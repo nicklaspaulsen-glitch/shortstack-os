@@ -2,6 +2,7 @@
 
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
+import ClientChatWidget from "@/components/client-chat-widget";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -36,6 +37,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           ) : !user ? null : children}
         </div>
       </main>
+      {/* Client chat widget — shows for all users */}
+      <ClientChatWidget />
     </div>
   );
 }
