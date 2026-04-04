@@ -27,6 +27,7 @@ export default function ClientDetailPage() {
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
   const [loading, setLoading] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
   const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing">("overview");
   const supabase = createClient();
 

@@ -25,6 +25,7 @@ export default function BriefingPage() {
   const { profile } = useAuth();
   const [briefing, setBriefing] = useState<Briefing | null>(null);
   const [loading, setLoading] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
   const [generating, setGenerating] = useState(false);
   const supabase = createClient();
 

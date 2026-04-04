@@ -21,6 +21,7 @@ export default function TrinityPage() {
   const [tab, setTab] = useState<Tab>("chat");
   const [logs, setLogs] = useState<TrinityLogEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hey, I am Trinity — ShortStack AI agent. I can build websites, set up AI receptionists, create chatbots, manage automations, set up Discord servers, and much more. What do you need?", timestamp: new Date() },
   ]);

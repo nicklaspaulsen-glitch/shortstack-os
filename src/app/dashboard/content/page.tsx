@@ -26,6 +26,7 @@ export default function ContentPage() {
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [personalIdeas, setPersonalIdeas] = useState<PersonalBrandIdea[]>([]);
   const [loading, setLoading] = useState(true);
+  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [showPublishEditor, setShowPublishEditor] = useState<PublishQueueItem | null>(null);
   const [editingPublish, setEditingPublish] = useState<Partial<PublishQueueItem>>({});
