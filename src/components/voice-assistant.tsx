@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { Mic, MicOff, Volume2, VolumeX, X, MessageSquare, StopCircle, Settings } from "lucide-react";
+import { Mic, Volume2, VolumeX, X, MessageSquare, StopCircle, Settings } from "lucide-react";
 import Image from "next/image";
 
 interface VoiceMessage {
@@ -23,7 +23,7 @@ export default function VoiceAssistant() {
   const [processing, setProcessing] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [voiceSpeed, setVoiceSpeed] = useState(1.0);
-  const [voicePitch, setVoicePitch] = useState(1.0);
+  const [voicePitch] = useState(1.0);
   const [autoPlayBriefing, setAutoPlayBriefing] = useState(true);
   const [hasPlayedBriefing, setHasPlayedBriefing] = useState(false);
 
