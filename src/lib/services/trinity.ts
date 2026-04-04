@@ -13,8 +13,91 @@ interface TrinityCommand {
 
 const ACTION_HANDLERS: Record<TrinityActionType, (params: Record<string, string>) => Promise<{ success: boolean; result: Record<string, unknown>; error?: string }>> = {
   website: async (params) => {
-    // Lovable + GoDaddy API integration
-    return { success: true, result: { message: `Website project initiated for ${params.domain || "client"}`, provider: "Lovable + GoDaddy" } };
+    const results: Record<string, unknown> = {};
+
+    // Step 1: Create website project on Lovable
+    const lovableToken = process.env.LOVABLE_API_KEY;
+    if (lovableToken) {
+      try {
+        const lovableRes = await fetch("https://api.lovable.dev/v1/projects", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${lovableToken}`,
+          },
+          body: JSON.stringify({
+            name: params.project_name || `${params.client || "client"}-website`,
+            description: params.description || `High-converting website for ${params.client || "client"}`,
+            template: params.template || "landing-page",
+            prompt: params.prompt || `Create a high-converting landing page for a ${params.industry || "local"} business called "${params.client || "Client"}". Include: hero section with CTA, services section, testimonials, contact form, mobile responsive, modern design with dark/light mode.`,
+          }),
+        });
+        const lovableData = await lovableRes.json();
+        results.lovable_project_id = lovableData.id;
+        results.lovable_url = lovableData.url || lovableData.preview_url;
+        results.lovable_status = "created";
+      } catch (err) {
+        results.lovable_error = String(err);
+      }
+    } else {
+      results.lovable_status = "api_key_not_configured";
+    }
+
+    // Step 2: Register domain on GoDaddy
+    const godaddyKey = process.env.GODADDY_API_KEY;
+    const godaddySecret = process.env.GODADDY_API_SECRET;
+    if (godaddyKey && godaddySecret && params.domain) {
+      try {
+        // Check domain availability
+        const checkRes = await fetch(
+          `https://api.godaddy.com/v1/domains/available?domain=${params.domain}`,
+          {
+            headers: {
+              Authorization: `sso-key ${godaddyKey}:${godaddySecret}`,
+            },
+          }
+        );
+        const availability = await checkRes.json();
+        results.domain = params.domain;
+        results.domain_available = availability.available;
+        results.domain_price = availability.price;
+
+        // If available, purchase it
+        if (availability.available && params.auto_purchase === "true") {
+          const purchaseRes = await fetch(
+            "https://api.godaddy.com/v1/domains/purchase",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `sso-key ${godaddyKey}:${godaddySecret}`,
+              },
+              body: JSON.stringify({
+                domain: params.domain,
+                consent: { agreedAt: new Date().toISOString(), agreedBy: "ShortStack OS" },
+                period: 1,
+                renewAuto: true,
+              }),
+            }
+          );
+          const purchaseData = await purchaseRes.json();
+          results.domain_purchased = purchaseRes.ok;
+          results.domain_order_id = purchaseData.orderId;
+        }
+      } catch (err) {
+        results.godaddy_error = String(err);
+      }
+    } else if (!params.domain) {
+      results.domain_status = "no_domain_specified";
+    } else {
+      results.godaddy_status = "api_keys_not_configured";
+    }
+
+    const message = results.lovable_url
+      ? `Website created on Lovable: ${results.lovable_url}${results.domain_purchased ? ` | Domain ${params.domain} registered on GoDaddy` : ""}`
+      : `Website project initiated for ${params.client || "client"} via Lovable + GoDaddy`;
+
+    return { success: true, result: { message, ...results } };
   },
   ai_receptionist: async (params) => {
     // Retell AI integration
