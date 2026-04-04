@@ -213,6 +213,12 @@ export async function handleGHLCallWebhook(
     outcome = "no_answer";
   }
 
+  // Extract transcript and conversation details from GHL payload
+  const transcript = payload.transcript as string || payload.recording_transcript as string || "";
+  const recordingUrl = payload.recordingUrl as string || payload.recording_url as string || "";
+  const callerNotes = payload.notes as string || payload.agentNotes as string || "";
+  const appointmentDate = payload.appointmentDate as string || "";
+
   // Update lead
   await supabase.from("leads").update({ status: leadStatus }).eq("id", lead.id);
 
@@ -220,15 +226,35 @@ export async function handleGHLCallWebhook(
   await updateContactAfterCall({
     contactId,
     outcome,
-    notes: `Call duration: ${duration}s. Status: ${callStatus}`,
+    notes: `Call duration: ${duration}s | Status: ${callStatus} | ${transcript ? "Transcript: " + transcript.substring(0, 500) : "No transcript"}`,
   });
 
-  // Log
+  // Log with FULL call details including transcript
   await supabase.from("trinity_log").insert({
     action_type: "lead_gen",
     description: `Cold call result: ${lead.business_name} — ${outcome}${outcome === "booked" ? " ✅ BOOKED" : ""}`,
     status: "completed",
-    result: { lead_id: lead.id, outcome, duration, callStatus },
+    result: {
+      lead_id: lead.id,
+      business_name: lead.business_name,
+      outcome,
+      duration,
+      callStatus,
+      transcript: transcript || "No transcript available",
+      recording_url: recordingUrl,
+      agent_notes: callerNotes,
+      appointment_date: appointmentDate,
+      what_was_said: transcript
+        ? `Call to ${lead.business_name} (${duration}s): ${transcript.substring(0, 1000)}`
+        : `Call to ${lead.business_name}: ${outcome} (${duration}s)`,
+      what_was_done: outcome === "booked"
+        ? `Appointment booked${appointmentDate ? ` for ${appointmentDate}` : ""}`
+        : outcome === "answered"
+          ? `Conversation had, no booking`
+          : outcome === "voicemail"
+            ? "Left voicemail message"
+            : "No answer / busy",
+    },
     completed_at: new Date().toISOString(),
   });
 
