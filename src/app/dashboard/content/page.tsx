@@ -214,12 +214,32 @@ export default function ContentPage() {
                   )},
                   { key: "scheduled_at", label: "Scheduled", render: (p: PublishQueueItem) => p.scheduled_at ? formatDateTime(p.scheduled_at) : "Not set" },
                   { key: "status", label: "Status", render: (p: PublishQueueItem) => <StatusBadge status={p.status} /> },
-                  { key: "actions", label: "", render: (p: PublishQueueItem) => p.status === "pending" ? (
-                    <button onClick={() => { setShowPublishEditor(p); setEditingPublish({ video_title: p.video_title, description: p.description, hashtags: p.hashtags, thumbnail_text: p.thumbnail_text, scheduled_at: p.scheduled_at }); }}
-                      className="btn-secondary text-xs py-1 px-3">
-                      <Edit3 size={12} /> Review
-                    </button>
-                  ) : null },
+                  { key: "actions", label: "", render: (p: PublishQueueItem) => (
+                    <div className="flex gap-2">
+                      {p.status === "pending" && (
+                        <button onClick={() => { setShowPublishEditor(p); setEditingPublish({ video_title: p.video_title, description: p.description, hashtags: p.hashtags, thumbnail_text: p.thumbnail_text, scheduled_at: p.scheduled_at }); }}
+                          className="btn-secondary text-xs py-1 px-3">
+                          <Edit3 size={12} /> Review
+                        </button>
+                      )}
+                      {(p.status === "pending" || p.status === "approved") && (
+                        <button onClick={async () => {
+                          toast.loading("Publishing via Zernio...");
+                          const res = await fetch("/api/content/publish", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ publish_queue_id: p.id }),
+                          });
+                          toast.dismiss();
+                          const data = await res.json();
+                          if (data.success) { toast.success("Published!"); fetchData(); }
+                          else toast.error(data.error || "Failed to publish");
+                        }} className="btn-primary text-xs py-1 px-3 flex items-center gap-1">
+                          <Send size={12} /> Publish
+                        </button>
+                      )}
+                    </div>
+                  ) },
                 ]}
                 data={publishQueue}
                 emptyMessage="No videos in the publish queue."

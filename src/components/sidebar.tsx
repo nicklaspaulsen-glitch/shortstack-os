@@ -40,6 +40,7 @@ const navItems: NavItem[] = [
   { label: "Trinity AI", href: "/dashboard/trinity", icon: <Bot size={20} />, roles: ["admin"] },
   { label: "System Monitor", href: "/dashboard/monitor", icon: <Activity size={20} />, roles: ["admin"] },
   { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={20} />, roles: ["admin"] },
+  { label: "Settings", href: "/dashboard/settings", icon: <LayoutDashboard size={20} />, roles: ["admin"] },
 ];
 
 export default function Sidebar() {
