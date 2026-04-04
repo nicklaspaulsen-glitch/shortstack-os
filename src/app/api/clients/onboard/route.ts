@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const {
     business_name, contact_name, email, phone, website, industry,
-    package_tier, mrr, services, password, create_portal, send_welcome,
+    package_tier, mrr, services, password, create_portal,
     create_invoice, setup_zernio, notes,
   } = body;
 
