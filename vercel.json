@@ -1,0 +1,20 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/scrape-leads",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/outreach",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/cron/health-check",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/personal-brand",
+      "schedule": "0 8 * * 0"
+    }
+  ]
+}
