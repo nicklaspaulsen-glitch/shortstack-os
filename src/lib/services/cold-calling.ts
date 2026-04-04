@@ -47,7 +47,6 @@ export async function triggerGHLWorkflow(params: {
   workflowId?: string;
 }): Promise<boolean> {
   try {
-    const locationId = process.env.GHL_LOCATION_ID;
     // Add contact to a workflow that triggers the AI agent call
     const res = await ghlFetch(`/contacts/${params.contactId}/workflow/${params.workflowId || "cold-call"}`, {
       method: "POST",
