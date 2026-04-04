@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Client, Contract, Invoice } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
@@ -23,6 +24,7 @@ export default function ClientsPage() {
   const [showInviteModal, setShowInviteModal] = useState<Client | null>(null);
   const [tab, setTab] = useState<"clients" | "contracts" | "invoices">("clients");
   const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     fetchData();
@@ -165,7 +167,7 @@ export default function ClientsPage() {
             )},
           ]}
           data={filteredClients}
-          onRowClick={(c) => setSelectedClient(c as unknown as Client)}
+          onRowClick={(c) => router.push(`/dashboard/clients/${c.id}`)}
           emptyMessage="No clients yet."
         />
       )}
