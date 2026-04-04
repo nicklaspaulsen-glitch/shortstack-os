@@ -135,7 +135,6 @@ I can execute any ShortStack OS action remotely.`);
 async function generateTelegramBriefing(supabase: ReturnType<typeof createServiceClient>): Promise<string> {
   const now = new Date();
   const yesterday = new Date(now.getTime() - 24 * 3600000).toISOString();
-  const today = now.toISOString().split("T")[0];
 
   const [
     { count: newLeads },
@@ -264,8 +263,6 @@ async function getSystemHealth(supabase: ReturnType<typeof createServiceClient>)
 }
 
 async function getRevenueStats(supabase: ReturnType<typeof createServiceClient>): Promise<string> {
-  const thisMonth = new Date().toISOString().slice(0, 7);
-
   const [
     { data: clients },
     { count: dealsWon },

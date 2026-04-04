@@ -236,7 +236,7 @@ export async function generateScriptPDF(script: {
 
     // Hook section
     if (script.hook) {
-      let y = addContentPage();
+      const y = addContentPage();
       sectionHeader("THE HOOK", y);
       doc.fontSize(12).fillColor(white).text(script.hook, 50, doc.y, {
         width: pageWidth,
@@ -246,7 +246,7 @@ export async function generateScriptPDF(script: {
 
     // Script body
     if (script.script_body) {
-      let y = addContentPage();
+      const y = addContentPage();
       sectionHeader("FULL SCRIPT", y);
       doc.fontSize(10).fillColor("#e0e0e0").text(script.script_body, 50, doc.y, {
         width: pageWidth,
@@ -256,7 +256,7 @@ export async function generateScriptPDF(script: {
 
     // Outline
     if (script.outline && Object.keys(script.outline).length > 0) {
-      let y = addContentPage();
+      const y = addContentPage();
       sectionHeader("OUTLINE", y);
       for (const [key, value] of Object.entries(script.outline)) {
         doc.fontSize(11).fillColor(gold).text(`${key}`, 50, doc.y + 8);
@@ -269,7 +269,7 @@ export async function generateScriptPDF(script: {
 
     // SEO & Metadata page
     if (script.seo_title || script.description || script.hashtags) {
-      let y = addContentPage();
+      const y = addContentPage();
       sectionHeader("SEO & METADATA", y);
 
       if (script.seo_title) {

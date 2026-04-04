@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     thumbnail_idea: script.thumbnail_idea,
   });
 
-  return new NextResponse(pdfBuffer, {
+  return new NextResponse(new Uint8Array(pdfBuffer), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${script.title.replace(/[^a-zA-Z0-9]/g, "_")}_script.pdf"`,
