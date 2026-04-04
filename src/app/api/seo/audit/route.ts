@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   let metaDescription = "";
   let h1Tags: string[] = [];
   let imageCount = 0;
-  let hasSSL = website_url.startsWith("https");
+  const hasSSL = website_url.startsWith("https");
 
   try {
     const res = await fetch(website_url, {
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     metaDescription = html.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"[^>]*>/i)?.[1] || "";
     h1Tags = (html.match(/<h1[^>]*>(.*?)<\/h1>/gi) || []).map(h => h.replace(/<[^>]+>/g, "").trim());
     imageCount = (html.match(/<img /gi) || []).length;
-    const imagesWithoutAlt = (html.match(/<img(?![^>]*alt=)[^>]*>/gi) || []).length;
+    
 
     pageContent = html.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
       .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
