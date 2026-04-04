@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import Modal from "@/components/ui/modal";
 import StatusBadge from "@/components/ui/status-badge";
-import { Zap, Plus, Sparkles, Play, Trash2, Settings } from "lucide-react";
+import { Zap, Plus, Sparkles, Play, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface WorkflowStep {
