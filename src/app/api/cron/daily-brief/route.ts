@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
+import { runDailyColdCalls } from "@/lib/services/cold-calling";
 
 // Runs daily at 9am CET via Vercel Cron
 export const maxDuration = 60;
@@ -66,11 +67,27 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // Run AI cold calling via GHL
+  const coldCallResults = await runDailyColdCalls(supabase, 50);
+
   brief += `
 
-📞 *Cold Calling*
-• ${callsBooked || 0} calls booked
-• ${newDeals || 0} deals closed
+📞 *AI Cold Calling (GHL)*
+• ${coldCallResults.totalQueued} calls queued today
+• ${callsBooked || 0} appointments booked
+• ${newDeals || 0} deals closed`;
+
+  if (coldCallResults.leads.length > 0) {
+    brief += `\n\n📋 *Called Today:*`;
+    for (const lead of coldCallResults.leads.slice(0, 10)) {
+      brief += `\n• ${lead.business} (${lead.phone})`;
+    }
+    if (coldCallResults.leads.length > 10) {
+      brief += `\n• ...and ${coldCallResults.leads.length - 10} more`;
+    }
+  }
+
+  brief += `
 
 📋 *Client Work*
 • ${pendingTasks || 0} tasks pending
@@ -80,7 +97,7 @@ ${totalReplied > 5 ? "🔥 Great day for replies!" : totalSent >= 60 ? "✅ Outr
 
   await sendTelegramMessage(chatId, brief);
 
-  // Also trigger outreach and health check in the background
+  // Also trigger DM outreach and health check in the background
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
   const cronSecret = process.env.CRON_SECRET;
   fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
