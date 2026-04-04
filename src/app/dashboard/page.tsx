@@ -10,7 +10,8 @@ import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import {
   Zap, Users, DollarSign, MessageSquare, TrendingUp,
   Phone, Bot, AlertTriangle, Plus, FileText, Sparkles,
-  Send, BarChart3, Globe, Film, Briefcase
+  Send, BarChart3, Globe, Film, Briefcase, Mic, StopCircle,
+  Volume2, VolumeX
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -124,6 +125,9 @@ export default function DashboardPage() {
           <p className="text-xs text-gold">{stats.trinityActions} AI actions today</p>
         </div>
       </div>
+
+      {/* JARVIS AI Assistant */}
+      <JarvisAssistant profile={profile} />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
@@ -287,6 +291,163 @@ export default function DashboardPage() {
             </div>
           </div>
           <p className="text-xs text-muted">14 integrations monitored · Last checked at daily brief</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function JarvisAssistant({ profile }: { profile: { full_name?: string; role?: string } | null }) {
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
+  const [inputMode, setInputMode] = useState<"voice" | "text">("voice");
+  const [processing, setProcessing] = useState(false);
+  const [pulseIntensity, setPulseIntensity] = useState(0);
+
+  // Animate pulse when speaking
+  useEffect(() => {
+    if (isSpeaking) {
+      const interval = setInterval(() => setPulseIntensity(Math.random()), 150);
+      return () => clearInterval(interval);
+    }
+    setPulseIntensity(0);
+  }, [isSpeaking]);
+
+  function speak(text: string) {
+    if (isMuted || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.0; u.pitch = 1.0; u.lang = "en-US";
+    const voices = window.speechSynthesis.getVoices();
+    const v = voices.find(v => v.name.includes("Google") && v.lang.startsWith("en")) || voices.find(v => v.lang.startsWith("en"));
+    if (v) u.voice = v;
+    u.onstart = () => setIsSpeaking(true);
+    u.onend = () => setIsSpeaking(false);
+    window.speechSynthesis.speak(u);
+  }
+
+  function startListening() {
+    const SR = (window as unknown as Record<string, unknown>).SpeechRecognition || (window as unknown as Record<string, unknown>).webkitSpeechRecognition;
+    if (!SR) { setInputMode("text"); return; }
+    const r = new (SR as new () => SpeechRecognition)();
+    r.continuous = false; r.interimResults = false; r.lang = "en-US";
+    r.onresult = (e: SpeechRecognitionEvent) => { setIsListening(false); sendMessage(e.results[0][0].transcript); };
+    r.onerror = () => setIsListening(false);
+    r.onend = () => setIsListening(false);
+    r.start(); setIsListening(true);
+  }
+
+  async function sendMessage(text: string) {
+    if (!text.trim()) return;
+    setMessage(text); setProcessing(true); setResponse("");
+    try {
+      const isClient = profile?.role === "client";
+      const res = await fetch(isClient ? "/api/trinity/client-chat" : "/api/trinity/chat", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+      const data = await res.json();
+      const reply = data.reply || "I didn't catch that.";
+      setResponse(reply);
+      if (!isMuted) speak(reply);
+    } catch { setResponse("Connection error. Try again."); }
+    setProcessing(false);
+  }
+
+  return (
+    <div className="card border-gold/20 bg-gradient-to-b from-gold/5 to-transparent overflow-hidden">
+      <div className="flex flex-col items-center py-6">
+        {/* AI Avatar — Animated orb */}
+        <div className="relative mb-6">
+          {/* Outer glow rings */}
+          <div className={`absolute inset-[-20px] rounded-full border border-gold/10 transition-all duration-300 ${isSpeaking || isListening ? "scale-110 opacity-100" : "scale-100 opacity-30"}`} />
+          <div className={`absolute inset-[-12px] rounded-full border border-gold/20 transition-all duration-300 ${isSpeaking || isListening ? "scale-105 opacity-100" : "scale-100 opacity-20"}`} />
+
+          {/* Main orb */}
+          <div className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-200 ${
+            isListening ? "bg-danger/20 shadow-[0_0_40px_rgba(239,68,68,0.3)]" :
+            isSpeaking ? "bg-gold/20 shadow-[0_0_40px_rgba(201,168,76,0.4)]" :
+            processing ? "bg-info/20 shadow-[0_0_30px_rgba(59,130,246,0.3)]" :
+            "bg-gold/10 shadow-[0_0_20px_rgba(201,168,76,0.15)]"
+          }`}>
+            {/* Inner animated bars */}
+            <div className="flex items-end gap-[3px] h-10">
+              {[0, 1, 2, 3, 4].map(i => (
+                <div key={i} className={`w-[4px] rounded-full transition-all duration-150 ${
+                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-info" : "bg-gold/40"
+                }`} style={{
+                  height: isSpeaking || isListening
+                    ? `${12 + Math.sin(Date.now() / 200 + i * 1.5) * 14 + pulseIntensity * 10}px`
+                    : processing ? `${8 + Math.sin(Date.now() / 300 + i) * 6}px` : "8px",
+                }} />
+              ))}
+            </div>
+          </div>
+
+          {/* Status dot */}
+          <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-surface ${
+            isListening ? "bg-danger animate-pulse" : isSpeaking ? "bg-gold animate-pulse" : "bg-success"
+          }`} />
+        </div>
+
+        {/* Status text */}
+        <p className="text-sm font-medium text-gold mb-1">
+          {isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : `Hey ${profile?.full_name?.split(" ")[0] || "there"}`}
+        </p>
+        <p className="text-xs text-muted mb-4">
+          {isListening ? "Speak now — I'm all ears" : isSpeaking ? "Tap to stop" : "Your AI assistant is ready"}
+        </p>
+
+        {/* Response bubble */}
+        {response && (
+          <div className="max-w-lg w-full bg-surface-light/50 rounded-xl px-4 py-3 mb-4 mx-4">
+            <p className="text-sm text-center leading-relaxed">{response}</p>
+          </div>
+        )}
+        {message && !response && !processing && (
+          <div className="max-w-lg bg-gold/10 rounded-xl px-4 py-2 mb-4">
+            <p className="text-sm text-gold text-center">{message}</p>
+          </div>
+        )}
+
+        {/* Controls */}
+        <div className="flex items-center gap-4">
+          <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) window.speechSynthesis?.cancel(); setIsSpeaking(false); }}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/20 text-danger" : "bg-surface-light text-muted hover:text-white"}`}>
+            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          </button>
+
+          {inputMode === "voice" ? (
+            <button onClick={() => { if (isListening) { window.speechSynthesis?.cancel(); setIsListening(false); } else if (isSpeaking) { window.speechSynthesis.cancel(); setIsSpeaking(false); } else startListening(); }}
+              disabled={processing}
+              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${
+                isListening ? "bg-danger shadow-lg shadow-danger/30 animate-pulse" :
+                isSpeaking ? "bg-gold shadow-lg shadow-gold/30" :
+                "bg-gold hover:bg-gold-light shadow-lg shadow-gold/20 hover:scale-105 active:scale-95"
+              }`}>
+              {isListening ? <StopCircle size={24} className="text-white" /> :
+               isSpeaking ? <StopCircle size={24} className="text-black" /> :
+               <Mic size={24} className="text-black" />}
+            </button>
+          ) : (
+            <form onSubmit={(e) => { e.preventDefault(); sendMessage(message); setMessage(""); }} className="flex gap-2">
+              <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type a message..." disabled={processing}
+                className="bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-white placeholder-muted focus:outline-none focus:border-gold/50 w-64" />
+              <button type="submit" disabled={!message.trim() || processing}
+                className="w-10 h-10 bg-gold rounded-full flex items-center justify-center disabled:opacity-30">
+                <Send size={14} className="text-black" />
+              </button>
+            </form>
+          )}
+
+          <button onClick={() => setInputMode(inputMode === "voice" ? "text" : "voice")}
+            className="w-10 h-10 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-white transition-colors">
+            {inputMode === "voice" ? <MessageSquare size={16} /> : <Mic size={16} />}
+          </button>
         </div>
       </div>
     </div>
