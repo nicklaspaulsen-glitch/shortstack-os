@@ -5,18 +5,18 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
 import {
-  Instagram, Youtube, Facebook, Linkedin, Twitter,
-  Check, ArrowRight, MessageSquare, HelpCircle, X
+  Check, ArrowRight, MessageSquare, HelpCircle, X,
+  Camera, Video, Globe, Briefcase, AtSign, Hash
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const SOCIAL_PLATFORMS = [
-  { id: "instagram", name: "Instagram", icon: <Instagram size={24} />, color: "text-pink-500", connectUrl: "#" },
-  { id: "facebook", name: "Facebook", icon: <Facebook size={24} />, color: "text-blue-500", connectUrl: "#" },
-  { id: "tiktok", name: "TikTok", icon: <MessageSquare size={24} />, color: "text-white", connectUrl: "#" },
-  { id: "youtube", name: "YouTube", icon: <Youtube size={24} />, color: "text-red-500", connectUrl: "#" },
-  { id: "linkedin", name: "LinkedIn", icon: <Linkedin size={24} />, color: "text-blue-400", connectUrl: "#" },
-  { id: "twitter", name: "X (Twitter)", icon: <Twitter size={24} />, color: "text-white", connectUrl: "#" },
+  { id: "instagram", name: "Instagram", icon: <Camera size={24} />, color: "text-pink-500" },
+  { id: "facebook", name: "Facebook", icon: <Globe size={24} />, color: "text-blue-500" },
+  { id: "tiktok", name: "TikTok", icon: <Hash size={24} />, color: "text-white" },
+  { id: "youtube", name: "YouTube", icon: <Video size={24} />, color: "text-red-500" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={24} />, color: "text-blue-400" },
+  { id: "twitter", name: "X (Twitter)", icon: <AtSign size={24} />, color: "text-white" },
 ];
 
 export default function ClientSetupPage() {
