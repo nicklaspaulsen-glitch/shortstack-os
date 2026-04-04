@@ -48,8 +48,10 @@ export default function Sidebar() {
   const { profile, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
+  // Show all admin links by default — profile might still be loading
+  const userRole = profile?.role || "admin";
   const filteredNav = navItems.filter(
-    (item) => profile && item.roles.includes(profile.role)
+    (item) => item.roles.includes(userRole)
   );
 
   return (
@@ -97,10 +99,10 @@ export default function Sidebar() {
 
       {/* User */}
       <div className="p-3 border-t border-border">
-        {profile && !collapsed && (
+        {!collapsed && (
           <div className="px-3 py-2 mb-2">
-            <p className="text-sm font-medium text-white truncate">{profile.full_name}</p>
-            <p className="text-xs text-muted capitalize">{profile.role.replace("_", " ")}</p>
+            <p className="text-sm font-medium text-white truncate">{profile?.full_name || "Loading..."}</p>
+            <p className="text-xs text-muted capitalize">{profile?.role?.replace("_", " ") || "..."}</p>
           </div>
         )}
         <button
