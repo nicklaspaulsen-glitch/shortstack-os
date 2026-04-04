@@ -48,8 +48,27 @@ Content: ${content?.map(c => `"${c.title}" - ${c.status}`).join("; ") || "none i
 Campaigns: ${campaigns?.map(c => `${c.name} - ${c.status}, $${c.spend} spend, ${c.conversions} conversions, ${c.roas}x ROAS`).join("; ") || "none active"}`;
   }
 
+  // Get custom bot config
+  let botName = "Trinity";
+  let botPersonality = "professional and friendly";
+  let botTone = "warm, helpful, concise";
+  if (client) {
+    const { data: botConfig } = await supabase
+      .from("social_accounts")
+      .select("metadata")
+      .eq("client_id", client.id)
+      .eq("platform", "ai_bot_config")
+      .single();
+    if (botConfig?.metadata) {
+      const cfg = botConfig.metadata as Record<string, string>;
+      botName = cfg.name || "Trinity";
+      botPersonality = cfg.personality || botPersonality;
+      botTone = cfg.tone || botTone;
+    }
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) return NextResponse.json({ reply: "I'm currently offline. Please contact your account manager." });
+  if (!apiKey) return NextResponse.json({ reply: "I'm currently offline. Please contact your account manager.", botName });
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -57,7 +76,7 @@ Campaigns: ${campaigns?.map(c => `${c.name} - ${c.status}, $${c.spend} spend, ${
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 500,
-      system: `You are Trinity, the personal AI assistant for ${client?.contact_name || profile?.full_name || "the client"} at ${client?.business_name || "their business"}. You work for ShortStack digital marketing agency.
+      system: `You are ${botName}, the personal AI assistant for ${client?.contact_name || profile?.full_name || "the client"} at ${client?.business_name || "their business"}. You work for ShortStack digital marketing agency. Your personality is: ${botPersonality}. Your tone is: ${botTone}.
 
 You know everything about their account:
 ${context}
@@ -76,5 +95,5 @@ Rules:
   const data = await res.json();
   const reply = data.content?.[0]?.text || "I couldn't process that. Try asking about your services, tasks, or invoices.";
 
-  return NextResponse.json({ reply });
+  return NextResponse.json({ reply, botName });
 }
