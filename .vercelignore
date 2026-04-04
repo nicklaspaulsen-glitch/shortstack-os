@@ -1,0 +1,4 @@
+dist-electron
+electron
+node_modules
+.git
