@@ -18,13 +18,11 @@ export async function POST(request: NextRequest) {
     { count: totalTasks },
     { count: contentCount },
     { data: campaigns },
-    { count: invoicesPaid },
   ] = await Promise.all([
     supabase.from("client_tasks").select("*", { count: "exact", head: true }).eq("client_id", client_id).eq("is_completed", true),
     supabase.from("client_tasks").select("*", { count: "exact", head: true }).eq("client_id", client_id),
     supabase.from("content_scripts").select("*", { count: "exact", head: true }).eq("client_id", client_id),
     supabase.from("campaigns").select("*").eq("client_id", client_id),
-    supabase.from("invoices").select("*", { count: "exact", head: true }).eq("client_id", client_id).eq("status", "paid"),
   ]);
 
   const totalSpend = campaigns?.reduce((s, c) => s + (c.spend || 0), 0) || 0;
