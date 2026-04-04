@@ -177,9 +177,9 @@ export async function parseTrinityMessage(message: string): Promise<TrinityComma
 }
 
 // Telegram Bot handler
-export async function sendTelegramMessage(chatId: string, text: string): Promise<boolean> {
+export async function sendTelegramMessage(chatId: string, text: string): Promise<{ ok: boolean; messageId?: number }> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  if (!token) return false;
+  if (!token) return { ok: false };
 
   try {
     const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -191,8 +191,63 @@ export async function sendTelegramMessage(chatId: string, text: string): Promise
         parse_mode: "Markdown",
       }),
     });
+    const data = await res.json();
+    return { ok: res.ok, messageId: data.result?.message_id };
+  } catch {
+    return { ok: false };
+  }
+}
+
+// Delete a specific Telegram message
+export async function deleteTelegramMessage(chatId: string, messageId: number): Promise<boolean> {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) return false;
+
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/deleteMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, message_id: messageId }),
+    });
     return res.ok;
   } catch {
     return false;
   }
+}
+
+// Clean up old briefing/status messages older than 24h that have no relevant data
+// Call this before sending new briefings to keep the chat clean
+export async function cleanupOldTelegramMessages(chatId: string, supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>): Promise<number> {
+  const cutoff = new Date(Date.now() - 24 * 3600000).toISOString();
+  let deleted = 0;
+
+  // Get old trinity log entries that were just status messages (no meaningful result)
+  const { data: oldLogs } = await supabase
+    .from("trinity_log")
+    .select("id, result, created_at")
+    .lt("created_at", cutoff)
+    .order("created_at", { ascending: true })
+    .limit(50);
+
+  if (oldLogs) {
+    for (const log of oldLogs) {
+      const result = log.result as Record<string, unknown>;
+      const telegramMsgId = result?.telegram_message_id as number | undefined;
+
+      // If we tracked the telegram message ID and the log has no meaningful outcome, delete it
+      if (telegramMsgId) {
+        const hasRelevantData = result?.replies_received || result?.calls_booked || result?.deals_closed;
+        if (!hasRelevantData) {
+          const success = await deleteTelegramMessage(chatId, telegramMsgId);
+          if (success) deleted++;
+        }
+      }
+    }
+  }
+
+  // Clean up old briefings from the database that are > 7 days old
+  const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+  await supabase.from("briefings").delete().lt("generated_at", weekAgo);
+
+  return deleted;
 }

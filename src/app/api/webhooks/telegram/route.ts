@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { parseTrinityMessage, executeTrinityCommand, sendTelegramMessage } from "@/lib/services/trinity";
+import { parseTrinityMessage, executeTrinityCommand, sendTelegramMessage, cleanupOldTelegramMessages } from "@/lib/services/trinity";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -25,6 +25,8 @@ export async function POST(request: NextRequest) {
 
   // /briefing — Full briefing of what happened since last login
   if (text === "/briefing" || text === "/brief" || text.toLowerCase().startsWith("what happened")) {
+    // Clean up old irrelevant messages before sending new briefing
+    await cleanupOldTelegramMessages(chatId, supabase);
     const briefing = await generateTelegramBriefing(supabase);
     await sendTelegramMessage(chatId, briefing);
     return NextResponse.json({ ok: true });
