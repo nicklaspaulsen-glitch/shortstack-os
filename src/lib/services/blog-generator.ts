@@ -113,15 +113,12 @@ export async function generateBlogPDF(params: {
       .replace(/\n{3,}/g, "\n\n");
 
     const lines = plainText.split("\n");
-    let y = 40;
-
     for (const line of lines) {
       if (doc.y > doc.page.height - 80) {
         doc.addPage();
         doc.rect(0, 0, doc.page.width, doc.page.height).fill(dark);
         doc.rect(0, 0, doc.page.width, 3).fill(gold);
         doc.rect(0, doc.page.height - 3, doc.page.width, 3).fill(gold);
-        y = 40;
       }
 
       const trimmed = line.trim();

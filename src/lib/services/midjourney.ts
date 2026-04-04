@@ -68,7 +68,7 @@ Aspect ratio: ${params.imageType === "ad_creative" ? "1:1" : params.imageType ==
 export async function sendMidjourneyPrompt(params: MidjourneyRequest): Promise<MidjourneyResult> {
   const botToken = process.env.DISCORD_BOT_TOKEN;
   const channelId = process.env.MIDJOURNEY_CHANNEL_ID;
-  const midjourneyBotId = process.env.MIDJOURNEY_BOT_ID || "936929561302675456"; // Default MJ bot ID
+  // Midjourney bot ID: 936929561302675456
 
   if (!botToken || !channelId) {
     return { success: false, error: "Discord bot token or Midjourney channel ID not configured" };
