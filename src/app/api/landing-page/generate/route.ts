@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
   let clientName = "ShortStack";
   let industry = "marketing";
-  let brandColors = { primary: "#C9A84C", bg: "#0a0a0a" };
+  const brandColors = { primary: "#C9A84C", bg: "#0a0a0a" };
   if (client_id) {
     const { data: client } = await supabase.from("clients").select("business_name, industry, website").eq("id", client_id).single();
     if (client) { clientName = client.business_name; industry = client.industry || "business"; }
