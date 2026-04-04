@@ -9,7 +9,7 @@ import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
 import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { Users, DollarSign, FileText, Plus, Search, Heart, ArrowUpRight } from "lucide-react";
+import { Users, DollarSign, FileText, Plus, Search, Heart, ArrowUpRight, UserPlus, Download } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function ClientsPage() {
@@ -20,6 +20,7 @@ export default function ClientsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState<Client | null>(null);
   const [tab, setTab] = useState<"clients" | "contracts" | "invoices">("clients");
   const supabase = createClient();
 
@@ -306,7 +307,83 @@ export default function ClientsPage() {
               <p className="text-xs text-muted mb-2">Contract Status</p>
               <StatusBadge status={selectedClient.contract_status} />
             </div>
+            <div className="flex gap-3 pt-4 border-t border-border">
+              <button onClick={() => { setSelectedClient(null); setShowInviteModal(selectedClient); }}
+                className="btn-primary flex items-center gap-2">
+                <UserPlus size={16} /> Give Portal Access
+              </button>
+              <button onClick={async () => {
+                toast.loading("Generating contract...");
+                const res = await fetch("/api/contracts/generate", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ client_id: selectedClient.id }),
+                });
+                toast.dismiss();
+                if (res.ok) {
+                  const blob = await res.blob();
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a"); a.href = url;
+                  a.download = `${selectedClient.business_name}_contract.pdf`; a.click();
+                  toast.success("Contract downloaded!");
+                } else { toast.error("Failed to generate contract"); }
+              }} className="btn-secondary flex items-center gap-2">
+                <Download size={16} /> Generate Contract PDF
+              </button>
+            </div>
           </div>
+        )}
+      </Modal>
+
+      {/* Invite Client to Portal Modal */}
+      <Modal isOpen={!!showInviteModal} onClose={() => setShowInviteModal(null)} title="Give Client Portal Access">
+        {showInviteModal && (
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            toast.loading("Creating account...");
+            const res = await fetch("/api/clients/invite", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: fd.get("email"),
+                full_name: fd.get("full_name"),
+                password: fd.get("password"),
+                client_id: showInviteModal.id,
+              }),
+            });
+            toast.dismiss();
+            const data = await res.json();
+            if (data.success) {
+              toast.success("Client account created! They can now log in.");
+              setShowInviteModal(null);
+            } else {
+              toast.error(data.error || "Failed to create account");
+            }
+          }} className="space-y-4">
+            <p className="text-sm text-muted">Create a login for <span className="text-gold font-medium">{showInviteModal.business_name}</span> so they can access their portal.</p>
+            <div>
+              <label className="block text-sm text-muted mb-1">Full Name *</label>
+              <input name="full_name" className="input w-full" defaultValue={showInviteModal.contact_name} required />
+            </div>
+            <div>
+              <label className="block text-sm text-muted mb-1">Email *</label>
+              <input name="email" type="email" className="input w-full" defaultValue={showInviteModal.email} required />
+            </div>
+            <div>
+              <label className="block text-sm text-muted mb-1">Password *</label>
+              <input name="password" type="text" className="input w-full" placeholder="Set their initial password" required minLength={6} />
+            </div>
+            <div className="bg-surface-light rounded-lg p-3 text-xs text-muted">
+              The client will be able to log in at shortstack-os.vercel.app and see: their active services, task checklist, invoices, contracts, and deliverables.
+            </div>
+            <div className="flex justify-end gap-3">
+              <button type="button" onClick={() => setShowInviteModal(null)} className="btn-secondary">Cancel</button>
+              <button type="submit" className="btn-primary flex items-center gap-2">
+                <UserPlus size={16} /> Create Account
+              </button>
+            </div>
+          </form>
         )}
       </Modal>
     </div>

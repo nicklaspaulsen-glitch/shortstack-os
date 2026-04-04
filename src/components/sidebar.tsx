@@ -36,6 +36,7 @@ const navItems: NavItem[] = [
   { label: "Team & Payroll", href: "/dashboard/team", icon: <Briefcase size={20} />, roles: ["admin"] },
   { label: "Content AI", href: "/dashboard/content", icon: <Film size={20} />, roles: ["admin", "team_member"] },
   { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={20} />, roles: ["admin"] },
+  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={20} />, roles: ["admin"] },
   { label: "Trinity AI", href: "/dashboard/trinity", icon: <Bot size={20} />, roles: ["admin"] },
   { label: "System Monitor", href: "/dashboard/monitor", icon: <Activity size={20} />, roles: ["admin"] },
   { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={20} />, roles: ["admin"] },

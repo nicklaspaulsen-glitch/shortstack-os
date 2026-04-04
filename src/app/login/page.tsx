@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -50,9 +51,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-gold rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-black font-bold text-xl">SS</span>
-          </div>
+          <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={56} height={56} className="rounded-2xl mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-white">ShortStack OS</h1>
           <p className="text-sm text-muted mt-1">Agency Operating System</p>
         </div>
