@@ -9,6 +9,7 @@ interface AuthContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
+  isPWA: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
   loading: true,
+  isPWA: false,
   signOut: async () => {},
   refreshProfile: async () => {},
 });
@@ -25,6 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isPWA, setIsPWA] = useState(false);
   const supabase = createClient();
 
   const fetchProfile = async (userId: string) => {
@@ -34,10 +37,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .select("*")
         .eq("id", userId)
         .single();
-      if (data && !error) setProfile(data);
+      if (data && !error) {
+        setProfile(data);
+        return true;
+      }
     } catch {
-      // Profile fetch failed silently
+      // Silently fail
     }
+    return false;
   };
 
   const refreshProfile = async () => {
@@ -45,35 +52,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    // Detect PWA (installed app) vs browser
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+      || (window.navigator as unknown as Record<string, boolean>).standalone === true;
+    setIsPWA(isStandalone);
+
     let mounted = true;
 
-    const getUser = async () => {
+    const init = async () => {
       try {
-        // Try getSession first (faster, uses local storage)
+        // Try session first
         const { data: { session } } = await supabase.auth.getSession();
 
         if (session?.user && mounted) {
           setUser(session.user);
-          await fetchProfile(session.user.id);
-          setLoading(false);
+          const profileLoaded = await fetchProfile(session.user.id);
+          // If profile didn't load via RLS, try fetching without auth filter
+          if (!profileLoaded && mounted) {
+            // Direct fetch as fallback
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}&select=*`, {
+              headers: {
+                apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+                Authorization: `Bearer ${session.access_token}`,
+              },
+            });
+            const profiles = await res.json();
+            if (Array.isArray(profiles) && profiles.length > 0) {
+              setProfile(profiles[0]);
+            }
+          }
+          if (mounted) setLoading(false);
           return;
         }
 
-        // Fallback to getUser (makes API call)
+        // Fallback: try getUser
         const { data: { user: authUser } } = await supabase.auth.getUser();
-        if (mounted) {
+        if (authUser && mounted) {
           setUser(authUser);
-          if (authUser) await fetchProfile(authUser.id);
-          setLoading(false);
+          await fetchProfile(authUser.id);
         }
+        if (mounted) setLoading(false);
       } catch {
         if (mounted) setLoading(false);
       }
     };
 
-    getUser();
+    init();
 
-    // Safety timeout — never stay loading forever
+    // Safety timeout
     const timeout = setTimeout(() => {
       if (mounted && loading) setLoading(false);
     }, 5000);
@@ -81,9 +107,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         if (!mounted) return;
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await fetchProfile(session.user.id);
+        const u = session?.user ?? null;
+        setUser(u);
+        if (u) {
+          await fetchProfile(u.id);
         } else {
           setProfile(null);
         }
@@ -105,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, signOut, refreshProfile }}>
+    <AuthContext.Provider value={{ user, profile, loading, isPWA, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { BrowserModeBanner } from "@/components/read-only-guard";
 import { Client, ClientTask, Invoice, Contract } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
@@ -69,6 +70,7 @@ export default function ClientPortalPage() {
   const totalPaid = paidInvoices.reduce((sum, i) => sum + i.amount, 0);
   return (
     <div className="fade-in space-y-6">
+      <BrowserModeBanner />
       <div>
         <h1 className="page-header mb-0">Welcome, {client.contact_name}</h1>
         <p className="text-muted text-sm">{client.business_name} &middot; {client.package_tier || "Standard"} Plan</p>
