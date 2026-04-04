@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ success: true, config: record.metadata });
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

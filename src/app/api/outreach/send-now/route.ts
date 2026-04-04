@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { platforms, count_per_platform, message_style, target_industry } = await request.json();
+  const { platforms, count_per_platform, target_industry } = await request.json();
 
   const selectedPlatforms = platforms || ["instagram", "linkedin", "facebook", "tiktok"];
   const countPer = count_per_platform || 5;
