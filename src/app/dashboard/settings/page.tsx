@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Shield, Save, Plus, Trash2 } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save } from "lucide-react";
 import toast from "react-hot-toast";
 
 type Tab = "agents" | "integrations" | "automation" | "notifications";
@@ -46,6 +46,7 @@ const INTEGRATIONS = [
 
 export default function SettingsPage() {
   const [tab, setTab] = useState<Tab>("agents");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clients, setClients] = useState<Client[]>([]);
   const [agentConfigs, setAgentConfigs] = useState<AgentConfig[]>([]);
   const [editingAgent, setEditingAgent] = useState<AgentConfig | null>(null);
