@@ -16,22 +16,21 @@ export async function POST(request: NextRequest) {
 
   if (!campaign) return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });
 
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: "gpt-4o-mini",
+      model: "claude-sonnet-4-6",
+      max_tokens: 500,
+      system: "You are a paid ads optimization expert. Analyze campaign performance and give actionable optimization suggestions. Be specific with numbers and recommendations.",
       messages: [
-        {
-          role: "system",
-          content: "You are a paid ads optimization expert. Analyze campaign performance and give actionable optimization suggestions. Be specific with numbers and recommendations.",
-        },
         {
           role: "user",
           content: `Analyze this ${campaign.platform} campaign:
@@ -48,12 +47,11 @@ Daily Budget: $${campaign.budget_daily}
 Give 3-5 specific optimization suggestions.`,
         },
       ],
-      max_tokens: 500,
     }),
   });
 
   const data = await res.json();
-  const suggestions = data.choices?.[0]?.message?.content || "No suggestions available";
+  const suggestions = data.content?.[0]?.text || "No suggestions available";
 
   await supabase.from("campaigns").update({ ai_suggestions: suggestions }).eq("id", campaign_id);
 

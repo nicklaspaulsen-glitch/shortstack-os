@@ -64,32 +64,30 @@ export async function POST(_request: NextRequest) {
   // Generate AI summary
   let summary = `Since your last login: ${newLeads || 0} new leads scraped, ${dmsSent || 0} DMs sent with ${replies || 0} replies. ${trinityActions || 0} Trinity actions executed.`;
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (apiKey) {
     try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
         },
         body: JSON.stringify({
-          model: "gpt-4o-mini",
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 200,
+          system: "You are an executive assistant for ShortStack agency. Write a concise morning briefing summary (3-5 sentences) based on the data. Be direct and highlight anything that needs attention.",
           messages: [
-            {
-              role: "system",
-              content: "You are an executive assistant for ShortStack agency. Write a concise morning briefing summary (3-5 sentences) based on the data. Be direct and highlight anything that needs attention.",
-            },
             {
               role: "user",
               content: JSON.stringify(content),
             },
           ],
-          max_tokens: 200,
         }),
       });
       const data = await res.json();
-      summary = data.choices?.[0]?.message?.content || summary;
+      summary = data.content?.[0]?.text || summary;
     } catch {
       // Use default summary
     }

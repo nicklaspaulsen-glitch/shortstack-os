@@ -150,31 +150,27 @@ export async function executeTrinityCommand(command: TrinityCommand): Promise<{
 }
 
 export async function parseTrinityMessage(message: string): Promise<TrinityCommand | null> {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
 
   try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          {
-            role: "system",
-            content: `You are Trinity, an AI agent for ShortStack digital marketing agency. Parse user commands into structured actions. Available actions: website, ai_receptionist, chatbot, automation, discord, social_setup, email_campaign, sms_campaign, lead_gen, custom. Return JSON with: action, description, params (key-value pairs of relevant details).`,
-          },
-          { role: "user", content: message },
-        ],
-        response_format: { type: "json_object" },
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 300,
+        system: `You are Trinity, an AI agent for ShortStack digital marketing agency. Parse user commands into structured actions. Available actions: website, ai_receptionist, chatbot, automation, discord, social_setup, email_campaign, sms_campaign, lead_gen, custom. Respond with valid JSON only (no markdown): { "action": "...", "description": "...", "params": { ... } }`,
+        messages: [{ role: "user", content: message }],
       }),
     });
     const data = await res.json();
-    return JSON.parse(data.choices[0].message.content);
+    const text = data.content?.[0]?.text || "";
+    return JSON.parse(text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim());
   } catch {
     return null;
   }

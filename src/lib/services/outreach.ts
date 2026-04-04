@@ -31,37 +31,34 @@ export async function generatePersonalizedMessage(
   industry: string,
   ownerName?: string | null
 ): Promise<string> {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return getTemplateMessage(platform, businessName, industry, ownerName);
   }
 
   try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 200,
+        system: `You are a friendly outreach specialist for ShortStack, a digital marketing agency. Write a short, personalized DM for ${platform}. Be conversational, not salesy. Max 150 words. Don't use emojis excessively. Focus on how you noticed their business and want to help them grow online. Include a soft CTA like asking if they're open to a quick chat.`,
         messages: [
-          {
-            role: "system",
-            content: `You are a friendly outreach specialist for ShortStack, a digital marketing agency. Write a short, personalized DM for ${platform}. Be conversational, not salesy. Max 150 words. Don't use emojis excessively. Focus on how you noticed their business and want to help them grow online. Include a soft CTA like asking if they're open to a quick chat.`,
-          },
           {
             role: "user",
             content: `Write a ${platform} DM to ${ownerName || "the owner"} of "${businessName}" (${industry}). Make it feel natural and personal.`,
           },
         ],
-        max_tokens: 200,
-        temperature: 0.8,
       }),
     });
 
     const data = await res.json();
-    return data.choices?.[0]?.message?.content || getTemplateMessage(platform, businessName, industry, ownerName);
+    return data.content?.[0]?.text || getTemplateMessage(platform, businessName, industry, ownerName);
   } catch {
     return getTemplateMessage(platform, businessName, industry, ownerName);
   }
@@ -89,7 +86,7 @@ export async function generateFollowUpMessage(
   followupNumber: number,
   originalMessage: string
 ): Promise<string> {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     if (followupNumber === 1) {
       return `Hey! Just following up on my message about helping ${businessName} with digital marketing. I know you're busy — happy to send over a quick case study if that's easier. No worries either way!`;
@@ -98,30 +95,27 @@ export async function generateFollowUpMessage(
   }
 
   try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 150,
+        system: `Write follow-up #${followupNumber} for a ${platform} DM. ${followupNumber === 1 ? "It's day 3, be friendly and provide value." : "It's day 7, last follow-up, be respectful and leave the door open."} Max 100 words. Reference the original message naturally.`,
         messages: [
-          {
-            role: "system",
-            content: `Write follow-up #${followupNumber} for a ${platform} DM. ${followupNumber === 1 ? "It's day 3, be friendly and provide value." : "It's day 7, last follow-up, be respectful and leave the door open."} Max 100 words. Reference the original message naturally.`,
-          },
           {
             role: "user",
             content: `Original message to ${businessName}: "${originalMessage}". Write follow-up #${followupNumber}.`,
           },
         ],
-        max_tokens: 150,
-        temperature: 0.8,
       }),
     });
     const data = await res.json();
-    return data.choices?.[0]?.message?.content || `Following up on my message about helping ${businessName}!`;
+    return data.content?.[0]?.text || `Following up on my message about helping ${businessName}!`;
   } catch {
     return `Following up on my message about helping ${businessName}!`;
   }
