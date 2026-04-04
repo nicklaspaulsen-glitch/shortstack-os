@@ -2,19 +2,11 @@
   "crons": [
     {
       "path": "/api/cron/scrape-leads",
-      "schedule": "0 6 * * *"
+      "schedule": "0 5 * * *"
     },
     {
-      "path": "/api/cron/outreach",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/health-check",
-      "schedule": "0 12 * * *"
-    },
-    {
-      "path": "/api/cron/personal-brand",
-      "schedule": "0 8 * * 0"
+      "path": "/api/cron/daily-brief",
+      "schedule": "0 8 * * *"
     }
   ]
 }
