@@ -94,7 +94,7 @@ export default function DashboardPage() {
 
   const quickActions = [
     { label: "Generate Proposal", icon: <FileText size={16} />, color: "text-gold", action: () => router.push("/dashboard/clients") },
-    { label: "New Client", icon: <Plus size={16} />, color: "text-success", action: () => router.push("/dashboard/clients") },
+    { label: "New Client", icon: <Plus size={16} />, color: "text-success", action: () => router.push("/dashboard/onboard") },
     { label: "Generate Script", icon: <Sparkles size={16} />, color: "text-info", action: () => router.push("/dashboard/content") },
     { label: "Create Workflow", icon: <Zap size={16} />, color: "text-warning", action: () => router.push("/dashboard/workflows") },
     { label: "Ask Trinity", icon: <Bot size={16} />, color: "text-gold", action: () => router.push("/dashboard/trinity") },
