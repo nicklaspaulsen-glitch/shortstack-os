@@ -2,11 +2,20 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { Toaster } from "react-hot-toast";
+import PWARegister from "@/components/pwa-register";
 
 export const metadata: Metadata = {
   title: "ShortStack OS",
   description: "Internal operating system for ShortStack digital marketing agency",
-  icons: { icon: "/favicon.ico" },
+  icons: { icon: "/icons/shortstack-logo.png", apple: "/icons/shortstack-logo.png" },
+  manifest: "/manifest.json",
+  themeColor: "#C9A84C",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ShortStack OS",
+  },
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({
@@ -19,6 +28,7 @@ export default function RootLayout({
       <body className="antialiased bg-background text-white min-h-screen">
         <AuthProvider>
           {children}
+          <PWARegister />
           <Toaster
             position="top-right"
             toastOptions={{

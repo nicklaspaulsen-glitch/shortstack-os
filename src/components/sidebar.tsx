@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import {
@@ -59,9 +60,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-between p-4 border-b border-border">
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gold rounded-lg flex items-center justify-center">
-              <span className="text-black font-bold text-sm">SS</span>
-            </div>
+            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={32} height={32} className="rounded-lg" />
             <span className="text-white font-semibold text-lg">ShortStack</span>
           </Link>
         )}

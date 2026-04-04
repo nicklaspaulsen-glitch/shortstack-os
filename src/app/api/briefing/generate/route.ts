@@ -106,5 +106,22 @@ export async function POST(_request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // Auto-send briefing to Telegram
+  const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
+  const telegramChatId = process.env.TELEGRAM_CHAT_ID;
+  if (telegramToken && telegramChatId) {
+    const telegramMsg = `📋 *Morning Briefing*\n\n${summary}\n\n📊 Leads: ${content.leads.scraped_since} new | DMs: ${content.outreach.sent_since} sent, ${content.outreach.replies} replies\n💰 MRR: $${content.revenue.total_mrr.toLocaleString()} | Deals: ${content.revenue.new_deals} new\n${content.system.issues > 0 ? `⚠️ ${content.system.issues} system issues` : "✅ All systems go"}`;
+
+    await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: telegramChatId,
+        text: telegramMsg,
+        parse_mode: "Markdown",
+      }),
+    }).catch(() => {});
+  }
+
   return NextResponse.json({ success: true, briefing });
 }

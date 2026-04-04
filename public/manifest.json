@@ -1,0 +1,23 @@
+{
+  "name": "ShortStack OS",
+  "short_name": "ShortStack",
+  "description": "Internal operating system for ShortStack digital marketing agency",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#C9A84C",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/shortstack-logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
