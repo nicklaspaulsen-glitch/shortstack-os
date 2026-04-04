@@ -34,6 +34,87 @@ export async function getProfiles(): Promise<Array<{
   }
 }
 
+// Create a profile group for a specific client
+export async function createClientProfile(clientName: string): Promise<{
+  success: boolean;
+  profileId?: string;
+  error?: string;
+}> {
+  try {
+    const res = await zernioFetch("/profiles", {
+      method: "POST",
+      body: JSON.stringify({
+        name: clientName,
+        description: `Social media accounts for ${clientName} — managed by ShortStack`,
+      }),
+    });
+    const data = await res.json();
+    return res.ok
+      ? { success: true, profileId: data.id || data.profileId }
+      : { success: false, error: data.message || `Error ${res.status}` };
+  } catch (err) {
+    return { success: false, error: String(err) };
+  }
+}
+
+// Connect a social account to a client's profile
+export async function connectAccountToProfile(params: {
+  profileId: string;
+  platform: string;
+  accountId?: string;
+}): Promise<{ success: boolean; error?: string }> {
+  try {
+    const res = await zernioFetch(`/profiles/${params.profileId}/connections`, {
+      method: "POST",
+      body: JSON.stringify({
+        platform: params.platform,
+        ...(params.accountId ? { accountId: params.accountId } : {}),
+      }),
+    });
+    return { success: res.ok, error: res.ok ? undefined : `Error ${res.status}` };
+  } catch (err) {
+    return { success: false, error: String(err) };
+  }
+}
+
+// Setup a new client in Zernio: create profile + store mapping
+export async function setupClientInZernio(
+  supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>,
+  clientId: string,
+  clientName: string
+): Promise<{ success: boolean; profileId?: string; error?: string }> {
+  // Create profile in Zernio
+  const result = await createClientProfile(clientName);
+
+  if (result.success && result.profileId) {
+    // Store the Zernio profile ID in the client's social_accounts
+    await supabase.from("social_accounts").insert({
+      client_id: clientId,
+      platform: "zernio",
+      account_name: clientName,
+      account_id: result.profileId,
+      is_active: true,
+      metadata: { type: "zernio_profile", created_by: "shortstack_os" },
+    });
+  }
+
+  return result;
+}
+
+// Get client's Zernio profile ID
+export async function getClientZernioProfile(
+  supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>,
+  clientId: string
+): Promise<string | null> {
+  const { data } = await supabase
+    .from("social_accounts")
+    .select("account_id")
+    .eq("client_id", clientId)
+    .eq("platform", "zernio")
+    .single();
+  return data?.account_id || null;
+}
+
 // Schedule a post to multiple platforms
 export async function schedulePost(params: {
   text: string;
@@ -96,11 +177,12 @@ export async function getAccountAnalytics(params?: {
   }
 }
 
-// Auto-publish from ShortStack publish queue
+// Auto-publish from ShortStack publish queue — uses client-specific Zernio profile
 export async function publishFromQueue(
   supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>,
   item: {
     id: string;
+    client_id: string;
     video_title: string;
     description: string | null;
     hashtags: string[] | null;
@@ -124,9 +206,26 @@ export async function publishFromQueue(
 
   const zernioPlats = item.platforms.map(p => platformMap[p] || p).filter(Boolean);
 
+  // Get client-specific Zernio profile if exists
+  let profileIds: string[] | undefined;
+  if (item.client_id) {
+    const clientProfileId = await getClientZernioProfile(supabase, item.client_id);
+    if (clientProfileId) {
+      profileIds = [clientProfileId];
+    } else {
+      // Auto-create profile for this client
+      const { data: client } = await supabase.from("clients").select("business_name").eq("id", item.client_id).single();
+      if (client) {
+        const setup = await setupClientInZernio(supabase, item.client_id, client.business_name);
+        if (setup.profileId) profileIds = [setup.profileId];
+      }
+    }
+  }
+
   const result = await schedulePost({
     text: fullText,
     platforms: zernioPlats,
+    profileIds,
     title: item.video_title,
     hashtags: item.hashtags || [],
     scheduledAt: item.publish_now ? undefined : item.scheduled_at || undefined,
