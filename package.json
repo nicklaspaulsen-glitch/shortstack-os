@@ -2,11 +2,36 @@
   "name": "shortstack-os",
   "version": "0.1.0",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "electron": "electron .",
+    "electron:build": "electron-builder --win",
+    "desktop": "electron ."
+  },
+  "build": {
+    "appId": "com.shortstack.os",
+    "productName": "ShortStack OS",
+    "win": {
+      "target": "nsis",
+      "icon": "public/icons/shortstack-logo.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron/**/*",
+      "public/icons/**/*"
+    ]
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
@@ -36,6 +61,8 @@
     "@types/pdfkit": "^0.17.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "electron": "^41.1.1",
+    "electron-builder": "^26.8.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
     "postcss": "^8",

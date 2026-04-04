@@ -3,6 +3,7 @@
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
 import ClientChatWidget from "@/components/client-chat-widget";
+import VoiceAssistant from "@/components/voice-assistant";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -37,7 +38,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           ) : !user ? null : children}
         </div>
       </main>
-      {/* Client chat widget — shows for all users */}
+      {/* Voice assistant + Chat widget */}
+      <VoiceAssistant />
       <ClientChatWidget />
     </div>
   );
