@@ -10,8 +10,8 @@ import DataTable from "@/components/ui/data-table";
 import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
-  ArrowLeft, Package, FileText, CreditCard, CheckCircle, Circle,
-  Film, Megaphone, Download, UserPlus, Sparkles, Send
+  ArrowLeft, FileText, CreditCard, CheckCircle, Circle,
+  Film, Megaphone, Download, Sparkles
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
