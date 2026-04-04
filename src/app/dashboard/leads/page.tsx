@@ -12,6 +12,7 @@ import {
   Zap, MessageSquare, RefreshCw, Search,
   Phone, Globe, Mail, Star
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 type Tab = "leads" | "outreach" | "followups" | "ghl";
 
@@ -28,6 +29,12 @@ export default function LeadEnginePage() {
   const [stats, setStats] = useState({
     leadsToday: 0, totalLeads: 0, dmsSent: 0, dmsTarget: 80,
     repliesThisWeek: 0, pendingFollowups: 0, ghlSynced: 0, ghlFailed: 0,
+  });
+  const [outreachConfig, setOutreachConfig] = useState<Record<string, { enabled: boolean; limit: number }>>({
+    instagram: { enabled: true, limit: 20 },
+    linkedin: { enabled: true, limit: 20 },
+    facebook: { enabled: true, limit: 20 },
+    tiktok: { enabled: true, limit: 20 },
   });
   const supabase = createClient();
 
@@ -127,21 +134,72 @@ export default function LeadEnginePage() {
         <StatCard label="Pending Follow-ups" value={stats.pendingFollowups} change={`${stats.ghlSynced} synced to GHL`} />
       </div>
 
-      {/* DM Progress Bars */}
+      {/* Outreach Control Panel */}
       <div className="card">
-        <h3 className="text-sm font-medium text-muted mb-3">Daily DM Progress</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium">Outreach Control Panel</h3>
+          <button onClick={async () => {
+            const platforms = Object.entries(outreachConfig).filter(([, v]) => v.enabled).map(([k]) => k);
+            if (platforms.length === 0) { toast.error("Select at least one platform"); return; }
+            toast.loading("Sending DMs...");
+            const res = await fetch("/api/outreach/send-now", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ platforms, count_per_platform: Object.values(outreachConfig)[0]?.limit || 5 }),
+            });
+            toast.dismiss();
+            const data = await res.json();
+            if (data.success) { toast.success(`${data.totalSent} DMs sent!`); fetchData(); }
+            else toast.error("Failed to send");
+          }} className="btn-primary text-xs py-1.5 px-4 flex items-center gap-2">
+            <MessageSquare size={14} /> Send Now
+          </button>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {["Instagram", "LinkedIn", "Facebook", "TikTok"].map((platform) => (
-            <div key={platform}>
-              <div className="flex justify-between text-xs mb-1">
-                <span>{platform}</span>
-                <span className="text-muted">0/20</span>
+          {(["instagram", "linkedin", "facebook", "tiktok"] as const).map((platform) => (
+            <div key={platform} className={`p-3 rounded-xl border transition-all ${outreachConfig[platform]?.enabled ? "border-gold/30 bg-gold/5" : "border-border opacity-50"}`}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium capitalize">{platform}</span>
+                <button onClick={() => setOutreachConfig(prev => ({
+                  ...prev,
+                  [platform]: { ...prev[platform], enabled: !prev[platform]?.enabled }
+                }))} className={`w-8 h-4 rounded-full transition-all ${outreachConfig[platform]?.enabled ? "bg-gold" : "bg-surface-light"}`}>
+                  <div className={`w-3 h-3 bg-white rounded-full transition-all ${outreachConfig[platform]?.enabled ? "translate-x-4" : "translate-x-0.5"}`} />
+                </button>
               </div>
-              <div className="w-full bg-surface-light rounded-full h-2">
-                <div className="bg-gold rounded-full h-2 transition-all" style={{ width: "0%" }} />
+              <div className="flex items-center gap-2">
+                <input type="range" min="0" max="50" value={outreachConfig[platform]?.limit || 20}
+                  onChange={(e) => setOutreachConfig(prev => ({
+                    ...prev,
+                    [platform]: { ...prev[platform], limit: parseInt(e.target.value) }
+                  }))}
+                  className="flex-1 accent-gold h-1" disabled={!outreachConfig[platform]?.enabled} />
+                <span className="text-xs text-gold font-mono w-8">{outreachConfig[platform]?.limit || 20}</span>
               </div>
+              <div className="w-full bg-surface-light rounded-full h-1.5 mt-2">
+                <div className="bg-gold rounded-full h-1.5 transition-all" style={{ width: "0%" }} />
+              </div>
+              <p className="text-[10px] text-muted mt-1">0/{outreachConfig[platform]?.limit || 20} sent today</p>
             </div>
           ))}
+        </div>
+
+        <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border/50">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted">Total daily:</span>
+            <span className="text-sm font-bold text-gold">
+              {Object.values(outreachConfig).filter(v => v.enabled).reduce((s, v) => s + (v.limit || 0), 0)} DMs
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted">Auto follow-up:</span>
+            <span className="text-xs text-success">Day 3 + Day 7</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted">Schedule:</span>
+            <span className="text-xs">9:00 AM CET daily</span>
+          </div>
         </div>
       </div>
 
