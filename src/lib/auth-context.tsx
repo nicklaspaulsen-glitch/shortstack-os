@@ -28,12 +28,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const supabase = createClient();
 
   const fetchProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    setProfile(data);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+      if (data && !error) setProfile(data);
+    } catch {
+      // Profile fetch failed silently
+    }
   };
 
   const refreshProfile = async () => {
@@ -41,17 +45,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    let mounted = true;
+
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) await fetchProfile(user.id);
-      setLoading(false);
+      try {
+        // Try getSession first (faster, uses local storage)
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.user && mounted) {
+          setUser(session.user);
+          await fetchProfile(session.user.id);
+          setLoading(false);
+          return;
+        }
+
+        // Fallback to getUser (makes API call)
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (mounted) {
+          setUser(authUser);
+          if (authUser) await fetchProfile(authUser.id);
+          setLoading(false);
+        }
+      } catch {
+        if (mounted) setLoading(false);
+      }
     };
 
     getUser();
 
+    // Safety timeout — never stay loading forever
+    const timeout = setTimeout(() => {
+      if (mounted && loading) setLoading(false);
+    }, 5000);
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (_event, session) => {
+        if (!mounted) return;
         setUser(session?.user ?? null);
         if (session?.user) {
           await fetchProfile(session.user.id);
@@ -62,7 +91,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
