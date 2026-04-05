@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import SocialConnect from "@/components/social-connect";
 
 export default function ClientDetailPage() {
   const { id } = useParams();
@@ -147,11 +148,16 @@ export default function ClientDetailPage() {
         </div>
       </div>
 
+      {/* Social Accounts */}
+      <div className="card">
+        <SocialConnect clientId={client.id} clientName={client.business_name} />
+      </div>
+
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+      <div className="tab-group w-fit">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm rounded-md transition-all ${tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-white"}`}
+            className={tab === t.key ? "tab-item-active" : "tab-item-inactive"}
           >{t.label}</button>
         ))}
       </div>

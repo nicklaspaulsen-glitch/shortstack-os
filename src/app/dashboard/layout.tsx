@@ -2,6 +2,7 @@
 
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
+import ClientSwitcher from "@/components/client-switcher";
 import ClientChatWidget from "@/components/client-chat-widget";
 import VoiceAssistant from "@/components/voice-assistant";
 import { useAuth } from "@/lib/auth-context";
@@ -22,11 +23,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 ml-64">
-        <div className="sticky top-0 z-30 bg-background/80 backdrop-blur-lg border-b border-border/50 px-6 lg:px-8 py-3 flex items-center justify-end">
+      <main className="flex-1 ml-60">
+        <div className="sticky top-0 z-30 bg-gradient-header backdrop-blur-xl border-b border-border/30 px-5 lg:px-6 py-2.5 flex items-center justify-end gap-3">
+          <ClientSwitcher />
           <GlobalSearch />
         </div>
-        <div className="p-6 lg:p-8">
+        <div className="p-5 lg:p-6">
           {children}
         </div>
       </main>

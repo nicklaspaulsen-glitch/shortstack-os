@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash } from "lucide-react";
+import { Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash, Map, Camera, Music, Briefcase, Star, FlaskConical, MessageCircle } from "lucide-react";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import toast from "react-hot-toast";
 
-const PLATFORMS: Array<{ id: string; name: string; icon: string; description: string; disabled?: boolean }> = [
-  { id: "google_maps", name: "Google Maps", icon: "🗺️", description: "Business listings with ratings, phone, website" },
-  { id: "facebook", name: "Facebook Pages", icon: "📘", description: "Business pages with phone, email, followers" },
-  { id: "instagram", name: "Instagram", icon: "📸", description: "Find businesses by hashtag, niche, or location" },
-  { id: "tiktok", name: "TikTok", icon: "🎵", description: "Find businesses with TikTok profiles" },
-  { id: "linkedin", name: "LinkedIn", icon: "💼", description: "Company profiles from website enrichment" },
-  { id: "yelp", name: "Yelp", icon: "⭐", description: "Reviews and local businesses (needs API key)", disabled: true },
+const PLATFORMS: Array<{ id: string; name: string; icon: React.ReactNode; description: string; disabled?: boolean }> = [
+  { id: "google_maps", name: "Google Maps", icon: <Map size={18} className="text-accent" />, description: "Business listings with ratings, phone, website" },
+  { id: "facebook", name: "Facebook Pages", icon: <MessageCircle size={18} className="text-info" />, description: "Business pages with phone, email, followers" },
+  { id: "instagram", name: "Instagram", icon: <Camera size={18} className="text-danger-light" />, description: "Find businesses by hashtag, niche, or location" },
+  { id: "tiktok", name: "TikTok", icon: <Music size={18} className="text-white" />, description: "Find businesses with TikTok profiles" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} className="text-info-light" />, description: "Company profiles from website enrichment" },
+  { id: "yelp", name: "Yelp", icon: <Star size={18} className="text-warning" />, description: "Reviews and local businesses (needs API key)", disabled: true },
 ];
 
 const PRESET_NICHES = [
@@ -68,8 +68,10 @@ export default function ScraperPage() {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [running, setRunning] = useState(false);
+  const [testRunning, setTestRunning] = useState(false);
   const [results, setResults] = useState<ScrapedLead[]>([]);
   const [stats, setStats] = useState({ scraped: 0, skipped: 0 });
+  const [testResults, setTestResults] = useState<{ totalFound: number; totalSaved: number; totalSkipped: number; errors: string[]; breakdown: Array<{ niche: string; city: string; found: number; saved: number; skipped: number }> } | null>(null);
 
   const togglePlatform = (id: string) => {
     setSelectedPlatforms(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]);
@@ -191,6 +193,27 @@ export default function ScraperPage() {
     setRunning(false);
   }
 
+  async function runTest500() {
+    setTestRunning(true);
+    setTestResults(null);
+    toast.loading("Running 500-lead test... (10 niches x 5 cities)");
+    try {
+      const res = await fetch("/api/scraper/test-500", { method: "POST" });
+      toast.dismiss();
+      const data = await res.json();
+      if (data.success) {
+        setTestResults(data);
+        toast.success(`Test complete: ${data.totalSaved} leads saved`);
+      } else {
+        toast.error(data.error || "Test failed");
+      }
+    } catch {
+      toast.dismiss();
+      toast.error("Test run failed");
+    }
+    setTestRunning(false);
+  }
+
   const estimatedLeads = selectedPlatforms.length * niches.length * locations.length * maxResults;
 
   return (
@@ -205,14 +228,24 @@ export default function ScraperPage() {
           </h1>
           <p className="text-muted text-sm mt-1">Find leads from any platform, any niche, any location</p>
         </div>
-        <button onClick={runScraper} disabled={running}
-          className="btn-primary flex items-center gap-2 disabled:opacity-50 px-6">
-          {running ? (
-            <><div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Scraping...</>
-          ) : (
-            <><Play size={16} /> Run Scraper</>
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={runTest500} disabled={testRunning || running}
+            className="btn-secondary flex items-center gap-2 disabled:opacity-50 text-xs">
+            {testRunning ? (
+              <><div className="w-3 h-3 border-2 border-muted/20 border-t-muted rounded-full animate-spin" /> Testing...</>
+            ) : (
+              <><FlaskConical size={14} /> Test 500</>
+            )}
+          </button>
+          <button onClick={runScraper} disabled={running}
+            className="btn-primary flex items-center gap-2 disabled:opacity-50 px-5">
+            {running ? (
+              <><div className="w-3.5 h-3.5 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Scraping...</>
+            ) : (
+              <><Play size={14} /> Run Scraper</>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Estimated output */}
@@ -233,7 +266,7 @@ export default function ScraperPage() {
                   className={`w-full p-3 rounded-lg border text-left transition-all flex items-center gap-3 ${
                     selectedPlatforms.includes(p.id) ? "border-gold bg-gold/10" : p.disabled ? "border-border opacity-30 cursor-not-allowed" : "border-border hover:border-gold/30"
                   }`}>
-                  <span className="text-lg">{p.icon}</span>
+                  <span className="shrink-0">{p.icon}</span>
                   <div className="flex-1">
                     <p className="text-sm font-medium">{p.name}</p>
                     <p className="text-[10px] text-muted">{p.description}</p>
@@ -438,7 +471,7 @@ export default function ScraperPage() {
                 <a href={r.website} target="_blank" rel="noopener" className="text-gold text-xs">Visit</a>
               ) : <span className="text-muted text-xs">-</span> },
               { key: "google_rating", label: "Rating", render: (r: ScrapedLead) => r.google_rating ? (
-                <span className="text-xs">⭐ {r.google_rating} ({r.review_count})</span>
+                <span className="text-xs flex items-center gap-1"><Star size={10} className="text-warning fill-warning" /> {r.google_rating} ({r.review_count})</span>
               ) : r.review_count > 0 ? (
                 <span className="text-xs">{r.review_count} followers</span>
               ) : <span className="text-muted text-xs">-</span> },
@@ -447,6 +480,69 @@ export default function ScraperPage() {
             data={results}
             emptyMessage="No results yet. Configure and run the scraper."
           />
+        </div>
+      )}
+      {/* Test 500 Results */}
+      {testResults && (
+        <div className="space-y-4">
+          <div className="card border-accent/20">
+            <h3 className="section-header flex items-center gap-2">
+              <FlaskConical size={14} className="text-accent" /> 500-Lead Test Results
+            </h3>
+            <div className="grid grid-cols-4 gap-3 mb-4">
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+                <p className="text-lg font-bold font-mono text-accent">{testResults.totalFound}</p>
+                <p className="text-[9px] text-muted uppercase tracking-wider">Found</p>
+              </div>
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+                <p className="text-lg font-bold font-mono text-success">{testResults.totalSaved}</p>
+                <p className="text-[9px] text-muted uppercase tracking-wider">Saved</p>
+              </div>
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+                <p className="text-lg font-bold font-mono text-warning">{testResults.totalSkipped}</p>
+                <p className="text-[9px] text-muted uppercase tracking-wider">Duplicates</p>
+              </div>
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+                <p className="text-lg font-bold font-mono text-danger">{testResults.errors.length}</p>
+                <p className="text-[9px] text-muted uppercase tracking-wider">Errors</p>
+              </div>
+            </div>
+
+            {/* Breakdown by niche/city */}
+            <div className="table-container">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Niche</th>
+                    <th>City</th>
+                    <th>Found</th>
+                    <th>Saved</th>
+                    <th>Skipped</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {testResults.breakdown.map((r, i) => (
+                    <tr key={i}>
+                      <td className="text-xs font-medium capitalize">{r.niche}</td>
+                      <td className="text-xs text-muted">{r.city}</td>
+                      <td className="text-xs font-mono">{r.found}</td>
+                      <td className="text-xs font-mono text-success">{r.saved}</td>
+                      <td className="text-xs font-mono text-muted">{r.skipped}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {testResults.errors.length > 0 && (
+              <div className="mt-3 p-2.5 bg-danger/5 border border-danger/10 rounded-lg">
+                <p className="text-[10px] text-danger font-medium mb-1">Errors:</p>
+                {testResults.errors.map((e, i) => (
+                  <p key={i} className="text-[10px] text-danger/80">{e}</p>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

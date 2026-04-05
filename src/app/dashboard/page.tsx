@@ -11,7 +11,7 @@ import {
   Zap, Users, DollarSign, MessageSquare, TrendingUp,
   Phone, Bot, AlertTriangle, Plus, FileText, Sparkles,
   Send, BarChart3, Globe, Film, Briefcase, Mic, StopCircle,
-  Volume2, VolumeX
+  Volume2, VolumeX, ArrowRight, Activity
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -94,98 +94,101 @@ export default function DashboardPage() {
   }
 
   const quickActions = [
-    { label: "Generate Proposal", icon: <FileText size={16} />, color: "text-gold", action: () => router.push("/dashboard/clients") },
-    { label: "New Client", icon: <Plus size={16} />, color: "text-success", action: () => router.push("/dashboard/onboard") },
-    { label: "Generate Script", icon: <Sparkles size={16} />, color: "text-info", action: () => router.push("/dashboard/content") },
-    { label: "Create Workflow", icon: <Zap size={16} />, color: "text-warning", action: () => router.push("/dashboard/workflows") },
-    { label: "Ask Trinity", icon: <Bot size={16} />, color: "text-gold", action: () => router.push("/dashboard/trinity") },
-    { label: "View Leads", icon: <Users size={16} />, color: "text-success", action: () => router.push("/dashboard/leads") },
-    { label: "Build Website", icon: <Globe size={16} />, color: "text-info", action: () => toast("Use Trinity: 'Build website for [client]'") },
-    { label: "New Campaign", icon: <BarChart3 size={16} />, color: "text-warning", action: () => router.push("/dashboard/ads") },
+    { label: "Proposal", icon: <FileText size={15} />, color: "text-gold", action: () => router.push("/dashboard/clients") },
+    { label: "New Client", icon: <Plus size={15} />, color: "text-success", action: () => router.push("/dashboard/onboard") },
+    { label: "AI Script", icon: <Sparkles size={15} />, color: "text-accent", action: () => router.push("/dashboard/content") },
+    { label: "Workflow", icon: <Zap size={15} />, color: "text-warning", action: () => router.push("/dashboard/workflows") },
+    { label: "Trinity", icon: <Bot size={15} />, color: "text-gold", action: () => router.push("/dashboard/trinity") },
+    { label: "Leads", icon: <Users size={15} />, color: "text-success", action: () => router.push("/dashboard/leads") },
+    { label: "Website", icon: <Globe size={15} />, color: "text-accent", action: () => toast("Use Trinity: 'Build website for [client]'") },
+    { label: "Campaign", icon: <BarChart3 size={15} />, color: "text-warning", action: () => router.push("/dashboard/ads") },
   ];
 
   const activityIcons: Record<string, React.ReactNode> = {
-    lead_gen: <Zap size={14} className="text-gold" />,
-    automation: <Zap size={14} className="text-info" />,
-    website: <Globe size={14} className="text-success" />,
-    custom: <Bot size={14} className="text-gold" />,
-    ai_receptionist: <Phone size={14} className="text-warning" />,
+    lead_gen: <Zap size={12} className="text-gold" />,
+    automation: <Zap size={12} className="text-accent" />,
+    website: <Globe size={12} className="text-success" />,
+    custom: <Bot size={12} className="text-gold" />,
+    ai_receptionist: <Phone size={12} className="text-warning" />,
   };
 
   return (
-    <div className="fade-in space-y-6">
+    <div className="fade-in space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Welcome back, {profile?.full_name?.split(" ")[0]}</h1>
-          <p className="text-muted text-sm">ShortStack Command Center</p>
+          <h1 className="text-xl font-bold tracking-tight">Welcome back, {profile?.full_name?.split(" ")[0]}</h1>
+          <p className="text-muted text-xs mt-0.5">Command Center</p>
         </div>
-        <div className="text-right">
-          <p className="text-sm text-muted">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}</p>
-          <p className="text-xs text-gold">{stats.trinityActions} AI actions today</p>
+        <div className="text-right flex items-center gap-3">
+          <div className="flex items-center gap-1.5 text-[10px] text-gold bg-gold/[0.08] px-2.5 py-1 rounded-md border border-gold/10">
+            <Activity size={10} />
+            <span className="font-medium">{stats.trinityActions} AI actions</span>
+          </div>
+          <span className="text-xs text-muted">{new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
         </div>
       </div>
 
-      {/* TRINITY AI Assistant */}
+      {/* Trinity AI */}
       <TrinityAssistant profile={profile} />
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+      <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">
         {quickActions.map((qa, i) => (
           <button key={i} onClick={qa.action}
-            className="card-hover p-3 flex flex-col items-center gap-1.5 text-center group">
+            className="card-hover p-2.5 flex flex-col items-center gap-1 text-center group">
             <span className={`${qa.color} group-hover:scale-110 transition-transform`}>{qa.icon}</span>
-            <span className="text-[10px] text-muted group-hover:text-white transition-colors">{qa.label}</span>
+            <span className="text-[9px] text-muted group-hover:text-white transition-colors font-medium">{qa.label}</span>
           </button>
         ))}
       </div>
 
       {/* Key Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={16} />} changeType="positive" />
-        <StatCard label="Leads Today" value={stats.leadsToday} icon={<Zap size={16} />} change={`${stats.totalLeads} total`} />
-        <StatCard label="DMs Today" value={`${stats.dmsSentToday}/${stats.dmsTarget}`} icon={<MessageSquare size={16} />} />
-        <StatCard label="Replies" value={stats.repliesThisWeek} icon={<TrendingUp size={16} />} change="this week" changeType="positive" />
-        <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={16} />} />
-        <StatCard label="Deals Won" value={stats.dealsWon} icon={<Briefcase size={16} />} change={formatCurrency(stats.totalRevenue)} changeType="positive" />
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
+        <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={14} />} changeType="positive" />
+        <StatCard label="Leads Today" value={stats.leadsToday} icon={<Zap size={14} />} change={`${stats.totalLeads} total`} />
+        <StatCard label="DMs Today" value={`${stats.dmsSentToday}/${stats.dmsTarget}`} icon={<MessageSquare size={14} />} />
+        <StatCard label="Replies" value={stats.repliesThisWeek} icon={<TrendingUp size={14} />} change="this week" changeType="positive" />
+        <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={14} />} />
+        <StatCard label="Deals Won" value={stats.dealsWon} icon={<Briefcase size={14} />} change={formatCurrency(stats.totalRevenue)} changeType="positive" />
       </div>
 
       {/* DM Progress */}
-      <div className="card p-4">
+      <div className="card p-3.5">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium">Daily Outreach Progress</span>
-          <span className="text-xs text-gold">{stats.dmsSentToday}/{stats.dmsTarget} DMs</span>
+          <span className="text-xs font-medium">Daily Outreach</span>
+          <span className="text-[10px] font-mono text-gold">{stats.dmsSentToday}/{stats.dmsTarget}</span>
         </div>
-        <div className="w-full bg-surface-light rounded-full h-3">
-          <div className="bg-gradient-to-r from-gold-dark to-gold rounded-full h-3 transition-all duration-500"
+        <div className="w-full bg-surface-light rounded-full h-2">
+          <div className="bg-gradient-gold rounded-full h-2 transition-all duration-500"
             style={{ width: `${Math.min((stats.dmsSentToday / stats.dmsTarget) * 100, 100)}%` }} />
         </div>
         <div className="flex justify-between mt-2">
           {["Instagram", "LinkedIn", "Facebook", "TikTok"].map(p => (
             <div key={p} className="text-center">
-              <p className="text-[10px] text-muted">{p}</p>
-              <p className="text-xs font-medium">0/20</p>
+              <p className="text-[9px] text-muted">{p}</p>
+              <p className="text-[10px] font-mono font-medium">0/20</p>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Activity Feed */}
-        <div className="card lg:col-span-1">
+        <div className="card">
           <h2 className="section-header flex items-center gap-2">
-            <Bot size={16} className="text-gold" /> Live Activity
+            <Bot size={14} className="text-gold" /> Live Activity
           </h2>
-          <div className="space-y-3 max-h-80 overflow-y-auto">
+          <div className="space-y-2 max-h-72 overflow-y-auto">
             {recentActivity.length === 0 ? (
-              <p className="text-muted text-sm">No activity yet</p>
+              <p className="text-muted text-xs">No activity yet</p>
             ) : (
               recentActivity.map((a, i) => (
-                <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border/30 last:border-0">
-                  <div className="mt-0.5">{activityIcons[a.action_type] || <Bot size={14} className="text-muted" />}</div>
+                <div key={i} className="flex items-start gap-2 py-1.5 border-b border-border/20 last:border-0">
+                  <div className="mt-0.5">{activityIcons[a.action_type] || <Bot size={12} className="text-muted" />}</div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs leading-tight">{a.description}</p>
-                    <p className="text-[10px] text-muted mt-0.5">{formatRelativeTime(a.created_at)}</p>
+                    <p className="text-[11px] leading-tight">{a.description}</p>
+                    <p className="text-[9px] text-muted mt-0.5">{formatRelativeTime(a.created_at)}</p>
                   </div>
                   <StatusBadge status={a.status} />
                 </div>
@@ -195,30 +198,32 @@ export default function DashboardPage() {
         </div>
 
         {/* Top Clients */}
-        <div className="card lg:col-span-1">
-          <div className="flex items-center justify-between mb-4">
+        <div className="card">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0">Top Clients</h2>
-            <Link href="/dashboard/clients" className="text-xs text-gold hover:text-gold-light">View all</Link>
+            <Link href="/dashboard/clients" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
+              View all <ArrowRight size={10} />
+            </Link>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {topClients.length === 0 ? (
-              <p className="text-muted text-sm">No clients yet</p>
+              <p className="text-muted text-xs">No clients yet</p>
             ) : (
               topClients.map((c, i) => (
                 <Link key={i} href={`/dashboard/clients/${c.id}`}
-                  className="flex items-center justify-between py-2 border-b border-border/30 last:border-0 hover:bg-surface-light/50 -mx-2 px-2 rounded transition-colors">
+                  className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0 hover:bg-surface-light/30 -mx-2 px-2 rounded transition-colors">
                   <div>
-                    <p className="text-sm font-medium">{c.business_name}</p>
-                    <p className="text-xs text-gold">{c.package_tier || "Client"}</p>
+                    <p className="text-xs font-medium">{c.business_name}</p>
+                    <p className="text-[10px] text-gold">{c.package_tier || "Client"}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-bold">{formatCurrency(c.mrr)}</p>
+                    <p className="text-xs font-bold font-mono">{formatCurrency(c.mrr)}</p>
                     <div className="flex items-center gap-1">
-                      <div className="w-8 bg-surface-light rounded-full h-1.5">
-                        <div className={`h-1.5 rounded-full ${c.health_score > 75 ? "bg-success" : c.health_score > 50 ? "bg-warning" : "bg-danger"}`}
+                      <div className="w-8 bg-surface-light rounded-full h-1">
+                        <div className={`h-1 rounded-full ${c.health_score > 75 ? "bg-success" : c.health_score > 50 ? "bg-warning" : "bg-danger"}`}
                           style={{ width: `${c.health_score}%` }} />
                       </div>
-                      <span className="text-[10px] text-muted">{c.health_score}%</span>
+                      <span className="text-[9px] text-muted font-mono">{c.health_score}%</span>
                     </div>
                   </div>
                 </Link>
@@ -228,22 +233,24 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Leads */}
-        <div className="card lg:col-span-1">
-          <div className="flex items-center justify-between mb-4">
+        <div className="card">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0">Recent Leads</h2>
-            <Link href="/dashboard/leads" className="text-xs text-gold hover:text-gold-light">View all</Link>
+            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
+              View all <ArrowRight size={10} />
+            </Link>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {recentLeads.length === 0 ? (
-              <p className="text-muted text-sm">No leads scraped yet today</p>
+              <p className="text-muted text-xs">No leads scraped yet</p>
             ) : (
               recentLeads.map((lead, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-border/30 last:border-0">
+                <div key={i} className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
                   <div>
-                    <p className="text-sm font-medium">{lead.business_name}</p>
-                    <p className="text-xs text-muted">{lead.industry || "Unknown"} · {lead.source}</p>
+                    <p className="text-xs font-medium">{lead.business_name}</p>
+                    <p className="text-[10px] text-muted">{lead.industry || "Unknown"} · {lead.source}</p>
                   </div>
-                  <span className="text-[10px] text-muted">{formatRelativeTime(lead.scraped_at)}</span>
+                  <span className="text-[9px] text-muted font-mono">{formatRelativeTime(lead.scraped_at)}</span>
                 </div>
               ))
             )}
@@ -251,46 +258,51 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Revenue + System Health Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Revenue + System Health */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card">
           <h2 className="section-header flex items-center gap-2">
-            <DollarSign size={16} className="text-gold" /> Revenue Overview
+            <DollarSign size={14} className="text-gold" /> Revenue
           </h2>
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className="text-center p-3 bg-surface-light rounded-lg">
-              <p className="text-xl font-bold text-gold">{formatCurrency(stats.totalMRR)}</p>
-              <p className="text-[10px] text-muted">Monthly Recurring</p>
+          <div className="grid grid-cols-3 gap-3 mb-3">
+            <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/30">
+              <p className="text-lg font-bold font-mono text-gold">{formatCurrency(stats.totalMRR)}</p>
+              <p className="text-[9px] text-muted uppercase tracking-wider">Monthly</p>
             </div>
-            <div className="text-center p-3 bg-surface-light rounded-lg">
-              <p className="text-xl font-bold text-success">{formatCurrency(stats.totalRevenue)}</p>
-              <p className="text-[10px] text-muted">Total Revenue</p>
+            <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/30">
+              <p className="text-lg font-bold font-mono text-success">{formatCurrency(stats.totalRevenue)}</p>
+              <p className="text-[9px] text-muted uppercase tracking-wider">Total</p>
             </div>
-            <div className="text-center p-3 bg-surface-light rounded-lg">
-              <p className="text-xl font-bold">{stats.dealsWon}</p>
-              <p className="text-[10px] text-muted">Deals Closed</p>
+            <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/30">
+              <p className="text-lg font-bold font-mono">{stats.dealsWon}</p>
+              <p className="text-[9px] text-muted uppercase tracking-wider">Closed</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted">
-            <TrendingUp size={12} className="text-success" />
-            <span>{stats.activeClients} active clients generating revenue</span>
+          <div className="flex items-center gap-1.5 text-[10px] text-muted">
+            <TrendingUp size={10} className="text-success" />
+            <span>{stats.activeClients} active clients</span>
           </div>
         </div>
 
         <div className="card">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
-              {stats.systemIssues > 0 ? <AlertTriangle size={16} className="text-danger" /> : <Zap size={16} className="text-success" />}
+              {stats.systemIssues > 0 ? <AlertTriangle size={14} className="text-danger" /> : <Activity size={14} className="text-success" />}
               System Status
             </h2>
-            <Link href="/dashboard/monitor" className="text-xs text-gold hover:text-gold-light">Details</Link>
+            <Link href="/dashboard/monitor" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
+              Details <ArrowRight size={10} />
+            </Link>
           </div>
-          <div className="flex items-center gap-4 mb-3">
-            <div className={`text-3xl font-bold ${stats.systemIssues === 0 ? "text-success" : "text-danger"}`}>
+          <div className="flex items-center gap-3 mb-2">
+            <div className={`text-2xl font-bold tracking-tight ${stats.systemIssues === 0 ? "text-success" : "text-danger"}`}>
               {stats.systemIssues === 0 ? "All Good" : `${stats.systemIssues} Issues`}
             </div>
+            {stats.systemIssues === 0 && (
+              <div className="glow-dot bg-success text-success" />
+            )}
           </div>
-          <p className="text-xs text-muted">14 integrations monitored · Last checked at daily brief</p>
+          <p className="text-[10px] text-muted">14 integrations monitored</p>
         </div>
       </div>
     </div>
@@ -308,7 +320,6 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
   const [processing, setProcessing] = useState(false);
   const [pulseIntensity, setPulseIntensity] = useState(0);
 
-  // Animate pulse when speaking
   useEffect(() => {
     if (isSpeaking) {
       const interval = setInterval(() => setPulseIntensity(Math.random()), 150);
@@ -359,107 +370,105 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
   }
 
   return (
-    <div className="card border-gold/20 bg-gradient-to-b from-gold/5 to-transparent overflow-hidden">
-      <div className="flex flex-col items-center py-6">
-        {/* AI Avatar — Animated orb */}
-        <div className="relative mb-6">
-          {/* Outer glow rings */}
-          <div className={`absolute inset-[-20px] rounded-full border border-gold/10 transition-all duration-300 ${isSpeaking || isListening ? "scale-110 opacity-100" : "scale-100 opacity-30"}`} />
-          <div className={`absolute inset-[-12px] rounded-full border border-gold/20 transition-all duration-300 ${isSpeaking || isListening ? "scale-105 opacity-100" : "scale-100 opacity-20"}`} />
+    <div className="card border-gold/10 overflow-hidden relative">
+      {/* Background mesh */}
+      <div className="absolute inset-0 bg-mesh opacity-50" />
 
-          {/* Main orb */}
-          <div className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-200 ${
-            isListening ? "bg-danger/20 shadow-[0_0_40px_rgba(239,68,68,0.3)]" :
-            isSpeaking ? "bg-gold/20 shadow-[0_0_40px_rgba(201,168,76,0.4)]" :
-            processing ? "bg-info/20 shadow-[0_0_30px_rgba(59,130,246,0.3)]" :
-            "bg-gold/10 shadow-[0_0_20px_rgba(201,168,76,0.15)]"
+      <div className="relative flex flex-col items-center py-5">
+        {/* AI Avatar */}
+        <div className="relative mb-4">
+          <div className={`absolute inset-[-16px] rounded-full border border-gold/8 transition-all duration-300 ${isSpeaking || isListening ? "scale-110 opacity-100" : "scale-100 opacity-20"}`} />
+          <div className={`absolute inset-[-8px] rounded-full border border-gold/15 transition-all duration-300 ${isSpeaking || isListening ? "scale-105 opacity-100" : "scale-100 opacity-10"}`} />
+
+          <div className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 ${
+            isListening ? "bg-danger/15 shadow-[0_0_30px_rgba(244,63,94,0.2)]" :
+            isSpeaking ? "bg-gold/15 shadow-[0_0_30px_rgba(201,168,76,0.25)]" :
+            processing ? "bg-accent/15 shadow-[0_0_25px_rgba(56,189,248,0.2)]" :
+            "bg-gold/[0.08] shadow-[0_0_15px_rgba(201,168,76,0.1)]"
           }`}>
-            {/* Inner animated bars */}
-            <div className="flex items-end gap-[3px] h-10">
+            <div className="flex items-end gap-[3px] h-8">
               {[0, 1, 2, 3, 4].map(i => (
-                <div key={i} className={`w-[4px] rounded-full transition-all duration-150 ${
-                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-info" : "bg-gold/40"
+                <div key={i} className={`w-[3px] rounded-full transition-all duration-150 ${
+                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-accent" : "bg-gold/30"
                 }`} style={{
                   height: isSpeaking || isListening
-                    ? `${12 + Math.sin(Date.now() / 200 + i * 1.5) * 14 + pulseIntensity * 10}px`
-                    : processing ? `${8 + Math.sin(Date.now() / 300 + i) * 6}px` : "8px",
+                    ? `${10 + Math.sin(Date.now() / 200 + i * 1.5) * 12 + pulseIntensity * 8}px`
+                    : processing ? `${6 + Math.sin(Date.now() / 300 + i) * 5}px` : "6px",
                 }} />
               ))}
             </div>
           </div>
 
-          {/* Status dot */}
-          <div className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-surface ${
+          <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-surface ${
             isListening ? "bg-danger animate-pulse" : isSpeaking ? "bg-gold animate-pulse" : "bg-success"
           }`} />
         </div>
 
-        {/* Status text */}
-        <p className="text-sm font-medium text-gold mb-1">
+        {/* Status */}
+        <p className="text-xs font-medium text-gold mb-0.5">
           {isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : `Hey ${profile?.full_name?.split(" ")[0] || "there"}`}
         </p>
-        <p className="text-xs text-muted mb-4">
-          {isListening ? "Speak now — I'm all ears" : isSpeaking ? "Tap to stop" : "Your AI assistant is ready"}
+        <p className="text-[10px] text-muted mb-3">
+          {isListening ? "Speak now" : isSpeaking ? "Tap to stop" : "AI assistant ready"}
         </p>
 
-        {/* Response bubble */}
+        {/* Response */}
         {response && (
-          <div className="max-w-lg w-full bg-surface-light/50 rounded-xl px-4 py-3 mb-4 mx-4">
-            <p className="text-sm text-center leading-relaxed">{response}</p>
+          <div className="max-w-lg w-full bg-surface-light/30 rounded-lg px-3.5 py-2.5 mb-3 mx-4 border border-border/20">
+            <p className="text-xs text-center leading-relaxed">{response}</p>
           </div>
         )}
         {message && !response && !processing && (
-          <div className="max-w-lg bg-gold/10 rounded-xl px-4 py-2 mb-4">
-            <p className="text-sm text-gold text-center">{message}</p>
+          <div className="max-w-lg bg-gold/[0.08] rounded-lg px-3.5 py-2 mb-3 border border-gold/10">
+            <p className="text-xs text-gold text-center">{message}</p>
           </div>
         )}
 
         {/* Controls */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) window.speechSynthesis?.cancel(); setIsSpeaking(false); }}
-            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/20 text-danger" : "bg-surface-light text-muted hover:text-white"}`}>
-            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/15 text-danger" : "bg-surface-light text-muted hover:text-white"}`}>
+            {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
           </button>
 
           {inputMode === "voice" ? (
             <button onClick={() => { if (isListening) { window.speechSynthesis?.cancel(); setIsListening(false); } else if (isSpeaking) { window.speechSynthesis.cancel(); setIsSpeaking(false); } else startListening(); }}
               disabled={processing}
-              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${
-                isListening ? "bg-danger shadow-lg shadow-danger/30 animate-pulse" :
-                isSpeaking ? "bg-gold shadow-lg shadow-gold/30" :
-                "bg-gold hover:bg-gold-light shadow-lg shadow-gold/20 hover:scale-105 active:scale-95"
+              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${
+                isListening ? "bg-danger shadow-lg shadow-danger/20 animate-pulse" :
+                isSpeaking ? "bg-gold shadow-lg shadow-gold/20" :
+                "bg-gradient-gold hover:shadow-glow-sm hover:scale-105 active:scale-95"
               }`}>
-              {isListening ? <StopCircle size={24} className="text-white" /> :
-               isSpeaking ? <StopCircle size={24} className="text-black" /> :
-               <Mic size={24} className="text-black" />}
+              {isListening ? <StopCircle size={20} className="text-white" /> :
+               isSpeaking ? <StopCircle size={20} className="text-black" /> :
+               <Mic size={20} className="text-black" />}
             </button>
           ) : (
             <form onSubmit={(e) => { e.preventDefault(); sendMessage(message); setMessage(""); }} className="flex gap-2">
               <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type a message..." disabled={processing}
-                className="bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-white placeholder-muted focus:outline-none focus:border-gold/50 w-64" />
+                className="input rounded-full px-4 py-2 text-xs w-56" />
               <button type="submit" disabled={!message.trim() || processing}
-                className="w-10 h-10 bg-gold rounded-full flex items-center justify-center disabled:opacity-30">
-                <Send size={14} className="text-black" />
+                className="w-8 h-8 bg-gradient-gold rounded-full flex items-center justify-center disabled:opacity-30">
+                <Send size={12} className="text-black" />
               </button>
             </form>
           )}
 
           <button onClick={() => setInputMode(inputMode === "voice" ? "text" : "voice")}
-            className="w-10 h-10 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-white transition-colors">
-            {inputMode === "voice" ? <MessageSquare size={16} /> : <Mic size={16} />}
+            className="w-8 h-8 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-white transition-colors">
+            {inputMode === "voice" ? <MessageSquare size={14} /> : <Mic size={14} />}
           </button>
         </div>
 
-        {/* Always-on toggle */}
+        {/* Always-on */}
         {inputMode === "voice" && (
-          <div className="flex items-center gap-2 mt-3">
+          <div className="flex items-center gap-2 mt-2.5">
             <button onClick={() => setAlwaysOn(!alwaysOn)}
-              className={`text-xs px-3 py-1 rounded-full flex items-center gap-1.5 transition-all ${alwaysOn ? "bg-gold/20 text-gold border border-gold/30" : "bg-surface-light text-muted border border-border"}`}>
-              <div className={`w-2 h-2 rounded-full ${alwaysOn ? "bg-gold animate-pulse" : "bg-muted"}`} />
+              className={`text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${alwaysOn ? "bg-gold/10 text-gold border border-gold/20" : "bg-surface-light text-muted border border-border/50"}`}>
+              <div className={`w-1.5 h-1.5 rounded-full ${alwaysOn ? "bg-gold animate-pulse" : "bg-muted"}`} />
               {alwaysOn ? "Always listening" : "Push to talk"}
             </button>
-            <span className="text-[10px] text-muted">{alwaysOn ? "Say anything — I'll hear you" : "Click mic to speak"}</span>
           </div>
         )}
       </div>
@@ -472,25 +481,25 @@ function ClientDashboard() {
   const router = useRouter();
 
   return (
-    <div className="fade-in space-y-6">
-      <h1 className="text-2xl font-bold">Welcome, {profile?.full_name}</h1>
-      <p className="text-muted">Your client portal — view services, tasks, invoices, and deliverables.</p>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-6 text-center">
-          <Briefcase size={24} className="text-gold mx-auto mb-2" />
-          <span className="text-sm">My Services</span>
+    <div className="fade-in space-y-5">
+      <h1 className="text-xl font-bold tracking-tight">Welcome, {profile?.full_name}</h1>
+      <p className="text-muted text-xs">Your client portal</p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
+          <Briefcase size={20} className="text-gold mx-auto mb-2" />
+          <span className="text-xs font-medium">My Services</span>
         </button>
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-6 text-center">
-          <FileText size={24} className="text-info mx-auto mb-2" />
-          <span className="text-sm">Invoices</span>
+        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
+          <FileText size={20} className="text-accent mx-auto mb-2" />
+          <span className="text-xs font-medium">Invoices</span>
         </button>
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-6 text-center">
-          <Film size={24} className="text-warning mx-auto mb-2" />
-          <span className="text-sm">Content</span>
+        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
+          <Film size={20} className="text-warning mx-auto mb-2" />
+          <span className="text-xs font-medium">Content</span>
         </button>
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-6 text-center">
-          <Send size={24} className="text-success mx-auto mb-2" />
-          <span className="text-sm">Contact Us</span>
+        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
+          <Send size={20} className="text-success mx-auto mb-2" />
+          <span className="text-xs font-medium">Contact Us</span>
         </button>
       </div>
     </div>

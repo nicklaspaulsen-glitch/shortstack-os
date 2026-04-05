@@ -1,6 +1,6 @@
 {
   "name": "shortstack-os",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "main": "electron/main.js",
   "scripts": {
@@ -15,15 +15,27 @@
   "build": {
     "appId": "com.shortstack.os",
     "productName": "ShortStack OS",
+    "copyright": "Copyright 2026 ShortStack",
     "win": {
-      "target": "nsis",
-      "icon": "public/icons/shortstack-logo.png"
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "icon": "public/icons/shortstack-logo.png",
+      "artifactName": "ShortStack-OS-${version}-Setup.${ext}"
     },
     "nsis": {
-      "oneClick": true,
-      "allowToChangeInstallationDirectory": false,
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "installerIcon": "public/icons/shortstack-logo.png",
+      "uninstallerIcon": "public/icons/shortstack-logo.png",
+      "installerHeaderIcon": "public/icons/shortstack-logo.png",
+      "shortcutName": "ShortStack OS"
+    },
+    "portable": {
+      "artifactName": "ShortStack-OS-${version}-Portable.${ext}"
     },
     "directories": {
       "output": "dist-electron"
@@ -31,7 +43,10 @@
     "files": [
       "electron/**/*",
       "public/icons/**/*"
-    ]
+    ],
+    "extraMetadata": {
+      "main": "electron/main.js"
+    }
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",

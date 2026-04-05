@@ -28,22 +28,23 @@ interface NavItem {
   href: string;
   icon: React.ReactNode;
   roles: string[];
+  badge?: string;
 }
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={20} />, roles: ["admin", "team_member", "client"] },
-  { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={20} />, roles: ["admin", "team_member"] },
-  { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={20} />, roles: ["admin", "team_member"] },
-  { label: "Clients", href: "/dashboard/clients", icon: <Users size={20} />, roles: ["admin", "team_member"] },
-  { label: "My Portal", href: "/dashboard/portal", icon: <User size={20} />, roles: ["client"] },
-  { label: "Team & Payroll", href: "/dashboard/team", icon: <Briefcase size={20} />, roles: ["admin"] },
-  { label: "Content AI", href: "/dashboard/content", icon: <Film size={20} />, roles: ["admin", "team_member"] },
-  { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={20} />, roles: ["admin"] },
-  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={20} />, roles: ["admin"] },
-  { label: "Trinity AI", href: "/dashboard/trinity", icon: <Bot size={20} />, roles: ["admin"] },
-  { label: "System Monitor", href: "/dashboard/monitor", icon: <Activity size={20} />, roles: ["admin"] },
-  { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={20} />, roles: ["admin"] },
-  { label: "Settings", href: "/dashboard/settings", icon: <Settings size={20} />, roles: ["admin"] },
+  { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} />, roles: ["admin", "team_member", "client"] },
+  { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={18} />, roles: ["admin", "team_member"] },
+  { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={18} />, roles: ["admin", "team_member"] },
+  { label: "Clients", href: "/dashboard/clients", icon: <Users size={18} />, roles: ["admin", "team_member"] },
+  { label: "My Portal", href: "/dashboard/portal", icon: <User size={18} />, roles: ["client"] },
+  { label: "Team & Payroll", href: "/dashboard/team", icon: <Briefcase size={18} />, roles: ["admin"] },
+  { label: "Content AI", href: "/dashboard/content", icon: <Film size={18} />, roles: ["admin", "team_member"] },
+  { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={18} />, roles: ["admin"] },
+  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={18} />, roles: ["admin"] },
+  { label: "Trinity AI", href: "/dashboard/trinity", icon: <Bot size={18} />, roles: ["admin"] },
+  { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={18} />, roles: ["admin"] },
+  { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={18} />, roles: ["admin"] },
+  { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} />, roles: ["admin"] },
 ];
 
 export default function Sidebar() {
@@ -51,7 +52,6 @@ export default function Sidebar() {
   const { profile, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  // Show all admin links by default — profile might still be loading
   const userRole = profile?.role || "admin";
   const filteredNav = navItems.filter(
     (item) => item.roles.includes(userRole)
@@ -59,28 +59,31 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-full bg-surface border-r border-border z-40 flex flex-col transition-all duration-300 ${
-        collapsed ? "w-16" : "w-64"
+      className={`fixed left-0 top-0 h-full bg-gradient-sidebar border-r border-border/50 z-40 flex flex-col transition-all duration-300 ${
+        collapsed ? "w-[60px]" : "w-60"
       }`}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between p-4 border-b border-border">
+      <div className="flex items-center justify-between px-3 py-3 border-b border-border/30">
         {!collapsed && (
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={32} height={32} className="rounded-lg" />
-            <span className="text-white font-semibold text-lg">ShortStack</span>
+          <Link href="/dashboard" className="flex items-center gap-2.5">
+            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={28} height={28} className="rounded-lg" />
+            <div className="flex flex-col">
+              <span className="text-white font-bold text-sm tracking-tight">ShortStack</span>
+              <span className="text-[9px] text-muted font-medium tracking-[0.15em] uppercase -mt-0.5">OS</span>
+            </div>
           </Link>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-white transition-colors"
+          className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-white transition-colors"
         >
-          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
         {filteredNav.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -93,7 +96,7 @@ export default function Sidebar() {
               className={isActive ? "sidebar-link-active" : "sidebar-link"}
               title={collapsed ? item.label : undefined}
             >
-              {item.icon}
+              <span className={isActive ? "text-gold" : ""}>{item.icon}</span>
               {!collapsed && <span>{item.label}</span>}
             </Link>
           );
@@ -101,19 +104,28 @@ export default function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="p-3 border-t border-border">
+      <div className="px-2 py-2 border-t border-border/30">
         {!collapsed && (
-          <div className="px-3 py-2 mb-2">
-            <p className="text-sm font-medium text-white truncate">{profile?.full_name || "Loading..."}</p>
-            <p className="text-xs text-muted capitalize">{profile?.role?.replace("_", " ") || "..."}</p>
+          <div className="px-3 py-2 mb-1">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-gold/15 flex items-center justify-center">
+                <span className="text-gold text-[10px] font-bold">
+                  {profile?.full_name?.charAt(0) || "?"}
+                </span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-white truncate">{profile?.full_name || "Loading..."}</p>
+                <p className="text-[10px] text-muted capitalize">{profile?.role?.replace("_", " ") || "..."}</p>
+              </div>
+            </div>
           </div>
         )}
         <button
           onClick={signOut}
-          className="sidebar-link w-full"
+          className="sidebar-link w-full text-muted hover:text-danger"
           title={collapsed ? "Sign Out" : undefined}
         >
-          <LogOut size={20} />
+          <LogOut size={16} />
           {!collapsed && <span>Sign Out</span>}
         </button>
       </div>
