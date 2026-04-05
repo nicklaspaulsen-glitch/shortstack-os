@@ -89,8 +89,10 @@ export default function SFXProvider({ children }: { children: ReactNode }) {
     if (!enabled) return;
 
     const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        for (const node of mutation.addedNodes) {
+      for (let m = 0; m < mutations.length; m++) {
+        const mutation = mutations[m];
+        for (let n = 0; n < mutation.addedNodes.length; n++) {
+          const node = mutation.addedNodes[n];
           if (node instanceof HTMLElement) {
             const text = node.textContent || "";
             if (node.getAttribute("role") === "status" || node.closest("[role='status']")) {
