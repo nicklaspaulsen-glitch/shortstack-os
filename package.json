@@ -21,7 +21,7 @@
         { "target": "nsis", "arch": ["x64"] },
         { "target": "portable", "arch": ["x64"] }
       ],
-      "icon": "public/icons/shortstack-logo.png",
+      "icon": "public/icons/shortstack-logo.ico",
       "artifactName": "ShortStack-OS-${version}-Setup.${ext}"
     },
     "nsis": {
@@ -29,9 +29,9 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "installerIcon": "public/icons/shortstack-logo.png",
-      "uninstallerIcon": "public/icons/shortstack-logo.png",
-      "installerHeaderIcon": "public/icons/shortstack-logo.png",
+      "installerIcon": "public/icons/shortstack-logo.ico",
+      "uninstallerIcon": "public/icons/shortstack-logo.ico",
+      "installerHeaderIcon": "public/icons/shortstack-logo.ico",
       "shortcutName": "ShortStack OS"
     },
     "portable": {
