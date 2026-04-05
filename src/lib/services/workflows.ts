@@ -159,6 +159,41 @@ const WORKFLOW_ACTIONS: Record<string, {
       return { waited: params.minutes + " minutes" };
     },
   },
+  generate_video: {
+    name: "Generate AI Video",
+    description: "Generate an AI video ad or content using Higgsfield",
+    execute: async (params, context) => {
+      const apiKey = process.env.HIGGSFIELD_API_KEY;
+      if (!apiKey) return { error: "Higgsfield not configured" };
+      try {
+        const res = await fetch("https://api.higgsfield.ai/v1/videos/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+          body: JSON.stringify({
+            prompt: params.prompt,
+            style: params.style || "professional",
+            duration: parseInt(params.duration || "15"),
+            aspect_ratio: params.aspect_ratio || "9:16",
+          }),
+        });
+        const data = await res.json();
+        // Save to content calendar if client_id provided
+        if (context.clientId && data.video_url) {
+          await context.supabase.from("content_calendar").insert({
+            client_id: context.clientId,
+            title: params.title || "AI Generated Video",
+            platform: params.platform || "tiktok",
+            content_type: "video",
+            status: "ready_to_publish",
+            metadata: { video_url: data.video_url, higgsfield_id: data.id, prompt: params.prompt },
+          });
+        }
+        return { video_url: data.video_url, id: data.id, status: data.status };
+      } catch (err) {
+        return { error: String(err) };
+      }
+    },
+  },
   ghl_add_tag: {
     name: "Add GHL Tag",
     description: "Add a tag to a contact in GoHighLevel",

@@ -8,8 +8,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 export async function POST(request: NextRequest) {
   const { license_key, email, machine_id } = await request.json();
 
-  if (!license_key || !email) {
-    return NextResponse.json({ valid: false, error: "License key and email required" }, { status: 400 });
+  if (!license_key) {
+    return NextResponse.json({ valid: false, error: "License key required" }, { status: 400 });
   }
 
   const supabase = createServiceClient();
@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ valid: false, error: "License has expired" }, { status: 403 });
   }
 
-  // Check email matches
-  if (license.email.toLowerCase() !== email.toLowerCase()) {
+  // Check email matches (only if email was provided)
+  if (email && license.email.toLowerCase() !== email.toLowerCase()) {
     return NextResponse.json({ valid: false, error: "Email does not match license" }, { status: 403 });
   }
 

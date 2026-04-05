@@ -82,8 +82,8 @@ function createSplash() {
       <div style="-webkit-app-region:no-drag;width:100%;padding:0 36px;">
         <div class="muted" style="font-size:10px;margin-bottom:3px;">License Key</div>
         <input id="key" placeholder="XXXX-XXXX-XXXX-XXXX">
-        <div class="muted" style="font-size:10px;margin-bottom:3px;">Email</div>
-        <input id="email" type="email" placeholder="you@company.com">
+        <div class="muted" style="font-size:10px;margin-bottom:3px;">Email (optional)</div>
+        <input id="email" type="email" placeholder="you@company.com (optional)">
         <div id="err" class="danger" style="font-size:10px;margin-bottom:8px;display:none;"></div>
         <button class="btn-gold" onclick="activate()">Activate License</button>
         <div style="height:8px;"></div>
@@ -99,8 +99,8 @@ function createSplash() {
         const{ipcRenderer}=require('electron');
         function activate(){
           const k=document.getElementById('key').value.trim(),e=document.getElementById('email').value.trim();
-          if(!k||!e){showErr('Enter license key and email');return;}
-          ipcRenderer.send('activate-license',{key:k,email:e});
+          if(!k){showErr('Enter your license key');return;}
+          ipcRenderer.send('activate-license',{key:k,email:e||''});
         }
         function trial(){
           const e=document.getElementById('email').value.trim();
