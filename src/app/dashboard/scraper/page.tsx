@@ -8,10 +8,11 @@ import toast from "react-hot-toast";
 
 const PLATFORMS = [
   { id: "google_maps", name: "Google Maps", icon: "🗺️", description: "Business listings with ratings, phone, website" },
-  { id: "facebook", name: "Facebook Pages", icon: "📘", description: "Business pages with phone, address, website" },
-  { id: "linkedin", name: "LinkedIn", icon: "💼", description: "Company profiles (coming soon)", disabled: true },
-  { id: "yelp", name: "Yelp", icon: "⭐", description: "Reviews and local businesses (coming soon)", disabled: true },
-  { id: "yellow_pages", name: "Yellow Pages", icon: "📒", description: "Directory listings (coming soon)", disabled: true },
+  { id: "facebook", name: "Facebook Pages", icon: "📘", description: "Business pages with phone, email, followers" },
+  { id: "instagram", name: "Instagram", icon: "📸", description: "Find businesses by hashtag, niche, or location" },
+  { id: "tiktok", name: "TikTok", icon: "🎵", description: "Find businesses with TikTok profiles" },
+  { id: "linkedin", name: "LinkedIn", icon: "💼", description: "Company profiles from website enrichment" },
+  { id: "yelp", name: "Yelp", icon: "⭐", description: "Reviews and local businesses" },
 ];
 
 const PRESET_NICHES = [
@@ -42,6 +43,11 @@ interface ScrapedLead {
   industry: string;
   source: string;
   status: string;
+  lead_score?: number;
+  instagram_url?: string;
+  facebook_url?: string;
+  tiktok_url?: string;
+  linkedin_url?: string;
 }
 
 export default function ScraperPage() {
@@ -91,30 +97,92 @@ export default function ScraperPage() {
 
     setRunning(true);
     setResults([]);
-    toast.loading(`Scraping ${niches.length} niches across ${locations.length} locations...`);
+
+    const socialPlatforms = selectedPlatforms.filter(p => ["instagram", "facebook", "tiktok", "linkedin"].includes(p));
+    const mapPlatforms = selectedPlatforms.filter(p => ["google_maps", "yelp"].includes(p));
+
+    toast.loading(`Scraping ${selectedPlatforms.length} platforms × ${niches.length} niches...`);
 
     try {
-      const res = await fetch("/api/scraper/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          platforms: selectedPlatforms,
-          niches: niches.map(n => n.toLowerCase()),
-          locations,
-          max_results_per_search: maxResults,
-          filters,
-          tags,
-        }),
-      });
-      toast.dismiss();
-      const data = await res.json();
+      const allResults: ScrapedLead[] = [];
+      let totalScraped = 0;
+      let totalSkipped = 0;
 
-      if (data.success) {
-        setResults(data.results || []);
-        setStats({ scraped: data.totalScraped, skipped: data.totalSkipped });
-        toast.success(`Found ${data.totalScraped} leads! (${data.totalSkipped} duplicates skipped)`);
+      // Run Google Maps / Yelp scraper
+      if (mapPlatforms.length > 0) {
+        const res = await fetch("/api/scraper/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            platforms: mapPlatforms,
+            niches: niches.map(n => n.toLowerCase()),
+            locations,
+            max_results_per_search: maxResults,
+            filters,
+            tags,
+          }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          allResults.push(...(data.results || []));
+          totalScraped += data.totalScraped || 0;
+          totalSkipped += data.totalSkipped || 0;
+        }
+      }
+
+      // Run social media scraper
+      if (socialPlatforms.length > 0) {
+        for (const niche of niches) {
+          const res = await fetch("/api/scraper/social", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              platform: socialPlatforms.length === 1 ? socialPlatforms[0] : "all",
+              search_type: tags.length > 0 ? "hashtag" : "niche",
+              query: niche.toLowerCase(),
+              niche: niche.toLowerCase(),
+              location: locations[0],
+              hashtags: tags.length > 0 ? tags.map(t => t.startsWith("#") ? t : `#${t}`) : undefined,
+              max_leads: maxResults,
+              auto_score: true,
+              filters,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            const mapped = (data.leads || []).map((l: Record<string, unknown>) => ({
+              business_name: l.business_name || l.instagram_handle || "",
+              phone: l.phone || null,
+              email: l.email || null,
+              website: l.website || null,
+              address: l.address || null,
+              google_rating: l.rating || null,
+              review_count: (l.review_count as number) || (l.followers as number) || 0,
+              industry: l.industry || niche,
+              source: l.source || "social",
+              status: l.qualification || "new",
+              lead_score: l.lead_score,
+              instagram_url: l.instagram_url,
+              facebook_url: l.facebook_url,
+              tiktok_url: l.tiktok_url,
+              linkedin_url: l.linkedin_url,
+            }));
+            allResults.push(...mapped);
+            totalScraped += data.saved_to_db || 0;
+          }
+        }
+      }
+
+      toast.dismiss();
+
+      if (allResults.length > 0) {
+        // Sort by lead score if available
+        allResults.sort((a, b) => ((b as Record<string, number>).lead_score || 0) - ((a as Record<string, number>).lead_score || 0));
+        setResults(allResults);
+        setStats({ scraped: totalScraped, skipped: totalSkipped });
+        toast.success(`Found ${allResults.length} leads! (${totalScraped} saved, ${totalSkipped} duplicates)`);
       } else {
-        toast.error("Scraper failed");
+        toast.error("No leads found — try different niches or locations");
       }
     } catch {
       toast.dismiss();
@@ -333,20 +401,47 @@ export default function ScraperPage() {
 
           <DataTable
             columns={[
+              { key: "lead_score", label: "Score", render: (r: Record<string, unknown>) => {
+                const score = r.lead_score as number;
+                if (!score) return <span className="text-muted text-xs">-</span>;
+                return (
+                  <div className="text-center">
+                    <span className={`text-sm font-bold ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-muted"}`}>{score}</span>
+                    <p className={`text-[9px] ${score >= 70 ? "text-success" : score >= 40 ? "text-warning" : "text-muted"}`}>
+                      {score >= 70 ? "HOT" : score >= 40 ? "WARM" : "COLD"}
+                    </p>
+                  </div>
+                );
+              }},
               { key: "business_name", label: "Business", render: (r: ScrapedLead) => (
                 <div>
                   <p className="font-medium text-sm">{r.business_name}</p>
                   <p className="text-[10px] text-muted">{r.industry}</p>
                 </div>
               )},
-              { key: "phone", label: "Phone", render: (r: ScrapedLead) => r.phone || <span className="text-muted">-</span> },
-              { key: "email", label: "Email", render: (r: ScrapedLead) => r.email || <span className="text-muted">-</span> },
+              { key: "phone", label: "Phone", render: (r: ScrapedLead) => r.phone ? (
+                <a href={`tel:${r.phone}`} className="text-gold text-xs">{r.phone}</a>
+              ) : <span className="text-muted text-xs">-</span> },
+              { key: "email", label: "Email", render: (r: ScrapedLead) => r.email ? (
+                <span className="text-xs text-gold">{r.email}</span>
+              ) : <span className="text-muted text-xs">-</span> },
+              { key: "socials", label: "Socials", render: (r: Record<string, unknown>) => (
+                <div className="flex gap-1">
+                  {r.instagram_url && <a href={r.instagram_url as string} target="_blank" rel="noopener" className="text-[10px] bg-pink-500/10 text-pink-400 px-1.5 py-0.5 rounded">IG</a>}
+                  {r.facebook_url && <a href={r.facebook_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">FB</a>}
+                  {r.tiktok_url && <a href={r.tiktok_url as string} target="_blank" rel="noopener" className="text-[10px] bg-white/10 text-white px-1.5 py-0.5 rounded">TK</a>}
+                  {r.linkedin_url && <a href={r.linkedin_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-400/10 text-blue-300 px-1.5 py-0.5 rounded">LI</a>}
+                  {!r.instagram_url && !r.facebook_url && !r.tiktok_url && !r.linkedin_url && <span className="text-muted text-[10px]">None</span>}
+                </div>
+              )},
               { key: "website", label: "Website", render: (r: ScrapedLead) => r.website ? (
                 <a href={r.website} target="_blank" rel="noopener" className="text-gold text-xs">Visit</a>
-              ) : <span className="text-muted">-</span> },
+              ) : <span className="text-muted text-xs">-</span> },
               { key: "google_rating", label: "Rating", render: (r: ScrapedLead) => r.google_rating ? (
                 <span className="text-xs">⭐ {r.google_rating} ({r.review_count})</span>
-              ) : <span className="text-muted">-</span> },
+              ) : r.review_count > 0 ? (
+                <span className="text-xs">{r.review_count} followers</span>
+              ) : <span className="text-muted text-xs">-</span> },
               { key: "source", label: "Source", render: (r: ScrapedLead) => <StatusBadge status={r.source} /> },
             ]}
             data={results}
