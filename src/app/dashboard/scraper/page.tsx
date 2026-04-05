@@ -247,12 +247,12 @@ export default function ScraperPage() {
           {/* Results per search */}
           <div className="card">
             <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-gold" /> Results per search</h3>
-            <input type="range" min="5" max="60" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))}
+            <input type="range" min="5" max="500" value={maxResults} onChange={e => setMaxResults(parseInt(e.target.value))}
               className="w-full accent-gold" />
             <div className="flex justify-between text-xs text-muted mt-1">
               <span>5</span>
               <span className="text-gold font-bold">{maxResults}</span>
-              <span>60</span>
+              <span>500</span>
             </div>
           </div>
 
