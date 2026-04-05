@@ -126,8 +126,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* JARVIS AI Assistant */}
-      <JarvisAssistant profile={profile} />
+      {/* TRINITY AI Assistant */}
+      <TrinityAssistant profile={profile} />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
@@ -297,7 +297,7 @@ export default function DashboardPage() {
   );
 }
 
-function JarvisAssistant({ profile }: { profile: { full_name?: string; role?: string } | null }) {
+function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: string } | null }) {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);

@@ -53,6 +53,20 @@ export default function ClientPortalPage() {
     setLoading(false);
   }
 
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [botName, setBotName] = useState("Trinity");
+  const [onboardingStep, setOnboardingStep] = useState(0);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+
+  // Check if client has completed onboarding questions
+  useEffect(() => {
+    if (!client) return;
+    const done = localStorage.getItem(`onboarding_done_${client.id}`);
+    if (!done) setShowOnboarding(true);
+    const savedBot = localStorage.getItem(`bot_name_${client.id}`);
+    if (savedBot) setBotName(savedBot);
+  }, [client]);
+
   if (loading) return <PageLoading />;
 
   if (!client) {
@@ -60,7 +74,7 @@ export default function ClientPortalPage() {
       <EmptyState
         icon={<Package size={48} />}
         title="No Client Profile Found"
-        description="Your account hasn't been linked to a client profile yet. Contact the admin."
+        description="Your account hasn&apos;t been linked to a client profile yet. Contact the admin."
       />
     );
   }
@@ -69,11 +83,84 @@ export default function ClientPortalPage() {
   const totalTasks = tasks.length;
   const paidInvoices = invoices.filter((i) => i.status === "paid");
   const totalPaid = paidInvoices.reduce((sum, i) => sum + i.amount, 0);
+
+  const onboardingQuestions = [
+    { key: "biggest_challenge", q: "What is your biggest challenge right now with getting new customers?", placeholder: "e.g., We struggle to get found online, our social media isn't growing..." },
+    { key: "goals_3mo", q: "What would success look like for you in the next 3 months?", placeholder: "e.g., 20 new clients, 5x more website traffic, fully booked schedule..." },
+    { key: "target_customer", q: "Describe your ideal customer in one sentence.", placeholder: "e.g., Homeowners aged 30-50 in Miami who need kitchen renovation..." },
+    { key: "competitors", q: "Who are your top 2-3 competitors?", placeholder: "e.g., ABC Dental, Bright Smile Clinic, Miami Family Dentistry..." },
+    { key: "past_marketing", q: "What marketing have you tried before? What worked and what didn't?", placeholder: "e.g., Tried Facebook ads but didn't get results, word of mouth works well..." },
+    { key: "bot_name", q: "Last one — what would you like to name your personal AI assistant?", placeholder: "e.g., Trinity, Max, Nova, Spark, Alex..." },
+  ];
+
+  async function finishOnboarding() {
+    const name = answers.bot_name || "Trinity";
+    setBotName(name);
+    localStorage.setItem(`onboarding_done_${client?.id}`, "true");
+    localStorage.setItem(`bot_name_${client?.id}`, name);
+    setShowOnboarding(false);
+
+    // Save bot config + pain points to server
+    if (client) {
+      fetch("/api/bot/customize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: client.id,
+          bot_name: name,
+          bot_personality: "helpful and knowledgeable about their business",
+        }),
+      }).catch(() => {});
+    }
+  }
+
+  if (showOnboarding && client) {
+    const q = onboardingQuestions[onboardingStep];
+    return (
+      <div className="fade-in max-w-xl mx-auto py-12 space-y-6">
+        <div className="text-center mb-8">
+          <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span className="text-2xl">🤖</span>
+          </div>
+          <h1 className="text-xl font-bold">Let&apos;s Get to Know You</h1>
+          <p className="text-sm text-muted mt-1">Help our AI understand your business so it can assist you better</p>
+        </div>
+        <div className="flex gap-1 mb-4">
+          {onboardingQuestions.map((_, i) => (
+            <div key={i} className={`flex-1 h-1.5 rounded-full ${i <= onboardingStep ? "bg-gold" : "bg-surface-light"}`} />
+          ))}
+        </div>
+        <div className="card">
+          <p className="text-sm font-medium text-gold mb-1">Question {onboardingStep + 1} of {onboardingQuestions.length}</p>
+          <p className="text-lg font-medium mb-4">{q.q}</p>
+          {q.key === "bot_name" ? (
+            <input value={answers[q.key] || ""} onChange={e => setAnswers({ ...answers, [q.key]: e.target.value })}
+              placeholder={q.placeholder} className="input w-full text-lg py-3" autoFocus />
+          ) : (
+            <textarea value={answers[q.key] || ""} onChange={e => setAnswers({ ...answers, [q.key]: e.target.value })}
+              placeholder={q.placeholder} className="input w-full h-28" autoFocus />
+          )}
+        </div>
+        <div className="flex justify-between">
+          <button onClick={() => setOnboardingStep(Math.max(0, onboardingStep - 1))} disabled={onboardingStep === 0}
+            className="btn-secondary disabled:opacity-30">Back</button>
+          {onboardingStep < onboardingQuestions.length - 1 ? (
+            <button onClick={() => setOnboardingStep(onboardingStep + 1)} className="btn-primary">Next</button>
+          ) : (
+            <button onClick={finishOnboarding} className="btn-primary">Start Using {answers.bot_name || "Trinity"}</button>
+          )}
+        </div>
+        <button onClick={() => { setShowOnboarding(false); localStorage.setItem(`onboarding_done_${client?.id}`, "true"); }}
+          className="text-xs text-muted hover:text-white block mx-auto mt-2">Skip for now</button>
+      </div>
+    );
+  }
+
   return (
     <div className="fade-in space-y-6">
       <BrowserModeBanner />
       <div>
-        <h1 className="page-header mb-0">Welcome, {client.contact_name}</h1>
+        <h1 className="page-header mb-0">Welcome, {client.contact_name} — {botName} is ready</h1>
         <p className="text-muted text-sm">{client.business_name} &middot; {client.package_tier || "Standard"} Plan</p>
       </div>
 
