@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import {
   Zap,
+  Search,
   Users,
   Briefcase,
   Film,
@@ -31,6 +32,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={20} />, roles: ["admin", "team_member", "client"] },
+  { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={20} />, roles: ["admin", "team_member"] },
   { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={20} />, roles: ["admin", "team_member"] },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={20} />, roles: ["admin", "team_member"] },
   { label: "My Portal", href: "/dashboard/portal", icon: <User size={20} />, roles: ["client"] },

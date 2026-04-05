@@ -301,6 +301,7 @@ function JarvisAssistant({ profile }: { profile: { full_name?: string; role?: st
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [alwaysOn, setAlwaysOn] = useState(false);
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
   const [inputMode, setInputMode] = useState<"voice" | "text">("voice");
@@ -449,6 +450,18 @@ function JarvisAssistant({ profile }: { profile: { full_name?: string; role?: st
             {inputMode === "voice" ? <MessageSquare size={16} /> : <Mic size={16} />}
           </button>
         </div>
+
+        {/* Always-on toggle */}
+        {inputMode === "voice" && (
+          <div className="flex items-center gap-2 mt-3">
+            <button onClick={() => setAlwaysOn(!alwaysOn)}
+              className={`text-xs px-3 py-1 rounded-full flex items-center gap-1.5 transition-all ${alwaysOn ? "bg-gold/20 text-gold border border-gold/30" : "bg-surface-light text-muted border border-border"}`}>
+              <div className={`w-2 h-2 rounded-full ${alwaysOn ? "bg-gold animate-pulse" : "bg-muted"}`} />
+              {alwaysOn ? "Always listening" : "Push to talk"}
+            </button>
+            <span className="text-[10px] text-muted">{alwaysOn ? "Say anything — I'll hear you" : "Click mic to speak"}</span>
+          </div>
+        )}
       </div>
     </div>
   );
