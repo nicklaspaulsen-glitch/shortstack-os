@@ -176,24 +176,108 @@ function createMainWindow() {
 
 // ── IPC handlers ────────────────────────────────────────────────
 
-ipcMain.on("activate-license", (event, { key, email }) => {
+ipcMain.on("activate-license", async (event, { key, email }) => {
   if (!/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/i.test(key)) {
     event.reply("activation-error", "Invalid key format: XXXX-XXXX-XXXX-XXXX");
     return;
   }
-  let tier = "Growth";
-  if (key.toUpperCase().startsWith("ENT")) tier = "Enterprise";
-  else if (key.toUpperCase().startsWith("STR")) tier = "Starter";
-  saveLicense({ key, email, tier, activated: true, activated_at: new Date().toISOString(), type: "license" });
-  if (splashWindow && !splashWindow.isDestroyed()) splashWindow.close();
-  createSplash();
+
+  // Validate against the API
+  try {
+    const { net } = require("electron");
+    const machineId = require("os").hostname();
+    const res = await net.fetch(APP_URL + "/api/license/validate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ license_key: key.toUpperCase(), email, machine_id: machineId }),
+    });
+    const data = await res.json();
+
+    if (data.valid) {
+      saveLicense({
+        key: key.toUpperCase(),
+        email: data.email,
+        tier: data.tier.charAt(0).toUpperCase() + data.tier.slice(1),
+        activated: true,
+        activated_at: new Date().toISOString(),
+        expires_at: data.expires_at,
+        type: "license",
+      });
+      if (splashWindow && !splashWindow.isDestroyed()) splashWindow.close();
+      createSplash();
+    } else {
+      event.reply("activation-error", data.error || "Invalid license");
+    }
+  } catch (err) {
+    // Offline fallback: accept key format but mark as unverified
+    event.reply("activation-error", "Could not connect to license server. Check your internet connection.");
+  }
 });
 
-ipcMain.on("start-trial", (event, { email }) => {
-  const ends = new Date(); ends.setDate(ends.getDate() + 14);
-  saveLicense({ email, tier: "Growth", activated: true, activated_at: new Date().toISOString(), trial_ends: ends.toISOString(), type: "trial" });
-  if (splashWindow && !splashWindow.isDestroyed()) splashWindow.close();
-  createSplash();
+ipcMain.on("start-trial", async (event, { email }) => {
+  if (!email) {
+    event.reply("activation-error", "Enter your email");
+    return;
+  }
+
+  // Create a checkout session for a trial via the API
+  try {
+    const { net } = require("electron");
+    const res = await net.fetch(APP_URL + "/api/license/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tier: "growth", email }),
+    });
+    const data = await res.json();
+
+    if (data.success && data.license_key) {
+      // Save trial license locally
+      const ends = new Date(); ends.setDate(ends.getDate() + 14);
+      saveLicense({
+        key: data.license_key,
+        email,
+        tier: "Growth",
+        activated: true,
+        activated_at: new Date().toISOString(),
+        trial_ends: ends.toISOString(),
+        type: "trial",
+      });
+
+      // Open checkout in browser for payment setup
+      if (data.checkout_url) {
+        shell.openExternal(data.checkout_url);
+      }
+
+      if (splashWindow && !splashWindow.isDestroyed()) splashWindow.close();
+      createSplash();
+    } else {
+      // Fallback: create local trial without Stripe
+      const ends = new Date(); ends.setDate(ends.getDate() + 14);
+      saveLicense({
+        email,
+        tier: "Growth",
+        activated: true,
+        activated_at: new Date().toISOString(),
+        trial_ends: ends.toISOString(),
+        type: "trial",
+      });
+      if (splashWindow && !splashWindow.isDestroyed()) splashWindow.close();
+      createSplash();
+    }
+  } catch {
+    // Offline fallback: local trial
+    const ends = new Date(); ends.setDate(ends.getDate() + 14);
+    saveLicense({
+      email,
+      tier: "Growth",
+      activated: true,
+      activated_at: new Date().toISOString(),
+      trial_ends: ends.toISOString(),
+      type: "trial",
+    });
+    if (splashWindow && !splashWindow.isDestroyed()) splashWindow.close();
+    createSplash();
+  }
 });
 
 ipcMain.on("launch-app", () => createMainWindow());
