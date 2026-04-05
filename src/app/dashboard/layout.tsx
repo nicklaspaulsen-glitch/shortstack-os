@@ -18,8 +18,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [user, loading, router]);
 
-  // Always show sidebar + layout immediately — never show blank loading screen
-  // The sidebar defaults to admin links, content area shows loading if needed
+  // Show everything immediately — profile loads from cache, no spinner needed
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -28,17 +27,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <GlobalSearch />
         </div>
         <div className="p-6 lg:p-8">
-          {loading ? (
-            <div className="flex items-center justify-center h-[60vh]">
-              <div className="flex flex-col items-center gap-3">
-                <div className="w-8 h-8 border-2 border-gold/20 border-t-gold rounded-full animate-spin" />
-                <span className="text-sm text-muted">Loading ShortStack OS...</span>
-              </div>
-            </div>
-          ) : !user ? null : children}
+          {children}
         </div>
       </main>
-      {/* Voice assistant + Chat widget */}
       <VoiceAssistant />
       <ClientChatWidget />
     </div>

@@ -26,8 +26,7 @@ export default function ClientDetailPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
+  const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing">("overview");
   const supabase = createClient();
 

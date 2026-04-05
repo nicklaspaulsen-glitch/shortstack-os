@@ -19,8 +19,7 @@ const INTEGRATIONS = [
 
 export default function MonitorPage() {
   const [health, setHealth] = useState<SystemHealthEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
+  const [loading, setLoading] = useState(false);
   const supabase = createClient();
 
   useEffect(() => { fetchHealth(); }, []);

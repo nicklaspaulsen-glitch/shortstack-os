@@ -22,8 +22,7 @@ export default function AdsPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [creatives, setCreatives] = useState<AdCreative[]>([]);
   const [clients, setClients] = useState<Pick<Client, "id" | "business_name">[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
+  const [loading, setLoading] = useState(false);
   const [showAddCampaign, setShowAddCampaign] = useState(false);
   const supabase = createClient();
 

@@ -19,8 +19,7 @@ export default function TeamPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
   const [payroll, setPayroll] = useState<Payroll[]>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => { const t = setTimeout(() => setLoading(false), 3000); return () => clearTimeout(t); }, []);
+  const [loading, setLoading] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
   const [showAddDeal, setShowAddDeal] = useState(false);
   const supabase = createClient();
