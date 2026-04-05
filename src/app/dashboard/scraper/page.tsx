@@ -6,13 +6,13 @@ import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import toast from "react-hot-toast";
 
-const PLATFORMS = [
+const PLATFORMS: Array<{ id: string; name: string; icon: string; description: string; disabled?: boolean }> = [
   { id: "google_maps", name: "Google Maps", icon: "🗺️", description: "Business listings with ratings, phone, website" },
   { id: "facebook", name: "Facebook Pages", icon: "📘", description: "Business pages with phone, email, followers" },
   { id: "instagram", name: "Instagram", icon: "📸", description: "Find businesses by hashtag, niche, or location" },
   { id: "tiktok", name: "TikTok", icon: "🎵", description: "Find businesses with TikTok profiles" },
   { id: "linkedin", name: "LinkedIn", icon: "💼", description: "Company profiles from website enrichment" },
-  { id: "yelp", name: "Yelp", icon: "⭐", description: "Reviews and local businesses" },
+  { id: "yelp", name: "Yelp", icon: "⭐", description: "Reviews and local businesses (needs API key)", disabled: true },
 ];
 
 const PRESET_NICHES = [
@@ -177,7 +177,7 @@ export default function ScraperPage() {
 
       if (allResults.length > 0) {
         // Sort by lead score if available
-        allResults.sort((a, b) => ((b as Record<string, number>).lead_score || 0) - ((a as Record<string, number>).lead_score || 0));
+        allResults.sort((a, b) => ((b.lead_score || 0) - (a.lead_score || 0)));
         setResults(allResults);
         setStats({ scraped: totalScraped, skipped: totalSkipped });
         toast.success(`Found ${allResults.length} leads! (${totalScraped} saved, ${totalSkipped} duplicates)`);
@@ -401,7 +401,7 @@ export default function ScraperPage() {
 
           <DataTable
             columns={[
-              { key: "lead_score", label: "Score", render: (r: Record<string, unknown>) => {
+              { key: "lead_score", label: "Score", render: (r: any) => {
                 const score = r.lead_score as number;
                 if (!score) return <span className="text-muted text-xs">-</span>;
                 return (
@@ -425,7 +425,7 @@ export default function ScraperPage() {
               { key: "email", label: "Email", render: (r: ScrapedLead) => r.email ? (
                 <span className="text-xs text-gold">{r.email}</span>
               ) : <span className="text-muted text-xs">-</span> },
-              { key: "socials", label: "Socials", render: (r: Record<string, unknown>) => (
+              { key: "socials", label: "Socials", render: (r: any) => (
                 <div className="flex gap-1">
                   {r.instagram_url && <a href={r.instagram_url as string} target="_blank" rel="noopener" className="text-[10px] bg-pink-500/10 text-pink-400 px-1.5 py-0.5 rounded">IG</a>}
                   {r.facebook_url && <a href={r.facebook_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">FB</a>}
