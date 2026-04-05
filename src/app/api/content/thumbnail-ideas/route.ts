@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 2000,
       system: "You are a YouTube thumbnail designer who creates viral, high-CTR thumbnails. Return valid JSON only.",
       messages: [{ role: "user", content: `Generate 5 thumbnail concepts for:

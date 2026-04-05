@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 3000,
       system: `You are a trend analyst and content strategist. Identify current trending topics, viral formats, and content opportunities for the ${clientIndustry} industry. Use your knowledge up to your training date. Return valid JSON only.`,
       messages: [{ role: "user", content: `Find trending topics and content opportunities for the ${clientIndustry} industry${platform ? ` on ${platform}` : " across all platforms"}.

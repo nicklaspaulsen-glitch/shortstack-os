@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 3000,
       system: "You are a business intelligence analyst. Generate actionable market intelligence for a business. Return valid JSON only.",
       messages: [{ role: "user", content: `Generate market intelligence report for:

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 1000,
       system: "You are writing emails on behalf of ShortStack digital marketing agency. Be professional, warm, and concise. Return JSON with: subject, body (HTML formatted with <p>, <br>, <strong> tags), plain_text (same content without HTML).",
       messages: [{ role: "user", content: prompt }],

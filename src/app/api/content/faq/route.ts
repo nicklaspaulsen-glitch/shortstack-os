@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 3000,
       system: "You are an SEO content expert. Generate FAQ content optimized for Google's 'People Also Ask' featured snippets. Return valid JSON only.",
       messages: [{ role: "user", content: `Generate ${num_questions || 20} FAQ questions and answers for ${clientName} (${industry}).

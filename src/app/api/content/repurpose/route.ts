@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
     body: JSON.stringify({
-      model: "claude-sonnet-4-6",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 4000,
       system: `You are a content repurposing expert for ${clientName}. Take one piece of content and create 10+ variations for different platforms. Return valid JSON only.`,
       messages: [{ role: "user", content: `Repurpose this ${content_type || "content"} into multiple formats:
