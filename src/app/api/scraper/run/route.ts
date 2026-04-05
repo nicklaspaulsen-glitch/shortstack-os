@@ -43,28 +43,36 @@ export async function POST(request: NextRequest) {
             if (!apiKey) { errors.push("Google Places API key not configured"); continue; }
 
             const query = `${niche} in ${location}`;
-            const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${apiKey}`;
-            const searchRes = await fetch(searchUrl);
+
+            // Use Places API (New) — the legacy API is deprecated
+            const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-Goog-Api-Key": apiKey,
+                "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri",
+              },
+              body: JSON.stringify({ textQuery: query, maxResultCount: max_results_per_search }),
+            });
             const searchData = await searchRes.json();
 
-            if (!searchData.results) continue;
+            if (!searchData.places) { errors.push(`Google: ${searchData.error?.message || "No results"}`); continue; }
 
-            const places = searchData.results.slice(0, max_results_per_search);
+            for (const place of searchData.places) {
+              const d = {
+                name: place.displayName?.text || "",
+                formatted_phone_number: place.nationalPhoneNumber || null,
+                formatted_address: place.formattedAddress || "",
+                website: place.websiteUri || null,
+                rating: place.rating || null,
+                user_ratings_total: place.userRatingCount || 0,
+                url: place.googleMapsUri || null,
+              };
 
-            for (const place of places) {
               // Apply filters
-              if (filters.min_rating && place.rating < filters.min_rating) continue;
-              if (filters.max_reviews && place.user_ratings_total > filters.max_reviews) continue;
-              if (filters.min_reviews && place.user_ratings_total < filters.min_reviews) continue;
-
-              // Get details
-              const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_phone_number,formatted_address,website,rating,user_ratings_total,url&key=${apiKey}`;
-              const detailRes = await fetch(detailUrl);
-              const detailData = await detailRes.json();
-              const d = detailData.result;
-              if (!d) continue;
-
-              // Filter: must have phone if required
+              if (filters.min_rating && d.rating && d.rating < filters.min_rating) continue;
+              if (filters.max_reviews && d.user_ratings_total > filters.max_reviews) continue;
+              if (filters.min_reviews && d.user_ratings_total < filters.min_reviews) continue;
               if (filters.require_phone && !d.formatted_phone_number) continue;
               if (filters.require_website && !d.website) continue;
 

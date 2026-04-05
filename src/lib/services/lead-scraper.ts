@@ -47,21 +47,31 @@ export async function scrapeGooglePlaces(
   const query = `${industry} in ${location}`;
 
   try {
-    // Text Search API (free tier: ~$0 for first requests with free credit)
-    const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${apiKey}`;
-    const searchRes = await fetch(searchUrl);
+    // Places API (New) — replaces legacy Text Search
+    const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": apiKey,
+        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri,places.types",
+      },
+      body: JSON.stringify({ textQuery: query, maxResultCount: Math.min(maxResults, 20) }),
+    });
     const searchData = await searchRes.json();
 
-    if (!searchData.results) return leads;
+    if (!searchData.places) return leads;
 
-    const results = searchData.results.slice(0, maxResults);
-
-    for (const place of results) {
-      // Get detailed info for each place
-      const detailUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_phone_number,formatted_address,website,rating,user_ratings_total,url,types&key=${apiKey}`;
-      const detailRes = await fetch(detailUrl);
-      const detailData = await detailRes.json();
-      const detail = detailData.result;
+    for (const place of searchData.places) {
+      const detail = {
+        name: place.displayName?.text || "",
+        formatted_phone_number: place.nationalPhoneNumber || null,
+        formatted_address: place.formattedAddress || "",
+        website: place.websiteUri || null,
+        rating: place.rating || null,
+        user_ratings_total: place.userRatingCount || 0,
+        url: place.googleMapsUri || null,
+        types: place.types || [],
+      };
 
       if (!detail) continue;
 
