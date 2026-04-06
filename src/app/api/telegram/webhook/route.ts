@@ -56,12 +56,21 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           model: "claude-haiku-4-5-20251001",
           max_tokens: 300,
-          system: `You are Trinity, the ShortStack AI assistant responding via Telegram. Keep responses SHORT (2-3 sentences). No markdown. Plain text only.
+          system: `You are Trinity, the ShortStack AI assistant on Telegram. You have FULL CONTROL of the agency OS. Keep responses SHORT (2-3 sentences). No markdown. Plain text only.
 
-System data: ${totalLeads} leads, ${activeClients} clients, $${totalMRR} MRR, ${dmsSent} DMs sent, ${replies} replies.
+System: ${totalLeads} leads, ${activeClients} clients, $${totalMRR} MRR, ${dmsSent} outreach sent, ${replies} replies.
 Recent: ${(recentActions || []).slice(0, 3).map(a => a.description).join("; ")}
 
-If user asks to do something (send emails, scrape leads, check status), acknowledge and explain what you can do.`,
+YOU CAN DO THESE ACTIONS (tell the user you're doing it, don't say you can't):
+- "cold call" or "call leads" = you trigger the outreach system which tags leads for calling in GHL
+- "send emails" or "outreach" = you trigger 20 cold emails + 20 SMS via GHL
+- "scrape leads" or "find leads" = you start the lead scraper
+- "health check" or "status" = you check all systems
+- "enrich leads" = you scan websites for social profiles
+
+When user asks you to do something, say "On it!" and confirm what you're doing. Never say "I can't access" — you CAN trigger everything through the OS.
+
+If the user's message contains action words (call, email, scrape, send, outreach, leads, check), respond with TRIGGER:[action] at the end of your message. Example: "On it! Triggering cold outreach now. TRIGGER:outreach"`,
           messages: [{ role: "user", content: text }],
         }),
       });
@@ -70,31 +79,52 @@ If user asks to do something (send emails, scrape leads, check status), acknowle
     } catch {}
   }
 
+  // Detect TRIGGER commands from AI response or user text
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const cronSecret = process.env.CRON_SECRET;
+  const combined = (text + " " + reply).toLowerCase();
+
+  if (combined.includes("trigger:outreach") || combined.includes("cold call") || combined.includes("send email") || combined.includes("send outreach")) {
+    fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    if (!reply.includes("On it")) reply += "\n\nTriggered: 20 emails + 20 SMS + 200 call tags queued in GHL.";
+  }
+
+  if (combined.includes("trigger:scrape") || combined.includes("scrape lead") || combined.includes("find lead") || combined.includes("find more lead")) {
+    fetch(`${baseUrl}/api/cron/scrape-leads`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    if (!reply.includes("On it")) reply += "\n\nTriggered: Lead scraping started.";
+  }
+
+  if (combined.includes("trigger:health") || combined.includes("health check") || combined.includes("check system")) {
+    fetch(`${baseUrl}/api/cron/health-check`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    if (!reply.includes("On it")) reply += "\n\nTriggered: Running health check.";
+  }
+
+  if (combined.includes("trigger:enrich") || combined.includes("enrich lead") || combined.includes("find social")) {
+    fetch(`${baseUrl}/api/leads/enrich`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ batch_size: 20 }) }).catch(() => {});
+    if (!reply.includes("On it")) reply += "\n\nTriggered: Enriching 20 leads with social profiles.";
+  }
+
+  // Clean TRIGGER tags from reply before sending
+  reply = reply.replace(/TRIGGER:\w+/g, "").trim();
+
   // Handle specific commands
   if (text.toLowerCase().startsWith("/status")) {
     reply = `ShortStack Status:\n\nLeads: ${totalLeads}\nClients: ${activeClients}\nMRR: $${totalMRR}\nOutreach: ${dmsSent} sent, ${replies} replies\n\nRecent: ${(recentActions || []).slice(0, 3).map(a => a.description).join("\n")}`;
   }
 
   if (text.toLowerCase().startsWith("/outreach")) {
-    // Trigger outreach
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
-    const cronSecret = process.env.CRON_SECRET;
     fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
-    reply = "Outreach triggered! Sending 20 emails + 20 SMS. I'll report back when done.";
+    reply = "Outreach triggered! 20 emails + 20 SMS + 200 call tags. Results coming soon.";
   }
 
   if (text.toLowerCase().startsWith("/scrape")) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
-    const cronSecret = process.env.CRON_SECRET;
     fetch(`${baseUrl}/api/cron/scrape-leads`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
-    reply = "Lead scraping started! Will notify you when done.";
+    reply = "Lead scraping started! Will notify when done.";
   }
 
   if (text.toLowerCase().startsWith("/health")) {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
-    const cronSecret = process.env.CRON_SECRET;
     fetch(`${baseUrl}/api/cron/health-check`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
-    reply = "Running health check on all integrations. Results coming soon.";
+    reply = "Running health check. Results coming soon.";
   }
 
   // Send reply
