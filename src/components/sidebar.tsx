@@ -33,6 +33,7 @@ import {
   PenTool,
   Target,
   Crown,
+  Globe,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";

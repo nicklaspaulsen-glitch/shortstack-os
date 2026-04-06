@@ -8,6 +8,7 @@ import ClientChatWidget from "@/components/client-chat-widget";
 import VoiceAssistant from "@/components/voice-assistant";
 import OnboardingTour from "@/components/onboarding-tour";
 import ErrorBoundary from "@/components/ui/error-boundary";
+import CommandPalette from "@/components/command-palette";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -73,6 +74,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <VoiceAssistant />
       <ClientChatWidget />
       <OnboardingTour onComplete={() => {}} />
+      <CommandPalette />
     </div>
   );
 }

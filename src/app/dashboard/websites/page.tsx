@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Globe, Sparkles, Loader, ExternalLink, Copy, Eye,
-  Code, Send, DollarSign, Zap
+  Globe, Sparkles, Loader, ExternalLink, Copy,
+  Code, Send, Zap
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -26,7 +26,6 @@ export default function WebsitesPage() {
   const [deploying, setDeploying] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState("");
   const [deployUrl, setDeployUrl] = useState("");
-  const [showPreview, setShowPreview] = useState(false);
   const [tab, setTab] = useState<"build" | "preview" | "deploy">("build");
   const supabase = createClient();
 
