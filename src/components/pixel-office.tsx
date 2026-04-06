@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { formatRelativeTime } from "@/lib/utils";
-import { Bot, Zap } from "lucide-react";
 
 interface Agent {
   id: string;
