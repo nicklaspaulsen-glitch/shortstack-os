@@ -26,6 +26,9 @@ import {
   Sparkles,
   Calendar,
   FileText,
+  Star,
+  Mail,
+  Eye,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -60,6 +63,9 @@ const navItems: NavItem[] = [
   { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={18} />, roles: ["admin"] },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={18} />, roles: ["admin"] },
   { label: "Trinity AI", href: "/dashboard/trinity", icon: <Bot size={18} />, roles: ["admin"] },
+  { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={18} />, roles: ["admin", "team_member"] },
+  { label: "Templates", href: "/dashboard/email-templates", icon: <Mail size={18} />, roles: ["admin", "team_member"] },
+  { label: "Spy Tool", href: "/dashboard/competitor", icon: <Eye size={18} />, roles: ["admin"] },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={18} />, roles: ["admin"] },
   { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={18} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} />, roles: ["admin"] },

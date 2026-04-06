@@ -478,7 +478,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
           {currentStep.fields.map(f => (
             <div key={f.key}>
               <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-medium">
-                {f.label} {f.required && <span className="text-danger">*</span>}
+                {f.label} {"required" in f && f.required && <span className="text-danger">*</span>}
               </label>
               {f.type === "textarea" ? (
                 <textarea
