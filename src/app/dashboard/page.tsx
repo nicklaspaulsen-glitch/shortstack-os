@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/auth-context";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import StatCard from "@/components/ui/stat-card";
@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import PixelOffice from "@/components/pixel-office";
 import AgentActivityFeed from "@/components/agent-activity-feed";
 
 interface DashboardStats {
@@ -133,9 +132,6 @@ export default function DashboardPage() {
 
       {/* Trinity AI */}
       <TrinityAssistant profile={profile} />
-
-      {/* Pixel Office — Live Agent View */}
-      <PixelOffice />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">
@@ -336,12 +332,14 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
     setPulseIntensity(0);
   }, [isSpeaking]);
 
+  // Hidden audio element ref for ElevenLabs playback
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   async function speak(text: string) {
     if (isMuted) return;
+    setIsSpeaking(true);
 
-    // Try ElevenLabs via Audio element (most compatible)
     try {
-      setIsSpeaking(true);
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -349,53 +347,28 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
       });
 
       if (res.ok) {
-        const contentType = res.headers.get("content-type") || "";
-        if (contentType.includes("audio") || contentType.includes("mpeg")) {
-          const blob = await res.blob();
-          if (blob.size > 1000) {
-            // Use Audio element — works in Electron + all browsers
-            const url = URL.createObjectURL(blob);
-            const audio = new Audio(url);
-            audio.volume = 1.0;
-            audio.onplay = () => setIsSpeaking(true);
-            audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
-            audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(url); fallbackSpeak(text); };
+        const blob = await res.blob();
+        if (blob.size > 500 && blob.type.includes("audio")) {
+          const url = URL.createObjectURL(blob);
 
-            // Must use play() from user gesture context
-            const playPromise = audio.play();
-            if (playPromise) {
-              playPromise.catch(() => {
-                // Autoplay blocked — try AudioContext as backup
-                URL.revokeObjectURL(url);
-                tryAudioContext(blob, text);
-              });
-            }
-            return;
+          // Use a DOM audio element (most reliable across all environments)
+          if (!audioRef.current) {
+            audioRef.current = document.createElement("audio");
+            document.body.appendChild(audioRef.current);
           }
+          const audio = audioRef.current;
+          audio.src = url;
+          audio.volume = 1.0;
+          audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+          audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(url); fallbackSpeak(text); };
+          await audio.play();
+          return;
         }
       }
-      // If we get here, TTS response wasn't audio — fall back
-      fallbackSpeak(text);
-    } catch (err) {
-      console.log("ElevenLabs TTS failed:", err);
-      fallbackSpeak(text);
-    }
-  }
+    } catch {}
 
-  async function tryAudioContext(blob: Blob, fallbackText: string) {
-    try {
-      const arrayBuffer = await blob.arrayBuffer();
-      const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-      await audioCtx.resume();
-      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-      const source = audioCtx.createBufferSource();
-      source.buffer = audioBuffer;
-      source.connect(audioCtx.destination);
-      source.onended = () => setIsSpeaking(false);
-      source.start(0);
-    } catch {
-      fallbackSpeak(fallbackText);
-    }
+    // Fallback to browser voice
+    fallbackSpeak(text);
   }
 
   function fallbackSpeak(text: string) {
@@ -404,17 +377,11 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 0.95; u.pitch = 1.0; u.lang = "en-US";
     const voices = window.speechSynthesis.getVoices();
-    const preferred = [
-      "Microsoft Aria", "Microsoft Jenny", "Microsoft Guy",
-      "Google US English", "Google UK English Female", "Samantha",
-    ];
-    let selectedVoice = null;
-    for (const name of preferred) {
-      selectedVoice = voices.find(v => v.name.includes(name));
-      if (selectedVoice) break;
-    }
-    if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith("en"));
-    if (selectedVoice) u.voice = selectedVoice;
+    const preferred = ["Microsoft Aria", "Microsoft Jenny", "Google US English", "Samantha"];
+    let v = null;
+    for (const name of preferred) { v = voices.find(x => x.name.includes(name)); if (v) break; }
+    if (!v) v = voices.find(x => x.lang.startsWith("en"));
+    if (v) u.voice = v;
     u.onstart = () => setIsSpeaking(true);
     u.onend = () => setIsSpeaking(false);
     window.speechSynthesis.speak(u);
