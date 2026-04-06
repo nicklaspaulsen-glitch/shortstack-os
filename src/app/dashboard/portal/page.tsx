@@ -8,6 +8,7 @@ import { Client, ClientTask, Invoice, ContentCalendarEntry } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import { PageLoading } from "@/components/ui/loading";
+import AIInsights from "@/components/ai-insights";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
   Package, CheckCircle, CreditCard, Circle, Bot,
@@ -225,6 +226,9 @@ export default function ClientPortalPage() {
           </div>
         </Link>
       </div>
+
+      {/* AI Recommendations */}
+      <AIInsights clientId={client.id} />
 
       {/* Active Services */}
       <div className="card">

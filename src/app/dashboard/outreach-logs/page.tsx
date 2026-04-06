@@ -8,7 +8,7 @@ import StatusBadge from "@/components/ui/status-badge";
 import { formatRelativeTime } from "@/lib/utils";
 import {
   MessageSquare, Mail, Phone, Camera, Music, Briefcase,
-  Globe, Search, Filter, Download, BarChart3, TrendingUp,
+  Globe, Search, Download,
   CheckCircle, XCircle, Clock, Send, Eye
 } from "lucide-react";
 import toast from "react-hot-toast";
