@@ -124,25 +124,60 @@ export default function MonitorPage() {
         })}
       </div>
 
-      {/* Error Log — hide "Not configured" entries, only show real errors */}
-      {health.filter((h) => h.error_message && !h.error_message.includes("Not configured")).length > 0 && (
-        <div className="card border-danger/15">
-          <h2 className="section-header text-danger flex items-center gap-2">
-            <AlertTriangle size={14} /> Recent Errors
-          </h2>
-          <div className="space-y-2">
-            {health.filter((h) => h.error_message && !h.error_message.includes("Not configured")).map((h) => (
-              <div key={h.id} className="bg-danger/5 border border-danger/10 rounded-lg p-2.5">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-xs">{h.integration_name}</span>
-                  <span className="text-[10px] text-muted font-mono">{formatRelativeTime(h.last_check_at)}</span>
+      {/* Error Log — only show actual down services, not auth issues or unconfigured */}
+      {(() => {
+        const realErrors = health.filter((h) =>
+          h.error_message &&
+          !h.error_message.includes("Not configured") &&
+          h.status === "down"
+        );
+        const authIssues = health.filter((h) =>
+          h.error_message &&
+          !h.error_message.includes("Not configured") &&
+          h.status === "degraded" &&
+          (h.error_message.includes("401") || h.error_message.includes("403") || h.error_message.includes("404"))
+        );
+
+        return (
+          <>
+            {realErrors.length > 0 && (
+              <div className="card border-danger/15">
+                <h2 className="section-header text-danger flex items-center gap-2">
+                  <AlertTriangle size={14} /> Service Outages
+                </h2>
+                <div className="space-y-2">
+                  {realErrors.map((h) => (
+                    <div key={h.id} className="bg-danger/5 border border-danger/10 rounded-lg p-2.5">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-medium text-xs">{h.integration_name}</span>
+                        <span className="text-[10px] text-muted font-mono">{formatRelativeTime(h.last_check_at)}</span>
+                      </div>
+                      <p className="text-[10px] text-danger">{h.error_message}</p>
+                    </div>
+                  ))}
                 </div>
-                <p className="text-[10px] text-danger">{h.error_message}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            )}
+
+            {authIssues.length > 0 && (
+              <div className="card border-warning/15">
+                <h2 className="section-header text-warning flex items-center gap-2">
+                  <Shield size={14} /> Credentials Need Refresh
+                </h2>
+                <p className="text-[10px] text-muted mb-2">These services are online but need updated API keys or tokens</p>
+                <div className="space-y-1.5">
+                  {authIssues.map((h) => (
+                    <div key={h.id} className="flex items-center justify-between py-1.5 border-b border-border/10 last:border-0">
+                      <span className="text-xs">{h.integration_name}</span>
+                      <span className="text-[10px] text-warning font-mono">{h.error_message}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }

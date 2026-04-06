@@ -201,12 +201,14 @@ export async function GET(_request: NextRequest) {
     } else if (result.degraded) {
       status = "degraded";
     } else {
-      // Check if it's an auth error (401/403) vs actual outage
-      const isAuthError = result.error?.includes("401") || result.error?.includes("403");
-      const isServerError = result.error?.includes("500") || result.error?.includes("502") || result.error?.includes("503");
-      // Auth errors = degraded (credentials may need refresh, service itself is up)
-      // Server errors = down
-      status = isAuthError ? "degraded" : isServerError ? "down" : "down";
+      // Categorize error type
+      const errorStr = result.error || "";
+      const isAuthError = errorStr.includes("401") || errorStr.includes("403");
+      const isNotFound = errorStr.includes("404");
+      const isServerError = errorStr.includes("500") || errorStr.includes("502") || errorStr.includes("503");
+      // Auth/404 = degraded (service is up, just needs credentials or endpoint update)
+      // Server errors = actually down
+      status = (isAuthError || isNotFound) ? "degraded" : isServerError ? "down" : "down";
     }
 
     // Upsert health record
