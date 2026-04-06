@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     { data: tasks },
     { count: leadsCount },
     { data: campaigns },
-    { data: recentActivity },
+    { data: _recentActivity },
   ] = await Promise.all([
     serviceSupabase.from("clients").select("*").eq("id", cId).single(),
     serviceSupabase.from("social_accounts").select("platform, account_name, is_active").eq("client_id", cId),

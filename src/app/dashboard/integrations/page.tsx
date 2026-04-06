@@ -94,7 +94,10 @@ function SocialAccountsPage() {
   const searchParams = useSearchParams();
   const [accounts, setAccounts] = useState<SocialAccount[]>([]);
   const [clientId, setClientId] = useState<string | null>(null);
+  const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
   const [loading, setLoading] = useState(true);
+  const [manualConnect, setManualConnect] = useState<string | null>(null);
+  const [manualHandle, setManualHandle] = useState("");
   const supabase = createClient();
 
   // Show toast on OAuth callback
@@ -106,26 +109,51 @@ function SocialAccountsPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (profile) fetchAccounts();
+    if (profile) fetchClients();
   }, [profile]);
 
-  async function fetchAccounts() {
-    let cId: string | null = null;
-    if (profile?.role === "client") {
-      const { data } = await supabase.from("clients").select("id").eq("profile_id", profile.id).single();
-      cId = data?.id || null;
-    } else {
-      const { data } = await supabase.from("clients").select("id").eq("is_active", true).order("created_at").limit(1);
-      cId = data?.[0]?.id || null;
-    }
-    setClientId(cId);
+  useEffect(() => {
+    if (clientId) fetchAccounts();
+  }, [clientId]);
 
-    if (cId) {
-      const res = await fetch(`/api/social/connect?client_id=${cId}`);
-      const data = await res.json();
-      setAccounts(data.accounts || []);
+  async function fetchClients() {
+    if (profile?.role === "client") {
+      const { data } = await supabase.from("clients").select("id, business_name").eq("profile_id", profile.id).single();
+      if (data) {
+        setClients([data]);
+        setClientId(data.id);
+      }
+    } else {
+      const { data } = await supabase.from("clients").select("id, business_name").eq("is_active", true).order("business_name");
+      setClients(data || []);
+      if (data && data.length > 0) setClientId(data[0].id);
     }
     setLoading(false);
+  }
+
+  async function fetchAccounts() {
+    if (!clientId) return;
+    const res = await fetch(`/api/social/connect?client_id=${clientId}`);
+    const data = await res.json();
+    setAccounts(data.accounts || []);
+  }
+
+  async function connectManual(platformId: string) {
+    if (!manualHandle.trim() || !clientId) return;
+    try {
+      const res = await fetch("/api/social/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: clientId, platform: platformId, account_name: manualHandle.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`${platformId} connected!`);
+        setManualConnect(null);
+        setManualHandle("");
+        fetchAccounts();
+      }
+    } catch { toast.error("Failed"); }
   }
 
   function startOAuth(platform: (typeof PLATFORMS)[0]) {
@@ -162,16 +190,25 @@ function SocialAccountsPage() {
   return (
     <div className="fade-in space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
             <Link2 size={18} className="text-gold" /> Connected Accounts
           </h1>
-          <p className="text-xs text-muted mt-0.5">Sign in to your social accounts for full AI-powered management</p>
+          <p className="text-xs text-muted mt-0.5">Connect social accounts for AI-powered management</p>
         </div>
-        <div className="flex items-center gap-1.5 text-[10px] bg-success/[0.08] text-success px-2.5 py-1 rounded-md border border-success/15">
-          <Check size={10} />
-          <span className="font-medium">{connectedIds.length} connected</span>
+        <div className="flex items-center gap-2">
+          {/* Client selector for admins */}
+          {profile?.role !== "client" && clients.length > 0 && (
+            <select value={clientId || ""} onChange={e => setClientId(e.target.value)}
+              className="input text-xs py-1.5 min-w-[160px]">
+              {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
+            </select>
+          )}
+          <div className="flex items-center gap-1.5 text-[10px] bg-success/[0.08] text-success px-2.5 py-1 rounded-md border border-success/15">
+            <Check size={10} />
+            <span className="font-medium">{connectedIds.length} connected</span>
+          </div>
         </div>
       </div>
 
@@ -252,20 +289,44 @@ function SocialAccountsPage() {
                   <p className="text-[10px] text-muted">{platform.description}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1.5 text-[10px] text-gold font-medium mt-1">
-                <LogIn size={11} /> Sign in with {platform.name}
-              </div>
+              {manualConnect === platform.id ? (
+                <div className="mt-2 flex gap-1.5" onClick={e => e.stopPropagation()}>
+                  <input value={manualHandle} onChange={e => setManualHandle(e.target.value)}
+                    placeholder="@handle or page name" className="input flex-1 text-[10px] py-1"
+                    onKeyDown={e => e.key === "Enter" && connectManual(platform.id)} autoFocus />
+                  <button onClick={() => connectManual(platform.id)} className="btn-primary text-[9px] py-1 px-2">Save</button>
+                  <button onClick={() => { setManualConnect(null); setManualHandle(""); }} className="btn-ghost text-[9px] py-1 px-1.5">X</button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 mt-1">
+                  <button onClick={() => startOAuth(platform)} className="text-[10px] text-gold font-medium flex items-center gap-1">
+                    <LogIn size={10} /> OAuth
+                  </button>
+                  <button onClick={(e) => { e.stopPropagation(); setManualConnect(platform.id); setManualHandle(""); }}
+                    className="text-[10px] text-muted hover:text-white flex items-center gap-1">
+                    <Link2 size={10} /> Manual
+                  </button>
+                </div>
+              )}
             </button>
           ))}
         </div>
       </div>
 
-      {/* No client warning */}
-      {!clientId && (
+      {/* No client warning — only for clients, not admins */}
+      {!clientId && profile?.role === "client" && (
         <div className="card border-warning/15 bg-warning/[0.03]">
           <div className="flex items-center gap-2">
             <AlertCircle size={14} className="text-warning" />
             <p className="text-xs text-muted">Set up your client profile first before connecting accounts.</p>
+          </div>
+        </div>
+      )}
+      {!clientId && profile?.role !== "client" && (
+        <div className="card border-accent/15 bg-accent/[0.03]">
+          <div className="flex items-center gap-2">
+            <AlertCircle size={14} className="text-accent" />
+            <p className="text-xs text-muted">Create a client first in the Clients page, then select them above to connect their accounts.</p>
           </div>
         </div>
       )}
