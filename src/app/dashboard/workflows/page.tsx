@@ -7,11 +7,10 @@ import Modal from "@/components/ui/modal";
 import StatusBadge from "@/components/ui/status-badge";
 import { formatRelativeTime } from "@/lib/utils";
 import {
-  Zap, Plus, Sparkles, Play, Trash2, Bot, ArrowRight,
-  MessageCircle, Mail, Clock, GitBranch, Globe, Phone,
-  Tag, FileText, Send, Webhook, Pause, Terminal, Loader,
-  ChevronDown, Copy, RotateCcw, Settings, Eye, Code,
-  Video
+  Zap, Plus, Sparkles, Play, Trash2, Bot,
+  MessageCircle, Mail, Clock, GitBranch, Phone,
+  Tag, FileText, Send, Webhook, Loader,
+  RotateCcw, Eye
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -42,7 +41,6 @@ const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: str
   delay: { icon: <Clock size={14} />, color: "text-muted", bg: "border-border bg-surface-light/50" },
   ghl_add_tag: { icon: <Tag size={14} />, color: "text-teal-400", bg: "border-teal-400/20 bg-teal-400/5" },
   condition: { icon: <GitBranch size={14} />, color: "text-amber-400", bg: "border-amber-400/20 bg-amber-400/5" },
-  generate_video: { icon: <Video size={14} />, color: "text-red-400", bg: "border-red-400/20 bg-red-400/5" },
 };
 
 export default function WorkflowsPage() {
@@ -53,7 +51,6 @@ export default function WorkflowsPage() {
   const [selectedClient, setSelectedClient] = useState("");
   const [generating, setGenerating] = useState(false);
   const [previewWorkflow, setPreviewWorkflow] = useState<Workflow | null>(null);
-  const [agentMode, setAgentMode] = useState(false);
   const [agentChat, setAgentChat] = useState<Array<{ role: "user" | "agent"; content: string; workflow?: Workflow }>>([]);
   const [agentInput, setAgentInput] = useState("");
   const [agentThinking, setAgentThinking] = useState(false);
@@ -280,15 +277,19 @@ export default function WorkflowsPage() {
                               <p className="text-xs font-medium">{step.name}</p>
                               <span className="text-[9px] text-muted font-mono">{(step.config?.action as string || step.type).replace(/_/g, " ")}</span>
                             </div>
-                            {step.config?.params && (
-                              <div className="mt-1 flex flex-wrap gap-1">
-                                {Object.entries(step.config.params as Record<string, string>).slice(0, 3).map(([k, v]) => (
-                                  <span key={k} className="text-[9px] bg-surface-light/80 px-1.5 py-0.5 rounded text-muted">
-                                    {k}: {String(v).substring(0, 30)}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
+                            {(() => {
+                              const params = step.config?.params;
+                              if (!params || typeof params !== "object") return null;
+                              return (
+                                <div className="mt-1 flex flex-wrap gap-1">
+                                  {Object.entries(params as Record<string, string>).slice(0, 3).map(([k, v]) => (
+                                    <span key={k} className="text-[9px] bg-surface-light/80 px-1.5 py-0.5 rounded text-muted">
+                                      {k}: {String(v).substring(0, 30)}
+                                    </span>
+                                  ))}
+                                </div>
+                              );
+                            })()}
                           </div>
                           {step.type === "condition" && (
                             <div className="flex flex-col items-center gap-0.5 text-[8px] text-muted">

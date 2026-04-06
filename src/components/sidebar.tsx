@@ -22,6 +22,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useState } from "react";
+import AdminProfileSwitcher from "@/components/admin-profile-switcher";
 
 interface NavItem {
   label: string;
@@ -67,7 +68,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-between px-3 py-3 border-b border-border/30">
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2.5">
-            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={28} height={28} className="rounded-lg" />
+            <Image src="/icons/icon.svg" alt="ShortStack" width={28} height={28} className="rounded-lg" />
             <div className="flex flex-col">
               <span className="text-white font-bold text-sm tracking-tight">ShortStack</span>
               <span className="text-[9px] text-muted font-medium tracking-[0.15em] uppercase -mt-0.5">OS</span>
@@ -81,6 +82,9 @@ export default function Sidebar() {
           {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
       </div>
+
+      {/* Admin Profile Switcher */}
+      {!collapsed && <AdminProfileSwitcher />}
 
       {/* Navigation */}
       <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">

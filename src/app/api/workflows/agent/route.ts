@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { designWorkflow, executeWorkflow, WORKFLOW_ACTIONS } from "@/lib/services/workflows";
+import { executeWorkflow, WORKFLOW_ACTIONS } from "@/lib/services/workflows";
 import { createServiceClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
@@ -35,8 +35,6 @@ export async function POST(request: NextRequest) {
 
 Available workflow actions:
 ${availableActions}
-
-You can also use: generate_video (Higgsfield AI video generation for ads/content)
 
 Context: ${client_name ? `Working with client: ${client_name}` : "No specific client selected"}
 

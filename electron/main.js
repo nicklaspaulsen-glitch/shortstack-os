@@ -1,10 +1,11 @@
-const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain, dialog, shell } = require("electron");
+const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain, dialog, shell, Notification } = require("electron");
 const path = require("path");
 const fs = require("fs");
 
 let mainWindow;
 let splashWindow;
 let tray;
+let updateAvailable = null;
 
 const APP_URL = "https://shortstack-os.vercel.app";
 const LICENSE_FILE = path.join(app.getPath("userData"), "license.json");
@@ -26,6 +27,49 @@ function saveLicense(data) {
 function isTrialExpired(license) {
   if (license?.type !== "trial") return false;
   return new Date(license.trial_ends) < new Date();
+}
+
+// ── Auto-update checker ─────────────────────────────────────────
+
+async function checkForUpdates() {
+  try {
+    const { net } = require("electron");
+    const res = await net.fetch(APP_URL + "/api/app/version");
+    const data = await res.json();
+
+    if (data.version && data.version !== APP_VERSION) {
+      updateAvailable = data;
+
+      // Show native notification
+      if (Notification.isSupported()) {
+        const notification = new Notification({
+          title: "ShortStack OS Update Available",
+          body: `Version ${data.version} is ready. Click to download.`,
+          icon: path.join(__dirname, "../public/icons/shortstack-logo.png"),
+        });
+        notification.on("click", () => {
+          shell.openExternal(data.download_url);
+        });
+        notification.show();
+      }
+
+      // Also show in-app banner via JS injection
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.executeJavaScript(`
+          (function() {
+            if (document.getElementById('ss-update-banner')) return;
+            const banner = document.createElement('div');
+            banner.id = 'ss-update-banner';
+            banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#C9A84C,#D4B85A);color:#000;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;font-family:Inter,system-ui,sans-serif;font-size:13px;font-weight:600;';
+            banner.innerHTML = '<span>Update available: v${data.version} — ${(data.release_notes || "").replace(/'/g, "\\'")} </span><div style="display:flex;gap:8px;"><button onclick="window.open(\\'${data.download_url}\\')" style="background:#000;color:#C9A84C;border:none;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Download</button><button onclick="this.parentElement.parentElement.remove()" style="background:transparent;border:1px solid rgba(0,0,0,0.2);color:#000;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;">Dismiss</button></div>';
+            document.body.prepend(banner);
+          })();
+        `);
+      }
+    }
+  } catch {
+    // Silent fail — no internet or API down
+  }
 }
 
 // ── Splash / License screen ─────────────────────────────────────
@@ -153,6 +197,11 @@ function createMainWindow() {
 
   mainWindow.loadURL(APP_URL + "/login");
   mainWindow.on("closed", () => { mainWindow = null; });
+
+  // Check for updates after page loads
+  mainWindow.webContents.on("did-finish-load", () => {
+    checkForUpdates();
+  });
 
   // Application menu (none — clean look)
   Menu.setApplicationMenu(null);

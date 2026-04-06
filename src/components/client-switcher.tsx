@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { formatCurrency } from "@/lib/utils";
 import {
   ChevronDown, Search, Users, FileText, DollarSign,
@@ -27,6 +28,7 @@ interface EnrichedClient {
 }
 
 export default function ClientSwitcher() {
+  const { profile } = useAuth();
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState<EnrichedClient[]>([]);
   const [loading, setLoading] = useState(false);
@@ -53,6 +55,9 @@ export default function ClientSwitcher() {
       fetchClients();
     }
   }, [open]);
+
+  // Only show for admins
+  if (profile?.role !== "admin") return null;
 
   const filtered = clients.filter(c =>
     !search || c.business_name.toLowerCase().includes(search.toLowerCase()) ||

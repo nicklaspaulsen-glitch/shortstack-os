@@ -1,5 +1,39 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="96" fill="#0a0a0a"/>
-  <rect x="16" y="16" width="480" height="480" rx="80" fill="#111111" stroke="#C9A84C" stroke-width="3"/>
-  <text x="256" y="290" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="200" fill="#C9A84C">SS</text>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0c1017"/>
+      <stop offset="100%" stop-color="#06080c"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D4B85A"/>
+      <stop offset="50%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#A8893D"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <rect x="4" y="4" width="504" height="504" rx="104" fill="none" stroke="#1e2a3a" stroke-width="2"/>
+  <!-- Subtle glow -->
+  <circle cx="256" cy="230" r="120" fill="url(#accent)" opacity="0.4"/>
+  <!-- Stack layers (the "ShortStack" visual) -->
+  <g filter="url(#glow)">
+    <!-- Bottom layer -->
+    <rect x="136" y="310" width="240" height="36" rx="8" fill="url(#gold)" opacity="0.4"/>
+    <!-- Middle layer -->
+    <rect x="116" y="262" width="280" height="36" rx="8" fill="url(#gold)" opacity="0.65"/>
+    <!-- Top layer -->
+    <rect x="96" y="214" width="320" height="36" rx="8" fill="url(#gold)"/>
+  </g>
+  <!-- Lightning bolt (automation/AI) -->
+  <path d="M268 120 L238 200 L270 200 L248 280 L310 180 L274 180 L300 120Z" fill="url(#gold)" opacity="0.9"/>
+  <!-- OS text -->
+  <text x="256" y="400" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="800" font-size="48" fill="#64748b" letter-spacing="8">OS</text>
 </svg>
