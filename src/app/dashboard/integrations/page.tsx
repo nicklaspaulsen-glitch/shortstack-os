@@ -289,7 +289,7 @@ function SocialAccountsPage() {
                   <p className="text-[10px] text-muted">{platform.description}</p>
                 </div>
               </div>
-              {manualConnect === platform.id ? (
+              {profile?.role !== "client" && manualConnect === platform.id ? (
                 <div className="mt-2 flex gap-1.5" onClick={e => e.stopPropagation()}>
                   <input value={manualHandle} onChange={e => setManualHandle(e.target.value)}
                     placeholder="@handle or page name" className="input flex-1 text-[10px] py-1"
@@ -300,12 +300,14 @@ function SocialAccountsPage() {
               ) : (
                 <div className="flex items-center gap-3 mt-1">
                   <button onClick={() => startOAuth(platform)} className="text-[10px] text-gold font-medium flex items-center gap-1">
-                    <LogIn size={10} /> OAuth
+                    <LogIn size={10} /> Sign in with {platform.name}
                   </button>
-                  <button onClick={(e) => { e.stopPropagation(); setManualConnect(platform.id); setManualHandle(""); }}
-                    className="text-[10px] text-muted hover:text-white flex items-center gap-1">
-                    <Link2 size={10} /> Manual
-                  </button>
+                  {profile?.role !== "client" && (
+                    <button onClick={(e) => { e.stopPropagation(); setManualConnect(platform.id); setManualHandle(""); }}
+                      className="text-[10px] text-muted hover:text-white flex items-center gap-1">
+                      <Link2 size={10} /> Manual
+                    </button>
+                  )}
                 </div>
               )}
             </button>
