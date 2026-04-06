@@ -76,7 +76,8 @@ const navItems: NavItem[] = [
   { label: "Trinity", href: "/dashboard/trinity", icon: <Bot size={16} />, roles: ["admin"] },
 
   // ── Marketing ──
-  { label: "Outreach Hub", href: "/dashboard/outreach-hub", icon: <Target size={16} />, roles: ["admin"], section: "Marketing" },
+  { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Send size={16} />, roles: ["admin"], section: "Marketing" },
+  { label: "Outreach Hub", href: "/dashboard/outreach-hub", icon: <Target size={16} />, roles: ["admin"] },
   { label: "Ads", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"] },
   { label: "Templates", href: "/dashboard/email-templates", icon: <Mail size={16} />, roles: ["admin", "team_member"] },
   { label: "Spy Tool", href: "/dashboard/competitor", icon: <Eye size={16} />, roles: ["admin"] },
