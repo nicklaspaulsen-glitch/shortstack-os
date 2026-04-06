@@ -16,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 import Link from "next/link";
 import AgentActivityFeed from "@/components/agent-activity-feed";
+import AgentStatusCards from "@/components/agent-status-cards";
 
 interface DashboardStats {
   leadsToday: number;
@@ -132,6 +133,9 @@ export default function DashboardPage() {
 
       {/* Trinity AI */}
       <TrinityAssistant profile={profile} />
+
+      {/* Live Agent Status */}
+      <AgentStatusCards />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">

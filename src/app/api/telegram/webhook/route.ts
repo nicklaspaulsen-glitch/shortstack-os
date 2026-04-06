@@ -61,12 +61,17 @@ export async function POST(request: NextRequest) {
 System: ${totalLeads} leads, ${activeClients} clients, $${totalMRR} MRR, ${dmsSent} outreach sent, ${replies} replies.
 Recent: ${(recentActions || []).slice(0, 3).map(a => a.description).join("; ")}
 
-YOU CAN DO THESE ACTIONS (tell the user you're doing it, don't say you can't):
-- "cold call" or "call leads" = you trigger the outreach system which tags leads for calling in GHL
-- "send emails" or "outreach" = you trigger 20 cold emails + 20 SMS via GHL
-- "scrape leads" or "find leads" = you start the lead scraper
-- "health check" or "status" = you check all systems
-- "enrich leads" = you scan websites for social profiles
+YOU CONTROL 9 AI AGENTS. You can activate any of them:
+
+SCOUT (Lead Finder) - "scrape leads" or "find leads" = scrapes Google Maps for new leads
+ECHO (Outreach) - "send emails" or "outreach" or "cold call" = sends 20 emails + 20 SMS + tags 200 for calling
+PIXEL (Content) - "write scripts" or "generate content" = generates marketing content
+WAVE (Social Manager) - "post content" or "schedule posts" = manages social media
+BLAZE (Ads) - "run ads" or "create campaign" = manages ad campaigns
+TRINITY (You) - "status" or "briefing" = gives system overview
+RING (Caller) - "cold call" = tags leads for GHL calling workflow
+NEXUS (Supervisor) - "check agents" or "health check" = monitors all systems
+ENRICHER - "enrich leads" or "find socials" = scans websites for Instagram/Facebook profiles
 
 When user asks you to do something, say "On it!" and confirm what you're doing. Never say "I can't access" — you CAN trigger everything through the OS.
 
@@ -102,6 +107,23 @@ If the user's message contains action words (call, email, scrape, send, outreach
   if (combined.includes("trigger:enrich") || combined.includes("enrich lead") || combined.includes("find social")) {
     fetch(`${baseUrl}/api/leads/enrich`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ batch_size: 20 }) }).catch(() => {});
     if (!reply.includes("On it")) reply += "\n\nTriggered: Enriching 20 leads with social profiles.";
+  }
+
+  if (combined.includes("trigger:content") || combined.includes("write script") || combined.includes("generate content") || combined.includes("create script")) {
+    reply += "\n\nPixel (Content Agent) activated. Open the Script Lab in the OS to generate scripts, or tell me what content you need and I'll write it.";
+  }
+
+  if (combined.includes("trigger:social") || combined.includes("post content") || combined.includes("schedule post")) {
+    reply += "\n\nWave (Social Manager) activated. Open Social Manager in the OS to generate and schedule a week of content.";
+  }
+
+  if (combined.includes("trigger:ads") || combined.includes("run ads") || combined.includes("create campaign") || combined.includes("launch ads")) {
+    reply += "\n\nBlaze (Ads Agent) activated. Open Ads Manager in the OS to create and optimize campaigns.";
+  }
+
+  if (combined.includes("briefing") || combined.includes("brief me") || combined.includes("what happened")) {
+    fetch(`${baseUrl}/api/cron/daily-brief`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    reply += "\n\nTriggered: Generating your daily briefing. Check Telegram in a moment.";
   }
 
   // Clean TRIGGER tags from reply before sending
