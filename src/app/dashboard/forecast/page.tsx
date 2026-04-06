@@ -211,7 +211,8 @@ export default function ForecastPage() {
               <YAxis tick={{ fontSize: 10, fill: "#888" }} tickFormatter={v => `$${(v / 1000).toFixed(0)}k`} />
               <Tooltip
                 contentStyle={{ background: "#1a1a1a", border: "1px solid #333", borderRadius: 8, fontSize: 11 }}
-                formatter={(value: number) => [formatCurrency(value), "Revenue"]}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                formatter={((value: number) => [`$${value.toLocaleString()}`, "Revenue"]) as any}
               />
               <Bar dataKey="revenue" fill="#C9A84C" radius={[4, 4, 0, 0]} />
             </BarChart>
