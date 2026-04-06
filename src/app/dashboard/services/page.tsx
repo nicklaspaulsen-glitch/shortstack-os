@@ -249,31 +249,16 @@ export default function ServicesPage() {
     });
 
     try {
-      const res = await fetch("/api/content/advanced-script", {
+      const res = await fetch("/api/agents/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          topic: finalPrompt,
-          script_type: "short_form",
-          platform: "instagram",
-          framework: "hook_story_offer",
-          tone: "professional",
+          prompt: finalPrompt,
+          agent_name: activeAgent ? `${activeAgent.name} — ${activeAgent.tagline}` : "AI Agent",
         }),
       });
       const data = await res.json();
-      if (data.success && data.script) {
-        const s = data.script;
-        setResult(`${s.title || ""}\n\nHOOK: ${s.hook?.text || ""}\n\n${s.script?.sections?.map((sec: { name: string; dialogue: string }) => `[${sec.name}]\n${sec.dialogue}`).join("\n\n") || ""}\n\nCTA: ${s.cta?.text || ""}\n\nCAPTION:\n${s.caption || ""}\n\nHASHTAGS:\n${s.hashtags?.join(" ") || ""}`);
-      } else {
-        // Fallback to Trinity for non-script actions
-        const res2 = await fetch("/api/trinity/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message: finalPrompt }),
-        });
-        const data2 = await res2.json();
-        setResult(data2.reply || "No response");
-      }
+      setResult(data.result || data.error || "No response");
     } catch {
       setResult("Error generating content. Try again.");
     }
