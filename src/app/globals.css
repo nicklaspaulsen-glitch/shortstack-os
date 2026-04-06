@@ -22,11 +22,19 @@ body {
 .electron-drag { -webkit-app-region: drag; }
 .electron-no-drag { -webkit-app-region: no-drag; }
 
-/* Electron titlebar padding */
-@media all {
-  .electron-titlebar-pad {
-    padding-top: env(titlebar-area-height, 0px);
-  }
+/* Top border bar — matches all themes */
+.top-border-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C9A84C, #38bdf8, #C9A84C);
+  z-index: 99999;
+}
+
+.theme-light .top-border-bar {
+  background: linear-gradient(90deg, #C9A84C, #0ea5e9, #C9A84C);
 }
 
 /* Selection */

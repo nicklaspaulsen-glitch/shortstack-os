@@ -27,6 +27,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen">
+      {/* Top border accent */}
+      <div className="top-border-bar" />
+
       {/* Desktop sidebar */}
       <div className="hidden lg:block">
         <Sidebar />

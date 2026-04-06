@@ -109,6 +109,8 @@ ${totalReplied > 5 ? "🔥 Great day for replies!" : totalSent >= 60 ? "✅ Outr
   const cronSecret = process.env.CRON_SECRET;
   fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
   fetch(`${baseUrl}/api/cron/health-check`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+  // Enrich leads with social profiles (runs in background)
+  fetch(`${baseUrl}/api/leads/enrich`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ batch_size: 20 }) }).catch(() => {});
 
   return NextResponse.json({ success: true, totalSent, totalReplied });
 }
