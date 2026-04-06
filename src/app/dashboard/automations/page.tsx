@@ -161,7 +161,7 @@ const CATEGORIES = [
 ];
 
 export default function AutomationsPage() {
-  const { profile } = useAuth();
+  useAuth();
   const [activeCategory, setActiveCategory] = useState("all");
   const [selectedTemplate, setSelectedTemplate] = useState<AutomationTemplate | null>(null);
   const [activeAutomations, setActiveAutomations] = useState<string[]>([]);

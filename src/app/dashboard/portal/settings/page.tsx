@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { createClient } from "@/lib/supabase/client";
 import { Settings, Shield, MessageSquare, Bot, Eye, Bell, Save, Loader } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -37,7 +36,6 @@ export default function ClientSettingsPage() {
   const [settings, setSettings] = useState<PrivacySettings>(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const supabase = createClient();
 
   useEffect(() => {
     if (profile) fetchSettings();
