@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Text-to-Speech API — uses ElevenLabs for high-quality AI voice
-// Falls back to 404 if not configured (browser TTS used instead)
 export async function POST(request: NextRequest) {
   const { text } = await request.json();
   if (!text) return NextResponse.json({ error: "No text" }, { status: 400 });
@@ -11,8 +10,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "TTS not configured" }, { status: 404 });
   }
 
-  // Default to a natural female voice (Rachel)
-  const voiceId = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM";
+  // Roger — Laid-back, casual, resonant male voice (great for assistant)
+  const voiceId = process.env.ELEVENLABS_VOICE_ID || "CwhRBWXzGAHq8TQ4Fs17";
 
   try {
     const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
@@ -22,17 +21,19 @@ export async function POST(request: NextRequest) {
         "xi-api-key": apiKey,
       },
       body: JSON.stringify({
-        text: text.substring(0, 1000), // Limit to 1000 chars
-        model_id: "eleven_monolingual_v1",
+        text: text.substring(0, 1000),
+        model_id: "eleven_flash_v2_5",
         voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.75,
+          stability: 0.55,
+          similarity_boost: 0.7,
+          style: 0.3,
         },
       }),
     });
 
     if (!res.ok) {
-      return NextResponse.json({ error: "TTS failed" }, { status: 500 });
+      const err = await res.text();
+      return NextResponse.json({ error: `TTS failed: ${err}` }, { status: 500 });
     }
 
     const audioBuffer = await res.arrayBuffer();
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
         "Cache-Control": "public, max-age=3600",
       },
     });
-  } catch {
-    return NextResponse.json({ error: "TTS error" }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ error: `TTS error: ${err}` }, { status: 500 });
   }
 }
