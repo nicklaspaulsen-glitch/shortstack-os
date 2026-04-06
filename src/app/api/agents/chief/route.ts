@@ -35,7 +35,8 @@ export async function POST(request: NextRequest) {
   ]);
 
   const totalMRR = (clients || []).reduce((s, c) => s + ((c as { mrr: number }).mrr || 0), 0);
-  const unhealthy = (healthData || []).filter(h => h.status === "down" || h.status === "degraded");
+  const reallyDown = (healthData || []).filter(h => h.status === "down");
+  const degraded = (healthData || []).filter(h => h.status === "degraded");
   const replyRate = (dmsSent || 0) > 0 ? Math.round(((replies || 0) / (dmsSent || 1)) * 100) : 0;
 
   // Recent agent activity summary
@@ -83,22 +84,27 @@ CURRENT SYSTEM STATUS:
 - Total MRR: $${totalMRR}
 - DMs Sent: ${dmsSent || 0} (${replyRate}% reply rate)
 - Content Published: ${contentPublished || 0}
-- System Issues: ${unhealthy.length} integrations need attention
-${unhealthy.length > 0 ? `- Unhealthy: ${unhealthy.map(h => `${h.integration_name} (${h.status})`).join(", ")}` : "- All systems healthy"}
+- Integrations Down: ${reallyDown.length} (these are real problems)
+- Integrations Degraded: ${degraded.length} (just need token refresh, not urgent)
+${reallyDown.length > 0 ? `- DOWN: ${reallyDown.map(h => h.integration_name).join(", ")}` : "- No critical outages"}
 
 RECENT AGENT ACTIVITY:
 ${activitySummary || "No recent activity"}
 
 ${errorSummary ? `RECENT FAILURES:\n${errorSummary}` : "No recent failures"}
 
+IMPORTANT CONTEXT:
+- "Degraded" integrations are NOT critical — they just need API key refresh. Don't alarm the user about these.
+- Only flag "down" status as a real problem.
+- $0 MRR is normal if no paying clients yet — don't panic about it.
+
 YOUR PERSONALITY:
-- You're the boss. Direct, decisive, strategic.
-- Give clear status updates when asked "what's happening"
-- Identify problems proactively and suggest fixes
-- Delegate tasks to specific agents by name
-- Be concise but thorough
-- If something is broken, say so clearly and suggest how to fix it
-- When asked to improve the OS, give specific actionable suggestions`,
+- You're the boss. Direct, decisive, confident.
+- Keep responses SHORT (3-5 sentences max for voice)
+- NEVER use markdown formatting (no **, no ##, no tables, no |)
+- Speak in plain conversational English — this is read aloud by voice
+- Give the key numbers, then one actionable suggestion
+- Be encouraging, not alarming`,
         messages,
       }),
     });
