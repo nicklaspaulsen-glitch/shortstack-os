@@ -22,6 +22,7 @@ import {
   BarChart3,
   CreditCard,
   MessageSquare,
+  Link2,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -44,6 +45,7 @@ const navItems: NavItem[] = [
   { label: "Reports", href: "/dashboard/portal/reports", icon: <BarChart3 size={18} />, roles: ["client"] },
   { label: "Invoices", href: "/dashboard/portal/billing", icon: <CreditCard size={18} />, roles: ["client"] },
   { label: "Support", href: "/dashboard/portal/support", icon: <MessageSquare size={18} />, roles: ["client"] },
+  { label: "Integrations", href: "/dashboard/integrations", icon: <Link2 size={18} />, roles: ["admin", "team_member", "client"] },
   { label: "Team & Payroll", href: "/dashboard/team", icon: <Briefcase size={18} />, roles: ["admin"] },
   { label: "Content AI", href: "/dashboard/content", icon: <Film size={18} />, roles: ["admin", "team_member"] },
   { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={18} />, roles: ["admin"] },
