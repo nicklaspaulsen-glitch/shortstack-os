@@ -13,6 +13,15 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   useEffect(() => {
     const saved = localStorage.getItem("ss-theme") || "midnight";
     applyTheme(saved);
+
+    // Apply saved zoom
+    const zoom = localStorage.getItem("ss-zoom");
+    if (zoom) document.documentElement.style.zoom = zoom;
+
+    // Apply reduced motion
+    if (localStorage.getItem("ss-animations") === "false") {
+      document.documentElement.classList.add("reduce-motion");
+    }
   }, []);
 
   return <>{children}</>;

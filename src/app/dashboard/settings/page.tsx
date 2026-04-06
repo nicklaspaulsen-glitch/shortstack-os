@@ -143,6 +143,72 @@ export default function SettingsPage() {
       {/* General Tab */}
       {tab === "general" && (
         <div className="space-y-4 max-w-2xl">
+          {/* Display & Zoom */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Settings size={14} className="text-gold" /> Display
+            </h2>
+            <div className="space-y-3">
+              {/* Zoom / FOV */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <div>
+                    <p className="text-xs font-medium">Interface Zoom</p>
+                    <p className="text-[10px] text-muted">Make everything smaller or larger</p>
+                  </div>
+                  <span className="text-xs font-mono text-gold">{typeof window !== "undefined" ? Math.round((parseFloat(document.documentElement.style.zoom || "1")) * 100) : 100}%</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => { document.documentElement.style.zoom = "0.75"; localStorage.setItem("ss-zoom", "0.75"); toast.success("Zoom: 75%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "0.75" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>75%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "0.85"; localStorage.setItem("ss-zoom", "0.85"); toast.success("Zoom: 85%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "0.85" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>85%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "0.9"; localStorage.setItem("ss-zoom", "0.9"); toast.success("Zoom: 90%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "0.9" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>90%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "1"; localStorage.setItem("ss-zoom", "1"); toast.success("Zoom: 100%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${!localStorage.getItem("ss-zoom") || localStorage.getItem("ss-zoom") === "1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>100%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "1.1"; localStorage.setItem("ss-zoom", "1.1"); toast.success("Zoom: 110%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "1.1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>110%</button>
+                </div>
+              </div>
+
+              {/* Sidebar compact */}
+              <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+                <div>
+                  <p className="text-xs font-medium">Compact Sidebar</p>
+                  <p className="text-[10px] text-muted">Collapse sidebar to icons only</p>
+                </div>
+                <button onClick={() => {
+                  const current = localStorage.getItem("ss-sidebar-collapsed") === "true";
+                  localStorage.setItem("ss-sidebar-collapsed", String(!current));
+                  toast.success(current ? "Sidebar expanded" : "Sidebar collapsed");
+                  window.location.reload();
+                }}
+                  className={`w-10 h-5 rounded-full transition-all ${localStorage.getItem("ss-sidebar-collapsed") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${localStorage.getItem("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
+                </button>
+              </div>
+
+              {/* Animations */}
+              <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+                <div>
+                  <p className="text-xs font-medium">Animations</p>
+                  <p className="text-[10px] text-muted">Card hover effects, transitions, fades</p>
+                </div>
+                <button onClick={() => {
+                  const current = localStorage.getItem("ss-animations") === "false";
+                  localStorage.setItem("ss-animations", String(current));
+                  if (!current) document.documentElement.classList.add("reduce-motion");
+                  else document.documentElement.classList.remove("reduce-motion");
+                  toast.success(current ? "Animations enabled" : "Animations disabled");
+                }}
+                  className={`w-10 h-5 rounded-full transition-all ${localStorage.getItem("ss-animations") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${localStorage.getItem("ss-animations") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Sound Effects */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">

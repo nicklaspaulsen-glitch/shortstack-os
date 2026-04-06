@@ -371,6 +371,12 @@ body {
 /* Modal */
 .theme-light [class*="bg-black/"] { background: rgba(0,0,0,0.3) !important; }
 
+/* Reduced motion */
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
 @layer utilities {
   .text-balance { text-wrap: balance; }
 }
