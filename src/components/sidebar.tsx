@@ -25,6 +25,7 @@ import {
   Link2,
   Sparkles,
   Calendar,
+  FileText,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -39,9 +40,11 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} />, roles: ["admin", "team_member", "client"] },
+  { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={18} />, roles: ["admin"] },
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={18} />, roles: ["admin", "team_member"] },
   { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={18} />, roles: ["admin", "team_member"] },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={18} />, roles: ["admin", "team_member"] },
+  { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={18} />, roles: ["admin", "team_member"] },
   { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={18} />, roles: ["client"] },
   { label: "Content", href: "/dashboard/portal/content", icon: <Film size={18} />, roles: ["client"] },
   { label: "Calendar", href: "/dashboard/portal/calendar", icon: <Calendar size={18} />, roles: ["client"] },
