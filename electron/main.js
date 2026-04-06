@@ -60,8 +60,8 @@ async function checkForUpdates() {
             if (document.getElementById('ss-update-banner')) return;
             const banner = document.createElement('div');
             banner.id = 'ss-update-banner';
-            banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#C9A84C,#D4B85A);color:#000;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;font-family:Inter,system-ui,sans-serif;font-size:13px;font-weight:600;';
-            banner.innerHTML = '<span>Update available: v${data.version} — ${(data.release_notes || "").replace(/'/g, "\\'")} </span><div style="display:flex;gap:8px;"><button onclick="window.open(\\'${data.download_url}\\')" style="background:#000;color:#C9A84C;border:none;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">Download</button><button onclick="this.parentElement.parentElement.remove()" style="background:transparent;border:1px solid rgba(0,0,0,0.2);color:#000;padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;">Dismiss</button></div>';
+            banner.style.cssText = 'position:fixed;top:36px;left:0;right:0;z-index:99999;background:#0c1017;border-bottom:1px solid #1e2a3a;color:#C9A84C;padding:6px 16px;display:flex;align-items:center;justify-content:space-between;font-family:Inter,system-ui,sans-serif;font-size:11px;font-weight:500;-webkit-app-region:no-drag;';
+            banner.innerHTML = '<span style="color:#94a3b8;">New version <strong style="color:#C9A84C;">v${data.version}</strong> — ${(data.release_notes || "").replace(/'/g, "\\'")}</span><div style="display:flex;gap:6px;"><button onclick="location.reload()" style="background:#C9A84C;color:#000;border:none;padding:3px 10px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;">Refresh</button><button onclick="this.parentElement.parentElement.remove()" style="background:transparent;border:1px solid #1e2a3a;color:#64748b;padding:3px 8px;border-radius:5px;font-size:10px;cursor:pointer;">Dismiss</button></div>';
             document.body.prepend(banner);
           })();
         `);
@@ -175,7 +175,7 @@ function createMainWindow() {
       devTools: !app.isPackaged,
     },
     titleBarStyle: "hidden",
-    titleBarOverlay: { color: "#06080c", symbolColor: "#C9A84C", height: 32 },
+    titleBarOverlay: { color: "#020304", symbolColor: "#C9A84C", height: 36 },
     autoHideMenuBar: true,
     show: false,
   });

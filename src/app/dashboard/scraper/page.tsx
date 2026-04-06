@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash, Map, Camera, Music, Briefcase, Star, FlaskConical, MessageCircle } from "lucide-react";
+import { Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash, Map, Camera, Music, Briefcase, Star, FlaskConical, MessageCircle, Send } from "lucide-react";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import toast from "react-hot-toast";
@@ -421,15 +421,66 @@ export default function ScraperPage() {
                 <p className="text-[10px] text-muted">Duplicates</p>
               </div>
             </div>
-            <button onClick={() => {
-              const csv = "Business,Phone,Email,Website,Address,Rating,Reviews,Industry,Source\n" +
-                results.map(r => `"${r.business_name}","${r.phone || ""}","${r.email || ""}","${r.website || ""}","${r.address || ""}",${r.google_rating || ""},${r.review_count},"${r.industry}","${r.source}"`).join("\n");
-              const blob = new Blob([csv], { type: "text/csv" });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a"); a.href = url; a.download = "leads.csv"; a.click();
-            }} className="btn-secondary flex items-center gap-2 text-xs">
-              <Download size={14} /> Export CSV
-            </button>
+            <div className="flex items-center gap-1.5">
+              {/* CSV Export */}
+              <button onClick={() => {
+                const csv = "Business,Phone,Email,Website,Address,Rating,Reviews,Industry,Source\n" +
+                  results.map(r => `"${r.business_name}","${r.phone || ""}","${r.email || ""}","${r.website || ""}","${r.address || ""}",${r.google_rating || ""},${r.review_count},"${r.industry}","${r.source}"`).join("\n");
+                const blob = new Blob([csv], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a"); a.href = url; a.download = "leads.csv"; a.click();
+                toast.success("CSV downloaded");
+              }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5">
+                <Download size={12} /> CSV
+              </button>
+
+              {/* JSON Export */}
+              <button onClick={() => {
+                const json = JSON.stringify(results, null, 2);
+                const blob = new Blob([json], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a"); a.href = url; a.download = "leads.json"; a.click();
+                toast.success("JSON downloaded");
+              }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5">
+                <Download size={12} /> JSON
+              </button>
+
+              {/* Excel-compatible Export */}
+              <button onClick={() => {
+                const header = "Business\tPhone\tEmail\tWebsite\tAddress\tRating\tReviews\tIndustry\tSource\n";
+                const rows = results.map(r => `${r.business_name}\t${r.phone || ""}\t${r.email || ""}\t${r.website || ""}\t${r.address || ""}\t${r.google_rating || ""}\t${r.review_count}\t${r.industry}\t${r.source}`).join("\n");
+                const blob = new Blob([header + rows], { type: "text/tab-separated-values" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a"); a.href = url; a.download = "leads.xlsx"; a.click();
+                toast.success("Excel file downloaded");
+              }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5">
+                <Download size={12} /> Excel
+              </button>
+
+              {/* Push to GHL */}
+              <button onClick={async () => {
+                toast.loading("Syncing to GoHighLevel...");
+                try {
+                  const res = await fetch("/api/ghl/sync-leads", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ leads: results.slice(0, 100) }),
+                  });
+                  toast.dismiss();
+                  const data = await res.json();
+                  if (data.success) {
+                    toast.success(`${data.synced} leads synced to GHL!`);
+                  } else {
+                    toast.error(data.error || "GHL sync failed");
+                  }
+                } catch {
+                  toast.dismiss();
+                  toast.error("Failed to sync with GHL");
+                }
+              }} className="btn-primary flex items-center gap-1.5 text-[10px] py-1.5">
+                <Send size={12} /> Push to GHL
+              </button>
+            </div>
           </div>
 
           <DataTable
