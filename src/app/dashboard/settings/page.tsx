@@ -5,10 +5,10 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info } from "lucide-react";
 import toast from "react-hot-toast";
 
-type Tab = "agents" | "integrations" | "automation" | "notifications";
+type Tab = "agents" | "integrations" | "automation" | "notifications" | "general";
 
 interface AgentConfig {
   id: string;
@@ -45,7 +45,7 @@ const INTEGRATIONS = [
 ];
 
 export default function SettingsPage() {
-  const [tab, setTab] = useState<Tab>("agents");
+  const [tab, setTab] = useState<Tab>("general");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clients, setClients] = useState<Client[]>([]);
   const [agentConfigs, setAgentConfigs] = useState<AgentConfig[]>([]);
@@ -98,7 +98,22 @@ export default function SettingsPage() {
     setEditingAgent(null);
   }
 
+  const [sfxEnabled, setSfxEnabled] = useState(true);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("sfx_enabled");
+    if (saved === "false") setSfxEnabled(false);
+  }, []);
+
+  function toggleSfx() {
+    const next = !sfxEnabled;
+    setSfxEnabled(next);
+    localStorage.setItem("sfx_enabled", String(next));
+    toast.success(next ? "Sound effects enabled" : "Sound effects muted");
+  }
+
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
+    { key: "general", label: "General", icon: <Settings size={16} /> },
     { key: "agents", label: "AI Agents", icon: <Bot size={16} /> },
     { key: "integrations", label: "Integrations", icon: <Globe size={16} /> },
     { key: "automation", label: "Automation", icon: <Zap size={16} /> },
@@ -124,6 +139,70 @@ export default function SettingsPage() {
           >{t.icon} {t.label}</button>
         ))}
       </div>
+
+      {/* General Tab */}
+      {tab === "general" && (
+        <div className="space-y-4 max-w-2xl">
+          {/* Sound Effects */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              {sfxEnabled ? <Volume2 size={14} className="text-gold" /> : <VolumeX size={14} className="text-muted" />}
+              Sound Effects
+            </h2>
+            <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+              <div>
+                <p className="text-xs font-medium">UI Sound Effects</p>
+                <p className="text-[10px] text-muted">Click sounds, notifications, success/error tones</p>
+              </div>
+              <button onClick={toggleSfx}
+                className={`w-10 h-5 rounded-full transition-all ${sfxEnabled ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${sfxEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Version Info */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Info size={14} className="text-gold" /> About
+            </h2>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between py-2 border-b border-border/15">
+                <span className="text-xs text-muted">Version</span>
+                <span className="text-xs font-mono text-gold">v1.1.0</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-border/15">
+                <span className="text-xs text-muted">Build</span>
+                <span className="text-xs font-mono text-muted">2026.04.06</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-border/15">
+                <span className="text-xs text-muted">Platform</span>
+                <span className="text-xs font-mono text-muted">Next.js + Supabase + Claude AI</span>
+              </div>
+              <div className="flex items-center justify-between py-2 border-b border-border/15">
+                <span className="text-xs text-muted">License</span>
+                <span className="text-xs font-mono text-success">Enterprise</span>
+              </div>
+              <div className="flex items-center justify-between py-2">
+                <span className="text-xs text-muted">Support</span>
+                <span className="text-xs text-gold">growth@shortstack.work</span>
+              </div>
+            </div>
+          </div>
+
+          {/* White Label link */}
+          <div className="card">
+            <h2 className="section-header">Customization</h2>
+            <a href="/dashboard/settings/white-label" className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20 hover:border-gold/15 transition-colors">
+              <div>
+                <p className="text-xs font-medium">White-Label Branding</p>
+                <p className="text-[10px] text-muted">Customize logo, colors, and branding for clients</p>
+              </div>
+              <span className="text-gold text-xs">Configure</span>
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* AI Agents Tab */}
       {tab === "agents" && (

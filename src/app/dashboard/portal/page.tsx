@@ -480,7 +480,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
               <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-medium">
                 {f.label} {"required" in f && f.required && <span className="text-danger">*</span>}
               </label>
-              {f.type === "textarea" ? (
+              {"type" in f && f.type === "textarea" ? (
                 <textarea
                   value={form[f.key as keyof typeof form]}
                   onChange={e => setForm({ ...form, [f.key]: e.target.value })}
@@ -489,13 +489,13 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
                 />
               ) : (
                 <div className="relative">
-                  {f.icon && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">{f.icon}</span>}
+                  {"icon" in f && f.icon && <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">{f.icon as React.ReactNode}</span>}
                   <input
                     type="text"
                     value={form[f.key as keyof typeof form]}
                     onChange={e => setForm({ ...form, [f.key]: e.target.value })}
                     placeholder={f.placeholder}
-                    className={`input w-full text-xs ${f.icon ? "pl-9" : ""}`}
+                    className={`input w-full text-xs ${"icon" in f && f.icon ? "pl-9" : ""}`}
                   />
                 </div>
               )}

@@ -195,7 +195,10 @@ function createMainWindow() {
     return { action: "allow" };
   });
 
-  mainWindow.loadURL(APP_URL + "/login");
+  // Clear cache on load to always get latest version
+  mainWindow.webContents.session.clearCache().then(() => {
+    mainWindow.loadURL(APP_URL + "/login");
+  });
   mainWindow.on("closed", () => { mainWindow = null; });
 
   // Check for updates after page loads
