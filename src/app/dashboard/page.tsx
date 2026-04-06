@@ -339,7 +339,7 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
   async function speak(text: string) {
     if (isMuted) return;
 
-    // Try ElevenLabs first (high-quality AI voice)
+    // Try ElevenLabs via Audio element (most compatible)
     try {
       setIsSpeaking(true);
       const res = await fetch("/api/tts", {
@@ -347,22 +347,58 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: text.substring(0, 500) }),
       });
-      if (res.ok && res.headers.get("content-type")?.includes("audio")) {
-        const arrayBuffer = await res.arrayBuffer();
-        const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
-        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-        const source = audioCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(audioCtx.destination);
-        source.onended = () => setIsSpeaking(false);
-        source.start(0);
-        return;
-      }
-    } catch (err) {
-      console.log("ElevenLabs TTS failed, falling back to browser voice:", err);
-    }
 
-    // Fallback to browser TTS with best available voice
+      if (res.ok) {
+        const contentType = res.headers.get("content-type") || "";
+        if (contentType.includes("audio") || contentType.includes("mpeg")) {
+          const blob = await res.blob();
+          if (blob.size > 1000) {
+            // Use Audio element — works in Electron + all browsers
+            const url = URL.createObjectURL(blob);
+            const audio = new Audio(url);
+            audio.volume = 1.0;
+            audio.onplay = () => setIsSpeaking(true);
+            audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+            audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(url); fallbackSpeak(text); };
+
+            // Must use play() from user gesture context
+            const playPromise = audio.play();
+            if (playPromise) {
+              playPromise.catch(() => {
+                // Autoplay blocked — try AudioContext as backup
+                URL.revokeObjectURL(url);
+                tryAudioContext(blob, text);
+              });
+            }
+            return;
+          }
+        }
+      }
+      // If we get here, TTS response wasn't audio — fall back
+      fallbackSpeak(text);
+    } catch (err) {
+      console.log("ElevenLabs TTS failed:", err);
+      fallbackSpeak(text);
+    }
+  }
+
+  async function tryAudioContext(blob: Blob, fallbackText: string) {
+    try {
+      const arrayBuffer = await blob.arrayBuffer();
+      const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      await audioCtx.resume();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(audioCtx.destination);
+      source.onended = () => setIsSpeaking(false);
+      source.start(0);
+    } catch {
+      fallbackSpeak(fallbackText);
+    }
+  }
+
+  function fallbackSpeak(text: string) {
     if (!("speechSynthesis" in window)) { setIsSpeaking(false); return; }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -371,7 +407,6 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
     const preferred = [
       "Microsoft Aria", "Microsoft Jenny", "Microsoft Guy",
       "Google US English", "Google UK English Female", "Samantha",
-      "Daniel", "Karen", "Moira",
     ];
     let selectedVoice = null;
     for (const name of preferred) {
