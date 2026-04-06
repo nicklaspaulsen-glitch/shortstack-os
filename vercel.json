@@ -3,6 +3,18 @@
     {
       "path": "/api/cron/daily-brief",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/outreach",
+      "schedule": "0 9 * * 1-5"
+    },
+    {
+      "path": "/api/cron/health-check",
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/cron/scrape-leads",
+      "schedule": "0 5 * * *"
     }
   ]
 }
