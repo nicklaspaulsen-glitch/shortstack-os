@@ -84,6 +84,9 @@ const navItems: NavItem[] = [
   // ── System ──
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"], section: "System" },
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"] },
+  { label: "Audit Trail", href: "/dashboard/audit", icon: <Eye size={16} />, roles: ["admin"] },
+  { label: "Forecast", href: "/dashboard/forecast", icon: <BarChart3 size={16} />, roles: ["admin"] },
+  { label: "API Docs", href: "/dashboard/api-docs", icon: <FileText size={16} />, roles: ["admin"] },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Demo", href: "/dashboard/demo", icon: <Eye size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
