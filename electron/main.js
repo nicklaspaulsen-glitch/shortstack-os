@@ -42,20 +42,21 @@ async function checkForUpdates() {
     if (data.version && data.version !== APP_VERSION) {
       updateAvailable = data;
 
-      // Show native dialog
+      // Show simple notification — features auto-update via web
       const result = await dialog.showMessageBox(mainWindow, {
         type: "info",
-        title: "Update Available",
+        title: "New Features Available",
         message: `ShortStack OS v${data.version}`,
-        detail: `${data.release_notes || "A new version is available."}\n\nWould you like to download and install it now?`,
-        buttons: ["Update Now", "Later"],
+        detail: `${data.release_notes || "New features available."}\n\nThe app will refresh to load the latest version.`,
+        buttons: ["Refresh Now", "Later"],
         defaultId: 0,
         cancelId: 1,
       });
 
-      if (result.response === 0) {
-        // Download and install
-        downloadAndInstallUpdate(data.download_url, data.version);
+      if (result.response === 0 && mainWindow && !mainWindow.isDestroyed()) {
+        // Just clear cache and reload — features are on the web
+        await mainWindow.webContents.session.clearCache();
+        mainWindow.webContents.reloadIgnoringCache();
       }
     }
   } catch {
