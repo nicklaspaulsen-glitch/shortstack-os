@@ -328,14 +328,46 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
     setPulseIntensity(0);
   }, [isSpeaking]);
 
-  function speak(text: string) {
-    if (isMuted || !("speechSynthesis" in window)) return;
+  async function speak(text: string) {
+    if (isMuted) return;
+
+    // Try ElevenLabs first (high-quality AI voice)
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.onplay = () => setIsSpeaking(true);
+        audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+        audio.play();
+        return;
+      }
+    } catch {}
+
+    // Fallback to browser TTS with best available voice
+    if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
-    u.rate = 1.0; u.pitch = 1.0; u.lang = "en-US";
+    u.rate = 0.95; u.pitch = 1.0; u.lang = "en-US";
     const voices = window.speechSynthesis.getVoices();
-    const v = voices.find(v => v.name.includes("Google") && v.lang.startsWith("en")) || voices.find(v => v.lang.startsWith("en"));
-    if (v) u.voice = v;
+    // Priority: Microsoft natural voices > Google voices > any English
+    const preferred = [
+      "Microsoft Aria", "Microsoft Jenny", "Microsoft Guy",
+      "Google US English", "Google UK English Female", "Samantha",
+      "Daniel", "Karen", "Moira",
+    ];
+    let selectedVoice = null;
+    for (const name of preferred) {
+      selectedVoice = voices.find(v => v.name.includes(name));
+      if (selectedVoice) break;
+    }
+    if (!selectedVoice) selectedVoice = voices.find(v => v.lang.startsWith("en"));
+    if (selectedVoice) u.voice = selectedVoice;
     u.onstart = () => setIsSpeaking(true);
     u.onend = () => setIsSpeaking(false);
     window.speechSynthesis.speak(u);

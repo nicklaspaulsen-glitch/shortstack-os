@@ -59,7 +59,7 @@ body {
   }
 
   .card-hover {
-    @apply card transition-all duration-200 hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[1px];
+    @apply card transition-all duration-300 hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[2px] hover:scale-[1.005];
   }
 
   .card-gradient {
@@ -69,11 +69,11 @@ body {
 
   /* Buttons */
   .btn-primary {
-    @apply bg-gradient-gold text-black font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-glow-sm active:scale-[0.97];
+    @apply bg-gradient-gold text-black font-semibold px-4 py-2 rounded-lg transition-all duration-200 hover:shadow-glow-sm hover:scale-[1.02] active:scale-[0.97];
   }
 
   .btn-secondary {
-    @apply bg-surface-light text-muted-light font-medium px-4 py-2 rounded-lg border border-border transition-all duration-200 hover:border-gold/30 hover:text-white active:scale-[0.97];
+    @apply bg-surface-light text-muted-light font-medium px-4 py-2 rounded-lg border border-border transition-all duration-200 hover:border-gold/30 hover:text-white hover:scale-[1.01] active:scale-[0.97];
   }
 
   .btn-danger {
@@ -86,7 +86,7 @@ body {
 
   /* Inputs */
   .input {
-    @apply bg-surface-light/80 border border-border rounded-lg px-3.5 py-2 text-white text-sm placeholder-muted focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/15 transition-all duration-200;
+    @apply bg-surface-light/80 border border-border rounded-lg px-3.5 py-2 text-white text-sm placeholder-muted focus:outline-none focus:border-gold/40 focus:ring-1 focus:ring-gold/15 transition-all duration-300;
   }
 
   .badge {
@@ -95,7 +95,7 @@ body {
 
   /* Stat cards */
   .stat-card {
-    @apply card flex flex-col gap-1;
+    @apply card flex flex-col gap-1 transition-all duration-300;
   }
 
   .stat-value {
@@ -120,7 +120,7 @@ body {
   }
 
   .table td {
-    @apply px-4 py-2.5 border-b border-border/30;
+    @apply px-4 py-2.5 border-b border-border/30 transition-colors duration-150;
   }
 
   .table tr:hover td {
@@ -129,7 +129,7 @@ body {
 
   /* Sidebar */
   .sidebar-link {
-    @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-muted transition-all duration-150 hover:bg-surface-light hover:text-white;
+    @apply flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-muted transition-all duration-200 hover:bg-surface-light hover:text-white hover:translate-x-0.5;
   }
 
   .sidebar-link-active {
@@ -147,16 +147,23 @@ body {
 
   /* Animations */
   .fade-in {
-    animation: fadeIn 0.25s ease-out;
+    animation: fadeIn 0.4s ease-out;
   }
 
   .slide-in {
-    animation: slideIn 0.25s ease-out;
+    animation: slideIn 0.4s ease-out;
   }
 
   .slide-up {
-    animation: slideUp 0.25s ease-out;
+    animation: slideUp 0.35s ease-out;
   }
+
+  .stagger-1 { animation-delay: 0.05s; animation-fill-mode: backwards; }
+  .stagger-2 { animation-delay: 0.1s; animation-fill-mode: backwards; }
+  .stagger-3 { animation-delay: 0.15s; animation-fill-mode: backwards; }
+  .stagger-4 { animation-delay: 0.2s; animation-fill-mode: backwards; }
+  .stagger-5 { animation-delay: 0.25s; animation-fill-mode: backwards; }
+  .stagger-6 { animation-delay: 0.3s; animation-fill-mode: backwards; }
 
   /* Divider */
   .divider {
@@ -169,7 +176,7 @@ body {
   }
 
   .tab-item {
-    @apply px-3 py-1.5 text-xs rounded-md font-medium transition-all duration-150 cursor-pointer;
+    @apply px-3 py-1.5 text-xs rounded-md font-medium transition-all duration-200 cursor-pointer;
   }
 
   .tab-item-active {
@@ -185,21 +192,98 @@ body {
     @apply w-2 h-2 rounded-full;
     box-shadow: 0 0 6px currentColor;
   }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+    overflow: hidden;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.3), transparent, rgba(56,189,248,0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: borderRotate 6s linear infinite;
+  }
+
+  /* Shimmer loading effect */
+  .shimmer {
+    background: linear-gradient(90deg, transparent 0%, rgba(201,168,76,0.05) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  /* Pulse ring */
+  .pulse-ring {
+    animation: pulseRing 2s ease-out infinite;
+  }
+
+  /* Count up animation */
+  .count-up {
+    animation: countPop 0.5s ease-out;
+  }
+
+  /* Float animation */
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Breathing glow */
+  .breathe {
+    animation: breathe 3s ease-in-out infinite;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes borderRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(201,168,76,0.3); }
+  70% { box-shadow: 0 0 0 10px rgba(201,168,76,0); }
+  100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+}
+
+@keyframes countPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
 }
 
 @layer utilities {

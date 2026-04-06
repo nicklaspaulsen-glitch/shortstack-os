@@ -24,6 +24,7 @@ import {
   MessageSquare,
   Link2,
   Sparkles,
+  Calendar,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -43,6 +44,7 @@ const navItems: NavItem[] = [
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={18} />, roles: ["admin", "team_member"] },
   { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={18} />, roles: ["client"] },
   { label: "Content", href: "/dashboard/portal/content", icon: <Film size={18} />, roles: ["client"] },
+  { label: "Calendar", href: "/dashboard/portal/calendar", icon: <Calendar size={18} />, roles: ["client"] },
   { label: "Reports", href: "/dashboard/portal/reports", icon: <BarChart3 size={18} />, roles: ["client"] },
   { label: "Invoices", href: "/dashboard/portal/billing", icon: <CreditCard size={18} />, roles: ["client"] },
   { label: "Support", href: "/dashboard/portal/support", icon: <MessageSquare size={18} />, roles: ["client"] },
