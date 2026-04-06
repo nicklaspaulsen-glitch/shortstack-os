@@ -42,7 +42,8 @@ export async function GET(request: NextRequest) {
       const body = `Hi,<br><br>I came across <b>${lead.business_name}</b> and noticed you might benefit from better online visibility.<br><br>We help ${lead.industry || "local"} businesses get more clients through social media, ads, and SEO.<br><br>Would you be open to a quick 10-minute call this week?<br><br>Best,<br>The ShortStack Team`;
 
       try {
-        const cRes = await fetch("https://services.leadconnectorhq.com/contacts/", { method: "POST", headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" }, body: JSON.stringify({ name: lead.business_name, email: lead.email, phone: lead.phone || undefined, tags: ["cold-outreach"], source: "ShortStack OS" }) });
+        const locationId = process.env.GHL_LOCATION_ID || "";
+        const cRes = await fetch("https://services.leadconnectorhq.com/contacts/", { method: "POST", headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" }, body: JSON.stringify({ locationId, name: lead.business_name, email: lead.email, phone: lead.phone || undefined, tags: ["cold-outreach"], source: "ShortStack OS" }) });
         const contact = await cRes.json();
         if (contact.contact?.id) {
           await fetch("https://services.leadconnectorhq.com/conversations/messages", { method: "POST", headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" }, body: JSON.stringify({ type: "Email", contactId: contact.contact.id, subject, html: body }) });
