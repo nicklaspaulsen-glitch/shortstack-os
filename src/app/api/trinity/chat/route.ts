@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 3000,
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 2000,
         system: `You are Trinity, the AI assistant for ShortStack digital marketing agency OS. You are powerful and can do ANYTHING the user asks.
 
 YOUR CAPABILITIES:
