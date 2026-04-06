@@ -186,8 +186,15 @@ export default function LoginPage() {
         )}
 
         {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-[9px] text-muted/40">Powered by ShortStack</p>
+        <div className="text-center mt-8 space-y-1">
+          <div className="flex items-center justify-center gap-3 text-[9px] text-muted/40">
+            <a href="/terms" className="hover:text-muted transition-colors">Terms</a>
+            <span>·</span>
+            <a href="/privacy" className="hover:text-muted transition-colors">Privacy</a>
+            <span>·</span>
+            <a href="/changelog" className="hover:text-muted transition-colors">Changelog</a>
+          </div>
+          <p className="text-[9px] text-muted/30">Powered by ShortStack</p>
         </div>
       </div>
     </div>
