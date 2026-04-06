@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import toast from "react-hot-toast";
 import {
-  Film, Megaphone, Globe, Search, Phone, Zap,
+  Film, Megaphone, Globe, Search, Phone,
   Camera, Send, Sparkles,
   Loader, CheckCircle, PenTool
 } from "lucide-react";
@@ -241,12 +242,26 @@ export default function ServicesPage() {
   async function runAction(prompt: string) {
     setGenerating(true);
     setResult("");
+    toast.loading("AI is generating... this takes 5-15 seconds");
 
-    // Replace variables in prompt
+    // Replace variables in prompt — use smart defaults if empty
     let finalPrompt = prompt;
+    const defaults: Record<string, string> = {
+      industry: "dental", business_name: "a local business", audience: "business owners aged 30-55",
+      location: "Miami, FL", topic: "getting more clients", keywords: "local services",
+      offer: "free consultation", service: "digital marketing", budget: "$2000/month",
+      platform: "Instagram and TikTok", client: "the client",
+    };
+    // First apply user-entered variables
     Object.entries(variables).forEach(([k, v]) => {
-      finalPrompt = finalPrompt.replace(new RegExp(`\\{${k}\\}`, "g"), v || `[${k}]`);
+      if (v) finalPrompt = finalPrompt.replace(new RegExp(`\\{${k}\\}`, "g"), v);
     });
+    // Then fill remaining with defaults
+    Object.entries(defaults).forEach(([k, v]) => {
+      finalPrompt = finalPrompt.replace(new RegExp(`\\{${k}\\}`, "g"), v);
+    });
+    // Clean any remaining unfilled vars
+    finalPrompt = finalPrompt.replace(/\{(\w+)\}/g, (_, key) => key.replace(/_/g, " "));
 
     try {
       const res = await fetch("/api/agents/generate", {
@@ -258,8 +273,10 @@ export default function ServicesPage() {
         }),
       });
       const data = await res.json();
+      toast.dismiss();
       setResult(data.result || data.error || "No response");
     } catch {
+      toast.dismiss();
       setResult("Error generating content. Try again.");
     }
     setGenerating(false);
@@ -384,14 +401,11 @@ export default function ServicesPage() {
               <h3 className="text-[10px] text-muted uppercase tracking-wider font-medium mb-2">Quick Actions</h3>
               <div className="grid grid-cols-2 gap-2">
                 {activeAgent.actions.map((action, i) => {
-                  const vars = getVars(action.prompt);
                   return (
                     <div key={i} className="space-y-1.5">
                       <button
-                        onClick={() => {
-                          if (vars.every(v => variables[v])) runAction(action.prompt);
-                        }}
-                        disabled={generating || !vars.every(v => variables[v])}
+                        onClick={() => runAction(action.prompt)}
+                        disabled={generating}
                         className="w-full text-left p-2.5 rounded-lg border border-border/30 hover:border-gold/20 transition-all text-xs disabled:opacity-50"
                       >
                         <div className="flex items-center gap-1.5">
