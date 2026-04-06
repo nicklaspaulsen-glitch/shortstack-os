@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 // Electron checks this on startup to show update notifications
 export async function GET() {
   return NextResponse.json({
-    version: "1.0.0",
+    version: "1.1.0",
     download_url: "https://shortstack-os.vercel.app/downloads/ShortStack-OS-Setup.exe",
-    release_notes: "Initial release — UI redesign, license system, AI workflow agent",
+    release_notes: "AI Social Manager, Analytics, Proposals, DM Automations, Notifications, Reviews, Competitor Spy, 20+ new features",
     required: false,
     published_at: new Date().toISOString(),
   });
