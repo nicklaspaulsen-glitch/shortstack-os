@@ -35,6 +35,23 @@ export async function POST(request: NextRequest) {
           activated_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         }).eq("license_key", licenseKey);
+
+        // 🚨 NOTIFY: Someone bought the product!
+        const chatId = process.env.TELEGRAM_CHAT_ID;
+        if (chatId) {
+          const { sendTelegramMessage } = await import("@/lib/services/trinity");
+          const email = session.metadata?.email || session.customer_email || "Unknown";
+          const tier = session.metadata?.tier || "Unknown";
+          const amount = session.amount_total ? `$${(session.amount_total / 100).toFixed(2)}` : "Unknown";
+          await sendTelegramMessage(chatId,
+            `🎉🎉🎉 *NEW SALE!* 🎉🎉🎉\n\n` +
+            `💰 Amount: ${amount}\n` +
+            `📧 Customer: ${email}\n` +
+            `🏷️ Tier: ${tier}\n` +
+            `🔑 License: ${licenseKey}\n\n` +
+            `Go check Stripe for details!`
+          );
+        }
       }
       break;
     }

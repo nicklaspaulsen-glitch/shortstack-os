@@ -48,10 +48,10 @@ export default function VoiceAssistant() {
     const isClient = profile?.role === "client";
 
     try {
-      const endpoint = isClient ? "/api/trinity/client-chat" : "/api/trinity/chat";
+      const endpoint = isClient ? "/api/trinity/client-chat" : "/api/agents/chief";
       const briefingPrompt = isClient
         ? "Give me a quick briefing on my account. What's the status of my tasks, any updates on my content, and what's coming up next?"
-        : "Give me a quick briefing. What happened since I was last here? Any leads, outreach results, calls booked, client updates, or issues I should know about?";
+        : "Give me a brief status update. How many leads do we have, what's the MRR, any outreach results, system issues, or things I should know about?";
 
       const res = await fetch(endpoint, {
         method: "POST",
@@ -172,12 +172,12 @@ export default function VoiceAssistant() {
 
     try {
       const isClient = profile?.role === "client";
-      const endpoint = isClient ? "/api/trinity/client-chat" : "/api/trinity/chat";
+      const endpoint = isClient ? "/api/trinity/client-chat" : "/api/agents/chief";
 
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ message: text, history: messages.slice(-6).map(m => ({ role: m.role === "assistant" ? "chief" : "user", content: m.content })) }),
       });
       const data = await res.json();
       const reply = data.reply || "I didn't catch that. Could you try again?";
