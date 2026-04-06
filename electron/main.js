@@ -239,7 +239,7 @@ function createMainWindow() {
       devTools: !app.isPackaged,
     },
     titleBarStyle: "hidden",
-    titleBarOverlay: { color: "#020304", symbolColor: "#C9A84C", height: 36 },
+    titleBarOverlay: { color: "#06080c", symbolColor: "#64748b", height: 32 },
     autoHideMenuBar: true,
     show: false,
   });

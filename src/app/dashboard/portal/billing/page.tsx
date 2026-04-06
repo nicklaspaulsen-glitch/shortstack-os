@@ -62,6 +62,18 @@ export default function ClientBillingPage() {
             { key: "status", label: "Status", render: (i: Invoice) => <StatusBadge status={i.status} /> },
             { key: "due_date", label: "Due", render: (i: Invoice) => <span className="text-xs text-muted">{i.due_date ? formatDate(i.due_date) : "-"}</span> },
             { key: "paid_at", label: "Paid", render: (i: Invoice) => <span className="text-xs text-muted">{i.paid_at ? formatDate(i.paid_at) : "-"}</span> },
+            { key: "actions", label: "", render: (i: Invoice) => (i.status === "sent" || i.status === "overdue") ? (
+              <button onClick={async (e) => {
+                e.stopPropagation();
+                const res = await fetch("/api/invoices/pay", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ invoice_id: i.id }),
+                });
+                const data = await res.json();
+                if (data.checkout_url) window.location.href = data.checkout_url;
+              }} className="btn-primary text-[9px] py-1 px-2.5">Pay Now</button>
+            ) : null },
           ]}
           data={invoices}
           emptyMessage="No invoices yet"
