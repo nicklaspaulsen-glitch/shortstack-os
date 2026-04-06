@@ -24,12 +24,11 @@ export async function POST(request: NextRequest) {
 
   // Get client context
   let clientContext = "";
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let _clientName = "the business";
+  void 0; // client name used in prompt context below
   if (client_id) {
     const { data: client } = await supabase.from("clients").select("business_name, industry, services, metadata").eq("id", client_id).single();
     if (client) {
-      _clientName = client.business_name;
+      void client.business_name;
       const meta = (client.metadata as Record<string, unknown>) || {};
       clientContext = `
 CLIENT CONTEXT:

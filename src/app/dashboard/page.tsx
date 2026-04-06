@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import PixelOffice from "@/components/pixel-office";
 
 interface DashboardStats {
   leadsToday: number;
@@ -131,6 +132,9 @@ export default function DashboardPage() {
 
       {/* Trinity AI */}
       <TrinityAssistant profile={profile} />
+
+      {/* Pixel Office — Live Agent View */}
+      <PixelOffice />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">
