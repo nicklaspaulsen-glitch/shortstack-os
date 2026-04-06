@@ -137,22 +137,63 @@ export default function LeadEnginePage() {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-medium">Outreach Control Panel</h3>
-          <button onClick={async () => {
-            const platforms = Object.entries(outreachConfig).filter(([, v]) => v.enabled).map(([k]) => k);
-            if (platforms.length === 0) { toast.error("Select at least one platform"); return; }
-            toast.loading("Sending DMs...");
-            const res = await fetch("/api/outreach/send-now", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ platforms, count_per_platform: Object.values(outreachConfig)[0]?.limit || 5 }),
-            });
-            toast.dismiss();
-            const data = await res.json();
-            if (data.success) { toast.success(`${data.totalSent} DMs sent!`); fetchData(); }
-            else toast.error("Failed to send");
-          }} className="btn-primary text-xs py-1.5 px-4 flex items-center gap-2">
-            <MessageSquare size={14} /> Send Now
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Email outreach */}
+            <button onClick={async () => {
+              toast.loading("Sending cold emails...");
+              const res = await fetch("/api/outreach/email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ batch_size: 20, from_name: "ShortStack Team" }),
+              });
+              toast.dismiss();
+              const data = await res.json();
+              if (data.success) { toast.success(`${data.sent} emails sent!`); fetchData(); }
+              else toast.error(data.error || "Failed");
+            }} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5">
+              <Mail size={12} /> Email Blast
+            </button>
+
+            {/* GHL cold calls */}
+            <button onClick={async () => {
+              const { data: newLeads } = await supabase.from("leads").select("id, phone, business_name").not("phone", "is", null).eq("status", "new").limit(5);
+              if (!newLeads || newLeads.length === 0) { toast.error("No leads with phone numbers"); return; }
+              toast.loading(`Calling ${newLeads.length} leads via GHL...`);
+              let called = 0;
+              for (const lead of newLeads) {
+                const res = await fetch("/api/ghl/call", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ lead_id: lead.id, phone_number: lead.phone, business_name: lead.business_name }),
+                });
+                const data = await res.json();
+                if (data.success) called++;
+              }
+              toast.dismiss();
+              toast.success(`${called} calls initiated via GHL`);
+              fetchData();
+            }} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5">
+              <Phone size={12} /> GHL Calls
+            </button>
+
+            {/* DM outreach */}
+            <button onClick={async () => {
+              const platforms = Object.entries(outreachConfig).filter(([, v]) => v.enabled).map(([k]) => k);
+              if (platforms.length === 0) { toast.error("Select at least one platform"); return; }
+              toast.loading("Sending DMs...");
+              const res = await fetch("/api/outreach/send-now", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ platforms, count_per_platform: Object.values(outreachConfig)[0]?.limit || 5 }),
+              });
+              toast.dismiss();
+              const data = await res.json();
+              if (data.success) { toast.success(`${data.totalSent} DMs sent!`); fetchData(); }
+              else toast.error("Failed to send");
+            }} className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1.5">
+              <MessageSquare size={12} /> Send DMs
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
