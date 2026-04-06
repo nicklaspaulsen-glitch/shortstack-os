@@ -70,6 +70,7 @@ const navItems: NavItem[] = [
   { label: "Content AI", href: "/dashboard/content", icon: <Film size={16} />, roles: ["admin", "team_member"] },
   { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member", "client"] },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"] },
+  { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
   { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"] },
   { label: "Trinity", href: "/dashboard/trinity", icon: <Bot size={16} />, roles: ["admin"] },
 
