@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
-import { parseTrinityMessage, executeTrinityCommand } from "@/lib/services/trinity";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -8,82 +7,82 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { message } = await request.json();
-
-  // Step 1: Determine if this is an ACTION request or just CONVERSATION
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
-  if (apiKey) {
-    try {
-      const classifyRes = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-        body: JSON.stringify({
-          model: "claude-haiku-4-5-20251001",
-          max_tokens: 300,
-          system: `You are Trinity, the AI assistant for ShortStack digital marketing agency OS. You help agency owners manage their business.
+  if (!apiKey) return NextResponse.json({ reply: "AI not configured." });
 
-If the user is making casual conversation (greetings, questions, small talk), respond naturally and helpfully. Be friendly, brief, and professional.
+  // Get system context so Trinity knows what's happening
+  const serviceSupabase = createServiceClient();
+  const [
+    { count: totalLeads },
+    { count: activeClients },
+    { data: clients },
+    { count: dmsSent },
+    { data: recentActions },
+  ] = await Promise.all([
+    serviceSupabase.from("leads").select("*", { count: "exact", head: true }),
+    serviceSupabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true),
+    serviceSupabase.from("clients").select("mrr").eq("is_active", true),
+    serviceSupabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "sent"),
+    serviceSupabase.from("trinity_log").select("description, status").order("created_at", { ascending: false }).limit(5),
+  ]);
 
-If the user is requesting a SPECIFIC ACTION (build website, generate leads, create campaign, set up receptionist, run outreach, etc), respond with exactly: ACTION: [describe the action]
+  const totalMRR = (clients || []).reduce((s, c) => s + ((c as { mrr: number }).mrr || 0), 0);
 
-Examples:
-- "hey" → friendly greeting (NOT an action)
-- "how are you" → casual response (NOT an action)
-- "what can you do" → explain your capabilities (NOT an action)
-- "build a website for Bright Smile Dental" → ACTION: build website for Bright Smile Dental
-- "generate 50 leads for dentists in Miami" → ACTION: generate leads for dentists in Miami
-- "set up AI receptionist for my client" → ACTION: set up AI receptionist`,
-          messages: [{ role: "user", content: message }],
-        }),
-      });
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 3000,
+        system: `You are Trinity, the AI assistant for ShortStack digital marketing agency OS. You are powerful and can do ANYTHING the user asks.
 
-      const classifyData = await classifyRes.json();
-      const response = classifyData.content?.[0]?.text || "";
+YOUR CAPABILITIES:
+- Generate content scripts (short-form, long-form, any quantity)
+- Write ad copy, blog posts, email sequences
+- Create marketing strategies and plans
+- Generate SEO keywords and content
+- Write cold outreach messages
+- Create brand voice guides
+- Design website copy
+- Analyze competitors
+- Plan content calendars
 
-      // If it's just conversation, return the AI response directly
-      if (!response.startsWith("ACTION:")) {
-        return NextResponse.json({ reply: response, success: true });
-      }
+SYSTEM STATUS:
+- Leads: ${totalLeads || 0}
+- Clients: ${activeClients || 0}
+- MRR: $${totalMRR}
+- Outreach sent: ${dmsSent || 0}
+- Recent: ${(recentActions || []).slice(0, 3).map(a => a.description).join("; ")}
 
-      // It's an action — proceed with command execution
-    } catch {
-      // If classification fails, fall through to command parsing
-    }
-  }
-
-  // Step 2: Parse and execute as action command
-  const command = await parseTrinityMessage(message);
-
-  if (!command) {
-    return NextResponse.json({
-      reply: "I'm not sure what action to take. You can ask me to:\n\n• Build a website for a client\n• Set up an AI receptionist\n• Generate leads for an industry\n• Run an email campaign\n• Create content scripts\n\nOr just chat with me — I'm happy to help with anything!",
+RULES:
+- NEVER use markdown (no **, ##, tables, or bullet dashes)
+- Write in plain conversational text
+- When asked to GENERATE content, actually GENERATE IT in full
+- When asked for scripts, WRITE THE ACTUAL SCRIPTS
+- When asked for 30 scripts, write outlines for all 30
+- Be thorough and deliver real value
+- If something is too long, break it into sections and deliver part 1
+- Always tell the user where to find things in the OS (which page/tab)`,
+        messages: [{ role: "user", content: message }],
+      }),
     });
+
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || "I couldn't process that. Try again.";
+
+    // Log the action
+    await serviceSupabase.from("trinity_log").insert({
+      action_type: "custom",
+      description: `Trinity: ${message.substring(0, 100)}`,
+      command: message,
+      status: "completed",
+      result: { reply_length: reply.length },
+    });
+
+    return NextResponse.json({ reply, success: true });
+  } catch (err) {
+    return NextResponse.json({ reply: `Error: ${err}`, success: false });
   }
-
-  // Log it
-  const { data: logEntry } = await supabase.from("trinity_log").insert({
-    action_type: command.action,
-    description: command.description,
-    command: message,
-    status: "in_progress",
-  }).select("id").single();
-
-  // Execute
-  const result = await executeTrinityCommand(command);
-
-  // Update log
-  if (logEntry) {
-    await supabase.from("trinity_log").update({
-      status: result.success ? "completed" : "failed",
-      result: result.result,
-      error_message: result.error || null,
-      completed_at: new Date().toISOString(),
-    }).eq("id", logEntry.id);
-  }
-
-  const reply = result.success
-    ? `Done! ${result.result.message || command.description}\n\nAction: ${command.action}\nStatus: Completed`
-    : `Failed: ${result.error || "Unknown error"}\n\nI logged this issue. Please check the configuration for ${command.action}.`;
-
-  return NextResponse.json({ reply, success: result.success });
 }
