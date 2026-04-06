@@ -6,6 +6,8 @@ import ClientSwitcher from "@/components/client-switcher";
 import Notifications from "@/components/notifications";
 import ClientChatWidget from "@/components/client-chat-widget";
 import VoiceAssistant from "@/components/voice-assistant";
+import OnboardingTour from "@/components/onboarding-tour";
+import ErrorBoundary from "@/components/ui/error-boundary";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -63,11 +65,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Page content */}
         <div className="p-4 lg:p-6">
-          {children}
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
         </div>
       </main>
       <VoiceAssistant />
       <ClientChatWidget />
+      <OnboardingTour onComplete={() => {}} />
     </div>
   );
 }

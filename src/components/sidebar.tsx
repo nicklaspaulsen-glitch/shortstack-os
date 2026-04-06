@@ -75,6 +75,7 @@ const navItems: NavItem[] = [
   // ── System ──
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"], section: "System" },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
+  { label: "Demo", href: "/dashboard/demo", icon: <Eye size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── Client Portal ──

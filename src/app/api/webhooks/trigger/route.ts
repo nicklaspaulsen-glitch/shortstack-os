@@ -55,15 +55,3 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ success: true, event, triggered: results.length, results });
 }
 
-// Helper: trigger webhook from other API routes
-export async function triggerWebhook(event: string, data: Record<string, unknown>) {
-  const urls = [process.env.ZAPIER_WEBHOOK_URL, process.env.MAKE_API_KEY].filter(Boolean);
-  for (const url of urls) {
-    if (!url) continue;
-    fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ event, timestamp: new Date().toISOString(), source: "shortstack_os", data }),
-    }).catch(() => {});
-  }
-}
