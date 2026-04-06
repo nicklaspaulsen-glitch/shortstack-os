@@ -22,30 +22,72 @@ export async function GET(request: NextRequest) {
   const supabase = createServiceClient();
   const today = new Date().toISOString().split("T")[0];
   const results: Record<string, { sent: number; failed: number }> = {};
+
+  // ══ EMAIL OUTREACH FIRST (most leads have emails, not social URLs) ══
+  let emailsSent = 0;
+  const ghlKey = process.env.GHL_API_KEY;
+  const aiKey = process.env.ANTHROPIC_API_KEY;
+
+  const { data: emailLeads } = await supabase
+    .from("leads")
+    .select("*")
+    .not("email", "is", null)
+    .eq("status", "new")
+    .limit(5); // Start with 5 to stay within timeout
+
+  if (emailLeads) {
+    for (const lead of emailLeads) {
+      let subject = `Quick question about ${lead.business_name}`;
+      let body = `Hi,\n\nI came across ${lead.business_name} and think we could help you get more clients.\n\nWould you be open to a quick chat?\n\nBest,\nThe ShortStack Team`;
+
+      if (aiKey) {
+        try {
+          const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-api-key": aiKey, "anthropic-version": "2023-06-01" },
+            body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 200, messages: [{ role: "user", content: `Write a 50-word cold email to ${lead.business_name} (${lead.industry || "business"}). Return JSON: {"subject":"...","body":"..."}` }] }),
+          });
+          const aiData = await aiRes.json();
+          try { const p = JSON.parse((aiData.content?.[0]?.text || "").replace(/```json\n?/g, "").replace(/```/g, "").trim()); subject = p.subject || subject; body = p.body || body; } catch {}
+        } catch {}
+      }
+
+      if (ghlKey) {
+        try {
+          const cRes = await fetch("https://services.leadconnectorhq.com/contacts/", { method: "POST", headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" }, body: JSON.stringify({ name: lead.business_name, email: lead.email, phone: lead.phone || undefined, tags: ["cold-outreach"], source: "ShortStack OS" }) });
+          const contact = await cRes.json();
+          if (contact.contact?.id) {
+            await fetch("https://services.leadconnectorhq.com/conversations/messages", { method: "POST", headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" }, body: JSON.stringify({ type: "Email", contactId: contact.contact.id, subject, html: body.replace(/\n/g, "<br>") }) });
+            emailsSent++;
+          }
+        } catch {}
+      }
+
+      await supabase.from("outreach_log").insert({ lead_id: lead.id, platform: "email", business_name: lead.business_name, recipient_handle: lead.email, message_text: `Subject: ${subject}\n\n${body}`, status: ghlKey ? "sent" : "pending", metadata: { source: "daily_cron" } });
+      await supabase.from("leads").update({ status: "called" }).eq("id", lead.id);
+    }
+  }
+
+  // Send Telegram notification immediately
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (chatId) {
+    const { sendTelegramMessage } = await import("@/lib/services/trinity");
+    await sendTelegramMessage(chatId, `📨 *Outreach Cron*\n\n✉️ Emails: ${emailsSent}/${emailLeads?.length || 0}\n\n${emailsSent > 0 ? "✅ Outreach running" : "⚠️ Check GHL key"}`);
+  }
+
+  // ══ DM OUTREACH (only if leads have social URLs) ══
   const platforms: OutreachPlatform[] = ["instagram", "linkedin", "facebook", "tiktok"];
 
   for (const platform of platforms) {
     results[platform] = { sent: 0, failed: 0 };
 
-    // Check how many DMs sent today
-    const { count } = await supabase
-      .from("outreach_log")
-      .select("*", { count: "exact", head: true })
-      .eq("platform", platform)
-      .gte("sent_at", today);
-
-    const remaining = DAILY_LIMITS[platform] - (count || 0);
-    if (remaining <= 0) continue;
-
-    // Get leads with social profiles for this platform
-    const socialField = `${platform === "instagram" ? "instagram" : platform === "facebook" ? "facebook" : platform === "linkedin" ? "linkedin" : "tiktok"}_url`;
-
+    const socialField = `${platform}_url`;
     const { data: leads } = await supabase
       .from("leads")
       .select("*")
       .not(socialField, "is", null)
       .eq("status", "new")
-      .limit(remaining);
+      .limit(DAILY_LIMITS[platform]);
 
     if (!leads) continue;
 
@@ -164,94 +206,6 @@ export async function GET(request: NextRequest) {
 
       followUpsSent++;
     }
-  }
-
-  // ── EMAIL OUTREACH — works even without social URLs ──
-  let emailsSent = 0;
-  const { data: emailLeads } = await supabase
-    .from("leads")
-    .select("*")
-    .not("email", "is", null)
-    .eq("status", "new")
-    .limit(20);
-
-  if (emailLeads && emailLeads.length > 0) {
-    const ghlKey = process.env.GHL_API_KEY;
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-
-    for (const lead of emailLeads) {
-      // Generate personalized email
-      let subject = `Quick question about ${lead.business_name}`;
-      let body = `Hi,\n\nI came across ${lead.business_name} and I think we could help you get more clients through digital marketing.\n\nWould you be open to a quick chat?\n\nBest,\nThe ShortStack Team`;
-
-      if (apiKey) {
-        try {
-          const aiRes = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-            body: JSON.stringify({
-              model: "claude-haiku-4-5-20251001",
-              max_tokens: 300,
-              messages: [{ role: "user", content: `Write a short cold email to ${lead.business_name} (${lead.industry || "business"}) pitching digital marketing services. Under 100 words. Return JSON: {"subject":"...","body":"..."}` }],
-            }),
-          });
-          const aiData = await aiRes.json();
-          const text = aiData.content?.[0]?.text || "";
-          try {
-            const parsed = JSON.parse(text.replace(/```json\n?/g, "").replace(/```/g, "").trim());
-            subject = parsed.subject || subject;
-            body = parsed.body || body;
-          } catch {}
-        } catch {}
-      }
-
-      // Send via GHL
-      if (ghlKey) {
-        try {
-          // Create contact
-          const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ name: lead.business_name, email: lead.email, phone: lead.phone || undefined, tags: ["cold-outreach", "cron"], source: "ShortStack OS" }),
-          });
-          const contact = await contactRes.json();
-          const contactId = contact.contact?.id;
-
-          if (contactId) {
-            await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-              body: JSON.stringify({ type: "Email", contactId, subject, html: body.replace(/\n/g, "<br>") }),
-            });
-            emailsSent++;
-          }
-        } catch {}
-      }
-
-      // Log it
-      await supabase.from("outreach_log").insert({
-        lead_id: lead.id,
-        platform: "email",
-        business_name: lead.business_name,
-        recipient_handle: lead.email,
-        message_text: `Subject: ${subject}\n\n${body}`,
-        status: ghlKey ? "sent" : "pending",
-        metadata: { source: "daily_cron", ai_generated: !!apiKey },
-      });
-
-      // Update lead status
-      await supabase.from("leads").update({ status: "called" }).eq("id", lead.id);
-
-      await new Promise(r => setTimeout(r, 300));
-    }
-  }
-
-  // Send summary to Telegram
-  const totalDMs = Object.values(results).reduce((s, r) => s + r.sent, 0);
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (chatId) {
-    const { sendTelegramMessage } = await import("@/lib/services/trinity");
-    await sendTelegramMessage(chatId, `📨 *Daily Outreach Complete*\n\nDMs: ${totalDMs}\nEmails: ${emailsSent}\nFollow-ups: ${followUpsSent}\n\n${emailsSent > 0 ? `✅ ${emailsSent} cold emails sent` : "⚠️ No emails sent (check GHL key)"}`);
   }
 
   return NextResponse.json({
