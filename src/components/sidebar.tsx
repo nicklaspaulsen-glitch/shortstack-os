@@ -59,6 +59,7 @@ const navItems: NavItem[] = [
   { label: "DM Automations", href: "/dashboard/automations", icon: <Bot size={18} />, roles: ["admin", "team_member", "client"] },
   { label: "Team & Payroll", href: "/dashboard/team", icon: <Briefcase size={18} />, roles: ["admin"] },
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={18} />, roles: ["admin", "team_member"] },
+  { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={18} />, roles: ["admin", "team_member"] },
   { label: "Content AI", href: "/dashboard/content", icon: <Film size={18} />, roles: ["admin", "team_member"] },
   { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={18} />, roles: ["admin"] },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={18} />, roles: ["admin"] },
