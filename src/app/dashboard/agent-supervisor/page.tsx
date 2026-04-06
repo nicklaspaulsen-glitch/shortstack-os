@@ -369,6 +369,100 @@ export default function AgentSupervisorPage() {
           </div>
         </div>
       </div>
+      {/* Chief Agent Chat */}
+      <ChiefChat />
+    </div>
+  );
+}
+
+function ChiefChat() {
+  const [messages, setMessages] = useState<Array<{ role: "user" | "chief"; content: string }>>([]);
+  const [input, setInput] = useState("");
+  const [thinking, setThinking] = useState(false);
+
+  async function sendMessage() {
+    if (!input.trim() || thinking) return;
+    const msg = input.trim();
+    setInput("");
+    setMessages(prev => [...prev, { role: "user", content: msg }]);
+    setThinking(true);
+
+    try {
+      const res = await fetch("/api/agents/chief", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg, history: messages.slice(-10) }),
+      });
+      const data = await res.json();
+      setMessages(prev => [...prev, { role: "chief", content: data.reply || "No response." }]);
+    } catch {
+      setMessages(prev => [...prev, { role: "chief", content: "Connection error." }]);
+    }
+    setThinking(false);
+  }
+
+  return (
+    <div className="card border-gold/10 relative overflow-hidden">
+      <div className="absolute inset-0 bg-mesh opacity-20" />
+      <div className="relative">
+        <div className="flex items-center gap-2 pb-3 border-b border-border/20 mb-3">
+          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
+            <Shield size={16} className="text-gold" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold">Nexus — Chief Agent</p>
+            <p className="text-[9px] text-success flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" /> Online — overseeing all agents
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-2 max-h-[250px] overflow-y-auto mb-3">
+          {messages.length === 0 && (
+            <div className="text-center py-6">
+              <Shield size={20} className="mx-auto mb-2 text-gold/30" />
+              <p className="text-[10px] text-muted mb-2">Talk to Nexus about agent status, system health, and strategy</p>
+              <div className="flex flex-wrap justify-center gap-1">
+                {["What's the status of all agents?", "Any problems I should know about?", "What should we improve?", "Give me a performance report"].map((s, i) => (
+                  <button key={i} onClick={() => setInput(s)}
+                    className="text-[9px] bg-surface-light/50 px-2 py-1 rounded text-muted hover:text-white border border-border/20 transition-all">
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          {messages.map((msg, i) => (
+            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
+                msg.role === "user" ? "bg-gold/10 border border-gold/15" : "bg-surface-light/50 border border-border/20"
+              }`}>
+                {msg.role === "chief" && <p className="text-[8px] text-gold font-bold mb-0.5">NEXUS</p>}
+                <p className="text-[10px] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+              </div>
+            </div>
+          ))}
+          {thinking && (
+            <div className="flex justify-start">
+              <div className="bg-surface-light/50 border border-border/20 rounded-lg px-3 py-2">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 border-2 border-gold/20 border-t-gold rounded-full animate-spin" />
+                  <span className="text-[9px] text-muted">Nexus analyzing...</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-2">
+          <input type="text" value={input} onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask Nexus anything about agent status, performance, or strategy..."
+            className="input flex-1 text-[10px]" disabled={thinking} />
+          <button type="submit" disabled={!input.trim() || thinking} className="btn-primary text-[10px] px-3 disabled:opacity-30">
+            <MessageSquare size={12} />
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
