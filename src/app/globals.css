@@ -289,42 +289,87 @@ body {
 }
 
 /* Light theme overrides */
+.theme-light body,
+.theme-light { background: #f8fafc !important; color: #0f172a !important; }
+
 .theme-light .card,
 .theme-light .stat-card,
 .theme-light .card-hover,
 .theme-light .card-gradient {
-  background: var(--color-surface) !important;
-  border-color: var(--color-border) !important;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.03) !important;
+  color: #0f172a !important;
 }
+.theme-light .card-hover:hover { border-color: #C9A84C !important; box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important; }
 
-.theme-light .sidebar-link,
-.theme-light .sidebar-link-active,
-.theme-light .input,
-.theme-light .tab-group,
-.theme-light .table th,
-.theme-light .table-container {
-  background: var(--color-surface-light) !important;
-  border-color: var(--color-border) !important;
-}
-
+/* Sidebar */
+.theme-light aside { background: #ffffff !important; border-color: #e2e8f0 !important; }
 .theme-light .sidebar-link { color: #475569 !important; }
-.theme-light .sidebar-link:hover { color: #0f172a !important; background: #e2e8f0 !important; }
-.theme-light .sidebar-link-active { color: var(--color-accent) !important; background: rgba(201,168,76,0.08) !important; }
+.theme-light .sidebar-link:hover { color: #0f172a !important; background: #f1f5f9 !important; }
+.theme-light .sidebar-link-active { color: #C9A84C !important; background: rgba(201,168,76,0.06) !important; border-color: rgba(201,168,76,0.15) !important; }
 
-.theme-light .text-muted,
-.theme-light .stat-label { color: #64748b !important; }
+/* Header */
+.theme-light header,
+.theme-light .electron-drag,
+.theme-light [class*="bg-gradient-header"] { background: rgba(255,255,255,0.9) !important; border-color: #e2e8f0 !important; }
 
+/* Text */
 .theme-light .text-white,
 .theme-light .stat-value,
 .theme-light .section-header,
-.theme-light .page-header { color: #0f172a !important; }
+.theme-light .page-header,
+.theme-light h1, .theme-light h2, .theme-light h3 { color: #0f172a !important; }
 
-.theme-light .input { color: #0f172a !important; background: #f1f5f9 !important; }
+.theme-light .text-muted,
+.theme-light .stat-label,
+.theme-light p { color: #64748b !important; }
+
+.theme-light span, .theme-light a { color: inherit; }
+
+/* Inputs */
+.theme-light .input { color: #0f172a !important; background: #f1f5f9 !important; border-color: #e2e8f0 !important; }
 .theme-light .input::placeholder { color: #94a3b8 !important; }
+.theme-light .input:focus { border-color: #C9A84C !important; }
 
+/* Tabs */
+.theme-light .tab-group { background: #f1f5f9 !important; border-color: #e2e8f0 !important; }
+.theme-light .tab-item-inactive { color: #64748b !important; }
+.theme-light .tab-item-inactive:hover { color: #0f172a !important; }
+
+/* Tables */
+.theme-light .table-container { border-color: #e2e8f0 !important; }
+.theme-light .table th { background: #f8fafc !important; border-color: #e2e8f0 !important; color: #475569 !important; }
+.theme-light .table td { border-color: #f1f5f9 !important; color: #334155 !important; }
+.theme-light .table tr:hover td { background: #f8fafc !important; }
+
+/* Buttons */
+.theme-light .btn-secondary { background: #f1f5f9 !important; color: #334155 !important; border-color: #e2e8f0 !important; }
+.theme-light .btn-secondary:hover { border-color: #C9A84C !important; color: #0f172a !important; }
+.theme-light .btn-ghost { color: #475569 !important; }
+.theme-light .btn-ghost:hover { background: #f1f5f9 !important; color: #0f172a !important; }
+
+/* Badges */
+.theme-light .badge { opacity: 0.9; }
+
+/* Misc */
+.theme-light .bg-surface-light,
+.theme-light [class*="bg-surface"] { background: #f1f5f9 !important; }
+.theme-light .border-border,
+.theme-light [class*="border-border"] { border-color: #e2e8f0 !important; }
+
+/* Section labels */
+.theme-light [class*="tracking-"] { color: #94a3b8 !important; }
+
+/* Mesh background */
+.theme-light .bg-mesh { background: none !important; }
+
+/* Scrollbar */
 .theme-light ::-webkit-scrollbar-thumb { background: #cbd5e1 !important; }
 .theme-light ::selection { background: rgba(201,168,76,0.2) !important; }
+
+/* Modal */
+.theme-light [class*="bg-black/"] { background: rgba(0,0,0,0.3) !important; }
 
 @layer utilities {
   .text-balance { text-wrap: balance; }

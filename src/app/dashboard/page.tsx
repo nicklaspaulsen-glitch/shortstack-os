@@ -333,29 +333,33 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
 
     // Try ElevenLabs first (high-quality AI voice)
     try {
+      setIsSpeaking(true);
       const res = await fetch("/api/tts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: text.substring(0, 500) }),
       });
-      if (res.ok) {
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audio.onplay = () => setIsSpeaking(true);
-        audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
-        audio.play();
+      if (res.ok && res.headers.get("content-type")?.includes("audio")) {
+        const arrayBuffer = await res.arrayBuffer();
+        const audioCtx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        const source = audioCtx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(audioCtx.destination);
+        source.onended = () => setIsSpeaking(false);
+        source.start(0);
         return;
       }
-    } catch {}
+    } catch (err) {
+      console.log("ElevenLabs TTS failed, falling back to browser voice:", err);
+    }
 
     // Fallback to browser TTS with best available voice
-    if (!("speechSynthesis" in window)) return;
+    if (!("speechSynthesis" in window)) { setIsSpeaking(false); return; }
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 0.95; u.pitch = 1.0; u.lang = "en-US";
     const voices = window.speechSynthesis.getVoices();
-    // Priority: Microsoft natural voices > Google voices > any English
     const preferred = [
       "Microsoft Aria", "Microsoft Jenny", "Microsoft Guy",
       "Google US English", "Google UK English Female", "Samantha",
