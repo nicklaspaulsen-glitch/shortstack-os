@@ -259,7 +259,7 @@ export default function SocialManagerPage() {
                         <div className="flex items-center gap-2 mt-0.5">
                           <span className="text-[9px] text-muted capitalize">{post.platform}</span>
                           {post.scheduled_at && <span className="text-[9px] text-muted">{formatDate(post.scheduled_at)}</span>}
-                          {meta.best_time && <span className="text-[9px] text-gold">{meta.best_time as string}</span>}
+                          {meta.best_time ? <span className="text-[9px] text-gold">{String(meta.best_time)}</span> : null}
                         </div>
                       </div>
                       <button onClick={() => publishPost(post)} disabled={posting === post.id}
@@ -318,14 +318,14 @@ export default function SocialManagerPage() {
                         <p className="text-xs font-semibold">{post.title}</p>
                         <StatusBadge status={post.status} />
                       </div>
-                      {meta.caption && (
-                        <p className="text-[10px] text-muted leading-relaxed mb-2 line-clamp-3">{meta.caption as string}</p>
-                      )}
+                      {meta.caption ? (
+                        <p className="text-[10px] text-muted leading-relaxed mb-2 line-clamp-3">{String(meta.caption)}</p>
+                      ) : null}
                       <div className="flex items-center gap-3 text-[9px] text-muted">
                         <span className="capitalize">{post.platform}</span>
                         {post.scheduled_at && <span>{formatDate(post.scheduled_at)}</span>}
-                        {meta.best_time && <span className="text-gold">{meta.best_time as string}</span>}
-                        {meta.topic && <span>{meta.topic as string}</span>}
+                        {meta.best_time ? <span className="text-gold">{String(meta.best_time)}</span> : null}
+                        {meta.topic ? <span>{String(meta.topic)}</span> : null}
                       </div>
                     </div>
                     <button onClick={() => publishPost(post)} disabled={posting === post.id}

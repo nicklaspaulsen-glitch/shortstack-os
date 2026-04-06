@@ -376,7 +376,7 @@ export default function ServicesPage() {
                 <div className="mt-3 pt-3 border-t border-border/20">
                   <p className="text-[9px] text-muted uppercase tracking-wider mb-2">Fill in details</p>
                   <div className="grid grid-cols-2 gap-2">
-                    {[...new Set(activeAgent.actions.flatMap(a => getVars(a.prompt)))].map(v => (
+                    {Array.from(new Set(activeAgent.actions.flatMap(a => getVars(a.prompt)))).map(v => (
                       <div key={v}>
                         <label className="text-[9px] text-muted capitalize">{v.replace(/_/g, " ")}</label>
                         <input

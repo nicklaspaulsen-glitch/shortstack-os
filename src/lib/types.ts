@@ -226,7 +226,9 @@ export interface ContentCalendarEntry {
   published_at: string | null;
   status: ContentStatus;
   live_url: string | null;
+  content_type?: string;
   notes: string | null;
+  metadata?: Record<string, unknown>;
   created_at: string;
 }
 

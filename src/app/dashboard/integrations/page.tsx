@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
@@ -81,7 +81,15 @@ const PLATFORMS = [
   },
 ];
 
-export default function SocialAccountsPage() {
+export default function SocialAccountsPageWrapper() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-gold" /></div>}>
+      <SocialAccountsPage />
+    </Suspense>
+  );
+}
+
+function SocialAccountsPage() {
   const { profile } = useAuth();
   const searchParams = useSearchParams();
   const [accounts, setAccounts] = useState<SocialAccount[]>([]);
