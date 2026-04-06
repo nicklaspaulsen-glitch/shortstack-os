@@ -9,6 +9,7 @@ import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import { PageLoading } from "@/components/ui/loading";
 import AIInsights from "@/components/ai-insights";
+import AgentActivityFeed from "@/components/agent-activity-feed";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
   Package, CheckCircle, CreditCard, Circle, Bot,
@@ -332,6 +333,9 @@ export default function ClientPortalPage() {
           </div>
         </div>
       )}
+
+      {/* Agent Activity for this client */}
+      <AgentActivityFeed clientId={client.id} />
 
       {/* Pending Invoices alert */}
       {pendingInvoices.length > 0 && (

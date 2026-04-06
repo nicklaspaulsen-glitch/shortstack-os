@@ -16,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 import Link from "next/link";
 import PixelOffice from "@/components/pixel-office";
+import AgentActivityFeed from "@/components/agent-activity-feed";
 
 interface DashboardStats {
   leadsToday: number;
@@ -178,6 +179,9 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Agent Activity Feed */}
+        <AgentActivityFeed />
+
         {/* Activity Feed */}
         <div className="card">
           <h2 className="section-header flex items-center gap-2">
