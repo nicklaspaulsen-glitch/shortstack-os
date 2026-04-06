@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { Invoice, Contract } from "@/lib/types";
+import toast from "react-hot-toast";
 import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
@@ -65,13 +66,17 @@ export default function ClientBillingPage() {
             { key: "actions", label: "", render: (i: Invoice) => (i.status === "sent" || i.status === "overdue") ? (
               <button onClick={async (e) => {
                 e.stopPropagation();
-                const res = await fetch("/api/invoices/pay", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ invoice_id: i.id }),
-                });
-                const data = await res.json();
-                if (data.checkout_url) window.location.href = data.checkout_url;
+                try {
+                  const res = await fetch("/api/invoices/pay", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ invoice_id: i.id }),
+                  });
+                  if (!res.ok) { toast.error("Payment failed"); return; }
+                  const data = await res.json();
+                  if (data.checkout_url) window.location.href = data.checkout_url;
+                  else toast.error(data.error || "Could not create payment link");
+                } catch { toast.error("Connection error"); }
               }} className="btn-primary text-[9px] py-1 px-2.5">Pay Now</button>
             ) : null },
           ]}

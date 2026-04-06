@@ -48,7 +48,7 @@ export default function ClientSettingsPage() {
       if (data.settings && Object.keys(data.settings).length > 0) {
         setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
       }
-    } catch {}
+    } catch { /* settings will use defaults */ }
     setLoading(false);
   }
 

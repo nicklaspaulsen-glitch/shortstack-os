@@ -16,9 +16,9 @@ export default function ClientSupportPage() {
 
   useEffect(() => {
     if (profile) {
-      supabase.from("clients").select("id").eq("profile_id", profile.id).single().then(({ data }) => {
+      Promise.resolve(supabase.from("clients").select("id").eq("profile_id", profile.id).single()).then(({ data }) => {
         if (data) setClientId(data.id);
-      });
+      }).catch(() => {});
     }
   }, [profile]);
 

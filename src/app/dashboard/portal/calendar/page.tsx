@@ -76,7 +76,8 @@ export default function ContentCalendarPage() {
       // Try to parse JSON from the reply
       const jsonMatch = reply.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
-        const items = JSON.parse(jsonMatch[0]);
+        let items;
+        try { items = JSON.parse(jsonMatch[0]); } catch { toast.error("AI returned invalid data. Try again."); setGenerating(false); return; }
         let saved = 0;
         for (const item of items) {
           const { error } = await supabase.from("content_calendar").insert({

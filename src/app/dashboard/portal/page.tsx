@@ -166,8 +166,8 @@ export default function ClientPortalPage() {
         <div className="absolute inset-0 bg-mesh opacity-40" />
         <div className="relative flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold tracking-tight">Welcome back, {client.contact_name.split(" ")[0]}</h1>
-            <p className="text-xs text-muted mt-0.5">{client.business_name} · {client.package_tier || "Standard"} Plan</p>
+            <h1 className="text-lg font-bold tracking-tight">Welcome back, {client.contact_name?.split(" ")[0] || "there"}</h1>
+            <p className="text-xs text-muted mt-0.5">{client.business_name || "Your Business"} · {client.package_tier || "Standard"} Plan</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1.5 text-[10px] bg-gold/[0.08] text-gold px-2.5 py-1 rounded-md border border-gold/15">
