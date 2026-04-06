@@ -29,6 +29,7 @@ import {
   Star,
   Mail,
   Eye,
+  Send,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -46,6 +47,7 @@ const navItems: NavItem[] = [
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={18} />, roles: ["admin"] },
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={18} />, roles: ["admin", "team_member"] },
   { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={18} />, roles: ["admin", "team_member"] },
+  { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <Send size={18} />, roles: ["admin"] },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={18} />, roles: ["admin", "team_member"] },
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={18} />, roles: ["admin", "team_member"] },
   { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={18} />, roles: ["client"] },
