@@ -44,6 +44,15 @@ const INTEGRATIONS = [
   { name: "Zernio", key: "ZERNIO_API_KEY", category: "Publishing" },
 ];
 
+function safeGet(key: string): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(key);
+}
+
+function safeSet(key: string, value: string) {
+  if (typeof window !== "undefined") localStorage.setItem(key, value);
+}
+
 export default function SettingsPage() {
   const [tab, setTab] = useState<Tab>("general");
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -64,7 +73,7 @@ export default function SettingsPage() {
     setHealthData(h || []);
 
     // Load agent configs from local storage (or DB in production)
-    const saved = localStorage.getItem("agent_configs");
+    const saved = safeGet("agent_configs");
     if (saved) {
       setAgentConfigs(JSON.parse(saved));
     } else {
@@ -93,7 +102,7 @@ export default function SettingsPage() {
   function saveAgentConfig(config: AgentConfig) {
     const updated = agentConfigs.map(a => a.client_id === config.client_id ? config : a);
     setAgentConfigs(updated);
-    localStorage.setItem("agent_configs", JSON.stringify(updated));
+    safeSet("agent_configs", JSON.stringify(updated));
     toast.success(`Agent config saved for ${config.client_name}`);
     setEditingAgent(null);
   }
@@ -101,14 +110,14 @@ export default function SettingsPage() {
   const [sfxEnabled, setSfxEnabled] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("sfx_enabled");
+    const saved = safeGet("sfx_enabled");
     if (saved === "false") setSfxEnabled(false);
   }, []);
 
   function toggleSfx() {
     const next = !sfxEnabled;
     setSfxEnabled(next);
-    localStorage.setItem("sfx_enabled", String(next));
+    safeSet("sfx_enabled", String(next));
     toast.success(next ? "Sound effects enabled" : "Sound effects muted");
   }
 
@@ -159,16 +168,16 @@ export default function SettingsPage() {
                   <span className="text-xs font-mono text-gold">{typeof window !== "undefined" ? Math.round((parseFloat(document.documentElement.style.zoom || "1")) * 100) : 100}%</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => { document.documentElement.style.zoom = "0.75"; localStorage.setItem("ss-zoom", "0.75"); toast.success("Zoom: 75%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "0.75" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>75%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "0.85"; localStorage.setItem("ss-zoom", "0.85"); toast.success("Zoom: 85%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "0.85" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>85%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "0.9"; localStorage.setItem("ss-zoom", "0.9"); toast.success("Zoom: 90%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "0.9" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>90%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "1"; localStorage.setItem("ss-zoom", "1"); toast.success("Zoom: 100%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${!localStorage.getItem("ss-zoom") || localStorage.getItem("ss-zoom") === "1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>100%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "1.1"; localStorage.setItem("ss-zoom", "1.1"); toast.success("Zoom: 110%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${localStorage.getItem("ss-zoom") === "1.1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>110%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "0.75"; safeSet("ss-zoom", "0.75"); toast.success("Zoom: 75%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.75" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>75%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "0.85"; safeSet("ss-zoom", "0.85"); toast.success("Zoom: 85%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.85" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>85%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "0.9"; safeSet("ss-zoom", "0.9"); toast.success("Zoom: 90%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.9" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>90%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "1"; safeSet("ss-zoom", "1"); toast.success("Zoom: 100%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${!safeGet("ss-zoom") || safeGet("ss-zoom") === "1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>100%</button>
+                  <button onClick={() => { document.documentElement.style.zoom = "1.1"; safeSet("ss-zoom", "1.1"); toast.success("Zoom: 110%"); }}
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "1.1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>110%</button>
                 </div>
               </div>
 
@@ -179,13 +188,13 @@ export default function SettingsPage() {
                   <p className="text-[10px] text-muted">Collapse sidebar to icons only</p>
                 </div>
                 <button onClick={() => {
-                  const current = localStorage.getItem("ss-sidebar-collapsed") === "true";
-                  localStorage.setItem("ss-sidebar-collapsed", String(!current));
+                  const current = safeGet("ss-sidebar-collapsed") === "true";
+                  safeSet("ss-sidebar-collapsed", String(!current));
                   toast.success(current ? "Sidebar expanded" : "Sidebar collapsed");
                   window.location.reload();
                 }}
-                  className={`w-10 h-5 rounded-full transition-all ${localStorage.getItem("ss-sidebar-collapsed") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${localStorage.getItem("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
+                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
                 </button>
               </div>
 
@@ -196,14 +205,14 @@ export default function SettingsPage() {
                   <p className="text-[10px] text-muted">Card hover effects, transitions, fades</p>
                 </div>
                 <button onClick={() => {
-                  const current = localStorage.getItem("ss-animations") === "false";
-                  localStorage.setItem("ss-animations", String(current));
+                  const current = safeGet("ss-animations") === "false";
+                  safeSet("ss-animations", String(current));
                   if (!current) document.documentElement.classList.add("reduce-motion");
                   else document.documentElement.classList.remove("reduce-motion");
                   toast.success(current ? "Animations enabled" : "Animations disabled");
                 }}
-                  className={`w-10 h-5 rounded-full transition-all ${localStorage.getItem("ss-animations") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${localStorage.getItem("ss-animations") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
+                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-animations") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-animations") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
                 </button>
               </div>
             </div>
@@ -240,11 +249,11 @@ export default function SettingsPage() {
                 { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#38bdf8", text: "#e2e8f0", desc: "Deep blue" },
                 { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm dark" },
               ].map(theme => {
-                const currentTheme = typeof window !== "undefined" ? localStorage.getItem("ss-theme") || "midnight" : "midnight";
+                const currentTheme = typeof window !== "undefined" ? safeGet("ss-theme") || "midnight" : "midnight";
                 const isActive = currentTheme === theme.id;
                 return (
                   <button key={theme.id} onClick={() => {
-                    localStorage.setItem("ss-theme", theme.id);
+                    safeSet("ss-theme", theme.id);
                     // Apply theme CSS variables
                     document.documentElement.style.setProperty("--bg", theme.bg);
                     document.documentElement.style.setProperty("--surface", theme.surface);

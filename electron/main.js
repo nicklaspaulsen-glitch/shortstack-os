@@ -259,9 +259,25 @@ function createMainWindow() {
     return { action: "allow" };
   });
 
-  // Clear cache on load to always get latest version
-  mainWindow.webContents.session.clearCache().then(() => {
+  // Clear ALL cache on load to always get latest version
+  Promise.all([
+    mainWindow.webContents.session.clearCache(),
+    mainWindow.webContents.session.clearStorageData({ storages: ["cachestorage", "serviceworkers"] }),
+  ]).then(() => {
     mainWindow.loadURL(APP_URL + "/login");
+  });
+
+  // Enable Ctrl+Shift+R to force reload
+  mainWindow.webContents.on("before-input-event", (event, input) => {
+    if (input.control && input.shift && input.key === "R") {
+      mainWindow.webContents.session.clearCache().then(() => {
+        mainWindow.webContents.reloadIgnoringCache();
+      });
+    }
+    // F5 to reload
+    if (input.key === "F5") {
+      mainWindow.webContents.reloadIgnoringCache();
+    }
   });
   mainWindow.on("closed", () => { mainWindow = null; });
 
