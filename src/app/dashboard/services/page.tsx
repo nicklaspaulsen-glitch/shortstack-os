@@ -273,6 +273,19 @@ export default function ServicesPage() {
     return vars;
   }
 
+  const QUICK_NAV = [
+    { task: "Write video scripts", tool: "Script Lab", href: "/dashboard/script-lab", icon: <Sparkles size={12} />, color: "text-gold" },
+    { task: "Manage social media", tool: "Social Manager", href: "/dashboard/social-manager", icon: <Camera size={12} />, color: "text-pink-400" },
+    { task: "Run ad campaigns", tool: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={12} />, color: "text-blue-400" },
+    { task: "Build automations", tool: "Workflows", href: "/dashboard/workflows", icon: <Zap size={12} />, color: "text-warning" },
+    { task: "Generate images", tool: "Script Lab → MJ Prompts", href: "/dashboard/script-lab", icon: <PenTool size={12} />, color: "text-purple-400" },
+    { task: "Build websites", tool: "Ask Trinity AI", href: "/dashboard/trinity", icon: <Globe size={12} />, color: "text-cyan-400" },
+    { task: "Cold outreach", tool: "Lead Engine", href: "/dashboard/leads", icon: <Send size={12} />, color: "text-green-400" },
+    { task: "Spy on competitors", tool: "Spy Tool", href: "/dashboard/competitor", icon: <Search size={12} />, color: "text-red-400" },
+    { task: "Generate proposals", tool: "Proposals", href: "/dashboard/proposals", icon: <Film size={12} />, color: "text-amber-400" },
+    { task: "AI phone calls", tool: "Lead Engine → GHL", href: "/dashboard/leads", icon: <Phone size={12} />, color: "text-emerald-400" },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       <div>
@@ -280,6 +293,23 @@ export default function ServicesPage() {
           <Sparkles size={18} className="text-gold" /> AI Service Agents
         </h1>
         <p className="text-xs text-muted mt-0.5">Each service has a dedicated AI agent — click to generate content, strategies, and campaigns</p>
+      </div>
+
+      {/* Quick nav — what tool for what */}
+      <div className="card border-gold/10">
+        <h2 className="text-[10px] text-muted uppercase tracking-[0.15em] font-bold mb-2">I want to...</h2>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-1.5">
+          {QUICK_NAV.map((item, i) => (
+            <a key={i} href={item.href}
+              className="flex items-center gap-2 p-2 rounded-lg border border-border/20 hover:border-gold/15 transition-all group">
+              <span className={item.color}>{item.icon}</span>
+              <div className="min-w-0">
+                <p className="text-[10px] font-medium group-hover:text-white transition-colors truncate">{item.task}</p>
+                <p className="text-[8px] text-muted truncate">{item.tool}</p>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
 
       <div className="flex gap-4">
