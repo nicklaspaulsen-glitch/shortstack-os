@@ -62,9 +62,14 @@ export default function ScraperPage() {
   const [filters, setFilters] = useState({
     require_phone: true,
     require_website: false,
+    require_local: true,
     min_rating: 0,
+    max_rating: 5,
     max_reviews: 500,
     min_reviews: 0,
+    no_website: false,
+    low_reviews_only: false,
+    bad_ratings_only: false,
   });
   const [showFilters, setShowFilters] = useState(false);
   const [running, setRunning] = useState(false);
@@ -292,26 +297,78 @@ export default function ScraperPage() {
           {/* Filters */}
           <div className="card">
             <button onClick={() => setShowFilters(!showFilters)} className="w-full flex items-center justify-between">
-              <h3 className="text-sm font-medium flex items-center gap-2"><Filter size={14} className="text-gold" /> Filters</h3>
-              <span className="text-xs text-muted">{showFilters ? "Hide" : "Show"}</span>
+              <h3 className="text-xs font-medium flex items-center gap-2"><Filter size={13} className="text-gold" /> Filters</h3>
+              <span className="text-[10px] text-muted">{showFilters ? "Hide" : "Show"}</span>
             </button>
             {showFilters && (
-              <div className="space-y-3 mt-3 pt-3 border-t border-border/50">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={filters.require_phone} onChange={e => setFilters({ ...filters, require_phone: e.target.checked })} className="accent-gold" />
-                  <span className="text-sm">Must have phone number</span>
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={filters.require_website} onChange={e => setFilters({ ...filters, require_website: e.target.checked })} className="accent-gold" />
-                  <span className="text-sm">Must have website</span>
-                </label>
+              <div className="space-y-3 mt-3 pt-3 border-t border-border/30">
+                {/* Quick presets */}
                 <div>
-                  <span className="text-xs text-muted">Min rating: {filters.min_rating}</span>
-                  <input type="range" min="0" max="5" step="0.5" value={filters.min_rating} onChange={e => setFilters({ ...filters, min_rating: parseFloat(e.target.value) })} className="w-full accent-gold" />
+                  <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Quick Presets</p>
+                  <div className="flex flex-wrap gap-1">
+                    <button onClick={() => setFilters({ ...filters, max_reviews: 10, max_rating: 3.5, low_reviews_only: true, bad_ratings_only: true, require_local: true })}
+                      className="text-[9px] bg-danger/10 text-danger px-2 py-1 rounded-lg border border-danger/20 hover:bg-danger/20 transition-all">
+                      Low review + bad rating
+                    </button>
+                    <button onClick={() => setFilters({ ...filters, max_reviews: 20, no_website: true, require_local: true })}
+                      className="text-[9px] bg-warning/10 text-warning px-2 py-1 rounded-lg border border-warning/20 hover:bg-warning/20 transition-all">
+                      No website + few reviews
+                    </button>
+                    <button onClick={() => setFilters({ ...filters, min_reviews: 50, min_rating: 4, max_reviews: 500, require_local: true })}
+                      className="text-[9px] bg-success/10 text-success px-2 py-1 rounded-lg border border-success/20 hover:bg-success/20 transition-all">
+                      Good businesses (upsell)
+                    </button>
+                  </div>
                 </div>
+
+                {/* Toggles */}
+                <div className="space-y-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={filters.require_phone} onChange={e => setFilters({ ...filters, require_phone: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                    <span className="text-[10px]">Must have phone number</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={filters.require_website} onChange={e => setFilters({ ...filters, require_website: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                    <span className="text-[10px]">Must have website</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={filters.no_website} onChange={e => setFilters({ ...filters, no_website: e.target.checked, require_website: false })} className="accent-gold w-3.5 h-3.5" />
+                    <span className="text-[10px]">No website (needs one built)</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={filters.require_local} onChange={e => setFilters({ ...filters, require_local: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                    <span className="text-[10px]">Local business only</span>
+                  </label>
+                </div>
+
+                {/* Rating range */}
                 <div>
-                  <span className="text-xs text-muted">Max reviews: {filters.max_reviews}</span>
-                  <input type="range" min="10" max="1000" step="10" value={filters.max_reviews} onChange={e => setFilters({ ...filters, max_reviews: parseInt(e.target.value) })} className="w-full accent-gold" />
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-muted">Rating: {filters.min_rating} - {filters.max_rating}</span>
+                    <label className="flex items-center gap-1 cursor-pointer">
+                      <input type="checkbox" checked={filters.bad_ratings_only} onChange={e => setFilters({ ...filters, bad_ratings_only: e.target.checked, max_rating: e.target.checked ? 3.5 : 5 })} className="accent-danger w-3 h-3" />
+                      <span className="text-[9px] text-danger">Bad ratings only</span>
+                    </label>
+                  </div>
+                  <div className="flex gap-2">
+                    <input type="range" min="0" max="5" step="0.5" value={filters.min_rating} onChange={e => setFilters({ ...filters, min_rating: parseFloat(e.target.value) })} className="flex-1 accent-gold" />
+                    <input type="range" min="0" max="5" step="0.5" value={filters.max_rating} onChange={e => setFilters({ ...filters, max_rating: parseFloat(e.target.value) })} className="flex-1 accent-danger" />
+                  </div>
+                </div>
+
+                {/* Review count range */}
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-muted">Reviews: {filters.min_reviews} - {filters.max_reviews}</span>
+                    <label className="flex items-center gap-1 cursor-pointer">
+                      <input type="checkbox" checked={filters.low_reviews_only} onChange={e => setFilters({ ...filters, low_reviews_only: e.target.checked, max_reviews: e.target.checked ? 10 : 500 })} className="accent-warning w-3 h-3" />
+                      <span className="text-[9px] text-warning">Low reviews only</span>
+                    </label>
+                  </div>
+                  <div className="flex gap-2">
+                    <input type="range" min="0" max="100" step="1" value={filters.min_reviews} onChange={e => setFilters({ ...filters, min_reviews: parseInt(e.target.value) })} className="flex-1 accent-gold" />
+                    <input type="range" min="1" max="1000" step="5" value={filters.max_reviews} onChange={e => setFilters({ ...filters, max_reviews: parseInt(e.target.value) })} className="flex-1 accent-gold" />
+                  </div>
                 </div>
               </div>
             )}
