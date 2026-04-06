@@ -76,33 +76,56 @@ export default function VoiceAssistant() {
     setProcessing(false);
   }
 
-  function speak(text: string) {
-    if (isMuted || !("speechSynthesis" in window)) return;
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
 
-    // Cancel any ongoing speech
+  async function speak(text: string) {
+    if (isMuted) return;
+    setIsSpeaking(true);
+
+    // Try ElevenLabs first
+    try {
+      const res = await fetch("/api/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text.substring(0, 500) }),
+      });
+      if (res.ok) {
+        const blob = await res.blob();
+        if (blob.size > 500 && blob.type.includes("audio")) {
+          const url = URL.createObjectURL(blob);
+          if (!audioElRef.current) {
+            audioElRef.current = document.createElement("audio");
+            document.body.appendChild(audioElRef.current);
+          }
+          audioElRef.current.src = url;
+          audioElRef.current.volume = 1.0;
+          audioElRef.current.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
+          audioElRef.current.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(url); browserSpeak(text); };
+          await audioElRef.current.play();
+          return;
+        }
+      }
+    } catch {}
+
+    browserSpeak(text);
+  }
+
+  function browserSpeak(text: string) {
+    if (!("speechSynthesis" in window)) { setIsSpeaking(false); return; }
     window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = voiceSpeed;
-    utterance.pitch = voicePitch;
-    utterance.lang = "en-US";
-
-    // Try to use a good voice
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = voiceSpeed; u.pitch = voicePitch; u.lang = "en-US";
     const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(v => v.name.includes("Google") && v.lang.startsWith("en")) ||
-      voices.find(v => v.name.includes("Samantha")) ||
-      voices.find(v => v.lang.startsWith("en") && v.localService);
-    if (preferred) utterance.voice = preferred;
-
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    synthRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
+    const preferred = voices.find(v => v.name.includes("Microsoft Aria")) || voices.find(v => v.name.includes("Google") && v.lang.startsWith("en")) || voices.find(v => v.lang.startsWith("en"));
+    if (preferred) u.voice = preferred;
+    u.onstart = () => setIsSpeaking(true);
+    u.onend = () => setIsSpeaking(false);
+    synthRef.current = u;
+    window.speechSynthesis.speak(u);
   }
 
   function stopSpeaking() {
+    if (audioElRef.current) { audioElRef.current.pause(); audioElRef.current.currentTime = 0; }
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
   }
