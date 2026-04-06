@@ -135,18 +135,17 @@ body {
 
   /* ═══════════ SIDEBAR ═══════════ */
   .sidebar-link {
-    @apply flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] text-muted/80 transition-all duration-200;
+    @apply flex items-center gap-2 px-2.5 py-[6px] rounded-lg text-[12px] text-muted/70 transition-all duration-200;
   }
   .sidebar-link:hover {
     @apply bg-surface-light/40 text-white;
-    transform: translateX(2px);
+    transform: translateX(1px);
   }
 
   .sidebar-link-active {
-    @apply flex items-center gap-2.5 px-3 py-2 rounded-xl text-[13px] text-gold font-medium;
+    @apply flex items-center gap-2 px-2.5 py-[6px] rounded-lg text-[12px] text-gold font-medium;
     background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.03) 100%);
     border: 1px solid rgba(201,168,76,0.12);
-    box-shadow: 0 0 12px rgba(201,168,76,0.05);
   }
 
   /* ═══════════ PAGE STRUCTURE ═══════════ */

@@ -39,39 +39,52 @@ interface NavItem {
   href: string;
   icon: React.ReactNode;
   roles: string[];
-  badge?: string;
+  section?: string;
 }
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} />, roles: ["admin", "team_member", "client"] },
-  { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={18} />, roles: ["admin"] },
-  { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={18} />, roles: ["admin", "team_member"] },
-  { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={18} />, roles: ["admin", "team_member"] },
-  { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <Send size={18} />, roles: ["admin"] },
-  { label: "Clients", href: "/dashboard/clients", icon: <Users size={18} />, roles: ["admin", "team_member"] },
-  { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={18} />, roles: ["admin", "team_member"] },
-  { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={18} />, roles: ["client"] },
-  { label: "Content", href: "/dashboard/portal/content", icon: <Film size={18} />, roles: ["client"] },
-  { label: "Calendar", href: "/dashboard/portal/calendar", icon: <Calendar size={18} />, roles: ["client"] },
-  { label: "Reports", href: "/dashboard/portal/reports", icon: <BarChart3 size={18} />, roles: ["client"] },
-  { label: "Invoices", href: "/dashboard/portal/billing", icon: <CreditCard size={18} />, roles: ["client"] },
-  { label: "Support", href: "/dashboard/portal/support", icon: <MessageSquare size={18} />, roles: ["client"] },
-  { label: "Settings", href: "/dashboard/portal/settings", icon: <Settings size={18} />, roles: ["client"] },
-  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={18} />, roles: ["admin", "team_member", "client"] },
-  { label: "DM Automations", href: "/dashboard/automations", icon: <Bot size={18} />, roles: ["admin", "team_member", "client"] },
-  { label: "Team & Payroll", href: "/dashboard/team", icon: <Briefcase size={18} />, roles: ["admin"] },
-  { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={18} />, roles: ["admin", "team_member"] },
-  { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={18} />, roles: ["admin", "team_member"] },
-  { label: "Content AI", href: "/dashboard/content", icon: <Film size={18} />, roles: ["admin", "team_member"] },
-  { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={18} />, roles: ["admin"] },
-  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={18} />, roles: ["admin"] },
-  { label: "Trinity AI", href: "/dashboard/trinity", icon: <Bot size={18} />, roles: ["admin"] },
-  { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={18} />, roles: ["admin", "team_member"] },
-  { label: "Templates", href: "/dashboard/email-templates", icon: <Mail size={18} />, roles: ["admin", "team_member"] },
-  { label: "Spy Tool", href: "/dashboard/competitor", icon: <Eye size={18} />, roles: ["admin"] },
-  { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={18} />, roles: ["admin"] },
-  { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={18} />, roles: ["admin"] },
-  { label: "Settings", href: "/dashboard/settings", icon: <Settings size={18} />, roles: ["admin"] },
+  // ── Core ──
+  { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={16} />, roles: ["admin", "team_member", "client"] },
+  { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
+  { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={16} />, roles: ["admin"] },
+
+  // ── Leads & Outreach ──
+  { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"], section: "Leads" },
+  { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={16} />, roles: ["admin", "team_member"] },
+  { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <Send size={16} />, roles: ["admin"] },
+
+  // ── Clients ──
+  { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"], section: "Manage" },
+  { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
+  { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin", "team_member"] },
+  { label: "Team", href: "/dashboard/team", icon: <Briefcase size={16} />, roles: ["admin"] },
+
+  // ── AI Tools ──
+  { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "AI" },
+  { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={16} />, roles: ["admin", "team_member"] },
+  { label: "Content AI", href: "/dashboard/content", icon: <Film size={16} />, roles: ["admin", "team_member"] },
+  { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member", "client"] },
+  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"] },
+  { label: "Trinity", href: "/dashboard/trinity", icon: <Bot size={16} />, roles: ["admin"] },
+
+  // ── Marketing ──
+  { label: "Ads", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"], section: "Marketing" },
+  { label: "Templates", href: "/dashboard/email-templates", icon: <Mail size={16} />, roles: ["admin", "team_member"] },
+  { label: "Spy Tool", href: "/dashboard/competitor", icon: <Eye size={16} />, roles: ["admin"] },
+
+  // ── System ──
+  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"], section: "System" },
+  { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
+  { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
+
+  // ── Client Portal ──
+  { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={16} />, roles: ["client"] },
+  { label: "Content", href: "/dashboard/portal/content", icon: <Film size={16} />, roles: ["client"] },
+  { label: "Calendar", href: "/dashboard/portal/calendar", icon: <Calendar size={16} />, roles: ["client"] },
+  { label: "Reports", href: "/dashboard/portal/reports", icon: <BarChart3 size={16} />, roles: ["client"] },
+  { label: "Invoices", href: "/dashboard/portal/billing", icon: <CreditCard size={16} />, roles: ["client"] },
+  { label: "Support", href: "/dashboard/portal/support", icon: <MessageSquare size={16} />, roles: ["client"] },
+  { label: "Settings", href: "/dashboard/portal/settings", icon: <Settings size={16} />, roles: ["client"] },
 ];
 
 export default function Sidebar() {
@@ -113,22 +126,28 @@ export default function Sidebar() {
       {!collapsed && <AdminProfileSwitcher />}
 
       {/* Navigation */}
-      <nav className="flex-1 px-2 py-2 space-y-0.5 overflow-y-auto">
-        {filteredNav.map((item) => {
+      <nav className="flex-1 px-2 py-1.5 overflow-y-auto">
+        {filteredNav.map((item, i) => {
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && pathname.startsWith(item.href));
 
+          const showSection = !collapsed && item.section && (i === 0 || filteredNav[i - 1]?.section !== item.section);
+
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={isActive ? "sidebar-link-active" : "sidebar-link"}
-              title={collapsed ? item.label : undefined}
-            >
-              <span className={isActive ? "text-gold" : ""}>{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
-            </Link>
+            <div key={item.href}>
+              {showSection && (
+                <p className="text-[8px] text-muted/50 uppercase tracking-[0.2em] font-bold px-3 pt-3 pb-1">{item.section}</p>
+              )}
+              <Link
+                href={item.href}
+                className={isActive ? "sidebar-link-active" : "sidebar-link"}
+                title={collapsed ? item.label : undefined}
+              >
+                <span className={isActive ? "text-gold" : ""}>{item.icon}</span>
+                {!collapsed && <span>{item.label}</span>}
+              </Link>
+            </div>
           );
         })}
       </nav>
