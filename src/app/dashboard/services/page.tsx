@@ -264,7 +264,13 @@ export default function ServicesPage() {
 
   // Extract variables from prompt
   function getVars(prompt: string): string[] {
-    return [...prompt.matchAll(/\{(\w+)\}/g)].map(m => m[1]);
+    const vars: string[] = [];
+    const regex = /\{(\w+)\}/g;
+    let match;
+    while ((match = regex.exec(prompt)) !== null) {
+      vars.push(match[1]);
+    }
+    return vars;
   }
 
   return (
