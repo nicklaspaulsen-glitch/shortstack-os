@@ -124,14 +124,14 @@ export default function MonitorPage() {
         })}
       </div>
 
-      {/* Error Log */}
-      {health.filter((h) => h.error_message).length > 0 && (
+      {/* Error Log — hide "Not configured" entries, only show real errors */}
+      {health.filter((h) => h.error_message && !h.error_message.includes("Not configured")).length > 0 && (
         <div className="card border-danger/15">
           <h2 className="section-header text-danger flex items-center gap-2">
             <AlertTriangle size={14} /> Recent Errors
           </h2>
           <div className="space-y-2">
-            {health.filter((h) => h.error_message).map((h) => (
+            {health.filter((h) => h.error_message && !h.error_message.includes("Not configured")).map((h) => (
               <div key={h.id} className="bg-danger/5 border border-danger/10 rounded-lg p-2.5">
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-medium text-xs">{h.integration_name}</span>
