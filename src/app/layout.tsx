@@ -4,6 +4,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { Toaster } from "react-hot-toast";
 import PWARegister from "@/components/pwa-register";
 import SFXProvider from "@/components/sfx-provider";
+import ThemeProvider from "@/components/theme-provider";
 
 export const metadata: Metadata = {
   title: "ShortStack OS",
@@ -28,17 +29,20 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className="antialiased bg-background text-white min-h-screen">
         <AuthProvider>
+          <ThemeProvider>
           <SFXProvider>
           {children}
           </SFXProvider>
+          </ThemeProvider>
           <PWARegister />
           <Toaster
             position="top-right"
             toastOptions={{
               style: {
-                background: "#111111",
-                color: "#fff",
-                border: "1px solid #2a2a2a",
+                background: "var(--color-surface, #111111)",
+                color: "var(--color-text, #fff)",
+                border: "1px solid var(--color-border, #2a2a2a)",
+                fontSize: "12px",
               },
             }}
           />

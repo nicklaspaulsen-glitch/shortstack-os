@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette } from "lucide-react";
 import toast from "react-hot-toast";
 
 type Tab = "agents" | "integrations" | "automation" | "notifications" | "general";
@@ -161,6 +161,58 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Theme */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Palette size={14} className="text-gold" /> Theme
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Choose your preferred color scheme</p>
+            <div className="grid grid-cols-4 gap-2.5">
+              {[
+                { id: "midnight", name: "Midnight", bg: "#06080c", surface: "#0c1017", accent: "#C9A84C", text: "#e2e8f0", desc: "Default dark" },
+                { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#C9A84C", text: "#0f172a", desc: "Clean white" },
+                { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#38bdf8", text: "#e2e8f0", desc: "Deep blue" },
+                { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm dark" },
+              ].map(theme => {
+                const currentTheme = typeof window !== "undefined" ? localStorage.getItem("ss-theme") || "midnight" : "midnight";
+                const isActive = currentTheme === theme.id;
+                return (
+                  <button key={theme.id} onClick={() => {
+                    localStorage.setItem("ss-theme", theme.id);
+                    // Apply theme CSS variables
+                    document.documentElement.style.setProperty("--bg", theme.bg);
+                    document.documentElement.style.setProperty("--surface", theme.surface);
+                    document.documentElement.style.setProperty("--accent", theme.accent);
+                    document.documentElement.style.setProperty("--text", theme.text);
+                    document.body.style.background = theme.bg;
+                    document.body.style.color = theme.text;
+                    // Update all surface elements
+                    document.querySelectorAll(".card, .stat-card").forEach(el => {
+                      (el as HTMLElement).style.backgroundColor = theme.surface;
+                    });
+                    toast.success(`${theme.name} theme applied`);
+                    // Full reload for complete theme switch
+                    setTimeout(() => window.location.reload(), 500);
+                  }}
+                    className={`p-3 rounded-xl border transition-all text-center ${
+                      isActive ? "border-gold/30 ring-2 ring-gold/20" : "border-border/30 hover:border-gold/15"
+                    }`}
+                  >
+                    {/* Preview circles */}
+                    <div className="flex items-center justify-center gap-1 mb-2">
+                      <div className="w-5 h-5 rounded-full border border-white/10" style={{ background: theme.bg }} />
+                      <div className="w-5 h-5 rounded-full border border-white/10" style={{ background: theme.surface }} />
+                      <div className="w-5 h-5 rounded-full border border-white/10" style={{ background: theme.accent }} />
+                    </div>
+                    <p className="text-[10px] font-semibold">{theme.name}</p>
+                    <p className="text-[8px] text-muted">{theme.desc}</p>
+                    {isActive && <p className="text-[8px] text-gold mt-0.5">Active</p>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Version Info */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">
@@ -169,7 +221,7 @@ export default function SettingsPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between py-2 border-b border-border/15">
                 <span className="text-xs text-muted">Version</span>
-                <span className="text-xs font-mono text-gold">v1.1.0</span>
+                <span className="text-xs font-mono text-gold">v1.2.0</span>
               </div>
               <div className="flex items-center justify-between py-2 border-b border-border/15">
                 <span className="text-xs text-muted">Build</span>
