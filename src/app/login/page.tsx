@@ -79,7 +79,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <div className="relative inline-block">
             <div className="absolute inset-0 bg-gold/10 rounded-2xl blur-xl scale-150" />
-            <Image src="/icons/icon.svg" alt="ShortStack" width={56} height={56} className="rounded-2xl relative" />
+            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={56} height={56} className="relative" />
           </div>
           <h1 className="text-lg font-bold text-white tracking-tight mt-4">ShortStack OS</h1>
           <p className="text-[10px] text-muted mt-1 uppercase tracking-[0.2em]">Agency Operating System</p>

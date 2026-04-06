@@ -18,8 +18,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Megaphone,
-  User,
   Settings,
+  BarChart3,
+  CreditCard,
+  MessageSquare,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -37,7 +39,11 @@ const navItems: NavItem[] = [
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={18} />, roles: ["admin", "team_member"] },
   { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={18} />, roles: ["admin", "team_member"] },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={18} />, roles: ["admin", "team_member"] },
-  { label: "My Portal", href: "/dashboard/portal", icon: <User size={18} />, roles: ["client"] },
+  { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={18} />, roles: ["client"] },
+  { label: "Content", href: "/dashboard/portal/content", icon: <Film size={18} />, roles: ["client"] },
+  { label: "Reports", href: "/dashboard/portal/reports", icon: <BarChart3 size={18} />, roles: ["client"] },
+  { label: "Invoices", href: "/dashboard/portal/billing", icon: <CreditCard size={18} />, roles: ["client"] },
+  { label: "Support", href: "/dashboard/portal/support", icon: <MessageSquare size={18} />, roles: ["client"] },
   { label: "Team & Payroll", href: "/dashboard/team", icon: <Briefcase size={18} />, roles: ["admin"] },
   { label: "Content AI", href: "/dashboard/content", icon: <Film size={18} />, roles: ["admin", "team_member"] },
   { label: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={18} />, roles: ["admin"] },
@@ -68,7 +74,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-between px-3 py-3 border-b border-border/30">
         {!collapsed && (
           <Link href="/dashboard" className="flex items-center gap-2.5">
-            <Image src="/icons/icon.svg" alt="ShortStack" width={28} height={28} className="rounded-lg" />
+            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={28} height={28} />
             <div className="flex flex-col">
               <span className="text-white font-bold text-sm tracking-tight">ShortStack</span>
               <span className="text-[9px] text-muted font-medium tracking-[0.15em] uppercase -mt-0.5">OS</span>
