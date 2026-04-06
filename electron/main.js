@@ -1,6 +1,8 @@
 const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain, dialog, shell, Notification } = require("electron");
 const path = require("path");
 const fs = require("fs");
+const https = require("https");
+const http = require("http");
 
 let mainWindow;
 let splashWindow;
@@ -40,36 +42,98 @@ async function checkForUpdates() {
     if (data.version && data.version !== APP_VERSION) {
       updateAvailable = data;
 
-      // Show native notification
-      if (Notification.isSupported()) {
-        const notification = new Notification({
-          title: "ShortStack OS Update Available",
-          body: `Version ${data.version} is ready. Click to download.`,
-          icon: path.join(__dirname, "../public/icons/shortstack-logo.png"),
-        });
-        notification.on("click", () => {
-          shell.openExternal(data.download_url);
-        });
-        notification.show();
-      }
+      // Show native dialog
+      const result = await dialog.showMessageBox(mainWindow, {
+        type: "info",
+        title: "Update Available",
+        message: `ShortStack OS v${data.version}`,
+        detail: `${data.release_notes || "A new version is available."}\n\nWould you like to download and install it now?`,
+        buttons: ["Update Now", "Later"],
+        defaultId: 0,
+        cancelId: 1,
+      });
 
-      // Also show in-app banner via JS injection
-      if (mainWindow && !mainWindow.isDestroyed()) {
-        mainWindow.webContents.executeJavaScript(`
-          (function() {
-            if (document.getElementById('ss-update-banner')) return;
-            const banner = document.createElement('div');
-            banner.id = 'ss-update-banner';
-            banner.style.cssText = 'position:fixed;top:36px;left:0;right:0;z-index:99999;background:#0c1017;border-bottom:1px solid #1e2a3a;color:#C9A84C;padding:6px 16px;display:flex;align-items:center;justify-content:space-between;font-family:Inter,system-ui,sans-serif;font-size:11px;font-weight:500;-webkit-app-region:no-drag;';
-            banner.innerHTML = '<span style="color:#94a3b8;">New version <strong style="color:#C9A84C;">v${data.version}</strong> — ${(data.release_notes || "").replace(/'/g, "\\'")}</span><div style="display:flex;gap:6px;"><button onclick="location.reload()" style="background:#C9A84C;color:#000;border:none;padding:3px 10px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;">Refresh</button><button onclick="this.parentElement.parentElement.remove()" style="background:transparent;border:1px solid #1e2a3a;color:#64748b;padding:3px 8px;border-radius:5px;font-size:10px;cursor:pointer;">Dismiss</button></div>';
-            document.body.prepend(banner);
-          })();
-        `);
+      if (result.response === 0) {
+        // Download and install
+        downloadAndInstallUpdate(data.download_url, data.version);
       }
     }
   } catch {
     // Silent fail — no internet or API down
   }
+}
+
+function downloadAndInstallUpdate(url, version) {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+
+  // Show progress in-app
+  mainWindow.webContents.executeJavaScript(`
+    (function() {
+      if (document.getElementById('ss-update-banner')) document.getElementById('ss-update-banner').remove();
+      const banner = document.createElement('div');
+      banner.id = 'ss-update-banner';
+      banner.style.cssText = 'position:fixed;top:36px;left:0;right:0;z-index:99999;background:#0c1017;border-bottom:1px solid #1e2a3a;color:#C9A84C;padding:8px 16px;display:flex;align-items:center;gap:12px;font-family:Inter,system-ui,sans-serif;font-size:11px;-webkit-app-region:no-drag;';
+      banner.innerHTML = '<div style="flex:1;"><div style="color:#94a3b8;margin-bottom:4px;">Downloading v${version}...</div><div style="width:100%;height:4px;background:#1e2a3a;border-radius:2px;overflow:hidden;"><div id="ss-update-progress" style="width:0%;height:100%;background:#C9A84C;border-radius:2px;transition:width 0.3s;"></div></div></div>';
+      document.body.prepend(banner);
+    })();
+  `);
+
+  const tmpPath = path.join(app.getPath("temp"), "ShortStack-OS-Update.exe");
+  const file = fs.createWriteStream(tmpPath);
+
+  function doDownload(downloadUrl) {
+    const protocol = downloadUrl.startsWith("https") ? https : http;
+    protocol.get(downloadUrl, (response) => {
+      // Handle redirects
+      if (response.statusCode === 301 || response.statusCode === 302) {
+        doDownload(response.headers.location);
+        return;
+      }
+
+      const total = parseInt(response.headers["content-length"] || "0", 10);
+      let downloaded = 0;
+
+      response.on("data", (chunk) => {
+        downloaded += chunk.length;
+        file.write(chunk);
+        if (total > 0 && mainWindow && !mainWindow.isDestroyed()) {
+          const pct = Math.round((downloaded / total) * 100);
+          mainWindow.webContents.executeJavaScript(
+            `document.getElementById('ss-update-progress')&&(document.getElementById('ss-update-progress').style.width='${pct}%')`
+          ).catch(() => {});
+        }
+      });
+
+      response.on("end", () => {
+        file.end();
+        // Install
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          dialog.showMessageBox(mainWindow, {
+            type: "info",
+            title: "Download Complete",
+            message: "Update downloaded successfully",
+            detail: "The app will close and the installer will open. Follow the prompts to update.",
+            buttons: ["Install Now"],
+          }).then(() => {
+            const { exec } = require("child_process");
+            exec(`"${tmpPath}"`);
+            app.quit();
+          });
+        }
+      });
+
+      response.on("error", () => {
+        file.end();
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.executeJavaScript(`
+            document.getElementById('ss-update-banner')&&(document.getElementById('ss-update-banner').innerHTML='<span style="color:#f43f5e;">Download failed. <a href="${url}" style="color:#C9A84C;cursor:pointer;" onclick="require(\\'electron\\').shell.openExternal(\\'${url}\\')">Download manually</a></span>');
+          `).catch(() => {});
+        }
+      });
+    });
+  }
+
+  doDownload(url);
 }
 
 // ── Splash / License screen ─────────────────────────────────────
