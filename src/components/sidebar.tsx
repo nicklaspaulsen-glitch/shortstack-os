@@ -30,6 +30,9 @@ import {
   Mail,
   Eye,
   Send,
+  PenTool,
+  Target,
+  Crown,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -67,15 +70,18 @@ const navItems: NavItem[] = [
   { label: "Content AI", href: "/dashboard/content", icon: <Film size={16} />, roles: ["admin", "team_member"] },
   { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member", "client"] },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"] },
+  { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"] },
   { label: "Trinity", href: "/dashboard/trinity", icon: <Bot size={16} />, roles: ["admin"] },
 
   // ── Marketing ──
-  { label: "Ads", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"], section: "Marketing" },
+  { label: "Outreach Hub", href: "/dashboard/outreach-hub", icon: <Target size={16} />, roles: ["admin"], section: "Marketing" },
+  { label: "Ads", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"] },
   { label: "Templates", href: "/dashboard/email-templates", icon: <Mail size={16} />, roles: ["admin", "team_member"] },
   { label: "Spy Tool", href: "/dashboard/competitor", icon: <Eye size={16} />, roles: ["admin"] },
 
   // ── System ──
-  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"], section: "System" },
+  { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"], section: "System" },
+  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"] },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Demo", href: "/dashboard/demo", icon: <Eye size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },

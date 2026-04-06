@@ -7,7 +7,7 @@ import Modal from "@/components/ui/modal";
 import StatusBadge from "@/components/ui/status-badge";
 import { formatRelativeTime } from "@/lib/utils";
 import {
-  Film, Upload, Send, FileText, Clock, CheckCircle,
+  Film, Upload, Send, FileText, CheckCircle,
   Sparkles, Loader, MessageSquare, ArrowRight, Camera
 } from "lucide-react";
 import toast from "react-hot-toast";
