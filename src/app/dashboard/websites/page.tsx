@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Globe, Sparkles, Loader, ExternalLink, Copy,
-  Code, Send, Zap
+  Code, Send, Zap, Heart
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -28,6 +28,9 @@ export default function WebsitesPage() {
   const [deployUrl, setDeployUrl] = useState("");
   const [tab, setTab] = useState<"build" | "preview" | "deploy">("build");
   const supabase = createClient();
+
+  const [lovablePrompt, setLovablePrompt] = useState("");
+  const [lovableLoading, setLovableLoading] = useState(false);
 
   const [config, setConfig] = useState({
     business_name: "",
@@ -92,6 +95,34 @@ export default function WebsitesPage() {
       toast.error("Error generating website");
     }
     setGenerating(false);
+  }
+
+  async function buildWithLovable() {
+    if (!config.business_name) { toast.error("Enter a business name"); return; }
+    setLovableLoading(true);
+    try {
+      const res = await fetch("/api/lovable/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          business_name: config.business_name,
+          industry: config.industry,
+          description: config.description,
+          style: config.style,
+          sections: config.sections,
+        }),
+      });
+      const data = await res.json();
+      if (data.lovable_prompt || data.prompt) {
+        setLovablePrompt(data.lovable_prompt || data.prompt);
+        toast.success("Lovable prompt generated!");
+      } else {
+        toast.error(data.error || "Failed to generate Lovable prompt");
+      }
+    } catch {
+      toast.error("Error generating Lovable prompt");
+    }
+    setLovableLoading(false);
   }
 
   async function deployWebsite() {
@@ -210,11 +241,37 @@ export default function WebsitesPage() {
               </div>
             </div>
 
-            <button onClick={generateWebsite} disabled={generating || !config.business_name}
-              className="btn-primary w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50">
-              {generating ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
-              {generating ? "Building website..." : "Generate Website with AI"}
-            </button>
+            <div className="flex gap-2">
+              <button onClick={generateWebsite} disabled={generating || !config.business_name}
+                className="btn-primary flex-1 text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50">
+                {generating ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                {generating ? "Building..." : "Generate with AI"}
+              </button>
+              <button onClick={buildWithLovable} disabled={lovableLoading || !config.business_name}
+                className="flex-1 text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-pink-500/30 bg-pink-500/[0.08] text-pink-300 hover:bg-pink-500/[0.15] transition-all font-medium">
+                {lovableLoading ? <Loader size={14} className="animate-spin" /> : <Heart size={14} />}
+                {lovableLoading ? "Generating..." : "Build with Lovable"}
+              </button>
+            </div>
+
+            {lovablePrompt && (
+              <div className="card border-pink-500/15 space-y-2 mt-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[10px] text-pink-300 uppercase tracking-wider font-bold flex items-center gap-1.5">
+                    <Heart size={10} /> Lovable Prompt Ready
+                  </h3>
+                  <button onClick={() => {
+                    navigator.clipboard.writeText(lovablePrompt);
+                    window.open("https://lovable.dev", "_blank");
+                    toast.success("Prompt copied! Paste it in Lovable.");
+                  }} className="text-[10px] px-2.5 py-1 rounded-lg bg-pink-500/10 text-pink-300 hover:bg-pink-500/20 transition-all flex items-center gap-1">
+                    <Copy size={10} /> Copy & Open Lovable
+                  </button>
+                </div>
+                <pre className="text-[9px] text-muted bg-surface-light/30 rounded-lg p-2.5 max-h-32 overflow-y-auto whitespace-pre-wrap">{lovablePrompt}</pre>
+                <p className="text-[8px] text-muted/60">Lovable builds full React apps with Supabase — much better than raw HTML. Paste this prompt in Lovable to get a production-ready site.</p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-3">
@@ -226,6 +283,20 @@ export default function WebsitesPage() {
                 <p><span className="text-gold font-medium">3.</span> Preview it in the browser</p>
                 <p><span className="text-gold font-medium">4.</span> Deploy as a demo link for the client</p>
                 <p><span className="text-gold font-medium">5.</span> Client approves → add custom domain + payment</p>
+              </div>
+            </div>
+
+            <div className="card border-pink-500/10">
+              <h3 className="section-header flex items-center gap-2"><Heart size={12} className="text-pink-400" /> Lovable (Recommended)</h3>
+              <div className="space-y-2 text-[10px] text-muted">
+                <p>Lovable builds <span className="text-pink-300 font-medium">full React + Supabase apps</span> — not just raw HTML. The result is a real, production-ready website with:</p>
+                <ul className="list-disc list-inside space-y-0.5 text-[9px] pl-1">
+                  <li>Responsive design with modern animations</li>
+                  <li>Contact forms that actually work</li>
+                  <li>SEO optimization built in</li>
+                  <li>Hosted on its own URL instantly</li>
+                </ul>
+                <p className="text-[8px] text-muted/60 pt-1">Use Generate with AI for quick HTML demos, or Build with Lovable for client-ready sites.</p>
               </div>
             </div>
           </div>

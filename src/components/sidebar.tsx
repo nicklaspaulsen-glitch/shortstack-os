@@ -53,7 +53,8 @@ const navItems: NavItem[] = [
   { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={16} />, roles: ["admin"] },
 
   // ── Leads & Outreach ──
-  { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"], section: "Leads" },
+  { label: "CRM", href: "/dashboard/crm", icon: <Users size={16} />, roles: ["admin", "team_member"], section: "Leads" },
+  { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"] },
   { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={16} />, roles: ["admin", "team_member"] },
   { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <Send size={16} />, roles: ["admin"] },
 

@@ -239,7 +239,7 @@ export default function DMControllerPage() {
               <p>1. Chrome open with Claude extension</p>
               <p>2. Logged into your social accounts</p>
               <p>3. Keep Chrome in foreground</p>
-              <p>4. Don't touch the mouse during run</p>
+              <p>4. Do not touch the mouse during run</p>
             </div>
           </div>
 

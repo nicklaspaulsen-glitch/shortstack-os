@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import toast from "react-hot-toast";
 import {
-  Film, Megaphone, Globe, Search, Phone,
+  Film, Megaphone, Globe, Search, Phone, Zap,
   Camera, Send, Sparkles,
   Loader, CheckCircle, PenTool
 } from "lucide-react";
