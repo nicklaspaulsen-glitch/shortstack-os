@@ -9,6 +9,7 @@ import VoiceAssistant from "@/components/voice-assistant";
 import OnboardingTour from "@/components/onboarding-tour";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import CommandPalette from "@/components/command-palette";
+import FloatingParticles from "@/components/ui/particles";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -27,6 +28,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen">
+      {/* Floating particles background */}
+      <FloatingParticles count={15} />
+
       {/* Top border accent */}
       <div className="top-border-bar" />
 

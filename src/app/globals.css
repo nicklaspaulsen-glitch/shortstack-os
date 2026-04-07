@@ -240,6 +240,195 @@ body {
   .count-up { animation: countPop 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
   .float { animation: float 4s ease-in-out infinite; }
   .breathe { animation: breathe 3.5s ease-in-out infinite; }
+
+  /* ═══════════ PREMIUM ANIMATIONS ═══════════ */
+
+  /* Animated flowing gradient border */
+  .card-premium {
+    @apply bg-surface/80 rounded-2xl p-5 backdrop-blur-md relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 0 0 1px rgba(30,42,58,0.3);
+  }
+  .card-premium::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      var(--gradient-angle, 135deg),
+      rgba(201,168,76,0.5),
+      transparent 40%,
+      rgba(56,189,248,0.3) 60%,
+      transparent 80%,
+      rgba(201,168,76,0.5)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: borderRotate 4s linear infinite;
+  }
+
+  /* Hover glow effect */
+  .hover-glow {
+    @apply transition-all duration-500;
+    position: relative;
+  }
+  .hover-glow::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(201,168,76,0.08),
+      transparent 60%
+    );
+    pointer-events: none;
+  }
+  .hover-glow:hover::after {
+    opacity: 1;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Skeleton loader */
+  .skeleton {
+    @apply rounded-lg;
+    background: linear-gradient(
+      90deg,
+      rgba(30,42,58,0.3) 25%,
+      rgba(30,42,58,0.6) 50%,
+      rgba(30,42,58,0.3) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton 1.8s ease-in-out infinite;
+  }
+
+  /* Animated gradient text */
+  .text-gradient-animated {
+    background: linear-gradient(270deg, #C9A84C, #38bdf8, #C9A84C, #38bdf8);
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 6s ease infinite;
+  }
+
+  /* Glass morphism card */
+  .card-glass {
+    @apply rounded-2xl p-5;
+    background: rgba(12, 16, 23, 0.6);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid rgba(201, 168, 76, 0.08);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.03) inset,
+      0 8px 32px rgba(0,0,0,0.25);
+  }
+
+  /* Button with shine effect */
+  .btn-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-shine::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255,255,255,0.15) 50%,
+      transparent 100%
+    );
+    transform: rotate(30deg) translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  .btn-shine:hover::after {
+    transform: rotate(30deg) translateX(100%);
+  }
+
+  /* Stat card with number highlight */
+  .stat-glow {
+    text-shadow: 0 0 20px rgba(201,168,76,0.3), 0 0 40px rgba(201,168,76,0.1);
+  }
+
+  /* Floating particles container */
+  .particles-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: rgba(201,168,76,0.15);
+    animation: particleFloat var(--duration, 15s) var(--delay, 0s) ease-in-out infinite;
+  }
+
+  /* Ripple effect */
+  .ripple {
+    position: relative;
+    overflow: hidden;
+  }
+  .ripple::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(201,168,76,0.15) 0%, transparent 70%);
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  .ripple:active::after {
+    transform: scale(2.5);
+    opacity: 1;
+    transition: transform 0s, opacity 0s;
+  }
+
+  /* Ambient glow behind key sections */
+  .ambient-glow {
+    position: relative;
+  }
+  .ambient-glow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60%;
+    height: 60%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    filter: blur(40px);
+  }
+
+  /* Notification dot with ping */
+  .notify-dot {
+    @apply relative w-2 h-2 rounded-full bg-gold;
+  }
+  .notify-dot::before {
+    content: '';
+    @apply absolute inset-0 rounded-full bg-gold;
+    animation: notifyPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
 }
 
 /* ═══════════ KEYFRAMES ═══════════ */
@@ -283,6 +472,39 @@ body {
 @keyframes breathe {
   0%, 100% { opacity: 0.5; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.03); }
+}
+
+@keyframes borderRotate {
+  0% { --gradient-angle: 0deg; }
+  100% { --gradient-angle: 360deg; }
+}
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes skeleton {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes particleFloat {
+  0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+  10% { opacity: 1; transform: translateY(90vh) translateX(10px) scale(1); }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(-10vh) translateX(-20px) scale(0.5); opacity: 0; }
+}
+
+@keyframes notifyPing {
+  0% { transform: scale(1); opacity: 0.75; }
+  75%, 100% { transform: scale(2.5); opacity: 0; }
 }
 
 /* ═══════════ THEME OVERRIDES ═══════════ */

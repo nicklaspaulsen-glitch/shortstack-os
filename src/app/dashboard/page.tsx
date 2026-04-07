@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import AgentActivityFeed from "@/components/agent-activity-feed";
 import AgentStatusCards from "@/components/agent-status-cards";
+import ScrollReveal from "@/components/ui/scroll-reveal";
 
 interface DashboardStats {
   leadsToday: number;
@@ -119,7 +120,7 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight">Welcome back, {profile?.full_name?.split(" ")[0]}</h1>
+          <h1 className="text-xl font-bold tracking-tight">Welcome back, <span className="text-gradient-animated">{profile?.full_name?.split(" ")[0]}</span></h1>
           <p className="text-muted text-xs mt-0.5">Command Center</p>
         </div>
         <div className="text-right flex items-center gap-3">
@@ -138,31 +139,38 @@ export default function DashboardPage() {
       <SmartSuggestions stats={stats} />
 
       {/* Live Agent Status */}
-      <AgentStatusCards />
+      <ScrollReveal delay={100}>
+        <AgentStatusCards />
+      </ScrollReveal>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">
-        {quickActions.map((qa, i) => (
-          <button key={i} onClick={qa.action}
-            className="card-hover p-2.5 flex flex-col items-center gap-1 text-center group">
-            <span className={`${qa.color} group-hover:scale-110 transition-transform`}>{qa.icon}</span>
-            <span className="text-[9px] text-muted group-hover:text-white transition-colors font-medium">{qa.label}</span>
-          </button>
-        ))}
-      </div>
+      <ScrollReveal delay={150}>
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">
+          {quickActions.map((qa, i) => (
+            <button key={i} onClick={qa.action}
+              className="card-hover ripple p-2.5 flex flex-col items-center gap-1 text-center group">
+              <span className={`${qa.color} group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_currentColor] transition-all duration-300`}>{qa.icon}</span>
+              <span className="text-[9px] text-muted group-hover:text-white transition-colors font-medium">{qa.label}</span>
+            </button>
+          ))}
+        </div>
+      </ScrollReveal>
 
-      {/* Key Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
-        <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={14} />} changeType="positive" />
-        <StatCard label="Leads Today" value={stats.leadsToday} icon={<Zap size={14} />} change={`${stats.totalLeads} total`} />
-        <StatCard label="DMs Today" value={`${stats.dmsSentToday}/${stats.dmsTarget}`} icon={<MessageSquare size={14} />} />
-        <StatCard label="Replies" value={stats.repliesThisWeek} icon={<TrendingUp size={14} />} change="this week" changeType="positive" />
-        <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={14} />} />
-        <StatCard label="Deals Won" value={stats.dealsWon} icon={<Briefcase size={14} />} change={formatCurrency(stats.totalRevenue)} changeType="positive" />
-      </div>
+      {/* Key Stats — premium animated */}
+      <ScrollReveal delay={200}>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={14} />} changeType="positive" premium />
+          <StatCard label="Leads Today" value={stats.leadsToday} icon={<Zap size={14} />} change={`${stats.totalLeads} total`} premium />
+          <StatCard label="DMs Today" value={`${stats.dmsSentToday}/${stats.dmsTarget}`} icon={<MessageSquare size={14} />} premium />
+          <StatCard label="Replies" value={stats.repliesThisWeek} icon={<TrendingUp size={14} />} change="this week" changeType="positive" premium />
+          <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={14} />} premium />
+          <StatCard label="Deals Won" value={stats.dealsWon} icon={<Briefcase size={14} />} change={formatCurrency(stats.totalRevenue)} changeType="positive" premium />
+        </div>
+      </ScrollReveal>
 
       {/* DM Progress */}
-      <div className="card p-3.5">
+      <ScrollReveal delay={250}>
+      <div className="card p-3.5 shimmer">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-medium">Daily Outreach</span>
           <span className="text-[10px] font-mono text-gold">{stats.dmsSentToday}/{stats.dmsTarget}</span>
@@ -180,7 +188,9 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
+      </ScrollReveal>
 
+      <ScrollReveal delay={300}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Agent Activity Feed */}
         <AgentActivityFeed />
@@ -268,10 +278,12 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      </ScrollReveal>
 
       {/* Revenue + System Health */}
+      <ScrollReveal delay={350}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="card">
+        <div className="card-premium">
           <h2 className="section-header flex items-center gap-2">
             <DollarSign size={14} className="text-gold" /> Revenue
           </h2>
@@ -316,6 +328,7 @@ export default function DashboardPage() {
           <p className="text-[10px] text-muted">14 integrations monitored</p>
         </div>
       </div>
+      </ScrollReveal>
     </div>
   );
 }

@@ -99,12 +99,14 @@ export interface Client {
   contract_status: ContractStatus;
   pandadoc_contract_id: string | null;
   ghl_contact_id: string | null;
+  ghl_location_id: string | null;
   stripe_customer_id: string | null;
   health_score: number;
   notes: string | null;
   is_active: boolean;
   onboarded_at: string | null;
   created_at: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface Contract {
