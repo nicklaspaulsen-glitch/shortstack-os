@@ -66,11 +66,11 @@ const navItems: NavItem[] = [
 
   // ── Automate ──
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], section: "Automate" },
-  { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member", "client"] },
+  { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member"] },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"] },
 
   // ── System ──
-  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"], section: "System" },
+  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member"], section: "System" },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 

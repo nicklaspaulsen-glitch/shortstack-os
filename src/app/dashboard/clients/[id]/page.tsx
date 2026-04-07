@@ -85,6 +85,25 @@ export default function ClientDetailPage() {
 
   return (
     <div className="fade-in space-y-6">
+      {/* Client banner — makes it clear you're managing a specific client */}
+      <div className="bg-gold/[0.06] border border-gold/15 rounded-xl px-4 py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
+            <span className="text-gold text-sm font-bold">{client.business_name.charAt(0)}</span>
+          </div>
+          <div>
+            <p className="text-[10px] text-gold uppercase tracking-wider font-bold">Managing Client Account</p>
+            <p className="text-xs font-semibold">{client.business_name}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`text-[9px] px-2 py-0.5 rounded-full ${client.is_active ? "bg-success/10 text-success" : "bg-danger/10 text-danger"}`}>
+            {client.is_active ? "Active" : "Inactive"}
+          </span>
+          <span className="text-[9px] text-muted">{client.package_tier || "Standard"} · ${client.mrr}/mo</span>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link href="/dashboard/clients" className="p-2 rounded-lg hover:bg-surface-light text-muted hover:text-white transition-colors">

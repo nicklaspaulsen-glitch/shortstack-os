@@ -311,8 +311,8 @@ export default function ClientsPage() {
             </div>
             <div className="flex gap-3 pt-4 border-t border-border">
               <button onClick={() => { setSelectedClient(null); setShowInviteModal(selectedClient); }}
-                className="btn-primary flex items-center gap-2">
-                <UserPlus size={16} /> Give Portal Access
+                className={`flex items-center gap-2 ${selectedClient.profile_id ? "btn-secondary" : "btn-primary"}`}>
+                <UserPlus size={16} /> {selectedClient.profile_id ? "Reset Password" : "Give Portal Access"}
               </button>
               <button onClick={async () => {
                 toast.loading("Generating contract...");
@@ -338,12 +338,13 @@ export default function ClientsPage() {
       </Modal>
 
       {/* Invite Client to Portal Modal */}
-      <Modal isOpen={!!showInviteModal} onClose={() => setShowInviteModal(null)} title="Give Client Portal Access">
+      <Modal isOpen={!!showInviteModal} onClose={() => setShowInviteModal(null)} title={showInviteModal?.profile_id ? "Reset Client Password" : "Give Client Portal Access"}>
         {showInviteModal && (
           <form onSubmit={async (e) => {
             e.preventDefault();
             const fd = new FormData(e.currentTarget);
-            toast.loading("Creating account...");
+            const hasPortal = !!showInviteModal.profile_id;
+            toast.loading(hasPortal ? "Updating password..." : "Creating account...");
             const res = await fetch("/api/clients/invite", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -352,18 +353,25 @@ export default function ClientsPage() {
                 full_name: fd.get("full_name"),
                 password: fd.get("password"),
                 client_id: showInviteModal.id,
+                update_existing: hasPortal,
               }),
             });
             toast.dismiss();
             const data = await res.json();
             if (data.success) {
-              toast.success("Client account created! They can now log in.");
+              toast.success(hasPortal ? "Password updated!" : "Client account created! They can now log in.");
               setShowInviteModal(null);
+              fetchData();
             } else {
-              toast.error(data.error || "Failed to create account");
+              toast.error(data.error || "Failed");
             }
           }} className="space-y-4">
-            <p className="text-sm text-muted">Create a login for <span className="text-gold font-medium">{showInviteModal.business_name}</span> so they can access their portal.</p>
+            <p className="text-sm text-muted">
+              {showInviteModal.profile_id
+                ? <>Update password for <span className="text-gold font-medium">{showInviteModal.business_name}</span>. They already have portal access.</>
+                : <>Create a login for <span className="text-gold font-medium">{showInviteModal.business_name}</span> so they can access their portal.</>
+              }
+            </p>
             <div>
               <label className="block text-sm text-muted mb-1">Full Name *</label>
               <input name="full_name" className="input w-full" defaultValue={showInviteModal.contact_name} required />
@@ -382,7 +390,7 @@ export default function ClientsPage() {
             <div className="flex justify-end gap-3">
               <button type="button" onClick={() => setShowInviteModal(null)} className="btn-secondary">Cancel</button>
               <button type="submit" className="btn-primary flex items-center gap-2">
-                <UserPlus size={16} /> Create Account
+                <UserPlus size={16} /> {showInviteModal.profile_id ? "Update Password" : "Create Account"}
               </button>
             </div>
           </form>
