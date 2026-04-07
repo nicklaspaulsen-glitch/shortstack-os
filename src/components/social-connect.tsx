@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   Globe, Camera, MessageCircle, Music, Briefcase, Play, Megaphone,
-  Plus, Check, Loader, Link2, Unlink
+  Plus, Check, Loader, Link2, Unlink, Hash
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
@@ -27,6 +27,7 @@ const PLATFORMS = [
   { id: "google_ads", name: "Google Ads", icon: <Megaphone size={16} />, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20" },
   { id: "meta_ads", name: "Meta Ads", icon: <Megaphone size={16} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
   { id: "tiktok_ads", name: "TikTok Ads", icon: <Megaphone size={16} />, color: "text-cyan-400", bg: "bg-cyan-400/10 border-cyan-400/20" },
+  { id: "x_twitter", name: "X (Twitter)", icon: <Hash size={16} />, color: "text-white", bg: "bg-white/10 border-white/20" },
   { id: "website", name: "Website", icon: <Globe size={16} />, color: "text-gold", bg: "bg-gold/10 border-gold/20" },
 ];
 
