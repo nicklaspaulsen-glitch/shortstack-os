@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   const { type, title, script, style, duration, aspect_ratio, client_id, template_id } = await request.json();
 
   // Option 1: Remotion (self-hosted on Railway)
-  const remotionUrl = process.env.REMOTION_RENDER_URL;
+  const remotionUrl = process.env.REMOTION_RENDER_URL || "https://shortstack-remotion-production.up.railway.app";
   if (remotionUrl && !template_id) {
     try {
       const res = await fetch(`${remotionUrl}/api/render`, {
