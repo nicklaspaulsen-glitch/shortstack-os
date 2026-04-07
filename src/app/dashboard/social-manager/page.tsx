@@ -14,6 +14,7 @@ import {
   Briefcase
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageAI from "@/components/page-ai";
 
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={14} className="text-pink-400" />,
@@ -398,6 +399,7 @@ export default function SocialManagerPage() {
           <p className="text-[9px] text-muted">These settings apply when generating weekly content. The AI uses your client&apos;s industry, services, and connected platforms to create platform-specific content.</p>
         </div>
       )}
+      <PageAI pageName="Social Manager" context="Autonomous social media manager. Schedule posts, generate content calendars, manage multiple platforms." suggestions={["Generate this week's content for Instagram", "What trending topics should I post about?", "Write 5 engaging captions for a dental practice", "Create a 30-day content calendar"]} />
     </div>
   );
 }

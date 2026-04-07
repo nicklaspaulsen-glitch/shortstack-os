@@ -11,6 +11,7 @@ import {
   Sparkles, Loader, MessageSquare, ArrowRight, Camera
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageAI from "@/components/page-ai";
 
 const EDIT_TYPES = [
   { id: "short_form", name: "Short Form Edit", desc: "Reels, TikToks, Shorts (30-60s)", icon: <Camera size={16} /> },
@@ -249,6 +250,7 @@ export default function ProductionPage() {
           </div>
         </div>
       </Modal>
+      <PageAI pageName="Production" context="Content production pipeline. Submit footage for editing, track edit requests, manage editor workflow." suggestions={["Write editing notes for a reel", "Create a shot list for a testimonial video", "What edits would make this video more engaging?", "Draft a brief for my editor"]} />
     </div>
   );
 }

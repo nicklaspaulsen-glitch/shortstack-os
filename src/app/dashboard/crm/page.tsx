@@ -11,6 +11,7 @@ import {
   X, RefreshCw
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageAI from "@/components/page-ai";
 
 type CRMStatus = "new" | "contacted" | "replied" | "booked" | "converted";
 
@@ -597,6 +598,16 @@ export default function CRMPage() {
           ))}
         </div>
       )}
+      <PageAI
+        pageName="CRM"
+        context={`${leads.length} total leads. Filters: ${activeTab}. ${leads.filter(l => l.status === "new").length} new, ${leads.filter(l => l.status === "contacted").length} contacted, ${leads.filter(l => l.status === "replied").length} replied, ${leads.filter(l => l.status === "booked").length} booked.`}
+        suggestions={[
+          "Draft follow-up emails for leads who haven't replied",
+          "Which leads should I prioritize today?",
+          "Write a cold DM for a dental practice",
+          "Analyze my conversion rate and suggest improvements",
+        ]}
+      />
     </div>
   );
 }

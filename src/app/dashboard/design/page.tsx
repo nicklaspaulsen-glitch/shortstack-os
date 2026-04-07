@@ -8,6 +8,7 @@ import {
   Camera, MessageCircle, Play, Briefcase, Music
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageAI from "@/components/page-ai";
 
 interface GeneratedPrompt {
   id: string;
@@ -280,6 +281,7 @@ export default function DesignStudioPage() {
           </div>
         </div>
       )}
+      <PageAI pageName="Design Studio" context="AI design prompt generator for thumbnails, social posts, ads, logos, and banners. Generates Midjourney prompts." suggestions={["Generate a thumbnail concept for '5 Marketing Tips'", "Create an Instagram post design for a restaurant", "What colors work best for dental practice ads?", "Design a YouTube banner concept"]} />
     </div>
   );
 }

@@ -14,6 +14,7 @@ import {
   Sparkles, Target
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageAI from "@/components/page-ai";
 
 type Tab = "campaigns" | "creatives" | "insights";
 
@@ -217,6 +218,7 @@ export default function AdsPage() {
           </div>
         </form>
       </Modal>
+      <PageAI pageName="Ads Manager" context="Ad campaign management across Meta, Google, and TikTok. Track spend, conversions, ROAS." suggestions={["Optimize my ad budget allocation", "Write 3 ad headlines for a roofing company", "What's my best performing campaign?", "Suggest targeting improvements for my ads"]} />
     </div>
   );
 }

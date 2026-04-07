@@ -9,6 +9,7 @@ import {
   Flame, Thermometer, Snowflake, Skull, Star
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageAI from "@/components/page-ai";
 
 type Tier = "all" | "hot" | "warm" | "cold" | "dead";
 
@@ -460,6 +461,7 @@ export default function OutreachHubPage() {
           })}
         </div>
       )}
+      <PageAI pageName="Outreach Hub" context="Lead outreach tiers with hot, warm, cold, dead leads. Manage follow-ups and prioritize outreach." suggestions={["Write 5 follow-up messages for warm leads", "Which leads should I call first today?", "Draft a personalized email for a gym owner", "What's the best time to send cold DMs?"]} />
     </div>
   );
 }
