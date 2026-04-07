@@ -441,27 +441,58 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
       <div className="absolute inset-0 bg-mesh opacity-50" />
 
       <div className="relative flex flex-col items-center py-5">
-        {/* AI Avatar */}
+        {/* AI Talking Head */}
         <div className="relative mb-4">
-          <div className={`absolute inset-[-16px] rounded-full border border-gold/8 transition-all duration-300 ${isSpeaking || isListening ? "scale-110 opacity-100" : "scale-100 opacity-20"}`} />
-          <div className={`absolute inset-[-8px] rounded-full border border-gold/15 transition-all duration-300 ${isSpeaking || isListening ? "scale-105 opacity-100" : "scale-100 opacity-10"}`} />
+          {/* Outer pulse rings */}
+          <div className={`absolute inset-[-20px] rounded-full transition-all duration-500 ${isSpeaking ? "opacity-100" : "opacity-0"}`}
+            style={{ background: `radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%)` }} />
+          <div className={`absolute inset-[-12px] rounded-full border transition-all duration-300 ${
+            isSpeaking ? "border-gold/20 scale-110" : isListening ? "border-danger/20 scale-110" : "border-border/10 scale-100"
+          }`} />
 
-          <div className={`relative w-20 h-20 rounded-full flex items-center justify-center transition-all duration-200 ${
-            isListening ? "bg-danger/15 shadow-[0_0_30px_rgba(244,63,94,0.2)]" :
-            isSpeaking ? "bg-gold/15 shadow-[0_0_30px_rgba(201,168,76,0.25)]" :
-            processing ? "bg-accent/15 shadow-[0_0_25px_rgba(56,189,248,0.2)]" :
-            "bg-gold/[0.08] shadow-[0_0_15px_rgba(201,168,76,0.1)]"
-          }`}>
-            <div className="flex items-end gap-[3px] h-8">
-              {[0, 1, 2, 3, 4].map(i => (
-                <div key={i} className={`w-[3px] rounded-full transition-all duration-150 ${
-                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-accent" : "bg-gold/30"
+          <div className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-200`}
+            style={{
+              background: isListening ? "radial-gradient(circle at 50% 40%, rgba(244,63,94,0.15), rgba(244,63,94,0.03))"
+                : isSpeaking ? "radial-gradient(circle at 50% 40%, rgba(201,168,76,0.2), rgba(201,168,76,0.04))"
+                : processing ? "radial-gradient(circle at 50% 40%, rgba(56,189,248,0.15), rgba(56,189,248,0.03))"
+                : "radial-gradient(circle at 50% 40%, rgba(201,168,76,0.08), rgba(201,168,76,0.02))",
+              boxShadow: isSpeaking ? "0 0 40px rgba(201,168,76,0.2)" : isListening ? "0 0 40px rgba(244,63,94,0.15)" : "none",
+            }}>
+            {/* Face */}
+            <div className="relative w-full h-full flex flex-col items-center justify-center">
+              {/* Eyes */}
+              <div className="flex gap-4 mb-2">
+                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-accent" : "bg-gold/50"
                 }`} style={{
-                  height: isSpeaking || isListening
-                    ? `${10 + Math.sin(Date.now() / 200 + i * 1.5) * 12 + pulseIntensity * 8}px`
-                    : processing ? `${6 + Math.sin(Date.now() / 300 + i) * 5}px` : "6px",
+                  transform: isSpeaking ? `translateY(${Math.sin(Date.now() / 400) * 1}px)` : "none",
+                  boxShadow: isSpeaking ? "0 0 8px rgba(201,168,76,0.5)" : isListening ? "0 0 8px rgba(244,63,94,0.5)" : "none",
                 }} />
-              ))}
+                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-accent" : "bg-gold/50"
+                }`} style={{
+                  transform: isSpeaking ? `translateY(${Math.sin(Date.now() / 400) * 1}px)` : "none",
+                  boxShadow: isSpeaking ? "0 0 8px rgba(201,168,76,0.5)" : isListening ? "0 0 8px rgba(244,63,94,0.5)" : "none",
+                }} />
+              </div>
+              {/* Mouth — animated when speaking */}
+              <div className={`rounded-full transition-all duration-100 ${
+                isListening ? "bg-danger/60" : isSpeaking ? "bg-gold/60" : processing ? "bg-accent/40" : "bg-gold/20"
+              }`} style={{
+                width: isSpeaking ? `${16 + pulseIntensity * 12}px` : isListening ? "20px" : "12px",
+                height: isSpeaking ? `${6 + pulseIntensity * 10}px` : isListening ? "10px" : "4px",
+                borderRadius: isSpeaking ? "50%" : "999px",
+              }} />
+              {/* Sound waves when speaking */}
+              {isSpeaking && (
+                <div className="absolute inset-0 flex items-end justify-center pb-2 gap-[2px] opacity-30">
+                  {[0, 1, 2, 3, 4, 5, 6].map(i => (
+                    <div key={i} className="w-[2px] bg-gold rounded-full" style={{
+                      height: `${4 + Math.sin(Date.now() / 150 + i * 1.2) * 8 + pulseIntensity * 6}px`,
+                    }} />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

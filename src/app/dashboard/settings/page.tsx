@@ -236,6 +236,38 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Widget Visibility */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Bot size={14} className="text-gold" /> Floating Widgets
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Show or hide the floating assistant bubbles. You can also drag them to any position.</p>
+            <div className="space-y-2">
+              {[
+                { key: "hide_voice_bubble", label: "Voice Assistant Bubble", desc: "The 'Hey Nicklas' gold bubble" },
+                { key: "hide_chat_bubble", label: "Chat Widget Bubble", desc: "The chat icon in the corner" },
+              ].map(widget => {
+                const isHidden = typeof window !== "undefined" && localStorage.getItem(widget.key) === "true";
+                return (
+                  <div key={widget.key} className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+                    <div>
+                      <p className="text-xs font-medium">{widget.label}</p>
+                      <p className="text-[10px] text-muted">{widget.desc}</p>
+                    </div>
+                    <button onClick={() => {
+                      const next = !isHidden;
+                      localStorage.setItem(widget.key, next ? "true" : "false");
+                      toast.success(next ? `${widget.label} hidden — refresh to apply` : `${widget.label} visible — refresh to apply`);
+                    }}
+                      className={`w-10 h-5 rounded-full transition-all ${!isHidden ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                      <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${!isHidden ? "translate-x-5" : "translate-x-0.5"}`} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Theme */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">
