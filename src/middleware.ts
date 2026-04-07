@@ -1,7 +1,18 @@
 import { updateSession } from "@/lib/supabase/middleware";
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  // Skip auth for static/public files
+  const path = request.nextUrl.pathname;
+  if (
+    path.endsWith(".txt") ||
+    path.endsWith(".xml") ||
+    path.startsWith("/.well-known") ||
+    path.includes("tiktok")
+  ) {
+    return NextResponse.next();
+  }
+
   return await updateSession(request);
 }
 
