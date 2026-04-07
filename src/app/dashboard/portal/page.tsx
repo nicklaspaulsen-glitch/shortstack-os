@@ -121,7 +121,7 @@ export default function ClientPortalPage() {
       // Save onboarding answers to client metadata
       await supabase.from("clients").update({
         metadata: {
-          ...((client as Record<string, unknown>).metadata as Record<string, unknown> || {}),
+          ...((client as unknown as Record<string, unknown>).metadata as Record<string, unknown> || {}),
           biggest_challenge: answers.biggest_challenge,
           goals: answers.goals_3mo,
           has_socials: answers.has_socials,

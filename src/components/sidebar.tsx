@@ -8,11 +8,9 @@ import {
   Zap,
   Search,
   Users,
-  Briefcase,
   Film,
   Bot,
   Activity,
-  Sun,
   LayoutDashboard,
   LogOut,
   ChevronLeft,
@@ -26,9 +24,6 @@ import {
   Sparkles,
   Calendar,
   FileText,
-  Star,
-  Mail,
-  Eye,
   Send,
   PenTool,
   Target,
@@ -50,48 +45,32 @@ const navItems: NavItem[] = [
   // ── Core ──
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={16} />, roles: ["admin", "team_member", "client"] },
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
-  { label: "Briefing", href: "/dashboard/briefing", icon: <Sun size={16} />, roles: ["admin"] },
 
-  // ── Leads & Outreach ──
-  { label: "CRM", href: "/dashboard/crm", icon: <Users size={16} />, roles: ["admin", "team_member"], section: "Leads" },
+  // ── Sales ──
+  { label: "CRM", href: "/dashboard/crm", icon: <Users size={16} />, roles: ["admin", "team_member"], section: "Sales" },
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"] },
-  { label: "Lead Engine", href: "/dashboard/leads", icon: <Zap size={16} />, roles: ["admin", "team_member"] },
-  { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <Send size={16} />, roles: ["admin"] },
-
-  // ── Clients ──
-  { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"], section: "Manage" },
+  { label: "Outreach", href: "/dashboard/outreach-hub", icon: <Send size={16} />, roles: ["admin"] },
+  { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Target size={16} />, roles: ["admin"] },
+  { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"] },
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
-  { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin", "team_member"] },
-  { label: "Team", href: "/dashboard/team", icon: <Briefcase size={16} />, roles: ["admin"] },
 
-  // ── AI Tools ──
-  { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "AI" },
-  { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={16} />, roles: ["admin", "team_member"] },
+  // ── Create ──
+  { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Create" },
   { label: "Script Lab", href: "/dashboard/script-lab", icon: <Sparkles size={16} />, roles: ["admin", "team_member"] },
+  { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={16} />, roles: ["admin", "team_member"] },
   { label: "Video Editor", href: "/dashboard/video-editor", icon: <Film size={16} />, roles: ["admin", "team_member"] },
-  { label: "Production", href: "/dashboard/production", icon: <Film size={16} />, roles: ["admin", "team_member", "client"] },
-  { label: "Content AI", href: "/dashboard/content", icon: <Film size={16} />, roles: ["admin", "team_member"] },
-  { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member", "client"] },
-  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"] },
-  { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
   { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"] },
-  { label: "Trinity", href: "/dashboard/trinity", icon: <Bot size={16} />, roles: ["admin"] },
-
-  // ── Marketing ──
-  { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Send size={16} />, roles: ["admin"], section: "Marketing" },
-  { label: "Outreach Hub", href: "/dashboard/outreach-hub", icon: <Target size={16} />, roles: ["admin"] },
+  { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
   { label: "Ads", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"] },
-  { label: "Templates", href: "/dashboard/email-templates", icon: <Mail size={16} />, roles: ["admin", "team_member"] },
-  { label: "Spy Tool", href: "/dashboard/competitor", icon: <Eye size={16} />, roles: ["admin"] },
+
+  // ── Automate ──
+  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], section: "Automate" },
+  { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member", "client"] },
+  { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"] },
 
   // ── System ──
-  { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"], section: "System" },
-  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"] },
-  { label: "Audit Trail", href: "/dashboard/audit", icon: <Eye size={16} />, roles: ["admin"] },
-  { label: "Forecast", href: "/dashboard/forecast", icon: <BarChart3 size={16} />, roles: ["admin"] },
-  { label: "API Docs", href: "/dashboard/api-docs", icon: <FileText size={16} />, roles: ["admin"] },
+  { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member", "client"], section: "System" },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
-  { label: "Demo", href: "/dashboard/demo", icon: <Eye size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── Client Portal ──
