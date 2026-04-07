@@ -53,17 +53,17 @@ body {
 @layer components {
   /* ═══════════ CARDS ═══════════ */
   .card {
-    @apply bg-surface/80 border border-border/60 rounded-2xl p-5 backdrop-blur-md;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2), 0 0 0 1px rgba(30,42,58,0.3);
+    @apply bg-surface/90 border border-border/40 rounded-xl p-4 backdrop-blur-md;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   }
 
   .card-hover {
-    @apply card transition-all duration-300 cursor-pointer;
+    @apply card transition-all duration-200 cursor-pointer;
   }
   .card-hover:hover {
-    border-color: rgba(201,168,76,0.15);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(201,168,76,0.1);
-    transform: translateY(-2px);
+    border-color: rgba(201,168,76,0.12);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 0 1px rgba(201,168,76,0.08);
+    transform: translateY(-1px);
   }
 
   .card-gradient {
@@ -74,22 +74,21 @@ body {
 
   /* ═══════════ BUTTONS ═══════════ */
   .btn-primary {
-    @apply bg-gradient-gold text-black font-semibold px-4 py-2 rounded-xl transition-all duration-200;
-    box-shadow: 0 2px 8px rgba(201,168,76,0.2);
+    @apply bg-gradient-gold text-black font-semibold px-4 py-2 rounded-lg transition-all duration-150;
+    box-shadow: 0 1px 4px rgba(201,168,76,0.2);
   }
   .btn-primary:hover {
-    box-shadow: 0 4px 16px rgba(201,168,76,0.3);
-    transform: scale(1.02);
+    box-shadow: 0 2px 12px rgba(201,168,76,0.3);
+    filter: brightness(1.05);
   }
   .btn-primary:active { transform: scale(0.97); }
 
   .btn-secondary {
-    @apply bg-surface-light/80 text-muted-light font-medium px-4 py-2 rounded-xl border border-border/60 transition-all duration-200;
+    @apply bg-surface-light/80 text-muted-light font-medium px-4 py-2 rounded-lg border border-border/50 transition-all duration-150;
   }
   .btn-secondary:hover {
-    border-color: rgba(201,168,76,0.2);
-    @apply text-white;
-    transform: scale(1.01);
+    border-color: rgba(201,168,76,0.15);
+    @apply text-white bg-surface-light;
   }
   .btn-secondary:active { transform: scale(0.97); }
 
@@ -103,11 +102,11 @@ body {
 
   /* ═══════════ INPUTS ═══════════ */
   .input {
-    @apply bg-surface-light/60 border border-border/60 rounded-xl px-3.5 py-2 text-white text-sm placeholder-muted/60 transition-all duration-300;
+    @apply bg-surface-light/50 border border-border/50 rounded-lg px-3 py-2 text-white text-sm placeholder-muted/50 transition-all duration-200;
   }
   .input:focus {
-    @apply outline-none border-gold/30;
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+    @apply outline-none border-gold/30 bg-surface-light/70;
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.06);
   }
 
   .badge {
@@ -150,17 +149,16 @@ body {
 
   /* ═══════════ SIDEBAR ═══════════ */
   .sidebar-link {
-    @apply flex items-center gap-2 px-2.5 py-[6px] rounded-lg text-[12px] text-muted/70 transition-all duration-200;
+    @apply flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[12px] text-muted/70 transition-all duration-150;
   }
   .sidebar-link:hover {
-    @apply bg-surface-light/40 text-white;
-    transform: translateX(1px);
+    @apply bg-white/[0.04] text-white;
   }
 
   .sidebar-link-active {
-    @apply flex items-center gap-2 px-2.5 py-[6px] rounded-lg text-[12px] text-gold font-medium;
-    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(201,168,76,0.03) 100%);
-    border: 1px solid rgba(201,168,76,0.12);
+    @apply flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[12px] text-gold font-medium;
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.1);
   }
 
   /* ═══════════ PAGE STRUCTURE ═══════════ */

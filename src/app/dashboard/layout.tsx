@@ -12,13 +12,14 @@ import CommandPalette from "@/components/command-palette";
 import FloatingParticles from "@/components/ui/particles";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [zoom, setZoom] = useState(100);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -26,13 +27,29 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [user, loading, router]);
 
+  // Ctrl+scroll zoom
+  const handleWheel = useCallback((e: WheelEvent) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      setZoom(prev => {
+        const next = prev + (e.deltaY > 0 ? -5 : 5);
+        return Math.max(50, Math.min(150, next));
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [handleWheel]);
+
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen" style={{ zoom: `${zoom}%` }}>
       {/* Floating particles background */}
       <FloatingParticles count={15} />
 
-      {/* Top border accent */}
-      <div className="top-border-bar" />
+      {/* Top border accent — full width */}
+      <div className="fixed top-0 left-0 right-0 h-[3px] z-[99999]" style={{ background: "linear-gradient(90deg, #C9A84C, #38bdf8, #C9A84C)" }} />
 
       {/* Desktop sidebar */}
       <div className="hidden lg:block">
@@ -54,20 +71,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       )}
 
       <main className="flex-1 lg:ml-60">
-        {/* Header */}
-        <div className="sticky top-0 z-30 bg-gradient-header backdrop-blur-xl border-b border-border/30 px-4 lg:px-6 py-2.5 flex items-center justify-between electron-drag">
-          {/* Left — mobile menu + brand */}
-          <div className="electron-no-drag flex items-center gap-2 lg:hidden">
-            <button onClick={() => setMobileMenuOpen(true)} className="p-1.5 rounded-lg text-muted hover:text-white hover:bg-surface-light/50 transition-colors">
-              <Menu size={18} />
-            </button>
-          </div>
+        {/* Header — full width, modern, clean */}
+        <div className="sticky top-[3px] z-30 border-b border-border/20 electron-drag"
+          style={{ background: "rgba(6,8,12,0.85)", backdropFilter: "blur(20px) saturate(1.5)" }}>
+          <div className="flex items-center justify-between px-4 lg:px-6 h-12">
+            {/* Left — mobile menu */}
+            <div className="electron-no-drag flex items-center gap-2 lg:hidden">
+              <button onClick={() => setMobileMenuOpen(true)} className="p-1.5 rounded-lg text-muted hover:text-white hover:bg-surface-light/50 transition-colors">
+                <Menu size={18} />
+              </button>
+            </div>
 
-          {/* Right — actions */}
-          <div className="electron-no-drag flex items-center gap-2 ml-auto">
-            <ClientSwitcher />
-            <Notifications />
-            <GlobalSearch />
+            {/* Center spacer */}
+            <div className="flex-1" />
+
+            {/* Right — actions */}
+            <div className="electron-no-drag flex items-center gap-1.5">
+              {zoom !== 100 && (
+                <button onClick={() => setZoom(100)} className="text-[9px] text-muted bg-surface-light/50 px-2 py-1 rounded-md hover:text-white transition-colors">
+                  {zoom}%
+                </button>
+              )}
+              <ClientSwitcher />
+              <Notifications />
+              <GlobalSearch />
+            </div>
           </div>
         </div>
 
