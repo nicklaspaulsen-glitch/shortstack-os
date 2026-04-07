@@ -104,13 +104,36 @@ export async function POST(request: NextRequest) {
     results.zernio = zernio;
   }
 
-  // 6. Notify on Telegram
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (chatId) {
-    await sendTelegramMessage(chatId, `🎉 *New Client Onboarded!*\n\n*${business_name}*\nContact: ${contact_name}\nPackage: ${package_tier || "Growth"}\nMRR: $${mrr}\nServices: ${(services || []).join(", ")}`);
+  // 6. Auto-create GHL sub-account
+  const ghlKey = process.env.GHL_API_KEY;
+  if (ghlKey) {
+    try {
+      const ghlRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/ghl/sub-account`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Cookie": request.headers.get("cookie") || "" },
+        body: JSON.stringify({
+          client_id: client.id,
+          business_name,
+          email,
+          phone,
+          industry,
+        }),
+      });
+      const ghlData = await ghlRes.json();
+      results.ghl = ghlData.success ? { created: true, location_id: ghlData.location_id } : { created: false, error: ghlData.error };
+    } catch {
+      results.ghl = { created: false, error: "GHL connection failed" };
+    }
   }
 
-  // 7. Log in trinity
+  // 7. Notify on Telegram
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (chatId) {
+    const ghlStatus = (results.ghl as Record<string, unknown>)?.created ? " + GHL sub-account" : "";
+    await sendTelegramMessage(chatId, `🎉 *New Client Onboarded!*\n\n*${business_name}*\nContact: ${contact_name}\nPackage: ${package_tier || "Growth"}\nMRR: $${mrr}\nServices: ${(services || []).join(", ")}${ghlStatus}`);
+  }
+
+  // 8. Log in trinity
   await supabase.from("trinity_log").insert({
     action_type: "custom",
     description: `Client onboarded: ${business_name} (${package_tier} — $${mrr}/mo)`,

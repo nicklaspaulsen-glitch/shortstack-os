@@ -418,24 +418,33 @@ export default function ServicesPage() {
                 })}
               </div>
 
-              {/* Variable inputs */}
+              <p className="text-[8px] text-muted mt-2 flex items-center gap-1">
+                <CheckCircle size={8} className="text-success" /> Just click — smart defaults auto-fill everything
+              </p>
+
+              {/* Variable inputs — collapsed by default */}
               {activeAgent.actions.length > 0 && (
-                <div className="mt-3 pt-3 border-t border-border/20">
-                  <p className="text-[9px] text-muted uppercase tracking-wider mb-2">Fill in details</p>
-                  <div className="grid grid-cols-2 gap-2">
+                <details className="mt-2 pt-2 border-t border-border/20">
+                  <summary className="text-[9px] text-muted cursor-pointer hover:text-white transition-colors">
+                    Customize variables (optional)
+                  </summary>
+                  <div className="grid grid-cols-2 gap-2 mt-2">
                     {Array.from(new Set(activeAgent.actions.flatMap(a => getVars(a.prompt)))).map(v => (
                       <div key={v}>
                         <label className="text-[9px] text-muted capitalize">{v.replace(/_/g, " ")}</label>
                         <input
                           value={variables[v] || ""}
                           onChange={e => setVariables({ ...variables, [v]: e.target.value })}
-                          placeholder={v.replace(/_/g, " ")}
+                          placeholder={`Default: ${({
+                            industry: "dental", business_name: "local business", audience: "owners 30-55",
+                            location: "Miami, FL", topic: "more clients", service: "digital marketing",
+                          } as Record<string, string>)[v] || v.replace(/_/g, " ")}`}
                           className="input w-full text-[10px] py-1"
                         />
                       </div>
                     ))}
                   </div>
-                </div>
+                </details>
               )}
             </div>
 

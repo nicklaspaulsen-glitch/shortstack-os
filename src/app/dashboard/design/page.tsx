@@ -51,6 +51,24 @@ export default function DesignStudioPage() {
   const [dimensions, setDimensions] = useState({ width: 1080, height: 1080 });
   const [style, setStyle] = useState("");
 
+  // Map section keys to API type values
+  const sectionTypeMap: Record<string, string> = {
+    thumbnails: "thumbnail",
+    social: "social_post",
+    ads: "ad",
+    logos: "logo",
+    banners: "banner",
+  };
+
+  // Map dimensions to aspect ratios
+  function getAspectRatio(w: number, h: number): string {
+    if (w === h) return "1:1";
+    if (w / h > 1.7) return "16:9";
+    if (h / w > 1.7) return "9:16";
+    if (w / h > 1.3) return "3:2";
+    return "4:5";
+  }
+
   async function generateDesign(section: string) {
     const prompt = prompts[section];
     if (!prompt?.trim()) {
@@ -60,40 +78,59 @@ export default function DesignStudioPage() {
 
     setGenerating(section);
     try {
+      const w = selectedTemplate?.width || dimensions.width;
+      const h = selectedTemplate?.height || dimensions.height;
+
       const res = await fetch("/api/content/generate-image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt,
-          section,
-          dimensions: selectedTemplate ? { width: selectedTemplate.width, height: selectedTemplate.height } : dimensions,
+          description: prompt,
+          type: sectionTypeMap[section] || section,
+          aspect_ratio: getAspectRatio(w, h),
           style: selectedTemplate?.style || style || "professional, modern",
         }),
       });
 
       if (res.ok) {
         const data = await res.json();
+        // API returns { prompts: [{ prompt, description }] }
+        const mjPrompts = data.prompts || [];
+        const mainPrompt = mjPrompts[0]?.prompt || data.midjourney_prompt || data.prompt || prompt;
+
         const newPrompt: GeneratedPrompt = {
           id: crypto.randomUUID(),
           section,
-          prompt: data.midjourney_prompt || data.prompt || prompt,
+          prompt: mainPrompt,
           style: selectedTemplate?.style || style || "professional",
-          dimensions: selectedTemplate
-            ? `${selectedTemplate.width}x${selectedTemplate.height}`
-            : `${dimensions.width}x${dimensions.height}`,
+          dimensions: `${w}x${h}`,
         };
         setGenerated((prev) => [newPrompt, ...prev]);
+
+        // If multiple prompts returned, add them all
+        if (mjPrompts.length > 1) {
+          mjPrompts.slice(1).forEach((p: { prompt: string }) => {
+            setGenerated((prev) => [{
+              id: crypto.randomUUID(),
+              section,
+              prompt: p.prompt,
+              style: selectedTemplate?.style || style || "professional",
+              dimensions: `${w}x${h}`,
+            }, ...prev]);
+          });
+        }
 
         await supabase.from("trinity_log").insert({
           agent: "design_studio",
           action: "generate_image_prompt",
-          details: { section, prompt: newPrompt.prompt, dimensions: newPrompt.dimensions },
+          details: { section, prompt: mainPrompt, dimensions: `${w}x${h}` },
           status: "success",
         });
 
-        toast.success("Midjourney prompt generated!");
+        toast.success(`${mjPrompts.length || 1} Midjourney prompt${mjPrompts.length > 1 ? "s" : ""} generated!`);
       } else {
-        toast.error("Failed to generate design prompt");
+        const errData = await res.json().catch(() => ({}));
+        toast.error(errData.error || "Failed to generate design prompt");
       }
     } catch {
       toast.error("Error connecting to AI service");
@@ -126,7 +163,7 @@ export default function DesignStudioPage() {
           <p className="text-muted text-sm mt-1">Generate AI-powered designs for thumbnails, social posts, ads & more</p>
         </div>
         <a
-          href="https://canva.com/design/create"
+          href="https://www.canva.com"
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary flex items-center gap-2 rounded-lg"
@@ -229,7 +266,7 @@ export default function DesignStudioPage() {
                       <Copy size={12} /> Copy to Midjourney
                     </button>
                     <a
-                      href="https://canva.com/design/create"
+                      href="https://www.canva.com"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-secondary flex items-center gap-1 text-[10px] px-3 py-1.5 rounded-lg text-center justify-center"

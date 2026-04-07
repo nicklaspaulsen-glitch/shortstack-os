@@ -54,11 +54,47 @@ export default function WorkflowsPage() {
   const [agentChat, setAgentChat] = useState<Array<{ role: "user" | "agent"; content: string; workflow?: Workflow }>>([]);
   const [agentInput, setAgentInput] = useState("");
   const [agentThinking, setAgentThinking] = useState(false);
-  const [tab, setTab] = useState<"builder" | "history" | "agent">("builder");
+  const [tab, setTab] = useState<"builder" | "history" | "agent" | "n8n">("builder");
+  const [n8nWorkflows, setN8nWorkflows] = useState<Array<{ id: string; name: string; active: boolean; nodes: number; createdAt: string; updatedAt: string; tags: Array<{ name: string }> }>>([]);
+  const [n8nLoading, setN8nLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); fetchN8n(); }, []);
+
+  async function fetchN8n() {
+    setN8nLoading(true);
+    try {
+      const res = await fetch("/api/n8n/workflows");
+      const data = await res.json();
+      setN8nWorkflows(data.workflows || []);
+    } catch {}
+    setN8nLoading(false);
+  }
+
+  async function toggleN8nWorkflow(id: string, active: boolean) {
+    try {
+      const res = await fetch(`/api/n8n/workflows/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: !active }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`Workflow ${!active ? "activated" : "deactivated"}`);
+        fetchN8n();
+      }
+    } catch { toast.error("Failed to update"); }
+  }
+
+  async function deleteN8nWorkflow(id: string) {
+    if (!confirm("Delete this n8n workflow?")) return;
+    try {
+      await fetch(`/api/n8n/workflows/${id}`, { method: "DELETE" });
+      toast.success("Workflow deleted");
+      fetchN8n();
+    } catch { toast.error("Failed to delete"); }
+  }
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [agentChat]);
 
   async function fetchData() {
@@ -202,10 +238,10 @@ export default function WorkflowsPage() {
 
       {/* Tabs */}
       <div className="tab-group w-fit">
-        {(["builder", "agent", "history"] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)}
+        {(["builder", "agent", "n8n", "history"] as const).map(t => (
+          <button key={t} onClick={() => { setTab(t); if (t === "n8n") fetchN8n(); }}
             className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "builder" ? "Builder" : t === "agent" ? "AI Agent" : "History"}
+            {t === "builder" ? "Builder" : t === "agent" ? "AI Agent" : t === "n8n" ? "n8n Live" : "History"}
           </button>
         ))}
       </div>
@@ -436,6 +472,75 @@ export default function WorkflowsPage() {
               </button>
             </form>
           </div>
+        </div>
+      )}
+
+      {/* n8n Live Tab */}
+      {tab === "n8n" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted">Live workflows from your n8n instance</p>
+            <div className="flex gap-2">
+              <a href={`${process.env.NEXT_PUBLIC_N8N_URL || "https://n8n-production-97d7.up.railway.app"}`}
+                target="_blank" rel="noopener noreferrer"
+                className="btn-ghost text-[10px] flex items-center gap-1">
+                Open n8n <Eye size={10} />
+              </a>
+              <button onClick={fetchN8n} className="btn-secondary text-[10px] flex items-center gap-1">
+                <RotateCcw size={10} /> Refresh
+              </button>
+            </div>
+          </div>
+          {n8nLoading ? (
+            <div className="card text-center py-8"><Loader size={16} className="animate-spin text-gold mx-auto" /></div>
+          ) : n8nWorkflows.length === 0 ? (
+            <div className="card text-center py-8">
+              <Zap size={20} className="mx-auto mb-2 text-gold/30" />
+              <p className="text-xs text-muted">No n8n workflows found. Create one in the Builder tab or via Agent Mode.</p>
+              <p className="text-[9px] text-muted mt-1">Make sure N8N_API_KEY is set in your environment variables.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {n8nWorkflows.map((w) => (
+                <div key={w.id} className="card-hover p-4 relative overflow-hidden">
+                  <div className={`absolute top-0 left-0 w-1 h-full ${w.active ? "bg-success" : "bg-muted/30"}`} />
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${w.active ? "bg-success/10" : "bg-surface-light"}`}>
+                        <Zap size={14} className={w.active ? "text-success" : "text-muted"} />
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-semibold">{w.name}</h3>
+                        <p className="text-[9px] text-muted">{w.nodes} nodes · Updated {formatRelativeTime(w.updatedAt)}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => toggleN8nWorkflow(w.id, w.active)}
+                      className={`relative w-10 h-5 rounded-full transition-colors ${w.active ? "bg-success" : "bg-surface-light border border-border"}`}>
+                      <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-all ${w.active ? "left-5" : "left-0.5"}`} />
+                    </button>
+                  </div>
+                  {w.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {w.tags.map((t, i) => (
+                        <span key={i} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{t.name}</span>
+                      ))}
+                    </div>
+                  )}
+                  <div className="flex items-center gap-1.5">
+                    <a href={`${process.env.NEXT_PUBLIC_N8N_URL || "https://n8n-production-97d7.up.railway.app"}/workflow/${w.id}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="btn-secondary text-[9px] py-1 px-2 flex items-center gap-1">
+                      <Eye size={9} /> Edit in n8n
+                    </a>
+                    <button onClick={() => deleteN8nWorkflow(w.id)}
+                      className="btn-ghost text-[9px] py-1 px-2 text-danger hover:text-danger">
+                      <Trash2 size={9} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

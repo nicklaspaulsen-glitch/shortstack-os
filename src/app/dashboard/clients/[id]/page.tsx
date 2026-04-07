@@ -28,7 +28,11 @@ export default function ClientDetailPage() {
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing">("overview");
+  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "access">("overview");
+  const [pageAccess, setPageAccess] = useState<Record<string, boolean>>({
+    portal: true, content: true, billing: true, reports: true, socials: true,
+    workflows: false, analytics: false, ads: false, websites: false,
+  });
   const supabase = createClient();
 
   useEffect(() => {
@@ -76,6 +80,7 @@ export default function ClientDetailPage() {
     { key: "ads" as const, label: `Ads (${campaigns.length})` },
     { key: "tasks" as const, label: `Tasks (${tasks.length})` },
     { key: "billing" as const, label: `Billing (${invoices.length})` },
+    { key: "access" as const, label: "Access" },
   ];
 
   return (
@@ -305,6 +310,74 @@ export default function ClientDetailPage() {
             data={invoices}
             emptyMessage="No invoices"
           />
+        </div>
+      )}
+
+      {/* Access Control */}
+      {tab === "access" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="section-header">Page Access Control</h3>
+            <p className="text-[10px] text-muted mb-4">Choose which pages this client can see in their portal. Changes save automatically.</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {Object.entries(pageAccess).map(([page, enabled]) => (
+                <button key={page} onClick={async () => {
+                  const updated = { ...pageAccess, [page]: !enabled };
+                  setPageAccess(updated);
+                  await supabase.from("clients").update({
+                    metadata: { ...((client as unknown as Record<string, unknown>)?.metadata as Record<string, unknown> || {}), page_access: updated },
+                  }).eq("id", id);
+                  toast.success(`${page} ${!enabled ? "enabled" : "disabled"} for client`);
+                }}
+                  className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                    enabled ? "border-success/30 bg-success/[0.05]" : "border-border/20 opacity-60"
+                  }`}>
+                  <span className="text-xs font-medium capitalize">{page}</span>
+                  <div className={`w-8 h-4 rounded-full transition-colors ${enabled ? "bg-success" : "bg-surface-light"}`}>
+                    <div className={`w-3.5 h-3.5 rounded-full bg-white shadow transition-all mt-[1px] ${enabled ? "ml-4" : "ml-[1px]"}`} />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="card">
+            <h3 className="section-header">Social Media Accounts</h3>
+            <SocialConnect clientId={id as string} clientName={client?.business_name} />
+          </div>
+
+          <div className="card">
+            <h3 className="section-header">GHL Sub-Account</h3>
+            {client?.ghl_location_id ? (
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-success" />
+                <div>
+                  <p className="text-xs font-medium">Connected</p>
+                  <p className="text-[9px] text-muted font-mono">Location ID: {client.ghl_location_id}</p>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p className="text-xs text-muted mb-2">No GHL sub-account linked to this client</p>
+                <button onClick={async () => {
+                  toast.loading("Creating GHL sub-account...");
+                  try {
+                    const res = await fetch("/api/ghl/sub-account", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ client_id: id, business_name: client?.business_name, email: client?.email }),
+                    });
+                    const data = await res.json();
+                    toast.dismiss();
+                    if (data.success) { toast.success("GHL sub-account created!"); fetchAll(); }
+                    else toast.error(data.error || "Failed");
+                  } catch { toast.dismiss(); toast.error("Error"); }
+                }} className="btn-primary text-[10px] py-1.5 px-3">
+                  Create GHL Sub-Account
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

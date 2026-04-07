@@ -218,9 +218,24 @@ export default function ScriptLabPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Topic *</label>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Topic * <span className="text-muted/50">— or pick a preset below</span></label>
                 <input value={config.topic} onChange={e => setConfig({ ...config, topic: e.target.value })}
                   className="input w-full text-xs" placeholder="e.g., Why most dental practices fail at social media" />
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                  {[
+                    "Why most businesses fail at social media",
+                    "3 things your competitors don't want you to know",
+                    "The biggest mistake local businesses make online",
+                    "How to get 50 new clients in 30 days",
+                    "Stop wasting money on ads that don't convert",
+                    "Why your website is losing you customers",
+                  ].map((t, i) => (
+                    <button key={i} onClick={() => setConfig({ ...config, topic: t })}
+                      className="text-[8px] px-2 py-0.5 rounded bg-surface-light/60 border border-border/20 text-muted hover:text-white hover:border-gold/20 transition-all">
+                      {t}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Pain Points to Address</label>

@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Globe, Sparkles, Loader, ExternalLink, Copy,
-  Code, Send, Zap, Heart
+  Code, Zap, Heart, Eye, Mail, CheckCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -26,11 +26,12 @@ export default function WebsitesPage() {
   const [deploying, setDeploying] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState("");
   const [deployUrl, setDeployUrl] = useState("");
-  const [tab, setTab] = useState<"build" | "preview" | "deploy">("build");
+  const [tab, setTab] = useState<"build" | "preview" | "deploy" | "demos">("build");
   const supabase = createClient();
 
   const [lovablePrompt, setLovablePrompt] = useState("");
   const [lovableLoading, setLovableLoading] = useState(false);
+  const [demos, setDemos] = useState<Array<{ id: string; business_name: string; url: string; status: string; created_at: string; client_id: string | null }>>([]);
 
   const [config, setConfig] = useState({
     business_name: "",
@@ -45,7 +46,78 @@ export default function WebsitesPage() {
     supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }) => {
       setClients(data || []);
     });
+    fetchDemos();
   });
+
+  async function fetchDemos() {
+    const { data } = await supabase
+      .from("trinity_log")
+      .select("id, description, result, status, created_at, client_id")
+      .eq("action_type", "website_deploy")
+      .order("created_at", { ascending: false })
+      .limit(20);
+    setDemos((data || []).map((d: Record<string, unknown>) => ({
+      id: d.id as string,
+      business_name: d.description as string,
+      url: ((d.result as Record<string, string>)?.url) || "",
+      status: d.status as string,
+      created_at: d.created_at as string,
+      client_id: d.client_id as string | null,
+    })));
+  }
+
+  async function generateDemoSite() {
+    if (!config.business_name) { toast.error("Enter a business name"); return; }
+    setGenerating(true);
+    toast.loading("Generating demo site...");
+    try {
+      const res = await fetch("/api/websites/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: selectedClient || null,
+          business_name: config.business_name,
+          industry: config.industry,
+          description: config.description,
+          services: config.sections,
+          demo: true,
+        }),
+      });
+      const genData = await res.json();
+      const html = genData.pages?.[0]?.html || genData.html;
+      if (!html) { toast.dismiss(); toast.error("Generation failed"); setGenerating(false); return; }
+
+      // Auto-deploy as demo
+      const safeName = config.business_name.toLowerCase().replace(/[^a-z0-9]/g, "-") + "-demo";
+      const deployRes = await fetch("/api/websites/deploy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html, project_name: safeName, client_id: selectedClient || null }),
+      });
+      toast.dismiss();
+      const deployData = await deployRes.json();
+      if (deployData.url) {
+        setDeployUrl(deployData.url);
+        setGeneratedHtml(html);
+        // Log as demo
+        await supabase.from("trinity_log").insert({
+          action_type: "website_deploy",
+          description: config.business_name,
+          client_id: selectedClient || null,
+          status: "demo",
+          result: { url: deployData.url, style: config.style },
+        });
+        fetchDemos();
+        setTab("deploy");
+        toast.success("Demo site live!");
+      } else {
+        setGeneratedHtml(html);
+        setTab("preview");
+        toast.success("Website generated! Add VERCEL_TOKEN to auto-deploy.");
+      }
+    } catch { toast.dismiss(); toast.error("Error"); }
+    setGenerating(false);
+  }
 
   function selectClient(id: string) {
     setSelectedClient(id);
@@ -184,9 +256,9 @@ export default function WebsitesPage() {
       </div>
 
       <div className="tab-group w-fit">
-        {(["build", "preview", "deploy"] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)} className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "build" ? "Build" : t === "preview" ? "Preview" : "Deploy"}
+        {(["build", "preview", "deploy", "demos"] as const).map(t => (
+          <button key={t} onClick={() => { setTab(t); if (t === "demos") fetchDemos(); }} className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
+            {t === "build" ? "Build" : t === "preview" ? "Preview" : t === "deploy" ? "Deploy" : `Demos (${demos.length})`}
           </button>
         ))}
       </div>
@@ -242,17 +314,22 @@ export default function WebsitesPage() {
             </div>
 
             <div className="flex gap-2">
+              <button onClick={generateDemoSite} disabled={generating || !config.business_name}
+                className="flex-1 text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-success/30 bg-success/[0.08] text-success hover:bg-success/[0.15] transition-all font-semibold">
+                {generating ? <Loader size={14} className="animate-spin" /> : <Eye size={14} />}
+                {generating ? "Building..." : "One-Click Demo"}
+              </button>
               <button onClick={generateWebsite} disabled={generating || !config.business_name}
                 className="btn-primary flex-1 text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50">
                 {generating ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
                 {generating ? "Building..." : "Generate with AI"}
               </button>
-              <button onClick={buildWithLovable} disabled={lovableLoading || !config.business_name}
-                className="flex-1 text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-pink-500/30 bg-pink-500/[0.08] text-pink-300 hover:bg-pink-500/[0.15] transition-all font-medium">
-                {lovableLoading ? <Loader size={14} className="animate-spin" /> : <Heart size={14} />}
-                {lovableLoading ? "Generating..." : "Build with Lovable"}
-              </button>
             </div>
+            <button onClick={buildWithLovable} disabled={lovableLoading || !config.business_name}
+              className="w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-pink-500/30 bg-pink-500/[0.08] text-pink-300 hover:bg-pink-500/[0.15] transition-all font-medium">
+              {lovableLoading ? <Loader size={14} className="animate-spin" /> : <Heart size={14} />}
+              {lovableLoading ? "Generating..." : "Build with Lovable (Recommended)"}
+            </button>
 
             {lovablePrompt && (
               <div className="card border-pink-500/15 space-y-2 mt-3">
@@ -343,10 +420,10 @@ export default function WebsitesPage() {
           {deployUrl ? (
             <div className="card border-success/15 text-center py-8">
               <div className="w-14 h-14 bg-success/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <Globe size={24} className="text-success" />
+                <CheckCircle size={24} className="text-success" />
               </div>
-              <h2 className="text-sm font-bold mb-1">Website Deployed!</h2>
-              <p className="text-xs text-muted mb-4">Your demo site is live</p>
+              <h2 className="text-sm font-bold mb-1">Demo Site Live!</h2>
+              <p className="text-xs text-muted mb-4">{config.business_name} demo is ready to share</p>
 
               <div className="bg-surface-light/50 rounded-xl p-3 mb-4 flex items-center justify-between border border-border/20">
                 <a href={deployUrl} target="_blank" rel="noopener" className="text-xs text-gold hover:text-gold-light truncate">{deployUrl}</a>
@@ -359,27 +436,78 @@ export default function WebsitesPage() {
                 <button onClick={() => window.open(deployUrl, "_blank")} className="btn-primary w-full text-xs flex items-center justify-center gap-1.5">
                   <ExternalLink size={12} /> Open Demo Site
                 </button>
-                <button onClick={() => { navigator.clipboard.writeText(deployUrl); toast.success("Link copied! Send to client."); }}
+                <button onClick={() => { navigator.clipboard.writeText(`Hey! Here's a preview of your new website: ${deployUrl}\n\nLet me know what you think!`); toast.success("Message copied with link!"); }}
                   className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
-                  <Send size={12} /> Copy Link to Send to Client
+                  <Mail size={12} /> Copy Message for Client
+                </button>
+                <button onClick={() => { navigator.clipboard.writeText(deployUrl); toast.success("Link copied!"); }}
+                  className="btn-ghost w-full text-xs flex items-center justify-center gap-1.5">
+                  <Copy size={12} /> Copy Link Only
                 </button>
               </div>
 
               <div className="mt-6 pt-4 border-t border-border/20 text-left">
-                <h3 className="text-[10px] text-muted uppercase tracking-wider font-bold mb-2">Next Steps</h3>
+                <h3 className="text-[10px] text-muted uppercase tracking-wider font-bold mb-2">Client Likes It? Next Steps</h3>
                 <div className="space-y-1.5 text-[10px] text-muted">
-                  <p>1. Send demo link to client for approval</p>
-                  <p>2. Client approves → send payment link via Stripe</p>
-                  <p>3. After payment → add custom domain in Vercel</p>
-                  <p>4. Point their domain DNS to Vercel</p>
-                  <p>5. SSL auto-configured — site is live!</p>
+                  <p><span className="text-success font-medium">1.</span> Send payment link via Stripe</p>
+                  <p><span className="text-success font-medium">2.</span> After payment → add custom domain in Vercel</p>
+                  <p><span className="text-success font-medium">3.</span> Client points their DNS to Vercel (76.76.21.21)</p>
+                  <p><span className="text-success font-medium">4.</span> SSL auto-configured — site is live!</p>
+                  <p><span className="text-success font-medium">5.</span> Or use Lovable for a React app with CMS</p>
                 </div>
               </div>
             </div>
           ) : (
             <div className="card text-center py-12">
               <Globe size={24} className="mx-auto mb-2 text-muted/30" />
-              <p className="text-xs text-muted">No deployment yet. Generate and deploy a website first.</p>
+              <p className="text-xs text-muted">No deployment yet. Use One-Click Demo to auto-generate and deploy.</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Demos Tab */}
+      {tab === "demos" && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted">All demo sites created for prospects and clients</p>
+            <button onClick={() => setTab("build")} className="btn-primary text-[10px] flex items-center gap-1">
+              <Sparkles size={10} /> New Demo
+            </button>
+          </div>
+          {demos.length === 0 ? (
+            <div className="card text-center py-12">
+              <Globe size={20} className="mx-auto mb-2 text-muted/30" />
+              <p className="text-xs text-muted">No demos yet. Create one to show prospects what their website could look like.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {demos.map((d) => (
+                <div key={d.id} className="card-hover p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="text-xs font-semibold">{d.business_name}</h3>
+                      <p className="text-[9px] text-muted">{new Date(d.created_at).toLocaleDateString()}</p>
+                    </div>
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${d.status === "demo" ? "bg-gold/10 text-gold" : d.status === "live" ? "bg-success/10 text-success" : "bg-surface-light text-muted"}`}>
+                      {d.status === "demo" ? "Demo" : d.status === "live" ? "Live" : d.status}
+                    </span>
+                  </div>
+                  {d.url && (
+                    <div className="bg-surface-light/30 rounded-lg px-2.5 py-1.5 mb-2.5 flex items-center justify-between border border-border/20">
+                      <a href={d.url} target="_blank" rel="noopener" className="text-[10px] text-gold hover:text-gold-light truncate">{d.url}</a>
+                      <button onClick={() => { navigator.clipboard.writeText(d.url); toast.success("Copied!"); }}>
+                        <Copy size={10} className="text-muted hover:text-white shrink-0 ml-2" />
+                      </button>
+                    </div>
+                  )}
+                  <div className="flex gap-1.5">
+                    {d.url && <a href={d.url} target="_blank" rel="noopener" className="btn-secondary text-[9px] py-1 px-2 flex items-center gap-1"><ExternalLink size={9} /> View</a>}
+                    <button onClick={() => { navigator.clipboard.writeText(`Hey! Here's a preview of your new website: ${d.url}\n\nLet me know what you think!`); toast.success("Message copied!"); }}
+                      className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1"><Mail size={9} /> Send</button>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
