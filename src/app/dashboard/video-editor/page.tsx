@@ -28,6 +28,7 @@ export default function VideoEditorPage() {
   const [selectedClient, setSelectedClient] = useState("");
   const supabase = createClient();
 
+  const [mode, setMode] = useState<"render" | "plan">("render");
   const [config, setConfig] = useState({
     type: "reel",
     title: "",
@@ -64,7 +65,7 @@ export default function VideoEditorPage() {
       const res = await fetch("/api/video/render", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...config, client_id: selectedClient || null }),
+        body: JSON.stringify({ ...config, client_id: selectedClient || null, plan_only: mode === "plan" }),
       });
       clearInterval(progressInterval);
       setRenderProgress(100);
@@ -175,11 +176,32 @@ export default function VideoEditorPage() {
             </div>
           </div>
 
+          {/* Mode toggle */}
+          <div className="flex gap-2">
+            <button onClick={() => setMode("render")}
+              className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
+                mode === "render" ? "bg-gold/10 border-gold/30 text-gold" : "border-border/20 text-muted hover:text-white"
+              }`}>
+              <Film size={14} /> Render MP4
+            </button>
+            <button onClick={() => setMode("plan")}
+              className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
+                mode === "plan" ? "bg-accent/10 border-accent/30 text-accent" : "border-border/20 text-muted hover:text-white"
+              }`}>
+              <Sparkles size={14} /> AI Plan Only
+            </button>
+          </div>
+
           <button onClick={generateVideo} disabled={generating || !config.title}
-            className="btn-primary w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50">
-            {generating ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
-            {generating ? "Creating..." : "Generate Video"}
+            className={`w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl font-semibold transition-all ${
+              mode === "render" ? "btn-primary" : "bg-accent/10 text-accent border border-accent/30 hover:bg-accent/20"
+            }`}>
+            {generating ? <Loader size={14} className="animate-spin" /> : mode === "render" ? <Film size={14} /> : <Sparkles size={14} />}
+            {generating ? "Creating..." : mode === "render" ? "Render Video" : "Generate Video Plan"}
           </button>
+          <p className="text-[8px] text-muted text-center">
+            {mode === "render" ? "Remotion renders an MP4 with animations, text, and transitions (~30-60s)" : "AI creates a detailed shot list, timing, overlays, and music suggestions"}
+          </p>
         </div>
 
         {/* Preview / Result */}

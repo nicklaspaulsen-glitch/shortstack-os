@@ -9,11 +9,11 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { type, title, script, style, duration, aspect_ratio, client_id, template_id } = await request.json();
+  const { type, title, script, style, duration, aspect_ratio, client_id, template_id, plan_only } = await request.json();
 
-  // Option 1: Remotion (self-hosted on Railway)
+  // Option 1: Remotion (self-hosted on Railway) — skip if plan_only
   const remotionUrl = process.env.REMOTION_RENDER_URL || "https://shortstack-remotion-production.up.railway.app";
-  if (remotionUrl && !template_id) {
+  if (remotionUrl && !template_id && !plan_only) {
     try {
       const res = await fetch(`${remotionUrl}/api/render`, {
         method: "POST",
