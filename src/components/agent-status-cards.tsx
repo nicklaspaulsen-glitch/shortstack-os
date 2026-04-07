@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Search, Send, Film, Camera, Megaphone, Zap, Bot, Phone, Crown
+  Search, Send, Film, Camera, Megaphone, Bot, Phone, Crown
 } from "lucide-react";
 
 interface AgentStatus {
