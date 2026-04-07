@@ -134,6 +134,9 @@ export default function DashboardPage() {
       {/* Trinity AI */}
       <TrinityAssistant profile={profile} />
 
+      {/* Smart Suggestions */}
+      <SmartSuggestions stats={stats} />
+
       {/* Live Agent Status */}
       <AgentStatusCards />
 
@@ -522,6 +525,97 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function SmartSuggestions({ stats }: { stats: DashboardStats }) {
+  const router = useRouter();
+  const suggestions: Array<{ text: string; action: () => void; icon: React.ReactNode; color: string; priority: "high" | "medium" | "low" }> = [];
+
+  // Smart logic based on actual data
+  if (stats.leadsToday === 0) {
+    suggestions.push({
+      text: "No leads scraped today — run the lead finder",
+      action: () => router.push("/dashboard/scraper"),
+      icon: <Users size={12} />,
+      color: "text-warning",
+      priority: "high",
+    });
+  }
+  if (stats.dmsSentToday < 10) {
+    suggestions.push({
+      text: `Only ${stats.dmsSentToday} DMs sent — launch a DM run`,
+      action: () => router.push("/dashboard/dm-controller"),
+      icon: <Send size={12} />,
+      color: "text-accent",
+      priority: "high",
+    });
+  }
+  if (stats.repliesThisWeek > 0) {
+    suggestions.push({
+      text: `${stats.repliesThisWeek} replies this week — follow up before they go cold`,
+      action: () => router.push("/dashboard/outreach-hub"),
+      icon: <MessageSquare size={12} />,
+      color: "text-success",
+      priority: "high",
+    });
+  }
+  if (stats.systemIssues > 0) {
+    suggestions.push({
+      text: `${stats.systemIssues} system issue${stats.systemIssues > 1 ? "s" : ""} — check health monitor`,
+      action: () => router.push("/dashboard/monitor"),
+      icon: <AlertTriangle size={12} />,
+      color: "text-danger",
+      priority: "high",
+    });
+  }
+  if (stats.activeClients > 0 && stats.totalMRR > 0) {
+    suggestions.push({
+      text: "Generate this week's social content for all clients",
+      action: () => router.push("/dashboard/social-manager"),
+      icon: <Sparkles size={12} />,
+      color: "text-gold",
+      priority: "medium",
+    });
+  }
+  if (stats.callsBooked > 0) {
+    suggestions.push({
+      text: `${stats.callsBooked} calls booked — prepare proposals`,
+      action: () => router.push("/dashboard/proposals"),
+      icon: <FileText size={12} />,
+      color: "text-gold",
+      priority: "medium",
+    });
+  }
+
+  // Always show at least one suggestion
+  if (suggestions.length === 0) {
+    suggestions.push({
+      text: "All systems running smooth — keep building",
+      action: () => {},
+      icon: <Zap size={12} />,
+      color: "text-success",
+      priority: "low",
+    });
+  }
+
+  // Show max 3 high priority first
+  const sorted = suggestions.sort((a, b) => {
+    const order = { high: 0, medium: 1, low: 2 };
+    return order[a.priority] - order[b.priority];
+  }).slice(0, 3);
+
+  return (
+    <div className="flex gap-2 overflow-x-auto pb-1">
+      {sorted.map((s, i) => (
+        <button key={i} onClick={s.action}
+          className="flex items-center gap-2 px-3 py-2 rounded-xl border border-border/20 hover:border-gold/15 bg-surface-light/20 transition-all shrink-0 group">
+          <span className={s.color}>{s.icon}</span>
+          <span className="text-[10px] text-muted group-hover:text-white transition-colors">{s.text}</span>
+          <ArrowRight size={10} className="text-muted/30 group-hover:text-gold transition-colors" />
+        </button>
+      ))}
     </div>
   );
 }
