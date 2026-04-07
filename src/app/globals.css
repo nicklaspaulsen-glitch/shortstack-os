@@ -192,6 +192,98 @@ body {
   .stagger-5 { animation-delay: 0.2s; animation-fill-mode: backwards; }
   .stagger-6 { animation-delay: 0.24s; animation-fill-mode: backwards; }
 
+  /* ═══════════ ALIVE ANIMATIONS ═══════════ */
+  /* Subtle ambient glow that moves behind cards */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.06), transparent);
+    animation: cardTopShimmer 8s ease-in-out infinite;
+  }
+  .card { position: relative; overflow: hidden; }
+
+  /* Status dots pulse alive */
+  .glow-dot {
+    @apply w-2 h-2 rounded-full;
+    box-shadow: 0 0 6px currentColor, 0 0 12px currentColor;
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  /* Stat values have a subtle glow */
+  .stat-value {
+    text-shadow: 0 0 30px rgba(255,255,255,0.03);
+  }
+
+  /* Gold elements have a subtle breathing glow */
+  .text-gold {
+    animation: goldBreath 4s ease-in-out infinite;
+  }
+
+  /* Active sidebar item has a pulse on the indicator */
+  .sidebar-link-active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2px;
+    height: 16px;
+    border-radius: 1px;
+    background: #C9A84C;
+    box-shadow: 0 0 6px rgba(201,168,76,0.4);
+    animation: sidebarPulse 2.5s ease-in-out infinite;
+  }
+  .sidebar-link-active { position: relative; }
+
+  /* Buttons have a micro-shimmer on hover */
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+  .btn-primary { position: relative; overflow: hidden; }
+  .btn-primary:hover::before {
+    transform: translateX(100%);
+  }
+
+  /* Input fields have a focus glow animation */
+  .input:focus {
+    animation: inputFocusGlow 0.3s ease forwards;
+  }
+
+  /* Tab active has a bottom glow */
+  .tab-item-active {
+    box-shadow: 0 2px 8px rgba(201,168,76,0.15);
+  }
+
+  /* Cards fade-stagger on page load */
+  .fade-in .card:nth-child(1) { animation: fadeSlideUp 0.4s 0.05s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(2) { animation: fadeSlideUp 0.4s 0.1s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(3) { animation: fadeSlideUp 0.4s 0.15s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(4) { animation: fadeSlideUp 0.4s 0.2s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(5) { animation: fadeSlideUp 0.4s 0.25s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(6) { animation: fadeSlideUp 0.4s 0.3s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+
+  /* Hover lift on any interactive card */
+  .card-hover { position: relative; overflow: hidden; }
+  .card-hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    background: radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), rgba(201,168,76,0.03), transparent 40%);
+    pointer-events: none;
+  }
+  .card-hover:hover::after { opacity: 1; }
+
   /* ═══════════ DIVIDER ═══════════ */
   .divider { @apply border-t border-border/30 my-4; }
 
@@ -518,6 +610,36 @@ body {
 @keyframes notifyPing {
   0% { transform: scale(1); opacity: 0.75; }
   75%, 100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes cardTopShimmer {
+  0%, 100% { opacity: 0; transform: translateX(-100%); }
+  50% { opacity: 1; transform: translateX(100%); }
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+@keyframes goldBreath {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes sidebarPulse {
+  0%, 100% { opacity: 1; height: 16px; }
+  50% { opacity: 0.6; height: 12px; }
+}
+
+@keyframes inputFocusGlow {
+  from { box-shadow: 0 0 0 0 rgba(201,168,76,0); }
+  to { box-shadow: 0 0 0 2px rgba(201,168,76,0.06); }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ═══════════ THEME OVERRIDES ═══════════ */

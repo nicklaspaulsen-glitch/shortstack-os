@@ -27,6 +27,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          document.addEventListener('mousemove', function(e) {
+            var cards = document.querySelectorAll('.card-hover');
+            for (var i = 0; i < cards.length; i++) {
+              var r = cards[i].getBoundingClientRect();
+              cards[i].style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+              cards[i].style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+            }
+          });
+        `}} />
+      </head>
       <body className="antialiased bg-background text-white min-h-screen">
         <AuthProvider>
           <ThemeProvider>
