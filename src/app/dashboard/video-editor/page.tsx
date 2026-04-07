@@ -45,11 +45,20 @@ export default function VideoEditorPage() {
     setConfig(prev => ({ ...prev, type: type.id, aspect_ratio: type.aspect, duration: type.duration }));
   }
 
+  const [renderProgress, setRenderProgress] = useState(0);
+
   async function generateVideo() {
     if (!config.title) { toast.error("Enter a video title"); return; }
     setGenerating(true);
     setResult(null);
-    toast.loading("Creating video plan...");
+    setRenderProgress(0);
+
+    // Simulate progress while waiting for server
+    const progressInterval = setInterval(() => {
+      setRenderProgress(prev => Math.min(prev + Math.random() * 8, 90));
+    }, 500);
+
+    toast.loading("Rendering video...");
 
     try {
       const res = await fetch("/api/video/render", {
@@ -57,15 +66,22 @@ export default function VideoEditorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...config, client_id: selectedClient || null }),
       });
+      clearInterval(progressInterval);
+      setRenderProgress(100);
       toast.dismiss();
       const data = await res.json();
       if (data.success) {
         setResult(data);
-        toast.success(data.url ? "Video rendered!" : "Video plan ready!");
+        if (data.url) {
+          toast.success("Video rendered! Ready to download.");
+        } else if (data.plan) {
+          toast.success("Video plan generated — use it to create the video or connect Remotion for auto-rendering.");
+        }
       } else {
         toast.error(data.error || "Failed");
       }
     } catch {
+      clearInterval(progressInterval);
       toast.dismiss();
       toast.error("Error");
     }
@@ -110,6 +126,26 @@ export default function VideoEditorPage() {
             </div>
           </div>
 
+          {/* Quick Presets */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> One-Click Videos</h2>
+            <div className="grid grid-cols-2 gap-1.5">
+              {[
+                { title: "5 Reasons You Need Social Media", script: "Hook: Are you still not on social media? Here's why that's costing you clients..." },
+                { title: "Before & After Transformation", script: "Look at what we did for this business in just 30 days..." },
+                { title: "Client Testimonial Highlight", script: "Here's what our client said about working with us..." },
+                { title: "3 Quick Marketing Tips", script: "Tip 1: Post consistently. Tip 2: Use video content. Tip 3: Engage with comments." },
+                { title: "Behind The Scenes", script: "Ever wonder what goes on behind the scenes at a digital agency?" },
+                { title: "Common Mistakes Business Owners Make", script: "Stop making these mistakes with your marketing..." },
+              ].map((preset, i) => (
+                <button key={i} onClick={() => setConfig({ ...config, title: preset.title, script: preset.script })}
+                  className="text-left p-2 rounded-lg border border-border/20 hover:border-gold/20 transition-all text-[9px] text-muted hover:text-white">
+                  {preset.title}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Details */}
           <div className="card space-y-3">
             <h2 className="section-header">Video Details</h2>
@@ -148,17 +184,38 @@ export default function VideoEditorPage() {
 
         {/* Preview / Result */}
         <div className="space-y-4">
-          <div className="card border-gold/10 text-center py-6">
-            <div className={`mx-auto mb-3 rounded-xl flex items-center justify-center ${
-              selectedType.aspect === "9:16" ? "w-24 h-40" : selectedType.aspect === "16:9" ? "w-40 h-24" : "w-32 h-32"
-            } bg-surface-light/50 border border-border/20`}>
-              {result?.url ? (
-                <a href={result.url} target="_blank" rel="noopener" className="text-gold text-xs">View Video</a>
-              ) : (
-                <Film size={24} className="text-muted/30" />
+          {/* Video preview area */}
+          <div className="card-premium border-gold/10 text-center py-6 relative overflow-hidden">
+            <div className="absolute inset-0 bg-mesh opacity-20" />
+            <div className="relative">
+              <div className={`mx-auto mb-3 rounded-xl flex items-center justify-center overflow-hidden ${
+                selectedType.aspect === "9:16" ? "w-28 h-48" : selectedType.aspect === "16:9" ? "w-48 h-28" : "w-36 h-36"
+              } bg-surface-light/50 border border-border/20`}>
+                {result?.url ? (
+                  <video src={result.url} controls className="w-full h-full object-cover rounded-xl" />
+                ) : generating ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <Loader size={20} className="animate-spin text-gold" />
+                    <span className="text-[9px] text-gold font-mono">{Math.round(renderProgress)}%</span>
+                  </div>
+                ) : (
+                  <Film size={24} className="text-muted/30" />
+                )}
+              </div>
+
+              {/* Render progress bar */}
+              {generating && (
+                <div className="mx-auto w-40 mt-2">
+                  <div className="w-full bg-surface-light rounded-full h-1.5">
+                    <div className="bg-gradient-gold rounded-full h-1.5 transition-all duration-300"
+                      style={{ width: `${renderProgress}%` }} />
+                  </div>
+                  <p className="text-[8px] text-muted mt-1">Rendering {config.duration}s {selectedType.name}...</p>
+                </div>
               )}
+
+              <p className="text-[10px] text-muted mt-2">{selectedType.name} / {selectedType.aspect} / {config.duration}s</p>
             </div>
-            <p className="text-[10px] text-muted">{selectedType.name} / {selectedType.aspect} / {config.duration}s</p>
           </div>
 
           {/* Result */}
@@ -166,13 +223,18 @@ export default function VideoEditorPage() {
             <div className="card">
               <h3 className="section-header flex items-center gap-2">
                 {result.url ? <Play size={12} className="text-success" /> : <Sparkles size={12} className="text-gold" />}
-                {result.source === "ai-plan" ? "Video Plan" : "Rendered"}
+                {result.source === "remotion" ? "Rendered Video" : result.source === "ai-plan" ? "Production Plan" : "Result"}
               </h3>
               {result.url && (
                 <div className="space-y-2">
-                  <a href={result.url} target="_blank" rel="noopener" className="btn-primary w-full text-xs flex items-center justify-center gap-1">
-                    <Download size={12} /> Download Video
+                  <a href={result.url} target="_blank" rel="noopener" download
+                    className="btn-primary btn-shine w-full text-xs flex items-center justify-center gap-1">
+                    <Download size={12} /> Download MP4
                   </a>
+                  <button onClick={() => { navigator.clipboard.writeText(result.url || ""); toast.success("Link copied!"); }}
+                    className="btn-secondary w-full text-xs flex items-center justify-center gap-1">
+                    <Copy size={12} /> Copy Video URL
+                  </button>
                 </div>
               )}
               {result.plan && (
@@ -182,17 +244,20 @@ export default function VideoEditorPage() {
                     className="btn-ghost text-[9px] w-full flex items-center justify-center gap-1"><Copy size={10} /> Copy Plan</button>
                 </div>
               )}
-              <p className="text-[8px] text-muted mt-2">Source: {result.source}{result.render_id ? ` / ID: ${result.render_id}` : ""}</p>
+              <p className="text-[8px] text-muted mt-2">
+                Source: {result.source === "remotion" ? "Remotion (auto-rendered)" : result.source === "ai-plan" ? "AI Plan (connect Remotion for auto-render)" : result.source}
+                {result.render_id ? ` / ${result.render_id}` : ""}
+              </p>
             </div>
           )}
 
           <div className="card border-accent/10">
             <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-accent" /> How it works</h3>
-            <div className="space-y-1 text-[9px] text-muted">
-              <p>1. Choose video type and enter details</p>
-              <p>2. AI creates a production plan with shots, timing, overlays</p>
-              <p>3. Use the plan to record or send to editors via Production page</p>
-              <p>4. With Remotion server: auto-renders motion graphics videos</p>
+            <div className="space-y-1.5 text-[9px] text-muted">
+              <p><span className="text-gold font-medium">1.</span> Pick video type + enter title/script</p>
+              <p><span className="text-gold font-medium">2.</span> AI renders motion graphics video automatically</p>
+              <p><span className="text-gold font-medium">3.</span> Download MP4 and post to social media</p>
+              <p className="pt-1 text-[8px] text-muted/60">Videos include: animated text, transitions, brand colors, CTA overlays. For real footage editing, use the Production page.</p>
             </div>
           </div>
         </div>
