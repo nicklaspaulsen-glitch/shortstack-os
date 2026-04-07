@@ -300,55 +300,142 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Theme */}
+          {/* Theme — 10 presets */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">
-              <Palette size={14} className="text-gold" /> Theme
+              <Palette size={14} className="text-gold" /> Color Theme
             </h2>
-            <p className="text-[10px] text-muted mb-3">Choose your preferred color scheme</p>
-            <div className="grid grid-cols-4 gap-2.5">
+            <p className="text-[10px] text-muted mb-3">10 color schemes to match your style</p>
+            <div className="grid grid-cols-5 gap-2">
               {[
-                { id: "midnight", name: "Midnight", bg: "#06080c", surface: "#0c1017", accent: "#C9A84C", text: "#e2e8f0", desc: "Default dark" },
-                { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#C9A84C", text: "#0f172a", desc: "Clean white" },
-                { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#38bdf8", text: "#e2e8f0", desc: "Deep blue" },
-                { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm dark" },
+                { id: "midnight", name: "Midnight", bg: "#08090e", surface: "#10121a", accent: "#C9A84C", text: "#e8eaed", desc: "Default" },
+                { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#C9A84C", text: "#0f172a", desc: "Clean" },
+                { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#38bdf8", text: "#e2e8f0", desc: "Blue" },
+                { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm" },
+                { id: "forest", name: "Forest", bg: "#071008", surface: "#0d1a10", accent: "#22c55e", text: "#e2e8f0", desc: "Green" },
+                { id: "purple", name: "Purple", bg: "#0e0812", surface: "#16101e", accent: "#a855f7", text: "#e8e0f0", desc: "Violet" },
+                { id: "rose", name: "Rose", bg: "#120810", surface: "#1c0e18", accent: "#f43f5e", text: "#f0e0e8", desc: "Pink" },
+                { id: "arctic", name: "Arctic", bg: "#0a0f14", surface: "#10171e", accent: "#06b6d4", text: "#e0eaf0", desc: "Cyan" },
+                { id: "noir", name: "Noir", bg: "#050505", surface: "#0e0e0e", accent: "#ffffff", text: "#d0d0d0", desc: "B&W" },
+                { id: "sunset", name: "Sunset", bg: "#100808", surface: "#1a0e0e", accent: "#fb923c", text: "#f0e8e0", desc: "Orange" },
               ].map(theme => {
                 const currentTheme = typeof window !== "undefined" ? safeGet("ss-theme") || "midnight" : "midnight";
                 const isActive = currentTheme === theme.id;
                 return (
                   <button key={theme.id} onClick={() => {
                     safeSet("ss-theme", theme.id);
-                    // Apply theme CSS variables
-                    document.documentElement.style.setProperty("--bg", theme.bg);
-                    document.documentElement.style.setProperty("--surface", theme.surface);
-                    document.documentElement.style.setProperty("--accent", theme.accent);
-                    document.documentElement.style.setProperty("--text", theme.text);
                     document.body.style.background = theme.bg;
                     document.body.style.color = theme.text;
-                    // Update all surface elements
-                    document.querySelectorAll(".card, .stat-card").forEach(el => {
-                      (el as HTMLElement).style.backgroundColor = theme.surface;
-                    });
+                    document.documentElement.style.setProperty("--color-background", theme.bg);
+                    document.documentElement.style.setProperty("--color-surface", theme.surface);
+                    document.documentElement.style.setProperty("--color-accent", theme.accent);
+                    if (theme.id === "light") document.documentElement.classList.add("theme-light");
+                    else document.documentElement.classList.remove("theme-light");
                     toast.success(`${theme.name} theme applied`);
-                    // Full reload for complete theme switch
-                    setTimeout(() => window.location.reload(), 500);
+                    setTimeout(() => window.location.reload(), 400);
                   }}
-                    className={`p-3 rounded-xl border transition-all text-center ${
-                      isActive ? "border-gold/30 ring-2 ring-gold/20" : "border-border/30 hover:border-gold/15"
+                    className={`p-2.5 rounded-lg border transition-all text-center ${
+                      isActive ? "border-gold/40 ring-2 ring-gold/20 bg-white/[0.03]" : "border-white/[0.06] hover:border-white/[0.12]"
                     }`}
                   >
-                    {/* Preview circles */}
-                    <div className="flex items-center justify-center gap-1 mb-2">
-                      <div className="w-5 h-5 rounded-full border border-white/10" style={{ background: theme.bg }} />
-                      <div className="w-5 h-5 rounded-full border border-white/10" style={{ background: theme.surface }} />
-                      <div className="w-5 h-5 rounded-full border border-white/10" style={{ background: theme.accent }} />
+                    <div className="flex items-center justify-center gap-0.5 mb-1.5">
+                      <div className="w-4 h-4 rounded-full border border-white/10" style={{ background: theme.bg }} />
+                      <div className="w-4 h-4 rounded-full border border-white/10" style={{ background: theme.accent }} />
                     </div>
-                    <p className="text-[10px] font-semibold">{theme.name}</p>
-                    <p className="text-[8px] text-muted">{theme.desc}</p>
-                    {isActive && <p className="text-[8px] text-gold mt-0.5">Active</p>}
+                    <p className="text-[9px] font-bold">{theme.name}</p>
+                    {isActive && <p className="text-[7px] text-gold mt-0.5">Active</p>}
                   </button>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Layout Options */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Settings size={14} className="text-gold" /> Layout & Density
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Customize how compact or spacious the interface feels</p>
+            <div className="space-y-4">
+              {/* Sidebar Style */}
+              <div>
+                <p className="text-xs font-medium mb-2">Sidebar Style</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: "default", name: "Full", desc: "Icons + labels" },
+                    { id: "compact", name: "Compact", desc: "Narrower sidebar" },
+                    { id: "icons", name: "Icons Only", desc: "Collapsed view" },
+                  ].map(style => {
+                    const current = safeGet("ss-sidebar") || "default";
+                    return (
+                      <button key={style.id} onClick={() => {
+                        safeSet("ss-sidebar", style.id);
+                        toast.success(`${style.name} sidebar — reload to apply`);
+                      }}
+                        className={`p-3 rounded-lg border text-center transition-all ${
+                          current === style.id ? "border-gold/30 bg-gold/[0.04]" : "border-white/[0.06]"
+                        }`}>
+                        <p className="text-[10px] font-bold">{style.name}</p>
+                        <p className="text-[8px] text-muted">{style.desc}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Font Size */}
+              <div>
+                <p className="text-xs font-medium mb-2">Font Size</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { id: "small", name: "Small", size: "13px" },
+                    { id: "default", name: "Default", size: "14px" },
+                    { id: "large", name: "Large", size: "15px" },
+                    { id: "xl", name: "Extra Large", size: "16px" },
+                  ].map(fs => {
+                    const current = safeGet("ss-fontsize") || "default";
+                    return (
+                      <button key={fs.id} onClick={() => {
+                        safeSet("ss-fontsize", fs.id);
+                        document.body.style.fontSize = fs.size;
+                        toast.success(`Font size: ${fs.name}`);
+                      }}
+                        className={`p-2.5 rounded-lg border text-center transition-all ${
+                          current === fs.id ? "border-gold/30 bg-gold/[0.04]" : "border-white/[0.06]"
+                        }`}>
+                        <p style={{ fontSize: fs.size }} className="font-bold">Aa</p>
+                        <p className="text-[8px] text-muted">{fs.name}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Card Style */}
+              <div>
+                <p className="text-xs font-medium mb-2">Card Style</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: "default", name: "Rounded", desc: "Soft corners" },
+                    { id: "sharp", name: "Sharp", desc: "Square corners" },
+                    { id: "bordered", name: "Bordered", desc: "Visible borders" },
+                  ].map(cs => {
+                    const current = safeGet("ss-cardstyle") || "default";
+                    return (
+                      <button key={cs.id} onClick={() => {
+                        safeSet("ss-cardstyle", cs.id);
+                        toast.success(`${cs.name} cards — reload to apply`);
+                      }}
+                        className={`p-3 rounded-lg border text-center transition-all ${
+                          current === cs.id ? "border-gold/30 bg-gold/[0.04]" : "border-white/[0.06]"
+                        }`}>
+                        <p className="text-[10px] font-bold">{cs.name}</p>
+                        <p className="text-[8px] text-muted">{cs.desc}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
 

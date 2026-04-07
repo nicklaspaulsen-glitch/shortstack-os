@@ -11,12 +11,13 @@
 }
 
 body {
-  color: #d4d4dc;
+  color: #e8eaed;
   background: #08090e;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
+  font-size: 14px;
 }
 
 /* Electron window drag region */
@@ -42,44 +43,49 @@ body {
 @layer components {
   /* ═══════════ CARDS ═══════════ */
   .card {
-    @apply rounded-lg p-4;
-    background: rgba(14,16,22,0.8);
-    border: 1px solid rgba(255,255,255,0.04);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    @apply rounded-xl p-5;
+    background: rgba(16,18,26,0.85);
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
 
   .card-hover {
-    @apply card transition-all duration-150 cursor-pointer;
+    @apply card transition-all duration-200 cursor-pointer;
   }
   .card-hover:hover {
-    background: rgba(18,20,28,0.9);
-    border-color: rgba(201,168,76,0.1);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    background: rgba(22,25,35,0.95);
+    border-color: rgba(201,168,76,0.15);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(201,168,76,0.06);
+    transform: translateY(-2px);
   }
 
   .card-gradient {
-    @apply rounded-lg p-4;
-    background: linear-gradient(145deg, rgba(16,18,26,0.95) 0%, rgba(10,12,18,0.98) 100%);
-    border: 1px solid rgba(255,255,255,0.04);
+    @apply rounded-xl p-5;
+    background: linear-gradient(145deg, rgba(18,20,30,0.95) 0%, rgba(12,14,22,0.98) 100%);
+    border: 1px solid rgba(255,255,255,0.06);
   }
 
   /* ═══════════ BUTTONS ═══════════ */
   .btn-primary {
-    @apply text-black font-semibold px-4 py-2 rounded-md transition-all duration-100;
-    background: linear-gradient(135deg, #C9A84C, #b8943f);
+    @apply text-black font-bold px-5 py-2.5 rounded-lg transition-all duration-150;
+    background: linear-gradient(135deg, #d4b45a, #C9A84C);
+    box-shadow: 0 2px 10px rgba(201,168,76,0.25);
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg, #d4b45a, #C9A84C);
+    background: linear-gradient(135deg, #dfc06a, #d4b45a);
+    box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+    transform: translateY(-1px);
   }
-  .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
+  .btn-primary:active { transform: scale(0.97) translateY(0); }
 
   .btn-secondary {
-    @apply text-[#9ca3af] font-medium px-4 py-2 rounded-md transition-all duration-100;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
+    @apply text-white/70 font-medium px-5 py-2.5 rounded-lg transition-all duration-150;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
   }
   .btn-secondary:hover {
-    background: rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.12);
     @apply text-white;
   }
   .btn-secondary:active { transform: scale(0.97); }
@@ -99,15 +105,16 @@ body {
 
   /* ═══════════ INPUTS ═══════════ */
   .input {
-    @apply text-white text-sm rounded-md px-3 py-2 transition-all duration-100;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
+    @apply text-white text-sm rounded-lg px-3.5 py-2.5 transition-all duration-150;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
   }
-  .input::placeholder { color: rgba(255,255,255,0.2); }
+  .input::placeholder { color: rgba(255,255,255,0.25); }
   .input:focus {
     @apply outline-none;
-    border-color: rgba(201,168,76,0.3);
-    background: rgba(255,255,255,0.05);
+    border-color: rgba(201,168,76,0.4);
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
   }
 
   .badge {
@@ -116,18 +123,19 @@ body {
 
   /* ═══════════ STAT CARDS ═══════════ */
   .stat-card {
-    @apply card flex flex-col gap-0.5;
+    @apply card flex flex-col gap-1;
   }
 
   .stat-value {
-    @apply text-xl font-bold text-white tracking-tight;
+    @apply text-2xl font-extrabold text-white tracking-tight;
     font-feature-settings: "tnum";
     font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 40px rgba(201,168,76,0.08);
   }
 
   .stat-label {
-    @apply text-[10px] font-medium uppercase tracking-[0.1em];
-    color: rgba(255,255,255,0.35);
+    @apply text-[11px] font-semibold uppercase tracking-[0.08em];
+    color: rgba(255,255,255,0.45);
   }
 
   /* ═══════════ TABLES ═══════════ */
@@ -170,13 +178,12 @@ body {
 
   /* ═══════════ PAGE STRUCTURE ═══════════ */
   .page-header {
-    @apply text-lg font-bold text-white mb-4;
-    letter-spacing: -0.02em;
+    @apply text-2xl font-extrabold text-white mb-5;
+    letter-spacing: -0.03em;
   }
 
   .section-header {
-    @apply text-[13px] font-semibold mb-3;
-    color: rgba(255,255,255,0.8);
+    @apply text-sm font-bold mb-3 text-white;
     letter-spacing: -0.01em;
   }
 
@@ -289,26 +296,27 @@ body {
 
   /* ═══════════ TABS ═══════════ */
   .tab-group {
-    @apply flex gap-px rounded-md p-px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.04);
+    @apply flex gap-1 rounded-xl p-1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
   }
 
   .tab-item {
-    @apply px-3.5 py-1.5 text-xs rounded-[5px] font-medium transition-all duration-100 cursor-pointer;
+    @apply px-4 py-2 text-xs rounded-lg font-semibold transition-all duration-150 cursor-pointer;
   }
 
   .tab-item-active {
     @apply tab-item text-black;
-    background: #C9A84C;
+    background: linear-gradient(135deg, #d4b45a, #C9A84C);
+    box-shadow: 0 2px 8px rgba(201,168,76,0.3);
   }
 
   .tab-item-inactive {
     @apply tab-item hover:text-white;
-    color: rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.4);
   }
   .tab-item-inactive:hover {
-    background: rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.06);
   }
 
   /* ═══════════ GLOW ═══════════ */
