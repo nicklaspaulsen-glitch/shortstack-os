@@ -7,7 +7,7 @@ import {
   Bot, Activity, CheckCircle, XCircle, Clock, RefreshCw,
   Zap, MessageSquare, Heart, Shield, Wrench,
   Search, Sparkles, Send, BarChart3, Star, Film, Eye,
-  CreditCard, UserPlus, Globe, Megaphone
+  CreditCard, UserPlus, Globe, Megaphone, FileText
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -54,6 +54,9 @@ const AGENTS_CONFIG: Omit<Agent, "status" | "lastAction" | "lastActionTime" | "u
   { id: "onboarding", name: "Onboarding Agent", role: "Runs client onboarding checklist & setup tasks", endpoint: "/api/agents/onboarding/health" },
   { id: "seo", name: "SEO Agent", role: "Monitors rankings, generates blogs, tracks keywords", endpoint: "/api/agents/seo/health" },
   { id: "reputation", name: "Reputation Agent", role: "Monitors brand mentions & manages online presence", endpoint: "/api/agents/reputation/health" },
+  { id: "retention", name: "Retention Agent", role: "Detects churn risk & auto-triggers re-engagement", endpoint: "/api/agents/retention/health" },
+  { id: "proposal", name: "Proposal Agent", role: "Auto-generates proposals when leads book calls", endpoint: "/api/agents/proposal/health" },
+  { id: "scheduler", name: "Scheduling Agent", role: "Books meetings, sends reminders, manages calendar", endpoint: "/api/agents/scheduler/health" },
 ];
 
 const STATUS_CONFIG: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
@@ -75,6 +78,9 @@ const AGENT_VISUALS: Record<string, { icon: React.ReactNode; gradient: string; g
   "onboarding": { icon: <UserPlus size={18} />, gradient: "from-sky-500 to-indigo-500", glow: "shadow-[0_0_20px_rgba(14,165,233,0.4)]", ring: "border-sky-400/30" },
   "seo": { icon: <Globe size={18} />, gradient: "from-lime-500 to-green-500", glow: "shadow-[0_0_20px_rgba(132,204,22,0.4)]", ring: "border-lime-400/30" },
   "reputation": { icon: <Megaphone size={18} />, gradient: "from-fuchsia-500 to-pink-600", glow: "shadow-[0_0_20px_rgba(217,70,239,0.4)]", ring: "border-fuchsia-400/30" },
+  "retention": { icon: <Heart size={18} />, gradient: "from-rose-500 to-red-500", glow: "shadow-[0_0_20px_rgba(244,63,94,0.4)]", ring: "border-rose-400/30" },
+  "proposal": { icon: <FileText size={18} />, gradient: "from-violet-500 to-purple-600", glow: "shadow-[0_0_20px_rgba(139,92,246,0.4)]", ring: "border-violet-400/30" },
+  "scheduler": { icon: <Clock size={18} />, gradient: "from-teal-500 to-cyan-600", glow: "shadow-[0_0_20px_rgba(20,184,166,0.4)]", ring: "border-teal-400/30" },
 };
 
 function AgentHead({ agentId, status, size = 48 }: { agentId: string; status: string; size?: number }) {
@@ -379,6 +385,40 @@ export default function AgentSupervisorPage() {
                   )}
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Agent Chains — automated triggers between agents */}
+      <div className="card rounded-xl">
+        <h2 className="section-header flex items-center gap-2 mb-4">
+          <Zap size={18} className="text-gold" /> Agent Chains
+          <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full ml-2">12 active</span>
+        </h2>
+        <p className="text-[10px] text-muted mb-3">When one agent completes a task, it automatically triggers the next agent in the chain.</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          {[
+            { from: "Lead Engine", to: "Outreach", label: "New lead → Send DM", color: "emerald" },
+            { from: "Outreach", to: "Proposal", label: "Reply received → Generate proposal", color: "blue" },
+            { from: "Outreach", to: "Scheduler", label: "Call booked → Schedule meeting", color: "cyan" },
+            { from: "Proposal", to: "Onboarding", label: "Deal won → Start onboarding", color: "purple" },
+            { from: "Onboarding", to: "Invoice", label: "Onboarded → Send first invoice", color: "green" },
+            { from: "Onboarding", to: "Content", label: "Onboarded → Generate first content", color: "pink" },
+            { from: "Analytics", to: "Retention", label: "Health drops → Re-engage client", color: "rose" },
+            { from: "Invoice", to: "Retention", label: "Invoice overdue → Chase payment", color: "red" },
+            { from: "Content", to: "Social", label: "Content ready → Schedule posts", color: "violet" },
+            { from: "Reviews", to: "Reputation", label: "New review → Auto-respond", color: "amber" },
+            { from: "Competitor", to: "Content", label: "Viral detected → Counter-content", color: "orange" },
+            { from: "Competitor", to: "Ads", label: "Price change → Adjust ads", color: "yellow" },
+          ].map((chain, i) => (
+            <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg border border-border/20 bg-surface-light/20 hover:border-gold/10 transition-all">
+              <div className="flex items-center gap-1 flex-1 min-w-0">
+                <span className="text-[9px] font-bold text-white bg-surface-light px-1.5 py-0.5 rounded">{chain.from}</span>
+                <Zap size={8} className="text-gold shrink-0" />
+                <span className="text-[9px] font-bold text-gold bg-gold/10 px-1.5 py-0.5 rounded">{chain.to}</span>
+              </div>
+              <div className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
             </div>
           ))}
         </div>
