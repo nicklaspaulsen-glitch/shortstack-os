@@ -68,6 +68,7 @@ const navItems: NavItem[] = [
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], section: "Automate" },
   { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member"] },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"] },
+  { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── System ──
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member"], section: "System" },
