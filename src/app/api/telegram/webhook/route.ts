@@ -121,6 +121,28 @@ If the user's message contains action words (call, email, scrape, send, outreach
     reply += "\n\nBlaze (Ads Agent) activated. Open Ads Manager in the OS to create and optimize campaigns.";
   }
 
+  if (combined.includes("create a workflow") || combined.includes("create workflow") || combined.includes("setup a workflow") || combined.includes("make a workflow") || combined.includes("build a workflow")) {
+    // Extract the workflow description from the user's message
+    fetch(`${baseUrl}/api/n8n/create-workflow`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ description: text }),
+    }).then(async (res) => {
+      const data = await res.json();
+      if (data.deployed) {
+        const token = process.env.TELEGRAM_BOT_TOKEN;
+        if (token) {
+          fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: chatId, text: `Workflow deployed to n8n! ID: ${data.n8n_id}. Open n8n to see it: https://n8n-production-97d7.up.railway.app` }),
+          });
+        }
+      }
+    }).catch(() => {});
+    reply += "\n\nCreating and deploying workflow to n8n now. I'll send you a confirmation when it's live.";
+  }
+
   if (combined.includes("briefing") || combined.includes("brief me") || combined.includes("what happened")) {
     fetch(`${baseUrl}/api/cron/daily-brief`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
     reply += "\n\nTriggered: Generating your daily briefing. Check Telegram in a moment.";
