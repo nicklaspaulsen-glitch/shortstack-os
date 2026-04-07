@@ -6,7 +6,8 @@ import { createClient } from "@/lib/supabase/client";
 import {
   Bot, Activity, CheckCircle, XCircle, Clock, RefreshCw,
   Zap, MessageSquare, Heart, Shield, Wrench,
-  Search, Sparkles, Send, BarChart3, Star, Film, Eye
+  Search, Sparkles, Send, BarChart3, Star, Film, Eye,
+  CreditCard, UserPlus, Globe, Megaphone
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -49,6 +50,10 @@ const AGENTS_CONFIG: Omit<Agent, "status" | "lastAction" | "lastActionTime" | "u
   { id: "analytics", name: "Analytics Agent", role: "Tracks KPIs and generates reports", endpoint: "/api/agents/analytics/health" },
   { id: "trinity", name: "Trinity", role: "Central AI coordinator & task executor", endpoint: "/api/agents/trinity/health" },
   { id: "competitor", name: "Competitor Agent", role: "Monitors competitor activity and pricing", endpoint: "/api/agents/competitor/health" },
+  { id: "invoice", name: "Invoice Agent", role: "Auto-sends invoices, tracks payments, chases overdue", endpoint: "/api/agents/invoice/health" },
+  { id: "onboarding", name: "Onboarding Agent", role: "Runs client onboarding checklist & setup tasks", endpoint: "/api/agents/onboarding/health" },
+  { id: "seo", name: "SEO Agent", role: "Monitors rankings, generates blogs, tracks keywords", endpoint: "/api/agents/seo/health" },
+  { id: "reputation", name: "Reputation Agent", role: "Monitors brand mentions & manages online presence", endpoint: "/api/agents/reputation/health" },
 ];
 
 const STATUS_CONFIG: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
@@ -66,6 +71,10 @@ const AGENT_VISUALS: Record<string, { icon: React.ReactNode; gradient: string; g
   "analytics": { icon: <BarChart3 size={18} />, gradient: "from-cyan-500 to-blue-600", glow: "shadow-[0_0_20px_rgba(6,182,212,0.4)]", ring: "border-cyan-400/30" },
   "trinity": { icon: <Shield size={18} />, gradient: "from-gold to-amber-600", glow: "shadow-[0_0_25px_rgba(201,168,76,0.5)]", ring: "border-gold/40" },
   "competitor": { icon: <Eye size={18} />, gradient: "from-red-500 to-rose-600", glow: "shadow-[0_0_20px_rgba(239,68,68,0.4)]", ring: "border-red-400/30" },
+  "invoice": { icon: <CreditCard size={18} />, gradient: "from-green-500 to-emerald-600", glow: "shadow-[0_0_20px_rgba(34,197,94,0.4)]", ring: "border-green-400/30" },
+  "onboarding": { icon: <UserPlus size={18} />, gradient: "from-sky-500 to-indigo-500", glow: "shadow-[0_0_20px_rgba(14,165,233,0.4)]", ring: "border-sky-400/30" },
+  "seo": { icon: <Globe size={18} />, gradient: "from-lime-500 to-green-500", glow: "shadow-[0_0_20px_rgba(132,204,22,0.4)]", ring: "border-lime-400/30" },
+  "reputation": { icon: <Megaphone size={18} />, gradient: "from-fuchsia-500 to-pink-600", glow: "shadow-[0_0_20px_rgba(217,70,239,0.4)]", ring: "border-fuchsia-400/30" },
 };
 
 function AgentHead({ agentId, status, size = 48 }: { agentId: string; status: string; size?: number }) {
