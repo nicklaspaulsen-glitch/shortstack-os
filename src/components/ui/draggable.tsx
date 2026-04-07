@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback, ReactNode } from "react";
+import { useRef, useState, useEffect, ReactNode } from "react";
 
 interface DraggableProps {
   children: ReactNode;
@@ -10,55 +10,77 @@ interface DraggableProps {
 }
 
 export default function Draggable({ children, defaultX, defaultY, storageKey }: DraggableProps) {
-  const [pos, setPos] = useState(() => {
-    if (storageKey && typeof window !== "undefined") {
-      const saved = localStorage.getItem(`drag_${storageKey}`);
-      if (saved) return JSON.parse(saved);
-    }
-    return { x: defaultX ?? 0, y: defaultY ?? 0 };
-  });
-
+  const [pos, setPos] = useState({ x: defaultX ?? 0, y: defaultY ?? 0 });
+  const posRef = useRef(pos);
   const dragging = useRef(false);
-  const offset = useRef({ x: 0, y: 0 });
-  const moved = useRef(false);
+  const hasMoved = useRef(false);
+  const startOffset = useRef({ x: 0, y: 0 });
+  const elRef = useRef<HTMLDivElement>(null);
 
-  const onMouseDown = useCallback((e: React.MouseEvent) => {
-    // Only drag on the handle (the element itself, not children buttons)
-    if ((e.target as HTMLElement).closest("button, input, a, textarea")) return;
+  // Load saved position
+  useEffect(() => {
+    if (storageKey) {
+      try {
+        const saved = localStorage.getItem(`drag_${storageKey}`);
+        if (saved) {
+          const p = JSON.parse(saved);
+          setPos(p);
+          posRef.current = p;
+        }
+      } catch {}
+    }
+  }, [storageKey]);
+
+  // Keep ref in sync
+  useEffect(() => { posRef.current = pos; }, [pos]);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    // Don't drag if clicking buttons/inputs inside
+    const target = e.target as HTMLElement;
+    if (target.closest("button, input, a, textarea, select")) return;
+
     dragging.current = true;
-    moved.current = false;
-    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y };
-
-    const onMouseMove = (e: MouseEvent) => {
-      if (!dragging.current) return;
-      moved.current = true;
-      const newX = e.clientX - offset.current.x;
-      const newY = e.clientY - offset.current.y;
-      setPos({ x: newX, y: newY });
+    hasMoved.current = false;
+    startOffset.current = {
+      x: e.clientX - posRef.current.x,
+      y: e.clientY - posRef.current.y,
     };
 
-    const onMouseUp = () => {
-      dragging.current = false;
-      if (storageKey && moved.current) {
-        localStorage.setItem(`drag_${storageKey}`, JSON.stringify(pos));
-      }
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-    };
+    // Capture pointer for smooth dragging even outside element
+    (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
 
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
-  }, [pos, storageKey]);
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!dragging.current) return;
+    hasMoved.current = true;
+    const newPos = {
+      x: Math.max(0, Math.min(window.innerWidth - 60, e.clientX - startOffset.current.x)),
+      y: Math.max(0, Math.min(window.innerHeight - 60, e.clientY - startOffset.current.y)),
+    };
+    setPos(newPos);
+    posRef.current = newPos;
+  };
+
+  const handlePointerUp = () => {
+    if (dragging.current && hasMoved.current && storageKey) {
+      localStorage.setItem(`drag_${storageKey}`, JSON.stringify(posRef.current));
+    }
+    dragging.current = false;
+  };
 
   return (
     <div
-      onMouseDown={onMouseDown}
+      ref={elRef}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
       style={{
         position: "fixed",
         left: pos.x,
         top: pos.y,
         zIndex: 50,
-        cursor: dragging.current ? "grabbing" : "grab",
+        touchAction: "none",
+        userSelect: dragging.current ? "none" : "auto",
       }}
     >
       {children}

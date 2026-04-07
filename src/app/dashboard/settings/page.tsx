@@ -152,59 +152,35 @@ export default function SettingsPage() {
       {/* General Tab */}
       {tab === "general" && (
         <div className="space-y-4 max-w-2xl">
-          {/* Desktop App Settings */}
+          {/* Desktop App Settings — uses localStorage since no IPC bridge */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">
               <Settings size={14} className="text-gold" /> Desktop App
             </h2>
-            <p className="text-[10px] text-muted mb-3">Settings for the ShortStack OS desktop application</p>
+            <p className="text-[10px] text-muted mb-3">Settings for the ShortStack OS application</p>
             <div className="space-y-2">
-              <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
-                <div>
-                  <p className="text-xs font-medium">Auto-Start on Login</p>
-                  <p className="text-[10px] text-muted">Launch ShortStack OS when your computer starts</p>
-                </div>
-                <button onClick={async () => {
-                  try {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const ipc = (window as any).electron?.ipcRenderer;
-                    if (ipc) {
-                      const settings = await ipc.invoke("get-app-settings");
-                      settings.autoStartup = !settings.autoStartup;
-                      await ipc.invoke("set-app-settings", settings);
-                      toast.success(settings.autoStartup ? "Auto-start enabled" : "Auto-start disabled");
-                    } else {
-                      toast("Only available in the desktop app");
-                    }
-                  } catch { toast("Desktop app feature only"); }
-                }}
-                  className="w-10 h-5 rounded-full bg-surface-light border border-border transition-colors">
-                  <div className="w-4 h-4 rounded-full bg-white shadow transition-transform translate-x-0.5" />
-                </button>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
-                <div>
-                  <p className="text-xs font-medium">Auto-Update</p>
-                  <p className="text-[10px] text-muted">Automatically check for and apply updates</p>
-                </div>
-                <button onClick={async () => {
-                  try {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const ipc = (window as any).electron?.ipcRenderer;
-                    if (ipc) {
-                      const settings = await ipc.invoke("get-app-settings");
-                      settings.autoUpdate = !settings.autoUpdate;
-                      await ipc.invoke("set-app-settings", settings);
-                      toast.success(settings.autoUpdate ? "Auto-update enabled" : "Auto-update disabled");
-                    } else {
-                      toast("Only available in the desktop app");
-                    }
-                  } catch { toast("Desktop app feature only"); }
-                }}
-                  className="w-10 h-5 rounded-full bg-gold transition-colors">
-                  <div className="w-4 h-4 rounded-full bg-white shadow transition-transform translate-x-5" />
-                </button>
-              </div>
+              {[
+                { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch ShortStack OS when your computer starts" },
+                { key: "ss_auto_update", label: "Auto-Update", desc: "Automatically check for and apply updates" },
+              ].map(setting => {
+                const isEnabled = typeof window !== "undefined" && safeGet(setting.key) === "true";
+                return (
+                  <div key={setting.key} className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                    <div>
+                      <p className="text-xs font-medium">{setting.label}</p>
+                      <p className="text-[10px] text-muted">{setting.desc}</p>
+                    </div>
+                    <button onClick={() => {
+                      const next = !isEnabled;
+                      safeSet(setting.key, next ? "true" : "false");
+                      toast.success(`${setting.label} ${next ? "enabled" : "disabled"}`);
+                    }}
+                      className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                      <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${isEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

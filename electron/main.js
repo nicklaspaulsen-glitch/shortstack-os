@@ -290,12 +290,15 @@ function createMainWindow() {
     return { action: "allow" };
   });
 
-  // Clear ALL cache on load to always get latest version
+  // Nuclear cache clear — wipe everything to guarantee latest version
   Promise.all([
     mainWindow.webContents.session.clearCache(),
-    mainWindow.webContents.session.clearStorageData({ storages: ["cachestorage", "serviceworkers"] }),
-  ]).then(() => {
-    mainWindow.loadURL(APP_URL + "/login");
+    mainWindow.webContents.session.clearStorageData({
+      storages: ["appcache", "cachestorage", "serviceworkers", "shadercache"],
+    }),
+    mainWindow.webContents.session.clearCodeCaches({}),
+  ]).catch(() => {}).then(() => {
+    mainWindow.loadURL(APP_URL + "/login?v=" + Date.now());
   });
 
   // Enable Ctrl+Shift+R to force reload
