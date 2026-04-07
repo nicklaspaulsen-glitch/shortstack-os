@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { Mic, Volume2, VolumeX, X, MessageSquare, StopCircle, Settings } from "lucide-react";
 import Image from "next/image";
+import Draggable from "@/components/ui/draggable";
 
 interface VoiceMessage {
   role: "user" | "assistant";
@@ -209,21 +210,31 @@ export default function VoiceAssistant() {
     setProcessing(false);
   }
 
+  // Check if hidden via settings
+  const [hidden] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("hide_voice_bubble") === "true";
+  });
+  if (hidden) return null;
+
   if (!isOpen) {
     return (
-      <button onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 left-72 z-50 bg-gradient-to-r from-gold-dark to-gold px-4 py-2.5 rounded-full shadow-lg shadow-gold/20 flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
-        <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
-          <Mic size={14} className="text-black" />
-        </div>
-        <span className="text-black font-medium text-sm">Hey {profile?.full_name?.split(" ")[0] || "there"}</span>
-        <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-      </button>
+      <Draggable defaultX={288} defaultY={typeof window !== "undefined" ? window.innerHeight - 60 : 700} storageKey="voice_bubble">
+        <button onClick={() => setIsOpen(true)}
+          className="bg-gradient-to-r from-gold-dark to-gold px-4 py-2.5 rounded-full shadow-lg shadow-gold/20 flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
+          <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
+            <Mic size={14} className="text-black" />
+          </div>
+          <span className="text-black font-medium text-sm">Hey {profile?.full_name?.split(" ")[0] || "there"}</span>
+          <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
+        </button>
+      </Draggable>
     );
   }
 
   return (
-    <div className="fixed bottom-6 left-72 z-50 w-[420px] bg-surface border border-border rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in" style={{ height: "560px" }}>
+    <Draggable defaultX={288} defaultY={typeof window !== "undefined" ? window.innerHeight - 580 : 200} storageKey="voice_panel">
+    <div className="w-[420px] bg-surface border border-border rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in" style={{ height: "560px" }}>
       {/* Header */}
       <div className="bg-gradient-to-r from-gold-dark/20 to-gold/10 px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
@@ -377,5 +388,6 @@ export default function VoiceAssistant() {
         </p>
       </div>
     </div>
+    </Draggable>
   );
 }

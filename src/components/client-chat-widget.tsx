@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MessageSquare, Send, X, Minimize2 } from "lucide-react";
 import Image from "next/image";
+import Draggable from "@/components/ui/draggable";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -44,17 +45,27 @@ export default function ClientChatWidget() {
     setSending(false);
   }
 
+  // Check if hidden via settings
+  const [hidden] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem("hide_chat_bubble") === "true";
+  });
+  if (hidden) return null;
+
   if (!isOpen) {
     return (
-      <button onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gold rounded-full shadow-lg shadow-gold/20 flex items-center justify-center hover:bg-gold-light transition-all hover:scale-105 active:scale-95">
-        <MessageSquare size={24} className="text-black" />
-      </button>
+      <Draggable defaultX={typeof window !== "undefined" ? window.innerWidth - 80 : 1000} defaultY={typeof window !== "undefined" ? window.innerHeight - 80 : 700} storageKey="chat_bubble">
+        <button onClick={() => setIsOpen(true)}
+          className="w-14 h-14 bg-gold rounded-full shadow-lg shadow-gold/20 flex items-center justify-center hover:bg-gold-light transition-all hover:scale-105 active:scale-95">
+          <MessageSquare size={24} className="text-black" />
+        </button>
+      </Draggable>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[380px] h-[520px] bg-surface border border-border rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in">
+    <Draggable defaultX={typeof window !== "undefined" ? window.innerWidth - 400 : 600} defaultY={typeof window !== "undefined" ? window.innerHeight - 540 : 200} storageKey="chat_panel">
+    <div className="w-[380px] h-[520px] bg-surface border border-border rounded-2xl shadow-2xl shadow-black/50 flex flex-col overflow-hidden fade-in">
       {/* Header */}
       <div className="bg-surface-light px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
@@ -133,5 +144,6 @@ export default function ClientChatWidget() {
         </form>
       </div>
     </div>
+    </Draggable>
   );
 }
