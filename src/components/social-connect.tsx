@@ -195,109 +195,40 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
-            <div className={`flex items-center gap-2 p-2.5 rounded-lg border ${connectPlatform.bg}`}>
+          <form onSubmit={(e) => { e.preventDefault(); connectAccount(new FormData(e.currentTarget)); }} className="space-y-3">
+            <div className={`flex items-center gap-2.5 p-3 rounded-lg border ${connectPlatform.bg}`}>
               <span className={connectPlatform.color}>{connectPlatform.icon}</span>
-              <span className="text-xs font-medium">{connectPlatform.name}</span>
+              <div>
+                <span className="text-xs font-bold">{connectPlatform.name}</span>
+                <p className="text-[9px] text-muted">Connect your {connectPlatform.name} account</p>
+              </div>
             </div>
 
-            {/* OAuth connect — one-click */}
-            {["instagram", "facebook", "meta_ads"].includes(connectPlatform.id) && (
-              <button
-                onClick={() => {
-                  const state = encodeURIComponent(JSON.stringify({ client_id: clientId, platform: connectPlatform.id }));
-                  window.location.href = `/api/oauth/meta?state=${state}`;
-                }}
-                disabled={connecting}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all"
-              >
-                {connecting ? <Loader size={14} className="animate-spin" /> : connectPlatform.icon}
-                Sign in with Meta (Facebook/Instagram)
-              </button>
-            )}
-
-            {["youtube", "google_ads"].includes(connectPlatform.id) && (
-              <button
-                onClick={() => {
-                  const state = encodeURIComponent(JSON.stringify({ client_id: clientId, platform: connectPlatform.id }));
-                  window.location.href = `/api/oauth/google?state=${state}`;
-                }}
-                disabled={connecting}
-                className="w-full py-3 bg-white hover:bg-gray-100 text-gray-800 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all border border-gray-300"
-              >
-                {connecting ? <Loader size={14} className="animate-spin" /> : <Globe size={14} />}
-                Sign in with Google
-              </button>
-            )}
-
-            {connectPlatform.id === "linkedin" && (
-              <button
-                onClick={() => {
-                  const state = encodeURIComponent(JSON.stringify({ client_id: clientId, platform: "linkedin" }));
-                  window.location.href = `/api/oauth/linkedin?state=${state}`;
-                }}
-                disabled={connecting}
-                className="w-full py-3 bg-[#0077B5] hover:bg-[#006699] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all"
-              >
-                {connecting ? <Loader size={14} className="animate-spin" /> : <Briefcase size={14} />}
-                Sign in with LinkedIn
-              </button>
-            )}
-
-            {connectPlatform.id === "tiktok" && (
-              <button
-                onClick={() => {
-                  const state = encodeURIComponent(JSON.stringify({ client_id: clientId, platform: "tiktok" }));
-                  window.location.href = `/api/oauth/tiktok?state=${state}`;
-                }}
-                disabled={connecting}
-                className="w-full py-3 bg-black hover:bg-gray-900 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all border border-white/20"
-              >
-                {connecting ? <Loader size={14} className="animate-spin" /> : <Music size={14} />}
-                Sign in with TikTok
-              </button>
-            )}
-
-            {connectPlatform.id === "tiktok_ads" && (
-              <button
-                onClick={() => {
-                  const state = encodeURIComponent(JSON.stringify({ client_id: clientId, platform: "tiktok_ads" }));
-                  window.location.href = `/api/oauth/tiktok?state=${state}`;
-                }}
-                disabled={connecting}
-                className="w-full py-3 bg-black hover:bg-gray-900 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all border border-white/20"
-              >
-                {connecting ? <Loader size={14} className="animate-spin" /> : <Megaphone size={14} />}
-                Sign in with TikTok Ads
-              </button>
-            )}
-
-            <div className="relative flex items-center gap-2 py-1">
-              <div className="flex-1 border-t border-border/30" />
-              <span className="text-[9px] text-muted">or connect manually</span>
-              <div className="flex-1 border-t border-border/30" />
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Account Name / Handle *</label>
+              <input name="account_name" className="input w-full" placeholder={`@your${connectPlatform.name.toLowerCase().replace(/ /g,"")}handle`} required />
+            </div>
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Profile URL (optional)</label>
+              <input name="account_id" className="input w-full" placeholder={`https://${connectPlatform.name.toLowerCase()}.com/yourprofile`} />
+            </div>
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Access Token (optional)</label>
+              <input name="access_token" type="password" className="input w-full" placeholder="For API access — leave blank if unsure" />
             </div>
 
-            {/* Manual fallback */}
-            <form onSubmit={(e) => { e.preventDefault(); connectAccount(new FormData(e.currentTarget)); }} className="space-y-2">
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Account Name / Handle *</label>
-                <input name="account_name" className="input w-full text-xs" placeholder="@username or page name" required />
-              </div>
-              <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Access Token (optional)</label>
-                <input name="access_token" type="password" className="input w-full text-xs" placeholder="Paste OAuth token if you have one" />
-              </div>
+            <div className="p-2.5 rounded-lg text-[10px] text-muted" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+              Enter the account handle to track this platform. Access tokens are optional and enable posting/DM features.
+            </div>
 
-              <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={() => setConnectPlatform(null)} className="btn-secondary text-xs">Back</button>
-                <button type="submit" disabled={connecting} className="btn-primary text-xs flex items-center gap-1.5">
-                  {connecting ? <Loader size={12} className="animate-spin" /> : <Link2 size={12} />}
-                  {connecting ? "Connecting..." : "Connect Manually"}
-                </button>
-              </div>
-            </form>
-          </div>
+            <div className="flex justify-end gap-2 pt-1">
+              <button type="button" onClick={() => setConnectPlatform(null)} className="btn-secondary text-xs">Back</button>
+              <button type="submit" disabled={connecting} className="btn-primary text-xs flex items-center gap-1.5">
+                {connecting ? <Loader size={12} className="animate-spin" /> : <Link2 size={12} />}
+                {connecting ? "Connecting..." : "Connect Account"}
+              </button>
+            </div>
+          </form>
         )}
       </Modal>
     </div>
