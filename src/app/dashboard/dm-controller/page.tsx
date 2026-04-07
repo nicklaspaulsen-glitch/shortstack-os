@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { createClient } from "@/lib/supabase/client";
 import {
   Send, Camera, MessageCircle, Briefcase, Music,
-  Play, Pause, Settings, Loader, CheckCircle, Zap
+  Play, Pause, Settings, Loader, CheckCircle, Zap,
+  Copy, RotateCcw, Inbox, Clock
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -13,6 +15,14 @@ const PLATFORMS = [
   { id: "facebook", name: "Facebook", icon: <MessageCircle size={18} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
   { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} />, color: "text-blue-300", bg: "bg-blue-300/10 border-blue-300/20" },
   { id: "tiktok", name: "TikTok", icon: <Music size={18} />, color: "text-white", bg: "bg-white/5 border-white/15" },
+];
+
+const MESSAGE_TEMPLATES = [
+  { name: "Friendly Intro", message: "Hey! I came across {business_name} and love what you guys are doing. We help {industry} businesses get more clients through social media. Would you be open to a quick chat?" },
+  { name: "Value First", message: "Hey {name}! I noticed a few things on your page that could easily double your reach. We specialize in {industry} marketing. Mind if I share a couple quick ideas?" },
+  { name: "Social Proof", message: "Hey! We just helped another {industry} business go from 500 to 5000 followers in 30 days. Saw {business_name} and thought we could do the same for you. Interested?" },
+  { name: "Direct Pitch", message: "Hey {name}! We run an agency that helps {industry} businesses fill their calendar with new clients every month. Can I send you a quick case study?" },
+  { name: "Loom Offer", message: "Hey! I just recorded a quick 2-min video breaking down how {business_name} could get more clients from social media. Want me to send it over?" },
 ];
 
 const NICHES = [
@@ -28,9 +38,29 @@ const SERVICES = [
 
 export default function DMControllerPage() {
   useAuth();
+  const supabase = createClient();
   const [running, setRunning] = useState(false);
   const [completed, setCompleted] = useState(0);
   const [logs, setLogs] = useState<Array<{ platform: string; target: string; status: string; time: string }>>([]);
+  const [tab, setTab] = useState<"setup" | "queue">("setup");
+  const [queuedDMs, setQueuedDMs] = useState<Array<{ id: string; platform: string; business_name: string; message_text: string; status: string; created_at: string }>>([]);
+  const [queueLoading, setQueueLoading] = useState(false);
+
+  useEffect(() => {
+    fetchQueue();
+  }, []);
+
+  async function fetchQueue() {
+    setQueueLoading(true);
+    const { data } = await supabase
+      .from("outreach_log")
+      .select("id, platform, business_name, message_text, status, created_at")
+      .eq("metadata->>source", "browser_dm")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    setQueuedDMs(data || []);
+    setQueueLoading(false);
+  }
 
   const [config, setConfig] = useState({
     platforms: ["instagram"] as string[],
@@ -84,9 +114,10 @@ export default function DMControllerPage() {
       const data = await res.json();
 
       if (data.success) {
-        setCompleted(data.sent || 0);
+        setCompleted(data.queued || data.sent || 0);
         setLogs(data.logs || []);
-        toast.success(`Done! ${data.sent} DMs sent.`);
+        toast.success(`Done! ${data.queued || data.sent} DMs queued.`);
+        fetchQueue();
       } else {
         toast.error(data.error || "DM run failed");
       }
@@ -115,7 +146,52 @@ export default function DMControllerPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Tabs */}
+      <div className="flex gap-1">
+        <button onClick={() => setTab("setup")} className={`text-[10px] px-3 py-1.5 rounded-lg transition-all ${tab === "setup" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border/20"}`}>
+          <Settings size={10} className="inline mr-1" /> Setup
+        </button>
+        <button onClick={() => { setTab("queue"); fetchQueue(); }} className={`text-[10px] px-3 py-1.5 rounded-lg transition-all ${tab === "queue" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border/20"}`}>
+          <Inbox size={10} className="inline mr-1" /> Queue ({queuedDMs.length})
+        </button>
+      </div>
+
+      {tab === "queue" && (
+        <div className="card">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="section-header mb-0 flex items-center gap-2"><Inbox size={14} className="text-gold" /> DM Queue</h2>
+            <button onClick={fetchQueue} className="btn-ghost text-[10px] flex items-center gap-1"><RotateCcw size={10} /> Refresh</button>
+          </div>
+          {queueLoading ? (
+            <div className="text-center py-8"><Loader size={16} className="animate-spin text-gold mx-auto" /></div>
+          ) : queuedDMs.length === 0 ? (
+            <p className="text-xs text-muted text-center py-8">No DMs in queue. Set up a run to get started.</p>
+          ) : (
+            <div className="space-y-1.5 max-h-[500px] overflow-y-auto">
+              {queuedDMs.map((dm) => (
+                <div key={dm.id} className="flex items-center gap-3 py-2 px-2 rounded-lg border border-border/20 hover:bg-surface-light/30 transition-colors">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    dm.status === "sent" ? "bg-success/10 text-success" : dm.status === "failed" ? "bg-danger/10 text-danger" : "bg-gold/10 text-gold"
+                  }`}>
+                    {dm.status === "sent" ? <CheckCircle size={12} /> : dm.status === "failed" ? "!" : <Clock size={12} />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium">{dm.business_name}</span>
+                      <span className="text-[9px] text-muted capitalize">{dm.platform}</span>
+                    </div>
+                    <p className="text-[10px] text-muted truncate">{dm.message_text}</p>
+                  </div>
+                  <button onClick={() => { navigator.clipboard.writeText(dm.message_text); toast.success("Copied!"); }}
+                    className="text-muted hover:text-white transition-colors p-1"><Copy size={12} /></button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === "setup" && <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Config */}
         <div className="lg:col-span-2 space-y-4">
           {/* Platforms */}
@@ -195,12 +271,30 @@ export default function DMControllerPage() {
             </div>
           </div>
 
-          {/* Custom message override */}
+          {/* Message Templates */}
           <div className="card">
-            <h2 className="section-header">Custom Message (optional)</h2>
+            <h2 className="section-header">Message Template</h2>
+            <div className="space-y-1.5 mb-3">
+              {MESSAGE_TEMPLATES.map((t, i) => (
+                <button key={i} onClick={() => setConfig({ ...config, customMessage: t.message })}
+                  className={`w-full text-left p-2.5 rounded-lg border transition-all ${
+                    config.customMessage === t.message ? "border-gold/30 bg-gold/[0.05]" : "border-border/20 hover:border-border/40"
+                  }`}>
+                  <p className="text-[10px] font-semibold mb-0.5">{t.name}</p>
+                  <p className="text-[9px] text-muted line-clamp-2">{t.message}</p>
+                </button>
+              ))}
+              <button onClick={() => setConfig({ ...config, customMessage: "" })}
+                className={`w-full text-left p-2.5 rounded-lg border transition-all ${
+                  !config.customMessage ? "border-accent/30 bg-accent/[0.05]" : "border-border/20 hover:border-border/40"
+                }`}>
+                <p className="text-[10px] font-semibold mb-0.5 text-accent">AI Generated</p>
+                <p className="text-[9px] text-muted">Let AI write unique personalized messages for each lead</p>
+              </button>
+            </div>
             <textarea value={config.customMessage} onChange={e => setConfig({ ...config, customMessage: e.target.value })}
-              className="input w-full h-20 text-xs"
-              placeholder="Leave empty for AI-generated personalized messages. Or type your template here. Use {business_name}, {industry}, {name} as variables." />
+              className="input w-full h-16 text-xs"
+              placeholder="Edit template or write your own. Variables: {business_name}, {industry}, {name}" />
           </div>
         </div>
 
@@ -260,7 +354,7 @@ export default function DMControllerPage() {
             </div>
           )}
         </div>
-      </div>
+      </div>}
     </div>
   );
 }

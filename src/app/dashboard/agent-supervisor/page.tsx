@@ -5,7 +5,8 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Bot, Activity, CheckCircle, XCircle, Clock, RefreshCw,
-  Zap, MessageSquare, Heart, Shield, Wrench
+  Zap, MessageSquare, Heart, Shield, Wrench,
+  Search, Sparkles, Send, BarChart3, Star, Film, Eye
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -55,6 +56,61 @@ const STATUS_CONFIG: Record<string, { color: string; icon: React.ReactNode; labe
   idle: { color: "text-yellow-400", icon: <Clock size={14} className="text-yellow-400" />, label: "Idle" },
   error: { color: "text-red-400", icon: <XCircle size={14} className="text-red-400" />, label: "Error" },
 };
+
+const AGENT_VISUALS: Record<string, { icon: React.ReactNode; gradient: string; glow: string; ring: string }> = {
+  "lead-engine": { icon: <Search size={18} />, gradient: "from-emerald-500 to-green-600", glow: "shadow-[0_0_20px_rgba(16,185,129,0.4)]", ring: "border-emerald-400/30" },
+  "outreach": { icon: <Send size={18} />, gradient: "from-blue-500 to-cyan-500", glow: "shadow-[0_0_20px_rgba(59,130,246,0.4)]", ring: "border-blue-400/30" },
+  "content": { icon: <Sparkles size={18} />, gradient: "from-purple-500 to-pink-500", glow: "shadow-[0_0_20px_rgba(168,85,247,0.4)]", ring: "border-purple-400/30" },
+  "ads": { icon: <Film size={18} />, gradient: "from-orange-500 to-amber-500", glow: "shadow-[0_0_20px_rgba(249,115,22,0.4)]", ring: "border-orange-400/30" },
+  "reviews": { icon: <Star size={18} />, gradient: "from-yellow-400 to-amber-500", glow: "shadow-[0_0_20px_rgba(250,204,21,0.4)]", ring: "border-yellow-400/30" },
+  "analytics": { icon: <BarChart3 size={18} />, gradient: "from-cyan-500 to-blue-600", glow: "shadow-[0_0_20px_rgba(6,182,212,0.4)]", ring: "border-cyan-400/30" },
+  "trinity": { icon: <Shield size={18} />, gradient: "from-gold to-amber-600", glow: "shadow-[0_0_25px_rgba(201,168,76,0.5)]", ring: "border-gold/40" },
+  "competitor": { icon: <Eye size={18} />, gradient: "from-red-500 to-rose-600", glow: "shadow-[0_0_20px_rgba(239,68,68,0.4)]", ring: "border-red-400/30" },
+};
+
+function AgentHead({ agentId, status, size = 48 }: { agentId: string; status: string; size?: number }) {
+  const visual = AGENT_VISUALS[agentId] || AGENT_VISUALS["trinity"];
+  const isActive = status === "working";
+  const isError = status === "error";
+
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      {/* Outer pulse ring */}
+      {isActive && (
+        <div className={`absolute inset-[-4px] rounded-full border ${visual.ring} animate-ping opacity-20`} />
+      )}
+      {/* Glow ring */}
+      <div className={`absolute inset-[-3px] rounded-full border-2 transition-all duration-500 ${
+        isError ? "border-red-500/40" : isActive ? visual.ring : "border-border/20"
+      }`} />
+      {/* 3D sphere body */}
+      <div className={`relative w-full h-full rounded-full bg-gradient-to-br ${
+        isError ? "from-red-600 to-red-800" : visual.gradient
+      } flex items-center justify-center transition-all duration-300 ${
+        isActive ? visual.glow : isError ? "shadow-[0_0_15px_rgba(239,68,68,0.3)]" : "opacity-60"
+      }`}
+        style={{
+          transform: "perspective(200px) rotateX(5deg)",
+          boxShadow: isActive
+            ? undefined
+            : "inset 0 -4px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.15)",
+        }}
+      >
+        {/* Inner highlight for 3D effect */}
+        <div className="absolute inset-0 rounded-full"
+          style={{
+            background: "radial-gradient(circle at 35% 30%, rgba(255,255,255,0.25) 0%, transparent 60%)",
+          }} />
+        {/* Icon */}
+        <span className="relative text-white drop-shadow-lg">{visual.icon}</span>
+      </div>
+      {/* Status dot */}
+      <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-surface ${
+        isActive ? "bg-green-400 animate-pulse" : isError ? "bg-red-400 animate-pulse" : "bg-yellow-400"
+      }`} />
+    </div>
+  );
+}
 
 export default function AgentSupervisorPage() {
   useAuth();
@@ -217,6 +273,16 @@ export default function AgentSupervisorPage() {
         </button>
       </div>
 
+      {/* Agent Heads Row */}
+      <div className="card p-4 flex items-center justify-center gap-5 flex-wrap">
+        {agents.map((agent) => (
+          <div key={agent.id} className="flex flex-col items-center gap-1.5 group cursor-pointer" onClick={() => healthCheck(agent.id)}>
+            <AgentHead agentId={agent.id} status={agent.status} size={40} />
+            <span className="text-[9px] text-muted group-hover:text-white transition-colors font-medium">{agent.name.split(" ")[0]}</span>
+          </div>
+        ))}
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
         <div className="card rounded-xl text-center">
@@ -240,66 +306,69 @@ export default function AgentSupervisorPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {agents.map((agent) => (
-            <div key={agent.id} className="card card-hover rounded-xl">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${
-                    agent.status === "working" ? "bg-green-400" : agent.status === "idle" ? "bg-yellow-400" : "bg-red-400"
-                  }`} />
-                  <h3 className="font-medium text-sm">{agent.name}</h3>
+            <div key={agent.id} className="card card-hover rounded-xl relative overflow-hidden">
+              {/* Background gradient based on agent */}
+              <div className={`absolute inset-0 opacity-[0.03] bg-gradient-to-br ${AGENT_VISUALS[agent.id]?.gradient || "from-gold to-amber-600"}`} />
+              <div className="relative">
+                {/* Agent Head + Name */}
+                <div className="flex flex-col items-center text-center mb-3 pt-1">
+                  <AgentHead agentId={agent.id} status={agent.status} size={52} />
+                  <h3 className="font-semibold text-sm mt-2.5">{agent.name}</h3>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    {STATUS_CONFIG[agent.status].icon}
+                    <span className={`text-[10px] ${STATUS_CONFIG[agent.status].color}`}>
+                      {STATUS_CONFIG[agent.status].label}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  {STATUS_CONFIG[agent.status].icon}
-                  <span className={`text-[10px] ${STATUS_CONFIG[agent.status].color}`}>
-                    {STATUS_CONFIG[agent.status].label}
-                  </span>
-                </div>
-              </div>
 
-              <p className="text-[10px] text-muted mb-3">{agent.role}</p>
+                <p className="text-[10px] text-muted text-center mb-3">{agent.role}</p>
 
-              <div className="space-y-1.5 mb-3">
-                <div className="flex justify-between text-[10px]">
-                  <span className="text-muted">Last Action</span>
-                  <span className="text-white/80 truncate ml-2 max-w-[120px]">{agent.lastAction}</span>
+                <div className="space-y-1.5 mb-3">
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-muted">Last Action</span>
+                    <span className="text-white/80 truncate ml-2 max-w-[120px]">{agent.lastAction}</span>
+                  </div>
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-muted">Time</span>
+                    <span className="text-white/80">{formatTime(agent.lastActionTime)}</span>
+                  </div>
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-muted">Today</span>
+                    <span className="text-white/80">{agent.actionsToday} actions</span>
+                  </div>
+                  <div className="flex justify-between text-[10px]">
+                    <span className="text-muted">Success</span>
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-12 bg-surface-light rounded-full h-1.5">
+                        <div className={`h-1.5 rounded-full transition-all ${agent.successRate >= 90 ? "bg-green-400" : agent.successRate >= 70 ? "bg-yellow-400" : "bg-red-400"}`}
+                          style={{ width: `${agent.successRate}%` }} />
+                      </div>
+                      <span className={agent.successRate >= 90 ? "text-green-400" : "text-yellow-400"}>
+                        {agent.successRate}%
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between text-[10px]">
-                  <span className="text-muted">Time</span>
-                  <span className="text-white/80">{formatTime(agent.lastActionTime)}</span>
-                </div>
-                <div className="flex justify-between text-[10px]">
-                  <span className="text-muted">Uptime</span>
-                  <span className="text-white/80">{agent.uptime}</span>
-                </div>
-                <div className="flex justify-between text-[10px]">
-                  <span className="text-muted">Today</span>
-                  <span className="text-white/80">{agent.actionsToday} actions</span>
-                </div>
-                <div className="flex justify-between text-[10px]">
-                  <span className="text-muted">Success</span>
-                  <span className={agent.successRate >= 90 ? "text-green-400" : "text-yellow-400"}>
-                    {agent.successRate}%
-                  </span>
-                </div>
-              </div>
 
-              <div className="flex gap-2">
-                <button
-                  onClick={() => healthCheck(agent.id)}
-                  disabled={checkingHealth === agent.id}
-                  className="btn-secondary flex-1 flex items-center justify-center gap-1 text-[10px] py-1.5 rounded-lg"
-                >
-                  <Heart size={10} /> {checkingHealth === agent.id ? "..." : "Health"}
-                </button>
-                {agent.status === "error" && (
+                <div className="flex gap-2">
                   <button
-                    onClick={() => repairAgent(agent.id)}
-                    disabled={repairing === agent.id}
-                    className="btn-primary flex-1 flex items-center justify-center gap-1 text-[10px] py-1.5 rounded-lg"
+                    onClick={() => healthCheck(agent.id)}
+                    disabled={checkingHealth === agent.id}
+                    className="btn-secondary flex-1 flex items-center justify-center gap-1 text-[10px] py-1.5 rounded-lg"
                   >
-                    <Wrench size={10} /> {repairing === agent.id ? "..." : "Repair"}
+                    <Heart size={10} /> {checkingHealth === agent.id ? "..." : "Health"}
                   </button>
-                )}
+                  {agent.status === "error" && (
+                    <button
+                      onClick={() => repairAgent(agent.id)}
+                      disabled={repairing === agent.id}
+                      className="btn-primary flex-1 flex items-center justify-center gap-1 text-[10px] py-1.5 rounded-lg"
+                    >
+                      <Wrench size={10} /> {repairing === agent.id ? "..." : "Repair"}
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           ))}
@@ -405,10 +474,8 @@ function ChiefChat() {
     <div className="card border-gold/10 relative overflow-hidden">
       <div className="absolute inset-0 bg-mesh opacity-20" />
       <div className="relative">
-        <div className="flex items-center gap-2 pb-3 border-b border-border/20 mb-3">
-          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
-            <Shield size={16} className="text-gold" />
-          </div>
+        <div className="flex items-center gap-3 pb-3 border-b border-border/20 mb-3">
+          <AgentHead agentId="trinity" status="working" size={38} />
           <div>
             <p className="text-xs font-semibold">Nexus — Chief Agent</p>
             <p className="text-[9px] text-success flex items-center gap-1">
