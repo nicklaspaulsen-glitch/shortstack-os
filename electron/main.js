@@ -11,7 +11,37 @@ let updateAvailable = null;
 
 const APP_URL = "https://shortstack-os.vercel.app";
 const LICENSE_FILE = path.join(app.getPath("userData"), "license.json");
+const SETTINGS_FILE = path.join(app.getPath("userData"), "app-settings.json");
 const APP_VERSION = app.getVersion() || "1.0.0";
+
+// ── App Settings ──────────────────────────────────────────────
+function getAppSettings() {
+  try {
+    if (fs.existsSync(SETTINGS_FILE)) return JSON.parse(fs.readFileSync(SETTINGS_FILE, "utf8"));
+  } catch {}
+  return { autoStartup: false, autoUpdate: true };
+}
+
+function saveAppSettings(settings) {
+  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2));
+}
+
+// Apply auto-startup setting
+function applyAutoStartup(enabled) {
+  app.setLoginItemSettings({
+    openAtLogin: enabled,
+    path: app.getPath("exe"),
+  });
+}
+
+// IPC handlers for settings
+ipcMain.handle("get-app-settings", () => getAppSettings());
+ipcMain.handle("set-app-settings", (_, settings) => {
+  saveAppSettings(settings);
+  applyAutoStartup(settings.autoStartup);
+  return { success: true };
+});
+ipcMain.handle("get-app-version", () => APP_VERSION);
 
 // ── License helpers ──────────────────────────────────────────────
 

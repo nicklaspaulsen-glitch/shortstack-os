@@ -11,31 +11,20 @@
 }
 
 body {
-  color: #e2e8f0;
-  background: #06080c;
+  color: #d4d4dc;
+  background: #08090e;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
 }
 
 /* Electron window drag region */
 .electron-drag { -webkit-app-region: drag; }
 .electron-no-drag { -webkit-app-region: no-drag; }
 
-/* Top border bar — matches all themes */
-.top-border-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #C9A84C, #38bdf8, #C9A84C);
-  z-index: 99999;
-}
-
-.theme-light .top-border-bar {
-  background: linear-gradient(90deg, #C9A84C, #0ea5e9, #C9A84C);
-}
+/* Top border bar — now handled inline in layout.tsx, kept for backwards compat */
+.top-border-bar { display: none; }
 
 /* Selection */
 ::selection {
@@ -53,60 +42,72 @@ body {
 @layer components {
   /* ═══════════ CARDS ═══════════ */
   .card {
-    @apply bg-surface/90 border border-border/40 rounded-xl p-4 backdrop-blur-md;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    @apply rounded-lg p-4;
+    background: rgba(14,16,22,0.8);
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
   }
 
   .card-hover {
-    @apply card transition-all duration-200 cursor-pointer;
+    @apply card transition-all duration-150 cursor-pointer;
   }
   .card-hover:hover {
-    border-color: rgba(201,168,76,0.12);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 0 0 1px rgba(201,168,76,0.08);
-    transform: translateY(-1px);
+    background: rgba(18,20,28,0.9);
+    border-color: rgba(201,168,76,0.1);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
   }
 
   .card-gradient {
-    @apply rounded-2xl p-5 border border-border/40;
-    background: linear-gradient(145deg, rgba(16,22,32,0.9) 0%, rgba(10,14,20,0.95) 100%);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    @apply rounded-lg p-4;
+    background: linear-gradient(145deg, rgba(16,18,26,0.95) 0%, rgba(10,12,18,0.98) 100%);
+    border: 1px solid rgba(255,255,255,0.04);
   }
 
   /* ═══════════ BUTTONS ═══════════ */
   .btn-primary {
-    @apply bg-gradient-gold text-black font-semibold px-4 py-2 rounded-lg transition-all duration-150;
-    box-shadow: 0 1px 4px rgba(201,168,76,0.2);
+    @apply text-black font-semibold px-4 py-2 rounded-md transition-all duration-100;
+    background: linear-gradient(135deg, #C9A84C, #b8943f);
   }
   .btn-primary:hover {
-    box-shadow: 0 2px 12px rgba(201,168,76,0.3);
-    filter: brightness(1.05);
+    background: linear-gradient(135deg, #d4b45a, #C9A84C);
   }
-  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:active { transform: scale(0.97); opacity: 0.9; }
 
   .btn-secondary {
-    @apply bg-surface-light/80 text-muted-light font-medium px-4 py-2 rounded-lg border border-border/50 transition-all duration-150;
+    @apply text-[#9ca3af] font-medium px-4 py-2 rounded-md transition-all duration-100;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
   }
   .btn-secondary:hover {
-    border-color: rgba(201,168,76,0.15);
-    @apply text-white bg-surface-light;
+    background: rgba(255,255,255,0.07);
+    @apply text-white;
   }
   .btn-secondary:active { transform: scale(0.97); }
 
   .btn-danger {
-    @apply bg-danger/10 text-danger font-medium px-4 py-2 rounded-xl border border-danger/20 transition-all duration-200 hover:bg-danger/20 active:scale-[0.97];
+    @apply text-danger font-medium px-4 py-2 rounded-md transition-all duration-100;
+    background: rgba(244,63,94,0.08);
+    border: 1px solid rgba(244,63,94,0.15);
   }
+  .btn-danger:hover { background: rgba(244,63,94,0.15); }
+  .btn-danger:active { transform: scale(0.97); }
 
   .btn-ghost {
-    @apply text-muted font-medium px-3 py-1.5 rounded-xl transition-all duration-200 hover:bg-surface-light/60 hover:text-white;
+    @apply text-[#6b7280] font-medium px-3 py-1.5 rounded-md transition-all duration-100;
   }
+  .btn-ghost:hover { @apply text-white; background: rgba(255,255,255,0.04); }
 
   /* ═══════════ INPUTS ═══════════ */
   .input {
-    @apply bg-surface-light/50 border border-border/50 rounded-lg px-3 py-2 text-white text-sm placeholder-muted/50 transition-all duration-200;
+    @apply text-white text-sm rounded-md px-3 py-2 transition-all duration-100;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
   }
+  .input::placeholder { color: rgba(255,255,255,0.2); }
   .input:focus {
-    @apply outline-none border-gold/30 bg-surface-light/70;
-    box-shadow: 0 0 0 2px rgba(201,168,76,0.06);
+    @apply outline-none;
+    border-color: rgba(201,168,76,0.3);
+    background: rgba(255,255,255,0.05);
   }
 
   .badge {
@@ -115,36 +116,42 @@ body {
 
   /* ═══════════ STAT CARDS ═══════════ */
   .stat-card {
-    @apply card flex flex-col gap-1 transition-all duration-300;
+    @apply card flex flex-col gap-0.5;
   }
 
   .stat-value {
     @apply text-xl font-bold text-white tracking-tight;
     font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
   }
 
   .stat-label {
-    @apply text-[10px] text-muted font-semibold uppercase tracking-[0.15em];
+    @apply text-[10px] font-medium uppercase tracking-[0.1em];
+    color: rgba(255,255,255,0.35);
   }
 
   /* ═══════════ TABLES ═══════════ */
   .table-container {
-    @apply overflow-x-auto rounded-2xl border border-border/40;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    @apply overflow-x-auto rounded-lg;
+    border: 1px solid rgba(255,255,255,0.04);
   }
 
   .table { @apply w-full text-sm; }
 
   .table th {
-    @apply px-4 py-2.5 text-left text-[9px] font-bold text-muted/70 uppercase tracking-[0.2em] bg-surface-light/30 border-b border-border/40;
+    @apply px-4 py-2.5 text-left text-[9px] font-semibold uppercase tracking-[0.15em];
+    color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
   }
 
   .table td {
-    @apply px-4 py-2.5 border-b border-border/20 transition-colors duration-150;
+    @apply px-4 py-2.5;
+    border-bottom: 1px solid rgba(255,255,255,0.025);
   }
 
   .table tr:hover td {
-    @apply bg-surface-light/20;
+    background: rgba(255,255,255,0.02);
   }
 
   /* ═══════════ SIDEBAR ═══════════ */
@@ -163,11 +170,14 @@ body {
 
   /* ═══════════ PAGE STRUCTURE ═══════════ */
   .page-header {
-    @apply text-xl font-bold text-white mb-5 tracking-tight;
+    @apply text-lg font-bold text-white mb-4;
+    letter-spacing: -0.02em;
   }
 
   .section-header {
-    @apply text-sm font-semibold text-white/90 mb-3 tracking-tight;
+    @apply text-[13px] font-semibold mb-3;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: -0.01em;
   }
 
   /* ═══════════ ANIMATIONS ═══════════ */
@@ -187,21 +197,26 @@ body {
 
   /* ═══════════ TABS ═══════════ */
   .tab-group {
-    @apply flex gap-0.5 rounded-xl p-0.5 border border-border/30;
-    background: rgba(12,16,23,0.6);
+    @apply flex gap-px rounded-md p-px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.04);
   }
 
   .tab-item {
-    @apply px-3.5 py-1.5 text-xs rounded-lg font-medium transition-all duration-200 cursor-pointer;
+    @apply px-3.5 py-1.5 text-xs rounded-[5px] font-medium transition-all duration-100 cursor-pointer;
   }
 
   .tab-item-active {
-    @apply tab-item bg-gold text-black;
-    box-shadow: 0 2px 8px rgba(201,168,76,0.2);
+    @apply tab-item text-black;
+    background: #C9A84C;
   }
 
   .tab-item-inactive {
-    @apply tab-item text-muted/70 hover:text-white;
+    @apply tab-item hover:text-white;
+    color: rgba(255,255,255,0.35);
+  }
+  .tab-item-inactive:hover {
+    background: rgba(255,255,255,0.04);
   }
 
   /* ═══════════ GLOW ═══════════ */
