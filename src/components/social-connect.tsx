@@ -195,7 +195,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
             </div>
           </div>
         ) : (
-          <form onSubmit={(e) => { e.preventDefault(); connectAccount(new FormData(e.currentTarget)); }} className="space-y-3">
+          <div className="space-y-3">
             <div className={`flex items-center gap-2.5 p-3 rounded-lg border ${connectPlatform.bg}`}>
               <span className={connectPlatform.color}>{connectPlatform.icon}</span>
               <div>
@@ -204,31 +204,52 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
               </div>
             </div>
 
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Account Name / Handle *</label>
-              <input name="account_name" className="input w-full" placeholder={`@your${connectPlatform.name.toLowerCase().replace(/ /g,"")}handle`} required />
-            </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Profile URL (optional)</label>
-              <input name="account_id" className="input w-full" placeholder={`https://${connectPlatform.name.toLowerCase()}.com/yourprofile`} />
-            </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Access Token (optional)</label>
-              <input name="access_token" type="password" className="input w-full" placeholder="For API access — leave blank if unsure" />
-            </div>
-
-            <div className="p-2.5 rounded-lg text-[10px] text-muted" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
-              Enter the account handle to track this platform. Access tokens are optional and enable posting/DM features.
-            </div>
-
-            <div className="flex justify-end gap-2 pt-1">
-              <button type="button" onClick={() => setConnectPlatform(null)} className="btn-secondary text-xs">Back</button>
-              <button type="submit" disabled={connecting} className="btn-primary text-xs flex items-center gap-1.5">
-                {connecting ? <Loader size={12} className="animate-spin" /> : <Link2 size={12} />}
-                {connecting ? "Connecting..." : "Connect Account"}
+            {/* One-click OAuth for configured platforms */}
+            {["instagram", "facebook", "meta_ads"].includes(connectPlatform.id) && (
+              <button onClick={() => {
+                const state = encodeURIComponent(JSON.stringify({ client_id: clientId, platform: connectPlatform.id }));
+                window.location.href = `/api/oauth/meta?state=${state}`;
+              }} className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all">
+                {connectPlatform.icon} Sign in with Meta
               </button>
-            </div>
-          </form>
+            )}
+
+            {["youtube", "google_ads"].includes(connectPlatform.id) && (
+              <button onClick={() => {
+                const state = encodeURIComponent(JSON.stringify({ client_id: clientId, platform: connectPlatform.id }));
+                window.location.href = `/api/oauth/google?state=${state}`;
+              }} className="w-full py-3 bg-white hover:bg-gray-100 text-gray-800 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all border border-gray-300">
+                <Globe size={14} /> Sign in with Google
+              </button>
+            )}
+
+            {["instagram", "facebook", "meta_ads", "youtube", "google_ads"].includes(connectPlatform.id) && (
+              <div className="flex items-center gap-2 py-1">
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="text-[9px] text-muted">or manually</span>
+                <div className="flex-1 h-px bg-white/10" />
+              </div>
+            )}
+
+            {/* Manual connect for all platforms */}
+            <form onSubmit={(e) => { e.preventDefault(); connectAccount(new FormData(e.currentTarget)); }} className="space-y-2">
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Account Name / Handle *</label>
+                <input name="account_name" className="input w-full" placeholder={`@your${connectPlatform.name.toLowerCase().replace(/ /g,"")}handle`} required />
+              </div>
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Access Token (optional)</label>
+                <input name="access_token" type="password" className="input w-full" placeholder="For API access — leave blank if unsure" />
+              </div>
+              <div className="flex justify-end gap-2 pt-1">
+                <button type="button" onClick={() => setConnectPlatform(null)} className="btn-secondary text-xs">Back</button>
+                <button type="submit" disabled={connecting} className="btn-primary text-xs flex items-center gap-1.5">
+                  {connecting ? <Loader size={12} className="animate-spin" /> : <Link2 size={12} />}
+                  {connecting ? "Connecting..." : "Connect"}
+                </button>
+              </div>
+            </form>
+          </div>
         )}
       </Modal>
     </div>
