@@ -25,6 +25,8 @@ export default function ClientPortalPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [content, setContent] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
+  const [aiPlan, setAiPlan] = useState("");
+  const [generatingPlan, setGeneratingPlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -94,25 +96,73 @@ export default function ClientPortalPage() {
   const onboardingQuestions = [
     { key: "biggest_challenge", q: "What is your biggest challenge right now with getting new customers?", placeholder: "e.g., We struggle to get found online, our social media isn't growing..." },
     { key: "goals_3mo", q: "What would success look like for you in the next 3 months?", placeholder: "e.g., 20 new clients, 5x more website traffic, fully booked schedule..." },
+    { key: "has_socials", q: "Do you have social media accounts set up? Which ones?", placeholder: "e.g., Instagram @mybusiness, Facebook page, no TikTok yet..." },
+    { key: "has_website", q: "Do you have a website? If yes, what is the URL?", placeholder: "e.g., www.mybusiness.com or No, I need one built..." },
     { key: "target_customer", q: "Describe your ideal customer in one sentence.", placeholder: "e.g., Homeowners aged 30-50 in Miami who need kitchen renovation..." },
+    { key: "budget", q: "What is your monthly marketing budget range?", placeholder: "e.g., $500-$1000, $1000-$2500, not sure yet..." },
     { key: "competitors", q: "Who are your top 2-3 competitors?", placeholder: "e.g., ABC Dental, Bright Smile Clinic, Miami Family Dentistry..." },
-    { key: "past_marketing", q: "What marketing have you tried before? What worked and what didn't?", placeholder: "e.g., Tried Facebook ads but didn't get results, word of mouth works well..." },
-    { key: "bot_name", q: "Last one -- what would you like to name your personal AI assistant?", placeholder: "e.g., Trinity, Max, Nova, Spark, Alex..." },
+    { key: "past_marketing", q: "What marketing have you tried before?", placeholder: "e.g., Tried Facebook ads but didn't get results, word of mouth works well..." },
+    { key: "bot_name", q: "Last one -- what would you like to name your AI assistant?", placeholder: "e.g., Trinity, Max, Nova, Spark, Alex..." },
   ];
 
   async function finishOnboarding() {
     const name = answers.bot_name || "Trinity";
     setBotName(name);
-    localStorage.setItem(`onboarding_done_${client?.id}`, "true");
-    localStorage.setItem(`bot_name_${client?.id}`, name);
-    setShowOnboarding(false);
+    setGeneratingPlan(true);
+
+    // Save bot config
     if (client) {
       fetch("/api/bot/customize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ client_id: client.id, bot_name: name, bot_personality: "helpful and knowledgeable about their business" }),
       }).catch(() => {});
+
+      // Save onboarding answers to client metadata
+      await supabase.from("clients").update({
+        metadata: {
+          ...((client as Record<string, unknown>).metadata as Record<string, unknown> || {}),
+          biggest_challenge: answers.biggest_challenge,
+          goals: answers.goals_3mo,
+          has_socials: answers.has_socials,
+          has_website: answers.has_website,
+          target_customer: answers.target_customer,
+          budget: answers.budget,
+          competitors: answers.competitors,
+          past_marketing: answers.past_marketing,
+          onboarded_at: new Date().toISOString(),
+        },
+      }).eq("id", client.id);
+
+      // AI Chief generates a custom plan
+      try {
+        const res = await fetch("/api/agents/chief", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: `A new client just onboarded. Create a custom 30-day marketing plan for them. Here is their info:
+Business: ${client.business_name} (${client.industry})
+Challenge: ${answers.biggest_challenge || "not specified"}
+Goals: ${answers.goals_3mo || "grow their business"}
+Social media: ${answers.has_socials || "unknown"}
+Website: ${answers.has_website || "unknown"}
+Target customer: ${answers.target_customer || "local customers"}
+Budget: ${answers.budget || "not specified"}
+Competitors: ${answers.competitors || "unknown"}
+Past marketing: ${answers.past_marketing || "unknown"}
+
+Create a specific 30-day plan with weekly milestones. Even if they gave minimal info, still create a plan based on their industry. Be specific and actionable. No markdown.`,
+          }),
+        });
+        const data = await res.json();
+        if (data.reply) setAiPlan(data.reply);
+      } catch {}
     }
+
+    setGeneratingPlan(false);
+    localStorage.setItem(`onboarding_done_${client?.id}`, "true");
+    localStorage.setItem(`bot_name_${client?.id}`, name);
+    setShowOnboarding(false);
   }
 
   if (showOnboarding && client) {
@@ -227,6 +277,22 @@ export default function ClientPortalPage() {
           </div>
         </Link>
       </div>
+
+      {/* AI Marketing Plan (shows after onboarding) */}
+      {generatingPlan && (
+        <div className="card border-gold/10 text-center py-6">
+          <Loader size={20} className="mx-auto mb-2 text-gold animate-spin" />
+          <p className="text-xs text-muted">AI Chief is creating your custom marketing plan...</p>
+        </div>
+      )}
+      {aiPlan && (
+        <div className="card border-gold/10">
+          <h2 className="section-header flex items-center gap-2">
+            <Sparkles size={13} className="text-gold" /> Your Custom Marketing Plan
+          </h2>
+          <pre className="text-[10px] text-muted leading-relaxed whitespace-pre-wrap">{aiPlan}</pre>
+        </div>
+      )}
 
       {/* AI Recommendations */}
       <AIInsights clientId={client.id} />

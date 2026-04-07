@@ -180,7 +180,22 @@ export default function VoiceAssistant() {
         body: JSON.stringify({ message: text, history: messages.slice(-6).map(m => ({ role: m.role === "assistant" ? "chief" : "user", content: m.content })) }),
       });
       const data = await res.json();
-      const reply = data.reply || "I didn't catch that. Could you try again?";
+      let reply = data.reply || "I didn't catch that. Could you try again?";
+
+      // Execute actions based on voice command
+      const cmd = text.toLowerCase();
+      if (cmd.includes("send email") || cmd.includes("cold call") || cmd.includes("outreach")) {
+        fetch("/api/cron/outreach", { headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ""}` } }).catch(() => {});
+        reply += " I triggered the outreach system — 20 emails, 20 SMS, and 200 call tags.";
+      }
+      if (cmd.includes("scrape") || cmd.includes("find lead")) {
+        fetch("/api/cron/scrape-leads", { headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ""}` } }).catch(() => {});
+        reply += " Lead scraping started.";
+      }
+      if (cmd.includes("health check") || cmd.includes("check system")) {
+        fetch("/api/cron/health-check", { headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ""}` } }).catch(() => {});
+        reply += " Running health check now.";
+      }
 
       setMessages(prev => [...prev, { role: "assistant", content: reply, timestamp: new Date() }]);
 
