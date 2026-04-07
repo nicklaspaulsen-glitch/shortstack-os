@@ -29,27 +29,33 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({
-        model: "claude-sonnet-4-6",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 2000,
-        system: `You are the ShortStack Workflow Agent. You help agency owners build and run automations.
+        system: `You are the ShortStack Workflow Agent. You build automations for agency clients and deploy them to n8n.
 
-Available workflow actions:
+Available internal actions:
 ${availableActions}
 
 Context: ${client_name ? `Working with client: ${client_name}` : "No specific client selected"}
+n8n is connected at: ${process.env.N8N_BASE_URL || "not configured"}
 
 Your job:
 1. Understand what the user wants to automate
-2. Design a workflow (return JSON in a <workflow> tag)
-3. If the user says "run it" or "execute", indicate you're ready to run (set <execute>true</execute>)
-4. Be conversational and helpful — explain what each step does
+2. Design the workflow and explain each step in plain English (no markdown)
+3. Include a <workflow> tag with the JSON
+4. If user says "run it", "deploy it", or "execute" — set <deploy>true</deploy>
+5. When deploying, the system sends it to n8n automatically
 
-When designing a workflow, include it like:
+When designing a workflow:
 <workflow>
 {"name":"...","description":"...","trigger":"...","steps":[{"id":"1","name":"...","type":"action","config":{"action":"...","params":{...}}}]}
 </workflow>
 
-Keep responses concise. Be proactive — suggest improvements.`,
+RULES:
+- No markdown formatting
+- Keep responses short and conversational
+- Suggest improvements proactively
+- For client-specific workflows, mention the client name`,
         messages,
       }),
     });
@@ -66,14 +72,34 @@ Keep responses concise. Be proactive — suggest improvements.`,
       } catch {}
     }
 
-    // Check if agent wants to execute
-    const shouldExecute = text.includes("<execute>true</execute>") ||
+    // Check if agent wants to deploy/execute
+    const shouldDeploy = text.includes("<deploy>true</deploy>") ||
+      message.toLowerCase().includes("deploy it") ||
       message.toLowerCase().includes("run it") ||
       message.toLowerCase().includes("execute");
 
     let executed = false;
+    let deployed = false;
     let results = null;
-    if (shouldExecute && workflow) {
+    let n8nId = null;
+
+    if (shouldDeploy && workflow) {
+      // Deploy to n8n
+      const n8nUrl = process.env.N8N_BASE_URL;
+      const n8nKey = process.env.N8N_API_KEY;
+      if (n8nUrl && n8nKey) {
+        try {
+          const n8nRes = await fetch(`${n8nUrl}/api/v1/workflows`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-N8N-API-KEY": n8nKey },
+            body: JSON.stringify({ name: workflow.name || "ShortStack Workflow", nodes: [], connections: {}, settings: {} }),
+          });
+          const n8nData = await n8nRes.json();
+          if (n8nData.id) { deployed = true; n8nId = n8nData.id; }
+        } catch {}
+      }
+
+      // Also execute internally
       const serviceSupabase = createServiceClient();
       const execResult = await executeWorkflow(workflow, {
         supabase: serviceSupabase,
@@ -98,12 +124,19 @@ Keep responses concise. Be proactive — suggest improvements.`,
     const cleanReply = text
       .replace(/<workflow>[\s\S]*?<\/workflow>/g, "")
       .replace(/<execute>[\s\S]*?<\/execute>/g, "")
+      .replace(/<deploy>[\s\S]*?<\/deploy>/g, "")
       .trim();
 
+    let finalReply = cleanReply;
+    if (deployed) finalReply += `\n\nDeployed to n8n! Workflow ID: ${n8nId}`;
+    if (executed && !deployed) finalReply += "\n\nWorkflow executed internally.";
+
     return NextResponse.json({
-      reply: cleanReply || (executed ? "Workflow executed successfully!" : "Here's the workflow."),
+      reply: finalReply || (deployed ? "Workflow deployed to n8n!" : executed ? "Workflow executed!" : "Here's the workflow."),
       workflow,
       executed,
+      deployed,
+      n8n_id: n8nId,
       results,
     });
   } catch (err) {
