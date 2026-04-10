@@ -163,14 +163,16 @@ export default function DesignStudioPage() {
           </h1>
           <p className="text-muted text-sm mt-1">Generate AI-powered designs for thumbnails, social posts, ads & more</p>
         </div>
-        <a
-          href="https://www.canva.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary flex items-center gap-2 rounded-lg"
-        >
-          <ExternalLink size={16} /> Open in Canva
-        </a>
+        <div className="flex items-center gap-2">
+          <a href="https://pikzels.com" target="_blank" rel="noopener noreferrer"
+            className="btn-secondary flex items-center gap-1.5 text-xs">
+            <ExternalLink size={12} /> Pikzels (Thumbnails)
+          </a>
+          <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
+            className="btn-primary flex items-center gap-1.5 text-xs">
+            <ExternalLink size={12} /> Canva
+          </a>
+        </div>
       </div>
 
       {/* Quick Templates */}

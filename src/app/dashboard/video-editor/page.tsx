@@ -100,10 +100,16 @@ export default function VideoEditorPage() {
           </h1>
           <p className="text-xs text-muted mt-0.5">AI creates video plans, scripts, and renders via Remotion</p>
         </div>
-        <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[160px]">
-          <option value="">No client</option>
-          {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-        </select>
+        <div className="flex items-center gap-2">
+          <a href="https://www.higgsfield.ai" target="_blank" rel="noopener noreferrer"
+            className="btn-secondary flex items-center gap-1.5 text-xs">
+            <Sparkles size={12} /> Higgsfield AI
+          </a>
+          <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[140px]">
+            <option value="">No client</option>
+            {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
