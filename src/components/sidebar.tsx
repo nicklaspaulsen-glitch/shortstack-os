@@ -52,6 +52,7 @@ const navItems: NavItem[] = [
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessageSquare size={16} />, roles: ["admin", "team_member"] },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"] },
   { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"] },
+  { label: "Deals", href: "/dashboard/deals", icon: <CreditCard size={16} />, roles: ["admin", "team_member"] },
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
 
   // ── Create ──
