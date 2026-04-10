@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import AgentActivityFeed from "@/components/agent-activity-feed";
 import AgentStatusCards from "@/components/agent-status-cards";
+import AgentOffice from "@/components/agent-office";
 import ScrollReveal from "@/components/ui/scroll-reveal";
 
 interface DashboardStats {
@@ -155,6 +156,9 @@ export default function DashboardPage() {
       {/* Live Agent Status */}
       <ScrollReveal delay={100}>
         <AgentStatusCards />
+
+      {/* 3D Agent Office */}
+      <AgentOffice />
       </ScrollReveal>
 
       {/* Quick Actions */}
@@ -450,9 +454,7 @@ function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: s
   }
 
   return (
-    <div className="card border-gold/10 overflow-hidden relative">
-      {/* Background mesh */}
-      <div className="absolute inset-0 bg-mesh opacity-50" />
+    <div className="rounded-xl overflow-hidden relative" style={{ background: "rgba(17,20,28,0.6)", border: "1px solid rgba(184,152,64,0.08)" }}>
 
       <div className="relative flex flex-col items-center py-5">
         {/* AI Talking Head */}
