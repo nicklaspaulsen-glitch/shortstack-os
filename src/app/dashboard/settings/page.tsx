@@ -439,6 +439,28 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Custom Domain */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Globe size={14} className="text-gold" /> Custom Domain
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Connect your own domain to ShortStack OS instead of shortstack-os.vercel.app</p>
+            <div className="space-y-2 text-[11px]">
+              <div className="p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                <p className="font-semibold text-white mb-2">Setup Instructions:</p>
+                <ol className="space-y-1.5 text-muted list-decimal list-inside">
+                  <li>Go to <a href="https://vercel.com/growth-9598s-projects/shortstack-os/settings/domains" target="_blank" rel="noopener" className="text-gold hover:underline">Vercel Domain Settings</a></li>
+                  <li>Click &ldquo;Add Domain&rdquo; and enter your domain (e.g. app.shortstack.work)</li>
+                  <li>Go to your domain registrar (GoDaddy, Namecheap, Cloudflare)</li>
+                  <li>Add a CNAME record: <code className="bg-white/5 px-1.5 py-0.5 rounded font-mono text-[10px]">app</code> pointing to <code className="bg-white/5 px-1.5 py-0.5 rounded font-mono text-[10px]">cname.vercel-dns.com</code></li>
+                  <li>Wait 5-10 minutes for DNS to propagate</li>
+                  <li>SSL certificate auto-configures</li>
+                </ol>
+              </div>
+              <p className="text-[9px] text-muted/50">Current URL: shortstack-os.vercel.app</p>
+            </div>
+          </div>
+
           {/* Version Info */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">
