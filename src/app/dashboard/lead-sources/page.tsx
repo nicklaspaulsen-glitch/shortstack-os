@@ -85,7 +85,7 @@ export default function LeadSourcesPage() {
             <ResponsiveContainer width="100%" height={280}>
               <PieChart>
                 <Pie data={chartData} cx="50%" cy="50%" innerRadius={60} outerRadius={100}
-                  paddingAngle={2} dataKey="value" label={({ name, percent }: { name: string; percent?: number }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                  paddingAngle={2} dataKey="value"
                   labelLine={false}>
                   {chartData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
