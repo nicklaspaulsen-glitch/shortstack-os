@@ -14,7 +14,8 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/pricing") ||
     path.startsWith("/changelog") ||
     path.startsWith("/survey") ||
-    path.startsWith("/api/surveys")
+    path.startsWith("/api/surveys") ||
+    path.startsWith("/demo")
   ) {
     return NextResponse.next();
   }
