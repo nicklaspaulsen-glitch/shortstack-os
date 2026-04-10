@@ -1,446 +1,238 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 
-// Agent config
 const AGENTS = [
-  { id: "lead-engine", name: "Scout", color: "#10b981", role: "Leads" },
-  { id: "outreach", name: "Echo", color: "#3b82f6", role: "Outreach" },
-  { id: "content", name: "Pixel", color: "#a855f7", role: "Content" },
-  { id: "ads", name: "Blaze", color: "#f59e0b", role: "Ads" },
-  { id: "trinity", name: "Trinity", color: "#c8a855", role: "Boss" },
-  { id: "analytics", name: "Lens", color: "#06b6d4", role: "Analytics" },
-  { id: "reviews", name: "Star", color: "#eab308", role: "Reviews" },
-  { id: "seo", name: "Rank", color: "#84cc16", role: "SEO" },
-  { id: "invoice", name: "Ledger", color: "#22c55e", role: "Billing" },
-  { id: "retention", name: "Keep", color: "#f43f5e", role: "Retention" },
-  { id: "social-media", name: "Wave", color: "#ec4899", role: "Social" },
-  { id: "scheduler", name: "Clock", color: "#14b8a6", role: "Calendar" },
+  { id: "lead-engine", name: "Scout", role: "Leads", color: "#10b981", emoji: "🔍" },
+  { id: "outreach", name: "Echo", role: "Outreach", color: "#3b82f6", emoji: "📨" },
+  { id: "content", name: "Pixel", role: "Content", color: "#a855f7", emoji: "✨" },
+  { id: "ads", name: "Blaze", role: "Ads", color: "#f59e0b", emoji: "🔥" },
+  { id: "trinity", name: "Trinity", role: "Boss", color: "#c8a855", emoji: "👑" },
+  { id: "analytics", name: "Lens", role: "Analytics", color: "#06b6d4", emoji: "📊" },
+  { id: "reviews", name: "Star", role: "Reviews", color: "#eab308", emoji: "⭐" },
+  { id: "seo", name: "Rank", role: "SEO", color: "#84cc16", emoji: "🌐" },
+  { id: "invoice", name: "Ledger", role: "Billing", color: "#22c55e", emoji: "💰" },
+  { id: "retention", name: "Keep", role: "Retention", color: "#f43f5e", emoji: "❤️" },
+  { id: "social-media", name: "Wave", role: "Social", color: "#ec4899", emoji: "📱" },
+  { id: "scheduler", name: "Clock", role: "Calendar", color: "#14b8a6", emoji: "📅" },
 ];
 
-// Office layout — grid of tiles (0=floor, 1=wall, 2=desk, 3=plant, 4=coffee)
-const TILE_SIZE = 16;
-const OFFICE_W = 52;
-const OFFICE_H = 20;
-
-// Simple BFS pathfinding
-function findPath(grid: number[][], sx: number, sy: number, ex: number, ey: number): Array<[number, number]> {
-  if (sx === ex && sy === ey) return [];
-  const queue: Array<[number, number, Array<[number, number]>]> = [[sx, sy, []]];
-  const visited = new Set<string>();
-  visited.add(`${sx},${sy}`);
-  const dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-
-  while (queue.length > 0) {
-    const [cx, cy, path] = queue.shift()!;
-    for (const [dx, dy] of dirs) {
-      const nx = cx + dx;
-      const ny = cy + dy;
-      const key = `${nx},${ny}`;
-      if (nx < 0 || ny < 0 || nx >= OFFICE_W || ny >= OFFICE_H) continue;
-      if (visited.has(key)) continue;
-      if (grid[ny]?.[nx] === 1) continue; // wall
-      visited.add(key);
-      const newPath: Array<[number, number]> = [...path, [nx, ny]];
-      if (nx === ex && ny === ey) return newPath;
-      queue.push([nx, ny, newPath]);
-    }
-  }
-  return [];
-}
-
-interface Agent {
-  id: string;
-  name: string;
-  color: string;
-  role: string;
-  x: number;
-  y: number;
-  state: "idle" | "walking" | "typing" | "talking";
-  path: Array<[number, number]>;
-  deskX: number;
-  deskY: number;
-  frame: number;
-  facing: "left" | "right" | "down" | "up";
-  actionsToday: number;
-  stateTimer: number;
-  bubbleText: string;
-  bubbleTimer: number;
-}
-
 export default function AgentOffice() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const agentsRef = useRef<Agent[]>([]);
-  const gridRef = useRef<number[][]>([]);
-  const animFrame = useRef<number>(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const [agents, setAgents] = useState(AGENTS.map((a) => ({
+    ...a,
+    actionsToday: 0,
+    active: false,
+    lastAction: "",
+    bobOffset: Math.random() * Math.PI * 2,
+    bobSpeed: 0.8 + Math.random() * 0.4,
+    jitterX: 0,
+    jitterY: 0,
+  })));
   const [hovered, setHovered] = useState<string | null>(null);
+  const frameRef = useRef<number>(0);
+  const timeRef = useRef(0);
   const supabase = createClient();
 
-  // Initialize grid and agents
+  // Fetch real data
   useEffect(() => {
-    // Build office grid
-    const grid: number[][] = [];
-    for (let y = 0; y < OFFICE_H; y++) {
-      grid[y] = [];
-      for (let x = 0; x < OFFICE_W; x++) {
-        // Walls on edges
-        if (y === 0 || y === OFFICE_H - 1 || x === 0 || x === OFFICE_W - 1) {
-          grid[y][x] = 1;
-        } else {
-          grid[y][x] = 0; // floor
-        }
-      }
-    }
-
-    // Add desks
-    const deskPositions: Array<[number, number]> = [];
-    AGENTS.forEach((_, i) => {
-      const row = Math.floor(i / 6);
-      const col = i % 6;
-      const dx = 4 + col * 8;
-      const dy = 4 + row * 8;
-      grid[dy][dx] = 2;
-      grid[dy][dx + 1] = 2;
-      deskPositions.push([dx, dy + 1]);
-    });
-
-    // Add decorations
-    grid[2][26] = 4; // coffee machine
-    grid[10][26] = 3; // plant
-    grid[2][2] = 3; // plant
-    grid[17][2] = 3; // plant
-    grid[17][49] = 3; // plant
-
-    gridRef.current = grid;
-
-    // Initialize agents at their desks
-    const agents: Agent[] = AGENTS.map((a, i) => {
-      const pos = deskPositions[i] || [5, 5];
-      return {
-        ...a,
-        x: pos[0],
-        y: pos[1],
-        deskX: pos[0],
-        deskY: pos[1],
-        state: "idle",
-        path: [],
-        frame: 0,
-        facing: "down",
-        actionsToday: 0,
-        stateTimer: Math.random() * 200,
-        bubbleText: "",
-        bubbleTimer: 0,
-      };
-    });
-    agentsRef.current = agents;
-
-    // Fetch real activity data
-    fetchActivity();
-  }, []);
-
-  async function fetchActivity() {
     const today = new Date().toISOString().split("T")[0];
-    const { data } = await supabase
-      .from("trinity_log")
+    supabase.from("trinity_log")
       .select("agent, description")
       .gte("created_at", today)
       .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(50)
+      .then(({ data }) => {
+        const counts: Record<string, { count: number; last: string }> = {};
+        (data || []).forEach(l => {
+          const aid = l.agent || "";
+          if (!counts[aid]) counts[aid] = { count: 0, last: "" };
+          counts[aid].count++;
+          if (!counts[aid].last) counts[aid].last = (l.description || "").substring(0, 25);
+        });
+        setAgents(prev => prev.map(a => ({
+          ...a,
+          actionsToday: counts[a.id]?.count || 0,
+          active: (counts[a.id]?.count || 0) > 0,
+          lastAction: counts[a.id]?.last || "",
+        })));
+      });
+  }, []);
 
-    const counts: Record<string, { count: number; last: string }> = {};
-    (data || []).forEach(l => {
-      const aid = l.agent || "";
-      if (!counts[aid]) counts[aid] = { count: 0, last: "" };
-      counts[aid].count++;
-      if (!counts[aid].last) counts[aid].last = (l.description || "").substring(0, 30);
-    });
-
-    agentsRef.current = agentsRef.current.map(a => {
-      const d = counts[a.id];
-      return {
+  // Animation loop for jitter
+  useEffect(() => {
+    function animate() {
+      timeRef.current += 0.016;
+      setAgents(prev => prev.map(a => ({
         ...a,
-        actionsToday: d?.count || 0,
-        state: d?.count ? "typing" : "idle",
-        bubbleText: d?.last || "",
-        bubbleTimer: d?.count ? 120 : 0,
-      };
+        jitterX: Math.sin(timeRef.current * 1.5 + a.bobOffset) * 2,
+        jitterY: Math.sin(timeRef.current * a.bobSpeed + a.bobOffset) * 4,
+      })));
+      frameRef.current = requestAnimationFrame(animate);
+    }
+    frameRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameRef.current);
+  }, []);
+
+  // Track mouse position relative to container
+  function handleMouseMove(e: React.MouseEvent) {
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMousePos({
+      x: (e.clientX - rect.left) / rect.width,
+      y: (e.clientY - rect.top) / rect.height,
     });
   }
 
-  // Game loop
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    function gameLoop() {
-      if (!ctx || !canvas) return;
-      const agents = agentsRef.current;
-      const grid = gridRef.current;
-
-      // Update agents
-      agents.forEach(agent => {
-        agent.frame++;
-        agent.stateTimer--;
-        if (agent.bubbleTimer > 0) agent.bubbleTimer--;
-
-        // Move along path
-        if (agent.path.length > 0 && agent.frame % 4 === 0) {
-          const [nx, ny] = agent.path.shift()!;
-          // Determine facing
-          if (nx > agent.x) agent.facing = "right";
-          else if (nx < agent.x) agent.facing = "left";
-          else if (ny > agent.y) agent.facing = "down";
-          else agent.facing = "up";
-          agent.x = nx;
-          agent.y = ny;
-          agent.state = "walking";
-        } else if (agent.path.length === 0 && agent.state === "walking") {
-          agent.state = agent.actionsToday > 0 ? "typing" : "idle";
-        }
-
-        // Randomly decide to move
-        if (agent.stateTimer <= 0 && agent.path.length === 0) {
-          agent.stateTimer = 100 + Math.random() * 300;
-
-          if (agent.state === "typing" && Math.random() > 0.7) {
-            // Walk to coffee or another agent
-            const targets = [
-              [26, 3], // coffee
-              [26, 10], // meeting spot
-              [agent.deskX + (Math.random() > 0.5 ? 3 : -3), agent.deskY],
-            ];
-            const t = targets[Math.floor(Math.random() * targets.length)];
-            const tx = Math.max(1, Math.min(OFFICE_W - 2, Math.round(t[0])));
-            const ty = Math.max(1, Math.min(OFFICE_H - 2, Math.round(t[1])));
-            agent.path = findPath(grid, agent.x, agent.y, tx, ty);
-            if (agent.path.length > 0) {
-              agent.bubbleText = ["coffee...", "brb", "hmm", "done!", "let me check"][Math.floor(Math.random() * 5)];
-              agent.bubbleTimer = 60;
-            }
-          } else if (agent.x !== agent.deskX || agent.y !== agent.deskY) {
-            // Return to desk
-            agent.path = findPath(grid, agent.x, agent.y, agent.deskX, agent.deskY);
-          }
-        }
-      });
-
-      // Render
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Floor
-      ctx.fillStyle = "#0d1017";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Grid tiles
-      for (let y = 0; y < OFFICE_H; y++) {
-        for (let x = 0; x < OFFICE_W; x++) {
-          const tile = grid[y]?.[x] || 0;
-          const px = x * TILE_SIZE;
-          const py = y * TILE_SIZE;
-
-          if (tile === 0) {
-            // Floor tile with subtle pattern
-            ctx.fillStyle = (x + y) % 2 === 0 ? "#111520" : "#121622";
-            ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
-          } else if (tile === 1) {
-            // Wall
-            ctx.fillStyle = "#1a1f2e";
-            ctx.fillRect(px, py, TILE_SIZE, TILE_SIZE);
-            ctx.fillStyle = "#222838";
-            ctx.fillRect(px, py, TILE_SIZE, 2);
-          } else if (tile === 2) {
-            // Desk
-            ctx.fillStyle = "#2a2520";
-            ctx.fillRect(px + 1, py + 1, TILE_SIZE - 2, TILE_SIZE - 2);
-            // Monitor on desk
-            ctx.fillStyle = "#334155";
-            ctx.fillRect(px + 3, py + 2, TILE_SIZE - 6, TILE_SIZE - 6);
-            ctx.fillStyle = "#1e293b";
-            ctx.fillRect(px + 4, py + 3, TILE_SIZE - 8, TILE_SIZE - 8);
-          } else if (tile === 3) {
-            // Plant
-            ctx.fillStyle = "#422";
-            ctx.fillRect(px + 5, py + 8, 6, 8);
-            ctx.fillStyle = "#166534";
-            ctx.beginPath();
-            ctx.arc(px + 8, py + 6, 6, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.fillStyle = "#22c55e";
-            ctx.beginPath();
-            ctx.arc(px + 7, py + 5, 3, 0, Math.PI * 2);
-            ctx.fill();
-          } else if (tile === 4) {
-            // Coffee machine
-            ctx.fillStyle = "#44403c";
-            ctx.fillRect(px + 2, py + 2, 12, 12);
-            ctx.fillStyle = "#78716c";
-            ctx.fillRect(px + 4, py + 4, 8, 5);
-            ctx.fillStyle = "#ef4444";
-            ctx.fillRect(px + 6, py + 10, 4, 2); // red light
-          }
-        }
-      }
-
-      // Render agents (sorted by Y for proper overlap)
-      const sortedAgents = [...agents].sort((a, b) => a.y - b.y);
-
-      sortedAgents.forEach(agent => {
-        const px = agent.x * TILE_SIZE;
-        const py = agent.y * TILE_SIZE;
-        const color = agent.color;
-
-        // Shadow
-        ctx.fillStyle = "rgba(0,0,0,0.2)";
-        ctx.beginPath();
-        ctx.ellipse(px + 8, py + 14, 5, 2, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Body
-        ctx.fillStyle = color;
-        ctx.fillRect(px + 4, py + 5, 8, 7);
-
-        // Head
-        const headBob = agent.state === "walking" ? Math.sin(agent.frame / 3) * 0.5 : 0;
-        ctx.fillStyle = "#fcd9b6"; // skin
-        ctx.fillRect(px + 4, py + headBob, 8, 6);
-
-        // Hair (colored)
-        ctx.fillStyle = color;
-        ctx.fillRect(px + 3, py - 1 + headBob, 10, 3);
-
-        // Eyes
-        const blink = agent.frame % 120 < 5;
-        if (!blink) {
-          ctx.fillStyle = "#1a1a2e";
-          const eyeOffsetX = agent.facing === "left" ? -1 : agent.facing === "right" ? 1 : 0;
-          ctx.fillRect(px + 5 + eyeOffsetX, py + 2 + headBob, 2, 2);
-          ctx.fillRect(px + 9 + eyeOffsetX, py + 2 + headBob, 2, 2);
-        } else {
-          ctx.fillStyle = "#1a1a2e";
-          ctx.fillRect(px + 5, py + 3 + headBob, 2, 1);
-          ctx.fillRect(px + 9, py + 3 + headBob, 2, 1);
-        }
-
-        // Legs (animate when walking)
-        if (agent.state === "walking") {
-          const legAnim = Math.sin(agent.frame / 2) * 2;
-          ctx.fillStyle = "#374151";
-          ctx.fillRect(px + 5, py + 12, 3, 3 + legAnim);
-          ctx.fillRect(px + 9, py + 12, 3, 3 - legAnim);
-        } else {
-          ctx.fillStyle = "#374151";
-          ctx.fillRect(px + 5, py + 12, 3, 3);
-          ctx.fillRect(px + 9, py + 12, 3, 3);
-        }
-
-        // Typing animation
-        if (agent.state === "typing" && agent.x === agent.deskX && agent.y === agent.deskY) {
-          // Hands moving
-          if (agent.frame % 10 < 5) {
-            ctx.fillStyle = "#fcd9b6";
-            ctx.fillRect(px + 2, py + 8, 3, 2);
-            ctx.fillRect(px + 12, py + 9, 3, 2);
-          } else {
-            ctx.fillStyle = "#fcd9b6";
-            ctx.fillRect(px + 2, py + 9, 3, 2);
-            ctx.fillRect(px + 12, py + 8, 3, 2);
-          }
-        }
-
-        // Speech bubble
-        if (agent.bubbleTimer > 0 && agent.bubbleText) {
-          const textWidth = agent.bubbleText.length * 4 + 8;
-          const bx = px + 8 - textWidth / 2;
-          const by = py - 14;
-
-          ctx.fillStyle = "rgba(255,255,255,0.9)";
-          ctx.beginPath();
-          ctx.roundRect(bx, by, textWidth, 10, 3);
-          ctx.fill();
-
-          // Bubble pointer
-          ctx.beginPath();
-          ctx.moveTo(px + 6, by + 10);
-          ctx.lineTo(px + 8, by + 13);
-          ctx.lineTo(px + 10, by + 10);
-          ctx.fill();
-
-          ctx.fillStyle = "#111";
-          ctx.font = "6px monospace";
-          ctx.fillText(agent.bubbleText, bx + 4, by + 7);
-        }
-
-        // Name below (only on hover)
-        if (hovered === agent.id) {
-          ctx.fillStyle = color;
-          ctx.font = "bold 7px sans-serif";
-          ctx.textAlign = "center";
-          ctx.fillText(agent.name, px + 8, py + 22);
-          ctx.fillStyle = "rgba(255,255,255,0.4)";
-          ctx.font = "6px sans-serif";
-          ctx.fillText(`${agent.role} · ${agent.actionsToday} today`, px + 8, py + 29);
-          ctx.textAlign = "left";
-        }
-
-        // Status indicator
-        if (agent.actionsToday > 0) {
-          ctx.fillStyle = "#22c55e";
-          ctx.beginPath();
-          ctx.arc(px + 14, py, 2, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      });
-
-      // Top label
-      ctx.fillStyle = "rgba(200,168,85,0.3)";
-      ctx.font = "bold 8px sans-serif";
-      ctx.fillText(`AGENT OFFICE · ${agents.filter(a => a.actionsToday > 0).length}/${agents.length} active`, 10, 12);
-
-      animFrame.current = requestAnimationFrame(gameLoop);
-    }
-
-    animFrame.current = requestAnimationFrame(gameLoop);
-    return () => cancelAnimationFrame(animFrame.current);
-  }, [hovered]);
-
-  // Mouse hover detection
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const mx = (e.clientX - rect.left) * scaleX;
-    const my = (e.clientY - rect.top) * scaleY;
-    // Check if hovering over an agent
-    let found: string | null = null;
-    agentsRef.current.forEach(agent => {
-      const px = agent.x * TILE_SIZE;
-      const py = agent.y * TILE_SIZE;
-      if (mx >= px && mx <= px + 16 && my >= py - 4 && my <= py + 16) {
-        found = agent.id;
-      }
-    });
-    setHovered(found);
-  }, []);
+  const activeCount = agents.filter(a => a.active).length;
 
   return (
     <Link href="/dashboard/agent-supervisor" className="block">
-      <div className="rounded-xl overflow-hidden cursor-pointer hover:ring-1 hover:ring-gold/10 transition-all"
-        style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
-        <canvas
-          ref={canvasRef}
-          width={OFFICE_W * TILE_SIZE}
-          height={OFFICE_H * TILE_SIZE}
-          onMouseMove={handleMouseMove}
-          onMouseLeave={() => setHovered(null)}
-          className="w-full"
-          style={{ imageRendering: "pixelated", height: "auto" }}
-        />
+      <div ref={containerRef} onMouseMove={handleMouseMove}
+        className="rounded-xl overflow-hidden cursor-pointer transition-all hover:ring-1 hover:ring-gold/10"
+        style={{ background: "rgba(14,16,22,0.6)", border: "1px solid rgba(255,255,255,0.04)", padding: "16px 12px 8px" }}>
+
+        {/* Header */}
+        <div className="flex items-center justify-between mb-3 px-2">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+            <span className="text-[10px] font-semibold text-muted uppercase tracking-wider">Agent Office</span>
+          </div>
+          <span className="text-[9px] text-muted">{activeCount}/{agents.length} active</span>
+        </div>
+
+        {/* Floating heads grid */}
+        <div className="flex flex-wrap justify-center gap-x-1 gap-y-2">
+          {agents.map(agent => {
+            // Calculate eye direction based on mouse
+            const eyeX = (mousePos.x - 0.5) * 3;
+            const eyeY = (mousePos.y - 0.5) * 2;
+
+            return (
+              <div key={agent.id}
+                className="relative flex flex-col items-center"
+                style={{
+                  transform: `translateX(${agent.jitterX}px) translateY(${agent.jitterY}px)`,
+                  transition: "transform 0.1s ease-out",
+                  width: 64,
+                }}
+                onMouseEnter={() => setHovered(agent.id)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                {/* 3D Head */}
+                <div className="relative" style={{ perspective: "200px" }}>
+                  {/* Glow behind active agents */}
+                  {agent.active && (
+                    <div className="absolute inset-[-4px] rounded-full animate-pulse" style={{
+                      background: `radial-gradient(circle, ${agent.color}20, transparent 70%)`,
+                    }} />
+                  )}
+
+                  {/* Head sphere */}
+                  <div className="w-10 h-10 rounded-full relative overflow-hidden"
+                    style={{
+                      background: `radial-gradient(circle at 40% 35%, ${agent.color}dd, ${agent.color}80 60%, ${agent.color}40 100%)`,
+                      boxShadow: agent.active
+                        ? `0 4px 20px ${agent.color}30, inset 0 -3px 6px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.15)`
+                        : `inset 0 -4px 8px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.1)`,
+                      transform: `rotateX(${eyeY * -3}deg) rotateY(${eyeX * 3}deg)`,
+                      transformStyle: "preserve-3d",
+                      opacity: agent.active ? 1 : 0.5,
+                    }}>
+
+                    {/* Highlight reflection */}
+                    <div className="absolute rounded-full" style={{
+                      top: "15%", left: "25%", width: "30%", height: "25%",
+                      background: "rgba(255,255,255,0.25)",
+                      filter: "blur(2px)",
+                      borderRadius: "50%",
+                    }} />
+
+                    {/* Eyes */}
+                    <div className="absolute flex gap-[6px]" style={{ top: "35%", left: "50%", transform: "translateX(-50%)" }}>
+                      {/* Left eye */}
+                      <div className="w-[7px] h-[7px] rounded-full bg-white relative overflow-hidden"
+                        style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)" }}>
+                        <div className="w-[4px] h-[4px] rounded-full bg-[#1a1a2e] absolute"
+                          style={{
+                            top: `${1 + eyeY * 1}px`,
+                            left: `${1.5 + eyeX * 1}px`,
+                            transition: "top 0.08s, left 0.08s",
+                          }} />
+                        {/* Pupil shine */}
+                        <div className="w-[1.5px] h-[1.5px] rounded-full bg-white absolute"
+                          style={{ top: "1px", left: "2px" }} />
+                      </div>
+                      {/* Right eye */}
+                      <div className="w-[7px] h-[7px] rounded-full bg-white relative overflow-hidden"
+                        style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.1)" }}>
+                        <div className="w-[4px] h-[4px] rounded-full bg-[#1a1a2e] absolute"
+                          style={{
+                            top: `${1 + eyeY * 1}px`,
+                            left: `${1.5 + eyeX * 1}px`,
+                            transition: "top 0.08s, left 0.08s",
+                          }} />
+                        <div className="w-[1.5px] h-[1.5px] rounded-full bg-white absolute"
+                          style={{ top: "1px", left: "2px" }} />
+                      </div>
+                    </div>
+
+                    {/* Mouth — smile when active */}
+                    <div className="absolute" style={{ bottom: "20%", left: "50%", transform: "translateX(-50%)" }}>
+                      {agent.active ? (
+                        <div style={{
+                          width: 8, height: 4,
+                          borderBottom: "2px solid rgba(255,255,255,0.5)",
+                          borderRadius: "0 0 8px 8px",
+                        }} />
+                      ) : (
+                        <div style={{
+                          width: 5, height: 1.5,
+                          background: "rgba(255,255,255,0.2)",
+                          borderRadius: 4,
+                        }} />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Status dot */}
+                  <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 ${
+                    agent.active ? "bg-green-400 border-[#0e1016]" : "bg-gray-600 border-[#0e1016]"
+                  }`} style={agent.active ? { boxShadow: "0 0 6px rgba(74,222,128,0.4)" } : {}} />
+                </div>
+
+                {/* Name */}
+                <span className="text-[7px] font-bold mt-1 text-center" style={{ color: agent.active ? agent.color : "rgba(255,255,255,0.25)" }}>
+                  {agent.name}
+                </span>
+
+                {/* Actions count */}
+                {agent.actionsToday > 0 && (
+                  <span className="text-[6px] font-mono" style={{ color: "rgba(255,255,255,0.3)" }}>
+                    {agent.actionsToday} today
+                  </span>
+                )}
+
+                {/* Hover tooltip */}
+                {hovered === agent.id && (
+                  <div className="absolute -top-14 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap">
+                    <div className="px-2.5 py-1.5 rounded-lg text-center" style={{
+                      background: "rgba(17,20,28,0.95)", border: "1px solid rgba(255,255,255,0.08)",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                    }}>
+                      <p className="text-[9px] font-bold" style={{ color: agent.color }}>{agent.name} — {agent.role}</p>
+                      {agent.lastAction && <p className="text-[7px] text-gray-400 truncate max-w-[120px]">{agent.lastAction}</p>}
+                      <p className="text-[7px] text-gray-500">{agent.actionsToday} actions today</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </Link>
   );
