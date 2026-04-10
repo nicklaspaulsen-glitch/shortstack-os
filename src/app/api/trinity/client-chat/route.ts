@@ -95,5 +95,81 @@ Rules:
   const data = await res.json();
   const reply = data.content?.[0]?.text || "I couldn't process that. Try asking about your services, tasks, or invoices.";
 
-  return NextResponse.json({ reply, botName });
+  // Detect client requests and trigger agents automatically
+  const lowerMsg = message.toLowerCase();
+  const clientId = client?.id;
+  let actionTaken = "";
+
+  if (clientId) {
+    if (lowerMsg.includes("website") || lowerMsg.includes("landing page") || lowerMsg.includes("web page")) {
+      // Create a website request ticket
+      await supabase.from("trinity_log").insert({
+        agent: "website",
+        action_type: "custom",
+        description: `Client request: Website — "${message.substring(0, 100)}"`,
+        client_id: clientId,
+        status: "pending",
+        result: { type: "client_request", category: "website", message },
+      });
+      actionTaken = "website_request";
+    }
+
+    if (lowerMsg.includes("content") || lowerMsg.includes("post") || lowerMsg.includes("video") || lowerMsg.includes("reel") || lowerMsg.includes("script")) {
+      await supabase.from("trinity_log").insert({
+        agent: "content",
+        action_type: "content",
+        description: `Client request: Content — "${message.substring(0, 100)}"`,
+        client_id: clientId,
+        status: "pending",
+        result: { type: "client_request", category: "content", message },
+      });
+      actionTaken = "content_request";
+    }
+
+    if (lowerMsg.includes("ad") || lowerMsg.includes("campaign") || lowerMsg.includes("facebook ad") || lowerMsg.includes("google ad")) {
+      await supabase.from("trinity_log").insert({
+        agent: "ads",
+        action_type: "ads",
+        description: `Client request: Ads — "${message.substring(0, 100)}"`,
+        client_id: clientId,
+        status: "pending",
+        result: { type: "client_request", category: "ads", message },
+      });
+      actionTaken = "ads_request";
+    }
+
+    if (lowerMsg.includes("invoice") || lowerMsg.includes("payment") || lowerMsg.includes("bill")) {
+      actionTaken = "billing_inquiry";
+    }
+
+    if (lowerMsg.includes("edit") || lowerMsg.includes("revision") || lowerMsg.includes("change")) {
+      await supabase.from("trinity_log").insert({
+        agent: "production",
+        action_type: "custom",
+        description: `Client revision request — "${message.substring(0, 100)}"`,
+        client_id: clientId,
+        status: "pending",
+        result: { type: "client_request", category: "revision", message },
+      });
+      actionTaken = "revision_request";
+    }
+
+    // Notify admin on Telegram for any request
+    if (actionTaken) {
+      const chatIdAdmin = process.env.TELEGRAM_CHAT_ID;
+      const botToken = process.env.TELEGRAM_BOT_TOKEN;
+      if (chatIdAdmin && botToken) {
+        await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatIdAdmin,
+            text: `Client Request from ${client?.business_name}:\n\n"${message.substring(0, 200)}"\n\nCategory: ${actionTaken}\nAgent assigned automatically.`,
+          }),
+        });
+      }
+    }
+  }
+
+  return NextResponse.json({ reply, botName, actionTaken });
 }
