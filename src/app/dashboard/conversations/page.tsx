@@ -39,6 +39,7 @@ export default function ConversationsPage() {
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
+  const [channelFilter, setChannelFilter] = useState<"all" | "sms" | "email" | "dm">("all");
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { fetchConversations(); }, []);
@@ -159,9 +160,12 @@ export default function ConversationsPage() {
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   }
 
-  const filtered = conversations.filter(c =>
-    c.business_name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = conversations.filter(c => {
+    if (!c.business_name.toLowerCase().includes(search.toLowerCase())) return false;
+    if (channelFilter === "all") return true;
+    if (channelFilter === "dm") return c.messages.some(m => ["instagram", "facebook", "linkedin", "tiktok"].includes(m.platform));
+    return c.messages.some(m => m.platform === channelFilter);
+  });
 
   return (
     <div className="fade-in flex h-[calc(100vh-120px)]">
@@ -175,6 +179,14 @@ export default function ConversationsPage() {
             <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted/50" />
             <input value={search} onChange={e => setSearch(e.target.value)}
               className="input w-full text-xs pl-8 py-1.5" placeholder="Search..." />
+          </div>
+          <div className="flex gap-1 px-3 pt-2">
+            {(["all", "sms", "email", "dm"] as const).map(ch => (
+              <button key={ch} onClick={() => setChannelFilter(ch)}
+                className={`text-[8px] px-2 py-1 rounded capitalize transition-all ${
+                  channelFilter === ch ? "bg-gold/10 text-gold" : "text-muted"
+                }`}>{ch === "dm" ? "Social DMs" : ch}</button>
+            ))}
           </div>
         </div>
 
