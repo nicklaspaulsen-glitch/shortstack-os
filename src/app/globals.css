@@ -11,13 +11,14 @@
 }
 
 body {
-  color: #e8eaed;
-  background: #08090e;
+  color: #d1d5db;
+  background: #0b0d12;
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
   font-size: 14px;
+  line-height: 1.6;
 }
 
 /* Electron window drag region */
@@ -44,51 +45,50 @@ body {
   /* ═══════════ CARDS ═══════════ */
   .card {
     @apply rounded-xl p-5;
-    background: rgba(16,18,26,0.85);
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background: rgba(17,20,28,0.7);
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
   }
 
   .card-hover {
     @apply card transition-all duration-200 cursor-pointer;
   }
   .card-hover:hover {
-    background: rgba(22,25,35,0.95);
-    border-color: rgba(201,168,76,0.15);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(201,168,76,0.06);
-    transform: translateY(-2px);
+    background: rgba(22,26,36,0.85);
+    border-color: rgba(255,255,255,0.08);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    transform: translateY(-1px);
   }
 
   .card-gradient {
     @apply rounded-xl p-5;
-    background: linear-gradient(145deg, rgba(18,20,30,0.95) 0%, rgba(12,14,22,0.98) 100%);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: linear-gradient(145deg, rgba(18,22,32,0.8) 0%, rgba(14,16,24,0.9) 100%);
+    border: 1px solid rgba(255,255,255,0.05);
   }
 
   /* ═══════════ BUTTONS ═══════════ */
   .btn-primary {
-    @apply text-black font-bold px-5 py-2.5 rounded-lg transition-all duration-150;
-    background: linear-gradient(135deg, #d4b45a, #C9A84C);
-    box-shadow: 0 2px 10px rgba(201,168,76,0.25);
+    @apply text-black font-semibold px-5 py-2.5 rounded-lg transition-all duration-150;
+    background: linear-gradient(135deg, #c8a855, #b89840);
+    box-shadow: 0 1px 6px rgba(184,152,64,0.2);
   }
   .btn-primary:hover {
-    background: linear-gradient(135deg, #dfc06a, #d4b45a);
-    box-shadow: 0 4px 20px rgba(201,168,76,0.35);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #d4b560, #c8a855);
+    box-shadow: 0 2px 12px rgba(184,152,64,0.3);
   }
-  .btn-primary:active { transform: scale(0.97) translateY(0); }
+  .btn-primary:active { transform: scale(0.98); }
 
   .btn-secondary {
-    @apply text-white/70 font-medium px-5 py-2.5 rounded-lg transition-all duration-150;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.08);
+    @apply text-white/60 font-medium px-5 py-2.5 rounded-lg transition-all duration-150;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
   }
   .btn-secondary:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.12);
-    @apply text-white;
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.1);
+    @apply text-white/80;
   }
-  .btn-secondary:active { transform: scale(0.97); }
+  .btn-secondary:active { transform: scale(0.98); }
 
   .btn-danger {
     @apply text-danger font-medium px-4 py-2 rounded-md transition-all duration-100;
@@ -106,15 +106,15 @@ body {
   /* ═══════════ INPUTS ═══════════ */
   .input {
     @apply text-white text-sm rounded-lg px-3.5 py-2.5 transition-all duration-150;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
   }
-  .input::placeholder { color: rgba(255,255,255,0.25); }
+  .input::placeholder { color: rgba(255,255,255,0.2); }
   .input:focus {
     @apply outline-none;
-    border-color: rgba(201,168,76,0.4);
-    background: rgba(255,255,255,0.07);
-    box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+    border-color: rgba(184,152,64,0.35);
+    background: rgba(255,255,255,0.06);
+    box-shadow: 0 0 0 2px rgba(184,152,64,0.06);
   }
 
   .badge {
@@ -127,15 +127,15 @@ body {
   }
 
   .stat-value {
-    @apply text-2xl font-extrabold text-white tracking-tight;
+    @apply text-xl font-bold text-white tracking-tight;
     font-feature-settings: "tnum";
     font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 40px rgba(201,168,76,0.08);
   }
 
   .stat-label {
-    @apply text-[11px] font-semibold uppercase tracking-[0.08em];
-    color: rgba(255,255,255,0.45);
+    @apply text-[11px] font-medium;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0;
   }
 
   /* ═══════════ TABLES ═══════════ */
@@ -164,27 +164,31 @@ body {
 
   /* ═══════════ SIDEBAR ═══════════ */
   .sidebar-link {
-    @apply flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[12px] text-muted/70 transition-all duration-150;
+    @apply flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[12.5px] transition-all duration-150;
+    color: rgba(255,255,255,0.45);
   }
   .sidebar-link:hover {
-    @apply bg-white/[0.04] text-white;
+    background: rgba(255,255,255,0.03);
+    color: rgba(255,255,255,0.8);
   }
 
   .sidebar-link-active {
-    @apply flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[12px] text-gold font-medium;
-    background: rgba(201,168,76,0.06);
-    border: 1px solid rgba(201,168,76,0.1);
+    @apply flex items-center gap-2.5 px-3 py-[7px] rounded-lg text-[12.5px] font-medium;
+    color: #c8a855;
+    background: rgba(184,152,64,0.06);
+    border: 1px solid rgba(184,152,64,0.08);
   }
 
   /* ═══════════ PAGE STRUCTURE ═══════════ */
   .page-header {
-    @apply text-2xl font-extrabold text-white mb-5;
-    letter-spacing: -0.03em;
+    @apply text-xl font-bold text-white mb-4;
+    letter-spacing: -0.02em;
   }
 
   .section-header {
-    @apply text-sm font-bold mb-3 text-white;
-    letter-spacing: -0.01em;
+    @apply text-[13px] font-semibold mb-3;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0;
   }
 
   /* ═══════════ ANIMATIONS ═══════════ */
@@ -200,17 +204,7 @@ body {
   .stagger-6 { animation-delay: 0.24s; animation-fill-mode: backwards; }
 
   /* ═══════════ ALIVE ANIMATIONS ═══════════ */
-  /* Subtle ambient glow that moves behind cards */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.06), transparent);
-    animation: cardTopShimmer 8s ease-in-out infinite;
-  }
+  /* Cards — clean, no shimmer animation */
   .card { position: relative; overflow: hidden; }
 
   /* Status dots pulse alive */
@@ -225,25 +219,9 @@ body {
     text-shadow: 0 0 30px rgba(255,255,255,0.03);
   }
 
-  /* Gold elements have a subtle breathing glow */
-  .text-gold {
-    animation: goldBreath 4s ease-in-out infinite;
-  }
+  /* Gold elements — no breathing, just clean color */
 
-  /* Active sidebar item has a pulse on the indicator */
-  .sidebar-link-active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 2px;
-    height: 16px;
-    border-radius: 1px;
-    background: #C9A84C;
-    box-shadow: 0 0 6px rgba(201,168,76,0.4);
-    animation: sidebarPulse 2.5s ease-in-out infinite;
-  }
+  /* Active sidebar — clean indicator, no pulse */
   .sidebar-link-active { position: relative; }
 
   /* Buttons have a micro-shimmer on hover */
@@ -296,27 +274,26 @@ body {
 
   /* ═══════════ TABS ═══════════ */
   .tab-group {
-    @apply flex gap-1 rounded-xl p-1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.06);
+    @apply flex gap-0.5 rounded-lg p-0.5;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
   }
 
   .tab-item {
-    @apply px-4 py-2 text-xs rounded-lg font-semibold transition-all duration-150 cursor-pointer;
+    @apply px-3.5 py-1.5 text-xs rounded-md font-medium transition-all duration-150 cursor-pointer;
   }
 
   .tab-item-active {
     @apply tab-item text-black;
-    background: linear-gradient(135deg, #d4b45a, #C9A84C);
-    box-shadow: 0 2px 8px rgba(201,168,76,0.3);
+    background: linear-gradient(135deg, #c8a855, #b89840);
   }
 
   .tab-item-inactive {
-    @apply tab-item hover:text-white;
-    color: rgba(255,255,255,0.4);
+    @apply tab-item hover:text-white/70;
+    color: rgba(255,255,255,0.35);
   }
   .tab-item-inactive:hover {
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.04);
   }
 
   /* ═══════════ GLOW ═══════════ */

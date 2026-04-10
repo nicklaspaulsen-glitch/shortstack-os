@@ -53,8 +53,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <>
       {/* Top accent bar — OUTSIDE everything, truly fixed full-width */}
       <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 3,
-        background: "linear-gradient(90deg, #C9A84C 0%, #38bdf8 50%, #C9A84C 100%)",
+        position: "fixed", top: 0, left: 0, right: 0, height: 2,
+        background: "linear-gradient(90deg, transparent 0%, rgba(184,152,64,0.5) 50%, transparent 100%)",
         zIndex: 100000, pointerEvents: "none",
       }} />
 
@@ -83,8 +83,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <main className="flex-1 lg:ml-56">
           {/* Header */}
-          <div className="sticky top-[3px] z-30 border-b border-white/[0.04] electron-drag"
-            style={{ background: "rgba(6,8,12,0.92)", backdropFilter: "blur(24px) saturate(1.8)" }}>
+          <div className="sticky top-[2px] z-30 border-b border-white/[0.03] electron-drag"
+            style={{ background: "rgba(11,13,18,0.88)", backdropFilter: "blur(20px) saturate(1.4)" }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-11">
               {/* Left — mobile menu */}
               <div className="electron-no-drag flex items-center gap-2 lg:hidden">
