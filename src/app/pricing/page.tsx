@@ -117,7 +117,6 @@ export default function PricingPage() {
                 style={{
                   background: plan.popular ? "rgba(200,168,85,0.04)" : "rgba(255,255,255,0.02)",
                   border: `1px solid ${plan.popular ? "rgba(200,168,85,0.2)" : "rgba(255,255,255,0.05)"}`,
-                  ringColor: plan.popular ? "rgba(200,168,85,0.3)" : "transparent",
                 }}>
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-bold px-3 py-1 rounded-full" style={{ background: "#c8a855", color: "#000" }}>
