@@ -53,6 +53,7 @@ const navItems: NavItem[] = [
   { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Target size={16} />, roles: ["admin"] },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"] },
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
+  { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"] },
 
   // ── Create ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Create" },
