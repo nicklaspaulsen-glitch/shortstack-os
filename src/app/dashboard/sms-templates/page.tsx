@@ -36,7 +36,7 @@ export default function SMSTemplatesPage() {
   const [newTemplate, setNewTemplate] = useState({ name: "", body: "", category: "Outreach" });
   const [showAdd, setShowAdd] = useState(false);
 
-  const categories = ["all", ...new Set(templates.map(t => t.category))];
+  const categories = ["all", ...Array.from(new Set(templates.map(t => t.category)))];
 
   async function generateWithAI(purpose: string) {
     setGenerating(true);
