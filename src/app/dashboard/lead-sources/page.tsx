@@ -91,8 +91,7 @@ export default function LeadSourcesPage() {
                     <Cell key={i} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(value: number) => [`${value} leads`, "Count"]}
-                  contentStyle={{ background: "#111420", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: "#111420", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 11 }} />
               </PieChart>
             </ResponsiveContainer>
           ) : (
