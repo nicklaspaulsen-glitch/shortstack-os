@@ -10,7 +10,9 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/.well-known") ||
     path.includes("tiktok") ||
     path.startsWith("/api/forms") ||
-    path.startsWith("/book")
+    path.startsWith("/book") ||
+    path.startsWith("/pricing") ||
+    path.startsWith("/changelog")
   ) {
     return NextResponse.next();
   }
