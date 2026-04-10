@@ -10,6 +10,8 @@ import OnboardingTour from "@/components/onboarding-tour";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import CommandPalette from "@/components/command-palette";
 import FloatingParticles from "@/components/ui/particles";
+import KeyboardShortcuts from "@/components/keyboard-shortcuts";
+import QuickAdd from "@/components/quick-add";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
@@ -120,6 +122,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <ClientChatWidget />
         <OnboardingTour onComplete={() => {}} />
         <CommandPalette />
+        <KeyboardShortcuts />
+        <QuickAdd />
       </div>
     </>
   );
