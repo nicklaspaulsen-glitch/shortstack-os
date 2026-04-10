@@ -8,7 +8,7 @@ import {
   ExternalLink, Star, Download, LayoutGrid, LayoutList,
   CheckSquare, Square, Filter, ArrowUpDown, Clock, MapPin,
   Briefcase, Globe, Camera, Music, Send, Users, ChevronUp,
-  X, RefreshCw
+  X, RefreshCw, Upload
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -420,8 +420,39 @@ export default function CRMPage() {
             ))}
           </div>
           <button onClick={exportCSV} className="btn-ghost text-[10px] flex items-center gap-1">
-            <Download size={12} /> Export CSV
+            <Download size={12} /> Export
           </button>
+          <label className="btn-ghost text-[10px] flex items-center gap-1 cursor-pointer">
+            <Upload size={12} /> Import CSV
+            <input type="file" accept=".csv" className="hidden" onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              const text = await file.text();
+              const lines = text.split("\n").filter(l => l.trim());
+              if (lines.length < 2) { toast.error("Empty CSV"); return; }
+              const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/["']/g, ""));
+              const leads = lines.slice(1).map(line => {
+                const vals = line.split(",").map(v => v.trim().replace(/["']/g, ""));
+                const obj: Record<string, string> = {};
+                headers.forEach((h, i) => { obj[h] = vals[i] || ""; });
+                return obj;
+              });
+              toast.loading(`Importing ${leads.length} leads...`);
+              try {
+                const res = await fetch("/api/leads/import", {
+                  method: "POST", headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ leads }),
+                });
+                toast.dismiss();
+                const data = await res.json();
+                if (data.success) {
+                  toast.success(`Imported ${data.imported} leads (${data.skipped} skipped)`);
+                  fetchLeads();
+                } else toast.error(data.error || "Import failed");
+              } catch { toast.dismiss(); toast.error("Import error"); }
+              e.target.value = "";
+            }} />
+          </label>
           <button onClick={fetchLeads} className="btn-ghost text-[10px] flex items-center gap-1">
             <RefreshCw size={12} /> Refresh
           </button>
