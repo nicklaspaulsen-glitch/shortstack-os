@@ -16,15 +16,39 @@ export async function GET(request: NextRequest) {
   let totalImported = 0;
   let totalSkipped = 0;
   const errors: string[] = [];
-  const leadsPerQuery = 6; // ~480 total: 10 industries × 8 cities × 6 per query
+
+  // Load agent settings from DB
+  let leadsPerQuery = 6;
+  let customIndustries: string[] | null = null;
+  let customLocations: string[] | null = null;
+  try {
+    const { data: settingsRow } = await supabase
+      .from("system_health")
+      .select("metadata")
+      .eq("integration_name", "agent_settings")
+      .single();
+    if (settingsRow?.metadata) {
+      const settings = settingsRow.metadata as Record<string, Record<string, unknown>>;
+      const leadsPerRun = (settings.lead_engine?.leads_per_run as number) || 50;
+      leadsPerQuery = Math.max(1, Math.round(leadsPerRun / 10));
+      const industries = settings.lead_engine?.target_industries as string[];
+      if (industries && industries.length > 0) customIndustries = industries;
+      const locations = settings.lead_engine?.target_locations as string[];
+      if (locations && locations.length > 0) customLocations = locations;
+    }
+  } catch {}
 
   try {
+    // Use custom settings or defaults
+    const industries = customIndustries || TARGET_INDUSTRIES;
+    const allCities = customLocations || TARGET_CITIES;
+
     // Rotate through cities each day
     const dayOfMonth = new Date().getDate();
-    const cityOffset = (dayOfMonth % 2) * 8;
-    const todayCities = TARGET_CITIES.slice(cityOffset, cityOffset + 8);
+    const cityOffset = (dayOfMonth % 2) * Math.min(8, allCities.length);
+    const todayCities = allCities.slice(cityOffset, cityOffset + 8);
 
-    for (const industry of TARGET_INDUSTRIES) {
+    for (const industry of industries) {
       for (const city of todayCities) {
         try {
           // Scrape Google Places

@@ -21,6 +21,24 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "GHL not configured" }, { status: 500 });
   }
 
+  // Load agent settings from DB (set via Agent Controls page)
+  let emailLimit = 20;
+  let smsLimit = 20;
+  let callLimit = 200;
+  try {
+    const { data: settingsRow } = await supabase
+      .from("system_health")
+      .select("metadata")
+      .eq("integration_name", "agent_settings")
+      .single();
+    if (settingsRow?.metadata) {
+      const settings = settingsRow.metadata as Record<string, Record<string, number>>;
+      emailLimit = settings.outreach?.emails_per_day || 20;
+      smsLimit = settings.outreach?.sms_per_day || 20;
+      callLimit = settings.outreach?.calls_per_day || 200;
+    }
+  } catch {}
+
   // Helper: create or find GHL contact
   async function getOrCreateContact(lead: { business_name: string; email?: string | null; phone?: string | null }) {
     try {
@@ -35,14 +53,14 @@ export async function GET(request: NextRequest) {
   }
 
   // ═══════════════════════════════════════
-  // 1. COLD EMAILS — 20 per day
+  // 1. COLD EMAILS
   // ═══════════════════════════════════════
   const { data: emailLeads } = await supabase
     .from("leads")
     .select("id, business_name, email, phone, industry")
     .not("email", "is", null)
     .eq("status", "new")
-    .limit(20);
+    .limit(emailLimit);
 
   if (emailLeads) {
     const emailPromises = emailLeads.map(async (lead) => {
@@ -68,14 +86,14 @@ export async function GET(request: NextRequest) {
   }
 
   // ═══════════════════════════════════════
-  // 2. COLD SMS — 20 per day
+  // 2. COLD SMS
   // ═══════════════════════════════════════
   const { data: smsLeads } = await supabase
     .from("leads")
     .select("id, business_name, phone, industry")
     .not("phone", "is", null)
     .in("status", ["new", "called"])
-    .limit(20);
+    .limit(smsLimit);
 
   if (smsLeads) {
     const smsPromises = smsLeads.map(async (lead) => {
@@ -99,14 +117,14 @@ export async function GET(request: NextRequest) {
   }
 
   // ═══════════════════════════════════════
-  // 3. COLD CALLS via GHL — queue up to 200
+  // 3. COLD CALLS via GHL
   // ═══════════════════════════════════════
   const { data: callLeads } = await supabase
     .from("leads")
     .select("id, business_name, phone, industry")
     .not("phone", "is", null)
     .eq("status", "new")
-    .limit(200);
+    .limit(callLimit);
 
   if (callLeads) {
     // Create contacts in GHL (they'll be called via GHL workflow)
@@ -133,10 +151,10 @@ export async function GET(request: NextRequest) {
     const { sendTelegramMessage } = await import("@/lib/services/trinity");
     await sendTelegramMessage(chatId,
       `📨 *Daily Outreach Report*\n\n` +
-      `✉️ Emails: ${emailsSent}/20 sent\n` +
-      `💬 SMS: ${smsSent}/20 sent\n` +
-      `📞 Calls: ${callsQueued} queued in GHL\n\n` +
-      `${emailsSent >= 15 ? "🔥 Great outreach day!" : emailsSent >= 5 ? "✅ Outreach running" : "⚠️ Low volume — check GHL"}`
+      `✉️ Emails: ${emailsSent}/${emailLimit} sent\n` +
+      `💬 SMS: ${smsSent}/${smsLimit} sent\n` +
+      `📞 Calls: ${callsQueued}/${callLimit} queued in GHL\n\n` +
+      `${emailsSent >= emailLimit * 0.75 ? "🔥 Great outreach day!" : emailsSent >= emailLimit * 0.25 ? "✅ Outreach running" : "⚠️ Low volume — check GHL"}`
     );
   }
 
