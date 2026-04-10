@@ -12,7 +12,9 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/api/forms") ||
     path.startsWith("/book") ||
     path.startsWith("/pricing") ||
-    path.startsWith("/changelog")
+    path.startsWith("/changelog") ||
+    path.startsWith("/survey") ||
+    path.startsWith("/api/surveys")
   ) {
     return NextResponse.next();
   }
