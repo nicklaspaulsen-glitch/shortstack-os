@@ -8,7 +8,8 @@ import StatusBadge from "@/components/ui/status-badge";
 import { PageLoading } from "@/components/ui/loading";
 import EmptyState from "@/components/ui/empty-state";
 import { formatDate } from "@/lib/utils";
-import { Film, Calendar, Download } from "lucide-react";
+import { Film, Calendar, Download, CheckCircle, MessageSquare } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function ClientContentPage() {
   const { profile } = useAuth();
@@ -57,7 +58,33 @@ export default function ClientContentPage() {
                   <StatusBadge status={c.status} />
                 </div>
                 <p className="text-xs font-medium mb-1">{c.title}</p>
-                {c.scheduled_at && <p className="text-[9px] text-muted">{formatDate(c.scheduled_at)}</p>}
+                {c.scheduled_at && <p className="text-[9px] text-muted mb-2">{formatDate(c.scheduled_at)}</p>}
+                {c.status === "ready_to_publish" && (
+                  <div className="flex gap-1.5 pt-1 border-t border-border/10">
+                    <button onClick={async () => {
+                      await supabase.from("content_calendar").update({ status: "published" }).eq("id", c.id);
+                      toast.success("Approved!");
+                      fetchContent();
+                    }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-success/10 text-success hover:bg-success/20 transition-colors">
+                      <CheckCircle size={10} /> Approve
+                    </button>
+                    <button onClick={async () => {
+                      const note = prompt("What changes do you need?");
+                      if (!note) return;
+                      await supabase.from("trinity_log").insert({
+                        agent: "content",
+                        action_type: "custom",
+                        description: `Content revision: "${c.title}" — "${note}"`,
+                        client_id: null,
+                        status: "pending",
+                        result: { type: "client_request", category: "revision", message: note },
+                      });
+                      toast.success("Revision request sent!");
+                    }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors">
+                      <MessageSquare size={10} /> Changes
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
