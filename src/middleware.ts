@@ -8,7 +8,8 @@ export async function middleware(request: NextRequest) {
     path.endsWith(".txt") ||
     path.endsWith(".xml") ||
     path.startsWith("/.well-known") ||
-    path.includes("tiktok")
+    path.includes("tiktok") ||
+    path.startsWith("/api/forms")
   ) {
     return NextResponse.next();
   }
