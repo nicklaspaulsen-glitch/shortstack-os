@@ -38,7 +38,7 @@ export default function SurveysPage() {
   const scores = responses.map(r => r.result?.score || 0);
   const avgScore = scores.length > 0 ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : "—";
   const promoters = scores.filter(s => s >= 9).length;
-  const _passives = scores.filter(s => s >= 7 && s < 9).length;
+  // passives = scores between 7-8 (not displayed separately)
   const detractors = scores.filter(s => s < 7).length;
   const nps = scores.length > 0 ? Math.round(((promoters - detractors) / scores.length) * 100) : 0;
 
