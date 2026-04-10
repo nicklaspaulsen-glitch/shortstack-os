@@ -57,6 +57,11 @@ const AGENTS_CONFIG: Omit<Agent, "status" | "lastAction" | "lastActionTime" | "u
   { id: "retention", name: "Retention Agent", role: "Detects churn risk & auto-triggers re-engagement", endpoint: "/api/agents/retention/health" },
   { id: "proposal", name: "Proposal Agent", role: "Auto-generates proposals when leads book calls", endpoint: "/api/agents/proposal/health" },
   { id: "scheduler", name: "Scheduling Agent", role: "Books meetings, sends reminders, manages calendar", endpoint: "/api/agents/scheduler/health" },
+  { id: "social-media", name: "Social Media Agent", role: "Auto-posts, engages, responds to comments", endpoint: "/api/agents/social-media/health" },
+  { id: "video", name: "Video Agent", role: "Renders videos, suggests edits, manages renders", endpoint: "/api/agents/video/health" },
+  { id: "design", name: "Design Agent", role: "Generates thumbnails, social graphics, brand assets", endpoint: "/api/agents/design/health" },
+  { id: "website", name: "Website Agent", role: "Monitors uptime, generates pages, tracks performance", endpoint: "/api/agents/website/health" },
+  { id: "production", name: "Production Agent", role: "Tracks edit requests, assigns editors, manages deadlines", endpoint: "/api/agents/production/health" },
 ];
 
 const STATUS_CONFIG: Record<string, { color: string; icon: React.ReactNode; label: string }> = {
@@ -81,6 +86,11 @@ const AGENT_VISUALS: Record<string, { icon: React.ReactNode; gradient: string; g
   "retention": { icon: <Heart size={18} />, gradient: "from-rose-500 to-red-500", glow: "shadow-[0_0_20px_rgba(244,63,94,0.4)]", ring: "border-rose-400/30" },
   "proposal": { icon: <FileText size={18} />, gradient: "from-violet-500 to-purple-600", glow: "shadow-[0_0_20px_rgba(139,92,246,0.4)]", ring: "border-violet-400/30" },
   "scheduler": { icon: <Clock size={18} />, gradient: "from-teal-500 to-cyan-600", glow: "shadow-[0_0_20px_rgba(20,184,166,0.4)]", ring: "border-teal-400/30" },
+  "social-media": { icon: <Send size={18} />, gradient: "from-pink-500 to-rose-500", glow: "shadow-[0_0_20px_rgba(236,72,153,0.4)]", ring: "border-pink-400/30" },
+  "video": { icon: <Film size={18} />, gradient: "from-indigo-500 to-blue-600", glow: "shadow-[0_0_20px_rgba(99,102,241,0.4)]", ring: "border-indigo-400/30" },
+  "design": { icon: <Sparkles size={18} />, gradient: "from-amber-400 to-orange-500", glow: "shadow-[0_0_20px_rgba(251,191,36,0.4)]", ring: "border-amber-400/30" },
+  "website": { icon: <Globe size={18} />, gradient: "from-emerald-400 to-teal-500", glow: "shadow-[0_0_20px_rgba(52,211,153,0.4)]", ring: "border-emerald-400/30" },
+  "production": { icon: <Film size={18} />, gradient: "from-slate-400 to-gray-500", glow: "shadow-[0_0_20px_rgba(148,163,184,0.4)]", ring: "border-slate-400/30" },
 };
 
 function AgentHead({ agentId, status, size = 48 }: { agentId: string; status: string; size?: number }) {
