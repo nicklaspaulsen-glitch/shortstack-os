@@ -66,6 +66,24 @@ export default function CommandPalette() {
     { id: "build-site", label: "Build Website", icon: <Globe size={14} />, action: () => nav("/dashboard/websites"), category: "Action", keywords: "create website deploy" },
     { id: "send-blast", label: "Send Email Blast", icon: <Send size={14} />, action: () => nav("/dashboard/leads"), category: "Action", keywords: "cold email outreach" },
     { id: "talk-nexus", label: "Talk to Nexus (Chief)", icon: <Crown size={14} />, action: () => nav("/dashboard/agent-supervisor"), category: "Action", keywords: "boss agent status" },
+
+    // More pages (accessible via search)
+    { id: "calendar", label: "Calendar & Booking", icon: <Send size={14} />, action: () => nav("/dashboard/calendar"), category: "Navigate", keywords: "schedule appointment meeting call" },
+    { id: "conversations", label: "Conversations", icon: <Send size={14} />, action: () => nav("/dashboard/conversations"), category: "Navigate", keywords: "chat sms messages replies" },
+    { id: "deals", label: "Deals Pipeline", icon: <Send size={14} />, action: () => nav("/dashboard/deals"), category: "Navigate", keywords: "pipeline sales revenue won lost" },
+    { id: "invoices", label: "Invoices", icon: <Send size={14} />, action: () => nav("/dashboard/invoices"), category: "Navigate", keywords: "billing payments stripe money" },
+    { id: "sequences", label: "Email Sequences", icon: <Send size={14} />, action: () => nav("/dashboard/sequences"), category: "Navigate", keywords: "drip campaign email automation followup" },
+    { id: "forms", label: "Form Builder", icon: <Send size={14} />, action: () => nav("/dashboard/forms"), category: "Navigate", keywords: "lead capture embed form" },
+    { id: "tags", label: "Tags", icon: <Send size={14} />, action: () => nav("/dashboard/tags"), category: "Navigate", keywords: "tag label organize leads hot warm cold" },
+    { id: "webhooks", label: "Webhooks", icon: <Send size={14} />, action: () => nav("/dashboard/webhooks"), category: "Navigate", keywords: "webhook zapier make api integration" },
+    { id: "client-health", label: "Client Health", icon: <Send size={14} />, action: () => nav("/dashboard/client-health"), category: "Navigate", keywords: "health churn risk retention clients" },
+    { id: "agent-controls", label: "Agent Controls", icon: <Settings size={14} />, action: () => nav("/dashboard/agent-controls"), category: "Navigate", keywords: "settings configure agents schedule leads outreach" },
+    { id: "production", label: "Production", icon: <Film size={14} />, action: () => nav("/dashboard/production"), category: "Navigate", keywords: "video editing editors footage" },
+    { id: "dm-controller", label: "DM Controller", icon: <Send size={14} />, action: () => nav("/dashboard/dm-controller"), category: "Navigate", keywords: "dm cold instagram tiktok browser" },
+    { id: "email-templates", label: "Email Templates", icon: <Send size={14} />, action: () => nav("/dashboard/email-templates"), category: "Navigate", keywords: "email template cold outreach" },
+    { id: "automations", label: "Automations", icon: <Zap size={14} />, action: () => nav("/dashboard/automations"), category: "Navigate", keywords: "manychat dm automation instagram" },
+    { id: "forecast", label: "Forecast", icon: <BarChart3 size={14} />, action: () => nav("/dashboard/forecast"), category: "Navigate", keywords: "forecast predict revenue future" },
+    { id: "team", label: "Team", icon: <Users size={14} />, action: () => nav("/dashboard/team"), category: "Navigate", keywords: "team members editors staff" },
   ];
 
   const filtered = query.trim()

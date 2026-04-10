@@ -47,6 +47,7 @@ export default function TagsPage() {
 
   async function fetchTagCounts() {
     setLoading(true);
+    try {
     // Count leads per tag by checking lead status and metadata
     const { data: leads } = await supabase.from("leads").select("status, metadata");
 
@@ -64,6 +65,7 @@ export default function TagsPage() {
     });
 
     setTags(prev => prev.map(t => ({ ...t, count: counts[t.name] || 0 })));
+    } catch { /* silent — tag counts are non-critical */ }
     setLoading(false);
   }
 

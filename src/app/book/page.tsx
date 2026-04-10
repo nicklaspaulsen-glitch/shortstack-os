@@ -43,7 +43,10 @@ export default function PublicBookingPage() {
         }),
       });
       setStep("done");
-    } catch {}
+    } catch {
+      // Show error on the page instead of toast (no toast provider on public page)
+      alert("Something went wrong. Please try again.");
+    }
     setSubmitting(false);
   }
 
