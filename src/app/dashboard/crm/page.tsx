@@ -47,7 +47,7 @@ interface CRMLead {
 }
 
 type SortKey = "newest" | "rating" | "reviews" | "last_contacted";
-type ViewMode = "table" | "card";
+type ViewMode = "table" | "card" | "pipeline";
 
 const STATUS_TABS: { key: CRMStatus | "all"; label: string }[] = [
   { key: "all", label: "All" },
@@ -405,11 +405,20 @@ export default function CRMPage() {
           <p className="text-xs text-muted mt-0.5">{leads.length} leads &middot; Manage outreach, track replies, close deals</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setViewMode(viewMode === "table" ? "card" : "table")}
-            className="btn-ghost text-[10px] flex items-center gap-1">
-            {viewMode === "table" ? <LayoutGrid size={12} /> : <LayoutList size={12} />}
-            {viewMode === "table" ? "Cards" : "Table"}
-          </button>
+          <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+            {([
+              { key: "table" as ViewMode, icon: <LayoutList size={12} />, label: "Table" },
+              { key: "card" as ViewMode, icon: <LayoutGrid size={12} />, label: "Cards" },
+              { key: "pipeline" as ViewMode, icon: <ArrowUpDown size={12} />, label: "Pipeline" },
+            ]).map(v => (
+              <button key={v.key} onClick={() => setViewMode(v.key)}
+                className={`text-[10px] px-2.5 py-1.5 flex items-center gap-1 transition-all ${
+                  viewMode === v.key ? "bg-gold/10 text-gold" : "text-muted hover:text-white"
+                }`}>
+                {v.icon} {v.label}
+              </button>
+            ))}
+          </div>
           <button onClick={exportCSV} className="btn-ghost text-[10px] flex items-center gap-1">
             <Download size={12} /> Export CSV
           </button>
@@ -598,6 +607,100 @@ export default function CRMPage() {
           ))}
         </div>
       )}
+      {/* Pipeline / Kanban View */}
+      {viewMode === "pipeline" && (
+        <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
+          {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
+            const stageLeads = leads.filter(l => mapToCRMStatus(l.status) === stage.key);
+            const stageColor: Record<string, string> = {
+              new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#C9A84C",
+            };
+            const color = stageColor[stage.key] || "#6b7280";
+
+            return (
+              <div key={stage.key} className="flex-shrink-0 w-[280px]">
+                {/* Column header */}
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full" style={{ background: color }} />
+                    <span className="text-xs font-bold uppercase tracking-wider">{stage.label}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-md font-mono" style={{ background: `${color}15`, color }}>{stageLeads.length}</span>
+                  </div>
+                </div>
+
+                {/* Cards */}
+                <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
+                  {stageLeads.length === 0 && (
+                    <div className="text-center py-8 border border-dashed rounded-lg" style={{ borderColor: `${color}20` }}>
+                      <p className="text-[10px] text-muted">No leads</p>
+                    </div>
+                  )}
+                  {stageLeads.map(lead => {
+                    // Lead score: based on data completeness + engagement
+                    const hasEmail = !!lead.email;
+                    const hasPhone = !!lead.phone;
+                    const hasSocial = !!(lead.instagram_url || lead.facebook_url || lead.linkedin_url);
+                    const hasReplied = lead.outreach_log.some(o => o.status === "replied");
+                    const score = (hasEmail ? 20 : 0) + (hasPhone ? 20 : 0) + (hasSocial ? 15 : 0) + (lead.google_rating ? Math.min(lead.google_rating * 5, 25) : 0) + (hasReplied ? 20 : 0);
+                    const temp = score >= 70 ? "hot" : score >= 40 ? "warm" : "cold";
+                    const tempColor = temp === "hot" ? "#ef4444" : temp === "warm" ? "#f59e0b" : "#3b82f6";
+                    const tempLabel = temp === "hot" ? "HOT" : temp === "warm" ? "WARM" : "COLD";
+
+                    return (
+                      <div key={lead.id} className="rounded-lg p-3 space-y-2 cursor-pointer hover:border-white/10 transition-all"
+                        style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}
+                        onClick={() => setExpandedId(expandedId === lead.id ? null : lead.id)}>
+                        <div className="flex items-start justify-between">
+                          <div className="min-w-0">
+                            <h4 className="text-[11px] font-bold truncate">{lead.business_name}</h4>
+                            <p className="text-[9px] text-muted truncate">{lead.industry || "Business"} {lead.city ? `· ${lead.city}` : ""}</p>
+                          </div>
+                          <span className="text-[7px] px-1.5 py-0.5 rounded font-bold shrink-0" style={{ background: `${tempColor}15`, color: tempColor }}>{tempLabel}</span>
+                        </div>
+
+                        {/* Contact info */}
+                        <div className="flex items-center gap-2 text-[9px] text-muted">
+                          {lead.email && <Mail size={9} />}
+                          {lead.phone && <Phone size={9} />}
+                          {lead.instagram_url && <Camera size={9} />}
+                          {lead.google_rating && (
+                            <span className="flex items-center gap-0.5 text-amber-400">
+                              <Star size={8} className="fill-amber-400" /> {lead.google_rating}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Score bar */}
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.05)" }}>
+                            <div className="h-1 rounded-full transition-all" style={{ width: `${score}%`, background: tempColor }} />
+                          </div>
+                          <span className="text-[8px] font-mono" style={{ color: tempColor }}>{score}</span>
+                        </div>
+
+                        {/* Last activity */}
+                        <div className="flex items-center justify-between text-[8px] text-muted/50">
+                          <span>{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
+                          <span>{lead.outreach_log.length} msgs</span>
+                        </div>
+
+                        {/* Quick actions on expand */}
+                        {expandedId === lead.id && (
+                          <div className="pt-2 border-t border-white/5 space-y-2">
+                            <OutreachHistory entries={lead.outreach_log.slice(0, 3)} />
+                            <LeadActions lead={lead} />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       <PageAI
         pageName="CRM"
         context={`${leads.length} total leads. Filters: ${activeTab}. ${leads.filter(l => l.status === "new").length} new, ${leads.filter(l => l.status === "contacted").length} contacted, ${leads.filter(l => l.status === "replied").length} replied, ${leads.filter(l => l.status === "booked").length} booked.`}
