@@ -26,9 +26,6 @@ import {
   FileText,
   Send,
   PenTool,
-  Star,
-  Mail,
-  Target,
   Crown,
   Globe,
 } from "lucide-react";
@@ -52,30 +49,23 @@ const navItems: NavItem[] = [
   { label: "CRM", href: "/dashboard/crm", icon: <Users size={16} />, roles: ["admin", "team_member"], section: "Sales" },
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"] },
   { label: "Outreach", href: "/dashboard/outreach-hub", icon: <Send size={16} />, roles: ["admin"] },
-  { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Target size={16} />, roles: ["admin"] },
-  { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"] },
-  { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
-  { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"] },
-  { label: "Forms", href: "/dashboard/forms", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessageSquare size={16} />, roles: ["admin", "team_member"] },
-  { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin", "team_member"] },
+  { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"] },
+  { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"] },
+  { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
 
   // ── Create ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Create" },
   { label: "Script Lab", href: "/dashboard/script-lab", icon: <Sparkles size={16} />, roles: ["admin", "team_member"] },
   { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={16} />, roles: ["admin", "team_member"] },
   { label: "Video Editor", href: "/dashboard/video-editor", icon: <Film size={16} />, roles: ["admin", "team_member"] },
-  { label: "Production", href: "/dashboard/production", icon: <Film size={16} />, roles: ["admin", "team_member"] },
   { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"] },
   { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
   { label: "Ads", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"] },
-  { label: "Email Templates", href: "/dashboard/email-templates", icon: <Mail size={16} />, roles: ["admin", "team_member"] },
 
   // ── Automate ──
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], section: "Automate" },
-  { label: "Automations", href: "/dashboard/automations", icon: <Zap size={16} />, roles: ["admin", "team_member"] },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"] },
-  { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── System ──
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member"], section: "System" },
