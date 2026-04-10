@@ -96,14 +96,28 @@ export default function DashboardPage() {
     return <ClientDashboard />;
   }
 
+  async function triggerQuickAction(action: string) {
+    toast.loading("Running...");
+    try {
+      const res = await fetch("/api/quick-actions", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      toast.dismiss();
+      const data = await res.json();
+      if (data.success) toast.success(data.results?.join("\n") || "Done!");
+      else toast.error(data.error || "Failed");
+    } catch { toast.dismiss(); toast.error("Error"); }
+  }
+
   const quickActions = [
-    { label: "Proposal", icon: <FileText size={15} />, color: "text-gold", action: () => router.push("/dashboard/clients") },
+    { label: "Autopilot", icon: <Zap size={15} />, color: "text-gold", action: () => triggerQuickAction("full_autopilot") },
     { label: "New Client", icon: <Plus size={15} />, color: "text-success", action: () => router.push("/dashboard/onboard") },
-    { label: "AI Script", icon: <Sparkles size={15} />, color: "text-accent", action: () => router.push("/dashboard/content") },
-    { label: "Workflow", icon: <Zap size={15} />, color: "text-warning", action: () => router.push("/dashboard/workflows") },
-    { label: "Trinity", icon: <Bot size={15} />, color: "text-gold", action: () => router.push("/dashboard/trinity") },
-    { label: "Leads", icon: <Users size={15} />, color: "text-success", action: () => router.push("/dashboard/leads") },
-    { label: "Website", icon: <Globe size={15} />, color: "text-accent", action: () => toast("Use Trinity: 'Build website for [client]'") },
+    { label: "Outreach", icon: <Send size={15} />, color: "text-accent", action: () => triggerQuickAction("full_outreach") },
+    { label: "Content", icon: <Sparkles size={15} />, color: "text-pink-400", action: () => triggerQuickAction("content_week") },
+    { label: "Proposal", icon: <FileText size={15} />, color: "text-gold", action: () => router.push("/dashboard/proposals") },
+    { label: "Leads", icon: <Users size={15} />, color: "text-emerald-400", action: () => router.push("/dashboard/scraper") },
+    { label: "Health", icon: <Activity size={15} />, color: "text-cyan-400", action: () => router.push("/dashboard/client-health") },
     { label: "Campaign", icon: <BarChart3 size={15} />, color: "text-warning", action: () => router.push("/dashboard/ads") },
   ];
 
