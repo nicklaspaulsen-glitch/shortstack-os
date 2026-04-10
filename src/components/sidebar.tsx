@@ -27,6 +27,7 @@ import {
   Send,
   PenTool,
   Star,
+  Mail,
   Target,
   Crown,
   Globe,
@@ -56,6 +57,7 @@ const navItems: NavItem[] = [
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
   { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"] },
   { label: "Forms", href: "/dashboard/forms", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
+  { label: "Conversations", href: "/dashboard/conversations", icon: <MessageSquare size={16} />, roles: ["admin", "team_member"] },
   { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin", "team_member"] },
 
   // ── Create ──
@@ -67,6 +69,7 @@ const navItems: NavItem[] = [
   { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"] },
   { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
   { label: "Ads", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"] },
+  { label: "Email Templates", href: "/dashboard/email-templates", icon: <Mail size={16} />, roles: ["admin", "team_member"] },
 
   // ── Automate ──
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], section: "Automate" },
