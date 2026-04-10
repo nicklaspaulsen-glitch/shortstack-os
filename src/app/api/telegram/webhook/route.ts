@@ -171,6 +171,61 @@ If the user's message contains action words (call, email, scrape, send, outreach
     reply = "Running health check. Results coming soon.";
   }
 
+  if (text.toLowerCase().startsWith("/clients")) {
+    const { data: clientList } = await supabase
+      .from("clients")
+      .select("business_name, mrr, health_score, package_tier")
+      .eq("is_active", true)
+      .order("mrr", { ascending: false })
+      .limit(10);
+    reply = "Active Clients:\n\n" + (clientList || []).map((c, i) =>
+      `${i+1}. ${c.business_name} — $${c.mrr}/mo (${c.package_tier || "Standard"}) ${c.health_score < 50 ? "⚠️" : "✅"}`
+    ).join("\n") + `\n\nTotal MRR: $${totalMRR}`;
+  }
+
+  if (text.toLowerCase().startsWith("/revenue")) {
+    const { data: deals } = await supabase.from("deals").select("amount").eq("status", "won");
+    const totalRevenue = (deals || []).reduce((sum, d) => sum + (d.amount || 0), 0);
+    const { count: overdueInvoices } = await supabase.from("invoices").select("*", { count: "exact", head: true }).eq("status", "sent").lt("due_date", new Date().toISOString().split("T")[0]);
+    reply = `Revenue Report:\n\nMRR: $${totalMRR}\nTotal Revenue: $${totalRevenue}\nActive Clients: ${activeClients}\nOverdue Invoices: ${overdueInvoices || 0}`;
+  }
+
+  if (text.toLowerCase().startsWith("/pipeline")) {
+    const { count: newLeads } = await supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new");
+    const { count: contacted } = await supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "contacted");
+    const { count: booked } = await supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked");
+    const { count: converted } = await supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "converted");
+    reply = `Pipeline:\n\nNew: ${newLeads}\nContacted: ${contacted}\nReplied: ${replies}\nBooked: ${booked}\nConverted: ${converted}\nTotal: ${totalLeads}`;
+  }
+
+  if (text.toLowerCase().startsWith("/content")) {
+    fetch(`${baseUrl}/api/cron/content-autopilot`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    reply = "Content generation started for all clients! Will notify when done.";
+  }
+
+  if (text.toLowerCase().startsWith("/agents")) {
+    const { data: agentLogs } = await supabase.from("trinity_log").select("agent, status").gte("created_at", new Date().toISOString().split("T")[0]);
+    const agentCounts: Record<string, number> = {};
+    (agentLogs || []).forEach(l => { agentCounts[l.agent || "unknown"] = (agentCounts[l.agent || "unknown"] || 0) + 1; });
+    reply = "Agent Activity Today:\n\n" + Object.entries(agentCounts).map(([agent, count]) => `${agent}: ${count} actions`).join("\n") || "No agent activity today";
+  }
+
+  if (text.toLowerCase().startsWith("/help")) {
+    reply = `ShortStack Bot Commands:\n
+/status — System overview
+/clients — Active clients + MRR
+/revenue — Revenue report
+/pipeline — Lead pipeline stats
+/outreach — Trigger cold outreach
+/scrape — Start lead scraping
+/content — Generate weekly content
+/health — Run health check
+/agents — Agent activity today
+/help — This message
+
+Or just type naturally — "send emails", "how are my leads", "what should I focus on today"`;
+  }
+
   // Send reply
   await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
     method: "POST",
