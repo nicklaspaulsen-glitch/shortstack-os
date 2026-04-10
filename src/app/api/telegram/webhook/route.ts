@@ -210,6 +210,18 @@ If the user's message contains action words (call, email, scrape, send, outreach
     reply = "Agent Activity Today:\n\n" + Object.entries(agentCounts).map(([agent, count]) => `${agent}: ${count} actions`).join("\n") || "No agent activity today";
   }
 
+  if (text.toLowerCase().startsWith("/autopilot")) {
+    // Trigger ALL systems
+    fetch(`${baseUrl}/api/cron/daily-brief`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    fetch(`${baseUrl}/api/cron/scrape-leads`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    fetch(`${baseUrl}/api/cron/content-autopilot`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    fetch(`${baseUrl}/api/cron/health-check`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    fetch(`${baseUrl}/api/cron/retention-check`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    fetch(`${baseUrl}/api/cron/invoice-chase`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
+    reply = "FULL AUTOPILOT ACTIVATED\n\nAll 7 agents triggered:\n- Lead scraping\n- Cold outreach (emails + SMS + calls)\n- Content generation\n- Health monitoring\n- Retention check\n- Invoice chasing\n- Daily briefing\n\nResults coming in over the next few minutes.";
+  }
+
   if (text.toLowerCase().startsWith("/help")) {
     reply = `ShortStack Bot Commands:\n
 /status — System overview
@@ -221,6 +233,7 @@ If the user's message contains action words (call, email, scrape, send, outreach
 /content — Generate weekly content
 /health — Run health check
 /agents — Agent activity today
+/autopilot — FULL AUTOPILOT (all 7 agents)
 /help — This message
 
 Or just type naturally — "send emails", "how are my leads", "what should I focus on today"`;
