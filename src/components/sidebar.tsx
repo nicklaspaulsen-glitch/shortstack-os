@@ -26,6 +26,7 @@ import {
   FileText,
   Send,
   PenTool,
+  Star,
   Target,
   Crown,
   Globe,
@@ -55,6 +56,7 @@ const navItems: NavItem[] = [
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
   { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"] },
   { label: "Forms", href: "/dashboard/forms", icon: <FileText size={16} />, roles: ["admin", "team_member"] },
+  { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin", "team_member"] },
 
   // ── Create ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Create" },
