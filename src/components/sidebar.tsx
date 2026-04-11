@@ -28,6 +28,7 @@ import {
   PenTool,
   Crown,
   Globe,
+  Phone,
 } from "lucide-react";
 import { useState } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -67,6 +68,7 @@ const navItems: NavItem[] = [
   // ── Automate ──
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], section: "Automate" },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"] },
+  { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <Phone size={16} />, roles: ["admin"] },
 
   // ── System ──
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member"], section: "System" },
