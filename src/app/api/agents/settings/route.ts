@@ -61,8 +61,13 @@ function getDefaults() {
       emails_per_day: 20,
       sms_per_day: 20,
       calls_per_day: 200,
+      ig_dms_per_day: 20,
+      fb_dms_per_day: 20,
       active_days: ["mon", "tue", "wed", "thu", "fri"],
       message_style: "friendly",
+      goal_mode: false,
+      weekly_reply_goal: 10,
+      weekly_booking_goal: 5,
     },
     content: {
       enabled: true,

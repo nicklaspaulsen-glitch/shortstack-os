@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { scrapeGooglePlaces, scrapeFacebookBusinessPages, scrapeWebsiteForEmail, TARGET_INDUSTRIES, TARGET_CITIES } from "@/lib/services/lead-scraper";
+import { scrapeGooglePlaces, scrapeFacebookBusinessPages, scrapeWebsiteForEmail, scrapeWebsiteForSocials, TARGET_INDUSTRIES, TARGET_CITIES } from "@/lib/services/lead-scraper";
 import { importLeadToGHL } from "@/lib/services/ghl";
 
 export const maxDuration = 300; // 5 minutes
 
 export async function GET(request: NextRequest) {
-  // Verify cron secret
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -15,10 +14,11 @@ export async function GET(request: NextRequest) {
   const supabase = createServiceClient();
   let totalImported = 0;
   let totalSkipped = 0;
+  let totalEnriched = 0;
   const errors: string[] = [];
 
   // Load agent settings from DB
-  let leadsPerQuery = 6;
+  let targetLeads = 50;
   let customIndustries: string[] | null = null;
   let customLocations: string[] | null = null;
   try {
@@ -29,8 +29,7 @@ export async function GET(request: NextRequest) {
       .single();
     if (settingsRow?.metadata) {
       const settings = settingsRow.metadata as Record<string, Record<string, unknown>>;
-      const leadsPerRun = (settings.lead_engine?.leads_per_run as number) || 50;
-      leadsPerQuery = Math.max(1, Math.round(leadsPerRun / 10));
+      targetLeads = (settings.lead_engine?.leads_per_run as number) || 50;
       const industries = settings.lead_engine?.target_industries as string[];
       if (industries && industries.length > 0) customIndustries = industries;
       const locations = settings.lead_engine?.target_locations as string[];
@@ -39,31 +38,48 @@ export async function GET(request: NextRequest) {
   } catch {}
 
   try {
-    // Use custom settings or defaults
     const industries = customIndustries || TARGET_INDUSTRIES;
     const allCities = customLocations || TARGET_CITIES;
 
-    // Rotate through cities each day
-    const dayOfMonth = new Date().getDate();
-    const cityOffset = (dayOfMonth % 2) * Math.min(8, allCities.length);
-    const todayCities = allCities.slice(cityOffset, cityOffset + 8);
+    // Spread cities across the week instead of binary flip
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+    const citiesPerDay = Math.max(3, Math.min(allCities.length, 8));
+    const cityOffset = (dayOfYear * citiesPerDay) % Math.max(allCities.length, 1);
+    const todayCities: string[] = [];
+    for (let i = 0; i < citiesPerDay; i++) {
+      todayCities.push(allCities[(cityOffset + i) % allCities.length]);
+    }
+
+    // Calculate how many leads per query to hit target
+    const totalCombinations = industries.length * todayCities.length;
+    const leadsPerQuery = Math.max(2, Math.min(20, Math.ceil(targetLeads / Math.max(totalCombinations, 1))));
+
+    // Track progress toward target
+    let scraped = 0;
 
     for (const industry of industries) {
+      if (scraped >= targetLeads) break;
+
       for (const city of todayCities) {
+        if (scraped >= targetLeads) break;
+
+        const remaining = targetLeads - scraped;
+        const batchSize = Math.min(leadsPerQuery, remaining);
+
         try {
           // Scrape Google Places
-          const googleLeads = await scrapeGooglePlaces(industry, city, leadsPerQuery);
+          const googleLeads = await scrapeGooglePlaces(industry, city, batchSize);
 
-          // Scrape Facebook
-          const fbLeads = await scrapeFacebookBusinessPages(industry, city);
+          // Scrape Facebook (only if Google didn't return enough)
+          let fbLeads: typeof googleLeads = [];
+          if (googleLeads.length < batchSize) {
+            fbLeads = await scrapeFacebookBusinessPages(industry, city);
+          }
 
-          const allLeads = [...googleLeads, ...fbLeads.slice(0, leadsPerQuery)];
+          const allLeads = [...googleLeads, ...fbLeads.slice(0, Math.max(0, batchSize - googleLeads.length))];
 
           for (const lead of allLeads) {
-            // Enrich email from website
-            if (lead.website && !lead.email) {
-              lead.email = await scrapeWebsiteForEmail(lead.website);
-            }
+            if (scraped >= targetLeads) break;
 
             // Deduplicate: check if phone+name combo exists
             const { data: existing } = await supabase
@@ -90,14 +106,12 @@ export async function GET(request: NextRequest) {
               .single();
 
             if (insertError) {
-              // Likely duplicate constraint violation
               totalSkipped++;
               continue;
             }
 
             // Import to GHL
             const { contactId, success } = await importLeadToGHL(lead);
-
             if (success && newLead) {
               await supabase
                 .from("leads")
@@ -110,27 +124,62 @@ export async function GET(request: NextRequest) {
             }
 
             totalImported++;
+            scraped++;
           }
 
-          // Rate limit pause
-          await new Promise((r) => setTimeout(r, 300));
+          // Rate limit
+          await new Promise((r) => setTimeout(r, 200));
         } catch (err) {
           errors.push(`${industry}/${city}: ${err}`);
         }
       }
     }
 
+    // Batch enrich emails + social profiles for leads missing them (parallel, capped)
+    const { data: unenrichedLeads } = await supabase
+      .from("leads")
+      .select("id, website, email, instagram_url, facebook_url, linkedin_url")
+      .not("website", "is", null)
+      .or("email.is.null,instagram_url.is.null")
+      .eq("status", "new")
+      .limit(20);
+
+    if (unenrichedLeads && unenrichedLeads.length > 0) {
+      await Promise.all(unenrichedLeads.map(async (lead) => {
+        if (!lead.website) return;
+        try {
+          const updates: Record<string, string | null> = {};
+
+          if (!lead.email) {
+            const email = await scrapeWebsiteForEmail(lead.website);
+            if (email) updates.email = email;
+          }
+
+          if (!lead.instagram_url || !lead.facebook_url) {
+            const socials = await scrapeWebsiteForSocials(lead.website);
+            if (!lead.instagram_url && socials.instagram_url) updates.instagram_url = socials.instagram_url;
+            if (!lead.facebook_url && socials.facebook_url) updates.facebook_url = socials.facebook_url;
+            if (!lead.linkedin_url && socials.linkedin_url) updates.linkedin_url = socials.linkedin_url;
+          }
+
+          if (Object.keys(updates).length > 0) {
+            await supabase.from("leads").update(updates).eq("id", lead.id);
+            totalEnriched++;
+          }
+        } catch {}
+      }));
+    }
+
     return NextResponse.json({
       success: true,
+      targetLeads,
       totalImported,
       totalSkipped,
+      totalEnriched,
       errors: errors.slice(0, 10),
       timestamp: new Date().toISOString(),
     });
   } catch (err) {
-    return NextResponse.json({
-      success: false,
-      error: String(err),
-    }, { status: 500 });
+    return NextResponse.json({ success: false, error: String(err) }, { status: 500 });
   }
 }

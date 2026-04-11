@@ -10,18 +10,12 @@ export async function GET(request: NextRequest) {
 
   const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/oauth/meta/callback`;
 
-  // Scopes for full control
+  // Scopes for Facebook Login for Business
   const scopes = [
     "pages_show_list",
     "pages_read_engagement",
-    "pages_manage_posts",
     "pages_manage_metadata",
-    "pages_read_user_content",
     "pages_messaging",
-    "instagram_basic",
-    "instagram_content_publish",
-    "instagram_manage_insights",
-    "instagram_manage_messages",
     "ads_management",
     "ads_read",
     "business_management",

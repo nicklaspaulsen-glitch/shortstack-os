@@ -29,10 +29,26 @@ const TARGET_INDUSTRIES = [
 ];
 
 const TARGET_CITIES = [
+  // US — Top 50 metro areas
   "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX",
   "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX", "San Diego, CA",
   "Dallas, TX", "Austin, TX", "Denver, CO", "Miami, FL",
   "Atlanta, GA", "Seattle, WA", "Portland, OR", "Nashville, TN",
+  "San Francisco, CA", "Boston, MA", "Washington, DC", "Las Vegas, NV",
+  "Detroit, MI", "Minneapolis, MN", "Tampa, FL", "Charlotte, NC",
+  "Orlando, FL", "St. Louis, MO", "Pittsburgh, PA", "Sacramento, CA",
+  "Kansas City, MO", "Columbus, OH", "Indianapolis, IN", "Cleveland, OH",
+  "San Jose, CA", "Jacksonville, FL", "Fort Worth, TX", "Raleigh, NC",
+  "Milwaukee, WI", "Oklahoma City, OK", "Memphis, TN", "Louisville, KY",
+  "Baltimore, MD", "Richmond, VA", "Salt Lake City, UT", "Tucson, AZ",
+  "Honolulu, HI", "Omaha, NE", "Albuquerque, NM", "New Orleans, LA",
+  "Boise, ID", "Charleston, SC",
+  // UK — Major cities
+  "London, UK", "Manchester, UK", "Birmingham, UK", "Leeds, UK",
+  "Glasgow, UK", "Liverpool, UK", "Bristol, UK", "Edinburgh, UK",
+  "Sheffield, UK", "Newcastle, UK", "Nottingham, UK", "Cardiff, UK",
+  "Leicester, UK", "Brighton, UK", "Southampton, UK", "Oxford, UK",
+  "Cambridge, UK", "Reading, UK", "Aberdeen, UK", "Belfast, UK",
 ];
 
 export async function scrapeGooglePlaces(
@@ -122,9 +138,19 @@ export async function scrapeWebsiteForEmail(websiteUrl: string): Promise<string 
     const emails = html.match(emailRegex);
 
     if (emails && emails.length > 0) {
-      // Filter out common non-business emails
+      // Filter out non-email matches (image filenames, tracking pixels, etc.)
+      const imageExts = /\.(png|jpg|jpeg|gif|svg|webp|ico|bmp|css|js)$/i;
       const filtered = emails.filter(
-        (e) => !e.includes("example.com") && !e.includes("wixpress") && !e.includes("sentry")
+        (e) =>
+          !e.includes("example.com") &&
+          !e.includes("wixpress") &&
+          !e.includes("sentry") &&
+          !e.includes("cloudflare") &&
+          !e.includes("googleapis") &&
+          !imageExts.test(e) &&
+          !e.match(/@\d/) && // e.g. sprite@2x.png
+          e.includes(".") &&
+          e.split("@")[1]?.includes(".")
       );
       return filtered[0] || null;
     }
@@ -132,6 +158,30 @@ export async function scrapeWebsiteForEmail(websiteUrl: string): Promise<string 
     // Timeout or fetch error
   }
   return null;
+}
+
+export async function scrapeWebsiteForSocials(websiteUrl: string): Promise<{ instagram_url: string | null; facebook_url: string | null; linkedin_url: string | null }> {
+  const result = { instagram_url: null as string | null, facebook_url: null as string | null, linkedin_url: null as string | null };
+  try {
+    const res = await fetch(websiteUrl, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; ShortStackBot/1.0)" },
+      signal: AbortSignal.timeout(5000),
+    });
+    const html = await res.text();
+
+    // Extract Instagram URL
+    const igMatch = html.match(/https?:\/\/(www\.)?instagram\.com\/[a-zA-Z0-9_.]+\/?/);
+    if (igMatch) result.instagram_url = igMatch[0].replace(/\/$/, "");
+
+    // Extract Facebook URL
+    const fbMatch = html.match(/https?:\/\/(www\.)?facebook\.com\/[a-zA-Z0-9.]+\/?/);
+    if (fbMatch && !fbMatch[0].includes("facebook.com/sharer")) result.facebook_url = fbMatch[0].replace(/\/$/, "");
+
+    // Extract LinkedIn URL
+    const liMatch = html.match(/https?:\/\/(www\.)?linkedin\.com\/(company|in)\/[a-zA-Z0-9_-]+\/?/);
+    if (liMatch) result.linkedin_url = liMatch[0].replace(/\/$/, "");
+  } catch {}
+  return result;
 }
 
 export async function scrapeFacebookBusinessPages(

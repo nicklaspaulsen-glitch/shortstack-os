@@ -46,76 +46,56 @@ export async function GET(request: NextRequest) {
     const pagesRes = await fetch(`https://graph.facebook.com/v18.0/me/accounts?access_token=${accessToken}`);
     const pagesData = await pagesRes.json();
 
-    // Get Instagram business account if available
-    let igAccount = null;
-    if (pagesData.data?.[0]) {
-      const pageId = pagesData.data[0].id;
-      const pageToken = pagesData.data[0].access_token;
-      const igRes = await fetch(`https://graph.facebook.com/v18.0/${pageId}?fields=instagram_business_account&access_token=${pageToken}`);
-      const igData = await igRes.json();
-      if (igData.instagram_business_account?.id) {
-        const igProfileRes = await fetch(`https://graph.facebook.com/v18.0/${igData.instagram_business_account.id}?fields=username,name,followers_count&access_token=${pageToken}`);
-        igAccount = await igProfileRes.json();
-      }
-    }
-
     const supabase = createServiceClient();
+    const page = pagesData.data?.[0];
+    const pageId = page?.id;
+    const pageToken = page?.access_token || accessToken;
 
-    // Save Facebook connection
-    if (state.client_id) {
-      // Facebook page
-      if (pagesData.data?.[0]) {
-        const page = pagesData.data[0];
-        const { data: existing } = await supabase.from("social_accounts").select("id").eq("client_id", state.client_id).eq("platform", "facebook").single();
-        const record = {
-          client_id: state.client_id,
-          platform: "facebook",
-          account_name: page.name,
-          account_id: page.id,
-          access_token: page.access_token, // Page token (long-lived)
-          is_active: true,
-          token_expires_at: new Date(Date.now() + 60 * 86400000).toISOString(),
-          metadata: {
-            connected_at: new Date().toISOString(),
-            user_name: meData.name,
-            user_id: meData.id,
-            page_count: pagesData.data?.length || 0,
-            oauth: true,
-          },
-        };
-        if (existing) {
-          await supabase.from("social_accounts").update(record).eq("id", existing.id);
-        } else {
-          await supabase.from("social_accounts").insert(record);
+    // Try to get Instagram business account linked to the Facebook page
+    let igAccount: { id?: string; username?: string; name?: string; followers_count?: number } | null = null;
+    if (pageId) {
+      try {
+        const igRes = await fetch(`https://graph.facebook.com/v18.0/${pageId}?fields=instagram_business_account&access_token=${pageToken}`);
+        const igData = await igRes.json();
+        if (igData.instagram_business_account?.id) {
+          try {
+            const igProfileRes = await fetch(`https://graph.facebook.com/v18.0/${igData.instagram_business_account.id}?fields=username,name,followers_count,profile_picture_url&access_token=${pageToken}`);
+            igAccount = await igProfileRes.json();
+          } catch {
+            igAccount = { id: igData.instagram_business_account.id, username: "Instagram Business" };
+          }
         }
+      } catch {}
+    }
+
+    if (state.client_id) {
+      // Always save Facebook page if found
+      if (page) {
+        const fbRecord = {
+          client_id: state.client_id, platform: "facebook", account_name: page.name, account_id: page.id,
+          access_token: pageToken, is_active: true, token_expires_at: new Date(Date.now() + 60 * 86400000).toISOString(),
+          metadata: { connected_at: new Date().toISOString(), user_name: meData.name, user_id: meData.id, page_id: page.id, page_count: pagesData.data?.length || 0, oauth: true },
+        };
+        const { data: existingFb } = await supabase.from("social_accounts").select("id").eq("client_id", state.client_id).eq("platform", "facebook").single();
+        if (existingFb) { await supabase.from("social_accounts").update(fbRecord).eq("id", existingFb.id); }
+        else { await supabase.from("social_accounts").insert(fbRecord); }
       }
 
-      // Instagram
-      if (igAccount?.username) {
-        const { data: existing } = await supabase.from("social_accounts").select("id").eq("client_id", state.client_id).eq("platform", "instagram").single();
-        const record = {
-          client_id: state.client_id,
-          platform: "instagram",
-          account_name: igAccount.username,
-          account_id: igAccount.id,
-          access_token: pagesData.data?.[0]?.access_token || accessToken,
-          is_active: true,
-          token_expires_at: new Date(Date.now() + 60 * 86400000).toISOString(),
-          metadata: {
-            connected_at: new Date().toISOString(),
-            followers: igAccount.followers_count,
-            oauth: true,
-          },
+      // Always save Instagram if linked to the page
+      if (igAccount?.id) {
+        const igRecord = {
+          client_id: state.client_id, platform: "instagram", account_name: igAccount.username || igAccount.name || "Instagram", account_id: igAccount.id,
+          access_token: pageToken, is_active: true, token_expires_at: new Date(Date.now() + 60 * 86400000).toISOString(),
+          metadata: { connected_at: new Date().toISOString(), page_id: pageId, followers: igAccount.followers_count || 0, oauth: true },
         };
-        if (existing) {
-          await supabase.from("social_accounts").update(record).eq("id", existing.id);
-        } else {
-          await supabase.from("social_accounts").insert(record);
-        }
+        const { data: existingIg } = await supabase.from("social_accounts").select("id").eq("client_id", state.client_id).eq("platform", "instagram").single();
+        if (existingIg) { await supabase.from("social_accounts").update(igRecord).eq("id", existingIg.id); }
+        else { await supabase.from("social_accounts").insert(igRecord); }
       }
     }
 
-    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?connected=meta`);
+    const connected = igAccount?.id ? "Facebook & Instagram" : "Facebook";
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?connected=${encodeURIComponent(connected)}`);
   } catch (err) {
     return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=${encodeURIComponent(String(err))}`);
   }

@@ -60,6 +60,37 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
+  // /remind — Schedule a reminder
+  // Formats: "/remind 23:00 Do the thing" or "/remind tomorrow 9:00 Check email"
+  if (text.startsWith("/remind")) {
+    const parts = text.replace("/remind", "").trim();
+    if (!parts) {
+      await sendTelegramMessage(chatId, `*Usage:* /remind <time> <message>\n\nExamples:\n• /remind 23:00 Revamp UI and connect ElevenAgents\n• /remind 14:30 Check TikTok review status\n• /remind tomorrow 9:00 Setup Google OAuth`);
+      return NextResponse.json({ ok: true });
+    }
+
+    const scheduledAt = parseReminderTime(parts);
+    if (!scheduledAt) {
+      await sendTelegramMessage(chatId, "Couldn't parse time. Use format: /remind 23:00 Your message");
+      return NextResponse.json({ ok: true });
+    }
+
+    const reminderMessage = parts.replace(/^(tomorrow\s+)?\d{1,2}[:.]\d{2}\s*/i, "").trim() || "Reminder!";
+
+    await supabase.from("trinity_log").insert({
+      action_type: "reminder",
+      description: reminderMessage,
+      command: text,
+      status: "pending",
+      result: { scheduled_at: scheduledAt.toISOString(), chat_id: chatId },
+    });
+
+    const timeStr = scheduledAt.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+    const dateStr = scheduledAt.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+    await sendTelegramMessage(chatId, `⏰ *Reminder set!*\n\n📝 ${reminderMessage}\n🕐 ${dateStr} at ${timeStr}`);
+    return NextResponse.json({ ok: true });
+  }
+
   // /help — List commands
   if (text === "/help" || text === "/start") {
     await sendTelegramMessage(chatId, `*ShortStack Trinity AI* 🤖
@@ -70,6 +101,7 @@ export async function POST(request: NextRequest) {
 /leads — Lead scraping stats
 /revenue — Revenue & deals overview
 /health — System integration status
+/remind — Set a timed reminder
 /help — This menu
 
 *Ask me anything:*
@@ -334,4 +366,30 @@ async function answerQuestion(supabase: ReturnType<typeof createServiceClient>, 
   } catch {
     return "AI unavailable. Try /help for manual commands.";
   }
+}
+
+function parseReminderTime(input: string): Date | null {
+  const now = new Date();
+  const isTomorrow = input.toLowerCase().startsWith("tomorrow");
+  const cleaned = input.replace(/^tomorrow\s*/i, "");
+
+  // Match time like "23:00", "9:30", "14.25"
+  const timeMatch = cleaned.match(/^(\d{1,2})[:.:](\d{2})/);
+  if (!timeMatch) return null;
+
+  const hours = parseInt(timeMatch[1]);
+  const minutes = parseInt(timeMatch[2]);
+  if (hours > 23 || minutes > 59) return null;
+
+  const scheduled = new Date(now);
+  scheduled.setHours(hours, minutes, 0, 0);
+
+  if (isTomorrow) {
+    scheduled.setDate(scheduled.getDate() + 1);
+  } else if (scheduled <= now) {
+    // If time already passed today, schedule for tomorrow
+    scheduled.setDate(scheduled.getDate() + 1);
+  }
+
+  return scheduled;
 }

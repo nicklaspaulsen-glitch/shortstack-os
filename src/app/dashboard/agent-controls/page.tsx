@@ -56,7 +56,9 @@ interface AgentSettings {
   outreach: {
     enabled: boolean; schedule: string; emails_per_day: number;
     sms_per_day: number; calls_per_day: number;
+    ig_dms_per_day: number; fb_dms_per_day: number;
     active_days: string[]; message_style: string;
+    goal_mode: boolean; weekly_reply_goal: number; weekly_booking_goal: number;
   };
   content: {
     enabled: boolean; schedule: string; schedule_day: string;
@@ -234,7 +236,7 @@ export default function AgentControlsPage() {
               </div>
               <div>
                 <h2 className="text-sm font-bold">Outreach Agent (Echo)</h2>
-                <p className="text-[10px] text-muted">Cold emails, SMS, and call scheduling</p>
+                <p className="text-[10px] text-muted">Cold emails, SMS, calls, and social DMs</p>
               </div>
             </div>
             <button onClick={() => update("outreach", "enabled", !settings.outreach.enabled)}
@@ -243,7 +245,7 @@ export default function AgentControlsPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <div>
               <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1"><Clock size={9} /> Run Time</label>
               <input type="time" value={settings.outreach.schedule} onChange={e => update("outreach", "schedule", e.target.value)} className="input w-full text-xs" />
@@ -259,6 +261,14 @@ export default function AgentControlsPage() {
             <div>
               <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Cold Calls / Day</label>
               <input type="number" min={0} max={500} value={settings.outreach.calls_per_day} onChange={e => update("outreach", "calls_per_day", parseInt(e.target.value) || 0)} className="input w-full text-xs" />
+            </div>
+            <div>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">IG DMs / Day</label>
+              <input type="number" min={0} max={50} value={settings.outreach.ig_dms_per_day} onChange={e => update("outreach", "ig_dms_per_day", parseInt(e.target.value) || 0)} className="input w-full text-xs" />
+            </div>
+            <div>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">FB DMs / Day</label>
+              <input type="number" min={0} max={50} value={settings.outreach.fb_dms_per_day} onChange={e => update("outreach", "fb_dms_per_day", parseInt(e.target.value) || 0)} className="input w-full text-xs" />
             </div>
           </div>
 
@@ -284,6 +294,32 @@ export default function AgentControlsPage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Goal Mode */}
+          <div className="mt-4 p-3 rounded-lg border border-amber-400/15 bg-amber-400/[0.03]">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <p className="text-[10px] font-semibold text-amber-400">Goal Mode</p>
+                <p className="text-[9px] text-muted">Auto-increase volume until weekly goals are hit</p>
+              </div>
+              <button onClick={() => update("outreach", "goal_mode", !settings.outreach.goal_mode)}
+                className={`w-10 h-5 rounded-full transition-colors ${settings.outreach.goal_mode ? "bg-amber-400" : "bg-surface-light"}`}>
+                <div className={`w-4 h-4 rounded-full bg-white shadow transition-all mt-0.5 ${settings.outreach.goal_mode ? "ml-5" : "ml-0.5"}`} />
+              </button>
+            </div>
+            {settings.outreach.goal_mode && (
+              <div className="grid grid-cols-2 gap-3 mt-2">
+                <div>
+                  <label className="block text-[8px] text-muted uppercase mb-1">Replies / Week</label>
+                  <input type="number" min={1} max={100} value={settings.outreach.weekly_reply_goal} onChange={e => update("outreach", "weekly_reply_goal", parseInt(e.target.value) || 10)} className="input w-full text-[10px]" />
+                </div>
+                <div>
+                  <label className="block text-[8px] text-muted uppercase mb-1">Bookings / Week</label>
+                  <input type="number" min={1} max={50} value={settings.outreach.weekly_booking_goal} onChange={e => update("outreach", "weekly_booking_goal", parseInt(e.target.value) || 5)} className="input w-full text-[10px]" />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

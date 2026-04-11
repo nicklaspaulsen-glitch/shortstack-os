@@ -257,11 +257,36 @@ export async function GET(_request: NextRequest) {
     }
   }
 
+  // === Check for due reminders ===
+  let remindersSent = 0;
+  const { data: dueReminders } = await supabase
+    .from("trinity_log")
+    .select("id, description, result")
+    .eq("action_type", "reminder")
+    .eq("status", "pending");
+
+  if (dueReminders) {
+    const now = new Date();
+    for (const reminder of dueReminders) {
+      const result = reminder.result as Record<string, string> | null;
+      const scheduledAt = result?.scheduled_at ? new Date(result.scheduled_at) : null;
+      if (scheduledAt && scheduledAt <= now) {
+        const targetChatId = result?.chat_id || process.env.TELEGRAM_CHAT_ID;
+        if (targetChatId) {
+          await sendTelegramMessage(targetChatId, `⏰ *Reminder*\n\n${reminder.description}`);
+          await supabase.from("trinity_log").update({ status: "completed", completed_at: now.toISOString() }).eq("id", reminder.id);
+          remindersSent++;
+        }
+      }
+    }
+  }
+
   return NextResponse.json({
     success: true,
     checked,
     skipped,
     alerts: alerts.length,
+    remindersSent,
     timestamp: new Date().toISOString(),
   });
 }

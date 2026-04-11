@@ -1,24 +1,19 @@
 "use client";
 
 import { useAuth } from "@/lib/auth-context";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import StatCard from "@/components/ui/stat-card";
-import StatusBadge from "@/components/ui/status-badge";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import {
   Zap, Users, DollarSign, MessageSquare, TrendingUp,
-  Phone, Bot, AlertTriangle, Plus, FileText, Sparkles,
-  Send, BarChart3, Globe, Film, Briefcase, Mic, StopCircle,
-  Volume2, VolumeX, ArrowRight, Activity
+  AlertTriangle, Plus, FileText, Sparkles,
+  Send, BarChart3, Globe, Briefcase,
+  ArrowRight, Activity, ArrowUpRight, ArrowDownRight,
+  Search, Clock, ChevronRight, Target, Mail, PhoneCall
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import AgentActivityFeed from "@/components/agent-activity-feed";
-import AgentStatusCards from "@/components/agent-status-cards";
-import AgentOffice from "@/components/agent-office";
-import ScrollReveal from "@/components/ui/scroll-reveal";
 
 interface DashboardStats {
   leadsToday: number;
@@ -33,6 +28,17 @@ interface DashboardStats {
   trinityActions: number;
   dealsWon: number;
   totalRevenue: number;
+  emailsSent: number;
+  smsSent: number;
+  callsMade: number;
+}
+
+interface LeadPipeline {
+  new: number;
+  called: number;
+  replied: number;
+  booked: number;
+  converted: number;
 }
 
 export default function DashboardPage() {
@@ -42,10 +48,14 @@ export default function DashboardPage() {
     leadsToday: 0, totalLeads: 0, dmsSentToday: 0, dmsTarget: 80,
     repliesThisWeek: 0, activeClients: 0, totalMRR: 0, callsBooked: 0,
     systemIssues: 0, trinityActions: 0, dealsWon: 0, totalRevenue: 0,
+    emailsSent: 0, smsSent: 0, callsMade: 0,
   });
+  const [pipeline, setPipeline] = useState<LeadPipeline>({ new: 0, called: 0, replied: 0, booked: 0, converted: 0 });
   const [recentActivity, setRecentActivity] = useState<Array<{ description: string; status: string; created_at: string; action_type: string }>>([]);
-  const [recentLeads, setRecentLeads] = useState<Array<{ business_name: string; industry: string; source: string; scraped_at: string }>>([]);
+  const [recentLeads, setRecentLeads] = useState<Array<{ business_name: string; industry: string; source: string; scraped_at: string; lead_score: number | null }>>([]);
   const [topClients, setTopClients] = useState<Array<{ id: string; business_name: string; mrr: number; health_score: number; package_tier: string }>>([]);
+  const [commandInput, setCommandInput] = useState("");
+  const [commandLoading, setCommandLoading] = useState(false);
   const supabase = createClient();
 
   useEffect(() => { fetchDashboardData(); }, []);
@@ -60,6 +70,8 @@ export default function DashboardPage() {
       { count: callsBooked }, { count: systemIssues }, { count: trinityActions },
       { data: leads }, { data: activity }, { count: dealsWon }, { data: deals },
       { data: topCl },
+      { count: emailsSent }, { count: smsSent }, { count: callsMade },
+      { count: pNew }, { count: pCalled }, { count: pReplied }, { count: pBooked }, { count: pConverted },
     ] = await Promise.all([
       supabase.from("leads").select("*", { count: "exact", head: true }).gte("scraped_at", today),
       supabase.from("leads").select("*", { count: "exact", head: true }),
@@ -70,11 +82,19 @@ export default function DashboardPage() {
       supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked"),
       supabase.from("system_health").select("*", { count: "exact", head: true }).eq("status", "down"),
       supabase.from("trinity_log").select("*", { count: "exact", head: true }).gte("created_at", today),
-      supabase.from("leads").select("business_name, industry, source, scraped_at").order("scraped_at", { ascending: false }).limit(5),
-      supabase.from("trinity_log").select("description, status, created_at, action_type").order("created_at", { ascending: false }).limit(10),
+      supabase.from("leads").select("business_name, industry, source, scraped_at, lead_score").order("scraped_at", { ascending: false }).limit(6),
+      supabase.from("trinity_log").select("description, status, created_at, action_type").order("created_at", { ascending: false }).limit(8),
       supabase.from("deals").select("*", { count: "exact", head: true }).eq("status", "won"),
       supabase.from("deals").select("amount").eq("status", "won"),
       supabase.from("clients").select("id, business_name, mrr, health_score, package_tier").eq("is_active", true).order("mrr", { ascending: false }).limit(5),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "email").gte("sent_at", today),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "sms").gte("sent_at", today),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "call").gte("sent_at", today),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "called"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "replied"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).in("status", ["converted", "closed_won"]),
     ]);
 
     const totalMRR = clients?.reduce((sum, c) => sum + (c.mrr || 0), 0) || 0;
@@ -87,7 +107,9 @@ export default function DashboardPage() {
       totalMRR, callsBooked: callsBooked || 0,
       systemIssues: systemIssues || 0, trinityActions: trinityActions || 0,
       dealsWon: dealsWon || 0, totalRevenue,
+      emailsSent: emailsSent || 0, smsSent: smsSent || 0, callsMade: callsMade || 0,
     });
+    setPipeline({ new: pNew || 0, called: pCalled || 0, replied: pReplied || 0, booked: pBooked || 0, converted: pConverted || 0 });
     setRecentLeads(leads || []);
     setRecentActivity(activity || []);
     setTopClients(topCl || []);
@@ -95,6 +117,22 @@ export default function DashboardPage() {
 
   if (profile?.role === "client") {
     return <ClientDashboard />;
+  }
+
+  async function handleCommand(e: React.FormEvent) {
+    e.preventDefault();
+    if (!commandInput.trim() || commandLoading) return;
+    setCommandLoading(true);
+    try {
+      const res = await fetch("/api/trinity/chat", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: commandInput }),
+      });
+      const data = await res.json();
+      toast.success(data.reply || "Done!", { duration: 5000 });
+    } catch { toast.error("Command failed"); }
+    setCommandInput("");
+    setCommandLoading(false);
   }
 
   async function triggerQuickAction(action: string) {
@@ -111,155 +149,239 @@ export default function DashboardPage() {
     } catch { toast.dismiss(); toast.error("Error"); }
   }
 
-  const quickActions = [
-    { label: "Autopilot", icon: <Zap size={15} />, color: "text-gold", action: () => triggerQuickAction("full_autopilot") },
-    { label: "New Client", icon: <Plus size={15} />, color: "text-success", action: () => router.push("/dashboard/onboard") },
-    { label: "Outreach", icon: <Send size={15} />, color: "text-accent", action: () => triggerQuickAction("full_outreach") },
-    { label: "Content", icon: <Sparkles size={15} />, color: "text-pink-400", action: () => triggerQuickAction("content_week") },
-    { label: "Proposal", icon: <FileText size={15} />, color: "text-gold", action: () => router.push("/dashboard/proposals") },
-    { label: "Leads", icon: <Users size={15} />, color: "text-emerald-400", action: () => router.push("/dashboard/scraper") },
-    { label: "Health", icon: <Activity size={15} />, color: "text-cyan-400", action: () => router.push("/dashboard/client-health") },
-    { label: "Campaign", icon: <BarChart3 size={15} />, color: "text-warning", action: () => router.push("/dashboard/ads") },
-  ];
-
-  const activityIcons: Record<string, React.ReactNode> = {
-    lead_gen: <Zap size={12} className="text-gold" />,
-    automation: <Zap size={12} className="text-accent" />,
-    website: <Globe size={12} className="text-success" />,
-    custom: <Bot size={12} className="text-gold" />,
-    ai_receptionist: <Phone size={12} className="text-warning" />,
-  };
+  const pipelineTotal = pipeline.new + pipeline.called + pipeline.replied + pipeline.booked + pipeline.converted;
 
   return (
-    <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="fade-in space-y-6 max-w-[1400px] mx-auto">
+      {/* Header + Command Bar */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight">Welcome back, <span className="text-gradient-animated">{profile?.full_name?.split(" ")[0]}</span></h1>
-          <p className="text-muted text-xs mt-0.5">Command Center</p>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {getGreeting()}, <span className="text-gold">{profile?.full_name?.split(" ")[0]}</span>
+          </h1>
+          <p className="text-sm text-muted mt-0.5">
+            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+            {stats.systemIssues === 0 ? (
+              <span className="ml-3 text-success text-xs">All systems operational</span>
+            ) : (
+              <span className="ml-3 text-danger text-xs">{stats.systemIssues} system issue{stats.systemIssues > 1 ? "s" : ""}</span>
+            )}
+          </p>
         </div>
-        <div className="text-right flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-[10px] text-gold bg-gold/[0.08] px-2.5 py-1 rounded-md border border-gold/10">
-            <Activity size={10} />
-            <span className="font-medium">{stats.trinityActions} AI actions</span>
+        <form onSubmit={handleCommand} className="flex gap-2">
+          <div className="relative">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+            <input
+              type="text"
+              value={commandInput}
+              onChange={(e) => setCommandInput(e.target.value)}
+              placeholder="Ask Trinity anything..."
+              disabled={commandLoading}
+              className="input pl-9 pr-4 py-2 text-xs w-64 rounded-lg bg-surface-light/40 border-border/30 focus:border-gold/30"
+            />
           </div>
-          <span className="text-xs text-muted">{new Date().toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}</span>
-        </div>
+          <button type="submit" disabled={!commandInput.trim() || commandLoading}
+            className="px-3 py-2 bg-gold/10 text-gold text-xs font-medium rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-30">
+            <Send size={12} />
+          </button>
+        </form>
       </div>
 
-      {/* Trinity AI */}
-      <TrinityAssistant profile={profile} />
-
-      {/* Smart Suggestions */}
-      <SmartSuggestions stats={stats} />
-
-      {/* Live Agent Status */}
-      <ScrollReveal delay={100}>
-        <AgentStatusCards />
-
-      {/* 3D Agent Office */}
-      <AgentOffice />
-      </ScrollReveal>
+      {/* Primary Metrics */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <MetricCard
+          label="Monthly Revenue"
+          value={formatCurrency(stats.totalMRR)}
+          sub={`${stats.activeClients} active clients`}
+          icon={<DollarSign size={18} />}
+          trend="up"
+          accent="gold"
+        />
+        <MetricCard
+          label="Leads Today"
+          value={stats.leadsToday.toString()}
+          sub={`${stats.totalLeads.toLocaleString()} total`}
+          icon={<Users size={18} />}
+          accent="emerald"
+        />
+        <MetricCard
+          label="Outreach Sent"
+          value={`${stats.dmsSentToday}`}
+          sub={`${stats.repliesThisWeek} replies this week`}
+          icon={<Send size={18} />}
+          accent="blue"
+        />
+        <MetricCard
+          label="Deals Won"
+          value={stats.dealsWon.toString()}
+          sub={formatCurrency(stats.totalRevenue) + " total"}
+          icon={<Target size={18} />}
+          trend="up"
+          accent="purple"
+        />
+      </div>
 
       {/* Quick Actions */}
-      <ScrollReveal delay={150}>
-        <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">
-          {quickActions.map((qa, i) => (
-            <button key={i} onClick={qa.action}
-              className="card-hover ripple p-2.5 flex flex-col items-center gap-1 text-center group">
-              <span className={`${qa.color} group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_currentColor] transition-all duration-300`}>{qa.icon}</span>
-              <span className="text-[9px] text-muted group-hover:text-white transition-colors font-medium">{qa.label}</span>
-            </button>
-          ))}
-        </div>
-      </ScrollReveal>
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+        {[
+          { label: "Full Autopilot", icon: <Zap size={13} />, action: () => triggerQuickAction("full_autopilot"), accent: "text-gold" },
+          { label: "New Client", icon: <Plus size={13} />, action: () => router.push("/dashboard/onboard"), accent: "text-emerald-400" },
+          { label: "Run Outreach", icon: <Send size={13} />, action: () => triggerQuickAction("full_outreach"), accent: "text-blue-400" },
+          { label: "Gen Content", icon: <Sparkles size={13} />, action: () => triggerQuickAction("content_week"), accent: "text-purple-400" },
+          { label: "Proposals", icon: <FileText size={13} />, action: () => router.push("/dashboard/proposals"), accent: "text-amber-400" },
+          { label: "View Leads", icon: <Users size={13} />, action: () => router.push("/dashboard/leads"), accent: "text-emerald-400" },
+          { label: "Health", icon: <Activity size={13} />, action: () => router.push("/dashboard/monitor"), accent: "text-cyan-400" },
+          { label: "Campaigns", icon: <BarChart3 size={13} />, action: () => router.push("/dashboard/ads"), accent: "text-orange-400" },
+        ].map((qa, i) => (
+          <button key={i} onClick={qa.action}
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg border border-border/20 bg-surface/60 hover:bg-surface-light/40 hover:border-border/40 transition-all shrink-0 group">
+            <span className={qa.accent}>{qa.icon}</span>
+            <span className="text-[11px] text-muted group-hover:text-white transition-colors font-medium">{qa.label}</span>
+          </button>
+        ))}
+      </div>
 
-      {/* Key Stats — premium animated */}
-      <ScrollReveal delay={200}>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5">
-          <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={14} />} changeType="positive" premium />
-          <StatCard label="Leads Today" value={stats.leadsToday} icon={<Zap size={14} />} change={`${stats.totalLeads} total`} premium />
-          <StatCard label="DMs Today" value={`${stats.dmsSentToday}/${stats.dmsTarget}`} icon={<MessageSquare size={14} />} premium />
-          <StatCard label="Replies" value={stats.repliesThisWeek} icon={<TrendingUp size={14} />} change="this week" changeType="positive" premium />
-          <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={14} />} premium />
-          <StatCard label="Deals Won" value={stats.dealsWon} icon={<Briefcase size={14} />} change={formatCurrency(stats.totalRevenue)} changeType="positive" premium />
-        </div>
-      </ScrollReveal>
-
-      {/* DM Progress */}
-      <ScrollReveal delay={250}>
-      <div className="card p-3.5 shimmer">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-medium">Daily Outreach</span>
-          <span className="text-[10px] font-mono text-gold">{stats.dmsSentToday}/{stats.dmsTarget}</span>
-        </div>
-        <div className="w-full bg-surface-light rounded-full h-2">
-          <div className="bg-gradient-gold rounded-full h-2 transition-all duration-500"
-            style={{ width: `${Math.min((stats.dmsSentToday / stats.dmsTarget) * 100, 100)}%` }} />
-        </div>
-        <div className="flex justify-between mt-2">
-          {["Instagram", "LinkedIn", "Facebook", "TikTok"].map(p => (
-            <div key={p} className="text-center">
-              <p className="text-[9px] text-muted">{p}</p>
-              <p className="text-[10px] font-mono font-medium">0/20</p>
+      {/* Pipeline + Outreach Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Lead Pipeline Funnel */}
+        <div className="lg:col-span-3 rounded-xl border border-border/20 bg-surface/40 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Target size={15} className="text-gold" /> Lead Pipeline
+            </h2>
+            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+              View all <ChevronRight size={10} />
+            </Link>
+          </div>
+          <div className="flex items-end gap-1 h-24 mb-3">
+            {[
+              { label: "New", count: pipeline.new, color: "bg-blue-500" },
+              { label: "Contacted", count: pipeline.called, color: "bg-amber-500" },
+              { label: "Replied", count: pipeline.replied, color: "bg-emerald-500" },
+              { label: "Booked", count: pipeline.booked, color: "bg-purple-500" },
+              { label: "Won", count: pipeline.converted, color: "bg-gold" },
+            ].map((stage) => (
+              <div key={stage.label} className="flex-1 flex flex-col items-center gap-1.5">
+                <span className="text-xs font-bold font-mono">{stage.count}</span>
+                <div className="w-full rounded-t-md transition-all duration-700"
+                  style={{
+                    height: pipelineTotal > 0 ? `${Math.max(8, (stage.count / pipelineTotal) * 80)}px` : "8px",
+                  }}>
+                  <div className={`w-full h-full rounded-t-md ${stage.color} opacity-80`} />
+                </div>
+                <span className="text-[9px] text-muted font-medium">{stage.label}</span>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-4 pt-3 border-t border-border/10">
+            <div className="flex items-center gap-1.5 text-[10px] text-muted">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Conversion: {pipelineTotal > 0 ? ((pipeline.converted / pipelineTotal) * 100).toFixed(1) : "0"}%
             </div>
-          ))}
+            <div className="flex items-center gap-1.5 text-[10px] text-muted">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              Reply rate: {pipeline.called > 0 ? ((pipeline.replied / pipeline.called) * 100).toFixed(1) : "0"}%
+            </div>
+          </div>
+        </div>
+
+        {/* Today's Outreach Breakdown */}
+        <div className="lg:col-span-2 rounded-xl border border-border/20 bg-surface/40 p-5">
+          <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
+            <Send size={15} className="text-blue-400" /> Outreach Today
+          </h2>
+          <div className="space-y-3">
+            {[
+              { label: "Emails", count: stats.emailsSent, target: 30, icon: <Mail size={13} />, color: "bg-blue-500" },
+              { label: "SMS", count: stats.smsSent, target: 20, icon: <MessageSquare size={13} />, color: "bg-emerald-500" },
+              { label: "Calls", count: stats.callsMade, target: 10, icon: <PhoneCall size={13} />, color: "bg-amber-500" },
+              { label: "DMs", count: stats.dmsSentToday - stats.emailsSent - stats.smsSent - stats.callsMade, target: 20, icon: <Send size={13} />, color: "bg-purple-500" },
+            ].map((ch) => (
+              <div key={ch.label} className="flex items-center gap-3">
+                <span className="text-muted w-5">{ch.icon}</span>
+                <span className="text-[11px] text-muted w-12">{ch.label}</span>
+                <div className="flex-1 h-2 bg-surface-light rounded-full overflow-hidden">
+                  <div className={`h-full rounded-full ${ch.color} transition-all duration-700`}
+                    style={{ width: `${Math.min((Math.max(ch.count, 0) / ch.target) * 100, 100)}%` }} />
+                </div>
+                <span className="text-[10px] font-mono text-muted w-10 text-right">{Math.max(ch.count, 0)}/{ch.target}</span>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 pt-3 border-t border-border/10 flex items-center justify-between">
+            <span className="text-[10px] text-muted">Total sent</span>
+            <span className="text-sm font-bold font-mono text-white">{stats.dmsSentToday}</span>
+          </div>
         </div>
       </div>
-      </ScrollReveal>
 
-      <ScrollReveal delay={300}>
+      {/* 3-Column: Activity, Clients, Recent Leads */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Agent Activity Feed */}
-        <AgentActivityFeed />
-
-        {/* Activity Feed */}
-        <div className="card">
-          <h2 className="section-header flex items-center gap-2">
-            <Bot size={14} className="text-gold" /> Live Activity
-          </h2>
-          <div className="space-y-2 max-h-72 overflow-y-auto">
+        {/* Agent Activity */}
+        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Activity size={15} className="text-gold" /> Agent Activity
+            </h2>
+            <span className="text-[10px] text-gold bg-gold/[0.06] px-2 py-0.5 rounded-full font-mono">
+              {stats.trinityActions} today
+            </span>
+          </div>
+          <div className="space-y-1 max-h-64 overflow-y-auto">
             {recentActivity.length === 0 ? (
-              <p className="text-muted text-xs">No activity yet</p>
+              <p className="text-muted text-xs py-6 text-center">No activity yet</p>
             ) : (
               recentActivity.map((a, i) => (
-                <div key={i} className="flex items-start gap-2 py-1.5 border-b border-border/20 last:border-0">
-                  <div className="mt-0.5">{activityIcons[a.action_type] || <Bot size={12} className="text-muted" />}</div>
+                <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border/10 last:border-0">
+                  <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
+                    a.status === "completed" || a.status === "success" ? "bg-emerald-400" :
+                    a.status === "error" || a.status === "failed" ? "bg-red-400" : "bg-amber-400"
+                  }`} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[11px] leading-tight">{a.description}</p>
+                    <p className="text-[11px] leading-snug truncate">{a.description}</p>
                     <p className="text-[9px] text-muted mt-0.5">{formatRelativeTime(a.created_at)}</p>
                   </div>
-                  <StatusBadge status={a.status} />
                 </div>
               ))
             )}
           </div>
+          <Link href="/dashboard/agent-supervisor"
+            className="flex items-center justify-center gap-1 text-[10px] text-gold hover:text-gold-light mt-3 pt-3 border-t border-border/10">
+            View all agents <ArrowRight size={10} />
+          </Link>
         </div>
 
         {/* Top Clients */}
-        <div className="card">
+        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="section-header mb-0">Top Clients</h2>
-            <Link href="/dashboard/clients" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
-              View all <ArrowRight size={10} />
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Briefcase size={15} className="text-emerald-400" /> Top Clients
+            </h2>
+            <Link href="/dashboard/clients" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+              All <ChevronRight size={10} />
             </Link>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1 max-h-64 overflow-y-auto">
             {topClients.length === 0 ? (
-              <p className="text-muted text-xs">No clients yet</p>
+              <p className="text-muted text-xs py-6 text-center">No clients yet</p>
             ) : (
               topClients.map((c, i) => (
                 <Link key={i} href={`/dashboard/clients/${c.id}`}
-                  className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0 hover:bg-surface-light/30 -mx-2 px-2 rounded transition-colors">
-                  <div>
-                    <p className="text-xs font-medium">{c.business_name}</p>
-                    <p className="text-[10px] text-gold">{c.package_tier || "Client"}</p>
+                  className="flex items-center justify-between py-2.5 border-b border-border/10 last:border-0 hover:bg-surface-light/20 -mx-2 px-2 rounded-lg transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-[11px] font-bold text-gold">
+                      {c.business_name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-medium">{c.business_name}</p>
+                      <p className="text-[9px] text-muted">{c.package_tier || "Client"}</p>
+                    </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-bold font-mono">{formatCurrency(c.mrr)}</p>
-                    <div className="flex items-center gap-1">
+                    <p className="text-[11px] font-bold font-mono">{formatCurrency(c.mrr)}<span className="text-muted font-normal">/mo</span></p>
+                    <div className="flex items-center gap-1 justify-end">
                       <div className="w-8 bg-surface-light rounded-full h-1">
-                        <div className={`h-1 rounded-full ${c.health_score > 75 ? "bg-success" : c.health_score > 50 ? "bg-warning" : "bg-danger"}`}
+                        <div className={`h-1 rounded-full ${c.health_score > 75 ? "bg-emerald-400" : c.health_score > 50 ? "bg-amber-400" : "bg-red-400"}`}
                           style={{ width: `${c.health_score}%` }} />
                       </div>
                       <span className="text-[9px] text-muted font-mono">{c.health_score}%</span>
@@ -272,412 +394,139 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Leads */}
-        <div className="card">
+        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="section-header mb-0">Recent Leads</h2>
-            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
-              View all <ArrowRight size={10} />
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Zap size={15} className="text-amber-400" /> Recent Leads
+            </h2>
+            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+              All <ChevronRight size={10} />
             </Link>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1 max-h-64 overflow-y-auto">
             {recentLeads.length === 0 ? (
-              <p className="text-muted text-xs">No leads scraped yet</p>
+              <p className="text-muted text-xs py-6 text-center">No leads yet</p>
             ) : (
               recentLeads.map((lead, i) => (
-                <div key={i} className="flex items-center justify-between py-1.5 border-b border-border/20 last:border-0">
-                  <div>
-                    <p className="text-xs font-medium">{lead.business_name}</p>
-                    <p className="text-[10px] text-muted">{lead.industry || "Unknown"} · {lead.source}</p>
+                <div key={i} className="flex items-center justify-between py-2.5 border-b border-border/10 last:border-0">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-[11px] font-bold text-blue-400">
+                      {lead.business_name?.charAt(0) || "?"}
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-medium">{lead.business_name}</p>
+                      <p className="text-[9px] text-muted">{lead.industry || "Unknown"} &middot; {lead.source}</p>
+                    </div>
                   </div>
-                  <span className="text-[9px] text-muted font-mono">{formatRelativeTime(lead.scraped_at)}</span>
+                  <div className="text-right">
+                    {lead.lead_score != null && (
+                      <span className={`text-[10px] font-mono font-medium ${
+                        lead.lead_score >= 70 ? "text-emerald-400" : lead.lead_score >= 40 ? "text-amber-400" : "text-muted"
+                      }`}>{lead.lead_score}</span>
+                    )}
+                    <p className="text-[9px] text-muted">{formatRelativeTime(lead.scraped_at)}</p>
+                  </div>
                 </div>
               ))
             )}
           </div>
         </div>
       </div>
-      </ScrollReveal>
 
-      {/* Revenue + System Health */}
-      <ScrollReveal delay={350}>
+      {/* Revenue + System Status */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="card-premium">
-          <h2 className="section-header flex items-center gap-2">
-            <DollarSign size={14} className="text-gold" /> Revenue
+        <div className="rounded-xl border border-gold/10 bg-surface/40 p-5">
+          <h2 className="text-sm font-semibold flex items-center gap-2 mb-4">
+            <DollarSign size={15} className="text-gold" /> Revenue Overview
           </h2>
-          <div className="grid grid-cols-3 gap-3 mb-3">
-            <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/30">
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center p-3 rounded-lg bg-surface-light/30 border border-border/10">
               <p className="text-lg font-bold font-mono text-gold">{formatCurrency(stats.totalMRR)}</p>
-              <p className="text-[9px] text-muted uppercase tracking-wider">Monthly</p>
+              <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">MRR</p>
             </div>
-            <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/30">
-              <p className="text-lg font-bold font-mono text-success">{formatCurrency(stats.totalRevenue)}</p>
-              <p className="text-[9px] text-muted uppercase tracking-wider">Total</p>
+            <div className="text-center p-3 rounded-lg bg-surface-light/30 border border-border/10">
+              <p className="text-lg font-bold font-mono text-emerald-400">{formatCurrency(stats.totalRevenue)}</p>
+              <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">Total Revenue</p>
             </div>
-            <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/30">
+            <div className="text-center p-3 rounded-lg bg-surface-light/30 border border-border/10">
               <p className="text-lg font-bold font-mono">{stats.dealsWon}</p>
-              <p className="text-[9px] text-muted uppercase tracking-wider">Closed</p>
+              <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">Deals Closed</p>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 text-[10px] text-muted">
-            <TrendingUp size={10} className="text-success" />
-            <span>{stats.activeClients} active clients</span>
+          <div className="flex items-center gap-1.5 mt-3 text-[10px] text-muted">
+            <TrendingUp size={10} className="text-emerald-400" />
+            <span>{stats.activeClients} active clients generating recurring revenue</span>
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="section-header mb-0 flex items-center gap-2">
-              {stats.systemIssues > 0 ? <AlertTriangle size={14} className="text-danger" /> : <Activity size={14} className="text-success" />}
+        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              {stats.systemIssues > 0 ? <AlertTriangle size={15} className="text-red-400" /> : <Activity size={15} className="text-emerald-400" />}
               System Status
             </h2>
-            <Link href="/dashboard/monitor" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
-              Details <ArrowRight size={10} />
+            <Link href="/dashboard/monitor" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+              Details <ChevronRight size={10} />
             </Link>
           </div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className={`text-2xl font-bold tracking-tight ${stats.systemIssues === 0 ? "text-success" : "text-danger"}`}>
-              {stats.systemIssues === 0 ? "All Good" : `${stats.systemIssues} Issues`}
+          <div className="flex items-center gap-4 mb-3">
+            <div className={`text-2xl font-bold tracking-tight ${stats.systemIssues === 0 ? "text-emerald-400" : "text-red-400"}`}>
+              {stats.systemIssues === 0 ? "All Clear" : `${stats.systemIssues} Issue${stats.systemIssues > 1 ? "s" : ""}`}
             </div>
             {stats.systemIssues === 0 && (
-              <div className="glow-dot bg-success text-success" />
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             )}
           </div>
-          <p className="text-[10px] text-muted">14 integrations monitored</p>
-        </div>
-      </div>
-      </ScrollReveal>
-    </div>
-  );
-}
-
-function TrinityAssistant({ profile }: { profile: { full_name?: string; role?: string } | null }) {
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [alwaysOn, setAlwaysOn] = useState(false);
-  const [message, setMessage] = useState("");
-  const [response, setResponse] = useState("");
-  const [inputMode, setInputMode] = useState<"voice" | "text">("voice");
-  const [processing, setProcessing] = useState(false);
-  const [pulseIntensity, setPulseIntensity] = useState(0);
-
-  useEffect(() => {
-    if (isSpeaking) {
-      const interval = setInterval(() => setPulseIntensity(Math.random()), 150);
-      return () => clearInterval(interval);
-    }
-    setPulseIntensity(0);
-  }, [isSpeaking]);
-
-  // Hidden audio element ref for ElevenLabs playback
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  async function speak(text: string) {
-    if (isMuted) return;
-    setIsSpeaking(true);
-
-    try {
-      const res = await fetch("/api/tts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: text.substring(0, 500) }),
-      });
-
-      if (res.ok) {
-        const blob = await res.blob();
-        if (blob.size > 500 && blob.type.includes("audio")) {
-          const url = URL.createObjectURL(blob);
-
-          // Use a DOM audio element (most reliable across all environments)
-          if (!audioRef.current) {
-            audioRef.current = document.createElement("audio");
-            document.body.appendChild(audioRef.current);
-          }
-          const audio = audioRef.current;
-          audio.src = url;
-          audio.volume = 1.0;
-          audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(url); };
-          audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(url); fallbackSpeak(text); };
-          await audio.play();
-          return;
-        }
-      }
-    } catch {}
-
-    // Fallback to browser voice
-    fallbackSpeak(text);
-  }
-
-  function fallbackSpeak(text: string) {
-    if (!("speechSynthesis" in window)) { setIsSpeaking(false); return; }
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.95; u.pitch = 1.0; u.lang = "en-US";
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = ["Microsoft Aria", "Microsoft Jenny", "Google US English", "Samantha"];
-    let v = null;
-    for (const name of preferred) { v = voices.find(x => x.name.includes(name)); if (v) break; }
-    if (!v) v = voices.find(x => x.lang.startsWith("en"));
-    if (v) u.voice = v;
-    u.onstart = () => setIsSpeaking(true);
-    u.onend = () => setIsSpeaking(false);
-    window.speechSynthesis.speak(u);
-  }
-
-  function startListening() {
-    const SR = (window as unknown as Record<string, unknown>).SpeechRecognition || (window as unknown as Record<string, unknown>).webkitSpeechRecognition;
-    if (!SR) { setInputMode("text"); return; }
-    const r = new (SR as new () => SpeechRecognition)();
-    r.continuous = false; r.interimResults = false; r.lang = "en-US";
-    r.onresult = (e: SpeechRecognitionEvent) => { setIsListening(false); sendMessage(e.results[0][0].transcript); };
-    r.onerror = () => setIsListening(false);
-    r.onend = () => setIsListening(false);
-    r.start(); setIsListening(true);
-  }
-
-  async function sendMessage(text: string) {
-    if (!text.trim()) return;
-    setMessage(text); setProcessing(true); setResponse("");
-    try {
-      const isClient = profile?.role === "client";
-      const res = await fetch(isClient ? "/api/trinity/client-chat" : "/api/trinity/chat", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
-      });
-      const data = await res.json();
-      const reply = data.reply || "I didn't catch that.";
-      setResponse(reply);
-      if (!isMuted) speak(reply);
-    } catch { setResponse("Connection error. Try again."); }
-    setProcessing(false);
-  }
-
-  return (
-    <div className="rounded-xl overflow-hidden relative" style={{ background: "rgba(17,20,28,0.6)", border: "1px solid rgba(184,152,64,0.08)" }}>
-
-      <div className="relative flex flex-col items-center py-5">
-        {/* AI Talking Head */}
-        <div className="relative mb-4">
-          {/* Outer pulse rings */}
-          <div className={`absolute inset-[-20px] rounded-full transition-all duration-500 ${isSpeaking ? "opacity-100" : "opacity-0"}`}
-            style={{ background: `radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%)` }} />
-          <div className={`absolute inset-[-12px] rounded-full border transition-all duration-300 ${
-            isSpeaking ? "border-gold/20 scale-110" : isListening ? "border-danger/20 scale-110" : "border-border/10 scale-100"
-          }`} />
-
-          <div className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-200`}
-            style={{
-              background: isListening ? "radial-gradient(circle at 50% 40%, rgba(244,63,94,0.15), rgba(244,63,94,0.03))"
-                : isSpeaking ? "radial-gradient(circle at 50% 40%, rgba(201,168,76,0.2), rgba(201,168,76,0.04))"
-                : processing ? "radial-gradient(circle at 50% 40%, rgba(56,189,248,0.15), rgba(56,189,248,0.03))"
-                : "radial-gradient(circle at 50% 40%, rgba(201,168,76,0.08), rgba(201,168,76,0.02))",
-              boxShadow: isSpeaking ? "0 0 40px rgba(201,168,76,0.2)" : isListening ? "0 0 40px rgba(244,63,94,0.15)" : "none",
-            }}>
-            {/* Face */}
-            <div className="relative w-full h-full flex flex-col items-center justify-center">
-              {/* Eyes */}
-              <div className="flex gap-4 mb-2">
-                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-accent" : "bg-gold/50"
-                }`} style={{
-                  transform: isSpeaking ? `translateY(${Math.sin(Date.now() / 400) * 1}px)` : "none",
-                  boxShadow: isSpeaking ? "0 0 8px rgba(201,168,76,0.5)" : isListening ? "0 0 8px rgba(244,63,94,0.5)" : "none",
-                }} />
-                <div className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-                  isListening ? "bg-danger" : isSpeaking ? "bg-gold" : processing ? "bg-accent" : "bg-gold/50"
-                }`} style={{
-                  transform: isSpeaking ? `translateY(${Math.sin(Date.now() / 400) * 1}px)` : "none",
-                  boxShadow: isSpeaking ? "0 0 8px rgba(201,168,76,0.5)" : isListening ? "0 0 8px rgba(244,63,94,0.5)" : "none",
-                }} />
-              </div>
-              {/* Mouth — animated when speaking */}
-              <div className={`rounded-full transition-all duration-100 ${
-                isListening ? "bg-danger/60" : isSpeaking ? "bg-gold/60" : processing ? "bg-accent/40" : "bg-gold/20"
-              }`} style={{
-                width: isSpeaking ? `${16 + pulseIntensity * 12}px` : isListening ? "20px" : "12px",
-                height: isSpeaking ? `${6 + pulseIntensity * 10}px` : isListening ? "10px" : "4px",
-                borderRadius: isSpeaking ? "50%" : "999px",
-              }} />
-              {/* Sound waves when speaking */}
-              {isSpeaking && (
-                <div className="absolute inset-0 flex items-end justify-center pb-2 gap-[2px] opacity-30">
-                  {[0, 1, 2, 3, 4, 5, 6].map(i => (
-                    <div key={i} className="w-[2px] bg-gold rounded-full" style={{
-                      height: `${4 + Math.sin(Date.now() / 150 + i * 1.2) * 8 + pulseIntensity * 6}px`,
-                    }} />
-                  ))}
-                </div>
-              )}
+          <div className="grid grid-cols-2 gap-2">
+            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-lg bg-surface-light/20">
+              <Clock size={10} /> Health checks: every 30 min
+            </div>
+            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-lg bg-surface-light/20">
+              <Globe size={10} /> 20 integrations monitored
             </div>
           </div>
-
-          <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-surface ${
-            isListening ? "bg-danger animate-pulse" : isSpeaking ? "bg-gold animate-pulse" : "bg-success"
-          }`} />
         </div>
-
-        {/* Status */}
-        <p className="text-xs font-medium text-gold mb-0.5">
-          {isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : `Hey ${profile?.full_name?.split(" ")[0] || "there"}`}
-        </p>
-        <p className="text-[10px] text-muted mb-3">
-          {isListening ? "Speak now" : isSpeaking ? "Tap to stop" : "AI assistant ready"}
-        </p>
-
-        {/* Response */}
-        {response && (
-          <div className="max-w-lg w-full bg-surface-light/30 rounded-lg px-3.5 py-2.5 mb-3 mx-4 border border-border/20">
-            <p className="text-xs text-center leading-relaxed">{response}</p>
-          </div>
-        )}
-        {message && !response && !processing && (
-          <div className="max-w-lg bg-gold/[0.08] rounded-lg px-3.5 py-2 mb-3 border border-gold/10">
-            <p className="text-xs text-gold text-center">{message}</p>
-          </div>
-        )}
-
-        {/* Controls */}
-        <div className="flex items-center gap-3">
-          <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) window.speechSynthesis?.cancel(); setIsSpeaking(false); }}
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/15 text-danger" : "bg-surface-light text-muted hover:text-white"}`}>
-            {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-          </button>
-
-          {inputMode === "voice" ? (
-            <button onClick={() => { if (isListening) { window.speechSynthesis?.cancel(); setIsListening(false); } else if (isSpeaking) { window.speechSynthesis.cancel(); setIsSpeaking(false); } else startListening(); }}
-              disabled={processing}
-              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${
-                isListening ? "bg-danger shadow-lg shadow-danger/20 animate-pulse" :
-                isSpeaking ? "bg-gold shadow-lg shadow-gold/20" :
-                "bg-gradient-gold hover:shadow-glow-sm hover:scale-105 active:scale-95"
-              }`}>
-              {isListening ? <StopCircle size={20} className="text-white" /> :
-               isSpeaking ? <StopCircle size={20} className="text-black" /> :
-               <Mic size={20} className="text-black" />}
-            </button>
-          ) : (
-            <form onSubmit={(e) => { e.preventDefault(); sendMessage(message); setMessage(""); }} className="flex gap-2">
-              <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type a message..." disabled={processing}
-                className="input rounded-full px-4 py-2 text-xs w-56" />
-              <button type="submit" disabled={!message.trim() || processing}
-                className="w-8 h-8 bg-gradient-gold rounded-full flex items-center justify-center disabled:opacity-30">
-                <Send size={12} className="text-black" />
-              </button>
-            </form>
-          )}
-
-          <button onClick={() => setInputMode(inputMode === "voice" ? "text" : "voice")}
-            className="w-8 h-8 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-white transition-colors">
-            {inputMode === "voice" ? <MessageSquare size={14} /> : <Mic size={14} />}
-          </button>
-        </div>
-
-        {/* Always-on */}
-        {inputMode === "voice" && (
-          <div className="flex items-center gap-2 mt-2.5">
-            <button onClick={() => setAlwaysOn(!alwaysOn)}
-              className={`text-[10px] px-2.5 py-1 rounded-full flex items-center gap-1 transition-all ${alwaysOn ? "bg-gold/10 text-gold border border-gold/20" : "bg-surface-light text-muted border border-border/50"}`}>
-              <div className={`w-1.5 h-1.5 rounded-full ${alwaysOn ? "bg-gold animate-pulse" : "bg-muted"}`} />
-              {alwaysOn ? "Always listening" : "Push to talk"}
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
 }
 
-function SmartSuggestions({ stats }: { stats: DashboardStats }) {
-  const router = useRouter();
-  const suggestions: Array<{ text: string; action: () => void; icon: React.ReactNode; color: string; priority: "high" | "medium" | "low" }> = [];
-
-  // Smart logic based on actual data
-  if (stats.leadsToday === 0) {
-    suggestions.push({
-      text: "No leads scraped today — run the lead finder",
-      action: () => router.push("/dashboard/scraper"),
-      icon: <Users size={12} />,
-      color: "text-warning",
-      priority: "high",
-    });
-  }
-  if (stats.dmsSentToday < 10) {
-    suggestions.push({
-      text: `Only ${stats.dmsSentToday} DMs sent — launch a DM run`,
-      action: () => router.push("/dashboard/dm-controller"),
-      icon: <Send size={12} />,
-      color: "text-accent",
-      priority: "high",
-    });
-  }
-  if (stats.repliesThisWeek > 0) {
-    suggestions.push({
-      text: `${stats.repliesThisWeek} replies this week — follow up before they go cold`,
-      action: () => router.push("/dashboard/outreach-hub"),
-      icon: <MessageSquare size={12} />,
-      color: "text-success",
-      priority: "high",
-    });
-  }
-  if (stats.systemIssues > 0) {
-    suggestions.push({
-      text: `${stats.systemIssues} system issue${stats.systemIssues > 1 ? "s" : ""} — check health monitor`,
-      action: () => router.push("/dashboard/monitor"),
-      icon: <AlertTriangle size={12} />,
-      color: "text-danger",
-      priority: "high",
-    });
-  }
-  if (stats.activeClients > 0 && stats.totalMRR > 0) {
-    suggestions.push({
-      text: "Generate this week's social content for all clients",
-      action: () => router.push("/dashboard/social-manager"),
-      icon: <Sparkles size={12} />,
-      color: "text-gold",
-      priority: "medium",
-    });
-  }
-  if (stats.callsBooked > 0) {
-    suggestions.push({
-      text: `${stats.callsBooked} calls booked — prepare proposals`,
-      action: () => router.push("/dashboard/proposals"),
-      icon: <FileText size={12} />,
-      color: "text-gold",
-      priority: "medium",
-    });
-  }
-
-  // Always show at least one suggestion
-  if (suggestions.length === 0) {
-    suggestions.push({
-      text: "All systems running smooth — keep building",
-      action: () => {},
-      icon: <Zap size={12} />,
-      color: "text-success",
-      priority: "low",
-    });
-  }
-
-  // Show max 3 high priority first
-  const sorted = suggestions.sort((a, b) => {
-    const order = { high: 0, medium: 1, low: 2 };
-    return order[a.priority] - order[b.priority];
-  }).slice(0, 3);
+function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
+  label: string; value: string; sub: string; icon: React.ReactNode;
+  trend?: "up" | "down"; accent?: string;
+}) {
+  const accentColors: Record<string, { bg: string; text: string; border: string }> = {
+    gold: { bg: "bg-gold/[0.06]", text: "text-gold", border: "border-gold/10" },
+    emerald: { bg: "bg-emerald-500/[0.06]", text: "text-emerald-400", border: "border-emerald-500/10" },
+    blue: { bg: "bg-blue-500/[0.06]", text: "text-blue-400", border: "border-blue-500/10" },
+    purple: { bg: "bg-purple-500/[0.06]", text: "text-purple-400", border: "border-purple-500/10" },
+  };
+  const c = accentColors[accent] || accentColors.gold;
 
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1">
-      {sorted.map((s, i) => (
-        <button key={i} onClick={s.action}
-          className="flex items-center gap-2 px-3 py-2 rounded-xl border border-border/20 hover:border-gold/15 bg-surface-light/20 transition-all shrink-0 group">
-          <span className={s.color}>{s.icon}</span>
-          <span className="text-[10px] text-muted group-hover:text-white transition-colors">{s.text}</span>
-          <ArrowRight size={10} className="text-muted/30 group-hover:text-gold transition-colors" />
-        </button>
-      ))}
+    <div className={`rounded-xl border ${c.border} ${c.bg} p-4 transition-all hover:scale-[1.01]`}>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[11px] text-muted font-medium">{label}</span>
+        <span className={`${c.text} opacity-50`}>{icon}</span>
+      </div>
+      <div className="flex items-end gap-2">
+        <span className="text-xl font-bold font-mono tracking-tight">{value}</span>
+        {trend && (
+          <span className={trend === "up" ? "text-emerald-400" : "text-red-400"}>
+            {trend === "up" ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
+          </span>
+        )}
+      </div>
+      <p className="text-[10px] text-muted mt-1">{sub}</p>
     </div>
   );
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 17) return "Good afternoon";
+  return "Good evening";
 }
 
 function ClientDashboard() {
@@ -685,26 +534,24 @@ function ClientDashboard() {
   const router = useRouter();
 
   return (
-    <div className="fade-in space-y-5">
-      <h1 className="text-xl font-bold tracking-tight">Welcome, {profile?.full_name}</h1>
-      <p className="text-muted text-xs">Your client portal</p>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
-          <Briefcase size={20} className="text-gold mx-auto mb-2" />
-          <span className="text-xs font-medium">My Services</span>
-        </button>
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
-          <FileText size={20} className="text-accent mx-auto mb-2" />
-          <span className="text-xs font-medium">Invoices</span>
-        </button>
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
-          <Film size={20} className="text-warning mx-auto mb-2" />
-          <span className="text-xs font-medium">Content</span>
-        </button>
-        <button onClick={() => router.push("/dashboard/portal")} className="card-hover p-5 text-center">
-          <Send size={20} className="text-success mx-auto mb-2" />
-          <span className="text-xs font-medium">Contact Us</span>
-        </button>
+    <div className="fade-in space-y-6 max-w-[1000px] mx-auto">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Welcome, {profile?.full_name}</h1>
+        <p className="text-sm text-muted mt-0.5">Your client portal</p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {[
+          { label: "My Services", icon: <Briefcase size={22} />, color: "text-gold", route: "/dashboard/portal" },
+          { label: "Invoices", icon: <FileText size={22} />, color: "text-blue-400", route: "/dashboard/portal" },
+          { label: "Content", icon: <Sparkles size={22} />, color: "text-purple-400", route: "/dashboard/portal" },
+          { label: "Contact Us", icon: <Send size={22} />, color: "text-emerald-400", route: "/dashboard/portal" },
+        ].map((item, i) => (
+          <button key={i} onClick={() => router.push(item.route)}
+            className="rounded-xl border border-border/20 bg-surface/40 p-6 text-center hover:bg-surface-light/30 hover:border-border/40 transition-all group">
+            <span className={`${item.color} inline-block mb-2 group-hover:scale-110 transition-transform`}>{item.icon}</span>
+            <span className="text-sm font-medium block">{item.label}</span>
+          </button>
+        ))}
       </div>
     </div>
   );
