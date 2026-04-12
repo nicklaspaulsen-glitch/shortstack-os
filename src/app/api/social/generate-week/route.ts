@@ -12,25 +12,59 @@ export async function POST(request: NextRequest) {
 
   const serviceSupabase = createServiceClient();
 
-  // Get client info
-  const { data: client } = await serviceSupabase.from("clients").select("business_name, industry, services, metadata").eq("id", client_id).single();
-  if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
+  // Fetch client info, social accounts, and past published content in parallel
+  const [
+    { data: client },
+    { data: accounts },
+    { data: pastContent },
+  ] = await Promise.all([
+    serviceSupabase
+      .from("clients")
+      .select("business_name, industry, services, metadata")
+      .eq("id", client_id)
+      .single(),
+    serviceSupabase
+      .from("social_accounts")
+      .select("platform, account_name, metadata, is_active")
+      .eq("client_id", client_id)
+      .eq("is_active", true),
+    serviceSupabase
+      .from("content_calendar")
+      .select("title, platform, content_type, metadata, scheduled_at")
+      .eq("client_id", client_id)
+      .eq("status", "published")
+      .order("scheduled_at", { ascending: false })
+      .limit(10),
+  ]);
 
-  // Get connected platforms
-  const { data: accounts } = await serviceSupabase
-    .from("social_accounts")
-    .select("platform, account_name")
-    .eq("client_id", client_id)
-    .eq("is_active", true);
+  if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 
   const connectedPlatforms = platforms || (accounts || []).map((a: { platform: string }) => a.platform).filter((p: string) => ["instagram", "facebook", "tiktok", "linkedin"].includes(p));
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });
 
+  // Extract rich client metadata
   const clientMeta = (client.metadata as Record<string, unknown>) || {};
-  const painPoints = clientMeta.biggest_challenge || "";
+  const painPoints = clientMeta.biggest_challenge || clientMeta.challenges || "";
   const goals = clientMeta.goals || "";
+  const brandVoice = clientMeta.brand_voice || clientMeta.tone || "";
+  const targetAudience = clientMeta.target_audience || clientMeta.audience || "";
+  const competitors = clientMeta.competitors || "";
+  const uniqueSellingProp = clientMeta.usp || clientMeta.unique_selling_proposition || "";
+
+  // Build past content summary for the AI
+  const pastContentSummary = (pastContent || []).map((p: { title: string; platform: string; content_type: string; metadata: unknown }) => {
+    const meta = (p.metadata as Record<string, unknown>) || {};
+    return `- [${p.platform}/${p.content_type}] "${p.title}"${meta.topic ? ` (topic: ${meta.topic})` : ""}`;
+  }).join("\n");
+
+  // Build connected accounts context with follower counts
+  const accountsSummary = (accounts || []).map((a: { platform: string; account_name: string; metadata: unknown }) => {
+    const meta = (a.metadata as Record<string, unknown>) || {};
+    const followers = meta.followers_count || meta.follower_count || "";
+    return `- ${a.platform}: @${a.account_name}${followers ? ` (${followers} followers)` : ""}`;
+  }).join("\n");
 
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -39,20 +73,43 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 4000,
-        system: `You are a social media manager for ${client.business_name}, a ${client.industry} business. Generate engaging, platform-specific content.`,
+        system: `You are an expert social media strategist managing content for ${client.business_name}, a ${client.industry} business.
+
+## Business Profile
+- **Business**: ${client.business_name}
+- **Industry**: ${client.industry}
+- **Services**: ${(client.services || []).join(", ") || "Not specified"}
+${uniqueSellingProp ? `- **Unique Value Proposition**: ${uniqueSellingProp}` : ""}
+
+## Brand Voice & Audience
+- **Tone**: ${tone || brandVoice || "professional yet approachable"}
+${targetAudience ? `- **Target Audience**: ${targetAudience}` : ""}
+${competitors ? `- **Competitors to differentiate from**: ${competitors}` : ""}
+
+## Goals & Challenges
+${goals ? `- **Goals**: ${goals}` : "- **Goals**: Grow brand awareness and engagement"}
+${painPoints ? `- **Challenges**: ${painPoints}` : ""}
+
+## Connected Platforms
+${accountsSummary || "No platform details available"}
+
+${pastContentSummary ? `## Past Published Content (most recent)\nThese posts have already been published. Avoid repeating the same topics and instead build on what worked:\n${pastContentSummary}` : ""}
+
+## Your Guidelines
+- Write platform-native content (Instagram = visual hooks + hashtags, LinkedIn = thought leadership, TikTok = trends + hooks, Facebook = community-focused)
+- Each post must stop the scroll — start with a strong hook
+- Mix content types strategically: educational (40%), entertaining (20%), promotional (20%), behind-the-scenes/social proof (20%)
+- Use relevant hashtags (5-15 for Instagram, 3-5 for LinkedIn, trending for TikTok)
+- Maintain consistent brand voice across all platforms while adapting format`,
         messages: [{
           role: "user",
           content: `Create a 7-day social media content plan for ${client.business_name}.
 
-Business: ${client.business_name}
-Industry: ${client.industry}
-Services: ${(client.services || []).join(", ")}
-Pain points: ${painPoints}
-Goals: ${goals}
-Tone: ${tone || "professional yet approachable"}
-Topics to cover: ${topics || "tips, behind-the-scenes, testimonials, promotions, educational content"}
 Platforms: ${connectedPlatforms.join(", ")}
 Posts per day: ${posts_per_day || 1}
+${topics ? `Priority topics to cover: ${topics}` : "Cover a mix of: tips & education, behind-the-scenes, social proof/testimonials, promotional offers, trending/timely content, community engagement"}
+
+Important: Do NOT repeat topics from the past published content listed in the system prompt. Create fresh, varied content that builds on previous themes.
 
 Return a JSON array where each item has:
 - day: "Monday" through "Sunday"

@@ -225,6 +225,11 @@ body {
   .fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
   .slide-in { animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
   .slide-up { animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
+  .scale-in { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+  .slide-right { animation: slideRight 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .breathe { animation: breathe 3s ease-in-out infinite; }
+  .pulse-ring { animation: pulseRing 2s ease-out infinite; }
+  .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(201,168,76,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
 
   .stagger-1 { animation-delay: 0.06s; animation-fill-mode: backwards; }
   .stagger-2 { animation-delay: 0.12s; animation-fill-mode: backwards; }
@@ -301,6 +306,45 @@ body {
     color: color-mix(in srgb, var(--color-accent, #C9A84C) 80%, var(--color-foreground, #1A1A2E));
     gap: 6px;
   }
+
+  /* ═══════════ SMOOTH NATIVE FEEL ═══════════ */
+  .page-transition { transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+
+  /* Focus ring for accessibility */
+  *:focus-visible {
+    outline: 2px solid var(--color-accent, #C9A84C);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Smooth scrolling globally */
+  * { scroll-behavior: smooth; }
+
+  /* Better scrollbar for Windows */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border, #E8E5E0);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted, #6B7280);
+  }
+}
+
+/* Reduce motion for users who prefer it */
+.reduce-motion, .reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ═══════════ KEYFRAMES ═══════════ */
@@ -332,6 +376,32 @@ body {
 @keyframes notifyPing {
   0% { transform: scale(1); opacity: 0.75; }
   75%, 100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(201, 168, 76, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
 }
 
 /* ═══════════ CSS VARIABLES ═══════════ */

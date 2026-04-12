@@ -97,6 +97,8 @@ function formatShortDate(date: string): string {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
+const PAGE_SIZE = 50;
+
 export default function CRMPage() {
   useAuth();
   const supabase = createClient();
@@ -111,8 +113,9 @@ export default function CRMPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
 
-  useEffect(() => { fetchLeads(); }, []);
+  useEffect(() => { fetchLeads(); cleanupStaleLeads(); }, []);
 
   async function fetchLeads() {
     setLoading(true);
@@ -120,7 +123,7 @@ export default function CRMPage() {
       .from("leads")
       .select("id, business_name, owner_name, phone, email, website, city, state, industry, google_rating, review_count, instagram_url, facebook_url, linkedin_url, tiktok_url, status, created_at")
       .order("created_at", { ascending: false })
-      .limit(500);
+      .limit(2000);
 
     if (!leadsData || leadsData.length === 0) {
       setLeads([]);
@@ -151,6 +154,20 @@ export default function CRMPage() {
     setLeads(merged);
     setLoading(false);
   }
+
+  async function cleanupStaleLeads() {
+    try {
+      const res = await fetch("/api/leads/cleanup", { method: "POST" });
+      const data = await res.json();
+      if (data.success && data.deleted > 0) {
+        toast.success(`Cleaned up ${data.deleted} stale leads (uncontacted 2+ days)`);
+        fetchLeads();
+      }
+    } catch { /* silent */ }
+  }
+
+  // Reset page when filters change
+  useEffect(() => { setPage(0); }, [activeTab, search, sortBy]);
 
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = { all: leads.length, new: 0, contacted: 0, replied: 0, booked: 0, converted: 0 };
@@ -193,6 +210,9 @@ export default function CRMPage() {
 
     return result;
   }, [leads, activeTab, search, sortBy]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginated = useMemo(() => filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE), [filtered, page]);
 
   const toggleSelect = useCallback((id: string) => {
     setSelectedIds(prev => {
@@ -543,10 +563,10 @@ export default function CRMPage() {
                 </tr>
               </thead>
               <tbody>
-                {filtered.length === 0 && (
+                {paginated.length === 0 && (
                   <tr><td colSpan={8} className="text-center py-12 text-muted text-xs">No leads found</td></tr>
                 )}
-                {filtered.map(lead => (
+                {paginated.map(lead => (
                   <LeadTableRow key={lead.id} lead={lead} expanded={expandedId === lead.id}
                     selected={selectedIds.has(lead.id)}
                     onToggleExpand={() => setExpandedId(expandedId === lead.id ? null : lead.id)}
@@ -564,10 +584,10 @@ export default function CRMPage() {
       {/* Card View */}
       {viewMode === "card" && (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {filtered.length === 0 && (
+          {paginated.length === 0 && (
             <div className="col-span-full text-center py-12 text-muted text-xs">No leads found</div>
           )}
-          {filtered.map(lead => (
+          {paginated.map(lead => (
             <div key={lead.id} className="card space-y-2.5 hover:border-border transition-all">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2">
@@ -729,6 +749,26 @@ export default function CRMPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[10px] text-muted">
+            Showing {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+          </span>
+          <div className="flex items-center gap-1">
+            <button onClick={() => setPage(0)} disabled={page === 0}
+              className="text-[10px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30 transition-all">First</button>
+            <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}
+              className="text-[10px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30 transition-all">Prev</button>
+            <span className="text-[10px] text-muted px-2">Page {page + 1} of {totalPages}</span>
+            <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page >= totalPages - 1}
+              className="text-[10px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30 transition-all">Next</button>
+            <button onClick={() => setPage(totalPages - 1)} disabled={page >= totalPages - 1}
+              className="text-[10px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground disabled:opacity-30 transition-all">Last</button>
+          </div>
         </div>
       )}
 

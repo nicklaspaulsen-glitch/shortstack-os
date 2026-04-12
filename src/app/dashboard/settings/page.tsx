@@ -464,6 +464,147 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Data & Cleanup */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Zap size={14} className="text-gold" /> Data Management
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Manage your data, exports, and automatic cleanup</p>
+            <div className="space-y-2">
+              {/* Auto-delete stale leads */}
+              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+                <div>
+                  <p className="text-xs font-medium">Auto-Delete Stale Leads</p>
+                  <p className="text-[10px] text-muted">Remove leads not contacted within 2 days</p>
+                </div>
+                <button onClick={() => {
+                  const current = safeGet("ss-auto-cleanup") !== "false";
+                  safeSet("ss-auto-cleanup", String(!current));
+                  rerender();
+                  toast.success(!current ? "Auto-cleanup enabled" : "Auto-cleanup disabled");
+                }}
+                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-auto-cleanup") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-auto-cleanup") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
+                </button>
+              </div>
+              {/* Default page size */}
+              <div>
+                <p className="text-xs font-medium mb-2">CRM Page Size</p>
+                <div className="grid grid-cols-4 gap-2">
+                  {[
+                    { id: "25", name: "25" },
+                    { id: "50", name: "50" },
+                    { id: "100", name: "100" },
+                    { id: "200", name: "200" },
+                  ].map(ps => {
+                    const current = safeGet("ss-pagesize") || "50";
+                    return (
+                      <button key={ps.id} onClick={() => { safeSet("ss-pagesize", ps.id); rerender(); toast.success(`Page size: ${ps.name}`); }}
+                        className={`p-2 rounded-lg border text-center transition-all ${current === ps.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"}`}>
+                        <p className="text-[10px] font-bold">{ps.name}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              {/* Manual cleanup */}
+              <button onClick={async () => {
+                toast.loading("Cleaning up stale leads...");
+                try {
+                  const res = await fetch("/api/leads/cleanup", { method: "POST" });
+                  const data = await res.json();
+                  toast.dismiss();
+                  toast.success(`Cleaned ${data.deleted || 0} stale leads`);
+                } catch { toast.dismiss(); toast.error("Cleanup failed"); }
+              }}
+                className="w-full text-[10px] py-2 rounded-lg border border-danger/20 bg-danger/5 text-danger hover:bg-danger/10 transition-all">
+                Run Manual Cleanup Now
+              </button>
+            </div>
+          </div>
+
+          {/* Keyboard Shortcuts */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Settings size={14} className="text-gold" /> Keyboard Shortcuts
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Navigate faster with these shortcuts</p>
+            <div className="space-y-1">
+              {[
+                { keys: "Ctrl + K", desc: "Open command palette" },
+                { keys: "Ctrl + /", desc: "Open AI assistant" },
+                { keys: "Ctrl + B", desc: "Toggle sidebar" },
+                { keys: "Ctrl + Scroll", desc: "Zoom in/out" },
+                { keys: "Ctrl + Shift + N", desc: "Quick add (lead, client, task)" },
+                { keys: "Esc", desc: "Close modals & menus" },
+              ].map(s => (
+                <div key={s.keys} className="flex items-center justify-between py-1.5 px-2.5 rounded-lg hover:bg-surface-light transition-colors">
+                  <span className="text-[10px] text-muted">{s.desc}</span>
+                  <kbd className="text-[9px] font-mono px-2 py-0.5 rounded bg-surface-light border border-border text-foreground">{s.keys}</kbd>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Default AI Behavior */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <Bot size={14} className="text-gold" /> Default AI Behavior
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Global defaults for how AI operates across the platform</p>
+            <div className="space-y-3">
+              <div>
+                <p className="text-xs font-medium mb-2">AI Response Tone</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { id: "professional", name: "Professional", desc: "Formal & polished" },
+                    { id: "friendly", name: "Friendly", desc: "Warm & approachable" },
+                    { id: "direct", name: "Direct", desc: "Short & to the point" },
+                  ].map(t => {
+                    const current = safeGet("ss-ai-tone") || "professional";
+                    return (
+                      <button key={t.id} onClick={() => { safeSet("ss-ai-tone", t.id); rerender(); toast.success(`AI tone: ${t.name}`); }}
+                        className={`p-2.5 rounded-lg border text-center transition-all ${current === t.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"}`}>
+                        <p className="text-[10px] font-bold">{t.name}</p>
+                        <p className="text-[8px] text-muted">{t.desc}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+                <div>
+                  <p className="text-xs font-medium">Auto-Draft Outreach</p>
+                  <p className="text-[10px] text-muted">AI pre-writes emails/DMs for new leads</p>
+                </div>
+                <button onClick={() => {
+                  const current = safeGet("ss-auto-draft") === "true";
+                  safeSet("ss-auto-draft", String(!current));
+                  rerender();
+                  toast.success(!current ? "Auto-draft enabled" : "Auto-draft disabled");
+                }}
+                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-auto-draft") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-auto-draft") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+                <div>
+                  <p className="text-xs font-medium">AI Suggestions</p>
+                  <p className="text-[10px] text-muted">Show AI tips and recommendations across pages</p>
+                </div>
+                <button onClick={() => {
+                  const current = safeGet("ss-ai-suggestions") !== "false";
+                  safeSet("ss-ai-suggestions", String(!current));
+                  rerender();
+                  toast.success(!current ? "AI suggestions enabled" : "AI suggestions disabled");
+                }}
+                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-ai-suggestions") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-ai-suggestions") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Version Info */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">

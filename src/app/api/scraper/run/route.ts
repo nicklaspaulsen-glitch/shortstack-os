@@ -1,6 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+// Lead scoring: rates 0-100 based on how likely a lead needs marketing help
+function scoreLeadQuality(lead: {
+  phone: string | null;
+  email: string | null;
+  website: string | null;
+  google_rating: number | null;
+  review_count: number;
+  facebook_url?: string | null;
+  source: string;
+}): number {
+  let score = 0;
+
+  // Contact info availability
+  if (lead.phone) score += 15;
+  if (lead.email) score += 15;
+  if (lead.website) score += 10;
+
+  // Low review count = needs marketing help
+  if (lead.review_count < 20) score += 15;
+
+  // No website or placeholder website = needs web presence
+  if (!lead.website || lead.website.includes("facebook.com") || lead.website.includes("yelp.com")) {
+    score += 10;
+  }
+
+  // Low rating = needs reputation management
+  if (lead.google_rating !== null && lead.google_rating < 4.0) score += 10;
+
+  // Good rating but few reviews = good business needing visibility
+  if (lead.google_rating !== null && lead.google_rating >= 4.0 && lead.review_count < 20) score += 10;
+
+  // Has social media presence (shows they care about marketing)
+  if (lead.facebook_url) score += 5;
+
+  // Local business signal (sourced from local search platforms)
+  if (lead.source === "google_maps" || lead.source === "facebook") score += 10;
+
+  return Math.min(score, 100);
+}
+
 // Custom Lead Scraper — Apify-style with full platform/niche/volume control
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -29,6 +69,7 @@ export async function POST(request: NextRequest) {
     industry: string;
     source: string;
     status: string;
+    lead_score: number;
   }> = [];
   const errors: string[] = [];
   let totalScraped = 0;
@@ -101,7 +142,7 @@ export async function POST(request: NextRequest) {
 
               const addressParts = (d.formatted_address || "").split(",").map((s: string) => s.trim());
 
-              const lead = {
+              const leadData = {
                 business_name: d.name || place.name,
                 phone: d.formatted_phone_number || null,
                 email,
@@ -120,20 +161,30 @@ export async function POST(request: NextRequest) {
                 ghl_sync_status: "pending",
               };
 
-              const { error: insertError } = await supabase.from("leads").insert(lead);
+              const lead_score = scoreLeadQuality({
+                phone: leadData.phone,
+                email: leadData.email,
+                website: leadData.website,
+                google_rating: leadData.google_rating,
+                review_count: leadData.review_count,
+                source: leadData.source,
+              });
+
+              const { error: insertError } = await supabase.from("leads").insert({ ...leadData, lead_score });
               if (!insertError) {
                 totalScraped++;
                 results.push({
-                  business_name: lead.business_name,
-                  phone: lead.phone,
-                  email: lead.email,
-                  website: lead.website,
-                  address: lead.address,
-                  google_rating: lead.google_rating,
-                  review_count: lead.review_count,
-                  industry: lead.industry,
-                  source: lead.source,
+                  business_name: leadData.business_name,
+                  phone: leadData.phone,
+                  email: leadData.email,
+                  website: leadData.website,
+                  address: leadData.address,
+                  google_rating: leadData.google_rating,
+                  review_count: leadData.review_count,
+                  industry: leadData.industry,
+                  source: leadData.source,
                   status: "new",
+                  lead_score,
                 });
               } else {
                 totalSkipped++;
@@ -166,7 +217,7 @@ export async function POST(request: NextRequest) {
 
                 if (existing && existing.length > 0) { totalSkipped++; continue; }
 
-                const { error: insertError } = await supabase.from("leads").insert({
+                const fbLeadData = {
                   business_name: page.name,
                   phone: page.phone || null,
                   address: page.single_line_address || null,
@@ -179,7 +230,19 @@ export async function POST(request: NextRequest) {
                   facebook_url: page.link || null,
                   status: "new",
                   ghl_sync_status: "pending",
+                };
+
+                const fb_lead_score = scoreLeadQuality({
+                  phone: fbLeadData.phone,
+                  email: null,
+                  website: fbLeadData.website,
+                  google_rating: null,
+                  review_count: fbLeadData.review_count,
+                  facebook_url: fbLeadData.facebook_url,
+                  source: fbLeadData.source,
                 });
+
+                const { error: insertError } = await supabase.from("leads").insert({ ...fbLeadData, lead_score: fb_lead_score });
 
                 if (!insertError) {
                   totalScraped++;
@@ -194,6 +257,7 @@ export async function POST(request: NextRequest) {
                     industry: niche,
                     source: "facebook",
                     status: "new",
+                    lead_score: fb_lead_score,
                   });
                 }
               }
@@ -216,11 +280,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Sort by lead score (highest first) and enforce max_results limit
+  results.sort((a, b) => b.lead_score - a.lead_score);
+
+  const trimmed = results.length > max_results_per_search;
+  const finalResults = trimmed ? results.slice(0, max_results_per_search) : results;
+
   return NextResponse.json({
     success: true,
     totalScraped,
     totalSkipped,
-    results: results.slice(0, 50), // Return first 50 for UI
+    totalResults: results.length,
+    ...(trimmed
+      ? { trimmedToLimit: max_results_per_search, note: `Results trimmed from ${results.length} to ${max_results_per_search} (max_results_per_search). Top-scored leads kept.` }
+      : results.length < max_results_per_search
+        ? { note: `Found ${results.length} results, fewer than the requested ${max_results_per_search}.` }
+        : {}),
+    results: finalResults,
     errors: errors.slice(0, 5),
     config: { platforms, niches, locations, max_results_per_search, filters },
   });

@@ -25,7 +25,8 @@ export default function OnboardPage() {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     business_name: "", contact_name: "", email: "", phone: "", website: "",
-    industry: "", package_tier: "Growth", mrr: "2497", services: [] as string[],
+    industry: "", target_audience: "", goals: "", biggest_challenge: "", brand_voice: "",
+    competitors: "", package_tier: "Growth", mrr: "2497", services: [] as string[],
     password: "", create_portal: true, create_invoice: true, setup_zernio: true,
     send_welcome: true, notes: "",
   });
@@ -86,6 +87,38 @@ export default function OnboardPage() {
         <div>
           <label className="block text-sm text-muted mb-1">Industry</label>
           <input value={form.industry} onChange={e => updateForm("industry", e.target.value)} className="input w-full" placeholder="e.g., Dentist, Lawyer, Gym" />
+        </div>
+      </div>
+      <div className="pt-2 border-t border-border">
+        <p className="text-xs text-gold font-semibold mb-3">AI Context (helps us serve them better)</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm text-muted mb-1">Target Audience</label>
+            <input value={form.target_audience} onChange={e => updateForm("target_audience", e.target.value)} className="input w-full" placeholder="e.g., Women 25-45, local homeowners" />
+          </div>
+          <div>
+            <label className="block text-sm text-muted mb-1">Brand Voice</label>
+            <select value={form.brand_voice} onChange={e => updateForm("brand_voice", e.target.value)} className="input w-full">
+              <option value="">Select tone...</option>
+              <option value="professional">Professional & Trustworthy</option>
+              <option value="friendly">Friendly & Approachable</option>
+              <option value="bold">Bold & Edgy</option>
+              <option value="luxury">Premium & Luxury</option>
+              <option value="casual">Casual & Fun</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm text-muted mb-1">Main Goals</label>
+            <input value={form.goals} onChange={e => updateForm("goals", e.target.value)} className="input w-full" placeholder="e.g., Get more bookings, grow social following" />
+          </div>
+          <div>
+            <label className="block text-sm text-muted mb-1">Biggest Challenge</label>
+            <input value={form.biggest_challenge} onChange={e => updateForm("biggest_challenge", e.target.value)} className="input w-full" placeholder="e.g., Low online visibility, bad reviews" />
+          </div>
+        </div>
+        <div className="mt-3">
+          <label className="block text-sm text-muted mb-1">Competitors (optional)</label>
+          <input value={form.competitors} onChange={e => updateForm("competitors", e.target.value)} className="input w-full" placeholder="e.g., Smile Direct, local competitor names" />
         </div>
       </div>
     </div>,
@@ -184,6 +217,10 @@ export default function OnboardPage() {
           <div><span className="text-muted">Email:</span> <span>{form.email}</span></div>
           <div><span className="text-muted">Package:</span> <span className="text-gold font-bold">{form.package_tier} — ${parseInt(form.mrr).toLocaleString()}/mo</span></div>
           <div className="col-span-2"><span className="text-muted">Services:</span> <span>{form.services.join(", ") || "None selected"}</span></div>
+          {form.target_audience && <div><span className="text-muted">Audience:</span> <span>{form.target_audience}</span></div>}
+          {form.goals && <div><span className="text-muted">Goals:</span> <span>{form.goals}</span></div>}
+          {form.biggest_challenge && <div><span className="text-muted">Challenge:</span> <span>{form.biggest_challenge}</span></div>}
+          {form.brand_voice && <div><span className="text-muted">Brand Voice:</span> <span className="capitalize">{form.brand_voice}</span></div>}
         </div>
       </div>
       <div className="space-y-2 text-sm">
