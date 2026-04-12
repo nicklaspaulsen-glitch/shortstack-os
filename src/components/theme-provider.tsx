@@ -34,10 +34,16 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <>{children}</>;
 }
 
+function hexToRgb(hex: string): string {
+  const h = hex.replace("#", "");
+  return `${parseInt(h.slice(0, 2), 16)} ${parseInt(h.slice(2, 4), 16)} ${parseInt(h.slice(4, 6), 16)}`;
+}
+
 export function applyTheme(themeId: string) {
   const theme = THEMES[themeId] || THEMES.nordic;
   const root = document.documentElement;
 
+  // Set hex values for direct CSS use
   root.style.setProperty("--color-background", theme.bg);
   root.style.setProperty("--color-surface", theme.surface);
   root.style.setProperty("--color-surface-light", theme.surfaceLight);
@@ -45,6 +51,15 @@ export function applyTheme(themeId: string) {
   root.style.setProperty("--color-accent", theme.accent);
   root.style.setProperty("--color-text", theme.text);
   root.style.setProperty("--color-muted", theme.muted);
+
+  // Set RGB channel values for Tailwind opacity modifiers (bg-gold/10, etc.)
+  root.style.setProperty("--color-background-rgb", hexToRgb(theme.bg));
+  root.style.setProperty("--color-surface-rgb", hexToRgb(theme.surface));
+  root.style.setProperty("--color-surface-light-rgb", hexToRgb(theme.surfaceLight));
+  root.style.setProperty("--color-border-rgb", hexToRgb(theme.border));
+  root.style.setProperty("--color-accent-rgb", hexToRgb(theme.accent));
+  root.style.setProperty("--color-text-rgb", hexToRgb(theme.text));
+  root.style.setProperty("--color-muted-rgb", hexToRgb(theme.muted));
 
   document.body.style.backgroundColor = theme.bg;
   document.body.style.color = theme.text;

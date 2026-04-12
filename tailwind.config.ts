@@ -9,19 +9,21 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#FAFAF7",
-        surface: "#FFFFFF",
-        "surface-light": "#F5F3EE",
-        border: "#E8E5E0",
-        "border-light": "#D4D0C8",
-        gold: "#C9A84C",
-        "gold-dark": "#A8893D",
-        "gold-light": "#D4B85A",
+        // Dynamic theme colors — respond to applyTheme() CSS variable changes
+        background: "rgb(var(--color-background-rgb, 250 250 247) / <alpha-value>)",
+        surface: "rgb(var(--color-surface-rgb, 255 255 255) / <alpha-value>)",
+        "surface-light": "rgb(var(--color-surface-light-rgb, 245 243 238) / <alpha-value>)",
+        border: "rgb(var(--color-border-rgb, 232 229 224) / <alpha-value>)",
+        gold: "rgb(var(--color-accent-rgb, 201 168 76) / <alpha-value>)",
+        "gold-dark": "rgb(var(--color-accent-rgb, 201 168 76) / <alpha-value>)",
+        "gold-light": "rgb(var(--color-accent-rgb, 201 168 76) / <alpha-value>)",
+        foreground: "rgb(var(--color-text-rgb, 55 65 81) / <alpha-value>)",
+        muted: "rgb(var(--color-muted-rgb, 107 114 128) / <alpha-value>)",
+        "muted-light": "rgb(var(--color-muted-rgb, 107 114 128) / <alpha-value>)",
+        // Static semantic colors — same across all themes
         accent: "#5B8A72",
         "accent-dark": "#4A7660",
         "accent-light": "#7BA896",
-        muted: "#6B7280",
-        "muted-light": "#9CA3AF",
         danger: "#EF4444",
         "danger-light": "#FCA5A5",
         success: "#10b981",
@@ -30,7 +32,7 @@ const config: Config = {
         "warning-light": "#FCD34D",
         info: "#3B82F6",
         "info-light": "#93C5FD",
-        foreground: "var(--color-text, #374151)",
+        "border-light": "rgb(var(--color-border-rgb, 232 229 224) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
