@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Campaign, AdCreative, Client } from "@/lib/types";
+import { Campaign, AdCreative, Client, AdAction } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
@@ -13,12 +13,14 @@ import {
   Sparkles, Target, Filter, ChevronDown,
   Copy, Wand2, Loader, Pause, Play,
   Eye, Megaphone, RefreshCw, Zap,
-  Image as ImageIcon, Type, Globe
+  Image as ImageIcon, Type, Globe,
+  Bot, CheckCircle2, XCircle, ArrowUpRight,
+  Shield, Clock, Plug, BarChart3
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 
-type Tab = "campaigns" | "creatives" | "copy-lab";
+type Tab = "campaigns" | "creatives" | "copy-lab" | "copilot";
 
 const PLATFORM_META = { id: "meta_ads", label: "Meta Ads", color: "#1877F2", icon: "M" };
 const PLATFORM_GOOGLE = { id: "google_ads", label: "Google Ads", color: "#34A853", icon: "G" };
@@ -54,9 +56,17 @@ export default function AdsPage() {
   const [generatingCopy, setGeneratingCopy] = useState(false);
   const [generatedCopy, setGeneratedCopy] = useState<Record<string, unknown> | null>(null);
 
+  // AI Copilot state
+  const [actions, setActions] = useState<AdAction[]>([]);
+  const [loadingActions, setLoadingActions] = useState(false);
+  const [insights, setInsights] = useState<Record<string, unknown> | null>(null);
+  const [loadingInsights, setLoadingInsights] = useState(false);
+  const [syncing, setSyncing] = useState<string | null>(null);
+  const [processingAction, setProcessingAction] = useState<string | null>(null);
+
   const supabase = createClient();
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); fetchActions(); }, []);
 
   async function fetchData() {
     setLoading(true);
@@ -171,6 +181,69 @@ export default function AdsPage() {
     setGeneratingCopy(false);
   }
 
+  async function fetchActions() {
+    setLoadingActions(true);
+    try {
+      const res = await fetch("/api/ads/actions");
+      const data = await res.json();
+      setActions(data.actions || []);
+    } catch { /* silent */ }
+    setLoadingActions(false);
+  }
+
+  async function handleAction(actionId: string, operation: "approve" | "reject" | "execute") {
+    setProcessingAction(actionId);
+    try {
+      const res = await fetch("/api/ads/actions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action_id: actionId, operation }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(operation === "approve" ? "Action approved" : operation === "reject" ? "Action rejected" : "Action executed");
+        fetchActions();
+        if (operation === "execute") fetchData();
+      } else {
+        toast.error(data.error || "Failed");
+      }
+    } catch { toast.error("Error"); }
+    setProcessingAction(null);
+  }
+
+  async function fetchInsights() {
+    setLoadingInsights(true);
+    try {
+      const res = await fetch("/api/ads/optimize");
+      const data = await res.json();
+      setInsights(data);
+    } catch { toast.error("Failed to load insights"); }
+    setLoadingInsights(false);
+  }
+
+  async function syncPlatform(clientId: string, platform?: string) {
+    setSyncing(platform || "all");
+    try {
+      const res = await fetch("/api/ads/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: clientId, platform }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Sync complete");
+        fetchData();
+      } else {
+        toast.error(data.error || "Sync failed");
+      }
+    } catch { toast.error("Sync error"); }
+    setSyncing(null);
+  }
+
+  const pendingActions = actions.filter(a => a.status === "proposed");
+  const approvedActions = actions.filter(a => a.status === "approved");
+  const recentActions = actions.filter(a => ["executed", "rejected", "failed"].includes(a.status)).slice(0, 10);
+
   function getClientName(clientId: string) {
     return clients.find(c => c.id === clientId)?.business_name || "—";
   }
@@ -245,12 +318,20 @@ export default function AdsPage() {
             { id: "campaigns", label: "Campaigns", icon: <Megaphone size={13} /> },
             { id: "creatives", label: "Creatives", icon: <ImageIcon size={13} /> },
             { id: "copy-lab", label: "Copy Lab", icon: <Wand2 size={13} /> },
+            { id: "copilot", label: "AI Copilot", icon: <Bot size={13} /> },
           ] as const).map(t => (
-            <button key={t.id} onClick={() => setTab(t.id)}
+            <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "copilot") fetchActions(); }}
               className={`flex items-center gap-1.5 px-3.5 py-2 text-xs rounded-lg transition-all ${
                 tab === t.id ? "bg-gold text-black font-medium shadow-sm" : "text-muted hover:text-foreground"
               }`}
-            >{t.icon} {t.label}</button>
+            >
+              {t.icon} {t.label}
+              {t.id === "copilot" && pendingActions.length > 0 && (
+                <span className="ml-1 w-4 h-4 rounded-full bg-danger text-white text-[8px] font-bold flex items-center justify-center">
+                  {pendingActions.length}
+                </span>
+              )}
+            </button>
           ))}
         </div>
 
@@ -671,6 +752,263 @@ export default function AdsPage() {
                   </div>
                 )}
               </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ── AI Copilot Tab ── */}
+      {tab === "copilot" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left: Controls + Sync */}
+          <div className="space-y-4">
+            {/* AI Controls */}
+            <div className="card-static space-y-3">
+              <div className="flex items-center gap-2">
+                <Bot size={16} className="text-gold" />
+                <h2 className="text-sm font-semibold">AI Ad Copilot</h2>
+              </div>
+              <p className="text-[10px] text-muted">AI analyzes your campaigns and proposes optimizations. Review and approve actions before they execute.</p>
+
+              <button onClick={fetchInsights} disabled={loadingInsights || campaigns.length === 0}
+                className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-50">
+                {loadingInsights ? <><Loader size={12} className="animate-spin" /> Analyzing...</> : <><BarChart3 size={12} /> Run Portfolio Analysis</>}
+              </button>
+
+              {/* Per-campaign optimize */}
+              <div>
+                <label className="block text-[10px] text-muted mb-1 font-semibold uppercase tracking-wider">Optimize Campaign</label>
+                <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                  {campaigns.map(c => (
+                    <button key={c.id} onClick={() => generateAISuggestions(c.id)}
+                      disabled={optimizingId === c.id}
+                      className="w-full flex items-center gap-2 p-2 rounded-lg border border-border hover:border-gold/30 hover:bg-gold/[0.03] transition-all text-left">
+                      <div className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[8px] font-bold shrink-0"
+                        style={{ backgroundColor: getPlatformInfo(c.platform).color }}>
+                        {getPlatformInfo(c.platform).icon}
+                      </div>
+                      <span className="text-[10px] truncate flex-1">{c.name}</span>
+                      {optimizingId === c.id
+                        ? <Loader size={10} className="text-gold animate-spin shrink-0" />
+                        : <Sparkles size={10} className="text-gold shrink-0" />}
+                    </button>
+                  ))}
+                  {campaigns.length === 0 && <p className="text-[10px] text-muted text-center py-2">No campaigns to optimize</p>}
+                </div>
+              </div>
+            </div>
+
+            {/* Platform Sync */}
+            <div className="card-static space-y-3">
+              <div className="flex items-center gap-2">
+                <Plug size={14} className="text-info" />
+                <h2 className="text-sm font-semibold">Platform Sync</h2>
+              </div>
+              <p className="text-[10px] text-muted">Pull latest campaign data from connected ad platforms.</p>
+              {clients.length > 0 ? (
+                <div className="space-y-2">
+                  {clients.map(client => (
+                    <div key={client.id} className="p-2 rounded-lg border border-border">
+                      <p className="text-[10px] font-medium mb-1.5">{client.business_name}</p>
+                      <div className="flex gap-1.5">
+                        {PLATFORMS.map(p => (
+                          <button key={p.id}
+                            onClick={() => syncPlatform(client.id, p.id)}
+                            disabled={syncing !== null}
+                            className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[9px] font-medium border border-border hover:border-gold/20 transition-all disabled:opacity-50">
+                            {syncing === p.id
+                              ? <Loader size={9} className="animate-spin" />
+                              : <span className="w-3.5 h-3.5 rounded-sm flex items-center justify-center text-white text-[7px] font-bold" style={{ backgroundColor: p.color }}>{p.icon}</span>}
+                            {p.label.split(" ")[0]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : <p className="text-[10px] text-muted text-center">No clients yet</p>}
+            </div>
+
+            {/* How It Works */}
+            <div className="card-static bg-gold/[0.02] border-gold/10">
+              <div className="flex items-center gap-2 mb-2">
+                <Shield size={14} className="text-gold" />
+                <h3 className="text-xs font-semibold">How Copilot Works</h3>
+              </div>
+              <ol className="space-y-1.5 text-[10px] text-muted">
+                <li className="flex gap-2"><span className="text-gold font-bold">1.</span> AI analyzes campaign performance data</li>
+                <li className="flex gap-2"><span className="text-gold font-bold">2.</span> Proposes optimizations with reasoning</li>
+                <li className="flex gap-2"><span className="text-gold font-bold">3.</span> You review and approve/reject each action</li>
+                <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Approved actions execute on the ad platform</li>
+              </ol>
+            </div>
+          </div>
+
+          {/* Right: Action Queue + Insights */}
+          <div className="lg:col-span-2 space-y-4">
+            {/* Portfolio Insights */}
+            {insights && (
+              <div className="card-static border-gold/20 bg-gold/[0.02] fade-in">
+                <div className="flex items-center gap-2 mb-3">
+                  <BarChart3 size={14} className="text-gold" />
+                  <h2 className="text-sm font-semibold">Portfolio Insights</h2>
+                </div>
+                <pre className="whitespace-pre-wrap text-xs text-foreground leading-relaxed font-sans bg-surface-light rounded-xl p-4 border border-border/30 max-h-[300px] overflow-y-auto">
+                  {(insights as Record<string, unknown>).summary as string || JSON.stringify(insights, null, 2)}
+                </pre>
+                {String((insights as Record<string, unknown>).budget_recommendations || "") && (
+                  <div className="mt-3 p-3 rounded-lg bg-gold/5 border border-gold/10">
+                    <p className="text-[10px] font-semibold text-gold mb-1">Budget Recommendations</p>
+                    <p className="text-[10px] text-muted">{String((insights as Record<string, unknown>).budget_recommendations)}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Pending Actions */}
+            <div className="card-static">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Clock size={14} className="text-warning" />
+                  <h2 className="text-sm font-semibold">Pending Actions</h2>
+                  {pendingActions.length > 0 && (
+                    <span className="text-[9px] bg-warning/10 text-warning font-bold px-2 py-0.5 rounded-full">{pendingActions.length}</span>
+                  )}
+                </div>
+                <button onClick={fetchActions} className="btn-ghost text-[10px] flex items-center gap-1">
+                  <RefreshCw size={10} /> Refresh
+                </button>
+              </div>
+
+              {loadingActions ? (
+                <div className="flex items-center justify-center py-8"><Loader size={16} className="animate-spin text-muted" /></div>
+              ) : pendingActions.length === 0 ? (
+                <div className="text-center py-8">
+                  <CheckCircle2 size={24} className="text-success/30 mx-auto mb-2" />
+                  <p className="text-xs text-muted">No pending actions</p>
+                  <p className="text-[10px] text-muted/60 mt-1">Run AI optimization on a campaign to get recommendations</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {pendingActions.map(action => (
+                    <div key={action.id} className={`border rounded-xl p-4 transition-all ${
+                      action.priority === "critical" ? "border-danger/30 bg-danger/[0.02]" :
+                      action.priority === "high" ? "border-warning/30 bg-warning/[0.02]" :
+                      "border-border"
+                    }`}>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className={`text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
+                              action.priority === "critical" ? "bg-danger/10 text-danger" :
+                              action.priority === "high" ? "bg-warning/10 text-warning" :
+                              action.priority === "medium" ? "bg-info/10 text-info" :
+                              "bg-surface-light text-muted"
+                            }`}>{action.priority}</span>
+                            <span className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")}</span>
+                            {action.platform && (
+                              <span className="w-4 h-4 rounded-sm flex items-center justify-center text-white text-[7px] font-bold"
+                                style={{ backgroundColor: getPlatformInfo(action.platform).color }}>
+                                {getPlatformInfo(action.platform).icon}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs font-semibold">{action.title}</p>
+                          {action.description && <p className="text-[10px] text-muted mt-0.5">{action.description}</p>}
+                          {action.ai_reasoning && (
+                            <div className="mt-2 p-2 rounded-lg bg-gold/[0.04] border border-gold/10">
+                              <p className="text-[9px] text-gold font-medium mb-0.5">AI Reasoning</p>
+                              <p className="text-[10px] text-muted leading-relaxed">{action.ai_reasoning}</p>
+                            </div>
+                          )}
+                          {action.estimated_impact && (
+                            <p className="text-[10px] text-success mt-1.5 flex items-center gap-1">
+                              <ArrowUpRight size={10} /> Expected: {action.estimated_impact}
+                            </p>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-1.5 shrink-0">
+                          <button onClick={() => handleAction(action.id, "approve")}
+                            disabled={processingAction === action.id}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-medium bg-success/10 text-success hover:bg-success/20 transition-all disabled:opacity-50">
+                            <CheckCircle2 size={11} /> Approve
+                          </button>
+                          <button onClick={() => handleAction(action.id, "reject")}
+                            disabled={processingAction === action.id}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-medium bg-danger/10 text-danger hover:bg-danger/20 transition-all disabled:opacity-50">
+                            <XCircle size={11} /> Reject
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Approved (ready to execute) */}
+            {approvedActions.length > 0 && (
+              <div className="card-static border-success/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <CheckCircle2 size={14} className="text-success" />
+                  <h2 className="text-sm font-semibold">Ready to Execute</h2>
+                  <span className="text-[9px] bg-success/10 text-success font-bold px-2 py-0.5 rounded-full">{approvedActions.length}</span>
+                </div>
+                <div className="space-y-2">
+                  {approvedActions.map(action => (
+                    <div key={action.id} className="flex items-center justify-between p-3 rounded-lg border border-success/20 bg-success/[0.02]">
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-md flex items-center justify-center text-white text-[8px] font-bold"
+                          style={{ backgroundColor: getPlatformInfo(action.platform).color }}>
+                          {getPlatformInfo(action.platform).icon}
+                        </span>
+                        <div>
+                          <p className="text-xs font-medium">{action.title}</p>
+                          <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")}</p>
+                        </div>
+                      </div>
+                      <button onClick={() => handleAction(action.id, "execute")}
+                        disabled={processingAction === action.id}
+                        className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1 disabled:opacity-50">
+                        {processingAction === action.id ? <Loader size={10} className="animate-spin" /> : <Zap size={10} />}
+                        Execute
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Recent Action History */}
+            {recentActions.length > 0 && (
+              <div className="card-static">
+                <div className="flex items-center gap-2 mb-3">
+                  <Clock size={14} className="text-muted" />
+                  <h2 className="text-sm font-semibold">Recent History</h2>
+                </div>
+                <div className="space-y-1.5">
+                  {recentActions.map(action => (
+                    <div key={action.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-light transition-colors">
+                      <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                        action.status === "executed" ? "bg-success/10" : action.status === "failed" ? "bg-danger/10" : "bg-surface-light"
+                      }`}>
+                        {action.status === "executed" ? <CheckCircle2 size={10} className="text-success" /> :
+                         action.status === "failed" ? <XCircle size={10} className="text-danger" /> :
+                         <XCircle size={10} className="text-muted" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] font-medium truncate">{action.title}</p>
+                        <p className="text-[9px] text-muted">{action.action_type.replace(/_/g, " ")} · {new Date(action.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <span className={`text-[8px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
+                        action.status === "executed" ? "bg-success/10 text-success" :
+                        action.status === "failed" ? "bg-danger/10 text-danger" :
+                        "bg-surface-light text-muted"
+                      }`}>{action.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </div>
         </div>

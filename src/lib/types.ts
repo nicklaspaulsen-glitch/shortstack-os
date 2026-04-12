@@ -356,6 +356,31 @@ export interface SystemHealthEntry {
   created_at: string;
 }
 
+export type AdActionType = "budget_increase" | "budget_decrease" | "pause_campaign" | "activate_campaign" | "adjust_targeting" | "update_bidding" | "create_ad" | "update_ad_copy" | "pause_ad" | "activate_ad" | "create_campaign" | "schedule_change" | "other";
+export type AdActionStatus = "proposed" | "approved" | "rejected" | "executing" | "executed" | "failed";
+
+export interface AdAction {
+  id: string;
+  campaign_id: string | null;
+  client_id: string | null;
+  platform: string;
+  action_type: AdActionType;
+  title: string;
+  description: string | null;
+  ai_reasoning: string | null;
+  proposed_changes: Record<string, unknown>;
+  current_values: Record<string, unknown>;
+  estimated_impact: string | null;
+  priority: "low" | "medium" | "high" | "critical";
+  status: AdActionStatus;
+  approved_by: string | null;
+  approved_at: string | null;
+  executed_at: string | null;
+  execution_result: Record<string, unknown> | null;
+  error_message: string | null;
+  created_at: string;
+}
+
 export interface Briefing {
   id: string;
   user_id: string;
