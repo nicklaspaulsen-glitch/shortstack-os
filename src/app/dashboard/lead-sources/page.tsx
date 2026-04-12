@@ -91,7 +91,7 @@ export default function LeadSourcesPage() {
                     <Cell key={i} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ background: "#111420", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: "#111420", borderRadius: 8, fontSize: 11 }} wrapperClassName="border border-border" />
               </PieChart>
             </ResponsiveContainer>
           ) : (
@@ -108,8 +108,7 @@ export default function LeadSourcesPage() {
             const label = s.source.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
 
             return (
-              <div key={s.source} className="flex items-center gap-3 p-3 rounded-xl"
-                style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+              <div key={s.source} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                 <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${color}15`, color }}>
                   {icon}
                 </div>
@@ -118,7 +117,7 @@ export default function LeadSourcesPage() {
                     <p className="text-xs font-semibold">{label}</p>
                     <span className="text-xs font-mono" style={{ color }}>{s.count}</span>
                   </div>
-                  <div className="w-full h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.04)" }}>
+                  <div className="w-full h-1.5 rounded-full bg-surface-light">
                     <div className="h-1.5 rounded-full transition-all" style={{ width: `${pct}%`, background: color }} />
                   </div>
                 </div>

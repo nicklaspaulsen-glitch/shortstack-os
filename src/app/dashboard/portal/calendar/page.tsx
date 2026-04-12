@@ -17,7 +17,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   tiktok: <Film size={10} className="text-white" />,
   facebook: <Send size={10} className="text-blue-400" />,
   youtube: <Film size={10} className="text-red-400" />,
-  linkedin: <Globe size={10} className="text-blue-300" />,
+  linkedin: <Globe size={10} className="text-blue-600" />,
 };
 
 export default function ContentCalendarPage() {
@@ -191,7 +191,7 @@ export default function ContentCalendarPage() {
         {/* Day cells */}
         <div className="grid grid-cols-7 gap-px">
           {calendarDays.map((day, i) => {
-            if (day === null) return <div key={i} className="min-h-[90px] bg-surface-light/20 rounded-lg" />;
+            if (day === null) return <div key={i} className="min-h-[90px] bg-surface-light rounded-lg" />;
             const dayEntries = getEntriesForDay(day);
             const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
 

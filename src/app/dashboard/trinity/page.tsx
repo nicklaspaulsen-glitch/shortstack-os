@@ -86,10 +86,10 @@ export default function TrinityPage() {
 
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
         <button onClick={() => setTab("chat")}
-          className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === "chat" ? "bg-gold text-black font-medium" : "text-muted hover:text-white"}`}
+          className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === "chat" ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
         ><Terminal size={16} /> Chat</button>
         <button onClick={() => setTab("log")}
-          className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === "log" ? "bg-gold text-black font-medium" : "text-muted hover:text-white"}`}
+          className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === "log" ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
         ><History size={16} /> Action Log</button>
       </div>
 
@@ -102,7 +102,7 @@ export default function TrinityPage() {
                 <div className={`max-w-[70%] rounded-2xl px-4 py-3 ${
                   msg.role === "user"
                     ? "bg-gold text-black rounded-br-sm"
-                    : "bg-surface-light text-white rounded-bl-sm"
+                    : "bg-surface-light text-foreground rounded-bl-sm"
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                   <p className={`text-xs mt-1 ${msg.role === "user" ? "text-black/50" : "text-muted"}`}>
@@ -143,7 +143,7 @@ export default function TrinityPage() {
             <div className="flex flex-wrap gap-2 mt-3">
               {["Build a website", "Set up AI receptionist", "Create Discord server", "Run email campaign", "Generate leads"].map((cmd) => (
                 <button key={cmd} onClick={() => setInput(cmd)}
-                  className="text-xs bg-surface-light px-3 py-1.5 rounded-full text-muted hover:text-white hover:bg-border transition-all"
+                  className="text-xs bg-surface-light px-3 py-1.5 rounded-full text-muted hover:text-foreground hover:bg-border transition-all"
                 >{cmd}</button>
               ))}
             </div>

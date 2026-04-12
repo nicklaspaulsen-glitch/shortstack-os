@@ -5,7 +5,8 @@ import { useAuth } from "@/lib/auth-context";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Link2, Globe, Loader, Check, Unlink, LogIn, Shield, Clock, AlertCircle
+  Link2, Globe, Loader, Check, Unlink, LogIn, Shield, Clock, AlertCircle,
+  Calendar, MessageSquare, Mail, Phone, BookOpen, Megaphone, MapPin, ExternalLink, Zap
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -240,7 +241,7 @@ function SocialAccountsPage() {
               const platform = PLATFORMS.find(p => p.id === account.platform);
               const isOAuth = account.metadata?.oauth === true;
               return (
-                <div key={account.id} className={`rounded-xl p-4 border ${platform?.bg || "bg-surface-light/50 border-border/30"} relative overflow-hidden`}>
+                <div key={account.id} className={`rounded-xl p-4 border ${platform?.bg || "bg-surface-light/50 border-border"} relative overflow-hidden`}>
                   <div className="absolute top-0 right-0 w-20 h-20 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2" />
                   <div className="relative">
                     <div className="flex items-center justify-between mb-2">
@@ -248,7 +249,7 @@ function SocialAccountsPage() {
                         <span className={platform?.color || "text-muted"}>{platform?.icon || <Globe size={22} />}</span>
                         <div>
                           <p className="text-xs font-semibold">{platform?.name || account.platform}</p>
-                          <p className="text-[11px] text-white/80 font-medium">{account.account_name}</p>
+                          <p className="text-[11px] text-foreground font-medium">{account.account_name}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-1">
@@ -297,11 +298,11 @@ function SocialAccountsPage() {
             <button
               key={platform.id}
               onClick={() => startOAuth(platform)}
-              className={`text-left rounded-xl p-4 border border-border/30 bg-surface hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[1px] transition-all group`}
+              className={`text-left rounded-xl p-4 border border-border bg-surface hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[1px] transition-all group`}
             >
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface-light border border-border/30 group-hover:border-gold/20 transition-colors">
-                  <span className="text-muted group-hover:text-white transition-colors">{platform.icon}</span>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface-light border border-border group-hover:border-gold/20 transition-colors">
+                  <span className="text-muted group-hover:text-foreground transition-colors">{platform.icon}</span>
                 </div>
                 <div className="flex-1">
                   <p className="text-xs font-semibold">{platform.name}</p>
@@ -323,7 +324,7 @@ function SocialAccountsPage() {
                   </button>
                   {profile?.role !== "client" && (
                     <button onClick={(e) => { e.stopPropagation(); setManualConnect(platform.id); setManualHandle(""); }}
-                      className="text-[10px] text-muted hover:text-white flex items-center gap-1">
+                      className="text-[10px] text-muted hover:text-foreground flex items-center gap-1">
                       <Link2 size={10} /> Manual
                     </button>
                   )}
@@ -352,15 +353,173 @@ function SocialAccountsPage() {
         </div>
       )}
 
+      {/* Business Integrations */}
+      {profile?.role !== "client" && <BusinessIntegrations />}
+
       {/* Security note */}
-      <div className="card border-border/20 bg-surface-light/20">
+      <div className="card border-border bg-surface-light">
         <div className="flex items-start gap-3">
           <Shield size={14} className="text-gold shrink-0 mt-0.5" />
           <p className="text-[10px] text-muted leading-relaxed">
             We use official OAuth to connect your accounts. ShortStack never sees your password —
             you sign in directly with the platform. You can revoke access anytime from here or from your account settings on each platform.
+            Business integrations use API keys stored securely in environment variables.
           </p>
         </div>
+      </div>
+    </div>
+  );
+}
+
+const BUSINESS_INTEGRATIONS = [
+  {
+    id: "google_ads",
+    name: "Google Ads",
+    icon: <Megaphone size={16} />,
+    color: "text-[#4285F4]",
+    bg: "from-[#4285F4]/10 to-[#34A853]/5 border-[#4285F4]/20",
+    description: "Campaign management, performance data, bid optimization",
+    endpoint: "/api/integrations/google-ads",
+    envKeys: ["GOOGLE_ADS_DEVELOPER_TOKEN", "GOOGLE_CLIENT_ID"],
+    docsUrl: "https://developers.google.com/google-ads/api/docs/start",
+  },
+  {
+    id: "google_business",
+    name: "Google Business",
+    icon: <MapPin size={16} />,
+    color: "text-[#34A853]",
+    bg: "from-[#34A853]/10 to-[#4285F4]/5 border-[#34A853]/20",
+    description: "Review management, local posts, business insights",
+    endpoint: "/api/integrations/google-business",
+    envKeys: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
+    docsUrl: "https://developers.google.com/my-business",
+  },
+  {
+    id: "calendly",
+    name: "Calendly",
+    icon: <Calendar size={16} />,
+    color: "text-[#006BFF]",
+    bg: "from-[#006BFF]/10 to-[#006BFF]/5 border-[#006BFF]/20",
+    description: "Scheduling, event types, booking management",
+    endpoint: "/api/integrations/calendly",
+    envKeys: ["CALENDLY_API_TOKEN"],
+    docsUrl: "https://developer.calendly.com",
+  },
+  {
+    id: "whatsapp",
+    name: "WhatsApp Business",
+    icon: <MessageSquare size={16} />,
+    color: "text-[#25D366]",
+    bg: "from-[#25D366]/10 to-[#25D366]/5 border-[#25D366]/20",
+    description: "Send messages, templates, media to clients",
+    endpoint: "/api/integrations/whatsapp",
+    envKeys: ["WHATSAPP_ACCESS_TOKEN", "WHATSAPP_PHONE_NUMBER_ID"],
+    docsUrl: "https://developers.facebook.com/docs/whatsapp/cloud-api",
+  },
+  {
+    id: "email_marketing",
+    name: "Mailchimp / SendGrid",
+    icon: <Mail size={16} />,
+    color: "text-[#FFE01B]",
+    bg: "from-[#FFE01B]/10 to-[#FFE01B]/5 border-[#FFE01B]/20",
+    description: "Email lists, campaigns, transactional emails",
+    endpoint: "/api/integrations/email-marketing",
+    envKeys: ["MAILCHIMP_API_KEY", "SENDGRID_API_KEY"],
+    docsUrl: "https://mailchimp.com/developer/",
+  },
+  {
+    id: "twilio",
+    name: "Twilio",
+    icon: <Phone size={16} />,
+    color: "text-[#F22F46]",
+    bg: "from-[#F22F46]/10 to-[#F22F46]/5 border-[#F22F46]/20",
+    description: "SMS messaging, voice calls, phone numbers",
+    endpoint: "/api/integrations/twilio",
+    envKeys: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
+    docsUrl: "https://www.twilio.com/docs",
+  },
+  {
+    id: "notion",
+    name: "Notion",
+    icon: <BookOpen size={16} />,
+    color: "text-foreground",
+    bg: "from-white/5 to-white/[0.02] border-white/15",
+    description: "Sync databases, create pages, manage tasks",
+    endpoint: "/api/integrations/notion",
+    envKeys: ["NOTION_API_KEY"],
+    docsUrl: "https://developers.notion.com",
+  },
+];
+
+function BusinessIntegrations() {
+  const [statuses, setStatuses] = useState<Record<string, "connected" | "not_configured" | "checking">>({});
+
+  useEffect(() => {
+    BUSINESS_INTEGRATIONS.forEach(async (integration) => {
+      setStatuses(prev => ({ ...prev, [integration.id]: "checking" }));
+      try {
+        const res = await fetch(`${integration.endpoint}?action=me&client_id=_check`, { method: "GET" });
+        const data = await res.json();
+        setStatuses(prev => ({
+          ...prev,
+          [integration.id]: data.connected === false || data.error?.includes("not configured") ? "not_configured" : "connected",
+        }));
+      } catch {
+        setStatuses(prev => ({ ...prev, [integration.id]: "not_configured" }));
+      }
+    });
+  }, []);
+
+  const configured = Object.values(statuses).filter(s => s === "connected").length;
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="section-header mb-0 flex items-center gap-2">
+          <Zap size={14} className="text-gold" /> Business Integrations
+        </h2>
+        <span className="text-[10px] text-muted">{configured}/{BUSINESS_INTEGRATIONS.length} configured</span>
+      </div>
+      <p className="text-[10px] text-muted mb-3">Connect business tools via API keys. Configure in your environment variables.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {BUSINESS_INTEGRATIONS.map(integration => {
+          const status = statuses[integration.id] || "checking";
+          return (
+            <div key={integration.id}
+              className={`rounded-xl p-4 border bg-gradient-to-br ${integration.bg} relative overflow-hidden`}>
+              <div className="absolute top-0 right-0 w-16 h-16 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2" />
+              <div className="relative">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2.5">
+                    <span className={integration.color}>{integration.icon}</span>
+                    <div>
+                      <p className="text-xs font-semibold">{integration.name}</p>
+                      <p className="text-[9px] text-muted">{integration.description}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <div className="flex items-center gap-1">
+                    {status === "checking" ? (
+                      <span className="text-[9px] text-muted flex items-center gap-1"><Loader size={8} className="animate-spin" /> Checking...</span>
+                    ) : status === "connected" ? (
+                      <span className="text-[9px] text-success flex items-center gap-1 bg-success/10 px-1.5 py-0.5 rounded"><Check size={8} /> Connected</span>
+                    ) : (
+                      <span className="text-[9px] text-muted flex items-center gap-1 bg-surface-light px-1.5 py-0.5 rounded"><AlertCircle size={8} /> Not configured</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[8px] text-muted/60">{integration.envKeys.join(", ")}</span>
+                    <a href={integration.docsUrl} target="_blank" rel="noopener noreferrer"
+                      className="text-[10px] text-muted hover:text-foreground flex items-center gap-0.5">
+                      <ExternalLink size={9} /> Docs
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

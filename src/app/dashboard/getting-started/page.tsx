@@ -65,7 +65,7 @@ export default function GettingStartedPage() {
           <span className="text-sm font-bold">{completed.size}/{STEPS.length} completed</span>
           <span className="text-xs text-gold font-mono">{progress}%</span>
         </div>
-        <div className="w-full h-2 rounded-full" style={{ background: "rgba(255,255,255,0.04)" }}>
+        <div className="w-full h-2 rounded-full bg-surface-light">
           <div className="h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: "linear-gradient(90deg, #c8a855, #10b981)" }} />
         </div>
         {progress === 100 && (
@@ -78,8 +78,7 @@ export default function GettingStartedPage() {
         {STEPS.map((step) => {
           const done = completed.has(step.id);
           return (
-            <div key={step.id} className={`p-4 rounded-xl flex items-center gap-4 transition-all ${done ? "opacity-60" : ""}`}
-              style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${done ? "rgba(16,185,129,0.1)" : "rgba(255,255,255,0.04)"}` }}>
+            <div key={step.id} className={`p-4 rounded-xl flex items-center gap-4 transition-all bg-surface-light border ${done ? "opacity-60 border-success/10" : "border-border"}`}>
               <button onClick={() => toggleStep(step.id)} className="shrink-0">
                 {done
                   ? <CheckCircle size={20} className="text-success" />
@@ -89,7 +88,7 @@ export default function GettingStartedPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-gold">{step.icon}</span>
-                  <p className={`text-sm font-semibold ${done ? "line-through text-gray-500" : "text-white"}`}>{step.title}</p>
+                  <p className={`text-sm font-semibold ${done ? "line-through text-gray-500" : "text-foreground"}`}>{step.title}</p>
                 </div>
                 <p className="text-[10px] text-muted mt-0.5">{step.description}</p>
               </div>

@@ -153,7 +153,7 @@ export default function DemoManagementPage() {
               <p className="text-[9px] text-zinc-500 uppercase tracking-wider mb-1">Services</p>
               <div className="flex flex-wrap gap-1">
                 {demoClient.services?.map((s) => (
-                  <span key={s} className="text-[9px] bg-purple-500/10 text-purple-300 px-1.5 py-0.5 rounded-lg">
+                  <span key={s} className="text-[9px] bg-purple-500/10 text-purple-600 px-1.5 py-0.5 rounded-lg">
                     {s}
                   </span>
                 ))}

@@ -85,7 +85,7 @@ export default function WebhooksPage() {
         <h2 className="section-header">Inbound Webhook URL</h2>
         <p className="text-[10px] text-muted mb-2">Send data TO ShortStack from external tools (Zapier, Make, n8n)</p>
         <div className="flex gap-2">
-          <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+          <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">
             {inboundUrl}
           </code>
           <button onClick={() => { navigator.clipboard.writeText(inboundUrl); toast.success("Copied!"); }}
@@ -111,7 +111,7 @@ export default function WebhooksPage() {
                   <button key={event.id} onClick={() => toggleEvent(event.id)}
                     className={`flex items-center gap-2 p-2 rounded-lg text-[10px] transition-all text-left ${
                       form.events.includes(event.id) ? "bg-gold/[0.06] border-gold/15 text-gold" : "border-white/[0.04] text-muted"
-                    }`} style={{ border: `1px solid ${form.events.includes(event.id) ? "rgba(200,168,85,0.15)" : "rgba(255,255,255,0.04)"}` }}>
+                    } ${form.events.includes(event.id) ? "border border-gold/15" : "border border-border"}`}>
                     {event.icon}
                     <span>{event.label}</span>
                   </button>
@@ -137,8 +137,7 @@ export default function WebhooksPage() {
       ) : (
         <div className="space-y-2">
           {webhooks.map(wh => (
-            <div key={wh.id} className="flex items-center justify-between p-4 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+            <div key={wh.id} className="flex items-center justify-between p-4 rounded-xl bg-surface-light border border-border">
               <div className="flex items-center gap-3">
                 <div className={`w-2 h-2 rounded-full ${wh.active ? "bg-success" : "bg-muted"}`} />
                 <div>

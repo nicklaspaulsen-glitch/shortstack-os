@@ -136,8 +136,7 @@ export default function SequencesPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {TEMPLATES.map((t, i) => (
                 <button key={i} onClick={() => createFromTemplate(t)}
-                  className="text-left p-4 rounded-xl transition-all hover:border-gold/15"
-                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  className="text-left p-4 rounded-xl transition-all hover:border-gold/15 bg-surface-light border border-border">
                   <p className="text-sm font-bold mb-1">{t.name}</p>
                   <p className="text-[10px] text-muted">{t.steps.length} steps · {t.steps.filter(s => s.type === "email").length} emails, {t.steps.filter(s => s.type === "sms").length} SMS</p>
                   <div className="flex gap-1 mt-2">
@@ -158,8 +157,7 @@ export default function SequencesPage() {
               <h2 className="section-header">Your Sequences</h2>
               <div className="space-y-2">
                 {sequences.map(seq => (
-                  <div key={seq.id} className="flex items-center justify-between p-3 rounded-lg"
-                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div key={seq.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
                     <div className="flex items-center gap-3">
                       <div className={`w-2 h-2 rounded-full ${seq.active ? "bg-success animate-pulse" : "bg-muted"}`} />
                       <div>
@@ -200,9 +198,9 @@ export default function SequencesPage() {
           <div className="space-y-2">
             {activeSequence.steps.map((step, i) => (
               <div key={step.id}>
-                <div className="p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${
-                  step.type === "email" ? "rgba(59,130,246,0.1)" : step.type === "sms" ? "rgba(16,185,129,0.1)" : "rgba(255,255,255,0.04)"
-                }` }}>
+                <div className={`p-4 rounded-xl bg-surface-light border ${
+                  step.type === "email" ? "border-blue-500/10" : step.type === "sms" ? "border-emerald-500/10" : "border-border"
+                }`}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold uppercase ${

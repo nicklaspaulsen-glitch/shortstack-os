@@ -61,7 +61,47 @@ export async function POST(request: NextRequest) {
     } catch {}
   }
 
-  // Option 3: Generate video concept with AI (no rendering, just the plan)
+  // Option 3: Higgsfield AI Video Generation (cloud API)
+  const higgsKey = process.env.HIGGSFIELD_API_KEY;
+  if (higgsKey && !plan_only) {
+    try {
+      const model = type === "ad" ? "kling-v2.5-t2v" : "seedance-v2.0-t2v";
+      const res = await fetch("https://api.higgsfield.ai/v1/generate/video", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${higgsKey}`,
+        },
+        body: JSON.stringify({
+          model,
+          prompt: script || `Create a ${duration || 30}-second ${style || "modern"} video: ${title}`,
+          aspect_ratio: aspect_ratio || "9:16",
+          duration: Math.min(duration || 10, 25),
+          quality: "high",
+        }),
+      });
+      const data = await res.json();
+      if (data.id || data.url || data.video_url) {
+        await supabase.from("trinity_log").insert({
+          action_type: "content",
+          description: `AI Video generated via Higgsfield: ${title}`,
+          client_id: client_id || null,
+          status: "completed",
+          result: { url: data.url || data.video_url, generation_id: data.id, model, source: "higgsfield" },
+        });
+        return NextResponse.json({
+          success: true,
+          source: "higgsfield",
+          url: data.url || data.video_url,
+          generation_id: data.id,
+          model,
+          status: data.status || "completed",
+        });
+      }
+    } catch {}
+  }
+
+  // Option 4: Generate video concept with AI (no rendering, just the plan)
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (apiKey) {
     try {

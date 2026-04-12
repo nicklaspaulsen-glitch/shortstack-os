@@ -135,7 +135,7 @@ export default function ProductionPage() {
           ].map((s, i) => (
             <div key={i} className="flex items-center gap-2 flex-1">
               <div className="text-center flex-1">
-                <div className="w-8 h-8 bg-surface-light rounded-lg flex items-center justify-center mx-auto mb-1 border border-border/20">
+                <div className="w-8 h-8 bg-surface-light rounded-lg flex items-center justify-center mx-auto mb-1 border border-border">
                   {s.icon}
                 </div>
                 <p className="text-[9px] font-semibold">{s.label}</p>
@@ -160,7 +160,7 @@ export default function ProductionPage() {
           <div className="space-y-2">
             {requests.map(req => (
               <div key={req.id} className="card-hover p-3 flex items-center gap-3">
-                <div className="w-9 h-9 bg-surface-light rounded-lg flex items-center justify-center shrink-0 border border-border/20">
+                <div className="w-9 h-9 bg-surface-light rounded-lg flex items-center justify-center shrink-0 border border-border">
                   <Film size={16} className="text-gold" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -205,7 +205,7 @@ export default function ProductionPage() {
             <div className="grid grid-cols-2 gap-1.5">
               {EDIT_TYPES.map(t => (
                 <button key={t.id} onClick={() => setForm({ ...form, edit_type: t.id })}
-                  className={`p-2 rounded-lg border text-left transition-all ${form.edit_type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border/20"}`}>
+                  className={`p-2 rounded-lg border text-left transition-all ${form.edit_type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"}`}>
                   <div className="flex items-center gap-1.5">
                     <span className="text-gold">{t.icon}</span>
                     <span className="text-[10px] font-medium">{t.name}</span>

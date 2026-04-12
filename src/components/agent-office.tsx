@@ -92,8 +92,8 @@ export default function AgentOffice() {
   return (
     <Link href="/dashboard/agent-supervisor" className="block">
       <div ref={containerRef} onMouseMove={handleMouseMove}
-        className="rounded-xl overflow-hidden cursor-pointer transition-all hover:ring-1 hover:ring-gold/10"
-        style={{ background: "rgba(14,16,22,0.6)", border: "1px solid rgba(255,255,255,0.04)", padding: "16px 12px 8px" }}>
+        className="rounded-xl overflow-hidden cursor-pointer transition-all hover:ring-1 hover:ring-gold/10 border border-border bg-surface/60"
+        style={{ padding: "16px 12px 8px" }}>
 
         {/* Header */}
         <div className="flex items-center justify-between mb-3 px-2">
@@ -219,8 +219,7 @@ export default function AgentOffice() {
                 {/* Hover tooltip */}
                 {hovered === agent.id && (
                   <div className="absolute -top-14 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap">
-                    <div className="px-2.5 py-1.5 rounded-lg text-center" style={{
-                      background: "rgba(17,20,28,0.95)", border: "1px solid rgba(255,255,255,0.08)",
+                    <div className="px-2.5 py-1.5 rounded-lg text-center bg-surface border border-border" style={{
                       boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
                     }}>
                       <p className="text-[9px] font-bold" style={{ color: agent.color }}>{agent.name} — {agent.role}</p>

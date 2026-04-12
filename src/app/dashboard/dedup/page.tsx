@@ -135,7 +135,7 @@ export default function DedupPage() {
       {duplicates.length === 0 ? (
         <div className="card text-center py-16">
           <CheckCircle size={32} className="mx-auto mb-3 text-success/30" />
-          <p className="text-sm text-white font-semibold mb-1">No duplicates found</p>
+          <p className="text-sm text-foreground font-semibold mb-1">No duplicates found</p>
           <p className="text-xs text-muted">Your lead database is clean!</p>
         </div>
       ) : (
@@ -158,8 +158,7 @@ export default function DedupPage() {
               </div>
               <div className="space-y-1">
                 {group.leads.map((lead, i) => (
-                  <div key={lead.id} className={`flex items-center justify-between px-3 py-1.5 rounded-lg text-[10px] ${i === group.leads.length - 1 ? "bg-success/[0.03] border border-success/10" : ""}`}
-                    style={i < group.leads.length - 1 ? { background: "rgba(255,255,255,0.02)" } : {}}>
+                  <div key={lead.id} className={`flex items-center justify-between px-3 py-1.5 rounded-lg text-[10px] ${i === group.leads.length - 1 ? "bg-success/[0.03] border border-success/10" : "bg-surface-light"}`}>
                     <div className="flex items-center gap-3">
                       <span className="text-muted font-mono">{lead.business_name}</span>
                       <span className="text-muted/50">{lead.email || "—"}</span>

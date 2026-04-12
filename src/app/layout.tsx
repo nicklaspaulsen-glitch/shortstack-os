@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: "Internal operating system for ShortStack digital marketing agency",
   icons: { icon: "/icons/shortstack-logo.png", apple: "/icons/shortstack-logo.png" },
   manifest: "/manifest.json",
-  themeColor: "#C9A84C",
+  themeColor: "#FAFAF7",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -26,20 +26,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: `
-          document.addEventListener('mousemove', function(e) {
-            var cards = document.querySelectorAll('.card-hover');
-            for (var i = 0; i < cards.length; i++) {
-              var r = cards[i].getBoundingClientRect();
-              cards[i].style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
-              cards[i].style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
-            }
-          });
-        `}} />
-      </head>
-      <body className="antialiased bg-background text-white min-h-screen">
+    <html lang="en">
+      <body className="antialiased bg-background min-h-screen">
         <AuthProvider>
           <ThemeProvider>
           <SFXProvider>

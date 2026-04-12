@@ -106,7 +106,7 @@ export default function ClientDetailPage() {
 
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/dashboard/clients" className="p-2 rounded-lg hover:bg-surface-light text-muted hover:text-white transition-colors">
+        <Link href="/dashboard/clients" className="p-2 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors">
           <ArrowLeft size={20} />
         </Link>
         <div className="flex-1">
@@ -196,7 +196,7 @@ export default function ClientDetailPage() {
               {aiActions.length === 0 ? (
                 <p className="text-muted text-sm">No AI actions for this client yet</p>
               ) : aiActions.map((a, i) => (
-                <div key={i} className="flex items-start gap-3 py-2 border-b border-border/50 last:border-0">
+                <div key={i} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
                   <StatusBadge status={a.status as string} />
                   <div>
                     <p className="text-sm">{a.description as string}</p>
@@ -214,7 +214,7 @@ export default function ClientDetailPage() {
               {tasks.length === 0 ? (
                 <p className="text-muted text-sm">No tasks</p>
               ) : tasks.map(task => (
-                <div key={task.id} className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
+                <div key={task.id} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
                   {task.is_completed ? <CheckCircle size={16} className="text-success shrink-0" /> : <Circle size={16} className="text-muted shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm ${task.is_completed ? "line-through text-muted" : ""}`}>{task.title}</p>
@@ -349,7 +349,7 @@ export default function ClientDetailPage() {
                   toast.success(`${page} ${!enabled ? "enabled" : "disabled"} for client`);
                 }}
                   className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                    enabled ? "border-success/30 bg-success/[0.05]" : "border-border/20 opacity-60"
+                    enabled ? "border-success/30 bg-success/[0.05]" : "border-border opacity-60"
                   }`}>
                   <span className="text-xs font-medium capitalize">{page}</span>
                   <div className={`w-8 h-4 rounded-full transition-colors ${enabled ? "bg-success" : "bg-surface-light"}`}>

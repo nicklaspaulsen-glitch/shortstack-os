@@ -130,5 +130,34 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success });
   }
 
+  if (action === "run_calls") {
+    const { runElevenAgentCalls } = await import("@/lib/services/eleven-agents");
+    const supabase = createServiceClient();
+    const results = await runElevenAgentCalls(supabase, body.maxCalls || 5);
+    return NextResponse.json(results);
+  }
+
+  if (action === "test_call") {
+    const { makeOutboundCall } = await import("@/lib/services/eleven-agents");
+    if (!body.agentId || !body.phoneNumberId || !body.toNumber) {
+      return NextResponse.json({ error: "Need agentId, phoneNumberId, toNumber" }, { status: 400 });
+    }
+    const result = await makeOutboundCall({
+      agentId: body.agentId,
+      phoneNumberId: body.phoneNumberId,
+      toNumber: body.toNumber,
+      customData: body.customData,
+    });
+    if (result.error) return NextResponse.json({ error: result.error }, { status: 500 });
+    return NextResponse.json(result);
+  }
+
+  if (action === "get_transcript") {
+    const { getConversation } = await import("@/lib/services/eleven-agents");
+    const convo = await getConversation(body.conversationId);
+    if (!convo) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+    return NextResponse.json({ conversation: convo });
+  }
+
   return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }

@@ -145,8 +145,7 @@ export default function SMSTemplatesPage() {
       {/* Templates grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         {filtered.map(template => (
-          <div key={template.id} className="p-4 rounded-xl group transition-all"
-            style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+          <div key={template.id} className="p-4 rounded-xl group transition-all bg-surface-light border border-border">
             <div className="flex items-start justify-between mb-2">
               <div>
                 <p className="text-xs font-semibold">{template.name}</p>
@@ -156,9 +155,9 @@ export default function SMSTemplatesPage() {
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button onClick={() => { navigator.clipboard.writeText(template.body); toast.success("Copied!"); }}
-                  className="p-1 rounded hover:bg-white/5 text-muted hover:text-white"><Copy size={10} /></button>
+                  className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Copy size={10} /></button>
                 <button onClick={() => setEditing(editing === template.id ? null : template.id)}
-                  className="p-1 rounded hover:bg-white/5 text-muted hover:text-white"><Edit3 size={10} /></button>
+                  className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Edit3 size={10} /></button>
                 <button onClick={() => { setTemplates(prev => prev.filter(t => t.id !== template.id)); toast.success("Deleted"); }}
                   className="p-1 rounded hover:bg-danger/10 text-muted hover:text-danger"><Trash2 size={10} /></button>
               </div>
@@ -172,7 +171,7 @@ export default function SMSTemplatesPage() {
               <p className="text-[11px] text-muted leading-relaxed">{template.body}</p>
             )}
 
-            <div className="flex items-center justify-between mt-2 pt-2" style={{ borderTop: "1px solid rgba(255,255,255,0.03)" }}>
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
               <span className="text-[8px] text-muted/40">{template.body.length} chars</span>
               <button onClick={() => { navigator.clipboard.writeText(template.body); toast.success("Copied!"); }}
                 className="text-[9px] text-gold hover:text-gold-light flex items-center gap-0.5">

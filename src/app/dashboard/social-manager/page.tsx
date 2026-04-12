@@ -20,7 +20,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={14} className="text-pink-400" />,
   facebook: <MessageSquare size={14} className="text-blue-400" />,
   tiktok: <Music size={14} className="text-white" />,
-  linkedin: <Briefcase size={14} className="text-blue-300" />,
+  linkedin: <Briefcase size={14} className="text-blue-600" />,
   youtube: <Film size={14} className="text-red-400" />,
 };
 
@@ -148,11 +148,14 @@ export default function SocialManagerPage() {
     <div className="fade-in space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Bot size={18} className="text-gold" /> AI Social Manager
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Autonomous AI that creates, schedules, and publishes content</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+            <Bot size={20} className="text-gold" />
+          </div>
+          <div>
+            <h1 className="page-header mb-0">Social Manager</h1>
+            <p className="text-xs text-muted">Autonomous AI that creates, schedules & publishes content</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {/* Client selector */}
@@ -182,7 +185,7 @@ export default function SocialManagerPage() {
           <span className="text-[10px] text-muted">Connected:</span>
           {currentClient.accounts.length > 0 ? (
             currentClient.accounts.map(p => (
-              <div key={p} className="flex items-center gap-1 text-[10px] bg-surface-light px-2 py-0.5 rounded border border-border/30">
+              <div key={p} className="flex items-center gap-1 text-[10px] bg-surface-light px-2 py-0.5 rounded border border-border">
                 {PLATFORM_ICONS[p] || <Globe size={10} />}
                 <span className="capitalize">{p}</span>
               </div>
@@ -253,7 +256,7 @@ export default function SocialManagerPage() {
                 {scheduledPosts.slice(0, 5).map(post => {
                   const meta = (post.metadata as Record<string, unknown>) || {};
                   return (
-                    <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light/30 rounded-lg border border-border/15 hover:border-gold/10 transition-all">
+                    <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border hover:border-gold/10 transition-all">
                       <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium truncate">{post.title}</p>
@@ -283,7 +286,7 @@ export default function SocialManagerPage() {
               </h2>
               <div className="space-y-1.5">
                 {recentPosts.slice(0, 5).map(post => (
-                  <div key={post.id} className="flex items-center gap-2.5 py-1.5 border-b border-border/10 last:border-0">
+                  <div key={post.id} className="flex items-center gap-2.5 py-1.5 border-b border-border last:border-0">
                     {PLATFORM_ICONS[post.platform] || <Globe size={12} />}
                     <div className="flex-1 min-w-0">
                       <p className="text-[11px] truncate">{post.title}</p>

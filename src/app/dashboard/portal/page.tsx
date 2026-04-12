@@ -202,7 +202,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
           )}
         </div>
         <button onClick={() => { setShowOnboarding(false); localStorage.setItem(`onboarding_done_${client?.id}`, "true"); }}
-          className="text-[10px] text-muted hover:text-white block mx-auto">Skip for now</button>
+          className="text-[10px] text-muted hover:text-foreground block mx-auto">Skip for now</button>
       </div>
     );
   }
@@ -245,7 +245,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
             <Film size={14} className="text-accent" />
           </div>
           <div>
-            <p className="text-xs font-medium group-hover:text-white transition-colors">Content</p>
+            <p className="text-xs font-medium group-hover:text-foreground transition-colors">Content</p>
             <p className="text-[10px] text-muted">View deliverables</p>
           </div>
         </Link>
@@ -254,7 +254,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
             <BarChart3 size={14} className="text-success" />
           </div>
           <div>
-            <p className="text-xs font-medium group-hover:text-white transition-colors">Reports</p>
+            <p className="text-xs font-medium group-hover:text-foreground transition-colors">Reports</p>
             <p className="text-[10px] text-muted">Performance data</p>
           </div>
         </Link>
@@ -263,7 +263,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
             <CreditCard size={14} className="text-warning" />
           </div>
           <div>
-            <p className="text-xs font-medium group-hover:text-white transition-colors">Billing</p>
+            <p className="text-xs font-medium group-hover:text-foreground transition-colors">Billing</p>
             <p className="text-[10px] text-muted">Invoices & contracts</p>
           </div>
         </Link>
@@ -272,7 +272,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
             <MessageSquare size={14} className="text-gold" />
           </div>
           <div>
-            <p className="text-xs font-medium group-hover:text-white transition-colors">Support</p>
+            <p className="text-xs font-medium group-hover:text-foreground transition-colors">Support</p>
             <p className="text-[10px] text-muted">Ask {botName}</p>
           </div>
         </Link>
@@ -334,7 +334,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
               <p className="text-xs text-muted py-3 text-center">No tasks assigned yet</p>
             ) : (
               tasks.map((task) => (
-                <div key={task.id} className="flex items-start gap-2 py-1.5 border-b border-border/15 last:border-0">
+                <div key={task.id} className="flex items-start gap-2 py-1.5 border-b border-border last:border-0">
                   {task.is_completed ? (
                     <CheckCircle size={14} className="text-success mt-0.5 shrink-0" />
                   ) : (
@@ -360,7 +360,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
               <p className="text-xs text-muted py-3 text-center">No recent activity</p>
             ) : (
               aiActions.map((a, i) => (
-                <div key={i} className="flex items-start gap-2 py-1.5 border-b border-border/15 last:border-0">
+                <div key={i} className="flex items-start gap-2 py-1.5 border-b border-border last:border-0">
                   <Bot size={12} className="text-gold mt-0.5 shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs">{a.description as string}</p>
@@ -387,7 +387,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
             {content.slice(0, 3).map((c, i) => (
-              <div key={i} className="bg-surface-light/30 border border-border/20 rounded-lg p-2.5">
+              <div key={i} className="bg-surface-light border border-border rounded-lg p-2.5">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[10px] text-muted capitalize">{c.platform.replace(/_/g, " ")}</span>
                   <StatusBadge status={c.status} />

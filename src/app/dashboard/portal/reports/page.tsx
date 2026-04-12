@@ -91,7 +91,7 @@ export default function ClientReportsPage() {
             <p className="text-xs text-muted py-4 text-center">No activity recorded yet</p>
           ) : (
             recentActions.map((a, i) => (
-              <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border/15 last:border-0">
+              <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border last:border-0">
                 <div className="w-6 h-6 bg-gold/10 rounded-md flex items-center justify-center shrink-0 mt-0.5">
                   <Zap size={10} className="text-gold" />
                 </div>

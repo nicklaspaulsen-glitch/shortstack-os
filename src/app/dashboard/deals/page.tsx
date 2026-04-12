@@ -117,7 +117,7 @@ export default function DealsPage() {
         </div>
         <div className="card text-center">
           <p className="text-[10px] text-muted">Win Rate</p>
-          <p className="text-xl font-bold text-white">{winRate}%</p>
+          <p className="text-xl font-bold text-foreground">{winRate}%</p>
         </div>
       </div>
 
@@ -145,8 +145,7 @@ export default function DealsPage() {
                   </div>
                 )}
                 {stageDeals.map(deal => (
-                  <div key={deal.id} className="p-3 rounded-lg space-y-1.5"
-                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+                  <div key={deal.id} className="p-3 rounded-lg space-y-1.5 bg-surface-light border border-border">
                     <p className="text-[11px] font-semibold truncate">{deal.title}</p>
                     <p className="text-sm font-bold" style={{ color: stage.color }}>{formatCurrency(deal.amount)}</p>
                     {deal.source && <p className="text-[8px] text-muted">Source: {deal.source}</p>}

@@ -301,7 +301,7 @@ export default function ScraperPage() {
               <span className="text-[10px] text-muted">{showFilters ? "Hide" : "Show"}</span>
             </button>
             {showFilters && (
-              <div className="space-y-3 mt-3 pt-3 border-t border-border/30">
+              <div className="space-y-3 mt-3 pt-3 border-t border-border">
                 {/* Quick presets */}
                 <div>
                   <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Quick Presets</p>
@@ -385,7 +385,7 @@ export default function ScraperPage() {
               {niches.map(n => (
                 <span key={n} className="bg-gold/10 border border-gold/20 text-gold text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
                   {n}
-                  <button onClick={() => setNiches(niches.filter(x => x !== n))} className="hover:text-white"><X size={10} /></button>
+                  <button onClick={() => setNiches(niches.filter(x => x !== n))} className="hover:text-foreground"><X size={10} /></button>
                 </span>
               ))}
             </div>
@@ -403,7 +403,7 @@ export default function ScraperPage() {
             <div className="flex flex-wrap gap-1">
               {PRESET_NICHES.filter(n => !niches.includes(n)).map(n => (
                 <button key={n} onClick={() => addNiche(n)}
-                  className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-white hover:bg-border transition-colors">
+                  className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">
                   {n}
                 </button>
               ))}
@@ -438,7 +438,7 @@ export default function ScraperPage() {
             {locations.map(l => (
               <span key={l} className="bg-success/10 border border-success/20 text-success text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
                 {l}
-                <button onClick={() => setLocations(locations.filter(x => x !== l))} className="hover:text-white"><X size={10} /></button>
+                <button onClick={() => setLocations(locations.filter(x => x !== l))} className="hover:text-foreground"><X size={10} /></button>
               </span>
             ))}
           </div>
@@ -456,7 +456,7 @@ export default function ScraperPage() {
           <div className="flex flex-wrap gap-1 max-h-60 overflow-y-auto">
             {PRESET_LOCATIONS.filter(l => !locations.includes(l)).map(l => (
               <button key={l} onClick={() => addLocation(l)}
-                className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-white hover:bg-border transition-colors">
+                className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">
                 {l}
               </button>
             ))}
@@ -571,7 +571,7 @@ export default function ScraperPage() {
                   {r.instagram_url && <a href={r.instagram_url as string} target="_blank" rel="noopener" className="text-[10px] bg-pink-500/10 text-pink-400 px-1.5 py-0.5 rounded">IG</a>}
                   {r.facebook_url && <a href={r.facebook_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">FB</a>}
                   {r.tiktok_url && <a href={r.tiktok_url as string} target="_blank" rel="noopener" className="text-[10px] bg-white/10 text-white px-1.5 py-0.5 rounded">TK</a>}
-                  {r.linkedin_url && <a href={r.linkedin_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-400/10 text-blue-300 px-1.5 py-0.5 rounded">LI</a>}
+                  {r.linkedin_url && <a href={r.linkedin_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-400/10 text-blue-600 px-1.5 py-0.5 rounded">LI</a>}
                   {!r.instagram_url && !r.facebook_url && !r.tiktok_url && !r.linkedin_url && <span className="text-muted text-[10px]">None</span>}
                 </div>
               )},
@@ -598,19 +598,19 @@ export default function ScraperPage() {
               <FlaskConical size={14} className="text-accent" /> 500-Lead Test Results
             </h3>
             <div className="grid grid-cols-4 gap-3 mb-4">
-              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border">
                 <p className="text-lg font-bold font-mono text-accent">{testResults.totalFound}</p>
                 <p className="text-[9px] text-muted uppercase tracking-wider">Found</p>
               </div>
-              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border">
                 <p className="text-lg font-bold font-mono text-success">{testResults.totalSaved}</p>
                 <p className="text-[9px] text-muted uppercase tracking-wider">Saved</p>
               </div>
-              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border">
                 <p className="text-lg font-bold font-mono text-warning">{testResults.totalSkipped}</p>
                 <p className="text-[9px] text-muted uppercase tracking-wider">Duplicates</p>
               </div>
-              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border/20">
+              <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border">
                 <p className="text-lg font-bold font-mono text-danger">{testResults.errors.length}</p>
                 <p className="text-[9px] text-muted uppercase tracking-wider">Errors</p>
               </div>

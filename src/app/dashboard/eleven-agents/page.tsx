@@ -56,6 +56,15 @@ export default function ElevenAgentsPage() {
   const [maxCallsPerDay, setMaxCallsPerDay] = useState(10);
   const [enabled, setEnabled] = useState(false);
 
+  // Call controls
+  const [calling, setCalling] = useState(false);
+  const [callResults, setCallResults] = useState<{ totalCalled: number; errors: number; leads: Array<{ business: string; phone: string; status: string; conversationId?: string }> } | null>(null);
+  const [testNumber, setTestNumber] = useState("");
+  const [testBusiness, setTestBusiness] = useState("Test Business");
+  const [expandedConvo, setExpandedConvo] = useState<string | null>(null);
+  const [transcript, setTranscript] = useState<Record<string, unknown> | null>(null);
+  const [loadingTranscript, setLoadingTranscript] = useState(false);
+
   useEffect(() => { fetchData(); loadDefaults(); }, []);
 
   async function fetchData() {
@@ -158,6 +167,76 @@ export default function ElevenAgentsPage() {
     } catch { toast.error("Failed to save"); }
   }
 
+  async function runCalls(count: number) {
+    if (!selectedAgent || !selectedPhone) {
+      toast.error("Select an agent and phone number first");
+      return;
+    }
+    setCalling(true);
+    setCallResults(null);
+    try {
+      const res = await fetch("/api/agents/eleven", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "run_calls", maxCalls: count }),
+      });
+      const data = await res.json();
+      setCallResults(data);
+      if (data.totalCalled > 0) {
+        toast.success(`${data.totalCalled} calls made (${data.errors} errors)`);
+        fetchData();
+      } else {
+        toast.error(data.leads?.[0]?.status || "No leads to call");
+      }
+    } catch { toast.error("Failed to run calls"); }
+    setCalling(false);
+  }
+
+  async function testCall() {
+    if (!selectedAgent || !selectedPhone || !testNumber) {
+      toast.error("Need agent, phone number, and target number");
+      return;
+    }
+    setCalling(true);
+    try {
+      const res = await fetch("/api/agents/eleven", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "test_call",
+          agentId: selectedAgent,
+          phoneNumberId: selectedPhone,
+          toNumber: testNumber,
+          customData: { business_name: testBusiness, industry: "test", caller_name: "Alex from ShortStack" },
+        }),
+      });
+      const data = await res.json();
+      if (data.error) toast.error(data.error);
+      else toast.success(`Call started! Conv: ${data.conversationId?.substring(0, 12)}...`);
+    } catch { toast.error("Failed to make test call"); }
+    setCalling(false);
+  }
+
+  async function fetchTranscript(conversationId: string) {
+    if (expandedConvo === conversationId) {
+      setExpandedConvo(null);
+      setTranscript(null);
+      return;
+    }
+    setExpandedConvo(conversationId);
+    setLoadingTranscript(true);
+    try {
+      const res = await fetch("/api/agents/eleven", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "get_transcript", conversationId }),
+      });
+      const data = await res.json();
+      setTranscript(data.conversation || null);
+    } catch { toast.error("Failed to load transcript"); }
+    setLoadingTranscript(false);
+  }
+
   async function deleteExistingAgent(agentId: string) {
     if (!confirm("Delete this agent?")) return;
     try {
@@ -187,17 +266,17 @@ export default function ElevenAgentsPage() {
           </h1>
           <p className="text-sm text-muted mt-0.5">AI voice agents for outbound cold calling</p>
         </div>
-        <button onClick={fetchData} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/20 text-xs text-muted hover:text-white transition-all">
+        <button onClick={fetchData} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-xs text-muted hover:text-foreground transition-all">
           <RefreshCw size={12} /> Refresh
         </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 border-b border-border/10 pb-px">
+      <div className="flex gap-1 border-b border-border pb-px">
         {(["agents", "calls", "setup"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-4 py-2 text-xs font-medium rounded-t-lg transition-all ${
-              tab === t ? "bg-surface-light/40 text-white border-b-2 border-gold" : "text-muted hover:text-white"
+              tab === t ? "bg-surface-light text-foreground border-b-2 border-gold" : "text-muted hover:text-foreground"
             }`}>
             {t === "agents" ? "Agents" : t === "calls" ? "Call History" : "Setup & Config"}
           </button>
@@ -215,12 +294,12 @@ export default function ElevenAgentsPage() {
             <div className="space-y-4">
               {/* Existing Agents */}
               {agents.length > 0 && (
-                <div className="rounded-xl border border-border/20 bg-surface/40 overflow-hidden">
-                  <div className="px-5 py-3 border-b border-border/10">
+                <div className="rounded-xl border border-border bg-white overflow-hidden">
+                  <div className="px-5 py-3 border-b border-border">
                     <h2 className="text-sm font-semibold">Your Agents</h2>
                   </div>
                   {agents.map((agent) => (
-                    <div key={agent.agent_id} className="flex items-center justify-between px-5 py-3 border-b border-border/5 last:border-0 hover:bg-surface-light/10">
+                    <div key={agent.agent_id} className="flex items-center justify-between px-5 py-3 border-b border-border last:border-0 hover:bg-surface-light">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                           <Phone size={14} className="text-purple-400" />
@@ -234,7 +313,7 @@ export default function ElevenAgentsPage() {
                         <button onClick={() => setSelectedAgent(agent.agent_id)}
                           className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
                             selectedAgent === agent.agent_id
-                              ? "bg-gold/10 text-gold border-gold/20" : "border-border/20 text-muted hover:text-white"
+                              ? "bg-gold/10 text-gold border-gold/20" : "border-border text-muted hover:text-foreground"
                           }`}>
                           {selectedAgent === agent.agent_id ? <><CheckCircle size={10} className="inline mr-1" />Selected</> : "Select"}
                         </button>
@@ -248,8 +327,40 @@ export default function ElevenAgentsPage() {
                 </div>
               )}
 
+              {/* Run Calls Now */}
+              {agents.length > 0 && selectedAgent && selectedPhone && (
+                <div className="rounded-xl border border-gold/20 bg-gold/5 p-5">
+                  <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                    <PhoneCall size={15} className="text-gold" /> Run Calls Now
+                  </h2>
+                  <p className="text-[11px] text-muted mb-3">AI will call high-score leads from your CRM using the selected agent and phone number.</p>
+                  <div className="flex items-center gap-2">
+                    {[3, 5, 10].map(n => (
+                      <button key={n} onClick={() => runCalls(n)} disabled={calling}
+                        className="px-4 py-2 bg-gold text-white text-xs font-medium rounded-lg hover:bg-gold-dark transition-all disabled:opacity-30 flex items-center gap-1.5">
+                        {calling ? <RefreshCw size={12} className="animate-spin" /> : <Play size={12} />}
+                        Call {n} Leads
+                      </button>
+                    ))}
+                  </div>
+                  {callResults && (
+                    <div className="mt-3 p-3 rounded-lg bg-white border border-border text-[11px] space-y-1">
+                      <p className="font-medium">{callResults.totalCalled} calls made, {callResults.errors} errors</p>
+                      {callResults.leads.map((l, i) => (
+                        <div key={i} className="flex items-center gap-2 text-muted">
+                          <span className={`w-1.5 h-1.5 rounded-full ${l.status === "calling" ? "bg-emerald-400" : "bg-red-400"}`} />
+                          <span>{l.business}</span>
+                          <span className="font-mono text-[9px]">{l.phone}</span>
+                          <span className="text-[9px]">{l.status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Create New Agent */}
-              <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+              <div className="rounded-xl border border-border bg-white p-5">
                 <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
                   <Plus size={15} /> Create New Agent
                 </h2>
@@ -286,8 +397,8 @@ export default function ElevenAgentsPage() {
 
           {/* CALLS TAB */}
           {tab === "calls" && (
-            <div className="rounded-xl border border-border/20 bg-surface/40 overflow-hidden">
-              <div className="px-5 py-3 border-b border-border/10 flex items-center justify-between">
+            <div className="rounded-xl border border-border bg-white overflow-hidden">
+              <div className="px-5 py-3 border-b border-border flex items-center justify-between">
                 <h2 className="text-sm font-semibold">Recent Conversations</h2>
                 <span className="text-[10px] text-muted">{conversations.length} total</span>
               </div>
@@ -300,26 +411,65 @@ export default function ElevenAgentsPage() {
               ) : (
                 <div className="divide-y divide-border/5">
                   {conversations.slice(0, 20).map((convo) => (
-                    <div key={convo.conversation_id} className="px-5 py-3 hover:bg-surface-light/10 transition-colors">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-2 h-2 rounded-full ${
-                            convo.status === "done" ? "bg-emerald-400" :
-                            convo.status === "active" ? "bg-blue-400 animate-pulse" : "bg-amber-400"
-                          }`} />
-                          <div>
-                            <p className="text-[11px] font-mono">{convo.conversation_id.substring(0, 16)}...</p>
-                            <p className="text-[9px] text-muted">
-                              {convo.call_duration_secs ? `${convo.call_duration_secs}s` : convo.status}
-                              {convo.start_time && ` — ${new Date(convo.start_time).toLocaleString()}`}
-                            </p>
+                    <div key={convo.conversation_id}>
+                      <div className="px-5 py-3 hover:bg-surface-light transition-colors cursor-pointer" onClick={() => fetchTranscript(convo.conversation_id)}>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-2 h-2 rounded-full ${
+                              convo.status === "done" ? "bg-emerald-400" :
+                              convo.status === "active" ? "bg-blue-400 animate-pulse" : "bg-amber-400"
+                            }`} />
+                            <div>
+                              <p className="text-[11px] font-mono">{convo.conversation_id.substring(0, 16)}...</p>
+                              <p className="text-[9px] text-muted">
+                                {convo.call_duration_secs ? `${convo.call_duration_secs}s` : convo.status}
+                                {convo.start_time && ` — ${new Date(convo.start_time).toLocaleString()}`}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                              convo.status === "done" ? "bg-emerald-500/10 text-emerald-600" :
+                              convo.status === "active" ? "bg-blue-500/10 text-blue-600" : "bg-amber-500/10 text-amber-600"
+                            }`}>{convo.status}</span>
+                            <span className="text-[9px] text-muted">{expandedConvo === convo.conversation_id ? "▲" : "▼"}</span>
                           </div>
                         </div>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                          convo.status === "done" ? "bg-emerald-500/10 text-emerald-400" :
-                          convo.status === "active" ? "bg-blue-500/10 text-blue-400" : "bg-amber-500/10 text-amber-400"
-                        }`}>{convo.status}</span>
                       </div>
+                      {expandedConvo === convo.conversation_id && (
+                        <div className="px-5 pb-3">
+                          {loadingTranscript ? (
+                            <div className="flex items-center gap-2 py-3 text-[11px] text-muted">
+                              <RefreshCw size={12} className="animate-spin" /> Loading transcript...
+                            </div>
+                          ) : transcript ? (
+                            <div className="rounded-lg border border-border bg-surface-light p-3 space-y-2 text-[11px]">
+                              {(transcript as Record<string, unknown>).analysis ? (
+                                <div className="pb-2 border-b border-border">
+                                  <p className="font-medium text-foreground mb-1">Analysis</p>
+                                  <p className="text-muted">{JSON.stringify((transcript as Record<string, unknown>).analysis)}</p>
+                                </div>
+                              ) : null}
+                              {Array.isArray((transcript as Record<string, unknown>).transcript) ? (
+                                ((transcript as Record<string, unknown>).transcript as Array<{ role: string; message: string }>).map((turn, i) => (
+                                  <div key={i} className={`flex gap-2 ${turn.role === "agent" ? "" : "justify-end"}`}>
+                                    <div className={`max-w-[80%] px-3 py-1.5 rounded-lg ${
+                                      turn.role === "agent" ? "bg-white border border-border" : "bg-gold/10 text-foreground"
+                                    }`}>
+                                      <p className="text-[9px] text-muted mb-0.5 font-medium">{turn.role === "agent" ? "AI Agent" : "Lead"}</p>
+                                      <p>{turn.message}</p>
+                                    </div>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="text-muted">No transcript available yet</p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-[11px] text-muted py-2">Failed to load transcript</p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -331,7 +481,7 @@ export default function ElevenAgentsPage() {
           {tab === "setup" && (
             <div className="space-y-4">
               {/* Phone Numbers */}
-              <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+              <div className="rounded-xl border border-border bg-white p-5">
                 <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
                   <Phone size={15} /> Phone Numbers (Twilio)
                 </h2>
@@ -339,7 +489,7 @@ export default function ElevenAgentsPage() {
                 {phones.length > 0 && (
                   <div className="mb-4 space-y-2">
                     {phones.map((ph) => (
-                      <div key={ph.phone_number_id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface-light/20 border border-border/10">
+                      <div key={ph.phone_number_id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-surface-light border border-border">
                         <div>
                           <p className="text-[11px] font-medium">{ph.phone_number}</p>
                           <p className="text-[9px] text-muted">{ph.label}</p>
@@ -347,7 +497,7 @@ export default function ElevenAgentsPage() {
                         <button onClick={() => setSelectedPhone(ph.phone_number_id)}
                           className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
                             selectedPhone === ph.phone_number_id
-                              ? "bg-gold/10 text-gold border-gold/20" : "border-border/20 text-muted hover:text-white"
+                              ? "bg-gold/10 text-gold border-gold/20" : "border-border text-muted hover:text-foreground"
                           }`}>
                           {selectedPhone === ph.phone_number_id ? "Selected" : "Select"}
                         </button>
@@ -356,7 +506,7 @@ export default function ElevenAgentsPage() {
                   </div>
                 )}
 
-                <div className="space-y-3 pt-3 border-t border-border/10">
+                <div className="space-y-3 pt-3 border-t border-border">
                   <p className="text-[10px] text-muted">Import a Twilio phone number for outbound calling</p>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -388,7 +538,7 @@ export default function ElevenAgentsPage() {
               </div>
 
               {/* Outbound Config */}
-              <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+              <div className="rounded-xl border border-border bg-white p-5">
                 <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
                   <Settings size={15} /> Outbound Calling Config
                 </h2>
@@ -433,8 +583,36 @@ export default function ElevenAgentsPage() {
                 </div>
               </div>
 
+              {/* Test Call */}
+              <div className="rounded-xl border border-border bg-white p-5">
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                  <Play size={15} className="text-gold" /> Test Call
+                </h2>
+                <p className="text-[10px] text-muted mb-3">Make a single test call to verify your agent works. Call yourself or a team member.</p>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Phone Number to Call</label>
+                    <input type="text" value={testNumber} onChange={(e) => setTestNumber(e.target.value)}
+                      className="input w-full text-xs py-2" placeholder="+1234567890" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Business Name (for script)</label>
+                    <input type="text" value={testBusiness} onChange={(e) => setTestBusiness(e.target.value)}
+                      className="input w-full text-xs py-2" />
+                  </div>
+                </div>
+                <button onClick={testCall} disabled={calling || !selectedAgent || !selectedPhone || !testNumber}
+                  className="flex items-center gap-2 px-4 py-2 bg-gold text-white text-xs font-medium rounded-lg hover:bg-gold-dark transition-all disabled:opacity-30">
+                  {calling ? <RefreshCw size={12} className="animate-spin" /> : <PhoneCall size={12} />}
+                  {calling ? "Calling..." : "Make Test Call"}
+                </button>
+                {(!selectedAgent || !selectedPhone) && (
+                  <p className="text-[9px] text-amber-600 mt-2">Select an agent and phone number above first</p>
+                )}
+              </div>
+
               {/* How it works */}
-              <div className="rounded-xl border border-border/10 bg-surface/40 p-5">
+              <div className="rounded-xl border border-border bg-white p-5">
                 <h2 className="text-sm font-semibold mb-3">How It Works</h2>
                 <div className="space-y-2">
                   {[

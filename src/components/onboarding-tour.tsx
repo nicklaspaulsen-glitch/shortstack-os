@@ -193,7 +193,7 @@ export default function OnboardingTour({ onComplete }: OnboardingTourProps) {
             <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
               <Icon className="w-4 h-4 text-purple-400" />
             </div>
-            <h3 className="text-xs font-bold text-white">{step.title}</h3>
+            <h3 className="text-xs font-bold text-foreground">{step.title}</h3>
           </div>
           <button
             onClick={completeTour}

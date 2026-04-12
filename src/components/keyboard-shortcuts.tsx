@@ -95,10 +95,10 @@ export default function KeyboardShortcuts() {
     <div className="fixed inset-0 z-[9999]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowHelp(false)} />
       <div className="relative max-w-md mx-auto mt-[15vh]">
-        <div className="rounded-2xl overflow-hidden fade-in" style={{ background: "rgba(17,20,28,0.98)", border: "1px solid rgba(255,255,255,0.06)" }}>
-          <div className="px-5 py-3 border-b" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
-            <h2 className="text-sm font-bold text-white">Keyboard Shortcuts</h2>
-            <p className="text-[10px] text-gray-500">Press <kbd className="px-1.5 py-0.5 rounded text-[9px]" style={{ background: "rgba(255,255,255,0.06)" }}>?</kbd> to toggle</p>
+        <div className="rounded-2xl overflow-hidden fade-in bg-surface border border-border">
+          <div className="px-5 py-3 border-b border-border">
+            <h2 className="text-sm font-bold text-foreground">Keyboard Shortcuts</h2>
+            <p className="text-[10px] text-gray-500">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-surface-light">?</kbd> to toggle</p>
           </div>
 
           <div className="px-5 py-3 max-h-[400px] overflow-y-auto space-y-4">
@@ -108,11 +108,11 @@ export default function KeyboardShortcuts() {
                 <div className="space-y-1">
                   {shortcuts.filter(s => s.category === cat).map(s => (
                     <div key={s.keys} className="flex items-center justify-between py-1.5">
-                      <span className="text-xs text-gray-300">{s.label}</span>
+                      <span className="text-xs text-muted">{s.label}</span>
                       <div className="flex gap-1">
                         {s.keys.split(" ").map((k, i) => (
                           <span key={i}>
-                            <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono" style={{ background: "rgba(255,255,255,0.06)", color: "#c8a855" }}>
+                            <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-surface-light text-gold">
                               {k}
                             </kbd>
                             {i < s.keys.split(" ").length - 1 && <span className="text-gray-600 mx-0.5">then</span>}
@@ -126,8 +126,8 @@ export default function KeyboardShortcuts() {
             ))}
           </div>
 
-          <div className="px-5 py-2 border-t text-center" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
-            <p className="text-[9px] text-gray-600">Press <kbd className="px-1 py-0.5 rounded text-[8px]" style={{ background: "rgba(255,255,255,0.04)" }}>Esc</kbd> to close</p>
+          <div className="px-5 py-2 border-t border-border text-center">
+            <p className="text-[9px] text-gray-600">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-surface-light">Esc</kbd> to close</p>
           </div>
         </div>
       </div>

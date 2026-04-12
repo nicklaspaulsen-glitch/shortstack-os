@@ -256,7 +256,7 @@ export default function OutreachHubPage() {
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-white"
+              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t.icon} {t.label}
@@ -400,7 +400,7 @@ export default function OutreachHubPage() {
                                     <span className="text-[10px] text-muted capitalize">{log.platform}</span>
                                     <span className="text-[10px] text-muted ml-auto">{formatTime(log.sent_at)}</span>
                                   </div>
-                                  <p className="text-xs text-white/80 truncate">{log.message_text}</p>
+                                  <p className="text-xs text-foreground truncate">{log.message_text}</p>
                                   {log.reply_text && (
                                     <p className="text-xs text-green-400 mt-1 truncate">Reply: {log.reply_text}</p>
                                   )}

@@ -144,13 +144,12 @@ export default function FormsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {PRESETS.map((preset, i) => (
                 <button key={i} onClick={() => createFromPreset(preset)}
-                  className="text-left p-4 rounded-xl transition-all hover:border-gold/15"
-                  style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  className="text-left p-4 rounded-xl transition-all hover:border-gold/15 bg-surface-light border border-border">
                   <p className="text-sm font-bold mb-1">{preset.name}</p>
                   <p className="text-[10px] text-muted">{preset.fields.length} fields</p>
                   <div className="flex flex-wrap gap-1 mt-2">
                     {preset.fields.map((f, j) => (
-                      <span key={j} className="text-[8px] px-1.5 py-0.5 rounded" style={{ background: "rgba(255,255,255,0.04)" }}>{f.label}</span>
+                      <span key={j} className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light">{f.label}</span>
                     ))}
                   </div>
                 </button>
@@ -164,8 +163,7 @@ export default function FormsPage() {
               <h2 className="section-header">Your Forms</h2>
               <div className="space-y-2">
                 {forms.map(form => (
-                  <div key={form.id} className="flex items-center justify-between p-3 rounded-lg"
-                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div key={form.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
                     <div>
                       <p className="text-xs font-semibold">{form.name}</p>
                       <p className="text-[10px] text-muted">{form.fields.length} fields</p>
@@ -199,8 +197,7 @@ export default function FormsPage() {
               {/* Fields */}
               <div className="space-y-2 mb-3">
                 {activeForm.fields.map((field, i) => (
-                  <div key={field.id} className="flex items-center gap-2 p-2.5 rounded-lg"
-                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div key={field.id} className="flex items-center gap-2 p-2.5 rounded-lg bg-surface-light border border-border">
                     <span className="text-muted">{FIELD_TYPES.find(t => t.type === field.type)?.icon}</span>
                     <input value={field.label} onChange={e => {
                       const fields = [...activeForm.fields];
@@ -227,8 +224,7 @@ export default function FormsPage() {
               <div className="flex flex-wrap gap-1.5">
                 {FIELD_TYPES.map(ft => (
                   <button key={ft.type} onClick={() => addField(ft.type)}
-                    className="flex items-center gap-1 text-[9px] px-2 py-1 rounded-md text-muted hover:text-white transition-colors"
-                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                    className="flex items-center gap-1 text-[9px] px-2 py-1 rounded-md text-muted hover:text-foreground transition-colors bg-surface-light border border-border">
                     <Plus size={8} /> {ft.label}
                   </button>
                 ))}

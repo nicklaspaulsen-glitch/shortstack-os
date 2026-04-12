@@ -258,7 +258,7 @@ export default function ConversationsPage() {
                     msg.direction === "outbound"
                       ? "bg-gold/10 border border-gold/15"
                       : "border border-white/[0.06]"
-                  }`} style={msg.direction === "inbound" ? { background: "rgba(255,255,255,0.03)" } : {}}>
+                  } ${msg.direction === "inbound" ? "bg-surface-light" : ""}`}>
                     <p className="text-[11px] leading-relaxed">{msg.text}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-[8px] text-muted">{formatTime(msg.date)}</span>

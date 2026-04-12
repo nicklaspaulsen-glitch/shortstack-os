@@ -229,7 +229,7 @@ export default function WorkflowsPage() {
             <Plus size={13} /> New
           </button>
           <button onClick={() => setTab("agent")} className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-all ${
-            tab === "agent" ? "bg-gold text-black" : "bg-surface-light text-muted hover:text-white border border-border"
+            tab === "agent" ? "bg-gold text-black" : "bg-surface-light text-muted hover:text-foreground border border-border"
           }`}>
             <Bot size={13} /> Agent Mode
           </button>
@@ -255,7 +255,7 @@ export default function WorkflowsPage() {
             <div className="flex flex-wrap gap-1.5">
               {EXAMPLE_PROMPTS.map((p, i) => (
                 <button key={i} onClick={() => { setPrompt(p.replace(/&apos;/g, "'")); setShowCreate(true); }}
-                  className="text-[10px] bg-surface-light px-2.5 py-1.5 rounded-md text-muted hover:text-white hover:border-gold/20 border border-border/50 transition-all text-left"
+                  className="text-[10px] bg-surface-light px-2.5 py-1.5 rounded-md text-muted hover:text-foreground hover:border-gold/20 border border-border transition-all text-left"
                 >{p.replace(/&apos;/g, "'")}</button>
               ))}
             </div>
@@ -362,7 +362,7 @@ export default function WorkflowsPage() {
           <div className="absolute inset-0 bg-mesh opacity-20" />
           <div className="relative flex flex-col h-full" style={{ minHeight: "480px" }}>
             {/* Agent header */}
-            <div className="flex items-center justify-between pb-3 border-b border-border/20 mb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-border mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
                   <Bot size={16} className="text-gold" />
@@ -399,7 +399,7 @@ export default function WorkflowsPage() {
                       "When a lead replies, notify me and create a task",
                     ].map((s, i) => (
                       <button key={i} onClick={() => { setAgentInput(s); }}
-                        className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-muted hover:text-white border border-border/30 hover:border-gold/20 transition-all">
+                        className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-muted hover:text-foreground border border-border hover:border-gold/20 transition-all">
                         {s}
                       </button>
                     ))}
@@ -411,12 +411,12 @@ export default function WorkflowsPage() {
                 <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
                     msg.role === "user"
-                      ? "bg-gold/10 border border-gold/15 text-white"
-                      : "bg-surface-light/50 border border-border/20"
+                      ? "bg-gold/10 border border-gold/15 text-foreground"
+                      : "bg-surface-light/50 border border-border"
                   }`}>
                     <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
                     {msg.workflow && (
-                      <div className="mt-2 pt-2 border-t border-border/20">
+                      <div className="mt-2 pt-2 border-t border-border">
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="text-[10px] text-gold font-medium">{msg.workflow.name}</span>
                           <div className="flex gap-1">
@@ -446,7 +446,7 @@ export default function WorkflowsPage() {
 
               {agentThinking && (
                 <div className="flex justify-start">
-                  <div className="bg-surface-light/50 border border-border/20 rounded-lg px-3 py-2">
+                  <div className="bg-surface-light/50 border border-border rounded-lg px-3 py-2">
                     <div className="flex items-center gap-1.5">
                       <Loader size={12} className="animate-spin text-gold" />
                       <span className="text-[10px] text-muted">Thinking...</span>

@@ -108,7 +108,7 @@ export default function ClientSettingsPage() {
 
         <div className="space-y-4">
           {/* DM Outreach */}
-          <div className="flex items-start justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+          <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
                 <MessageSquare size={14} className="text-accent" />
@@ -123,7 +123,7 @@ export default function ClientSettingsPage() {
                         className={`text-[10px] px-2 py-0.5 rounded-md border transition-colors capitalize ${
                           settings.dm_outreach_platforms.includes(p)
                             ? "bg-gold/10 text-gold border-gold/20"
-                            : "bg-surface-light text-muted border-border/30 hover:border-gold/20"
+                            : "bg-surface-light text-muted border-border hover:border-gold/20"
                         }`}>
                         {p}
                       </button>
@@ -139,7 +139,7 @@ export default function ClientSettingsPage() {
           </div>
 
           {/* AI Content Posting */}
-          <div className="flex items-start justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+          <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-success/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
                 <Bot size={14} className="text-success" />
@@ -156,7 +156,7 @@ export default function ClientSettingsPage() {
           </div>
 
           {/* Analytics Access */}
-          <div className="flex items-start justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+          <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-info/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
                 <Eye size={14} className="text-info" />
@@ -173,7 +173,7 @@ export default function ClientSettingsPage() {
           </div>
 
           {/* Ad Management */}
-          <div className="flex items-start justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+          <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border">
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-warning/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
                 <Bot size={14} className="text-warning" />
@@ -223,11 +223,11 @@ export default function ClientSettingsPage() {
       </div>
 
       {/* Info */}
-      <div className="card border-border/20 bg-surface-light/20">
+      <div className="card border-border bg-surface-light">
         <div className="flex items-start gap-3">
           <Shield size={14} className="text-gold shrink-0 mt-0.5" />
           <p className="text-[10px] text-muted leading-relaxed">
-            All permissions can be changed at any time. DM outreach is <strong className="text-white">off by default</strong> —
+            All permissions can be changed at any time. DM outreach is <strong className="text-foreground">off by default</strong> —
             you must explicitly enable it. Your account manager can also control these settings on your behalf.
             All AI actions are logged and can be reviewed in your Reports section.
           </p>

@@ -59,23 +59,23 @@ const STATUS_TABS: { key: CRMStatus | "all"; label: string }[] = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  new: "bg-blue-500/15 text-blue-300 border-blue-500/20",
-  contacted: "bg-amber-500/15 text-amber-300 border-amber-500/20",
-  called: "bg-amber-500/15 text-amber-300 border-amber-500/20",
-  replied: "bg-emerald-500/15 text-emerald-300 border-emerald-500/20",
-  booked: "bg-purple-500/15 text-purple-300 border-purple-500/20",
-  converted: "bg-gold/15 text-gold border-gold/20",
-  not_interested: "bg-red-500/15 text-red-300 border-red-500/20",
+  new: "bg-blue-500/10 text-blue-600 border-blue-500/20",
+  contacted: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+  called: "bg-amber-500/10 text-amber-600 border-amber-500/20",
+  replied: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
+  booked: "bg-purple-500/10 text-purple-600 border-purple-500/20",
+  converted: "bg-gold/10 text-gold border-gold/20",
+  not_interested: "bg-red-500/10 text-red-600 border-red-500/20",
 };
 
 const OUTREACH_STATUS_COLORS: Record<string, string> = {
-  sent: "text-blue-300",
-  delivered: "text-blue-300",
-  replied: "text-emerald-300",
+  sent: "text-blue-600",
+  delivered: "text-blue-600",
+  replied: "text-emerald-600",
   no_reply: "text-muted",
-  bounced: "text-red-300",
-  failed: "text-red-300",
-  pending: "text-amber-300",
+  bounced: "text-red-600",
+  failed: "text-red-600",
+  pending: "text-amber-600",
 };
 
 function mapToCRMStatus(status: string): CRMStatus {
@@ -242,17 +242,17 @@ export default function CRMPage() {
     setActionLoading(null);
   }
 
-  async function callViaGHL(lead: CRMLead) {
+  async function callLead(lead: CRMLead) {
     if (!lead.phone) { toast.error("No phone for this lead"); return; }
     setActionLoading(lead.id + "-call");
     try {
-      const res = await fetch("/api/ghl/call", {
+      const res = await fetch("/api/call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lead_id: lead.id, phone: lead.phone, business_name: lead.business_name }),
+        body: JSON.stringify({ lead_id: lead.id, phone: lead.phone, business_name: lead.business_name, industry: lead.industry }),
       });
       const data = await res.json();
-      if (data.success) { toast.success("Call initiated via GHL!"); }
+      if (data.success) { toast.success("AI call initiated!"); fetchLeads(); }
       else toast.error(data.error || "Failed to initiate call");
     } catch { toast.error("Error initiating call"); }
     setActionLoading(null);
@@ -326,8 +326,8 @@ export default function CRMPage() {
     const icons: Record<string, React.ReactNode> = {
       instagram: <Camera size={13} className="text-pink-400" />,
       facebook: <Globe size={13} className="text-blue-400" />,
-      linkedin: <Briefcase size={13} className="text-blue-300" />,
-      tiktok: <Music size={13} className="text-white" />,
+      linkedin: <Briefcase size={13} className="text-blue-600" />,
+      tiktok: <Music size={13} className="text-foreground" />,
     };
     return (
       <a href={url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform" title={type}>
@@ -344,12 +344,12 @@ export default function CRMPage() {
         <Mail size={10} /> Email
       </button>
       <button onClick={() => sendSMS(lead)} disabled={!lead.phone || actionLoading === lead.id + "-sms"}
-        className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
+        className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
         title={lead.phone || "No phone"}>
         <MessageSquare size={10} /> SMS
       </button>
-      <button onClick={() => callViaGHL(lead)} disabled={!lead.phone || actionLoading === lead.id + "-call"}
-        className="text-[9px] px-2 py-1 rounded-lg bg-blue-500/10 text-blue-300 hover:bg-blue-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
+      <button onClick={() => callLead(lead)} disabled={!lead.phone || actionLoading === lead.id + "-call"}
+        className="text-[9px] px-2 py-1 rounded-lg bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
         title={lead.phone || "No phone"}>
         <Phone size={10} /> Call
       </button>
@@ -357,17 +357,17 @@ export default function CRMPage() {
   );
 
   const OutreachHistory = ({ entries }: { entries: OutreachLogEntry[] }) => {
-    if (entries.length === 0) return <p className="text-[10px] text-muted/50 py-2">No outreach yet</p>;
+    if (entries.length === 0) return <p className="text-[10px] text-muted py-2">No outreach yet</p>;
     return (
       <div className="space-y-1.5 max-h-48 overflow-y-auto">
         {entries.map(e => (
-          <div key={e.id} className="flex items-start gap-2 text-[10px] py-1.5 px-2 rounded-lg bg-surface-light/20">
+          <div key={e.id} className="flex items-start gap-2 text-[10px] py-1.5 px-2 rounded-lg bg-surface-light">
             <div className="flex items-center gap-1.5 shrink-0 pt-0.5">
               {e.platform === "email" ? <Mail size={11} className="text-gold" /> :
                e.platform === "call" ? <Phone size={11} className="text-green-400" /> :
                e.platform === "instagram" ? <Camera size={11} className="text-pink-400" /> :
-               e.platform === "linkedin" ? <Briefcase size={11} className="text-blue-300" /> :
-               e.platform === "tiktok" ? <Music size={11} className="text-white" /> :
+               e.platform === "linkedin" ? <Briefcase size={11} className="text-blue-600" /> :
+               e.platform === "tiktok" ? <Music size={11} className="text-foreground" /> :
                <MessageSquare size={11} className="text-blue-400" />}
               <span className={`text-[9px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>
                 {e.status}
@@ -376,10 +376,10 @@ export default function CRMPage() {
             <div className="flex-1 min-w-0">
               <p className="text-muted truncate">{e.message_text}</p>
               {e.reply_text && (
-                <p className="text-emerald-300/80 mt-0.5 truncate">Reply: {e.reply_text}</p>
+                <p className="text-emerald-600 mt-0.5 truncate">Reply: {e.reply_text}</p>
               )}
             </div>
-            <span className="text-[8px] text-muted/50 shrink-0">{formatShortDate(e.sent_at)}</span>
+            <span className="text-[8px] text-muted shrink-0">{formatShortDate(e.sent_at)}</span>
           </div>
         ))}
       </div>
@@ -405,7 +405,7 @@ export default function CRMPage() {
           <p className="text-xs text-muted mt-0.5">{leads.length} leads &middot; Manage outreach, track replies, close deals</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-lg overflow-hidden" style={{ border: "1px solid rgba(255,255,255,0.06)" }}>
+          <div className="flex rounded-lg overflow-hidden border border-border">
             {([
               { key: "table" as ViewMode, icon: <LayoutList size={12} />, label: "Table" },
               { key: "card" as ViewMode, icon: <LayoutGrid size={12} />, label: "Cards" },
@@ -413,7 +413,7 @@ export default function CRMPage() {
             ]).map(v => (
               <button key={v.key} onClick={() => setViewMode(v.key)}
                 className={`text-[10px] px-2.5 py-1.5 flex items-center gap-1 transition-all ${
-                  viewMode === v.key ? "bg-gold/10 text-gold" : "text-muted hover:text-white"
+                  viewMode === v.key ? "bg-gold/10 text-gold" : "text-muted hover:text-foreground"
                 }`}>
                 {v.icon} {v.label}
               </button>
@@ -462,13 +462,13 @@ export default function CRMPage() {
       {/* Search + Sort */}
       <div className="flex items-center gap-2 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search by name, industry, city, email..."
             className="input w-full text-xs pl-9 py-2" />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2">
-              <X size={12} className="text-muted/50 hover:text-white" />
+              <X size={12} className="text-muted hover:text-foreground" />
             </button>
           )}
         </div>
@@ -478,10 +478,10 @@ export default function CRMPage() {
             <ChevronDown size={10} />
           </button>
           {showSortMenu && (
-            <div className="absolute right-0 top-full mt-1 bg-surface border border-border/30 rounded-xl shadow-xl z-50 py-1 min-w-[140px]">
+            <div className="absolute right-0 top-full mt-1 bg-surface border border-border rounded-xl shadow-xl z-50 py-1 min-w-[140px]">
               {(["newest", "rating", "reviews", "last_contacted"] as SortKey[]).map(s => (
                 <button key={s} onClick={() => { setSortBy(s); setShowSortMenu(false); }}
-                  className={`block w-full text-left text-[10px] px-3 py-1.5 hover:bg-surface-light/30 transition-colors ${sortBy === s ? "text-gold" : "text-muted"}`}>
+                  className={`block w-full text-left text-[10px] px-3 py-1.5 hover:bg-surface-light transition-colors ${sortBy === s ? "text-gold" : "text-muted"}`}>
                   {s === "newest" ? "Newest First" : s === "rating" ? "Highest Rating" : s === "reviews" ? "Most Reviews" : "Last Contacted"}
                 </button>
               ))}
@@ -496,7 +496,7 @@ export default function CRMPage() {
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`${activeTab === t.key ? "tab-item-active" : "tab-item-inactive"} flex items-center gap-1.5`}>
             {t.label}
-            <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-gold/20 text-gold" : "bg-surface-light/30 text-muted"}`}>
+            <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${activeTab === t.key ? "bg-gold/20 text-gold" : "bg-surface-light text-muted"}`}>
               {statusCounts[t.key] || 0}
             </span>
           </button>
@@ -505,15 +505,15 @@ export default function CRMPage() {
 
       {/* Bulk Actions */}
       {selectedIds.size > 0 && (
-        <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gold/[0.05] border border-gold/15">
+        <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gold/10 border border-gold/15">
           <span className="text-[10px] text-gold font-medium">{selectedIds.size} selected</span>
           <button onClick={() => bulkAction("email")} className="text-[9px] px-2 py-1 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
             <Mail size={10} /> Bulk Email
           </button>
-          <button onClick={() => bulkAction("sms")} className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20 transition-all flex items-center gap-1">
+          <button onClick={() => bulkAction("sms")} className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-all flex items-center gap-1">
             <MessageSquare size={10} /> Bulk SMS
           </button>
-          <button onClick={() => setSelectedIds(new Set())} className="text-[9px] text-muted hover:text-white ml-auto flex items-center gap-1">
+          <button onClick={() => setSelectedIds(new Set())} className="text-[9px] text-muted hover:text-foreground ml-auto flex items-center gap-1">
             <X size={10} /> Clear
           </button>
         </div>
@@ -525,7 +525,7 @@ export default function CRMPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-[11px]">
               <thead>
-                <tr className="border-b border-border/20 bg-surface-light/20">
+                <tr className="border-b border-border bg-surface-light">
                   <th className="text-left px-3 py-2.5 w-8">
                     <button onClick={toggleSelectAll}>
                       {selectedIds.size === filtered.length && filtered.length > 0
@@ -568,7 +568,7 @@ export default function CRMPage() {
             <div className="col-span-full text-center py-12 text-muted text-xs">No leads found</div>
           )}
           {filtered.map(lead => (
-            <div key={lead.id} className="card space-y-2.5 hover:border-border/40 transition-all">
+            <div key={lead.id} className="card space-y-2.5 hover:border-border transition-all">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-2">
                   <button onClick={() => toggleSelect(lead.id)}>
@@ -614,8 +614,8 @@ export default function CRMPage() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between pt-1 border-t border-border/10">
-                <span className="text-[8px] text-muted/50 flex items-center gap-1">
+              <div className="flex items-center justify-between pt-1 border-t border-border">
+                <span className="text-[8px] text-muted flex items-center gap-1">
                   <Clock size={8} />
                   {lead.outreach_log[0] ? `Last: ${formatShortDate(lead.outreach_log[0].sent_at)}` : "No outreach yet"}
                   {lead.outreach_log.length > 0 && <span>&middot; {lead.outreach_log.length} messages</span>}
@@ -628,7 +628,7 @@ export default function CRMPage() {
               </div>
 
               {expandedId === lead.id && (
-                <div className="pt-2 border-t border-border/10">
+                <div className="pt-2 border-t border-border">
                   <OutreachHistory entries={lead.outreach_log} />
                 </div>
               )}
@@ -710,7 +710,7 @@ export default function CRMPage() {
                         </div>
 
                         {/* Last activity */}
-                        <div className="flex items-center justify-between text-[8px] text-muted/50">
+                        <div className="flex items-center justify-between text-[8px] text-muted">
                           <span>{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
                           <span>{lead.outreach_log.length} msgs</span>
                         </div>
@@ -757,7 +757,7 @@ function LeadTableRow({ lead, expanded, selected, onToggleExpand, onToggleSelect
 }) {
   return (
     <>
-      <tr className={`border-b border-border/10 hover:bg-surface-light/10 transition-colors ${expanded ? "bg-surface-light/10" : ""}`}>
+      <tr className={`border-b border-border hover:bg-surface-light/10 transition-colors ${expanded ? "bg-surface-light/10" : ""}`}>
         <td className="px-3 py-2.5">
           <button onClick={onToggleSelect}>
             {selected ? <CheckSquare size={13} className="text-gold" /> : <Square size={13} className="text-muted/40" />}
@@ -783,7 +783,7 @@ function LeadTableRow({ lead, expanded, selected, onToggleExpand, onToggleSelect
             {lead.email && <span className="text-muted flex items-center gap-0.5" title={lead.email}><Mail size={11} /></span>}
             {lead.website && (
               <a href={lead.website} target="_blank" rel="noopener noreferrer" title={lead.website}>
-                <Globe size={11} className="text-muted hover:text-white" />
+                <Globe size={11} className="text-muted hover:text-foreground" />
               </a>
             )}
           </div>
@@ -792,8 +792,8 @@ function LeadTableRow({ lead, expanded, selected, onToggleExpand, onToggleSelect
           <div className="flex items-center gap-1.5">
             {lead.instagram_url && <a href={lead.instagram_url} target="_blank" rel="noopener noreferrer"><Camera size={12} className="text-pink-400 hover:scale-110 transition-transform" /></a>}
             {lead.facebook_url && <a href={lead.facebook_url} target="_blank" rel="noopener noreferrer"><Globe size={12} className="text-blue-400 hover:scale-110 transition-transform" /></a>}
-            {lead.linkedin_url && <a href={lead.linkedin_url} target="_blank" rel="noopener noreferrer"><Briefcase size={12} className="text-blue-300 hover:scale-110 transition-transform" /></a>}
-            {lead.tiktok_url && <a href={lead.tiktok_url} target="_blank" rel="noopener noreferrer"><Music size={12} className="text-white hover:scale-110 transition-transform" /></a>}
+            {lead.linkedin_url && <a href={lead.linkedin_url} target="_blank" rel="noopener noreferrer"><Briefcase size={12} className="text-blue-600 hover:scale-110 transition-transform" /></a>}
+            {lead.tiktok_url && <a href={lead.tiktok_url} target="_blank" rel="noopener noreferrer"><Music size={12} className="text-foreground hover:scale-110 transition-transform" /></a>}
           </div>
         </td>
         <td className="px-3 py-2.5">
@@ -807,12 +807,12 @@ function LeadTableRow({ lead, expanded, selected, onToggleExpand, onToggleSelect
             {lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "Never"}
           </span>
           {lead.outreach_log.length > 0 && (
-            <span className="text-[8px] text-muted/50">{lead.outreach_log.length} msgs</span>
+            <span className="text-[8px] text-muted">{lead.outreach_log.length} msgs</span>
           )}
         </td>
         <td className="px-3 py-2.5">{actions}</td>
         <td className="px-2 py-2.5">
-          <button onClick={onToggleExpand} className="hover:bg-surface-light/30 rounded-lg p-1 transition-colors">
+          <button onClick={onToggleExpand} className="hover:bg-surface-light rounded-lg p-1 transition-colors">
             {expanded ? <ChevronUp size={12} className="text-muted" /> : <ChevronDown size={12} className="text-muted" />}
           </button>
         </td>

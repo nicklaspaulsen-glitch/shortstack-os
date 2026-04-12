@@ -45,7 +45,7 @@ export default function ReferralsPage() {
       <div className="card">
         <h2 className="section-header">Your Referral Link</h2>
         <div className="flex gap-2">
-          <code className="flex-1 text-xs font-mono p-3 rounded-lg truncate" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+          <code className="flex-1 text-xs font-mono p-3 rounded-lg truncate bg-surface-light border border-border">
             {referralLink}
           </code>
           <button onClick={() => { navigator.clipboard.writeText(referralLink); toast.success("Referral link copied!"); }}
@@ -60,7 +60,7 @@ export default function ReferralsPage() {
       <div className="grid grid-cols-3 gap-3">
         <div className="card text-center">
           <p className="text-[10px] text-muted">Referrals Sent</p>
-          <p className="text-2xl font-bold text-white">0</p>
+          <p className="text-2xl font-bold text-foreground">0</p>
         </div>
         <div className="card text-center">
           <p className="text-[10px] text-muted">Converted</p>
@@ -82,8 +82,7 @@ export default function ReferralsPage() {
             { refs: "6-10", reward: "20% commission for 12 months", bonus: "$1,000 bonus" },
             { refs: "10+", reward: "20% commission forever", bonus: "Free ShortStack account" },
           ].map((tier, i) => (
-            <div key={i} className="flex items-center justify-between p-3 rounded-lg"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+            <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
               <div>
                 <p className="text-xs font-semibold">{tier.refs} referrals</p>
                 <p className="text-[10px] text-muted">{tier.reward}</p>

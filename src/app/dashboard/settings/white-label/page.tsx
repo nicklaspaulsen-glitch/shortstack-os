@@ -88,7 +88,7 @@ export default function WhiteLabelPage() {
       <div className="page-header">
         <div>
           <h1 className="text-lg font-bold">White Label Settings</h1>
-          <p className="text-xs text-white/50">Customize branding for your agency and clients</p>
+          <p className="text-xs text-muted">Customize branding for your agency and clients</p>
         </div>
         <div className="flex gap-2">
           <button onClick={() => setShowPreview(!showPreview)} className="btn-primary flex items-center gap-1.5 text-[10px]">
@@ -109,7 +109,7 @@ export default function WhiteLabelPage() {
             <h2 className="section-header">Brand Settings</h2>
             <div className="card space-y-4">
               <div>
-                <label className="text-[10px] text-white/50 uppercase tracking-wider mb-1 block">Custom Brand Name</label>
+                <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Custom Brand Name</label>
                 <input
                   type="text"
                   value={settings.brandName}
@@ -119,7 +119,7 @@ export default function WhiteLabelPage() {
                 />
               </div>
               <div>
-                <label className="text-[10px] text-white/50 uppercase tracking-wider mb-1 block">Custom Logo URL</label>
+                <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Custom Logo URL</label>
                 <input
                   type="text"
                   value={settings.logoUrl}
@@ -130,7 +130,7 @@ export default function WhiteLabelPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] text-white/50 uppercase tracking-wider mb-1 block">Primary Color</label>
+                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Primary Color</label>
                   <div className="flex gap-2 items-center">
                     <input
                       type="color"
@@ -147,7 +147,7 @@ export default function WhiteLabelPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="text-[10px] text-white/50 uppercase tracking-wider mb-1 block">Accent Color</label>
+                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Accent Color</label>
                   <div className="flex gap-2 items-center">
                     <input
                       type="color"
@@ -167,13 +167,13 @@ export default function WhiteLabelPage() {
               <div className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/10">
                 <div>
                   <p className="text-xs font-medium">Enable White-Label for Clients</p>
-                  <p className="text-[10px] text-white/40 mt-0.5">Clients will see your custom branding instead of ShortStack</p>
+                  <p className="text-[10px] text-muted mt-0.5">Clients will see your custom branding instead of ShortStack</p>
                 </div>
                 <button
                   onClick={() => setSettings(prev => ({ ...prev, enabled: !prev.enabled }))}
                   className="text-purple-400 hover:text-purple-300 transition-colors"
                 >
-                  {settings.enabled ? <ToggleRight size={28} /> : <ToggleLeft size={28} className="text-white/30" />}
+                  {settings.enabled ? <ToggleRight size={28} /> : <ToggleLeft size={28} className="text-muted" />}
                 </button>
               </div>
             </div>
@@ -196,7 +196,7 @@ export default function WhiteLabelPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[10px] text-white/40 mb-0.5 block">Client Name</label>
+                      <label className="text-[10px] text-muted mb-0.5 block">Client Name</label>
                       <input
                         type="text"
                         value={override.clientName}
@@ -206,7 +206,7 @@ export default function WhiteLabelPage() {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-white/40 mb-0.5 block">Brand Name</label>
+                      <label className="text-[10px] text-muted mb-0.5 block">Brand Name</label>
                       <input
                         type="text"
                         value={override.brandName}
@@ -216,7 +216,7 @@ export default function WhiteLabelPage() {
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] text-white/40 mb-0.5 block">Primary Color</label>
+                      <label className="text-[10px] text-muted mb-0.5 block">Primary Color</label>
                       <div className="flex gap-1 items-center">
                         <input
                           type="color"
@@ -233,7 +233,7 @@ export default function WhiteLabelPage() {
                       </div>
                     </div>
                     <div>
-                      <label className="text-[10px] text-white/40 mb-0.5 block">Accent Color</label>
+                      <label className="text-[10px] text-muted mb-0.5 block">Accent Color</label>
                       <div className="flex gap-1 items-center">
                         <input
                           type="color"
@@ -254,7 +254,7 @@ export default function WhiteLabelPage() {
               ))}
               <button onClick={addOverride} className="card-hover w-full flex items-center justify-center gap-2 py-3">
                 <Plus size={14} className="text-purple-400" />
-                <span className="text-xs text-white/50">Add Client Override</span>
+                <span className="text-xs text-muted">Add Client Override</span>
               </button>
             </div>
           </div>
@@ -313,7 +313,7 @@ export default function WhiteLabelPage() {
                   </button>
                 </div>
               </div>
-              <p className="text-[10px] text-white/30 mt-3 text-center">
+              <p className="text-[10px] text-muted mt-3 text-center">
                 This is a preview of how your branding will appear to clients
               </p>
             </div>

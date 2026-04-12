@@ -308,11 +308,14 @@ export default function ServicesPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div>
-        <h1 className="page-header mb-0 flex items-center gap-2">
-          <Sparkles size={18} className="text-gold" /> AI Service Agents
-        </h1>
-        <p className="text-xs text-muted mt-0.5">Each service has a dedicated AI agent — click to generate content, strategies, and campaigns</p>
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+          <Sparkles size={20} className="text-gold" />
+        </div>
+        <div>
+          <h1 className="page-header mb-0">AI Agents</h1>
+          <p className="text-xs text-muted">Each service has a dedicated AI agent — click to generate content, strategies & campaigns</p>
+        </div>
       </div>
 
       {/* Quick nav — what tool for what */}
@@ -321,10 +324,10 @@ export default function ServicesPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-1.5">
           {QUICK_NAV.map((item, i) => (
             <a key={i} href={item.href}
-              className="flex items-center gap-2 p-2 rounded-lg border border-border/20 hover:border-gold/15 transition-all group">
+              className="flex items-center gap-2 p-2 rounded-lg border border-border hover:border-gold/15 transition-all group">
               <span className={item.color}>{item.icon}</span>
               <div className="min-w-0">
-                <p className="text-[10px] font-medium group-hover:text-white transition-colors truncate">{item.task}</p>
+                <p className="text-[10px] font-medium group-hover:text-foreground transition-colors truncate">{item.task}</p>
                 <p className="text-[8px] text-muted truncate">{item.tool}</p>
               </div>
             </a>
@@ -346,7 +349,7 @@ export default function ServicesPage() {
                 className={`text-left rounded-xl p-4 border transition-all hover:-translate-y-[1px] ${
                   activeAgent?.id === agent.id
                     ? `bg-gradient-to-br ${agent.bg} shadow-card-hover`
-                    : "border-border/30 bg-surface hover:border-gold/15 hover:shadow-card-hover"
+                    : "border-border bg-surface hover:border-gold/15 hover:shadow-card-hover"
                 }`}
               >
                 <div className="flex items-center gap-2.5 mb-1.5">
@@ -371,7 +374,7 @@ export default function ServicesPage() {
             <div className={`card bg-gradient-to-br ${activeAgent.bg} border`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 bg-surface/50 rounded-xl flex items-center justify-center border border-border/20">
+                  <div className="w-11 h-11 bg-surface/50 rounded-xl flex items-center justify-center border border-border">
                     <span className={activeAgent.color}>{activeAgent.icon}</span>
                   </div>
                   <div>
@@ -379,7 +382,7 @@ export default function ServicesPage() {
                     <p className="text-[10px] text-muted">{activeAgent.description}</p>
                   </div>
                 </div>
-                <button onClick={() => setActiveAgent(null)} className="text-muted hover:text-white text-xs">Close</button>
+                <button onClick={() => setActiveAgent(null)} className="text-muted hover:text-foreground text-xs">Close</button>
               </div>
             </div>
 
@@ -406,7 +409,7 @@ export default function ServicesPage() {
                       <button
                         onClick={() => runAction(action.prompt)}
                         disabled={generating}
-                        className="w-full text-left p-2.5 rounded-lg border border-border/30 hover:border-gold/20 transition-all text-xs disabled:opacity-50"
+                        className="w-full text-left p-2.5 rounded-lg border border-border hover:border-gold/20 transition-all text-xs disabled:opacity-50"
                       >
                         <div className="flex items-center gap-1.5">
                           <Sparkles size={11} className="text-gold shrink-0" />
@@ -424,8 +427,8 @@ export default function ServicesPage() {
 
               {/* Variable inputs — collapsed by default */}
               {activeAgent.actions.length > 0 && (
-                <details className="mt-2 pt-2 border-t border-border/20">
-                  <summary className="text-[9px] text-muted cursor-pointer hover:text-white transition-colors">
+                <details className="mt-2 pt-2 border-t border-border">
+                  <summary className="text-[9px] text-muted cursor-pointer hover:text-foreground transition-colors">
                     Customize variables (optional)
                   </summary>
                   <div className="grid grid-cols-2 gap-2 mt-2">
@@ -458,7 +461,7 @@ export default function ServicesPage() {
                     <span className="text-xs text-muted">Generating...</span>
                   </div>
                 ) : (
-                  <div className="bg-surface-light/30 rounded-lg p-3 border border-border/20 max-h-[400px] overflow-y-auto">
+                  <div className="bg-surface-light rounded-lg p-3 border border-border max-h-[400px] overflow-y-auto">
                     <pre className="text-xs whitespace-pre-wrap leading-relaxed">{result}</pre>
                   </div>
                 )}

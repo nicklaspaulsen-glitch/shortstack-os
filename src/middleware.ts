@@ -5,6 +5,7 @@ export async function middleware(request: NextRequest) {
   // Skip auth for static/public files
   const path = request.nextUrl.pathname;
   if (
+    path === "/" ||
     path.endsWith(".txt") ||
     path.endsWith(".xml") ||
     path.startsWith("/.well-known") ||
@@ -15,7 +16,8 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/changelog") ||
     path.startsWith("/survey") ||
     path.startsWith("/api/surveys") ||
-    path.startsWith("/demo")
+    path.startsWith("/demo") ||
+    path.startsWith("/style-preview")
   ) {
     return NextResponse.next();
   }

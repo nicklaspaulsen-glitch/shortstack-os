@@ -10,7 +10,8 @@ import {
   AlertTriangle, Plus, FileText, Sparkles,
   Send, BarChart3, Globe, Briefcase,
   ArrowRight, Activity, ArrowUpRight, ArrowDownRight,
-  Search, Clock, ChevronRight, Target, Mail, PhoneCall
+  Search, Clock, ChevronRight, Target, Mail, PhoneCall,
+  Bot, XCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -54,6 +55,7 @@ export default function DashboardPage() {
   const [recentActivity, setRecentActivity] = useState<Array<{ description: string; status: string; created_at: string; action_type: string }>>([]);
   const [recentLeads, setRecentLeads] = useState<Array<{ business_name: string; industry: string; source: string; scraped_at: string; lead_score: number | null }>>([]);
   const [topClients, setTopClients] = useState<Array<{ id: string; business_name: string; mrr: number; health_score: number; package_tier: string }>>([]);
+  const [agentStatuses, setAgentStatuses] = useState<Array<{ id: string; name: string; status: "working" | "idle" | "error"; actionsToday: number }>>([]);
   const [commandInput, setCommandInput] = useState("");
   const [commandLoading, setCommandLoading] = useState(false);
   const supabase = createClient();
@@ -113,6 +115,31 @@ export default function DashboardPage() {
     setRecentLeads(leads || []);
     setRecentActivity(activity || []);
     setTopClients(topCl || []);
+
+    // Compute agent statuses from activity logs
+    const agentNames = [
+      { id: "lead-engine", name: "Lead Engine" }, { id: "outreach", name: "Outreach" },
+      { id: "content", name: "Content" }, { id: "ads", name: "Ads" },
+      { id: "reviews", name: "Reviews" }, { id: "analytics", name: "Analytics" },
+      { id: "trinity", name: "Trinity" }, { id: "invoice", name: "Invoice" },
+      { id: "onboarding", name: "Onboarding" }, { id: "seo", name: "SEO" },
+      { id: "social-media", name: "Social" }, { id: "retention", name: "Retention" },
+    ];
+    const { data: agentLogs } = await supabase
+      .from("trinity_log")
+      .select("action_type, status, created_at")
+      .gte("created_at", weekAgo)
+      .order("created_at", { ascending: false })
+      .limit(200);
+    const logs = agentLogs || [];
+    const statuses = agentNames.map(a => {
+      const aLogs = logs.filter(l => l.action_type === a.id || l.action_type === a.name.toLowerCase().replace(/ /g, "_"));
+      const todayLogs = aLogs.filter(l => l.created_at >= today);
+      const hasError = aLogs.slice(0, 3).some(l => l.status === "error" || l.status === "failed");
+      const hasRecent = aLogs[0] && (Date.now() - new Date(aLogs[0].created_at).getTime()) < 3600000;
+      return { id: a.id, name: a.name, status: (hasError ? "error" : hasRecent ? "working" : "idle") as "working" | "idle" | "error", actionsToday: todayLogs.length };
+    });
+    setAgentStatuses(statuses);
   }
 
   if (profile?.role === "client") {
@@ -156,10 +183,10 @@ export default function DashboardPage() {
       {/* Header + Command Bar */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {getGreeting()}, <span className="text-gold">{profile?.full_name?.split(" ")[0]}</span>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {getGreeting()}, <span className="text-gold">{profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0]}</span>
           </h1>
-          <p className="text-sm text-muted mt-0.5">
+          <p className="text-sm text-muted mt-1">
             {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
             {stats.systemIssues === 0 ? (
               <span className="ml-3 text-success text-xs">All systems operational</span>
@@ -177,11 +204,11 @@ export default function DashboardPage() {
               onChange={(e) => setCommandInput(e.target.value)}
               placeholder="Ask Trinity anything..."
               disabled={commandLoading}
-              className="input pl-9 pr-4 py-2 text-xs w-64 rounded-lg bg-surface-light/40 border-border/30 focus:border-gold/30"
+              className="input pl-9 pr-4 py-2 text-xs w-64"
             />
           </div>
           <button type="submit" disabled={!commandInput.trim() || commandLoading}
-            className="px-3 py-2 bg-gold/10 text-gold text-xs font-medium rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-30">
+            className="px-3 py-2 bg-gold/10 text-gold text-xs font-medium rounded-xl border border-gold/15 hover:bg-gold/20 transition-all disabled:opacity-30">
             <Send size={12} />
           </button>
         </form>
@@ -225,18 +252,18 @@ export default function DashboardPage() {
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
         {[
           { label: "Full Autopilot", icon: <Zap size={13} />, action: () => triggerQuickAction("full_autopilot"), accent: "text-gold" },
-          { label: "New Client", icon: <Plus size={13} />, action: () => router.push("/dashboard/onboard"), accent: "text-emerald-400" },
-          { label: "Run Outreach", icon: <Send size={13} />, action: () => triggerQuickAction("full_outreach"), accent: "text-blue-400" },
-          { label: "Gen Content", icon: <Sparkles size={13} />, action: () => triggerQuickAction("content_week"), accent: "text-purple-400" },
-          { label: "Proposals", icon: <FileText size={13} />, action: () => router.push("/dashboard/proposals"), accent: "text-amber-400" },
-          { label: "View Leads", icon: <Users size={13} />, action: () => router.push("/dashboard/leads"), accent: "text-emerald-400" },
-          { label: "Health", icon: <Activity size={13} />, action: () => router.push("/dashboard/monitor"), accent: "text-cyan-400" },
-          { label: "Campaigns", icon: <BarChart3 size={13} />, action: () => router.push("/dashboard/ads"), accent: "text-orange-400" },
+          { label: "New Client", icon: <Plus size={13} />, action: () => router.push("/dashboard/onboard"), accent: "text-success" },
+          { label: "Run Outreach", icon: <Send size={13} />, action: () => triggerQuickAction("full_outreach"), accent: "text-info" },
+          { label: "Gen Content", icon: <Sparkles size={13} />, action: () => triggerQuickAction("content_week"), accent: "text-accent" },
+          { label: "Proposals", icon: <FileText size={13} />, action: () => router.push("/dashboard/proposals"), accent: "text-warning" },
+          { label: "View Leads", icon: <Users size={13} />, action: () => router.push("/dashboard/leads"), accent: "text-success" },
+          { label: "Health", icon: <Activity size={13} />, action: () => router.push("/dashboard/monitor"), accent: "text-info" },
+          { label: "Campaigns", icon: <BarChart3 size={13} />, action: () => router.push("/dashboard/ads"), accent: "text-warning" },
         ].map((qa, i) => (
           <button key={i} onClick={qa.action}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg border border-border/20 bg-surface/60 hover:bg-surface-light/40 hover:border-border/40 transition-all shrink-0 group">
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-surface hover:border-gold/20 hover:shadow-sm transition-all shrink-0 group">
             <span className={qa.accent}>{qa.icon}</span>
-            <span className="text-[11px] text-muted group-hover:text-white transition-colors font-medium">{qa.label}</span>
+            <span className="text-xs text-muted group-hover:text-foreground transition-colors font-medium">{qa.label}</span>
           </button>
         ))}
       </div>
@@ -244,7 +271,7 @@ export default function DashboardPage() {
       {/* Pipeline + Outreach Breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Lead Pipeline Funnel */}
-        <div className="lg:col-span-3 rounded-xl border border-border/20 bg-surface/40 p-5">
+        <div className="lg:col-span-3 card-static">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
               <Target size={15} className="text-gold" /> Lead Pipeline
@@ -255,9 +282,9 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-end gap-1 h-24 mb-3">
             {[
-              { label: "New", count: pipeline.new, color: "bg-blue-500" },
-              { label: "Contacted", count: pipeline.called, color: "bg-amber-500" },
-              { label: "Replied", count: pipeline.replied, color: "bg-emerald-500" },
+              { label: "New", count: pipeline.new, color: "bg-info" },
+              { label: "Contacted", count: pipeline.called, color: "bg-warning" },
+              { label: "Replied", count: pipeline.replied, color: "bg-success" },
               { label: "Booked", count: pipeline.booked, color: "bg-purple-500" },
               { label: "Won", count: pipeline.converted, color: "bg-gold" },
             ].map((stage) => (
@@ -273,28 +300,28 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-          <div className="flex items-center gap-4 pt-3 border-t border-border/10">
+          <div className="flex items-center gap-4 pt-3 border-t border-border">
             <div className="flex items-center gap-1.5 text-[10px] text-muted">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <div className="w-1.5 h-1.5 rounded-full bg-success" />
               Conversion: {pipelineTotal > 0 ? ((pipeline.converted / pipelineTotal) * 100).toFixed(1) : "0"}%
             </div>
             <div className="flex items-center gap-1.5 text-[10px] text-muted">
-              <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              <div className="w-1.5 h-1.5 rounded-full bg-warning" />
               Reply rate: {pipeline.called > 0 ? ((pipeline.replied / pipeline.called) * 100).toFixed(1) : "0"}%
             </div>
           </div>
         </div>
 
         {/* Today's Outreach Breakdown */}
-        <div className="lg:col-span-2 rounded-xl border border-border/20 bg-surface/40 p-5">
+        <div className="lg:col-span-2 card-static">
           <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-            <Send size={15} className="text-blue-400" /> Outreach Today
+            <Send size={15} className="text-info" /> Outreach Today
           </h2>
           <div className="space-y-3">
             {[
-              { label: "Emails", count: stats.emailsSent, target: 30, icon: <Mail size={13} />, color: "bg-blue-500" },
-              { label: "SMS", count: stats.smsSent, target: 20, icon: <MessageSquare size={13} />, color: "bg-emerald-500" },
-              { label: "Calls", count: stats.callsMade, target: 10, icon: <PhoneCall size={13} />, color: "bg-amber-500" },
+              { label: "Emails", count: stats.emailsSent, target: 30, icon: <Mail size={13} />, color: "bg-info" },
+              { label: "SMS", count: stats.smsSent, target: 20, icon: <MessageSquare size={13} />, color: "bg-success" },
+              { label: "Calls", count: stats.callsMade, target: 10, icon: <PhoneCall size={13} />, color: "bg-warning" },
               { label: "DMs", count: stats.dmsSentToday - stats.emailsSent - stats.smsSent - stats.callsMade, target: 20, icon: <Send size={13} />, color: "bg-purple-500" },
             ].map((ch) => (
               <div key={ch.label} className="flex items-center gap-3">
@@ -308,54 +335,73 @@ export default function DashboardPage() {
               </div>
             ))}
           </div>
-          <div className="mt-4 pt-3 border-t border-border/10 flex items-center justify-between">
+          <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
             <span className="text-[10px] text-muted">Total sent</span>
-            <span className="text-sm font-bold font-mono text-white">{stats.dmsSentToday}</span>
+            <span className="text-sm font-bold font-mono text-foreground">{stats.dmsSentToday}</span>
           </div>
         </div>
       </div>
 
       {/* 3-Column: Activity, Clients, Recent Leads */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Agent Activity */}
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+        {/* Agent Activity + Live Status */}
+        <div className="card-static">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Activity size={15} className="text-gold" /> Agent Activity
+              <Bot size={15} className="text-gold" /> Live Agents
             </h2>
-            <span className="text-[10px] text-gold bg-gold/[0.06] px-2 py-0.5 rounded-full font-mono">
-              {stats.trinityActions} today
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="flex items-center gap-1 text-[9px] text-success"><span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />{agentStatuses.filter(a => a.status === "working").length} active</span>
+              {agentStatuses.filter(a => a.status === "error").length > 0 && (
+                <span className="flex items-center gap-1 text-[9px] text-danger"><XCircle size={9} />{agentStatuses.filter(a => a.status === "error").length}</span>
+              )}
+            </div>
           </div>
-          <div className="space-y-1 max-h-64 overflow-y-auto">
-            {recentActivity.length === 0 ? (
-              <p className="text-muted text-xs py-6 text-center">No activity yet</p>
-            ) : (
-              recentActivity.map((a, i) => (
-                <div key={i} className="flex items-start gap-2.5 py-2 border-b border-border/10 last:border-0">
-                  <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
-                    a.status === "completed" || a.status === "success" ? "bg-emerald-400" :
-                    a.status === "error" || a.status === "failed" ? "bg-red-400" : "bg-amber-400"
-                  }`} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] leading-snug truncate">{a.description}</p>
-                    <p className="text-[9px] text-muted mt-0.5">{formatRelativeTime(a.created_at)}</p>
+
+          {/* Agent grid */}
+          <div className="grid grid-cols-4 gap-1.5 mb-3">
+            {agentStatuses.map(a => (
+              <div key={a.id} className="flex items-center gap-1.5 p-1.5 rounded-lg bg-surface-light/50 border border-border/50">
+                <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                  a.status === "working" ? "bg-success animate-pulse" : a.status === "error" ? "bg-danger" : "bg-muted/40"
+                }`} />
+                <span className="text-[8px] truncate font-medium">{a.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Recent actions */}
+          <div className="border-t border-border pt-2">
+            <p className="text-[9px] text-muted mb-1.5 flex items-center gap-1"><Activity size={9} /> Recent</p>
+            <div className="space-y-0.5 max-h-32 overflow-y-auto">
+              {recentActivity.length === 0 ? (
+                <p className="text-muted text-[10px] py-3 text-center">No activity yet</p>
+              ) : (
+                recentActivity.slice(0, 5).map((a, i) => (
+                  <div key={i} className="flex items-start gap-2 py-1.5">
+                    <div className={`w-1 h-1 rounded-full mt-1.5 shrink-0 ${
+                      a.status === "completed" || a.status === "success" ? "bg-success" :
+                      a.status === "error" || a.status === "failed" ? "bg-danger" : "bg-warning"
+                    }`} />
+                    <p className="text-[10px] leading-snug truncate flex-1">{a.description}</p>
+                    <span className="text-[8px] text-muted shrink-0">{formatRelativeTime(a.created_at)}</span>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
+
           <Link href="/dashboard/agent-supervisor"
-            className="flex items-center justify-center gap-1 text-[10px] text-gold hover:text-gold-light mt-3 pt-3 border-t border-border/10">
-            View all agents <ArrowRight size={10} />
+            className="flex items-center justify-center gap-1 text-[10px] text-gold hover:text-gold-dark mt-2 pt-2 border-t border-border">
+            Agent Supervisor <ArrowRight size={10} />
           </Link>
         </div>
 
         {/* Top Clients */}
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+        <div className="card-static">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Briefcase size={15} className="text-emerald-400" /> Top Clients
+              <Briefcase size={15} className="text-success" /> Top Clients
             </h2>
             <Link href="/dashboard/clients" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
               All <ChevronRight size={10} />
@@ -367,7 +413,7 @@ export default function DashboardPage() {
             ) : (
               topClients.map((c, i) => (
                 <Link key={i} href={`/dashboard/clients/${c.id}`}
-                  className="flex items-center justify-between py-2.5 border-b border-border/10 last:border-0 hover:bg-surface-light/20 -mx-2 px-2 rounded-lg transition-colors">
+                  className="flex items-center justify-between py-2.5 border-b border-border last:border-0 hover:bg-surface-light -mx-2 px-2 rounded-xl transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-[11px] font-bold text-gold">
                       {c.business_name.charAt(0)}
@@ -381,7 +427,7 @@ export default function DashboardPage() {
                     <p className="text-[11px] font-bold font-mono">{formatCurrency(c.mrr)}<span className="text-muted font-normal">/mo</span></p>
                     <div className="flex items-center gap-1 justify-end">
                       <div className="w-8 bg-surface-light rounded-full h-1">
-                        <div className={`h-1 rounded-full ${c.health_score > 75 ? "bg-emerald-400" : c.health_score > 50 ? "bg-amber-400" : "bg-red-400"}`}
+                        <div className={`h-1 rounded-full ${c.health_score > 75 ? "bg-success" : c.health_score > 50 ? "bg-warning" : "bg-danger"}`}
                           style={{ width: `${c.health_score}%` }} />
                       </div>
                       <span className="text-[9px] text-muted font-mono">{c.health_score}%</span>
@@ -394,10 +440,10 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Leads */}
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+        <div className="card-static">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Zap size={15} className="text-amber-400" /> Recent Leads
+              <Zap size={15} className="text-warning" /> Recent Leads
             </h2>
             <Link href="/dashboard/leads" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
               All <ChevronRight size={10} />
@@ -408,7 +454,7 @@ export default function DashboardPage() {
               <p className="text-muted text-xs py-6 text-center">No leads yet</p>
             ) : (
               recentLeads.map((lead, i) => (
-                <div key={i} className="flex items-center justify-between py-2.5 border-b border-border/10 last:border-0">
+                <div key={i} className="flex items-center justify-between py-2.5 border-b border-border last:border-0">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-[11px] font-bold text-blue-400">
                       {lead.business_name?.charAt(0) || "?"}
@@ -421,7 +467,7 @@ export default function DashboardPage() {
                   <div className="text-right">
                     {lead.lead_score != null && (
                       <span className={`text-[10px] font-mono font-medium ${
-                        lead.lead_score >= 70 ? "text-emerald-400" : lead.lead_score >= 40 ? "text-amber-400" : "text-muted"
+                        lead.lead_score >= 70 ? "text-success" : lead.lead_score >= 40 ? "text-warning" : "text-muted"
                       }`}>{lead.lead_score}</span>
                     )}
                     <p className="text-[9px] text-muted">{formatRelativeTime(lead.scraped_at)}</p>
@@ -435,34 +481,34 @@ export default function DashboardPage() {
 
       {/* Revenue + System Status */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-xl border border-gold/10 bg-surface/40 p-5">
+        <div className="card-static border-gold/15">
           <h2 className="text-sm font-semibold flex items-center gap-2 mb-4">
             <DollarSign size={15} className="text-gold" /> Revenue Overview
           </h2>
           <div className="grid grid-cols-3 gap-3">
-            <div className="text-center p-3 rounded-lg bg-surface-light/30 border border-border/10">
+            <div className="text-center p-3 rounded-xl bg-surface-light border border-border">
               <p className="text-lg font-bold font-mono text-gold">{formatCurrency(stats.totalMRR)}</p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">MRR</p>
             </div>
-            <div className="text-center p-3 rounded-lg bg-surface-light/30 border border-border/10">
-              <p className="text-lg font-bold font-mono text-emerald-400">{formatCurrency(stats.totalRevenue)}</p>
+            <div className="text-center p-3 rounded-xl bg-surface-light border border-border">
+              <p className="text-lg font-bold font-mono text-success">{formatCurrency(stats.totalRevenue)}</p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">Total Revenue</p>
             </div>
-            <div className="text-center p-3 rounded-lg bg-surface-light/30 border border-border/10">
-              <p className="text-lg font-bold font-mono">{stats.dealsWon}</p>
+            <div className="text-center p-3 rounded-xl bg-surface-light border border-border">
+              <p className="text-lg font-bold font-mono text-foreground">{stats.dealsWon}</p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">Deals Closed</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5 mt-3 text-[10px] text-muted">
-            <TrendingUp size={10} className="text-emerald-400" />
+            <TrendingUp size={10} className="text-success" />
             <span>{stats.activeClients} active clients generating recurring revenue</span>
           </div>
         </div>
 
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+        <div className="card-static">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              {stats.systemIssues > 0 ? <AlertTriangle size={15} className="text-red-400" /> : <Activity size={15} className="text-emerald-400" />}
+              {stats.systemIssues > 0 ? <AlertTriangle size={15} className="text-danger" /> : <Activity size={15} className="text-success" />}
               System Status
             </h2>
             <Link href="/dashboard/monitor" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
@@ -470,18 +516,18 @@ export default function DashboardPage() {
             </Link>
           </div>
           <div className="flex items-center gap-4 mb-3">
-            <div className={`text-2xl font-bold tracking-tight ${stats.systemIssues === 0 ? "text-emerald-400" : "text-red-400"}`}>
+            <div className={`text-2xl font-bold tracking-tight ${stats.systemIssues === 0 ? "text-success" : "text-danger"}`}>
               {stats.systemIssues === 0 ? "All Clear" : `${stats.systemIssues} Issue${stats.systemIssues > 1 ? "s" : ""}`}
             </div>
             {stats.systemIssues === 0 && (
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
             )}
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-lg bg-surface-light/20">
+            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-xl bg-surface-light">
               <Clock size={10} /> Health checks: every 30 min
             </div>
-            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-lg bg-surface-light/20">
+            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-xl bg-surface-light">
               <Globe size={10} /> 20 integrations monitored
             </div>
           </div>
@@ -497,22 +543,22 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
 }) {
   const accentColors: Record<string, { bg: string; text: string; border: string }> = {
     gold: { bg: "bg-gold/[0.06]", text: "text-gold", border: "border-gold/10" },
-    emerald: { bg: "bg-emerald-500/[0.06]", text: "text-emerald-400", border: "border-emerald-500/10" },
-    blue: { bg: "bg-blue-500/[0.06]", text: "text-blue-400", border: "border-blue-500/10" },
-    purple: { bg: "bg-purple-500/[0.06]", text: "text-purple-400", border: "border-purple-500/10" },
+    emerald: { bg: "bg-success/[0.06]", text: "text-success", border: "border-success/10" },
+    blue: { bg: "bg-info/[0.06]", text: "text-info", border: "border-info/10" },
+    purple: { bg: "bg-accent/[0.06]", text: "text-accent", border: "border-accent/10" },
   };
   const c = accentColors[accent] || accentColors.gold;
 
   return (
-    <div className={`rounded-xl border ${c.border} ${c.bg} p-4 transition-all hover:scale-[1.01]`}>
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[11px] text-muted font-medium">{label}</span>
-        <span className={`${c.text} opacity-50`}>{icon}</span>
+    <div className={`rounded-2xl border ${c.border} ${c.bg} p-5 transition-all hover:shadow-lg hover:-translate-y-0.5`}>
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs text-muted font-medium">{label}</span>
+        <span className={`${c.text} opacity-30`}>{icon}</span>
       </div>
       <div className="flex items-end gap-2">
-        <span className="text-xl font-bold font-mono tracking-tight">{value}</span>
+        <span className="text-2xl font-bold font-mono tracking-tight text-foreground">{value}</span>
         {trend && (
-          <span className={trend === "up" ? "text-emerald-400" : "text-red-400"}>
+          <span className={trend === "up" ? "text-success" : "text-danger"}>
             {trend === "up" ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
           </span>
         )}
@@ -547,7 +593,7 @@ function ClientDashboard() {
           { label: "Contact Us", icon: <Send size={22} />, color: "text-emerald-400", route: "/dashboard/portal" },
         ].map((item, i) => (
           <button key={i} onClick={() => router.push(item.route)}
-            className="rounded-xl border border-border/20 bg-surface/40 p-6 text-center hover:bg-surface-light/30 hover:border-border/40 transition-all group">
+            className="rounded-2xl border border-border bg-surface p-6 text-center hover:bg-surface-light hover:border-border-light transition-all group">
             <span className={`${item.color} inline-block mb-2 group-hover:scale-110 transition-transform`}>{item.icon}</span>
             <span className="text-sm font-medium block">{item.label}</span>
           </button>

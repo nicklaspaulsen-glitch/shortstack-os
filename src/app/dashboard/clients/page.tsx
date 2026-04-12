@@ -10,7 +10,10 @@ import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
 import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { Users, DollarSign, FileText, Plus, Search, Heart, ArrowUpRight, UserPlus, Download } from "lucide-react";
+import {
+  Users, DollarSign, FileText, Plus, Search, Heart, ArrowUpRight,
+  UserPlus, Download, CreditCard, RefreshCw, ExternalLink, Loader, Zap
+} from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function ClientsPage() {
@@ -22,7 +25,9 @@ export default function ClientsPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [showInviteModal, setShowInviteModal] = useState<Client | null>(null);
-  const [tab, setTab] = useState<"clients" | "contracts" | "invoices">("clients");
+  const [showSubscribeModal, setShowSubscribeModal] = useState<Client | null>(null);
+  const [billingLoading, setBillingLoading] = useState<string | null>(null);
+  const [tab, setTab] = useState<"clients" | "contracts" | "invoices" | "billing">("clients");
   const supabase = createClient();
   const router = useRouter();
 
@@ -78,6 +83,68 @@ export default function ClientsPage() {
     }
   }
 
+  async function syncStripeCustomer(clientId: string) {
+    setBillingLoading(`sync-${clientId}`);
+    try {
+      const res = await fetch("/api/billing/customer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: clientId }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(data.exists ? "Stripe customer verified" : "Stripe customer created");
+        fetchData();
+      } else {
+        toast.error(data.error || "Failed to sync");
+      }
+    } catch { toast.error("Error syncing Stripe customer"); }
+    setBillingLoading(null);
+  }
+
+  async function createSubscription(clientId: string, amount: number, description: string, interval: string) {
+    setBillingLoading(`sub-${clientId}`);
+    try {
+      const res = await fetch("/api/billing/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: clientId, amount, description, interval }),
+      });
+      const data = await res.json();
+      if (data.checkout_url) {
+        toast.success("Checkout link created!");
+        navigator.clipboard.writeText(data.checkout_url);
+        toast.success("Checkout URL copied to clipboard — send it to the client");
+      } else {
+        toast.error(data.error || "Failed to create subscription");
+      }
+    } catch { toast.error("Error creating subscription"); }
+    setBillingLoading(null);
+  }
+
+  async function openBillingPortal(clientId: string) {
+    setBillingLoading(`portal-${clientId}`);
+    try {
+      const res = await fetch("/api/billing/portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: clientId }),
+      });
+      const data = await res.json();
+      if (data.portal_url) {
+        window.open(data.portal_url, "_blank");
+      } else {
+        toast.error(data.error || "Failed to open portal");
+      }
+    } catch { toast.error("Error opening billing portal"); }
+    setBillingLoading(null);
+  }
+
+  const clientsWithStripe = clients.filter(c => c.stripe_customer_id);
+  const clientsWithSubs = clients.filter(c => c.stripe_subscription_id);
+  const paidInvoices = invoices.filter(i => i.status === "paid");
+  const overdueInvoices = invoices.filter(i => i.status === "overdue");
+
   if (loading) return <PageLoading />;
 
   return (
@@ -102,14 +169,15 @@ export default function ClientsPage() {
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        {(["clients", "contracts", "invoices"] as const).map((t) => (
+        {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm rounded-md capitalize transition-all ${
-              tab === t ? "bg-gold text-black font-medium" : "text-muted hover:text-white"
+            className={`px-4 py-2 text-sm rounded-md capitalize transition-all flex items-center gap-1.5 ${
+              tab === t ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
             }`}
           >
+            {t === "billing" && <CreditCard size={14} />}
             {t}
           </button>
         ))}
@@ -205,6 +273,106 @@ export default function ClientsPage() {
           data={invoices}
           emptyMessage="No invoices yet."
         />
+      )}
+
+      {/* Billing Tab */}
+      {tab === "billing" && (
+        <div className="space-y-4">
+          {/* Billing Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="card p-3">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Stripe Customers</p>
+              <p className="text-xl font-bold mt-1">{clientsWithStripe.length}<span className="text-xs text-muted font-normal">/{clients.length}</span></p>
+            </div>
+            <div className="card p-3">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Active Subs</p>
+              <p className="text-xl font-bold text-success mt-1">{clientsWithSubs.length}</p>
+            </div>
+            <div className="card p-3">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Paid Invoices</p>
+              <p className="text-xl font-bold text-success mt-1">{paidInvoices.length}</p>
+            </div>
+            <div className="card p-3">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Overdue</p>
+              <p className={`text-xl font-bold mt-1 ${overdueInvoices.length > 0 ? "text-danger" : "text-muted"}`}>{overdueInvoices.length}</p>
+            </div>
+          </div>
+
+          {/* Client Billing Cards */}
+          <div className="space-y-2">
+            {activeClients.map(client => {
+              const clientInvoices = invoices.filter(i => i.client_id === client.id);
+              const paidTotal = clientInvoices.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
+              const hasStripe = !!client.stripe_customer_id;
+              const hasSub = !!client.stripe_subscription_id;
+
+              return (
+                <div key={client.id} className="card p-4">
+                  <div className="flex items-center justify-between flex-wrap gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                        hasSub ? "bg-success/10 text-success" : hasStripe ? "bg-warning/10 text-warning" : "bg-surface-light text-muted"
+                      }`}>
+                        {hasSub ? <Zap size={14} /> : <CreditCard size={14} />}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-medium text-sm truncate">{client.business_name}</p>
+                        <div className="flex items-center gap-2 text-[10px] text-muted">
+                          {hasStripe ? (
+                            <span className="text-success flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-success inline-block" /> Stripe connected</span>
+                          ) : (
+                            <span className="text-muted flex items-center gap-0.5"><span className="w-1.5 h-1.5 rounded-full bg-muted inline-block" /> No Stripe</span>
+                          )}
+                          {hasSub && <span className="text-gold">Subscribed</span>}
+                          {client.mrr > 0 && <span>{formatCurrency(client.mrr)}/mo</span>}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-xs">
+                      <div className="text-right hidden md:block">
+                        <p className="text-muted text-[10px]">Total Paid</p>
+                        <p className="font-medium">{formatCurrency(paidTotal)}</p>
+                      </div>
+                      <div className="text-right hidden md:block">
+                        <p className="text-muted text-[10px]">Invoices</p>
+                        <p className="font-medium">{clientInvoices.length}</p>
+                      </div>
+
+                      <div className="flex items-center gap-1.5">
+                        {!hasStripe && (
+                          <button onClick={() => syncStripeCustomer(client.id)}
+                            disabled={billingLoading === `sync-${client.id}`}
+                            className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
+                            {billingLoading === `sync-${client.id}` ? <Loader size={10} className="animate-spin" /> : <RefreshCw size={10} />}
+                            Connect Stripe
+                          </button>
+                        )}
+                        {hasStripe && !hasSub && (
+                          <button onClick={() => setShowSubscribeModal(client)}
+                            className="btn-primary text-[10px] px-2 py-1 flex items-center gap-1">
+                            <Zap size={10} /> Subscribe
+                          </button>
+                        )}
+                        {hasStripe && (
+                          <button onClick={() => openBillingPortal(client.id)}
+                            disabled={billingLoading === `portal-${client.id}`}
+                            className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
+                            {billingLoading === `portal-${client.id}` ? <Loader size={10} className="animate-spin" /> : <ExternalLink size={10} />}
+                            Portal
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {activeClients.length === 0 && (
+              <div className="card p-8 text-center text-muted text-sm">No active clients</div>
+            )}
+          </div>
+        </div>
       )}
 
       {/* Add Client Modal */}
@@ -309,6 +477,44 @@ export default function ClientsPage() {
               <p className="text-xs text-muted mb-2">Contract Status</p>
               <StatusBadge status={selectedClient.contract_status} />
             </div>
+            {/* Stripe Billing */}
+            <div className="pt-2">
+              <p className="text-xs text-muted mb-2">Billing</p>
+              <div className="flex flex-wrap gap-2">
+                {!selectedClient.stripe_customer_id ? (
+                  <button onClick={() => syncStripeCustomer(selectedClient.id)}
+                    disabled={billingLoading === `sync-${selectedClient.id}`}
+                    className="btn-secondary text-xs flex items-center gap-1.5">
+                    {billingLoading === `sync-${selectedClient.id}` ? <Loader size={14} className="animate-spin" /> : <CreditCard size={14} />}
+                    Connect to Stripe
+                  </button>
+                ) : (
+                  <>
+                    <span className="badge bg-success/10 text-success text-xs flex items-center gap-1">
+                      <CreditCard size={12} /> Stripe Connected
+                    </span>
+                    {!selectedClient.stripe_subscription_id && (
+                      <button onClick={() => { setSelectedClient(null); setShowSubscribeModal(selectedClient); }}
+                        className="btn-primary text-xs flex items-center gap-1.5">
+                        <Zap size={14} /> Create Subscription
+                      </button>
+                    )}
+                    {selectedClient.stripe_subscription_id && (
+                      <span className="badge bg-gold/10 text-gold text-xs flex items-center gap-1">
+                        <Zap size={12} /> Subscribed
+                      </span>
+                    )}
+                    <button onClick={() => openBillingPortal(selectedClient.id)}
+                      disabled={billingLoading === `portal-${selectedClient.id}`}
+                      className="btn-secondary text-xs flex items-center gap-1.5">
+                      {billingLoading === `portal-${selectedClient.id}` ? <Loader size={14} className="animate-spin" /> : <ExternalLink size={14} />}
+                      Billing Portal
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
             <div className="flex gap-3 pt-4 border-t border-border">
               <button onClick={() => { setSelectedClient(null); setShowInviteModal(selectedClient); }}
                 className={`flex items-center gap-2 ${selectedClient.profile_id ? "btn-secondary" : "btn-primary"}`}>
@@ -391,6 +597,58 @@ export default function ClientsPage() {
               <button type="button" onClick={() => setShowInviteModal(null)} className="btn-secondary">Cancel</button>
               <button type="submit" className="btn-primary flex items-center gap-2">
                 <UserPlus size={16} /> {showInviteModal.profile_id ? "Update Password" : "Create Account"}
+              </button>
+            </div>
+          </form>
+        )}
+      </Modal>
+
+      {/* Create Subscription Modal */}
+      <Modal isOpen={!!showSubscribeModal} onClose={() => setShowSubscribeModal(null)} title="Create Subscription">
+        {showSubscribeModal && (
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            const amount = parseFloat(fd.get("amount") as string);
+            if (!amount || amount <= 0) { toast.error("Enter a valid amount"); return; }
+            await createSubscription(
+              showSubscribeModal.id,
+              amount,
+              (fd.get("description") as string) || "",
+              (fd.get("interval") as string) || "month",
+            );
+            setShowSubscribeModal(null);
+          }} className="space-y-4">
+            <p className="text-sm text-muted">
+              Set up recurring billing for <span className="text-gold font-medium">{showSubscribeModal.business_name}</span>.
+              This creates a Stripe Checkout link you can send to the client.
+            </p>
+            <div>
+              <label className="block text-sm text-muted mb-1">Amount (USD) *</label>
+              <input name="amount" type="number" step="0.01" min="1" className="input w-full"
+                defaultValue={showSubscribeModal.mrr || ""} placeholder="e.g. 1500" required />
+            </div>
+            <div>
+              <label className="block text-sm text-muted mb-1">Description</label>
+              <input name="description" className="input w-full"
+                defaultValue={`${showSubscribeModal.business_name} — ${showSubscribeModal.package_tier || "Growth"} Package`}
+                placeholder="Service description shown on invoice" />
+            </div>
+            <div>
+              <label className="block text-sm text-muted mb-1">Billing Interval</label>
+              <select name="interval" className="input w-full">
+                <option value="month">Monthly</option>
+                <option value="year">Yearly</option>
+              </select>
+            </div>
+            <div className="bg-surface-light rounded-lg p-3 text-xs text-muted">
+              A Stripe Checkout link will be generated and copied to your clipboard. Send it to the client to complete payment setup.
+            </div>
+            <div className="flex justify-end gap-3">
+              <button type="button" onClick={() => setShowSubscribeModal(null)} className="btn-secondary">Cancel</button>
+              <button type="submit" disabled={!!billingLoading} className="btn-primary flex items-center gap-2">
+                {billingLoading ? <Loader size={14} className="animate-spin" /> : <CreditCard size={16} />}
+                Create Checkout Link
               </button>
             </div>
           </form>

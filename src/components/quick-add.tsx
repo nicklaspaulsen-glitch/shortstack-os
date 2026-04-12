@@ -99,9 +99,9 @@ export default function QuickAdd() {
     <div className="fixed inset-0 z-[9998]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(null)} />
       <div className="relative max-w-sm mx-auto mt-[20vh]">
-        <div className="rounded-2xl overflow-hidden fade-in" style={{ background: "rgba(17,20,28,0.98)", border: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="rounded-2xl overflow-hidden fade-in bg-surface border border-border">
           {/* Type selector */}
-          <div className="flex border-b" style={{ borderColor: "rgba(255,255,255,0.04)" }}>
+          <div className="flex border-b border-border">
             {([
               { type: "lead" as const, icon: <Users size={12} />, label: "Lead" },
               { type: "deal" as const, icon: <DollarSign size={12} />, label: "Deal" },
@@ -114,7 +114,7 @@ export default function QuickAdd() {
                 {t.icon} {t.label}
               </button>
             ))}
-            <button onClick={() => setOpen(null)} className="px-3 text-gray-500 hover:text-white"><X size={14} /></button>
+            <button onClick={() => setOpen(null)} className="px-3 text-gray-500 hover:text-foreground"><X size={14} /></button>
           </div>
 
           <div className="p-4 space-y-3">
@@ -168,7 +168,7 @@ export default function QuickAdd() {
           </div>
 
           <div className="px-4 pb-3 text-center">
-            <p className="text-[8px] text-gray-600">Press <kbd className="px-1 py-0.5 rounded text-[7px]" style={{ background: "rgba(255,255,255,0.04)" }}>Shift+N</kbd> to open from anywhere</p>
+            <p className="text-[8px] text-gray-600">Press <kbd className="px-1 py-0.5 rounded text-[7px] bg-surface-light">Shift+N</kbd> to open from anywhere</p>
           </div>
         </div>
       </div>

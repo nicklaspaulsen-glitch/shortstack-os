@@ -85,7 +85,7 @@ export default function SurveysPage() {
       <div className="card">
         <h2 className="section-header">Send to Clients</h2>
         <div className="flex gap-2">
-          <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+          <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">
             {surveyUrl}?client=CLIENT_ID
           </code>
           <button onClick={() => { navigator.clipboard.writeText(surveyUrl); toast.success("Copied!"); }}
@@ -104,8 +104,7 @@ export default function SurveysPage() {
           </div>
         ) : (
           responses.map(r => (
-            <div key={r.id} className="flex items-start gap-3 p-3 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+            <div key={r.id} className="flex items-start gap-3 p-3 rounded-xl bg-surface-light border border-border">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold shrink-0 ${
                 r.result.score >= 9 ? "bg-success/10 text-success" : r.result.score >= 7 ? "bg-warning/10 text-warning" : "bg-danger/10 text-danger"
               }`}>

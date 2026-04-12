@@ -154,26 +154,26 @@ export default function LeadEnginePage() {
               <Mail size={12} /> Email Blast
             </button>
 
-            {/* GHL cold calls */}
+            {/* AI cold calls */}
             <button onClick={async () => {
-              const { data: newLeads } = await supabase.from("leads").select("id, phone, business_name").not("phone", "is", null).eq("status", "new").limit(5);
+              const { data: newLeads } = await supabase.from("leads").select("id, phone, business_name, industry").not("phone", "is", null).eq("status", "new").limit(5);
               if (!newLeads || newLeads.length === 0) { toast.error("No leads with phone numbers"); return; }
-              toast.loading(`Calling ${newLeads.length} leads via GHL...`);
+              toast.loading(`AI calling ${newLeads.length} leads...`);
               let called = 0;
               for (const lead of newLeads) {
-                const res = await fetch("/api/ghl/call", {
+                const res = await fetch("/api/call", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ lead_id: lead.id, phone_number: lead.phone, business_name: lead.business_name }),
+                  body: JSON.stringify({ lead_id: lead.id, phone: lead.phone, business_name: lead.business_name, industry: lead.industry }),
                 });
                 const data = await res.json();
                 if (data.success) called++;
               }
               toast.dismiss();
-              toast.success(`${called} calls initiated via GHL`);
+              toast.success(`${called} AI calls initiated`);
               fetchData();
             }} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5">
-              <Phone size={12} /> GHL Calls
+              <Phone size={12} /> AI Calls
             </button>
 
             {/* DM outreach */}
@@ -225,7 +225,7 @@ export default function LeadEnginePage() {
           ))}
         </div>
 
-        <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border/50">
+        <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border">
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted">Total daily:</span>
             <span className="text-sm font-bold text-gold">
@@ -250,7 +250,7 @@ export default function LeadEnginePage() {
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-sm rounded-md transition-all ${
-              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-white"
+              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t.label}

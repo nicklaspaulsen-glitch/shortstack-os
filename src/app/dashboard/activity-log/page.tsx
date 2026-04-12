@@ -86,8 +86,7 @@ export default function ActivityLogPage() {
           </div>
         ) : (
           filtered.map(log => (
-            <div key={log.id} className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.01] transition-colors"
-              style={{ borderBottom: "1px solid rgba(255,255,255,0.02)" }}>
+            <div key={log.id} className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-white/[0.01] transition-colors border-b border-border">
               <div className="mt-0.5 shrink-0">
                 {TYPE_ICONS[log.action_type] || <Activity size={12} className="text-muted" />}
               </div>

@@ -276,11 +276,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
   return (
     <div className="fade-in space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Sparkles size={18} className="text-gold" /> Script Lab
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Advanced AI script generator with viral research + proven frameworks</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+            <Sparkles size={20} className="text-gold" />
+          </div>
+          <div>
+            <h1 className="page-header mb-0">Script Lab</h1>
+            <p className="text-xs text-muted">AI script generator with viral research & proven frameworks</p>
+          </div>
         </div>
         <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)}
           className="input text-xs py-1.5 min-w-[160px]">
@@ -310,7 +313,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 {FRAMEWORKS.map(f => (
                   <button key={f.id} onClick={() => setConfig({ ...config, framework: f.id })}
                     className={`p-2.5 rounded-xl border text-left transition-all ${
-                      config.framework === f.id ? "border-gold/30 bg-gold/[0.05]" : "border-border/30 hover:border-gold/15"
+                      config.framework === f.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
                     }`}>
                     <p className={`text-[11px] font-semibold ${f.color}`}>{f.name}</p>
                     <p className="text-[9px] text-muted">{f.desc}</p>
@@ -368,7 +371,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                     "Why your website is losing you customers",
                   ].map((t, i) => (
                     <button key={i} onClick={() => setConfig({ ...config, topic: t })}
-                      className="text-[8px] px-2 py-0.5 rounded bg-surface-light/60 border border-border/20 text-muted hover:text-white hover:border-gold/20 transition-all">
+                      className="text-[8px] px-2 py-0.5 rounded bg-surface-light/60 border border-border text-muted hover:text-foreground hover:border-gold/20 transition-all">
                       {t}
                     </button>
                   ))}
@@ -412,7 +415,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <div className="space-y-1.5">
                   {research.opportunities.slice(0, 4).map((opp, i) => (
                     <button key={i} onClick={() => setConfig({ ...config, topic: opp })}
-                      className="w-full text-left text-[10px] p-2 rounded-lg border border-border/20 hover:border-gold/15 transition-all">
+                      className="w-full text-left text-[10px] p-2 rounded-lg border border-border hover:border-gold/15 transition-all">
                       {opp}
                     </button>
                   ))}
@@ -456,7 +459,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <h2 className="section-header flex items-center gap-2"><Film size={13} className="text-pink-400" /> Viral Video Analysis</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                   {research.viral_videos?.map((v, i) => (
-                    <div key={i} className="p-3 rounded-xl border border-border/20 bg-surface-light/20 hover:border-gold/10 transition-all">
+                    <div key={i} className="p-3 rounded-xl border border-border bg-surface-light hover:border-gold/10 transition-all">
                       <div className="flex items-center justify-between mb-1.5">
                         <p className="text-[11px] font-semibold">{v.title}</p>
                         <span className="text-[8px] text-success bg-success/10 px-1.5 py-0.5 rounded">{v.estimated_views}</span>
@@ -531,7 +534,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {research.opportunities?.map((opp, i) => (
                     <button key={i} onClick={() => { setConfig({ ...config, topic: opp }); setTab("generate"); }}
-                      className="text-left p-2.5 rounded-xl border border-border/20 hover:border-gold/15 transition-all flex items-center gap-2">
+                      className="text-left p-2.5 rounded-xl border border-border hover:border-gold/15 transition-all flex items-center gap-2">
                       <ArrowRight size={10} className="text-gold shrink-0" />
                       <span className="text-[10px]">{opp}</span>
                     </button>
@@ -547,7 +550,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "results" && script && (
         <div className="space-y-4 fade-in">
           {/* Download bar */}
-          <div className="flex items-center justify-between bg-surface-light/30 rounded-xl px-4 py-2 border border-border/20">
+          <div className="flex items-center justify-between bg-surface-light rounded-xl px-4 py-2 border border-border">
             <span className="text-[10px] text-muted">Export this script</span>
             <div className="flex items-center gap-1.5">
               <button onClick={downloadAsText} className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
@@ -577,7 +580,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <p className="text-[9px] text-gold uppercase tracking-wider font-medium">The Hook</p>
                   <div className="flex items-center gap-2">
                     <span className="text-[8px] bg-surface-light px-1.5 py-0.5 rounded">{script.hook.type}</span>
-                    <button onClick={() => copyToClipboard(script.hook.text)}><Copy size={10} className="text-muted hover:text-white" /></button>
+                    <button onClick={() => copyToClipboard(script.hook.text)}><Copy size={10} className="text-muted hover:text-foreground" /></button>
                   </div>
                 </div>
                 <p className="text-xs font-medium italic">&ldquo;{script.hook.text}&rdquo;</p>
@@ -595,8 +598,8 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
             <div className="space-y-1">
               {script.script.sections.map((section, i) => (
-                <div key={i} className="rounded-xl border border-border/20 overflow-hidden">
-                  <div className="flex items-center justify-between px-3 py-1.5 bg-surface-light/30">
+                <div key={i} className="rounded-xl border border-border overflow-hidden">
+                  <div className="flex items-center justify-between px-3 py-1.5 bg-surface-light">
                     <div className="flex items-center gap-2">
                       <span className="text-[9px] font-bold text-gold">{section.name}</span>
                       <span className="text-[8px] text-muted font-mono">{section.duration}</span>
@@ -655,7 +658,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               <h3 className="section-header flex items-center gap-2"><RefreshCw size={12} className="text-warning" /> A/B Hook Variations</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 {script.ab_variations.map((v, i) => (
-                  <div key={i} className="p-2.5 rounded-xl border border-border/20 bg-surface-light/20">
+                  <div key={i} className="p-2.5 rounded-xl border border-border bg-surface-light">
                     <p className="text-[11px] font-medium italic mb-1">&ldquo;{v.hook_alt}&rdquo;</p>
                     <p className="text-[9px] text-muted">{v.why}</p>
                   </div>

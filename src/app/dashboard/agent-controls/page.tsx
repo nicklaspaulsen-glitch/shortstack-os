@@ -174,7 +174,7 @@ export default function AgentControlsPage() {
             <div className="flex flex-wrap gap-1.5">
               {PLATFORMS_SCRAPE.map(p => (
                 <button key={p.id} onClick={() => update("lead_engine", "platforms", toggle(settings.lead_engine.platforms, p.id))}
-                  className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${settings.lead_engine.platforms.includes(p.id) ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-400" : "border-border/20 text-muted"}`}>
+                  className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${settings.lead_engine.platforms.includes(p.id) ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-400" : "border-border text-muted"}`}>
                   {p.name}
                 </button>
               ))}
@@ -186,7 +186,7 @@ export default function AgentControlsPage() {
             <div className="flex flex-wrap gap-1.5">
               {REQUIRED_FIELDS.map(f => (
                 <button key={f.id} onClick={() => update("lead_engine", "required_fields", toggle(settings.lead_engine.required_fields, f.id))}
-                  className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${settings.lead_engine.required_fields.includes(f.id) ? "border-gold/30 bg-gold/10 text-gold" : "border-border/20 text-muted"}`}>
+                  className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${settings.lead_engine.required_fields.includes(f.id) ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"}`}>
                   {f.name}
                 </button>
               ))}
@@ -198,7 +198,7 @@ export default function AgentControlsPage() {
             <div className="flex flex-wrap gap-1.5">
               {INDUSTRIES.map(i => (
                 <button key={i} onClick={() => update("lead_engine", "target_industries", toggle(settings.lead_engine.target_industries, i.toLowerCase()))}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${settings.lead_engine.target_industries.includes(i.toLowerCase()) ? "border-accent/30 bg-accent/10 text-accent" : "border-border/20 text-muted"}`}>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${settings.lead_engine.target_industries.includes(i.toLowerCase()) ? "border-accent/30 bg-accent/10 text-accent" : "border-border text-muted"}`}>
                   {i}
                 </button>
               ))}
@@ -277,7 +277,7 @@ export default function AgentControlsPage() {
             <div className="flex gap-1.5">
               {DAYS.map(d => (
                 <button key={d.id} onClick={() => update("outreach", "active_days", toggle(settings.outreach.active_days, d.id))}
-                  className={`text-[10px] w-10 py-1.5 rounded-lg border text-center transition-all ${settings.outreach.active_days.includes(d.id) ? "border-blue-400/30 bg-blue-400/10 text-blue-400" : "border-border/20 text-muted"}`}>
+                  className={`text-[10px] w-10 py-1.5 rounded-lg border text-center transition-all ${settings.outreach.active_days.includes(d.id) ? "border-blue-400/30 bg-blue-400/10 text-blue-400" : "border-border text-muted"}`}>
                   {d.name}
                 </button>
               ))}
@@ -289,7 +289,7 @@ export default function AgentControlsPage() {
             <div className="flex gap-1.5">
               {TONES.map(t => (
                 <button key={t} onClick={() => update("outreach", "message_style", t)}
-                  className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${settings.outreach.message_style === t ? "border-blue-400/30 bg-blue-400/10 text-blue-400" : "border-border/20 text-muted"}`}>
+                  className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${settings.outreach.message_style === t ? "border-blue-400/30 bg-blue-400/10 text-blue-400" : "border-border text-muted"}`}>
                   {t}
                 </button>
               ))}
@@ -365,7 +365,7 @@ export default function AgentControlsPage() {
             <div className="flex flex-wrap gap-1.5">
               {SOCIAL_PLATFORMS.map(p => (
                 <button key={p.id} onClick={() => update("content", "platforms", toggle(settings.content.platforms, p.id))}
-                  className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${settings.content.platforms.includes(p.id) ? "border-purple-400/30 bg-purple-400/10 text-purple-400" : "border-border/20 text-muted"}`}>
+                  className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${settings.content.platforms.includes(p.id) ? "border-purple-400/30 bg-purple-400/10 text-purple-400" : "border-border text-muted"}`}>
                   {p.name}
                 </button>
               ))}
@@ -377,7 +377,7 @@ export default function AgentControlsPage() {
             <div className="flex gap-1.5">
               {TONES.map(t => (
                 <button key={t} onClick={() => update("content", "tone", t)}
-                  className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${settings.content.tone === t ? "border-purple-400/30 bg-purple-400/10 text-purple-400" : "border-border/20 text-muted"}`}>
+                  className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${settings.content.tone === t ? "border-purple-400/30 bg-purple-400/10 text-purple-400" : "border-border text-muted"}`}>
                   {t}
                 </button>
               ))}

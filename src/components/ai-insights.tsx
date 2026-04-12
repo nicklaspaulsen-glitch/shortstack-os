@@ -97,7 +97,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
             {insights.length - actionedIds.size} active
           </span>
         </div>
-        <button onClick={() => { setInsights([]); fetchInsights(); }} className="text-muted hover:text-white transition-colors">
+        <button onClick={() => { setInsights([]); fetchInsights(); }} className="text-muted hover:text-foreground transition-colors">
           <RefreshCw size={12} />
         </button>
       </div>

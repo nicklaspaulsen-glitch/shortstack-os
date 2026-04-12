@@ -63,16 +63,16 @@ export default function CompetitorPage() {
       <div className="page-header">
         <div>
           <h1 className="text-lg font-bold">Competitor Spy Tool</h1>
-          <p className="text-xs text-white/50">AI-powered competitive intelligence and analysis</p>
+          <p className="text-xs text-muted">AI-powered competitive intelligence and analysis</p>
         </div>
       </div>
 
       {/* Search Input */}
       <div className="card">
-        <label className="text-[10px] text-white/50 uppercase tracking-wider mb-2 block">Competitor URL or Name</label>
+        <label className="text-[10px] text-muted uppercase tracking-wider mb-2 block">Competitor URL or Name</label>
         <div className="flex gap-2">
           <div className="flex-1 relative">
-            <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
+            <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
             <input
               type="text"
               value={competitorInput}
@@ -109,7 +109,7 @@ export default function CompetitorPage() {
               </div>
               <div>
                 <p className="text-xs font-semibold">{qa.label}</p>
-                <p className="text-[10px] text-white/40 mt-0.5 line-clamp-2">{qa.prompt.slice(0, 80)}...</p>
+                <p className="text-[10px] text-muted mt-0.5 line-clamp-2">{qa.prompt.slice(0, 80)}...</p>
               </div>
             </button>
           ))}
@@ -127,11 +127,11 @@ export default function CompetitorPage() {
             {loading && !analysisResult ? (
               <div className="flex items-center justify-center py-12 gap-3">
                 <Loader2 size={20} className="animate-spin text-purple-400" />
-                <p className="text-xs text-white/50">Analyzing {competitorInput}...</p>
+                <p className="text-xs text-muted">Analyzing {competitorInput}...</p>
               </div>
             ) : (
               <div className="prose prose-invert prose-sm max-w-none">
-                <pre className="whitespace-pre-wrap text-xs text-white/80 leading-relaxed font-sans">{analysisResult}</pre>
+                <pre className="whitespace-pre-wrap text-xs text-foreground leading-relaxed font-sans">{analysisResult}</pre>
               </div>
             )}
           </div>
@@ -141,9 +141,9 @@ export default function CompetitorPage() {
       {/* Empty State */}
       {!analysisResult && !loading && (
         <div className="card flex flex-col items-center justify-center py-12 text-center">
-          <Crosshair size={32} className="text-white/20 mb-3" />
-          <p className="text-xs text-white/40">Enter a competitor name or URL above to get started</p>
-          <p className="text-[10px] text-white/25 mt-1">Choose a quick analysis type or run a full comprehensive analysis</p>
+          <Crosshair size={32} className="text-muted mb-3" />
+          <p className="text-xs text-muted">Enter a competitor name or URL above to get started</p>
+          <p className="text-[10px] text-muted mt-1">Choose a quick analysis type or run a full comprehensive analysis</p>
         </div>
       )}
     </div>

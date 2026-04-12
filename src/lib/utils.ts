@@ -77,7 +77,7 @@ export function getStatusColor(status: string): string {
     editing: "text-orange-400",
     ready_to_publish: "text-gold",
   };
-  return colors[status] || "text-white";
+  return colors[status] || "text-foreground";
 }
 
 export function getStatusBgColor(status: string): string {
@@ -93,7 +93,7 @@ export function getStatusBgColor(status: string): string {
     published: "bg-success/10 text-success",
     failed: "bg-danger/10 text-danger",
   };
-  return colors[status] || "bg-surface-light text-white";
+  return colors[status] || "bg-surface-light text-foreground";
 }
 
 export function truncate(str: string, maxLength: number): string {

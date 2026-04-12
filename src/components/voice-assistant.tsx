@@ -243,15 +243,15 @@ export default function VoiceAssistant() {
             {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-gold animate-ping" />}
           </div>
           <div>
-            <p className="text-sm font-medium text-white">ShortStack AI</p>
+            <p className="text-sm font-medium text-foreground">ShortStack AI</p>
             <p className="text-[10px] text-gold">{isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : "Ready"}</p>
           </div>
         </div>
         <div className="flex gap-1">
-          <button onClick={() => setShowSettings(!showSettings)} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-white transition-colors">
+          <button onClick={() => setShowSettings(!showSettings)} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors">
             <Settings size={14} />
           </button>
-          <button onClick={() => { stopSpeaking(); setIsOpen(false); }} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-white transition-colors">
+          <button onClick={() => { stopSpeaking(); setIsOpen(false); }} className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors">
             <X size={14} />
           </button>
         </div>
@@ -304,7 +304,7 @@ export default function VoiceAssistant() {
             <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 ${
               msg.role === "user"
                 ? "bg-gold text-black rounded-br-sm"
-                : "bg-surface-light text-white rounded-bl-sm"
+                : "bg-surface-light text-foreground rounded-bl-sm"
             }`}>
               <p className="text-sm leading-relaxed">{msg.content}</p>
               <p className={`text-[9px] mt-1 ${msg.role === "user" ? "text-black/40" : "text-muted"}`}>
@@ -333,7 +333,7 @@ export default function VoiceAssistant() {
           <div className="flex items-center justify-center gap-4">
             {/* Mute button */}
             <button onClick={() => { setIsMuted(!isMuted); if (!isMuted) stopSpeaking(); }}
-              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/20 text-danger" : "bg-surface-light text-muted hover:text-white"}`}>
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isMuted ? "bg-danger/20 text-danger" : "bg-surface-light text-muted hover:text-foreground"}`}>
               {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
 
@@ -357,14 +357,14 @@ export default function VoiceAssistant() {
 
             {/* Switch to text */}
             <button onClick={() => setInputMode("text")}
-              className="w-10 h-10 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-white transition-colors">
+              className="w-10 h-10 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-foreground transition-colors">
               <MessageSquare size={18} />
             </button>
           </div>
         ) : (
           <form onSubmit={(e) => { e.preventDefault(); sendMessage(textInput); setTextInput(""); }} className="flex gap-2">
             <button type="button" onClick={() => setInputMode("voice")}
-              className="w-9 h-9 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-white shrink-0">
+              className="w-9 h-9 rounded-full bg-surface-light flex items-center justify-center text-muted hover:text-foreground shrink-0">
               <Mic size={16} />
             </button>
             <input
@@ -372,7 +372,7 @@ export default function VoiceAssistant() {
               value={textInput}
               onChange={(e) => setTextInput(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-white placeholder-muted focus:outline-none focus:border-gold/50"
+              className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-gold/50"
               disabled={processing}
               autoFocus
             />

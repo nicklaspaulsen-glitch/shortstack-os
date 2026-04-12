@@ -4,6 +4,8 @@ export interface Profile {
   id: string;
   email: string;
   full_name: string;
+  username: string | null;
+  nickname: string | null;
   avatar_url: string | null;
   role: UserRole;
   phone: string | null;
@@ -101,6 +103,7 @@ export interface Client {
   ghl_contact_id: string | null;
   ghl_location_id: string | null;
   stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
   health_score: number;
   notes: string | null;
   is_active: boolean;

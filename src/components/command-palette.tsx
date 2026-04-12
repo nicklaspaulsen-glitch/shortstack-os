@@ -6,7 +6,7 @@ import {
   Search, LayoutDashboard, BarChart3, Zap, Users, FileText,
   Sparkles, Bot, Film, Megaphone, Globe, Activity, Settings,
   Send, Star, Mail, Eye, PenTool, Target, Crown,
-  Camera, Link2, Sun
+  Camera, Link2, Sun, Calendar
 } from "lucide-react";
 
 interface CommandItem {
@@ -32,6 +32,7 @@ export default function CommandPalette() {
     // Navigation
     { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={14} />, action: () => nav("/dashboard"), category: "Navigate", keywords: "home main" },
     { id: "analytics", label: "Analytics", icon: <BarChart3 size={14} />, action: () => nav("/dashboard/analytics"), category: "Navigate", keywords: "charts stats metrics" },
+    { id: "reports", label: "AI Reports", icon: <FileText size={14} />, action: () => nav("/dashboard/reports"), category: "Navigate", keywords: "report client weekly monthly ai generate" },
     { id: "leads", label: "Lead Finder", icon: <Search size={14} />, action: () => nav("/dashboard/scraper"), category: "Navigate", keywords: "scrape search find" },
     { id: "engine", label: "Lead Engine", icon: <Zap size={14} />, action: () => nav("/dashboard/leads"), category: "Navigate", keywords: "outreach dms pipeline" },
     { id: "outreach", label: "Outreach Hub", icon: <Target size={14} />, action: () => nav("/dashboard/outreach-hub"), category: "Navigate", keywords: "tiers hot warm cold" },
@@ -84,6 +85,11 @@ export default function CommandPalette() {
     { id: "automations", label: "Automations", icon: <Zap size={14} />, action: () => nav("/dashboard/automations"), category: "Navigate", keywords: "manychat dm automation instagram" },
     { id: "forecast", label: "Forecast", icon: <BarChart3 size={14} />, action: () => nav("/dashboard/forecast"), category: "Navigate", keywords: "forecast predict revenue future" },
     { id: "team", label: "Team", icon: <Users size={14} />, action: () => nav("/dashboard/team"), category: "Navigate", keywords: "team members editors staff" },
+    { id: "whatsapp", label: "WhatsApp", icon: <Send size={14} />, action: () => nav("/dashboard/whatsapp"), category: "Navigate", keywords: "whatsapp message sms text" },
+    { id: "scheduling", label: "Scheduling", icon: <Calendar size={14} />, action: () => nav("/dashboard/scheduling"), category: "Navigate", keywords: "calendly calendar meeting booking schedule" },
+    { id: "notion", label: "Notion Sync", icon: <FileText size={14} />, action: () => nav("/dashboard/notion-sync"), category: "Navigate", keywords: "notion database pages sync" },
+    { id: "google-business", label: "Google Business", icon: <Globe size={14} />, action: () => nav("/dashboard/google-business"), category: "Navigate", keywords: "google business reviews gbp local seo maps" },
+    { id: "community", label: "Community", icon: <Users size={14} />, action: () => nav("/dashboard/community"), category: "Navigate", keywords: "community posts discuss forum" },
   ];
 
   const filtered = query.trim()
@@ -158,7 +164,7 @@ export default function CommandPalette() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Search commands, pages, actions..."
-              className="flex-1 bg-transparent text-sm text-white placeholder-muted/50 outline-none"
+              className="flex-1 bg-transparent text-sm text-foreground placeholder-muted/50 outline-none"
             />
             <kbd className="text-[8px] text-muted bg-surface-light px-1.5 py-0.5 rounded border border-border/30">ESC</kbd>
           </div>
@@ -176,7 +182,7 @@ export default function CommandPalette() {
                       onClick={item.action}
                       onMouseEnter={() => setSelectedIndex(globalIndex)}
                       className={`w-full flex items-center gap-3 px-4 py-2 text-left transition-colors ${
-                        globalIndex === selectedIndex ? "bg-gold/[0.08] text-white" : "text-muted hover:text-white"
+                        globalIndex === selectedIndex ? "bg-gold/[0.08] text-foreground" : "text-muted hover:text-foreground"
                       }`}
                     >
                       <span className={globalIndex === selectedIndex ? "text-gold" : ""}>{item.icon}</span>

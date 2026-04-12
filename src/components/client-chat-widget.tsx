@@ -73,15 +73,15 @@ export default function ClientChatWidget() {
             <Image src="/icons/shortstack-logo.png" alt="Trinity" width={20} height={20} />
           </div>
           <div>
-            <p className="text-sm font-medium text-white">Trinity AI</p>
+            <p className="text-sm font-medium text-foreground">Trinity AI</p>
             <p className="text-[10px] text-success">Online</p>
           </div>
         </div>
         <div className="flex gap-1">
-          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-muted hover:text-white transition-colors">
+          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-muted hover:text-foreground transition-colors">
             <Minimize2 size={14} />
           </button>
-          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-muted hover:text-white transition-colors">
+          <button onClick={() => setIsOpen(false)} className="p-1 rounded hover:bg-border text-muted hover:text-foreground transition-colors">
             <X size={14} />
           </button>
         </div>
@@ -94,7 +94,7 @@ export default function ClientChatWidget() {
             <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 ${
               msg.role === "user"
                 ? "bg-gold text-black rounded-br-sm"
-                : "bg-surface-light text-white rounded-bl-sm"
+                : "bg-surface-light text-foreground rounded-bl-sm"
             }`}>
               <p className="text-sm leading-relaxed">{msg.content}</p>
             </div>
@@ -119,7 +119,7 @@ export default function ClientChatWidget() {
         <div className="px-4 pb-2 flex flex-wrap gap-1.5">
           {["My tasks", "Invoice status", "Content progress", "How are my ads?"].map(q => (
             <button key={q} onClick={() => { setInput(q); }}
-              className="text-[10px] bg-surface-light px-2.5 py-1 rounded-full text-muted hover:text-white hover:bg-border transition-colors">
+              className="text-[10px] bg-surface-light px-2.5 py-1 rounded-full text-muted hover:text-foreground hover:bg-border transition-colors">
               {q}
             </button>
           ))}
@@ -134,7 +134,7 @@ export default function ClientChatWidget() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask Trinity anything..."
-            className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-white placeholder-muted focus:outline-none focus:border-gold/50"
+            className="flex-1 bg-surface-light border border-border rounded-full px-4 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-gold/50"
             disabled={sending}
           />
           <button type="submit" disabled={sending || !input.trim()}

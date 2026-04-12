@@ -137,7 +137,7 @@ export default function ContentPage() {
         {tabs.map((t) => (
           <button key={t.key} onClick={() => setTab(t.key)}
             className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
-              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-white"
+              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
             }`}
           >
             {t.icon} {t.label}

@@ -93,8 +93,7 @@ export default function TicketsPage() {
           {filtered.map(ticket => {
             const client = clients.find(c => c.id === ticket.client_id);
             return (
-              <div key={ticket.id} className="p-4 rounded-xl transition-all"
-                style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${ticket.status === "pending" ? "rgba(245,158,11,0.1)" : "rgba(255,255,255,0.04)"}` }}>
+              <div key={ticket.id} className={`p-4 rounded-xl transition-all bg-surface-light border ${ticket.status === "pending" ? "border-warning/10" : "border-border"}`}>
                 <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${

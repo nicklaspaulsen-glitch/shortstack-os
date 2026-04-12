@@ -67,7 +67,7 @@ export default function ReviewsPage() {
   const renderStars = (rating: number) => (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map(i => (
-        <Star key={i} size={14} className={i <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-white/20'} />
+        <Star key={i} size={14} className={i <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted'} />
       ))}
     </div>
   )
@@ -79,7 +79,7 @@ export default function ReviewsPage() {
       <div className="page-header">
         <div>
           <h1 className="text-lg font-bold">Google Review Management</h1>
-          <p className="text-xs text-white/50">Monitor, respond to, and request Google reviews</p>
+          <p className="text-xs text-muted">Monitor, respond to, and request Google reviews</p>
         </div>
       </div>
 
@@ -91,7 +91,7 @@ export default function ReviewsPage() {
               <TrendingUp size={18} className="text-yellow-400" />
             </div>
             <div>
-              <p className="text-[10px] text-white/50 uppercase tracking-wider">Average Rating</p>
+              <p className="text-[10px] text-muted uppercase tracking-wider">Average Rating</p>
               <div className="flex items-center gap-2">
                 <p className="text-xl font-bold">{avgRating}</p>
                 {renderStars(Math.round(Number(avgRating)))}
@@ -105,7 +105,7 @@ export default function ReviewsPage() {
               <Users size={18} className="text-blue-400" />
             </div>
             <div>
-              <p className="text-[10px] text-white/50 uppercase tracking-wider">Total Reviews</p>
+              <p className="text-[10px] text-muted uppercase tracking-wider">Total Reviews</p>
               <p className="text-xl font-bold">{reviews.length}</p>
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function ReviewsPage() {
               <Clock size={18} className="text-green-400" />
             </div>
             <div>
-              <p className="text-[10px] text-white/50 uppercase tracking-wider">Response Rate</p>
+              <p className="text-[10px] text-muted uppercase tracking-wider">Response Rate</p>
               <p className="text-xl font-bold">{responseRate}%</p>
             </div>
           </div>
@@ -134,16 +134,16 @@ export default function ReviewsPage() {
                   <div className="flex items-center gap-3 mb-1">
                     <span className="text-xs font-semibold">{review.name}</span>
                     {renderStars(review.rating)}
-                    <span className="text-[10px] text-white/40">{review.date}</span>
+                    <span className="text-[10px] text-muted">{review.date}</span>
                     {review.responded && (
                       <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400">Responded</span>
                     )}
                   </div>
-                  <p className="text-xs text-white/70 leading-relaxed">{review.text}</p>
+                  <p className="text-xs text-foreground leading-relaxed">{review.text}</p>
                   {aiResponses[review.id] && (
                     <div className="mt-2 p-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
                       <p className="text-[10px] text-purple-400 font-medium mb-1">AI Suggested Response:</p>
-                      <p className="text-xs text-white/70">{aiResponses[review.id]}</p>
+                      <p className="text-xs text-foreground">{aiResponses[review.id]}</p>
                     </div>
                   )}
                 </div>
@@ -167,7 +167,7 @@ export default function ReviewsPage() {
         <div className="card">
           <form onSubmit={handleRequestReview} className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
-              <label className="text-[10px] text-white/50 uppercase tracking-wider mb-1 block">Client Name</label>
+              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Client Name</label>
               <input
                 type="text"
                 value={requestName}
@@ -177,7 +177,7 @@ export default function ReviewsPage() {
               />
             </div>
             <div className="flex-1">
-              <label className="text-[10px] text-white/50 uppercase tracking-wider mb-1 block">Phone or Email</label>
+              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Phone or Email</label>
               <input
                 type="text"
                 value={requestContact}
@@ -194,8 +194,8 @@ export default function ReviewsPage() {
             </div>
           </form>
           <div className="mt-3 flex items-start gap-2 p-2 rounded-lg bg-white/5">
-            <MessageSquare size={14} className="text-white/40 mt-0.5 shrink-0" />
-            <p className="text-[10px] text-white/40">
+            <MessageSquare size={14} className="text-muted mt-0.5 shrink-0" />
+            <p className="text-[10px] text-muted">
               A personalized review request will be sent via SMS or email with a direct link to your Google Business profile.
             </p>
           </div>

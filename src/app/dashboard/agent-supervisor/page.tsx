@@ -8,7 +8,7 @@ import {
   Zap, Heart, Shield,
   Search, Sparkles, Send, BarChart3, Star, Film, Eye,
   CreditCard, UserPlus, Globe, Megaphone, FileText,
-  ChevronDown, ChevronRight, ArrowRight
+  ChevronDown, ChevronRight, ArrowRight, Plus, Cpu, Trash2
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -22,6 +22,19 @@ interface Agent {
   lastActionTime: string;
   actionsToday: number;
   successRate: number;
+  isCustom?: boolean;
+  executionCount?: number;
+}
+
+interface CustomAgentRow {
+  id: string;
+  name: string;
+  slug: string;
+  role: string;
+  capabilities: string[];
+  execution_count: number;
+  last_executed_at: string | null;
+  created_at: string;
 }
 
 interface TimelineEntry {
@@ -106,24 +119,28 @@ export default function AgentSupervisorPage() {
   useAuth();
   const supabase = createClient();
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [customAgents, setCustomAgents] = useState<CustomAgentRow[]>([]);
   const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingHealth, setCheckingHealth] = useState<string | null>(null);
   const [repairing, setRepairing] = useState<string | null>(null);
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
   const [showChains, setShowChains] = useState(false);
+  const [showSpawnedAgents, setShowSpawnedAgents] = useState(true);
+  const [spawning, setSpawning] = useState(false);
+  const [spawnTask, setSpawnTask] = useState("");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     const today = new Date().toISOString().split("T")[0];
 
-    const { data: logs } = await supabase
-      .from("trinity_log")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(50);
+    const [{ data: logs }, { data: spawned }] = await Promise.all([
+      supabase.from("trinity_log").select("*").order("created_at", { ascending: false }).limit(50),
+      supabase.from("custom_agents").select("*").eq("is_active", true).order("execution_count", { ascending: false }),
+    ]);
 
     const logEntries = logs || [];
+    setCustomAgents(spawned || []);
 
     const builtAgents: Agent[] = AGENTS_CONFIG.map((cfg) => {
       const agentLogs = logEntries.filter((l: TimelineEntry) => l.agent === cfg.id || l.agent === cfg.name.toLowerCase().replace(/ /g, "_"));
@@ -147,6 +164,35 @@ export default function AgentSupervisorPage() {
     setTimeline(logEntries.slice(0, 15) as TimelineEntry[]);
     setLoading(false);
   }, [supabase]);
+
+  async function spawnAgent() {
+    if (!spawnTask.trim()) return;
+    setSpawning(true);
+    try {
+      const res = await fetch("/api/agents/spawn", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ task: spawnTask, spawned_by: "manual" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`Spawned "${data.agent.name}"!`);
+        setSpawnTask("");
+        fetchData();
+      } else {
+        toast.error(data.error || "Failed to spawn agent");
+      }
+    } catch {
+      toast.error("Connection error");
+    }
+    setSpawning(false);
+  }
+
+  async function deactivateAgent(id: string) {
+    await supabase.from("custom_agents").update({ is_active: false }).eq("id", id);
+    toast.success("Agent deactivated");
+    fetchData();
+  }
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
@@ -223,7 +269,7 @@ export default function AgentSupervisorPage() {
           <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-3">
             Agent Control Center
           </h1>
-          <p className="text-sm text-muted mt-0.5">{agents.length} agents &middot; {agentsWorking} active &middot; {agentsError > 0 ? <span className="text-red-400">{agentsError} errors</span> : <span className="text-emerald-400">no errors</span>}</p>
+          <p className="text-sm text-muted mt-0.5">{agents.length + customAgents.length} agents &middot; {agentsWorking} active &middot; {agentsError > 0 ? <span className="text-danger">{agentsError} errors</span> : <span className="text-success">no errors</span>}</p>
         </div>
         <button
           onClick={() => { toast.loading("Checking all..."); Promise.all(agents.map((a) => healthCheck(a.id))).then(() => toast.dismiss()); }}
@@ -234,32 +280,36 @@ export default function AgentSupervisorPage() {
       </div>
 
       {/* Summary Bar */}
-      <div className="grid grid-cols-4 gap-4">
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-4 text-center">
+      <div className="grid grid-cols-5 gap-4">
+        <div className="card-static text-center">
           <p className="text-[10px] text-muted uppercase tracking-wider">Active</p>
-          <p className="text-2xl font-bold text-emerald-400 mt-1">{agentsWorking}</p>
+          <p className="text-2xl font-bold text-success mt-1">{agentsWorking}</p>
         </div>
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-4 text-center">
+        <div className="card-static text-center">
           <p className="text-[10px] text-muted uppercase tracking-wider">Actions Today</p>
-          <p className="text-2xl font-bold text-white mt-1">{totalActionsToday}</p>
+          <p className="text-2xl font-bold text-foreground mt-1">{totalActionsToday}</p>
         </div>
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-4 text-center">
+        <div className="card-static text-center">
           <p className="text-[10px] text-muted uppercase tracking-wider">Success Rate</p>
-          <p className={`text-2xl font-bold mt-1 ${avgSuccessRate >= 90 ? "text-emerald-400" : avgSuccessRate >= 70 ? "text-amber-400" : "text-red-400"}`}>
+          <p className={`text-2xl font-bold mt-1 ${avgSuccessRate >= 90 ? "text-success" : avgSuccessRate >= 70 ? "text-warning" : "text-danger"}`}>
             {avgSuccessRate}%
           </p>
         </div>
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-4 text-center">
+        <div className="card-static text-center">
           <p className="text-[10px] text-muted uppercase tracking-wider">Errors</p>
-          <p className={`text-2xl font-bold mt-1 ${agentsError === 0 ? "text-emerald-400" : "text-red-400"}`}>
+          <p className={`text-2xl font-bold mt-1 ${agentsError === 0 ? "text-success" : "text-danger"}`}>
             {agentsError}
           </p>
+        </div>
+        <div className="card-static text-center">
+          <p className="text-[10px] text-muted uppercase tracking-wider">Spawned</p>
+          <p className="text-2xl font-bold text-gold mt-1">{customAgents.length}</p>
         </div>
       </div>
 
       {/* Agent List — Clean table/row style */}
-      <div className="rounded-xl border border-border/20 bg-surface/40 overflow-hidden">
-        <div className="px-5 py-3 border-b border-border/10 flex items-center justify-between">
+      <div className="rounded-xl border border-border bg-surface overflow-hidden">
+        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
           <h2 className="text-sm font-semibold flex items-center gap-2">
             <Bot size={15} /> All Agents
           </h2>
@@ -267,7 +317,7 @@ export default function AgentSupervisorPage() {
         </div>
 
         {/* Header row */}
-        <div className="hidden md:grid grid-cols-12 gap-2 px-5 py-2 border-b border-border/10 text-[10px] text-muted uppercase tracking-wider">
+        <div className="hidden md:grid grid-cols-12 gap-2 px-5 py-2 border-b border-border text-[10px] text-muted uppercase tracking-wider">
           <div className="col-span-3">Agent</div>
           <div className="col-span-2">Status</div>
           <div className="col-span-3">Last Action</div>
@@ -281,10 +331,10 @@ export default function AgentSupervisorPage() {
           const isExpanded = expandedAgent === agent.id;
 
           return (
-            <div key={agent.id} className="border-b border-border/5 last:border-0">
+            <div key={agent.id} className="border-b border-border last:border-0">
               {/* Main row */}
               <div
-                className="grid grid-cols-12 gap-2 px-5 py-3 items-center hover:bg-surface-light/20 transition-colors cursor-pointer"
+                className="grid grid-cols-12 gap-2 px-5 py-3 items-center hover:bg-surface-light transition-colors cursor-pointer"
                 onClick={() => setExpandedAgent(isExpanded ? null : agent.id)}
               >
                 {/* Agent name + icon */}
@@ -295,7 +345,7 @@ export default function AgentSupervisorPage() {
                     "bg-surface-light text-muted"
                   }`} style={{
                     backgroundColor: agent.status === "error" ? "rgba(239,68,68,0.1)" :
-                      agent.status === "working" ? undefined : "rgba(255,255,255,0.03)",
+                      agent.status === "working" ? undefined : undefined,
                   }}>
                     {AGENT_ICONS[agent.id] || <Bot size={15} />}
                   </div>
@@ -308,14 +358,14 @@ export default function AgentSupervisorPage() {
                 {/* Status */}
                 <div className="col-span-2">
                   <span className={`inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                    agent.status === "working" ? "bg-emerald-500/10 text-emerald-400" :
-                    agent.status === "error" ? "bg-red-500/10 text-red-400" :
-                    "bg-amber-500/10 text-amber-400"
+                    agent.status === "working" ? "bg-success/10 text-success" :
+                    agent.status === "error" ? "bg-danger/10 text-danger" :
+                    "bg-warning/10 text-warning"
                   }`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${
-                      agent.status === "working" ? "bg-emerald-400" :
-                      agent.status === "error" ? "bg-red-400 animate-pulse" :
-                      "bg-amber-400"
+                      agent.status === "working" ? "bg-success" :
+                      agent.status === "error" ? "bg-danger animate-pulse" :
+                      "bg-warning"
                     }`} />
                     {agent.status === "working" ? "Active" : agent.status === "error" ? "Error" : "Idle"}
                   </span>
@@ -335,7 +385,7 @@ export default function AgentSupervisorPage() {
                 {/* Success Rate */}
                 <div className="col-span-1 text-center">
                   <span className={`text-[11px] font-mono font-medium ${
-                    agent.successRate >= 90 ? "text-emerald-400" : agent.successRate >= 70 ? "text-amber-400" : "text-red-400"
+                    agent.successRate >= 90 ? "text-success" : agent.successRate >= 70 ? "text-warning" : "text-danger"
                   }`}>{agent.successRate}%</span>
                 </div>
 
@@ -344,7 +394,7 @@ export default function AgentSupervisorPage() {
                   <button
                     onClick={(e) => { e.stopPropagation(); healthCheck(agent.id); }}
                     disabled={checkingHealth === agent.id}
-                    className="text-[10px] px-2 py-1 rounded border border-border/20 text-muted hover:text-white hover:border-border/40 transition-all disabled:opacity-30"
+                    className="text-[10px] px-2 py-1 rounded border border-border text-muted hover:text-foreground hover:border-border transition-all disabled:opacity-30"
                   >
                     {checkingHealth === agent.id ? <RefreshCw size={10} className="animate-spin" /> : "Check"}
                   </button>
@@ -363,18 +413,18 @@ export default function AgentSupervisorPage() {
 
               {/* Expanded detail */}
               {isExpanded && (
-                <div className="px-5 pb-3 pl-16 border-t border-border/5">
+                <div className="px-5 pb-3 pl-16 border-t border-border">
                   <div className="grid grid-cols-3 gap-4 py-3 text-[10px]">
                     <div>
                       <span className="text-muted">Endpoint</span>
-                      <p className="text-white/70 font-mono mt-0.5 text-[9px]">{agent.endpoint}</p>
+                      <p className="text-foreground font-mono mt-0.5 text-[9px]">{agent.endpoint}</p>
                     </div>
                     <div>
                       <span className="text-muted">Success Rate</span>
                       <div className="flex items-center gap-2 mt-1">
                         <div className="w-20 bg-surface-light rounded-full h-1.5">
                           <div className={`h-1.5 rounded-full transition-all ${
-                            agent.successRate >= 90 ? "bg-emerald-400" : agent.successRate >= 70 ? "bg-amber-400" : "bg-red-400"
+                            agent.successRate >= 90 ? "bg-success" : agent.successRate >= 70 ? "bg-warning" : "bg-danger"
                           }`} style={{ width: `${agent.successRate}%` }} />
                         </div>
                         <span className="font-mono">{agent.successRate}%</span>
@@ -382,7 +432,7 @@ export default function AgentSupervisorPage() {
                     </div>
                     <div>
                       <span className="text-muted">Last Active</span>
-                      <p className="text-white/70 mt-0.5">{formatTime(agent.lastActionTime)}</p>
+                      <p className="text-foreground mt-0.5">{formatTime(agent.lastActionTime)}</p>
                     </div>
                   </div>
                 </div>
@@ -392,17 +442,92 @@ export default function AgentSupervisorPage() {
         })}
       </div>
 
+      {/* Spawned Sub-Agents */}
+      <div className="rounded-xl border border-gold/10 bg-white overflow-hidden">
+        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+          <button onClick={() => setShowSpawnedAgents(!showSpawnedAgents)} className="flex items-center gap-2">
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Cpu size={15} className="text-gold" /> Spawned Sub-Agents
+              <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full">{customAgents.length}</span>
+            </h2>
+            {showSpawnedAgents ? <ChevronDown size={12} className="text-muted" /> : <ChevronRight size={12} className="text-muted" />}
+          </button>
+        </div>
+
+        {showSpawnedAgents && (
+          <div className="p-5 space-y-3">
+            <p className="text-[10px] text-muted">Nexus can dynamically create specialist agents for tasks that don&apos;t fit existing agents. Spawn one manually or let Nexus decide.</p>
+
+            {/* Manual spawn */}
+            <div className="flex gap-2">
+              <input
+                value={spawnTask}
+                onChange={e => setSpawnTask(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && spawnAgent()}
+                placeholder="Describe a task to spawn an agent for..."
+                className="input flex-1 text-xs"
+              />
+              <button onClick={spawnAgent} disabled={spawning || !spawnTask.trim()}
+                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50 shrink-0">
+                {spawning ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
+                Spawn
+              </button>
+            </div>
+
+            {/* Custom agents list */}
+            {customAgents.length > 0 ? (
+              <div className="space-y-1.5">
+                {customAgents.map(agent => (
+                  <div key={agent.id} className="flex items-center justify-between p-3 rounded-xl bg-surface-light border border-border hover:border-gold/20 transition-all group">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center">
+                        <Cpu size={14} className="text-gold" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold">{agent.name}</p>
+                        <p className="text-[9px] text-muted">{agent.role}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        {agent.capabilities?.slice(0, 2).map((cap, i) => (
+                          <span key={i} className="text-[8px] bg-surface px-1.5 py-0.5 rounded-full text-muted border border-border">{cap}</span>
+                        ))}
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-mono font-medium">{agent.execution_count}x</p>
+                        <p className="text-[8px] text-muted">runs</p>
+                      </div>
+                      <button onClick={() => deactivateAgent(agent.id)}
+                        className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-danger/5 hover:text-danger transition-all"
+                        title="Deactivate">
+                        <Trash2 size={11} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <Cpu size={24} className="mx-auto mb-2 text-muted/20" />
+                <p className="text-[10px] text-muted">No sub-agents spawned yet. Ask Nexus or spawn one manually.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Agent Chains + Timeline */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Agent Chains */}
-        <div className="rounded-xl border border-border/20 bg-surface/40">
+        <div className="rounded-xl border border-border bg-surface">
           <button
             onClick={() => setShowChains(!showChains)}
-            className="w-full px-5 py-3 flex items-center justify-between hover:bg-surface-light/10 transition-colors"
+            className="w-full px-5 py-3 flex items-center justify-between hover:bg-surface-light transition-colors"
           >
             <h2 className="text-sm font-semibold flex items-center gap-2">
               <Zap size={15} className="text-gold" /> Agent Chains
-              <span className="text-[9px] bg-gold/[0.06] text-gold px-2 py-0.5 rounded-full">{CHAINS.length} active</span>
+              <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full">{CHAINS.length} active</span>
             </h2>
             {showChains ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
           </button>
@@ -411,7 +536,7 @@ export default function AgentSupervisorPage() {
               <p className="text-[10px] text-muted mb-2">Automated triggers between agents</p>
               {CHAINS.map((chain, i) => (
                 <div key={i} className="flex items-center gap-2 py-1.5 text-[10px]">
-                  <span className="text-white/80 font-medium w-24 shrink-0">{chain.from}</span>
+                  <span className="text-foreground font-medium w-24 shrink-0">{chain.from}</span>
                   <ArrowRight size={10} className="text-gold shrink-0" />
                   <span className="text-gold font-medium w-24 shrink-0">{chain.to}</span>
                   <span className="text-muted truncate">{chain.label} &rarr; {chain.trigger}</span>
@@ -423,7 +548,7 @@ export default function AgentSupervisorPage() {
         </div>
 
         {/* Activity Timeline */}
-        <div className="rounded-xl border border-border/20 bg-surface/40 p-5">
+        <div className="rounded-xl border border-border bg-surface p-5">
           <h2 className="text-sm font-semibold flex items-center gap-2 mb-4">
             <Activity size={15} /> Recent Activity
           </h2>
@@ -432,14 +557,14 @@ export default function AgentSupervisorPage() {
               <p className="text-xs text-muted text-center py-8">No recent activity</p>
             ) : (
               timeline.map((entry) => (
-                <div key={entry.id} className="flex items-start gap-3 py-2 border-b border-border/5 last:border-0">
+                <div key={entry.id} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
                   <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
-                    entry.status === "success" ? "bg-emerald-500/10" :
-                    entry.status === "error" ? "bg-red-500/10" : "bg-amber-500/10"
+                    entry.status === "success" ? "bg-success/10" :
+                    entry.status === "error" ? "bg-danger/10" : "bg-warning/10"
                   }`}>
-                    {entry.status === "success" ? <CheckCircle size={11} className="text-emerald-400" /> :
-                     entry.status === "error" ? <XCircle size={11} className="text-red-400" /> :
-                     <Clock size={11} className="text-amber-400" />}
+                    {entry.status === "success" ? <CheckCircle size={11} className="text-success" /> :
+                     entry.status === "error" ? <XCircle size={11} className="text-danger" /> :
+                     <Clock size={11} className="text-warning" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -462,7 +587,7 @@ export default function AgentSupervisorPage() {
 }
 
 function ChiefChat() {
-  const [messages, setMessages] = useState<Array<{ role: "user" | "chief"; content: string }>>([]);
+  const [messages, setMessages] = useState<Array<{ role: "user" | "chief"; content: string; spawned?: string }>>([]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
 
@@ -478,7 +603,11 @@ function ChiefChat() {
         body: JSON.stringify({ message: msg, history: messages.slice(-10) }),
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: "chief", content: data.reply || "No response." }]);
+      setMessages(prev => [...prev, {
+        role: "chief",
+        content: data.reply || "No response.",
+        spawned: data.spawned_agent?.name,
+      }]);
     } catch {
       setMessages(prev => [...prev, { role: "chief", content: "Connection error." }]);
     }
@@ -486,15 +615,15 @@ function ChiefChat() {
   }
 
   return (
-    <div className="rounded-xl border border-gold/10 bg-surface/40 p-5">
-      <div className="flex items-center gap-3 pb-3 border-b border-border/10 mb-4">
+    <div className="rounded-xl border border-gold/10 card-static">
+      <div className="flex items-center gap-3 pb-3 border-b border-border mb-4">
         <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center">
           <Shield size={16} className="text-gold" />
         </div>
         <div>
           <p className="text-sm font-semibold">Nexus</p>
-          <p className="text-[10px] text-emerald-400 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" /> Chief Agent &middot; Online
+          <p className="text-[10px] text-success flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" /> Chief Agent &middot; Online
           </p>
         </div>
       </div>
@@ -506,7 +635,7 @@ function ChiefChat() {
             <div className="flex flex-wrap justify-center gap-1.5">
               {["Agent status overview", "Performance report", "Any problems?", "What should we improve?"].map((s, i) => (
                 <button key={i} onClick={() => setInput(s)}
-                  className="text-[10px] bg-surface-light/30 px-2.5 py-1 rounded-lg text-muted hover:text-white border border-border/10 hover:border-border/30 transition-all">
+                  className="text-[10px] bg-surface-light px-2.5 py-1 rounded-lg text-muted hover:text-foreground border border-border hover:border-border transition-all">
                   {s}
                 </button>
               ))}
@@ -516,16 +645,21 @@ function ChiefChat() {
         {messages.map((msg, i) => (
           <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
             <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
-              msg.role === "user" ? "bg-gold/[0.06] border border-gold/10" : "bg-surface-light/30 border border-border/10"
+              msg.role === "user" ? "bg-gold/10 border border-gold/10" : "bg-surface-light border border-border"
             }`}>
               {msg.role === "chief" && <p className="text-[8px] text-gold font-semibold mb-0.5 uppercase tracking-wider">Nexus</p>}
+              {msg.spawned && (
+                <div className="flex items-center gap-1.5 mb-1.5 text-[9px] bg-gold/10 text-gold px-2 py-1 rounded-md">
+                  <Cpu size={10} /> Spawned: {msg.spawned}
+                </div>
+              )}
               <p className="text-[11px] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
             </div>
           </div>
         ))}
         {thinking && (
           <div className="flex justify-start">
-            <div className="bg-surface-light/30 border border-border/10 rounded-lg px-3 py-2 flex items-center gap-1.5">
+            <div className="bg-surface-light border border-border rounded-lg px-3 py-2 flex items-center gap-1.5">
               <div className="w-3 h-3 border-2 border-gold/20 border-t-gold rounded-full animate-spin" />
               <span className="text-[10px] text-muted">Analyzing...</span>
             </div>
@@ -536,7 +670,7 @@ function ChiefChat() {
       <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-2">
         <input type="text" value={input} onChange={(e) => setInput(e.target.value)}
           placeholder="Ask Nexus anything..."
-          className="input flex-1 text-[11px] py-2 rounded-lg bg-surface-light/20 border-border/20" disabled={thinking} />
+          className="input flex-1 text-[11px] py-2 rounded-lg bg-surface-light border-border" disabled={thinking} />
         <button type="submit" disabled={!input.trim() || thinking}
           className="px-3 py-2 bg-gold/10 text-gold text-xs rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-30">
           <Send size={12} />

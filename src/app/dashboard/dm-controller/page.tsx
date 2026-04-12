@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 const PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={18} />, color: "text-pink-400", bg: "bg-pink-400/10 border-pink-400/20" },
   { id: "facebook", name: "Facebook", icon: <MessageCircle size={18} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
-  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} />, color: "text-blue-300", bg: "bg-blue-300/10 border-blue-300/20" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} />, color: "text-blue-600", bg: "bg-blue-300/10 border-blue-300/20" },
   { id: "tiktok", name: "TikTok", icon: <Music size={18} />, color: "text-white", bg: "bg-white/5 border-white/15" },
 ];
 
@@ -148,10 +148,10 @@ export default function DMControllerPage() {
 
       {/* Tabs */}
       <div className="flex gap-1">
-        <button onClick={() => setTab("setup")} className={`text-[10px] px-3 py-1.5 rounded-lg transition-all ${tab === "setup" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border/20"}`}>
+        <button onClick={() => setTab("setup")} className={`text-[10px] px-3 py-1.5 rounded-lg transition-all ${tab === "setup" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border"}`}>
           <Settings size={10} className="inline mr-1" /> Setup
         </button>
-        <button onClick={() => { setTab("queue"); fetchQueue(); }} className={`text-[10px] px-3 py-1.5 rounded-lg transition-all ${tab === "queue" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border/20"}`}>
+        <button onClick={() => { setTab("queue"); fetchQueue(); }} className={`text-[10px] px-3 py-1.5 rounded-lg transition-all ${tab === "queue" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-border"}`}>
           <Inbox size={10} className="inline mr-1" /> Queue ({queuedDMs.length})
         </button>
       </div>
@@ -169,7 +169,7 @@ export default function DMControllerPage() {
           ) : (
             <div className="space-y-1.5 max-h-[500px] overflow-y-auto">
               {queuedDMs.map((dm) => (
-                <div key={dm.id} className="flex items-center gap-3 py-2 px-2 rounded-lg border border-border/20 hover:bg-surface-light/30 transition-colors">
+                <div key={dm.id} className="flex items-center gap-3 py-2 px-2 rounded-lg border border-border hover:bg-surface-light transition-colors">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
                     dm.status === "sent" ? "bg-success/10 text-success" : dm.status === "failed" ? "bg-danger/10 text-danger" : "bg-gold/10 text-gold"
                   }`}>
@@ -183,7 +183,7 @@ export default function DMControllerPage() {
                     <p className="text-[10px] text-muted truncate">{dm.message_text}</p>
                   </div>
                   <button onClick={() => { navigator.clipboard.writeText(dm.message_text); toast.success("Copied!"); }}
-                    className="text-muted hover:text-white transition-colors p-1"><Copy size={12} /></button>
+                    className="text-muted hover:text-foreground transition-colors p-1"><Copy size={12} /></button>
                 </div>
               ))}
             </div>
@@ -201,7 +201,7 @@ export default function DMControllerPage() {
               {PLATFORMS.map(p => (
                 <button key={p.id} onClick={() => togglePlatform(p.id)}
                   className={`flex items-center gap-2.5 p-3 rounded-xl border transition-all ${
-                    config.platforms.includes(p.id) ? p.bg : "border-border/20 opacity-50"
+                    config.platforms.includes(p.id) ? p.bg : "border-border opacity-50"
                   }`}>
                   <span className={config.platforms.includes(p.id) ? p.color : "text-muted"}>{p.icon}</span>
                   <div>
@@ -238,7 +238,7 @@ export default function DMControllerPage() {
                 {["friendly", "professional", "bold", "casual"].map(s => (
                   <button key={s} onClick={() => setConfig({ ...config, messageStyle: s })}
                     className={`text-[10px] px-3 py-1 rounded-lg border transition-all capitalize ${
-                      config.messageStyle === s ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/20 text-muted"
+                      config.messageStyle === s ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
                     }`}>{s}</button>
                 ))}
               </div>
@@ -252,7 +252,7 @@ export default function DMControllerPage() {
               {NICHES.map(n => (
                 <button key={n} onClick={() => toggleNiche(n)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
-                    config.niches.includes(n) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/20 text-muted"
+                    config.niches.includes(n) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
                   }`}>{n}</button>
               ))}
             </div>
@@ -265,7 +265,7 @@ export default function DMControllerPage() {
               {SERVICES.map(s => (
                 <button key={s} onClick={() => toggleService(s)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
-                    config.services.includes(s) ? "border-accent/30 bg-accent/[0.05] text-accent" : "border-border/20 text-muted"
+                    config.services.includes(s) ? "border-accent/30 bg-accent/[0.05] text-accent" : "border-border text-muted"
                   }`}>{s}</button>
               ))}
             </div>
@@ -278,7 +278,7 @@ export default function DMControllerPage() {
               {MESSAGE_TEMPLATES.map((t, i) => (
                 <button key={i} onClick={() => setConfig({ ...config, customMessage: t.message })}
                   className={`w-full text-left p-2.5 rounded-lg border transition-all ${
-                    config.customMessage === t.message ? "border-gold/30 bg-gold/[0.05]" : "border-border/20 hover:border-border/40"
+                    config.customMessage === t.message ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-border"
                   }`}>
                   <p className="text-[10px] font-semibold mb-0.5">{t.name}</p>
                   <p className="text-[9px] text-muted line-clamp-2">{t.message}</p>
@@ -286,7 +286,7 @@ export default function DMControllerPage() {
               ))}
               <button onClick={() => setConfig({ ...config, customMessage: "" })}
                 className={`w-full text-left p-2.5 rounded-lg border transition-all ${
-                  !config.customMessage ? "border-accent/30 bg-accent/[0.05]" : "border-border/20 hover:border-border/40"
+                  !config.customMessage ? "border-accent/30 bg-accent/[0.05]" : "border-border hover:border-border"
                 }`}>
                 <p className="text-[10px] font-semibold mb-0.5 text-accent">AI Generated</p>
                 <p className="text-[9px] text-muted">Let AI write unique personalized messages for each lead</p>

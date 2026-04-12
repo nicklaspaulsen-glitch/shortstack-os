@@ -161,7 +161,7 @@ export default function AuditPage() {
           {FILTER_TABS.map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors ${
-                activeTab === tab ? "bg-gold/20 text-gold" : "text-muted hover:text-white"
+                activeTab === tab ? "bg-gold/20 text-gold" : "text-muted hover:text-foreground"
               }`}>
               {tab}
             </button>
@@ -173,7 +173,7 @@ export default function AuditPage() {
           {DATE_RANGES.map(dr => (
             <button key={dr.label} onClick={() => setDateRange(dr.days)}
               className={`px-2 py-1 rounded text-[10px] transition-colors ${
-                dateRange === dr.days ? "bg-gold/20 text-gold" : "text-muted hover:text-white"
+                dateRange === dr.days ? "bg-gold/20 text-gold" : "text-muted hover:text-foreground"
               }`}>
               {dr.label}
             </button>

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
-// AI Chief Agent — the boss that oversees all other agents
-// Has full context on what every agent has done, system health, and performance
+// AI Chief Agent (Nexus) — oversees all agents, can spawn sub-agents dynamically
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -11,7 +10,7 @@ export async function POST(request: NextRequest) {
   const { message, history } = await request.json();
   const serviceSupabase = createServiceClient();
 
-  // Gather full system context for the Chief
+  // Gather full system context
   const [
     { data: recentActions },
     { count: totalLeads },
@@ -22,6 +21,7 @@ export async function POST(request: NextRequest) {
     { data: healthData },
     { count: contentPublished },
     { data: recentErrors },
+    { data: customAgents },
   ] = await Promise.all([
     serviceSupabase.from("trinity_log").select("action_type, description, status, created_at").order("created_at", { ascending: false }).limit(30),
     serviceSupabase.from("leads").select("*", { count: "exact", head: true }),
@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
     serviceSupabase.from("system_health").select("integration_name, status, error_message"),
     serviceSupabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("status", "published"),
     serviceSupabase.from("trinity_log").select("description, action_type, created_at").eq("status", "failed").order("created_at", { ascending: false }).limit(10),
+    serviceSupabase.from("custom_agents").select("name, slug, role, execution_count, last_executed_at").eq("is_active", true).order("execution_count", { ascending: false }).limit(20),
   ]);
 
   const totalMRR = (clients || []).reduce((s, c) => s + ((c as { mrr: number }).mrr || 0), 0);
@@ -39,13 +40,16 @@ export async function POST(request: NextRequest) {
   const degraded = (healthData || []).filter(h => h.status === "degraded");
   const replyRate = (dmsSent || 0) > 0 ? Math.round(((replies || 0) / (dmsSent || 1)) * 100) : 0;
 
-  // Recent agent activity summary
   const activitySummary = (recentActions || []).slice(0, 15).map(a =>
     `[${a.action_type}] ${a.description} — ${a.status} (${new Date(a.created_at).toLocaleTimeString()})`
   ).join("\n");
 
   const errorSummary = (recentErrors || []).map(e =>
     `FAILED: [${e.action_type}] ${e.description} (${new Date(e.created_at).toLocaleTimeString()})`
+  ).join("\n");
+
+  const customAgentsList = (customAgents || []).map(a =>
+    `- ${a.name} (${a.slug}): ${a.role} — used ${a.execution_count}x`
   ).join("\n");
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -59,24 +63,29 @@ export async function POST(request: NextRequest) {
     { role: "user", content: message },
   ];
 
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1500,
-        system: `You are the Chief AI Agent (codename: "Nexus") of ShortStack OS — the boss overseeing all other AI agents. You manage the entire agency operation.
+  const systemPrompt = `You are the Chief AI Agent (codename: "Nexus") of ShortStack OS — the boss overseeing all other AI agents. You manage the entire agency operation.
 
-YOUR AGENTS:
+YOUR BUILT-IN AGENTS:
 - Scout (Lead Finder) — scrapes leads from Google Maps
 - Echo (Outreach) — sends cold DMs and emails
 - Pixel (Content AI) — writes scripts and content
 - Wave (Social Manager) — manages social media posting
 - Blaze (Ads Manager) — runs ad campaigns
 - Trinity (AI Assistant) — helps users with voice/text
-- Ring (Cold Caller) — makes calls via GHL
-- Nexus (Supervisor) — monitors all agents (that's you)
+- Ring (Cold Caller) — makes calls via ElevenLabs
+- Plus 12 more specialized agents (Reviews, Analytics, Invoice, Onboarding, SEO, Reputation, Retention, Proposal, Scheduler, Video, Design, Website)
+
+YOUR SPAWNED SUB-AGENTS:
+${customAgentsList || "None spawned yet."}
+
+IMPORTANT ABILITY — SPAWN SUB-AGENTS:
+You can create new specialized AI agents on the fly when a task doesn't fit any existing agent.
+When you determine a task needs a new specialist, use the spawn_agent tool.
+Examples of when to spawn:
+- "Analyze competitor pricing across 5 platforms" → spawn a "Pricing Analyst" agent
+- "Create a brand voice guide for a new client" → spawn a "Brand Strategist" agent
+- "Research trending hashtags in the fitness niche" → spawn a "Trend Scout" agent
+- "Audit our email deliverability" → spawn a "Deliverability Auditor" agent
 
 CURRENT SYSTEM STATUS:
 - Total Leads: ${totalLeads || 0}
@@ -84,8 +93,8 @@ CURRENT SYSTEM STATUS:
 - Total MRR: $${totalMRR}
 - DMs Sent: ${dmsSent || 0} (${replyRate}% reply rate)
 - Content Published: ${contentPublished || 0}
-- Integrations Down: ${reallyDown.length} (these are real problems)
-- Integrations Degraded: ${degraded.length} (just need token refresh, not urgent)
+- Integrations Down: ${reallyDown.length}
+- Integrations Degraded: ${degraded.length}
 ${reallyDown.length > 0 ? `- DOWN: ${reallyDown.map(h => h.integration_name).join(", ")}` : "- No critical outages"}
 
 RECENT AGENT ACTIVITY:
@@ -100,17 +109,95 @@ IMPORTANT CONTEXT:
 
 YOUR PERSONALITY:
 - You're the boss. Direct, decisive, confident.
-- Keep responses SHORT (3-5 sentences max for voice)
+- Keep responses SHORT (3-5 sentences max)
 - NEVER use markdown formatting (no **, no ##, no tables, no |)
-- Speak in plain conversational English — this is read aloud by voice
+- Speak in plain conversational English
 - Give the key numbers, then one actionable suggestion
-- Be encouraging, not alarming`,
+- When a task needs a specialist you don't have, SPAWN one — be proactive`;
+
+  try {
+    // First call — with tool definitions for spawning
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1500,
+        system: systemPrompt,
         messages,
+        tools: [
+          {
+            name: "spawn_agent",
+            description: "Spawn a new specialized AI sub-agent to handle a task that no existing agent covers. The agent will be created, saved for reuse, and will execute the task immediately.",
+            input_schema: {
+              type: "object",
+              properties: {
+                task: {
+                  type: "string",
+                  description: "The specific task for the new agent to execute",
+                },
+                context: {
+                  type: "string",
+                  description: "Additional context about why this agent is needed and what domain it covers",
+                },
+              },
+              required: ["task"],
+            },
+          },
+        ],
       }),
     });
 
     const data = await res.json();
-    const reply = data.content?.[0]?.text || "Systems nominal. All agents reporting.";
+
+    // Check if Nexus wants to spawn a sub-agent
+    const toolUse = data.content?.find((b: { type: string }) => b.type === "tool_use");
+
+    if (toolUse && toolUse.name === "spawn_agent") {
+      // Execute the spawn
+      const spawnRes = await fetch(new URL("/api/agents/spawn", request.url).toString(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Cookie": request.headers.get("cookie") || "",
+        },
+        body: JSON.stringify({
+          task: toolUse.input.task,
+          context: toolUse.input.context || "",
+          spawned_by: "nexus",
+        }),
+      });
+
+      const spawnData = await spawnRes.json();
+
+      // Get text blocks from initial response
+      const textBlocks = data.content?.filter((b: { type: string }) => b.type === "text") || [];
+      const initialText = textBlocks.map((b: { text: string }) => b.text).join(" ");
+
+      if (spawnData.success) {
+        const agentInfo = spawnData.agent;
+        const spawnSummary = `I just spawned a new sub-agent: "${agentInfo.name}" (${agentInfo.role}). ${agentInfo.is_new ? "This is a brand new specialist." : "Reused an existing specialist."}\n\nHere's what it found:\n\n${spawnData.result.substring(0, 800)}`;
+
+        const reply = initialText
+          ? `${initialText}\n\n${spawnSummary}`
+          : spawnSummary;
+
+        return NextResponse.json({
+          reply,
+          spawned_agent: agentInfo,
+        });
+      } else {
+        const reply = initialText
+          ? `${initialText}\n\nI tried to spawn a sub-agent but hit an issue: ${spawnData.error || "unknown error"}. I'll handle this differently.`
+          : `Tried to spawn a specialist but hit an issue. Let me handle this directly instead.`;
+
+        return NextResponse.json({ reply });
+      }
+    }
+
+    // Normal text response (no tool use)
+    const reply = data.content?.filter((b: { type: string }) => b.type === "text")
+      .map((b: { text: string }) => b.text).join(" ") || "Systems nominal. All agents reporting.";
 
     return NextResponse.json({ reply });
   } catch (err) {

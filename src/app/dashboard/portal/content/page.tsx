@@ -52,7 +52,7 @@ export default function ClientContentPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {calendar.map((c, i) => (
-              <div key={i} className="bg-surface-light/30 border border-border/20 rounded-lg p-3 hover:border-gold/15 transition-colors">
+              <div key={i} className="bg-surface-light border border-border rounded-lg p-3 hover:border-gold/15 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] text-muted capitalize font-medium">{c.platform.replace(/_/g, " ")}</span>
                   <StatusBadge status={c.status} />
@@ -60,7 +60,7 @@ export default function ClientContentPage() {
                 <p className="text-xs font-medium mb-1">{c.title}</p>
                 {c.scheduled_at && <p className="text-[9px] text-muted mb-2">{formatDate(c.scheduled_at)}</p>}
                 {c.status === "ready_to_publish" && (
-                  <div className="flex gap-1.5 pt-1 border-t border-border/10">
+                  <div className="flex gap-1.5 pt-1 border-t border-border">
                     <button onClick={async () => {
                       await supabase.from("content_calendar").update({ status: "published" }).eq("id", c.id);
                       toast.success("Approved!");
@@ -97,7 +97,7 @@ export default function ClientContentPage() {
           <h2 className="section-header">Content Scripts</h2>
           <div className="space-y-2">
             {scripts.map((s, i) => (
-              <div key={i} className="flex items-center justify-between py-2 border-b border-border/15 last:border-0">
+              <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                 <div>
                   <p className="text-xs font-medium">{s.title}</p>
                   <p className="text-[10px] text-muted capitalize">{s.script_type?.replace(/_/g, " ")} · {s.target_platform?.replace(/_/g, " ")}</p>

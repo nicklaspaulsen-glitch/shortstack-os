@@ -57,7 +57,7 @@ export default function ClientSupportPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Chat */}
         <div className="lg:col-span-2 card flex flex-col" style={{ minHeight: "500px" }}>
-          <div className="flex items-center gap-2 pb-3 border-b border-border/20 mb-3">
+          <div className="flex items-center gap-2 pb-3 border-b border-border mb-3">
             <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
               <Bot size={16} className="text-gold" />
             </div>
@@ -82,7 +82,7 @@ export default function ClientSupportPage() {
                     "I have a question about my invoice",
                   ].map((s, i) => (
                     <button key={i} onClick={() => setInput(s)}
-                      className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-muted hover:text-white border border-border/30 transition-all">
+                      className="text-[10px] bg-surface-light/50 px-2.5 py-1.5 rounded-md text-muted hover:text-foreground border border-border transition-all">
                       {s}
                     </button>
                   ))}
@@ -95,7 +95,7 @@ export default function ClientSupportPage() {
                 <div className={`max-w-[75%] rounded-lg px-3 py-2 ${
                   msg.role === "user"
                     ? "bg-gold/10 border border-gold/15"
-                    : "bg-surface-light/50 border border-border/20"
+                    : "bg-surface-light/50 border border-border"
                 }`}>
                   <p className="text-xs whitespace-pre-wrap">{msg.content}</p>
                 </div>
@@ -104,7 +104,7 @@ export default function ClientSupportPage() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-surface-light/50 border border-border/20 rounded-lg px-3 py-2">
+                <div className="bg-surface-light/50 border border-border rounded-lg px-3 py-2">
                   <Loader size={12} className="animate-spin text-gold" />
                 </div>
               </div>

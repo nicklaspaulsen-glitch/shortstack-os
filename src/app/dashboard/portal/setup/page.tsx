@@ -108,7 +108,7 @@ export default function ClientSetupPage() {
         ))}
       </div>
       <div className="flex gap-3 pt-2">
-        <button onClick={() => setStep(3)} className="text-sm text-muted hover:text-white flex items-center gap-1">
+        <button onClick={() => setStep(3)} className="text-sm text-muted hover:text-foreground flex items-center gap-1">
           <X size={14} /> No thanks, maybe later
         </button>
         <button onClick={() => toast("Contact your ShortStack account manager for help connecting accounts.")}

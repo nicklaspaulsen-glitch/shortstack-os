@@ -78,7 +78,7 @@ export default function ClientSwitcher() {
       {/* Trigger button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-muted hover:text-white bg-surface-light/50 border border-border/50 hover:border-gold/20 transition-all"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-muted hover:text-foreground bg-surface-light/50 border border-border/50 hover:border-gold/20 transition-all"
       >
         <Users size={13} />
         <span>{activeClient ? activeClient.business_name : "Switch Client"}</span>
@@ -97,7 +97,7 @@ export default function ClientSwitcher() {
                 <span className="text-xs font-semibold">Client Switcher</span>
                 <span className="text-[10px] text-muted bg-surface-light px-1.5 py-0.5 rounded">{clients.length}</span>
               </div>
-              <button onClick={() => setOpen(false)} className="text-muted hover:text-white">
+              <button onClick={() => setOpen(false)} className="text-muted hover:text-foreground">
                 <X size={14} />
               </button>
             </div>

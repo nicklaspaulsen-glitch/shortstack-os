@@ -5,8 +5,9 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor } from "lucide-react";
 import toast from "react-hot-toast";
+import { applyTheme } from "@/components/theme-provider";
 
 type Tab = "agents" | "integrations" | "automation" | "notifications" | "general";
 
@@ -144,7 +145,7 @@ export default function SettingsPage() {
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-white"}`}
+            className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
           >{t.icon} {t.label}</button>
         ))}
       </div>
@@ -152,37 +153,39 @@ export default function SettingsPage() {
       {/* General Tab */}
       {tab === "general" && (
         <div className="space-y-4 max-w-2xl">
-          {/* Desktop App Settings — uses localStorage since no IPC bridge */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Settings size={14} className="text-gold" /> Desktop App
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Settings for the ShortStack OS application</p>
-            <div className="space-y-2">
-              {[
-                { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch ShortStack OS when your computer starts" },
-                { key: "ss_auto_update", label: "Auto-Update", desc: "Automatically check for and apply updates" },
-              ].map(setting => {
-                const isEnabled = typeof window !== "undefined" && safeGet(setting.key) === "true";
-                return (
-                  <div key={setting.key} className="flex items-center justify-between p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                    <div>
-                      <p className="text-xs font-medium">{setting.label}</p>
-                      <p className="text-[10px] text-muted">{setting.desc}</p>
+          {/* Desktop App Settings — only show in Electron */}
+          {typeof window !== "undefined" && !!(window as unknown as { electronAPI?: unknown }).electronAPI && (
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2">
+                <Monitor size={14} className="text-gold" /> Desktop App
+              </h2>
+              <p className="text-[10px] text-muted mb-3">Settings for the ShortStack OS desktop application</p>
+              <div className="space-y-2">
+                {[
+                  { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch ShortStack OS when your computer starts" },
+                  { key: "ss_auto_update", label: "Auto-Update", desc: "Automatically check for and apply updates" },
+                ].map(setting => {
+                  const isEnabled = typeof window !== "undefined" && safeGet(setting.key) === "true";
+                  return (
+                    <div key={setting.key} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+                      <div>
+                        <p className="text-xs font-medium">{setting.label}</p>
+                        <p className="text-[10px] text-muted">{setting.desc}</p>
+                      </div>
+                      <button onClick={() => {
+                        const next = !isEnabled;
+                        safeSet(setting.key, next ? "true" : "false");
+                        toast.success(`${setting.label} ${next ? "enabled" : "disabled"}`);
+                      }}
+                        className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                        <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${isEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
+                      </button>
                     </div>
-                    <button onClick={() => {
-                      const next = !isEnabled;
-                      safeSet(setting.key, next ? "true" : "false");
-                      toast.success(`${setting.label} ${next ? "enabled" : "disabled"}`);
-                    }}
-                      className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                      <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${isEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
-                    </button>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Display & Zoom */}
           <div className="card">
@@ -201,20 +204,20 @@ export default function SettingsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={() => { document.documentElement.style.zoom = "0.75"; safeSet("ss-zoom", "0.75"); toast.success("Zoom: 75%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.75" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>75%</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.75" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>75%</button>
                   <button onClick={() => { document.documentElement.style.zoom = "0.85"; safeSet("ss-zoom", "0.85"); toast.success("Zoom: 85%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.85" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>85%</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.85" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>85%</button>
                   <button onClick={() => { document.documentElement.style.zoom = "0.9"; safeSet("ss-zoom", "0.9"); toast.success("Zoom: 90%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.9" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>90%</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.9" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>90%</button>
                   <button onClick={() => { document.documentElement.style.zoom = "1"; safeSet("ss-zoom", "1"); toast.success("Zoom: 100%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${!safeGet("ss-zoom") || safeGet("ss-zoom") === "1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>100%</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${!safeGet("ss-zoom") || safeGet("ss-zoom") === "1" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>100%</button>
                   <button onClick={() => { document.documentElement.style.zoom = "1.1"; safeSet("ss-zoom", "1.1"); toast.success("Zoom: 110%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "1.1" ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/30 text-muted hover:text-white"}`}>110%</button>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "1.1" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>110%</button>
                 </div>
               </div>
 
               {/* Sidebar compact */}
-              <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
                 <div>
                   <p className="text-xs font-medium">Compact Sidebar</p>
                   <p className="text-[10px] text-muted">Collapse sidebar to icons only</p>
@@ -231,7 +234,7 @@ export default function SettingsPage() {
               </div>
 
               {/* Animations */}
-              <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
                 <div>
                   <p className="text-xs font-medium">Animations</p>
                   <p className="text-[10px] text-muted">Card hover effects, transitions, fades</p>
@@ -256,7 +259,7 @@ export default function SettingsPage() {
               {sfxEnabled ? <Volume2 size={14} className="text-gold" /> : <VolumeX size={14} className="text-muted" />}
               Sound Effects
             </h2>
-            <div className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+            <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
               <div>
                 <p className="text-xs font-medium">UI Sound Effects</p>
                 <p className="text-[10px] text-muted">Click sounds, notifications, success/error tones</p>
@@ -281,7 +284,7 @@ export default function SettingsPage() {
               ].map(widget => {
                 const isHidden = typeof window !== "undefined" && localStorage.getItem(widget.key) === "true";
                 return (
-                  <div key={widget.key} className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20">
+                  <div key={widget.key} className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
                     <div>
                       <p className="text-xs font-medium">{widget.label}</p>
                       <p className="text-[10px] text-muted">{widget.desc}</p>
@@ -308,7 +311,8 @@ export default function SettingsPage() {
             <p className="text-[10px] text-muted mb-3">10 color schemes to match your style</p>
             <div className="grid grid-cols-5 gap-2">
               {[
-                { id: "midnight", name: "Midnight", bg: "#08090e", surface: "#10121a", accent: "#C9A84C", text: "#e8eaed", desc: "Default" },
+                { id: "nordic", name: "Nordic", bg: "#FAFAF7", surface: "#FFFFFF", accent: "#C9A84C", text: "#374151", desc: "Default" },
+                { id: "midnight", name: "Midnight", bg: "#08090e", surface: "#10121a", accent: "#C9A84C", text: "#e8eaed", desc: "Dark" },
                 { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#C9A84C", text: "#0f172a", desc: "Clean" },
                 { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#38bdf8", text: "#e2e8f0", desc: "Blue" },
                 { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm" },
@@ -319,28 +323,21 @@ export default function SettingsPage() {
                 { id: "noir", name: "Noir", bg: "#050505", surface: "#0e0e0e", accent: "#ffffff", text: "#d0d0d0", desc: "B&W" },
                 { id: "sunset", name: "Sunset", bg: "#100808", surface: "#1a0e0e", accent: "#fb923c", text: "#f0e8e0", desc: "Orange" },
               ].map(theme => {
-                const currentTheme = typeof window !== "undefined" ? safeGet("ss-theme") || "midnight" : "midnight";
+                const currentTheme = typeof window !== "undefined" ? safeGet("ss-theme") || "nordic" : "nordic";
                 const isActive = currentTheme === theme.id;
                 return (
                   <button key={theme.id} onClick={() => {
                     safeSet("ss-theme", theme.id);
-                    document.body.style.background = theme.bg;
-                    document.body.style.color = theme.text;
-                    document.documentElement.style.setProperty("--color-background", theme.bg);
-                    document.documentElement.style.setProperty("--color-surface", theme.surface);
-                    document.documentElement.style.setProperty("--color-accent", theme.accent);
-                    if (theme.id === "light") document.documentElement.classList.add("theme-light");
-                    else document.documentElement.classList.remove("theme-light");
+                    applyTheme(theme.id);
                     toast.success(`${theme.name} theme applied`);
-                    setTimeout(() => window.location.reload(), 400);
                   }}
                     className={`p-2.5 rounded-lg border transition-all text-center ${
-                      isActive ? "border-gold/40 ring-2 ring-gold/20 bg-white/[0.03]" : "border-white/[0.06] hover:border-white/[0.12]"
+                      isActive ? "border-gold/40 ring-2 ring-gold/20 bg-surface-light" : "border-border hover:border-gold/30"
                     }`}
                   >
                     <div className="flex items-center justify-center gap-0.5 mb-1.5">
-                      <div className="w-4 h-4 rounded-full border border-white/10" style={{ background: theme.bg }} />
-                      <div className="w-4 h-4 rounded-full border border-white/10" style={{ background: theme.accent }} />
+                      <div className="w-4 h-4 rounded-full border border-border" style={{ background: theme.bg }} />
+                      <div className="w-4 h-4 rounded-full border border-border" style={{ background: theme.accent }} />
                     </div>
                     <p className="text-[9px] font-bold">{theme.name}</p>
                     {isActive && <p className="text-[7px] text-gold mt-0.5">Active</p>}
@@ -373,7 +370,7 @@ export default function SettingsPage() {
                         toast.success(`${style.name} sidebar — reload to apply`);
                       }}
                         className={`p-3 rounded-lg border text-center transition-all ${
-                          current === style.id ? "border-gold/30 bg-gold/[0.04]" : "border-white/[0.06]"
+                          current === style.id ? "border-gold/30 bg-gold/[0.04]" : "border-border"
                         }`}>
                         <p className="text-[10px] font-bold">{style.name}</p>
                         <p className="text-[8px] text-muted">{style.desc}</p>
@@ -401,7 +398,7 @@ export default function SettingsPage() {
                         toast.success(`Font size: ${fs.name}`);
                       }}
                         className={`p-2.5 rounded-lg border text-center transition-all ${
-                          current === fs.id ? "border-gold/30 bg-gold/[0.04]" : "border-white/[0.06]"
+                          current === fs.id ? "border-gold/30 bg-gold/[0.04]" : "border-border"
                         }`}>
                         <p style={{ fontSize: fs.size }} className="font-bold">Aa</p>
                         <p className="text-[8px] text-muted">{fs.name}</p>
@@ -427,7 +424,7 @@ export default function SettingsPage() {
                         toast.success(`${cs.name} cards — reload to apply`);
                       }}
                         className={`p-3 rounded-lg border text-center transition-all ${
-                          current === cs.id ? "border-gold/30 bg-gold/[0.04]" : "border-white/[0.06]"
+                          current === cs.id ? "border-gold/30 bg-gold/[0.04]" : "border-border"
                         }`}>
                         <p className="text-[10px] font-bold">{cs.name}</p>
                         <p className="text-[8px] text-muted">{cs.desc}</p>
@@ -446,8 +443,8 @@ export default function SettingsPage() {
             </h2>
             <p className="text-[10px] text-muted mb-3">Connect your own domain to ShortStack OS instead of shortstack-os.vercel.app</p>
             <div className="space-y-2 text-[11px]">
-              <div className="p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                <p className="font-semibold text-white mb-2">Setup Instructions:</p>
+              <div className="p-3 rounded-lg bg-surface-light border border-border">
+                <p className="font-semibold text-foreground mb-2">Setup Instructions:</p>
                 <ol className="space-y-1.5 text-muted list-decimal list-inside">
                   <li>Go to <a href="https://vercel.com/growth-9598s-projects/shortstack-os/settings/domains" target="_blank" rel="noopener" className="text-gold hover:underline">Vercel Domain Settings</a></li>
                   <li>Click &ldquo;Add Domain&rdquo; and enter your domain (e.g. app.shortstack.work)</li>
@@ -467,19 +464,19 @@ export default function SettingsPage() {
               <Info size={14} className="text-gold" /> About
             </h2>
             <div className="space-y-3">
-              <div className="flex items-center justify-between py-2 border-b border-border/15">
+              <div className="flex items-center justify-between py-2 border-b border-border">
                 <span className="text-xs text-muted">Version</span>
                 <span className="text-xs font-mono text-gold">v1.2.0</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/15">
+              <div className="flex items-center justify-between py-2 border-b border-border">
                 <span className="text-xs text-muted">Build</span>
                 <span className="text-xs font-mono text-muted">2026.04.06</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/15">
+              <div className="flex items-center justify-between py-2 border-b border-border">
                 <span className="text-xs text-muted">Platform</span>
                 <span className="text-xs font-mono text-muted">Next.js + Supabase + Claude AI</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/15">
+              <div className="flex items-center justify-between py-2 border-b border-border">
                 <span className="text-xs text-muted">License</span>
                 <span className="text-xs font-mono text-success">Enterprise</span>
               </div>
@@ -493,7 +490,7 @@ export default function SettingsPage() {
           {/* White Label link */}
           <div className="card">
             <h2 className="section-header">Customization</h2>
-            <a href="/dashboard/settings/white-label" className="flex items-center justify-between p-3 bg-surface-light/30 rounded-lg border border-border/20 hover:border-gold/15 transition-colors">
+            <a href="/dashboard/settings/white-label" className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border hover:border-gold/15 transition-colors">
               <div>
                 <p className="text-xs font-medium">White-Label Branding</p>
                 <p className="text-[10px] text-muted">Customize logo, colors, and branding for clients</p>
@@ -621,7 +618,7 @@ export default function SettingsPage() {
                 { name: "GHL Cold Call Queue", schedule: "50 leads queued daily at 9:00 CET", status: "active" },
                 { name: "Telegram Cleanup", schedule: "Before each new briefing", status: "active" },
               ].map((job, i) => (
-                <div key={i} className="flex items-center justify-between py-3 border-b border-border/50 last:border-0">
+                <div key={i} className="flex items-center justify-between py-3 border-b border-border0 last:border-0">
                   <div>
                     <p className="text-sm font-medium">{job.name}</p>
                     <p className="text-xs text-muted">{job.schedule}</p>
@@ -635,23 +632,23 @@ export default function SettingsPage() {
           <div className="card">
             <h3 className="section-header">Automation Rules</h3>
             <div className="space-y-3 text-sm">
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
+              <div className="flex items-center justify-between py-2 border-b border-border0">
                 <span>Auto-import leads to GHL</span>
                 <span className="text-success">Enabled</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
+              <div className="flex items-center justify-between py-2 border-b border-border0">
                 <span>Round-robin assign to cold callers</span>
                 <span className="text-success">Enabled</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
+              <div className="flex items-center justify-between py-2 border-b border-border0">
                 <span>Auto-generate follow-up messages</span>
                 <span className="text-success">Enabled</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
+              <div className="flex items-center justify-between py-2 border-b border-border0">
                 <span>Telegram notification on call booked</span>
                 <span className="text-success">Enabled</span>
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-border/50">
+              <div className="flex items-center justify-between py-2 border-b border-border0">
                 <span>Auto briefing on admin login</span>
                 <span className="text-success">Enabled</span>
               </div>
@@ -681,7 +678,7 @@ export default function SettingsPage() {
                 { event: "Invoice paid", enabled: true },
                 { event: "Trinity action completed", enabled: true },
               ].map((n, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-border/50 last:border-0">
+                <div key={i} className="flex items-center justify-between py-2 border-b border-border0 last:border-0">
                   <span>{n.event}</span>
                   <span className={n.enabled ? "text-success" : "text-muted"}>{n.enabled ? "On" : "Off"}</span>
                 </div>

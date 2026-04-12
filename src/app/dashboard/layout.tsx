@@ -9,7 +9,6 @@ import VoiceAssistant from "@/components/voice-assistant";
 import OnboardingTour from "@/components/onboarding-tour";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import CommandPalette from "@/components/command-palette";
-import FloatingParticles from "@/components/ui/particles";
 import KeyboardShortcuts from "@/components/keyboard-shortcuts";
 import QuickAdd from "@/components/quick-add";
 import { useAuth } from "@/lib/auth-context";
@@ -53,16 +52,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <>
-      {/* Top accent bar — OUTSIDE everything, truly fixed full-width */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 2,
-        background: "linear-gradient(90deg, transparent 0%, rgba(184,152,64,0.5) 50%, transparent 100%)",
-        zIndex: 100000, pointerEvents: "none",
-      }} />
-
       <div className="flex min-h-screen">
-        {/* Floating particles background */}
-        <FloatingParticles count={15} />
 
         {/* Desktop sidebar */}
         <div className="hidden lg:block">
@@ -72,11 +62,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Mobile sidebar overlay */}
         {mobileMenuOpen && (
           <div className="lg:hidden fixed inset-0 z-50">
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
             <div className="relative w-56 h-full">
               <Sidebar />
               <button onClick={() => setMobileMenuOpen(false)}
-                className="absolute top-3 right-3 p-1.5 rounded-lg bg-surface-light text-muted hover:text-white z-50">
+                className="absolute top-3 right-3 p-1.5 rounded-lg bg-surface-light text-muted hover:text-foreground z-50">
                 <X size={16} />
               </button>
             </div>
@@ -85,12 +75,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <main className="flex-1 lg:ml-56">
           {/* Header */}
-          <div className="sticky top-[2px] z-30 border-b border-white/[0.03] electron-drag"
-            style={{ background: "rgba(11,13,18,0.88)", backdropFilter: "blur(20px) saturate(1.4)" }}>
-            <div className="flex items-center justify-between px-5 lg:px-6 h-11">
+          <div className="sticky top-0 z-30 border-b border-border electron-drag"
+            style={{ background: "color-mix(in srgb, var(--color-background) 85%, transparent)", backdropFilter: "blur(16px) saturate(1.2)" }}>
+            <div className="flex items-center justify-between px-5 lg:px-6 h-12">
               {/* Left — mobile menu */}
               <div className="electron-no-drag flex items-center gap-2 lg:hidden">
-                <button onClick={() => setMobileMenuOpen(true)} className="p-1.5 rounded-md text-muted hover:text-white hover:bg-white/5 transition-colors">
+                <button onClick={() => setMobileMenuOpen(true)} className="p-1.5 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors">
                   <Menu size={16} />
                 </button>
               </div>
@@ -100,7 +90,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               {/* Right — actions */}
               <div className="electron-no-drag flex items-center gap-1.5">
                 {zoom !== 100 && (
-                  <button onClick={() => setZoom(100)} className="text-[9px] text-muted/60 bg-white/[0.04] px-2 py-0.5 rounded hover:text-white transition-colors font-mono">
+                  <button onClick={() => setZoom(100)} className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded hover:text-foreground transition-colors font-mono">
                     {zoom}%
                   </button>
                 )}

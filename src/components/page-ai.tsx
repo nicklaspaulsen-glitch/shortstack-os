@@ -92,10 +92,10 @@ export default function PageAI({ pageName, context, suggestions, accentColor = "
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <button onClick={() => setMinimized(true)} className="p-1 rounded hover:bg-surface-light text-muted hover:text-white transition-colors">
+          <button onClick={() => setMinimized(true)} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors">
             <Minimize2 size={12} />
           </button>
-          <button onClick={() => { setOpen(false); setMessages([]); }} className="p-1 rounded hover:bg-surface-light text-muted hover:text-white transition-colors">
+          <button onClick={() => { setOpen(false); setMessages([]); }} className="p-1 rounded hover:bg-surface-light text-muted hover:text-foreground transition-colors">
             <X size={12} />
           </button>
         </div>
@@ -110,7 +110,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor = "
             <div className="space-y-1">
               {suggestions.map((s, i) => (
                 <button key={i} onClick={() => sendMessage(s)}
-                  className="w-full text-left text-[10px] p-2 rounded-lg border border-border/20 hover:border-gold/20 text-muted hover:text-white transition-all">
+                  className="w-full text-left text-[10px] p-2 rounded-lg border border-border/20 hover:border-gold/20 text-muted hover:text-foreground transition-all">
                   {s}
                 </button>
               ))}
@@ -128,7 +128,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor = "
               <p className="text-[11px] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
               {msg.role === "ai" && (
                 <button onClick={() => { navigator.clipboard.writeText(msg.content); toast.success("Copied!"); }}
-                  className="mt-1 text-[8px] text-muted hover:text-white flex items-center gap-0.5">
+                  className="mt-1 text-[8px] text-muted hover:text-foreground flex items-center gap-0.5">
                   <Copy size={8} /> Copy
                 </button>
               )}

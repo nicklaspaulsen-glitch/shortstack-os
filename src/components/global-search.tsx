@@ -81,11 +81,11 @@ export default function GlobalSearch() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search leads, clients, content, team..."
-            className="flex-1 bg-transparent text-white placeholder-muted outline-none"
+            className="flex-1 bg-transparent text-foreground placeholder-muted outline-none"
             autoFocus
           />
           {query && (
-            <button onClick={() => setQuery("")} className="text-muted hover:text-white">
+            <button onClick={() => setQuery("")} className="text-muted hover:text-foreground">
               <X size={16} />
             </button>
           )}

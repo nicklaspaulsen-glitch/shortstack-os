@@ -17,7 +17,7 @@ function PasswordInput({ name, placeholder, required, minLength }: { name: strin
   return (
     <div className="relative">
       <input name={name} type={show ? "text" : "password"} className="input w-full text-xs pr-9" placeholder={placeholder} required={required} minLength={minLength} />
-      <button type="button" onClick={() => setShow(!show)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-white transition-colors">
+      <button type="button" onClick={() => setShow(!show)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors">
         {show ? <EyeOff size={14} /> : <Eye size={14} />}
       </button>
     </div>
@@ -131,7 +131,7 @@ export default function AdminProfileSwitcher() {
               <Eye size={11} className="text-warning" />
               <span className="text-[9px] text-warning font-semibold uppercase tracking-wider">Viewing as</span>
             </div>
-            <button onClick={() => setImpersonatedClient(null)} className="text-warning hover:text-white transition-colors" title="Exit">
+            <button onClick={() => setImpersonatedClient(null)} className="text-warning hover:text-foreground transition-colors" title="Exit">
               <X size={12} />
             </button>
           </div>
@@ -223,7 +223,7 @@ export default function AdminProfileSwitcher() {
                           <Eye size={9} /> View as
                         </button>
                         <button onClick={() => manageClient(client)}
-                          className="text-[9px] bg-surface-light text-muted hover:text-white px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
+                          className="text-[9px] bg-surface-light text-muted hover:text-foreground px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
                           <Settings size={9} /> Manage
                         </button>
                         {!client.profile_id ? (

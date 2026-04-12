@@ -167,7 +167,7 @@ export default function MonitorPage() {
                 <p className="text-[10px] text-muted mb-2">These services are online but need updated API keys or tokens</p>
                 <div className="space-y-1.5">
                   {authIssues.map((h) => (
-                    <div key={h.id} className="flex items-center justify-between py-1.5 border-b border-border/10 last:border-0">
+                    <div key={h.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
                       <span className="text-xs">{h.integration_name}</span>
                       <span className="text-[10px] text-warning font-mono">{h.error_message}</span>
                     </div>

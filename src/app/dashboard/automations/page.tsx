@@ -267,13 +267,13 @@ export default function AutomationsPage() {
               className={`text-left rounded-xl p-4 border transition-all hover:-translate-y-[1px] ${
                 isActive
                   ? "border-success/20 bg-success/[0.03]"
-                  : "border-border/30 bg-surface hover:border-gold/20 hover:shadow-card-hover"
+                  : "border-border bg-surface hover:border-gold/20 hover:shadow-card-hover"
               }`}
             >
               <div className="flex items-center gap-2.5 mb-2">
                 <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
                   isActive ? "bg-success/10" : "bg-surface-light"
-                } border border-border/20`}>
+                } border border-border`}>
                   <span className={template.color}>{template.icon}</span>
                 </div>
                 <div className="flex-1 min-w-0">
@@ -299,7 +299,7 @@ export default function AutomationsPage() {
           <div className="space-y-4">
             {/* Header */}
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-surface-light border border-border/20`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-surface-light border border-border`}>
                 <span className={selectedTemplate.color}>{selectedTemplate.icon}</span>
               </div>
               <div>
@@ -322,12 +322,12 @@ export default function AutomationsPage() {
                   <div key={i}>
                     {i > 0 && <div className="flex justify-center py-0.5"><div className="w-px h-3 bg-border/50" /></div>}
                     <div className="flex items-start gap-2">
-                      <div className="w-6 h-6 rounded-md bg-surface-light flex items-center justify-center shrink-0 mt-0.5 border border-border/20">
+                      <div className="w-6 h-6 rounded-md bg-surface-light flex items-center justify-center shrink-0 mt-0.5 border border-border">
                         {getStepIcon(step.type)}
                       </div>
                       <div className={`flex-1 rounded-lg px-3 py-2 border text-xs ${
                         step.type === "message" ? "bg-gold/[0.03] border-gold/10" :
-                        step.type === "delay" ? "bg-surface-light/50 border-border/20" :
+                        step.type === "delay" ? "bg-surface-light/50 border-border" :
                         step.type === "condition" ? "bg-warning/[0.03] border-warning/10" :
                         "bg-accent/[0.03] border-accent/10"
                       }`}>
@@ -352,7 +352,7 @@ export default function AutomationsPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-between pt-2 border-t border-border/20">
+            <div className="flex items-center justify-between pt-2 border-t border-border">
               <button onClick={() => startCustomize(selectedTemplate)}
                 className="btn-ghost text-[10px] flex items-center gap-1">
                 <Sparkles size={11} /> {customizing ? "Editing..." : "Customize Messages"}

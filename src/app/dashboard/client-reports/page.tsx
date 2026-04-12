@@ -185,7 +185,7 @@ shortstackdigital.com`;
                 className="btn-primary text-xs flex items-center gap-1"><Send size={10} /> Email to Client</button>
             </div>
           </div>
-          <pre className="text-xs leading-relaxed whitespace-pre-wrap text-muted p-4 rounded-lg" style={{ background: "rgba(255,255,255,0.02)" }}>
+          <pre className="text-xs leading-relaxed whitespace-pre-wrap text-muted p-4 rounded-lg bg-surface-light">
             {report}
           </pre>
         </div>

@@ -68,39 +68,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute inset-0 bg-mesh" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-gold/[0.03] rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
-
-      <div className="w-full max-w-[380px] relative z-10">
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-[380px]">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="relative inline-block">
-            <div className="absolute inset-0 bg-gold/10 rounded-2xl blur-xl scale-150" />
-            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={56} height={56} className="relative" />
-          </div>
-          <h1 className="text-lg font-bold text-white tracking-tight mt-4">ShortStack OS</h1>
-          <p className="text-[10px] text-muted mt-1 uppercase tracking-[0.2em]">Agency Operating System</p>
+        <div className="text-center mb-8 flex flex-col items-center">
+          <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={56} height={56} />
+          <h1 className="text-lg font-bold text-foreground tracking-tight mt-4">ShortStack OS</h1>
+          <p className="text-[11px] text-muted mt-1 tracking-wide">Agency Operating System</p>
         </div>
 
         {/* Password Reset View */}
         {showReset ? (
-          <div className="card border-border/30 space-y-4">
+          <div className="card space-y-4">
             <button onClick={() => { setShowReset(false); setResetSent(false); }}
-              className="flex items-center gap-1 text-xs text-muted hover:text-white transition-colors">
+              className="flex items-center gap-1 text-xs text-muted hover:text-foreground transition-colors">
               <ArrowLeft size={12} /> Back to login
             </button>
 
             {resetSent ? (
               <div className="text-center py-4">
-                <div className="w-12 h-12 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 bg-success/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
                   <Mail size={20} className="text-success" />
                 </div>
-                <h2 className="text-sm font-semibold mb-1">Check your email</h2>
+                <h2 className="text-sm font-semibold text-foreground mb-1">Check your email</h2>
                 <p className="text-xs text-muted">
-                  We sent a password reset link to <span className="text-white">{email}</span>
+                  We sent a password reset link to <span className="text-foreground font-medium">{email}</span>
                 </p>
               </div>
             ) : (
@@ -125,7 +117,7 @@ export default function LoginPage() {
           </div>
         ) : (
           /* Login / Signup Form */
-          <form onSubmit={handleAuth} className="card border-border/30 space-y-3">
+          <form onSubmit={handleAuth} className="card space-y-3">
             {isSignUp && (
               <div>
                 <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-medium">Full Name</label>
@@ -162,7 +154,7 @@ export default function LoginPage() {
                   className="input w-full text-sm pl-9 pr-10" placeholder="Enter password" required minLength={6}
                 />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-white transition-colors">
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors">
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
@@ -177,24 +169,24 @@ export default function LoginPage() {
         )}
 
         {!showReset && (
-          <p className="text-center text-[11px] text-muted mt-5">
+          <p className="text-center text-[11px] text-muted mt-6">
             {isSignUp ? "Already have an account?" : "Need an account?"}{" "}
-            <button onClick={() => setIsSignUp(!isSignUp)} className="text-gold hover:text-gold-light transition-colors font-medium">
+            <button onClick={() => setIsSignUp(!isSignUp)} className="text-gold hover:text-gold-dark transition-colors font-medium">
               {isSignUp ? "Sign In" : "Sign Up"}
             </button>
           </p>
         )}
 
         {/* Footer */}
-        <div className="text-center mt-8 space-y-1">
-          <div className="flex items-center justify-center gap-3 text-[9px] text-muted/40">
-            <a href="/terms" className="hover:text-muted transition-colors">Terms</a>
-            <span>·</span>
-            <a href="/privacy" className="hover:text-muted transition-colors">Privacy</a>
-            <span>·</span>
-            <a href="/changelog" className="hover:text-muted transition-colors">Changelog</a>
+        <div className="text-center mt-10 space-y-1">
+          <div className="flex items-center justify-center gap-3 text-[10px] text-muted">
+            <a href="/terms" className="hover:text-foreground transition-colors">Terms</a>
+            <span className="text-border">·</span>
+            <a href="/privacy" className="hover:text-foreground transition-colors">Privacy</a>
+            <span className="text-border">·</span>
+            <a href="/changelog" className="hover:text-foreground transition-colors">Changelog</a>
           </div>
-          <p className="text-[9px] text-muted/30">Powered by ShortStack</p>
+          <p className="text-[10px] text-muted-light">Powered by ShortStack</p>
         </div>
       </div>
     </div>

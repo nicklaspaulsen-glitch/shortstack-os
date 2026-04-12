@@ -115,11 +115,10 @@ export default function IntegrationsMarketplacePage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {filtered.filter(i => !i.connected).map(int => (
             <a key={int.id} href={int.url} target="_blank" rel="noopener noreferrer"
-              className="p-3 rounded-xl flex items-center gap-3 group transition-all hover:border-gold/10"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+              className="p-3 rounded-xl flex items-center gap-3 group transition-all hover:border-gold/10 bg-surface-light border border-border">
               <span className="text-xl">{int.icon}</span>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold group-hover:text-white transition-colors">{int.name}</p>
+                <p className="text-xs font-semibold group-hover:text-foreground transition-colors">{int.name}</p>
                 <p className="text-[9px] text-muted truncate">{int.description}</p>
               </div>
               <ExternalLink size={10} className="text-muted/30 group-hover:text-gold transition-colors shrink-0" />

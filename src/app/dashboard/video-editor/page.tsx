@@ -94,11 +94,14 @@ export default function VideoEditorPage() {
   return (
     <div className="fade-in space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Film size={18} className="text-gold" /> Video Editor
-          </h1>
-          <p className="text-xs text-muted mt-0.5">AI creates video plans, scripts, and renders via Remotion</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+            <Film size={20} className="text-gold" />
+          </div>
+          <div>
+            <h1 className="page-header mb-0">Video Editor</h1>
+            <p className="text-xs text-muted">AI video generation via Higgsfield, Remotion & Creatomate</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <a href="https://www.higgsfield.ai" target="_blank" rel="noopener noreferrer"
@@ -121,7 +124,7 @@ export default function VideoEditorPage() {
               {VIDEO_TYPES.map(t => (
                 <button key={t.id} onClick={() => selectType(t)}
                   className={`flex items-center gap-2 p-3 rounded-xl border transition-all ${
-                    config.type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border/20"
+                    config.type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"
                   }`}>
                   <span className={config.type === t.id ? "text-gold" : "text-muted"}>{t.icon}</span>
                   <div>
@@ -146,7 +149,7 @@ export default function VideoEditorPage() {
                 { title: "Common Mistakes Business Owners Make", script: "Stop making these mistakes with your marketing..." },
               ].map((preset, i) => (
                 <button key={i} onClick={() => setConfig({ ...config, title: preset.title, script: preset.script })}
-                  className="text-left p-2 rounded-lg border border-border/20 hover:border-gold/20 transition-all text-[9px] text-muted hover:text-white">
+                  className="text-left p-2 rounded-lg border border-border hover:border-gold/20 transition-all text-[9px] text-muted hover:text-foreground">
                   {preset.title}
                 </button>
               ))}
@@ -186,13 +189,13 @@ export default function VideoEditorPage() {
           <div className="flex gap-2">
             <button onClick={() => setMode("render")}
               className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                mode === "render" ? "bg-gold/10 border-gold/30 text-gold" : "border-border/20 text-muted hover:text-white"
+                mode === "render" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
               }`}>
               <Film size={14} /> Render MP4
             </button>
             <button onClick={() => setMode("plan")}
               className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                mode === "plan" ? "bg-accent/10 border-accent/30 text-accent" : "border-border/20 text-muted hover:text-white"
+                mode === "plan" ? "bg-accent/10 border-accent/30 text-accent" : "border-border text-muted hover:text-foreground"
               }`}>
               <Sparkles size={14} /> AI Plan Only
             </button>
@@ -218,7 +221,7 @@ export default function VideoEditorPage() {
             <div className="relative">
               <div className={`mx-auto mb-3 rounded-xl flex items-center justify-center overflow-hidden ${
                 selectedType.aspect === "9:16" ? "w-28 h-48" : selectedType.aspect === "16:9" ? "w-48 h-28" : "w-36 h-36"
-              } bg-surface-light/50 border border-border/20`}>
+              } bg-surface-light/50 border border-border`}>
                 {result?.url ? (
                   <video src={result.url} controls className="w-full h-full object-cover rounded-xl" />
                 ) : generating ? (
@@ -267,7 +270,7 @@ export default function VideoEditorPage() {
               )}
               {result.plan && (
                 <div className="space-y-2">
-                  <pre className="text-[9px] text-muted bg-surface-light/30 rounded-lg p-2.5 max-h-[300px] overflow-y-auto whitespace-pre-wrap">{result.plan}</pre>
+                  <pre className="text-[9px] text-muted bg-surface-light rounded-lg p-2.5 max-h-[300px] overflow-y-auto whitespace-pre-wrap">{result.plan}</pre>
                   <button onClick={() => { navigator.clipboard.writeText(result.plan || ""); toast.success("Copied!"); }}
                     className="btn-ghost text-[9px] w-full flex items-center justify-center gap-1"><Copy size={10} /> Copy Plan</button>
                 </div>

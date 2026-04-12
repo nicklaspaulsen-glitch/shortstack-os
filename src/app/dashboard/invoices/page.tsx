@@ -122,7 +122,7 @@ export default function InvoicesPage() {
         </div>
         <div className="card text-center">
           <p className="text-[10px] text-muted">Total</p>
-          <p className="text-xl font-bold text-white">{formatCurrency(totalPaid + totalSent)}</p>
+          <p className="text-xl font-bold text-foreground">{formatCurrency(totalPaid + totalSent)}</p>
         </div>
       </div>
 
@@ -149,8 +149,7 @@ export default function InvoicesPage() {
           filtered.map(inv => {
             const isOverdue = inv.status === "sent" && inv.due_date && inv.due_date < today;
             return (
-              <div key={inv.id} className={`flex items-center justify-between p-4 rounded-xl transition-all ${isOverdue ? "border-danger/10" : ""}`}
-                style={{ background: "rgba(255,255,255,0.02)", border: `1px solid ${isOverdue ? "rgba(244,63,94,0.15)" : "rgba(255,255,255,0.04)"}` }}>
+              <div key={inv.id} className={`flex items-center justify-between p-4 rounded-xl transition-all bg-surface-light border ${isOverdue ? "border-danger/15" : "border-border"}`}>
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                     inv.status === "paid" ? "bg-success/10" : isOverdue ? "bg-danger/10" : "bg-warning/10"

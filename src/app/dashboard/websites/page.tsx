@@ -243,11 +243,14 @@ export default function WebsitesPage() {
   return (
     <div className="fade-in space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Globe size={18} className="text-gold" /> Website Builder
-          </h1>
-          <p className="text-xs text-muted mt-0.5">AI builds a full website, deploy as demo, then go live with custom domain</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+            <Globe size={20} className="text-gold" />
+          </div>
+          <div>
+            <h1 className="page-header mb-0">Website Builder</h1>
+            <p className="text-xs text-muted">AI builds full websites, deploy as demo, go live with custom domain</p>
+          </div>
         </div>
         <select value={selectedClient} onChange={e => selectClient(e.target.value)} className="input text-xs py-1.5 min-w-[160px]">
           <option value="">No client</option>
@@ -293,7 +296,7 @@ export default function WebsitesPage() {
               <div className="grid grid-cols-2 gap-2">
                 {STYLES.map(s => (
                   <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
-                    className={`p-2.5 rounded-xl border text-left transition-all ${config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border/20"}`}>
+                    className={`p-2.5 rounded-xl border text-left transition-all ${config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"}`}>
                     <p className="text-[10px] font-semibold">{s.name}</p>
                     <p className="text-[8px] text-muted">{s.desc}</p>
                   </button>
@@ -306,7 +309,7 @@ export default function WebsitesPage() {
               <div className="flex flex-wrap gap-1.5">
                 {SECTIONS.map(s => (
                   <button key={s} onClick={() => toggleSection(s)}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${config.sections.includes(s) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border/20 text-muted hover:text-white"}`}>
+                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${config.sections.includes(s) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted hover:text-foreground"}`}>
                     {s}
                   </button>
                 ))}
@@ -326,7 +329,7 @@ export default function WebsitesPage() {
               </button>
             </div>
             <button onClick={buildWithLovable} disabled={lovableLoading || !config.business_name}
-              className="w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-pink-500/30 bg-pink-500/[0.08] text-pink-300 hover:bg-pink-500/[0.15] transition-all font-medium">
+              className="w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-pink-500/30 bg-pink-500/[0.08] text-pink-500 hover:bg-pink-500/[0.15] transition-all font-medium">
               {lovableLoading ? <Loader size={14} className="animate-spin" /> : <Heart size={14} />}
               {lovableLoading ? "Generating..." : "Build with Lovable (Recommended)"}
             </button>
@@ -334,18 +337,18 @@ export default function WebsitesPage() {
             {lovablePrompt && (
               <div className="card border-pink-500/15 space-y-2 mt-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-[10px] text-pink-300 uppercase tracking-wider font-bold flex items-center gap-1.5">
+                  <h3 className="text-[10px] text-pink-500 uppercase tracking-wider font-bold flex items-center gap-1.5">
                     <Heart size={10} /> Lovable Prompt Ready
                   </h3>
                   <button onClick={() => {
                     navigator.clipboard.writeText(lovablePrompt);
                     window.open("https://lovable.dev", "_blank");
                     toast.success("Prompt copied! Paste it in Lovable.");
-                  }} className="text-[10px] px-2.5 py-1 rounded-lg bg-pink-500/10 text-pink-300 hover:bg-pink-500/20 transition-all flex items-center gap-1">
+                  }} className="text-[10px] px-2.5 py-1 rounded-lg bg-pink-500/10 text-pink-500 hover:bg-pink-500/20 transition-all flex items-center gap-1">
                     <Copy size={10} /> Copy & Open Lovable
                   </button>
                 </div>
-                <pre className="text-[9px] text-muted bg-surface-light/30 rounded-lg p-2.5 max-h-32 overflow-y-auto whitespace-pre-wrap">{lovablePrompt}</pre>
+                <pre className="text-[9px] text-muted bg-surface-light rounded-lg p-2.5 max-h-32 overflow-y-auto whitespace-pre-wrap">{lovablePrompt}</pre>
                 <p className="text-[8px] text-muted/60">Lovable builds full React apps with Supabase — much better than raw HTML. Paste this prompt in Lovable to get a production-ready site.</p>
               </div>
             )}
@@ -366,7 +369,7 @@ export default function WebsitesPage() {
             <div className="card border-pink-500/10">
               <h3 className="section-header flex items-center gap-2"><Heart size={12} className="text-pink-400" /> Lovable (Recommended)</h3>
               <div className="space-y-2 text-[10px] text-muted">
-                <p>Lovable builds <span className="text-pink-300 font-medium">full React + Supabase apps</span> — not just raw HTML. The result is a real, production-ready website with:</p>
+                <p>Lovable builds <span className="text-pink-500 font-medium">full React + Supabase apps</span> — not just raw HTML. The result is a real, production-ready website with:</p>
                 <ul className="list-disc list-inside space-y-0.5 text-[9px] pl-1">
                   <li>Responsive design with modern animations</li>
                   <li>Contact forms that actually work</li>
@@ -401,7 +404,7 @@ export default function WebsitesPage() {
                   </button>
                 </div>
               </div>
-              <div className="rounded-xl border border-border/30 overflow-hidden bg-white" style={{ height: "600px" }}>
+              <div className="rounded-xl border border-border overflow-hidden bg-white" style={{ height: "600px" }}>
                 <iframe srcDoc={generatedHtml} className="w-full h-full" title="Website Preview" sandbox="allow-scripts" />
               </div>
             </>
@@ -425,10 +428,10 @@ export default function WebsitesPage() {
               <h2 className="text-sm font-bold mb-1">Demo Site Live!</h2>
               <p className="text-xs text-muted mb-4">{config.business_name} demo is ready to share</p>
 
-              <div className="bg-surface-light/50 rounded-xl p-3 mb-4 flex items-center justify-between border border-border/20">
+              <div className="bg-surface-light/50 rounded-xl p-3 mb-4 flex items-center justify-between border border-border">
                 <a href={deployUrl} target="_blank" rel="noopener" className="text-xs text-gold hover:text-gold-light truncate">{deployUrl}</a>
                 <button onClick={() => { navigator.clipboard.writeText(deployUrl); toast.success("URL copied!"); }}>
-                  <Copy size={12} className="text-muted hover:text-white" />
+                  <Copy size={12} className="text-muted hover:text-foreground" />
                 </button>
               </div>
 
@@ -446,7 +449,7 @@ export default function WebsitesPage() {
                 </button>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-border/20 text-left">
+              <div className="mt-6 pt-4 border-t border-border text-left">
                 <h3 className="text-[10px] text-muted uppercase tracking-wider font-bold mb-2">Client Likes It? Next Steps</h3>
                 <div className="space-y-1.5 text-[10px] text-muted">
                   <p><span className="text-success font-medium">1.</span> Send payment link via Stripe</p>
@@ -494,10 +497,10 @@ export default function WebsitesPage() {
                     </span>
                   </div>
                   {d.url && (
-                    <div className="bg-surface-light/30 rounded-lg px-2.5 py-1.5 mb-2.5 flex items-center justify-between border border-border/20">
+                    <div className="bg-surface-light rounded-lg px-2.5 py-1.5 mb-2.5 flex items-center justify-between border border-border">
                       <a href={d.url} target="_blank" rel="noopener" className="text-[10px] text-gold hover:text-gold-light truncate">{d.url}</a>
                       <button onClick={() => { navigator.clipboard.writeText(d.url); toast.success("Copied!"); }}>
-                        <Copy size={10} className="text-muted hover:text-white shrink-0 ml-2" />
+                        <Copy size={10} className="text-muted hover:text-foreground shrink-0 ml-2" />
                       </button>
                     </div>
                   )}

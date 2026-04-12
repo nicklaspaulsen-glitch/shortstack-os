@@ -114,8 +114,7 @@ export default function ClientHealthPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {healthy.map(client => (
               <Link key={client.id} href={`/dashboard/clients/${client.id}`}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/[0.02] transition-colors"
-                style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-white/[0.02] transition-colors border border-border">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(245,158,11,0.1)" }}>
                     <span className="text-warning text-[10px] font-bold">{client.health_score}</span>
@@ -143,8 +142,7 @@ export default function ClientHealthPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             {thriving.map(client => (
               <Link key={client.id} href={`/dashboard/clients/${client.id}`}
-                className="flex items-center gap-2.5 p-3 rounded-lg hover:bg-white/[0.02] transition-colors"
-                style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
+                className="flex items-center gap-2.5 p-3 rounded-lg hover:bg-white/[0.02] transition-colors border border-border">
                 <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "rgba(16,185,129,0.1)" }}>
                   <CheckCircle size={14} className="text-success" />
                 </div>

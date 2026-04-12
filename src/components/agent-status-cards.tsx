@@ -126,7 +126,7 @@ export default function AgentStatusCards() {
             {/* Hover tooltip */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-50 w-36">
               <div className="bg-surface border border-border/30 rounded-lg p-2 shadow-lg text-center">
-                <p className="text-[9px] font-semibold text-white">{agent.name} — {agent.role}</p>
+                <p className="text-[9px] font-semibold text-foreground">{agent.name} — {agent.role}</p>
                 <p className="text-[8px] text-muted mt-0.5 line-clamp-2">{agent.lastAction}</p>
                 {agent.actionsToday > 0 && (
                   <p className="text-[8px] text-success mt-0.5">{agent.actionsToday} actions today</p>

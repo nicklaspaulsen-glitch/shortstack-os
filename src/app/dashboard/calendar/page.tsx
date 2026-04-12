@@ -162,11 +162,10 @@ export default function CalendarPage() {
           const isToday = dateStr === today;
 
           return (
-            <div key={dateStr} className={`rounded-xl p-3 min-h-[200px] ${isToday ? "ring-1 ring-gold/20" : ""}`}
-              style={{ background: isToday ? "rgba(184,152,64,0.04)" : "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+            <div key={dateStr} className={`rounded-xl p-3 min-h-[200px] border border-border ${isToday ? "ring-1 ring-gold/20 bg-gold/[0.04]" : "bg-surface-light"}`}>
               <div className="text-center mb-2">
                 <p className="text-[10px] text-muted uppercase">{day.toLocaleDateString("en-US", { weekday: "short" })}</p>
-                <p className={`text-lg font-bold ${isToday ? "text-gold" : "text-white"}`}>{day.getDate()}</p>
+                <p className={`text-lg font-bold ${isToday ? "text-gold" : "text-foreground"}`}>{day.getDate()}</p>
               </div>
 
               <div className="space-y-1.5">
@@ -207,10 +206,8 @@ export default function CalendarPage() {
             {appointments.filter(a => a.status === "scheduled").slice(0, 10).map(appt => {
               const typeConfig = TYPES.find(t => t.id === appt.type);
               return (
-                <div key={appt.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.02] transition-colors"
-                  style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
-                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${typeConfig?.color}`}
-                    style={{ background: "rgba(255,255,255,0.04)" }}>
+                <div key={appt.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.02] transition-colors border border-border">
+                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center bg-surface-light ${typeConfig?.color}`}>
                     {typeConfig?.icon}
                   </div>
                   <div className="flex-1 min-w-0">

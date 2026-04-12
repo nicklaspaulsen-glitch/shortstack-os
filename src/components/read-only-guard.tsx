@@ -22,7 +22,7 @@ export default function ActionGuard({ children, fallback }: { children: ReactNod
       <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="text-center px-3">
           <Download size={16} className="text-gold mx-auto mb-1" />
-          <p className="text-xs text-white">Install the app to edit</p>
+          <p className="text-xs text-foreground">Install the app to edit</p>
         </div>
       </div>
     </div>

@@ -136,7 +136,7 @@ export default function EmailComposerPage() {
             className="input w-full text-sm font-medium" placeholder="Subject line..." />
 
           {/* Toolbar */}
-          <div className="flex gap-1 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+          <div className="flex gap-1 p-1 rounded-lg bg-surface-light border border-border">
             {[
               { icon: <Bold size={12} />, label: "Bold" },
               { icon: <Italic size={12} />, label: "Italic" },
@@ -144,7 +144,7 @@ export default function EmailComposerPage() {
               { icon: <List size={12} />, label: "List" },
               { icon: <Image size={12} />, label: "Image" },
             ].map(tool => (
-              <button key={tool.label} className="p-2 rounded text-muted hover:text-white hover:bg-white/5 transition-colors" title={tool.label}>
+              <button key={tool.label} className="p-2 rounded text-muted hover:text-foreground hover:bg-white/5 transition-colors" title={tool.label}>
                 {tool.icon}
               </button>
             ))}
@@ -188,8 +188,7 @@ export default function EmailComposerPage() {
                 { name: "Monthly Report", subject: "Your monthly report is ready", body: "Hey!\n\nYour monthly marketing report is ready. Here's a quick summary of what we accomplished this month.\n\nFull report is in your portal. Let me know if you have any questions!\n\nBest,\nNicklas" },
               ].map(t => (
                 <button key={t.name} onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.body }))}
-                  className="w-full text-left p-2.5 rounded-lg text-[10px] transition-all hover:bg-white/[0.03]"
-                  style={{ border: "1px solid rgba(255,255,255,0.04)" }}>
+                  className="w-full text-left p-2.5 rounded-lg text-[10px] transition-all hover:bg-white/[0.03] border border-border">
                   <p className="font-semibold">{t.name}</p>
                   <p className="text-muted truncate">{t.subject}</p>
                 </button>

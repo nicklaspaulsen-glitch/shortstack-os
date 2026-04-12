@@ -135,7 +135,7 @@ export default function ProposalsPage() {
                   className={`text-[10px] p-2 rounded-lg border text-left transition-all ${
                     form.services.includes(s)
                       ? "bg-gold/10 border-gold/20 text-gold"
-                      : "border-border/30 text-muted hover:border-gold/15 hover:text-white"
+                      : "border-border text-muted hover:border-gold/15 hover:text-foreground"
                   }`}>
                   {form.services.includes(s) ? "+" : ""} {s}
                 </button>

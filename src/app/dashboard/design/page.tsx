@@ -155,13 +155,15 @@ export default function DesignStudioPage() {
     <div className="fade-in space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="page-header mb-0 flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-              <Sparkles size={24} className="text-gold" />
+              <Sparkles size={20} className="text-gold" />
             </div>
-            Canva Design Studio
-          </h1>
-          <p className="text-muted text-sm mt-1">Generate AI-powered designs for thumbnails, social posts, ads & more</p>
+            <div>
+              <h1 className="page-header mb-0">Design Studio</h1>
+              <p className="text-xs text-muted">AI-powered designs for thumbnails, social posts, ads & more</p>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <a href="https://pikzels.com" target="_blank" rel="noopener noreferrer"
@@ -188,7 +190,7 @@ export default function DesignStudioPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
                 selectedTemplate?.label === t.label
                   ? "bg-gold text-black"
-                  : "bg-surface-light text-muted hover:text-white hover:bg-surface-light/80"
+                  : "bg-surface-light text-muted hover:text-foreground hover:bg-surface-light/80"
               }`}
             >
               {t.icon} {t.label}
@@ -258,7 +260,7 @@ export default function DesignStudioPage() {
                       </span>
                       <span className="text-[10px] text-muted">{g.dimensions}</span>
                     </div>
-                    <p className="text-xs text-white/90 leading-relaxed">{g.prompt}</p>
+                    <p className="text-xs text-foreground leading-relaxed">{g.prompt}</p>
                     <p className="text-[10px] text-muted mt-1">Style: {g.style}</p>
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">

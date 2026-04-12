@@ -8,6 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "electron": "electron .",
     "electron:build": "electron-builder --win",
     "desktop": "electron ."
@@ -18,8 +21,18 @@
     "copyright": "Copyright 2026 ShortStack",
     "win": {
       "target": [
-        { "target": "nsis", "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "icon": "public/icons/shortstack-logo.ico",
       "artifactName": "ShortStack-OS-${version}-Setup.${ext}"
@@ -69,19 +82,25 @@
     "react-icons": "^5.6.0",
     "recharts": "^3.8.1",
     "stripe": "^22.0.0",
+    "tweetnacl": "^1.0.3",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20",
     "@types/pdfkit": "^0.17.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^6.0.1",
     "electron": "^41.1.1",
     "electron-builder": "^26.8.1",
     "eslint": "^8",
     "eslint-config-next": "14.2.35",
+    "jsdom": "^29.0.2",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.4"
   }
 }

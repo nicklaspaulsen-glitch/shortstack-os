@@ -95,7 +95,7 @@ export default function Notifications() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-lg text-muted hover:text-white hover:bg-surface-light/50 transition-all"
+        className="relative p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface-light/50 transition-all"
       >
         <Bell size={16} />
         {unreadCount > 0 && (
@@ -152,7 +152,7 @@ export default function Notifications() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <p className={`text-xs font-medium truncate ${!n.is_read ? "text-white" : "text-muted-light"}`}>
+                        <p className={`text-xs font-medium truncate ${!n.is_read ? "text-foreground" : "text-muted-light"}`}>
                           {n.title}
                         </p>
                         {!n.is_read && <div className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" />}

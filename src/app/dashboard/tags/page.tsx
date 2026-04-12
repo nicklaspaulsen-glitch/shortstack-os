@@ -126,8 +126,7 @@ export default function TagsPage() {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
           {filtered.map(tag => (
-            <div key={tag.name} className="flex items-center justify-between p-3 rounded-xl group transition-all"
-              style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}>
+            <div key={tag.name} className="flex items-center justify-between p-3 rounded-xl group transition-all bg-surface-light border border-border">
               <div className="flex items-center gap-2.5 min-w-0">
                 <div className="w-3 h-3 rounded-full shrink-0" style={{ background: tag.color }} />
                 <div className="min-w-0">

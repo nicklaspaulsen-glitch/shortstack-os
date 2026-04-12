@@ -124,7 +124,7 @@ export default function OnboardPage() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {SERVICES.map(s => (
           <button key={s} onClick={() => toggleService(s)}
-            className={`p-3 rounded-lg border text-sm text-left transition-all ${form.services.includes(s) ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:border-gold/30 hover:text-white"}`}>
+            className={`p-3 rounded-lg border text-sm text-left transition-all ${form.services.includes(s) ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:border-gold/30 hover:text-foreground"}`}>
             <span className="flex items-center gap-2">
               {form.services.includes(s) && <Check size={14} />}
               {s}

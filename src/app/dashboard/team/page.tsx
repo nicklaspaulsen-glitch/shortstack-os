@@ -147,7 +147,7 @@ export default function TeamPage() {
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
         {(["team", "deals", "payroll"] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm rounded-md capitalize transition-all ${tab === t ? "bg-gold text-black font-medium" : "text-muted hover:text-white"}`}
+            className={`px-4 py-2 text-sm rounded-md capitalize transition-all ${tab === t ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
           >{t}</button>
         ))}
       </div>

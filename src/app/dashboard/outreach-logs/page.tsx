@@ -33,7 +33,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={14} className="text-pink-400" />,
   facebook: <MessageSquare size={14} className="text-blue-400" />,
   tiktok: <Music size={14} className="text-white" />,
-  linkedin: <Briefcase size={14} className="text-blue-300" />,
+  linkedin: <Briefcase size={14} className="text-blue-600" />,
   email: <Mail size={14} className="text-gold" />,
   call: <Phone size={14} className="text-green-400" />,
 };
@@ -204,7 +204,7 @@ export default function OutreachLogsPage() {
 
                 {/* Expanded view */}
                 {isExpanded && (
-                  <div className="mt-3 pt-3 border-t border-border/20 space-y-2 slide-up">
+                  <div className="mt-3 pt-3 border-t border-border space-y-2 slide-up">
                     {/* Sent message */}
                     <div>
                       <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Message Sent</p>

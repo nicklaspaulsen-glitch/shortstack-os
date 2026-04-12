@@ -289,18 +289,18 @@ export default function ApiDocsPage() {
 
               {/* Endpoints */}
               {isOpen && (
-                <div className="border-t border-border/10">
+                <div className="border-t border-border">
                   {cat.endpoints.map((ep, i) => {
                     const epKey = `${cat.name}-${i}`;
                     const isExpanded = expandedEndpoints[epKey];
                     return (
-                      <div key={epKey} className="border-b border-border/5 last:border-b-0">
+                      <div key={epKey} className="border-b border-border last:border-b-0">
                         <button onClick={() => toggleEndpoint(epKey)}
                           className="w-full flex items-center gap-2.5 px-4 py-2.5 hover:bg-white/[0.02] transition-colors text-left">
                           <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border shrink-0 ${METHOD_STYLES[ep.method]}`}>
                             {ep.method}
                           </span>
-                          <span className="text-xs font-mono text-white/80 truncate">{ep.path}</span>
+                          <span className="text-xs font-mono text-foreground truncate">{ep.path}</span>
                           <span className="text-[10px] text-muted ml-auto shrink-0 hidden sm:block">{ep.description}</span>
                           <Copy size={11} className="text-muted shrink-0 hover:text-gold transition-colors"
                             onClick={(e) => { e.stopPropagation(); copyPath(ep.path); }} />
@@ -312,7 +312,7 @@ export default function ApiDocsPage() {
                             {ep.body && (
                               <div>
                                 <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Request Body</p>
-                                <pre className="bg-black/30 rounded-lg p-2.5 text-[10px] font-mono text-green-300 overflow-x-auto">
+                                <pre className="bg-black/30 rounded-lg p-2.5 text-[10px] font-mono text-green-600 overflow-x-auto">
                                   {ep.body}
                                 </pre>
                               </div>
@@ -320,7 +320,7 @@ export default function ApiDocsPage() {
                             {ep.response && (
                               <div>
                                 <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Response</p>
-                                <pre className="bg-black/30 rounded-lg p-2.5 text-[10px] font-mono text-blue-300 overflow-x-auto">
+                                <pre className="bg-black/30 rounded-lg p-2.5 text-[10px] font-mono text-blue-600 overflow-x-auto">
                                   {ep.response}
                                 </pre>
                               </div>

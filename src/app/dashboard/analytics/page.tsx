@@ -131,8 +131,8 @@ export default function AnalyticsPage() {
   const replyRate = stats.dmsSent > 0 ? Math.round((stats.replies / stats.dmsSent) * 100) : 0;
 
   const chartTooltipStyle = {
-    contentStyle: { background: "#0c1017", border: "1px solid #1e2a3a", borderRadius: "8px", fontSize: "11px" },
-    labelStyle: { color: "#64748b", fontSize: "10px" },
+    contentStyle: { background: "#FFFFFF", border: "1px solid #E8E5E0", borderRadius: "12px", fontSize: "11px", color: "#374151", boxShadow: "0 4px 12px rgba(0,0,0,0.06)" },
+    labelStyle: { color: "#6B7280", fontSize: "10px" },
   };
 
   return (
@@ -171,9 +171,9 @@ export default function AnalyticsPage() {
                     <stop offset="100%" stopColor="#C9A84C" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2a3a" />
-                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#64748b" }} />
-                <YAxis tick={{ fontSize: 9, fill: "#64748b" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
+                <YAxis tick={{ fontSize: 9, fill: "#9CA3AF" }} />
                 <Tooltip {...chartTooltipStyle} />
                 <Area type="monotone" dataKey="count" stroke="#C9A84C" fill="url(#goldGrad)" strokeWidth={2} />
               </AreaChart>
@@ -187,9 +187,9 @@ export default function AnalyticsPage() {
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByMonth}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2a3a" />
-                <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#64748b" }} />
-                <YAxis tick={{ fontSize: 9, fill: "#64748b" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
+                <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
+                <YAxis tick={{ fontSize: 9, fill: "#9CA3AF" }} />
                 <Tooltip {...chartTooltipStyle} />
                 <Bar dataKey="mrr" fill="#C9A84C" radius={[4, 4, 0, 0]} name="MRR" />
                 <Bar dataKey="deals" fill="#38bdf8" radius={[4, 4, 0, 0]} name="Deal Revenue" />
@@ -233,9 +233,9 @@ export default function AnalyticsPage() {
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={leadsByIndustry} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2a3a" />
-                <XAxis type="number" tick={{ fontSize: 9, fill: "#64748b" }} />
-                <YAxis dataKey="industry" type="category" tick={{ fontSize: 9, fill: "#64748b" }} width={80} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
+                <XAxis type="number" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
+                <YAxis dataKey="industry" type="category" tick={{ fontSize: 9, fill: "#9CA3AF" }} width={80} />
                 <Tooltip {...chartTooltipStyle} />
                 <Bar dataKey="count" fill="#38bdf8" radius={[0, 4, 4, 0]} />
               </BarChart>
@@ -249,9 +249,9 @@ export default function AnalyticsPage() {
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={outreachByDay}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e2a3a" />
-                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#64748b" }} />
-                <YAxis tick={{ fontSize: 9, fill: "#64748b" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
+                <YAxis tick={{ fontSize: 9, fill: "#9CA3AF" }} />
                 <Tooltip {...chartTooltipStyle} />
                 <Line type="monotone" dataKey="sent" stroke="#C9A84C" strokeWidth={2} dot={false} name="Sent" />
                 <Line type="monotone" dataKey="replies" stroke="#10b981" strokeWidth={2} dot={false} name="Replies" />
