@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Globe, Sparkles, Loader, ExternalLink, Copy,
-  Code, Zap, Heart, Eye, Mail, CheckCircle
+  Code, Zap, Eye, Mail, CheckCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -29,8 +29,8 @@ export default function WebsitesPage() {
   const [tab, setTab] = useState<"build" | "preview" | "deploy" | "demos">("build");
   const supabase = createClient();
 
-  const [lovablePrompt, setLovablePrompt] = useState("");
-  const [lovableLoading, setLovableLoading] = useState(false);
+  const [proBuilderPrompt, setProBuilderPrompt] = useState("");
+  const [proBuilderLoading, setProBuilderLoading] = useState(false);
   const [demos, setDemos] = useState<Array<{ id: string; business_name: string; url: string; status: string; created_at: string; client_id: string | null }>>([]);
 
   const [config, setConfig] = useState({
@@ -169,9 +169,9 @@ export default function WebsitesPage() {
     setGenerating(false);
   }
 
-  async function buildWithLovable() {
+  async function buildProSite() {
     if (!config.business_name) { toast.error("Enter a business name"); return; }
-    setLovableLoading(true);
+    setProBuilderLoading(true);
     try {
       const res = await fetch("/api/lovable/create", {
         method: "POST",
@@ -186,15 +186,15 @@ export default function WebsitesPage() {
       });
       const data = await res.json();
       if (data.lovable_prompt || data.prompt) {
-        setLovablePrompt(data.lovable_prompt || data.prompt);
-        toast.success("Lovable prompt generated!");
+        setProBuilderPrompt(data.lovable_prompt || data.prompt);
+        toast.success("Pro site prompt generated!");
       } else {
-        toast.error(data.error || "Failed to generate Lovable prompt");
+        toast.error(data.error || "Failed to generate prompt");
       }
     } catch {
-      toast.error("Error generating Lovable prompt");
+      toast.error("Error generating prompt");
     }
-    setLovableLoading(false);
+    setProBuilderLoading(false);
   }
 
   async function deployWebsite() {
@@ -328,28 +328,27 @@ export default function WebsitesPage() {
                 {generating ? "Building..." : "Generate with AI"}
               </button>
             </div>
-            <button onClick={buildWithLovable} disabled={lovableLoading || !config.business_name}
-              className="w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-pink-500/30 bg-pink-500/[0.08] text-pink-500 hover:bg-pink-500/[0.15] transition-all font-medium">
-              {lovableLoading ? <Loader size={14} className="animate-spin" /> : <Heart size={14} />}
-              {lovableLoading ? "Generating..." : "Build with Lovable (Recommended)"}
+            <button onClick={buildProSite} disabled={proBuilderLoading || !config.business_name}
+              className="w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-gold/30 bg-gold/[0.08] text-gold hover:bg-gold/[0.15] transition-all font-medium">
+              {proBuilderLoading ? <Loader size={14} className="animate-spin" /> : <Code size={14} />}
+              {proBuilderLoading ? "Generating..." : "Pro Builder (React App)"}
             </button>
 
-            {lovablePrompt && (
-              <div className="card border-pink-500/15 space-y-2 mt-3">
+            {proBuilderPrompt && (
+              <div className="card border-gold/15 space-y-2 mt-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-[10px] text-pink-500 uppercase tracking-wider font-bold flex items-center gap-1.5">
-                    <Heart size={10} /> Lovable Prompt Ready
+                  <h3 className="text-[10px] text-gold uppercase tracking-wider font-bold flex items-center gap-1.5">
+                    <Code size={10} /> Pro Builder Prompt Ready
                   </h3>
                   <button onClick={() => {
-                    navigator.clipboard.writeText(lovablePrompt);
-                    window.open("https://lovable.dev", "_blank");
-                    toast.success("Prompt copied! Paste it in Lovable.");
-                  }} className="text-[10px] px-2.5 py-1 rounded-lg bg-pink-500/10 text-pink-500 hover:bg-pink-500/20 transition-all flex items-center gap-1">
-                    <Copy size={10} /> Copy & Open Lovable
+                    navigator.clipboard.writeText(proBuilderPrompt);
+                    toast.success("Prompt copied to clipboard!");
+                  }} className="text-[10px] px-2.5 py-1 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
+                    <Copy size={10} /> Copy Prompt
                   </button>
                 </div>
-                <pre className="text-[9px] text-muted bg-surface-light rounded-lg p-2.5 max-h-32 overflow-y-auto whitespace-pre-wrap">{lovablePrompt}</pre>
-                <p className="text-[8px] text-muted/60">Lovable builds full React apps with Supabase — much better than raw HTML. Paste this prompt in Lovable to get a production-ready site.</p>
+                <pre className="text-[9px] text-muted bg-surface-light rounded-lg p-2.5 max-h-32 overflow-y-auto whitespace-pre-wrap">{proBuilderPrompt}</pre>
+                <p className="text-[8px] text-muted/60">Use this prompt with our Pro Builder to generate a full React app with database integration — production-ready in minutes.</p>
               </div>
             )}
           </div>
@@ -366,17 +365,17 @@ export default function WebsitesPage() {
               </div>
             </div>
 
-            <div className="card border-pink-500/10">
-              <h3 className="section-header flex items-center gap-2"><Heart size={12} className="text-pink-400" /> Lovable (Recommended)</h3>
+            <div className="card border-gold/10">
+              <h3 className="section-header flex items-center gap-2"><Code size={12} className="text-gold" /> Pro Builder</h3>
               <div className="space-y-2 text-[10px] text-muted">
-                <p>Lovable builds <span className="text-pink-500 font-medium">full React + Supabase apps</span> — not just raw HTML. The result is a real, production-ready website with:</p>
+                <p>Pro Builder creates <span className="text-gold font-medium">full React + database apps</span> — not just raw HTML. The result is a real, production-ready website with:</p>
                 <ul className="list-disc list-inside space-y-0.5 text-[9px] pl-1">
                   <li>Responsive design with modern animations</li>
                   <li>Contact forms that actually work</li>
                   <li>SEO optimization built in</li>
                   <li>Hosted on its own URL instantly</li>
                 </ul>
-                <p className="text-[8px] text-muted/60 pt-1">Use Generate with AI for quick HTML demos, or Build with Lovable for client-ready sites.</p>
+                <p className="text-[8px] text-muted/60 pt-1">Use Generate with AI for quick HTML demos, or Pro Builder for client-ready sites.</p>
               </div>
             </div>
           </div>
@@ -456,7 +455,7 @@ export default function WebsitesPage() {
                   <p><span className="text-success font-medium">2.</span> After payment → add custom domain in Vercel</p>
                   <p><span className="text-success font-medium">3.</span> Client points their DNS to Vercel (76.76.21.21)</p>
                   <p><span className="text-success font-medium">4.</span> SSL auto-configured — site is live!</p>
-                  <p><span className="text-success font-medium">5.</span> Or use Lovable for a React app with CMS</p>
+                  <p><span className="text-success font-medium">5.</span> Or use Pro Builder for a React app with CMS</p>
                 </div>
               </div>
             </div>

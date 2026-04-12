@@ -61,6 +61,8 @@ export default function SettingsPage() {
   const [agentConfigs, setAgentConfigs] = useState<AgentConfig[]>([]);
   const [editingAgent, setEditingAgent] = useState<AgentConfig | null>(null);
   const [healthData, setHealthData] = useState<Array<{ integration_name: string; status: string }>>([]);
+  const [, forceRender] = useState(0);
+  const rerender = () => forceRender(n => n + 1);
   const supabase = createClient();
 
   useEffect(() => { fetchData(); }, []);
@@ -203,15 +205,15 @@ export default function SettingsPage() {
                   <span className="text-xs font-mono text-gold">{typeof window !== "undefined" ? Math.round((parseFloat(document.documentElement.style.zoom || "1")) * 100) : 100}%</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button onClick={() => { document.documentElement.style.zoom = "0.75"; safeSet("ss-zoom", "0.75"); toast.success("Zoom: 75%"); }}
+                  <button onClick={() => { document.documentElement.style.zoom = "0.75"; safeSet("ss-zoom", "0.75"); rerender(); toast.success("Zoom: 75%"); }}
                     className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.75" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>75%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "0.85"; safeSet("ss-zoom", "0.85"); toast.success("Zoom: 85%"); }}
+                  <button onClick={() => { document.documentElement.style.zoom = "0.85"; safeSet("ss-zoom", "0.85"); rerender(); toast.success("Zoom: 85%"); }}
                     className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.85" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>85%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "0.9"; safeSet("ss-zoom", "0.9"); toast.success("Zoom: 90%"); }}
+                  <button onClick={() => { document.documentElement.style.zoom = "0.9"; safeSet("ss-zoom", "0.9"); rerender(); toast.success("Zoom: 90%"); }}
                     className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.9" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>90%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "1"; safeSet("ss-zoom", "1"); toast.success("Zoom: 100%"); }}
+                  <button onClick={() => { document.documentElement.style.zoom = "1"; safeSet("ss-zoom", "1"); rerender(); toast.success("Zoom: 100%"); }}
                     className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${!safeGet("ss-zoom") || safeGet("ss-zoom") === "1" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>100%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "1.1"; safeSet("ss-zoom", "1.1"); toast.success("Zoom: 110%"); }}
+                  <button onClick={() => { document.documentElement.style.zoom = "1.1"; safeSet("ss-zoom", "1.1"); rerender(); toast.success("Zoom: 110%"); }}
                     className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "1.1" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>110%</button>
                 </div>
               </div>
@@ -226,7 +228,7 @@ export default function SettingsPage() {
                   const current = safeGet("ss-sidebar-collapsed") === "true";
                   safeSet("ss-sidebar-collapsed", String(!current));
                   toast.success(current ? "Sidebar expanded" : "Sidebar collapsed");
-                  window.location.reload();
+                  window.dispatchEvent(new Event("storage"));
                 }}
                   className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
@@ -329,6 +331,7 @@ export default function SettingsPage() {
                   <button key={theme.id} onClick={() => {
                     safeSet("ss-theme", theme.id);
                     applyTheme(theme.id);
+                    rerender();
                     toast.success(`${theme.name} theme applied`);
                   }}
                     className={`p-2.5 rounded-lg border transition-all text-center ${
@@ -367,10 +370,11 @@ export default function SettingsPage() {
                     return (
                       <button key={style.id} onClick={() => {
                         safeSet("ss-sidebar", style.id);
-                        toast.success(`${style.name} sidebar — reload to apply`);
+                        rerender();
+                        toast.success(`${style.name} sidebar applied`);
                       }}
                         className={`p-3 rounded-lg border text-center transition-all ${
-                          current === style.id ? "border-gold/30 bg-gold/[0.04]" : "border-border"
+                          current === style.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"
                         }`}>
                         <p className="text-[10px] font-bold">{style.name}</p>
                         <p className="text-[8px] text-muted">{style.desc}</p>
@@ -395,10 +399,11 @@ export default function SettingsPage() {
                       <button key={fs.id} onClick={() => {
                         safeSet("ss-fontsize", fs.id);
                         document.body.style.fontSize = fs.size;
+                        rerender();
                         toast.success(`Font size: ${fs.name}`);
                       }}
                         className={`p-2.5 rounded-lg border text-center transition-all ${
-                          current === fs.id ? "border-gold/30 bg-gold/[0.04]" : "border-border"
+                          current === fs.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"
                         }`}>
                         <p style={{ fontSize: fs.size }} className="font-bold">Aa</p>
                         <p className="text-[8px] text-muted">{fs.name}</p>
@@ -421,10 +426,11 @@ export default function SettingsPage() {
                     return (
                       <button key={cs.id} onClick={() => {
                         safeSet("ss-cardstyle", cs.id);
-                        toast.success(`${cs.name} cards — reload to apply`);
+                        rerender();
+                        toast.success(`${cs.name} cards applied`);
                       }}
                         className={`p-3 rounded-lg border text-center transition-all ${
-                          current === cs.id ? "border-gold/30 bg-gold/[0.04]" : "border-border"
+                          current === cs.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"
                         }`}>
                         <p className="text-[10px] font-bold">{cs.name}</p>
                         <p className="text-[8px] text-muted">{cs.desc}</p>
