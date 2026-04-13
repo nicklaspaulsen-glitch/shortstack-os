@@ -73,25 +73,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const init = async () => {
       try {
-        // getUser() is the authoritative server-validated check.
-        // getSession() can return stale/tampered local data, so we use
-        // getSession() for the fast path and then validate the profile.
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user && mounted) {
-          setUser(session.user);
-          // Await the profile fetch so loading stays true until we have
-          // a fresh profile. This prevents the sidebar from rendering with
-          // stale role data from localStorage.
-          await fetchProfile(session.user.id);
-          if (mounted) setLoading(false);
-          return;
-        }
+        // Use getUser() — validates JWT server-side and refreshes expired
+        // tokens. getSession() returns stale tokens that look valid but
+        // cause auth.uid()=null in RLS → all data queries return 0 rows.
         const { data: { user: authUser } } = await supabase.auth.getUser();
         if (authUser && mounted) {
           setUser(authUser);
           await fetchProfile(authUser.id);
         } else if (mounted) {
-          // No authenticated user — clear any stale cached profile
           setProfile(null);
           localStorage.removeItem("ss_profile");
         }
