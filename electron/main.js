@@ -228,63 +228,53 @@ function downloadAndInstallUpdate(url, version) {
     })();
   `);
 
-  const tmpPath = path.join(app.getPath("temp"), "ShortStack-OS-Update.exe");
-  const file = fs.createWriteStream(tmpPath);
+  // Use Electron's Chromium download manager — handles GitHub redirects, SSL, etc.
+  const ses = mainWindow.webContents.session;
 
-  function doDownload(downloadUrl) {
-    const protocol = downloadUrl.startsWith("https") ? https : http;
-    protocol.get(downloadUrl, (response) => {
-      // Handle redirects
-      if (response.statusCode === 301 || response.statusCode === 302) {
-        doDownload(response.headers.location);
-        return;
-      }
+  // One-time listener for this specific download
+  ses.once("will-download", (event, item) => {
+    const tmpPath = path.join(app.getPath("temp"), "ShortStack-OS-Update.exe");
+    item.setSavePath(tmpPath);
 
-      const total = parseInt(response.headers["content-length"] || "0", 10);
-      let downloaded = 0;
-
-      response.on("data", (chunk) => {
-        downloaded += chunk.length;
-        file.write(chunk);
+    item.on("updated", (event, state) => {
+      if (state === "progressing" && !item.isPaused()) {
+        const received = item.getReceivedBytes();
+        const total = item.getTotalBytes();
         if (total > 0 && mainWindow && !mainWindow.isDestroyed()) {
-          const pct = Math.round((downloaded / total) * 100);
+          const pct = Math.round((received / total) * 100);
           mainWindow.webContents.executeJavaScript(
             `document.getElementById('ss-update-progress')&&(document.getElementById('ss-update-progress').style.width='${pct}%')`
           ).catch(() => {});
         }
-      });
+      }
+    });
 
-      response.on("end", () => {
-        file.end();
-        // Install
-        if (mainWindow && !mainWindow.isDestroyed()) {
-          dialog.showMessageBox(mainWindow, {
-            type: "info",
-            title: "Download Complete",
-            message: "Update downloaded successfully",
-            detail: "The app will close and the installer will open. Follow the prompts to update.",
-            buttons: ["Install Now"],
-          }).then(() => {
-            const { exec } = require("child_process");
-            exec(`"${tmpPath}"`);
-            app.quit();
-          });
-        }
-      });
-
-      response.on("error", () => {
-        file.end();
+    item.once("done", (event, state) => {
+      if (state === "completed" && mainWindow && !mainWindow.isDestroyed()) {
+        dialog.showMessageBox(mainWindow, {
+          type: "info",
+          title: "Download Complete",
+          message: "Update downloaded successfully",
+          detail: "The app will close and the installer will open. Follow the prompts to update.",
+          buttons: ["Install Now"],
+        }).then(() => {
+          const { exec } = require("child_process");
+          exec(`"${tmpPath}"`);
+          app.quit();
+        });
+      } else {
         updateInProgress = false;
         if (mainWindow && !mainWindow.isDestroyed()) {
           mainWindow.webContents.executeJavaScript(`
-            document.getElementById('ss-update-banner')&&(document.getElementById('ss-update-banner').innerHTML='<span style="color:#f43f5e;">Download failed. <a href="${url}" style="color:#C9A84C;cursor:pointer;" onclick="require(\\'electron\\').shell.openExternal(\\'${url}\\')">Download manually</a></span>');
+            document.getElementById('ss-update-banner')&&(document.getElementById('ss-update-banner').innerHTML='<span style="color:#f43f5e;">Download failed. </span><button onclick="require(\\'electron\\').shell.openExternal(\\'${url}\\')" style="color:#C9A84C;background:none;border:none;cursor:pointer;text-decoration:underline;">Download manually</button>');
           `).catch(() => {});
         }
-      });
+      }
     });
-  }
+  });
 
-  doDownload(url);
+  // Trigger the download through Chromium's network stack
+  mainWindow.webContents.downloadURL(url);
 }
 
 // ── Splash / License screen ─────────────────────────────────────
