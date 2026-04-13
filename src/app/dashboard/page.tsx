@@ -62,7 +62,12 @@ export default function DashboardPage() {
   const supabase = createClient();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchDashboardData(); }, []);
+  useEffect(() => {
+    fetchDashboardData();
+    // Safety: if data fetch hangs for 8s, clear loading anyway
+    const t = setTimeout(() => setDashboardLoading(false), 8000);
+    return () => clearTimeout(t);
+  }, []);
 
   // Show success toast after Stripe checkout redirect
   useEffect(() => {

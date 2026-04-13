@@ -73,9 +73,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const init = async () => {
       try {
-        // Use getUser() — validates JWT server-side and refreshes expired
-        // tokens. getSession() returns stale tokens that look valid but
-        // cause auth.uid()=null in RLS → all data queries return 0 rows.
+        // Fast path: getSession() for instant page load
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user && mounted) {
+          setUser(session.user);
+          await fetchProfile(session.user.id);
+          if (mounted) setLoading(false);
+
+          // Background: validate + refresh the JWT so RLS queries work.
+          // getSession() may return expired tokens that pass here but
+          // make auth.uid()=null in RLS. getUser() fixes that silently.
+          supabase.auth.getUser().catch(() => {});
+          return;
+        }
+        // No cached session — try server validation
         const { data: { user: authUser } } = await supabase.auth.getUser();
         if (authUser && mounted) {
           setUser(authUser);
