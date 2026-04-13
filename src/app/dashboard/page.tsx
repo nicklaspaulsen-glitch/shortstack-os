@@ -75,6 +75,7 @@ export default function DashboardPage() {
   }, []);
 
   async function fetchDashboardData() {
+    try {
     const today = new Date().toISOString().split("T")[0];
     const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
 
@@ -153,6 +154,10 @@ export default function DashboardPage() {
     });
     setAgentStatuses(statuses);
     setDashboardLoading(false);
+    } catch (err) {
+      console.error("Dashboard data fetch failed:", err);
+      setDashboardLoading(false); // Always clear loading — don't leave spinner stuck
+    }
   }
 
   if (profile?.role === "client") {
