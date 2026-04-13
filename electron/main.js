@@ -4,8 +4,11 @@ const fs = require("fs");
 const https = require("https");
 const http = require("http");
 
+const agentRuntime = require("./agent-runtime");
+
 let mainWindow;
 let splashWindow;
+let agentWindow;
 let tray;
 let updateAvailable = null;
 
@@ -301,12 +304,15 @@ function createMainWindow() {
     mainWindow.loadURL(APP_URL + "/login?v=" + Date.now());
   });
 
-  // Enable Ctrl+Shift+R to force reload
+  // Enable Ctrl+Shift+R to force reload, Ctrl+Shift+A to open agent
   mainWindow.webContents.on("before-input-event", (event, input) => {
     if (input.control && input.shift && input.key === "R") {
       mainWindow.webContents.session.clearCache().then(() => {
         mainWindow.webContents.reloadIgnoringCache();
       });
+    }
+    if (input.control && input.shift && input.key === "A") {
+      createAgentWindow();
     }
     // F5 to reload
     if (input.key === "F5") {
@@ -330,6 +336,7 @@ function createMainWindow() {
     tray.setToolTip("ShortStack OS");
     tray.setContextMenu(Menu.buildFromTemplate([
       { label: "Open ShortStack OS", click: () => { if (mainWindow) { mainWindow.show(); mainWindow.focus(); } } },
+      { label: "Open AI Agent", click: () => createAgentWindow() },
       { type: "separator" },
       { label: `${license?.tier || "Trial"} Plan`, enabled: false },
       { label: `v${APP_VERSION}`, enabled: false },
@@ -447,6 +454,134 @@ ipcMain.on("start-trial", async (event, { email }) => {
 });
 
 ipcMain.on("launch-app", () => createMainWindow());
+
+// ── Agent Window ───────────────────────────────────────────────
+
+function createAgentWindow() {
+  if (agentWindow && !agentWindow.isDestroyed()) {
+    agentWindow.show();
+    agentWindow.focus();
+    return;
+  }
+
+  agentWindow = new BrowserWindow({
+    width: 480,
+    height: 680,
+    minWidth: 380,
+    minHeight: 500,
+    title: "ShortStack Agent",
+    icon: path.join(__dirname, "../public/icons/shortstack-logo.png"),
+    backgroundColor: "#06080c",
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload-agent.js"),
+      devTools: !app.isPackaged,
+    },
+    titleBarStyle: "hidden",
+    titleBarOverlay: { color: "#06080c", symbolColor: "#64748b", height: 36 },
+    autoHideMenuBar: true,
+    alwaysOnTop: false,
+    show: false,
+  });
+
+  agentWindow.loadFile(path.join(__dirname, "agent-ui.html"));
+  agentWindow.once("ready-to-show", () => agentWindow.show());
+  agentWindow.on("closed", () => { agentWindow = null; });
+}
+
+// ── Agent IPC handlers ─────────────────────────────────────────
+
+ipcMain.handle("agent:workspace", () => agentRuntime.WORKSPACE);
+
+ipcMain.handle("agent:chat", async (event, messages) => {
+  try {
+    const { net } = require("electron");
+
+    // Build Anthropic-formatted messages from conversation history
+    const apiMessages = messages.map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+
+    // AI loop: call API → execute tools → repeat until text response
+    let toolLogs = [];
+    let maxIterations = 10;
+
+    while (maxIterations-- > 0) {
+      const res = await net.fetch(APP_URL + "/api/agents/client-agent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        return { error: `API error ${res.status}: ${errText}` };
+      }
+
+      const data = await res.json();
+
+      if (data.error) return { error: data.error };
+
+      // If no tool calls, return the text response
+      if (!data.tool_calls || data.tool_calls.length === 0) {
+        return { text: data.text, toolLogs };
+      }
+
+      // Has tool calls — execute them locally
+      // First add the assistant message with tool_use to history
+      apiMessages.push({ role: "assistant", content: data.content });
+
+      const toolResults = [];
+      for (const tool of data.tool_calls) {
+        // Notify renderer about tool execution
+        if (agentWindow && !agentWindow.isDestroyed()) {
+          agentWindow.webContents.send("agent:tool-exec", {
+            name: tool.name,
+            input: tool.input,
+            result: `Executing ${tool.name}...`,
+            success: true,
+          });
+        }
+
+        const result = await agentRuntime.executeTool(tool.name, tool.input);
+        const resultStr = result.success
+          ? result.content || result.stdout || result.path || JSON.stringify(result.items || result)
+          : `Error: ${result.error}`;
+
+        toolLogs.push({
+          name: tool.name,
+          input: tool.input,
+          result: resultStr.slice(0, 500),
+          success: result.success,
+        });
+
+        // Notify renderer with result
+        if (agentWindow && !agentWindow.isDestroyed()) {
+          agentWindow.webContents.send("agent:tool-exec", {
+            name: tool.name,
+            result: resultStr.slice(0, 300),
+            success: result.success,
+          });
+        }
+
+        toolResults.push({
+          type: "tool_result",
+          tool_use_id: tool.id,
+          content: resultStr.slice(0, 10000),
+        });
+      }
+
+      // Add tool results to history and continue loop
+      apiMessages.push({ role: "user", content: toolResults });
+    }
+
+    return { text: "Agent reached maximum iteration limit.", toolLogs };
+  } catch (err) {
+    return { error: String(err) };
+  }
+});
 
 // ── App lifecycle ───────────────────────────────────────────────
 

@@ -13,7 +13,8 @@
     "test:coverage": "vitest run --coverage",
     "electron": "electron .",
     "electron:build": "electron-builder --win",
-    "desktop": "electron ."
+    "desktop": "electron .",
+    "bot": "node scripts/discord-bot.js"
   },
   "build": {
     "appId": "com.shortstack.os",
