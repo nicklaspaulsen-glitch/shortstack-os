@@ -81,8 +81,9 @@ export default function DashboardPage() {
 
   async function fetchDashboardData() {
     // Per-query timeout — if a single Supabase query hangs, bail after 6s
-    const safe = <T,>(p: Promise<T>): Promise<T> =>
-      Promise.race([p, new Promise<T>((resolve) => setTimeout(() => resolve({ data: null, error: "timeout", count: null } as T), 6000))]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const safe = (p: PromiseLike<any>): Promise<any> =>
+      Promise.race([Promise.resolve(p), new Promise((resolve) => setTimeout(() => resolve({ data: null, error: "timeout", count: null }), 6000))]);
 
     try {
       const today = new Date().toISOString().split("T")[0];
