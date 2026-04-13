@@ -177,6 +177,133 @@ async function handleReport() {
   ]);
 }
 
+async function handlePipeline() {
+  const supabase = createServiceClient();
+
+  const statuses = ["new", "contacted", "qualified", "converted", "lost"];
+
+  const counts = await Promise.all(
+    statuses.map((status) =>
+      supabase
+        .from("leads")
+        .select("id", { count: "exact", head: true })
+        .eq("status", status)
+    )
+  );
+
+  const fields = statuses.map((status, i) => ({
+    name: status.charAt(0).toUpperCase() + status.slice(1),
+    value: `${counts[i].count ?? 0}`,
+    inline: true,
+  }));
+
+  const total = counts.reduce((sum, c) => sum + (c.count ?? 0), 0);
+
+  return embed(
+    "Lead Pipeline",
+    `${total} total leads across all stages.`,
+    fields
+  );
+}
+
+async function handleRevenue() {
+  const supabase = createServiceClient();
+
+  const { data: clients } = await supabase
+    .from("clients")
+    .select("business_name, mrr")
+    .eq("is_active", true)
+    .order("mrr", { ascending: false });
+
+  if (!clients || clients.length === 0) {
+    return embed("Revenue Dashboard", "No active clients found.");
+  }
+
+  const totalMRR = clients.reduce((sum, c) => sum + (c.mrr || 0), 0);
+  const avgMRR = clients.length > 0 ? totalMRR / clients.length : 0;
+  const topEarner = clients[0];
+
+  return embed("Revenue Dashboard", "Current revenue metrics at a glance.", [
+    {
+      name: "Total MRR",
+      value: `$${totalMRR.toLocaleString()}`,
+      inline: true,
+    },
+    {
+      name: "Avg MRR / Client",
+      value: `$${avgMRR.toFixed(2)}`,
+      inline: true,
+    },
+    {
+      name: "Active Clients",
+      value: `${clients.length}`,
+      inline: true,
+    },
+    {
+      name: "Top Earner",
+      value: `${topEarner.business_name || "Unnamed"} — $${topEarner.mrr ?? 0}/mo`,
+      inline: false,
+    },
+  ]);
+}
+
+function handleUptime() {
+  return embed("System Health", "All Systems Operational", [
+    {
+      name: "Status",
+      value: "Online",
+      inline: true,
+    },
+    {
+      name: "Node Version",
+      value: process.version,
+      inline: true,
+    },
+    {
+      name: "Checked At",
+      value: new Date().toLocaleString("en-US", { timeZone: "UTC" }) + " UTC",
+      inline: true,
+    },
+  ]);
+}
+
+async function handleLeaderboard() {
+  const supabase = createServiceClient();
+
+  const { data: clients } = await supabase
+    .from("clients")
+    .select("business_name, mrr")
+    .eq("is_active", true)
+    .order("mrr", { ascending: false })
+    .limit(5);
+
+  if (!clients || clients.length === 0) {
+    return embed("Leaderboard", "No active clients to rank.");
+  }
+
+  const medals = ["🥇", "🥈", "🥉", "4.", "5."];
+  const lines = clients.map(
+    (c, i) =>
+      `${medals[i]} **${c.business_name || "Unnamed"}** — $${c.mrr ?? 0}/mo`
+  );
+
+  return embed("Client Leaderboard", "Top 5 clients by MRR:\n\n" + lines.join("\n"));
+}
+
+function handleAnnounce(interaction: { data?: { options?: { name: string; value: string }[] } }) {
+  const options = interaction.data?.options || [];
+  const messageOpt = options.find((o) => o.name === "message");
+  const message = messageOpt?.value || "No message provided.";
+
+  return embed("Announcement", message, [
+    {
+      name: "Posted By",
+      value: "ShortStack OS",
+      inline: true,
+    },
+  ]);
+}
+
 function handleHelp() {
   return embed(
     "ShortStack Bot Commands",
@@ -200,6 +327,31 @@ function handleHelp() {
       {
         name: "/report",
         value: "Weekly summary: total MRR, leads, and outreach sent.",
+        inline: false,
+      },
+      {
+        name: "/pipeline",
+        value: "Lead pipeline breakdown by status.",
+        inline: false,
+      },
+      {
+        name: "/revenue",
+        value: "Revenue dashboard with total MRR, avg MRR, and top earner.",
+        inline: false,
+      },
+      {
+        name: "/uptime",
+        value: "Check system health and API status.",
+        inline: false,
+      },
+      {
+        name: "/leaderboard",
+        value: "Top 5 clients ranked by MRR.",
+        inline: false,
+      },
+      {
+        name: "/announce",
+        value: "Post a formatted announcement to the channel.",
         inline: false,
       },
       {
@@ -259,6 +411,21 @@ export async function POST(request: NextRequest) {
           break;
         case "report":
           response = await handleReport();
+          break;
+        case "pipeline":
+          response = await handlePipeline();
+          break;
+        case "revenue":
+          response = await handleRevenue();
+          break;
+        case "uptime":
+          response = handleUptime();
+          break;
+        case "leaderboard":
+          response = await handleLeaderboard();
+          break;
+        case "announce":
+          response = handleAnnounce(interaction);
           break;
         case "help":
           response = handleHelp();

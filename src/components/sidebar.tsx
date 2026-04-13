@@ -78,6 +78,7 @@ const navItems: NavItem[] = [
   { label: "Google Biz", href: "/dashboard/google-business", icon: <Globe size={16} />, roles: ["admin"] },
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member"] },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
+  { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── Client Portal ──

@@ -26,6 +26,41 @@ const COMMANDS = [
     description: "Show all available ShortStack bot commands",
     type: 1,
   },
+  {
+    name: "pipeline",
+    description:
+      "View lead pipeline breakdown by status (new, contacted, qualified, converted)",
+    type: 1,
+  },
+  {
+    name: "revenue",
+    description:
+      "Revenue dashboard with total MRR, average MRR per client, and top earner",
+    type: 1,
+  },
+  {
+    name: "uptime",
+    description: "Check system health and API status",
+    type: 1,
+  },
+  {
+    name: "leaderboard",
+    description: "Top 5 clients ranked by MRR",
+    type: 1,
+  },
+  {
+    name: "announce",
+    description: "Post an announcement to the channel",
+    type: 1,
+    options: [
+      {
+        name: "message",
+        description: "The announcement message to post",
+        type: 3, // STRING
+        required: true,
+      },
+    ],
+  },
 ];
 
 export async function POST() {

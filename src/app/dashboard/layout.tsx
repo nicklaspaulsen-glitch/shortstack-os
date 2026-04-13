@@ -12,13 +12,64 @@ import CommandPalette from "@/components/command-palette";
 import KeyboardShortcuts from "@/components/keyboard-shortcuts";
 import QuickAdd from "@/components/quick-add";
 import { useAuth } from "@/lib/auth-context";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { Menu, X } from "lucide-react";
 
+// ── Role-based route access control ──
+// Complements the sidebar role filtering (which hides nav items) by
+// preventing direct URL access to pages the user shouldn't reach.
+
+const CLIENT_ALLOWED_PREFIXES = ["/dashboard/portal", "/dashboard/community"];
+const CLIENT_DEFAULT = "/dashboard/portal";
+
+const TEAM_MEMBER_BLOCKED: string[] = [
+  "/dashboard/analytics",
+  "/dashboard/reports",
+  "/dashboard/client-health",
+  "/dashboard/monitor",
+  "/dashboard/discord",
+  "/dashboard/pricing",
+  "/dashboard/settings",
+  "/dashboard/outreach-hub",
+  "/dashboard/ads",
+  "/dashboard/agent-supervisor",
+  "/dashboard/workflows",
+  "/dashboard/whatsapp",
+  "/dashboard/eleven-agents",
+];
+const TEAM_MEMBER_DEFAULT = "/dashboard";
+
+function isRouteAllowed(pathname: string, role: string): boolean {
+  if (role === "admin") return true;
+
+  if (role === "client") {
+    // Clients can only access /dashboard/portal/* and /dashboard/community
+    return CLIENT_ALLOWED_PREFIXES.some(
+      (prefix) => pathname === prefix || pathname.startsWith(prefix + "/")
+    );
+  }
+
+  if (role === "team_member") {
+    // Team members are blocked from specific admin-only pages
+    return !TEAM_MEMBER_BLOCKED.some(
+      (blocked) => pathname === blocked || pathname.startsWith(blocked + "/")
+    );
+  }
+
+  return false;
+}
+
+function getDefaultRoute(role: string): string {
+  if (role === "client") return CLIENT_DEFAULT;
+  if (role === "team_member") return TEAM_MEMBER_DEFAULT;
+  return "/dashboard";
+}
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [zoom, setZoom] = useState(100);
 
@@ -27,6 +78,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.push("/login");
     }
   }, [user, loading, router]);
+
+  // Role-based route guard — redirect if user accesses a page they shouldn't
+  useEffect(() => {
+    if (loading || !profile?.role || !pathname) return;
+    const role = profile.role;
+    if (!isRouteAllowed(pathname, role)) {
+      router.replace(getDefaultRoute(role));
+    }
+  }, [pathname, profile?.role, loading, router]);
 
   // Ctrl+scroll zoom — applies CSS transform instead of zoom to not break fixed positioning
   const handleWheel = useCallback((e: WheelEvent) => {
