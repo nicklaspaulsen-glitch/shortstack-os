@@ -73,25 +73,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const init = async () => {
       try {
-        // Step 1: Try getUser() first — it validates the JWT server-side
-        // and refreshes expired tokens. This ensures auth.uid() works in
-        // RLS policies when pages make Supabase queries.
-        // Race with 2.5s timeout so we don't hang forever in Electron.
+        // Step 1: Sync browser client from server session.
+        // The middleware always has valid auth (cookie-based). The browser
+        // client's cookies may be corrupted/incomplete. This fetches the
+        // server's session tokens and injects them into the browser client.
         let validUser = null;
         try {
-          const result = await Promise.race([
-            supabase.auth.getUser(),
-            new Promise<{ data: { user: null }; error: Error }>((resolve) =>
-              setTimeout(() => resolve({ data: { user: null }, error: new Error("timeout") }), 2500)
-            ),
-          ]) as { data: { user: typeof validUser } };
-          validUser = result.data?.user ?? null;
+          const res = await fetch("/api/auth/session");
+          if (res.ok) {
+            const { access_token, refresh_token } = await res.json();
+            if (access_token && refresh_token) {
+              const { data } = await supabase.auth.setSession({
+                access_token,
+                refresh_token,
+              });
+              validUser = data.user;
+            }
+          }
         } catch {
-          // getUser failed — fall through to getSession
+          // Session sync failed — try local methods
         }
 
-        // Step 2: If getUser timed out or failed, fall back to getSession
-        // (may have stale token, but at least the page renders)
+        // Step 2: Fallback to local getUser/getSession
+        if (!validUser) {
+          try {
+            const { data: { user } } = await supabase.auth.getUser();
+            validUser = user;
+          } catch {}
+        }
         if (!validUser) {
           const { data: { session } } = await supabase.auth.getSession();
           validUser = session?.user ?? null;
