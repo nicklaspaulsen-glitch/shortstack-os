@@ -11,6 +11,7 @@ let splashWindow;
 let agentWindow;
 let tray;
 let updateAvailable = null;
+let updateInProgress = false;
 
 const APP_URL = "https://shortstack-os.vercel.app";
 const LICENSE_FILE = path.join(app.getPath("userData"), "license.json");
@@ -135,6 +136,7 @@ function isTrialExpired(license) {
 // ── Auto-update checker ─────────────────────────────────────────
 
 async function checkForUpdates() {
+  if (updateInProgress) return; // Don't show dialog while downloading
   try {
     const { net } = require("electron");
     const res = await net.fetch(APP_URL + "/api/app/version");
@@ -143,21 +145,27 @@ async function checkForUpdates() {
     if (data.version && data.version !== APP_VERSION) {
       updateAvailable = data;
 
-      // Show simple notification — features auto-update via web
+      const hasInstaller = !!data.download_url;
+
       const result = await dialog.showMessageBox(mainWindow, {
         type: "info",
-        title: "New Features Available",
+        title: "Update Available",
         message: `ShortStack OS v${data.version}`,
-        detail: `${data.release_notes || "New features available."}\n\nThe app will refresh to load the latest version.`,
-        buttons: ["Refresh Now", "Later"],
+        detail: `${data.release_notes || "New features and improvements available."}\n\nWould you like to download and install it now?`,
+        buttons: hasInstaller ? ["Update Now", "Later"] : ["Refresh Now", "Later"],
         defaultId: 0,
         cancelId: 1,
       });
 
       if (result.response === 0 && mainWindow && !mainWindow.isDestroyed()) {
-        // Just clear cache and reload — features are on the web
-        await mainWindow.webContents.session.clearCache();
-        mainWindow.webContents.reloadIgnoringCache();
+        if (hasInstaller) {
+          // Download the installer .exe and run it
+          downloadAndInstallUpdate(data.download_url, data.version);
+        } else {
+          // Web-only update — just clear cache and reload
+          await mainWindow.webContents.session.clearCache();
+          mainWindow.webContents.reloadIgnoringCache();
+        }
       }
     }
   } catch {
@@ -206,6 +214,7 @@ function startWebDeployChecker() {
 
 function downloadAndInstallUpdate(url, version) {
   if (!mainWindow || mainWindow.isDestroyed()) return;
+  updateInProgress = true;
 
   // Show progress in-app
   mainWindow.webContents.executeJavaScript(`
@@ -265,6 +274,7 @@ function downloadAndInstallUpdate(url, version) {
 
       response.on("error", () => {
         file.end();
+        updateInProgress = false;
         if (mainWindow && !mainWindow.isDestroyed()) {
           mainWindow.webContents.executeJavaScript(`
             document.getElementById('ss-update-banner')&&(document.getElementById('ss-update-banner').innerHTML='<span style="color:#f43f5e;">Download failed. <a href="${url}" style="color:#C9A84C;cursor:pointer;" onclick="require(\\'electron\\').shell.openExternal(\\'${url}\\')">Download manually</a></span>');
