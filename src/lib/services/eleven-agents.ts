@@ -250,14 +250,25 @@ export async function runElevenAgentCalls(
     return { ...results, errors: 1, leads: [{ business: "Config", phone: "", status: "ElevenAgent not configured (need agent_id + phone_number_id)" }] };
   }
 
+  // Get leads recently called in last 48h to prevent duplicates
+  const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+  const { data: recentCalls } = await supabase
+    .from("outreach_log")
+    .select("lead_id")
+    .eq("platform", "call")
+    .gte("created_at", cutoff);
+  const recentlyCalledIds = new Set((recentCalls || []).map(c => c.lead_id).filter(Boolean));
+
   // Get leads with phone numbers, prioritized by lead_score
-  const { data: leads } = await supabase
+  const { data: allLeads } = await supabase
     .from("leads")
     .select("id, business_name, phone, industry, email, lead_score")
     .not("phone", "is", null)
     .in("status", ["new", "called"])
     .order("lead_score", { ascending: false, nullsFirst: false })
-    .limit(maxCalls);
+    .limit(maxCalls * 2); // fetch extra to account for filtered duplicates
+
+  const leads = (allLeads || []).filter(l => !recentlyCalledIds.has(l.id)).slice(0, maxCalls);
 
   if (!leads || leads.length === 0) return results;
 
@@ -327,6 +338,104 @@ export async function runElevenAgentCalls(
   }
 
   return results;
+}
+
+// ══════════════════════════════════
+// Post-Call Processing
+// ══════════════════════════════════
+
+// Sync recent call outcomes — fetch transcripts, detect intent, update lead status
+export async function syncCallOutcomes(
+  supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>,
+): Promise<{ synced: number; errors: number }> {
+  const result = { synced: 0, errors: 0 };
+
+  // Get recent outreach entries with conversation IDs that haven't been processed
+  const { data: pendingCalls } = await supabase
+    .from("outreach_log")
+    .select("id, lead_id, message_text, status, business_name, metadata")
+    .eq("platform", "call")
+    .eq("status", "sent")
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  if (!pendingCalls || pendingCalls.length === 0) return result;
+
+  for (const call of pendingCalls) {
+    // Extract conversation ID from message_text or metadata
+    const convMatch = call.message_text?.match(/conv:([a-zA-Z0-9_-]+)/);
+    const meta = (call.metadata as Record<string, unknown>) || {};
+    const conversationId = convMatch?.[1] || (meta.conversation_id as string);
+    if (!conversationId) continue;
+
+    try {
+      const conversation = await getConversation(conversationId);
+      if (!conversation) continue;
+
+      const status = conversation.status as string;
+      // Only process completed conversations
+      if (status !== "done" && status !== "ended" && status !== "failed") continue;
+
+      const transcript = conversation.transcript as Array<{ role: string; message: string }> | undefined;
+      const duration = (conversation.metadata as Record<string, unknown>)?.call_duration_secs as number | undefined;
+      const fullTranscript = (transcript || []).map(t => `${t.role}: ${t.message}`).join("\n");
+
+      // Detect outcome from transcript
+      const outcome = detectCallOutcome(fullTranscript);
+
+      // Update outreach log with outcome
+      await supabase.from("outreach_log").update({
+        status: outcome === "interested" ? "replied" : outcome === "voicemail" ? "sent" : "failed",
+        metadata: {
+          ...meta,
+          conversation_id: conversationId,
+          outcome,
+          duration_secs: duration,
+          transcript_length: fullTranscript.length,
+          synced_at: new Date().toISOString(),
+        },
+      }).eq("id", call.id);
+
+      // Update lead status based on outcome
+      if (call.lead_id && outcome === "interested") {
+        await supabase.from("leads").update({ status: "replied" }).eq("id", call.lead_id);
+      } else if (call.lead_id && outcome === "not_interested") {
+        await supabase.from("leads").update({ status: "lost" }).eq("id", call.lead_id);
+      }
+
+      // Store transcript
+      if (fullTranscript) {
+        await supabase.from("trinity_log").insert({
+          action_type: "lead_gen",
+          description: `Call transcript: ${call.business_name || "Unknown"} — ${outcome} (${duration || 0}s)`,
+          status: "completed",
+          metadata: {
+            conversation_id: conversationId,
+            outcome,
+            duration_secs: duration,
+            transcript: fullTranscript.slice(0, 5000),
+            lead_id: call.lead_id,
+          },
+        });
+      }
+
+      result.synced++;
+    } catch {
+      result.errors++;
+    }
+  }
+
+  return result;
+}
+
+// Detect call outcome from transcript text
+function detectCallOutcome(transcript: string): "interested" | "not_interested" | "voicemail" | "no_answer" | "unknown" {
+  const lower = transcript.toLowerCase();
+  if (!transcript || transcript.length < 20) return "no_answer";
+  if (lower.includes("leave a message") || lower.includes("voicemail") || lower.includes("not available")) return "voicemail";
+  if (lower.includes("sounds good") || lower.includes("i'm interested") || lower.includes("book") || lower.includes("schedule") || lower.includes("what day") || lower.includes("send me") || lower.includes("tell me more")) return "interested";
+  if (lower.includes("not interested") || lower.includes("no thanks") || lower.includes("don't call") || lower.includes("remove") || lower.includes("stop calling")) return "not_interested";
+  return "unknown";
 }
 
 // Default cold calling agent prompt

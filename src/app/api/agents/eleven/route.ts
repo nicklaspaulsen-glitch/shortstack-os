@@ -175,5 +175,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ conversation: convo });
   }
 
+  if (action === "sync_outcomes") {
+    const { syncCallOutcomes } = await import("@/lib/services/eleven-agents");
+    const supabase = createServiceClient();
+    const results = await syncCallOutcomes(supabase);
+    return NextResponse.json(results);
+  }
+
   return NextResponse.json({ error: "Invalid action" }, { status: 400 });
 }

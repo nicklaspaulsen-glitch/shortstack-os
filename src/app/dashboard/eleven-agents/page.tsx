@@ -400,7 +400,20 @@ export default function ElevenAgentsPage() {
             <div className="rounded-xl border border-border bg-white overflow-hidden">
               <div className="px-5 py-3 border-b border-border flex items-center justify-between">
                 <h2 className="text-sm font-semibold">Recent Conversations</h2>
-                <span className="text-[10px] text-muted">{conversations.length} total</span>
+                <div className="flex items-center gap-2">
+                  <button onClick={async () => {
+                    toast.loading("Syncing call outcomes...");
+                    try {
+                      const res = await fetch("/api/agents/eleven", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "sync_outcomes" }) });
+                      const data = await res.json();
+                      toast.dismiss();
+                      toast.success(`Synced ${data.synced || 0} call outcomes`);
+                    } catch { toast.dismiss(); toast.error("Sync failed"); }
+                  }} className="text-[10px] text-gold flex items-center gap-1 hover:text-gold-light transition-colors">
+                    <RefreshCw size={10} /> Sync Outcomes
+                  </button>
+                  <span className="text-[10px] text-muted">{conversations.length} total</span>
+                </div>
               </div>
               {conversations.length === 0 ? (
                 <div className="px-5 py-12 text-center">
