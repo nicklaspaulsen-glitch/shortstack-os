@@ -11,7 +11,7 @@ import {
   Send, BarChart3, Globe, Briefcase,
   ArrowRight, Activity, ArrowUpRight, ArrowDownRight,
   Search, Clock, ChevronRight, Target, Mail, PhoneCall,
-  Bot, XCircle, Loader, Shield
+  Bot, XCircle, Shield
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -58,16 +58,10 @@ export default function DashboardPage() {
   const [agentStatuses, setAgentStatuses] = useState<Array<{ id: string; name: string; status: "working" | "idle" | "error"; actionsToday: number }>>([]);
   const [commandInput, setCommandInput] = useState("");
   const [commandLoading, setCommandLoading] = useState(false);
-  const [dashboardLoading, setDashboardLoading] = useState(true);
   const supabase = createClient();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchDashboardData();
-    // Safety net — NEVER let the spinner get permanently stuck
-    const safety = setTimeout(() => setDashboardLoading(false), 8000);
-    return () => clearTimeout(safety);
-  }, []);
+  useEffect(() => { fetchDashboardData(); }, []);
 
   // Show success toast after Stripe checkout redirect
   useEffect(() => {
@@ -165,9 +159,6 @@ export default function DashboardPage() {
       setAgentStatuses(statuses);
     } catch (err) {
       console.error("Dashboard data fetch failed:", err);
-    } finally {
-      // ALWAYS clear loading — never leave the spinner stuck
-      setDashboardLoading(false);
     }
   }
 
@@ -175,13 +166,8 @@ export default function DashboardPage() {
     return <ClientDashboard />;
   }
 
-  if (dashboardLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader size={20} className="animate-spin text-gold" />
-      </div>
-    );
-  }
+  // No loading spinner — dashboard renders instantly with zero/empty state.
+  // Data fills in as Supabase queries resolve (typically <1s).
 
   async function handleCommand(e: React.FormEvent) {
     e.preventDefault();
