@@ -194,7 +194,6 @@ async function run() {
         title: "\uD83D\uDCDC  ShortStack OS \u2014 Server Rules",
         description: "Welcome to the official ShortStack OS community! To keep this a great place for everyone, please follow these rules. **Accept the rules below to unlock all channels.**",
         color: 0xC9A84C,
-        image: { url: "https://i.imgur.com/8QqZfGb.png" },
       }]
     });
     console.log("  Posted rules header");

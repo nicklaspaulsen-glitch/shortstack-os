@@ -31,6 +31,7 @@ let heartbeatInterval;
 let lastSequence = null;
 let sessionId = null;
 let resumeUrl = null;
+let botUserId = null;
 
 // ── Discord REST API helper ────────────────────────────────
 async function apiCall(method, path, body) {
@@ -107,6 +108,7 @@ function connect(url) {
     if (t === "READY") {
       sessionId = d.session_id;
       resumeUrl = d.resume_gateway_url;
+      botUserId = d.user.id;
       console.log(`[Bot] Logged in as ${d.user.username} (${d.user.id})`);
       console.log(`[Bot] Serving ${d.guilds.length} guild(s)`);
     }
@@ -133,7 +135,7 @@ function connect(url) {
         d.channel_id === VERIFY_CHANNEL &&
         d.message_id === VERIFY_MESSAGE &&
         d.emoji?.name === "\u2705" &&
-        d.user_id !== d.guild_id // not the bot itself
+        d.user_id !== botUserId
       ) {
         console.log(`[Bot] Verifying user: ${d.user_id}`);
         apiCall("PUT", `/guilds/${GUILD_ID}/members/${d.user_id}/roles/${MEMBER_ROLE}`)
@@ -141,7 +143,7 @@ function connect(url) {
             if (r !== null) {
               console.log(`[Bot] Assigned Member role to ${d.user_id}`);
             } else {
-              console.log(`[Bot] Failed to assign role to ${d.user_id}`);
+              console.log(`[Bot] Failed to assign role to ${d.user_id} (check bot role hierarchy)`);
             }
           })
           .catch((e) => console.error("[Bot] Role assign error:", e.message));
@@ -188,7 +190,7 @@ function identify() {
       op: 2,
       d: {
         token: BOT_TOKEN,
-        intents: 33281 | 1024, // GUILDS | GUILD_MEMBERS | GUILD_MESSAGES | MESSAGE_CONTENT | GUILD_MESSAGE_REACTIONS
+        intents: 33283 | 1024, // GUILDS (1) | GUILD_MEMBERS (2) | GUILD_MESSAGES (512) | MESSAGE_CONTENT (32768) | GUILD_MESSAGE_REACTIONS (1024)
         properties: {
           os: "linux",
           browser: "shortstack-os",
