@@ -60,13 +60,29 @@ export default function DashboardPage() {
   const [commandLoading, setCommandLoading] = useState(false);
   const supabase = createClient();
 
-  // Wait for auth session before querying — Supabase RLS returns empty
-  // results if queries fire before the session cookie is established.
-  // Using profile?.id ensures auth is fully loaded (profile is fetched
-  // AFTER the session is confirmed), preventing the "data randomly
-  // disappears" race condition.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { if (profile?.id) fetchDashboardData(); }, [profile?.id]);
+  // Wait for the Supabase auth session on THIS client instance before
+  // querying. The auth context may have loaded, but this component's
+  // `createClient()` instance needs its own session confirmation.
+  // Without this, RLS returns empty results intermittently.
+  useEffect(() => {
+    let cancelled = false;
+    async function init() {
+      // First try — session may already be available
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session && !cancelled) { fetchDashboardData(); return; }
+      // Fallback — listen for the session to arrive
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+        if (s && !cancelled) fetchDashboardData();
+      });
+      // Cleanup if component unmounts
+      if (cancelled) subscription.unsubscribe();
+      return subscription;
+    }
+    let sub: { unsubscribe: () => void } | undefined;
+    init().then(s => { sub = s; });
+    return () => { cancelled = true; sub?.unsubscribe(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Show success toast after Stripe checkout redirect
   useEffect(() => {
