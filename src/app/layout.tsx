@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { Toaster } from "react-hot-toast";
 import PWARegister from "@/components/pwa-register";
+import ElectronBannerCleanup from "@/components/electron-banner-cleanup";
 import SFXProvider from "@/components/sfx-provider";
 import ThemeProvider from "@/components/theme-provider";
 
@@ -54,6 +55,7 @@ export default function RootLayout({
           </SFXProvider>
           </ThemeProvider>
           <PWARegister />
+          <ElectronBannerCleanup />
           <Toaster
             position="top-right"
             toastOptions={{

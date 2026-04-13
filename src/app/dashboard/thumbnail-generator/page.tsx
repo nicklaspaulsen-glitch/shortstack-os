@@ -65,6 +65,8 @@ const MOODS = [
 
 interface ThumbnailResult {
   id: string;
+  job_id?: string;
+  status?: string;
   prompt: string;
   style: string;
   platform: string;
@@ -73,7 +75,7 @@ interface ThumbnailResult {
   mood: string;
   faces: string[];
   imageUrl: string | null;
-  gradient: string;
+  gradient?: string;
   width: number;
   height: number;
   createdAt: string;
@@ -143,6 +145,54 @@ export default function ThumbnailGeneratorPage() {
     );
   }
 
+  // Poll a single job until completion
+  async function pollJob(jobId: string, index: number) {
+    const maxAttempts = 120; // 2 minutes max
+    let attempts = 0;
+    while (attempts < maxAttempts) {
+      attempts++;
+      await new Promise((r) => setTimeout(r, 1000));
+      try {
+        const res = await fetch(`/api/thumbnail/status?job_id=${jobId}`);
+        const data = await res.json();
+        if (data.status === "COMPLETED") {
+          setResults((prev) => {
+            const updated = [...prev];
+            if (updated[index]) {
+              updated[index] = {
+                ...updated[index],
+                status: "COMPLETED",
+                imageUrl: data.imageUrl || null,
+              };
+            }
+            return updated;
+          });
+          return data.imageUrl;
+        } else if (data.status === "FAILED") {
+          setResults((prev) => {
+            const updated = [...prev];
+            if (updated[index]) {
+              updated[index] = { ...updated[index], status: "FAILED" };
+            }
+            return updated;
+          });
+          return null;
+        }
+        // Still in queue or processing — update status
+        setResults((prev) => {
+          const updated = [...prev];
+          if (updated[index]) {
+            updated[index] = { ...updated[index], status: data.status };
+          }
+          return updated;
+        });
+      } catch {
+        // Network error, keep polling
+      }
+    }
+    return null; // Timed out
+  }
+
   async function generate() {
     if (!prompt.trim()) {
       toast.error("Enter a description for your thumbnail");
@@ -150,7 +200,9 @@ export default function ThumbnailGeneratorPage() {
     }
     setGenerating(true);
     setResults([]);
-    toast.loading("Generating thumbnail" + (variations > 1 ? "s" : "") + "...");
+    const toastId = toast.loading(
+      "Sending to GPU... this takes 15-30s per image"
+    );
     try {
       const res = await fetch("/api/thumbnail/generate", {
         method: "POST",
@@ -168,46 +220,103 @@ export default function ThumbnailGeneratorPage() {
           variations,
         }),
       });
-      toast.dismiss();
       const data = await res.json();
       if (data.success) {
+        // Set initial results with IN_QUEUE status
         setResults(data.thumbnails);
-        toast.success(data.message);
-        // Log to history
-        await supabase.from("trinity_log").insert({
-          action_type: "thumbnail_generated",
-          description: prompt.slice(0, 100),
-          status: "completed",
-          metadata: { style, platform, colorTheme, mood, faces: selectedFaces, count: variations },
-        });
-        loadHistory();
+        toast.loading("GPU is generating your images...", { id: toastId });
+
+        // Start polling all jobs in parallel
+        const pollPromises = data.thumbnails.map(
+          (thumb: ThumbnailResult, i: number) =>
+            thumb.job_id ? pollJob(thumb.job_id, i) : Promise.resolve(null)
+        );
+        const images = await Promise.all(pollPromises);
+        const completed = images.filter(Boolean).length;
+
+        toast.dismiss(toastId);
+        if (completed > 0) {
+          toast.success(
+            `${completed} thumbnail${completed > 1 ? "s" : ""} generated!`
+          );
+          // Log to history
+          await supabase.from("trinity_log").insert({
+            action_type: "thumbnail_generated",
+            description: prompt.slice(0, 100),
+            status: "completed",
+            metadata: {
+              style,
+              platform,
+              colorTheme,
+              mood,
+              faces: selectedFaces,
+              count: variations,
+            },
+          });
+          loadHistory();
+        } else {
+          toast.error("Generation failed — GPU may be cold-starting, try again");
+        }
       } else {
-        toast.error(data.error || "Generation failed");
+        toast.error(data.error || "Generation failed", { id: toastId });
       }
     } catch {
-      toast.dismiss();
+      toast.dismiss(toastId);
       toast.error("Error generating thumbnails");
     }
     setGenerating(false);
   }
 
-  function regenerateSingle(index: number) {
-    toast.success("Regenerating variation " + (index + 1) + "...");
-    // In production, would call API for single regeneration
-    const updated = [...results];
-    const gradients = [
-      "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
-      "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)",
-      "linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)",
-      "linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%)",
-    ];
-    updated[index] = {
-      ...updated[index],
-      id: `thumb_${Date.now()}_regen`,
-      gradient: gradients[Math.floor(Math.random() * gradients.length)],
-      createdAt: new Date().toISOString(),
-    };
-    setResults(updated);
+  async function regenerateSingle(index: number) {
+    toast.loading("Regenerating variation " + (index + 1) + "...");
+    // Mark this result as loading
+    setResults((prev) => {
+      const updated = [...prev];
+      if (updated[index]) {
+        updated[index] = {
+          ...updated[index],
+          status: "IN_QUEUE",
+          imageUrl: null,
+        };
+      }
+      return updated;
+    });
+    try {
+      const res = await fetch("/api/thumbnail/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          faces: selectedFaces,
+          style,
+          platform,
+          width: displayWidth,
+          height: displayHeight,
+          textOverlay,
+          colorTheme,
+          mood,
+          variations: 1,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.thumbnails?.[0]?.job_id) {
+        const newThumb = data.thumbnails[0];
+        setResults((prev) => {
+          const updated = [...prev];
+          updated[index] = { ...updated[index], ...newThumb };
+          return updated;
+        });
+        toast.dismiss();
+        await pollJob(newThumb.job_id, index);
+        toast.success("Variation regenerated!");
+      } else {
+        toast.dismiss();
+        toast.error("Regeneration failed");
+      }
+    } catch {
+      toast.dismiss();
+      toast.error("Error regenerating");
+    }
   }
 
   function copyPrompt(text: string, id: string) {
@@ -563,89 +672,176 @@ export default function ThumbnailGeneratorPage() {
                     : "grid-cols-1"
                 }`}
               >
-                {results.map((thumb, i) => (
-                  <div key={thumb.id} className="card-static group">
-                    {/* Preview */}
-                    <div
-                      className={`${getAspectClass()} rounded-xl overflow-hidden relative`}
-                      style={{ background: thumb.gradient }}
-                    >
-                      {/* Text overlay preview */}
-                      {thumb.textOverlay && (
-                        <div className="absolute inset-0 flex items-center justify-center p-4">
-                          <h3
-                            className="text-white font-black text-center drop-shadow-lg"
-                            style={{
-                              fontSize: results.length >= 4 ? "14px" : "22px",
-                              textShadow: "2px 2px 8px rgba(0,0,0,0.7)",
-                              lineHeight: 1.1,
-                            }}
-                          >
-                            {thumb.textOverlay}
-                          </h3>
-                        </div>
-                      )}
-                      {/* Face badges */}
-                      {thumb.faces.length > 0 && (
-                        <div className="absolute top-2 left-2 flex gap-1">
-                          {thumb.faces.slice(0, 3).map((fid) => {
-                            const face = FACE_OPTIONS.find((f) => f.id === fid);
-                            return face ? (
-                              <span
-                                key={fid}
-                                className="w-6 h-6 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-xs"
-                              >
-                                {face.emoji}
-                              </span>
-                            ) : null;
-                          })}
-                        </div>
-                      )}
-                      {/* Style badge */}
-                      <div className="absolute top-2 right-2">
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/40 text-white/80 backdrop-blur-sm">
-                          {THUMBNAIL_STYLES.find((s) => s.id === thumb.style)?.name || thumb.style}
-                        </span>
-                      </div>
-                      {/* Size badge */}
-                      <div className="absolute bottom-2 right-2">
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/40 text-white/60 backdrop-blur-sm">
-                          {thumb.width}x{thumb.height}
-                        </span>
-                      </div>
-                      {/* Mock indicator */}
-                      <div className="absolute bottom-2 left-2">
-                        <span className="text-[7px] px-1.5 py-0.5 rounded bg-gold/80 text-white font-semibold">
-                          PREVIEW
-                        </span>
-                      </div>
-                    </div>
+                {results.map((thumb, i) => {
+                  const isLoading =
+                    thumb.status === "IN_QUEUE" || thumb.status === "IN_PROGRESS";
+                  const isFailed = thumb.status === "FAILED";
+                  const isComplete =
+                    thumb.status === "COMPLETED" && thumb.imageUrl;
 
-                    {/* Actions */}
-                    <div className="flex items-center gap-1.5 mt-3">
-                      <button
-                        onClick={() => {
-                          toast.success("Download ready (mock)");
-                        }}
-                        className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground"
+                  return (
+                    <div key={thumb.id} className="card-static group">
+                      {/* Preview */}
+                      <div
+                        className={`${getAspectClass()} rounded-xl overflow-hidden relative bg-surface-light`}
                       >
-                        <Download size={12} /> Download
-                      </button>
-                      <button
-                        onClick={() => regenerateSingle(i)}
-                        className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground"
-                      >
-                        <RefreshCw size={12} /> Regenerate
-                      </button>
-                      <button
-                        onClick={() => toast("Edit feature coming soon")}
-                        className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground"
-                      >
-                        <Edit3 size={12} /> Edit
-                      </button>
+                        {/* Real generated image */}
+                        {isComplete && thumb.imageUrl && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={thumb.imageUrl}
+                            alt={thumb.prompt}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+
+                        {/* Loading state */}
+                        {isLoading && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-surface-light">
+                            <div className="flex flex-col items-center gap-2">
+                              <Loader
+                                size={28}
+                                className="text-gold animate-spin"
+                              />
+                              <span className="text-[10px] text-muted">
+                                {thumb.status === "IN_QUEUE"
+                                  ? "Waiting for GPU..."
+                                  : "Generating image..."}
+                              </span>
+                              <div className="w-32 h-1 bg-border rounded-full overflow-hidden">
+                                <div className="h-full bg-gold/60 rounded-full animate-pulse w-2/3" />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Failed state */}
+                        {isFailed && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-surface-light">
+                            <div className="flex flex-col items-center gap-2">
+                              <span className="text-danger text-lg">!</span>
+                              <span className="text-[10px] text-danger">
+                                Generation failed
+                              </span>
+                              <button
+                                onClick={() => regenerateSingle(i)}
+                                className="text-[9px] px-2 py-1 rounded border border-danger/30 text-danger hover:bg-danger/10"
+                              >
+                                Retry
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Text overlay (on completed images) */}
+                        {isComplete && thumb.textOverlay && (
+                          <div className="absolute inset-0 flex items-center justify-center p-4">
+                            <h3
+                              className="text-white font-black text-center drop-shadow-lg"
+                              style={{
+                                fontSize:
+                                  results.length >= 4 ? "14px" : "22px",
+                                textShadow: "2px 2px 8px rgba(0,0,0,0.7)",
+                                lineHeight: 1.1,
+                              }}
+                            >
+                              {thumb.textOverlay}
+                            </h3>
+                          </div>
+                        )}
+
+                        {/* Face badges */}
+                        {thumb.faces.length > 0 && (
+                          <div className="absolute top-2 left-2 flex gap-1">
+                            {thumb.faces.slice(0, 3).map((fid) => {
+                              const face = FACE_OPTIONS.find(
+                                (f) => f.id === fid
+                              );
+                              return face ? (
+                                <span
+                                  key={fid}
+                                  className="w-6 h-6 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-xs"
+                                >
+                                  {face.emoji}
+                                </span>
+                              ) : null;
+                            })}
+                          </div>
+                        )}
+
+                        {/* Style badge */}
+                        <div className="absolute top-2 right-2">
+                          <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/40 text-white/80 backdrop-blur-sm">
+                            {THUMBNAIL_STYLES.find((s) => s.id === thumb.style)
+                              ?.name || thumb.style}
+                          </span>
+                        </div>
+
+                        {/* Size badge */}
+                        <div className="absolute bottom-2 right-2">
+                          <span className="text-[8px] px-1.5 py-0.5 rounded bg-black/40 text-white/60 backdrop-blur-sm">
+                            {thumb.width}x{thumb.height}
+                          </span>
+                        </div>
+
+                        {/* Status badge */}
+                        <div className="absolute bottom-2 left-2">
+                          <span
+                            className={`text-[7px] px-1.5 py-0.5 rounded font-semibold ${
+                              isComplete
+                                ? "bg-success/80 text-white"
+                                : isLoading
+                                ? "bg-gold/80 text-white"
+                                : "bg-danger/80 text-white"
+                            }`}
+                          >
+                            {isComplete
+                              ? "READY"
+                              : isLoading
+                              ? "GENERATING"
+                              : isFailed
+                              ? "FAILED"
+                              : "QUEUED"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1.5 mt-3">
+                        <button
+                          onClick={() => {
+                            if (isComplete && thumb.imageUrl) {
+                              // Download real image
+                              const link = document.createElement("a");
+                              link.href = thumb.imageUrl;
+                              link.download = `thumbnail_${thumb.id}.png`;
+                              link.click();
+                              toast.success("Downloading thumbnail");
+                            } else {
+                              toast.error("Image not ready yet");
+                            }
+                          }}
+                          disabled={!isComplete}
+                          className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground disabled:opacity-40"
+                        >
+                          <Download size={12} /> Download
+                        </button>
+                        <button
+                          onClick={() => regenerateSingle(i)}
+                          className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground"
+                        >
+                          <RefreshCw size={12} /> Regenerate
+                        </button>
+                        <button
+                          onClick={() => toast("Edit feature coming soon")}
+                          className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground"
+                        >
+                          <Edit3 size={12} /> Edit
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 

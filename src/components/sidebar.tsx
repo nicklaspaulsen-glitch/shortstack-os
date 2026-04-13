@@ -210,37 +210,72 @@ export default function Sidebar() {
                   />
                 </button>
               )}
-              {(expanded || collapsed) && group.items.map((item) => {
-                const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-                return (
-                  <div key={item.href} className="relative">
-                    <Link
-                      href={item.href}
-                      onMouseEnter={() => setHoveredItem(item.href)}
-                      onMouseLeave={() => setHoveredItem(null)}
-                      className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-150 ${
-                        isActive
-                          ? "text-gold font-medium bg-gold/[0.06] border border-gold/10"
-                          : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
-                      }`}
-                      title={collapsed ? item.label : undefined}
-                    >
-                      <span className={`shrink-0 transition-colors ${isActive ? "text-gold" : hoveredItem === item.href ? "text-foreground" : ""}`}>
-                        {item.icon}
-                      </span>
-                      {!collapsed && <span className="truncate">{item.label}</span>}
-                      {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2.5px] h-4 rounded-r bg-gold" />}
-                    </Link>
-                    {collapsed && hoveredItem === item.href && (
-                      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
-                        <div className="bg-surface border border-border rounded-xl px-2.5 py-1.5 shadow-elevated text-xs font-medium text-foreground">
-                          {item.label}
+              {/* Animated section wrapper — uses CSS grid for smooth height transition */}
+              {group.section && !collapsed ? (
+                <div
+                  className="sidebar-section-items"
+                  data-collapsed={!expanded}
+                >
+                  <div className="sidebar-section-inner">
+                    {group.items.map((item) => {
+                      const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                      return (
+                        <div key={item.href} className="relative sidebar-item-anim">
+                          <Link
+                            href={item.href}
+                            onMouseEnter={() => setHoveredItem(item.href)}
+                            onMouseLeave={() => setHoveredItem(null)}
+                            className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-150 ${
+                              isActive
+                                ? "text-gold font-medium bg-gold/[0.06] border border-gold/10"
+                                : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
+                            }`}
+                          >
+                            <span className={`shrink-0 transition-colors ${isActive ? "text-gold" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+                              {item.icon}
+                            </span>
+                            <span className="truncate">{item.label}</span>
+                            {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2.5px] h-4 rounded-r bg-gold" />}
+                          </Link>
                         </div>
-                      </div>
-                    )}
+                      );
+                    })}
                   </div>
-                );
-              })}
+                </div>
+              ) : (
+                /* Core items (no section) or collapsed sidebar — render directly */
+                group.items.map((item) => {
+                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                  return (
+                    <div key={item.href} className="relative">
+                      <Link
+                        href={item.href}
+                        onMouseEnter={() => setHoveredItem(item.href)}
+                        onMouseLeave={() => setHoveredItem(null)}
+                        className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-150 ${
+                          isActive
+                            ? "text-gold font-medium bg-gold/[0.06] border border-gold/10"
+                            : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
+                        }`}
+                        title={collapsed ? item.label : undefined}
+                      >
+                        <span className={`shrink-0 transition-colors ${isActive ? "text-gold" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+                          {item.icon}
+                        </span>
+                        {!collapsed && <span className="truncate">{item.label}</span>}
+                        {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2.5px] h-4 rounded-r bg-gold" />}
+                      </Link>
+                      {collapsed && hoveredItem === item.href && (
+                        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
+                          <div className="bg-surface border border-border rounded-xl px-2.5 py-1.5 shadow-elevated text-xs font-medium text-foreground">
+                            {item.label}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
           );
         })}

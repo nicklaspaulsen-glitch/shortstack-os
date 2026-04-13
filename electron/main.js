@@ -17,7 +17,16 @@ const APP_URL = "https://shortstack-os.vercel.app";
 const LICENSE_FILE = path.join(app.getPath("userData"), "license.json");
 const SETTINGS_FILE = path.join(app.getPath("userData"), "app-settings.json");
 const SESSION_FILE = path.join(app.getPath("userData"), "agent-session.json");
-const APP_VERSION = app.getVersion() || "1.0.0";
+// Read version from package.json directly — app.getVersion() returns the
+// Electron framework version in dev mode, causing false update prompts.
+const APP_VERSION = (() => {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "../package.json"), "utf8"));
+    return pkg.version || app.getVersion() || "1.0.0";
+  } catch {
+    return app.getVersion() || "1.0.0";
+  }
+})();
 
 // ── Agent Session Management ─────────────────────────────────
 let agentSession = null; // { access_token, refresh_token, expires_at, user }
@@ -135,38 +144,48 @@ function isTrialExpired(license) {
 
 // ── Auto-update checker ─────────────────────────────────────────
 
+// Track which versions the user has already dismissed so we don't re-prompt
+let dismissedVersion = null;
+
 async function checkForUpdates() {
-  if (updateInProgress) return; // Don't show dialog while downloading
+  if (updateInProgress) return;
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+
   try {
     const { net } = require("electron");
     const res = await net.fetch(APP_URL + "/api/app/version");
     const data = await res.json();
 
-    if (data.version && data.version !== APP_VERSION) {
-      updateAvailable = data;
+    if (!data.version || data.version === APP_VERSION) return; // up to date
+    if (data.version === dismissedVersion) return; // already dismissed this version
 
-      const hasInstaller = !!data.download_url;
+    updateAvailable = data;
+    const hasInstaller = !!data.download_url;
 
-      const result = await dialog.showMessageBox(mainWindow, {
-        type: "info",
-        title: "Update Available",
-        message: `ShortStack OS v${data.version}`,
-        detail: `${data.release_notes || "New features and improvements available."}\n\nWould you like to download and install it now?`,
-        buttons: hasInstaller ? ["Update Now", "Later"] : ["Refresh Now", "Later"],
-        defaultId: 0,
-        cancelId: 1,
-      });
+    if (!hasInstaller) {
+      // Web-only update — no .exe to download. Just silently clear cache.
+      // The web deploy checker will show a subtle refresh banner if build_id
+      // changes. No blocking dialog needed — that was causing an infinite
+      // reload loop since the version mismatch never resolves for Electron.
+      await mainWindow.webContents.session.clearCache();
+      return;
+    }
 
-      if (result.response === 0 && mainWindow && !mainWindow.isDestroyed()) {
-        if (hasInstaller) {
-          // Download the installer .exe and run it
-          downloadAndInstallUpdate(data.download_url, data.version);
-        } else {
-          // Web-only update — just clear cache and reload
-          await mainWindow.webContents.session.clearCache();
-          mainWindow.webContents.reloadIgnoringCache();
-        }
-      }
+    // Has a real installer URL — show the download dialog
+    const result = await dialog.showMessageBox(mainWindow, {
+      type: "info",
+      title: "Update Available",
+      message: `ShortStack OS v${data.version}`,
+      detail: `${data.release_notes || "New features and improvements available."}\n\nWould you like to download and install it now?`,
+      buttons: ["Update Now", "Later"],
+      defaultId: 0,
+      cancelId: 1,
+    });
+
+    if (result.response === 0 && mainWindow && !mainWindow.isDestroyed()) {
+      downloadAndInstallUpdate(data.download_url, data.version);
+    } else {
+      dismissedVersion = data.version; // don't re-prompt until next app restart
     }
   } catch {
     // Silent fail — no internet or API down
@@ -214,7 +233,11 @@ function startWebDeployChecker() {
 
 function downloadAndInstallUpdate(url, version) {
   if (!mainWindow || mainWindow.isDestroyed()) return;
+  if (!url) { updateInProgress = false; return; } // guard against empty URL
   updateInProgress = true;
+
+  // Safety timeout — reset flag after 5 minutes so the app isn't stuck
+  setTimeout(() => { updateInProgress = false; }, 5 * 60 * 1000);
 
   // Show progress in-app
   mainWindow.webContents.executeJavaScript(`
@@ -225,6 +248,8 @@ function downloadAndInstallUpdate(url, version) {
       banner.style.cssText = 'position:fixed;top:36px;left:0;right:0;z-index:99999;background:#0c1017;border-bottom:1px solid #1e2a3a;color:#C9A84C;padding:8px 16px;display:flex;align-items:center;gap:12px;font-family:Inter,system-ui,sans-serif;font-size:11px;-webkit-app-region:no-drag;';
       banner.innerHTML = '<div style="flex:1;"><div style="color:#94a3b8;margin-bottom:4px;">Downloading v${version}...</div><div style="width:100%;height:4px;background:#1e2a3a;border-radius:2px;overflow:hidden;"><div id="ss-update-progress" style="width:0%;height:100%;background:#C9A84C;border-radius:2px;transition:width 0.3s;"></div></div></div>';
       document.body.prepend(banner);
+      // Auto-remove banner after 60s if download never completes (stale protection)
+      setTimeout(function() { var b = document.getElementById('ss-update-banner'); if (b) b.remove(); }, 60000);
     })();
   `);
 
@@ -510,6 +535,19 @@ function createMainWindow() {
 
   // Check for updates after page loads
   mainWindow.webContents.on("did-finish-load", () => {
+    // Clean up any stale update/download banners from previous sessions
+    mainWindow.webContents.executeJavaScript(`
+      (function() {
+        var b = document.getElementById('ss-update-banner');
+        if (b) b.remove();
+        var d = document.getElementById('ss-deploy-banner');
+        if (d) d.remove();
+      })();
+    `).catch(() => {});
+
+    // Reset stuck download flag on fresh page load
+    updateInProgress = false;
+
     checkForUpdates();
     startWebDeployChecker();
   });

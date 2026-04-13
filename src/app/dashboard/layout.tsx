@@ -115,6 +115,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => { document.documentElement.style.fontSize = "100%"; };
   }, [zoom]);
 
+  // Electron banner cleanup is handled globally by <ElectronBannerCleanup /> in root layout
+
   // Don't render dashboard content until auth state is resolved.
   // This prevents flash of admin content for client users and avoids
   // rendering anything before the redirect to /login fires.

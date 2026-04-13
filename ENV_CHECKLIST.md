@@ -101,8 +101,10 @@
 ## RunPod GPU (self-hosted AI)
 
 - [x] `RUNPOD_API_KEY` — RunPod API key for serverless GPU endpoints
-- [ ] `RUNPOD_LLM_URL` — RunPod serverless LLM endpoint (replaces Claude for routine tasks)
-- [ ] `HIGGSFIELD_URL` — RunPod serverless Higgsfield video generation endpoint
+- [x] `RUNPOD_LLM_URL` — RunPod serverless LLM endpoint (replaces Claude for routine tasks)
+- [x] `RUNPOD_FLUX_URL` — RunPod ComfyUI FLUX.1-dev endpoint (primary thumbnail generator)
+- [x] `RUNPOD_SDXL_URL` — RunPod SDXL image generation endpoint (fallback)
+- [x] `HIGGSFIELD_URL` — RunPod Mochi Video Generator endpoint (text-to-video)
 
 ## Video / Creative
 

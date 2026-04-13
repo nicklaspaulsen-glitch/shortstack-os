@@ -129,6 +129,7 @@ export default function VideoEditorPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...config,
+          music_mood: config.music_mood,
           client_id: selectedClient || null,
           plan_only: mode === "plan" || mode === "storyboard",
           storyboard_mode: mode === "storyboard",
@@ -179,7 +180,7 @@ export default function VideoEditorPage() {
           </div>
           <div>
             <h1 className="page-header mb-0">Video Editor</h1>
-            <p className="text-xs text-muted">AI storyboards, video plans & rendering via Remotion & Higgsfield</p>
+            <p className="text-xs text-muted">AI storyboards, video plans & GPU rendering via Remotion & Mochi</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
