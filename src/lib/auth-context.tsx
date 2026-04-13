@@ -29,10 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return cached ? JSON.parse(cached) : null;
     } catch { return null; }
   });
-  const [loading, setLoading] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return !localStorage.getItem("ss_profile");
-  });
+  // Always start loading=true so the layout waits for auth.getSession()
+  // before deciding whether to redirect to /login. The cached profile
+  // above is only for UI display (sidebar name, role) — it must NOT
+  // cause loading to start as false, which would trigger a premature
+  // redirect when user is still null.
+  const [loading, setLoading] = useState(true);
   const [isPWA, setIsPWA] = useState(false);
 
   // Stable supabase client — avoid re-creating on every render
