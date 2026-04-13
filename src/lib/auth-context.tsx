@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, useRef, useMemo, ReactNode } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createAuthClient, setAccessToken } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Profile } from "@/lib/types";
 
@@ -37,8 +37,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [isPWA, setIsPWA] = useState(false);
 
-  // Stable supabase client — avoid re-creating on every render
-  const supabase = useMemo(() => createClient(), []);
+  // Stable supabase client for AUTH operations only (cookie-based singleton).
+  // Data queries go through createClient() which uses the access token header.
+  const supabase = useMemo(() => createAuthClient(), []);
 
   // Track whether the fresh profile has been fetched (vs stale cache)
   const profileFetchedRef = useRef(false);
@@ -88,6 +89,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 refresh_token,
               });
               validUser = data.user;
+              // Inject token globally so createClient() returns a
+              // token-based client — bypasses broken cookie auth
+              if (validUser) {
+                setAccessToken(access_token);
+              }
             }
           }
         } catch {
@@ -135,6 +141,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!mounted) return;
         const u = session?.user ?? null;
         setUser(u);
+
+        // Keep the global access token in sync so createClient()
+        // always returns a client with a valid token.
+        if (session?.access_token) {
+          setAccessToken(session.access_token);
+        } else {
+          setAccessToken(null);
+        }
+
         if (u) {
           await fetchProfile(u.id);
         } else {
@@ -156,6 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [supabase]);
 
   const signOut = async () => {
+    setAccessToken(null); // Clear global token first
     await supabase.auth.signOut();
     setUser(null); setProfile(null);
     localStorage.removeItem("ss_profile");
