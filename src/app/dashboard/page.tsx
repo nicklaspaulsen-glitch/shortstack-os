@@ -60,8 +60,13 @@ export default function DashboardPage() {
   const [commandLoading, setCommandLoading] = useState(false);
   const supabase = createClient();
 
+  // Wait for auth session before querying — Supabase RLS returns empty
+  // results if queries fire before the session cookie is established.
+  // Using profile?.id ensures auth is fully loaded (profile is fetched
+  // AFTER the session is confirmed), preventing the "data randomly
+  // disappears" race condition.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchDashboardData(); }, []);
+  useEffect(() => { if (profile?.id) fetchDashboardData(); }, [profile?.id]);
 
   // Show success toast after Stripe checkout redirect
   useEffect(() => {
