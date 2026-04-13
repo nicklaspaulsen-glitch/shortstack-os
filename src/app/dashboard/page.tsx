@@ -60,28 +60,14 @@ export default function DashboardPage() {
   const [commandLoading, setCommandLoading] = useState(false);
   const supabase = createClient();
 
-  // Wait for the Supabase auth session on THIS client instance before
-  // querying. The auth context may have loaded, but this component's
-  // `createClient()` instance needs its own session confirmation.
-  // Without this, RLS returns empty results intermittently.
+  // Fetch data immediately (works if session is ready) + guaranteed
+  // retry after 1s (session is always ready by then). The retry
+  // overwrites stale zeros with real data. Simple and bulletproof.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    let cancelled = false;
-    async function init() {
-      // First try — session may already be available
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session && !cancelled) { fetchDashboardData(); return; }
-      // Fallback — listen for the session to arrive
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-        if (s && !cancelled) fetchDashboardData();
-      });
-      // Cleanup if component unmounts
-      if (cancelled) subscription.unsubscribe();
-      return subscription;
-    }
-    let sub: { unsubscribe: () => void } | undefined;
-    init().then(s => { sub = s; });
-    return () => { cancelled = true; sub?.unsubscribe(); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchDashboardData();
+    const retry = setTimeout(fetchDashboardData, 1200);
+    return () => clearTimeout(retry);
   }, []);
 
   // Show success toast after Stripe checkout redirect

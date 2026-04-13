@@ -164,7 +164,6 @@ export default function Sidebar() {
       style={{
         background: "var(--color-surface, #FFFFFF)",
         borderRight: "1px solid var(--color-border, #E8E5E0)",
-        borderTop: "1px solid var(--color-border, #E8E5E0)",
       }}
     >
       {/* Logo — compact and clean */}
