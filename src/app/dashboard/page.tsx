@@ -11,7 +11,7 @@ import {
   Send, BarChart3, Globe, Briefcase,
   ArrowRight, Activity, ArrowUpRight, ArrowDownRight,
   Search, Clock, ChevronRight, Target, Mail, PhoneCall,
-  Bot, XCircle, Shield
+  Bot, XCircle, Shield, Loader
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -58,9 +58,9 @@ export default function DashboardPage() {
   const [agentStatuses, setAgentStatuses] = useState<Array<{ id: string; name: string; status: "working" | "idle" | "error"; actionsToday: number }>>([]);
   const [commandInput, setCommandInput] = useState("");
   const [commandLoading, setCommandLoading] = useState(false);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
   const supabase = createClient();
 
-  // Layout guarantees Supabase session is ready before children render
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchDashboardData(); }, []);
 
@@ -76,12 +76,6 @@ export default function DashboardPage() {
 
   async function fetchDashboardData() {
     try {
-      // Debug: verify auth session + RLS access
-      const { data: { session } } = await supabase.auth.getSession();
-      const { count: testCount, error: testErr } = await supabase.from("leads").select("*", { count: "exact", head: true });
-      // Always show diagnostic toast so we can see what's happening
-      toast(`DEBUG: session=${session ? "yes" : "NO"}, uid=${session?.user?.id?.slice(0,8) || "none"}, leads=${testCount ?? "null"}, err=${testErr?.message || "none"}`, { duration: 10000 });
-
       const today = new Date().toISOString().split("T")[0];
       const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
 
@@ -161,6 +155,8 @@ export default function DashboardPage() {
       setAgentStatuses(statuses);
     } catch (err) {
       console.error("Dashboard data fetch failed:", err);
+    } finally {
+      setDashboardLoading(false);
     }
   }
 
@@ -168,8 +164,13 @@ export default function DashboardPage() {
     return <ClientDashboard />;
   }
 
-  // No loading spinner — dashboard renders instantly with zero/empty state.
-  // Data fills in as Supabase queries resolve (typically <1s).
+  if (dashboardLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader size={20} className="animate-spin text-gold" />
+      </div>
+    );
+  }
 
   async function handleCommand(e: React.FormEvent) {
     e.preventDefault();

@@ -1,9 +1,8 @@
-const CACHE_NAME = "shortstack-os-v2";
+const CACHE_NAME = "shortstack-os-v3";
 const OFFLINE_URL = "/dashboard";
 
-// Static assets to pre-cache for instant loads
+// Only cache truly static assets — NOT pages or JS bundles
 const PRECACHE_URLS = [
-  OFFLINE_URL,
   "/icons/shortstack-logo.png",
   "/manifest.json",
 ];
@@ -16,6 +15,7 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
+  // Delete ALL old caches to force fresh content
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
@@ -34,17 +34,25 @@ self.addEventListener("fetch", (event) => {
   // API calls: network-only (never cache)
   if (url.pathname.startsWith("/api/")) return;
 
-  // Navigation: network-first, fall back to cached dashboard
+  // Navigation (page loads): ALWAYS go to network, no caching
+  // This ensures Electron/PWA always gets the latest deployed code
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request).catch(() => caches.match(OFFLINE_URL))
+      fetch(request).catch(() => caches.match(OFFLINE_URL) || new Response("Offline", { status: 503 }))
     );
     return;
   }
 
-  // Static assets (images, fonts, JS, CSS): stale-while-revalidate
+  // Next.js JS/CSS bundles: network-first (never serve stale bundles)
+  if (url.pathname.startsWith("/_next/")) {
+    event.respondWith(
+      fetch(request).catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Static assets (images, fonts only): stale-while-revalidate
   if (
-    url.pathname.startsWith("/_next/static/") ||
     url.pathname.startsWith("/icons/") ||
     url.pathname.endsWith(".png") ||
     url.pathname.endsWith(".svg") ||

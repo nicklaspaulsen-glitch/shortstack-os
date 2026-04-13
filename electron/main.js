@@ -534,10 +534,12 @@ function createMainWindow() {
   });
 
   // Nuclear cache clear — wipe everything to guarantee latest version
+  // Includes localstorage to prevent stale profile data (ss_profile) from
+  // persisting across sessions and causing role/auth mismatches.
   Promise.all([
     mainWindow.webContents.session.clearCache(),
     mainWindow.webContents.session.clearStorageData({
-      storages: ["appcache", "cachestorage", "serviceworkers", "shadercache"],
+      storages: ["appcache", "cachestorage", "serviceworkers", "shadercache", "localstorage"],
     }),
     mainWindow.webContents.session.clearCodeCaches({}),
   ]).catch(() => {}).then(() => {
@@ -547,7 +549,12 @@ function createMainWindow() {
   // Enable Ctrl+Shift+R to force reload, Ctrl+Shift+A to open agent
   mainWindow.webContents.on("before-input-event", (event, input) => {
     if (input.control && input.shift && input.key === "R") {
-      mainWindow.webContents.session.clearCache().then(() => {
+      Promise.all([
+        mainWindow.webContents.session.clearCache(),
+        mainWindow.webContents.session.clearStorageData({
+          storages: ["localstorage", "cachestorage", "serviceworkers"],
+        }),
+      ]).then(() => {
         mainWindow.webContents.reloadIgnoringCache();
       });
     }
