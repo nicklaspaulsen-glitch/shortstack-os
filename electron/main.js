@@ -305,168 +305,196 @@ function downloadAndInstallUpdate(url, version) {
 // ── Splash / License screen ─────────────────────────────────────
 
 function createSplash() {
+  const license = getLicense();
+  const isActive = license?.activated && !isTrialExpired(license);
+
   splashWindow = new BrowserWindow({
-    width: 480, height: 600, frame: false, resizable: false,
+    width: 480, height: isActive ? 480 : 600, frame: false, resizable: false,
     backgroundColor: "#06080c",
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
 
-  const license = getLicense();
-  const isActive = license?.activated && !isTrialExpired(license);
+  // ── Embed actual logo PNG as base64 data URI ──
+  let logoPNG = "";
+  try {
+    logoPNG = "data:image/png;base64," + fs.readFileSync(path.join(__dirname, "../public/icons/shortstack-logo.png")).toString("base64");
+  } catch { /* SVG fallback below */ }
 
-  const commonCSS = `
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Segoe UI', system-ui, sans-serif; background: #06080c; color: #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-    .gold { color: #C9A84C; }
-    .muted { color: #64748b; }
-    .danger { color: #f43f5e; }
-    .success { color: #10b981; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes glow { 0%,100% { opacity: 0.3; } 50% { opacity: 0.6; } }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-    .spinner { width: 36px; height: 36px; border: 2px solid #1e2a3a; border-top: 2px solid #C9A84C; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 20px; }
-    .fade { animation: fadeUp 0.5s ease-out forwards; opacity: 0; }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-    .delay-4 { animation-delay: 0.4s; }
-    .delay-5 { animation-delay: 0.5s; }
-    .delay-6 { animation-delay: 0.6s; }
-    input { width: 100%; background: #0c1017; border: 1px solid #1e2a3a; border-radius: 10px; padding: 11px 14px; color: white; font-size: 13px; outline: none; margin-bottom: 10px; box-sizing: border-box; transition: border-color 0.2s; }
-    input:focus { border-color: rgba(201,168,76,0.5); box-shadow: 0 0 0 3px rgba(201,168,76,0.06); }
-    input::placeholder { color: #3a4a5e; }
-    .btn { width: 100%; border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-gold { background: linear-gradient(135deg, #C9A84C, #D4B85A, #A8893D); color: #0b0d12; }
-    .btn-gold:hover { box-shadow: 0 0 20px rgba(201,168,76,0.25); transform: translateY(-1px); }
-    .btn-ghost { background: rgba(255,255,255,0.03); color: #94a3b8; border: 1px solid #1e2a3a; }
-    .btn-ghost:hover { border-color: #2e3e52; color: #e2e8f0; background: rgba(255,255,255,0.05); }
-    .divider { display: flex; align-items: center; gap: 12px; margin: 14px 0; }
-    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #1e2a3a; }
-    .divider span { font-size: 9px; color: #3a4a5e; text-transform: uppercase; letter-spacing: 1px; }
-    .features { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
-    .feature { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 10px; text-align: center; }
-    .feature .icon { font-size: 14px; margin-bottom: 3px; }
-    .feature .label { font-size: 9px; color: #64748b; }
-    a { color: #C9A84C; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+  const logoEl = logoPNG
+    ? `<img src="${logoPNG}" style="width:80px;height:80px;border-radius:18px;" />`
+    : `<svg width="80" height="80" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4B85A"/><stop offset="50%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#A8893D"/></linearGradient></defs><rect width="512" height="512" rx="108" fill="#0c1017"/><rect x="136" y="310" width="240" height="36" rx="8" fill="url(#g)" opacity=".4"/><rect x="116" y="262" width="280" height="36" rx="8" fill="url(#g)" opacity=".65"/><rect x="96" y="214" width="320" height="36" rx="8" fill="url(#g)"/><path d="M268 120L238 200L270 200L248 280L310 180L274 180L300 120Z" fill="url(#g)" opacity=".9"/></svg>`;
+
+  // ── Shared base styles ──
+  const baseCSS = `
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:#06080c;color:#e2e8f0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden;-webkit-app-region:drag}
+    .no-drag{-webkit-app-region:no-drag}
+
+    /* ── Background effects ── */
+    .bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(201,168,76,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,0.03) 1px,transparent 1px);background-size:36px 36px;-webkit-mask-image:radial-gradient(ellipse 55% 55% at 50% 45%,black,transparent);animation:gridIn 2s ease forwards;opacity:0}
+    @keyframes gridIn{to{opacity:1}}
+    .bg-glow{position:fixed;top:-100px;left:50%;transform:translateX(-50%);width:550px;height:550px;background:radial-gradient(ellipse,rgba(201,168,76,0.12) 0%,rgba(201,168,76,0.03) 35%,transparent 65%);pointer-events:none;animation:breathe 4s ease-in-out infinite}
+    @keyframes breathe{0%,100%{opacity:.5;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.06)}}
+
+    /* ── Floating particles ── */
+    .particle{position:fixed;width:2px;height:2px;background:rgba(201,168,76,0.25);border-radius:50%;animation:float linear infinite;pointer-events:none}
+    @keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1;transform:translateY(90vh) scale(1)}90%{opacity:.6}100%{transform:translateY(-20px) scale(0);opacity:0}}
+    .p1{left:8%;animation-duration:14s;animation-delay:0s}.p2{left:18%;animation-duration:18s;animation-delay:2s;width:3px;height:3px}.p3{left:32%;animation-duration:12s;animation-delay:.8s}.p4{left:48%;animation-duration:20s;animation-delay:3.5s;width:1px;height:1px}.p5{left:62%;animation-duration:15s;animation-delay:.3s}.p6{left:78%;animation-duration:17s;animation-delay:2.2s;width:3px;height:3px}.p7{left:88%;animation-duration:13s;animation-delay:1.2s}.p8{left:42%;animation-duration:16s;animation-delay:4s;width:1px;height:1px}
+
+    /* ── Logo with orbital ring ── */
+    .logo-wrap{position:relative;width:150px;height:150px;display:flex;align-items:center;justify-content:center;margin-bottom:24px}
+    .logo-wrap img,.logo-wrap>svg{animation:logoIn .8s cubic-bezier(.16,1,.3,1) forwards;opacity:0;filter:drop-shadow(0 0 30px rgba(201,168,76,.25))}
+    @keyframes logoIn{from{opacity:0;transform:scale(.65) translateY(14px)}to{opacity:1;transform:scale(1) translateY(0)}}
+    .orbit-ring{position:absolute;inset:4px;border-radius:50%;border:1px solid rgba(201,168,76,.08)}
+    .orbit-ring-2{position:absolute;inset:16px;border-radius:50%;border:1px dashed rgba(201,168,76,.04)}
+    .orbit{position:absolute;inset:4px;border-radius:50%;animation:spin 10s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .dot{position:absolute;width:5px;height:5px;border-radius:50%;background:#C9A84C}
+    .dot-1{top:-2px;left:50%;transform:translateX(-50%);box-shadow:0 0 10px rgba(201,168,76,.8),0 0 25px rgba(201,168,76,.3)}
+    .dot-2{bottom:-2px;left:50%;transform:translateX(-50%);opacity:.25;box-shadow:0 0 6px rgba(201,168,76,.3);width:3px;height:3px}
+    .dot-3{top:50%;right:-2px;transform:translateY(-50%);opacity:.45;box-shadow:0 0 8px rgba(201,168,76,.4);width:4px;height:4px}
+
+    /* ── Staggered fade-slide ── */
+    .fs{animation:fadeSlide .6s ease-out forwards;opacity:0}
+    @keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .d1{animation-delay:.15s}.d2{animation-delay:.3s}.d3{animation-delay:.45s}.d4{animation-delay:.6s}.d5{animation-delay:.75s}.d6{animation-delay:.9s}.d7{animation-delay:1.05s}
+
+    /* ── Gold gradient text ── */
+    .gold-text{background:linear-gradient(135deg,#E8D48B 0%,#D4B85A 30%,#C9A84C 60%,#A8893D 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(201,168,76,.15))}
+    .muted{color:#475569}.dim{color:#1e2a3a}.danger{color:#f43f5e}
   `;
 
-  const logoSVG = `<svg width="80" height="80" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0c1017"/><stop offset="100%" stop-color="#06080c"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4B85A"/><stop offset="50%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#A8893D"/></linearGradient><linearGradient id="accent" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/><stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="8" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter></defs><rect width="512" height="512" rx="108" fill="url(#bg)"/><rect x="4" y="4" width="504" height="504" rx="104" fill="none" stroke="#1e2a3a" stroke-width="2"/><circle cx="256" cy="230" r="120" fill="url(#accent)" opacity="0.4"/><g filter="url(#glow)"><rect x="136" y="310" width="240" height="36" rx="8" fill="url(#gold)" opacity="0.4"/><rect x="116" y="262" width="280" height="36" rx="8" fill="url(#gold)" opacity="0.65"/><rect x="96" y="214" width="320" height="36" rx="8" fill="url(#gold)"/></g><path d="M268 120 L238 200 L270 200 L248 280 L310 180 L274 180 L300 120Z" fill="url(#gold)" opacity="0.9"/><text x="256" y="400" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="48" fill="#64748b" letter-spacing="8">OS</text></svg>`;
+  // ── Particles HTML (shared by both screens) ──
+  const particlesHTML = `<div class="particle p1"></div><div class="particle p2"></div><div class="particle p3"></div><div class="particle p4"></div><div class="particle p5"></div><div class="particle p6"></div><div class="particle p7"></div><div class="particle p8"></div>`;
 
-  const html = isActive ? `
-    <style>${commonCSS}
-      .glow-bg { position:fixed; top:-120px; left:50%; transform:translateX(-50%); width:500px; height:400px; background:radial-gradient(ellipse,rgba(201,168,76,0.08) 0%,rgba(56,189,248,0.03) 40%,transparent 70%); pointer-events:none; animation:glow 3s ease-in-out infinite; }
-      .logo-container { margin-bottom:20px; filter:drop-shadow(0 0 30px rgba(201,168,76,0.15)); }
-      .progress-bar { width:160px; height:3px; background:#1e2a3a; border-radius:2px; overflow:hidden; margin-bottom:24px; }
-      .progress-fill { width:0%; height:100%; background:linear-gradient(90deg,#C9A84C,#D4B85A); border-radius:2px; animation:loading 1.2s ease-in-out forwards; }
-      @keyframes loading { 0%{width:0%} 50%{width:70%} 100%{width:100%} }
-      .status-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:20px; padding:5px 14px; font-size:11px; font-weight:600; color:#10b981; }
-      .status-dot { width:6px; height:6px; border-radius:50%; background:#10b981; animation:glow 2s ease-in-out infinite; }
-    </style>
-    <body style="-webkit-app-region:drag;">
-      <div class="glow-bg"></div>
-      <div class="fade logo-container">${logoSVG}</div>
-      <div class="fade delay-1" style="font-size:26px;font-weight:800;letter-spacing:-0.5px;color:#C9A84C;">ShortStack OS</div>
-      <div class="fade delay-2" style="font-size:9px;letter-spacing:4px;margin:6px 0 28px;color:#475569;">AGENCY OPERATING SYSTEM</div>
-      <div class="fade delay-3 progress-bar"><div class="progress-fill"></div></div>
-      <div class="fade delay-4 status-badge"><div class="status-dot"></div>License Active — ${license.tier}</div>
-      <div class="fade delay-5 muted" style="font-size:10px;margin-top:8px;">
-        ${license.type === "trial" ? "Trial ends " + new Date(license.trial_ends).toLocaleDateString() : "Full License"}
-      </div>
-      <div class="fade delay-6" style="position:absolute;bottom:16px;font-size:9px;color:#1e2a3a;">v${APP_VERSION}</div>
-      <script>setTimeout(()=>require('electron').ipcRenderer.send('launch-app'),1400)</script>
-    </body>` : `
-    <style>${commonCSS}
-      .glow-bg { position:fixed; top:-80px; left:50%; transform:translateX(-50%); width:500px; height:350px; background:radial-gradient(ellipse,rgba(201,168,76,0.05) 0%,transparent 70%); pointer-events:none; animation:glow 4s ease-in-out infinite; }
-      .tab-row { display:flex; gap:4px; margin-bottom:16px; background:rgba(255,255,255,0.02); border-radius:10px; padding:3px; border:1px solid #1e2a3a; }
-      .tab { flex:1; padding:8px; text-align:center; font-size:11px; font-weight:600; border-radius:8px; cursor:pointer; transition:all 0.2s; color:#64748b; }
-      .tab.active { background:rgba(201,168,76,0.1); color:#C9A84C; }
-      .tab:not(.active):hover { color:#94a3b8; }
-      .panel { display:none; }
-      .panel.active { display:block; }
+  // ── Logo wrap HTML (shared) ──
+  const logoWrapHTML = `<div class="logo-wrap"><div class="orbit-ring"></div><div class="orbit-ring-2"></div><div class="orbit"><div class="dot dot-1"></div><div class="dot dot-2"></div><div class="dot dot-3"></div></div>${logoEl}</div>`;
+
+  if (isActive) {
+    // ── ACTIVE SPLASH — premium loading screen ──
+    const trialInfo = license.type === "trial"
+      ? "Trial \u00B7 " + Math.max(0, Math.ceil((new Date(license.trial_ends) - Date.now()) / 86400000)) + " days remaining"
+      : "Full License";
+
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+    <style>${baseCSS}
+      .progress-track{width:180px;height:3px;background:rgba(201,168,76,.08);border-radius:3px;overflow:hidden;position:relative}
+      .progress-fill{width:0%;height:100%;background:linear-gradient(90deg,#A8893D,#C9A84C,#E8D48B);border-radius:3px;animation:pFill 1.4s cubic-bezier(.4,0,.2,1) .4s forwards;position:relative}
+      .progress-fill::after{content:'';position:absolute;top:0;right:0;bottom:0;width:40px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 1.4s ease-in-out .6s forwards;opacity:0}
+      @keyframes pFill{0%{width:0}35%{width:50%}70%{width:85%}100%{width:100%}}
+      @keyframes shimmer{0%{opacity:0;right:100%}30%{opacity:1}100%{opacity:0;right:-20%}}
+      .status{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.12);border-radius:24px;padding:7px 18px;font-size:11px;font-weight:600;color:#10b981;backdrop-filter:blur(8px)}
+      .s-dot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:pulse 2s ease-in-out infinite}
+      @keyframes pulse{0%,100%{opacity:.3;box-shadow:0 0 0 0 rgba(16,185,129,.4)}50%{opacity:1;box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+      .loading-text{font-size:10px;color:#3a4a5e;margin-top:10px;overflow:hidden}
+      .loading-text span{display:inline-block;animation:textCycle 1.4s ease-in-out .4s forwards}
+      @keyframes textCycle{0%{opacity:0;transform:translateY(8px)}20%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}100%{opacity:.5;transform:translateY(0)}}
     </style>
     <body>
-      <div class="glow-bg"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-glow"></div>
+      ${particlesHTML}
+      ${logoWrapHTML}
+      <div class="fs d1 gold-text" style="font-size:30px;font-weight:800;letter-spacing:-1px">ShortStack</div>
+      <div class="fs d2" style="font-size:9px;letter-spacing:6px;color:#2a3548;margin-top:6px;font-weight:600">AGENCY OPERATING SYSTEM</div>
+      <div class="fs d3" style="margin-top:30px"><div class="progress-track"><div class="progress-fill"></div></div></div>
+      <div class="fs d4 loading-text"><span>Initializing workspace\u2026</span></div>
+      <div class="fs d5 status" style="margin-top:22px"><div class="s-dot"></div>License Active \u2014 ${license.tier}</div>
+      <div class="fs d6 muted" style="font-size:10px;margin-top:6px">${trialInfo}</div>
+      <div class="fs d7 dim" style="position:absolute;bottom:14px;font-size:9px;letter-spacing:2px">v${APP_VERSION}</div>
+      <script>setTimeout(()=>require('electron').ipcRenderer.send('launch-app'),1600)</script>
+    </body></html>`;
 
-      <div style="-webkit-app-region:drag;text-align:center;margin-bottom:16px;">
-        <div class="fade" style="margin:0 auto 14px;filter:drop-shadow(0 0 20px rgba(201,168,76,0.15));">${logoSVG}</div>
-        <div class="fade delay-1" style="font-size:22px;font-weight:800;color:#C9A84C;letter-spacing:-0.5px;">ShortStack OS</div>
-        <div class="fade delay-2" style="font-size:10px;color:#3a4a5e;margin-top:4px;letter-spacing:1px;">YOUR AI-POWERED AGENCY</div>
-        ${isTrialExpired(license) ? '<div class="fade delay-2 danger" style="font-size:11px;margin-top:10px;">Your trial has expired. Activate a license to continue.</div>' : ''}
+    splashWindow.loadURL("data:text/html;charset=utf-8," + encodeURIComponent(html));
+    return;
+  }
+
+  // ── INACTIVE SPLASH — activation / trial form ──
+  const expiredMsg = isTrialExpired(license) ? '<div class="fs d2 danger" style="font-size:11px;margin-top:8px">Your trial has expired. Activate a license to continue.</div>' : "";
+
+  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head>
+  <style>${baseCSS}
+    input{width:100%;background:#0a0d14;border:1px solid #1e2a3a;border-radius:10px;padding:11px 14px;color:white;font-size:13px;outline:none;margin-bottom:10px;transition:border-color .2s,box-shadow .2s;-webkit-app-region:no-drag}
+    input:focus{border-color:rgba(201,168,76,.5);box-shadow:0 0 0 3px rgba(201,168,76,.06)}
+    input::placeholder{color:#3a4a5e}
+    .btn{width:100%;border:none;border-radius:10px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-app-region:no-drag}
+    .btn-gold{background:linear-gradient(135deg,#C9A84C,#D4B85A,#A8893D);color:#0b0d12}
+    .btn-gold:hover{box-shadow:0 0 20px rgba(201,168,76,.3);transform:translateY(-1px)}
+    .btn-ghost{background:rgba(255,255,255,.03);color:#94a3b8;border:1px solid #1e2a3a}
+    .btn-ghost:hover{border-color:#2e3e52;color:#e2e8f0;background:rgba(255,255,255,.05)}
+    .tab-row{display:flex;gap:4px;margin-bottom:16px;background:rgba(255,255,255,.02);border-radius:10px;padding:3px;border:1px solid #1e2a3a}
+    .tab{flex:1;padding:8px;text-align:center;font-size:11px;font-weight:600;border-radius:8px;cursor:pointer;transition:all .2s;color:#64748b;-webkit-app-region:no-drag}
+    .tab.active{background:rgba(201,168,76,.1);color:#C9A84C}
+    .tab:not(.active):hover{color:#94a3b8}
+    .panel{display:none}.panel.active{display:block}
+    .divider{display:flex;align-items:center;gap:12px;margin:14px 0}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#1e2a3a}
+    .divider span{font-size:9px;color:#3a4a5e;text-transform:uppercase;letter-spacing:1px}
+    .features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+    .feature{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:8px;padding:8px 10px;text-align:center;transition:border-color .3s}
+    .feature:hover{border-color:rgba(201,168,76,.15)}
+    .feature .icon{font-size:14px;margin-bottom:3px}
+    .feature .label{font-size:9px;color:#64748b}
+    a{color:#C9A84C;text-decoration:none}a:hover{text-decoration:underline}
+  </style>
+  <body>
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    ${particlesHTML}
+    <div style="text-align:center;margin-bottom:12px">
+      <div style="display:flex;justify-content:center">${logoWrapHTML}</div>
+      <div class="fs d1 gold-text" style="font-size:24px;font-weight:800;letter-spacing:-.5px">ShortStack OS</div>
+      <div class="fs d2" style="font-size:9px;color:#2a3548;margin-top:4px;letter-spacing:3px;font-weight:500">YOUR AI-POWERED AGENCY</div>
+      ${expiredMsg}
+    </div>
+    <div class="fs d3 no-drag" style="width:100%;padding:0 32px">
+      <div class="tab-row">
+        <div class="tab active" onclick="switchTab('license')">License Key</div>
+        <div class="tab" onclick="switchTab('trial')">Free Trial</div>
       </div>
-
-      <div class="fade delay-3" style="-webkit-app-region:no-drag;width:100%;padding:0 32px;">
-        <div class="tab-row">
-          <div class="tab active" onclick="switchTab('license')">License Key</div>
-          <div class="tab" onclick="switchTab('trial')">Free Trial</div>
-        </div>
-
-        <!-- License Panel -->
-        <div class="panel active" id="panel-license">
-          <input id="key" placeholder="Enter your license key">
-          <input id="email-license" type="email" placeholder="Email address">
-          <div id="err" class="danger" style="font-size:10px;margin-bottom:8px;display:none;"></div>
-          <button class="btn btn-gold" onclick="activate()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M13.8 12H3"/></svg>
-            Activate License
-          </button>
-        </div>
-
-        <!-- Trial Panel -->
-        <div class="panel" id="panel-trial">
-          <input id="email-trial" type="email" placeholder="Enter your email to start">
-          <div id="err2" class="danger" style="font-size:10px;margin-bottom:8px;display:none;"></div>
-          <button class="btn btn-gold" onclick="trial()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            Start 14-Day Free Trial
-          </button>
-          <div style="text-align:center;margin-top:10px;font-size:10px;color:#3a4a5e;">No credit card required</div>
-        </div>
-
-        <div class="divider"><span>or</span></div>
-
-        <button class="btn btn-ghost" onclick="require('electron').shell.openExternal('https://shortstack.work/pricing')">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-          Create Account at shortstack.work
+      <div class="panel active" id="panel-license">
+        <input id="key" placeholder="Enter your license key">
+        <input id="email-license" type="email" placeholder="Email address">
+        <div id="err" class="danger" style="font-size:10px;margin-bottom:8px;display:none"></div>
+        <button class="btn btn-gold" onclick="activate()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M13.8 12H3"/></svg>
+          Activate License
         </button>
-
-        <!-- Feature highlights -->
-        <div class="features fade delay-5">
-          <div class="feature"><div class="icon">&#x26A1;</div><div class="label">14 AI Tools</div></div>
-          <div class="feature"><div class="icon">&#x1F4C1;</div><div class="label">File Management</div></div>
-          <div class="feature"><div class="icon">&#x1F3A8;</div><div class="label">Brand Kits</div></div>
-          <div class="feature"><div class="icon">&#x1F4F1;</div><div class="label">Campaigns</div></div>
-        </div>
       </div>
+      <div class="panel" id="panel-trial">
+        <input id="email-trial" type="email" placeholder="Enter your email to start">
+        <div id="err2" class="danger" style="font-size:10px;margin-bottom:8px;display:none"></div>
+        <button class="btn btn-gold" onclick="trial()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Start 14-Day Free Trial
+        </button>
+        <div style="text-align:center;margin-top:10px;font-size:10px;color:#3a4a5e">No credit card required</div>
+      </div>
+      <div class="divider"><span>or</span></div>
+      <button class="btn btn-ghost" onclick="require('electron').shell.openExternal('https://shortstack.work/pricing')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        Create Account at shortstack.work
+      </button>
+      <div class="features fs d5">
+        <div class="feature"><div class="icon">&#x26A1;</div><div class="label">AI Agents</div></div>
+        <div class="feature"><div class="icon">&#x1F4E8;</div><div class="label">Outreach</div></div>
+        <div class="feature"><div class="icon">&#x1F3AF;</div><div class="label">Lead Engine</div></div>
+        <div class="feature"><div class="icon">&#x1F4CA;</div><div class="label">Analytics</div></div>
+      </div>
+    </div>
+    <div class="fs d6 dim" style="position:absolute;bottom:12px;font-size:9px;letter-spacing:2px">v${APP_VERSION}</div>
+    <script>
+      const{ipcRenderer,shell}=require('electron');
+      function switchTab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelector('.tab-row').children[t==='license'?0:1].classList.add('active');document.getElementById('panel-'+t).classList.add('active');clearErrs()}
+      function clearErrs(){document.getElementById('err').style.display='none';document.getElementById('err2').style.display='none'}
+      function activate(){const k=document.getElementById('key').value.trim(),e=document.getElementById('email-license').value.trim();if(!k){showErr('err','Enter your license key');return}ipcRenderer.send('activate-license',{key:k,email:e||''})}
+      function trial(){const e=document.getElementById('email-trial').value.trim();if(!e){showErr('err2','Enter your email address');return}ipcRenderer.send('start-trial',{email:e})}
+      function showErr(id,m){const el=document.getElementById(id);el.style.display='block';el.textContent=m}
+      ipcRenderer.on('activation-error',(ev,m)=>showErr('err',m));
+    </script>
+  </body></html>`;
 
-      <div class="fade delay-6" style="position:absolute;bottom:12px;font-size:9px;color:#1e2a3a;">v${APP_VERSION}</div>
-
-      <script>
-        const{ipcRenderer,shell}=require('electron');
-        function switchTab(tab){
-          document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-          document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-          document.querySelector('.tab-row').children[tab==='license'?0:1].classList.add('active');
-          document.getElementById('panel-'+tab).classList.add('active');
-          clearErrs();
-        }
-        function clearErrs(){document.getElementById('err').style.display='none';document.getElementById('err2').style.display='none';}
-        function activate(){
-          const k=document.getElementById('key').value.trim(),e=document.getElementById('email-license').value.trim();
-          if(!k){showErr('err','Enter your license key');return;}
-          ipcRenderer.send('activate-license',{key:k,email:e||''});
-        }
-        function trial(){
-          const e=document.getElementById('email-trial').value.trim();
-          if(!e){showErr('err2','Enter your email address');return;}
-          ipcRenderer.send('start-trial',{email:e});
-        }
-        function showErr(id,m){const el=document.getElementById(id);el.style.display='block';el.textContent=m;}
-        ipcRenderer.on('activation-error',(ev,m)=>showErr('err',m));
-      </script>
-    </body>`;
-
-  splashWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(`<!DOCTYPE html><html><head><meta charset="utf-8"></head>${html}</html>`)}`);
+  splashWindow.loadURL("data:text/html;charset=utf-8," + encodeURIComponent(html));
 }
 
 // ── Main window ─────────────────────────────────────────────────

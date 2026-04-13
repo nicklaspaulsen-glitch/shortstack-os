@@ -62,7 +62,12 @@ export default function DashboardPage() {
   const supabase = createClient();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchDashboardData(); }, []);
+  useEffect(() => {
+    fetchDashboardData();
+    // Safety net — NEVER let the spinner get permanently stuck
+    const safety = setTimeout(() => setDashboardLoading(false), 8000);
+    return () => clearTimeout(safety);
+  }, []);
 
   // Show success toast after Stripe checkout redirect
   useEffect(() => {
@@ -75,88 +80,93 @@ export default function DashboardPage() {
   }, []);
 
   async function fetchDashboardData() {
+    // Per-query timeout — if a single Supabase query hangs, bail after 6s
+    const safe = <T,>(p: Promise<T>): Promise<T> =>
+      Promise.race([p, new Promise<T>((resolve) => setTimeout(() => resolve({ data: null, error: "timeout", count: null } as T), 6000))]);
+
     try {
-    const today = new Date().toISOString().split("T")[0];
-    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+      const today = new Date().toISOString().split("T")[0];
+      const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
 
-    const [
-      { count: leadsToday }, { count: totalLeads }, { count: dmsSentToday },
-      { count: repliesThisWeek }, { count: activeClients }, { data: clients },
-      { count: callsBooked }, { count: systemIssues }, { count: trinityActions },
-      { data: leads }, { data: activity }, { count: dealsWon }, { data: deals },
-      { data: topCl },
-      { count: emailsSent }, { count: smsSent }, { count: callsMade },
-      { count: pNew }, { count: pCalled }, { count: pReplied }, { count: pBooked }, { count: pConverted },
-    ] = await Promise.all([
-      supabase.from("leads").select("*", { count: "exact", head: true }).gte("scraped_at", today),
-      supabase.from("leads").select("*", { count: "exact", head: true }),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).gte("sent_at", today),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied").gte("sent_at", weekAgo),
-      supabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true),
-      supabase.from("clients").select("mrr").eq("is_active", true),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked"),
-      supabase.from("system_health").select("*", { count: "exact", head: true }).eq("status", "down"),
-      supabase.from("trinity_log").select("*", { count: "exact", head: true }).gte("created_at", today),
-      supabase.from("leads").select("business_name, industry, source, scraped_at, lead_score").order("scraped_at", { ascending: false }).limit(6),
-      supabase.from("trinity_log").select("description, status, created_at, action_type").order("created_at", { ascending: false }).limit(8),
-      supabase.from("deals").select("*", { count: "exact", head: true }).eq("status", "won"),
-      supabase.from("deals").select("amount").eq("status", "won"),
-      supabase.from("clients").select("id, business_name, mrr, health_score, package_tier").eq("is_active", true).order("mrr", { ascending: false }).limit(5),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "email").gte("sent_at", today),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "sms").gte("sent_at", today),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "call").gte("sent_at", today),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "called"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "replied"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).in("status", ["converted", "closed_won"]),
-    ]);
+      const [
+        r0, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21,
+      ] = await Promise.all([
+        safe(supabase.from("leads").select("*", { count: "exact", head: true }).gte("scraped_at", today)),
+        safe(supabase.from("leads").select("*", { count: "exact", head: true })),
+        safe(supabase.from("outreach_log").select("*", { count: "exact", head: true }).gte("sent_at", today)),
+        safe(supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied").gte("sent_at", weekAgo)),
+        safe(supabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true)),
+        safe(supabase.from("clients").select("mrr").eq("is_active", true)),
+        safe(supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked")),
+        safe(supabase.from("system_health").select("*", { count: "exact", head: true }).eq("status", "down")),
+        safe(supabase.from("trinity_log").select("*", { count: "exact", head: true }).gte("created_at", today)),
+        safe(supabase.from("leads").select("business_name, industry, source, scraped_at, lead_score").order("scraped_at", { ascending: false }).limit(6)),
+        safe(supabase.from("trinity_log").select("description, status, created_at, action_type").order("created_at", { ascending: false }).limit(8)),
+        safe(supabase.from("deals").select("*", { count: "exact", head: true }).eq("status", "won")),
+        safe(supabase.from("deals").select("amount").eq("status", "won")),
+        safe(supabase.from("clients").select("id, business_name, mrr, health_score, package_tier").eq("is_active", true).order("mrr", { ascending: false }).limit(5)),
+        safe(supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "email").gte("sent_at", today)),
+        safe(supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "sms").gte("sent_at", today)),
+        safe(supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "call").gte("sent_at", today)),
+        safe(supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new")),
+        safe(supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "called")),
+        safe(supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "replied")),
+        safe(supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked")),
+        safe(supabase.from("leads").select("*", { count: "exact", head: true }).in("status", ["converted", "closed_won"])),
+      ]);
 
-    const totalMRR = clients?.reduce((sum, c) => sum + (c.mrr || 0), 0) || 0;
-    const totalRevenue = deals?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
+      // Safe accessors — never crash on missing data
+      const cnt = (r: { count?: number | null }) => r?.count ?? 0;
+      const dat = <D,>(r: { data?: D | null }) => r?.data ?? null;
 
-    setStats({
-      leadsToday: leadsToday || 0, totalLeads: totalLeads || 0,
-      dmsSentToday: dmsSentToday || 0, dmsTarget: 80,
-      repliesThisWeek: repliesThisWeek || 0, activeClients: activeClients || 0,
-      totalMRR, callsBooked: callsBooked || 0,
-      systemIssues: systemIssues || 0, trinityActions: trinityActions || 0,
-      dealsWon: dealsWon || 0, totalRevenue,
-      emailsSent: emailsSent || 0, smsSent: smsSent || 0, callsMade: callsMade || 0,
-    });
-    setPipeline({ new: pNew || 0, called: pCalled || 0, replied: pReplied || 0, booked: pBooked || 0, converted: pConverted || 0 });
-    setRecentLeads(leads || []);
-    setRecentActivity(activity || []);
-    setTopClients(topCl || []);
+      const clients = dat(r5) as { mrr: number }[] | null;
+      const deals = dat(r12) as { amount: number }[] | null;
+      const totalMRR = clients?.reduce((sum, c) => sum + (c.mrr || 0), 0) || 0;
+      const totalRevenue = deals?.reduce((sum, d) => sum + (d.amount || 0), 0) || 0;
 
-    // Compute agent statuses from activity logs
-    const agentNames = [
-      { id: "lead-engine", name: "Lead Engine" }, { id: "outreach", name: "Outreach" },
-      { id: "content", name: "Content" }, { id: "ads", name: "Ads" },
-      { id: "reviews", name: "Reviews" }, { id: "analytics", name: "Analytics" },
-      { id: "trinity", name: "Trinity" }, { id: "invoice", name: "Invoice" },
-      { id: "onboarding", name: "Onboarding" }, { id: "seo", name: "SEO" },
-      { id: "social-media", name: "Social" }, { id: "retention", name: "Retention" },
-    ];
-    const { data: agentLogs } = await supabase
-      .from("trinity_log")
-      .select("action_type, status, created_at")
-      .gte("created_at", weekAgo)
-      .order("created_at", { ascending: false })
-      .limit(200);
-    const logs = agentLogs || [];
-    const statuses = agentNames.map(a => {
-      const aLogs = logs.filter(l => l.action_type === a.id || l.action_type === a.name.toLowerCase().replace(/ /g, "_"));
-      const todayLogs = aLogs.filter(l => l.created_at >= today);
-      const hasError = aLogs.slice(0, 3).some(l => l.status === "error" || l.status === "failed");
-      const hasRecent = aLogs[0] && (Date.now() - new Date(aLogs[0].created_at).getTime()) < 3600000;
-      return { id: a.id, name: a.name, status: (hasError ? "error" : hasRecent ? "working" : "idle") as "working" | "idle" | "error", actionsToday: todayLogs.length };
-    });
-    setAgentStatuses(statuses);
-    setDashboardLoading(false);
+      setStats({
+        leadsToday: cnt(r0), totalLeads: cnt(r1),
+        dmsSentToday: cnt(r2), dmsTarget: 80,
+        repliesThisWeek: cnt(r3), activeClients: cnt(r4),
+        totalMRR, callsBooked: cnt(r6),
+        systemIssues: cnt(r7), trinityActions: cnt(r8),
+        dealsWon: cnt(r11), totalRevenue,
+        emailsSent: cnt(r14), smsSent: cnt(r15), callsMade: cnt(r16),
+      });
+      setPipeline({ new: cnt(r17), called: cnt(r18), replied: cnt(r19), booked: cnt(r20), converted: cnt(r21) });
+      setRecentLeads((dat(r9) || []) as typeof recentLeads);
+      setRecentActivity((dat(r10) || []) as typeof recentActivity);
+      setTopClients((dat(r13) || []) as typeof topClients);
+
+      // Compute agent statuses from activity logs
+      const agentNames = [
+        { id: "lead-engine", name: "Lead Engine" }, { id: "outreach", name: "Outreach" },
+        { id: "content", name: "Content" }, { id: "ads", name: "Ads" },
+        { id: "reviews", name: "Reviews" }, { id: "analytics", name: "Analytics" },
+        { id: "trinity", name: "Trinity" }, { id: "invoice", name: "Invoice" },
+        { id: "onboarding", name: "Onboarding" }, { id: "seo", name: "SEO" },
+        { id: "social-media", name: "Social" }, { id: "retention", name: "Retention" },
+      ];
+      const agentResult = await safe(supabase
+        .from("trinity_log")
+        .select("action_type, status, created_at")
+        .gte("created_at", weekAgo)
+        .order("created_at", { ascending: false })
+        .limit(200));
+      const logs = (agentResult as { data: typeof recentActivity | null })?.data || [];
+      const statuses = agentNames.map(a => {
+        const aLogs = logs.filter(l => l.action_type === a.id || l.action_type === a.name.toLowerCase().replace(/ /g, "_"));
+        const todayLogs = aLogs.filter(l => l.created_at >= today);
+        const hasError = aLogs.slice(0, 3).some(l => l.status === "error" || l.status === "failed");
+        const hasRecent = aLogs[0] && (Date.now() - new Date(aLogs[0].created_at).getTime()) < 3600000;
+        return { id: a.id, name: a.name, status: (hasError ? "error" : hasRecent ? "working" : "idle") as "working" | "idle" | "error", actionsToday: todayLogs.length };
+      });
+      setAgentStatuses(statuses);
     } catch (err) {
       console.error("Dashboard data fetch failed:", err);
-      setDashboardLoading(false); // Always clear loading — don't leave spinner stuck
+    } finally {
+      // ALWAYS clear loading — never leave the spinner stuck
+      setDashboardLoading(false);
     }
   }
 
