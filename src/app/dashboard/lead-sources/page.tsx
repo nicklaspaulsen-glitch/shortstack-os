@@ -43,6 +43,8 @@ export default function LeadSourcesPage() {
 
   async function fetchSources() {
     try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
       setLoading(true);
       const { data } = await supabase.from("leads").select("source");
 

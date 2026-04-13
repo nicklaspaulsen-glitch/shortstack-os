@@ -22,6 +22,8 @@ export default function ClientHealthPage() {
 
   async function fetchClients() {
     try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
       setLoading(true);
       const { data } = await supabase
         .from("clients")

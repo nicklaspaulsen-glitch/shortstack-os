@@ -35,6 +35,8 @@ export default function AnalyticsPage() {
   useEffect(() => { fetchAnalytics(); }, []);
 
   async function fetchAnalytics() {
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    if (!authUser) return;
     const now = new Date();
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();

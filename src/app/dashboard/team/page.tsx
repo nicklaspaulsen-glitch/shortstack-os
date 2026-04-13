@@ -31,6 +31,8 @@ export default function TeamPage() {
 
   async function fetchData() {
     try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
       setLoading(true);
       const [{ data: m }, { data: d }, { data: p }] = await Promise.all([
         supabase.from("team_members").select("*").order("full_name"),

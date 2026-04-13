@@ -47,6 +47,8 @@ export default function DealsPage() {
 
   async function fetchData() {
     try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
       setLoading(true);
       const [{ data: d }, { data: cl }] = await Promise.all([
         supabase.from("deals").select("*").order("created_at", { ascending: false }),

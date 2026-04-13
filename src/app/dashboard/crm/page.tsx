@@ -121,6 +121,8 @@ export default function CRMPage() {
 
   async function fetchLeads() {
     try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
       setLoading(true);
       const { data: leadsData } = await supabase
         .from("leads")

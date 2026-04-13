@@ -81,6 +81,8 @@ export default function DashboardPage() {
 
   async function fetchDashboardData() {
     try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
       const today = new Date().toISOString().split("T")[0];
       const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
 

@@ -31,6 +31,8 @@ export default function InvoicesPage() {
 
   async function fetchData() {
     try {
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      if (!authUser) return;
       setLoading(true);
       const [{ data: inv }, { data: cl }] = await Promise.all([
         supabase.from("invoices").select("*").order("created_at", { ascending: false }),
