@@ -37,25 +37,20 @@ export default function ClientsPage() {
   }, []);
 
   async function fetchData() {
-    try {
-      setLoading(true);
-      const [
-        { data: clientsData },
-        { data: contractsData },
-        { data: invoicesData },
-      ] = await Promise.all([
-        supabase.from("clients").select("*").order("created_at", { ascending: false }),
-        supabase.from("contracts").select("*").order("created_at", { ascending: false }),
-        supabase.from("invoices").select("*").order("created_at", { ascending: false }),
-      ]);
-      setClients(clientsData || []);
-      setContracts(contractsData || []);
-      setInvoices(invoicesData || []);
-    } catch (err) {
-      console.error("[Clients] fetchData error:", err);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const [
+      { data: clientsData },
+      { data: contractsData },
+      { data: invoicesData },
+    ] = await Promise.all([
+      supabase.from("clients").select("*").order("created_at", { ascending: false }),
+      supabase.from("contracts").select("*").order("created_at", { ascending: false }),
+      supabase.from("invoices").select("*").order("created_at", { ascending: false }),
+    ]);
+    setClients(clientsData || []);
+    setContracts(contractsData || []);
+    setInvoices(invoicesData || []);
+    setLoading(false);
   }
 
   const activeClients = clients.filter((c) => c.is_active);

@@ -46,19 +46,14 @@ export default function DealsPage() {
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {
-    try {
-      setLoading(true);
-      const [{ data: d }, { data: cl }] = await Promise.all([
-        supabase.from("deals").select("*").order("created_at", { ascending: false }),
-        supabase.from("clients").select("id, business_name").eq("is_active", true),
-      ]);
-      setDeals(d || []);
-      setClients(cl || []);
-    } catch (err) {
-      console.error("[Deals] fetchData error:", err);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const [{ data: d }, { data: cl }] = await Promise.all([
+      supabase.from("deals").select("*").order("created_at", { ascending: false }),
+      supabase.from("clients").select("id, business_name").eq("is_active", true),
+    ]);
+    setDeals(d || []);
+    setClients(cl || []);
+    setLoading(false);
   }
 
   async function createDeal() {

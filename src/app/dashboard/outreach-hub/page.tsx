@@ -70,55 +70,52 @@ export default function OutreachHubPage() {
   const [tierCounts, setTierCounts] = useState({ all: 0, hot: 0, warm: 0, cold: 0, dead: 0 });
 
   const fetchLeads = useCallback(async () => {
-    try {
-      setLoading(true);
-      let query = supabase.from("leads").select("*").order("created_at", { ascending: false });
+    setLoading(true);
+    let query = supabase.from("leads").select("*").order("created_at", { ascending: false });
 
-      if (tab === "hot") query = query.eq("status", "replied");
-      else if (tab === "warm") query = query.eq("status", "contacted");
-      else if (tab === "cold") query = query.eq("status", "new");
-      else if (tab === "dead") query = query.eq("status", "bounced");
+    if (tab === "hot") query = query.eq("status", "replied");
+    else if (tab === "warm") query = query.eq("status", "contacted");
+    else if (tab === "cold") query = query.eq("status", "new");
+    else if (tab === "dead") query = query.eq("status", "bounced");
 
-      if (industryFilter) query = query.eq("industry", industryFilter);
-      if (cityFilter) query = query.ilike("city", `%${cityFilter}%`);
-      if (platformFilter) query = query.eq("platform", platformFilter);
+    if (industryFilter) query = query.eq("industry", industryFilter);
+    if (cityFilter) query = query.ilike("city", `%${cityFilter}%`);
+    if (platformFilter) query = query.eq("platform", platformFilter);
 
-      const { data, error } = await query;
+    const { data, error } = await query;
 
-      if (error) {
-        toast.error("Failed to load leads");
-        return;
-      }
-
-      setLeads(data || []);
-
-      // Fetch tier counts
-      const [
-        { count: allCount },
-        { count: hotCount },
-        { count: warmCount },
-        { count: coldCount },
-        { count: deadCount },
-      ] = await Promise.all([
-        supabase.from("leads").select("*", { count: "exact", head: true }),
-        supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "replied"),
-        supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "contacted"),
-        supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
-        supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "bounced"),
-      ]);
-
-      setTierCounts({
-        all: allCount || 0,
-        hot: hotCount || 0,
-        warm: warmCount || 0,
-        cold: coldCount || 0,
-        dead: deadCount || 0,
-      });
-    } catch (err) {
-      console.error("[OutreachHub] fetchLeads error:", err);
-    } finally {
+    if (error) {
+      toast.error("Failed to load leads");
       setLoading(false);
+      return;
     }
+
+    setLeads(data || []);
+
+    // Fetch tier counts
+    const [
+      { count: allCount },
+      { count: hotCount },
+      { count: warmCount },
+      { count: coldCount },
+      { count: deadCount },
+    ] = await Promise.all([
+      supabase.from("leads").select("*", { count: "exact", head: true }),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "replied"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "contacted"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "bounced"),
+    ]);
+
+    setTierCounts({
+      all: allCount || 0,
+      hot: hotCount || 0,
+      warm: warmCount || 0,
+      cold: coldCount || 0,
+      dead: deadCount || 0,
+    });
+
+    setLoading(false);
   }, [supabase, tab, industryFilter, cityFilter, platformFilter]);
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);

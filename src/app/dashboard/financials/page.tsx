@@ -7,7 +7,7 @@ import { formatCurrency } from "@/lib/utils";
 import Modal from "@/components/ui/modal";
 import {
   DollarSign, TrendingUp, Users, Minus, Plus, Pencil, Trash2,
-  PiggyBank, BarChart3, Receipt, ArrowUpRight, ArrowDownRight,
+  PiggyBank, BarChart3, Receipt, Loader, ArrowUpRight, ArrowDownRight,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -93,7 +93,6 @@ export default function FinancialsPage() {
 
   // Revenue state
   const [clients, setClients] = useState<ClientRow[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
 
   // Expense state
@@ -119,17 +118,12 @@ export default function FinancialsPage() {
   }, []);
 
   async function fetchClients() {
-    try {
-      setLoading(true);
-      const { data } = await supabase
-        .from("clients")
-        .select("mrr, is_active, created_at");
-      setClients(data || []);
-    } catch (err) {
-      console.error("[Financials] fetchClients error:", err);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const { data } = await supabase
+      .from("clients")
+      .select("mrr, is_active, created_at");
+    setClients(data || []);
+    setLoading(false);
   }
 
   // ---------------------------------------------------------------------------
@@ -259,6 +253,14 @@ export default function FinancialsPage() {
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader size={20} className="animate-spin text-gold" />
+      </div>
+    );
+  }
 
   return (
     <div className="fade-in space-y-5">

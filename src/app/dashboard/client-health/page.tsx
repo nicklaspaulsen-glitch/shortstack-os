@@ -21,19 +21,14 @@ export default function ClientHealthPage() {
   useEffect(() => { fetchClients(); }, []);
 
   async function fetchClients() {
-    try {
-      setLoading(true);
-      const { data } = await supabase
-        .from("clients")
-        .select("*")
-        .eq("is_active", true)
-        .order("health_score", { ascending: true });
-      setClients(data || []);
-    } catch (err) {
-      console.error("[ClientHealth] fetchClients error:", err);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const { data } = await supabase
+      .from("clients")
+      .select("*")
+      .eq("is_active", true)
+      .order("health_score", { ascending: true });
+    setClients(data || []);
+    setLoading(false);
   }
 
   const atRisk = clients.filter(c => c.health_score < 50);

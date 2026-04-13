@@ -213,24 +213,18 @@ function SocialAccountsPage() {
   }, [clientId]);
 
   async function fetchClients() {
-    try {
-      setLoading(true);
-      if (profile?.role === "client") {
-        const { data } = await supabase.from("clients").select("id, business_name").eq("profile_id", profile.id).single();
-        if (data) {
-          setClients([data]);
-          setClientId(data.id);
-        }
-      } else {
-        const { data } = await supabase.from("clients").select("id, business_name").eq("is_active", true).order("business_name");
-        setClients(data || []);
-        if (data && data.length > 0) setClientId(data[0].id);
+    if (profile?.role === "client") {
+      const { data } = await supabase.from("clients").select("id, business_name").eq("profile_id", profile.id).single();
+      if (data) {
+        setClients([data]);
+        setClientId(data.id);
       }
-    } catch (err) {
-      console.error("[IntegrationsPage] fetch error:", err);
-    } finally {
-      setLoading(false);
+    } else {
+      const { data } = await supabase.from("clients").select("id, business_name").eq("is_active", true).order("business_name");
+      setClients(data || []);
+      if (data && data.length > 0) setClientId(data[0].id);
     }
+    setLoading(false);
   }
 
   async function fetchAccounts() {

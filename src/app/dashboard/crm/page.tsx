@@ -104,7 +104,6 @@ export default function CRMPage() {
   const supabase = createClient();
 
   const [leads, setLeads] = useState<CRMLead[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<CRMStatus | "all">("all");
@@ -120,45 +119,41 @@ export default function CRMPage() {
   useEffect(() => { fetchLeads(); cleanupStaleLeads(); }, []);
 
   async function fetchLeads() {
-    try {
-      setLoading(true);
-      const { data: leadsData } = await supabase
-        .from("leads")
-        .select("id, business_name, owner_name, phone, email, website, city, state, industry, google_rating, review_count, instagram_url, facebook_url, linkedin_url, tiktok_url, status, created_at")
-        .order("created_at", { ascending: false })
-        .limit(2000);
+    setLoading(true);
+    const { data: leadsData } = await supabase
+      .from("leads")
+      .select("id, business_name, owner_name, phone, email, website, city, state, industry, google_rating, review_count, instagram_url, facebook_url, linkedin_url, tiktok_url, status, created_at")
+      .order("created_at", { ascending: false })
+      .limit(2000);
 
-      if (!leadsData || leadsData.length === 0) {
-        setLeads([]);
-        return;
-      }
-
-      const leadIds = leadsData.map(l => l.id);
-      const { data: outreachData } = await supabase
-        .from("outreach_log")
-        .select("id, lead_id, platform, message_text, status, reply_text, sent_at, replied_at")
-        .in("lead_id", leadIds)
-        .order("sent_at", { ascending: false });
-
-      const outreachByLead: Record<string, OutreachLogEntry[]> = {};
-      (outreachData || []).forEach(o => {
-        const lid = (o as { lead_id: string }).lead_id;
-        if (!outreachByLead[lid]) outreachByLead[lid] = [];
-        outreachByLead[lid].push(o as OutreachLogEntry);
-      });
-
-      const merged: CRMLead[] = leadsData.map(l => ({
-        ...l,
-        review_count: l.review_count || 0,
-        outreach_log: outreachByLead[l.id] || [],
-      }));
-
-      setLeads(merged);
-    } catch (err) {
-      console.error("[CRM] fetchLeads error:", err);
-    } finally {
+    if (!leadsData || leadsData.length === 0) {
+      setLeads([]);
       setLoading(false);
+      return;
     }
+
+    const leadIds = leadsData.map(l => l.id);
+    const { data: outreachData } = await supabase
+      .from("outreach_log")
+      .select("id, lead_id, platform, message_text, status, reply_text, sent_at, replied_at")
+      .in("lead_id", leadIds)
+      .order("sent_at", { ascending: false });
+
+    const outreachByLead: Record<string, OutreachLogEntry[]> = {};
+    (outreachData || []).forEach(o => {
+      const lid = (o as { lead_id: string }).lead_id;
+      if (!outreachByLead[lid]) outreachByLead[lid] = [];
+      outreachByLead[lid].push(o as OutreachLogEntry);
+    });
+
+    const merged: CRMLead[] = leadsData.map(l => ({
+      ...l,
+      review_count: l.review_count || 0,
+      outreach_log: outreachByLead[l.id] || [],
+    }));
+
+    setLeads(merged);
+    setLoading(false);
   }
 
   async function cleanupStaleLeads() {
@@ -411,6 +406,14 @@ export default function CRMPage() {
       </div>
     );
   };
+
+  if (loading) {
+    return (
+      <div className="fade-in flex items-center justify-center py-20">
+        <RefreshCw size={20} className="animate-spin text-gold" />
+      </div>
+    );
+  }
 
   return (
     <div className="fade-in space-y-4">

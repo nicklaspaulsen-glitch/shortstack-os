@@ -31,9 +31,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
   // Always start loading=true so the layout waits for auth.getSession()
   // before deciding whether to redirect to /login. The cached profile
-  // above is only for UI display (sidebar name, role) — it must NOT
-  // cause loading to start as false, which would trigger a premature
-  // redirect when user is still null.
+  // above is only for UI display — it must NOT cause loading to start
+  // as false, which would trigger a premature redirect.
   const [loading, setLoading] = useState(true);
   const [isPWA, setIsPWA] = useState(false);
 
@@ -73,19 +72,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const init = async () => {
       try {
-        // getUser() is the authoritative server-validated check.
-        // getSession() can return stale/tampered local data, so we use
-        // getSession() for the fast path and then validate the profile.
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user && mounted) {
-          setUser(session.user);
-          // Await the profile fetch so loading stays true until we have
-          // a fresh profile. This prevents the sidebar from rendering with
-          // stale role data from localStorage.
-          await fetchProfile(session.user.id);
-          if (mounted) setLoading(false);
-          return;
-        }
+        // ALWAYS use getUser() — it validates the JWT server-side and
+        // refreshes expired tokens. getSession() returns stale/expired
+        // sessions that LOOK valid but cause auth.uid()=null in RLS,
+        // making all data queries silently return 0 rows.
         const { data: { user: authUser } } = await supabase.auth.getUser();
         if (authUser && mounted) {
           setUser(authUser);

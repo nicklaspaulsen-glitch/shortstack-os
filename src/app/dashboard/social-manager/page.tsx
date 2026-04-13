@@ -54,27 +54,22 @@ export default function SocialManagerPage() {
   }, [selectedClient]);
 
   async function fetchClients() {
-    try {
-      setLoading(true);
-      const { data: cl } = await supabase.from("clients").select("*").eq("is_active", true).order("business_name");
-      const clientsWithAccounts = [];
-      for (const c of (cl || [])) {
-        const { data: accs } = await supabase
-          .from("social_accounts")
-          .select("platform")
-          .eq("client_id", c.id)
-          .eq("is_active", true);
-        clientsWithAccounts.push({ ...c, accounts: (accs || []).map((a: { platform: string }) => a.platform) });
-      }
-      setClients(clientsWithAccounts);
-      if (clientsWithAccounts.length > 0 && !selectedClient) {
-        setSelectedClient(clientsWithAccounts[0].id);
-      }
-    } catch (err) {
-      console.error("[SocialManagerPage] fetch error:", err);
-    } finally {
-      setLoading(false);
+    const { data: cl } = await supabase.from("clients").select("*").eq("is_active", true).order("business_name");
+    const clientsWithAccounts = [];
+    for (const c of (cl || [])) {
+      const { data: accs } = await supabase
+        .from("social_accounts")
+        .select("platform")
+        .eq("client_id", c.id)
+        .eq("is_active", true);
+      clientsWithAccounts.push({ ...c, accounts: (accs || []).map((a: { platform: string }) => a.platform) });
     }
+    setClients(clientsWithAccounts);
+    if (clientsWithAccounts.length > 0 && !selectedClient) {
+      setSelectedClient(clientsWithAccounts[0].id);
+    }
+
+    setLoading(false);
   }
 
   async function fetchAutopilotConfig() {

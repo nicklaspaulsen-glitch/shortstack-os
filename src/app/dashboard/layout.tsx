@@ -140,7 +140,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <>
-      <div className="flex min-h-screen bg-background">
+      <div className="flex min-h-screen">
 
         {/* Desktop sidebar */}
         <div className="hidden lg:block">
@@ -163,7 +163,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <main className="flex-1 lg:ml-56">
           {/* Header */}
-          <div className="sticky top-0 z-30 border-b border-border electron-drag"
+          <div className="sticky top-0 z-30 border-y border-border electron-drag"
             style={{ background: "color-mix(in srgb, var(--color-background) 85%, transparent)", backdropFilter: "blur(16px) saturate(1.2)" }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-12">
               {/* Left — mobile menu */}
@@ -194,7 +194,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
 
           {/* Page content */}
-          <div className="p-4 lg:p-6 pb-24">
+          <div className="p-4 lg:p-6">
             <ErrorBoundary>
               {children}
             </ErrorBoundary>
