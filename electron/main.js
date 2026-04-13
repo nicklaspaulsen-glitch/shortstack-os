@@ -326,27 +326,33 @@ function createSplash() {
     a:hover { text-decoration: underline; }
   `;
 
+  const logoSVG = `<svg width="80" height="80" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0c1017"/><stop offset="100%" stop-color="#06080c"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#D4B85A"/><stop offset="50%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#A8893D"/></linearGradient><linearGradient id="accent" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3"/><stop offset="100%" stop-color="#38bdf8" stop-opacity="0"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="8" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter></defs><rect width="512" height="512" rx="108" fill="url(#bg)"/><rect x="4" y="4" width="504" height="504" rx="104" fill="none" stroke="#1e2a3a" stroke-width="2"/><circle cx="256" cy="230" r="120" fill="url(#accent)" opacity="0.4"/><g filter="url(#glow)"><rect x="136" y="310" width="240" height="36" rx="8" fill="url(#gold)" opacity="0.4"/><rect x="116" y="262" width="280" height="36" rx="8" fill="url(#gold)" opacity="0.65"/><rect x="96" y="214" width="320" height="36" rx="8" fill="url(#gold)"/></g><path d="M268 120 L238 200 L270 200 L248 280 L310 180 L274 180 L300 120Z" fill="url(#gold)" opacity="0.9"/><text x="256" y="400" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="48" fill="#64748b" letter-spacing="8">OS</text></svg>`;
+
   const html = isActive ? `
     <style>${commonCSS}
-      .glow-bg { position:fixed; top:-100px; left:50%; transform:translateX(-50%); width:400px; height:300px; background:radial-gradient(ellipse,rgba(201,168,76,0.06) 0%,transparent 70%); pointer-events:none; animation:glow 3s ease-in-out infinite; }
+      .glow-bg { position:fixed; top:-120px; left:50%; transform:translateX(-50%); width:500px; height:400px; background:radial-gradient(ellipse,rgba(201,168,76,0.08) 0%,rgba(56,189,248,0.03) 40%,transparent 70%); pointer-events:none; animation:glow 3s ease-in-out infinite; }
+      .logo-container { margin-bottom:20px; filter:drop-shadow(0 0 30px rgba(201,168,76,0.15)); }
+      .progress-bar { width:160px; height:3px; background:#1e2a3a; border-radius:2px; overflow:hidden; margin-bottom:24px; }
+      .progress-fill { width:0%; height:100%; background:linear-gradient(90deg,#C9A84C,#D4B85A); border-radius:2px; animation:loading 1.2s ease-in-out forwards; }
+      @keyframes loading { 0%{width:0%} 50%{width:70%} 100%{width:100%} }
+      .status-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2); border-radius:20px; padding:5px 14px; font-size:11px; font-weight:600; color:#10b981; }
+      .status-dot { width:6px; height:6px; border-radius:50%; background:#10b981; animation:glow 2s ease-in-out infinite; }
     </style>
     <body style="-webkit-app-region:drag;">
       <div class="glow-bg"></div>
-      <div class="fade" style="font-size:28px;font-weight:800;letter-spacing:-0.5px;" class="gold">ShortStack OS</div>
-      <div class="fade delay-1" style="font-size:9px;letter-spacing:4px;margin:6px 0 32px;color:#64748b;">AGENCY OPERATING SYSTEM</div>
-      <div class="spinner"></div>
-      <div class="fade delay-2 success" style="font-size:12px;font-weight:600;">License Active</div>
-      <div class="fade delay-3" style="font-size:11px;color:#C9A84C;margin-top:4px;font-weight:500;">${license.tier}</div>
-      <div class="fade delay-4 muted" style="font-size:10px;margin-top:6px;">
+      <div class="fade logo-container">${logoSVG}</div>
+      <div class="fade delay-1" style="font-size:26px;font-weight:800;letter-spacing:-0.5px;color:#C9A84C;">ShortStack OS</div>
+      <div class="fade delay-2" style="font-size:9px;letter-spacing:4px;margin:6px 0 28px;color:#475569;">AGENCY OPERATING SYSTEM</div>
+      <div class="fade delay-3 progress-bar"><div class="progress-fill"></div></div>
+      <div class="fade delay-4 status-badge"><div class="status-dot"></div>License Active — ${license.tier}</div>
+      <div class="fade delay-5 muted" style="font-size:10px;margin-top:8px;">
         ${license.type === "trial" ? "Trial ends " + new Date(license.trial_ends).toLocaleDateString() : "Full License"}
       </div>
-      <div class="fade delay-5 muted" style="font-size:9px;margin-top:16px;">v${APP_VERSION}</div>
-      <script>setTimeout(()=>require('electron').ipcRenderer.send('launch-app'),1200)</script>
+      <div class="fade delay-6" style="position:absolute;bottom:16px;font-size:9px;color:#1e2a3a;">v${APP_VERSION}</div>
+      <script>setTimeout(()=>require('electron').ipcRenderer.send('launch-app'),1400)</script>
     </body>` : `
     <style>${commonCSS}
       .glow-bg { position:fixed; top:-80px; left:50%; transform:translateX(-50%); width:500px; height:350px; background:radial-gradient(ellipse,rgba(201,168,76,0.05) 0%,transparent 70%); pointer-events:none; animation:glow 4s ease-in-out infinite; }
-      .logo-ring { width:56px; height:56px; border-radius:50%; border:2px solid rgba(201,168,76,0.2); display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
-      .logo-ring .inner { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05)); display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#C9A84C; }
       .tab-row { display:flex; gap:4px; margin-bottom:16px; background:rgba(255,255,255,0.02); border-radius:10px; padding:3px; border:1px solid #1e2a3a; }
       .tab { flex:1; padding:8px; text-align:center; font-size:11px; font-weight:600; border-radius:8px; cursor:pointer; transition:all 0.2s; color:#64748b; }
       .tab.active { background:rgba(201,168,76,0.1); color:#C9A84C; }
@@ -358,9 +364,7 @@ function createSplash() {
       <div class="glow-bg"></div>
 
       <div style="-webkit-app-region:drag;text-align:center;margin-bottom:16px;">
-        <div class="fade logo-ring" style="margin:0 auto 14px;">
-          <div class="inner">SS</div>
-        </div>
+        <div class="fade" style="margin:0 auto 14px;filter:drop-shadow(0 0 20px rgba(201,168,76,0.15));">${logoSVG}</div>
         <div class="fade delay-1" style="font-size:22px;font-weight:800;color:#C9A84C;letter-spacing:-0.5px;">ShortStack OS</div>
         <div class="fade delay-2" style="font-size:10px;color:#3a4a5e;margin-top:4px;letter-spacing:1px;">YOUR AI-POWERED AGENCY</div>
         ${isTrialExpired(license) ? '<div class="fade delay-2 danger" style="font-size:11px;margin-top:10px;">Your trial has expired. Activate a license to continue.</div>' : ''}

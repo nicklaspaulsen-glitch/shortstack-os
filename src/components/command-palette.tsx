@@ -6,7 +6,7 @@ import {
   Search, LayoutDashboard, BarChart3, Zap, Users, FileText,
   Sparkles, Bot, Film, Megaphone, Globe, Activity, Settings,
   Send, Star, Mail, Eye, PenTool, Target, Crown,
-  Camera, Link2, Sun, Calendar
+  Camera, Link2, Sun, Calendar, ImageIcon
 } from "lucide-react";
 
 interface CommandItem {
@@ -43,7 +43,8 @@ export default function CommandPalette() {
     { id: "social", label: "Social Manager", icon: <Camera size={14} />, action: () => nav("/dashboard/social-manager"), category: "Navigate", keywords: "post schedule autopilot" },
     { id: "scriptlab", label: "Script Lab", icon: <Sparkles size={14} />, action: () => nav("/dashboard/script-lab"), category: "Navigate", keywords: "write viral framework hooks" },
     { id: "websites", label: "Website Builder", icon: <Globe size={14} />, action: () => nav("/dashboard/websites"), category: "Navigate", keywords: "build deploy site" },
-    { id: "design", label: "Design Studio", icon: <PenTool size={14} />, action: () => nav("/dashboard/design"), category: "Navigate", keywords: "canva midjourney thumbnail" },
+    { id: "design", label: "Design Studio", icon: <PenTool size={14} />, action: () => nav("/dashboard/design"), category: "Navigate", keywords: "canva midjourney" },
+    { id: "thumbnails", label: "Thumbnail Generator", icon: <ImageIcon size={14} />, action: () => nav("/dashboard/thumbnail-generator"), category: "Navigate", keywords: "thumbnail pikzels youtube cover image ai" },
     { id: "production", label: "Production", icon: <Film size={14} />, action: () => nav("/dashboard/production"), category: "Navigate", keywords: "edit video footage editors" },
     { id: "content", label: "Content AI", icon: <Film size={14} />, action: () => nav("/dashboard/content"), category: "Navigate", keywords: "scripts generate" },
     { id: "ads", label: "Ads Manager", icon: <Megaphone size={14} />, action: () => nav("/dashboard/ads"), category: "Navigate", keywords: "meta google tiktok campaigns" },
