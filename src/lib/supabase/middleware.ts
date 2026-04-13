@@ -1,9 +1,9 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({
-    request: { headers: request.headers },
+  let supabaseResponse = NextResponse.next({
+    request,
   });
 
   const supabase = createServerClient(
@@ -11,22 +11,22 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
+        getAll() {
+          return request.cookies.getAll();
         },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({ name, value, ...options });
-          response = NextResponse.next({
-            request: { headers: request.headers },
+        setAll(cookiesToSet) {
+          // 1. Update request cookies (for server-side reading downstream)
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
+          // 2. Recreate response ONCE with all updated request headers
+          supabaseResponse = NextResponse.next({
+            request,
           });
-          response.cookies.set({ name, value, ...options });
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({ name, value: "", ...options });
-          response = NextResponse.next({
-            request: { headers: request.headers },
-          });
-          response.cookies.set({ name, value: "", ...options });
+          // 3. Set ALL cookies on the single response
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
         },
       },
     }
@@ -52,5 +52,5 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return response;
+  return supabaseResponse;
 }
