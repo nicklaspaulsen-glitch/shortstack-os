@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import { SystemHealthEntry } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import StatCard from "@/components/ui/stat-card";
-import { PageLoading } from "@/components/ui/loading";
 import { formatRelativeTime } from "@/lib/utils";
 import { CheckCircle, AlertTriangle, XCircle, RefreshCw, Wifi, Shield } from "lucide-react";
 import toast from "react-hot-toast";
@@ -19,6 +18,7 @@ const INTEGRATIONS = [
 
 export default function MonitorPage() {
   const [health, setHealth] = useState<SystemHealthEntry[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
@@ -26,10 +26,15 @@ export default function MonitorPage() {
   useEffect(() => { fetchHealth(); }, []);
 
   async function fetchHealth() {
-    setLoading(true);
-    const { data } = await supabase.from("system_health").select("*").order("integration_name");
-    setHealth(data || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data } = await supabase.from("system_health").select("*").order("integration_name");
+      setHealth(data || []);
+    } catch (err) {
+      console.error("[Monitor] fetchHealth error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function runHealthCheck() {
@@ -57,8 +62,6 @@ export default function MonitorPage() {
   const down = health.filter((h) => h.status === "down").length;
   const unknown = health.filter((h) => h.status === "unknown").length;
   const notChecked = Math.max(0, INTEGRATIONS.length - health.length);
-
-  if (loading) return <PageLoading />;
 
   const getStatusIcon = (status: string) => {
     switch (status) {

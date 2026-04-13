@@ -42,30 +42,35 @@ export default function ClientDetailPage() {
   }, [id]);
 
   async function fetchAll() {
-    setLoading(true);
-    const [
-      { data: c },
-      { data: con },
-      { data: inv },
-      { data: t },
-      { data: s },
-      { data: camp },
-      { data: cal },
-      { data: ai },
-    ] = await Promise.all([
-      supabase.from("clients").select("*").eq("id", id).single(),
-      supabase.from("contracts").select("*").eq("client_id", id).order("created_at", { ascending: false }),
-      supabase.from("invoices").select("*").eq("client_id", id).order("created_at", { ascending: false }),
-      supabase.from("client_tasks").select("*").eq("client_id", id).order("created_at", { ascending: false }),
-      supabase.from("content_scripts").select("*").eq("client_id", id).order("created_at", { ascending: false }),
-      supabase.from("campaigns").select("*").eq("client_id", id).order("created_at", { ascending: false }),
-      supabase.from("content_calendar").select("*").eq("client_id", id).order("scheduled_at", { ascending: false }),
-      supabase.from("trinity_log").select("*").eq("client_id", id).order("created_at", { ascending: false }).limit(20),
-    ]);
-    setClient(c); setContracts(con || []); setInvoices(inv || []);
-    setTasks(t || []); setScripts(s || []); setCampaigns(camp || []);
-    setCalendar(cal || []); setAiActions(ai || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const [
+        { data: c },
+        { data: con },
+        { data: inv },
+        { data: t },
+        { data: s },
+        { data: camp },
+        { data: cal },
+        { data: ai },
+      ] = await Promise.all([
+        supabase.from("clients").select("*").eq("id", id).single(),
+        supabase.from("contracts").select("*").eq("client_id", id).order("created_at", { ascending: false }),
+        supabase.from("invoices").select("*").eq("client_id", id).order("created_at", { ascending: false }),
+        supabase.from("client_tasks").select("*").eq("client_id", id).order("created_at", { ascending: false }),
+        supabase.from("content_scripts").select("*").eq("client_id", id).order("created_at", { ascending: false }),
+        supabase.from("campaigns").select("*").eq("client_id", id).order("created_at", { ascending: false }),
+        supabase.from("content_calendar").select("*").eq("client_id", id).order("scheduled_at", { ascending: false }),
+        supabase.from("trinity_log").select("*").eq("client_id", id).order("created_at", { ascending: false }).limit(20),
+      ]);
+      setClient(c); setContracts(con || []); setInvoices(inv || []);
+      setTasks(t || []); setScripts(s || []); setCampaigns(camp || []);
+      setCalendar(cal || []); setAiActions(ai || []);
+    } catch (err) {
+      console.error("[ClientDetailPage] fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) return <PageLoading />;

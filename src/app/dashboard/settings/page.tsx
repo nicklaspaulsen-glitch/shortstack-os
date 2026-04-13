@@ -75,6 +75,7 @@ export default function SettingsPage() {
   useEffect(() => { if (profile?.nickname) setNickname(profile.nickname); }, [profile]);
 
   async function fetchData() {
+    try {
     const [{ data: c }, { data: h }] = await Promise.all([
       supabase.from("clients").select("*").eq("is_active", true).order("business_name"),
       supabase.from("system_health").select("integration_name, status").order("integration_name"),
@@ -106,6 +107,9 @@ export default function SettingsPage() {
         custom_instructions: "",
       }));
       setAgentConfigs(defaults);
+    }
+    } catch (err) {
+      console.error("[Settings] fetchData error:", err);
     }
   }
 
@@ -180,17 +184,47 @@ export default function SettingsPage() {
                 )}
                 <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
                   <Camera size={16} className="text-white" />
-                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                  <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="hidden" onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file || !profile) return;
-                    const ext = file.name.split(".").pop();
+                    if (file.size > 2 * 1024 * 1024) { toast.error("Image must be under 2 MB"); return; }
+                    const ext = file.name.split(".").pop() || "png";
                     const path = `avatars/${profile.id}.${ext}`;
-                    const { error } = await supabase.storage.from("public").upload(path, file, { upsert: true });
-                    if (error) { toast.error("Upload failed"); return; }
-                    const { data: urlData } = supabase.storage.from("public").getPublicUrl(path);
-                    await supabase.from("profiles").update({ avatar_url: urlData.publicUrl }).eq("id", profile.id);
-                    await refreshProfile();
-                    toast.success("Avatar updated");
+                    toast.loading("Uploading avatar...");
+                    try {
+                      // Try "avatars" bucket first, fallback to "public"
+                      let bucketName = "avatars";
+                      let uploadResult = await supabase.storage.from(bucketName).upload(path, file, { upsert: true });
+                      if (uploadResult.error) {
+                        bucketName = "public";
+                        uploadResult = await supabase.storage.from(bucketName).upload(path, file, { upsert: true });
+                      }
+                      toast.dismiss();
+                      if (uploadResult.error) {
+                        console.error("Avatar upload error:", uploadResult.error);
+                        // Fallback: convert to base64 data URL and store directly
+                        const reader = new FileReader();
+                        reader.onload = async () => {
+                          const dataUrl = reader.result as string;
+                          const { error: updateErr } = await supabase.from("profiles").update({ avatar_url: dataUrl }).eq("id", profile.id);
+                          if (updateErr) { toast.error("Failed to save avatar"); return; }
+                          await refreshProfile();
+                          toast.success("Avatar updated");
+                        };
+                        reader.readAsDataURL(file);
+                        return;
+                      }
+                      const { data: urlData } = supabase.storage.from(bucketName).getPublicUrl(path);
+                      // Append cache-bust so browser shows new avatar immediately
+                      const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+                      await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", profile.id);
+                      await refreshProfile();
+                      toast.success("Avatar updated");
+                    } catch (err) {
+                      toast.dismiss();
+                      console.error("Avatar upload exception:", err);
+                      toast.error("Upload failed — try a smaller image");
+                    }
                   }} />
                 </label>
               </div>

@@ -35,18 +35,23 @@ export default function TicketsPage() {
   useEffect(() => { fetchTickets(); }, []);
 
   async function fetchTickets() {
-    setLoading(true);
-    const [{ data: t }, { data: cl }] = await Promise.all([
-      supabase.from("trinity_log")
-        .select("*")
-        .eq("action_type", "custom")
-        .order("created_at", { ascending: false })
-        .limit(100),
-      supabase.from("clients").select("id, business_name").eq("is_active", true),
-    ]);
-    setTickets((t || []).filter(item => (item.result as Record<string, unknown>)?.type === "client_request") as TicketItem[]);
-    setClients(cl || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const [{ data: t }, { data: cl }] = await Promise.all([
+        supabase.from("trinity_log")
+          .select("*")
+          .eq("action_type", "custom")
+          .order("created_at", { ascending: false })
+          .limit(100),
+        supabase.from("clients").select("id, business_name").eq("is_active", true),
+      ]);
+      setTickets((t || []).filter(item => (item.result as Record<string, unknown>)?.type === "client_request") as TicketItem[]);
+      setClients(cl || []);
+    } catch (err) {
+      console.error("[Tickets] fetchTickets error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function updateStatus(ticketId: string, status: string) {

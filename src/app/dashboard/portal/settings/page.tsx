@@ -43,13 +43,17 @@ export default function ClientSettingsPage() {
 
   async function fetchSettings() {
     try {
+      setLoading(true);
       const res = await fetch("/api/clients/privacy");
       const data = await res.json();
       if (data.settings && Object.keys(data.settings).length > 0) {
         setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
       }
-    } catch { /* settings will use defaults */ }
-    setLoading(false);
+    } catch (err) {
+      console.error("[ClientSettingsPage] fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function saveSettings() {
