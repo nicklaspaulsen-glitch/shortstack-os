@@ -26,8 +26,6 @@ export default function DedupPage() {
 
   async function findDuplicates() {
     try {
-    const { data: { user: authUser } } = await supabase.auth.getUser();
-    if (!authUser) return;
     setLoading(true);
     const { data: leads } = await supabase
       .from("leads")

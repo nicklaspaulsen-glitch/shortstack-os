@@ -43,8 +43,6 @@ export default function ActivityLogPage() {
 
   async function fetchLogs() {
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       setLoading(true);
       const { data } = await supabase
         .from("trinity_log")

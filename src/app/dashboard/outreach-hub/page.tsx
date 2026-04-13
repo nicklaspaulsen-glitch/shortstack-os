@@ -71,8 +71,6 @@ export default function OutreachHubPage() {
 
   const fetchLeads = useCallback(async () => {
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       setLoading(true);
       let query = supabase.from("leads").select("*").order("created_at", { ascending: false });
 

@@ -214,8 +214,6 @@ function SocialAccountsPage() {
 
   async function fetchClients() {
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       setLoading(true);
       if (profile?.role === "client") {
         const { data } = await supabase.from("clients").select("id, business_name").eq("profile_id", profile.id).single();

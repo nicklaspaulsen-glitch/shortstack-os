@@ -42,8 +42,6 @@ export default function ClientPortalPage() {
   async function fetchPortalData() {
     if (!profile?.id) { setLoading(false); return; }
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       let clientData;
       if (isImpersonating && impersonatedClient) {
         // Admin is viewing as this client -- look up by client ID

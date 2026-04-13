@@ -23,8 +23,6 @@ export default function ClientReportsPage() {
   useEffect(() => {
     async function load() {
       try {
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        if (!authUser) return;
         const { data } = await supabase.from("clients").select("*").eq("is_active", true).order("business_name");
         setClients(data || []);
       } catch (err) {

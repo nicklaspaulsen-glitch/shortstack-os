@@ -61,8 +61,6 @@ export default function ProductionPage() {
 
   async function fetchData() {
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       setLoading(true);
       // Get client ID
       let cId: string | null = null;

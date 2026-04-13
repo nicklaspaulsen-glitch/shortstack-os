@@ -27,8 +27,6 @@ export default function MonitorPage() {
 
   async function fetchHealth() {
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       setLoading(true);
       const { data } = await supabase.from("system_health").select("*").order("integration_name");
       setHealth(data || []);

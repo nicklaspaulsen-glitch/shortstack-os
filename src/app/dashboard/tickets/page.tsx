@@ -36,8 +36,6 @@ export default function TicketsPage() {
 
   async function fetchTickets() {
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       setLoading(true);
       const [{ data: t }, { data: cl }] = await Promise.all([
         supabase.from("trinity_log")

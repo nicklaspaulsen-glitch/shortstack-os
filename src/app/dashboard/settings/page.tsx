@@ -76,8 +76,6 @@ export default function SettingsPage() {
 
   async function fetchData() {
     try {
-    const { data: { user: authUser } } = await supabase.auth.getUser();
-    if (!authUser) return;
     const [{ data: c }, { data: h }] = await Promise.all([
       supabase.from("clients").select("*").eq("is_active", true).order("business_name"),
       supabase.from("system_health").select("integration_name, status").order("integration_name"),

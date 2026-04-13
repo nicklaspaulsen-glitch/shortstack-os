@@ -40,8 +40,6 @@ export default function SurveysPage() {
 
   async function loadData() {
     try {
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      if (!authUser) return;
       setLoading(true);
       const [responsesRes, clientsRes] = await Promise.all([
         supabase.from("trinity_log")
