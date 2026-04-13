@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
+// TODO: Add rate limiting in production — both for API calls and email sending limits
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { lead_ids, subject_template, body_template, from_name, batch_size } = await request.json();
+  // Cap batch size to prevent abuse
+  const safeBatchSize = Math.min(batch_size || 20, 50);
 
   const serviceSupabase = createServiceClient();
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -25,7 +28,7 @@ export async function POST(request: NextRequest) {
       .select("*")
       .not("email", "is", null)
       .eq("status", "new")
-      .limit(batch_size || 20);
+      .limit(safeBatchSize);
     leads = data;
   }
 

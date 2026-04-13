@@ -5,9 +5,11 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 import toast from "react-hot-toast";
 import { applyTheme } from "@/components/theme-provider";
+import { getPlanConfig } from "@/lib/plan-config";
 
 type Tab = "agents" | "integrations" | "automation" | "notifications" | "general";
 
@@ -55,7 +57,10 @@ function safeSet(key: string, value: string) {
 }
 
 export default function SettingsPage() {
+  const { profile, refreshProfile } = useAuth();
   const [tab, setTab] = useState<Tab>("general");
+  const [nickname, setNickname] = useState("");
+  const [savingProfile, setSavingProfile] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [clients, setClients] = useState<Client[]>([]);
   const [agentConfigs, setAgentConfigs] = useState<AgentConfig[]>([]);
@@ -65,7 +70,9 @@ export default function SettingsPage() {
   const rerender = () => forceRender(n => n + 1);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, []);
+  useEffect(() => { if (profile?.nickname) setNickname(profile.nickname); }, [profile]);
 
   async function fetchData() {
     const [{ data: c }, { data: h }] = await Promise.all([
@@ -155,6 +162,120 @@ export default function SettingsPage() {
       {/* General Tab */}
       {tab === "general" && (
         <div className="space-y-4 max-w-2xl">
+          {/* Profile — Nickname & Avatar */}
+          <div className="card" id="profile-section">
+            <h2 className="section-header flex items-center gap-2">
+              <User size={14} className="text-gold" /> Profile
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Customize how you appear in the sidebar and across the app</p>
+            <div className="flex items-start gap-4">
+              <div className="relative group">
+                {profile?.avatar_url ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={profile.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-border" />
+                ) : (
+                  <div className="w-16 h-16 rounded-xl bg-gold/10 border border-border flex items-center justify-center">
+                    <span className="text-gold text-xl font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
+                  </div>
+                )}
+                <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                  <Camera size={16} className="text-white" />
+                  <input type="file" accept="image/*" className="hidden" onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file || !profile) return;
+                    const ext = file.name.split(".").pop();
+                    const path = `avatars/${profile.id}.${ext}`;
+                    const { error } = await supabase.storage.from("public").upload(path, file, { upsert: true });
+                    if (error) { toast.error("Upload failed"); return; }
+                    const { data: urlData } = supabase.storage.from("public").getPublicUrl(path);
+                    await supabase.from("profiles").update({ avatar_url: urlData.publicUrl }).eq("id", profile.id);
+                    await refreshProfile();
+                    toast.success("Avatar updated");
+                  }} />
+                </label>
+              </div>
+              <div className="flex-1 space-y-2">
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Display Name</label>
+                  <input
+                    type="text"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
+                    placeholder={profile?.full_name || "Your name"}
+                    className="input w-full text-xs"
+                  />
+                </div>
+                <button
+                  disabled={savingProfile}
+                  onClick={async () => {
+                    if (!profile) return;
+                    setSavingProfile(true);
+                    await supabase.from("profiles").update({ nickname }).eq("id", profile.id);
+                    await refreshProfile();
+                    setSavingProfile(false);
+                    toast.success("Profile updated");
+                  }}
+                  className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1"
+                >
+                  <Save size={10} /> {savingProfile ? "Saving..." : "Save"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Subscription — agency plan management */}
+          {profile?.role === "admin" && (
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2">
+                <CreditCard size={14} className="text-gold" /> Subscription
+              </h2>
+              <p className="text-[10px] text-muted mb-3">Manage your ShortStack OS plan</p>
+              {(() => {
+                const plan = getPlanConfig(profile?.plan_tier);
+                return (
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${plan.color}18` }}>
+                        <Zap size={14} style={{ color: plan.color }} />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold">{plan.badge_label} Plan</span>
+                          <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+                            style={{ background: `${plan.color}18`, color: plan.color, boxShadow: `0 0 6px ${plan.glow}` }}>
+                            Active
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-muted mt-0.5">
+                          ${plan.price_monthly.toLocaleString("en-US")}/mo
+                          {plan.max_clients === -1 ? " — Unlimited clients" : ` — Up to ${plan.max_clients} clients`}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        const res = await fetch("/api/billing/portal", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ self: true }),
+                        });
+                        const data = await res.json();
+                        if (data.portal_url) {
+                          window.open(data.portal_url, "_blank");
+                        } else {
+                          toast.error(data.error || "Could not open billing portal");
+                        }
+                      }}
+                      className="btn-secondary text-[10px] px-3 py-1.5 flex items-center gap-1"
+                    >
+                      Manage <ExternalLink size={9} />
+                    </button>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
           {/* Desktop App Settings — only show in Electron */}
           {typeof window !== "undefined" && !!(window as unknown as { electronAPI?: unknown }).electronAPI && (
             <div className="card">

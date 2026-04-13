@@ -115,6 +115,21 @@ YOUR PERSONALITY:
 - Give the key numbers, then one actionable suggestion
 - When a task needs a specialist you don't have, SPAWN one — be proactive`;
 
+  const spawnTool = {
+    name: "spawn_agent",
+    description: "Spawn a new specialized AI sub-agent to handle a task that no existing agent covers. The agent will be created, saved for reuse, and will execute the task immediately.",
+    input_schema: {
+      type: "object",
+      properties: {
+        task: { type: "string", description: "The specific task for the new agent to execute" },
+        context: { type: "string", description: "Additional context about why this agent is needed and what domain it covers" },
+      },
+      required: ["task"],
+    },
+  };
+
+  const wantsStream = request.headers.get("accept")?.includes("text/event-stream");
+
   try {
     // First call — with tool definitions for spawning
     const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -123,31 +138,99 @@ YOUR PERSONALITY:
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
         max_tokens: 1500,
+        stream: !!wantsStream,
         system: systemPrompt,
         messages,
-        tools: [
-          {
-            name: "spawn_agent",
-            description: "Spawn a new specialized AI sub-agent to handle a task that no existing agent covers. The agent will be created, saved for reuse, and will execute the task immediately.",
-            input_schema: {
-              type: "object",
-              properties: {
-                task: {
-                  type: "string",
-                  description: "The specific task for the new agent to execute",
-                },
-                context: {
-                  type: "string",
-                  description: "Additional context about why this agent is needed and what domain it covers",
-                },
-              },
-              required: ["task"],
-            },
-          },
-        ],
+        tools: [spawnTool],
       }),
     });
 
+    // Streaming path — stream text deltas; if tool_use detected, break out and handle
+    if (wantsStream && res.body) {
+      // We need to detect tool_use events. If found, we can't stream — collect and handle.
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = "";
+      let hasToolUse = false;
+      let toolInput = "";
+      let toolName = "";
+      let inputAccumulator = "";
+
+      // First pass: peek for tool_use
+      const chunks: string[] = [];
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(decoder.decode(value, { stream: true }));
+      }
+      const allData = chunks.join("");
+
+      // Parse all events
+      const textParts: string[] = [];
+      for (const line of allData.split("\n")) {
+        if (!line.startsWith("data: ")) continue;
+        const jsonStr = line.slice(6);
+        if (jsonStr === "[DONE]") continue;
+        try {
+          const event = JSON.parse(jsonStr);
+          if (event.type === "content_block_start" && event.content_block?.type === "tool_use") {
+            hasToolUse = true;
+            toolName = event.content_block.name || "";
+          }
+          if (event.type === "content_block_delta") {
+            if (event.delta?.text) textParts.push(event.delta.text);
+            if (event.delta?.partial_json) inputAccumulator += event.delta.partial_json;
+          }
+        } catch {}
+      }
+
+      fullText = textParts.join("");
+
+      if (hasToolUse && toolName === "spawn_agent") {
+        // Handle tool-use the old way (non-streaming)
+        let toolInputParsed: { task?: string; context?: string } = {};
+        try { toolInputParsed = JSON.parse(inputAccumulator); } catch {}
+
+        const spawnRes = await fetch(new URL("/api/agents/spawn", request.url).toString(), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Cookie": request.headers.get("cookie") || "",
+          },
+          body: JSON.stringify({
+            task: toolInputParsed.task || "",
+            context: toolInputParsed.context || "",
+            spawned_by: "nexus",
+          }),
+        });
+        const spawnData = await spawnRes.json();
+
+        let reply: string;
+        if (spawnData.success) {
+          const agentInfo = spawnData.agent;
+          const spawnSummary = `I just spawned a new sub-agent: "${agentInfo.name}" (${agentInfo.role}). ${agentInfo.is_new ? "This is a brand new specialist." : "Reused an existing specialist."}\n\nHere's what it found:\n\n${spawnData.result.substring(0, 800)}`;
+          reply = fullText ? `${fullText}\n\n${spawnSummary}` : spawnSummary;
+        } else {
+          reply = fullText ? `${fullText}\n\nTried to spawn a sub-agent but hit an issue.` : "Tried to spawn a specialist but hit an issue.";
+        }
+
+        return NextResponse.json({ reply });
+      }
+
+      // No tool use — return the streamed text as SSE
+      const stream = new ReadableStream({
+        start(controller) {
+          for (const part of textParts) {
+            controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ text: part })}\n\n`));
+          }
+          controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ done: true, fullText })}\n\n`));
+          controller.close();
+        },
+      });
+      return new Response(stream, { headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", "Connection": "keep-alive" } });
+    }
+
+    // Non-streaming fallback
     const data = await res.json();
 
     // Check if Nexus wants to spawn a sub-agent

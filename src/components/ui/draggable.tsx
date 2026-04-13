@@ -24,6 +24,12 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
         const saved = localStorage.getItem(`drag_${storageKey}`);
         if (saved) {
           const p = JSON.parse(saved);
+          // Validate saved position is still within viewport
+          const el = elRef.current;
+          const w = el?.offsetWidth || 60;
+          const h = el?.offsetHeight || 60;
+          p.x = Math.max(0, Math.min(window.innerWidth - w, p.x));
+          p.y = Math.max(0, Math.min(window.innerHeight - h, p.y));
           setPos(p);
           posRef.current = p;
         }
@@ -53,9 +59,15 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (!dragging.current) return;
     hasMoved.current = true;
+
+    // Use actual element size for boundary clamping
+    const el = elRef.current;
+    const w = el?.offsetWidth || 60;
+    const h = el?.offsetHeight || 60;
+
     const newPos = {
-      x: Math.max(0, Math.min(window.innerWidth - 60, e.clientX - startOffset.current.x)),
-      y: Math.max(0, Math.min(window.innerHeight - 60, e.clientY - startOffset.current.y)),
+      x: Math.max(-w + 20, Math.min(window.innerWidth - 20, e.clientX - startOffset.current.x)),
+      y: Math.max(0, Math.min(window.innerHeight - 20, e.clientY - startOffset.current.y)),
     };
     setPos(newPos);
     posRef.current = newPos;
@@ -81,6 +93,7 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
         zIndex: 50,
         touchAction: "none",
         userSelect: dragging.current ? "none" : "auto",
+        cursor: dragging.current ? "grabbing" : undefined,
       }}
     >
       {children}

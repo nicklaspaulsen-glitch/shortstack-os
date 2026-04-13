@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Mail, Send, Sparkles, Loader,
-  Bold, Italic, Link2, List, Image, Save
+  Bold, Italic, Link2, List, Image as ImageIcon, Save
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -33,6 +33,7 @@ export default function EmailComposerPage() {
       setClients(cl || []);
       setLeads(ld || []);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function generateWithAI() {
@@ -142,7 +143,7 @@ export default function EmailComposerPage() {
               { icon: <Italic size={12} />, label: "Italic" },
               { icon: <Link2 size={12} />, label: "Link" },
               { icon: <List size={12} />, label: "List" },
-              { icon: <Image size={12} />, label: "Image" },
+              { icon: <ImageIcon size={12} />, label: "Image" },
             ].map(tool => (
               <button key={tool.label} className="p-2 rounded text-muted hover:text-foreground hover:bg-white/5 transition-colors" title={tool.label}>
                 {tool.icon}

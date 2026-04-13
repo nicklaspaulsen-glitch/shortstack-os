@@ -72,6 +72,7 @@ export default function PixelOffice() {
     fetchActivity();
     const interval = setInterval(fetchActivity, 20000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Initialize agents

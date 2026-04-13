@@ -30,6 +30,7 @@ export default function DemoManagementPage() {
 
   useEffect(() => {
     fetchDemoClient();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchDemoClient() {

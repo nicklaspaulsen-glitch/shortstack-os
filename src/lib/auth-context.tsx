@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, useRef, useMemo, ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Profile } from "@/lib/types";
@@ -34,17 +34,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return !localStorage.getItem("ss_profile");
   });
   const [isPWA, setIsPWA] = useState(false);
-  const supabase = createClient();
 
-  const fetchProfile = async (userId: string) => {
+  // Stable supabase client — avoid re-creating on every render
+  const supabase = useMemo(() => createClient(), []);
+
+  // Track whether the fresh profile has been fetched (vs stale cache)
+  const profileFetchedRef = useRef(false);
+
+  const fetchProfile = async (userId: string): Promise<boolean> => {
     try {
-      const { data } = await supabase.from("profiles").select("*").eq("id", userId).single();
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
+      if (error) {
+        console.warn("[auth] Profile fetch error:", error.message);
+        return false;
+      }
       if (data) {
         setProfile(data);
         localStorage.setItem("ss_profile", JSON.stringify(data));
+        profileFetchedRef.current = true;
         return true;
       }
-    } catch {}
+    } catch (err) {
+      console.warn("[auth] Profile fetch exception:", err);
+    }
     return false;
   };
 
@@ -59,47 +71,75 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const init = async () => {
       try {
+        // getUser() is the authoritative server-validated check.
+        // getSession() can return stale/tampered local data, so we use
+        // getSession() for the fast path and then validate the profile.
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user && mounted) {
           setUser(session.user);
-          fetchProfile(session.user.id); // Don't await — let it run in background
-          setLoading(false);
+          // Await the profile fetch so loading stays true until we have
+          // a fresh profile. This prevents the sidebar from rendering with
+          // stale role data from localStorage.
+          await fetchProfile(session.user.id);
+          if (mounted) setLoading(false);
           return;
         }
         const { data: { user: authUser } } = await supabase.auth.getUser();
         if (authUser && mounted) {
           setUser(authUser);
-          fetchProfile(authUser.id);
+          await fetchProfile(authUser.id);
+        } else if (mounted) {
+          // No authenticated user — clear any stale cached profile
+          setProfile(null);
+          localStorage.removeItem("ss_profile");
         }
         if (mounted) setLoading(false);
-      } catch {
-        if (mounted) setLoading(false);
+      } catch (err) {
+        console.warn("[auth] Init error:", err);
+        if (mounted) {
+          // Clear stale state on error to prevent showing cached admin data
+          setProfile(null);
+          localStorage.removeItem("ss_profile");
+          setLoading(false);
+        }
       }
     };
 
     init();
 
-    // 2s safety timeout (was 5s)
-    const timeout = setTimeout(() => { if (mounted) setLoading(false); }, 2000);
+    // 3s safety timeout — prevents infinite loading if network is slow
+    const timeout = setTimeout(() => { if (mounted) setLoading(false); }, 3000);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
         if (!mounted) return;
         const u = session?.user ?? null;
         setUser(u);
-        if (u) fetchProfile(u.id);
-        else { setProfile(null); localStorage.removeItem("ss_profile"); }
+        if (u) {
+          await fetchProfile(u.id);
+        } else {
+          setProfile(null);
+          localStorage.removeItem("ss_profile");
+          profileFetchedRef.current = false;
+        }
         setLoading(false);
+
+        // Handle token refresh events — session stayed alive, profile may have changed
+        if (event === "TOKEN_REFRESHED" && u) {
+          fetchProfile(u.id);
+        }
       }
     );
 
     return () => { mounted = false; clearTimeout(timeout); subscription.unsubscribe(); };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [supabase]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null); setProfile(null);
     localStorage.removeItem("ss_profile");
+    profileFetchedRef.current = false;
     window.location.href = "/login";
   };
 

@@ -275,6 +275,7 @@ export default function WhiteLabelPage() {
                   style={{ background: `${settings.primaryColor}15` }}
                 >
                   {settings.logoUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={settings.logoUrl} alt="Logo" className="w-6 h-6 rounded object-cover" />
                   ) : (
                     <div className="w-6 h-6 rounded flex items-center justify-center" style={{ background: settings.primaryColor }}>

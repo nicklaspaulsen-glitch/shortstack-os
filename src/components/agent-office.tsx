@@ -60,6 +60,7 @@ export default function AgentOffice() {
           lastAction: counts[a.id]?.last || "",
         })));
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Animation loop for jitter
@@ -200,7 +201,7 @@ export default function AgentOffice() {
 
                   {/* Status dot */}
                   <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 ${
-                    agent.active ? "bg-green-400 border-[#0e1016]" : "bg-gray-600 border-[#0e1016]"
+                    agent.active ? "bg-green-400 border-background" : "bg-muted border-background"
                   }`} style={agent.active ? { boxShadow: "0 0 6px rgba(74,222,128,0.4)" } : {}} />
                 </div>
 
@@ -223,8 +224,8 @@ export default function AgentOffice() {
                       boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
                     }}>
                       <p className="text-[9px] font-bold" style={{ color: agent.color }}>{agent.name} — {agent.role}</p>
-                      {agent.lastAction && <p className="text-[7px] text-gray-400 truncate max-w-[120px]">{agent.lastAction}</p>}
-                      <p className="text-[7px] text-gray-500">{agent.actionsToday} actions today</p>
+                      {agent.lastAction && <p className="text-[7px] text-muted truncate max-w-[120px]">{agent.lastAction}</p>}
+                      <p className="text-[7px] text-muted">{agent.actionsToday} actions today</p>
                     </div>
                   </div>
                 )}

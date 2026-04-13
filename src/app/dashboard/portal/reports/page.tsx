@@ -19,37 +19,45 @@ export default function ClientReportsPage() {
 
   useEffect(() => {
     if (profile) fetchReports();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   async function fetchReports() {
-    const { data: clientData } = await supabase.from("clients").select("id").eq("profile_id", profile!.id).single();
-    if (!clientData) { setLoading(false); return; }
+    if (!profile?.id) { setLoading(false); return; }
+    try {
+      const { data: clientData, error: clientError } = await supabase.from("clients").select("id").eq("profile_id", profile.id).single();
+      if (clientError && clientError.code !== "PGRST116") throw clientError;
+      if (!clientData) { setLoading(false); return; }
 
-    const [
-      { count: contentPublished },
-      { count: totalContent },
-      { count: campaigns },
-      { count: tasksCompleted },
-      { count: totalTasks },
-      { data: actions },
-    ] = await Promise.all([
-      supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("client_id", clientData.id).eq("status", "published"),
-      supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("client_id", clientData.id),
-      supabase.from("campaigns").select("*", { count: "exact", head: true }).eq("client_id", clientData.id),
-      supabase.from("client_tasks").select("*", { count: "exact", head: true }).eq("client_id", clientData.id).eq("is_completed", true),
-      supabase.from("client_tasks").select("*", { count: "exact", head: true }).eq("client_id", clientData.id),
-      supabase.from("trinity_log").select("description, status, created_at, action_type").eq("client_id", clientData.id).order("created_at", { ascending: false }).limit(20),
-    ]);
+      const [
+        { count: contentPublished },
+        { count: totalContent },
+        { count: campaigns },
+        { count: tasksCompleted },
+        { count: totalTasks },
+        { data: actions },
+      ] = await Promise.all([
+        supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("client_id", clientData.id).eq("status", "published"),
+        supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("client_id", clientData.id),
+        supabase.from("campaigns").select("*", { count: "exact", head: true }).eq("client_id", clientData.id),
+        supabase.from("client_tasks").select("*", { count: "exact", head: true }).eq("client_id", clientData.id).eq("is_completed", true),
+        supabase.from("client_tasks").select("*", { count: "exact", head: true }).eq("client_id", clientData.id),
+        supabase.from("trinity_log").select("description, status, created_at, action_type").eq("client_id", clientData.id).order("created_at", { ascending: false }).limit(20),
+      ]);
 
-    setStats({
-      contentPublished: contentPublished || 0,
-      totalContent: totalContent || 0,
-      campaigns: campaigns || 0,
-      tasksCompleted: tasksCompleted || 0,
-      totalTasks: totalTasks || 0,
-    });
-    setRecentActions(actions || []);
-    setLoading(false);
+      setStats({
+        contentPublished: contentPublished || 0,
+        totalContent: totalContent || 0,
+        campaigns: campaigns || 0,
+        tasksCompleted: tasksCompleted || 0,
+        totalTasks: totalTasks || 0,
+      });
+      setRecentActions(actions || []);
+    } catch {
+      // Stats stay at defaults; page renders empty state
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) return <PageLoading />;

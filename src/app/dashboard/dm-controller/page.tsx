@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 const PLATFORMS = [
   { id: "instagram", name: "Instagram", icon: <Camera size={18} />, color: "text-pink-400", bg: "bg-pink-400/10 border-pink-400/20" },
   { id: "facebook", name: "Facebook", icon: <MessageCircle size={18} />, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20" },
-  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} />, color: "text-blue-600", bg: "bg-blue-300/10 border-blue-300/20" },
+  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} />, color: "text-blue-400", bg: "bg-blue-300/10 border-blue-300/20" },
   { id: "tiktok", name: "TikTok", icon: <Music size={18} />, color: "text-white", bg: "bg-white/5 border-white/15" },
 ];
 
@@ -48,6 +48,7 @@ export default function DMControllerPage() {
 
   useEffect(() => {
     fetchQueue();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchQueue() {
@@ -265,7 +266,7 @@ export default function DMControllerPage() {
               {SERVICES.map(s => (
                 <button key={s} onClick={() => toggleService(s)}
                   className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
-                    config.services.includes(s) ? "border-accent/30 bg-accent/[0.05] text-accent" : "border-border text-muted"
+                    config.services.includes(s) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
                   }`}>{s}</button>
               ))}
             </div>
@@ -286,9 +287,9 @@ export default function DMControllerPage() {
               ))}
               <button onClick={() => setConfig({ ...config, customMessage: "" })}
                 className={`w-full text-left p-2.5 rounded-lg border transition-all ${
-                  !config.customMessage ? "border-accent/30 bg-accent/[0.05]" : "border-border hover:border-border"
+                  !config.customMessage ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-border"
                 }`}>
-                <p className="text-[10px] font-semibold mb-0.5 text-accent">AI Generated</p>
+                <p className="text-[10px] font-semibold mb-0.5 text-gold">AI Generated</p>
                 <p className="text-[9px] text-muted">Let AI write unique personalized messages for each lead</p>
               </button>
             </div>

@@ -23,7 +23,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
   lead: <Zap size={14} className="text-gold" />,
   task: <CheckCircle size={14} className="text-success" />,
   invoice: <CreditCard size={14} className="text-warning" />,
-  system: <Activity size={14} className="text-accent" />,
+  system: <Activity size={14} className="text-gold" />,
   content: <Film size={14} className="text-pink-400" />,
   message: <MessageSquare size={14} className="text-blue-400" />,
   deal: <Briefcase size={14} className="text-emerald-400" />,
@@ -42,6 +42,7 @@ export default function Notifications() {
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   // Real-time subscription
@@ -59,6 +60,7 @@ export default function Notifications() {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   async function fetchNotifications() {

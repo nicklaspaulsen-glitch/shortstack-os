@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 const COMMANDS = [
   {
@@ -64,6 +65,11 @@ const COMMANDS = [
 ];
 
 export async function POST() {
+  // Auth check — only authenticated admin users should register Discord commands
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const botToken = process.env.DISCORD_BOT_TOKEN;
   const appId = process.env.DISCORD_APP_ID;
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, ArrowRight } from "lucide-react";
+import { Check, ArrowRight, Phone } from "lucide-react";
 
 const PLANS = [
   {
@@ -13,12 +13,15 @@ const PLANS = [
     description: "Perfect for small businesses getting started",
     color: "#3b82f6",
     features: [
+      "Up to 5 clients",
+      "1 team member",
       "1 social media platform",
       "10 posts per month",
       "Basic ad management",
       "Monthly performance report",
       "Email support",
       "Client portal access",
+      "AI Lead Engine",
     ],
     cta: "Get Started",
     popular: false,
@@ -30,14 +33,16 @@ const PLANS = [
     description: "For businesses ready to scale aggressively",
     color: "#c8a855",
     features: [
+      "Up to 25 clients",
+      "5 team members",
       "3 social media platforms",
       "30 posts per month",
       "Advanced ad management",
       "Weekly performance reports",
       "SEO & content marketing",
-      "Email marketing campaigns",
-      "Dedicated account manager",
+      "Email & SMS campaigns",
       "AI-powered content creation",
+      "Multi-channel outreach",
       "Priority support",
     ],
     cta: "Start Growing",
@@ -50,6 +55,8 @@ const PLANS = [
     description: "Full-service agency partnership",
     color: "#a855f7",
     features: [
+      "Unlimited clients",
+      "Unlimited team members",
       "All social media platforms",
       "Unlimited content creation",
       "Full ad management (Meta + Google + TikTok)",
@@ -58,10 +65,10 @@ const PLANS = [
       "Automation workflows",
       "Website design included",
       "Video production",
-      "Branding & creative design",
+      "Custom AI agents & voice callers",
       "Dedicated team of specialists",
       "24/7 priority support",
-      "Custom AI agents",
+      "White-label options",
     ],
     cta: "Go Enterprise",
     popular: false,
@@ -143,8 +150,8 @@ export default function PricingPage() {
                   ))}
                 </ul>
 
-                <Link href="/book"
-                  className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
+                <Link href={`/login?plan=${plan.name.toLowerCase()}${annual ? "&billing=annual" : ""}`}
+                  className={`w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 ${
                     plan.popular ? "text-black" : "text-white"
                   }`}
                   style={{
@@ -153,6 +160,10 @@ export default function PricingPage() {
                   }}>
                   {plan.cta} <ArrowRight size={14} />
                 </Link>
+                <Link href="/book"
+                  className="w-full mt-2 py-2 rounded-lg text-[11px] text-gray-500 hover:text-gray-300 flex items-center justify-center gap-1.5 transition-colors">
+                  <Phone size={10} /> Or book a free strategy call
+                </Link>
               </div>
             );
           })}
@@ -160,10 +171,11 @@ export default function PricingPage() {
 
         {/* Bottom CTA */}
         <div className="text-center mt-16 mb-8">
-          <p className="text-gray-500 text-sm mb-4">Not sure which plan? Book a free strategy call and we&apos;ll help you decide.</p>
-          <Link href="/book" className="inline-flex items-center gap-2 text-sm font-medium px-6 py-3 rounded-xl transition-all"
-            style={{ background: "rgba(200,168,85,0.1)", color: "#c8a855", border: "1px solid rgba(200,168,85,0.2)" }}>
-            Book Free Strategy Call <ArrowRight size={14} />
+          <p className="text-gray-500 text-sm mb-2">Sign up in 60 seconds. Cancel anytime.</p>
+          <p className="text-gray-600 text-xs mb-5">Not sure which plan? <Link href="/book" className="text-gray-400 hover:text-white underline underline-offset-2 transition-colors">Book a free strategy call</Link> and we&apos;ll help you decide.</p>
+          <Link href="/login" className="inline-flex items-center gap-2 text-sm font-medium px-6 py-3 rounded-xl transition-all hover:opacity-90"
+            style={{ background: "linear-gradient(135deg, #c8a855, #b89840)", color: "#0b0d12" }}>
+            Get Started Now <ArrowRight size={14} />
           </Link>
         </div>
 

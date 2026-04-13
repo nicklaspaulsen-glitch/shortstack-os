@@ -21,6 +21,7 @@ export default function DedupPage() {
   const [loading, setLoading] = useState(true);
   const [merging, setMerging] = useState<string | null>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { findDuplicates(); }, []);
 
   async function findDuplicates() {

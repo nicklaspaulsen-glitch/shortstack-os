@@ -48,6 +48,7 @@ export default function SocialConnect({ clientId, clientName }: SocialConnectPro
 
   useEffect(() => {
     fetchAccounts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId]);
 
   async function fetchAccounts() {

@@ -60,6 +60,7 @@ export default function WorkflowsPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); fetchN8n(); }, []);
 
   async function fetchN8n() {
@@ -420,7 +421,7 @@ export default function WorkflowsPage() {
                         <div className="flex items-center justify-between mb-1.5">
                           <span className="text-[10px] text-gold font-medium">{msg.workflow.name}</span>
                           <div className="flex gap-1">
-                            <button onClick={() => setPreviewWorkflow(msg.workflow!)} className="text-[9px] text-accent hover:underline flex items-center gap-0.5">
+                            <button onClick={() => setPreviewWorkflow(msg.workflow!)} className="text-[9px] text-gold hover:underline flex items-center gap-0.5">
                               <Eye size={9} /> View
                             </button>
                             <button onClick={() => runWorkflow(msg.workflow!)} className="text-[9px] text-success hover:underline flex items-center gap-0.5">

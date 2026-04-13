@@ -26,6 +26,7 @@ export default function InvoicesPage() {
     client_id: "", amount: "", description: "", due_days: "7",
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {

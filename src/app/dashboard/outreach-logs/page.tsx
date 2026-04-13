@@ -33,7 +33,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={14} className="text-pink-400" />,
   facebook: <MessageSquare size={14} className="text-blue-400" />,
   tiktok: <Music size={14} className="text-white" />,
-  linkedin: <Briefcase size={14} className="text-blue-600" />,
+  linkedin: <Briefcase size={14} className="text-blue-400" />,
   email: <Mail size={14} className="text-gold" />,
   call: <Phone size={14} className="text-green-400" />,
 };
@@ -49,6 +49,7 @@ export default function OutreachLogsPage() {
   const [stats, setStats] = useState({ total: 0, sent: 0, replied: 0, bounced: 0, pending: 0 });
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchLogs(); }, [filter, statusFilter]);
 
   async function fetchLogs() {

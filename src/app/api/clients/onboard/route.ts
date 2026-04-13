@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
+import { isAtClientLimit } from "@/lib/plan-config";
 
 // Full client onboarding — creates client, portal access, welcome doc, first invoice, Zernio profile
 export async function POST(request: NextRequest) {
@@ -14,6 +15,28 @@ export async function POST(request: NextRequest) {
     package_tier, mrr, services, password, create_portal,
     create_invoice, setup_zernio, notes,
   } = body;
+
+  // Validate required fields
+  if (!business_name || typeof business_name !== "string" || business_name.trim().length === 0) {
+    return NextResponse.json({ error: "business_name is required" }, { status: 400 });
+  }
+  if (email && typeof email === "string" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
+  }
+  if (password && typeof password === "string" && password.length < 8) {
+    return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
+  }
+
+  // Check client limit for the agency's plan
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const agencyPlan = profile?.plan_tier || "Starter";
+  const { count: currentClients } = await supabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true);
+  if (isAtClientLimit(agencyPlan, currentClients || 0)) {
+    return NextResponse.json({
+      error: `You've reached the maximum number of clients for your ${agencyPlan} plan. Upgrade to add more.`,
+      upgrade_needed: true,
+    }, { status: 403 });
+  }
 
   const results: Record<string, unknown> = {};
 

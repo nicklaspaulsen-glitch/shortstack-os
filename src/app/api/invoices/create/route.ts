@@ -9,6 +9,15 @@ export async function POST(request: NextRequest) {
 
   const { client_id, amount, description, due_days } = await request.json();
 
+  // Validate required fields
+  if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+  if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+    return NextResponse.json({ error: "Valid amount required" }, { status: 400 });
+  }
+  if (due_days !== undefined && (isNaN(parseInt(due_days)) || parseInt(due_days) < 1 || parseInt(due_days) > 365)) {
+    return NextResponse.json({ error: "due_days must be between 1 and 365" }, { status: 400 });
+  }
+
   const { data: client } = await supabase.from("clients").select("*").eq("id", client_id).single();
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 

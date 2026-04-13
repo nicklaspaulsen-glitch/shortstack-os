@@ -54,6 +54,7 @@ export default function ClientSwitcher() {
     if (open && clients.length === 0) {
       fetchClients();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   // Only show for admins
@@ -191,7 +192,7 @@ export default function ClientSwitcher() {
                       </div>
                       <div className="bg-surface-light/50 rounded-lg p-2 border border-border/20">
                         <div className="flex items-center gap-1 mb-0.5">
-                          <FileText size={10} className="text-accent" />
+                          <FileText size={10} className="text-gold" />
                           <span className="text-[9px] text-muted uppercase">Content</span>
                         </div>
                         <p className="text-xs font-bold font-mono">{activeClient.content_count}</p>

@@ -25,12 +25,13 @@ export default function ContentPage() {
   const [publishQueue, setPublishQueue] = useState<PublishQueueItem[]>([]);
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [personalIdeas, setPersonalIdeas] = useState<PersonalBrandIdea[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [showPublishEditor, setShowPublishEditor] = useState<PublishQueueItem | null>(null);
   const [editingPublish, setEditingPublish] = useState<Partial<PublishQueueItem>>({});
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, [tab]);
 
   async function fetchData() {

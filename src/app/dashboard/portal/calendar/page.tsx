@@ -17,7 +17,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   tiktok: <Film size={10} className="text-white" />,
   facebook: <Send size={10} className="text-blue-400" />,
   youtube: <Film size={10} className="text-red-400" />,
-  linkedin: <Globe size={10} className="text-blue-600" />,
+  linkedin: <Globe size={10} className="text-blue-400" />,
 };
 
 export default function ContentCalendarPage() {
@@ -35,26 +35,34 @@ export default function ContentCalendarPage() {
 
   useEffect(() => {
     if (profile) fetchCalendar();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, currentDate]);
 
   async function fetchCalendar() {
-    const { data: clientData } = await supabase.from("clients").select("id").eq("profile_id", profile!.id).single();
-    if (!clientData) { setLoading(false); return; }
-    setClientId(clientData.id);
+    if (!profile?.id) { setLoading(false); return; }
+    try {
+      const { data: clientData, error: clientError } = await supabase.from("clients").select("id").eq("profile_id", profile.id).single();
+      if (clientError && clientError.code !== "PGRST116") throw clientError;
+      if (!clientData) { setLoading(false); return; }
+      setClientId(clientData.id);
 
-    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString();
-    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59).toISOString();
+      const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString();
+      const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59).toISOString();
 
-    const { data } = await supabase
-      .from("content_calendar")
-      .select("*")
-      .eq("client_id", clientData.id)
-      .gte("scheduled_at", startOfMonth)
-      .lte("scheduled_at", endOfMonth)
-      .order("scheduled_at");
+      const { data } = await supabase
+        .from("content_calendar")
+        .select("*")
+        .eq("client_id", clientData.id)
+        .gte("scheduled_at", startOfMonth)
+        .lte("scheduled_at", endOfMonth)
+        .order("scheduled_at");
 
-    setEntries(data || []);
-    setLoading(false);
+      setEntries(data || []);
+    } catch {
+      toast.error("Failed to load calendar data");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function generateAIPlan() {
@@ -210,7 +218,7 @@ export default function ContentCalendarPage() {
                   {dayEntries.slice(0, 3).map((entry, j) => (
                     <div key={j} className={`text-[8px] px-1 py-0.5 rounded flex items-center gap-0.5 truncate ${
                       entry.status === "published" ? "bg-success/10 text-success" :
-                      entry.status === "scheduled" ? "bg-accent/10 text-accent" :
+                      entry.status === "scheduled" ? "bg-gold/10 text-gold" :
                       entry.status === "idea" ? "bg-gold/10 text-gold" :
                       "bg-surface-light text-muted"
                     }`}>
@@ -232,7 +240,7 @@ export default function ContentCalendarPage() {
       <div className="flex items-center gap-4 justify-center">
         {[
           { label: "Idea", color: "bg-gold/10 text-gold" },
-          { label: "Scheduled", color: "bg-accent/10 text-accent" },
+          { label: "Scheduled", color: "bg-gold/10 text-gold" },
           { label: "Published", color: "bg-success/10 text-success" },
         ].map(item => (
           <div key={item.label} className="flex items-center gap-1.5">
@@ -253,7 +261,7 @@ export default function ContentCalendarPage() {
           <p className="text-[9px] text-muted uppercase tracking-wider">Published</p>
         </div>
         <div className="card text-center p-3">
-          <p className="text-lg font-bold font-mono text-accent count-up">{entries.filter(e => e.status === "scheduled" || e.status === "idea").length}</p>
+          <p className="text-lg font-bold font-mono text-gold count-up">{entries.filter(e => e.status === "scheduled" || e.status === "idea").length}</p>
           <p className="text-[9px] text-muted uppercase tracking-wider">Upcoming</p>
         </div>
       </div>

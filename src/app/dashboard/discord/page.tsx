@@ -22,6 +22,15 @@ interface DiscordServer {
   created_at: string;
 }
 
+interface HealthResult {
+  bot_online: boolean;
+  guild_found: boolean;
+  guild_name: string;
+  member_count: number;
+  channels: Array<{ name: string; type: string; id: string; writable_by_everyone: boolean; bot_only: boolean }>;
+  errors: string[];
+}
+
 export default function DiscordPage() {
   const [servers, setServers] = useState<DiscordServer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,8 +42,11 @@ export default function DiscordPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [registering, setRegistering] = useState(false);
   const [commandsRegistered, setCommandsRegistered] = useState(false);
+  const [healthResult, setHealthResult] = useState<HealthResult | null>(null);
+  const [healthLoading, setHealthLoading] = useState(false);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {
@@ -104,6 +116,25 @@ export default function DiscordPage() {
       }
     } catch { toast.error("Connection error"); }
     setRegistering(false);
+  }
+
+  async function testHealth() {
+    setHealthLoading(true);
+    try {
+      const res = await fetch("/api/discord/health");
+      const data = await res.json();
+      if (res.ok) {
+        setHealthResult(data);
+        if (data.errors?.length > 0) {
+          toast.error(`Health check found ${data.errors.length} issue(s)`);
+        } else {
+          toast.success("Server health check passed!");
+        }
+      } else {
+        toast.error(data.error || "Health check failed");
+      }
+    } catch { toast.error("Connection error"); }
+    setHealthLoading(false);
   }
 
   const botCommands = [
@@ -177,6 +208,78 @@ export default function DiscordPage() {
             <p className="text-[10px] text-muted">Client Servers</p>
           </div>
         </div>
+      </div>
+
+      {/* Health Check */}
+      <div className="card-static">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Shield size={15} className="text-success" />
+            <h2 className="text-sm font-semibold">Server Health Check</h2>
+          </div>
+          <button onClick={testHealth} disabled={healthLoading} className="btn-secondary text-xs flex items-center gap-1.5 disabled:opacity-50">
+            {healthLoading ? <Loader size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+            {healthLoading ? "Testing..." : "Run Test"}
+          </button>
+        </div>
+
+        {!healthResult ? (
+          <p className="text-xs text-muted">Click &ldquo;Run Test&rdquo; to check bot connectivity, channel permissions, and server status.</p>
+        ) : (
+          <div className="space-y-3">
+            {/* Status indicators */}
+            <div className="grid grid-cols-3 gap-2">
+              <div className={`p-2.5 rounded-lg text-center ${healthResult.bot_online ? "bg-success/5 border border-success/10" : "bg-danger/5 border border-danger/10"}`}>
+                <p className={`text-xs font-bold ${healthResult.bot_online ? "text-success" : "text-danger"}`}>{healthResult.bot_online ? "Online" : "Offline"}</p>
+                <p className="text-[9px] text-muted">Bot Status</p>
+              </div>
+              <div className={`p-2.5 rounded-lg text-center ${healthResult.guild_found ? "bg-success/5 border border-success/10" : "bg-danger/5 border border-danger/10"}`}>
+                <p className={`text-xs font-bold ${healthResult.guild_found ? "text-success" : "text-danger"}`}>{healthResult.guild_found ? "Connected" : "Not Found"}</p>
+                <p className="text-[9px] text-muted">Server</p>
+              </div>
+              <div className="p-2.5 rounded-lg text-center bg-[#5865F2]/5 border border-[#5865F2]/10">
+                <p className="text-xs font-bold text-[#5865F2]">{healthResult.member_count}</p>
+                <p className="text-[9px] text-muted">Members</p>
+              </div>
+            </div>
+
+            {/* Channel permissions */}
+            {healthResult.channels.length > 0 && (
+              <div>
+                <p className="text-[10px] text-muted uppercase tracking-wider mb-2 font-semibold">Channel Permissions</p>
+                <div className="space-y-1">
+                  {healthResult.channels.map(ch => (
+                    <div key={ch.id} className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border text-xs">
+                      <div className="flex items-center gap-2">
+                        {ch.type === "text" ? <Hash size={11} className="text-muted" /> : <Volume2 size={11} className="text-muted" />}
+                        <span className="font-mono">{ch.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {ch.bot_only ? (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400">Bot Only</span>
+                        ) : ch.writable_by_everyone ? (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-success/10 text-success">Everyone Can Chat</span>
+                        ) : (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-warning/10 text-warning">Restricted</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Errors */}
+            {healthResult.errors.length > 0 && (
+              <div className="p-3 rounded-lg bg-danger/5 border border-danger/10">
+                <p className="text-[10px] font-semibold text-danger mb-1">Issues Found:</p>
+                {healthResult.errors.map((e, i) => (
+                  <p key={i} className="text-[10px] text-danger/80">{e}</p>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Server List */}

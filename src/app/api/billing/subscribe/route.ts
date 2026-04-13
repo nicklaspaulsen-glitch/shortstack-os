@@ -15,6 +15,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "client_id and amount required" }, { status: 400 });
   }
 
+  // Validate amount is a positive number
+  const parsedAmount = parseFloat(amount);
+  if (isNaN(parsedAmount) || parsedAmount <= 0 || parsedAmount > 100000) {
+    return NextResponse.json({ error: "Amount must be between $0.01 and $100,000" }, { status: 400 });
+  }
+
+  // Validate interval if provided
+  const validIntervals = ["month", "year", "week", "day"];
+  if (interval && !validIntervals.includes(interval)) {
+    return NextResponse.json({ error: "Invalid interval. Must be: month, year, week, or day" }, { status: 400 });
+  }
+
   const { data: client } = await supabase
     .from("clients")
     .select("id, business_name, email, stripe_customer_id, package_tier")
@@ -23,21 +35,20 @@ export async function POST(request: NextRequest) {
 
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 
-  // Ensure Stripe customer exists
-  let customerId = client.stripe_customer_id;
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      name: client.business_name,
-      email: client.email || undefined,
-      metadata: { shortstack_client_id: client.id },
-    });
-    customerId = customer.id;
-    await supabase.from("clients").update({ stripe_customer_id: customerId }).eq("id", client.id);
-  }
-
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
 
   try {
+    // Ensure Stripe customer exists (inside try-catch for Stripe API safety)
+    let customerId = client.stripe_customer_id;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        name: client.business_name,
+        email: client.email || undefined,
+        metadata: { shortstack_client_id: client.id },
+      });
+      customerId = customer.id;
+      await supabase.from("clients").update({ stripe_customer_id: customerId }).eq("id", client.id);
+    }
     // Create a price for this subscription
     const price = await stripe.prices.create({
       unit_amount: Math.round(amount * 100),
@@ -66,6 +77,7 @@ export async function POST(request: NextRequest) {
       price_id: price.id,
     });
   } catch (err) {
-    return NextResponse.json({ error: `Stripe error: ${err}` }, { status: 500 });
+    console.error("Stripe subscribe error:", err);
+    return NextResponse.json({ error: "Failed to create subscription. Please try again." }, { status: 500 });
   }
 }

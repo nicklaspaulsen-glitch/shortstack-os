@@ -1,17 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
-import { Eye, EyeOff, ArrowRight, Mail, Lock, User, Loader, ArrowLeft } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Eye, EyeOff, ArrowRight, Mail, Lock, User, Loader, ArrowLeft, Zap } from "lucide-react";
 import toast from "react-hot-toast";
+import { PLAN_TIERS, PlanTier } from "@/lib/plan-config";
 
 export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const planParam = searchParams?.get("plan") ?? null; // e.g. "growth" from /login?plan=growth
+  const billingParam = searchParams?.get("billing") ?? null; // "annual" or null
+  const selectedPlan = planParam
+    ? (planParam.charAt(0).toUpperCase() + planParam.slice(1).toLowerCase()) as PlanTier
+    : null;
+  const planConfig = selectedPlan && PLAN_TIERS[selectedPlan] ? PLAN_TIERS[selectedPlan] : null;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(!!planParam); // auto-show signup if coming from pricing
   const [showReset, setShowReset] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [fullName, setFullName] = useState("");
@@ -24,9 +41,11 @@ export default function LoginPage() {
     setLoading(true);
     try {
       if (isSignUp) {
+        // Sign up as "admin" when coming from pricing page, otherwise "client"
+        const role = planParam ? "admin" : "client";
         const { error } = await supabase.auth.signUp({
           email, password,
-          options: { data: { full_name: fullName, role: "client" } },
+          options: { data: { full_name: fullName, role } },
         });
         if (error) throw error;
         toast.success("Account created! You can now sign in.");
@@ -34,6 +53,25 @@ export default function LoginPage() {
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
+
+        // If a plan was selected from pricing, redirect to Stripe checkout
+        if (planParam && planConfig) {
+          toast.loading("Redirecting to checkout...");
+          const res = await fetch("/api/billing/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ plan: planParam, billing: billingParam || "monthly" }),
+          });
+          const data = await res.json();
+          if (data.checkout_url) {
+            window.location.href = data.checkout_url;
+            return;
+          }
+          // If checkout fails, still go to dashboard
+          toast.dismiss();
+          toast.error("Checkout setup failed — you can subscribe from Settings.");
+        }
+
         router.push("/dashboard");
         router.refresh();
       }
@@ -76,6 +114,19 @@ export default function LoginPage() {
           <h1 className="text-lg font-bold text-foreground tracking-tight mt-4">ShortStack OS</h1>
           <p className="text-[11px] text-muted mt-1 tracking-wide">Agency Operating System</p>
         </div>
+
+        {/* Selected plan banner */}
+        {planConfig && selectedPlan && (
+          <div className="mb-4 px-4 py-3 rounded-xl border text-center" style={{ borderColor: `${planConfig.color}30`, background: `${planConfig.color}08` }}>
+            <div className="flex items-center justify-center gap-2 text-sm font-semibold" style={{ color: planConfig.color }}>
+              <Zap size={14} />
+              {selectedPlan} Plan — ${planConfig.price_monthly.toLocaleString("en-US")}/mo
+            </div>
+            <p className="text-[10px] text-muted mt-1">
+              {isSignUp ? "Create your account to get started" : "Sign in to complete checkout"}
+            </p>
+          </div>
+        )}
 
         {/* Password Reset View */}
         {showReset ? (

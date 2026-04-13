@@ -44,6 +44,7 @@ export default function AgentActivityFeed({ clientId }: { clientId?: string | nu
     fetchLogs();
     const interval = setInterval(fetchLogs, 15000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId]);
 
   async function fetchLogs() {

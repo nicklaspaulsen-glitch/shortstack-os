@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import PDFDocument from "pdfkit";
 
 // Generate weekly performance report for a client
 // Can be triggered manually or by cron
 export async function POST(request: NextRequest) {
+  // Auth check
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { client_id } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 

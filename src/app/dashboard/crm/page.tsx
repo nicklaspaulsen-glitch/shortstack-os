@@ -59,23 +59,23 @@ const STATUS_TABS: { key: CRMStatus | "all"; label: string }[] = [
 ];
 
 const STATUS_COLORS: Record<string, string> = {
-  new: "bg-blue-500/10 text-blue-600 border-blue-500/20",
-  contacted: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-  called: "bg-amber-500/10 text-amber-600 border-amber-500/20",
-  replied: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
-  booked: "bg-purple-500/10 text-purple-600 border-purple-500/20",
+  new: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+  contacted: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  called: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  replied: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  booked: "bg-purple-500/10 text-purple-400 border-purple-500/20",
   converted: "bg-gold/10 text-gold border-gold/20",
-  not_interested: "bg-red-500/10 text-red-600 border-red-500/20",
+  not_interested: "bg-red-500/10 text-red-400 border-red-500/20",
 };
 
 const OUTREACH_STATUS_COLORS: Record<string, string> = {
-  sent: "text-blue-600",
-  delivered: "text-blue-600",
-  replied: "text-emerald-600",
+  sent: "text-blue-400",
+  delivered: "text-blue-400",
+  replied: "text-emerald-400",
   no_reply: "text-muted",
-  bounced: "text-red-600",
-  failed: "text-red-600",
-  pending: "text-amber-600",
+  bounced: "text-red-400",
+  failed: "text-red-400",
+  pending: "text-amber-400",
 };
 
 function mapToCRMStatus(status: string): CRMStatus {
@@ -115,6 +115,7 @@ export default function CRMPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [page, setPage] = useState(0);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchLeads(); cleanupStaleLeads(); }, []);
 
   async function fetchLeads() {
@@ -346,7 +347,7 @@ export default function CRMPage() {
     const icons: Record<string, React.ReactNode> = {
       instagram: <Camera size={13} className="text-pink-400" />,
       facebook: <Globe size={13} className="text-blue-400" />,
-      linkedin: <Briefcase size={13} className="text-blue-600" />,
+      linkedin: <Briefcase size={13} className="text-blue-400" />,
       tiktok: <Music size={13} className="text-foreground" />,
     };
     return (
@@ -364,12 +365,12 @@ export default function CRMPage() {
         <Mail size={10} /> Email
       </button>
       <button onClick={() => sendSMS(lead)} disabled={!lead.phone || actionLoading === lead.id + "-sms"}
-        className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
+        className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
         title={lead.phone || "No phone"}>
         <MessageSquare size={10} /> SMS
       </button>
       <button onClick={() => callLead(lead)} disabled={!lead.phone || actionLoading === lead.id + "-call"}
-        className="text-[9px] px-2 py-1 rounded-lg bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
+        className="text-[9px] px-2 py-1 rounded-lg bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all disabled:opacity-30 flex items-center gap-1"
         title={lead.phone || "No phone"}>
         <Phone size={10} /> Call
       </button>
@@ -386,7 +387,7 @@ export default function CRMPage() {
               {e.platform === "email" ? <Mail size={11} className="text-gold" /> :
                e.platform === "call" ? <Phone size={11} className="text-green-400" /> :
                e.platform === "instagram" ? <Camera size={11} className="text-pink-400" /> :
-               e.platform === "linkedin" ? <Briefcase size={11} className="text-blue-600" /> :
+               e.platform === "linkedin" ? <Briefcase size={11} className="text-blue-400" /> :
                e.platform === "tiktok" ? <Music size={11} className="text-foreground" /> :
                <MessageSquare size={11} className="text-blue-400" />}
               <span className={`text-[9px] font-medium ${OUTREACH_STATUS_COLORS[e.status] || "text-muted"}`}>
@@ -396,7 +397,7 @@ export default function CRMPage() {
             <div className="flex-1 min-w-0">
               <p className="text-muted truncate">{e.message_text}</p>
               {e.reply_text && (
-                <p className="text-emerald-600 mt-0.5 truncate">Reply: {e.reply_text}</p>
+                <p className="text-emerald-400 mt-0.5 truncate">Reply: {e.reply_text}</p>
               )}
             </div>
             <span className="text-[8px] text-muted shrink-0">{formatShortDate(e.sent_at)}</span>
@@ -530,7 +531,7 @@ export default function CRMPage() {
           <button onClick={() => bulkAction("email")} className="text-[9px] px-2 py-1 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
             <Mail size={10} /> Bulk Email
           </button>
-          <button onClick={() => bulkAction("sms")} className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 transition-all flex items-center gap-1">
+          <button onClick={() => bulkAction("sms")} className="text-[9px] px-2 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-all flex items-center gap-1">
             <MessageSquare size={10} /> Bulk SMS
           </button>
           <button onClick={() => setSelectedIds(new Set())} className="text-[9px] text-muted hover:text-foreground ml-auto flex items-center gap-1">
@@ -698,8 +699,7 @@ export default function CRMPage() {
                     const tempLabel = temp === "hot" ? "HOT" : temp === "warm" ? "WARM" : "COLD";
 
                     return (
-                      <div key={lead.id} className="rounded-lg p-3 space-y-2 cursor-pointer hover:border-white/10 transition-all"
-                        style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.04)" }}
+                      <div key={lead.id} className="rounded-lg p-3 space-y-2 cursor-pointer bg-surface-light border border-border hover:border-gold/20 transition-all"
                         onClick={() => setExpandedId(expandedId === lead.id ? null : lead.id)}>
                         <div className="flex items-start justify-between">
                           <div className="min-w-0">
@@ -723,7 +723,7 @@ export default function CRMPage() {
 
                         {/* Score bar */}
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 h-1 rounded-full" style={{ background: "rgba(255,255,255,0.05)" }}>
+                          <div className="flex-1 h-1 rounded-full bg-border">
                             <div className="h-1 rounded-full transition-all" style={{ width: `${score}%`, background: tempColor }} />
                           </div>
                           <span className="text-[8px] font-mono" style={{ color: tempColor }}>{score}</span>
@@ -737,7 +737,7 @@ export default function CRMPage() {
 
                         {/* Quick actions on expand */}
                         {expandedId === lead.id && (
-                          <div className="pt-2 border-t border-white/5 space-y-2">
+                          <div className="pt-2 border-t border-border space-y-2">
                             <OutreachHistory entries={lead.outreach_log.slice(0, 3)} />
                             <LeadActions lead={lead} />
                           </div>
@@ -832,7 +832,7 @@ function LeadTableRow({ lead, expanded, selected, onToggleExpand, onToggleSelect
           <div className="flex items-center gap-1.5">
             {lead.instagram_url && <a href={lead.instagram_url} target="_blank" rel="noopener noreferrer"><Camera size={12} className="text-pink-400 hover:scale-110 transition-transform" /></a>}
             {lead.facebook_url && <a href={lead.facebook_url} target="_blank" rel="noopener noreferrer"><Globe size={12} className="text-blue-400 hover:scale-110 transition-transform" /></a>}
-            {lead.linkedin_url && <a href={lead.linkedin_url} target="_blank" rel="noopener noreferrer"><Briefcase size={12} className="text-blue-600 hover:scale-110 transition-transform" /></a>}
+            {lead.linkedin_url && <a href={lead.linkedin_url} target="_blank" rel="noopener noreferrer"><Briefcase size={12} className="text-blue-400 hover:scale-110 transition-transform" /></a>}
             {lead.tiktok_url && <a href={lead.tiktok_url} target="_blank" rel="noopener noreferrer"><Music size={12} className="text-foreground hover:scale-110 transition-transform" /></a>}
           </div>
         </td>

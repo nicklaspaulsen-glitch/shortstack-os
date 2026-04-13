@@ -28,17 +28,48 @@ export default function ClientChatWidget() {
 
     const userMsg: ChatMessage = { role: "user", content: input };
     setMessages(prev => [...prev, userMsg]);
+    const msg = input;
     setInput("");
     setSending(true);
 
     try {
       const res = await fetch("/api/trinity/client-chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        headers: { "Content-Type": "application/json", "Accept": "text/event-stream" },
+        body: JSON.stringify({ message: msg }),
       });
-      const data = await res.json();
-      setMessages(prev => [...prev, { role: "assistant", content: data.reply || "Sorry, I couldn't process that." }]);
+
+      if (res.headers.get("content-type")?.includes("text/event-stream") && res.body) {
+        // Streaming response
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = "";
+        setMessages(prev => [...prev, { role: "assistant", content: "..." }]);
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          for (const line of chunk.split("\n")) {
+            if (!line.startsWith("data: ")) continue;
+            try {
+              const event = JSON.parse(line.slice(6));
+              if (event.text) {
+                fullText += event.text;
+                setMessages(prev => {
+                  const copy = [...prev];
+                  copy[copy.length - 1] = { role: "assistant", content: fullText };
+                  return copy;
+                });
+              }
+              if (event.done && event.fullText) fullText = event.fullText;
+            } catch {}
+          }
+        }
+      } else {
+        const data = await res.json();
+        setMessages(prev => [...prev, { role: "assistant", content: data.reply || "Sorry, I couldn't process that." }]);
+      }
     } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "I'm having trouble connecting. Please try again." }]);
     }

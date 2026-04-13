@@ -75,8 +75,8 @@ export default function AdminProfileSwitcher() {
       profile_id: client.profile_id,
     });
     setOpen(false);
-    // Navigate to their portal view
-    router.push(`/dashboard/clients/${client.id}`);
+    // Navigate to the client portal so admin sees exactly what the client sees
+    router.push("/dashboard/portal");
   }
 
   function manageClient(client: ClientAccount) {
@@ -228,7 +228,7 @@ export default function AdminProfileSwitcher() {
                         </button>
                         {!client.profile_id ? (
                           <button onClick={() => { setOpen(false); setShowCreateProfile(client); }}
-                            className="text-[9px] bg-accent/10 text-accent hover:bg-accent/20 px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
+                            className="text-[9px] bg-gold/10 text-gold hover:bg-gold/20 px-2 py-0.5 rounded flex items-center gap-0.5 transition-colors">
                             <UserPlus size={9} /> Create Login
                           </button>
                         ) : (

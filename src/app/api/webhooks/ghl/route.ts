@@ -3,9 +3,25 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { handleGHLCallWebhook } from "@/lib/services/cold-calling";
 
 // GHL sends call outcome webhooks here
+// Verified via shared secret in query param or header
 export async function POST(request: NextRequest) {
+  // Verify webhook authenticity via shared secret
+  const url = new URL(request.url);
+  const key = url.searchParams.get("key") || request.headers.get("x-webhook-key");
+  const expectedKey = process.env.GHL_WEBHOOK_SECRET || process.env.WEBHOOK_SECRET || process.env.CRON_SECRET;
+
+  if (!expectedKey || !key || key !== expectedKey) {
+    return NextResponse.json({ error: "Invalid webhook key" }, { status: 401 });
+  }
+
   const supabase = createServiceClient();
-  const payload = await request.json();
+
+  let payload: Record<string, unknown>;
+  try {
+    payload = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
 
   // Handle different GHL webhook types
   const type = payload.type || payload.event;

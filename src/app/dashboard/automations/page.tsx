@@ -191,7 +191,7 @@ export default function AutomationsPage() {
       case "message": return <Send size={12} className="text-gold" />;
       case "delay": return <Clock size={12} className="text-muted" />;
       case "condition": return <GitBranch size={12} className="text-warning" />;
-      case "action": return <Zap size={12} className="text-accent" />;
+      case "action": return <Zap size={12} className="text-gold" />;
       default: return <Zap size={12} />;
     }
   };
@@ -329,7 +329,7 @@ export default function AutomationsPage() {
                         step.type === "message" ? "bg-gold/[0.03] border-gold/10" :
                         step.type === "delay" ? "bg-surface-light/50 border-border" :
                         step.type === "condition" ? "bg-warning/[0.03] border-warning/10" :
-                        "bg-accent/[0.03] border-accent/10"
+                        "bg-gold/[0.03] border-gold/10"
                       }`}>
                         {customizing && step.type === "message" ? (
                           <textarea

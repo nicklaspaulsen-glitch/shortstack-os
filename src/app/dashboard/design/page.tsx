@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Sparkles, Copy, ExternalLink, Image, Layout, Award, Flag, Monitor,
+  Sparkles, Copy, ExternalLink, Image as ImageIcon, Layout, Award, Flag, Monitor,
   Camera, MessageCircle, Play, Briefcase, Music
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -27,7 +27,7 @@ interface TemplatePreset {
 }
 
 const SECTIONS = [
-  { key: "thumbnails", label: "Thumbnails", icon: <Image size={18} />, description: "YouTube & video thumbnails" },
+  { key: "thumbnails", label: "Thumbnails", icon: <ImageIcon size={18} />, description: "YouTube & video thumbnails" },
   { key: "social", label: "Social Posts", icon: <Camera size={18} />, description: "Posts for all platforms" },
   { key: "ads", label: "Ad Creatives", icon: <Flag size={18} />, description: "Facebook, Google & display ads" },
   { key: "logos", label: "Logos", icon: <Award size={18} />, description: "Brand logos & marks" },
@@ -247,7 +247,7 @@ export default function DesignStudioPage() {
       {generated.length > 0 && (
         <div className="card rounded-xl">
           <h2 className="section-header flex items-center gap-2 mb-4">
-            <Image size={18} /> Generated Prompts ({generated.length})
+            <ImageIcon size={18} /> Generated Prompts ({generated.length})
           </h2>
           <div className="space-y-3">
             {generated.map((g) => (

@@ -168,6 +168,43 @@ export async function POST(request: NextRequest) {
       const sub = event.data.object as Stripe.Subscription;
       const customerId = sub.customer as string;
 
+      // Check if this is an agency owner's subscription
+      const { data: agencyProfile } = await supabase
+        .from("profiles")
+        .select("id, full_name, email")
+        .eq("stripe_customer_id", customerId)
+        .single();
+
+      if (agencyProfile) {
+        // Agency owner cancelled — clear their plan
+        await supabase
+          .from("profiles")
+          .update({ plan_tier: null })
+          .eq("id", agencyProfile.id);
+
+        await supabase.from("trinity_log").insert({
+          action_type: "custom",
+          description: `Agency subscription cancelled: ${agencyProfile.full_name || agencyProfile.email}`,
+          status: "completed",
+          result: { type: "agency_subscription_cancelled", user_id: agencyProfile.id, stripe_sub_id: sub.id },
+        });
+
+        const chatId = process.env.TELEGRAM_CHAT_ID;
+        const botToken = process.env.TELEGRAM_BOT_TOKEN;
+        if (chatId && botToken) {
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: `🚨 Agency Subscription Cancelled!\n\n${agencyProfile.full_name || "Unknown"} (${agencyProfile.email || ""})\nSub: ${sub.id}\nTrigger retention!`,
+            }),
+          }).catch(() => {});
+        }
+        break;
+      }
+
+      // Otherwise check if it's a client subscription
       const { data: client } = await supabase
         .from("clients")
         .select("id, business_name")
@@ -207,21 +244,63 @@ export async function POST(request: NextRequest) {
     // ── Checkout Completed ──
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
-      const clientId = session.metadata?.client_id;
       const type = session.metadata?.type;
 
-      if (type === "client_subscription" && clientId) {
-        await supabase.from("trinity_log").insert({
-          action_type: "custom",
-          description: `New subscription started via Stripe Checkout`,
-          client_id: clientId,
-          status: "completed",
-          result: {
-            type: "checkout_completed",
-            session_id: session.id,
-            amount: session.amount_total ? (session.amount_total / 100) : null,
-          },
-        });
+      if (type === "agency_subscription") {
+        // Agency owner subscribed to a plan from the pricing page
+        const userId = session.metadata?.user_id;
+        const planTier = session.metadata?.plan_tier;
+
+        if (userId && planTier) {
+          // Activate their plan
+          await supabase
+            .from("profiles")
+            .update({ plan_tier: planTier, role: "admin" })
+            .eq("id", userId);
+
+          await supabase.from("trinity_log").insert({
+            action_type: "custom",
+            description: `New agency subscription: ${planTier} plan ($${((session.amount_total || 0) / 100).toFixed(0)}/mo)`,
+            status: "completed",
+            result: {
+              type: "agency_subscription",
+              plan_tier: planTier,
+              user_id: userId,
+              session_id: session.id,
+              amount: session.amount_total ? session.amount_total / 100 : null,
+            },
+          });
+
+          // Telegram notification
+          const chatId = process.env.TELEGRAM_CHAT_ID;
+          const botToken = process.env.TELEGRAM_BOT_TOKEN;
+          if (chatId && botToken) {
+            const { data: prof } = await supabase.from("profiles").select("full_name, email").eq("id", userId).single();
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chat_id: chatId,
+                text: `🎉 New Agency Signup!\n\n${prof?.full_name || "Unknown"} (${prof?.email || ""})\nPlan: ${planTier}\nMRR: $${((session.amount_total || 0) / 100).toFixed(0)}`,
+              }),
+            }).catch(() => {});
+          }
+        }
+      } else if (type === "client_subscription") {
+        const clientId = session.metadata?.client_id;
+        if (clientId) {
+          await supabase.from("trinity_log").insert({
+            action_type: "custom",
+            description: `New subscription started via Stripe Checkout`,
+            client_id: clientId,
+            status: "completed",
+            result: {
+              type: "checkout_completed",
+              session_id: session.id,
+              amount: session.amount_total ? session.amount_total / 100 : null,
+            },
+          });
+        }
       }
       break;
     }

@@ -56,6 +56,7 @@ export default function ProductionPage() {
 
   useEffect(() => {
     if (profile) fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   async function fetchData() {
@@ -129,7 +130,7 @@ export default function ProductionPage() {
           {[
             { step: "1", label: "Get Script", desc: "AI writes your script", icon: <FileText size={14} className="text-gold" /> },
             { step: "2", label: "Record", desc: "Film yourself doing the lines", icon: <Camera size={14} className="text-pink-400" /> },
-            { step: "3", label: "Upload", desc: "Send footage + notes", icon: <Upload size={14} className="text-accent" /> },
+            { step: "3", label: "Upload", desc: "Send footage + notes", icon: <Upload size={14} className="text-gold" /> },
             { step: "4", label: "Editors", desc: "Team notified on Slack", icon: <MessageSquare size={14} className="text-purple-400" /> },
             { step: "5", label: "Done", desc: "Get your edited video", icon: <CheckCircle size={14} className="text-success" /> },
           ].map((s, i) => (

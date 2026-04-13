@@ -1,11 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
 // Cron: Weekly performance digest — sent every Monday at 9 AM
 // Vercel Cron: 0 9 * * 1
 // Sends a summary via Telegram with key metrics
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Verify cron secret to prevent unauthorized triggering
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const supabase = createServiceClient();
 
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();

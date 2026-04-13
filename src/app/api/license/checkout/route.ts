@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
       license_key: licenseKey,
     });
   } catch (err) {
-    return NextResponse.json({ error: `Stripe error: ${err}` }, { status: 500 });
+    console.error("License checkout error:", err);
+    return NextResponse.json({ error: "Failed to create checkout session. Please try again." }, { status: 500 });
   }
 }

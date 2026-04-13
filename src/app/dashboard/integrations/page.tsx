@@ -178,18 +178,30 @@ function SocialAccountsPage() {
 
   // Show toast on OAuth callback
   useEffect(() => {
-    const connected = searchParams.get("connected");
-    const error = searchParams.get("error");
+    const connected = searchParams?.get("connected");
+    const error = searchParams?.get("error");
     if (connected) {
       toast.success(`${connected} connected successfully via Zernio!`);
       // Sync accounts after successful OAuth callback
-      if (clientId) syncZernioAccounts();
+      if (clientId) {
+        syncZernioAccounts();
+        // Fire-and-forget: AI analyzes client profile and generates content suggestions
+        fetch("/api/ai/content-suggestions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ client_id: clientId, platform: connected }),
+        }).then(() => {
+          toast.success("AI is generating content suggestions based on your profile!");
+        }).catch(() => { /* best-effort */ });
+      }
     }
     if (error) toast.error(error === "denied" ? "Authorization was denied" : `Connection failed: ${error}`);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   useEffect(() => {
     if (profile) fetchClients();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   useEffect(() => {
@@ -197,6 +209,7 @@ function SocialAccountsPage() {
       fetchAccounts();
       syncZernioAccounts();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId]);
 
   async function fetchClients() {
@@ -364,7 +377,7 @@ function SocialAccountsPage() {
                           </div>
                         )}
                         {platform?.supportsDM && (
-                          <div className="flex items-center gap-1 text-[9px] text-accent bg-accent/10 px-1.5 py-0.5 rounded">
+                          <div className="flex items-center gap-1 text-[9px] text-gold bg-gold/10 px-1.5 py-0.5 rounded">
                             <MessageSquare size={8} /> DM
                           </div>
                         )}
@@ -415,7 +428,7 @@ function SocialAccountsPage() {
                   <div className="flex items-center gap-2">
                     <p className="text-xs font-semibold">{platform.name}</p>
                     {platform.supportsDM && (
-                      <span className="text-[8px] text-accent bg-accent/10 px-1 py-0.5 rounded font-medium">DM</span>
+                      <span className="text-[8px] text-gold bg-gold/10 px-1 py-0.5 rounded font-medium">DM</span>
                     )}
                   </div>
                   <p className="text-[10px] text-muted">{platform.description}</p>
@@ -447,9 +460,9 @@ function SocialAccountsPage() {
         </div>
       )}
       {!clientId && profile?.role !== "client" && (
-        <div className="card border-accent/15 bg-accent/[0.03]">
+        <div className="card border-gold/15 bg-gold/[0.03]">
           <div className="flex items-center gap-2">
-            <AlertCircle size={14} className="text-accent" />
+            <AlertCircle size={14} className="text-gold" />
             <p className="text-xs text-muted">Create a client first in the Clients page, then select them above to connect their accounts.</p>
           </div>
         </div>
@@ -530,14 +543,14 @@ const BUSINESS_INTEGRATIONS = [
   },
   {
     id: "email_marketing",
-    name: "Mailchimp / SendGrid",
+    name: "SendGrid",
     icon: <Mail size={16} />,
-    color: "text-[#FFE01B]",
-    bg: "from-[#FFE01B]/10 to-[#FFE01B]/5 border-[#FFE01B]/20",
+    color: "text-[#1A82E2]",
+    bg: "from-[#1A82E2]/10 to-[#1A82E2]/5 border-[#1A82E2]/20",
     description: "Email lists, campaigns, transactional emails",
     endpoint: "/api/integrations/email-marketing",
-    envKeys: ["MAILCHIMP_API_KEY", "SENDGRID_API_KEY"],
-    docsUrl: "https://mailchimp.com/developer/",
+    envKeys: ["SENDGRID_API_KEY"],
+    docsUrl: "https://docs.sendgrid.com/",
   },
   {
     id: "twilio",

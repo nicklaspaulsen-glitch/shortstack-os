@@ -66,6 +66,7 @@ export default function AdsPage() {
 
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); fetchActions(); }, []);
 
   async function fetchData() {
@@ -497,6 +498,7 @@ export default function AdsPage() {
                             {campaignCreatives.map(cr => (
                               <div key={cr.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
                                 {cr.image_url ? (
+                                  /* eslint-disable-next-line @next/next/no-img-element */
                                   <img src={cr.image_url} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
                                 ) : (
                                   <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center shrink-0">
@@ -551,6 +553,7 @@ export default function AdsPage() {
                     {/* Preview */}
                     <div className="aspect-video rounded-lg bg-surface-light border border-border mb-3 overflow-hidden relative">
                       {cr.image_url ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img src={cr.image_url} alt="" className="w-full h-full object-cover" />
                       ) : cr.video_url ? (
                         <video src={cr.video_url} className="w-full h-full object-cover" />

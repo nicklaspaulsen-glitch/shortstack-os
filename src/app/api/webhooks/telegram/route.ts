@@ -3,15 +3,30 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { parseTrinityMessage, executeTrinityCommand, sendTelegramMessage, cleanupOldTelegramMessages } from "@/lib/services/trinity";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const message = body.message;
+  // Validate Telegram webhook secret token if configured
+  const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (webhookSecret) {
+    const token = request.headers.get("x-telegram-bot-api-secret-token");
+    if (token !== webhookSecret) {
+      return NextResponse.json({ ok: true }); // Silent rejection
+    }
+  }
 
-  if (!message?.text || !message?.chat?.id) {
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
     return NextResponse.json({ ok: true });
   }
 
-  const chatId = String(message.chat.id);
-  const text = message.text.trim();
+  const message = body.message as Record<string, unknown> | undefined;
+
+  if (!message?.text || !(message?.chat as Record<string, unknown>)?.id) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const chatId = String((message.chat as Record<string, unknown>).id);
+  const text = (message.text as string).trim();
   const supabase = createServiceClient();
 
   // Only respond to authorized chat IDs

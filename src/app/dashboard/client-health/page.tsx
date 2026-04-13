@@ -17,6 +17,7 @@ export default function ClientHealthPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchClients(); }, []);
 
   async function fetchClients() {

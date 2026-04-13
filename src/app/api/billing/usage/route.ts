@@ -6,6 +6,8 @@ import { createServerSupabase } from "@/lib/supabase/server";
 
 const TIER_LIMITS = {
   Starter: {
+    max_clients: 5,
+    team_members: 1,
     ai_requests_monthly: 100,
     content_scripts: 10,
     social_posts: 30,
@@ -19,6 +21,8 @@ const TIER_LIMITS = {
     storage_mb: 500,
   },
   Growth: {
+    max_clients: 25,
+    team_members: 5,
     ai_requests_monthly: 500,
     content_scripts: 50,
     social_posts: 150,
@@ -32,7 +36,9 @@ const TIER_LIMITS = {
     storage_mb: 2000,
   },
   Enterprise: {
-    ai_requests_monthly: -1, // unlimited
+    max_clients: -1, // unlimited
+    team_members: -1,
+    ai_requests_monthly: -1,
     content_scripts: -1,
     social_posts: -1,
     seo_audits: -1,
@@ -101,6 +107,16 @@ export async function POST(request: NextRequest) {
 
   const { client_id, action } = await request.json();
 
+  // Validate action is one of the known tier limit keys
+  const validActions = [
+    "max_clients", "team_members", "ai_requests_monthly", "content_scripts",
+    "social_posts", "seo_audits", "competitor_analyses", "landing_pages",
+    "email_sequences", "proposals", "reports", "voice_assistant_minutes", "storage_mb",
+  ];
+  if (!action || typeof action !== "string" || !validActions.includes(action)) {
+    return NextResponse.json({ error: "Invalid action type" }, { status: 400 });
+  }
+
   let tier = "Growth";
   if (client_id) {
     const { data: client } = await supabase.from("clients").select("package_tier").eq("id", client_id).single();
@@ -118,12 +134,15 @@ export async function POST(request: NextRequest) {
   monthStart.setDate(1);
   const since = monthStart.toISOString();
 
+  // Sanitize action for ilike query — strip wildcard chars to prevent pattern injection
+  const sanitizedAction = action.replace(/[%_\\]/g, "");
+
   const { count } = await supabase
     .from("trinity_log")
     .select("*", { count: "exact", head: true })
     .gte("created_at", since)
     .eq("client_id", client_id || "")
-    .ilike("action_type", `%${action}%`);
+    .ilike("action_type", `%${sanitizedAction}%`);
 
   const used = count || 0;
   const allowed = used < (limit || 0);

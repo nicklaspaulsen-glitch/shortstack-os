@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // Social Profile Enricher — scans lead websites to find Instagram, Facebook, LinkedIn, TikTok
 export async function POST(request: NextRequest) {
+  // Auth check — only authenticated users can enrich leads
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { lead_ids, batch_size } = await request.json();
   const supabase = createServiceClient();
 

@@ -18,7 +18,8 @@ import toast from "react-hot-toast";
 import SocialConnect from "@/components/social-connect";
 
 export default function ClientDetailPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id;
   const [client, setClient] = useState<Client | null>(null);
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -27,7 +28,7 @@ export default function ClientDetailPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "access">("overview");
   const [pageAccess, setPageAccess] = useState<Record<string, boolean>>({
     portal: true, content: true, billing: true, reports: true, socials: true,
@@ -37,6 +38,7 @@ export default function ClientDetailPage() {
 
   useEffect(() => {
     if (id) fetchAll();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   async function fetchAll() {
@@ -196,7 +198,7 @@ export default function ClientDetailPage() {
               {aiActions.length === 0 ? (
                 <p className="text-muted text-sm">No AI actions for this client yet</p>
               ) : aiActions.map((a, i) => (
-                <div key={i} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
+                <div key={(a.id as string) || i} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
                   <StatusBadge status={a.status as string} />
                   <div>
                     <p className="text-sm">{a.description as string}</p>
@@ -365,6 +367,9 @@ export default function ClientDetailPage() {
             <SocialConnect clientId={id as string} clientName={client?.business_name} />
           </div>
 
+          {/* Telegram Bot */}
+          <TelegramBotSetup clientId={id as string} client={client} onUpdate={fetchAll} />
+
           <div className="card">
             <h3 className="section-header">GHL Sub-Account</h3>
             {client?.ghl_location_id ? (
@@ -396,6 +401,104 @@ export default function ClientDetailPage() {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Telegram Bot Setup Component ────────────────────────────────── */
+function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; client: Client | null; onUpdate: () => void }) {
+  const [token, setToken] = useState("");
+  const [setting, setSetting] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const hasBot = !!(client as unknown as Record<string, unknown>)?.telegram_bot_username;
+
+  async function setupBot() {
+    if (!token.trim()) { toast.error("Paste the bot token from @BotFather"); return; }
+    setSetting(true);
+    try {
+      const res = await fetch("/api/telegram/setup-bot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: clientId, bot_token: token }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`Bot @${data.bot_username} connected!`);
+        setToken("");
+        onUpdate();
+      } else {
+        toast.error(data.error || "Failed to setup bot");
+      }
+    } catch { toast.error("Connection error"); }
+    setSetting(false);
+  }
+
+  async function removeBot() {
+    if (!confirm("Remove the Telegram bot for this client?")) return;
+    setRemoving(true);
+    try {
+      const res = await fetch("/api/telegram/setup-bot", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ client_id: clientId }),
+      });
+      const data = await res.json();
+      if (data.success) { toast.success("Bot removed"); onUpdate(); }
+    } catch { toast.error("Error"); }
+    setRemoving(false);
+  }
+
+  return (
+    <div className="card">
+      <h3 className="section-header flex items-center gap-2">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-[#26A5E4]">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+        </svg>
+        Client Telegram Bot
+      </h3>
+
+      {hasBot ? (
+        <div className="space-y-2">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-success/[0.05] border border-success/20">
+            <div className="w-2 h-2 rounded-full bg-success" />
+            <div className="flex-1">
+              <p className="text-xs font-medium">@{(client as unknown as Record<string, unknown>)?.telegram_bot_username as string}</p>
+              <p className="text-[9px] text-muted">Bot connected and active</p>
+            </div>
+            <button onClick={removeBot} disabled={removing}
+              className="text-[9px] text-danger hover:text-danger/80 transition-colors">
+              {removing ? "Removing..." : "Remove"}
+            </button>
+          </div>
+          <p className="text-[9px] text-muted">
+            The client can message this bot to check project status, tasks, invoices, and content.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-xs text-muted">
+            Give this client their own Telegram bot for project updates and communication.
+          </p>
+          <ol className="text-[10px] text-muted space-y-1 list-decimal list-inside">
+            <li>Open Telegram and message <span className="font-mono text-foreground">@BotFather</span></li>
+            <li>Send <span className="font-mono text-foreground">/newbot</span> and follow the steps</li>
+            <li>Copy the bot token and paste it below</li>
+          </ol>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={token}
+              onChange={e => setToken(e.target.value)}
+              placeholder="123456:ABC-DEF1234..."
+              className="input flex-1 text-xs font-mono"
+            />
+            <button onClick={setupBot} disabled={setting}
+              className="btn-primary text-[10px] px-3 py-1.5 shrink-0">
+              {setting ? "Setting up..." : "Connect Bot"}
+            </button>
           </div>
         </div>
       )}

@@ -65,6 +65,7 @@ export default function AuditPage() {
   const [stats, setStats] = useState({ total: 0, successRate: 0, mostActive: "", today: 0 });
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchAudit(); }, [activeTab, dateRange]);
 
   async function fetchAudit() {

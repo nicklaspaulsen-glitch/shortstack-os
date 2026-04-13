@@ -19,9 +19,10 @@ const INTEGRATIONS = [
 
 export default function MonitorPage() {
   const [health, setHealth] = useState<SystemHealthEntry[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchHealth(); }, []);
 
   async function fetchHealth() {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
+import { useAppStore } from "@/lib/store";
 import { BrowserModeBanner } from "@/components/read-only-guard";
 import { Client, ClientTask, Invoice, ContentCalendarEntry } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
@@ -20,6 +21,7 @@ import Link from "next/link";
 
 export default function ClientPortalPage() {
   const { profile } = useAuth();
+  const { impersonatedClient, isImpersonating } = useAppStore();
   const [client, setClient] = useState<Client | null>(null);
   const [tasks, setTasks] = useState<ClientTask[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -28,43 +30,73 @@ export default function ClientPortalPage() {
   const [aiPlan, setAiPlan] = useState("");
   const [generatingPlan, setGeneratingPlan] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [leadCount, setLeadCount] = useState(0);
+  const [outreachStats, setOutreachStats] = useState({ sent: 0, replied: 0 });
   const supabase = createClient();
 
   useEffect(() => {
     if (profile) fetchPortalData();
-  }, [profile]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile, impersonatedClient]);
 
   async function fetchPortalData() {
-    const { data: clientData } = await supabase
-      .from("clients")
-      .select("*")
-      .eq("profile_id", profile!.id)
-      .single();
+    if (!profile?.id) { setLoading(false); return; }
+    try {
+      let clientData;
+      if (isImpersonating && impersonatedClient) {
+        // Admin is viewing as this client -- look up by client ID
+        const { data } = await supabase
+          .from("clients")
+          .select("*")
+          .eq("id", impersonatedClient.id)
+          .single();
+        clientData = data;
+      } else {
+        // Normal client login -- look up by profile_id
+        const { data } = await supabase
+          .from("clients")
+          .select("*")
+          .eq("profile_id", profile.id)
+          .single();
+        clientData = data;
+      }
 
-    if (!clientData) {
+      if (!clientData) {
+        setLoading(false);
+        return;
+      }
+
+      setClient(clientData);
+
+      const [
+        { data: tasksData },
+        { data: invoicesData },
+        { data: contentData },
+        { data: aiData },
+        { count: leadsCount },
+        { data: outreachData },
+      ] = await Promise.all([
+        supabase.from("client_tasks").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
+        supabase.from("invoices").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
+        supabase.from("content_calendar").select("*").eq("client_id", clientData.id).order("scheduled_at", { ascending: false }).limit(5),
+        supabase.from("trinity_log").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }).limit(5),
+        supabase.from("leads").select("*", { count: "exact", head: true }).eq("client_id", clientData.id),
+        supabase.from("outreach_log").select("status").eq("client_id", clientData.id),
+      ]);
+
+      setTasks(tasksData || []);
+      setInvoices(invoicesData || []);
+      setContent(contentData || []);
+      setAiActions(aiData || []);
+      setLeadCount(leadsCount || 0);
+      const sent = (outreachData || []).length;
+      const replied = (outreachData || []).filter((o: { status: string }) => o.status === "replied").length;
+      setOutreachStats({ sent, replied });
+    } catch {
+      // Data fetch failed silently; page shows empty/onboarding state
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setClient(clientData);
-
-    const [
-      { data: tasksData },
-      { data: invoicesData },
-      { data: contentData },
-      { data: aiData },
-    ] = await Promise.all([
-      supabase.from("client_tasks").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
-      supabase.from("invoices").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
-      supabase.from("content_calendar").select("*").eq("client_id", clientData.id).order("scheduled_at", { ascending: false }).limit(5),
-      supabase.from("trinity_log").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }).limit(5),
-    ]);
-
-    setTasks(tasksData || []);
-    setInvoices(invoicesData || []);
-    setContent(contentData || []);
-    setAiActions(aiData || []);
-    setLoading(false);
   }
 
   // Onboarding flow
@@ -84,7 +116,7 @@ export default function ClientPortalPage() {
   if (loading) return <PageLoading />;
 
   if (!client) {
-    return <ClientSelfOnboarding profileId={profile!.id} profileEmail={profile!.email} profileName={profile!.full_name} onComplete={fetchPortalData} />;
+    return <ClientSelfOnboarding profileId={profile?.id || ""} profileEmail={profile?.email || ""} profileName={profile?.full_name || ""} onComplete={fetchPortalData} />;
   }
 
   const completedTasks = tasks.filter((t) => t.is_completed).length;
@@ -229,20 +261,49 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-        <StatCard label="Services" value={(client.services || []).length} icon={<Package size={14} />} />
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-2.5">
+        <StatCard label="Leads" value={leadCount} icon={<Target size={14} />} />
+        <StatCard label="Outreach" value={outreachStats.sent} icon={<Zap size={14} />} change={outreachStats.replied > 0 ? `${outreachStats.replied} replied` : undefined} changeType="positive" />
         <StatCard label="Tasks Done" value={`${completedTasks}/${totalTasks}`} icon={<CheckCircle size={14} />} changeType={completedTasks === totalTasks && totalTasks > 0 ? "positive" : "neutral"} />
         <StatCard label="Content" value={publishedContent} icon={<Film size={14} />} change={`${content.length} total`} />
+        <StatCard label="Services" value={(client.services || []).length} icon={<Package size={14} />} />
         <StatCard label="Invoiced" value={formatCurrency(totalPaid)} icon={<CreditCard size={14} />}
           change={pendingInvoices.length > 0 ? `${pendingInvoices.length} pending` : "All paid"}
           changeType={pendingInvoices.length > 0 ? "negative" : "positive"} />
       </div>
 
       {/* Quick links */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <Link href="/dashboard/portal/leads" className="card-hover p-3 flex items-center gap-2.5 group border-gold/10">
+          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
+            <Sparkles size={14} className="text-gold" />
+          </div>
+          <div>
+            <p className="text-xs font-medium group-hover:text-foreground transition-colors">AI Lead Engine</p>
+            <p className="text-[10px] text-muted">Find new prospects</p>
+          </div>
+        </Link>
+        <Link href="/dashboard/portal/outreach" className="card-hover p-3 flex items-center gap-2.5 group">
+          <div className="w-8 h-8 bg-info/10 rounded-lg flex items-center justify-center shrink-0">
+            <Target size={14} className="text-info" />
+          </div>
+          <div>
+            <p className="text-xs font-medium group-hover:text-foreground transition-colors">Outreach</p>
+            <p className="text-[10px] text-muted">Email, DM, SMS, calls</p>
+          </div>
+        </Link>
+        <Link href="/dashboard/portal/socials" className="card-hover p-3 flex items-center gap-2.5 group">
+          <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
+            <Globe size={14} className="text-gold" />
+          </div>
+          <div>
+            <p className="text-xs font-medium group-hover:text-foreground transition-colors">Socials</p>
+            <p className="text-[10px] text-muted">Connect accounts</p>
+          </div>
+        </Link>
         <Link href="/dashboard/portal/content" className="card-hover p-3 flex items-center gap-2.5 group">
-          <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center shrink-0">
-            <Film size={14} className="text-accent" />
+          <div className="w-8 h-8 bg-info/10 rounded-lg flex items-center justify-center shrink-0">
+            <Film size={14} className="text-info" />
           </div>
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">Content</p>
@@ -256,15 +317,6 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
           <div>
             <p className="text-xs font-medium group-hover:text-foreground transition-colors">Reports</p>
             <p className="text-[10px] text-muted">Performance data</p>
-          </div>
-        </Link>
-        <Link href="/dashboard/portal/billing" className="card-hover p-3 flex items-center gap-2.5 group">
-          <div className="w-8 h-8 bg-warning/10 rounded-lg flex items-center justify-center shrink-0">
-            <CreditCard size={14} className="text-warning" />
-          </div>
-          <div>
-            <p className="text-xs font-medium group-hover:text-foreground transition-colors">Billing</p>
-            <p className="text-[10px] text-muted">Invoices & contracts</p>
           </div>
         </Link>
         <Link href="/dashboard/portal/support" className="card-hover p-3 flex items-center gap-2.5 group">
@@ -360,7 +412,7 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
               <p className="text-xs text-muted py-3 text-center">No recent activity</p>
             ) : (
               aiActions.map((a, i) => (
-                <div key={i} className="flex items-start gap-2 py-1.5 border-b border-border last:border-0">
+                <div key={(a.id as string) || i} className="flex items-start gap-2 py-1.5 border-b border-border last:border-0">
                   <Bot size={12} className="text-gold mt-0.5 shrink-0" />
                   <div className="min-w-0">
                     <p className="text-xs">{a.description as string}</p>
@@ -379,15 +431,15 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
         <div className="card">
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header mb-0 flex items-center gap-2">
-              <Calendar size={13} className="text-accent" /> Upcoming Content
+              <Calendar size={13} className="text-gold" /> Upcoming Content
             </h2>
             <Link href="/dashboard/portal/content" className="text-[10px] text-gold hover:text-gold-light flex items-center gap-0.5">
               View all <ArrowRight size={10} />
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            {content.slice(0, 3).map((c, i) => (
-              <div key={i} className="bg-surface-light border border-border rounded-lg p-2.5">
+            {content.slice(0, 3).map((c) => (
+              <div key={c.id} className="bg-surface-light border border-border rounded-lg p-2.5">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[10px] text-muted capitalize">{c.platform.replace(/_/g, " ")}</span>
                   <StatusBadge status={c.status} />

@@ -42,6 +42,7 @@ export default function DealsPage() {
     title: "", amount: "", client_id: "", stage: "prospect", source: "",
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {
@@ -104,20 +105,40 @@ export default function DealsPage() {
       {/* Stats */}
       <div className="grid grid-cols-4 gap-3">
         <div className="card text-center">
-          <p className="text-[10px] text-muted">Pipeline Value</p>
+          <div className="flex items-center justify-center gap-1.5 mb-1">
+            <div className="w-6 h-6 rounded-lg bg-gold/10 flex items-center justify-center">
+              <DollarSign size={12} className="text-gold" />
+            </div>
+          </div>
           <p className="text-xl font-bold text-gold">{formatCurrency(totalValue)}</p>
+          <p className="text-[10px] text-muted">Pipeline Value</p>
         </div>
         <div className="card text-center">
-          <p className="text-[10px] text-muted">Won</p>
+          <div className="flex items-center justify-center gap-1.5 mb-1">
+            <div className="w-6 h-6 rounded-lg bg-success/10 flex items-center justify-center">
+              <DollarSign size={12} className="text-success" />
+            </div>
+          </div>
           <p className="text-xl font-bold text-success">{formatCurrency(wonValue)}</p>
+          <p className="text-[10px] text-muted">Won</p>
         </div>
         <div className="card text-center">
-          <p className="text-[10px] text-muted">Lost</p>
+          <div className="flex items-center justify-center gap-1.5 mb-1">
+            <div className="w-6 h-6 rounded-lg bg-danger/10 flex items-center justify-center">
+              <DollarSign size={12} className="text-danger" />
+            </div>
+          </div>
           <p className="text-xl font-bold text-danger">{formatCurrency(lostValue)}</p>
+          <p className="text-[10px] text-muted">Lost</p>
         </div>
         <div className="card text-center">
+          <div className="flex items-center justify-center gap-1.5 mb-1">
+            <div className="w-6 h-6 rounded-lg bg-info/10 flex items-center justify-center">
+              <DollarSign size={12} className="text-info" />
+            </div>
+          </div>
+          <p className="text-xl font-bold">{winRate}%</p>
           <p className="text-[10px] text-muted">Win Rate</p>
-          <p className="text-xl font-bold text-foreground">{winRate}%</p>
         </div>
       </div>
 

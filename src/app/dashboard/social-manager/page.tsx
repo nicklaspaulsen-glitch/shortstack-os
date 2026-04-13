@@ -11,7 +11,7 @@ import {
   Bot, Play, Pause, Calendar, Camera, Music,
   MessageSquare, Sparkles, Send, Clock, CheckCircle,
   Loader, Settings, ArrowRight, Globe, Film,
-  Briefcase
+  Briefcase, Lightbulb, Video, LayoutGrid, FileText as FileTextIcon, Mic
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -20,7 +20,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={14} className="text-pink-400" />,
   facebook: <MessageSquare size={14} className="text-blue-400" />,
   tiktok: <Music size={14} className="text-white" />,
-  linkedin: <Briefcase size={14} className="text-blue-600" />,
+  linkedin: <Briefcase size={14} className="text-blue-400" />,
   youtube: <Film size={14} className="text-red-400" />,
 };
 
@@ -36,12 +36,18 @@ export default function SocialManagerPage() {
   const [loading, setLoading] = useState(true);
   const [weekConfig, setWeekConfig] = useState({ posts_per_day: 1, tone: "professional yet approachable", topics: "" });
   const [tab, setTab] = useState<"dashboard" | "scheduled" | "published" | "config">("dashboard");
+  const [suggestions, setSuggestions] = useState<Array<{ id: string; description: string; status: string; metadata: Record<string, unknown>; created_at: string }>>([]);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchClients(); }, []);
 
   useEffect(() => {
-    if (selectedClient) fetchPosts();
+    if (selectedClient) {
+      fetchPosts();
+      fetchSuggestions();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClient]);
 
   async function fetchClients() {
@@ -73,6 +79,15 @@ export default function SocialManagerPage() {
     ]);
     setScheduledPosts(scheduled || []);
     setRecentPosts(published || []);
+  }
+
+  async function fetchSuggestions() {
+    if (!selectedClient) return;
+    try {
+      const res = await fetch(`/api/ai/content-suggestions?client_id=${selectedClient}`);
+      const data = await res.json();
+      setSuggestions((data.suggestions || []).filter((s: { status: string }) => s.status === "pending"));
+    } catch { /* best-effort */ }
   }
 
   function toggleAutopilot(clientId: string) {
@@ -241,12 +256,59 @@ export default function SocialManagerPage() {
             </div>
           </div>
 
+          {/* AI Content Suggestions */}
+          {suggestions.length > 0 && (
+            <div className="card">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="section-header mb-0 flex items-center gap-2">
+                  <Lightbulb size={13} className="text-gold" /> AI Suggestions
+                </h2>
+                <span className="text-[9px] text-muted">{suggestions.length} ideas</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {suggestions.slice(0, 6).map(s => {
+                  const meta = s.metadata || {};
+                  const typeIcon: Record<string, React.ReactNode> = {
+                    short_video: <Video size={12} className="text-pink-400" />,
+                    carousel: <LayoutGrid size={12} className="text-blue-400" />,
+                    script: <FileTextIcon size={12} className="text-yellow-400" />,
+                    reel: <Film size={12} className="text-purple-400" />,
+                    story: <Camera size={12} className="text-orange-400" />,
+                    post: <MessageSquare size={12} className="text-green-400" />,
+                    thread: <FileTextIcon size={12} className="text-cyan-400" />,
+                  };
+                  return (
+                    <div key={s.id} className="p-2.5 bg-surface-light rounded-lg border border-border hover:border-gold/10 transition-all">
+                      <div className="flex items-center gap-2 mb-1">
+                        {typeIcon[String(meta.type)] || <Sparkles size={12} className="text-gold" />}
+                        <span className="text-[10px] font-medium text-gold uppercase">{String(meta.type || "").replace("_", " ")}</span>
+                        <span className="text-[9px] text-muted ml-auto capitalize">{String(meta.platform || "")}</span>
+                      </div>
+                      <p className="text-xs font-medium truncate">{String(meta.title || s.description)}</p>
+                      <p className="text-[10px] text-muted mt-0.5 line-clamp-2">{String(meta.description || "")}</p>
+                      {typeof meta.hook === "string" && meta.hook && (
+                        <p className="text-[10px] text-foreground/70 mt-1 italic border-l-2 border-gold/30 pl-2">&ldquo;{meta.hook}&rdquo;</p>
+                      )}
+                      {Array.isArray(meta.tags) && (
+                        <div className="flex gap-1 mt-1.5">
+                          {(meta.tags as string[]).map(tag => (
+                            <span key={tag} className="text-[8px] text-muted bg-surface px-1.5 py-0.5 rounded">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {/* Up next */}
           {scheduledPosts.length > 0 && (
             <div className="card">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="section-header mb-0 flex items-center gap-2">
-                  <Clock size={13} className="text-accent" /> Up Next
+                  <Clock size={13} className="text-gold" /> Up Next
                 </h2>
                 <button onClick={() => setTab("scheduled")} className="text-[10px] text-gold flex items-center gap-0.5">
                   View all <ArrowRight size={10} />

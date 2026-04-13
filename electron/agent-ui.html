@@ -5,14 +5,78 @@
 <title>ShortStack Agent</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --bg: #06080c; --surface: #0c1017; --border: #1e2a3a; --gold: #C9A84C; --text: #e2e8f0; --muted: #64748b; --success: #10b981; --danger: #f43f5e; }
+  :root { --bg: #06080c; --surface: #0c1017; --border: #1e2a3a; --gold: #C9A84C; --text: #e2e8f0; --muted: #64748b; --success: #10b981; --danger: #f43f5e; --info: #3b82f6; }
   body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
   /* Titlebar */
   .titlebar { -webkit-app-region: drag; height: 36px; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 14px; gap: 8px; shrink: 0; }
   .titlebar .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
   .titlebar span { font-size: 11px; font-weight: 600; color: var(--gold); letter-spacing: 0.5px; }
-  .titlebar .badge { font-size: 8px; color: var(--muted); margin-left: auto; -webkit-app-region: no-drag; }
+  .titlebar .tab-btns { margin-left: auto; display: flex; gap: 2px; -webkit-app-region: no-drag; }
+  .titlebar .tab-btn { font-size: 9px; padding: 3px 10px; border-radius: 6px; border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-weight: 600; }
+  .titlebar .tab-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+  .titlebar .tab-btn:not(.active):hover { border-color: var(--border); color: var(--text); }
+
+  /* Main layout */
+  .main-area { flex: 1; display: flex; overflow: hidden; }
+
+  /* Chat panel */
+  .chat-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Workspace panel */
+  .workspace-panel { display: none; flex-direction: column; overflow: hidden; flex: 1; }
+  .workspace-panel.active { display: flex; }
+
+  .workspace-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .workspace-header h3 { font-size: 13px; font-weight: 700; color: var(--gold); }
+  .workspace-header .sync-btn { margin-left: auto; font-size: 9px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .workspace-header .sync-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .workspace-header .sync-btn.syncing { color: var(--info); border-color: var(--info); }
+
+  .workspace-stats { padding: 10px 16px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; border-bottom: 1px solid var(--border); }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; text-align: center; }
+  .stat-card .stat-value { font-size: 18px; font-weight: 700; color: var(--gold); }
+  .stat-card .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  .workspace-section { padding: 10px 16px; }
+  .workspace-section h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+
+  .file-list { overflow-y: auto; flex: 1; padding: 0 16px; }
+  .file-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; font-size: 11px; transition: background 0.1s; cursor: default; }
+  .file-item:hover { background: var(--surface); }
+  .file-item .icon { width: 16px; text-align: center; }
+  .file-item .name { flex: 1; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .file-item .meta { color: var(--muted); font-size: 9px; white-space: nowrap; }
+
+  .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; cursor: pointer; transition: all 0.15s; }
+  .project-card:hover { border-color: var(--gold); }
+  .project-card .project-name { font-size: 12px; font-weight: 600; }
+  .project-card .project-meta { font-size: 9px; color: var(--muted); margin-top: 2px; display: flex; gap: 8px; }
+
+  /* Tasks panel */
+  .tasks-panel { display: none; flex-direction: column; overflow: hidden; flex: 1; }
+  .tasks-panel.active { display: flex; }
+
+  .tasks-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .tasks-header h3 { font-size: 13px; font-weight: 700; color: var(--gold); }
+  .tasks-header .refresh-btn { margin-left: auto; font-size: 9px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; }
+  .tasks-header .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .task-list { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .task-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+  .task-card .task-title { font-size: 12px; font-weight: 600; }
+  .task-card .task-desc { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+  .task-card .task-actions { display: flex; gap: 6px; margin-top: 8px; }
+  .task-card .task-btn { font-size: 9px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .task-card .task-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .task-card .task-btn.primary { background: var(--gold); color: #000; border-color: var(--gold); }
+  .task-card .task-priority { font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+  .task-card .task-priority.high { background: rgba(244,63,94,0.1); color: var(--danger); }
+  .task-card .task-priority.medium { background: rgba(201,168,76,0.1); color: var(--gold); }
+  .task-card .task-priority.low { background: rgba(100,116,139,0.1); color: var(--muted); }
+
+  .empty-state { text-align: center; color: var(--muted); font-size: 12px; padding: 40px 20px; }
+  .empty-state .emoji { font-size: 24px; margin-bottom: 8px; }
 
   /* Messages */
   .messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
@@ -46,42 +110,161 @@
   .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .send-btn svg { width: 16px; height: 16px; }
 
+  /* Login */
+  .login-screen { position: absolute; inset: 0; z-index: 100; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px; }
+  .login-screen.hidden { display: none; }
+  .login-screen h2 { color: var(--gold); font-size: 20px; font-weight: 700; }
+  .login-screen p { color: var(--muted); font-size: 12px; text-align: center; max-width: 280px; line-height: 1.5; }
+  .login-form { width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 10px; }
+  .login-form input { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 11px 14px; color: var(--text); font-size: 13px; outline: none; transition: border-color 0.2s; font-family: inherit; }
+  .login-form input:focus { border-color: rgba(201,168,76,0.5); }
+  .login-form input::placeholder { color: #3a4a5e; }
+  .login-btn { width: 100%; border: none; border-radius: 10px; padding: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: linear-gradient(135deg, #C9A84C, #D4B85A, #A8893D); color: #0b0d12; font-family: inherit; }
+  .login-btn:hover { box-shadow: 0 0 20px rgba(201,168,76,0.25); }
+  .login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .login-error { color: var(--danger); font-size: 11px; text-align: center; min-height: 16px; }
+  .login-user { display: flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); font-size: 10px; color: var(--muted); }
+  .login-user .email { color: var(--text); font-weight: 600; }
+  .logout-btn { font-size: 9px; padding: 3px 8px; border-radius: 5px; border: 1px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; margin-left: auto; }
+  .logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+
   /* Welcome */
   .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
   .welcome h2 { color: var(--gold); font-size: 18px; font-weight: 700; }
-  .welcome p { color: var(--muted); font-size: 12px; text-align: center; max-width: 280px; line-height: 1.5; }
+  .welcome p { color: var(--muted); font-size: 12px; text-align: center; max-width: 320px; line-height: 1.5; }
   .welcome .workspace { font-size: 10px; color: var(--border); margin-top: 8px; }
 
-  .suggestions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; }
-  .suggestions button { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; color: var(--muted); font-size: 11px; cursor: pointer; transition: all 0.15s; }
-  .suggestions button:hover { border-color: var(--gold); color: var(--gold); }
+  .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; max-width: 360px; width: 100%; }
+  .quick-action { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; cursor: pointer; transition: all 0.15s; text-align: left; }
+  .quick-action:hover { border-color: var(--gold); }
+  .quick-action .qa-icon { font-size: 14px; margin-bottom: 4px; }
+  .quick-action .qa-title { font-size: 11px; font-weight: 600; color: var(--text); }
+  .quick-action .qa-desc { font-size: 9px; color: var(--muted); margin-top: 2px; }
 </style>
 </head>
 <body>
   <div class="titlebar">
     <div class="dot"></div>
     <span>ShortStack Agent</span>
-    <div class="badge">Powered by ShortStack</div>
+    <div class="tab-btns" id="tabBtns" style="display:none;">
+      <button class="tab-btn active" onclick="switchTab('chat')">Chat</button>
+      <button class="tab-btn" onclick="switchTab('workspace')">Workspace</button>
+      <button class="tab-btn" onclick="switchTab('tasks')">Tasks</button>
+    </div>
+    <button class="logout-btn" id="logoutBtn" style="display:none;-webkit-app-region:no-drag;" onclick="doLogout()">Sign Out</button>
   </div>
 
-  <div class="messages" id="messages">
-    <div class="welcome" id="welcome">
-      <h2>ShortStack Agent</h2>
-      <p>Your AI assistant that works directly on your machine. Ask me to create files, run commands, build projects, or automate tasks.</p>
-      <div class="workspace" id="workspace-path"></div>
-      <div class="suggestions">
-        <button onclick="suggest('List all files in my workspace')">Show my files</button>
-        <button onclick="suggest('Create a new project folder')">New project</button>
-        <button onclick="suggest('What can you help me with?')">What can you do?</button>
-      </div>
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <h2>ShortStack Agent</h2>
+    <p>Sign in with your ShortStack account to start using the agent.</p>
+    <div class="login-form">
+      <input type="email" id="loginEmail" placeholder="Email address" autocomplete="email">
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+      <div class="login-error" id="loginError"></div>
+      <button class="login-btn" id="loginBtn" onclick="doLogin()">Sign In</button>
     </div>
   </div>
 
-  <div class="input-area">
-    <textarea id="input" placeholder="Ask your agent anything..." rows="1"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="send()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
+  <div class="main-area">
+    <!-- Chat Panel -->
+    <div class="chat-panel" id="chatPanel">
+      <div class="messages" id="messages">
+        <div class="welcome" id="welcome">
+          <h2>ShortStack Agent</h2>
+          <p>Your AI creative partner. I can build websites, create campaigns, organize your files, and automate your workflow — all directly on your machine.</p>
+          <div class="workspace" id="workspace-path"></div>
+          <div class="quick-actions">
+            <button class="quick-action" onclick="suggest('Create a new social media campaign project')">
+              <div class="qa-icon">&#x1F4F1;</div>
+              <div class="qa-title">Social Campaign</div>
+              <div class="qa-desc">Scaffold a full campaign</div>
+            </button>
+            <button class="quick-action" onclick="suggest('Create a brand kit for my business')">
+              <div class="qa-icon">&#x1F3A8;</div>
+              <div class="qa-title">Brand Kit</div>
+              <div class="qa-desc">Logo, colors, guidelines</div>
+            </button>
+            <button class="quick-action" onclick="suggest('Build me a landing page website')">
+              <div class="qa-icon">&#x1F310;</div>
+              <div class="qa-title">Website</div>
+              <div class="qa-desc">HTML/CSS/JS starter</div>
+            </button>
+            <button class="quick-action" onclick="suggest('Create a content calendar for this month')">
+              <div class="qa-icon">&#x1F4C5;</div>
+              <div class="qa-title">Content Calendar</div>
+              <div class="qa-desc">Plan your posts</div>
+            </button>
+            <button class="quick-action" onclick="suggest('Write a 5-email welcome sequence for new subscribers')">
+              <div class="qa-icon">&#x2709;</div>
+              <div class="qa-title">Email Sequence</div>
+              <div class="qa-desc">Drip campaign series</div>
+            </button>
+            <button class="quick-action" onclick="suggest('Analyze my workspace and organize my files')">
+              <div class="qa-icon">&#x1F4C2;</div>
+              <div class="qa-title">Organize Files</div>
+              <div class="qa-desc">Auto-sort workspace</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-area">
+        <textarea id="input" placeholder="Ask your agent anything..." rows="1"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="send()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Workspace Panel -->
+    <div class="workspace-panel" id="workspacePanel">
+      <div class="workspace-header">
+        <h3>Workspace</h3>
+        <button class="sync-btn" id="syncBtn" onclick="syncWorkspace()">Sync</button>
+      </div>
+      <div class="workspace-stats" id="workspaceStats">
+        <div class="stat-card">
+          <div class="stat-value" id="statFiles">-</div>
+          <div class="stat-label">Files</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statProjects">-</div>
+          <div class="stat-label">Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statSize">-</div>
+          <div class="stat-label">Size</div>
+        </div>
+      </div>
+      <div class="workspace-section" id="projectsSection" style="display:none;">
+        <h4>Projects</h4>
+        <div id="projectsList"></div>
+      </div>
+      <div class="workspace-section">
+        <h4>Files</h4>
+      </div>
+      <div class="file-list" id="fileList">
+        <div class="empty-state" id="filesEmpty">
+          <div class="emoji">&#x1F4C1;</div>
+          <div>Click Sync to scan your workspace</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tasks Panel -->
+    <div class="tasks-panel" id="tasksPanel">
+      <div class="tasks-header">
+        <h3>Tasks</h3>
+        <button class="refresh-btn" onclick="loadTasks()">Refresh</button>
+      </div>
+      <div class="task-list" id="taskList">
+        <div class="empty-state">
+          <div class="emoji">&#x2705;</div>
+          <div>No pending tasks</div>
+        </div>
+      </div>
+    </div>
   </div>
 
 <script>
@@ -91,11 +274,239 @@
   const welcomeEl = document.getElementById("welcome");
   let conversationHistory = [];
   let isProcessing = false;
+  let currentTab = "chat";
+
+  // ── Auth Flow ─────────────────────────────────────────────────
+  const loginScreen = document.getElementById("loginScreen");
+  const loginBtn = document.getElementById("loginBtn");
+  const loginError = document.getElementById("loginError");
+  const tabBtns = document.getElementById("tabBtns");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  async function checkAuth() {
+    const session = await window.agent.getSession();
+    if (session.authenticated) {
+      showApp(session.user);
+    } else {
+      showLogin();
+    }
+  }
+
+  function showLogin() {
+    loginScreen.classList.remove("hidden");
+    tabBtns.style.display = "none";
+    logoutBtn.style.display = "none";
+    document.getElementById("loginEmail").focus();
+  }
+
+  function showApp(user) {
+    loginScreen.classList.add("hidden");
+    tabBtns.style.display = "flex";
+    logoutBtn.style.display = "block";
+    logoutBtn.title = user?.email || "";
+    inputEl.focus();
+  }
+
+  async function doLogin() {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    if (!email || !password) { loginError.textContent = "Enter email and password"; return; }
+
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Signing in...";
+    loginError.textContent = "";
+
+    const result = await window.agent.login(email, password);
+
+    if (result.error) {
+      loginError.textContent = result.error;
+      loginBtn.disabled = false;
+      loginBtn.textContent = "Sign In";
+    } else {
+      showApp(result.user);
+    }
+  }
+
+  async function doLogout() {
+    await window.agent.logout();
+    conversationHistory = [];
+    messagesEl.innerHTML = "";
+    if (welcomeEl) messagesEl.appendChild(welcomeEl);
+    showLogin();
+  }
+
+  // Enter key in login form
+  document.getElementById("loginPassword").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") doLogin();
+  });
+  document.getElementById("loginEmail").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") document.getElementById("loginPassword").focus();
+  });
+
+  // Check auth on load
+  checkAuth();
 
   // Load workspace path
   window.agent.getWorkspace().then(p => {
     document.getElementById("workspace-path").textContent = "Workspace: " + p;
   });
+
+  // ── Tab Switching ──────────────────────────────────────────────
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelector(`.tab-btn[onclick="switchTab('${tab}')"]`).classList.add("active");
+
+    document.getElementById("chatPanel").style.display = tab === "chat" ? "flex" : "none";
+    document.getElementById("workspacePanel").classList.toggle("active", tab === "workspace");
+    document.getElementById("tasksPanel").classList.toggle("active", tab === "tasks");
+
+    if (tab === "workspace") loadWorkspaceFiles();
+    if (tab === "tasks") loadTasks();
+  }
+
+  // ── Workspace ──────────────────────────────────────────────────
+  let workspaceFiles = [];
+
+  async function loadWorkspaceFiles() {
+    try {
+      const result = await window.agent.chat([{ role: "user", content: "list_directory" }]);
+      // Direct IPC call to list workspace
+      scanWorkspace();
+    } catch {}
+  }
+
+  async function scanWorkspace() {
+    try {
+      const result = await window.agent.getWorkspace();
+      // Use the chat to list files
+      const listResult = await window.agent.chat([
+        { role: "user", content: "List all files and folders in my workspace root. Also search for all projects (folders with README.md or index.html). Give me the results." }
+      ]);
+      if (listResult.text) {
+        // For now, show the scan result in workspace
+        document.getElementById("filesEmpty").style.display = "none";
+      }
+    } catch {}
+  }
+
+  async function syncWorkspace() {
+    const btn = document.getElementById("syncBtn");
+    btn.textContent = "Syncing...";
+    btn.classList.add("syncing");
+    try {
+      if (window.agent.syncWorkspace) {
+        const result = await window.agent.syncWorkspace();
+        if (result && result.files) {
+          renderWorkspace(result);
+        }
+      }
+    } catch (err) {
+      console.error("Sync error:", err);
+    }
+    btn.textContent = "Sync";
+    btn.classList.remove("syncing");
+  }
+
+  function renderWorkspace(data) {
+    const { files, projects, totalSize } = data;
+
+    // Stats
+    document.getElementById("statFiles").textContent = files ? files.length : 0;
+    document.getElementById("statProjects").textContent = projects ? projects.length : 0;
+    document.getElementById("statSize").textContent = formatSize(totalSize || 0);
+
+    // Projects
+    if (projects && projects.length > 0) {
+      document.getElementById("projectsSection").style.display = "block";
+      document.getElementById("projectsList").innerHTML = projects.map(p => `
+        <div class="project-card" onclick="openProject('${escapeHtml(p.name)}')">
+          <div class="project-name">${escapeHtml(p.name)}</div>
+          <div class="project-meta">
+            <span>${p.type || "project"}</span>
+            <span>${p.file_count || 0} files</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // Files
+    const fileListEl = document.getElementById("fileList");
+    document.getElementById("filesEmpty").style.display = "none";
+    if (files && files.length > 0) {
+      fileListEl.innerHTML = files.slice(0, 100).map(f => {
+        const icon = getFileIcon(f.path || f.name);
+        return `<div class="file-item">
+          <span class="icon">${icon}</span>
+          <span class="name">${escapeHtml(f.path || f.name)}</span>
+          <span class="meta">${formatSize(f.size || 0)}</span>
+        </div>`;
+      }).join("");
+    }
+  }
+
+  function getFileIcon(name) {
+    if (!name) return "&#x1F4C4;";
+    const ext = name.split(".").pop().toLowerCase();
+    const icons = {
+      html: "&#x1F310;", css: "&#x1F3A8;", js: "&#x26A1;", ts: "&#x1F535;",
+      json: "&#x1F4CB;", md: "&#x1F4DD;", csv: "&#x1F4CA;", txt: "&#x1F4C4;",
+      jpg: "&#x1F5BC;", jpeg: "&#x1F5BC;", png: "&#x1F5BC;", gif: "&#x1F5BC;", svg: "&#x1F5BC;", webp: "&#x1F5BC;",
+      mp4: "&#x1F3AC;", mov: "&#x1F3AC;", avi: "&#x1F3AC;",
+      mp3: "&#x1F3B5;", wav: "&#x1F3B5;",
+      pdf: "&#x1F4D5;", zip: "&#x1F4E6;",
+      py: "&#x1F40D;", psd: "&#x1F3A8;",
+    };
+    return icons[ext] || "&#x1F4C4;";
+  }
+
+  function openProject(name) {
+    switchTab("chat");
+    inputEl.value = `Show me the contents of the "${name}" project folder`;
+    send();
+  }
+
+  // ── Tasks ──────────────────────────────────────────────────────
+  async function loadTasks() {
+    const listEl = document.getElementById("taskList");
+    try {
+      if (window.agent.getTasks) {
+        const result = await window.agent.getTasks();
+        if (result && result.tasks && result.tasks.length > 0) {
+          listEl.innerHTML = result.tasks.map(t => `
+            <div class="task-card">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span class="task-priority ${t.priority || 'medium'}">${t.priority || 'medium'}</span>
+                <span class="task-title">${escapeHtml(t.title)}</span>
+              </div>
+              ${t.description ? `<div class="task-desc">${escapeHtml(t.description)}</div>` : ""}
+              <div class="task-actions">
+                <button class="task-btn primary" onclick="startTask('${t.id}', '${escapeHtml(t.title)}')">Start</button>
+                <button class="task-btn" onclick="completeTask('${t.id}')">Complete</button>
+              </div>
+            </div>
+          `).join("");
+        } else {
+          listEl.innerHTML = '<div class="empty-state"><div class="emoji">&#x2705;</div><div>No pending tasks. Create tasks from the ShortStack OS dashboard.</div></div>';
+        }
+      }
+    } catch {}
+  }
+
+  function startTask(taskId, title) {
+    switchTab("chat");
+    inputEl.value = title;
+    send();
+  }
+
+  async function completeTask(taskId) {
+    if (window.agent.completeTask) {
+      await window.agent.completeTask(taskId);
+      loadTasks();
+    }
+  }
+
+  // ── Chat ───────────────────────────────────────────────────────
 
   // Auto-resize textarea
   inputEl.addEventListener("input", () => {
@@ -117,7 +528,7 @@
   }
 
   function addMessage(role, content, extra) {
-    if (welcomeEl) welcomeEl.remove();
+    if (welcomeEl && welcomeEl.parentNode) welcomeEl.remove();
 
     const div = document.createElement("div");
     div.className = "msg " + role;
@@ -149,19 +560,20 @@
   }
 
   function escapeHtml(str) {
-    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1048576) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / 1048576).toFixed(1) + " MB";
   }
 
   function formatContent(text) {
-    // Simple markdown: code blocks, inline code, bold
     let html = escapeHtml(text);
-    // Code blocks
     html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-    // Inline code
     html = html.replace(/`([^`]+)`/g, '<code style="background:#0a0e14;padding:2px 5px;border-radius:4px;">$1</code>');
-    // Bold
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    // Newlines
     html = html.replace(/\n/g, '<br>');
     return html;
   }
@@ -174,6 +586,9 @@
     sendBtn.disabled = true;
     inputEl.value = "";
     inputEl.style.height = "auto";
+
+    // Switch to chat tab if not already
+    if (currentTab !== "chat") switchTab("chat");
 
     addMessage("user", text);
     conversationHistory.push({ role: "user", content: text });
@@ -188,14 +603,12 @@
       if (result.error) {
         addMessage("system", "Error: " + result.error);
       } else {
-        // Show tool executions if any
         if (result.toolLogs) {
           for (const log of result.toolLogs) {
             addMessage("tool", log.result, { name: log.name, success: log.success });
           }
         }
 
-        // Show final response
         if (result.text) {
           addMessage("assistant", result.text);
           conversationHistory.push({ role: "assistant", content: result.text });

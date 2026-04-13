@@ -198,7 +198,7 @@ export default function AgentControlsPage() {
             <div className="flex flex-wrap gap-1.5">
               {INDUSTRIES.map(i => (
                 <button key={i} onClick={() => update("lead_engine", "target_industries", toggle(settings.lead_engine.target_industries, i.toLowerCase()))}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${settings.lead_engine.target_industries.includes(i.toLowerCase()) ? "border-accent/30 bg-accent/10 text-accent" : "border-border text-muted"}`}>
+                  className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${settings.lead_engine.target_industries.includes(i.toLowerCase()) ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"}`}>
                   {i}
                 </button>
               ))}

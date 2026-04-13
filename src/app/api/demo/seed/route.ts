@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 export async function POST() {
+  // Auth check — only authenticated users can seed demo data
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const supabase = createServiceClient();
 
   try {

@@ -70,13 +70,7 @@ Campaigns: ${campaigns?.map(c => `${c.name} - ${c.status}, $${c.spend} spend, ${
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ reply: "I'm currently offline. Please contact your account manager.", botName });
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 500,
-      system: `You are ${botName}, the personal AI assistant for ${client?.contact_name || profile?.full_name || "the client"} at ${client?.business_name || "their business"}. You work for ShortStack digital marketing agency. Your personality is: ${botPersonality}. Your tone is: ${botTone}.
+  const systemMsg = `You are ${botName}, the personal AI assistant for ${client?.contact_name || profile?.full_name || "the client"} at ${client?.business_name || "their business"}. You work for ShortStack digital marketing agency. Your personality is: ${botPersonality}. Your tone is: ${botTone}.
 
 You know everything about their account:
 ${context}
@@ -87,11 +81,59 @@ Rules:
 - If they ask about something you don't have data for, suggest they contact their account manager
 - Keep responses concise (2-3 sentences max unless they ask for detail)
 - If they request new content or services, acknowledge and say the team will be notified
-- Never reveal internal ShortStack operations or other client data`,
+- Never reveal internal ShortStack operations or other client data`;
+
+  // Check if client wants streaming
+  const wantsStream = request.headers.get("accept")?.includes("text/event-stream");
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+    body: JSON.stringify({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 500,
+      stream: !!wantsStream,
+      system: systemMsg,
       messages: [{ role: "user", content: message }],
     }),
   });
 
+  // Streaming response
+  if (wantsStream && res.body) {
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = res.body!.getReader();
+        const decoder = new TextDecoder();
+        let fullText = "";
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            const chunk = decoder.decode(value, { stream: true });
+            // Parse SSE events, extract text deltas
+            for (const line of chunk.split("\n")) {
+              if (line.startsWith("data: ")) {
+                const jsonStr = line.slice(6);
+                if (jsonStr === "[DONE]") continue;
+                try {
+                  const event = JSON.parse(jsonStr);
+                  if (event.type === "content_block_delta" && event.delta?.text) {
+                    fullText += event.delta.text;
+                    controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`));
+                  }
+                } catch {}
+              }
+            }
+          }
+          controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({ done: true, fullText, botName })}\n\n`));
+        } catch {}
+        controller.close();
+      },
+    });
+    return new Response(stream, { headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache", "Connection": "keep-alive" } });
+  }
+
+  // Non-streaming fallback
   const data = await res.json();
   const reply = data.content?.[0]?.text || "I couldn't process that. Try asking about your services, tasks, or invoices.";
 

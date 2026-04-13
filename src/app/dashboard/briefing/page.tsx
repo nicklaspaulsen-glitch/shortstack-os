@@ -24,13 +24,14 @@ interface BriefingContent {
 export default function BriefingPage() {
   const { profile } = useAuth();
   const [briefing, setBriefing] = useState<Briefing | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
     fetchLatestBriefing();
     generateBriefingOnLogin();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchLatestBriefing() {

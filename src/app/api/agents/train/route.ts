@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // Agent Training — when agents are idle, they self-improve
 // Analyzes past performance, learns from failures, optimizes strategies
 export async function POST(request: NextRequest) {
+  // Auth check — only authenticated users can trigger agent training
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { agent_id } = await request.json();
   const supabase = createServiceClient();
   const apiKey = process.env.ANTHROPIC_API_KEY;

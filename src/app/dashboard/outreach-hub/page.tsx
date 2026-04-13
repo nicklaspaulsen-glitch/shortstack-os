@@ -43,7 +43,7 @@ const TIER_CONFIG: Record<string, { label: string; color: string; icon: React.Re
   hot: { label: "Hot", color: "text-red-400", icon: <Flame size={12} className="text-red-400" />, bgColor: "bg-red-400/10" },
   warm: { label: "Warm", color: "text-orange-400", icon: <Thermometer size={12} className="text-orange-400" />, bgColor: "bg-orange-400/10" },
   cold: { label: "Cold", color: "text-blue-400", icon: <Snowflake size={12} className="text-blue-400" />, bgColor: "bg-blue-400/10" },
-  dead: { label: "Dead", color: "text-gray-500", icon: <Skull size={12} className="text-gray-500" />, bgColor: "bg-gray-500/10" },
+  dead: { label: "Dead", color: "text-muted", icon: <Skull size={12} className="text-muted" />, bgColor: "bg-muted/10" },
 };
 
 const CATEGORY_BADGES: Record<string, { label: string; color: string }> = {

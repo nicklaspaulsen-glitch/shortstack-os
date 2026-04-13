@@ -46,6 +46,7 @@ export default function AgentStatusCards() {
     fetchAgentStatus();
     const interval = setInterval(fetchAgentStatus, 30000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchAgentStatus() {

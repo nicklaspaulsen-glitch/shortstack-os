@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 export const maxDuration = 60;
 
 // On-demand AI report generation for a specific client
 export async function POST(request: NextRequest) {
+  // Auth check
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const supabase = createServiceClient();
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });

@@ -2,21 +2,42 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
 // Telegram Webhook — receive messages from Telegram and execute commands
-// Set this up: https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://shortstack-os.vercel.app/api/telegram/webhook
+// Set this up: https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://shortstack-os.vercel.app/api/telegram/webhook&secret_token=YOUR_SECRET
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const message = body.message;
+  // Validate Telegram webhook secret token if configured
+  const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
+  if (webhookSecret) {
+    const token = request.headers.get("x-telegram-bot-api-secret-token");
+    if (token !== webhookSecret) {
+      return NextResponse.json({ ok: true }); // Silent rejection — don't reveal error details
+    }
+  }
 
-  if (!message?.text || !message?.chat?.id) {
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
     return NextResponse.json({ ok: true });
   }
 
-  const chatId = String(message.chat.id);
-  const text = message.text;
+  const message = body.message as Record<string, unknown> | undefined;
+
+  if (!message?.text || !(message?.chat as Record<string, unknown>)?.id) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const chatId = String((message.chat as Record<string, unknown>).id);
+  const text = message.text as string;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   if (!botToken) return NextResponse.json({ ok: true });
+
+  // Only respond to authorized chat IDs to prevent unauthorized command execution
+  const allowedChatId = process.env.TELEGRAM_CHAT_ID;
+  if (allowedChatId && chatId !== allowedChatId) {
+    return NextResponse.json({ ok: true }); // Silent ignore
+  }
 
   // Send typing indicator
   await fetch(`https://api.telegram.org/bot${botToken}/sendChatAction`, {

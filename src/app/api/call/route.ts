@@ -1,15 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { makeOutboundCall } from "@/lib/services/eleven-agents";
 
 // POST — make an outbound AI call to a lead via ElevenAgents
+// TODO: Add rate limiting in production to prevent call abuse
 export async function POST(request: NextRequest) {
+  // Auth check — only authenticated users can initiate calls
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const body = await request.json();
   const { lead_id, phone, phone_number, business_name, industry } = body;
 
   const toNumber = phone || phone_number;
-  if (!toNumber) {
+  if (!toNumber || typeof toNumber !== "string") {
     return NextResponse.json({ error: "No phone number provided" }, { status: 400 });
+  }
+
+  // Basic phone number format validation
+  const cleanedCheck = toNumber.replace(/[^\d+]/g, "");
+  if (cleanedCheck.length < 7 || cleanedCheck.length > 16) {
+    return NextResponse.json({ error: "Invalid phone number format" }, { status: 400 });
   }
 
   // Get agent config from system_health

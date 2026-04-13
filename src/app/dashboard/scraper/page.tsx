@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash, Map, Camera, Music, Briefcase, Star, FlaskConical, MessageCircle, Send } from "lucide-react";
+import { Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash, Map, Camera, Music, Briefcase, Star, FlaskConical, MessageCircle, Send, Shield } from "lucide-react";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import toast from "react-hot-toast";
 
-const PLATFORMS: Array<{ id: string; name: string; icon: React.ReactNode; description: string; disabled?: boolean }> = [
-  { id: "google_maps", name: "Google Maps", icon: <Map size={18} className="text-accent" />, description: "Business listings with ratings, phone, website" },
+const PLATFORMS: Array<{ id: string; name: string; icon: React.ReactNode; description: string; disabled?: boolean; apify?: boolean }> = [
+  { id: "google_maps", name: "Google Maps", icon: <Map size={18} className="text-gold" />, description: "Business listings with ratings, phone, website" },
   { id: "facebook", name: "Facebook Pages", icon: <MessageCircle size={18} className="text-info" />, description: "Business pages with phone, email, followers" },
   { id: "instagram", name: "Instagram", icon: <Camera size={18} className="text-danger-light" />, description: "Find businesses by hashtag, niche, or location" },
   { id: "tiktok", name: "TikTok", icon: <Music size={18} className="text-white" />, description: "Find businesses with TikTok profiles" },
   { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} className="text-info-light" />, description: "Company profiles from website enrichment" },
   { id: "yelp", name: "Yelp", icon: <Star size={18} className="text-warning" />, description: "Reviews and local businesses (needs API key)", disabled: true },
+  { id: "tripadvisor", name: "TripAdvisor", icon: <Star size={18} className="text-success" />, description: "Hotels, restaurants, attractions with reviews", apify: true },
+  { id: "trustpilot", name: "Trustpilot", icon: <Shield size={18} className="text-success" />, description: "Business reviews and company profiles", apify: true },
+  { id: "yellow_pages", name: "Yellow Pages", icon: <Globe size={18} className="text-warning-light" />, description: "Local business directory listings", apify: true },
+  { id: "indeed", name: "Indeed", icon: <Briefcase size={18} className="text-info" />, description: "Job listings for B2B lead discovery", apify: true },
 ];
 
 const PRESET_NICHES = [
@@ -105,8 +109,10 @@ export default function ScraperPage() {
     setRunning(true);
     setResults([]);
 
+    const apifyPlatformIds = PLATFORMS.filter(p => p.apify).map(p => p.id);
     const socialPlatforms = selectedPlatforms.filter(p => ["instagram", "facebook", "tiktok", "linkedin"].includes(p));
-    const mapPlatforms = selectedPlatforms.filter(p => ["google_maps", "yelp"].includes(p));
+    const mapPlatforms = selectedPlatforms.filter(p => ["google_maps", "yelp"].includes(p) && !apifyPlatformIds.includes(p));
+    const apifyPlatforms = selectedPlatforms.filter(p => apifyPlatformIds.includes(p));
 
     toast.loading(`Scraping ${selectedPlatforms.length} platforms × ${niches.length} niches...`);
 
@@ -176,6 +182,50 @@ export default function ScraperPage() {
             }));
             allResults.push(...mapped);
             totalScraped += data.saved_to_db || 0;
+          }
+        }
+      }
+
+      // Run Apify-powered scrapers
+      if (apifyPlatforms.length > 0) {
+        for (const apifyPlat of apifyPlatforms) {
+          for (const niche of niches) {
+            for (const loc of locations) {
+              try {
+                const res = await fetch("/api/scraper/apify", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    platform: apifyPlat,
+                    query: niche.toLowerCase(),
+                    location: loc,
+                    max_results: maxResults,
+                    filters,
+                  }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                  const mapped = (data.leads || []).map((l: Record<string, unknown>) => ({
+                    business_name: (l.business_name as string) || "",
+                    phone: (l.phone as string) || null,
+                    email: (l.email as string) || null,
+                    website: (l.website as string) || null,
+                    address: (l.address as string) || null,
+                    google_rating: (l.google_rating as number) || null,
+                    review_count: (l.review_count as number) || 0,
+                    industry: (l.industry as string) || niche,
+                    source: (l.source as string) || apifyPlat,
+                    status: "new",
+                    lead_score: l.lead_score as number,
+                  }));
+                  allResults.push(...mapped);
+                  totalScraped += data.leads_saved || 0;
+                  totalSkipped += data.duplicates_skipped || 0;
+                }
+              } catch {
+                // Individual Apify platform failure should not stop others
+              }
+            }
           }
         }
       }
@@ -273,7 +323,7 @@ export default function ScraperPage() {
                   }`}>
                   <span className="shrink-0">{p.icon}</span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{p.name}</p>
+                    <p className="text-sm font-medium flex items-center gap-1.5">{p.name}{p.apify && <span className="text-[8px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full font-medium uppercase tracking-wider">Apify</span>}</p>
                     <p className="text-[10px] text-muted">{p.description}</p>
                   </div>
                   {selectedPlatforms.includes(p.id) && <div className="w-3 h-3 bg-gold rounded-full" />}
@@ -571,7 +621,7 @@ export default function ScraperPage() {
                   {r.instagram_url && <a href={r.instagram_url as string} target="_blank" rel="noopener" className="text-[10px] bg-pink-500/10 text-pink-400 px-1.5 py-0.5 rounded">IG</a>}
                   {r.facebook_url && <a href={r.facebook_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">FB</a>}
                   {r.tiktok_url && <a href={r.tiktok_url as string} target="_blank" rel="noopener" className="text-[10px] bg-white/10 text-white px-1.5 py-0.5 rounded">TK</a>}
-                  {r.linkedin_url && <a href={r.linkedin_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-400/10 text-blue-600 px-1.5 py-0.5 rounded">LI</a>}
+                  {r.linkedin_url && <a href={r.linkedin_url as string} target="_blank" rel="noopener" className="text-[10px] bg-blue-400/10 text-blue-400 px-1.5 py-0.5 rounded">LI</a>}
                   {!r.instagram_url && !r.facebook_url && !r.tiktok_url && !r.linkedin_url && <span className="text-muted text-[10px]">None</span>}
                 </div>
               )},
@@ -595,11 +645,11 @@ export default function ScraperPage() {
         <div className="space-y-4">
           <div className="card border-accent/20">
             <h3 className="section-header flex items-center gap-2">
-              <FlaskConical size={14} className="text-accent" /> 500-Lead Test Results
+              <FlaskConical size={14} className="text-gold" /> 500-Lead Test Results
             </h3>
             <div className="grid grid-cols-4 gap-3 mb-4">
               <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border">
-                <p className="text-lg font-bold font-mono text-accent">{testResults.totalFound}</p>
+                <p className="text-lg font-bold font-mono text-gold">{testResults.totalFound}</p>
                 <p className="text-[9px] text-muted uppercase tracking-wider">Found</p>
               </div>
               <div className="text-center p-2.5 bg-surface-light/50 rounded-lg border border-border">

@@ -46,14 +46,8 @@
     .logo {
       width: 20px;
       height: 20px;
-      background: linear-gradient(135deg, var(--gold), #A8893D);
       border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 10px;
-      color: #000;
+      object-fit: contain;
     }
     .brand { font-weight: 700; font-size: 13px; }
     .brand span { color: var(--gold); }
@@ -270,14 +264,8 @@
     .welcome-logo {
       width: 48px;
       height: 48px;
-      background: linear-gradient(135deg, var(--gold), #A8893D);
       border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 20px;
-      color: #000;
+      object-fit: contain;
     }
     .welcome h2 { font-size: 16px; font-weight: 700; }
     .welcome h2 span { color: var(--gold); }
@@ -308,7 +296,7 @@
 <body>
   <div class="header">
     <div class="header-left">
-      <div class="logo">S</div>
+      <img class="logo" src="icons/icon32.png" alt="ShortStack" />
       <div class="brand">Short<span>Stack</span></div>
     </div>
     <div class="header-actions">
@@ -323,7 +311,7 @@
 
   <div class="messages" id="messages">
     <div class="welcome" id="welcome">
-      <div class="welcome-logo">S</div>
+      <img class="welcome-logo" src="icons/icon128.png" alt="ShortStack" style="object-fit:contain;" />
       <h2>Short<span>Stack</span> Agent</h2>
       <p>AI assistant that can see and interact with your browser. Ask me anything about this page.</p>
       <div class="suggestions">

@@ -42,6 +42,7 @@ export default function VoiceAssistant() {
       setHasPlayedBriefing(true);
       generateBriefing();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, hasPlayedBriefing, autoPlayBriefing, profile]);
 
   async function generateBriefing() {
@@ -164,6 +165,40 @@ export default function VoiceAssistant() {
     setIsListening(false);
   }
 
+  /** Read a streaming SSE response, updating messages progressively */
+  async function readStream(res: Response): Promise<string> {
+    const reader = res.body!.getReader();
+    const decoder = new TextDecoder();
+    let fullText = "";
+    const msgId = Date.now();
+
+    // Add placeholder message
+    setMessages(prev => [...prev, { role: "assistant", content: "...", timestamp: new Date() }]);
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      for (const line of chunk.split("\n")) {
+        if (!line.startsWith("data: ")) continue;
+        try {
+          const event = JSON.parse(line.slice(6));
+          if (event.text) {
+            fullText += event.text;
+            // Update the last assistant message in-place
+            setMessages(prev => {
+              const copy = [...prev];
+              copy[copy.length - 1] = { role: "assistant", content: fullText, timestamp: new Date(msgId) };
+              return copy;
+            });
+          }
+          if (event.done && event.fullText) fullText = event.fullText;
+        } catch {}
+      }
+    }
+    return fullText;
+  }
+
   async function sendMessage(text: string) {
     if (!text.trim()) return;
 
@@ -177,11 +212,19 @@ export default function VoiceAssistant() {
 
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Accept": "text/event-stream" },
         body: JSON.stringify({ message: text, history: messages.slice(-6).map(m => ({ role: m.role === "assistant" ? "chief" : "user", content: m.content })) }),
       });
-      const data = await res.json();
-      let reply = data.reply || "I didn't catch that. Could you try again?";
+
+      let reply: string;
+
+      if (res.headers.get("content-type")?.includes("text/event-stream") && res.body) {
+        reply = await readStream(res);
+      } else {
+        const data = await res.json();
+        reply = data.reply || "I didn't catch that. Could you try again?";
+        setMessages(prev => [...prev, { role: "assistant", content: reply, timestamp: new Date() }]);
+      }
 
       // Execute actions based on voice command
       const cmd = text.toLowerCase();
@@ -198,7 +241,12 @@ export default function VoiceAssistant() {
         reply += " Running health check now.";
       }
 
-      setMessages(prev => [...prev, { role: "assistant", content: reply, timestamp: new Date() }]);
+      // Update final message with any action additions
+      setMessages(prev => {
+        const copy = [...prev];
+        copy[copy.length - 1] = { role: "assistant", content: reply, timestamp: new Date() };
+        return copy;
+      });
 
       if (!isMuted) {
         speak(reply);

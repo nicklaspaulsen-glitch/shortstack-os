@@ -43,10 +43,12 @@ export default function GoogleBusinessPage() {
       setClients(data || []);
       if (data?.[0]) setSelectedClient(data[0].id);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (selectedClient) fetchReviews();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClient]);
 
   async function fetchReviews() {

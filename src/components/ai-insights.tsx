@@ -26,7 +26,7 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 
 const PRIORITY_COLORS: Record<string, string> = {
   high: "border-gold/20 bg-gold/[0.03]",
-  medium: "border-accent/15 bg-accent/[0.02]",
+  medium: "border-gold/15 bg-gold/[0.02]",
   low: "border-border/30",
 };
 
@@ -46,6 +46,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
 
   useEffect(() => {
     fetchInsights();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clientId]);
 
   async function fetchInsights() {

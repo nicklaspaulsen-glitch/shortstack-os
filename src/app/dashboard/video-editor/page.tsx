@@ -195,7 +195,7 @@ export default function VideoEditorPage() {
             </button>
             <button onClick={() => setMode("plan")}
               className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                mode === "plan" ? "bg-accent/10 border-accent/30 text-accent" : "border-border text-muted hover:text-foreground"
+                mode === "plan" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
               }`}>
               <Sparkles size={14} /> AI Plan Only
             </button>
@@ -203,7 +203,7 @@ export default function VideoEditorPage() {
 
           <button onClick={generateVideo} disabled={generating || !config.title}
             className={`w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl font-semibold transition-all ${
-              mode === "render" ? "btn-primary" : "bg-accent/10 text-accent border border-accent/30 hover:bg-accent/20"
+              mode === "render" ? "btn-primary" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"
             }`}>
             {generating ? <Loader size={14} className="animate-spin" /> : mode === "render" ? <Film size={14} /> : <Sparkles size={14} />}
             {generating ? "Creating..." : mode === "render" ? "Render Video" : "Generate Video Plan"}
@@ -282,8 +282,8 @@ export default function VideoEditorPage() {
             </div>
           )}
 
-          <div className="card border-accent/10">
-            <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-accent" /> How it works</h3>
+          <div className="card border-gold/10">
+            <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-gold" /> How it works</h3>
             <div className="space-y-1.5 text-[9px] text-muted">
               <p><span className="text-gold font-medium">1.</span> Pick video type + enter title/script</p>
               <p><span className="text-gold font-medium">2.</span> AI renders motion graphics video automatically</p>

@@ -31,6 +31,7 @@ export default function TicketsPage() {
   const [filter, setFilter] = useState<"all" | "pending" | "completed">("all");
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchTickets(); }, []);
 
   async function fetchTickets() {

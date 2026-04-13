@@ -19,13 +19,14 @@ export default function TeamPage() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [deals, setDeals] = useState<Deal[]>([]);
   const [payroll, setPayroll] = useState<Payroll[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showAddMember, setShowAddMember] = useState(false);
   const [showAddDeal, setShowAddDeal] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchData() {

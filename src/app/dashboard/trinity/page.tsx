@@ -29,6 +29,7 @@ export default function TrinityPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchLogs(); }, []);
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
 

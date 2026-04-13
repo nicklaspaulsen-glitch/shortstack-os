@@ -11,7 +11,7 @@ import {
   Send, BarChart3, Globe, Briefcase,
   ArrowRight, Activity, ArrowUpRight, ArrowDownRight,
   Search, Clock, ChevronRight, Target, Mail, PhoneCall,
-  Bot, XCircle
+  Bot, XCircle, Loader, Shield
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -58,9 +58,21 @@ export default function DashboardPage() {
   const [agentStatuses, setAgentStatuses] = useState<Array<{ id: string; name: string; status: "working" | "idle" | "error"; actionsToday: number }>>([]);
   const [commandInput, setCommandInput] = useState("");
   const [commandLoading, setCommandLoading] = useState(false);
+  const [dashboardLoading, setDashboardLoading] = useState(true);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchDashboardData(); }, []);
+
+  // Show success toast after Stripe checkout redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const subscribed = params.get("subscribed");
+    if (subscribed) {
+      toast.success(`Welcome to ShortStack OS! Your ${subscribed.charAt(0).toUpperCase() + subscribed.slice(1)} plan is active.`, { duration: 5000 });
+      window.history.replaceState({}, "", "/dashboard");
+    }
+  }, []);
 
   async function fetchDashboardData() {
     const today = new Date().toISOString().split("T")[0];
@@ -140,10 +152,19 @@ export default function DashboardPage() {
       return { id: a.id, name: a.name, status: (hasError ? "error" : hasRecent ? "working" : "idle") as "working" | "idle" | "error", actionsToday: todayLogs.length };
     });
     setAgentStatuses(statuses);
+    setDashboardLoading(false);
   }
 
   if (profile?.role === "client") {
     return <ClientDashboard />;
+  }
+
+  if (dashboardLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <Loader size={20} className="animate-spin text-gold" />
+      </div>
+    );
   }
 
   async function handleCommand(e: React.FormEvent) {
@@ -177,10 +198,13 @@ export default function DashboardPage() {
   }
 
   const pipelineTotal = pipeline.new + pipeline.called + pipeline.replied + pipeline.booked + pipeline.converted;
+  const pipelineMax = Math.max(pipeline.new, pipeline.called, pipeline.replied, pipeline.booked, pipeline.converted, 1);
+  const workingAgents = agentStatuses.filter(a => a.status === "working").length;
+  const errorAgents = agentStatuses.filter(a => a.status === "error").length;
 
   return (
-    <div className="fade-in space-y-6 max-w-[1400px] mx-auto">
-      {/* Header + Command Bar */}
+    <div className="fade-in space-y-5 max-w-[1400px] mx-auto">
+      {/* ─── Header + Command Bar ─────────────────────────────────── */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -189,9 +213,9 @@ export default function DashboardPage() {
           <p className="text-sm text-muted mt-1">
             {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
             {stats.systemIssues === 0 ? (
-              <span className="ml-3 text-success text-xs">All systems operational</span>
+              <span className="ml-3 text-success text-xs font-medium">All systems operational</span>
             ) : (
-              <span className="ml-3 text-danger text-xs">{stats.systemIssues} system issue{stats.systemIssues > 1 ? "s" : ""}</span>
+              <span className="ml-3 text-danger text-xs font-medium">{stats.systemIssues} system issue{stats.systemIssues > 1 ? "s" : ""}</span>
             )}
           </p>
         </div>
@@ -214,26 +238,27 @@ export default function DashboardPage() {
         </form>
       </div>
 
-      {/* Primary Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* ─── Primary Metrics ──────────────────────────────────────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <MetricCard
           label="Monthly Revenue"
           value={formatCurrency(stats.totalMRR)}
-          sub={`${stats.activeClients} active clients`}
+          sub={`${stats.activeClients} active client${stats.activeClients !== 1 ? "s" : ""}`}
           icon={<DollarSign size={18} />}
-          trend="up"
+          trend={stats.totalMRR > 0 ? "up" : undefined}
           accent="gold"
         />
         <MetricCard
           label="Leads Today"
           value={stats.leadsToday.toString()}
           sub={`${stats.totalLeads.toLocaleString()} total`}
-          icon={<Users size={18} />}
+          icon={<Target size={18} />}
+          trend={stats.leadsToday > 0 ? "up" : undefined}
           accent="emerald"
         />
         <MetricCard
           label="Outreach Sent"
-          value={`${stats.dmsSentToday}`}
+          value={stats.dmsSentToday.toString()}
           sub={`${stats.repliesThisWeek} replies this week`}
           icon={<Send size={18} />}
           accent="blue"
@@ -241,23 +266,23 @@ export default function DashboardPage() {
         <MetricCard
           label="Deals Won"
           value={stats.dealsWon.toString()}
-          sub={formatCurrency(stats.totalRevenue) + " total"}
-          icon={<Target size={18} />}
-          trend="up"
+          sub={stats.totalRevenue > 0 ? formatCurrency(stats.totalRevenue) + " total" : "No deals closed yet"}
+          icon={<Briefcase size={18} />}
+          trend={stats.dealsWon > 0 ? "up" : undefined}
           accent="purple"
         />
       </div>
 
-      {/* Quick Actions */}
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+      {/* ─── Quick Actions ────────────────────────────────────────── */}
+      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
         {[
           { label: "Full Autopilot", icon: <Zap size={13} />, action: () => triggerQuickAction("full_autopilot"), accent: "text-gold" },
           { label: "New Client", icon: <Plus size={13} />, action: () => router.push("/dashboard/onboard"), accent: "text-success" },
           { label: "Run Outreach", icon: <Send size={13} />, action: () => triggerQuickAction("full_outreach"), accent: "text-info" },
-          { label: "Gen Content", icon: <Sparkles size={13} />, action: () => triggerQuickAction("content_week"), accent: "text-accent" },
+          { label: "Gen Content", icon: <Sparkles size={13} />, action: () => triggerQuickAction("content_week"), accent: "text-purple-400" },
           { label: "Proposals", icon: <FileText size={13} />, action: () => router.push("/dashboard/proposals"), accent: "text-warning" },
-          { label: "View Leads", icon: <Users size={13} />, action: () => router.push("/dashboard/leads"), accent: "text-success" },
-          { label: "Health", icon: <Activity size={13} />, action: () => router.push("/dashboard/monitor"), accent: "text-info" },
+          { label: "View Leads", icon: <Users size={13} />, action: () => router.push("/dashboard/leads"), accent: "text-info" },
+          { label: "Health", icon: <Activity size={13} />, action: () => router.push("/dashboard/monitor"), accent: "text-success" },
           { label: "Campaigns", icon: <BarChart3 size={13} />, action: () => router.push("/dashboard/ads"), accent: "text-warning" },
         ].map((qa, i) => (
           <button key={i} onClick={qa.action}
@@ -268,118 +293,157 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Pipeline + Outreach Breakdown */}
+      {/* ─── Pipeline + Outreach ───────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-        {/* Lead Pipeline Funnel */}
+        {/* Lead Pipeline */}
         <div className="lg:col-span-3 card-static">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Target size={15} className="text-gold" /> Lead Pipeline
+              <Target size={14} className="text-gold" /> Lead Pipeline
             </h2>
-            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:underline flex items-center gap-0.5 font-medium">
               View all <ChevronRight size={10} />
             </Link>
           </div>
-          <div className="flex items-end gap-1 h-24 mb-3">
-            {[
-              { label: "New", count: pipeline.new, color: "bg-info" },
-              { label: "Contacted", count: pipeline.called, color: "bg-warning" },
-              { label: "Replied", count: pipeline.replied, color: "bg-success" },
-              { label: "Booked", count: pipeline.booked, color: "bg-purple-500" },
-              { label: "Won", count: pipeline.converted, color: "bg-gold" },
-            ].map((stage) => (
-              <div key={stage.label} className="flex-1 flex flex-col items-center gap-1.5">
-                <span className="text-xs font-bold font-mono">{stage.count}</span>
-                <div className="w-full rounded-t-md transition-all duration-700"
-                  style={{
-                    height: pipelineTotal > 0 ? `${Math.max(8, (stage.count / pipelineTotal) * 80)}px` : "8px",
-                  }}>
-                  <div className={`w-full h-full rounded-t-md ${stage.color} opacity-80`} />
-                </div>
-                <span className="text-[9px] text-muted font-medium">{stage.label}</span>
+
+          {pipelineTotal === 0 ? (
+            <div className="text-center py-8">
+              <Target size={24} className="text-muted/30 mx-auto mb-2" />
+              <p className="text-xs text-muted">No leads in pipeline yet</p>
+              <Link href="/dashboard/scraper" className="text-[10px] text-gold hover:underline mt-1 inline-block">Find leads</Link>
+            </div>
+          ) : (
+            <>
+              {/* Horizontal funnel bars */}
+              <div className="space-y-2.5 mb-4">
+                {[
+                  { label: "New", count: pipeline.new, color: "bg-info", textColor: "text-info" },
+                  { label: "Contacted", count: pipeline.called, color: "bg-gold", textColor: "text-gold" },
+                  { label: "Replied", count: pipeline.replied, color: "bg-success", textColor: "text-success" },
+                  { label: "Booked", count: pipeline.booked, color: "bg-purple-500", textColor: "text-purple-500" },
+                  { label: "Won", count: pipeline.converted, color: "bg-emerald-400", textColor: "text-emerald-400" },
+                ].map((stage) => (
+                  <div key={stage.label} className="flex items-center gap-3">
+                    <span className="text-[10px] text-muted w-16 text-right font-medium">{stage.label}</span>
+                    <div className="flex-1 h-5 bg-surface-light rounded-lg overflow-hidden relative">
+                      <div
+                        className={`h-full rounded-lg ${stage.color} transition-all duration-700`}
+                        style={{ width: `${Math.max(2, (stage.count / pipelineMax) * 100)}%`, opacity: stage.count > 0 ? 0.85 : 0.15 }}
+                      />
+                      {stage.count > 0 && (
+                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold font-mono text-foreground">
+                          {stage.count}
+                        </span>
+                      )}
+                    </div>
+                    {stage.count === 0 && <span className="text-[10px] text-muted/40 font-mono w-6">0</span>}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="flex items-center gap-4 pt-3 border-t border-border">
-            <div className="flex items-center gap-1.5 text-[10px] text-muted">
-              <div className="w-1.5 h-1.5 rounded-full bg-success" />
-              Conversion: {pipelineTotal > 0 ? ((pipeline.converted / pipelineTotal) * 100).toFixed(1) : "0"}%
-            </div>
-            <div className="flex items-center gap-1.5 text-[10px] text-muted">
-              <div className="w-1.5 h-1.5 rounded-full bg-warning" />
-              Reply rate: {pipeline.called > 0 ? ((pipeline.replied / pipeline.called) * 100).toFixed(1) : "0"}%
-            </div>
-          </div>
+              <div className="flex items-center gap-4 pt-3 border-t border-border">
+                <span className="text-[10px] text-muted font-mono">{pipelineTotal} total</span>
+                <span className="text-[10px] text-muted">
+                  Conversion: <span className="text-foreground font-medium">{pipelineTotal > 0 ? ((pipeline.converted / pipelineTotal) * 100).toFixed(1) : "0"}%</span>
+                </span>
+                <span className="text-[10px] text-muted">
+                  Reply rate: <span className="text-foreground font-medium">{pipeline.called > 0 ? ((pipeline.replied / pipeline.called) * 100).toFixed(1) : "0"}%</span>
+                </span>
+              </div>
+            </>
+          )}
         </div>
 
-        {/* Today's Outreach Breakdown */}
+        {/* Outreach Today */}
         <div className="lg:col-span-2 card-static">
           <h2 className="text-sm font-semibold mb-4 flex items-center gap-2">
-            <Send size={15} className="text-info" /> Outreach Today
+            <Send size={14} className="text-info" /> Outreach Today
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-3.5">
             {[
-              { label: "Emails", count: stats.emailsSent, target: 30, icon: <Mail size={13} />, color: "bg-info" },
-              { label: "SMS", count: stats.smsSent, target: 20, icon: <MessageSquare size={13} />, color: "bg-success" },
-              { label: "Calls", count: stats.callsMade, target: 10, icon: <PhoneCall size={13} />, color: "bg-warning" },
-              { label: "DMs", count: stats.dmsSentToday - stats.emailsSent - stats.smsSent - stats.callsMade, target: 20, icon: <Send size={13} />, color: "bg-purple-500" },
-            ].map((ch) => (
-              <div key={ch.label} className="flex items-center gap-3">
-                <span className="text-muted w-5">{ch.icon}</span>
-                <span className="text-[11px] text-muted w-12">{ch.label}</span>
-                <div className="flex-1 h-2 bg-surface-light rounded-full overflow-hidden">
-                  <div className={`h-full rounded-full ${ch.color} transition-all duration-700`}
-                    style={{ width: `${Math.min((Math.max(ch.count, 0) / ch.target) * 100, 100)}%` }} />
+              { label: "Emails", count: stats.emailsSent, target: 30, icon: <Mail size={13} />, color: "bg-info", lightColor: "text-info" },
+              { label: "SMS", count: stats.smsSent, target: 20, icon: <MessageSquare size={13} />, color: "bg-success", lightColor: "text-success" },
+              { label: "Calls", count: stats.callsMade, target: 10, icon: <PhoneCall size={13} />, color: "bg-warning", lightColor: "text-warning" },
+              { label: "DMs", count: Math.max(stats.dmsSentToday - stats.emailsSent - stats.smsSent - stats.callsMade, 0), target: 20, icon: <Send size={13} />, color: "bg-purple-500", lightColor: "text-purple-500" },
+            ].map((ch) => {
+              const pct = Math.min((ch.count / ch.target) * 100, 100);
+              return (
+                <div key={ch.label}>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className={ch.lightColor}>{ch.icon}</span>
+                      <span className="text-[11px] font-medium">{ch.label}</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-muted">
+                      <span className="text-foreground font-semibold">{ch.count}</span>/{ch.target}
+                    </span>
+                  </div>
+                  <div className="h-2 bg-surface-light rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${ch.color} transition-all duration-700`}
+                      style={{ width: `${pct}%`, opacity: ch.count > 0 ? 0.85 : 0 }} />
+                  </div>
                 </div>
-                <span className="text-[10px] font-mono text-muted w-10 text-right">{Math.max(ch.count, 0)}/{ch.target}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
-            <span className="text-[10px] text-muted">Total sent</span>
+            <span className="text-[10px] text-muted">Total sent today</span>
             <span className="text-sm font-bold font-mono text-foreground">{stats.dmsSentToday}</span>
           </div>
         </div>
       </div>
 
-      {/* 3-Column: Activity, Clients, Recent Leads */}
+      {/* ─── Agents, Clients, Leads ────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Agent Activity + Live Status */}
+        {/* Live Agents */}
         <div className="card-static">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Bot size={15} className="text-gold" /> Live Agents
+              <Bot size={14} className="text-gold" /> Live Agents
             </h2>
             <div className="flex items-center gap-2">
-              <span className="flex items-center gap-1 text-[9px] text-success"><span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />{agentStatuses.filter(a => a.status === "working").length} active</span>
-              {agentStatuses.filter(a => a.status === "error").length > 0 && (
-                <span className="flex items-center gap-1 text-[9px] text-danger"><XCircle size={9} />{agentStatuses.filter(a => a.status === "error").length}</span>
+              {workingAgents > 0 && (
+                <span className="flex items-center gap-1 text-[9px] text-success font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />{workingAgents} active
+                </span>
+              )}
+              {errorAgents > 0 && (
+                <span className="flex items-center gap-1 text-[9px] text-danger font-medium">
+                  <XCircle size={9} />{errorAgents}
+                </span>
               )}
             </div>
           </div>
 
-          {/* Agent grid */}
-          <div className="grid grid-cols-4 gap-1.5 mb-3">
+          {/* Agent grid - 3 cols for better readability */}
+          <div className="grid grid-cols-3 gap-1.5 mb-3">
             {agentStatuses.map(a => (
-              <div key={a.id} className="flex items-center gap-1.5 p-1.5 rounded-lg bg-surface-light/50 border border-border/50">
-                <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                  a.status === "working" ? "bg-success animate-pulse" : a.status === "error" ? "bg-danger" : "bg-muted/40"
+              <div key={a.id} className={`flex items-center gap-1.5 p-2 rounded-lg border transition-colors ${
+                a.status === "working" ? "bg-success/[0.04] border-success/15" :
+                a.status === "error" ? "bg-danger/[0.04] border-danger/15" :
+                "bg-surface-light/50 border-border/50"
+              }`}>
+                <div className={`w-2 h-2 rounded-full shrink-0 ${
+                  a.status === "working" ? "bg-success animate-pulse" :
+                  a.status === "error" ? "bg-danger" :
+                  "bg-muted/30"
                 }`} />
-                <span className="text-[8px] truncate font-medium">{a.name}</span>
+                <span className="text-[9px] truncate font-medium">{a.name}</span>
               </div>
             ))}
           </div>
 
           {/* Recent actions */}
-          <div className="border-t border-border pt-2">
-            <p className="text-[9px] text-muted mb-1.5 flex items-center gap-1"><Activity size={9} /> Recent</p>
-            <div className="space-y-0.5 max-h-32 overflow-y-auto">
+          <div className="border-t border-border pt-2.5">
+            <p className="text-[9px] text-muted mb-2 flex items-center gap-1 font-semibold uppercase tracking-wider">
+              <Activity size={9} /> Recent
+            </p>
+            <div className="space-y-0.5 max-h-28 overflow-y-auto">
               {recentActivity.length === 0 ? (
                 <p className="text-muted text-[10px] py-3 text-center">No activity yet</p>
               ) : (
                 recentActivity.slice(0, 5).map((a, i) => (
                   <div key={i} className="flex items-start gap-2 py-1.5">
-                    <div className={`w-1 h-1 rounded-full mt-1.5 shrink-0 ${
+                    <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
                       a.status === "completed" || a.status === "success" ? "bg-success" :
                       a.status === "error" || a.status === "failed" ? "bg-danger" : "bg-warning"
                     }`} />
@@ -392,7 +456,7 @@ export default function DashboardPage() {
           </div>
 
           <Link href="/dashboard/agent-supervisor"
-            className="flex items-center justify-center gap-1 text-[10px] text-gold hover:text-gold-dark mt-2 pt-2 border-t border-border">
+            className="flex items-center justify-center gap-1 text-[10px] text-gold font-medium hover:text-gold-dark mt-2.5 pt-2.5 border-t border-border">
             Agent Supervisor <ArrowRight size={10} />
           </Link>
         </div>
@@ -401,36 +465,42 @@ export default function DashboardPage() {
         <div className="card-static">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Briefcase size={15} className="text-success" /> Top Clients
+              <Briefcase size={14} className="text-success" /> Top Clients
             </h2>
-            <Link href="/dashboard/clients" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+            <Link href="/dashboard/clients" className="text-[10px] text-gold hover:underline flex items-center gap-0.5 font-medium">
               All <ChevronRight size={10} />
             </Link>
           </div>
           <div className="space-y-1 max-h-64 overflow-y-auto">
             {topClients.length === 0 ? (
-              <p className="text-muted text-xs py-6 text-center">No clients yet</p>
+              <div className="text-center py-8">
+                <Users size={24} className="text-muted/30 mx-auto mb-2" />
+                <p className="text-xs text-muted">No clients yet</p>
+                <Link href="/dashboard/onboard" className="text-[10px] text-gold hover:underline mt-1 inline-block">Onboard your first client</Link>
+              </div>
             ) : (
-              topClients.map((c, i) => (
-                <Link key={i} href={`/dashboard/clients/${c.id}`}
+              topClients.map((c) => (
+                <Link key={c.id} href={`/dashboard/clients/${c.id}`}
                   className="flex items-center justify-between py-2.5 border-b border-border last:border-0 hover:bg-surface-light -mx-2 px-2 rounded-xl transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-[11px] font-bold text-gold">
+                    <div className="w-9 h-9 rounded-xl bg-gold/[0.08] flex items-center justify-center text-[12px] font-bold text-gold">
                       {c.business_name.charAt(0)}
                     </div>
                     <div>
-                      <p className="text-[11px] font-medium">{c.business_name}</p>
+                      <p className="text-[12px] font-semibold">{c.business_name}</p>
                       <p className="text-[9px] text-muted">{c.package_tier || "Client"}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-[11px] font-bold font-mono">{formatCurrency(c.mrr)}<span className="text-muted font-normal">/mo</span></p>
-                    <div className="flex items-center gap-1 justify-end">
-                      <div className="w-8 bg-surface-light rounded-full h-1">
-                        <div className={`h-1 rounded-full ${c.health_score > 75 ? "bg-success" : c.health_score > 50 ? "bg-warning" : "bg-danger"}`}
+                    <p className="text-[12px] font-bold font-mono">{formatCurrency(c.mrr)}<span className="text-muted font-normal text-[10px]">/mo</span></p>
+                    <div className="flex items-center gap-1.5 justify-end mt-0.5">
+                      <div className="w-10 bg-surface-light rounded-full h-1.5">
+                        <div className={`h-1.5 rounded-full transition-all ${c.health_score > 75 ? "bg-success" : c.health_score > 50 ? "bg-warning" : "bg-danger"}`}
                           style={{ width: `${c.health_score}%` }} />
                       </div>
-                      <span className="text-[9px] text-muted font-mono">{c.health_score}%</span>
+                      <span className={`text-[9px] font-mono font-medium ${c.health_score > 75 ? "text-success" : c.health_score > 50 ? "text-warning" : "text-danger"}`}>
+                        {c.health_score}%
+                      </span>
                     </div>
                   </div>
                 </Link>
@@ -443,31 +513,41 @@ export default function DashboardPage() {
         <div className="card-static">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Zap size={15} className="text-warning" /> Recent Leads
+              <Zap size={14} className="text-warning" /> Recent Leads
             </h2>
-            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+            <Link href="/dashboard/leads" className="text-[10px] text-gold hover:underline flex items-center gap-0.5 font-medium">
               All <ChevronRight size={10} />
             </Link>
           </div>
           <div className="space-y-1 max-h-64 overflow-y-auto">
             {recentLeads.length === 0 ? (
-              <p className="text-muted text-xs py-6 text-center">No leads yet</p>
+              <div className="text-center py-8">
+                <Search size={24} className="text-muted/30 mx-auto mb-2" />
+                <p className="text-xs text-muted">No leads yet</p>
+                <Link href="/dashboard/scraper" className="text-[10px] text-gold hover:underline mt-1 inline-block">Find leads</Link>
+              </div>
             ) : (
               recentLeads.map((lead, i) => (
                 <div key={i} className="flex items-center justify-between py-2.5 border-b border-border last:border-0">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center text-[11px] font-bold text-blue-400">
+                    <div className="w-9 h-9 rounded-xl bg-info/[0.08] flex items-center justify-center text-[12px] font-bold text-info">
                       {lead.business_name?.charAt(0) || "?"}
                     </div>
                     <div>
-                      <p className="text-[11px] font-medium">{lead.business_name}</p>
-                      <p className="text-[9px] text-muted">{lead.industry || "Unknown"} &middot; {lead.source}</p>
+                      <p className="text-[12px] font-semibold">{lead.business_name}</p>
+                      <p className="text-[9px] text-muted">
+                        {lead.industry || "Unknown"}
+                        <span className="mx-1 opacity-30">&middot;</span>
+                        {lead.source}
+                      </p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex flex-col items-end gap-0.5">
                     {lead.lead_score != null && (
-                      <span className={`text-[10px] font-mono font-medium ${
-                        lead.lead_score >= 70 ? "text-success" : lead.lead_score >= 40 ? "text-warning" : "text-muted"
+                      <span className={`text-[11px] font-mono font-bold px-1.5 py-0.5 rounded-md ${
+                        lead.lead_score >= 70 ? "text-success bg-success/[0.08]" :
+                        lead.lead_score >= 40 ? "text-warning bg-warning/[0.08]" :
+                        "text-muted bg-surface-light"
                       }`}>{lead.lead_score}</span>
                     )}
                     <p className="text-[9px] text-muted">{formatRelativeTime(lead.scraped_at)}</p>
@@ -479,56 +559,84 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Revenue + System Status */}
+      {/* ─── Revenue + System Status ──────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="card-static border-gold/15">
+        {/* Revenue Overview */}
+        <div className="card-static border-gold/10">
           <h2 className="text-sm font-semibold flex items-center gap-2 mb-4">
-            <DollarSign size={15} className="text-gold" /> Revenue Overview
+            <DollarSign size={14} className="text-gold" /> Revenue Overview
           </h2>
           <div className="grid grid-cols-3 gap-3">
-            <div className="text-center p-3 rounded-xl bg-surface-light border border-border">
+            <div className="text-center p-3 rounded-xl bg-gold/[0.04] border border-gold/10">
               <p className="text-lg font-bold font-mono text-gold">{formatCurrency(stats.totalMRR)}</p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">MRR</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-surface-light border border-border">
-              <p className="text-lg font-bold font-mono text-success">{formatCurrency(stats.totalRevenue)}</p>
+              <p className={`text-lg font-bold font-mono ${stats.totalRevenue > 0 ? "text-success" : "text-muted"}`}>
+                {formatCurrency(stats.totalRevenue)}
+              </p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">Total Revenue</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-surface-light border border-border">
-              <p className="text-lg font-bold font-mono text-foreground">{stats.dealsWon}</p>
+              <p className={`text-lg font-bold font-mono ${stats.dealsWon > 0 ? "text-foreground" : "text-muted"}`}>{stats.dealsWon}</p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-0.5">Deals Closed</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5 mt-3 text-[10px] text-muted">
-            <TrendingUp size={10} className="text-success" />
-            <span>{stats.activeClients} active clients generating recurring revenue</span>
+            {stats.activeClients > 0 ? (
+              <>
+                <TrendingUp size={10} className="text-success" />
+                <span>{stats.activeClients} active client{stats.activeClients !== 1 ? "s" : ""} generating recurring revenue</span>
+              </>
+            ) : (
+              <>
+                <Users size={10} />
+                <span>Onboard clients to start tracking revenue</span>
+              </>
+            )}
           </div>
         </div>
 
+        {/* System Status */}
         <div className="card-static">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold flex items-center gap-2">
-              {stats.systemIssues > 0 ? <AlertTriangle size={15} className="text-danger" /> : <Activity size={15} className="text-success" />}
+              {stats.systemIssues > 0 ? <AlertTriangle size={14} className="text-danger" /> : <Shield size={14} className="text-success" />}
               System Status
             </h2>
-            <Link href="/dashboard/monitor" className="text-[10px] text-gold hover:underline flex items-center gap-0.5">
+            <Link href="/dashboard/monitor" className="text-[10px] text-gold hover:underline flex items-center gap-0.5 font-medium">
               Details <ChevronRight size={10} />
             </Link>
           </div>
-          <div className="flex items-center gap-4 mb-3">
-            <div className={`text-2xl font-bold tracking-tight ${stats.systemIssues === 0 ? "text-success" : "text-danger"}`}>
-              {stats.systemIssues === 0 ? "All Clear" : `${stats.systemIssues} Issue${stats.systemIssues > 1 ? "s" : ""}`}
-            </div>
-            {stats.systemIssues === 0 && (
-              <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
+          <div className="flex items-center gap-3 mb-4">
+            {stats.systemIssues === 0 ? (
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-success/[0.08] flex items-center justify-center">
+                  <Activity size={18} className="text-success" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-success">All Clear</p>
+                  <p className="text-[10px] text-muted">All systems operational</p>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-danger/[0.08] flex items-center justify-center">
+                  <AlertTriangle size={18} className="text-danger" />
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-danger">{stats.systemIssues} Issue{stats.systemIssues > 1 ? "s" : ""}</p>
+                  <p className="text-[10px] text-muted">Check monitor for details</p>
+                </div>
+              </div>
             )}
           </div>
           <div className="grid grid-cols-2 gap-2">
-            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-xl bg-surface-light">
-              <Clock size={10} /> Health checks: every 30 min
+            <div className="flex items-center gap-2 text-[10px] text-muted p-2.5 rounded-xl bg-surface-light border border-border">
+              <Clock size={11} className="shrink-0" /> Health checks every 30 min
             </div>
-            <div className="flex items-center gap-2 text-[10px] text-muted p-2 rounded-xl bg-surface-light">
-              <Globe size={10} /> 20 integrations monitored
+            <div className="flex items-center gap-2 text-[10px] text-muted p-2.5 rounded-xl bg-surface-light border border-border">
+              <Globe size={11} className="shrink-0" /> 20 integrations monitored
             </div>
           </div>
         </div>
@@ -537,33 +645,36 @@ export default function DashboardPage() {
   );
 }
 
+/* ─── Metric Card ───────────────────────────────────────────────── */
 function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
   label: string; value: string; sub: string; icon: React.ReactNode;
   trend?: "up" | "down"; accent?: string;
 }) {
-  const accentColors: Record<string, { bg: string; text: string; border: string }> = {
-    gold: { bg: "bg-gold/[0.06]", text: "text-gold", border: "border-gold/10" },
-    emerald: { bg: "bg-success/[0.06]", text: "text-success", border: "border-success/10" },
-    blue: { bg: "bg-info/[0.06]", text: "text-info", border: "border-info/10" },
-    purple: { bg: "bg-accent/[0.06]", text: "text-accent", border: "border-accent/10" },
+  const themes: Record<string, { bg: string; text: string; border: string; iconBg: string }> = {
+    gold:    { bg: "bg-gold/[0.04]",        text: "text-gold",        border: "border-gold/10",        iconBg: "bg-gold/[0.08]" },
+    emerald: { bg: "bg-success/[0.04]",     text: "text-success",     border: "border-success/10",     iconBg: "bg-success/[0.08]" },
+    blue:    { bg: "bg-info/[0.04]",        text: "text-info",        border: "border-info/10",        iconBg: "bg-info/[0.08]" },
+    purple:  { bg: "bg-purple-500/[0.04]",  text: "text-purple-400",  border: "border-purple-500/10",  iconBg: "bg-purple-500/[0.08]" },
   };
-  const c = accentColors[accent] || accentColors.gold;
+  const t = themes[accent] || themes.gold;
 
   return (
-    <div className={`rounded-2xl border ${c.border} ${c.bg} p-5 transition-all hover:shadow-lg hover:-translate-y-0.5`}>
+    <div className={`rounded-2xl border ${t.border} ${t.bg} p-4 transition-all hover:shadow-lg hover:-translate-y-0.5`}>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs text-muted font-medium">{label}</span>
-        <span className={`${c.text} opacity-30`}>{icon}</span>
+        <span className="text-[11px] text-muted font-medium">{label}</span>
+        <div className={`w-8 h-8 rounded-xl ${t.iconBg} flex items-center justify-center ${t.text}`}>
+          {icon}
+        </div>
       </div>
       <div className="flex items-end gap-2">
         <span className="text-2xl font-bold font-mono tracking-tight text-foreground">{value}</span>
         {trend && (
-          <span className={trend === "up" ? "text-success" : "text-danger"}>
+          <span className={`mb-0.5 ${trend === "up" ? "text-success" : "text-danger"}`}>
             {trend === "up" ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
           </span>
         )}
       </div>
-      <p className="text-[10px] text-muted mt-1">{sub}</p>
+      <p className="text-[10px] text-muted mt-1.5">{sub}</p>
     </div>
   );
 }
@@ -588,9 +699,9 @@ function ClientDashboard() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "My Services", icon: <Briefcase size={22} />, color: "text-gold", route: "/dashboard/portal" },
-          { label: "Invoices", icon: <FileText size={22} />, color: "text-blue-400", route: "/dashboard/portal" },
-          { label: "Content", icon: <Sparkles size={22} />, color: "text-purple-400", route: "/dashboard/portal" },
-          { label: "Contact Us", icon: <Send size={22} />, color: "text-emerald-400", route: "/dashboard/portal" },
+          { label: "Invoices", icon: <FileText size={22} />, color: "text-info", route: "/dashboard/portal/billing" },
+          { label: "Content", icon: <Sparkles size={22} />, color: "text-purple-400", route: "/dashboard/portal/content" },
+          { label: "Contact Us", icon: <Send size={22} />, color: "text-success", route: "/dashboard/portal/support" },
         ].map((item, i) => (
           <button key={i} onClick={() => router.push(item.route)}
             className="rounded-2xl border border-border bg-surface p-6 text-center hover:bg-surface-light hover:border-border-light transition-all group">

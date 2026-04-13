@@ -42,6 +42,7 @@ export default function ConversationsPage() {
   const [channelFilter, setChannelFilter] = useState<"all" | "sms" | "email" | "dm">("all");
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchConversations(); }, []);
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [selected]);
 

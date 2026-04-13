@@ -1,13 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import {
   createAgent, listAgents, deleteAgent, getAgent,
   importPhoneNumber, listPhoneNumbers, listConversations,
   DEFAULT_COLD_CALL_PROMPT, DEFAULT_FIRST_MESSAGE,
 } from "@/lib/services/eleven-agents";
 
+// Auth helper — require authenticated admin user
+async function requireAdmin() {
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") return { error: NextResponse.json({ error: "Admin only" }, { status: 403 }) };
+  return { user };
+}
+
 // GET — list agents, phone numbers, or conversations
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin();
+  if ("error" in auth && auth.error) return auth.error;
+
   const type = request.nextUrl.searchParams.get("type") || "agents";
 
   if (type === "agents") {
@@ -39,6 +52,9 @@ export async function GET(request: NextRequest) {
 
 // POST — create agent, import phone, or save config
 export async function POST(request: NextRequest) {
+  const auth = await requireAdmin();
+  if ("error" in auth && auth.error) return auth.error;
+
   const body = await request.json();
   const action = body.action as string;
 

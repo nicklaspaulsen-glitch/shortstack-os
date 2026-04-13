@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       exists: false,
     });
   } catch (err) {
-    return NextResponse.json({ error: `Stripe error: ${err}` }, { status: 500 });
+    console.error("Stripe customer error:", err);
+    return NextResponse.json({ error: "Failed to create Stripe customer. Please try again." }, { status: 500 });
   }
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { getPlanConfig } from "@/lib/plan-config";
 import {
   Zap,
   Search,
@@ -29,8 +30,10 @@ import {
   Crown,
   Globe,
   Phone,
+  Monitor,
+  ChevronDown,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
 
 interface NavItem {
@@ -67,6 +70,7 @@ const navItems: NavItem[] = [
   // ── Automate ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate" },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"] },
+  { label: "Desktop Agent", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin"] },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"] },
   { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <Phone size={16} />, roles: ["admin"] },
   { label: "WhatsApp", href: "/dashboard/whatsapp", icon: <MessageSquare size={16} />, roles: ["admin"] },
@@ -77,13 +81,17 @@ const navItems: NavItem[] = [
   { label: "Notion", href: "/dashboard/notion-sync", icon: <FileText size={16} />, roles: ["admin"] },
   { label: "Google Biz", href: "/dashboard/google-business", icon: <Globe size={16} />, roles: ["admin"] },
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin", "team_member"] },
+  { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── Client Portal ──
   { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={16} />, roles: ["client"] },
-  { label: "Content", href: "/dashboard/portal/content", icon: <Film size={16} />, roles: ["client"] },
+  { label: "Lead Engine", href: "/dashboard/portal/leads", icon: <Sparkles size={16} />, roles: ["client"], section: "Grow" },
+  { label: "Outreach", href: "/dashboard/portal/outreach", icon: <Send size={16} />, roles: ["client"] },
+  { label: "Socials", href: "/dashboard/portal/socials", icon: <Link2 size={16} />, roles: ["client"] },
+  { label: "Content", href: "/dashboard/portal/content", icon: <Film size={16} />, roles: ["client"], section: "Manage" },
   { label: "Calendar", href: "/dashboard/portal/calendar", icon: <Calendar size={16} />, roles: ["client"] },
   { label: "Reports", href: "/dashboard/portal/reports", icon: <BarChart3 size={16} />, roles: ["client"] },
   { label: "Invoices", href: "/dashboard/portal/billing", icon: <CreditCard size={16} />, roles: ["client"] },
@@ -92,20 +100,63 @@ const navItems: NavItem[] = [
 ];
 
 export default function Sidebar() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { profile, signOut } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
-  const userRole = profile?.role || "admin";
+  // Default to empty string when profile hasn't loaded yet — this hides all
+  // nav items until we know the real role, preventing a client from briefly
+  // seeing admin navigation.
+  const userRole = profile?.role || "";
   const filteredNav = navItems.filter(
-    (item) => item.roles.includes(userRole)
+    (item) => userRole && item.roles.includes(userRole)
   );
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
+  // Group nav items by section for collapsible sidebar
+  const groups: { section: string | null; items: NavItem[] }[] = [];
+  let currentGroup: (typeof groups)[0] | null = null;
+  filteredNav.forEach(item => {
+    if (item.section) {
+      currentGroup = { section: item.section, items: [item] };
+      groups.push(currentGroup);
+    } else if (!currentGroup) {
+      if (groups.length === 0 || groups[0].section !== null) {
+        groups.unshift({ section: null, items: [] });
+      }
+      groups[0].items.push(item);
+    } else {
+      currentGroup.items.push(item);
+    }
+  });
+
+  // Collapsible section state — persisted to localStorage
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
+    if (typeof window === "undefined") return {};
+    try { return JSON.parse(localStorage.getItem("sidebar_sections") || "{}"); } catch { return {}; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("sidebar_sections", JSON.stringify(expandedSections));
+  }, [expandedSections]);
+
+  const isSectionExpanded = (section: string | null): boolean => {
+    if (!section) return true; // Core items always visible
+    if (expandedSections[section] !== undefined) return expandedSections[section];
+    // Default: expand only the section containing the active page
+    return groups.find(g => g.section === section)?.items.some(item =>
+      pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+    ) || false;
+  };
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !isSectionExpanded(section) }));
+  };
+
   return (
     <aside
-      className={`fixed left-0 top-[3px] h-[calc(100%-3px)] z-40 flex flex-col transition-all duration-300 ${
+      className={`fixed left-0 top-px h-[calc(100%-1px)] z-40 flex flex-col transition-all duration-300 ${
         collapsed ? "w-[56px]" : "w-56"
       }`}
       style={{
@@ -135,49 +186,58 @@ export default function Sidebar() {
       {/* Admin Profile Switcher */}
       {!collapsed && <AdminProfileSwitcher />}
 
-      {/* Navigation — clean with subtle hover */}
+      {/* Navigation — collapsible sections */}
       <nav className="flex-1 px-1.5 py-1 overflow-y-auto scrollbar-none">
-        {filteredNav.map((item, i) => {
-          const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
-          const showSection = !collapsed && item.section && (i === 0 || filteredNav[i - 1]?.section !== item.section);
-
+        {groups.map((group) => {
+          const expanded = isSectionExpanded(group.section);
           return (
-            <div key={item.href}>
-              {showSection && (
-                <div className="flex items-center gap-2 px-2 pt-4 pb-1">
-                  <span className="text-[8px] text-muted uppercase tracking-[0.2em] font-semibold">{item.section}</span>
-                  <div className="flex-1 h-px bg-border" />
-                </div>
-              )}
-              <div className="relative">
-                <Link
-                  href={item.href}
-                  onMouseEnter={() => setHoveredItem(item.href)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-150 ${
-                    isActive
-                      ? "text-gold font-medium bg-gold/[0.06] border border-gold/10"
-                      : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
-                  }`}
-                  title={collapsed ? item.label : undefined}
+            <div key={group.section || "_core"}>
+              {group.section && !collapsed && (
+                <button
+                  onClick={() => toggleSection(group.section!)}
+                  className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec cursor-pointer"
                 >
-                  <span className={`shrink-0 transition-colors ${isActive ? "text-gold" : hoveredItem === item.href ? "text-foreground" : ""}`}>
-                    {item.icon}
+                  <span className="text-[8px] text-muted uppercase tracking-[0.2em] font-semibold group-hover/sec:text-foreground transition-colors">
+                    {group.section}
                   </span>
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                  {/* Active indicator line */}
-                  {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2.5px] h-4 rounded-r bg-gold" />}
-                </Link>
-
-                {/* Collapsed tooltip */}
-                {collapsed && hoveredItem === item.href && (
-                  <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
-                    <div className="bg-surface border border-border rounded-xl px-2.5 py-1.5 shadow-elevated text-xs font-medium text-foreground">
-                      {item.label}
-                    </div>
+                  <div className="flex-1 h-px bg-border" />
+                  <ChevronDown
+                    size={10}
+                    className={`text-muted group-hover/sec:text-foreground transition-transform duration-200 ${expanded ? "" : "-rotate-90"}`}
+                  />
+                </button>
+              )}
+              {(expanded || collapsed) && group.items.map((item) => {
+                const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                return (
+                  <div key={item.href} className="relative">
+                    <Link
+                      href={item.href}
+                      onMouseEnter={() => setHoveredItem(item.href)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                      className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-150 ${
+                        isActive
+                          ? "text-gold font-medium bg-gold/[0.06] border border-gold/10"
+                          : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
+                      }`}
+                      title={collapsed ? item.label : undefined}
+                    >
+                      <span className={`shrink-0 transition-colors ${isActive ? "text-gold" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+                        {item.icon}
+                      </span>
+                      {!collapsed && <span className="truncate">{item.label}</span>}
+                      {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2.5px] h-4 rounded-r bg-gold" />}
+                    </Link>
+                    {collapsed && hoveredItem === item.href && (
+                      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
+                        <div className="bg-surface border border-border rounded-xl px-2.5 py-1.5 shadow-elevated text-xs font-medium text-foreground">
+                          {item.label}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                );
+              })}
             </div>
           );
         })}
@@ -192,30 +252,35 @@ export default function Sidebar() {
         </div>
       )}
 
-      {/* User — cleaner profile section */}
+      {/* User — cleaner profile section (click to open settings) */}
       <div className="px-1.5 py-2 border-t border-border">
         {!collapsed ? (
-          <div className="px-2.5 py-2 rounded-xl hover:bg-surface-light transition-colors">
+          <Link href="/dashboard/settings" className="block px-2.5 py-2 rounded-xl hover:bg-surface-light transition-colors cursor-pointer" title="Open settings">
             <div className="flex items-center gap-2.5">
-              {profile?.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover" />
-              ) : (
-                <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
-                  <span className="text-gold text-[10px] font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
-                </div>
-              )}
+              {(() => {
+                const plan = getPlanConfig(profile?.plan_tier);
+                const glow = profile?.plan_tier ? `0 0 8px ${plan.glow}` : undefined;
+                return profile?.avatar_url ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={profile.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover" style={{ boxShadow: glow }} />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center" style={{ boxShadow: glow }}>
+                    <span className="text-gold text-[10px] font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
+                  </div>
+                );
+              })()}
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] font-medium text-foreground truncate">{profile?.nickname || profile?.full_name || "Loading..."}</p>
-                <p className="text-[9px] text-muted capitalize">{profile?.role?.replace("_", " ") || "..."}</p>
+                <RoleBadge role={profile?.role} planTier={profile?.plan_tier || undefined} />
               </div>
             </div>
-          </div>
+          </Link>
         ) : (
-          <div className="flex justify-center py-1">
+          <Link href="/dashboard/settings" className="flex justify-center py-1" title="Open settings">
             <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center">
               <span className="text-gold text-[9px] font-bold">{profile?.full_name?.charAt(0) || "?"}</span>
             </div>
-          </div>
+          </Link>
         )}
         <button onClick={signOut}
           className={`w-full flex items-center gap-2.5 px-2.5 py-[6px] my-[1px] rounded-xl text-[11px] text-muted hover:text-danger hover:bg-danger/5 transition-colors ${collapsed ? "justify-center" : ""}`}
@@ -226,4 +291,53 @@ export default function Sidebar() {
       </div>
     </aside>
   );
+}
+
+/* ─── Role Badge ──────────────────────────────────────────────────── */
+function RoleBadge({ role, planTier }: { role?: string; planTier?: string }) {
+  if (role === "admin") {
+    const plan = getPlanConfig(planTier);
+    return (
+      <div className="flex items-center gap-1.5">
+        <span className="text-[9px] text-muted">Admin</span>
+        {planTier && (
+          <span
+            className="text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+            style={{
+              background: `${plan.color}18`,
+              color: plan.color,
+              boxShadow: `0 0 6px ${plan.glow}`,
+            }}
+          >
+            {plan.badge_label}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  if (role === "client") {
+    // Show "Member" instead of "client" + plan badge if available
+    const plan = getPlanConfig(planTier);
+    return (
+      <div className="flex items-center gap-1.5">
+        <span className="text-[9px] text-muted">Member</span>
+        {planTier && (
+          <span
+            className="text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
+            style={{
+              background: `${plan.color}18`,
+              color: plan.color,
+              boxShadow: `0 0 6px ${plan.glow}`,
+            }}
+          >
+            {plan.badge_label}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  // team_member
+  return <span className="text-[9px] text-muted capitalize">{role?.replace("_", " ") || "..."}</span>;
 }

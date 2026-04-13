@@ -1,11 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
 // Cron: Monitor new Google Business reviews and notify
 // Vercel Cron: 0 */6 * * * (every 6 hours)
 // Checks all connected GBP accounts for new reviews and sends Telegram alerts
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Verify cron secret to prevent unauthorized triggering
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const supabase = createServiceClient();
 
   // Get all active Google Business accounts

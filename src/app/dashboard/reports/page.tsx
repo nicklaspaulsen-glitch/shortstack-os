@@ -67,6 +67,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchData() {
@@ -123,8 +124,8 @@ export default function ReportsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-            <FileText size={20} className="text-accent" />
+          <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
+            <FileText size={20} className="text-gold" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-foreground">AI Client Reports</h1>
@@ -141,7 +142,7 @@ export default function ReportsPage() {
         {[
           { label: "Total Reports", value: totalReports, icon: FileText, color: "text-info" },
           { label: "Weekly Reports", value: weeklyReports, icon: Calendar, color: "text-gold" },
-          { label: "Monthly Reports", value: monthlyReports, icon: BarChart3, color: "text-accent" },
+          { label: "Monthly Reports", value: monthlyReports, icon: BarChart3, color: "text-gold" },
           { label: "Clients Covered", value: uniqueClients, icon: Users, color: "text-success" },
         ].map(stat => (
           <div key={stat.label} className="bg-surface border border-border/50 rounded-2xl p-4">
@@ -231,7 +232,7 @@ export default function ReportsPage() {
           {/* Quick Generate for All */}
           <div className="bg-surface border border-border/50 rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-2">
-              <Users size={14} className="text-accent" />
+              <Users size={14} className="text-gold" />
               <h2 className="text-sm font-semibold text-foreground">Batch Reports</h2>
             </div>
             <p className="text-[10px] text-muted mb-3">
@@ -340,7 +341,7 @@ export default function ReportsPage() {
                       className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-light transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className={`w-1.5 h-1.5 rounded-full ${report.result?.type === "monthly_report" ? "bg-accent" : "bg-gold"}`} />
+                        <div className={`w-1.5 h-1.5 rounded-full ${report.result?.type === "monthly_report" ? "bg-info" : "bg-gold"}`} />
                         <div className="text-left">
                           <p className="text-xs font-medium text-foreground">{getClientName(report.client_id)}</p>
                           <p className="text-[10px] text-muted">

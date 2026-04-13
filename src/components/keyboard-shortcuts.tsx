@@ -85,6 +85,7 @@ export default function KeyboardShortcuts() {
       window.removeEventListener("keydown", handleKeyDown);
       clearTimeout(timer);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   if (!showHelp) return null;
@@ -98,13 +99,13 @@ export default function KeyboardShortcuts() {
         <div className="rounded-2xl overflow-hidden fade-in bg-surface border border-border">
           <div className="px-5 py-3 border-b border-border">
             <h2 className="text-sm font-bold text-foreground">Keyboard Shortcuts</h2>
-            <p className="text-[10px] text-gray-500">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-surface-light">?</kbd> to toggle</p>
+            <p className="text-[10px] text-muted">Press <kbd className="px-1.5 py-0.5 rounded text-[9px] bg-surface-light">?</kbd> to toggle</p>
           </div>
 
           <div className="px-5 py-3 max-h-[400px] overflow-y-auto space-y-4">
             {categories.map(cat => (
               <div key={cat}>
-                <p className="text-[9px] text-gray-500 uppercase tracking-wider font-bold mb-2">{cat}</p>
+                <p className="text-[9px] text-muted uppercase tracking-wider font-bold mb-2">{cat}</p>
                 <div className="space-y-1">
                   {shortcuts.filter(s => s.category === cat).map(s => (
                     <div key={s.keys} className="flex items-center justify-between py-1.5">
@@ -115,7 +116,7 @@ export default function KeyboardShortcuts() {
                             <kbd className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-surface-light text-gold">
                               {k}
                             </kbd>
-                            {i < s.keys.split(" ").length - 1 && <span className="text-gray-600 mx-0.5">then</span>}
+                            {i < s.keys.split(" ").length - 1 && <span className="text-muted mx-0.5">then</span>}
                           </span>
                         ))}
                       </div>
@@ -127,7 +128,7 @@ export default function KeyboardShortcuts() {
           </div>
 
           <div className="px-5 py-2 border-t border-border text-center">
-            <p className="text-[9px] text-gray-600">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-surface-light">Esc</kbd> to close</p>
+            <p className="text-[9px] text-muted">Press <kbd className="px-1 py-0.5 rounded text-[8px] bg-surface-light">Esc</kbd> to close</p>
           </div>
         </div>
       </div>

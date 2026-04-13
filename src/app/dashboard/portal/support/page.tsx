@@ -20,6 +20,7 @@ export default function ClientSupportPage() {
         if (data) setClientId(data.id);
       }).catch(() => {});
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   useEffect(() => {
@@ -130,8 +131,8 @@ export default function ClientSupportPage() {
             <h3 className="section-header">Contact Your Team</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center">
-                  <Mail size={14} className="text-accent" />
+                <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center">
+                  <Mail size={14} className="text-gold" />
                 </div>
                 <div>
                   <p className="text-xs font-medium">Email</p>

@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { formatRelativeTime } from "@/lib/utils";
 import {
   MessageSquare, Plus, Pin, Heart, Trash2, Send, Loader,
-  Megaphone, HelpCircle, Sparkles, BookOpen, Users, ChevronDown
+  Megaphone, HelpCircle, Sparkles, BookOpen, Users, ChevronDown, ExternalLink
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
@@ -45,7 +45,7 @@ const TYPE_COLORS: Record<string, string> = {
   announcement: "bg-gold/10 text-gold border-gold/20",
   discussion: "bg-info/10 text-info border-info/20",
   question: "bg-warning/10 text-warning border-warning/20",
-  resource: "bg-accent/10 text-accent border-accent/20",
+  resource: "bg-gold/10 text-gold border-gold/20",
   showcase: "bg-success/10 text-success border-success/20",
 };
 
@@ -60,6 +60,7 @@ export default function CommunityPage() {
   const [newComment, setNewComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchPosts(); }, [filter]);
 
   async function fetchPosts() {
@@ -167,6 +168,33 @@ export default function CommunityPage() {
         <button onClick={() => setShowNewPost(true)} className="btn-primary flex items-center gap-2 text-xs">
           <Plus size={14} /> New Post
         </button>
+      </div>
+
+      {/* Discord widget */}
+      <div className="card p-0 overflow-hidden">
+        <div className="flex flex-col md:flex-row">
+          <div className="flex-1 p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <svg width="20" height="16" viewBox="0 0 71 55" fill="none"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.7 40.7 0 00-1.8 3.7 54 54 0 00-16.2 0A26.4 26.4 0 0025.4.3a.2.2 0 00-.2-.1A58.4 58.4 0 0010.5 4.9a.2.2 0 00-.1.1C1.5 18.7-.9 32.2.3 45.5v.1a58.8 58.8 0 0017.7 9a.2.2 0 00.3-.1 42.1 42.1 0 003.6-5.9.2.2 0 00-.1-.3 38.7 38.7 0 01-5.5-2.6.2.2 0 01 0-.4l1.1-.9a.2.2 0 01.2 0 42 42 0 0035.6 0 .2.2 0 01.2 0l1.1.9a.2.2 0 010 .4 36.4 36.4 0 01-5.5 2.6.2.2 0 00-.1.3 47.2 47.2 0 003.6 5.9.2.2 0 00.3.1A58.6 58.6 0 0070.4 45.6v-.1c1.4-15.2-2.4-28.4-10.1-40.1a.2.2 0 00-.1-.1zM23.7 37.3c-3.5 0-6.3-3.2-6.3-7s2.8-7 6.3-7 6.4 3.2 6.3 7-2.8 7-6.3 7zm23.2 0c-3.5 0-6.3-3.2-6.3-7s2.8-7 6.3-7 6.4 3.2 6.3 7-2.8 7-6.3 7z" fill="#5865F2"/></svg>
+              <h3 className="text-sm font-bold">ShortStack Discord</h3>
+            </div>
+            <p className="text-xs text-muted mb-3">Join the community server for real-time chat, support, and exclusive updates.</p>
+            <a href="https://discord.gg/shortstack" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all hover:opacity-90"
+              style={{ background: "#5865F2", color: "#fff" }}>
+              Join Discord <ExternalLink size={11} />
+            </a>
+          </div>
+          <div className="w-full md:w-[300px] h-[200px] border-t md:border-t-0 md:border-l border-border">
+            <iframe
+              src="https://discord.com/widget?id=1492845816514347121&theme=dark"
+              width="100%"
+              height="100%"
+              sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"
+              className="border-0"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Filter tabs */}

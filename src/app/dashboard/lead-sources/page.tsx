@@ -38,6 +38,7 @@ export default function LeadSourcesPage() {
   const [loading, setLoading] = useState(true);
   const [totalLeads, setTotalLeads] = useState(0);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchSources(); }, []);
 
   async function fetchSources() {

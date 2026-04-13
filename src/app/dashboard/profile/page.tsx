@@ -155,6 +155,7 @@ export default function ProfilePage() {
         <div className="flex items-center gap-5">
           <div className="relative group">
             {avatarUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
               <img src={avatarUrl} alt="" className="w-20 h-20 rounded-full object-cover border-2 border-border" />
             ) : (
               <div className="w-20 h-20 rounded-full flex items-center justify-center border-2 border-border" style={{ background: "color-mix(in srgb, var(--color-accent) 12%, transparent)" }}>

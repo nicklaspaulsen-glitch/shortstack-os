@@ -110,8 +110,8 @@ export default function ClientSettingsPage() {
           {/* DM Outreach */}
           <div className="flex items-start justify-between p-3 bg-surface-light rounded-lg border border-border">
             <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
-                <MessageSquare size={14} className="text-accent" />
+              <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+                <MessageSquare size={14} className="text-gold" />
               </div>
               <div>
                 <p className="text-xs font-semibold">DM Outreach</p>

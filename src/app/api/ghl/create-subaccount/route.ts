@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // Auto-create GHL sub-account when a new client signs up
 // Uses the Agency API to create a location under your GHL agency
 export async function POST(request: NextRequest) {
+  // Auth check — only authenticated users can create GHL subaccounts
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { client_id, business_name, email, phone, address } = await request.json();
+
+  if (!client_id || !business_name) {
+    return NextResponse.json({ error: "client_id and business_name required" }, { status: 400 });
+  }
 
   const agencyKey = process.env.GHL_AGENCY_KEY;
   const companyId = process.env.GHL_COMPANY_ID;

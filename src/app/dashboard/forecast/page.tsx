@@ -44,6 +44,7 @@ export default function ForecastPage() {
   const [aiLoading, setAiLoading] = useState(false);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchForecast(); }, []);
 
   async function fetchForecast() {

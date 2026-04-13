@@ -21,19 +21,27 @@ export default function ClientBillingPage() {
 
   useEffect(() => {
     if (profile) fetchBilling();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   async function fetchBilling() {
-    const { data: clientData } = await supabase.from("clients").select("id, mrr").eq("profile_id", profile!.id).single();
-    if (!clientData) { setLoading(false); return; }
+    if (!profile?.id) { setLoading(false); return; }
+    try {
+      const { data: clientData, error: clientError } = await supabase.from("clients").select("id, mrr").eq("profile_id", profile.id).single();
+      if (clientError && clientError.code !== "PGRST116") throw clientError;
+      if (!clientData) { setLoading(false); return; }
 
-    const [{ data: inv }, { data: con }] = await Promise.all([
-      supabase.from("invoices").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
-      supabase.from("contracts").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
-    ]);
-    setInvoices(inv || []);
-    setContracts(con || []);
-    setLoading(false);
+      const [{ data: inv }, { data: con }] = await Promise.all([
+        supabase.from("invoices").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
+        supabase.from("contracts").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
+      ]);
+      setInvoices(inv || []);
+      setContracts(con || []);
+    } catch {
+      toast.error("Failed to load billing data");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) return <PageLoading />;

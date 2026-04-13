@@ -43,6 +43,7 @@ export default function TagsPage() {
   const [newColor, setNewColor] = useState(TAG_COLORS[0]);
   const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchTagCounts(); }, []);
 
   async function fetchTagCounts() {

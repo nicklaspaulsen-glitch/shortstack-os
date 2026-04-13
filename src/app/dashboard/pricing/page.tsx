@@ -170,7 +170,7 @@ export default function PricingPage() {
               <div className="mt-6 pt-5 border-t border-border space-y-2.5">
                 {plan.features.map((f) => (
                   <div key={f} className="flex items-start gap-2.5">
-                    <Check size={14} className={`mt-0.5 shrink-0 ${plan.popular ? "text-gold" : "text-accent"}`} />
+                    <Check size={14} className={`mt-0.5 shrink-0 ${plan.popular ? "text-gold" : "text-gold"}`} />
                     <span className="text-xs text-foreground/80">{f}</span>
                   </div>
                 ))}
@@ -222,7 +222,7 @@ export default function PricingPage() {
                 <div className="flex items-center justify-between">
                   <p className="text-xs font-medium text-foreground">{addon.name}</p>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${
-                    addon.type === "one-time" ? "bg-accent/10 text-accent" : "bg-gold/10 text-gold"
+                    addon.type === "one-time" ? "bg-info/10 text-info" : "bg-gold/10 text-gold"
                   }`}>
                     {addon.type === "one-time" ? "One-time" : "Monthly"}
                   </span>

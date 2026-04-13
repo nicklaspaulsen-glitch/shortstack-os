@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 const FRAMEWORKS = [
   { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll → tell story → make offer", color: "text-gold" },
   { id: "pas", name: "PAS", desc: "Problem → Agitate → Solution", color: "text-danger" },
-  { id: "aida", name: "AIDA", desc: "Attention → Interest → Desire → Action", color: "text-accent" },
+  { id: "aida", name: "AIDA", desc: "Attention → Interest → Desire → Action", color: "text-gold" },
   { id: "before_after", name: "Before/After", desc: "Pain state → transformation → results", color: "text-success" },
   { id: "contrarian", name: "Contrarian", desc: "Challenge beliefs → new perspective", color: "text-warning" },
   { id: "listicle", name: "Listicle", desc: "X things/mistakes/secrets that...", color: "text-purple-400" },
@@ -411,7 +411,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             {/* Use research results */}
             {research && research.opportunities && (
               <div className="card border-accent/10">
-                <h3 className="section-header flex items-center gap-2"><Search size={12} className="text-accent" /> From Research</h3>
+                <h3 className="section-header flex items-center gap-2"><Search size={12} className="text-gold" /> From Research</h3>
                 <div className="space-y-1.5">
                   {research.opportunities.slice(0, 4).map((opp, i) => (
                     <button key={i} onClick={() => setConfig({ ...config, topic: opp })}
@@ -430,7 +430,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "research" && (
         <div className="space-y-4">
           <div className="card max-w-xl space-y-3">
-            <h2 className="section-header flex items-center gap-2"><Search size={13} className="text-accent" /> Viral Content Research</h2>
+            <h2 className="section-header flex items-center gap-2"><Search size={13} className="text-gold" /> Viral Content Research</h2>
             <p className="text-[10px] text-muted">Find what content is going viral in your niche and why</p>
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -609,7 +609,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <div className="p-3 space-y-1.5">
                     <p className="text-[11px] leading-relaxed">{section.dialogue}</p>
                     {section.visual_direction && (
-                      <p className="text-[9px] text-accent flex items-center gap-1"><Eye size={9} /> {section.visual_direction}</p>
+                      <p className="text-[9px] text-info flex items-center gap-1"><Eye size={9} /> {section.visual_direction}</p>
                     )}
                     {section.text_overlay && (
                       <p className="text-[9px] text-warning flex items-center gap-1"><MessageSquare size={9} /> Text: {section.text_overlay}</p>
@@ -633,7 +633,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
 
             {/* Posting strategy */}
             <div className="card">
-              <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-accent" /> Posting Strategy</h3>
+              <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-gold" /> Posting Strategy</h3>
               <div className="space-y-1 text-[10px]">
                 <p><span className="text-muted">Best time:</span> {script.posting_strategy.best_time}</p>
                 <p><span className="text-muted">Best day:</span> {script.posting_strategy.best_day}</p>
@@ -695,7 +695,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
             <div className="flex flex-wrap gap-1">
               {script.hashtags?.map((h, i) => (
-                <span key={i} className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-accent">{h}</span>
+                <span key={i} className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-gold">{h}</span>
               ))}
             </div>
           </div>

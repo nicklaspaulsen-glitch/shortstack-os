@@ -21,7 +21,7 @@ export default function LeadEnginePage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [outreach, setOutreach] = useState<OutreachEntry[]>([]);
   const [followups, setFollowups] = useState<FollowUp[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [industryFilter, setIndustryFilter] = useState("");
@@ -39,6 +39,7 @@ export default function LeadEnginePage() {
 
   useEffect(() => {
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, statusFilter, industryFilter]);
 
   async function fetchData() {

@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 // Text-to-Speech API — uses ElevenLabs for high-quality AI voice
+// TODO: Add rate limiting in production — TTS is expensive per request
 export async function POST(request: NextRequest) {
+  // Auth check — only authenticated users can use TTS
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { text } = await request.json();
-  if (!text) return NextResponse.json({ error: "No text" }, { status: 400 });
+  if (!text || typeof text !== "string") return NextResponse.json({ error: "No text" }, { status: 400 });
 
   const apiKey = process.env.ELEVENLABS_API_KEY;
   if (!apiKey) {
@@ -32,8 +39,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (!res.ok) {
-      const err = await res.text();
-      return NextResponse.json({ error: `TTS failed: ${err}` }, { status: 500 });
+      console.error("TTS failed:", await res.text());
+      return NextResponse.json({ error: "Text-to-speech generation failed" }, { status: 500 });
     }
 
     const audioBuffer = await res.arrayBuffer();
@@ -44,6 +51,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (err) {
-    return NextResponse.json({ error: `TTS error: ${err}` }, { status: 500 });
+    console.error("TTS error:", err);
+    return NextResponse.json({ error: "Text-to-speech service unavailable" }, { status: 500 });
   }
 }

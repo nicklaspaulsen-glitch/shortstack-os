@@ -152,6 +152,11 @@ Return JSON only:
 
 // GET — list all custom/spawned agents
 export async function GET() {
+  // Auth check — only authenticated users can list agents
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase

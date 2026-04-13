@@ -31,6 +31,7 @@ export default function AnalyticsPage() {
   const [outreachByDay, setOutreachByDay] = useState<Array<{ date: string; sent: number; replies: number }>>([]);
   const supabase = createClient();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchAnalytics(); }, []);
 
   async function fetchAnalytics() {
@@ -131,8 +132,8 @@ export default function AnalyticsPage() {
   const replyRate = stats.dmsSent > 0 ? Math.round((stats.replies / stats.dmsSent) * 100) : 0;
 
   const chartTooltipStyle = {
-    contentStyle: { background: "#FFFFFF", border: "1px solid #E8E5E0", borderRadius: "12px", fontSize: "11px", color: "#374151", boxShadow: "0 4px 12px rgba(0,0,0,0.06)" },
-    labelStyle: { color: "#6B7280", fontSize: "10px" },
+    contentStyle: { background: "var(--color-surface, #FFFFFF)", border: "1px solid var(--color-border, #E8E5E0)", borderRadius: "12px", fontSize: "11px", color: "var(--color-text, #374151)", boxShadow: "0 4px 12px rgba(0,0,0,0.12)" },
+    labelStyle: { color: "var(--color-muted, #6B7280)", fontSize: "10px" },
   };
 
   return (
@@ -171,9 +172,9 @@ export default function AnalyticsPage() {
                     <stop offset="100%" stopColor="#C9A84C" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
-                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
-                <YAxis tick={{ fontSize: 9, fill: "#9CA3AF" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
+                <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <Tooltip {...chartTooltipStyle} />
                 <Area type="monotone" dataKey="count" stroke="#C9A84C" fill="url(#goldGrad)" strokeWidth={2} />
               </AreaChart>
@@ -187,9 +188,9 @@ export default function AnalyticsPage() {
           <div className="h-52">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={revenueByMonth}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
-                <XAxis dataKey="month" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
-                <YAxis tick={{ fontSize: 9, fill: "#9CA3AF" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
+                <XAxis dataKey="month" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
+                <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <Tooltip {...chartTooltipStyle} />
                 <Bar dataKey="mrr" fill="#C9A84C" radius={[4, 4, 0, 0]} name="MRR" />
                 <Bar dataKey="deals" fill="#38bdf8" radius={[4, 4, 0, 0]} name="Deal Revenue" />
@@ -233,9 +234,9 @@ export default function AnalyticsPage() {
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={leadsByIndustry} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
-                <XAxis type="number" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
-                <YAxis dataKey="industry" type="category" tick={{ fontSize: 9, fill: "#9CA3AF" }} width={80} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
+                <XAxis type="number" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
+                <YAxis dataKey="industry" type="category" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} width={80} />
                 <Tooltip {...chartTooltipStyle} />
                 <Bar dataKey="count" fill="#38bdf8" radius={[0, 4, 4, 0]} />
               </BarChart>
@@ -249,9 +250,9 @@ export default function AnalyticsPage() {
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={outreachByDay}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E8E5E0" />
-                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "#9CA3AF" }} />
-                <YAxis tick={{ fontSize: 9, fill: "#9CA3AF" }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border, #E8E5E0)" />
+                <XAxis dataKey="date" tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
+                <YAxis tick={{ fontSize: 9, fill: "var(--color-muted, #9CA3AF)" }} />
                 <Tooltip {...chartTooltipStyle} />
                 <Line type="monotone" dataKey="sent" stroke="#C9A84C" strokeWidth={2} dot={false} name="Sent" />
                 <Line type="monotone" dataKey="replies" stroke="#10b981" strokeWidth={2} dot={false} name="Replies" />
@@ -275,7 +276,7 @@ export default function AnalyticsPage() {
           <p className="text-[9px] text-muted uppercase tracking-wider">Reply Rate</p>
         </div>
         <div className="card text-center p-3">
-          <span className="text-lg font-bold font-mono text-accent">{formatCurrency(stats.dealValue)}</span>
+          <span className="text-lg font-bold font-mono text-gold">{formatCurrency(stats.dealValue)}</span>
           <p className="text-[9px] text-muted uppercase tracking-wider">Revenue Closed</p>
         </div>
         <div className="card text-center p-3">

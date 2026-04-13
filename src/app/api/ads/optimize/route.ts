@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { analyzeCampaign, generateBulkInsights } from "@/lib/ads/ai-engine";
 import type { Campaign, Client } from "@/lib/types";
 
 // POST — AI-optimize a single campaign
 export async function POST(request: NextRequest) {
+  // Auth check
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const supabase = createServiceClient();
     const { campaign_id } = await request.json();

@@ -61,6 +61,7 @@ export default function CalendarPage() {
     notes: "",
   });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {

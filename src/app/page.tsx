@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -18,6 +18,9 @@ import {
   TrendingUp,
   Globe,
   Shield,
+  Monitor,
+  Download,
+  Lock,
 } from "lucide-react";
 
 /* ─── Stats ────────────────────────────────────────────────────────── */
@@ -124,6 +127,61 @@ const TESTIMONIALS = [
   },
 ];
 
+/* ─── Scroll Reveal ───────────────────────────────────────────────── */
+function ScrollReveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [vis, setVis] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVis(true); obs.disconnect(); } },
+      { threshold: 0.12 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: vis ? 1 : 0,
+        transform: vis ? "translateY(0)" : "translateY(32px)",
+        transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <button
+      onClick={() => setOpen(!open)}
+      className="w-full text-left rounded-xl p-5 transition-all"
+      style={{
+        background: open ? "rgba(200,168,85,0.04)" : "rgba(255,255,255,0.02)",
+        border: `1px solid ${open ? "rgba(200,168,85,0.12)" : "rgba(255,255,255,0.05)"}`,
+      }}
+    >
+      <div className="flex items-center justify-between gap-4">
+        <p className="text-sm font-semibold text-white">{question}</p>
+        <ChevronRight
+          size={16}
+          className="shrink-0 transition-transform text-gray-500"
+          style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)" }}
+        />
+      </div>
+      {open && (
+        <p className="text-sm text-gray-400 mt-3 leading-relaxed">{answer}</p>
+      )}
+    </button>
+  );
+}
+
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -229,6 +287,12 @@ export default function LandingPage() {
             >
               Changelog
             </Link>
+            <Link
+              href="#desktop"
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              Desktop App
+            </Link>
           </div>
 
           <div className="flex items-center gap-3">
@@ -239,7 +303,7 @@ export default function LandingPage() {
               Login
             </Link>
             <Link
-              href="/book"
+              href="/pricing"
               className="text-sm font-semibold px-5 py-2 rounded-lg transition-all hover:opacity-90"
               style={{
                 background: "linear-gradient(135deg, #c8a855, #b89840)",
@@ -345,7 +409,7 @@ export default function LandingPage() {
             style={{ opacity: 0 }}
           >
             <Link
-              href="/book"
+              href="/pricing"
               className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
               style={{
                 background: "linear-gradient(135deg, #c8a855, #b89840)",
@@ -476,25 +540,29 @@ export default function LandingPage() {
       {/* ─── TRUST BAR ─────────────────────────────────────────────── */}
       <section className="py-16 px-6" style={{ borderTop: "1px solid rgba(255,255,255,0.03)" }}>
         <div className="max-w-5xl mx-auto">
-          <p className="text-center text-xs text-gray-600 uppercase tracking-widest mb-10">
-            Trusted by growing agencies worldwide
-          </p>
+          <ScrollReveal>
+            <p className="text-center text-xs text-gray-600 uppercase tracking-widest mb-10">
+              Trusted by growing agencies worldwide
+            </p>
+          </ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p
-                  className="text-3xl md:text-4xl font-extrabold mb-1"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #c8a855, #e2c878)",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
-                  {stat.value}
-                </p>
-                <p className="text-xs text-gray-500">{stat.label}</p>
-              </div>
+            {STATS.map((stat, i) => (
+              <ScrollReveal key={stat.label} delay={0.1 * i}>
+                <div className="text-center">
+                  <p
+                    className="text-3xl md:text-4xl font-extrabold mb-1"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, #c8a855, #e2c878)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                    }}
+                  >
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-gray-500">{stat.label}</p>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -503,7 +571,7 @@ export default function LandingPage() {
       {/* ─── FEATURES ──────────────────────────────────────────────── */}
       <section id="features" className="py-20 md:py-28 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <ScrollReveal className="text-center mb-16">
             <p
               className="text-xs font-semibold uppercase tracking-widest mb-3"
               style={{ color: "#c8a855" }}
@@ -520,13 +588,13 @@ export default function LandingPage() {
               Replace your entire tool stack with ShortStack OS. Every feature
               your agency needs, integrated and AI-powered.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {FEATURES.map((feature) => (
+            {FEATURES.map((feature, i) => (
+              <ScrollReveal key={feature.title} delay={0.08 * i}>
               <div
-                key={feature.title}
-                className="group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1"
+                className="group rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 h-full"
                 style={{
                   background: "rgba(255,255,255,0.02)",
                   border: "1px solid rgba(255,255,255,0.05)",
@@ -555,6 +623,7 @@ export default function LandingPage() {
                   {feature.description}
                 </p>
               </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -570,7 +639,7 @@ export default function LandingPage() {
         }}
       >
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
+          <ScrollReveal className="text-center mb-16">
             <p
               className="text-xs font-semibold uppercase tracking-widest mb-3"
               style={{ color: "#c8a855" }}
@@ -587,11 +656,12 @@ export default function LandingPage() {
               No steep learning curve. No month-long onboarding. Connect your
               accounts and let the AI handle the rest.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {STEPS.map((step, i) => (
-              <div key={step.num} className="relative text-center">
+              <ScrollReveal key={step.num} delay={0.15 * i}>
+              <div className="relative text-center">
                 {/* Connector line */}
                 {i < STEPS.length - 1 && (
                   <div
@@ -628,6 +698,7 @@ export default function LandingPage() {
                   {step.description}
                 </p>
               </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -636,7 +707,7 @@ export default function LandingPage() {
       {/* ─── TESTIMONIALS ──────────────────────────────────────────── */}
       <section className="py-20 md:py-28 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <ScrollReveal className="text-center mb-16">
             <p
               className="text-xs font-semibold uppercase tracking-widest mb-3"
               style={{ color: "#c8a855" }}
@@ -653,12 +724,12 @@ export default function LandingPage() {
               Don&apos;t take our word for it. Here&apos;s what real agency
               founders say about ShortStack OS.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {TESTIMONIALS.map((t) => (
+            {TESTIMONIALS.map((t, i) => (
+              <ScrollReveal key={t.name} delay={0.1 * i}>
               <div
-                key={t.name}
                 className="rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1"
                 style={{
                   background: "rgba(255,255,255,0.02)",
@@ -702,7 +773,236 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
+              </ScrollReveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── REPLACE YOUR STACK ──────────────────────────────────── */}
+      <section className="py-20 md:py-28 px-6" style={{ borderTop: "1px solid rgba(255,255,255,0.03)" }}>
+        <div className="max-w-5xl mx-auto">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#c8a855" }}>
+              One Platform, Not Ten
+            </p>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4" style={{ letterSpacing: "-0.03em" }}>
+              Replace your entire tool stack
+            </h2>
+            <p className="text-gray-400 max-w-lg mx-auto">
+              Stop paying for a dozen subscriptions. ShortStack OS combines everything into one.
+            </p>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { tool: "GoHighLevel", for: "CRM & Automation", saved: "$97/mo" },
+              { tool: "Apollo / ZoomInfo", for: "Lead Scraping", saved: "$99/mo" },
+              { tool: "Mailchimp / SendGrid", for: "Email Outreach", saved: "$50/mo" },
+              { tool: "HubSpot", for: "Client Management", saved: "$45/mo" },
+              { tool: "Canva Pro", for: "Design Assets", saved: "$13/mo" },
+              { tool: "Later / Buffer", for: "Social Scheduling", saved: "$25/mo" },
+              { tool: "PandaDoc", for: "Contracts", saved: "$35/mo" },
+              { tool: "Stripe Billing", for: "Invoicing", saved: "Free" },
+            ].map((item, i) => (
+              <ScrollReveal key={item.tool} delay={0.05 * i}>
+                <div className="rounded-xl p-4 text-center transition-all hover:-translate-y-0.5" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}>
+                  <p className="text-xs font-semibold text-white line-through opacity-50">{item.tool}</p>
+                  <p className="text-[10px] text-gray-500 mt-1">{item.for}</p>
+                  <p className="text-[10px] font-bold mt-1.5" style={{ color: "#10b981" }}>Save {item.saved}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <ScrollReveal delay={0.4}>
+            <div className="text-center mt-10 py-5 rounded-xl" style={{ background: "rgba(200,168,85,0.04)", border: "1px solid rgba(200,168,85,0.1)" }}>
+              <p className="text-sm text-gray-300">Total savings: <span className="text-gold font-bold">$364+/mo</span> compared to using separate tools</p>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* ─── FAQ ───────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28 px-6">
+        <div className="max-w-3xl mx-auto">
+          <ScrollReveal className="text-center mb-14">
+            <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#c8a855" }}>FAQ</p>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4" style={{ letterSpacing: "-0.03em" }}>
+              Common questions
+            </h2>
+          </ScrollReveal>
+
+          <div className="space-y-3">
+            {[
+              { q: "Who is ShortStack OS for?", a: "Digital marketing agencies, freelance marketers, and consultants who want to automate lead generation, client management, outreach, and content creation in one platform." },
+              { q: "Do I need technical skills to use it?", a: "No. ShortStack is designed for agency owners, not developers. Everything is point-and-click with AI assistance built in." },
+              { q: "Can my clients log in and see their own portal?", a: "Yes. Each client gets their own portal with deliverables, invoices, contracts, tasks, and real-time progress updates." },
+              { q: "What integrations are included?", a: "Stripe for billing, Google for leads and ads, Meta for social and ads, TikTok, LinkedIn, Telegram for notifications, and more. We add new integrations regularly." },
+              { q: "Is there a free trial?", a: "We offer a Starter plan so you can explore the platform. You can upgrade anytime as your agency grows." },
+              { q: "Can I white-label ShortStack for my clients?", a: "White-label options are available on Growth and Enterprise plans, including custom domains and branding." },
+            ].map((faq, i) => (
+              <ScrollReveal key={i} delay={0.06 * i}>
+                <FAQItem question={faq.q} answer={faq.a} />
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── DESKTOP APP DOWNLOAD ────────────────────────────────── */}
+      <section className="py-20 md:py-28 px-6" id="desktop" style={{ borderTop: "1px solid rgba(255,255,255,0.03)" }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <ScrollReveal>
+              <div
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-medium mb-4"
+                style={{
+                  background: "rgba(59,130,246,0.08)",
+                  border: "1px solid rgba(59,130,246,0.15)",
+                  color: "#3b82f6",
+                }}
+              >
+                <Monitor size={10} />
+                Desktop App
+              </div>
+
+              <h2
+                className="text-3xl md:text-4xl font-extrabold text-white mb-4"
+                style={{ letterSpacing: "-0.03em" }}
+              >
+                Your AI{" "}
+                <span
+                  style={{
+                    background: "linear-gradient(135deg, #c8a855, #e2c878)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  creative partner
+                </span>
+                , on your desktop
+              </h2>
+
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                ShortStack Agent lives on your computer. It can create websites, scaffold campaigns,
+                organize your files, build brand kits, write email sequences, and automate your workflow —
+                all with natural language. Just tell it what you need.
+              </p>
+
+              <div className="space-y-3 mb-8">
+                {[
+                  { text: "14 AI-powered tools for file management and content creation", icon: Zap },
+                  { text: "Project templates: websites, campaigns, brand kits, calendars", icon: Layers },
+                  { text: "Syncs with your ShortStack OS dashboard automatically", icon: Globe },
+                  { text: "Works offline — your files never leave your machine", icon: Lock },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div
+                      className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
+                      style={{ background: "rgba(200,168,85,0.08)" }}
+                    >
+                      <item.icon size={12} style={{ color: "#c8a855" }} />
+                    </div>
+                    <p className="text-sm text-gray-300">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="/downloads/ShortStack-Setup.exe"
+                  className="group flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
+                  style={{
+                    background: "linear-gradient(135deg, #c8a855, #b89840)",
+                    color: "#0b0d12",
+                    boxShadow: "0 0 20px rgba(200,168,85,0.1)",
+                  }}
+                >
+                  <Download size={15} />
+                  Download for Windows
+                </a>
+                <a
+                  href="/downloads/ShortStack.dmg"
+                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm text-white transition-all hover:border-white/20"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  <Download size={15} className="text-gray-500" />
+                  Download for Mac
+                </a>
+              </div>
+
+              <p className="text-[10px] text-gray-600 mt-3">
+                Free to download. Requires a ShortStack account to use.
+              </p>
+            </ScrollReveal>
+
+            <ScrollReveal delay={0.15}>
+              <div
+                className="rounded-2xl p-6 relative overflow-hidden"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                {/* Mock agent window */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#C9A84C" }} />
+                  <span className="text-[10px] font-semibold" style={{ color: "#C9A84C" }}>ShortStack Agent</span>
+                  <span className="text-[8px] text-gray-600 ml-auto">Chat</span>
+                  <span className="text-[8px] text-gray-600">Workspace</span>
+                  <span className="text-[8px] text-gray-600">Tasks</span>
+                </div>
+
+                {/* Mock conversation */}
+                <div className="space-y-3">
+                  <div className="ml-auto max-w-[75%] rounded-xl px-3 py-2 text-xs" style={{ background: "#C9A84C", color: "#000" }}>
+                    Create a social media campaign for my new product launch
+                  </div>
+                  <div
+                    className="max-w-[85%] rounded-xl px-3 py-2 text-xs text-gray-300"
+                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    <div className="text-[9px] font-semibold mb-1" style={{ color: "#C9A84C" }}>create_project</div>
+                    <div className="text-[9px] text-emerald-400">Created &quot;product-launch&quot; — 4 folders, 5 files</div>
+                  </div>
+                  <div
+                    className="max-w-[85%] rounded-xl px-3 py-2 text-xs text-gray-300"
+                    style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    Done! I scaffolded your campaign at <code className="text-[10px] px-1 rounded" style={{ background: "rgba(255,255,255,0.04)" }}>product-launch/</code> with briefs, caption templates, a posting calendar, and hashtag strategy. Want me to fill in the captions for Instagram and TikTok?
+                  </div>
+                </div>
+
+                {/* Mock input */}
+                <div className="mt-4 flex gap-2">
+                  <div
+                    className="flex-1 rounded-xl px-3 py-2.5 text-[11px] text-gray-600"
+                    style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  >
+                    Ask your agent anything...
+                  </div>
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ background: "#C9A84C" }}
+                  >
+                    <ArrowRight size={12} style={{ color: "#0b0d12" }} />
+                  </div>
+                </div>
+
+                {/* Glow */}
+                <div
+                  className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-2/3 h-8 pointer-events-none"
+                  style={{
+                    background: "radial-gradient(ellipse, rgba(200,168,85,0.08) 0%, transparent 70%)",
+                    filter: "blur(12px)",
+                  }}
+                />
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -720,7 +1020,7 @@ export default function LandingPage() {
             }}
           />
 
-          <div className="relative z-10">
+          <ScrollReveal className="relative z-10">
             <div
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-medium mb-6"
               style={{
@@ -730,7 +1030,7 @@ export default function LandingPage() {
               }}
             >
               <Shield size={10} />
-              Free Strategy Call — No Obligation
+              Start Today — No Obligation
             </div>
 
             <h2
@@ -752,14 +1052,14 @@ export default function LandingPage() {
             </h2>
 
             <p className="text-gray-400 text-lg max-w-lg mx-auto mb-10">
-              Book a free 30-minute strategy call. We&apos;ll show you exactly
-              how ShortStack OS can automate your agency and multiply your
-              output.
+              Pick a plan, sign up in 60 seconds, and start automating your
+              agency today. No meetings required — but we&apos;re here if you
+              want a walkthrough.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/book"
+                href="/pricing"
                 className="group flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-sm transition-all hover:shadow-lg"
                 style={{
                   background: "linear-gradient(135deg, #c8a855, #b89840)",
@@ -767,21 +1067,21 @@ export default function LandingPage() {
                   boxShadow: "0 0 40px rgba(200,168,85,0.15)",
                 }}
               >
-                Book Your Free Call
+                See Plans &amp; Start Now
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-0.5 transition-transform"
                 />
               </Link>
               <Link
-                href="/pricing"
+                href="/book"
                 className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-1"
               >
-                Or view pricing
+                Or book a free call
                 <ChevronRight size={14} />
               </Link>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -822,6 +1122,7 @@ export default function LandingPage() {
                 {[
                   { label: "Features", href: "#features" },
                   { label: "Pricing", href: "/pricing" },
+                  { label: "Desktop App", href: "#desktop" },
                   { label: "Changelog", href: "/changelog" },
                   { label: "Book a Call", href: "/book" },
                 ].map((link) => (

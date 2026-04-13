@@ -38,6 +38,7 @@ export default function ActivityLogPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchLogs(); }, []);
 
   async function fetchLogs() {

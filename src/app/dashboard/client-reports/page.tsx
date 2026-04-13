@@ -25,6 +25,7 @@ export default function ClientReportsPage() {
       setClients(data || []);
       setLoading(false);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function generateReport() {

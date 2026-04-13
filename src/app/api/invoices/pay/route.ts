@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, checkout_url: session.url });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    console.error("Invoice payment error:", err);
+    return NextResponse.json({ error: "Failed to create payment session. Please try again." }, { status: 500 });
   }
 }

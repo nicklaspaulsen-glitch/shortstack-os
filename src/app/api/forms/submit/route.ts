@@ -56,9 +56,20 @@ export async function POST(request: NextRequest) {
   }
 
   // Redirect to thank you page or return success
+  // Validate redirect_url to prevent open redirects — only allow same-origin or explicitly allowed domains
   const redirectUrl = data.redirect_url;
   if (redirectUrl) {
-    return NextResponse.redirect(redirectUrl);
+    try {
+      const parsed = new URL(redirectUrl);
+      const appHost = new URL(process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app").hostname;
+      // Only allow redirects to our own domain
+      if (parsed.hostname === appHost || parsed.hostname.endsWith(`.${appHost}`)) {
+        return NextResponse.redirect(redirectUrl);
+      }
+      // Block external redirects — fall through to thank you page
+    } catch {
+      // Invalid URL — fall through to thank you page
+    }
   }
 
   // Return a simple thank you page

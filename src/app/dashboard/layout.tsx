@@ -1,20 +1,25 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
 import ClientSwitcher from "@/components/client-switcher";
 import Notifications from "@/components/notifications";
-import ClientChatWidget from "@/components/client-chat-widget";
-import VoiceAssistant from "@/components/voice-assistant";
-import OnboardingTour from "@/components/onboarding-tour";
 import ErrorBoundary from "@/components/ui/error-boundary";
-import CommandPalette from "@/components/command-palette";
-import KeyboardShortcuts from "@/components/keyboard-shortcuts";
-import QuickAdd from "@/components/quick-add";
 import { useAuth } from "@/lib/auth-context";
+import { getPlanConfig } from "@/lib/plan-config";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Crown } from "lucide-react";
+import Link from "next/link";
+
+// Lazy-load overlay/modal components — not needed on initial render
+const ClientChatWidget = dynamic(() => import("@/components/client-chat-widget"), { ssr: false });
+const VoiceAssistant = dynamic(() => import("@/components/voice-assistant"), { ssr: false });
+const OnboardingTour = dynamic(() => import("@/components/onboarding-tour"), { ssr: false });
+const CommandPalette = dynamic(() => import("@/components/command-palette"), { ssr: false });
+const KeyboardShortcuts = dynamic(() => import("@/components/keyboard-shortcuts"), { ssr: false });
+const QuickAdd = dynamic(() => import("@/components/quick-add"), { ssr: false });
 
 // ── Role-based route access control ──
 // Complements the sidebar role filtering (which hides nav items) by
@@ -110,8 +115,31 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => { document.documentElement.style.fontSize = "100%"; };
   }, [zoom]);
 
+  // Don't render dashboard content until auth state is resolved.
+  // This prevents flash of admin content for client users and avoids
+  // rendering anything before the redirect to /login fires.
+  if (loading || !user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // If we have a profile and the current route is not allowed, don't render
+  // the page content while the redirect is in progress
+  if (profile?.role && pathname && !isRouteAllowed(pathname, profile.role)) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <>
+      {/* Full-width top border — spans entire viewport including sidebar */}
+      <div className="fixed top-0 left-0 right-0 h-px z-50" style={{ background: "var(--color-border, #E8E5E0)" }} />
       <div className="flex min-h-screen">
 
         {/* Desktop sidebar */}
@@ -154,6 +182,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {zoom}%
                   </button>
                 )}
+                {/* Subscription badge for admin */}
+                {profile?.role === "admin" && (
+                  <PlanBadge planTier={profile.plan_tier || undefined} />
+                )}
                 <ClientSwitcher />
                 <Notifications />
                 <GlobalSearch />
@@ -176,5 +208,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <QuickAdd />
       </div>
     </>
+  );
+}
+
+/* ─── Plan Badge (header) ───────────────────────────────────────── */
+function PlanBadge({ planTier }: { planTier?: string }) {
+  const plan = getPlanConfig(planTier);
+  if (!planTier) {
+    return (
+      <Link href="/dashboard/pricing"
+        className="flex items-center gap-1 text-[10px] text-muted bg-surface-light hover:bg-surface-light/80 px-2 py-1 rounded-lg border border-border transition-colors">
+        <Crown size={10} /> Free
+      </Link>
+    );
+  }
+  return (
+    <Link href="/dashboard/settings"
+      className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg transition-colors"
+      style={{ background: `${plan.color}12`, color: plan.color, border: `1px solid ${plan.color}25` }}>
+      <Crown size={10} /> {plan.badge_label}
+    </Link>
   );
 }

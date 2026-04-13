@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 // Sync scraped leads to GoHighLevel CRM
 export async function POST(request: NextRequest) {
+  // Auth check — only authenticated users can sync leads to GHL
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { leads } = await request.json();
-  if (!leads || leads.length === 0) {
+  if (!leads || !Array.isArray(leads) || leads.length === 0) {
     return NextResponse.json({ error: "No leads to sync" }, { status: 400 });
   }
 

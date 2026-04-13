@@ -20,19 +20,27 @@ export default function ClientContentPage() {
 
   useEffect(() => {
     if (profile) fetchContent();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   async function fetchContent() {
-    const { data: clientData } = await supabase.from("clients").select("id").eq("profile_id", profile!.id).single();
-    if (!clientData) { setLoading(false); return; }
+    if (!profile?.id) { setLoading(false); return; }
+    try {
+      const { data: clientData, error: clientError } = await supabase.from("clients").select("id").eq("profile_id", profile.id).single();
+      if (clientError && clientError.code !== "PGRST116") throw clientError;
+      if (!clientData) { setLoading(false); return; }
 
-    const [{ data: cal }, { data: sc }] = await Promise.all([
-      supabase.from("content_calendar").select("*").eq("client_id", clientData.id).order("scheduled_at", { ascending: false }),
-      supabase.from("content_scripts").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
-    ]);
-    setCalendar(cal || []);
-    setScripts(sc || []);
-    setLoading(false);
+      const [{ data: cal }, { data: sc }] = await Promise.all([
+        supabase.from("content_calendar").select("*").eq("client_id", clientData.id).order("scheduled_at", { ascending: false }),
+        supabase.from("content_scripts").select("*").eq("client_id", clientData.id).order("created_at", { ascending: false }),
+      ]);
+      setCalendar(cal || []);
+      setScripts(sc || []);
+    } catch {
+      toast.error("Failed to load content data");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) return <PageLoading />;
@@ -40,7 +48,7 @@ export default function ClientContentPage() {
   return (
     <div className="fade-in space-y-5">
       <div>
-        <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-accent" /> Your Content</h1>
+        <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-gold" /> Your Content</h1>
         <p className="text-xs text-muted mt-0.5">All content created and scheduled for your brand</p>
       </div>
 
@@ -51,8 +59,8 @@ export default function ClientContentPage() {
           <EmptyState icon={<Calendar size={32} />} title="No Content Scheduled" description="Your content calendar is empty. We&apos;ll start populating it soon." />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-            {calendar.map((c, i) => (
-              <div key={i} className="bg-surface-light border border-border rounded-lg p-3 hover:border-gold/15 transition-colors">
+            {calendar.map((c) => (
+              <div key={c.id} className="bg-surface-light border border-border rounded-lg p-3 hover:border-gold/15 transition-colors">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[10px] text-muted capitalize font-medium">{c.platform.replace(/_/g, " ")}</span>
                   <StatusBadge status={c.status} />
@@ -96,8 +104,8 @@ export default function ClientContentPage() {
         <div className="card">
           <h2 className="section-header">Content Scripts</h2>
           <div className="space-y-2">
-            {scripts.map((s, i) => (
-              <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+            {scripts.map((s) => (
+              <div key={s.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                 <div>
                   <p className="text-xs font-medium">{s.title}</p>
                   <p className="text-[10px] text-muted capitalize">{s.script_type?.replace(/_/g, " ")} · {s.target_platform?.replace(/_/g, " ")}</p>

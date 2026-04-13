@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { syncPlatformCampaigns } from "@/lib/ads/platforms";
 
 const PLATFORMS = ["meta_ads", "google_ads", "tiktok_ads"] as const;
 
 // POST — Sync campaign data from ad platforms
 export async function POST(request: NextRequest) {
+  // Auth check
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const { client_id, platform } = await request.json();
 

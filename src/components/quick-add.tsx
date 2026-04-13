@@ -26,6 +26,7 @@ export default function QuickAdd() {
     supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }) => {
       setClients(data || []);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Global shortcut: Shift+N opens quick add menu
@@ -109,12 +110,12 @@ export default function QuickAdd() {
             ]).map(t => (
               <button key={t.type} onClick={() => setOpen(t.type)}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 text-xs font-medium transition-all ${
-                  open === t.type ? "text-gold border-b-2 border-gold" : "text-gray-500"
+                  open === t.type ? "text-gold border-b-2 border-gold" : "text-muted"
                 }`}>
                 {t.icon} {t.label}
               </button>
             ))}
-            <button onClick={() => setOpen(null)} className="px-3 text-gray-500 hover:text-foreground"><X size={14} /></button>
+            <button onClick={() => setOpen(null)} className="px-3 text-muted hover:text-foreground"><X size={14} /></button>
           </div>
 
           <div className="p-4 space-y-3">
@@ -168,7 +169,7 @@ export default function QuickAdd() {
           </div>
 
           <div className="px-4 pb-3 text-center">
-            <p className="text-[8px] text-gray-600">Press <kbd className="px-1 py-0.5 rounded text-[7px] bg-surface-light">Shift+N</kbd> to open from anywhere</p>
+            <p className="text-[8px] text-muted">Press <kbd className="px-1 py-0.5 rounded text-[7px] bg-surface-light">Shift+N</kbd> to open from anywhere</p>
           </div>
         </div>
       </div>

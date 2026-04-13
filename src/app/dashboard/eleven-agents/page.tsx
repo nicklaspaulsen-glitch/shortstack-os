@@ -429,8 +429,8 @@ export default function ElevenAgentsPage() {
                           </div>
                           <div className="flex items-center gap-2">
                             <span className={`text-[10px] px-2 py-0.5 rounded-full ${
-                              convo.status === "done" ? "bg-emerald-500/10 text-emerald-600" :
-                              convo.status === "active" ? "bg-blue-500/10 text-blue-600" : "bg-amber-500/10 text-amber-600"
+                              convo.status === "done" ? "bg-emerald-500/10 text-emerald-400" :
+                              convo.status === "active" ? "bg-blue-500/10 text-blue-400" : "bg-amber-500/10 text-amber-400"
                             }`}>{convo.status}</span>
                             <span className="text-[9px] text-muted">{expandedConvo === convo.conversation_id ? "▲" : "▼"}</span>
                           </div>
@@ -607,7 +607,7 @@ export default function ElevenAgentsPage() {
                   {calling ? "Calling..." : "Make Test Call"}
                 </button>
                 {(!selectedAgent || !selectedPhone) && (
-                  <p className="text-[9px] text-amber-600 mt-2">Select an agent and phone number above first</p>
+                  <p className="text-[9px] text-amber-400 mt-2">Select an agent and phone number above first</p>
                 )}
               </div>
 

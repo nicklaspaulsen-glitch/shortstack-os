@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { generateAdCopy } from "@/lib/ads/ai-engine";
 
 // POST — Generate AI ad copy
 export async function POST(request: NextRequest) {
+  // Auth check
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const supabase = createServiceClient();
     const { client_id, platform, objective, target_audience, offer, tone } =

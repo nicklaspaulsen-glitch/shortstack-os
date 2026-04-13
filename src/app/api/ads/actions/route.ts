@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { executePlatformAction } from "@/lib/ads/platforms";
 import type { AdAction } from "@/lib/types";
 
 // GET — Fetch ad actions with optional filters
 export async function GET(request: NextRequest) {
+  // Auth check
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const supabase = createServiceClient();
     const { searchParams } = request.nextUrl;
@@ -46,6 +51,11 @@ export async function GET(request: NextRequest) {
 
 // POST — Approve, reject, or execute an action
 export async function POST(request: NextRequest) {
+  // Auth check
+  const authSupabase2 = createServerSupabase();
+  const { data: { user: user2 } } = await authSupabase2.auth.getUser();
+  if (!user2) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const supabase = createServiceClient();
     const { action_id, operation } = await request.json();
