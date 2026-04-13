@@ -10,9 +10,16 @@ import { createClient as createSupabaseJsClient } from "@supabase/supabase-js";
 // used by createSupabaseFromToken() on the server side.
 
 let _accessToken: string | null = null;
+let _tokenClient: ReturnType<typeof createSupabaseJsClient> | null = null;
+let _lastToken: string | null = null;
 
 export function setAccessToken(token: string | null) {
   _accessToken = token;
+  // Invalidate cached client when token changes
+  if (token !== _lastToken) {
+    _tokenClient = null;
+    _lastToken = null;
+  }
 }
 
 export function getAccessToken(): string | null {
@@ -23,15 +30,21 @@ export function getAccessToken(): string | null {
  * Create a Supabase client for browser use (data queries).
  *
  * - If an access token has been set (after auth-context syncs from server),
- *   returns a lightweight client that uses the token in the Authorization
- *   header. This bypasses cookie-based auth entirely.
+ *   returns a CACHED client that uses the token in the Authorization header.
+ *   This bypasses cookie-based auth entirely. The client is cached so
+ *   React hooks (useCallback, useMemo) that depend on it don't trigger
+ *   unnecessary re-renders.
  *
  * - If no token is set yet (initial page load, before auth syncs),
- *   falls back to the standard cookie-based browser client.
+ *   falls back to the standard cookie-based browser client (singleton).
  */
 export function createClient() {
   if (_accessToken) {
-    return createSupabaseJsClient(
+    // Return cached client if token hasn't changed
+    if (_tokenClient && _lastToken === _accessToken) {
+      return _tokenClient;
+    }
+    _tokenClient = createSupabaseJsClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -44,6 +57,8 @@ export function createClient() {
         },
       }
     );
+    _lastToken = _accessToken;
+    return _tokenClient;
   }
   // Fallback: cookie-based browser client (singleton)
   return createBrowserClient(

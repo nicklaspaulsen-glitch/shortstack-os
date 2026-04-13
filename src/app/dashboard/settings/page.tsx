@@ -188,36 +188,17 @@ export default function SettingsPage() {
                     const file = e.target.files?.[0];
                     if (!file || !profile) return;
                     if (file.size > 2 * 1024 * 1024) { toast.error("Image must be under 2 MB"); return; }
-                    const ext = file.name.split(".").pop() || "png";
-                    const path = `avatars/${profile.id}.${ext}`;
                     toast.loading("Uploading avatar...");
                     try {
-                      // Try "avatars" bucket first, fallback to "public"
-                      let bucketName = "avatars";
-                      let uploadResult = await supabase.storage.from(bucketName).upload(path, file, { upsert: true });
-                      if (uploadResult.error) {
-                        bucketName = "public";
-                        uploadResult = await supabase.storage.from(bucketName).upload(path, file, { upsert: true });
-                      }
+                      const formData = new FormData();
+                      formData.append("file", file);
+                      const res = await fetch("/api/profile/avatar", { method: "POST", body: formData });
                       toast.dismiss();
-                      if (uploadResult.error) {
-                        console.error("Avatar upload error:", uploadResult.error);
-                        // Fallback: convert to base64 data URL and store directly
-                        const reader = new FileReader();
-                        reader.onload = async () => {
-                          const dataUrl = reader.result as string;
-                          const { error: updateErr } = await supabase.from("profiles").update({ avatar_url: dataUrl }).eq("id", profile.id);
-                          if (updateErr) { toast.error("Failed to save avatar"); return; }
-                          await refreshProfile();
-                          toast.success("Avatar updated");
-                        };
-                        reader.readAsDataURL(file);
+                      if (!res.ok) {
+                        const err = await res.json();
+                        toast.error(err.error || "Upload failed");
                         return;
                       }
-                      const { data: urlData } = supabase.storage.from(bucketName).getPublicUrl(path);
-                      // Append cache-bust so browser shows new avatar immediately
-                      const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
-                      await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("id", profile.id);
                       await refreshProfile();
                       toast.success("Avatar updated");
                     } catch (err) {
@@ -244,10 +225,22 @@ export default function SettingsPage() {
                   onClick={async () => {
                     if (!profile) return;
                     setSavingProfile(true);
-                    await supabase.from("profiles").update({ nickname }).eq("id", profile.id);
-                    await refreshProfile();
+                    try {
+                      const res = await fetch("/api/profile", {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ nickname }),
+                      });
+                      if (res.ok) {
+                        await refreshProfile();
+                        toast.success("Profile updated");
+                      } else {
+                        toast.error("Failed to save");
+                      }
+                    } catch {
+                      toast.error("Connection error");
+                    }
                     setSavingProfile(false);
-                    toast.success("Profile updated");
                   }}
                   className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1"
                 >

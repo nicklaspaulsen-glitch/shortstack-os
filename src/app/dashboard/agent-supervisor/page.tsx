@@ -130,8 +130,8 @@ export default function AgentSupervisorPage() {
   const [spawning, setSpawning] = useState(false);
   const [spawnTask, setSpawnTask] = useState("");
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
+  const fetchData = useCallback(async (isInitial = false) => {
+    if (isInitial) setLoading(true);
     const today = new Date().toISOString().split("T")[0];
 
     const [{ data: logs }, { data: spawned }] = await Promise.all([
@@ -194,7 +194,8 @@ export default function AgentSupervisorPage() {
     fetchData();
   }
 
-  useEffect(() => { fetchData(); }, [fetchData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchData(true); }, []);
 
   async function healthCheck(agentId: string) {
     setCheckingHealth(agentId);

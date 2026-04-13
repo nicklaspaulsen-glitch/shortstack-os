@@ -258,16 +258,9 @@ export default function VoiceAssistant() {
     setProcessing(false);
   }
 
-  // Check if hidden via settings
-  const [hidden] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("hide_voice_bubble") === "true";
-  });
-  if (hidden) return null;
-
   if (!isOpen) {
     return (
-      <Draggable defaultX={288} defaultY={typeof window !== "undefined" ? window.innerHeight - 60 : 700} storageKey="voice_bubble">
+      <div className="fixed bottom-6 right-6 z-50">
         <button onClick={() => setIsOpen(true)}
           className="bg-gradient-to-r from-gold-dark to-gold px-4 py-2.5 rounded-full shadow-lg shadow-gold/20 flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
           <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
@@ -276,7 +269,7 @@ export default function VoiceAssistant() {
           <span className="text-black font-medium text-sm">Hey {profile?.full_name?.split(" ")[0] || "there"}</span>
           <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
         </button>
-      </Draggable>
+      </div>
     );
   }
 
