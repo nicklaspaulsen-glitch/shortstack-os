@@ -11,9 +11,12 @@ export async function GET(request: NextRequest) {
   const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/oauth/google/callback`;
   const state = JSON.stringify({ client_id: clientId, platform });
 
-  const scopes = platform === "youtube"
-    ? "https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/yt-analytics.readonly"
-    : "https://www.googleapis.com/auth/business.manage";
+  const scopeMap: Record<string, string> = {
+    youtube: "https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/yt-analytics.readonly",
+    google_business: "https://www.googleapis.com/auth/business.manage",
+    google_ads: "https://www.googleapis.com/auth/adwords",
+  };
+  const scopes = scopeMap[platform] || scopeMap.youtube;
 
   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scopes)}&state=${encodeURIComponent(state)}&access_type=offline&prompt=consent`;
 

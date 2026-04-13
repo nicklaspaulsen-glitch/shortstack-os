@@ -1,22 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Globe, Sparkles, Loader, ExternalLink, Copy,
-  Code, Zap, Eye, Mail, CheckCircle
+  Code, Zap, Eye, Mail, CheckCircle, Wand2,
+  Palette, Layout, Search, BarChart3, Smartphone,
+  Monitor, Tablet, FileText, RefreshCw, Layers
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const STYLES = [
-  { id: "modern-dark", name: "Modern Dark", desc: "Dark bg, clean typography, gold accents" },
-  { id: "clean-white", name: "Clean White", desc: "Light, minimal, professional" },
-  { id: "bold-gradient", name: "Bold Gradient", desc: "Gradient backgrounds, bold fonts" },
-  { id: "corporate", name: "Corporate", desc: "Traditional, trust-focused, blue tones" },
+  { id: "modern-dark", name: "Modern Dark", desc: "Dark bg, clean typography, gold accents", preview: "bg-gray-900" },
+  { id: "clean-white", name: "Clean White", desc: "Light, minimal, professional", preview: "bg-white" },
+  { id: "bold-gradient", name: "Bold Gradient", desc: "Gradient backgrounds, bold fonts", preview: "bg-gradient-to-r from-purple-500 to-pink-500" },
+  { id: "corporate", name: "Corporate", desc: "Traditional, trust-focused, blue tones", preview: "bg-blue-900" },
+  { id: "startup", name: "Startup", desc: "Modern, vibrant, tech-forward", preview: "bg-indigo-600" },
+  { id: "luxury", name: "Luxury", desc: "Elegant, gold accents, premium feel", preview: "bg-black" },
+  { id: "restaurant", name: "Restaurant", desc: "Warm, appetizing, inviting atmosphere", preview: "bg-amber-800" },
+  { id: "portfolio", name: "Portfolio", desc: "Creative, showcase-focused, gallery", preview: "bg-gray-800" },
+  { id: "saas", name: "SaaS Landing", desc: "Conversion-focused, feature grids", preview: "bg-slate-900" },
+  { id: "ecommerce", name: "E-commerce", desc: "Product-focused, shop layout", preview: "bg-white" },
 ];
 
-const SECTIONS = ["Hero", "Services", "About", "Testimonials", "Pricing", "Contact", "FAQ", "Gallery", "Team", "Blog"];
+const ALL_SECTIONS = [
+  "Hero", "Services", "About", "Testimonials", "Pricing", "Contact",
+  "FAQ", "Gallery", "Team", "Blog", "Features", "How It Works",
+  "Case Studies", "Stats/Numbers", "CTA Banner", "Newsletter",
+];
+
+const PAGE_TYPES = [
+  { id: "landing", name: "Landing Page", desc: "Single page, conversion focused", icon: <Zap size={14} /> },
+  { id: "full_site", name: "Full Website", desc: "Multi-section business site", icon: <Globe size={14} /> },
+  { id: "portfolio", name: "Portfolio", desc: "Creative work showcase", icon: <Layout size={14} /> },
+  { id: "coming_soon", name: "Coming Soon", desc: "Pre-launch with email capture", icon: <Mail size={14} /> },
+];
+
+const SEO_TIPS = [
+  { title: "Title Tag", desc: "Include business name + primary service + location" },
+  { title: "Meta Description", desc: "150-160 chars, include CTA and unique value prop" },
+  { title: "H1 Tag", desc: "One per page, matches search intent" },
+  { title: "Image Alt Tags", desc: "Descriptive text for all images" },
+  { title: "Page Speed", desc: "Optimize images, minimize CSS/JS" },
+  { title: "Mobile First", desc: "Responsive design is mandatory for ranking" },
+];
 
 export default function WebsitesPage() {
   useAuth();
@@ -26,7 +54,8 @@ export default function WebsitesPage() {
   const [deploying, setDeploying] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState("");
   const [deployUrl, setDeployUrl] = useState("");
-  const [tab, setTab] = useState<"build" | "preview" | "deploy" | "demos">("build");
+  const [tab, setTab] = useState<"build" | "preview" | "deploy" | "seo" | "demos">("build");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const supabase = createClient();
 
   const [proBuilderPrompt, setProBuilderPrompt] = useState("");
@@ -40,14 +69,23 @@ export default function WebsitesPage() {
     description: "",
     color_scheme: "dark with gold accents (#C9A84C)",
     sections: ["Hero", "Services", "About", "Testimonials", "Contact"],
+    page_type: "full_site",
+    custom_colors: { primary: "#C9A84C", secondary: "#1a1a1a", accent: "#ffffff" },
+    include_seo: true,
+    include_analytics: false,
+    cta_text: "",
+    phone: "",
+    email_address: "",
+    address: "",
   });
 
-  useState(() => {
+  useEffect(() => {
     supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }) => {
       setClients(data || []);
     });
     fetchDemos();
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function fetchDemos() {
     const { data } = await supabase
@@ -81,13 +119,20 @@ export default function WebsitesPage() {
           description: config.description,
           services: config.sections,
           demo: true,
+          page_type: config.page_type,
+          style: config.style,
+          custom_colors: config.custom_colors,
+          include_seo: config.include_seo,
+          cta_text: config.cta_text,
+          phone: config.phone,
+          email_address: config.email_address,
+          address: config.address,
         }),
       });
       const genData = await res.json();
       const html = genData.pages?.[0]?.html || genData.html;
       if (!html) { toast.dismiss(); toast.error("Generation failed"); setGenerating(false); return; }
 
-      // Auto-deploy as demo
       const safeName = config.business_name.toLowerCase().replace(/[^a-z0-9]/g, "-") + "-demo";
       const deployRes = await fetch("/api/websites/deploy", {
         method: "POST",
@@ -99,7 +144,6 @@ export default function WebsitesPage() {
       if (deployData.url) {
         setDeployUrl(deployData.url);
         setGeneratedHtml(html);
-        // Log as demo
         await supabase.from("trinity_log").insert({
           action_type: "website_deploy",
           description: config.business_name,
@@ -142,13 +186,20 @@ export default function WebsitesPage() {
           industry: config.industry,
           description: config.description,
           services: config.sections,
+          page_type: config.page_type,
+          style: config.style,
+          custom_colors: config.custom_colors,
+          include_seo: config.include_seo,
+          cta_text: config.cta_text,
+          phone: config.phone,
+          email_address: config.email_address,
+          address: config.address,
         }),
       });
       toast.dismiss();
       const data = await res.json();
 
       if (data.success && data.pages) {
-        // Combine pages into single HTML
         const mainPage = data.pages.find((p: { name: string; html: string }) => p.name === "index" || p.name === "Home") || data.pages[0];
         if (mainPage) {
           setGeneratedHtml(mainPage.html);
@@ -182,6 +233,8 @@ export default function WebsitesPage() {
           description: config.description,
           style: config.style,
           sections: config.sections,
+          page_type: config.page_type,
+          custom_colors: config.custom_colors,
         }),
       });
       const data = await res.json();
@@ -249,7 +302,7 @@ export default function WebsitesPage() {
           </div>
           <div>
             <h1 className="page-header mb-0">Website Builder</h1>
-            <p className="text-xs text-muted">AI builds full websites, deploy as demo, go live with custom domain</p>
+            <p className="text-xs text-muted">AI builds full websites — deploy as demo, go live with custom domain</p>
           </div>
         </div>
         <select value={selectedClient} onChange={e => selectClient(e.target.value)} className="input text-xs py-1.5 min-w-[160px]">
@@ -259,9 +312,9 @@ export default function WebsitesPage() {
       </div>
 
       <div className="tab-group w-fit">
-        {(["build", "preview", "deploy", "demos"] as const).map(t => (
+        {(["build", "preview", "deploy", "seo", "demos"] as const).map(t => (
           <button key={t} onClick={() => { setTab(t); if (t === "demos") fetchDemos(); }} className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "build" ? "Build" : t === "preview" ? "Preview" : t === "deploy" ? "Deploy" : `Demos (${demos.length})`}
+            {t === "build" ? "Build" : t === "preview" ? "Preview" : t === "deploy" ? "Deploy" : t === "seo" ? "SEO Tips" : `Demos (${demos.length})`}
           </button>
         ))}
       </div>
@@ -270,6 +323,26 @@ export default function WebsitesPage() {
       {tab === "build" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-4">
+            {/* Page type */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Layout size={13} className="text-gold" /> Page Type</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {PAGE_TYPES.map(pt => (
+                  <button key={pt.id} onClick={() => setConfig({ ...config, page_type: pt.id })}
+                    className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
+                      config.page_type === pt.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"
+                    }`}>
+                    <span className={config.page_type === pt.id ? "text-gold" : "text-muted"}>{pt.icon}</span>
+                    <div>
+                      <p className="text-[10px] font-semibold">{pt.name}</p>
+                      <p className="text-[8px] text-muted">{pt.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Website Details */}
             <div className="card space-y-3">
               <h2 className="section-header">Website Details</h2>
               <div className="grid grid-cols-2 gap-3">
@@ -287,35 +360,104 @@ export default function WebsitesPage() {
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Business Description</label>
                 <textarea value={config.description} onChange={e => setConfig({ ...config, description: e.target.value })}
-                  className="input w-full h-16 text-xs" placeholder="What does this business do? What makes them unique?" />
+                  className="input w-full h-14 text-xs" placeholder="What does this business do? What makes them unique?" />
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Phone</label>
+                  <input value={config.phone} onChange={e => setConfig({ ...config, phone: e.target.value })}
+                    className="input w-full text-xs" placeholder="(555) 123-4567" />
+                </div>
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Email</label>
+                  <input value={config.email_address} onChange={e => setConfig({ ...config, email_address: e.target.value })}
+                    className="input w-full text-xs" placeholder="info@business.com" />
+                </div>
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">CTA Button Text</label>
+                  <input value={config.cta_text} onChange={e => setConfig({ ...config, cta_text: e.target.value })}
+                    className="input w-full text-xs" placeholder="Book Now / Get Quote" />
+                </div>
               </div>
             </div>
 
+            {/* Style */}
             <div className="card">
-              <h2 className="section-header">Style</h2>
-              <div className="grid grid-cols-2 gap-2">
+              <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-gold" /> Style</h2>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                 {STYLES.map(s => (
                   <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
-                    className={`p-2.5 rounded-xl border text-left transition-all ${config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"}`}>
+                    className={`p-2 rounded-xl border text-left transition-all ${config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"}`}>
+                    <div className={`w-full h-4 rounded-md mb-1.5 ${s.preview} border border-border`} />
                     <p className="text-[10px] font-semibold">{s.name}</p>
-                    <p className="text-[8px] text-muted">{s.desc}</p>
+                    <p className="text-[8px] text-muted leading-tight">{s.desc}</p>
                   </button>
                 ))}
               </div>
             </div>
 
+            {/* Custom Colors */}
             <div className="card">
-              <h2 className="section-header">Sections</h2>
+              <h2 className="section-header flex items-center gap-2"><Wand2 size={13} className="text-gold" /> Brand Colors</h2>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-[9px] text-muted">Primary</label>
+                  <input type="color" value={config.custom_colors.primary}
+                    onChange={e => setConfig({ ...config, custom_colors: { ...config.custom_colors, primary: e.target.value } })}
+                    className="w-8 h-8 rounded-lg border border-border cursor-pointer" />
+                  <span className="text-[9px] text-muted font-mono">{config.custom_colors.primary}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-[9px] text-muted">Secondary</label>
+                  <input type="color" value={config.custom_colors.secondary}
+                    onChange={e => setConfig({ ...config, custom_colors: { ...config.custom_colors, secondary: e.target.value } })}
+                    className="w-8 h-8 rounded-lg border border-border cursor-pointer" />
+                  <span className="text-[9px] text-muted font-mono">{config.custom_colors.secondary}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-[9px] text-muted">Accent</label>
+                  <input type="color" value={config.custom_colors.accent}
+                    onChange={e => setConfig({ ...config, custom_colors: { ...config.custom_colors, accent: e.target.value } })}
+                    className="w-8 h-8 rounded-lg border border-border cursor-pointer" />
+                  <span className="text-[9px] text-muted font-mono">{config.custom_colors.accent}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Sections */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Layers size={13} className="text-gold" /> Sections</h2>
               <div className="flex flex-wrap gap-1.5">
-                {SECTIONS.map(s => (
+                {ALL_SECTIONS.map(s => (
                   <button key={s} onClick={() => toggleSection(s)}
                     className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${config.sections.includes(s) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted hover:text-foreground"}`}>
                     {s}
                   </button>
                 ))}
               </div>
+              <p className="text-[8px] text-muted mt-2">{config.sections.length} sections selected</p>
             </div>
 
+            {/* AI Options */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-gold" /> AI Options</h2>
+              <div className="flex flex-wrap gap-4">
+                <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
+                  <input type="checkbox" checked={config.include_seo}
+                    onChange={e => setConfig({ ...config, include_seo: e.target.checked })}
+                    className="rounded border-border text-gold focus:ring-gold/30" />
+                  <Search size={11} /> SEO Optimized
+                </label>
+                <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
+                  <input type="checkbox" checked={config.include_analytics}
+                    onChange={e => setConfig({ ...config, include_analytics: e.target.checked })}
+                    className="rounded border-border text-gold focus:ring-gold/30" />
+                  <BarChart3 size={11} /> Analytics Ready
+                </label>
+              </div>
+            </div>
+
+            {/* Action buttons */}
             <div className="flex gap-2">
               <button onClick={generateDemoSite} disabled={generating || !config.business_name}
                 className="flex-1 text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl border border-success/30 bg-success/[0.08] text-success hover:bg-success/[0.15] transition-all font-semibold">
@@ -348,11 +490,11 @@ export default function WebsitesPage() {
                   </button>
                 </div>
                 <pre className="text-[9px] text-muted bg-surface-light rounded-lg p-2.5 max-h-32 overflow-y-auto whitespace-pre-wrap">{proBuilderPrompt}</pre>
-                <p className="text-[8px] text-muted/60">Use this prompt with our Pro Builder to generate a full React app with database integration — production-ready in minutes.</p>
               </div>
             )}
           </div>
 
+          {/* Right sidebar */}
           <div className="space-y-3">
             <div className="card border-gold/10">
               <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> How it works</h3>
@@ -368,14 +510,27 @@ export default function WebsitesPage() {
             <div className="card border-gold/10">
               <h3 className="section-header flex items-center gap-2"><Code size={12} className="text-gold" /> Pro Builder</h3>
               <div className="space-y-2 text-[10px] text-muted">
-                <p>Pro Builder creates <span className="text-gold font-medium">full React + database apps</span> — not just raw HTML. The result is a real, production-ready website with:</p>
+                <p>Pro Builder creates <span className="text-gold font-medium">full React + database apps</span>:</p>
                 <ul className="list-disc list-inside space-y-0.5 text-[9px] pl-1">
-                  <li>Responsive design with modern animations</li>
-                  <li>Contact forms that actually work</li>
+                  <li>Responsive design with animations</li>
+                  <li>Working contact forms</li>
                   <li>SEO optimization built in</li>
                   <li>Hosted on its own URL instantly</li>
                 </ul>
-                <p className="text-[8px] text-muted/60 pt-1">Use Generate with AI for quick HTML demos, or Pro Builder for client-ready sites.</p>
+              </div>
+            </div>
+
+            <div className="card border-gold/10">
+              <h3 className="section-header flex items-center gap-2"><FileText size={12} className="text-gold" /> Quick Stats</h3>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="text-center p-2 rounded-lg bg-surface-light">
+                  <p className="text-lg font-bold text-gold">{demos.length}</p>
+                  <p className="text-[8px] text-muted">Sites Created</p>
+                </div>
+                <div className="text-center p-2 rounded-lg bg-surface-light">
+                  <p className="text-lg font-bold text-success">{demos.filter(d => d.status === "live").length}</p>
+                  <p className="text-[8px] text-muted">Live Sites</p>
+                </div>
               </div>
             </div>
           </div>
@@ -387,15 +542,32 @@ export default function WebsitesPage() {
         <div className="space-y-3">
           {generatedHtml ? (
             <>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <p className="text-xs text-muted">Preview of {config.business_name} website</p>
                 <div className="flex items-center gap-2">
+                  {/* Device preview toggle */}
+                  <div className="flex bg-surface-light rounded-lg border border-border">
+                    <button onClick={() => setPreviewDevice("desktop")}
+                      className={`p-1.5 rounded-l-lg ${previewDevice === "desktop" ? "bg-gold/10 text-gold" : "text-muted"}`}>
+                      <Monitor size={12} />
+                    </button>
+                    <button onClick={() => setPreviewDevice("tablet")}
+                      className={`p-1.5 ${previewDevice === "tablet" ? "bg-gold/10 text-gold" : "text-muted"}`}>
+                      <Tablet size={12} />
+                    </button>
+                    <button onClick={() => setPreviewDevice("mobile")}
+                      className={`p-1.5 rounded-r-lg ${previewDevice === "mobile" ? "bg-gold/10 text-gold" : "text-muted"}`}>
+                      <Smartphone size={12} />
+                    </button>
+                  </div>
                   <button onClick={() => { navigator.clipboard.writeText(generatedHtml); toast.success("HTML copied!"); }}
                     className="btn-ghost text-[10px] flex items-center gap-1"><Code size={10} /> Copy HTML</button>
                   <button onClick={() => {
                     const win = window.open("", "_blank");
                     if (win) { win.document.write(generatedHtml); win.document.close(); }
                   }} className="btn-secondary text-[10px] flex items-center gap-1"><ExternalLink size={10} /> Open Full</button>
+                  <button onClick={() => { setGeneratedHtml(""); setTab("build"); }}
+                    className="btn-ghost text-[10px] flex items-center gap-1"><RefreshCw size={10} /> Rebuild</button>
                   <button onClick={deployWebsite} disabled={deploying}
                     className="btn-primary text-[10px] flex items-center gap-1 disabled:opacity-50">
                     {deploying ? <Loader size={10} className="animate-spin" /> : <Globe size={10} />}
@@ -403,7 +575,10 @@ export default function WebsitesPage() {
                   </button>
                 </div>
               </div>
-              <div className="rounded-xl border border-border overflow-hidden bg-white" style={{ height: "600px" }}>
+              <div className="rounded-xl border border-border overflow-hidden bg-white mx-auto transition-all duration-300" style={{
+                height: "600px",
+                maxWidth: previewDevice === "mobile" ? "375px" : previewDevice === "tablet" ? "768px" : "100%",
+              }}>
                 <iframe srcDoc={generatedHtml} className="w-full h-full" title="Website Preview" sandbox="allow-scripts" />
               </div>
             </>
@@ -455,7 +630,6 @@ export default function WebsitesPage() {
                   <p><span className="text-success font-medium">2.</span> After payment → add custom domain in Vercel</p>
                   <p><span className="text-success font-medium">3.</span> Client points their DNS to Vercel (76.76.21.21)</p>
                   <p><span className="text-success font-medium">4.</span> SSL auto-configured — site is live!</p>
-                  <p><span className="text-success font-medium">5.</span> Or use Pro Builder for a React app with CMS</p>
                 </div>
               </div>
             </div>
@@ -465,6 +639,37 @@ export default function WebsitesPage() {
               <p className="text-xs text-muted">No deployment yet. Use One-Click Demo to auto-generate and deploy.</p>
             </div>
           )}
+        </div>
+      )}
+
+      {/* SEO Tips Tab */}
+      {tab === "seo" && (
+        <div className="space-y-4 max-w-2xl">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Search size={13} className="text-gold" /> SEO Checklist</h2>
+            <p className="text-[10px] text-muted mb-3">AI-generated websites include these SEO best practices when enabled</p>
+            <div className="space-y-2">
+              {SEO_TIPS.map((tip, i) => (
+                <div key={i} className="flex items-start gap-3 p-2.5 rounded-xl border border-border">
+                  <CheckCircle size={14} className="text-success shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[11px] font-semibold">{tip.title}</p>
+                    <p className="text-[10px] text-muted">{tip.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card border-gold/10">
+            <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> Performance Tips</h3>
+            <div className="space-y-1.5 text-[10px] text-muted">
+              <p><span className="text-gold font-medium">Images:</span> Use WebP format, lazy load below-fold images</p>
+              <p><span className="text-gold font-medium">Fonts:</span> Use system fonts or Google Fonts with display=swap</p>
+              <p><span className="text-gold font-medium">CSS:</span> Inline critical CSS, defer non-critical styles</p>
+              <p><span className="text-gold font-medium">JS:</span> Minimize JavaScript, defer non-essential scripts</p>
+              <p><span className="text-gold font-medium">Hosting:</span> Use CDN (Vercel Edge), enable gzip compression</p>
+            </div>
+          </div>
         </div>
       )}
 
@@ -480,7 +685,7 @@ export default function WebsitesPage() {
           {demos.length === 0 ? (
             <div className="card text-center py-12">
               <Globe size={20} className="mx-auto mb-2 text-muted/30" />
-              <p className="text-xs text-muted">No demos yet. Create one to show prospects what their website could look like.</p>
+              <p className="text-xs text-muted">No demos yet. Create one to show prospects their website.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

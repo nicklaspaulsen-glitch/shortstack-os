@@ -40,6 +40,26 @@ export async function GET(request: NextRequest) {
         accountName = chData.items[0].snippet.title;
         accountId = chData.items[0].id;
       }
+    } else if (state.platform === "google_ads") {
+      // Fetch accessible Google Ads customer IDs
+      const devToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN || "";
+      if (devToken) {
+        try {
+          const custRes = await fetch("https://googleads.googleapis.com/v17/customers:listAccessibleCustomers", {
+            headers: {
+              Authorization: `Bearer ${tokenData.access_token}`,
+              "developer-token": devToken,
+            },
+          });
+          const custData = await custRes.json();
+          const resourceNames: string[] = custData.resourceNames || [];
+          if (resourceNames.length > 0) {
+            // resourceNames look like "customers/1234567890"
+            accountId = resourceNames[0].replace("customers/", "");
+            accountName = `Google Ads (${accountId})`;
+          }
+        } catch {}
+      }
     }
 
     const supabase = createServiceClient();

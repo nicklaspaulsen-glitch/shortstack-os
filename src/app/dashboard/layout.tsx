@@ -138,8 +138,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <>
-      {/* Full-width top border — spans entire viewport including sidebar */}
-      <div className="fixed top-0 left-0 right-0 h-px z-50" style={{ background: "var(--color-border, #E8E5E0)" }} />
       <div className="flex min-h-screen">
 
         {/* Desktop sidebar */}
@@ -163,7 +161,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         <main className="flex-1 lg:ml-56">
           {/* Header */}
-          <div className="sticky top-0 z-30 border-b border-border electron-drag"
+          <div className="sticky top-0 z-30 border-y border-border electron-drag"
             style={{ background: "color-mix(in srgb, var(--color-background) 85%, transparent)", backdropFilter: "blur(16px) saturate(1.2)" }}>
             <div className="flex items-center justify-between px-5 lg:px-6 h-12">
               {/* Left — mobile menu */}

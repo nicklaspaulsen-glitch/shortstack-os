@@ -43,7 +43,7 @@ const INTEGRATIONS: Integration[] = [
   { id: "sendgrid", name: "SendGrid", description: "Transactional email", category: "Marketing", icon: "📩", connected: false, url: "https://sendgrid.com" },
   { id: "canva", name: "Canva", description: "Design tool", category: "Design", icon: "🎨", connected: false, url: "https://canva.com" },
   { id: "pikzels", name: "Pikzels", description: "AI thumbnails", category: "Design", icon: "🖼️", connected: false, url: "https://pikzels.com" },
-  { id: "higgsfield", name: "Higgsfield", description: "AI video", category: "Video", icon: "🎬", connected: false, url: "https://higgsfield.ai" },
+  { id: "higgsfield", name: "Higgsfield", description: "AI video (self-hosted)", category: "Video", icon: "🎬", connected: true, url: "https://github.com/higgsfield-ai/higgsfield" },
   { id: "instantly", name: "Instantly", description: "Cold email at scale", category: "Outreach", icon: "📬", connected: false, url: "https://instantly.ai" },
   { id: "lemlist", name: "Lemlist", description: "Cold outreach", category: "Outreach", icon: "🍋", connected: false, url: "https://lemlist.com" },
   { id: "semrush", name: "SEMrush", description: "SEO & keywords", category: "Marketing", icon: "🔍", connected: false, url: "https://semrush.com" },

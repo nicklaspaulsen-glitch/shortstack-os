@@ -51,6 +51,23 @@ export async function GET(request: NextRequest) {
     const pageId = page?.id;
     const pageToken = page?.access_token || accessToken;
 
+    // Fetch ad accounts for the ads manager integration
+    let adAccountId: string | null = null;
+    let adAccountName: string | null = null;
+    try {
+      const adAccountsRes = await fetch(
+        `https://graph.facebook.com/v18.0/me/adaccounts?fields=account_id,name,account_status&access_token=${accessToken}`
+      );
+      const adAccountsData = await adAccountsRes.json();
+      const activeAdAccount = (adAccountsData.data || []).find(
+        (a: Record<string, unknown>) => a.account_status === 1
+      ) || adAccountsData.data?.[0];
+      if (activeAdAccount) {
+        adAccountId = String(activeAdAccount.account_id);
+        adAccountName = String(activeAdAccount.name || "Meta Ad Account");
+      }
+    } catch {}
+
     // Try to get Instagram business account linked to the Facebook page
     let igAccount: { id?: string; username?: string; name?: string; followers_count?: number } | null = null;
     if (pageId) {
@@ -92,9 +109,24 @@ export async function GET(request: NextRequest) {
         if (existingIg) { await supabase.from("social_accounts").update(igRecord).eq("id", existingIg.id); }
         else { await supabase.from("social_accounts").insert(igRecord); }
       }
+
+      // Save meta_ads record for the Ads Manager (separate from social posting)
+      if (adAccountId) {
+        const adsRecord = {
+          client_id: state.client_id, platform: "meta_ads", account_name: adAccountName || "Meta Ad Account", account_id: adAccountId,
+          access_token: accessToken, is_active: true, token_expires_at: new Date(Date.now() + 60 * 86400000).toISOString(),
+          metadata: { connected_at: new Date().toISOString(), user_name: meData.name, user_id: meData.id, page_id: pageId, oauth: true },
+        };
+        const { data: existingAds } = await supabase.from("social_accounts").select("id").eq("client_id", state.client_id).eq("platform", "meta_ads").single();
+        if (existingAds) { await supabase.from("social_accounts").update(adsRecord).eq("id", existingAds.id); }
+        else { await supabase.from("social_accounts").insert(adsRecord); }
+      }
     }
 
-    const connected = igAccount?.id ? "Facebook & Instagram" : "Facebook";
+    const parts = ["Facebook"];
+    if (igAccount?.id) parts.push("Instagram");
+    if (adAccountId) parts.push("Meta Ads");
+    const connected = parts.join(" & ");
     return NextResponse.redirect(`${baseUrl}/dashboard/integrations?connected=${encodeURIComponent(connected)}`);
   } catch (err) {
     return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=${encodeURIComponent(String(err))}`);

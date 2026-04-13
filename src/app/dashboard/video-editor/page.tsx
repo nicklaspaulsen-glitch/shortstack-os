@@ -1,34 +1,88 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Film, Sparkles, Loader, Play, Copy, Download,
-  Clock, Camera, Monitor, Zap
+  Clock, Camera, Monitor, Zap, Music, Type, Wand2,
+  Layers, Mic, Volume2, Palette, LayoutGrid, Eye,
+  BookOpen, Scissors, Image as ImageIcon
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const VIDEO_TYPES = [
-  { id: "reel", name: "Reel / TikTok", aspect: "9:16", duration: 30, icon: <Camera size={16} /> },
-  { id: "youtube", name: "YouTube Video", aspect: "16:9", duration: 60, icon: <Monitor size={16} /> },
-  { id: "ad", name: "Ad Creative", aspect: "1:1", duration: 15, icon: <Zap size={16} /> },
-  { id: "story", name: "Story", aspect: "9:16", duration: 15, icon: <Film size={16} /> },
+  { id: "reel", name: "Reel / TikTok", aspect: "9:16", duration: 30, icon: <Camera size={14} />, desc: "Vertical short-form" },
+  { id: "youtube", name: "YouTube Video", aspect: "16:9", duration: 60, icon: <Monitor size={14} />, desc: "Horizontal long-form" },
+  { id: "ad", name: "Ad Creative", aspect: "1:1", duration: 15, icon: <Zap size={14} />, desc: "Square ad format" },
+  { id: "story", name: "Story", aspect: "9:16", duration: 15, icon: <Film size={14} />, desc: "Full-screen ephemeral" },
+  { id: "explainer", name: "Explainer", aspect: "16:9", duration: 90, icon: <BookOpen size={14} />, desc: "Educational walkthrough" },
+  { id: "testimonial", name: "Testimonial", aspect: "1:1", duration: 30, icon: <Mic size={14} />, desc: "Client success story" },
+  { id: "product_demo", name: "Product Demo", aspect: "16:9", duration: 45, icon: <Eye size={14} />, desc: "Feature showcase" },
+  { id: "carousel_video", name: "Carousel Video", aspect: "1:1", duration: 60, icon: <Layers size={14} />, desc: "Multi-slide video" },
 ];
 
 const STYLES = [
-  "modern-dark", "clean-white", "bold-gradient", "neon", "minimal", "corporate",
+  { id: "modern-dark", name: "Modern Dark", desc: "Dark bg, neon accents, clean" },
+  { id: "clean-white", name: "Clean White", desc: "Light, airy, professional" },
+  { id: "bold-gradient", name: "Bold Gradient", desc: "Vibrant color transitions" },
+  { id: "neon", name: "Neon Glow", desc: "Dark with neon highlights" },
+  { id: "minimal", name: "Minimal", desc: "Less is more, whitespace" },
+  { id: "corporate", name: "Corporate", desc: "Professional, trust-focused" },
+  { id: "retro", name: "Retro / Y2K", desc: "Nostalgic, colorful, playful" },
+  { id: "cinematic", name: "Cinematic", desc: "Film grain, moody lighting" },
 ];
+
+const MUSIC_MOODS = [
+  { id: "upbeat", name: "Upbeat", emoji: "🎵" },
+  { id: "motivational", name: "Motivational", emoji: "💪" },
+  { id: "chill", name: "Chill", emoji: "😎" },
+  { id: "dramatic", name: "Dramatic", emoji: "🎬" },
+  { id: "corporate", name: "Corporate", emoji: "💼" },
+  { id: "trendy", name: "Trendy/Pop", emoji: "🔥" },
+  { id: "emotional", name: "Emotional", emoji: "❤️" },
+  { id: "none", name: "No Music", emoji: "🔇" },
+];
+
+const CAPTION_STYLES = [
+  { id: "none", name: "No Captions" },
+  { id: "bottom_bar", name: "Bottom Bar" },
+  { id: "word_highlight", name: "Word-by-Word Highlight" },
+  { id: "centered_bold", name: "Centered Bold" },
+  { id: "karaoke", name: "Karaoke Style" },
+];
+
+interface StoryboardScene {
+  scene_number: number;
+  duration: string;
+  visual: string;
+  text_overlay: string;
+  voiceover: string;
+  transition: string;
+  camera_movement: string;
+  music_note: string;
+}
+
+interface VideoResult {
+  source: string;
+  plan?: string;
+  storyboard?: StoryboardScene[];
+  url?: string;
+  render_id?: string;
+  thumbnail_suggestion?: string;
+  music_suggestions?: string[];
+}
 
 export default function VideoEditorPage() {
   useAuth();
   const [generating, setGenerating] = useState(false);
-  const [result, setResult] = useState<{ source: string; plan?: string; url?: string; render_id?: string } | null>(null);
+  const [result, setResult] = useState<VideoResult | null>(null);
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
   const supabase = createClient();
 
-  const [mode, setMode] = useState<"render" | "plan">("render");
+  const [tab, setTab] = useState<"create" | "storyboard" | "templates">("create");
+  const [mode, setMode] = useState<"render" | "plan" | "storyboard">("plan");
   const [config, setConfig] = useState({
     type: "reel",
     title: "",
@@ -36,11 +90,19 @@ export default function VideoEditorPage() {
     style: "modern-dark",
     duration: 30,
     aspect_ratio: "9:16",
+    music_mood: "upbeat",
+    caption_style: "word_highlight",
+    include_voiceover: false,
+    include_cta: true,
+    cta_text: "",
+    brand_colors: "",
+    target_platform: "instagram",
   });
 
-  useState(() => {
+  useEffect(() => {
     supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }) => setClients(data || []));
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function selectType(type: typeof VIDEO_TYPES[0]) {
     setConfig(prev => ({ ...prev, type: type.id, aspect_ratio: type.aspect, duration: type.duration }));
@@ -54,18 +116,23 @@ export default function VideoEditorPage() {
     setResult(null);
     setRenderProgress(0);
 
-    // Simulate progress while waiting for server
     const progressInterval = setInterval(() => {
       setRenderProgress(prev => Math.min(prev + Math.random() * 8, 90));
     }, 500);
 
-    toast.loading("Rendering video...");
+    const loadMsg = mode === "storyboard" ? "Creating AI storyboard..." : mode === "plan" ? "Generating video plan..." : "Rendering video...";
+    toast.loading(loadMsg);
 
     try {
       const res = await fetch("/api/video/render", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...config, client_id: selectedClient || null, plan_only: mode === "plan" }),
+        body: JSON.stringify({
+          ...config,
+          client_id: selectedClient || null,
+          plan_only: mode === "plan" || mode === "storyboard",
+          storyboard_mode: mode === "storyboard",
+        }),
       });
       clearInterval(progressInterval);
       setRenderProgress(100);
@@ -75,8 +142,9 @@ export default function VideoEditorPage() {
         setResult(data);
         if (data.url) {
           toast.success("Video rendered! Ready to download.");
-        } else if (data.plan) {
-          toast.success("Video plan generated — use it to create the video or connect Remotion for auto-rendering.");
+        } else if (data.storyboard || data.plan) {
+          toast.success(mode === "storyboard" ? "Storyboard created!" : "Video plan generated!");
+          if (mode === "storyboard") setTab("storyboard");
         }
       } else {
         toast.error(data.error || "Failed");
@@ -91,6 +159,17 @@ export default function VideoEditorPage() {
 
   const selectedType = VIDEO_TYPES.find(t => t.id === config.type) || VIDEO_TYPES[0];
 
+  const PRESETS = [
+    { title: "5 Reasons You Need Social Media", script: "Hook: Are you still not on social media? Here's why that's costing you clients...", type: "reel" },
+    { title: "Before & After Transformation", script: "Look at what we did for this business in just 30 days...", type: "reel" },
+    { title: "Client Testimonial Highlight", script: "Here's what our client said about working with us...", type: "testimonial" },
+    { title: "3 Quick Marketing Tips", script: "Tip 1: Post consistently. Tip 2: Use video content. Tip 3: Engage with comments.", type: "reel" },
+    { title: "Service Explainer", script: "Here's exactly how we help businesses grow with social media marketing...", type: "explainer" },
+    { title: "Behind The Scenes Day", script: "Ever wonder what goes on behind the scenes at a digital agency?", type: "story" },
+    { title: "Common Mistakes to Avoid", script: "Stop making these mistakes with your marketing...", type: "youtube" },
+    { title: "Product Feature Walkthrough", script: "Let me show you exactly how this works and why it's a game-changer...", type: "product_demo" },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       <div className="flex items-center justify-between flex-wrap gap-3">
@@ -100,14 +179,10 @@ export default function VideoEditorPage() {
           </div>
           <div>
             <h1 className="page-header mb-0">Video Editor</h1>
-            <p className="text-xs text-muted">AI video generation via Higgsfield, Remotion & Creatomate</p>
+            <p className="text-xs text-muted">AI storyboards, video plans & rendering via Remotion & Higgsfield</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <a href="https://www.higgsfield.ai" target="_blank" rel="noopener noreferrer"
-            className="btn-secondary flex items-center gap-1.5 text-xs">
-            <Sparkles size={12} /> Higgsfield AI
-          </a>
           <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[140px]">
             <option value="">No client</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
@@ -115,184 +190,383 @@ export default function VideoEditorPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 space-y-4">
-          {/* Video type */}
-          <div className="card">
-            <h2 className="section-header">Video Type</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {VIDEO_TYPES.map(t => (
-                <button key={t.id} onClick={() => selectType(t)}
-                  className={`flex items-center gap-2 p-3 rounded-xl border transition-all ${
-                    config.type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"
-                  }`}>
-                  <span className={config.type === t.id ? "text-gold" : "text-muted"}>{t.icon}</span>
-                  <div>
-                    <p className="text-[10px] font-semibold">{t.name}</p>
-                    <p className="text-[8px] text-muted">{t.aspect} / {t.duration}s</p>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Quick Presets */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> One-Click Videos</h2>
-            <div className="grid grid-cols-2 gap-1.5">
-              {[
-                { title: "5 Reasons You Need Social Media", script: "Hook: Are you still not on social media? Here's why that's costing you clients..." },
-                { title: "Before & After Transformation", script: "Look at what we did for this business in just 30 days..." },
-                { title: "Client Testimonial Highlight", script: "Here's what our client said about working with us..." },
-                { title: "3 Quick Marketing Tips", script: "Tip 1: Post consistently. Tip 2: Use video content. Tip 3: Engage with comments." },
-                { title: "Behind The Scenes", script: "Ever wonder what goes on behind the scenes at a digital agency?" },
-                { title: "Common Mistakes Business Owners Make", script: "Stop making these mistakes with your marketing..." },
-              ].map((preset, i) => (
-                <button key={i} onClick={() => setConfig({ ...config, title: preset.title, script: preset.script })}
-                  className="text-left p-2 rounded-lg border border-border hover:border-gold/20 transition-all text-[9px] text-muted hover:text-foreground">
-                  {preset.title}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Details */}
-          <div className="card space-y-3">
-            <h2 className="section-header">Video Details</h2>
-            <div>
-              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Title *</label>
-              <input value={config.title} onChange={e => setConfig({ ...config, title: e.target.value })}
-                className="input w-full text-xs" placeholder="e.g., 5 Dental Marketing Tips That Actually Work" />
-            </div>
-            <div>
-              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Script (optional)</label>
-              <textarea value={config.script} onChange={e => setConfig({ ...config, script: e.target.value })}
-                className="input w-full h-24 text-xs" placeholder="Paste your script here, or leave empty and AI will create one..." />
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Style</label>
-                <select value={config.style} onChange={e => setConfig({ ...config, style: e.target.value })} className="input w-full text-xs">
-                  {STYLES.map(s => <option key={s} value={s}>{s.replace("-", " ")}</option>)}
-                </select>
-              </div>
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration (seconds)</label>
-                <input type="number" min={5} max={300} value={config.duration}
-                  onChange={e => setConfig({ ...config, duration: parseInt(e.target.value) || 30 })}
-                  className="input w-full text-xs" />
-              </div>
-            </div>
-          </div>
-
-          {/* Mode toggle */}
-          <div className="flex gap-2">
-            <button onClick={() => setMode("render")}
-              className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                mode === "render" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
-              }`}>
-              <Film size={14} /> Render MP4
-            </button>
-            <button onClick={() => setMode("plan")}
-              className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
-                mode === "plan" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
-              }`}>
-              <Sparkles size={14} /> AI Plan Only
-            </button>
-          </div>
-
-          <button onClick={generateVideo} disabled={generating || !config.title}
-            className={`w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl font-semibold transition-all ${
-              mode === "render" ? "btn-primary" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"
-            }`}>
-            {generating ? <Loader size={14} className="animate-spin" /> : mode === "render" ? <Film size={14} /> : <Sparkles size={14} />}
-            {generating ? "Creating..." : mode === "render" ? "Render Video" : "Generate Video Plan"}
+      {/* Tabs */}
+      <div className="tab-group w-fit">
+        {(["create", "storyboard", "templates"] as const).map(t => (
+          <button key={t} onClick={() => setTab(t)}
+            className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
+            {t === "create" ? "Create Video" : t === "storyboard" ? "Storyboard" : "Quick Templates"}
           </button>
-          <p className="text-[8px] text-muted text-center">
-            {mode === "render" ? "Remotion renders an MP4 with animations, text, and transitions (~30-60s)" : "AI creates a detailed shot list, timing, overlays, and music suggestions"}
-          </p>
-        </div>
+        ))}
+      </div>
 
-        {/* Preview / Result */}
-        <div className="space-y-4">
-          {/* Video preview area */}
-          <div className="card-premium border-gold/10 text-center py-6 relative overflow-hidden">
-            <div className="absolute inset-0 bg-mesh opacity-20" />
-            <div className="relative">
-              <div className={`mx-auto mb-3 rounded-xl flex items-center justify-center overflow-hidden ${
-                selectedType.aspect === "9:16" ? "w-28 h-48" : selectedType.aspect === "16:9" ? "w-48 h-28" : "w-36 h-36"
-              } bg-surface-light/50 border border-border`}>
-                {result?.url ? (
-                  <video src={result.url} controls className="w-full h-full object-cover rounded-xl" />
-                ) : generating ? (
-                  <div className="flex flex-col items-center gap-2">
-                    <Loader size={20} className="animate-spin text-gold" />
-                    <span className="text-[9px] text-gold font-mono">{Math.round(renderProgress)}%</span>
+      {/* Create Tab */}
+      {tab === "create" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2 space-y-4">
+            {/* Video type */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Film size={13} className="text-gold" /> Video Type</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {VIDEO_TYPES.map(t => (
+                  <button key={t.id} onClick={() => selectType(t)}
+                    className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
+                      config.type === t.id ? "border-gold/30 bg-gold/[0.05]" : "border-border"
+                    }`}>
+                    <span className={config.type === t.id ? "text-gold" : "text-muted"}>{t.icon}</span>
+                    <div>
+                      <p className="text-[10px] font-semibold">{t.name}</p>
+                      <p className="text-[8px] text-muted">{t.aspect} / {t.duration}s</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Details */}
+            <div className="card space-y-3">
+              <h2 className="section-header">Video Details</h2>
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Title *</label>
+                <input value={config.title} onChange={e => setConfig({ ...config, title: e.target.value })}
+                  className="input w-full text-xs" placeholder="e.g., 5 Dental Marketing Tips That Actually Work" />
+              </div>
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Script (optional — AI will create one if empty)</label>
+                <textarea value={config.script} onChange={e => setConfig({ ...config, script: e.target.value })}
+                  className="input w-full h-20 text-xs" placeholder="Paste your script here, or leave empty for AI to write..." />
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration (sec)</label>
+                  <input type="number" min={5} max={300} value={config.duration}
+                    onChange={e => setConfig({ ...config, duration: parseInt(e.target.value) || 30 })}
+                    className="input w-full text-xs" />
+                </div>
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Platform</label>
+                  <select value={config.target_platform} onChange={e => setConfig({ ...config, target_platform: e.target.value })} className="input w-full text-xs">
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="linkedin">LinkedIn</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Brand Colors</label>
+                  <input value={config.brand_colors} onChange={e => setConfig({ ...config, brand_colors: e.target.value })}
+                    className="input w-full text-xs" placeholder="#C9A84C, #1a1a1a" />
+                </div>
+              </div>
+            </div>
+
+            {/* Style */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-gold" /> Visual Style</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {STYLES.map(s => (
+                  <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
+                    className={`p-2 rounded-xl border text-left transition-all ${
+                      config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                    }`}>
+                    <p className="text-[10px] font-semibold">{s.name}</p>
+                    <p className="text-[8px] text-muted">{s.desc}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* AI Options */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Wand2 size={13} className="text-gold" /> AI Enhancement Options</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Music Mood</label>
+                  <div className="grid grid-cols-4 gap-1">
+                    {MUSIC_MOODS.map(m => (
+                      <button key={m.id} onClick={() => setConfig({ ...config, music_mood: m.id })}
+                        className={`text-[9px] p-1.5 rounded-lg border transition-all text-center ${
+                          config.music_mood === m.id ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted hover:text-foreground"
+                        }`}>
+                        <span className="text-sm">{m.emoji}</span>
+                        <p className="text-[8px] mt-0.5">{m.name}</p>
+                      </button>
+                    ))}
                   </div>
-                ) : (
-                  <Film size={24} className="text-muted/30" />
+                </div>
+                <div>
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Caption Style</label>
+                  <div className="space-y-1">
+                    {CAPTION_STYLES.map(c => (
+                      <button key={c.id} onClick={() => setConfig({ ...config, caption_style: c.id })}
+                        className={`w-full text-left text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${
+                          config.caption_style === c.id ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted hover:text-foreground"
+                        }`}>
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-3 mt-3 pt-3 border-t border-border">
+                <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
+                  <input type="checkbox" checked={config.include_voiceover}
+                    onChange={e => setConfig({ ...config, include_voiceover: e.target.checked })}
+                    className="rounded border-border text-gold focus:ring-gold/30" />
+                  <Volume2 size={11} /> AI Voiceover Notes
+                </label>
+                <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer">
+                  <input type="checkbox" checked={config.include_cta}
+                    onChange={e => setConfig({ ...config, include_cta: e.target.checked })}
+                    className="rounded border-border text-gold focus:ring-gold/30" />
+                  <Zap size={11} /> Include CTA Overlay
+                </label>
+                {config.include_cta && (
+                  <input value={config.cta_text} onChange={e => setConfig({ ...config, cta_text: e.target.value })}
+                    className="input text-xs py-1 flex-1 min-w-[150px]" placeholder="CTA text (e.g., Book Now)" />
                 )}
               </div>
-
-              {/* Render progress bar */}
-              {generating && (
-                <div className="mx-auto w-40 mt-2">
-                  <div className="w-full bg-surface-light rounded-full h-1.5">
-                    <div className="bg-gradient-gold rounded-full h-1.5 transition-all duration-300"
-                      style={{ width: `${renderProgress}%` }} />
-                  </div>
-                  <p className="text-[8px] text-muted mt-1">Rendering {config.duration}s {selectedType.name}...</p>
-                </div>
-              )}
-
-              <p className="text-[10px] text-muted mt-2">{selectedType.name} / {selectedType.aspect} / {config.duration}s</p>
             </div>
+
+            {/* Mode toggle */}
+            <div className="flex gap-2">
+              <button onClick={() => setMode("storyboard")}
+                className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
+                  mode === "storyboard" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
+                }`}>
+                <LayoutGrid size={14} /> AI Storyboard
+              </button>
+              <button onClick={() => setMode("plan")}
+                className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
+                  mode === "plan" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
+                }`}>
+                <Sparkles size={14} /> AI Plan
+              </button>
+              <button onClick={() => setMode("render")}
+                className={`flex-1 text-xs py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all border ${
+                  mode === "render" ? "bg-gold/10 border-gold/30 text-gold" : "border-border text-muted hover:text-foreground"
+                }`}>
+                <Film size={14} /> Render MP4
+              </button>
+            </div>
+
+            <button onClick={generateVideo} disabled={generating || !config.title}
+              className={`w-full text-xs py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 rounded-xl font-semibold transition-all ${
+                mode === "render" ? "btn-primary" : "bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20"
+              }`}>
+              {generating ? <Loader size={14} className="animate-spin" /> : mode === "storyboard" ? <LayoutGrid size={14} /> : mode === "render" ? <Film size={14} /> : <Sparkles size={14} />}
+              {generating ? "Creating..." : mode === "storyboard" ? "Generate Storyboard" : mode === "render" ? "Render Video" : "Generate Video Plan"}
+            </button>
+            <p className="text-[8px] text-muted text-center">
+              {mode === "render" ? "Remotion + Higgsfield render an MP4 with animations, text, and transitions (~30-60s)" : mode === "storyboard" ? "AI creates scene-by-scene breakdown with visuals, transitions, and timing" : "AI creates a detailed shot list, timing, overlays, and music suggestions"}
+            </p>
           </div>
 
-          {/* Result */}
-          {result && (
-            <div className="card">
-              <h3 className="section-header flex items-center gap-2">
-                {result.url ? <Play size={12} className="text-success" /> : <Sparkles size={12} className="text-gold" />}
-                {result.source === "remotion" ? "Rendered Video" : result.source === "ai-plan" ? "Production Plan" : "Result"}
-              </h3>
-              {result.url && (
-                <div className="space-y-2">
-                  <a href={result.url} target="_blank" rel="noopener" download
-                    className="btn-primary btn-shine w-full text-xs flex items-center justify-center gap-1">
-                    <Download size={12} /> Download MP4
-                  </a>
-                  <button onClick={() => { navigator.clipboard.writeText(result.url || ""); toast.success("Link copied!"); }}
-                    className="btn-secondary w-full text-xs flex items-center justify-center gap-1">
-                    <Copy size={12} /> Copy Video URL
-                  </button>
+          {/* Preview / Result */}
+          <div className="space-y-4">
+            <div className="card-premium border-gold/10 text-center py-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-mesh opacity-20" />
+              <div className="relative">
+                <div className={`mx-auto mb-3 rounded-xl flex items-center justify-center overflow-hidden ${
+                  selectedType.aspect === "9:16" ? "w-28 h-48" : selectedType.aspect === "16:9" ? "w-48 h-28" : "w-36 h-36"
+                } bg-surface-light/50 border border-border`}>
+                  {result?.url ? (
+                    <video src={result.url} controls className="w-full h-full object-cover rounded-xl" />
+                  ) : generating ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <Loader size={20} className="animate-spin text-gold" />
+                      <span className="text-[9px] text-gold font-mono">{Math.round(renderProgress)}%</span>
+                    </div>
+                  ) : (
+                    <Film size={24} className="text-muted/30" />
+                  )}
                 </div>
-              )}
-              {result.plan && (
-                <div className="space-y-2">
-                  <pre className="text-[9px] text-muted bg-surface-light rounded-lg p-2.5 max-h-[300px] overflow-y-auto whitespace-pre-wrap">{result.plan}</pre>
-                  <button onClick={() => { navigator.clipboard.writeText(result.plan || ""); toast.success("Copied!"); }}
-                    className="btn-ghost text-[9px] w-full flex items-center justify-center gap-1"><Copy size={10} /> Copy Plan</button>
-                </div>
-              )}
-              <p className="text-[8px] text-muted mt-2">
-                Source: {result.source === "remotion" ? "Remotion (auto-rendered)" : result.source === "ai-plan" ? "AI Plan (connect Remotion for auto-render)" : result.source}
-                {result.render_id ? ` / ${result.render_id}` : ""}
-              </p>
+                {generating && (
+                  <div className="mx-auto w-40 mt-2">
+                    <div className="w-full bg-surface-light rounded-full h-1.5">
+                      <div className="bg-gradient-gold rounded-full h-1.5 transition-all duration-300"
+                        style={{ width: `${renderProgress}%` }} />
+                    </div>
+                    <p className="text-[8px] text-muted mt-1">Creating {config.duration}s {selectedType.name}...</p>
+                  </div>
+                )}
+                <p className="text-[10px] text-muted mt-2">{selectedType.name} / {selectedType.aspect} / {config.duration}s</p>
+              </div>
             </div>
-          )}
 
-          <div className="card border-gold/10">
-            <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-gold" /> How it works</h3>
-            <div className="space-y-1.5 text-[9px] text-muted">
-              <p><span className="text-gold font-medium">1.</span> Pick video type + enter title/script</p>
-              <p><span className="text-gold font-medium">2.</span> AI renders motion graphics video automatically</p>
-              <p><span className="text-gold font-medium">3.</span> Download MP4 and post to social media</p>
-              <p className="pt-1 text-[8px] text-muted/60">Videos include: animated text, transitions, brand colors, CTA overlays. For real footage editing, use the Production page.</p>
+            {/* Result */}
+            {result && (
+              <div className="card">
+                <h3 className="section-header flex items-center gap-2">
+                  {result.url ? <Play size={12} className="text-success" /> : <Sparkles size={12} className="text-gold" />}
+                  {result.url ? "Rendered Video" : result.storyboard ? "Storyboard Ready" : "Production Plan"}
+                </h3>
+                {result.url && (
+                  <div className="space-y-2">
+                    <a href={result.url} target="_blank" rel="noopener" download
+                      className="btn-primary btn-shine w-full text-xs flex items-center justify-center gap-1">
+                      <Download size={12} /> Download MP4
+                    </a>
+                    <button onClick={() => { navigator.clipboard.writeText(result.url || ""); toast.success("Link copied!"); }}
+                      className="btn-secondary w-full text-xs flex items-center justify-center gap-1">
+                      <Copy size={12} /> Copy Video URL
+                    </button>
+                  </div>
+                )}
+                {result.plan && !result.storyboard && (
+                  <div className="space-y-2">
+                    <pre className="text-[9px] text-muted bg-surface-light rounded-lg p-2.5 max-h-[300px] overflow-y-auto whitespace-pre-wrap">{result.plan}</pre>
+                    <button onClick={() => { navigator.clipboard.writeText(result.plan || ""); toast.success("Copied!"); }}
+                      className="btn-ghost text-[9px] w-full flex items-center justify-center gap-1"><Copy size={10} /> Copy Plan</button>
+                  </div>
+                )}
+                {result.music_suggestions && result.music_suggestions.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-border">
+                    <p className="text-[9px] text-gold uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Music size={9} /> Music Suggestions</p>
+                    {result.music_suggestions.map((m, i) => (
+                      <p key={i} className="text-[9px] text-muted">{m}</p>
+                    ))}
+                  </div>
+                )}
+                {result.thumbnail_suggestion && (
+                  <div className="mt-2 pt-2 border-t border-border">
+                    <p className="text-[9px] text-gold uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><ImageIcon size={9} /> Thumbnail Idea</p>
+                    <p className="text-[9px] text-muted">{result.thumbnail_suggestion}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="card border-gold/10">
+              <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-gold" /> How it works</h3>
+              <div className="space-y-1.5 text-[9px] text-muted">
+                <p><span className="text-gold font-medium">1.</span> Pick video type, style & AI options</p>
+                <p><span className="text-gold font-medium">2.</span> Choose: Storyboard / Plan / Direct Render</p>
+                <p><span className="text-gold font-medium">3.</span> AI creates your video with music, captions & CTA</p>
+                <p><span className="text-gold font-medium">4.</span> Download and post to social media</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Storyboard Tab */}
+      {tab === "storyboard" && (
+        <div className="space-y-4">
+          {result?.storyboard ? (
+            <>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-sm font-semibold">{config.title}</h2>
+                  <p className="text-[10px] text-muted">{result.storyboard.length} scenes / {config.duration}s / {selectedType.name}</p>
+                </div>
+                <div className="flex gap-1.5">
+                  <button onClick={() => {
+                    const text = result.storyboard!.map(s => `Scene ${s.scene_number} (${s.duration})\nVisual: ${s.visual}\nText: ${s.text_overlay}\nVO: ${s.voiceover}\nTransition: ${s.transition}\n`).join("\n");
+                    navigator.clipboard.writeText(text);
+                    toast.success("Storyboard copied!");
+                  }} className="btn-secondary text-[10px] flex items-center gap-1"><Copy size={10} /> Copy</button>
+                  <button onClick={() => { setMode("render"); setTab("create"); }}
+                    className="btn-primary text-[10px] flex items-center gap-1"><Film size={10} /> Render This</button>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {result.storyboard.map((scene, i) => (
+                  <div key={i} className="card card-hover">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[10px] font-bold text-gold">Scene {scene.scene_number}</span>
+                      <span className="text-[9px] text-muted font-mono">{scene.duration}</span>
+                    </div>
+                    <div className="space-y-2">
+                      <div>
+                        <p className="text-[8px] text-muted uppercase tracking-wider">Visual</p>
+                        <p className="text-[10px]">{scene.visual}</p>
+                      </div>
+                      {scene.text_overlay && (
+                        <div>
+                          <p className="text-[8px] text-muted uppercase tracking-wider flex items-center gap-1"><Type size={8} /> Text Overlay</p>
+                          <p className="text-[10px] text-gold font-medium">{scene.text_overlay}</p>
+                        </div>
+                      )}
+                      {scene.voiceover && (
+                        <div>
+                          <p className="text-[8px] text-muted uppercase tracking-wider flex items-center gap-1"><Mic size={8} /> Voiceover</p>
+                          <p className="text-[10px] italic">{scene.voiceover}</p>
+                        </div>
+                      )}
+                      <div className="flex items-center gap-3 pt-1 border-t border-border">
+                        {scene.transition && <span className="text-[8px] text-muted flex items-center gap-1"><Scissors size={8} /> {scene.transition}</span>}
+                        {scene.camera_movement && <span className="text-[8px] text-muted flex items-center gap-1"><Camera size={8} /> {scene.camera_movement}</span>}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : result?.plan ? (
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-gold" /> Video Plan</h2>
+              <pre className="text-[10px] text-muted bg-surface-light rounded-lg p-3 whitespace-pre-wrap max-h-[500px] overflow-y-auto">{result.plan}</pre>
+              <div className="flex gap-2 mt-3">
+                <button onClick={() => { navigator.clipboard.writeText(result.plan || ""); toast.success("Copied!"); }}
+                  className="btn-secondary text-[10px] flex items-center gap-1"><Copy size={10} /> Copy Plan</button>
+                <button onClick={() => { setMode("storyboard"); generateVideo(); }}
+                  className="btn-primary text-[10px] flex items-center gap-1"><LayoutGrid size={10} /> Convert to Storyboard</button>
+              </div>
+            </div>
+          ) : (
+            <div className="card text-center py-12">
+              <LayoutGrid size={24} className="mx-auto mb-2 text-muted/30" />
+              <p className="text-xs text-muted">No storyboard yet. Generate one from the Create tab.</p>
+              <button onClick={() => { setMode("storyboard"); setTab("create"); }}
+                className="btn-primary text-[10px] mt-3 flex items-center gap-1 mx-auto"><Sparkles size={10} /> Create Storyboard</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Templates Tab */}
+      {tab === "templates" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted">One-click video templates — select one to auto-fill settings</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {PRESETS.map((preset, i) => {
+              const presetType = VIDEO_TYPES.find(t => t.id === preset.type) || VIDEO_TYPES[0];
+              return (
+                <button key={i} onClick={() => {
+                  setConfig({ ...config, title: preset.title, script: preset.script, type: preset.type, aspect_ratio: presetType.aspect, duration: presetType.duration });
+                  setTab("create");
+                  toast.success(`Template loaded: ${preset.title}`);
+                }}
+                  className="card card-hover text-left p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-gold">{presetType.icon}</span>
+                    <span className="text-[8px] text-muted bg-surface-light px-1.5 py-0.5 rounded">{presetType.name}</span>
+                  </div>
+                  <h3 className="text-[11px] font-semibold mb-1">{preset.title}</h3>
+                  <p className="text-[9px] text-muted line-clamp-2">{preset.script}</p>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="card border-gold/10">
+            <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> Batch Video Ideas</h3>
+            <p className="text-[10px] text-muted mb-3">Generate a week of video content at once — select multiple templates and batch render</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {["Monday Motivation", "Tuesday Tip", "Wednesday BTS", "Thursday Myth Bust", "Friday Client Win", "Saturday Q&A", "Sunday Recap"].map((day, i) => (
+                <div key={i} className="p-2 rounded-lg border border-border text-center">
+                  <p className="text-[10px] font-semibold">{day}</p>
+                  <p className="text-[8px] text-muted">Auto-generate</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

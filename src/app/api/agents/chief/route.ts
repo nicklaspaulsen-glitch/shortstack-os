@@ -152,7 +152,6 @@ YOUR PERSONALITY:
       const decoder = new TextDecoder();
       let fullText = "";
       let hasToolUse = false;
-      let toolInput = "";
       let toolName = "";
       let inputAccumulator = "";
 

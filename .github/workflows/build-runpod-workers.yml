@@ -1,0 +1,61 @@
+name: Build RunPod Workers
+
+on:
+  push:
+    paths:
+      - 'deploy/**'
+  workflow_dispatch: # manual trigger
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-higgsfield:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Higgsfield worker
+        uses: docker/build-push-action@v5
+        with:
+          context: deploy/higgsfield
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/higgsfield-video:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/higgsfield-video:${{ github.sha }}
+
+  build-llm-worker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push LLM worker
+        uses: docker/build-push-action@v5
+        with:
+          context: deploy/llm-worker
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/llm-worker:latest
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/llm-worker:${{ github.sha }}

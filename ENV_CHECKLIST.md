@@ -98,13 +98,17 @@
 
 (covered above under Billing)
 
+## RunPod GPU (self-hosted AI)
+
+- [x] `RUNPOD_API_KEY` — RunPod API key for serverless GPU endpoints
+- [ ] `RUNPOD_LLM_URL` — RunPod serverless LLM endpoint (replaces Claude for routine tasks)
+- [ ] `HIGGSFIELD_URL` — RunPod serverless Higgsfield video generation endpoint
+
 ## Video / Creative
 
-- [ ] `CREATOMATE_API_KEY` — Creatomate video rendering API key
 - [ ] `REMOTION_RENDER_URL` — Remotion render service URL (defaults to Railway URL)
 - [ ] `MIDJOURNEY_API_KEY` — Midjourney API key (via GoAPI/ImagineAPI)
 - [ ] `MIDJOURNEY_CHANNEL_ID` — Discord channel ID for Midjourney
-- [ ] `HIGGSFIELD_API_KEY` — Higgsfield video API key
 
 ## Third-Party Integrations
 

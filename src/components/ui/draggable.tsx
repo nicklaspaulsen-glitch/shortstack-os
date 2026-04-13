@@ -27,7 +27,8 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
           // Validate saved position is still within viewport
           const el = elRef.current;
           const w = el?.offsetWidth || 60;
-          const h = el?.offsetHeight || 60;
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const h = el?.offsetHeight || 60;
           p.x = Math.max(0, Math.min(window.innerWidth - w, p.x));
           p.y = Math.max(0, Math.min(window.innerHeight - h, p.y));
           setPos(p);
@@ -63,6 +64,7 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
     // Use actual element size for boundary clamping
     const el = elRef.current;
     const w = el?.offsetWidth || 60;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const h = el?.offsetHeight || 60;
 
     const newPos = {

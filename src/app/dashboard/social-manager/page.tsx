@@ -11,7 +11,8 @@ import {
   Bot, Play, Pause, Calendar, Camera, Music,
   MessageSquare, Sparkles, Send, Clock, CheckCircle,
   Loader, Settings, ArrowRight, Globe, Film,
-  Briefcase, Lightbulb, Video, LayoutGrid, FileText as FileTextIcon, Mic
+  Briefcase, Lightbulb, Video, LayoutGrid, FileText as FileTextIcon,
+  ToggleLeft, ToggleRight, Zap, Shield, Activity, Hash
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -28,7 +29,6 @@ export default function SocialManagerPage() {
   useAuth();
   const [clients, setClients] = useState<Array<Client & { accounts: string[] }>>([]);
   const [selectedClient, setSelectedClient] = useState<string>("");
-  const [autopilot, setAutopilot] = useState<Record<string, boolean>>({});
   const [scheduledPosts, setScheduledPosts] = useState<ContentCalendarEntry[]>([]);
   const [recentPosts, setRecentPosts] = useState<ContentCalendarEntry[]>([]);
   const [generating, setGenerating] = useState(false);
@@ -37,10 +37,13 @@ export default function SocialManagerPage() {
   const [weekConfig, setWeekConfig] = useState({ posts_per_day: 1, tone: "professional yet approachable", topics: "" });
   const [tab, setTab] = useState<"dashboard" | "scheduled" | "published" | "config">("dashboard");
   const [suggestions, setSuggestions] = useState<Array<{ id: string; description: string; status: string; metadata: Record<string, unknown>; created_at: string }>>([]);
+  const [autopilotConfig, setAutopilotConfig] = useState<Record<string, unknown>>({});
+  const [savingConfig, setSavingConfig] = useState(false);
+  const [runningAutopilot, setRunningAutopilot] = useState(false);
   const supabase = createClient();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchClients(); }, []);
+  useEffect(() => { fetchClients(); fetchAutopilotConfig(); }, []);
 
   useEffect(() => {
     if (selectedClient) {
@@ -66,10 +69,48 @@ export default function SocialManagerPage() {
       setSelectedClient(clientsWithAccounts[0].id);
     }
 
-    // Load autopilot state
-    const saved = localStorage.getItem("social_autopilot");
-    if (saved) setAutopilot(JSON.parse(saved));
     setLoading(false);
+  }
+
+  async function fetchAutopilotConfig() {
+    try {
+      const res = await fetch("/api/social/autopilot");
+      const data = await res.json();
+      setAutopilotConfig(data.config || {});
+    } catch { /* silent */ }
+  }
+
+  async function saveAutopilotSetting(updates: Record<string, unknown>) {
+    setSavingConfig(true);
+    const newConfig = { ...autopilotConfig, ...updates };
+    setAutopilotConfig(newConfig);
+    try {
+      await fetch("/api/social/autopilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "save_config", config: newConfig }),
+      });
+      toast.success("Settings saved");
+    } catch { toast.error("Failed to save"); }
+    setSavingConfig(false);
+  }
+
+  async function runSocialAutopilot() {
+    setRunningAutopilot(true);
+    try {
+      const res = await fetch("/api/social/autopilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "run" }),
+      });
+      const data = await res.json();
+      if (data.skipped) { toast.error(data.reason || "Autopilot skipped"); }
+      else {
+        toast.success(`Autopilot: ${data.content_generated || 0} generated, ${data.posts_published || 0} published`);
+        fetchPosts();
+      }
+    } catch { toast.error("Autopilot error"); }
+    setRunningAutopilot(false);
   }
 
   async function fetchPosts() {
@@ -90,11 +131,8 @@ export default function SocialManagerPage() {
     } catch { /* best-effort */ }
   }
 
-  function toggleAutopilot(clientId: string) {
-    const updated = { ...autopilot, [clientId]: !autopilot[clientId] };
-    setAutopilot(updated);
-    localStorage.setItem("social_autopilot", JSON.stringify(updated));
-    toast.success(updated[clientId] ? "Autopilot ON — AI will manage this account" : "Autopilot OFF");
+  function toggleAutopilot() {
+    saveAutopilotSetting({ enabled: !autopilotConfig.enabled });
   }
 
   async function generateWeek() {
@@ -151,7 +189,7 @@ export default function SocialManagerPage() {
   }
 
   const currentClient = clients.find(c => c.id === selectedClient);
-  const isAutopilot = autopilot[selectedClient] || false;
+  const isAutopilot = !!autopilotConfig.enabled;
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
@@ -182,7 +220,7 @@ export default function SocialManagerPage() {
           </select>
 
           {/* Autopilot toggle */}
-          <button onClick={() => toggleAutopilot(selectedClient)}
+          <button onClick={() => toggleAutopilot()}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               isAutopilot
                 ? "bg-success/10 text-success border border-success/20 pulse-ring"
@@ -429,39 +467,163 @@ export default function SocialManagerPage() {
         </div>
       )}
 
-      {/* Config */}
+      {/* Config / Autopilot Settings */}
       {tab === "config" && (
-        <div className="card max-w-lg space-y-4">
-          <h2 className="section-header flex items-center gap-2"><Settings size={13} className="text-gold" /> Content Settings</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {/* Content Generation Settings */}
+          <div className="card-static space-y-4">
+            <h2 className="text-sm font-semibold flex items-center gap-2"><Settings size={13} className="text-gold" /> Content Settings</h2>
 
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Posts Per Day</label>
-            <input type="number" min={1} max={5} value={weekConfig.posts_per_day}
-              onChange={e => setWeekConfig({ ...weekConfig, posts_per_day: parseInt(e.target.value) || 1 })}
-              className="input w-full text-xs" />
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Posts Per Day</label>
+              <input type="number" min={1} max={5} value={weekConfig.posts_per_day}
+                onChange={e => setWeekConfig({ ...weekConfig, posts_per_day: parseInt(e.target.value) || 1 })}
+                className="input w-full text-xs" />
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Brand Tone</label>
+              <select value={weekConfig.tone} onChange={e => setWeekConfig({ ...weekConfig, tone: e.target.value })}
+                className="input w-full text-xs">
+                <option value="professional yet approachable">Professional & Approachable</option>
+                <option value="casual and fun">Casual & Fun</option>
+                <option value="authoritative and expert">Authoritative & Expert</option>
+                <option value="bold and edgy">Bold & Edgy</option>
+                <option value="warm and caring">Warm & Caring</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Topics to Cover</label>
+              <textarea value={weekConfig.topics}
+                onChange={e => setWeekConfig({ ...weekConfig, topics: e.target.value })}
+                className="input w-full h-20 text-xs"
+                placeholder="e.g., client results, tips, behind the scenes, promotions, educational content, trending topics" />
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Topics to Avoid</label>
+              <input value={String(autopilotConfig.blacklist_topics || "")}
+                onChange={e => saveAutopilotSetting({ blacklist_topics: e.target.value })}
+                className="input w-full text-xs"
+                placeholder="e.g., politics, religion, competitors by name" />
+            </div>
+
+            <p className="text-[9px] text-muted">These settings apply when generating content. AI uses your client&apos;s industry, services, and connected platforms to create platform-specific content.</p>
           </div>
 
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Brand Tone</label>
-            <select value={weekConfig.tone} onChange={e => setWeekConfig({ ...weekConfig, tone: e.target.value })}
-              className="input w-full text-xs">
-              <option value="professional yet approachable">Professional & Approachable</option>
-              <option value="casual and fun">Casual & Fun</option>
-              <option value="authoritative and expert">Authoritative & Expert</option>
-              <option value="bold and edgy">Bold & Edgy</option>
-              <option value="warm and caring">Warm & Caring</option>
-            </select>
-          </div>
+          {/* Autopilot Controls */}
+          <div className="space-y-4">
+            <div className="card-static border-gold/20">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Bot size={16} className="text-gold" />
+                  <h2 className="text-sm font-semibold">Social Autopilot</h2>
+                </div>
+                <button onClick={toggleAutopilot} disabled={savingConfig}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isAutopilot ? "bg-success/10 text-success border border-success/20" : "bg-surface-light text-muted border border-border"
+                  }`}>
+                  {isAutopilot ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
+                  {isAutopilot ? "ON" : "OFF"}
+                </button>
+              </div>
 
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Topics to Cover</label>
-            <textarea value={weekConfig.topics}
-              onChange={e => setWeekConfig({ ...weekConfig, topics: e.target.value })}
-              className="input w-full h-20 text-xs"
-              placeholder="e.g., client results, tips, behind the scenes, promotions, educational content, trending topics" />
-          </div>
+              <p className="text-[10px] text-muted mb-3">AI automatically generates content, schedules posts, and publishes when the time comes. Control exactly what it can do.</p>
 
-          <p className="text-[9px] text-muted">These settings apply when generating weekly content. The AI uses your client&apos;s industry, services, and connected platforms to create platform-specific content.</p>
+              <button onClick={runSocialAutopilot} disabled={runningAutopilot || !isAutopilot}
+                className="btn-primary w-full text-xs flex items-center justify-center gap-2 mb-4 disabled:opacity-50">
+                {runningAutopilot ? <><Loader size={12} className="animate-spin" /> Running...</> : <><Zap size={12} /> Run Autopilot Now</>}
+              </button>
+
+              {/* Granular controls */}
+              <div className="space-y-2">
+                <p className="text-[9px] text-muted font-semibold uppercase tracking-wider">Allowed Actions</p>
+                {[
+                  { key: "auto_generate_content", label: "Auto-generate content", desc: "AI creates posts when queue is low", icon: <Sparkles size={11} className="text-gold" /> },
+                  { key: "auto_publish_scheduled", label: "Auto-publish on schedule", desc: "Publish posts when scheduled time arrives", icon: <Send size={11} className="text-blue-400" /> },
+                  { key: "auto_reply_comments", label: "Auto-reply to comments", desc: "AI responds to comments & DMs", icon: <MessageSquare size={11} className="text-green-400" /> },
+                  { key: "auto_hashtag_research", label: "Trending hashtag research", desc: "AI finds trending hashtags for posts", icon: <Hash size={11} className="text-purple-400" /> },
+                  { key: "require_approval", label: "Require approval before post", desc: "Posts go to queue for review first", icon: <Shield size={11} className="text-orange-400" /> },
+                ].map(toggle => (
+                  <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border hover:border-gold/10 transition-all">
+                    <div className="flex items-center gap-2">
+                      {toggle.icon}
+                      <div>
+                        <p className="text-[10px] font-medium">{toggle.label}</p>
+                        <p className="text-[8px] text-muted">{toggle.desc}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => saveAutopilotSetting({ [toggle.key]: !autopilotConfig[toggle.key] })}
+                      className={`w-8 h-4.5 rounded-full transition-all flex items-center ${
+                        autopilotConfig[toggle.key] ? "bg-success justify-end" : "bg-surface-light border border-border justify-start"
+                      }`}>
+                      <div className={`w-3.5 h-3.5 rounded-full mx-0.5 transition-all ${
+                        autopilotConfig[toggle.key] ? "bg-white" : "bg-muted/40"
+                      }`} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Platform filters */}
+              <div className="mt-3">
+                <p className="text-[9px] text-muted font-semibold uppercase tracking-wider mb-1.5">Allowed Platforms</p>
+                <div className="flex gap-2">
+                  {["instagram", "facebook", "tiktok", "linkedin", "youtube"].map(p => {
+                    const allowed = Array.isArray(autopilotConfig.allowed_platforms)
+                      ? (autopilotConfig.allowed_platforms as string[]).includes(p)
+                      : true;
+                    return (
+                      <button key={p} onClick={() => {
+                        const current = Array.isArray(autopilotConfig.allowed_platforms)
+                          ? [...autopilotConfig.allowed_platforms as string[]]
+                          : ["instagram", "facebook", "tiktok", "linkedin", "youtube"];
+                        const updated = allowed ? current.filter(x => x !== p) : [...current, p];
+                        saveAutopilotSetting({ allowed_platforms: updated });
+                      }}
+                        className={`flex items-center gap-1 px-2 py-1 rounded-md text-[9px] font-medium border transition-all ${
+                          allowed ? "border-gold/30 bg-gold/5" : "border-border bg-surface-light text-muted"
+                        }`}>
+                        {PLATFORM_ICONS[p]} <span className="capitalize">{p}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Posting hours */}
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[8px] text-muted font-semibold">Posting starts (hour)</label>
+                  <input type="number" min={0} max={23}
+                    value={(autopilotConfig.posting_hours as Record<string, number>)?.start ?? 9}
+                    onChange={e => saveAutopilotSetting({ posting_hours: { ...(autopilotConfig.posting_hours as Record<string, number> || {}), start: parseInt(e.target.value) || 9 } })}
+                    className="input w-full text-xs py-1" />
+                </div>
+                <div>
+                  <label className="text-[8px] text-muted font-semibold">Posting ends (hour)</label>
+                  <input type="number" min={0} max={23}
+                    value={(autopilotConfig.posting_hours as Record<string, number>)?.end ?? 18}
+                    onChange={e => saveAutopilotSetting({ posting_hours: { ...(autopilotConfig.posting_hours as Record<string, number> || {}), end: parseInt(e.target.value) || 18 } })}
+                    className="input w-full text-xs py-1" />
+                </div>
+              </div>
+            </div>
+
+            {/* How it works */}
+            <div className="card-static bg-gold/[0.02] border-gold/10">
+              <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-gold" /> How Social Autopilot Works</h3>
+              <ol className="space-y-1 text-[10px] text-muted">
+                <li className="flex gap-2"><span className="text-gold font-bold">1.</span> Checks if content queue is running low (less than 3 days ahead)</li>
+                <li className="flex gap-2"><span className="text-gold font-bold">2.</span> AI generates platform-specific content based on your settings</li>
+                <li className="flex gap-2"><span className="text-gold font-bold">3.</span> Posts go to queue (or publish immediately if approval is off)</li>
+                <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Scheduled posts auto-publish when the time arrives</li>
+                <li className="flex gap-2"><span className="text-gold font-bold">5.</span> AI can auto-reply to comments on connected accounts</li>
+              </ol>
+            </div>
+          </div>
         </div>
       )}
       <PageAI pageName="Social Manager" context="Autonomous social media manager. Schedule posts, generate content calendars, manage multiple platforms." suggestions={["Generate this week's content for Instagram", "What trending topics should I post about?", "Write 5 engaging captions for a dental practice", "Create a 30-day content calendar"]} />

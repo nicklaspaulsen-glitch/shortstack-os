@@ -156,12 +156,13 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`fixed left-0 top-px h-[calc(100%-1px)] z-40 flex flex-col transition-all duration-300 ${
+      className={`fixed left-0 top-0 h-screen z-40 flex flex-col transition-all duration-300 ${
         collapsed ? "w-[56px]" : "w-56"
       }`}
       style={{
         background: "var(--color-surface, #FFFFFF)",
         borderRight: "1px solid var(--color-border, #E8E5E0)",
+        borderTop: "1px solid var(--color-border, #E8E5E0)",
       }}
     >
       {/* Logo — compact and clean */}

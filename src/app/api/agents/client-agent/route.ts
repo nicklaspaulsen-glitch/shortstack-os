@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAgentAuth } from "@/lib/supabase/agent-auth";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { createServiceClient } from "@/lib/supabase/server";
 import Anthropic from "@anthropic-ai/sdk";
 
@@ -351,6 +352,7 @@ export async function POST(request: NextRequest) {
   if ("error" in auth) {
     return NextResponse.json({ error: auth.error }, { status: 401 });
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { user } = auth;
 
   const apiKey = process.env.ANTHROPIC_API_KEY;

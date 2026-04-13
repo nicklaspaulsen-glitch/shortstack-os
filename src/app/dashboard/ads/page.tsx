@@ -12,15 +12,17 @@ import {
   DollarSign, MousePointer, TrendingUp, Plus,
   Sparkles, Target, Filter, ChevronDown,
   Copy, Wand2, Loader, Pause, Play,
-  Eye, Megaphone, RefreshCw, Zap,
+  Megaphone, RefreshCw, Zap,
   Image as ImageIcon, Type, Globe,
   Bot, CheckCircle2, XCircle, ArrowUpRight,
-  Shield, Clock, Plug, BarChart3
+  Shield, Clock, Plug, BarChart3,
+  Gauge, Settings2, ToggleLeft, ToggleRight,
+  Activity, Users
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 
-type Tab = "campaigns" | "creatives" | "copy-lab" | "copilot";
+type Tab = "overview" | "campaigns" | "creatives" | "copy-lab" | "copilot";
 
 const PLATFORM_META = { id: "meta_ads", label: "Meta Ads", color: "#1877F2", icon: "M" };
 const PLATFORM_GOOGLE = { id: "google_ads", label: "Google Ads", color: "#34A853", icon: "G" };
@@ -32,7 +34,7 @@ function getPlatformInfo(id: string) {
 }
 
 export default function AdsPage() {
-  const [tab, setTab] = useState<Tab>("campaigns");
+  const [tab, setTab] = useState<Tab>("overview");
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [creatives, setCreatives] = useState<AdCreative[]>([]);
   const [clients, setClients] = useState<Pick<Client, "id" | "business_name">[]>([]);
@@ -64,10 +66,21 @@ export default function AdsPage() {
   const [syncing, setSyncing] = useState<string | null>(null);
   const [processingAction, setProcessingAction] = useState<string | null>(null);
 
+  // Ad account connections
+  const [adConnections, setAdConnections] = useState<Record<string, string[]>>({});
+
+  // Autopilot state
+  const [autopilotConfig, setAutopilotConfig] = useState<Record<string, unknown>>({});
+  const [autopilotRunning, setAutopilotRunning] = useState(false);
+  const [savingAutopilot, setSavingAutopilot] = useState(false);
+
+  // Client MRR for overview
+  const [clientMrr, setClientMrr] = useState<Record<string, number>>({});
+
   const supabase = createClient();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); fetchActions(); }, []);
+  useEffect(() => { fetchData(); fetchActions(); fetchAdConnections(); fetchAutopilotConfig(); }, []);
 
   async function fetchData() {
     setLoading(true);
@@ -80,6 +93,77 @@ export default function AdsPage() {
     setCreatives(cr || []);
     setClients(cl || []);
     setLoading(false);
+  }
+
+  async function fetchAdConnections() {
+    const { data } = await supabase
+      .from("social_accounts")
+      .select("client_id, platform")
+      .in("platform", ["meta_ads", "google_ads", "tiktok_ads"])
+      .eq("is_active", true);
+    const map: Record<string, string[]> = {};
+    for (const row of data || []) {
+      if (!map[row.client_id]) map[row.client_id] = [];
+      if (!map[row.client_id].includes(row.platform)) map[row.client_id].push(row.platform);
+    }
+    setAdConnections(map);
+  }
+
+  function connectAdPlatform(clientId: string, platform: string) {
+    const baseUrl = window.location.origin;
+    if (platform === "meta_ads") {
+      window.location.href = `${baseUrl}/api/oauth/meta?client_id=${clientId}`;
+    } else if (platform === "google_ads") {
+      window.location.href = `${baseUrl}/api/oauth/google?client_id=${clientId}&platform=google_ads`;
+    } else if (platform === "tiktok_ads") {
+      window.location.href = `${baseUrl}/api/oauth/tiktok-ads?client_id=${clientId}`;
+    }
+  }
+
+  async function fetchAutopilotConfig() {
+    try {
+      const res = await fetch("/api/ads/autopilot");
+      const data = await res.json();
+      setAutopilotConfig(data.config || {});
+    } catch { /* silent */ }
+    // Also get client MRR data
+    const { data: cl } = await supabase.from("clients").select("id, mrr").eq("is_active", true);
+    const mrrMap: Record<string, number> = {};
+    for (const c of cl || []) mrrMap[c.id] = c.mrr || 0;
+    setClientMrr(mrrMap);
+  }
+
+  async function saveAutopilotConfig(updates: Record<string, unknown>) {
+    setSavingAutopilot(true);
+    const newConfig = { ...autopilotConfig, ...updates };
+    setAutopilotConfig(newConfig);
+    try {
+      await fetch("/api/ads/autopilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "save_config", config: newConfig }),
+      });
+      toast.success("Autopilot settings saved");
+    } catch { toast.error("Failed to save"); }
+    setSavingAutopilot(false);
+  }
+
+  async function runAutopilot() {
+    setAutopilotRunning(true);
+    try {
+      const res = await fetch("/api/ads/autopilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "run" }),
+      });
+      const data = await res.json();
+      if (data.skipped) { toast.error(data.reason || "Autopilot skipped"); }
+      else {
+        toast.success(`Autopilot: ${data.actions_taken || 0} actions, ${data.ads_created || 0} ads created`);
+        fetchData(); fetchActions();
+      }
+    } catch { toast.error("Autopilot error"); }
+    setAutopilotRunning(false);
   }
 
   // Filtered campaigns
@@ -97,10 +181,13 @@ export default function AdsPage() {
   const totalConversions = filtered.reduce((s, c) => s + c.conversions, 0);
   const avgROAS = filtered.filter(c => c.roas > 0).reduce((s, c) => s + c.roas, 0) / (filtered.filter(c => c.roas > 0).length || 1);
   const avgCTR = filtered.filter(c => c.ctr > 0).reduce((s, c) => s + c.ctr, 0) / (filtered.filter(c => c.ctr > 0).length || 1);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const totalImpressions = filtered.reduce((s, c) => s + c.impressions, 0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const totalClicks = filtered.reduce((s, c) => s + c.clicks, 0);
 
   // Platform breakdown
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const platformBreakdown = useMemo(() => {
     return PLATFORMS.map(p => {
       const platCampaigns = filtered.filter(c => c.platform === p.id);
@@ -274,48 +361,11 @@ export default function AdsPage() {
         </div>
       </div>
 
-      {/* Top Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        <StatCard label="Total Spend" value={formatCurrency(totalSpend)} icon={<DollarSign size={16} />} />
-        <StatCard label="Impressions" value={totalImpressions} icon={<Eye size={16} />} />
-        <StatCard label="Clicks" value={totalClicks} icon={<MousePointer size={16} />} />
-        <StatCard label="Conversions" value={totalConversions} icon={<Target size={16} />} />
-        <StatCard label="Avg ROAS" value={`${avgROAS.toFixed(1)}x`} icon={<TrendingUp size={16} />} changeType={avgROAS >= 2 ? "positive" : avgROAS >= 1 ? "neutral" : "negative"} />
-        <StatCard label="Avg CTR" value={`${(avgCTR * 100).toFixed(2)}%`} icon={<MousePointer size={16} />} changeType={avgCTR >= 0.02 ? "positive" : "neutral"} />
-      </div>
-
-      {/* Platform Breakdown */}
-      {platformBreakdown.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          {platformBreakdown.map(p => (
-            <div key={p.id} className="card-static flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm text-white shrink-0" style={{ backgroundColor: p.color }}>
-                {p.icon}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold">{p.label}</p>
-                <div className="flex items-center gap-4 text-[10px] text-muted mt-0.5">
-                  <span>{p.count} campaign{p.count !== 1 ? "s" : ""}</span>
-                  <span>{formatCurrency(p.spend)} spent</span>
-                  <span className={p.roas >= 2 ? "text-success font-bold" : ""}>{p.roas.toFixed(1)}x ROAS</span>
-                </div>
-              </div>
-              {/* Spend bar */}
-              <div className="w-20 h-2 bg-surface-light rounded-full overflow-hidden">
-                <div className="h-full rounded-full transition-all duration-500" style={{
-                  backgroundColor: p.color,
-                  width: `${totalSpend > 0 ? (p.spend / totalSpend) * 100 : 0}%`
-                }} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
       {/* Tabs + Filters */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex gap-1 bg-surface rounded-xl p-1">
           {([
+            { id: "overview", label: "Overview", icon: <Gauge size={13} /> },
             { id: "campaigns", label: "Campaigns", icon: <Megaphone size={13} /> },
             { id: "creatives", label: "Creatives", icon: <ImageIcon size={13} /> },
             { id: "copy-lab", label: "Copy Lab", icon: <Wand2 size={13} /> },
@@ -363,6 +413,227 @@ export default function AdsPage() {
         )}
       </div>
 
+      {/* ── Overview Tab ── */}
+      {tab === "overview" && (
+        <div className="space-y-5">
+          {/* KPI Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            <StatCard label="Total Spend" value={formatCurrency(totalSpend)} icon={<DollarSign size={16} />} />
+            <StatCard label="Avg ROAS" value={`${avgROAS.toFixed(1)}x`} icon={<TrendingUp size={16} />} changeType={avgROAS >= 2 ? "positive" : avgROAS >= 1 ? "neutral" : "negative"} />
+            <StatCard label="Avg CTR" value={`${(avgCTR * 100).toFixed(2)}%`} icon={<MousePointer size={16} />} changeType={avgCTR >= 0.02 ? "positive" : "neutral"} />
+            <StatCard label="Conversions" value={totalConversions} icon={<Target size={16} />} />
+            <StatCard label="Active Campaigns" value={campaigns.filter(c => c.status === "active").length} icon={<Activity size={16} />} />
+            <StatCard label="Client MRR" value={formatCurrency(Object.values(clientMrr).reduce((s, v) => s + v, 0))} icon={<Users size={16} />} />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {/* Left: Performance by platform + client */}
+            <div className="lg:col-span-2 space-y-4">
+              {/* Platform Performance */}
+              <div className="card-static">
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-gold" /> Platform Performance</h2>
+                <div className="space-y-2">
+                  {PLATFORMS.map(p => {
+                    const platCampaigns = campaigns.filter(c => c.platform === p.id);
+                    const platSpend = platCampaigns.reduce((s, c) => s + c.spend, 0);
+                    const platRoas = platCampaigns.filter(c => c.roas > 0).length > 0
+                      ? platCampaigns.filter(c => c.roas > 0).reduce((s, c) => s + c.roas, 0) / platCampaigns.filter(c => c.roas > 0).length : 0;
+                    const platConv = platCampaigns.reduce((s, c) => s + c.conversions, 0);
+                    const platCtr = platCampaigns.filter(c => c.ctr > 0).length > 0
+                      ? platCampaigns.filter(c => c.ctr > 0).reduce((s, c) => s + c.ctr, 0) / platCampaigns.filter(c => c.ctr > 0).length : 0;
+                    const platClicks = platCampaigns.reduce((s, c) => s + c.clicks, 0);
+                    return (
+                      <div key={p.id} className="p-3 rounded-xl bg-surface-light border border-border">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: p.color }}>{p.icon}</div>
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold">{p.label}</p>
+                            <p className="text-[9px] text-muted">{platCampaigns.length} campaign{platCampaigns.length !== 1 ? "s" : ""}</p>
+                          </div>
+                          {platSpend > 0 && <div className="w-24 h-2 bg-surface rounded-full overflow-hidden">
+                            <div className="h-full rounded-full" style={{ backgroundColor: p.color, width: `${totalSpend > 0 ? (platSpend / totalSpend) * 100 : 0}%` }} />
+                          </div>}
+                        </div>
+                        {platCampaigns.length > 0 && (
+                          <div className="grid grid-cols-5 gap-2">
+                            {[
+                              { label: "Spend", value: formatCurrency(platSpend) },
+                              { label: "ROAS", value: `${platRoas.toFixed(1)}x`, good: platRoas >= 2 },
+                              { label: "CTR", value: `${(platCtr * 100).toFixed(2)}%` },
+                              { label: "Clicks", value: platClicks.toLocaleString() },
+                              { label: "Conv.", value: platConv.toString() },
+                            ].map(m => (
+                              <div key={m.label} className="text-center">
+                                <p className={`text-[11px] font-bold font-mono ${(m as {good?: boolean}).good ? "text-success" : ""}`}>{m.value}</p>
+                                <p className="text-[8px] text-muted">{m.label}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Per-client breakdown */}
+              <div className="card-static">
+                <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Client Ad Performance</h2>
+                {clients.length > 0 ? (
+                  <div className="space-y-2">
+                    {clients.map(cl => {
+                      const clCampaigns = campaigns.filter(c => c.client_id === cl.id);
+                      if (clCampaigns.length === 0) return null;
+                      const clSpend = clCampaigns.reduce((s, c) => s + c.spend, 0);
+                      const clRoas = clCampaigns.filter(c => c.roas > 0).length > 0
+                        ? clCampaigns.reduce((s, c) => s + c.roas, 0) / clCampaigns.filter(c => c.roas > 0).length : 0;
+                      const clConv = clCampaigns.reduce((s, c) => s + c.conversions, 0);
+                      const mrr = clientMrr[cl.id] || 0;
+                      return (
+                        <div key={cl.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium truncate">{cl.business_name}</p>
+                            <div className="flex items-center gap-3 mt-0.5">
+                              {clCampaigns.map(c => (
+                                <span key={c.id} className="w-3 h-3 rounded-sm flex items-center justify-center text-white text-[6px] font-bold" style={{ backgroundColor: getPlatformInfo(c.platform).color }}>{getPlatformInfo(c.platform).icon}</span>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-4 gap-4 text-center shrink-0">
+                            <div><p className="text-[10px] font-bold font-mono">{formatCurrency(clSpend)}</p><p className="text-[7px] text-muted">Spend</p></div>
+                            <div><p className={`text-[10px] font-bold font-mono ${clRoas >= 2 ? "text-success" : clRoas < 1 ? "text-danger" : ""}`}>{clRoas.toFixed(1)}x</p><p className="text-[7px] text-muted">ROAS</p></div>
+                            <div><p className="text-[10px] font-bold font-mono">{clConv}</p><p className="text-[7px] text-muted">Conv.</p></div>
+                            <div><p className="text-[10px] font-bold font-mono">{formatCurrency(mrr)}</p><p className="text-[7px] text-muted">MRR</p></div>
+                          </div>
+                        </div>
+                      );
+                    }).filter(Boolean)}
+                  </div>
+                ) : <p className="text-xs text-muted text-center py-4">No clients with campaigns</p>}
+              </div>
+            </div>
+
+            {/* Right: Autopilot Controls */}
+            <div className="space-y-4">
+              <div className="card-static border-gold/20">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Bot size={16} className="text-gold" />
+                    <h2 className="text-sm font-semibold">AI Autopilot</h2>
+                  </div>
+                  <button
+                    onClick={() => saveAutopilotConfig({ enabled: !autopilotConfig.enabled })}
+                    disabled={savingAutopilot}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                      autopilotConfig.enabled
+                        ? "bg-success/10 text-success border border-success/20"
+                        : "bg-surface-light text-muted border border-border"
+                    }`}>
+                    {autopilotConfig.enabled ? <ToggleRight size={14} /> : <ToggleLeft size={14} />}
+                    {autopilotConfig.enabled ? "ON" : "OFF"}
+                  </button>
+                </div>
+
+                <p className="text-[10px] text-muted mb-3">AI analyzes campaigns and auto-executes allowed actions. Control exactly what it can do.</p>
+
+                <button onClick={runAutopilot} disabled={autopilotRunning || !autopilotConfig.enabled}
+                  className="btn-primary w-full text-xs flex items-center justify-center gap-2 mb-4 disabled:opacity-50">
+                  {autopilotRunning ? <><Loader size={12} className="animate-spin" /> Running...</> : <><Zap size={12} /> Run Autopilot Now</>}
+                </button>
+
+                {/* Permission toggles */}
+                <div className="space-y-2">
+                  <p className="text-[9px] text-muted font-semibold uppercase tracking-wider">Allowed Actions</p>
+                  {[
+                    { key: "allow_budget_increase", label: "Increase budgets", desc: "On high-ROAS campaigns" },
+                    { key: "allow_budget_decrease", label: "Decrease budgets", desc: "On low-ROAS campaigns" },
+                    { key: "allow_pause", label: "Pause campaigns", desc: "Auto-pause terrible performers" },
+                    { key: "allow_activate", label: "Reactivate campaigns", desc: "Reactivate improved campaigns" },
+                    { key: "allow_create_ads", label: "Create new ads", desc: "AI generates copy & creates ads" },
+                    { key: "auto_sync", label: "Auto-sync data", desc: "Pull latest data before analysis" },
+                  ].map(toggle => (
+                    <div key={toggle.key} className="flex items-center justify-between p-2 rounded-lg border border-border hover:border-gold/10 transition-all">
+                      <div>
+                        <p className="text-[10px] font-medium">{toggle.label}</p>
+                        <p className="text-[8px] text-muted">{toggle.desc}</p>
+                      </div>
+                      <button
+                        onClick={() => saveAutopilotConfig({ [toggle.key]: !autopilotConfig[toggle.key] })}
+                        className={`w-8 h-4.5 rounded-full transition-all flex items-center ${
+                          autopilotConfig[toggle.key] ? "bg-success justify-end" : "bg-surface-light border border-border justify-start"
+                        }`}>
+                        <div className={`w-3.5 h-3.5 rounded-full mx-0.5 transition-all ${
+                          autopilotConfig[toggle.key] ? "bg-white" : "bg-muted/40"
+                        }`} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Thresholds */}
+                <div className="mt-4 space-y-2">
+                  <p className="text-[9px] text-muted font-semibold uppercase tracking-wider">Thresholds</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[8px] text-muted">Max budget change %</label>
+                      <input type="number" value={Number(autopilotConfig.max_budget_change_pct) || 20}
+                        onChange={e => saveAutopilotConfig({ max_budget_change_pct: parseInt(e.target.value) || 20 })}
+                        className="input w-full text-xs py-1" />
+                    </div>
+                    <div>
+                      <label className="text-[8px] text-muted">Min ROAS for increase</label>
+                      <input type="number" step="0.1" value={Number(autopilotConfig.min_roas_for_increase) || 2}
+                        onChange={e => saveAutopilotConfig({ min_roas_for_increase: parseFloat(e.target.value) || 2 })}
+                        className="input w-full text-xs py-1" />
+                    </div>
+                    <div>
+                      <label className="text-[8px] text-muted">Max ROAS for decrease</label>
+                      <input type="number" step="0.1" value={Number(autopilotConfig.max_roas_for_decrease) || 0.8}
+                        onChange={e => saveAutopilotConfig({ max_roas_for_decrease: parseFloat(e.target.value) || 0.8 })}
+                        className="input w-full text-xs py-1" />
+                    </div>
+                    <div>
+                      <label className="text-[8px] text-muted">Pause if ROAS below</label>
+                      <input type="number" step="0.1" value={Number(autopilotConfig.pause_roas_threshold) || 0.3}
+                        onChange={e => saveAutopilotConfig({ pause_roas_threshold: parseFloat(e.target.value) || 0.3 })}
+                        className="input w-full text-xs py-1" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent autopilot actions */}
+              {actions.filter(a => a.status === "executed").length > 0 && (
+                <div className="card-static">
+                  <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Activity size={12} className="text-success" /> Recent AI Actions</h3>
+                  <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                    {actions.filter(a => a.status === "executed").slice(0, 8).map(a => (
+                      <div key={a.id} className="flex items-center gap-2 text-[10px] py-1 border-b border-border/50 last:border-0">
+                        <CheckCircle2 size={10} className="text-success shrink-0" />
+                        <span className="truncate flex-1">{a.title}</span>
+                        <span className="text-[8px] text-muted shrink-0">{new Date(a.executed_at || a.created_at).toLocaleDateString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quick stats */}
+              <div className="card-static bg-gold/[0.02] border-gold/10">
+                <h3 className="text-xs font-semibold mb-2 flex items-center gap-2"><Settings2 size={12} className="text-gold" /> How Autopilot Works</h3>
+                <ol className="space-y-1 text-[10px] text-muted">
+                  <li className="flex gap-2"><span className="text-gold font-bold">1.</span> Syncs latest campaign data from all platforms</li>
+                  <li className="flex gap-2"><span className="text-gold font-bold">2.</span> AI analyzes performance vs benchmarks</li>
+                  <li className="flex gap-2"><span className="text-gold font-bold">3.</span> Proposes budget/status changes within your limits</li>
+                  <li className="flex gap-2"><span className="text-gold font-bold">4.</span> Auto-executes only actions you&apos;ve allowed above</li>
+                  <li className="flex gap-2"><span className="text-gold font-bold">5.</span> Optionally creates new AI-generated ads</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Campaigns Tab ── */}
       {tab === "campaigns" && (
         <div className="space-y-2">
@@ -371,13 +642,18 @@ export default function AdsPage() {
               <Megaphone size={32} className="mx-auto mb-3 text-muted/30" />
               <p className="text-sm font-medium text-muted">No campaigns found</p>
               <p className="text-xs text-muted mt-1">
-                {campaigns.length > 0 ? "Try adjusting your filters" : "Create your first campaign to get started"}
+                {campaigns.length > 0 ? "Try adjusting your filters" : "Connect client ad accounts from the AI Copilot tab, then sync to pull campaigns"}
               </p>
-              {campaigns.length === 0 && (
-                <button onClick={() => setShowAddCampaign(true)} className="btn-primary text-xs mt-4 inline-flex items-center gap-1.5">
-                  <Plus size={12} /> Create Campaign
+              <div className="flex items-center justify-center gap-2 mt-4">
+                {campaigns.length === 0 && (
+                  <button onClick={() => setTab("copilot")} className="btn-primary text-xs inline-flex items-center gap-1.5">
+                    <Plug size={12} /> Connect Ad Accounts
+                  </button>
+                )}
+                <button onClick={() => setShowAddCampaign(true)} className="btn-secondary text-xs inline-flex items-center gap-1.5">
+                  <Plus size={12} /> Manual Campaign
                 </button>
-              )}
+              </div>
             </div>
           ) : (
             filtered.map(campaign => {
@@ -801,33 +1077,54 @@ export default function AdsPage() {
               </div>
             </div>
 
-            {/* Platform Sync */}
+            {/* Platform Connections & Sync */}
             <div className="card-static space-y-3">
               <div className="flex items-center gap-2">
                 <Plug size={14} className="text-info" />
-                <h2 className="text-sm font-semibold">Platform Sync</h2>
+                <h2 className="text-sm font-semibold">Ad Accounts</h2>
               </div>
-              <p className="text-[10px] text-muted">Pull latest campaign data from connected ad platforms.</p>
+              <p className="text-[10px] text-muted">Connect client ad accounts, then sync campaign data.</p>
               {clients.length > 0 ? (
                 <div className="space-y-2">
-                  {clients.map(client => (
-                    <div key={client.id} className="p-2 rounded-lg border border-border">
-                      <p className="text-[10px] font-medium mb-1.5">{client.business_name}</p>
-                      <div className="flex gap-1.5">
-                        {PLATFORMS.map(p => (
-                          <button key={p.id}
-                            onClick={() => syncPlatform(client.id, p.id)}
-                            disabled={syncing !== null}
-                            className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-md text-[9px] font-medium border border-border hover:border-gold/20 transition-all disabled:opacity-50">
-                            {syncing === p.id
-                              ? <Loader size={9} className="animate-spin" />
-                              : <span className="w-3.5 h-3.5 rounded-sm flex items-center justify-center text-white text-[7px] font-bold" style={{ backgroundColor: p.color }}>{p.icon}</span>}
-                            {p.label.split(" ")[0]}
-                          </button>
-                        ))}
+                  {clients.map(client => {
+                    const connected = adConnections[client.id] || [];
+                    return (
+                      <div key={client.id} className="p-2.5 rounded-lg border border-border">
+                        <p className="text-[10px] font-medium mb-2">{client.business_name}</p>
+                        <div className="space-y-1.5">
+                          {PLATFORMS.map(p => {
+                            const isConnected = connected.includes(p.id);
+                            return (
+                              <div key={p.id} className="flex items-center gap-2">
+                                <span className="w-4 h-4 rounded-sm flex items-center justify-center text-white text-[7px] font-bold shrink-0" style={{ backgroundColor: p.color }}>{p.icon}</span>
+                                <span className="text-[10px] flex-1">{p.label}</span>
+                                {isConnected ? (
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-[8px] bg-success/10 text-success font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
+                                      <CheckCircle2 size={8} /> Connected
+                                    </span>
+                                    <button
+                                      onClick={() => syncPlatform(client.id, p.id)}
+                                      disabled={syncing !== null}
+                                      className="text-[9px] px-2 py-1 rounded-md font-medium border border-border hover:border-gold/20 hover:bg-gold/5 transition-all disabled:opacity-50 flex items-center gap-1">
+                                      {syncing === p.id ? <Loader size={8} className="animate-spin" /> : <RefreshCw size={8} />}
+                                      Sync
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    onClick={() => connectAdPlatform(client.id, p.id)}
+                                    className="text-[9px] px-2 py-1 rounded-md font-medium bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
+                                    <Plug size={8} /> Connect
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : <p className="text-[10px] text-muted text-center">No clients yet</p>}
             </div>
