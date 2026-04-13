@@ -73,24 +73,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const init = async () => {
       try {
-        // Fast path: getSession() for instant page load
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user && mounted) {
-          setUser(session.user);
-          await fetchProfile(session.user.id);
-          if (mounted) setLoading(false);
-
-          // Background: validate + refresh the JWT so RLS queries work.
-          // getSession() may return expired tokens that pass here but
-          // make auth.uid()=null in RLS. getUser() fixes that silently.
-          supabase.auth.getUser().catch(() => {});
-          return;
+        // Step 1: Try getUser() first — it validates the JWT server-side
+        // and refreshes expired tokens. This ensures auth.uid() works in
+        // RLS policies when pages make Supabase queries.
+        // Race with 2.5s timeout so we don't hang forever in Electron.
+        let validUser = null;
+        try {
+          const result = await Promise.race([
+            supabase.auth.getUser(),
+            new Promise<{ data: { user: null }; error: Error }>((resolve) =>
+              setTimeout(() => resolve({ data: { user: null }, error: new Error("timeout") }), 2500)
+            ),
+          ]) as { data: { user: typeof validUser } };
+          validUser = result.data?.user ?? null;
+        } catch {
+          // getUser failed — fall through to getSession
         }
-        // No cached session — try server validation
-        const { data: { user: authUser } } = await supabase.auth.getUser();
-        if (authUser && mounted) {
-          setUser(authUser);
-          await fetchProfile(authUser.id);
+
+        // Step 2: If getUser timed out or failed, fall back to getSession
+        // (may have stale token, but at least the page renders)
+        if (!validUser) {
+          const { data: { session } } = await supabase.auth.getSession();
+          validUser = session?.user ?? null;
+        }
+
+        if (validUser && mounted) {
+          setUser(validUser);
+          await fetchProfile(validUser.id);
         } else if (mounted) {
           setProfile(null);
           localStorage.removeItem("ss_profile");
