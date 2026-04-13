@@ -104,6 +104,7 @@ export default function CRMPage() {
   const supabase = createClient();
 
   const [leads, setLeads] = useState<CRMLead[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<CRMStatus | "all">("all");
@@ -115,8 +116,13 @@ export default function CRMPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [page, setPage] = useState(0);
 
+  // Fetch immediately + retry after 1.2s to handle auth race condition
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchLeads(); cleanupStaleLeads(); }, []);
+  useEffect(() => {
+    fetchLeads(); cleanupStaleLeads();
+    const retry = setTimeout(fetchLeads, 1200);
+    return () => clearTimeout(retry);
+  }, []);
 
   async function fetchLeads() {
     setLoading(true);
@@ -406,14 +412,6 @@ export default function CRMPage() {
       </div>
     );
   };
-
-  if (loading) {
-    return (
-      <div className="fade-in flex items-center justify-center py-20">
-        <RefreshCw size={20} className="animate-spin text-gold" />
-      </div>
-    );
-  }
 
   return (
     <div className="fade-in space-y-4">

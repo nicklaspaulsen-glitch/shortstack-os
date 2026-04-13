@@ -120,6 +120,13 @@ export default function OutreachHubPage() {
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
 
+  // Retry after 1.2s to handle auth race condition
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const retry = setTimeout(fetchLeads, 1200);
+    return () => clearTimeout(retry);
+  }, []);
+
   async function fetchOutreachHistory(leadId: string) {
     if (outreachLogs[leadId]) return;
     const { data } = await supabase

@@ -7,7 +7,7 @@ import { formatCurrency } from "@/lib/utils";
 import Modal from "@/components/ui/modal";
 import {
   DollarSign, TrendingUp, Users, Minus, Plus, Pencil, Trash2,
-  PiggyBank, BarChart3, Receipt, Loader, ArrowUpRight, ArrowDownRight,
+  PiggyBank, BarChart3, Receipt, ArrowUpRight, ArrowDownRight,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -93,6 +93,7 @@ export default function FinancialsPage() {
 
   // Revenue state
   const [clients, setClients] = useState<ClientRow[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
 
   // Expense state
@@ -111,9 +112,13 @@ export default function FinancialsPage() {
   // Data loading
   // ---------------------------------------------------------------------------
 
+  // Fetch immediately + retry after 1.2s to handle auth race condition
+  // (Supabase session may not be ready on first attempt)
   useEffect(() => {
     setExpenses(loadExpenses());
     fetchClients();
+    const retry = setTimeout(fetchClients, 1200);
+    return () => clearTimeout(retry);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -253,14 +258,6 @@ export default function FinancialsPage() {
   // ---------------------------------------------------------------------------
   // Render
   // ---------------------------------------------------------------------------
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader size={20} className="animate-spin text-gold" />
-      </div>
-    );
-  }
 
   return (
     <div className="fade-in space-y-5">
