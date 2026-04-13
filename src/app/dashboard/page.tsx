@@ -76,6 +76,22 @@ export default function DashboardPage() {
 
   async function fetchDashboardData() {
     try {
+      // Debug: verify auth session + RLS access
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error("No session — sign out and sign back in");
+        return;
+      }
+      // Test single query to diagnose RLS
+      const { count: testCount, error: testErr } = await supabase.from("leads").select("*", { count: "exact", head: true });
+      if (testErr) {
+        toast.error(`DB error: ${testErr.message}`);
+        console.error("[Dashboard] RLS test failed:", testErr);
+      }
+      if (testCount === 0 || testCount === null) {
+        console.warn("[Dashboard] leads query returned 0 — session uid:", session.user.id, "token expires:", new Date(session.expires_at! * 1000).toISOString());
+      }
+
       const today = new Date().toISOString().split("T")[0];
       const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
 
