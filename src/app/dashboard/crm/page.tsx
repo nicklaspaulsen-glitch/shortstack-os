@@ -116,50 +116,49 @@ export default function CRMPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [page, setPage] = useState(0);
 
-  // Fetch immediately + retry after 1.2s to handle auth race condition
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchLeads(); cleanupStaleLeads();
-    const retry = setTimeout(fetchLeads, 1200);
-    return () => clearTimeout(retry);
-  }, []);
+  useEffect(() => { fetchLeads(); cleanupStaleLeads(); }, []);
 
   async function fetchLeads() {
-    setLoading(true);
-    const { data: leadsData } = await supabase
-      .from("leads")
-      .select("id, business_name, owner_name, phone, email, website, city, state, industry, google_rating, review_count, instagram_url, facebook_url, linkedin_url, tiktok_url, status, created_at")
-      .order("created_at", { ascending: false })
-      .limit(2000);
+    try {
+      setLoading(true);
+      const { data: leadsData } = await supabase
+        .from("leads")
+        .select("id, business_name, owner_name, phone, email, website, city, state, industry, google_rating, review_count, instagram_url, facebook_url, linkedin_url, tiktok_url, status, created_at")
+        .order("created_at", { ascending: false })
+        .limit(2000);
 
-    if (!leadsData || leadsData.length === 0) {
-      setLeads([]);
+      if (!leadsData || leadsData.length === 0) {
+        setLeads([]);
+        return;
+      }
+
+      const leadIds = leadsData.map(l => l.id);
+      const { data: outreachData } = await supabase
+        .from("outreach_log")
+        .select("id, lead_id, platform, message_text, status, reply_text, sent_at, replied_at")
+        .in("lead_id", leadIds)
+        .order("sent_at", { ascending: false });
+
+      const outreachByLead: Record<string, OutreachLogEntry[]> = {};
+      (outreachData || []).forEach(o => {
+        const lid = (o as { lead_id: string }).lead_id;
+        if (!outreachByLead[lid]) outreachByLead[lid] = [];
+        outreachByLead[lid].push(o as OutreachLogEntry);
+      });
+
+      const merged: CRMLead[] = leadsData.map(l => ({
+        ...l,
+        review_count: l.review_count || 0,
+        outreach_log: outreachByLead[l.id] || [],
+      }));
+
+      setLeads(merged);
+    } catch (err) {
+      console.error("[CRM] fetchLeads error:", err);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const leadIds = leadsData.map(l => l.id);
-    const { data: outreachData } = await supabase
-      .from("outreach_log")
-      .select("id, lead_id, platform, message_text, status, reply_text, sent_at, replied_at")
-      .in("lead_id", leadIds)
-      .order("sent_at", { ascending: false });
-
-    const outreachByLead: Record<string, OutreachLogEntry[]> = {};
-    (outreachData || []).forEach(o => {
-      const lid = (o as { lead_id: string }).lead_id;
-      if (!outreachByLead[lid]) outreachByLead[lid] = [];
-      outreachByLead[lid].push(o as OutreachLogEntry);
-    });
-
-    const merged: CRMLead[] = leadsData.map(l => ({
-      ...l,
-      review_count: l.review_count || 0,
-      outreach_log: outreachByLead[l.id] || [],
-    }));
-
-    setLeads(merged);
-    setLoading(false);
   }
 
   async function cleanupStaleLeads() {

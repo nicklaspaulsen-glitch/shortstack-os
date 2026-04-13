@@ -21,10 +21,17 @@ export default function ClientReportsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.from("clients").select("*").eq("is_active", true).order("business_name").then(({ data }) => {
-      setClients(data || []);
-      setLoading(false);
-    });
+    async function load() {
+      try {
+        const { data } = await supabase.from("clients").select("*").eq("is_active", true).order("business_name");
+        setClients(data || []);
+      } catch (err) {
+        console.error("[ClientReports] fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

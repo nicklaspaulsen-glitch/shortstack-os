@@ -9,9 +9,10 @@ import ErrorBoundary from "@/components/ui/error-boundary";
 import { useAuth } from "@/lib/auth-context";
 import { getPlanConfig } from "@/lib/plan-config";
 import { useRouter, usePathname } from "next/navigation";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { Menu, X, Crown } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 // Lazy-load overlay/modal components — not needed on initial render
 const ClientChatWidget = dynamic(() => import("@/components/client-chat-widget"), { ssr: false });
@@ -77,6 +78,21 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [zoom, setZoom] = useState(100);
+  const [sessionReady, setSessionReady] = useState(false);
+
+  // Guarantee the Supabase singleton has a confirmed session before
+  // rendering ANY child page. This prevents the race condition where
+  // child pages query Supabase before the JWT is set in the client,
+  // causing RLS to return empty results.
+  const supabase = useMemo(() => createClient(), []);
+  useEffect(() => {
+    if (!user) { setSessionReady(false); return; }
+    let cancelled = false;
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!cancelled) setSessionReady(!!session);
+    });
+    return () => { cancelled = true; };
+  }, [user, supabase]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -120,7 +136,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // Don't render dashboard content until auth state is resolved.
   // This prevents flash of admin content for client users and avoids
   // rendering anything before the redirect to /login fires.
-  if (loading || !user) {
+  if (loading || !user || !sessionReady) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />

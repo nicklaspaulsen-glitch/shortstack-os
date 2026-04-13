@@ -42,14 +42,19 @@ export default function ActivityLogPage() {
   useEffect(() => { fetchLogs(); }, []);
 
   async function fetchLogs() {
-    setLoading(true);
-    const { data } = await supabase
-      .from("trinity_log")
-      .select("id, agent, action_type, description, status, client_id, created_at")
-      .order("created_at", { ascending: false })
-      .limit(200);
-    setLogs(data || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data } = await supabase
+        .from("trinity_log")
+        .select("id, agent, action_type, description, status, client_id, created_at")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      setLogs(data || []);
+    } catch (err) {
+      console.error("[ActivityLog] fetchLogs error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const types = ["all", ...Array.from(new Set(logs.map(l => l.action_type).filter(Boolean)))];

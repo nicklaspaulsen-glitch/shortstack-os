@@ -36,15 +36,21 @@ export default function BriefingPage() {
 
   async function fetchLatestBriefing() {
     if (!profile) return;
-    const { data } = await supabase
-      .from("briefings")
-      .select("*")
-      .eq("user_id", profile.id)
-      .order("generated_at", { ascending: false })
-      .limit(1)
-      .single();
-    setBriefing(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data } = await supabase
+        .from("briefings")
+        .select("*")
+        .eq("user_id", profile.id)
+        .order("generated_at", { ascending: false })
+        .limit(1)
+        .single();
+      setBriefing(data);
+    } catch (err) {
+      console.error("[BriefingPage] fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function generateBriefingOnLogin() {

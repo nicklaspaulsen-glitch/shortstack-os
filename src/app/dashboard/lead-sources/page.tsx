@@ -42,24 +42,28 @@ export default function LeadSourcesPage() {
   useEffect(() => { fetchSources(); }, []);
 
   async function fetchSources() {
-    setLoading(true);
-    const { data } = await supabase.from("leads").select("source");
+    try {
+      setLoading(true);
+      const { data } = await supabase.from("leads").select("source");
 
-    const counts: Record<string, number> = {};
-    (data || []).forEach(l => {
-      const src = l.source || "unknown";
-      // Normalize source names
-      const normalized = src.includes("form") ? "form" : src.includes("csv") ? "csv_import" : src;
-      counts[normalized] = (counts[normalized] || 0) + 1;
-    });
+      const counts: Record<string, number> = {};
+      (data || []).forEach(l => {
+        const src = l.source || "unknown";
+        const normalized = src.includes("form") ? "form" : src.includes("csv") ? "csv_import" : src;
+        counts[normalized] = (counts[normalized] || 0) + 1;
+      });
 
-    const sorted = Object.entries(counts)
-      .map(([source, count]) => ({ source, count }))
-      .sort((a, b) => b.count - a.count);
+      const sorted = Object.entries(counts)
+        .map(([source, count]) => ({ source, count }))
+        .sort((a, b) => b.count - a.count);
 
-    setSources(sorted);
-    setTotalLeads(sorted.reduce((s, c) => s + c.count, 0));
-    setLoading(false);
+      setSources(sorted);
+      setTotalLeads(sorted.reduce((s, c) => s + c.count, 0));
+    } catch (err) {
+      console.error("[LeadSources] fetchSources error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (loading) return <div className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-gold" /></div>;

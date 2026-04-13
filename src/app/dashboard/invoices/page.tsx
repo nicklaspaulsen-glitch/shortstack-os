@@ -30,14 +30,19 @@ export default function InvoicesPage() {
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {
-    setLoading(true);
-    const [{ data: inv }, { data: cl }] = await Promise.all([
-      supabase.from("invoices").select("*").order("created_at", { ascending: false }),
-      supabase.from("clients").select("id, business_name").eq("is_active", true),
-    ]);
-    setInvoices(inv || []);
-    setClients(cl || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const [{ data: inv }, { data: cl }] = await Promise.all([
+        supabase.from("invoices").select("*").order("created_at", { ascending: false }),
+        supabase.from("clients").select("id, business_name").eq("is_active", true),
+      ]);
+      setInvoices(inv || []);
+      setClients(cl || []);
+    } catch (err) {
+      console.error("[Invoices] fetchData error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function createInvoice() {

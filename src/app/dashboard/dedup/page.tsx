@@ -25,6 +25,7 @@ export default function DedupPage() {
   useEffect(() => { findDuplicates(); }, []);
 
   async function findDuplicates() {
+    try {
     setLoading(true);
     const { data: leads } = await supabase
       .from("leads")
@@ -32,7 +33,7 @@ export default function DedupPage() {
       .order("created_at", { ascending: false })
       .limit(2000);
 
-    if (!leads) { setLoading(false); return; }
+    if (!leads) { return; }
 
     const groups: Record<string, DuplicateGroup> = {};
 
@@ -67,7 +68,11 @@ export default function DedupPage() {
     // Only keep groups with 2+ leads
     const dupes = Object.values(groups).filter(g => g.leads.length >= 2);
     setDuplicates(dupes);
-    setLoading(false);
+    } catch (err) {
+      console.error("[Dedup] findDuplicates error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function mergeDuplicates(group: DuplicateGroup) {

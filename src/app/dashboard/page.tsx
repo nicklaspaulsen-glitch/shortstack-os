@@ -60,15 +60,9 @@ export default function DashboardPage() {
   const [commandLoading, setCommandLoading] = useState(false);
   const supabase = createClient();
 
-  // Fetch data immediately (works if session is ready) + guaranteed
-  // retry after 1s (session is always ready by then). The retry
-  // overwrites stale zeros with real data. Simple and bulletproof.
+  // Layout guarantees Supabase session is ready before children render
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchDashboardData();
-    const retry = setTimeout(fetchDashboardData, 1200);
-    return () => clearTimeout(retry);
-  }, []);
+  useEffect(() => { fetchDashboardData(); }, []);
 
   // Show success toast after Stripe checkout redirect
   useEffect(() => {

@@ -30,16 +30,21 @@ export default function TeamPage() {
   }, []);
 
   async function fetchData() {
-    setLoading(true);
-    const [{ data: m }, { data: d }, { data: p }] = await Promise.all([
-      supabase.from("team_members").select("*").order("full_name"),
-      supabase.from("deals").select("*").order("created_at", { ascending: false }),
-      supabase.from("payroll").select("*").order("month", { ascending: false }),
-    ]);
-    setMembers(m || []);
-    setDeals(d || []);
-    setPayroll(p || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const [{ data: m }, { data: d }, { data: p }] = await Promise.all([
+        supabase.from("team_members").select("*").order("full_name"),
+        supabase.from("deals").select("*").order("created_at", { ascending: false }),
+        supabase.from("payroll").select("*").order("month", { ascending: false }),
+      ]);
+      setMembers(m || []);
+      setDeals(d || []);
+      setPayroll(p || []);
+    } catch (err) {
+      console.error("[TeamPage] fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const totalPayroll = payroll

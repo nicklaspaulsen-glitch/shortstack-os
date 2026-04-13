@@ -65,25 +65,30 @@ export default function CalendarPage() {
   useEffect(() => { fetchData(); }, []);
 
   async function fetchData() {
-    setLoading(true);
-    const [{ data: appts }, { data: cl }] = await Promise.all([
-      supabase.from("trinity_log")
-        .select("*")
-        .eq("action_type", "appointment")
-        .order("created_at", { ascending: false })
-        .limit(100),
-      supabase.from("clients").select("id, business_name").eq("is_active", true),
-    ]);
+    try {
+      setLoading(true);
+      const [{ data: appts }, { data: cl }] = await Promise.all([
+        supabase.from("trinity_log")
+          .select("*")
+          .eq("action_type", "appointment")
+          .order("created_at", { ascending: false })
+          .limit(100),
+        supabase.from("clients").select("id, business_name").eq("is_active", true),
+      ]);
 
-    const parsed: Appointment[] = (appts || []).map(a => ({
-      id: a.id,
-      ...(a.result as Record<string, unknown>),
-      created_at: a.created_at,
-    } as Appointment));
+      const parsed: Appointment[] = (appts || []).map(a => ({
+        id: a.id,
+        ...(a.result as Record<string, unknown>),
+        created_at: a.created_at,
+      } as Appointment));
 
-    setAppointments(parsed);
-    setClients(cl || []);
-    setLoading(false);
+      setAppointments(parsed);
+      setClients(cl || []);
+    } catch (err) {
+      console.error("[Calendar] fetchData error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function createAppointment() {

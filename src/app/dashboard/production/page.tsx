@@ -60,27 +60,32 @@ export default function ProductionPage() {
   }, [profile]);
 
   async function fetchData() {
-    // Get client ID
-    let cId: string | null = null;
-    if (profile?.role === "client") {
-      const { data } = await supabase.from("clients").select("id").eq("profile_id", profile.id).single();
-      cId = data?.id || null;
+    try {
+      setLoading(true);
+      // Get client ID
+      let cId: string | null = null;
+      if (profile?.role === "client") {
+        const { data } = await supabase.from("clients").select("id").eq("profile_id", profile.id).single();
+        cId = data?.id || null;
+      }
+      setClientId(cId);
+
+      // Get production requests
+      let query = supabase.from("trinity_log").select("*").eq("action_type", "custom").order("created_at", { ascending: false });
+      if (cId) query = query.eq("client_id", cId);
+      const { data: reqs } = await query;
+      setRequests((reqs || []).filter(r => (r.result as { type?: string })?.type === "production_request") as ProductionRequest[]);
+
+      // Get scripts
+      let scriptQuery = supabase.from("content_scripts").select("id, title, hook").order("created_at", { ascending: false }).limit(10);
+      if (cId) scriptQuery = scriptQuery.eq("client_id", cId);
+      const { data: sc } = await scriptQuery;
+      setScripts(sc || []);
+    } catch (err) {
+      console.error("[Production] fetchData error:", err);
+    } finally {
+      setLoading(false);
     }
-    setClientId(cId);
-
-    // Get production requests
-    let query = supabase.from("trinity_log").select("*").eq("action_type", "custom").order("created_at", { ascending: false });
-    if (cId) query = query.eq("client_id", cId);
-    const { data: reqs } = await query;
-    setRequests((reqs || []).filter(r => (r.result as { type?: string })?.type === "production_request") as ProductionRequest[]);
-
-    // Get scripts
-    let scriptQuery = supabase.from("content_scripts").select("id, title, hook").order("created_at", { ascending: false }).limit(10);
-    if (cId) scriptQuery = scriptQuery.eq("client_id", cId);
-    const { data: sc } = await scriptQuery;
-    setScripts(sc || []);
-
-    setLoading(false);
   }
 
   async function submitRequest() {

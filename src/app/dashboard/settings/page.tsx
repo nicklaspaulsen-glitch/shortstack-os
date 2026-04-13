@@ -70,16 +70,12 @@ export default function SettingsPage() {
   const rerender = () => forceRender(n => n + 1);
   const supabase = createClient();
 
-  // Fetch immediately + retry after 1.2s to handle auth race condition
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchData();
-    const retry = setTimeout(fetchData, 1200);
-    return () => clearTimeout(retry);
-  }, []);
+  useEffect(() => { fetchData(); }, []);
   useEffect(() => { if (profile?.nickname) setNickname(profile.nickname); }, [profile]);
 
   async function fetchData() {
+    try {
     const [{ data: c }, { data: h }] = await Promise.all([
       supabase.from("clients").select("*").eq("is_active", true).order("business_name"),
       supabase.from("system_health").select("integration_name, status").order("integration_name"),
@@ -111,6 +107,9 @@ export default function SettingsPage() {
         custom_instructions: "",
       }));
       setAgentConfigs(defaults);
+    }
+    } catch (err) {
+      console.error("[Settings] fetchData error:", err);
     }
   }
 

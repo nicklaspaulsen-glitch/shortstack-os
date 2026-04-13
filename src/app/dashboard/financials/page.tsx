@@ -112,23 +112,24 @@ export default function FinancialsPage() {
   // Data loading
   // ---------------------------------------------------------------------------
 
-  // Fetch immediately + retry after 1.2s to handle auth race condition
-  // (Supabase session may not be ready on first attempt)
   useEffect(() => {
     setExpenses(loadExpenses());
     fetchClients();
-    const retry = setTimeout(fetchClients, 1200);
-    return () => clearTimeout(retry);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchClients() {
-    setLoading(true);
-    const { data } = await supabase
-      .from("clients")
-      .select("mrr, is_active, created_at");
-    setClients(data || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data } = await supabase
+        .from("clients")
+        .select("mrr, is_active, created_at");
+      setClients(data || []);
+    } catch (err) {
+      console.error("[Financials] fetchClients error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   // ---------------------------------------------------------------------------

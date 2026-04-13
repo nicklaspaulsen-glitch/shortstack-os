@@ -22,19 +22,19 @@ export default function MonitorPage() {
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
-  // Fetch immediately + retry after 1.2s to handle auth race condition
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    fetchHealth();
-    const retry = setTimeout(fetchHealth, 1200);
-    return () => clearTimeout(retry);
-  }, []);
+  useEffect(() => { fetchHealth(); }, []);
 
   async function fetchHealth() {
-    setLoading(true);
-    const { data } = await supabase.from("system_health").select("*").order("integration_name");
-    setHealth(data || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data } = await supabase.from("system_health").select("*").order("integration_name");
+      setHealth(data || []);
+    } catch (err) {
+      console.error("[Monitor] fetchHealth error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function runHealthCheck() {

@@ -39,34 +39,38 @@ export default function SurveysPage() {
   }, []);
 
   async function loadData() {
-    // Load responses and clients in parallel
-    const [responsesRes, clientsRes] = await Promise.all([
-      supabase.from("trinity_log")
-        .select("*")
-        .eq("action_type", "custom")
-        .order("created_at", { ascending: false })
-        .limit(200),
-      supabase.from("clients")
-        .select("id, business_name, email")
-        .eq("is_active", true)
-        .order("business_name"),
-    ]);
+    try {
+      setLoading(true);
+      const [responsesRes, clientsRes] = await Promise.all([
+        supabase.from("trinity_log")
+          .select("*")
+          .eq("action_type", "custom")
+          .order("created_at", { ascending: false })
+          .limit(200),
+        supabase.from("clients")
+          .select("id, business_name, email")
+          .eq("is_active", true)
+          .order("business_name"),
+      ]);
 
-    const allLogs = responsesRes.data || [];
-    const surveyLogs = allLogs.filter(d => (d.result as Record<string, unknown>)?.type === "nps_survey") as SurveyResponse[];
+      const allLogs = responsesRes.data || [];
+      const surveyLogs = allLogs.filter(d => (d.result as Record<string, unknown>)?.type === "nps_survey") as SurveyResponse[];
 
-    // Enrich with client names
-    const clientMap = new Map<string, string>();
-    (clientsRes.data || []).forEach(c => clientMap.set(c.id, c.business_name));
-    surveyLogs.forEach(r => {
-      if (r.client_id && clientMap.has(r.client_id)) {
-        r.client_name = clientMap.get(r.client_id);
-      }
-    });
+      const clientMap = new Map<string, string>();
+      (clientsRes.data || []).forEach(c => clientMap.set(c.id, c.business_name));
+      surveyLogs.forEach(r => {
+        if (r.client_id && clientMap.has(r.client_id)) {
+          r.client_name = clientMap.get(r.client_id);
+        }
+      });
 
-    setResponses(surveyLogs);
-    setClients(clientsRes.data || []);
-    setLoading(false);
+      setResponses(surveyLogs);
+      setClients(clientsRes.data || []);
+    } catch (err) {
+      console.error("[Surveys] loadData error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const scores = responses.map(r => r.result?.score || 0);

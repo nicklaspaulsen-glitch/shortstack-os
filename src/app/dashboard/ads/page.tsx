@@ -83,16 +83,21 @@ export default function AdsPage() {
   useEffect(() => { fetchData(); fetchActions(); fetchAdConnections(); fetchAutopilotConfig(); }, []);
 
   async function fetchData() {
-    setLoading(true);
-    const [{ data: c }, { data: cr }, { data: cl }] = await Promise.all([
-      supabase.from("campaigns").select("*").order("created_at", { ascending: false }),
-      supabase.from("ad_creatives").select("*").order("created_at", { ascending: false }),
-      supabase.from("clients").select("id, business_name").eq("is_active", true),
-    ]);
-    setCampaigns(c || []);
-    setCreatives(cr || []);
-    setClients(cl || []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const [{ data: c }, { data: cr }, { data: cl }] = await Promise.all([
+        supabase.from("campaigns").select("*").order("created_at", { ascending: false }),
+        supabase.from("ad_creatives").select("*").order("created_at", { ascending: false }),
+        supabase.from("clients").select("id, business_name").eq("is_active", true),
+      ]);
+      setCampaigns(c || []);
+      setCreatives(cr || []);
+      setClients(cl || []);
+    } catch (err) {
+      console.error("[AdsPage] fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function fetchAdConnections() {
