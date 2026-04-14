@@ -83,9 +83,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: result.error, success: false }, { status: 500 });
   }
 
-  // Update lead status + log the call
+  // Update lead status + log the call (only advance forward, never overwrite replied/booked)
   if (lead_id) {
-    await supabase.from("leads").update({ status: "called" }).eq("id", lead_id);
+    await supabase.from("leads").update({ status: "called" }).eq("id", lead_id).in("status", ["new"]);
 
     await supabase.from("outreach_log").insert({
       lead_id,

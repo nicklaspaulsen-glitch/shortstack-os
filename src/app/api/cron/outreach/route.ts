@@ -136,19 +136,20 @@ export async function GET(request: NextRequest) {
       const body = `Hi,<br><br>I came across <b>${lead.business_name}</b> and noticed you might benefit from better online visibility.<br><br>We help ${lead.industry || "local"} businesses get more clients through social media, ads, and SEO.<br><br>Would you be open to a quick 10-minute call this week?<br><br>Best,<br>The ShortStack Team`;
 
       const contactId = await getOrCreateContact(lead);
+      let delivered = false;
       if (contactId) {
         try {
-          await fetch("https://services.leadconnectorhq.com/conversations/messages", {
+          const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
             method: "POST",
             headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
             body: JSON.stringify({ type: "Email", contactId, subject, html: body }),
           });
-          emailsSent++;
+          if (res.ok) { emailsSent++; delivered = true; }
         } catch {}
       }
 
-      await supabase.from("outreach_log").insert({ lead_id: lead.id, platform: "email", business_name: lead.business_name, recipient_handle: lead.email, message_text: `Subject: ${subject}`, status: "sent" });
-      await supabase.from("leads").update({ status: "called" }).eq("id", lead.id);
+      await supabase.from("outreach_log").insert({ lead_id: lead.id, platform: "email", business_name: lead.business_name, recipient_handle: lead.email, message_text: `Subject: ${subject}`, status: delivered ? "sent" : "failed" });
+      if (delivered) await supabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new"]);
     });
     await Promise.all(emailPromises);
   }
@@ -156,30 +157,41 @@ export async function GET(request: NextRequest) {
   // ═══════════════════════════════════════
   // 2. COLD SMS
   // ═══════════════════════════════════════
-  const { data: smsLeads } = await supabase
+  // Dedup: skip leads that received SMS in the last 48h
+  const smsCutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
+  const { data: recentSms } = await supabase
+    .from("outreach_log")
+    .select("lead_id")
+    .eq("platform", "sms")
+    .gte("created_at", smsCutoff);
+  const recentSmsIds = new Set((recentSms || []).map(s => s.lead_id).filter(Boolean));
+
+  const { data: smsLeadsRaw } = await supabase
     .from("leads")
     .select("id, business_name, phone, industry")
     .not("phone", "is", null)
     .in("status", ["new", "called"])
-    .limit(smsLimit);
+    .limit(smsLimit * 2);
+  const smsLeads = (smsLeadsRaw || []).filter(l => !recentSmsIds.has(l.id)).slice(0, smsLimit);
 
   if (smsLeads) {
     const smsPromises = smsLeads.map(async (lead) => {
       const smsText = `Hi! I came across ${lead.business_name} and wanted to reach out. We help ${lead.industry || "local"} businesses get more clients through digital marketing. Would you be open to a quick chat? - ShortStack Team`;
 
       const contactId = await getOrCreateContact(lead);
+      let delivered = false;
       if (contactId) {
         try {
-          await fetch("https://services.leadconnectorhq.com/conversations/messages", {
+          const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
             method: "POST",
             headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
             body: JSON.stringify({ type: "SMS", contactId, message: smsText }),
           });
-          smsSent++;
+          if (res.ok) { smsSent++; delivered = true; }
         } catch {}
       }
 
-      await supabase.from("outreach_log").insert({ lead_id: lead.id, platform: "sms" as never, business_name: lead.business_name, recipient_handle: lead.phone, message_text: smsText, status: "sent" });
+      await supabase.from("outreach_log").insert({ lead_id: lead.id, platform: "sms", business_name: lead.business_name, recipient_handle: lead.phone, message_text: smsText, status: delivered ? "sent" : "failed" });
     });
     await Promise.all(smsPromises);
   }

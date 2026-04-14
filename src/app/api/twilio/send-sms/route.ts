@@ -72,6 +72,16 @@ export async function POST(request: NextRequest) {
       } catch { /* use original */ }
     }
 
+    // Validate phone format before sending
+    const cleanedPhone = (lead.phone || "").replace(/[^\d+]/g, "");
+    if (cleanedPhone.length < 7 || cleanedPhone.length > 16) {
+      failed++;
+      continue;
+    }
+
+    // Ensure E.164 format
+    const toPhone = cleanedPhone.startsWith("+") ? cleanedPhone : `+1${cleanedPhone}`;
+
     try {
       const smsRes = await fetch(
         `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`,
@@ -82,7 +92,7 @@ export async function POST(request: NextRequest) {
             "Content-Type": "application/x-www-form-urlencoded",
           },
           body: new URLSearchParams({
-            To: lead.phone!,
+            To: toPhone,
             From: resolvedFrom,
             Body: message,
           }),
@@ -100,7 +110,8 @@ export async function POST(request: NextRequest) {
           sent_at: new Date().toISOString(),
           metadata: { lead_id: lead.id, direction: "outbound" },
         });
-        await serviceSupabase.from("leads").update({ status: "contacted" }).eq("id", lead.id);
+        // Only advance status if lead hasn't already replied/booked
+        await serviceSupabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new", "called"]);
       } else {
         failed++;
       }
