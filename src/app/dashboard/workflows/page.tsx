@@ -10,8 +10,12 @@ import {
   Zap, Plus, Sparkles, Play, Trash2, Bot,
   MessageCircle, Mail, Clock, GitBranch, Phone,
   Tag, FileText, Send, Webhook, Loader,
-  RotateCcw, Eye
+  RotateCcw, Eye, Search, BookOpen, ChevronRight,
+  Users, UserPlus, Globe, CreditCard, Star,
+  Target, BarChart, Calendar, Bell, ShoppingCart,
+  Briefcase, Database, BarChart3, Building
 } from "lucide-react";
+import { WORKFLOW_PRESETS, WORKFLOW_CATEGORIES, type WorkflowPreset } from "@/lib/workflow-presets";
 import toast from "react-hot-toast";
 
 interface WorkflowStep {
@@ -54,7 +58,10 @@ export default function WorkflowsPage() {
   const [agentChat, setAgentChat] = useState<Array<{ role: "user" | "agent"; content: string; workflow?: Workflow }>>([]);
   const [agentInput, setAgentInput] = useState("");
   const [agentThinking, setAgentThinking] = useState(false);
-  const [tab, setTab] = useState<"builder" | "history" | "agent" | "n8n">("builder");
+  const [tab, setTab] = useState<"builder" | "presets" | "history" | "agent" | "n8n">("builder");
+  const [presetSearch, setPresetSearch] = useState("");
+  const [presetCategory, setPresetCategory] = useState("all");
+  const [presetDifficulty, setPresetDifficulty] = useState<"all" | "easy" | "medium" | "advanced">("all");
   const [n8nWorkflows, setN8nWorkflows] = useState<Array<{ id: string; name: string; active: boolean; nodes: number; createdAt: string; updatedAt: string; tags: Array<{ name: string }> }>>([]);
   const [n8nLoading, setN8nLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -206,6 +213,38 @@ export default function WorkflowsPage() {
     return NODE_TYPES[action] || { icon: <Zap size={14} />, color: "text-muted", bg: "border-border bg-surface-light/50" };
   }
 
+  function applyPreset(preset: WorkflowPreset) {
+    const description = `${preset.name}: ${preset.description}\n\nTrigger: ${preset.trigger}\nSteps:\n${preset.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}`;
+    setPrompt(description);
+    setTab("builder");
+    setShowCreate(true);
+  }
+
+  const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+    "lead-gen": <Users size={12} />, onboarding: <UserPlus size={12} />, email: <Mail size={12} />,
+    social: <Globe size={12} />, crm: <GitBranch size={12} />, invoicing: <CreditCard size={12} />,
+    content: <FileText size={12} />, reviews: <Star size={12} />, ads: <Target size={12} />,
+    seo: <BarChart size={12} />, scheduling: <Calendar size={12} />, notifications: <Bell size={12} />,
+    ecommerce: <ShoppingCart size={12} />, support: <MessageCircle size={12} />, hr: <Briefcase size={12} />,
+    data: <Database size={12} />, ai: <Sparkles size={12} />, reporting: <BarChart3 size={12} />,
+    webhooks: <Webhook size={12} />, agency: <Building size={12} />,
+  };
+
+  const filteredPresets = WORKFLOW_PRESETS.filter(p => {
+    if (presetCategory !== "all" && p.category !== presetCategory) return false;
+    if (presetDifficulty !== "all" && p.difficulty !== presetDifficulty) return false;
+    if (presetSearch) {
+      const q = presetSearch.toLowerCase();
+      return p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.tags.some(t => t.toLowerCase().includes(q));
+    }
+    return true;
+  });
+
+  const categoryCounts = WORKFLOW_CATEGORIES.map(cat => ({
+    ...cat,
+    count: WORKFLOW_PRESETS.filter(p => p.category === cat.id).length,
+  }));
+
   const EXAMPLE_PROMPTS = [
     "When a new lead is scraped, send a Telegram notification and add to GHL",
     "Auto-generate weekly content reports for each client",
@@ -239,10 +278,10 @@ export default function WorkflowsPage() {
 
       {/* Tabs */}
       <div className="tab-group w-fit">
-        {(["builder", "agent", "n8n", "history"] as const).map(t => (
+        {(["builder", "presets", "agent", "n8n", "history"] as const).map(t => (
           <button key={t} onClick={() => { setTab(t); if (t === "n8n") fetchN8n(); }}
             className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "builder" ? "Builder" : t === "agent" ? "AI Agent" : t === "n8n" ? "n8n Live" : "History"}
+            {t === "builder" ? "Builder" : t === "presets" ? `Presets (${WORKFLOW_PRESETS.length})` : t === "agent" ? "AI Agent" : t === "n8n" ? "n8n Live" : "History"}
           </button>
         ))}
       </div>
@@ -352,6 +391,128 @@ export default function WorkflowsPage() {
                   <span className="text-[10px] text-muted">Workflow complete</span>
                 </div>
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Presets Tab */}
+      {tab === "presets" && (
+        <div className="space-y-4">
+          {/* Search + filters */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+              <input
+                type="text"
+                value={presetSearch}
+                onChange={(e) => setPresetSearch(e.target.value)}
+                placeholder="Search presets..."
+                className="input w-full text-xs pl-8"
+              />
+            </div>
+            <div className="flex gap-1.5">
+              {(["all", "easy", "medium", "advanced"] as const).map(d => (
+                <button key={d} onClick={() => setPresetDifficulty(d)}
+                  className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${
+                    presetDifficulty === d
+                      ? "border-gold/30 bg-gold/[0.05] text-gold font-medium"
+                      : "border-border text-muted hover:text-foreground"
+                  }`}>
+                  {d === "all" ? "All Levels" : d.charAt(0).toUpperCase() + d.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Category pills */}
+          <div className="flex flex-wrap gap-1.5">
+            <button onClick={() => setPresetCategory("all")}
+              className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1 ${
+                presetCategory === "all"
+                  ? "border-gold/30 bg-gold/[0.05] text-gold font-medium"
+                  : "border-border text-muted hover:text-foreground"
+              }`}>
+              <BookOpen size={10} /> All ({WORKFLOW_PRESETS.length})
+            </button>
+            {categoryCounts.map(cat => (
+              <button key={cat.id} onClick={() => setPresetCategory(cat.id)}
+                className={`text-[10px] px-2.5 py-1.5 rounded-lg border transition-all flex items-center gap-1 ${
+                  presetCategory === cat.id
+                    ? "border-gold/30 bg-gold/[0.05] text-gold font-medium"
+                    : "border-border text-muted hover:text-foreground"
+                }`}>
+                {CATEGORY_ICONS[cat.id]} {cat.name} ({cat.count})
+              </button>
+            ))}
+          </div>
+
+          {/* Results count */}
+          <p className="text-[10px] text-muted">{filteredPresets.length} preset{filteredPresets.length !== 1 ? "s" : ""} found</p>
+
+          {/* Preset cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {filteredPresets.map(preset => (
+              <div key={preset.id} className="card card-hover p-4 flex flex-col">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-gold/10 rounded-lg flex items-center justify-center shrink-0">
+                      {CATEGORY_ICONS[preset.category] || <Zap size={12} />}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-xs font-semibold truncate">{preset.name}</h3>
+                      <span className="text-[8px] text-muted">{categoryCounts.find(c => c.id === preset.category)?.name}</span>
+                    </div>
+                  </div>
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded shrink-0 font-medium ${
+                    preset.difficulty === "easy" ? "bg-success/10 text-success" :
+                    preset.difficulty === "medium" ? "bg-warning/10 text-warning" :
+                    "bg-danger/10 text-danger"
+                  }`}>
+                    {preset.difficulty}
+                  </span>
+                </div>
+
+                <p className="text-[10px] text-muted mb-2 flex-1">{preset.description}</p>
+
+                <div className="space-y-2">
+                  {/* Steps preview */}
+                  <div className="flex items-center gap-1 flex-wrap">
+                    {preset.steps.slice(0, 3).map((step, i) => (
+                      <span key={i} className="text-[8px] bg-surface-light px-1.5 py-0.5 rounded text-muted truncate max-w-[120px]">
+                        {i + 1}. {step}
+                      </span>
+                    ))}
+                    {preset.steps.length > 3 && (
+                      <span className="text-[8px] text-muted">+{preset.steps.length - 3} more</span>
+                    )}
+                  </div>
+
+                  {/* Tags + action */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-1 flex-wrap">
+                      {preset.tags.slice(0, 3).map(tag => (
+                        <span key={tag} className="text-[7px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{tag}</span>
+                      ))}
+                    </div>
+                    <button onClick={() => applyPreset(preset)}
+                      className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1 shrink-0">
+                      Use <ChevronRight size={9} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {filteredPresets.length === 0 && (
+            <div className="card-static text-center py-12">
+              <BookOpen size={24} className="text-muted mx-auto mb-2" />
+              <p className="text-sm text-muted">No presets match your filters</p>
+              <button onClick={() => { setPresetSearch(""); setPresetCategory("all"); setPresetDifficulty("all"); }}
+                className="btn-secondary text-xs mt-3">
+                Clear Filters
+              </button>
             </div>
           )}
         </div>
