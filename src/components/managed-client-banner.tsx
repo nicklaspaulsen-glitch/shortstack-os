@@ -2,11 +2,26 @@
 
 import { useAppStore } from "@/lib/store";
 import { useAuth } from "@/lib/auth-context";
-import { X, UserCheck, ChevronRight } from "lucide-react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import {
+  X, UserCheck, ChevronRight, FileText, CreditCard,
+  Film, Send, BarChart3, Zap
+} from "lucide-react";
+
+const QUICK_LINKS = [
+  { label: "Content", href: "/dashboard/content", icon: <Film size={10} /> },
+  { label: "Invoices", href: "/dashboard/invoices", icon: <CreditCard size={10} /> },
+  { label: "Deals", href: "/dashboard/deals", icon: <BarChart3 size={10} /> },
+  { label: "Scripts", href: "/dashboard/script-lab", icon: <FileText size={10} /> },
+  { label: "Social", href: "/dashboard/social-manager", icon: <Send size={10} /> },
+  { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={10} /> },
+];
 
 export default function ManagedClientBanner() {
   const { profile } = useAuth();
   const { managedClient, isManaging, setManagedClient } = useAppStore();
+  const pathname = usePathname();
 
   if (!isManaging || !managedClient) return null;
   if (profile?.role !== "admin" && profile?.role !== "team_member") return null;
@@ -31,6 +46,23 @@ export default function ManagedClientBanner() {
               {managedClient.package_tier}
             </span>
           )}
+
+          {/* Quick nav links */}
+          <div className="hidden md:flex items-center gap-0.5 ml-3 pl-3 border-l border-gold/15">
+            {QUICK_LINKS.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center gap-1 text-[9px] px-2 py-0.5 rounded transition-all ${
+                  pathname === link.href
+                    ? "bg-gold/15 text-gold font-medium"
+                    : "text-muted hover:text-gold hover:bg-gold/5"
+                }`}
+              >
+                {link.icon} {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
         <button

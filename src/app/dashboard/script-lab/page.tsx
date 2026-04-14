@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
+import { useManagedClient } from "@/lib/use-managed-client";
 import {
   Sparkles, Film, Camera,
   Search, Loader, Copy, Zap, Target, MessageSquare,
@@ -121,6 +122,7 @@ const TOPIC_PRESETS: Record<string, string[]> = {
 
 export default function ScriptLabPage() {
   useAuth();
+  const { clientId: managedClientId } = useManagedClient();
   const [clients, setClients] = useState<Array<{ id: string; business_name: string; industry: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
   const [tab, setTab] = useState<"generate" | "research" | "results" | "history">("generate");
@@ -163,6 +165,13 @@ export default function ScriptLabPage() {
     loadSavedScripts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Auto-select managed client
+  useEffect(() => {
+    if (managedClientId && clients.length > 0) {
+      setSelectedClient(managedClientId);
+    }
+  }, [managedClientId, clients]);
 
   async function loadSavedScripts() {
     const { data } = await supabase

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
+import { useManagedClient } from "@/lib/use-managed-client";
 import { Client, ContentCalendarEntry } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
@@ -27,6 +28,7 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
 
 export default function SocialManagerPage() {
   useAuth();
+  const { clientId: managedClientId } = useManagedClient();
   const [clients, setClients] = useState<Array<Client & { accounts: string[] }>>([]);
   const [selectedClient, setSelectedClient] = useState<string>("");
   const [scheduledPosts, setScheduledPosts] = useState<ContentCalendarEntry[]>([]);
@@ -44,6 +46,13 @@ export default function SocialManagerPage() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchClients(); fetchAutopilotConfig(); }, []);
+
+  // Auto-select managed client
+  useEffect(() => {
+    if (managedClientId && clients.length > 0) {
+      setSelectedClient(managedClientId);
+    }
+  }, [managedClientId, clients]);
 
   useEffect(() => {
     if (selectedClient) {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
+import { useManagedClient } from "@/lib/use-managed-client";
 import {
   Film, Sparkles, Loader, Play, Copy, Download,
   Clock, Camera, Monitor, Zap, Music, Type, Wand2,
@@ -77,6 +78,7 @@ interface VideoResult {
 
 export default function VideoEditorPage() {
   useAuth();
+  const { clientId: managedClientId } = useManagedClient();
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<VideoResult | null>(null);
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
@@ -106,6 +108,13 @@ export default function VideoEditorPage() {
     supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }) => setClients(data || []));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Auto-select managed client
+  useEffect(() => {
+    if (managedClientId && clients.length > 0) {
+      setSelectedClient(managedClientId);
+    }
+  }, [managedClientId, clients]);
 
   function handleFileUpload(files: File[]) {
     const remaining = 5 - referenceFiles.length;
