@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 const ZERNIO_API_BASE = "https://api.zernio.com/v1";
 const ZERNIO_API_KEY = process.env.ZERNIO_API_KEY;
@@ -71,6 +72,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "client_id and platform are required" }, { status: 400 });
     }
 
+    // Verify ownership
+    const access = await verifyClientAccess(supabase, user.id, client_id);
+    if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
     // Ensure profile exists
     const profileId = await ensureZernioProfile(client_id, supabase);
 
@@ -108,6 +113,10 @@ export async function GET(request: NextRequest) {
   if (!clientId) {
     return NextResponse.json({ error: "client_id is required" }, { status: 400 });
   }
+
+  // Verify ownership
+  const getAccess = await verifyClientAccess(supabase, user.id, clientId);
+  if (getAccess.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
     // Get the client's Zernio profile ID
@@ -182,6 +191,10 @@ export async function DELETE(request: NextRequest) {
 
   try {
     const { client_id, account_id, local_account_id } = await request.json();
+
+    // Verify ownership
+    const delAccess = await verifyClientAccess(supabase, user.id, client_id);
+    if (delAccess.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     // Get client's Zernio profile
     const { data: client } = await supabase

@@ -1,28 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 export async function GET(req: NextRequest) {
   const clientId = req.nextUrl.searchParams.get("client_id");
   if (!clientId) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 
-  const supabase = createServiceClient();
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Get content with media (published or with drive links)
-  const { data: content } = await supabase
+  // Verify the caller has access to this client_id
+  const access = await verifyClientAccess(supabase, user.id, clientId);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  // Use service client for queries that may need cross-table access
+  const service = createServiceClient();
+
+  const { data: content } = await service
     .from("content_scripts")
     .select("id, title, script_type, status, drive_folder_url, target_platform, created_at")
     .eq("client_id", clientId)
     .order("created_at", { ascending: false });
 
-  // Get publish queue items (published content with URLs)
-  const { data: published } = await supabase
+  const { data: published } = await service
     .from("publish_queue")
     .select("id, video_title, description, platforms, status, published_urls, published_at, created_at")
     .eq("client_id", clientId)
     .order("created_at", { ascending: false });
 
-  // Get client uploads from storage bucket metadata
-  const { data: uploads } = await supabase
+  const { data: uploads } = await service
     .from("client_uploads")
     .select("*")
     .eq("client_id", clientId)
@@ -43,9 +50,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "client_id and file_name required" }, { status: 400 });
   }
 
-  const supabase = createServiceClient();
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { data, error } = await supabase.from("client_uploads").insert({
+  const access = await verifyClientAccess(supabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  const service = createServiceClient();
+  const { data, error } = await service.from("client_uploads").insert({
     client_id,
     file_name,
     file_type: file_type || "unknown",

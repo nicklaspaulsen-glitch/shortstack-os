@@ -17,6 +17,11 @@ export async function POST(request: NextRequest) {
     personalize, // use AI to personalize each message
   } = await request.json();
 
+  // Verify ownership of client_id
+  const { verifyClientAccess } = await import("@/lib/verify-client-access");
+  const access = await verifyClientAccess(supabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { data: client } = await supabase.from("clients").select("*").eq("id", client_id).single();
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 

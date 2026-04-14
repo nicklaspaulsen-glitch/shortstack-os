@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 // GET: Get client privacy settings
 export async function GET(request: NextRequest) {
@@ -8,6 +9,12 @@ export async function GET(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const clientId = request.nextUrl.searchParams.get("client_id");
+
+  // If client_id provided, verify access
+  if (clientId) {
+    const access = await verifyClientAccess(supabase, user.id, clientId);
+    if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   let id = clientId;
   if (!id) {
@@ -29,6 +36,12 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { client_id, settings } = await request.json();
+
+  // Verify access to client_id
+  if (client_id) {
+    const access = await verifyClientAccess(supabase, user.id, client_id);
+    if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   let id = client_id;
   if (!id) {

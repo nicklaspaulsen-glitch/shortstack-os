@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 // Social Media Account Connection — Connect client social accounts to ShortStack OS
 // Stores account credentials so AI assistant can access and manage them
@@ -9,6 +10,10 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { client_id, platform, account_name, account_id, access_token, refresh_token } = await request.json();
+
+  // Verify ownership of client_id
+  const access = await verifyClientAccess(supabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   // Check if already connected
   const { data: existing } = await supabase

@@ -9,8 +9,13 @@ export async function POST(request: NextRequest) {
 
   const { client_id, bot_name, bot_personality, bot_greeting, bot_capabilities, bot_tone } = await request.json();
 
+  // Verify ownership of client_id
+  const { verifyClientAccess } = await import("@/lib/verify-client-access");
+  const access = await verifyClientAccess(supabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   // Find client
-  const clientId = client_id || (await supabase.from("clients").select("id").eq("profile_id", user.id).single()).data?.id;
+  const clientId = access.clientId || (await supabase.from("clients").select("id").eq("profile_id", user.id).single()).data?.id;
   if (!clientId) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 
   // Store bot config in client notes or a dedicated field
@@ -56,6 +61,13 @@ export async function GET(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const clientId = request.nextUrl.searchParams.get("client_id");
+
+  // Verify ownership if client_id is specified
+  if (clientId) {
+    const { verifyClientAccess } = await import("@/lib/verify-client-access");
+    const access = await verifyClientAccess(supabase, user.id, clientId);
+    if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const query = clientId
     ? supabase.from("social_accounts").select("metadata, account_name").eq("client_id", clientId).eq("platform", "ai_bot_config").single()

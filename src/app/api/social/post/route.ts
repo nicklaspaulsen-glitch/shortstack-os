@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 // Post content to a client's connected social media account
 export async function POST(request: NextRequest) {
@@ -7,6 +8,14 @@ export async function POST(request: NextRequest) {
   if (!client_id || !platform || !caption) {
     return NextResponse.json({ error: "Missing client_id, platform, or caption" }, { status: 400 });
   }
+
+  // Auth + ownership check
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const access = await verifyClientAccess(authSupabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const supabase = createServiceClient();
 
