@@ -34,6 +34,7 @@ import {
   ChevronDown,
   ImageIcon,
   Heart,
+  Upload,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -97,6 +98,7 @@ const navItems: NavItem[] = [
   { label: "Outreach", href: "/dashboard/portal/outreach", icon: <Send size={16} />, roles: ["client"] },
   { label: "Socials", href: "/dashboard/portal/socials", icon: <Link2 size={16} />, roles: ["client"] },
   { label: "Content", href: "/dashboard/portal/content", icon: <Film size={16} />, roles: ["client"], section: "Manage" },
+  { label: "Uploads", href: "/dashboard/portal/uploads", icon: <Upload size={16} />, roles: ["client"] },
   { label: "Calendar", href: "/dashboard/portal/calendar", icon: <Calendar size={16} />, roles: ["client"] },
   { label: "Reports", href: "/dashboard/portal/reports", icon: <BarChart3 size={16} />, roles: ["client"] },
   { label: "Invoices", href: "/dashboard/portal/billing", icon: <CreditCard size={16} />, roles: ["client"] },
