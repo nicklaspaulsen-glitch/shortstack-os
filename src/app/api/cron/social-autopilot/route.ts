@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { aiGenerate } from "@/lib/ai/router";
+import { publish as unifiedPublish } from "@/lib/services/social-publisher";
 
 interface SocialAutopilotConfig {
   enabled: boolean;
@@ -153,45 +154,60 @@ Return ONLY the JSON array.`,
         .limit(5);
 
       for (const post of duePosts || []) {
-        const account = accounts.find(a => a.platform === post.platform);
-        if (!account?.access_token) { results.posts_skipped++; continue; }
-
         const meta = (post.metadata as Record<string, unknown>) || {};
         const caption = (meta.caption as string) || post.title;
 
         try {
-          let posted = false;
+          // Use unified publisher (Zernio → Ayrshare fallback)
+          const publishResult = await unifiedPublish({
+            text: caption,
+            platforms: [post.platform],
+            title: post.title,
+          });
 
-          if (post.platform === "facebook" && account.account_id) {
-            const res = await fetch(`https://graph.facebook.com/v18.0/${account.account_id}/feed`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ message: caption, access_token: account.access_token }),
-            });
-            const data = await res.json();
-            posted = !!data.id;
-          }
-
-          if (post.platform === "linkedin" && account.account_id) {
-            const res = await fetch("https://api.linkedin.com/v2/ugcPosts", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${account.access_token}`, "Content-Type": "application/json", "X-Restli-Protocol-Version": "2.0.0" },
-              body: JSON.stringify({
-                author: `urn:li:person:${account.account_id}`,
-                lifecycleState: "PUBLISHED",
-                specificContent: { "com.linkedin.ugc.ShareContent": { shareCommentary: { text: caption }, shareMediaCategory: "NONE" } },
-                visibility: { "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC" },
-              }),
-            });
-            posted = res.ok;
-          }
-
-          if (posted) {
-            await supabase.from("content_calendar").update({ status: "published" }).eq("id", post.id);
+          if (publishResult.success) {
+            await supabase.from("content_calendar").update({
+              status: "published",
+              metadata: { ...meta, published_via: publishResult.provider, post_id: publishResult.postId },
+            }).eq("id", post.id);
             results.posts_published++;
-            results.details.push(`Published to ${post.platform}: "${post.title.substring(0, 40)}..."`);
+            results.details.push(`Published to ${post.platform} via ${publishResult.provider}: "${post.title.substring(0, 40)}..."`);
           } else {
-            results.posts_skipped++;
+            // Fallback: try direct API if account has access token
+            const account = accounts.find(a => a.platform === post.platform);
+            let directPosted = false;
+
+            if (post.platform === "facebook" && account?.access_token && account?.account_id) {
+              const res = await fetch(`https://graph.facebook.com/v18.0/${account.account_id}/feed`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: caption, access_token: account.access_token }),
+              });
+              const data = await res.json();
+              directPosted = !!data.id;
+            }
+
+            if (post.platform === "linkedin" && account?.access_token && account?.account_id) {
+              const res = await fetch("https://api.linkedin.com/v2/ugcPosts", {
+                method: "POST",
+                headers: { Authorization: `Bearer ${account.access_token}`, "Content-Type": "application/json", "X-Restli-Protocol-Version": "2.0.0" },
+                body: JSON.stringify({
+                  author: `urn:li:person:${account.account_id}`,
+                  lifecycleState: "PUBLISHED",
+                  specificContent: { "com.linkedin.ugc.ShareContent": { shareCommentary: { text: caption }, shareMediaCategory: "NONE" } },
+                  visibility: { "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC" },
+                }),
+              });
+              directPosted = res.ok;
+            }
+
+            if (directPosted) {
+              await supabase.from("content_calendar").update({ status: "published", metadata: { ...meta, published_via: "direct" } }).eq("id", post.id);
+              results.posts_published++;
+              results.details.push(`Published to ${post.platform} via direct API: "${post.title.substring(0, 40)}..."`);
+            } else {
+              results.posts_skipped++;
+            }
           }
         } catch { results.posts_skipped++; }
       }

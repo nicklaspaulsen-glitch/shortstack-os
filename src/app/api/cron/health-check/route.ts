@@ -154,6 +154,45 @@ const healthChecks: HealthCheck[] = [
     check: () => checkEndpoint(`https://graph.facebook.com/v18.0/act_0/campaigns?access_token=${process.env.META_ADS_ACCESS_TOKEN || "test"}`),
     requiresCredential: () => hasCredential(process.env.META_ADS_ACCESS_TOKEN),
   },
+  {
+    name: "Zernio",
+    check: () => checkEndpoint("https://api.zernio.com/v1/profiles", {
+      Authorization: `Bearer ${process.env.ZERNIO_API_KEY || ""}`,
+    }),
+    requiresCredential: () => hasCredential(process.env.ZERNIO_API_KEY),
+  },
+  {
+    name: "Ayrshare",
+    check: () => checkEndpoint("https://app.ayrshare.com/api/user", {
+      Authorization: `Bearer ${process.env.AYRSHARE_API_KEY || ""}`,
+    }),
+    requiresCredential: () => hasCredential(process.env.AYRSHARE_API_KEY),
+  },
+  {
+    name: "Twilio",
+    check: async () => {
+      const sid = process.env.TWILIO_ACCOUNT_SID || "";
+      const token = process.env.TWILIO_AUTH_TOKEN || "";
+      return checkEndpoint(`https://api.twilio.com/2010-04-01/Accounts/${sid}.json`, {
+        Authorization: `Basic ${Buffer.from(`${sid}:${token}`).toString("base64")}`,
+      });
+    },
+    requiresCredential: () => hasCredential(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN),
+  },
+  {
+    name: "ElevenLabs",
+    check: () => checkEndpoint("https://api.elevenlabs.io/v1/user/subscription", {
+      "xi-api-key": process.env.ELEVENLABS_API_KEY || "",
+    }),
+    requiresCredential: () => hasCredential(process.env.ELEVENLABS_API_KEY),
+  },
+  {
+    name: "SendGrid",
+    check: () => checkEndpoint("https://api.sendgrid.com/v3/user/profile", {
+      Authorization: `Bearer ${process.env.SENDGRID_API_KEY || ""}`,
+    }),
+    requiresCredential: () => hasCredential(process.env.SENDGRID_API_KEY),
+  },
 ];
 
 export async function GET(_request: NextRequest) {
@@ -230,9 +269,11 @@ export async function GET(_request: NextRequest) {
     if (existing) {
       await supabase.from("system_health").update(record).eq("id", existing.id);
 
-      // Only alert when transitioning from healthy/degraded to down (not on first check)
+      // Alert on status transitions
       if (existing.status === "healthy" && status === "down") {
-        alerts.push(`${hc.name} is DOWN: ${result.error}`);
+        alerts.push(`🔴 ${hc.name} is DOWN: ${result.error}`);
+      } else if ((existing.status === "down" || existing.status === "degraded") && status === "healthy") {
+        alerts.push(`🟢 ${hc.name} is BACK UP! (${result.responseTime}ms)`);
       }
     } else {
       await supabase.from("system_health").insert(record);
