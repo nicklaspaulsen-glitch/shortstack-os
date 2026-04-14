@@ -32,29 +32,56 @@ interface TemplatePreset {
 const SECTIONS = [
   { key: "thumbnails", label: "Thumbnails", icon: <ImageIcon size={16} />, description: "YouTube & video thumbnails" },
   { key: "social", label: "Social Posts", icon: <Camera size={16} />, description: "Posts for all platforms" },
+  { key: "carousels", label: "Carousels", icon: <RotateCcw size={16} />, description: "Multi-slide carousel posts" },
   { key: "ads", label: "Ad Creatives", icon: <Flag size={16} />, description: "Facebook, Google & display ads" },
-  { key: "logos", label: "Logos", icon: <Award size={16} />, description: "Brand logos & marks" },
+  { key: "logos", label: "Logos & Marks", icon: <Award size={16} />, description: "Logos, icons & brand marks" },
   { key: "banners", label: "Banners", icon: <Monitor size={16} />, description: "Website & social banners" },
   { key: "infographics", label: "Infographics", icon: <Grid size={16} />, description: "Data visualization & info layouts" },
   { key: "presentations", label: "Presentations", icon: <Layers size={16} />, description: "Slide decks & pitch decks" },
   { key: "email_headers", label: "Email Headers", icon: <Mail size={16} />, description: "Newsletter & email graphics" },
   { key: "podcast_covers", label: "Podcast Covers", icon: <Podcast size={16} />, description: "Podcast & audio artwork" },
   { key: "brochures", label: "Brochures", icon: <FileText size={16} />, description: "Print-ready marketing materials" },
+  { key: "mockups", label: "Mockups", icon: <Monitor size={16} />, description: "Device & product mockups" },
 ];
 
 const TEMPLATES: TemplatePreset[] = [
+  // Social
   { label: "Instagram Post", icon: <Camera size={12} />, width: 1080, height: 1080, style: "vibrant, social media aesthetic, clean typography", category: "social" },
   { label: "Instagram Story", icon: <Camera size={12} />, width: 1080, height: 1920, style: "bold, full-screen, vertical, eye-catching", category: "social" },
-  { label: "Facebook Ad", icon: <MessageCircle size={12} />, width: 1200, height: 628, style: "professional, high-converting ad creative, bold CTA", category: "ads" },
-  { label: "YouTube Thumbnail", icon: <Play size={12} />, width: 1280, height: 720, style: "eye-catching, bold text overlay, expressive", category: "thumbnails" },
-  { label: "LinkedIn Banner", icon: <Briefcase size={12} />, width: 1584, height: 396, style: "corporate, professional, clean gradient", category: "banners" },
   { label: "TikTok Cover", icon: <Music size={12} />, width: 1080, height: 1920, style: "trendy, Gen-Z aesthetic, bold colors", category: "social" },
   { label: "Pinterest Pin", icon: <ImageIcon size={12} />, width: 1000, height: 1500, style: "aesthetic, pin-worthy, clean layout", category: "social" },
+  { label: "Facebook Post", icon: <MessageCircle size={12} />, width: 1200, height: 630, style: "engaging, conversational, clear text", category: "social" },
+  { label: "LinkedIn Post", icon: <Briefcase size={12} />, width: 1200, height: 1200, style: "professional, thought leadership, clean", category: "social" },
+  // Carousels
+  { label: "IG Carousel Slide", icon: <RotateCcw size={12} />, width: 1080, height: 1080, style: "cohesive multi-slide, numbered, educational, swipe-worthy", category: "carousels" },
+  { label: "IG Carousel (4:5)", icon: <RotateCcw size={12} />, width: 1080, height: 1350, style: "tall carousel slide, bold headers, listicle layout", category: "carousels" },
+  { label: "LinkedIn Carousel", icon: <RotateCcw size={12} />, width: 1080, height: 1080, style: "corporate carousel, data-driven, chart-ready", category: "carousels" },
+  { label: "Carousel Cover Slide", icon: <RotateCcw size={12} />, width: 1080, height: 1080, style: "attention-grabbing cover, bold hook text, swipe CTA", category: "carousels" },
+  // Ads
+  { label: "Facebook Ad", icon: <MessageCircle size={12} />, width: 1200, height: 628, style: "professional, high-converting ad creative, bold CTA", category: "ads" },
+  { label: "Google Display Ad", icon: <Flag size={12} />, width: 300, height: 250, style: "high-converting, clear CTA, bold", category: "ads" },
+  { label: "Google Leaderboard", icon: <Flag size={12} />, width: 728, height: 90, style: "minimal, direct, clear CTA banner", category: "ads" },
+  { label: "Instagram Ad", icon: <Camera size={12} />, width: 1080, height: 1080, style: "native-feeling, engaging, thumb-stopping", category: "ads" },
+  // Thumbnails
+  { label: "YouTube Thumbnail", icon: <Play size={12} />, width: 1280, height: 720, style: "eye-catching, bold text overlay, expressive", category: "thumbnails" },
+  { label: "Podcast Episode Art", icon: <Podcast size={12} />, width: 1280, height: 720, style: "guest photo, episode number, bold branding", category: "thumbnails" },
+  // Logos & Marks
+  { label: "Primary Logo", icon: <Award size={12} />, width: 1000, height: 1000, style: "clean, scalable, versatile, professional brand mark", category: "logos" },
+  { label: "Logo Icon / Favicon", icon: <Award size={12} />, width: 512, height: 512, style: "simple, recognizable at small sizes, icon mark", category: "logos" },
+  { label: "Logo Wordmark", icon: <Award size={12} />, width: 2000, height: 600, style: "typography-focused, clean wordmark, brand font", category: "logos" },
+  { label: "Logo + Tagline", icon: <Award size={12} />, width: 1500, height: 800, style: "full lockup with tagline, professional", category: "logos" },
+  { label: "App Icon", icon: <Award size={12} />, width: 1024, height: 1024, style: "iOS/Android app icon, rounded corners, bold, simple", category: "logos" },
+  // Banners
+  { label: "LinkedIn Banner", icon: <Briefcase size={12} />, width: 1584, height: 396, style: "corporate, professional, clean gradient", category: "banners" },
   { label: "Twitter Header", icon: <MessageCircle size={12} />, width: 1500, height: 500, style: "clean, professional, brand-focused", category: "banners" },
+  { label: "YouTube Channel Art", icon: <Play size={12} />, width: 2560, height: 1440, style: "bold, channel branding, subscribe CTA", category: "banners" },
+  { label: "Website Hero", icon: <Monitor size={12} />, width: 1920, height: 800, style: "hero section, compelling, conversion-focused", category: "banners" },
+  // Other
   { label: "Email Header", icon: <Mail size={12} />, width: 600, height: 200, style: "clean, on-brand, professional", category: "email_headers" },
   { label: "Podcast Cover", icon: <Podcast size={12} />, width: 3000, height: 3000, style: "bold, recognizable, clear text", category: "podcast_covers" },
   { label: "Presentation Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "modern, clean, corporate", category: "presentations" },
-  { label: "Google Display Ad", icon: <Flag size={12} />, width: 300, height: 250, style: "high-converting, clear CTA, bold", category: "ads" },
+  { label: "Phone Mockup", icon: <Monitor size={12} />, width: 1080, height: 1920, style: "device frame, app screenshot, professional", category: "mockups" },
+  { label: "Desktop Mockup", icon: <Monitor size={12} />, width: 1920, height: 1080, style: "laptop/desktop frame, website screenshot", category: "mockups" },
 ];
 
 const INDUSTRY_STYLES: Record<string, string> = {
@@ -103,9 +130,9 @@ export default function DesignStudioPage() {
   }, []);
 
   const sectionTypeMap: Record<string, string> = {
-    thumbnails: "thumbnail", social: "social_post", ads: "ad", logos: "logo",
+    thumbnails: "thumbnail", social: "social_post", carousels: "carousel", ads: "ad", logos: "logo",
     banners: "banner", infographics: "infographic", presentations: "presentation",
-    email_headers: "email_header", podcast_covers: "podcast_cover", brochures: "brochure",
+    email_headers: "email_header", podcast_covers: "podcast_cover", brochures: "brochure", mockups: "mockup",
   };
 
   function getAspectRatio(w: number, h: number): string {
