@@ -35,14 +35,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=token_failed`);
     }
 
-    // Get advertiser IDs associated with this token
+    // Get advertiser IDs associated with this token (use headers, not URL params)
     const advRes = await fetch(
-      `https://business-api.tiktok.com/open_api/v1.3/oauth2/advertiser/get/?app_id=${appId}&secret=${secret}&access_token=${accessToken}`,
-      { headers: { "Access-Token": accessToken } }
+      "https://business-api.tiktok.com/open_api/v1.3/oauth2/advertiser/get/",
+      {
+        method: "GET",
+        headers: {
+          "Access-Token": accessToken,
+          "Content-Type": "application/json",
+        },
+      }
     );
     const advData = await advRes.json();
     const advertisers = advData.data?.list || [];
-    const advertiser = advertisers[0]; // Use first advertiser
+    const advertiser = advertisers[0]; // Primary advertiser
 
     const advertiserId = advertiser?.advertiser_id ? String(advertiser.advertiser_id) : "";
     const advertiserName = advertiser?.advertiser_name || "TikTok Ad Account";
