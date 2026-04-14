@@ -4,12 +4,13 @@ import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Image, Sparkles, Download, RefreshCw, Edit3, Loader,
+  Image as ImageIcon, Sparkles, Download, RefreshCw, Edit3, Loader,
   Monitor, Palette, Type, Smile, Layers, ChevronDown,
   Clock, Trash2, Copy, Check, Zap, Grid, User,
-  Square, RectangleHorizontal,
+  Square, RectangleHorizontal, Upload, X,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PromptEnhancer from "@/components/prompt-enhancer";
 
 /* ──────────────────── DATA ──────────────────── */
 
@@ -96,6 +97,7 @@ export default function ThumbnailGeneratorPage() {
 
   // Form state
   const [prompt, setPrompt] = useState("");
+  const [referenceImages, setReferenceImages] = useState<string[]>([]);
   const [selectedFaces, setSelectedFaces] = useState<string[]>([]);
   const [style, setStyle] = useState("youtube_classic");
   const [platform, setPlatform] = useState("youtube");
@@ -218,6 +220,7 @@ export default function ThumbnailGeneratorPage() {
           colorTheme,
           mood,
           variations,
+          reference_images: referenceImages,
         }),
       });
       const data = await res.json();
@@ -340,7 +343,7 @@ export default function ThumbnailGeneratorPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Image size={20} className="text-gold" />
+            <ImageIcon size={20} className="text-gold" />
           </div>
           <div>
             <h1 className="page-header mb-0">Thumbnail Generator</h1>
@@ -379,16 +382,58 @@ export default function ThumbnailGeneratorPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
           {/* LEFT PANEL — Controls */}
           <div className="lg:col-span-2 space-y-4">
+            {/* Reference Images */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2">
+                <Upload size={13} className="text-gold" /> Reference Images <span className="text-[9px] text-muted font-normal">(optional)</span>
+              </h2>
+              <p className="text-[9px] text-muted mb-2">Drop faces, logos, or reference images to include in your thumbnail</p>
+              {referenceImages.length > 0 && (
+                <div className="flex gap-2 mb-2 flex-wrap">
+                  {referenceImages.map((img, i) => (
+                    <div key={i} className="relative group">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={img} alt="" className="w-16 h-16 rounded-lg object-cover border border-border" />
+                      <button onClick={() => setReferenceImages(prev => prev.filter((_, j) => j !== i))}
+                        className="absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <X size={8} className="text-white" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {referenceImages.length < 3 && (
+                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border/50 hover:border-gold/30 rounded-xl py-3 cursor-pointer transition-colors">
+                  <Upload size={14} className="text-muted" />
+                  <span className="text-[10px] text-muted">Click or drag files here ({3 - referenceImages.length} remaining)</span>
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                    const files = Array.from(e.target.files || []);
+                    const remaining = 3 - referenceImages.length;
+                    files.slice(0, remaining).forEach(file => {
+                      if (file.size > 5 * 1024 * 1024) return;
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        setReferenceImages(prev => [...prev, reader.result as string].slice(0, 3));
+                      };
+                      reader.readAsDataURL(file);
+                    });
+                    e.target.value = "";
+                  }} />
+                </label>
+              )}
+            </div>
+
             {/* Prompt */}
             <div className="card">
               <h2 className="section-header flex items-center gap-2">
                 <Sparkles size={13} className="text-gold" /> Description / Prompt
               </h2>
-              <textarea
+              <PromptEnhancer
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                className="input w-full h-24 text-xs resize-none"
+                onChange={setPrompt}
+                type="thumbnail"
                 placeholder='e.g., "A dramatic thumbnail about space exploration with a shocked astronaut"'
+                rows={3}
               />
             </div>
 
@@ -849,7 +894,7 @@ export default function ThumbnailGeneratorPage() {
             {!generating && results.length === 0 && (
               <div className="card-static flex flex-col items-center justify-center py-16 text-center">
                 <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-4">
-                  <Image size={28} className="text-gold" />
+                  <ImageIcon size={28} className="text-gold" />
                 </div>
                 <h3 className="text-sm font-semibold mb-1">No thumbnails yet</h3>
                 <p className="text-xs text-muted max-w-xs">
@@ -954,7 +999,7 @@ export default function ThumbnailGeneratorPage() {
                   <div key={item.id} className="card-static group">
                     {/* Mock preview */}
                     <div className="aspect-video rounded-xl bg-gradient-to-br from-gold/10 to-gold/5 flex items-center justify-center mb-3">
-                      <Image size={24} className="text-gold/40" />
+                      <ImageIcon size={24} className="text-gold/40" />
                     </div>
                     <p className="text-xs font-medium truncate">{item.description}</p>
                     <div className="flex items-center gap-2 mt-1">

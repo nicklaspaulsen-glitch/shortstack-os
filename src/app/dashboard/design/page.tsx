@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import PromptEnhancer from "@/components/prompt-enhancer";
 
 interface GeneratedPrompt {
   id: string;
@@ -341,12 +342,15 @@ export default function DesignStudioPage() {
                       className="input w-16 text-[9px] py-1 text-center" />
                   </div>
                 </div>
-                <textarea
-                  className="input w-full h-16 text-xs mb-3"
-                  placeholder={`Describe your ${section.label.toLowerCase()} design...`}
-                  value={prompts[section.key] || ""}
-                  onChange={e => setPrompts(prev => ({ ...prev, [section.key]: e.target.value }))}
-                />
+                <div className="mb-3">
+                  <PromptEnhancer
+                    value={prompts[section.key] || ""}
+                    onChange={(v) => setPrompts(prev => ({ ...prev, [section.key]: v }))}
+                    type="design"
+                    placeholder={`Describe your ${section.label.toLowerCase()} design...`}
+                    rows={2}
+                  />
+                </div>
                 <div className="flex gap-2">
                   <button onClick={() => generateDesign(section.key)} disabled={generating === section.key}
                     className="btn-primary flex-1 flex items-center justify-center gap-2 rounded-lg text-xs">

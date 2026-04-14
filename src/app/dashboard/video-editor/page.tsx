@@ -10,6 +10,7 @@ import {
   BookOpen, Scissors, Image as ImageIcon
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PromptEnhancer from "@/components/prompt-enhancer";
 
 const VIDEO_TYPES = [
   { id: "reel", name: "Reel / TikTok", aspect: "9:16", duration: 30, icon: <Camera size={14} />, desc: "Vertical short-form" },
@@ -234,8 +235,13 @@ export default function VideoEditorPage() {
               </div>
               <div>
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Script (optional — AI will create one if empty)</label>
-                <textarea value={config.script} onChange={e => setConfig({ ...config, script: e.target.value })}
-                  className="input w-full h-20 text-xs" placeholder="Paste your script here, or leave empty for AI to write..." />
+                <PromptEnhancer
+                  value={config.script}
+                  onChange={(v) => setConfig({ ...config, script: v })}
+                  type="video"
+                  placeholder="Paste your script here, or leave empty for AI to write..."
+                  rows={3}
+                />
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div>
