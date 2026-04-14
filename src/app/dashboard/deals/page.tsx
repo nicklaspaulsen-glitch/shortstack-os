@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { useManagedClient } from "@/lib/use-managed-client";
 import { createClient } from "@/lib/supabase/client";
 import { formatCurrency } from "@/lib/utils";
 import {
@@ -32,6 +33,7 @@ const STAGES = [
 
 export default function DealsPage() {
   useAuth();
+  const { clientId: managedClientId } = useManagedClient();
   const supabase = createClient();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,13 +45,16 @@ export default function DealsPage() {
   });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); }, [managedClientId]);
 
   async function fetchData() {
     try {
       setLoading(true);
+      let dealsQuery = supabase.from("deals").select("*").order("created_at", { ascending: false });
+      if (managedClientId) dealsQuery = dealsQuery.eq("client_id", managedClientId);
+
       const [{ data: d }, { data: cl }] = await Promise.all([
-        supabase.from("deals").select("*").order("created_at", { ascending: false }),
+        dealsQuery,
         supabase.from("clients").select("id, business_name").eq("is_active", true),
       ]);
       setDeals(d || []);

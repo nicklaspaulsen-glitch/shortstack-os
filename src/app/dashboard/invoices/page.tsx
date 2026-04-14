@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { useManagedClient } from "@/lib/use-managed-client";
 import { createClient } from "@/lib/supabase/client";
 import { Invoice } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -15,6 +16,7 @@ import toast from "react-hot-toast";
 
 export default function InvoicesPage() {
   useAuth();
+  const { clientId: managedClientId } = useManagedClient();
   const supabase = createClient();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
@@ -27,13 +29,16 @@ export default function InvoicesPage() {
   });
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); }, [managedClientId]);
 
   async function fetchData() {
     try {
       setLoading(true);
+      let invQuery = supabase.from("invoices").select("*").order("created_at", { ascending: false });
+      if (managedClientId) invQuery = invQuery.eq("client_id", managedClientId);
+
       const [{ data: inv }, { data: cl }] = await Promise.all([
-        supabase.from("invoices").select("*").order("created_at", { ascending: false }),
+        invQuery,
         supabase.from("clients").select("id, business_name").eq("is_active", true),
       ]);
       setInvoices(inv || []);

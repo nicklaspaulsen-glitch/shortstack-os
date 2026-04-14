@@ -44,7 +44,7 @@ interface ClientAccount {
 export default function AdminProfileSwitcher() {
   const { profile } = useAuth();
   const router = useRouter();
-  const { impersonatedClient, setImpersonatedClient, isImpersonating } = useAppStore();
+  const { impersonatedClient, setImpersonatedClient, isImpersonating, setManagedClient } = useAppStore();
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState<ClientAccount[]>([]);
   const [loading, setLoading] = useState(false);
@@ -81,7 +81,15 @@ export default function AdminProfileSwitcher() {
 
   function manageClient(client: ClientAccount) {
     setOpen(false);
-    router.push(`/dashboard/clients/${client.id}`);
+    // Set managed client in global state — admin stays on current page
+    // but all data-aware pages will scope to this client
+    setManagedClient({
+      id: client.id,
+      business_name: client.business_name,
+      contact_name: client.contact_name,
+      email: client.email,
+      package_tier: client.package_tier,
+    });
   }
 
   async function createClientProfile(e: React.FormEvent<HTMLFormElement>) {

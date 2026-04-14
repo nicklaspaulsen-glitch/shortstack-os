@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useManagedClient } from "@/lib/use-managed-client";
 import { createClient } from "@/lib/supabase/client";
 import { ContentScript, ContentRequest, PublishQueueItem, PersonalBrandIdea, ContentCalendarEntry, PublishPlatform } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
@@ -19,6 +20,7 @@ import toast from "react-hot-toast";
 type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal";
 
 export default function ContentPage() {
+  const { clientId: managedClientId } = useManagedClient();
   const [tab, setTab] = useState<Tab>("scripts");
   const [scripts, setScripts] = useState<ContentScript[]>([]);
   const [requests, setRequests] = useState<ContentRequest[]>([]);
@@ -32,21 +34,29 @@ export default function ContentPage() {
   const supabase = createClient();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, [tab]);
+  useEffect(() => { fetchData(); }, [tab, managedClientId]);
 
   async function fetchData() {
     setLoading(true);
     if (tab === "scripts") {
-      const { data } = await supabase.from("content_scripts").select("*").order("created_at", { ascending: false });
+      let q = supabase.from("content_scripts").select("*").order("created_at", { ascending: false });
+      if (managedClientId) q = q.eq("client_id", managedClientId);
+      const { data } = await q;
       setScripts(data || []);
     } else if (tab === "requests") {
-      const { data } = await supabase.from("content_requests").select("*").order("created_at", { ascending: false });
+      let q = supabase.from("content_requests").select("*").order("created_at", { ascending: false });
+      if (managedClientId) q = q.eq("client_id", managedClientId);
+      const { data } = await q;
       setRequests(data || []);
     } else if (tab === "publish") {
-      const { data } = await supabase.from("publish_queue").select("*").order("created_at", { ascending: false });
+      let q = supabase.from("publish_queue").select("*").order("created_at", { ascending: false });
+      if (managedClientId) q = q.eq("client_id", managedClientId);
+      const { data } = await q;
       setPublishQueue(data || []);
     } else if (tab === "calendar") {
-      const { data } = await supabase.from("content_calendar").select("*").order("scheduled_at", { ascending: true });
+      let q = supabase.from("content_calendar").select("*").order("scheduled_at", { ascending: true });
+      if (managedClientId) q = q.eq("client_id", managedClientId);
+      const { data } = await q;
       setCalendar(data || []);
     } else if (tab === "personal") {
       const { data } = await supabase.from("personal_brand_ideas").select("*").order("batch_date", { ascending: false });

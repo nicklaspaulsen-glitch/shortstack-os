@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { useAppStore } from "@/lib/store";
 import { formatCurrency } from "@/lib/utils";
 import {
   ChevronDown, Search, Users, FileText, DollarSign,
-  CheckCircle, AlertTriangle, ExternalLink, X
+  CheckCircle, AlertTriangle, UserCheck, X
 } from "lucide-react";
 
 interface EnrichedClient {
@@ -34,7 +34,7 @@ export default function ClientSwitcher() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [activeClient, setActiveClient] = useState<EnrichedClient | null>(null);
-  const router = useRouter();
+  const { managedClient, setManagedClient } = useAppStore();
 
   async function fetchClients() {
     setLoading(true);
@@ -69,8 +69,14 @@ export default function ClientSwitcher() {
     setActiveClient(client);
   }
 
-  function viewClientPortal(clientId: string) {
-    router.push(`/dashboard/clients/${clientId}`);
+  function manageSelectedClient(client: EnrichedClient) {
+    setManagedClient({
+      id: client.id,
+      business_name: client.business_name,
+      contact_name: client.contact_name,
+      email: client.email,
+      package_tier: client.package_tier,
+    });
     setOpen(false);
   }
 
@@ -79,10 +85,14 @@ export default function ClientSwitcher() {
       {/* Trigger button */}
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium text-muted hover:text-foreground bg-surface-light/50 border border-border/50 hover:border-gold/20 transition-all"
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          managedClient
+            ? "text-gold bg-gold/10 border border-gold/20 hover:bg-gold/15"
+            : "text-muted hover:text-foreground bg-surface-light/50 border border-border/50 hover:border-gold/20"
+        }`}
       >
-        <Users size={13} />
-        <span>{activeClient ? activeClient.business_name : "Switch Client"}</span>
+        {managedClient ? <UserCheck size={13} /> : <Users size={13} />}
+        <span>{managedClient ? managedClient.business_name : "Switch Client"}</span>
         <ChevronDown size={12} className={`transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
@@ -228,10 +238,10 @@ export default function ClientSwitcher() {
 
                     {/* Actions */}
                     <button
-                      onClick={() => viewClientPortal(activeClient.id)}
+                      onClick={() => manageSelectedClient(activeClient)}
                       className="w-full btn-primary text-xs py-2 flex items-center justify-center gap-1.5"
                     >
-                      <ExternalLink size={12} /> Open Client
+                      <UserCheck size={12} /> Manage Client
                     </button>
                   </div>
                 ) : (

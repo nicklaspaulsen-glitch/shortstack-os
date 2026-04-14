@@ -6,6 +6,7 @@ import GlobalSearch from "@/components/global-search";
 import ClientSwitcher from "@/components/client-switcher";
 import Notifications from "@/components/notifications";
 import ErrorBoundary from "@/components/ui/error-boundary";
+import ManagedClientBanner from "@/components/managed-client-banner";
 import { useAuth } from "@/lib/auth-context";
 import { getPlanConfig } from "@/lib/plan-config";
 import { useRouter, usePathname } from "next/navigation";
@@ -192,6 +193,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </div>
             </div>
           </div>
+
+          {/* Managed client banner */}
+          <ManagedClientBanner />
 
           {/* Page content */}
           <div className="p-4 lg:p-6 pb-24">
