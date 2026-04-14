@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
+import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 
 /* ──────────────────── DATA ──────────────────── */
 
@@ -656,6 +657,43 @@ export default function ThumbnailGeneratorPage() {
                   ))}
                 </div>
               </div>
+              {/* Quick Presets */}
+              <div>
+                <h2 className="section-header flex items-center gap-2"><Layers size={13} className="text-gold" /> Quick Presets</h2>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {THUMBNAIL_PRESET_CATEGORIES.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => {
+                        const preset = THUMBNAIL_PRESETS.find(p => p.category === cat.id);
+                        if (preset) {
+                          setPrompt(preset.config.description || `${preset.name} — ${preset.desc}`);
+                          toast.success(`Preset: ${preset.name}`);
+                        }
+                      }}
+                      className="text-[8px] px-2 py-1 rounded border border-border text-muted hover:text-foreground hover:border-gold/15 transition-all"
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+                <div className="max-h-32 overflow-y-auto space-y-1">
+                  {THUMBNAIL_PRESETS.slice(0, 8).map(preset => (
+                    <button
+                      key={preset.id}
+                      onClick={() => {
+                        setPrompt(preset.config.description || `${preset.name}: ${preset.desc}. Style: ${preset.config.style}, Colors: ${preset.config.color_scheme}, Text: "${preset.config.text_overlay}", Face: ${preset.config.face_expression}, BG: ${preset.config.background}`);
+                        toast.success(`Preset loaded: ${preset.name}`);
+                      }}
+                      className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-surface-light border border-transparent hover:border-border/30 transition-all"
+                    >
+                      <p className="text-[10px] font-medium">{preset.name}</p>
+                      <p className="text-[8px] text-muted">{preset.desc}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <button
                 onClick={generate}
                 disabled={generating}

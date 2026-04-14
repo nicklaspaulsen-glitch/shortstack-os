@@ -7,10 +7,11 @@ import {
   Film, Sparkles, Loader, Play, Copy, Download,
   Clock, Camera, Monitor, Zap, Music, Type, Wand2,
   Layers, Mic, Volume2, Palette, LayoutGrid, Eye,
-  BookOpen, Scissors, Image as ImageIcon
+  BookOpen, Scissors, Image as ImageIcon, Upload, X
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
+import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 
 const VIDEO_TYPES = [
   { id: "reel", name: "Reel / TikTok", aspect: "9:16", duration: 30, icon: <Camera size={14} />, desc: "Vertical short-form" },
@@ -82,6 +83,7 @@ export default function VideoEditorPage() {
   const [selectedClient, setSelectedClient] = useState("");
   const supabase = createClient();
 
+  const [referenceFiles, setReferenceFiles] = useState<Array<{ name: string; type: string; preview: string; data: string }>>([]);
   const [tab, setTab] = useState<"create" | "storyboard" | "templates">("create");
   const [mode, setMode] = useState<"render" | "plan" | "storyboard">("plan");
   const [config, setConfig] = useState({
@@ -104,6 +106,25 @@ export default function VideoEditorPage() {
     supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }) => setClients(data || []));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function handleFileUpload(files: File[]) {
+    const remaining = 5 - referenceFiles.length;
+    if (remaining <= 0) { toast.error("Max 5 files"); return; }
+    const toProcess = files.slice(0, remaining);
+    toProcess.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        setReferenceFiles(prev => [...prev, {
+          name: file.name,
+          type: file.type,
+          preview: file.type.startsWith("image/") ? base64 : "",
+          data: base64,
+        }]);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
   function selectType(type: typeof VIDEO_TYPES[0]) {
     setConfig(prev => ({ ...prev, type: type.id, aspect_ratio: type.aspect, duration: type.duration }));
@@ -134,6 +155,7 @@ export default function VideoEditorPage() {
           client_id: selectedClient || null,
           plan_only: mode === "plan" || mode === "storyboard",
           storyboard_mode: mode === "storyboard",
+          reference_files: referenceFiles.map(f => ({ name: f.name, type: f.type, data: f.data })),
         }),
       });
       clearInterval(progressInterval);
@@ -160,17 +182,6 @@ export default function VideoEditorPage() {
   }
 
   const selectedType = VIDEO_TYPES.find(t => t.id === config.type) || VIDEO_TYPES[0];
-
-  const PRESETS = [
-    { title: "5 Reasons You Need Social Media", script: "Hook: Are you still not on social media? Here's why that's costing you clients...", type: "reel" },
-    { title: "Before & After Transformation", script: "Look at what we did for this business in just 30 days...", type: "reel" },
-    { title: "Client Testimonial Highlight", script: "Here's what our client said about working with us...", type: "testimonial" },
-    { title: "3 Quick Marketing Tips", script: "Tip 1: Post consistently. Tip 2: Use video content. Tip 3: Engage with comments.", type: "reel" },
-    { title: "Service Explainer", script: "Here's exactly how we help businesses grow with social media marketing...", type: "explainer" },
-    { title: "Behind The Scenes Day", script: "Ever wonder what goes on behind the scenes at a digital agency?", type: "story" },
-    { title: "Common Mistakes to Avoid", script: "Stop making these mistakes with your marketing...", type: "youtube" },
-    { title: "Product Feature Walkthrough", script: "Let me show you exactly how this works and why it's a game-changer...", type: "product_demo" },
-  ];
 
   return (
     <div className="fade-in space-y-5">
@@ -243,6 +254,60 @@ export default function VideoEditorPage() {
                   rows={3}
                 />
               </div>
+              {/* Reference Files */}
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Reference Files (faces, logos, footage, effects)</label>
+                <div
+                  className="border-2 border-dashed border-border/40 rounded-xl p-3 text-center hover:border-gold/30 transition-colors cursor-pointer"
+                  onDragOver={e => { e.preventDefault(); e.currentTarget.classList.add("border-gold/40", "bg-gold/5"); }}
+                  onDragLeave={e => { e.currentTarget.classList.remove("border-gold/40", "bg-gold/5"); }}
+                  onDrop={e => {
+                    e.preventDefault();
+                    e.currentTarget.classList.remove("border-gold/40", "bg-gold/5");
+                    handleFileUpload(Array.from(e.dataTransfer.files));
+                  }}
+                  onClick={() => {
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.multiple = true;
+                    input.accept = "image/*,video/*,audio/*";
+                    input.onchange = (ev) => {
+                      const files = Array.from((ev.target as HTMLInputElement).files || []);
+                      handleFileUpload(files);
+                    };
+                    input.click();
+                  }}
+                >
+                  <Upload size={16} className="mx-auto text-muted mb-1" />
+                  <p className="text-[10px] text-muted">Drop files or click to upload (up to 5)</p>
+                  <p className="text-[8px] text-muted/60">Images, video clips, audio, logos</p>
+                </div>
+                {referenceFiles.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {referenceFiles.map((f, i) => (
+                      <div key={i} className="relative group">
+                        {f.type.startsWith("image/") ? (
+                          <img src={f.preview} alt={f.name} className="w-14 h-14 object-cover rounded-lg border border-border" />
+                        ) : (
+                          <div className="w-14 h-14 bg-surface-light rounded-lg border border-border flex flex-col items-center justify-center">
+                            {f.type.startsWith("video/") ? <Film size={14} className="text-gold mb-0.5" /> :
+                             f.type.startsWith("audio/") ? <Music size={14} className="text-gold mb-0.5" /> :
+                             <ImageIcon size={14} className="text-muted mb-0.5" />}
+                            <span className="text-[7px] text-muted truncate max-w-[48px]">{f.name}</span>
+                          </div>
+                        )}
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setReferenceFiles(prev => prev.filter((_, idx) => idx !== i)); }}
+                          className="absolute -top-1 -right-1 w-4 h-4 bg-danger/80 text-white rounded-full items-center justify-center text-[8px] hidden group-hover:flex"
+                        >
+                          <X size={8} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration (sec)</label>
@@ -533,47 +598,109 @@ export default function VideoEditorPage() {
         </div>
       )}
 
-      {/* Templates Tab */}
+      {/* Templates / Presets Tab */}
       {tab === "templates" && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-muted">One-click video templates — select one to auto-fill settings</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            {PRESETS.map((preset, i) => {
-              const presetType = VIDEO_TYPES.find(t => t.id === preset.type) || VIDEO_TYPES[0];
-              return (
-                <button key={i} onClick={() => {
-                  setConfig({ ...config, title: preset.title, script: preset.script, type: preset.type, aspect_ratio: presetType.aspect, duration: presetType.duration });
-                  setTab("create");
-                  toast.success(`Template loaded: ${preset.title}`);
-                }}
-                  className="card card-hover text-left p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-gold">{presetType.icon}</span>
-                    <span className="text-[8px] text-muted bg-surface-light px-1.5 py-0.5 rounded">{presetType.name}</span>
-                  </div>
-                  <h3 className="text-[11px] font-semibold mb-1">{preset.title}</h3>
-                  <p className="text-[9px] text-muted line-clamp-2">{preset.script}</p>
-                </button>
-              );
-            })}
-          </div>
+        <VideoPresetsTab onSelect={(preset) => {
+          setConfig(prev => ({
+            ...prev,
+            ...preset.config,
+            title: preset.config.title || prev.title,
+            script: preset.config.script || prev.script,
+          }));
+          setTab("create");
+          toast.success(`Preset loaded: ${preset.name}`);
+        }} />
+      )}
+    </div>
+  );
+}
 
-          <div className="card border-gold/10">
-            <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> Batch Video Ideas</h3>
-            <p className="text-[10px] text-muted mb-3">Generate a week of video content at once — select multiple templates and batch render</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {["Monday Motivation", "Tuesday Tip", "Wednesday BTS", "Thursday Myth Bust", "Friday Client Win", "Saturday Q&A", "Sunday Recap"].map((day, i) => (
-                <div key={i} className="p-2 rounded-lg border border-border text-center">
-                  <p className="text-[10px] font-semibold">{day}</p>
-                  <p className="text-[8px] text-muted">Auto-generate</p>
-                </div>
-              ))}
+/* ─── Video Presets Tab ──────────────────────────────────────── */
+import { VideoPreset } from "@/lib/presets";
+
+function VideoPresetsTab({ onSelect }: { onSelect: (preset: VideoPreset) => void }) {
+  const [activeCategory, setActiveCategory] = useState("hooks");
+  const [search, setSearch] = useState("");
+
+  const filtered = VIDEO_PRESETS.filter(p => {
+    const matchesCategory = p.category === activeCategory;
+    const matchesSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || p.desc.toLowerCase().includes(search.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-muted">{VIDEO_PRESETS.length} presets — select one to auto-fill all settings</p>
+        <div className="relative">
+          <input
+            type="text" placeholder="Search presets..." value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="input text-[10px] w-48 pl-3 py-1"
+          />
+        </div>
+      </div>
+
+      {/* Category tabs */}
+      <div className="flex flex-wrap gap-1.5">
+        {VIDEO_PRESET_CATEGORIES.map(cat => (
+          <button
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id)}
+            className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
+              activeCategory === cat.id
+                ? "bg-gold/10 text-gold border-gold/20 font-semibold"
+                : "text-muted border-border hover:border-gold/15 hover:text-foreground"
+            }`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Preset cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {filtered.map(preset => (
+          <button
+            key={preset.id}
+            onClick={() => onSelect(preset)}
+            className="card card-hover text-left p-4"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-[11px] font-semibold">{preset.name}</h3>
+              <span className="text-[8px] text-muted bg-surface-light px-1.5 py-0.5 rounded">
+                {preset.config.aspect_ratio} / {preset.config.duration}s
+              </span>
             </div>
-          </div>
+            <p className="text-[9px] text-muted mb-2">{preset.desc}</p>
+            <div className="flex flex-wrap gap-1">
+              <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{preset.config.style}</span>
+              <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{preset.config.caption_style}</span>
+              <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{preset.config.music_mood}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 && (
+        <div className="text-center py-8 text-xs text-muted">
+          No presets found. Try a different category or search term.
         </div>
       )}
+
+      {/* Batch ideas */}
+      <div className="card border-gold/10">
+        <h3 className="section-header flex items-center gap-2"><Zap size={12} className="text-gold" /> Weekly Content Plan</h3>
+        <p className="text-[10px] text-muted mb-3">Auto-generate a week of video content — one preset per day</p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {["Monday Motivation", "Tuesday Tip", "Wednesday BTS", "Thursday Myth Bust", "Friday Client Win", "Saturday Q&A", "Sunday Recap"].map((day, i) => (
+            <div key={i} className="p-2 rounded-lg border border-border text-center">
+              <p className="text-[10px] font-semibold">{day}</p>
+              <p className="text-[8px] text-muted">Auto-generate</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
