@@ -16,6 +16,9 @@
       --muted: #64748b;
       --success: #10b981;
       --error: #f43f5e;
+      --purple: #a78bfa;
+      --blue: #60a5fa;
+      --cyan: #22d3ee;
     }
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -34,263 +37,150 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       background: var(--bg-card);
     }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .logo {
-      width: 20px;
-      height: 20px;
-      border-radius: 4px;
-      object-fit: contain;
-    }
+    .header-left { display: flex; align-items: center; gap: 8px; }
+    .logo { width: 20px; height: 20px; border-radius: 4px; object-fit: contain; }
     .brand { font-weight: 700; font-size: 13px; }
     .brand span { color: var(--gold); }
-    .header-actions { display: flex; gap: 6px; }
+    .header-actions { display: flex; gap: 5px; }
     .icon-btn {
       background: transparent;
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--muted);
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-size: 14px;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.15s; font-size: 14px;
     }
     .icon-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .icon-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+
+    /* Tab bar */
+    .tab-bar {
+      display: flex; border-bottom: 1px solid var(--border); background: var(--bg-card);
+    }
+    .tab-btn {
+      flex: 1; padding: 8px 4px; font-size: 10px; text-align: center;
+      color: var(--muted); background: transparent; border: none; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* Feature grid */
+    .features-panel {
+      flex: 1; overflow-y: auto; padding: 12px; display: none;
+      flex-direction: column; gap: 8px;
+    }
+    .features-panel.active { display: flex; }
+    .features-panel::-webkit-scrollbar { width: 4px; }
+    .features-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .feature-section { margin-bottom: 4px; }
+    .feature-section-title {
+      font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); margin-bottom: 6px; font-weight: 600;
+    }
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px; cursor: pointer; transition: all 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.04); transform: translateY(-1px); }
+    .feature-card .icon {
+      font-size: 18px; margin-bottom: 6px; display: block;
+    }
+    .feature-card .title { font-size: 11px; font-weight: 600; margin-bottom: 2px; }
+    .feature-card .desc { font-size: 9px; color: var(--muted); line-height: 1.4; }
+    .feature-card.wide { grid-column: 1 / -1; }
 
     /* Messages */
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .messages::-webkit-scrollbar { width: 4px; }
-    .messages::-webkit-scrollbar-track { background: transparent; }
-    .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .chat-panel { flex: 1; overflow-y: auto; padding: 12px; display: none; flex-direction: column; gap: 10px; }
+    .chat-panel.active { display: flex; }
+    .chat-panel::-webkit-scrollbar { width: 4px; }
+    .chat-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    .msg {
-      max-width: 92%;
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-size: 13px;
-      line-height: 1.5;
-      word-break: break-word;
-    }
-    .msg-user {
-      align-self: flex-end;
-      background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
-      border: 1px solid rgba(201,168,76,0.2);
-      color: var(--text);
-    }
-    .msg-assistant {
-      align-self: flex-start;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-    }
-    .msg-system {
-      align-self: center;
-      text-align: center;
-      color: var(--muted);
-      font-size: 11px;
-      padding: 4px 12px;
-    }
-    .msg-tool {
-      align-self: flex-start;
-      background: rgba(16, 185, 129, 0.06);
-      border: 1px solid rgba(16, 185, 129, 0.15);
-      font-size: 11px;
-      color: var(--muted);
-      font-family: 'Cascadia Code', monospace;
-    }
+    .msg { max-width: 92%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; word-break: break-word; }
+    .msg-user { align-self: flex-end; background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06)); border: 1px solid rgba(201,168,76,0.2); }
+    .msg-assistant { align-self: flex-start; background: var(--bg-card); border: 1px solid var(--border); }
+    .msg-system { align-self: center; text-align: center; color: var(--muted); font-size: 11px; padding: 4px 12px; }
+    .msg-tool { align-self: flex-start; background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.15); font-size: 11px; color: var(--muted); font-family: monospace; }
     .msg-tool .tool-name { color: var(--success); font-weight: 600; }
-
-    /* Code blocks */
-    .msg pre {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 10px;
-      margin: 6px 0;
-      overflow-x: auto;
-      font-size: 11px;
-      font-family: 'Cascadia Code', monospace;
-    }
-    .msg code {
-      background: rgba(201,168,76,0.1);
-      padding: 1px 5px;
-      border-radius: 3px;
-      font-size: 12px;
-      font-family: 'Cascadia Code', monospace;
-    }
+    .msg pre { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 6px; padding: 8px; margin: 6px 0; overflow-x: auto; font-size: 11px; font-family: monospace; }
+    .msg code { background: rgba(201,168,76,0.1); padding: 1px 5px; border-radius: 3px; font-size: 12px; font-family: monospace; }
     .msg pre code { background: none; padding: 0; }
     .msg strong { color: var(--gold); }
-    .msg a { color: var(--gold); text-decoration: underline; }
+    .msg a { color: var(--gold); }
+    .msg ul, .msg ol { padding-left: 16px; margin: 4px 0; }
+    .msg li { margin-bottom: 2px; }
+
+    /* Typing indicator */
+    .typing { display: none; align-self: flex-start; padding: 10px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; }
+    .typing.active { display: flex; gap: 4px; align-items: center; }
+    .typing-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: typingBounce 1.2s ease-in-out infinite; }
+    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes typingBounce { 0%,60%,100% { transform:translateY(0);opacity:0.3; } 30% { transform:translateY(-4px);opacity:1; } }
 
     /* Context bar */
     .context-bar {
-      padding: 6px 12px;
-      background: var(--bg-card);
-      border-top: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 10px;
-      color: var(--muted);
-      cursor: pointer;
-      transition: color 0.15s;
+      padding: 6px 12px; background: var(--bg-card); border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 6px; font-size: 10px; color: var(--muted);
+      cursor: pointer; transition: color 0.15s;
     }
     .context-bar:hover { color: var(--gold); }
-    .context-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--success);
-    }
-
-    /* Typing indicator */
-    .typing {
-      display: none;
-      align-self: flex-start;
-      padding: 10px 14px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-    }
-    .typing.active { display: flex; gap: 4px; align-items: center; }
-    .typing-dot {
-      width: 6px;
-      height: 6px;
-      background: var(--gold);
-      border-radius: 50%;
-      animation: typingBounce 1.2s ease-in-out infinite;
-    }
-    .typing-dot:nth-child(2) { animation-delay: 0.15s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.3s; }
-    @keyframes typingBounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
-      30% { transform: translateY(-4px); opacity: 1; }
-    }
+    .context-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); }
+    .context-dot.inactive { background: var(--muted); }
 
     /* Input area */
-    .input-area {
-      padding: 10px 12px;
-      border-top: 1px solid var(--border);
-      background: var(--bg-card);
-    }
-    .input-row {
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-    }
+    .input-area { padding: 8px 12px; border-top: 1px solid var(--border); background: var(--bg-card); }
+    .input-row { display: flex; gap: 8px; align-items: flex-end; }
     .input-row textarea {
-      flex: 1;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 8px 12px;
-      color: var(--text);
-      font-size: 13px;
-      font-family: inherit;
-      resize: none;
-      outline: none;
-      min-height: 36px;
-      max-height: 120px;
-      line-height: 1.4;
+      flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 8px 12px; color: var(--text); font-size: 13px; font-family: inherit;
+      resize: none; outline: none; min-height: 36px; max-height: 120px; line-height: 1.4;
       transition: border-color 0.15s;
     }
     .input-row textarea:focus { border-color: rgba(201,168,76,0.4); }
     .input-row textarea::placeholder { color: var(--muted); }
     .send-btn {
-      background: linear-gradient(135deg, var(--gold), #A8893D);
-      border: none;
-      border-radius: 8px;
-      color: #000;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.15s;
-      flex-shrink: 0;
+      background: linear-gradient(135deg, var(--gold), #A8893D); border: none; border-radius: 8px;
+      color: #000; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; transition: all 0.15s; flex-shrink: 0;
     }
     .send-btn:hover { box-shadow: 0 0 12px rgba(201,168,76,0.3); }
     .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
     /* Quick actions */
-    .quick-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
+    .quick-actions { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
     .quick-btn {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--muted);
-      padding: 4px 10px;
-      font-size: 10px;
-      cursor: pointer;
-      transition: all 0.15s;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--muted); padding: 3px 8px; font-size: 9px; cursor: pointer; transition: all 0.15s;
     }
     .quick-btn:hover { border-color: var(--gold); color: var(--gold); }
 
-    /* Welcome screen */
-    .welcome {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-      gap: 12px;
+    /* Result cards (for structured output) */
+    .result-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px; margin: 6px 0;
     }
-    .welcome-logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      object-fit: contain;
+    .result-card .score {
+      font-size: 28px; font-weight: 700; line-height: 1;
     }
+    .result-card .score.good { color: var(--success); }
+    .result-card .score.mid { color: var(--gold); }
+    .result-card .score.bad { color: var(--error); }
+    .result-card .label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Welcome */
+    .welcome { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; gap: 10px; }
+    .welcome-logo { width: 48px; height: 48px; border-radius: 12px; object-fit: contain; }
     .welcome h2 { font-size: 16px; font-weight: 700; }
     .welcome h2 span { color: var(--gold); }
-    .welcome p { color: var(--muted); font-size: 12px; max-width: 240px; }
-    .suggestions {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      width: 100%;
-      max-width: 280px;
-      margin-top: 8px;
-    }
-    .suggestion-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 14px;
-      color: var(--text);
-      font-size: 12px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .suggestion-btn:hover { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.04); }
-    .suggestion-btn .label { color: var(--muted); font-size: 10px; margin-bottom: 2px; }
+    .welcome p { color: var(--muted); font-size: 11px; max-width: 240px; }
   </style>
 </head>
 <body>
@@ -309,25 +199,141 @@
     </div>
   </div>
 
-  <div class="messages" id="messages">
-    <div class="welcome" id="welcome">
-      <img class="welcome-logo" src="icons/icon128.png" alt="ShortStack" style="object-fit:contain;" />
-      <h2>Short<span>Stack</span> Agent</h2>
-      <p>AI assistant that can see and interact with your browser. Ask me anything about this page.</p>
-      <div class="suggestions">
-        <button class="suggestion-btn" onclick="sendQuick('Summarize this page for me')">
-          <div class="label">Page Analysis</div>
-          Summarize this page for me
-        </button>
-        <button class="suggestion-btn" onclick="sendQuick('Find all the important links on this page')">
-          <div class="label">Extract Data</div>
-          Find all the important links
-        </button>
-        <button class="suggestion-btn" onclick="sendQuick('Help me fill out the form on this page')">
-          <div class="label">Automation</div>
-          Help me fill out a form
-        </button>
+  <!-- Tab Navigation -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('features')">Features</button>
+    <button class="tab-btn" onclick="switchTab('chat')">AI Chat</button>
+  </div>
+
+  <!-- Features Panel -->
+  <div class="features-panel active" id="featuresPanel">
+    <!-- Competitor Analysis -->
+    <div class="feature-section">
+      <div class="feature-section-title">Competitor Intelligence</div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="runFeature('competitor_full')">
+          <span class="icon">&#x1f50d;</span>
+          <div class="title">Analyze Competitor</div>
+          <div class="desc">Full breakdown of this site's strategy, strengths, weaknesses</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('competitor_pricing')">
+          <span class="icon">&#x1f4b0;</span>
+          <div class="title">Extract Pricing</div>
+          <div class="desc">Pull pricing info, packages, and plans from this page</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('competitor_stack')">
+          <span class="icon">&#x2699;&#xfe0f;</span>
+          <div class="title">Tech Stack</div>
+          <div class="desc">Identify frameworks, tools, analytics, and CMS used</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('competitor_copy')">
+          <span class="icon">&#x270d;&#xfe0f;</span>
+          <div class="title">Copy Analysis</div>
+          <div class="desc">Analyze headlines, CTAs, tone of voice, and messaging</div>
+        </div>
       </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="feature-section">
+      <div class="feature-section-title">Review Management</div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="runFeature('review_respond')">
+          <span class="icon">&#x2b50;</span>
+          <div class="title">Write Review Response</div>
+          <div class="desc">AI writes a professional response to reviews on this page</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('review_summary')">
+          <span class="icon">&#x1f4ca;</span>
+          <div class="title">Review Summary</div>
+          <div class="desc">Summarize all reviews: sentiment, common themes, action items</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Creation -->
+    <div class="feature-section">
+      <div class="feature-section-title">Content Creation</div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="runFeature('content_social')">
+          <span class="icon">&#x1f4f1;</span>
+          <div class="title">Make Social Post</div>
+          <div class="desc">Turn this page into an Instagram, TikTok, or LinkedIn post</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('content_blog')">
+          <span class="icon">&#x1f4dd;</span>
+          <div class="title">Write Blog Post</div>
+          <div class="desc">Generate a blog article inspired by this page's content</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('content_email')">
+          <span class="icon">&#x1f4e7;</span>
+          <div class="title">Draft Email</div>
+          <div class="desc">Create a marketing email based on this page</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('content_ad')">
+          <span class="icon">&#x1f4e3;</span>
+          <div class="title">Write Ad Copy</div>
+          <div class="desc">Generate Facebook/Google ad copy from this page</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO & Technical -->
+    <div class="feature-section">
+      <div class="feature-section-title">SEO & Technical</div>
+      <div class="feature-grid">
+        <div class="feature-card wide" onclick="runFeature('seo_audit')">
+          <span class="icon">&#x1f3af;</span>
+          <div class="title">Instant SEO Audit</div>
+          <div class="desc">Score this page's SEO: meta tags, headings, content, structure, mobile-friendliness. Get actionable recommendations.</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('seo_keywords')">
+          <span class="icon">&#x1f511;</span>
+          <div class="title">Keyword Analysis</div>
+          <div class="desc">Extract target keywords and suggest improvements</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('seo_schema')">
+          <span class="icon">&#x1f4cb;</span>
+          <div class="title">Schema Markup</div>
+          <div class="desc">Generate structured data JSON-LD for this page</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Extraction -->
+    <div class="feature-section">
+      <div class="feature-section-title">Data & Extraction</div>
+      <div class="feature-grid">
+        <div class="feature-card" onclick="runFeature('extract_contacts')">
+          <span class="icon">&#x1f4c7;</span>
+          <div class="title">Extract Contacts</div>
+          <div class="desc">Find emails, phone numbers, social links on this page</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('extract_leads')">
+          <span class="icon">&#x1f465;</span>
+          <div class="title">Lead Info</div>
+          <div class="desc">Extract business info for lead generation</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('page_summary')">
+          <span class="icon">&#x1f4c4;</span>
+          <div class="title">Page Summary</div>
+          <div class="desc">Quick summary of what this page is about</div>
+        </div>
+        <div class="feature-card" onclick="runFeature('form_fill')">
+          <span class="icon">&#x1f4dd;</span>
+          <div class="title">Smart Form Fill</div>
+          <div class="desc">Help fill out forms on this page intelligently</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel" id="chatPanel">
+    <div class="welcome" id="welcome">
+      <img class="welcome-logo" src="icons/icon128.png" alt="ShortStack" />
+      <h2>Short<span>Stack</span> Agent</h2>
+      <p>AI assistant with page context. Ask anything or use a feature from the Features tab.</p>
     </div>
     <div class="typing" id="typing">
       <div class="typing-dot"></div>
@@ -336,11 +342,13 @@
     </div>
   </div>
 
+  <!-- Context Bar -->
   <div class="context-bar" id="contextBar" onclick="readPage()">
-    <div class="context-dot"></div>
+    <div class="context-dot" id="contextDot"></div>
     <span id="contextText">Click to read current page</span>
   </div>
 
+  <!-- Input Area -->
   <div class="input-area">
     <div class="input-row">
       <textarea id="input" placeholder="Ask about this page..." rows="1"
@@ -349,10 +357,10 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
       </button>
     </div>
-    <div class="quick-actions">
-      <button class="quick-btn" onclick="sendQuick('What is this page about?')">About page</button>
-      <button class="quick-btn" onclick="sendQuick('Find contact info')">Contacts</button>
-      <button class="quick-btn" onclick="sendQuick('Extract pricing')">Pricing</button>
+    <div class="quick-actions" id="quickActions">
+      <button class="quick-btn" onclick="sendQuick('What is this page about?')">Summary</button>
+      <button class="quick-btn" onclick="sendQuick('Find contact info on this page')">Contacts</button>
+      <button class="quick-btn" onclick="sendQuick('Rate this website design 1-10 with suggestions')">Rate Design</button>
     </div>
   </div>
 
@@ -360,52 +368,269 @@
     let conversationHistory = [];
     let pageContext = null;
     let isProcessing = false;
+    let currentTab = 'features';
 
-    const messagesEl = document.getElementById("messages");
-    const welcomeEl = document.getElementById("welcome");
+    const chatPanel = document.getElementById("chatPanel");
+    const featuresPanel = document.getElementById("featuresPanel");
     const typingEl = document.getElementById("typing");
     const inputEl = document.getElementById("input");
     const sendBtn = document.getElementById("sendBtn");
-    const contextBar = document.getElementById("contextBar");
     const contextText = document.getElementById("contextText");
+    const contextDot = document.getElementById("contextDot");
+    const welcomeEl = document.getElementById("welcome");
 
-    // Auto-resize textarea
     inputEl.addEventListener("input", () => {
       inputEl.style.height = "auto";
       inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
     });
 
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', (i === 0 && tab === 'features') || (i === 1 && tab === 'chat'));
+      });
+      featuresPanel.classList.toggle('active', tab === 'features');
+      chatPanel.classList.toggle('active', tab === 'chat');
+    }
+
+    // Feature prompt templates
+    const FEATURE_PROMPTS = {
+      competitor_full: `Analyze this website as a competitor. Provide:
+1. **Business Overview** — What they do, who they target
+2. **Strengths** — What they do well (design, copy, UX, features)
+3. **Weaknesses** — Gaps, missing features, poor UX elements
+4. **Pricing Strategy** — If visible
+5. **Marketing Approach** — Tone, messaging style, value props
+6. **Opportunities** — How to compete against them
+Rate overall threat level 1-10.`,
+
+      competitor_pricing: `Extract ALL pricing information from this page. Include:
+- Plan names and prices
+- Features per plan
+- Any hidden fees or conditions
+- Free tier details
+- Comparison to industry average
+Format as a clean table.`,
+
+      competitor_stack: `Analyze this website's tech stack. Look for:
+- Frontend framework (React, Vue, etc.)
+- CSS framework (Tailwind, Bootstrap)
+- CMS or website builder
+- Analytics tools (GA, Hotjar, etc.)
+- Chat widgets, CRM integrations
+- CDN, hosting indicators
+- Any third-party scripts or tools
+List everything you can identify from the page source and behavior.`,
+
+      competitor_copy: `Analyze the copywriting on this page:
+1. **Headline Analysis** — Rate the main headline. Is it clear, compelling, specific?
+2. **Value Proposition** — What's their core promise? Is it unique?
+3. **CTAs** — List all calls-to-action. Rate their effectiveness.
+4. **Tone of Voice** — Professional, casual, urgent, playful?
+5. **Social Proof** — Testimonials, logos, numbers used?
+6. **Improvements** — Rewrite the headline and main CTA to be more effective.`,
+
+      review_respond: `Find all customer reviews visible on this page. For each review:
+1. Identify the reviewer name and rating
+2. Summarize their feedback
+3. Write a professional, warm response that:
+   - Thanks them by name
+   - Addresses their specific points
+   - Sounds authentic, not corporate
+   - Is 2-3 sentences max
+If no reviews found, explain what page to navigate to.`,
+
+      review_summary: `Analyze all customer reviews on this page:
+1. **Overall Sentiment** — Positive/Negative/Mixed (with percentage)
+2. **Average Rating** — If star ratings visible
+3. **Top Praise Themes** — What customers love most (list top 3)
+4. **Top Complaint Themes** — What needs improvement (list top 3)
+5. **Urgent Issues** — Any reviews that need immediate attention
+6. **Action Items** — 3 specific things to improve based on feedback`,
+
+      content_social: `Based on this page's content, create 3 social media posts:
+
+1. **Instagram/TikTok** — Hook + value + CTA. Include relevant hashtags. Make it scroll-stopping.
+2. **LinkedIn** — Professional thought-leadership angle. 3-4 paragraphs.
+3. **Twitter/X** — Punchy, under 280 chars. Make it shareable.
+
+Each post should promote or reference the key value from this page but NOT copy the content directly. Make it original and platform-native.`,
+
+      content_blog: `Using this page as inspiration, outline a 1000-word blog post:
+1. **Title** — SEO-friendly, compelling
+2. **Hook** — Opening paragraph that grabs attention
+3. **3-5 Section Headings** — With bullet points for each section
+4. **Key Takeaways** — Summary box content
+5. **Meta Description** — 155 chars for SEO
+Write the full introduction paragraph and conclusion.`,
+
+      content_email: `Create a marketing email based on this page's content:
+1. **Subject Line** — 3 options (one curiosity, one benefit, one urgency)
+2. **Preview Text** — 40-60 chars
+3. **Email Body** — Professional, scannable, 150-200 words
+4. **CTA Button Text** — 3 options
+5. **P.S. Line** — Optional urgency/value add`,
+
+      content_ad: `Generate ad copy for this page:
+
+**Facebook/Instagram Ad:**
+- Primary text (125 chars)
+- Headline (40 chars)
+- Description (30 chars)
+- 3 hook variations
+
+**Google Search Ad:**
+- 3 Headlines (30 chars each)
+- 2 Descriptions (90 chars each)
+- Display path suggestions
+
+Make each variation test a different angle: benefit, social proof, urgency.`,
+
+      seo_audit: `Perform a comprehensive SEO audit of this page. Score each area 1-10:
+
+1. **Title Tag** — Length, keyword usage, clarity
+2. **Meta Description** — Length, compelling, includes keyword
+3. **Headings Structure** — H1 count, H2/H3 hierarchy
+4. **Content Quality** — Length, readability, keyword density
+5. **Internal Links** — Count and relevance
+6. **Image Alt Text** — Are images optimized?
+7. **URL Structure** — Clean, keyword-rich
+8. **Mobile Signals** — Viewport meta, responsive indicators
+9. **Page Speed Signals** — Large scripts, render-blocking resources
+10. **Schema Markup** — Structured data present?
+
+Give an **overall SEO score out of 100** and the **top 3 quick wins** to improve ranking.`,
+
+      seo_keywords: `Analyze this page's keyword strategy:
+1. **Primary Keyword** — What is the page targeting?
+2. **Keyword Density** — How often does it appear?
+3. **LSI Keywords** — Related terms found on page
+4. **Missing Keywords** — Important terms that should be added
+5. **Keyword Placement** — Is it in title, H1, first paragraph, URL?
+6. **Long-Tail Opportunities** — Suggest 5 long-tail keywords to target`,
+
+      seo_schema: `Generate appropriate JSON-LD structured data markup for this page. Based on the content, create:
+1. The most appropriate schema type (LocalBusiness, Article, Product, FAQ, etc.)
+2. Complete JSON-LD with all relevant properties
+3. FAQ schema if Q&A content is present
+4. Breadcrumb schema
+Provide the complete code ready to paste into the page's <head>.`,
+
+      extract_contacts: `Extract ALL contact information from this page:
+- Email addresses
+- Phone numbers
+- Physical addresses
+- Social media links (Instagram, Facebook, Twitter, LinkedIn, TikTok, YouTube)
+- Contact form URLs
+- WhatsApp/messaging links
+Format as a clean contact card.`,
+
+      extract_leads: `Extract business information for lead generation:
+1. **Business Name**
+2. **Industry/Category**
+3. **Location**
+4. **Contact Info** — Email, phone, address
+5. **Social Media Presence** — All platforms found
+6. **Website Quality Score** (1-10)
+7. **Services/Products Offered**
+8. **Estimated Business Size** — Solo, small, medium, large
+9. **Lead Quality Rating** — Hot/Warm/Cold with reasoning`,
+
+      page_summary: `Summarize this page in 3 bullet points:
+1. **What** — What is this page about?
+2. **Who** — Who is the target audience?
+3. **Key Value** — What's the main takeaway or offer?
+Keep each point under 20 words.`,
+
+      form_fill: `I see a form on this page. Analyze the form fields and help me understand:
+1. What information is required
+2. What each field expects
+3. Any hidden fields or tracking
+4. Whether this form looks legitimate
+Then ask me what information I'd like to fill in.`,
+    };
+
     async function readPage() {
       contextText.textContent = "Reading page...";
+      contextDot.classList.add("inactive");
       chrome.runtime.sendMessage({ type: "GET_PAGE_CONTEXT" }, (res) => {
         if (res && !res.error) {
           pageContext = res;
-          contextText.textContent = `Reading: ${res.title?.slice(0, 40) || res.url}`;
+          contextDot.classList.remove("inactive");
+          contextText.textContent = "Reading: " + (res.title || res.url || "").slice(0, 40);
+          updateSmartSuggestions();
         } else {
           contextText.textContent = "Could not read page";
         }
       });
     }
 
-    // Auto-read page on load
+    // Smart suggestions based on current page
+    function updateSmartSuggestions() {
+      if (!pageContext) return;
+      const url = (pageContext.url || "").toLowerCase();
+      const title = (pageContext.title || "").toLowerCase();
+      const qa = document.getElementById("quickActions");
+
+      let suggestions = [];
+
+      if (url.includes("google.com/maps") || url.includes("business.google") || title.includes("reviews")) {
+        suggestions = [
+          { text: "Respond to reviews", action: "review_respond" },
+          { text: "Summarize reviews", action: "review_summary" },
+          { text: "Extract business info", action: "extract_leads" },
+        ];
+      } else if (url.includes("linkedin.com") || url.includes("instagram.com") || url.includes("facebook.com") || url.includes("twitter.com") || url.includes("tiktok.com")) {
+        suggestions = [
+          { text: "Analyze profile", action: "competitor_full" },
+          { text: "Create similar post", action: "content_social" },
+          { text: "Extract contacts", action: "extract_contacts" },
+        ];
+      } else if (url.includes("yelp.com") || url.includes("trustpilot") || url.includes("g2.com")) {
+        suggestions = [
+          { text: "Review summary", action: "review_summary" },
+          { text: "Respond to reviews", action: "review_respond" },
+          { text: "Competitor analysis", action: "competitor_full" },
+        ];
+      } else {
+        suggestions = [
+          { text: "SEO audit", action: "seo_audit" },
+          { text: "Competitor analysis", action: "competitor_full" },
+          { text: "Make social post", action: "content_social" },
+        ];
+      }
+
+      qa.innerHTML = suggestions.map(s =>
+        `<button class="quick-btn" onclick="runFeature('${s.action}')">${s.text}</button>`
+      ).join("");
+    }
+
     readPage();
+
+    function runFeature(featureKey) {
+      const prompt = FEATURE_PROMPTS[featureKey];
+      if (!prompt) return;
+      switchTab('chat');
+      inputEl.value = "";
+      sendWithPrompt(prompt, featureKey.replace(/_/g, " "));
+    }
 
     function addMessage(role, content) {
       welcomeEl.style.display = "none";
       const div = document.createElement("div");
-      div.className = `msg msg-${role}`;
+      div.className = "msg msg-" + role;
       div.innerHTML = formatMarkdown(content);
-      messagesEl.insertBefore(div, typingEl);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+      chatPanel.insertBefore(div, typingEl);
+      chatPanel.scrollTop = chatPanel.scrollHeight;
     }
 
     function addToolMessage(name, result) {
       welcomeEl.style.display = "none";
       const div = document.createElement("div");
       div.className = "msg msg-tool";
-      div.innerHTML = `<span class="tool-name">${name}</span> ${result.slice(0, 200)}`;
-      messagesEl.insertBefore(div, typingEl);
-      messagesEl.scrollTop = messagesEl.scrollHeight;
+      div.innerHTML = '<span class="tool-name">' + name + "</span> " + result.slice(0, 200);
+      chatPanel.insertBefore(div, typingEl);
+      chatPanel.scrollTop = chatPanel.scrollHeight;
     }
 
     function formatMarkdown(text) {
@@ -413,39 +638,72 @@
         .replace(/```(\w*)\n?([\s\S]*?)```/g, "<pre><code>$2</code></pre>")
         .replace(/`([^`]+)`/g, "<code>$1</code>")
         .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/^\- (.+)/gm, "<li>$1</li>")
+        .replace(/^\d+\. (.+)/gm, "<li>$1</li>")
         .replace(/\n/g, "<br>");
     }
 
     function sendQuick(text) {
+      switchTab('chat');
       inputEl.value = text;
       sendMessage();
+    }
+
+    async function sendWithPrompt(prompt, label) {
+      if (isProcessing) return;
+      addMessage("user", label.charAt(0).toUpperCase() + label.slice(1));
+
+      let fullMessage = prompt;
+      if (pageContext) {
+        fullMessage = "[Page Context]\nTitle: " + (pageContext.title || "") +
+          "\nURL: " + (pageContext.url || "") +
+          "\nDescription: " + (pageContext.metaDescription || "") +
+          "\n\nHeadings:\n" + (pageContext.headings || []).map(function(h) { return h.level + ": " + h.text; }).join("\n") +
+          "\n\nPage text (first 3000 chars):\n" + (pageContext.bodyText || "").slice(0, 3000) +
+          "\n\nLinks: " + (pageContext.links || []).map(function(l) { return l.text + " -> " + l.href; }).join(", ").slice(0, 800) +
+          "\n\nForm fields: " + JSON.stringify((pageContext.inputs || []).slice(0, 10)) +
+          "\n\n[Task]\n" + prompt;
+      }
+
+      conversationHistory.push({ role: "user", content: fullMessage });
+      await doSend();
     }
 
     async function sendMessage() {
       const text = inputEl.value.trim();
       if (!text || isProcessing) return;
 
-      isProcessing = true;
-      sendBtn.disabled = true;
       inputEl.value = "";
       inputEl.style.height = "auto";
+      switchTab('chat');
 
-      // Build message with page context if available
       let fullMessage = text;
       if (pageContext && conversationHistory.length === 0) {
-        fullMessage = `[Page Context]\nTitle: ${pageContext.title}\nURL: ${pageContext.url}\nDescription: ${pageContext.metaDescription}\n\nHeadings:\n${pageContext.headings?.map(h => `${h.level}: ${h.text}`).join("\n") || "None"}\n\nPage text (first 2000 chars):\n${pageContext.bodyText?.slice(0, 2000) || "N/A"}\n\nLinks: ${pageContext.links?.map(l => l.text + " -> " + l.href).join(", ").slice(0, 500) || "None"}\n\n[User Question]\n${text}`;
+        fullMessage = "[Page Context]\nTitle: " + (pageContext.title || "") +
+          "\nURL: " + (pageContext.url || "") +
+          "\nDescription: " + (pageContext.metaDescription || "") +
+          "\n\nHeadings:\n" + (pageContext.headings || []).map(function(h) { return h.level + ": " + h.text; }).join("\n") +
+          "\n\nPage text (first 3000 chars):\n" + (pageContext.bodyText || "").slice(0, 3000) +
+          "\n\nLinks: " + (pageContext.links || []).map(function(l) { return l.text + " -> " + l.href; }).join(", ").slice(0, 800) +
+          "\n\nForm fields: " + JSON.stringify((pageContext.inputs || []).slice(0, 10)) +
+          "\n\n[User Question]\n" + text;
       }
 
       addMessage("user", text);
       conversationHistory.push({ role: "user", content: fullMessage });
+      await doSend();
+    }
 
+    async function doSend() {
+      isProcessing = true;
+      sendBtn.disabled = true;
       typingEl.classList.add("active");
 
       try {
-        const response = await new Promise((resolve, reject) => {
+        const response = await new Promise(function(resolve, reject) {
           chrome.runtime.sendMessage(
             { type: "AI_CHAT", messages: conversationHistory },
-            (res) => {
+            function(res) {
               if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
               else resolve(res);
             }
@@ -462,7 +720,7 @@
         }
 
         if (response.toolLogs) {
-          response.toolLogs.forEach((log) => {
+          response.toolLogs.forEach(function(log) {
             addToolMessage(log.name, log.result);
           });
         }
@@ -476,11 +734,12 @@
       inputEl.focus();
     }
 
-    document.getElementById("btnClear").addEventListener("click", () => {
+    document.getElementById("btnClear").addEventListener("click", function() {
       conversationHistory = [];
       pageContext = null;
-      messagesEl.querySelectorAll(".msg").forEach((el) => el.remove());
+      chatPanel.querySelectorAll(".msg").forEach(function(el) { el.remove(); });
       welcomeEl.style.display = "flex";
+      switchTab('features');
       readPage();
     });
 

@@ -1336,6 +1336,178 @@ async function zipFolder(folderPath, outputPath) {
 }
 
 // ---------------------------------------------------------------------------
+//  NEW TOOL 11 — auto_organize
+//  Scan a folder and organize files into subfolders by type.
+// ---------------------------------------------------------------------------
+
+function autoOrganize(targetDir) {
+  try {
+    const resolved = path.resolve(WORKSPACE, targetDir || ".");
+    if (!resolved.startsWith(WORKSPACE)) return { success: false, error: "Outside workspace." };
+    if (!fs.existsSync(resolved)) return { success: false, error: "Directory not found." };
+
+    const TYPE_MAP = {
+      images:  [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg", ".ico", ".tiff", ".heic", ".avif"],
+      videos:  [".mp4", ".mov", ".avi", ".mkv", ".webm", ".wmv", ".flv", ".m4v"],
+      audio:   [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma"],
+      documents: [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".txt", ".rtf", ".odt"],
+      design:  [".psd", ".ai", ".sketch", ".fig", ".xd", ".indd", ".eps", ".afdesign"],
+      code:    [".js", ".ts", ".jsx", ".tsx", ".py", ".html", ".css", ".scss", ".json", ".xml", ".yaml", ".yml"],
+      fonts:   [".ttf", ".otf", ".woff", ".woff2", ".eot"],
+      archives: [".zip", ".rar", ".tar", ".gz", ".7z", ".tar.gz"],
+      data:    [".csv", ".sql", ".db", ".sqlite"],
+    };
+
+    const entries = fs.readdirSync(resolved, { withFileTypes: true });
+    const moved = [];
+    const skipped = [];
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) continue;
+      const ext = path.extname(entry.name).toLowerCase();
+      let destFolder = null;
+
+      for (const [folder, exts] of Object.entries(TYPE_MAP)) {
+        if (exts.includes(ext)) { destFolder = folder; break; }
+      }
+
+      if (!destFolder) { skipped.push(entry.name); continue; }
+
+      const srcPath = path.join(resolved, entry.name);
+      const destDir = path.join(resolved, destFolder);
+      const destPath = path.join(destDir, entry.name);
+
+      if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
+
+      // Avoid overwriting
+      if (fs.existsSync(destPath)) {
+        const base = path.basename(entry.name, ext);
+        const newName = `${base}_${Date.now()}${ext}`;
+        fs.renameSync(srcPath, path.join(destDir, newName));
+        moved.push({ file: entry.name, to: `${destFolder}/${newName}` });
+      } else {
+        fs.renameSync(srcPath, destPath);
+        moved.push({ file: entry.name, to: `${destFolder}/${entry.name}` });
+      }
+    }
+
+    return {
+      success: true,
+      organized: moved.length,
+      skipped: skipped.length,
+      moved,
+      skippedFiles: skipped.slice(0, 20),
+    };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+// ---------------------------------------------------------------------------
+//  NEW TOOL 12 — batch_rename
+//  Rename files matching a pattern with a template.
+//  Template vars: {n} = number, {name} = original name, {ext} = extension,
+//  {date} = YYYY-MM-DD, {platform} = platform prefix if provided.
+// ---------------------------------------------------------------------------
+
+function batchRename(targetDir, pattern, template, platform) {
+  try {
+    const resolved = path.resolve(WORKSPACE, targetDir || ".");
+    if (!resolved.startsWith(WORKSPACE)) return { success: false, error: "Outside workspace." };
+    if (!fs.existsSync(resolved)) return { success: false, error: "Directory not found." };
+    if (!template) return { success: false, error: "Rename template is required." };
+
+    const regexStr = (pattern || "*")
+      .replace(/([.+^${}()|[\]\\])/g, "\\$1")
+      .replace(/\*/g, ".*")
+      .replace(/\?/g, ".");
+    const regex = new RegExp("^" + regexStr + "$", "i");
+
+    const entries = fs.readdirSync(resolved, { withFileTypes: true })
+      .filter(e => !e.isDirectory() && regex.test(e.name))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    const dateStr = new Date().toISOString().split("T")[0];
+    const renamed = [];
+
+    entries.forEach((entry, index) => {
+      const ext = path.extname(entry.name);
+      const nameOnly = path.basename(entry.name, ext);
+
+      const newName = template
+        .replace(/\{n\}/g, String(index + 1).padStart(3, "0"))
+        .replace(/\{name\}/g, nameOnly)
+        .replace(/\{ext\}/g, ext)
+        .replace(/\{date\}/g, dateStr)
+        .replace(/\{platform\}/g, platform || "post");
+
+      // Add extension if template doesn't include {ext}
+      const finalName = newName.includes(".") ? newName : newName + ext;
+
+      const srcPath = path.join(resolved, entry.name);
+      const destPath = path.join(resolved, finalName);
+
+      if (srcPath !== destPath && !fs.existsSync(destPath)) {
+        fs.renameSync(srcPath, destPath);
+        renamed.push({ from: entry.name, to: finalName });
+      }
+    });
+
+    return {
+      success: true,
+      renamed: renamed.length,
+      total: entries.length,
+      files: renamed.slice(0, 50),
+    };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+// ---------------------------------------------------------------------------
+//  NEW TOOL 13 — workspace_stats
+//  Get a summary of the entire workspace: file counts, sizes by type, etc.
+// ---------------------------------------------------------------------------
+
+function workspaceStats() {
+  try {
+    ensureWorkspace();
+    const stats = { totalFiles: 0, totalDirs: 0, totalSizeBytes: 0, byType: {}, largestFiles: [] };
+
+    function walk(dir) {
+      let entries;
+      try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.name === "node_modules" || entry.name === ".git") continue;
+        if (entry.isDirectory()) {
+          stats.totalDirs++;
+          walk(fullPath);
+        } else {
+          stats.totalFiles++;
+          try {
+            const s = fs.statSync(fullPath);
+            stats.totalSizeBytes += s.size;
+            const ext = path.extname(entry.name).toLowerCase() || "(none)";
+            stats.byType[ext] = (stats.byType[ext] || 0) + 1;
+            stats.largestFiles.push({ name: path.relative(WORKSPACE, fullPath).replace(/\\/g, "/"), size: s.size });
+          } catch {}
+        }
+      }
+    }
+
+    walk(WORKSPACE);
+    stats.largestFiles.sort((a, b) => b.size - a.size);
+    stats.largestFiles = stats.largestFiles.slice(0, 10).map(f => ({ ...f, sizeHuman: humanSize(f.size) }));
+    stats.totalSizeHuman = humanSize(stats.totalSizeBytes);
+
+    return { success: true, ...stats };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+// ---------------------------------------------------------------------------
 //  TOOL EXECUTOR — routes tool calls to the right function
 // ---------------------------------------------------------------------------
 
@@ -1352,7 +1524,7 @@ async function executeTool(name, input) {
     case "list_directory":
       return listDirectory(input.path);
 
-    // New tools
+    // File tools
     case "search_files":
       return searchFiles(input.pattern, input.path);
     case "analyze_file":
@@ -1373,6 +1545,14 @@ async function executeTool(name, input) {
       return downloadFile(input.url, input.filename);
     case "zip_folder":
       return zipFolder(input.path, input.output);
+
+    // Batch & organization tools
+    case "auto_organize":
+      return autoOrganize(input.path);
+    case "batch_rename":
+      return batchRename(input.path, input.pattern, input.template, input.platform);
+    case "workspace_stats":
+      return workspaceStats();
 
     default:
       return { success: false, error: `Unknown tool: ${name}` };

@@ -265,6 +265,60 @@ const TOOLS: Anthropic.Tool[] = [
       required: ["path"],
     },
   },
+
+  // ── Batch & Organization ──────────────────────────────────────────
+  {
+    name: "auto_organize",
+    description:
+      "Automatically organize files in a folder into subfolders by type — images, videos, audio, documents, design, code, fonts, archives, data. Perfect for messy download folders, unsorted assets, or client deliverables dump. Files are moved into categorized subfolders.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        path: {
+          type: "string",
+          description: "Folder to organize, relative to workspace (defaults to workspace root)",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "batch_rename",
+    description:
+      "Rename multiple files matching a pattern using a template. Template variables: {n} = sequential number (001, 002...), {name} = original filename, {ext} = extension, {date} = YYYY-MM-DD, {platform} = platform prefix. Example: template '{platform}_{date}_{n}{ext}' renames to 'instagram_2024-01-15_001.jpg'. Perfect for organizing social media assets, naming deliverables, or standardizing file names.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        path: {
+          type: "string",
+          description: "Directory containing files to rename (relative to workspace)",
+        },
+        pattern: {
+          type: "string",
+          description: "Glob pattern to match files (e.g. '*.jpg', 'IMG_*'). Default '*' matches all.",
+        },
+        template: {
+          type: "string",
+          description: "Rename template using {n}, {name}, {ext}, {date}, {platform} variables",
+        },
+        platform: {
+          type: "string",
+          description: "Platform name for {platform} variable (e.g. 'instagram', 'tiktok')",
+        },
+      },
+      required: ["template"],
+    },
+  },
+  {
+    name: "workspace_stats",
+    description:
+      "Get a comprehensive summary of the workspace: total files, folders, size breakdown by file type, and the 10 largest files. Useful for auditing what's in the workspace, finding large files, or understanding project scope.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
 ];
 
 const SYSTEM_PROMPT = `You are ShortStack Agent — the world's most capable AI assistant for content creators, brands, and agencies. You are embedded in ShortStack OS, a premium desktop agent that works directly on the user's computer with full file system access.
