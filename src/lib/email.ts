@@ -76,30 +76,95 @@ const goldBtn = `
   font-weight: 600; font-size: 14px;
 `;
 
-export async function sendWelcomeEmail(email: string, name: string) {
+export async function sendWelcomeEmail(email: string, name: string, planTier?: string) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const logoUrl = `${appUrl}/icons/shortstack-logo.png`;
+
+  const planBadge = planTier
+    ? `<span style="display:inline-block;background:#c8a855;color:#0b0d12;padding:4px 12px;border-radius:4px;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;">${planTier} Plan</span>`
+    : "";
 
   return sendEmail({
     to: email,
-    subject: "Welcome to ShortStack OS",
+    subject: `Welcome to ShortStack OS${planTier ? ` — ${planTier} Plan Activated` : ""}`,
     html: `
       <div style="${baseStyle}">
-        <h1 style="color:#fff;font-size:22px;margin-bottom:8px;">Welcome, ${name}!</h1>
-        <p style="color:#a0a0a0;font-size:14px;line-height:1.6;">
-          Your agency command center is ready. Here's how to get started:
-        </p>
-        <ol style="color:#d0d0d0;font-size:13px;line-height:1.8;padding-left:20px;">
-          <li>Complete your profile and choose a plan</li>
-          <li>Add your first client</li>
-          <li>Connect your social accounts</li>
-          <li>Let AI agents start working for you</li>
-        </ol>
-        <div style="text-align:center;margin:24px 0;">
-          <a href="${appUrl}/dashboard/getting-started" style="${goldBtn}">Get Started</a>
+        <!-- Logo -->
+        <div style="text-align:center;margin-bottom:24px;">
+          <img src="${logoUrl}" alt="ShortStack OS" width="60" height="60" style="border-radius:12px;" />
         </div>
-        <p style="color:#666;font-size:11px;margin-top:32px;">
-          Questions? Reply to this email or reach us at growth@shortstack.work
+
+        <h1 style="color:#fff;font-size:24px;margin-bottom:4px;text-align:center;">Welcome aboard, ${name}!</h1>
+        ${planBadge ? `<div style="text-align:center;margin:12px 0 24px;">${planBadge}</div>` : ""}
+
+        <p style="color:#a0a0a0;font-size:14px;line-height:1.7;">
+          Your agency command center is live. ShortStack OS gives you AI-powered lead generation,
+          content creation, client management, and automated outreach — all in one place.
         </p>
+
+        <!-- Quick Start Steps -->
+        <div style="background:#111318;border-radius:8px;padding:20px;margin:20px 0;">
+          <h2 style="color:#c8a855;font-size:14px;margin:0 0 12px;font-weight:600;">Quick Start Guide</h2>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr>
+              <td style="padding:8px 0;color:#888;font-size:13px;width:28px;vertical-align:top;">1.</td>
+              <td style="padding:8px 0;color:#d0d0d0;font-size:13px;"><strong style="color:#fff;">Complete your profile</strong> — Set your agency name, timezone, and branding</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0;color:#888;font-size:13px;vertical-align:top;">2.</td>
+              <td style="padding:8px 0;color:#d0d0d0;font-size:13px;"><strong style="color:#fff;">Add your first client</strong> — Import or create a client to start managing their account</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0;color:#888;font-size:13px;vertical-align:top;">3.</td>
+              <td style="padding:8px 0;color:#d0d0d0;font-size:13px;"><strong style="color:#fff;">Connect integrations</strong> — Link Meta, TikTok, Google, and social accounts</td>
+            </tr>
+            <tr>
+              <td style="padding:8px 0;color:#888;font-size:13px;vertical-align:top;">4.</td>
+              <td style="padding:8px 0;color:#d0d0d0;font-size:13px;"><strong style="color:#fff;">Launch AI agents</strong> — Set up AI calling, content generation, and lead scraping</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="text-align:center;margin:24px 0;">
+          <a href="${appUrl}/dashboard/getting-started" style="${goldBtn}">Open Your Dashboard</a>
+        </div>
+
+        <!-- Key Resources -->
+        <div style="border-top:1px solid #1e2028;padding-top:20px;margin-top:24px;">
+          <h3 style="color:#fff;font-size:13px;margin:0 0 12px;">Key Resources</h3>
+          <table style="width:100%;border-collapse:collapse;">
+            <tr>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/getting-started" style="color:#c8a855;font-size:12px;text-decoration:none;">Getting Started Guide</a></td>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/integrations" style="color:#c8a855;font-size:12px;text-decoration:none;">Connect Integrations</a></td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/settings" style="color:#c8a855;font-size:12px;text-decoration:none;">Account Settings</a></td>
+              <td style="padding:6px 0;"><a href="${appUrl}/dashboard/eleven-agents" style="color:#c8a855;font-size:12px;text-decoration:none;">AI Agent Setup</a></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- License Info -->
+        ${planTier ? `
+        <div style="background:#111318;border:1px solid #1e2028;border-radius:8px;padding:16px;margin:20px 0;">
+          <h3 style="color:#fff;font-size:13px;margin:0 0 8px;">Your License</h3>
+          <p style="color:#a0a0a0;font-size:12px;line-height:1.6;margin:0;">
+            Plan: <strong style="color:#c8a855;">${planTier}</strong><br/>
+            Status: <span style="color:#10b981;">Active</span><br/>
+            Billing: Monthly, auto-renews. Manage at <a href="${appUrl}/dashboard/settings" style="color:#c8a855;text-decoration:none;">Settings &rarr; Billing</a>
+          </p>
+        </div>
+        ` : ""}
+
+        <div style="border-top:1px solid #1e2028;padding-top:16px;margin-top:24px;text-align:center;">
+          <p style="color:#666;font-size:11px;margin:0;">
+            Need help? Email <a href="mailto:growth@shortstack.work" style="color:#888;">growth@shortstack.work</a>
+            or message us on the dashboard.
+          </p>
+          <p style="color:#444;font-size:10px;margin-top:12px;">
+            ShortStack OS &mdash; Your Agency, Automated.
+          </p>
+        </div>
       </div>
     `,
   });

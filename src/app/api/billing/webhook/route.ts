@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import { sendPaymentFailedEmail } from "@/lib/email";
+import { sendPaymentFailedEmail, sendWelcomeEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
@@ -346,11 +346,20 @@ export async function POST(request: NextRequest) {
             },
           });
 
+          // Send branded welcome email with plan details
+          const { data: prof } = await supabase.from("profiles").select("full_name, email").eq("id", userId).single();
+          if (prof?.email) {
+            sendWelcomeEmail(
+              prof.email,
+              prof.full_name || prof.email.split("@")[0] || "there",
+              planTier,
+            ).catch(() => {});
+          }
+
           // Telegram notification
           const chatId = process.env.TELEGRAM_CHAT_ID;
           const botToken = process.env.TELEGRAM_BOT_TOKEN;
           if (chatId && botToken) {
-            const { data: prof } = await supabase.from("profiles").select("full_name, email").eq("id", userId).single();
             await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
