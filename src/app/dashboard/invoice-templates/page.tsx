@@ -608,7 +608,7 @@ export default function InvoiceTemplatesPage() {
                   <span className="text-xs font-semibold text-muted">Live Preview</span>
                   <button onClick={() => setTab("preview")} className="text-[10px] text-gold hover:underline">Full Preview</button>
                 </div>
-                <div className="rounded-lg border border-white/10 overflow-hidden bg-white text-black p-4" style={{ fontFamily: template.fontFamily }}>
+                <div className="rounded-lg border border-white/10 overflow-hidden bg-[#1a1c23] text-foreground p-4" style={{ fontFamily: template.fontFamily }}>
                   {/* Invoice Header */}
                   <div className="flex justify-between items-start mb-4 pb-3 border-b" style={{ borderColor: template.primaryColor + "40" }}>
                     <div>
@@ -686,7 +686,7 @@ export default function InvoiceTemplatesPage() {
           </div>
 
           <div className="flex justify-center">
-            <div className="w-full max-w-2xl rounded-lg border border-white/10 overflow-hidden bg-white text-black p-8" style={{ fontFamily: template.fontFamily }}>
+            <div className="w-full max-w-2xl rounded-lg border border-white/10 overflow-hidden bg-[#1a1c23] text-foreground p-8" style={{ fontFamily: template.fontFamily }}>
               {/* Header */}
               <div className="flex justify-between items-start mb-8 pb-4 border-b-2" style={{ borderColor: template.primaryColor }}>
                 <div>

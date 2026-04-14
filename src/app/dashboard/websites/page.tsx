@@ -648,7 +648,7 @@ export default function WebsitesPage() {
                   </button>
                 </div>
               </div>
-              <div className="rounded-xl border border-border overflow-hidden bg-white mx-auto transition-all duration-300" style={{
+              <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23] mx-auto transition-all duration-300" style={{
                 height: "600px",
                 maxWidth: previewDevice === "mobile" ? "375px" : previewDevice === "tablet" ? "768px" : "100%",
               }}>

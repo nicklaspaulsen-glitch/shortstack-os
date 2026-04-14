@@ -341,10 +341,10 @@ export default function ReviewsPage() {
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><QrCode size={12} className="text-gold" /> QR Code Generator</h3>
             <div className="flex items-center gap-4">
-              <div className="w-32 h-32 bg-white rounded-xl flex items-center justify-center">
+              <div className="w-32 h-32 bg-[#1a1c23] rounded-xl flex items-center justify-center">
                 <div className="text-center">
-                  <QrCode size={48} className="text-black mx-auto" />
-                  <p className="text-[8px] text-black mt-1">Scan to review</p>
+                  <QrCode size={48} className="text-foreground mx-auto" />
+                  <p className="text-[8px] text-foreground mt-1">Scan to review</p>
                 </div>
               </div>
               <div>

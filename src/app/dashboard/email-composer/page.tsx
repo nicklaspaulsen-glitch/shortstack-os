@@ -362,8 +362,8 @@ export default function EmailComposerPage() {
               }`}><Smartphone size={12} /> Mobile</button>
           </div>
           <div className="flex justify-center">
-            <div className={`bg-white rounded-lg shadow-2xl overflow-hidden ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
-              <div className="bg-gray-100 p-3 border-b border-gray-200">
+            <div className={`bg-[#1a1c23] rounded-lg shadow-2xl overflow-hidden ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
+              <div className="bg-surface p-3 border-b border-white/10">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1">
                     <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -371,22 +371,22 @@ export default function EmailComposerPage() {
                     <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
                   </div>
                   <div className="flex-1 text-center">
-                    <p className="text-[10px] text-gray-500 font-mono">Inbox</p>
+                    <p className="text-[10px] text-muted font-mono">Inbox</p>
                   </div>
                 </div>
               </div>
               <div className="p-6">
-                <p className="text-sm font-semibold text-gray-900 mb-1">{email.subject || "No subject"}</p>
-                <p className="text-[10px] text-gray-500 mb-4">From: {email.fromName} &lt;{email.replyTo}&gt;</p>
-                <div className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
+                <p className="text-sm font-semibold text-white mb-1">{email.subject || "No subject"}</p>
+                <p className="text-[10px] text-muted mb-4">From: {email.fromName} &lt;{email.replyTo}&gt;</p>
+                <div className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap">
                   {email.body.replace(/\{first_name\}/g, "John").replace(/\{business_name\}/g, "Bright Smile Dental").replace(/\{industry\}/g, "dental").replace(/\{company\}/g, "ShortStack").replace(/\{city\}/g, "Miami")}
                 </div>
                 {attachments.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-[10px] text-gray-500 mb-2">Attachments ({attachments.length})</p>
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-[10px] text-muted mb-2">Attachments ({attachments.length})</p>
                     <div className="flex gap-2">
                       {attachments.map((f, i) => (
-                        <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-[9px] text-gray-600">
+                        <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-white/5 text-[9px] text-muted">
                           <Paperclip size={8} /> {f}
                         </div>
                       ))}
@@ -511,7 +511,7 @@ export default function EmailComposerPage() {
             </div>
             <div className="card">
               <h4 className="text-xs font-semibold mb-3">Preview</h4>
-              <div className="p-4 rounded-lg bg-white">
+              <div className="p-4 rounded-lg bg-[#1a1c23]">
                 <div className="border-t-2 border-amber-500 pt-3">
                   <p className="text-sm font-bold text-gray-900">Nicklas</p>
                   <p className="text-[10px] text-gray-500">Founder, ShortStack</p>

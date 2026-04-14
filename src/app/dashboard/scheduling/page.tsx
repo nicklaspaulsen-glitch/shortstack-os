@@ -275,17 +275,17 @@ export default function SchedulingPage() {
               </button>
             </div>
             {showEmailPreview && (
-              <div className="mt-3 rounded-xl bg-white p-5 text-black text-xs">
+              <div className="mt-3 rounded-xl bg-[#1a1c23] p-5 text-foreground text-xs">
                 <p className="font-bold text-base mb-2" style={{ color: "#C9A84C" }}>ShortStack Creative</p>
                 <p className="mb-3">Hi <strong>[Client Name]</strong>,</p>
                 <p className="mb-2">Your <strong>[Meeting Type]</strong> has been confirmed!</p>
-                <div className="bg-gray-100 rounded-lg p-3 mb-3">
+                <div className="bg-white/5 rounded-lg p-3 mb-3">
                   <p><strong>Date:</strong> [Date]</p>
                   <p><strong>Time:</strong> [Time] ([Timezone])</p>
                   <p><strong>Duration:</strong> [Duration] minutes</p>
                   <p><strong>Join Link:</strong> <span className="text-blue-500">[Video Link]</span></p>
                 </div>
-                <p className="text-gray-500 text-[10px]">Need to reschedule? Click the link in this email to find a new time.</p>
+                <p className="text-muted text-[10px]">Need to reschedule? Click the link in this email to find a new time.</p>
               </div>
             )}
           </div>
