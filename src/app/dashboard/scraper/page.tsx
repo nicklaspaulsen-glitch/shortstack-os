@@ -3,27 +3,31 @@
 import { useState } from "react";
 import {
   Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash,
-  Map, Camera, Music, Briefcase, Star, FlaskConical, MessageCircle, Send,
-  Shield, Clock, Save, Users, Wifi, Target,
+  FlaskConical, Send, Star,
+  Clock, Save, Users, Wifi, Target,
   Calendar, Trash2, Eye, Mail, Phone, Layers,
   UserPlus, Database, CheckCircle, Bookmark
 } from "lucide-react";
+import {
+  GoogleMapsIcon, FacebookIcon, InstagramIcon, TikTokIcon, LinkedInIcon,
+  YelpIcon, TripAdvisorIcon, TrustpilotIcon, YellowPagesIcon, IndeedIcon,
+} from "@/components/ui/platform-icons";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import toast from "react-hot-toast";
 
 /* ─── static data ─── */
 const PLATFORMS: Array<{ id: string; name: string; icon: React.ReactNode; description: string; disabled?: boolean; apify?: boolean }> = [
-  { id: "google_maps", name: "Google Maps", icon: <Map size={18} className="text-gold" />, description: "Business listings with ratings, phone, website" },
-  { id: "facebook", name: "Facebook Pages", icon: <MessageCircle size={18} className="text-info" />, description: "Business pages with phone, email, followers" },
-  { id: "instagram", name: "Instagram", icon: <Camera size={18} className="text-danger-light" />, description: "Find businesses by hashtag, niche, or location" },
-  { id: "tiktok", name: "TikTok", icon: <Music size={18} className="text-white" />, description: "Find businesses with TikTok profiles" },
-  { id: "linkedin", name: "LinkedIn", icon: <Briefcase size={18} className="text-info-light" />, description: "Company profiles from website enrichment" },
-  { id: "yelp", name: "Yelp", icon: <Star size={18} className="text-warning" />, description: "Reviews and local businesses (needs API key)", disabled: true },
-  { id: "tripadvisor", name: "TripAdvisor", icon: <Star size={18} className="text-success" />, description: "Hotels, restaurants, attractions with reviews", apify: true },
-  { id: "trustpilot", name: "Trustpilot", icon: <Shield size={18} className="text-success" />, description: "Business reviews and company profiles", apify: true },
-  { id: "yellow_pages", name: "Yellow Pages", icon: <Globe size={18} className="text-warning-light" />, description: "Local business directory listings", apify: true },
-  { id: "indeed", name: "Indeed", icon: <Briefcase size={18} className="text-info" />, description: "Job listings for B2B lead discovery", apify: true },
+  { id: "google_maps", name: "Google Maps", icon: <GoogleMapsIcon size={20} />, description: "Business listings with ratings, phone, website" },
+  { id: "facebook", name: "Facebook Pages", icon: <FacebookIcon size={20} />, description: "Business pages with phone, email, followers" },
+  { id: "instagram", name: "Instagram", icon: <InstagramIcon size={20} />, description: "Find businesses by hashtag, niche, or location" },
+  { id: "tiktok", name: "TikTok", icon: <TikTokIcon size={20} />, description: "Find businesses with TikTok profiles" },
+  { id: "linkedin", name: "LinkedIn", icon: <LinkedInIcon size={20} />, description: "Company profiles from website enrichment" },
+  { id: "yelp", name: "Yelp", icon: <YelpIcon size={20} />, description: "Reviews and local businesses (needs API key)", disabled: true },
+  { id: "tripadvisor", name: "TripAdvisor", icon: <TripAdvisorIcon size={20} />, description: "Hotels, restaurants, attractions with reviews", apify: true },
+  { id: "trustpilot", name: "Trustpilot", icon: <TrustpilotIcon size={20} />, description: "Business reviews and company profiles", apify: true },
+  { id: "yellow_pages", name: "Yellow Pages", icon: <YellowPagesIcon size={20} />, description: "Local business directory listings", apify: true },
+  { id: "indeed", name: "Indeed", icon: <IndeedIcon size={20} />, description: "Job listings for B2B lead discovery", apify: true },
 ];
 
 const PRESET_NICHES = [
