@@ -17,6 +17,32 @@ export async function GET(request: NextRequest) {
   let totalEnriched = 0;
   const errors: string[] = [];
 
+  // ── Check auto-run config (user-configured daily schedule) ──
+  let autoRunConfig: { enabled?: boolean; platforms?: string[]; niches?: string[]; locations?: string[]; max_results?: number; filters?: Record<string, unknown> } | null = null;
+  try {
+    // Check system_config first
+    const { data: configRow } = await supabase
+      .from("system_config")
+      .select("value")
+      .eq("key", "scraper_auto_run")
+      .single();
+    if (configRow?.value?.enabled) {
+      autoRunConfig = configRow.value;
+    }
+  } catch {
+    // Fallback: check system_health
+    try {
+      const { data: shRow } = await supabase
+        .from("system_health")
+        .select("metadata, status")
+        .eq("service_name", "scraper_auto_run")
+        .single();
+      if (shRow?.status === "healthy" && shRow?.metadata?.enabled) {
+        autoRunConfig = shRow.metadata;
+      }
+    } catch {}
+  }
+
   // Load agent settings from DB
   let targetLeads = 50;
   let customIndustries: string[] | null = null;
@@ -36,6 +62,19 @@ export async function GET(request: NextRequest) {
       if (locations && locations.length > 0) customLocations = locations;
     }
   } catch {}
+
+  // Auto-run config overrides defaults if present
+  if (autoRunConfig) {
+    if (autoRunConfig.niches && autoRunConfig.niches.length > 0) {
+      customIndustries = autoRunConfig.niches;
+    }
+    if (autoRunConfig.locations && autoRunConfig.locations.length > 0) {
+      customLocations = autoRunConfig.locations;
+    }
+    if (autoRunConfig.max_results) {
+      targetLeads = autoRunConfig.max_results * (autoRunConfig.niches?.length || 1) * (autoRunConfig.locations?.length || 1);
+    }
+  }
 
   try {
     const industries = customIndustries || TARGET_INDUSTRIES;

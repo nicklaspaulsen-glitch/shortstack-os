@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Search, Zap, Plus, X, Play, Download, Filter, Globe, MapPin, Tag, Hash,
   FlaskConical, Send, Star,
@@ -188,6 +188,25 @@ export default function ScraperPage() {
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [scheduleForm, setScheduleForm] = useState({ name: "", schedule: "weekly" });
 
+  // Auto-run daily
+  const [autoRunEnabled, setAutoRunEnabled] = useState(false);
+  const [autoRunTime, setAutoRunTime] = useState("09:00");
+  const [autoRunSaving, setAutoRunSaving] = useState(false);
+  const [showAutoRunConfig, setShowAutoRunConfig] = useState(false);
+
+  // Load auto-run config on mount
+  useEffect(() => {
+    fetch("/api/scraper/auto-run")
+      .then(r => r.json())
+      .then(d => {
+        if (d.config) {
+          setAutoRunEnabled(!!d.config.enabled);
+          if (d.config.time) setAutoRunTime(d.config.time);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Batch search
   const [batchMode, setBatchMode] = useState(false);
   const [batchNiches, setBatchNiches] = useState("");
@@ -350,6 +369,37 @@ export default function ScraperPage() {
     return Math.min(score, 100);
   }
 
+  async function toggleAutoRun() {
+    if (!autoRunEnabled && (niches.length === 0 || locations.length === 0)) {
+      toast.error("Configure niches & locations first");
+      return;
+    }
+    setAutoRunSaving(true);
+    try {
+      const res = await fetch("/api/scraper/auto-run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enabled: !autoRunEnabled,
+          time: autoRunTime,
+          platforms: selectedPlatforms,
+          niches,
+          locations,
+          max_results: maxResults,
+          filters,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to save");
+      setAutoRunEnabled(!autoRunEnabled);
+      toast.success(autoRunEnabled ? "Auto-run disabled" : `Auto-run enabled — daily at ${autoRunTime}`);
+      setShowAutoRunConfig(false);
+    } catch {
+      toast.error("Failed to save auto-run config");
+    } finally {
+      setAutoRunSaving(false);
+    }
+  }
+
   function addSchedule() {
     if (!scheduleForm.name) { toast.error("Enter a schedule name"); return; }
     const ns: ScheduledScrape = {
@@ -396,6 +446,77 @@ export default function ScraperPage() {
           <p className="text-muted text-sm mt-1">Find leads from any platform, any niche, any location</p>
         </div>
         <div className="flex items-center gap-2">
+          {/* Auto-Run Daily Button */}
+          <div className="relative">
+            <button
+              onClick={() => setShowAutoRunConfig(!showAutoRunConfig)}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
+                autoRunEnabled
+                  ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                  : "bg-surface-light border-border text-muted hover:text-foreground"
+              }`}
+            >
+              <Clock size={14} />
+              {autoRunEnabled ? `Auto: ${autoRunTime}` : "Auto-Run"}
+              {autoRunEnabled && <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />}
+            </button>
+
+            {/* Auto-run config dropdown */}
+            {showAutoRunConfig && (
+              <div className="absolute right-0 top-full mt-2 w-72 bg-surface border border-border rounded-xl shadow-2xl p-4 z-50">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-xs font-semibold flex items-center gap-2">
+                    <Clock size={12} className="text-gold" /> Auto-Run Daily
+                  </h4>
+                  <button onClick={() => setShowAutoRunConfig(false)} className="text-muted hover:text-foreground">
+                    <X size={14} />
+                  </button>
+                </div>
+                <p className="text-[10px] text-muted mb-3">
+                  Automatically run the lead finder every day at a set time using your current search configuration.
+                </p>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Run Time</label>
+                    <input
+                      type="time"
+                      value={autoRunTime}
+                      onChange={e => setAutoRunTime(e.target.value)}
+                      className="input text-xs py-1.5 w-full"
+                    />
+                  </div>
+                  <div className="p-2.5 bg-surface-light rounded-lg border border-border">
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Current Config</p>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedPlatforms.map(p => <span key={p} className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{p.replace("_", " ")}</span>)}
+                      {niches.slice(0, 3).map(n => <span key={n} className="text-[8px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">{n}</span>)}
+                      {niches.length > 3 && <span className="text-[8px] text-muted">+{niches.length - 3} more</span>}
+                      {locations.slice(0, 2).map(l => <span key={l} className="text-[8px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded">{l}</span>)}
+                      {locations.length > 2 && <span className="text-[8px] text-muted">+{locations.length - 2} more</span>}
+                    </div>
+                  </div>
+                  <button
+                    onClick={toggleAutoRun}
+                    disabled={autoRunSaving}
+                    className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-xs font-semibold transition-all ${
+                      autoRunEnabled
+                        ? "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20"
+                        : "bg-gold text-black hover:bg-gold/90"
+                    }`}
+                  >
+                    {autoRunSaving ? (
+                      <div className="w-3.5 h-3.5 border-2 border-current/20 border-t-current rounded-full animate-spin" />
+                    ) : autoRunEnabled ? (
+                      <><X size={13} /> Disable Auto-Run</>
+                    ) : (
+                      <><Zap size={13} /> Enable Daily Auto-Run</>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
           <button onClick={runTest500} disabled={testRunning || running} className="btn-secondary flex items-center gap-2 disabled:opacity-50 text-xs">
             {testRunning ? <><div className="w-3 h-3 border-2 border-muted/20 border-t-muted rounded-full animate-spin" /> Testing...</> : <><FlaskConical size={14} /> Test 500</>}
           </button>

@@ -5,10 +5,50 @@ import {
   Monitor, Zap, Plus, RefreshCw, CheckCircle, Clock, Trash2,
   Cpu, MemoryStick, HardDrive,
   Play, Calendar, Eye, ShieldAlert, Store, Settings,
-  BarChart3, History, Search, Terminal, Download
+  BarChart3, History, Search, Terminal, Download,
+  Copy, Check, Shield,
+  FolderOpen, Layers, FileText, Users, Star, MessageSquare,
+  Globe, Layout, Sparkles, ArrowRight,
+  ChevronDown, ChevronUp, Info, Package
 } from "lucide-react";
+import toast from "react-hot-toast";
 
-/* ── mock data ── */
+/* ── Download Section Feature Data ──────────────────────────── */
+
+const DESKTOP_FEATURES = [
+  { icon: <Terminal size={15} />, title: "Shell Commands", desc: "Run any command on the client machine" },
+  { icon: <FolderOpen size={15} />, title: "File Management", desc: "Full read, write, copy, move, delete" },
+  { icon: <Search size={15} />, title: "Smart Search", desc: "Glob-pattern file search" },
+  { icon: <Layers size={15} />, title: "Project Scaffolding", desc: "Scaffold websites, campaigns & more" },
+  { icon: <Zap size={15} />, title: "Auto-Organize", desc: "Sort files into categorized folders" },
+  { icon: <FileText size={15} />, title: "Batch Rename", desc: "Smart template-based renaming" },
+  { icon: <BarChart3 size={15} />, title: "Workspace Stats", desc: "Full audit & file breakdown" },
+  { icon: <Download size={15} />, title: "URL Downloads", desc: "Grab assets from any URL" },
+  { icon: <HardDrive size={15} />, title: "System Info", desc: "OS, CPU, RAM, disk at a glance" },
+];
+
+const EXTENSION_FEATURES = [
+  { icon: <Users size={15} />, title: "Competitor Analysis", desc: "Pricing, tech stack & positioning" },
+  { icon: <Star size={15} />, title: "Review Responder", desc: "AI responses to reviews" },
+  { icon: <MessageSquare size={15} />, title: "Content Creator", desc: "Social, blogs, emails from context" },
+  { icon: <Globe size={15} />, title: "SEO Audit", desc: "Meta tags, schema, H1s, speed" },
+  { icon: <Search size={15} />, title: "Data Extraction", desc: "Contacts, emails, social links" },
+  { icon: <Layout size={15} />, title: "Tech Stack Detect", desc: "30+ technologies identified" },
+  { icon: <Sparkles size={15} />, title: "AI Chat Panel", desc: "Side panel with page context" },
+  { icon: <FileText size={15} />, title: "Page Summarizer", desc: "Instant key takeaway summaries" },
+];
+
+const INSTALL_STEPS_EXTENSION = [
+  "Download the extension .zip below",
+  "Unzip to a folder on your computer",
+  "Go to chrome://extensions in Chrome",
+  'Enable "Developer mode" (top-right toggle)',
+  'Click "Load unpacked" → select folder',
+  "Pin ShortStack to your toolbar",
+];
+
+/* ── Monitoring mock data ──────────────────────────────────── */
+
 const MOCK_ACTIVITY = [
   { id: "a1", agent: "Content Engine", action: "Generated 5 Instagram captions", status: "success", time: "2 min ago", cpu: 12 },
   { id: "a2", agent: "Lead Finder", action: "Scraped 48 leads from Google Maps", status: "success", time: "8 min ago", cpu: 34 },
@@ -79,8 +119,8 @@ const MOCK_METRICS = [
   { label: "Cost Today", value: "$4.82", change: "-$0.41", positive: true },
 ];
 
-const TABS = ["Activity", "Queue", "Logs", "Errors", "Schedule", "Marketplace", "Metrics", "Config", "Versions"] as const;
-type Tab = typeof TABS[number];
+const MAIN_TABS = ["Downloads", "Activity", "Queue", "Logs", "Errors", "Schedule", "Marketplace", "Metrics", "Config", "Versions"] as const;
+type Tab = typeof MAIN_TABS[number];
 
 const QUICK_TASKS = [
   { title: "Create social media campaign", description: "Scaffold a complete multi-platform social campaign", type: "social-campaign", priority: "medium" as const },
@@ -92,7 +132,7 @@ const QUICK_TASKS = [
 ];
 
 export default function AgentDesktopPage() {
-  const [tab, setTab] = useState<Tab>("Activity");
+  const [tab, setTab] = useState<Tab>("Downloads");
   const [logFilter, setLogFilter] = useState<"all" | "info" | "warn" | "error" | "success">("all");
   const [logSearch, setLogSearch] = useState("");
   const [queue, setQueue] = useState(MOCK_QUEUE);
@@ -102,11 +142,23 @@ export default function AgentDesktopPage() {
   const [outputPreview, setOutputPreview] = useState<string | null>(null);
   const [triggerAgent, setTriggerAgent] = useState("");
   const [triggerTask, setTriggerTask] = useState("");
+  const [copiedCmd, setCopiedCmd] = useState(false);
+  const [showExtSteps, setShowExtSteps] = useState(false);
 
   /* resource usage mock */
   const cpuUsage = 42;
   const memUsage = 61;
   const diskUsage = 28;
+
+  const DESKTOP_DOWNLOAD_URL = "/downloads/ShortStack-Agent-Setup.exe";
+  const EXTENSION_DOWNLOAD_URL = "/downloads/shortstack-extension.zip";
+
+  function handleCopyCmd() {
+    navigator.clipboard.writeText("npx shortstack-agent@latest");
+    setCopiedCmd(true);
+    toast.success("Copied to clipboard");
+    setTimeout(() => setCopiedCmd(false), 2000);
+  }
 
   const filteredLogs = MOCK_LOGS.filter(l => {
     if (logFilter !== "all" && l.level !== logFilter) return false;
@@ -132,59 +184,295 @@ export default function AgentDesktopPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
-            <Monitor size={18} className="text-gold" /> Desktop Agent
+            <Package size={18} className="text-gold" /> Apps &amp; Downloads
           </h1>
-          <p className="text-xs text-muted mt-0.5">Full agent workspace with live monitoring, scheduling, and marketplace</p>
+          <p className="text-xs text-muted mt-0.5">Desktop agent, Chrome extension, and agent monitoring dashboard</p>
         </div>
-        <button className="btn-secondary text-xs flex items-center gap-1.5">
-          <RefreshCw size={12} /> Refresh
+        <button onClick={() => setTab("Activity")} className="btn-secondary text-xs flex items-center gap-1.5">
+          <RefreshCw size={12} /> Agent Status
         </button>
-      </div>
-
-      {/* Resource Usage Strip */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="card p-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] text-muted uppercase tracking-wider flex items-center gap-1"><Cpu size={10} /> CPU</span>
-            <span className="text-xs font-mono font-bold text-gold">{cpuUsage}%</span>
-          </div>
-          <div className="w-full h-2 rounded-full bg-surface-light">
-            <div className="h-2 rounded-full bg-gold transition-all" style={{ width: `${cpuUsage}%` }} />
-          </div>
-        </div>
-        <div className="card p-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] text-muted uppercase tracking-wider flex items-center gap-1"><MemoryStick size={10} /> Memory</span>
-            <span className="text-xs font-mono font-bold text-blue-400">{memUsage}%</span>
-          </div>
-          <div className="w-full h-2 rounded-full bg-surface-light">
-            <div className="h-2 rounded-full bg-blue-400 transition-all" style={{ width: `${memUsage}%` }} />
-          </div>
-        </div>
-        <div className="card p-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] text-muted uppercase tracking-wider flex items-center gap-1"><HardDrive size={10} /> Disk</span>
-            <span className="text-xs font-mono font-bold text-emerald-400">{diskUsage}%</span>
-          </div>
-          <div className="w-full h-2 rounded-full bg-surface-light">
-            <div className="h-2 rounded-full bg-emerald-400 transition-all" style={{ width: `${diskUsage}%` }} />
-          </div>
-        </div>
       </div>
 
       {/* Tab Navigation */}
       <div className="flex gap-1 overflow-x-auto pb-1">
-        {TABS.map(t => (
+        {MAIN_TABS.map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-3 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${
               tab === t ? "bg-gold/15 text-gold border border-gold/20" : "text-muted border border-transparent hover:text-foreground"
-            }`}>{t}</button>
+            }`}>
+            {t === "Downloads" && <span className="mr-1">⬇️</span>}
+            {t}
+          </button>
         ))}
       </div>
+
+      {/* ═══ DOWNLOADS TAB ═══ */}
+      {tab === "Downloads" && (
+        <div className="space-y-6">
+          {/* Two-column download cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            {/* ─── Desktop Agent Card ─────────────────────────── */}
+            <div className="card overflow-hidden p-0">
+              {/* Hero */}
+              <div className="bg-gradient-to-br from-gold/10 via-surface to-surface p-5 border-b border-border">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-gold/10 border border-gold/20 rounded-xl flex items-center justify-center">
+                    <Monitor size={24} className="text-gold" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">Desktop Agent</h2>
+                    <p className="text-[10px] text-muted">Windows &bull; Electron &bull; v1.0.0</p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted leading-relaxed">
+                  A local AI agent that runs directly on your computer with full file system access.
+                  Create projects, organize assets, run scripts — all via natural language.
+                </p>
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="px-2 py-0.5 bg-gold/10 border border-gold/15 rounded-full text-gold text-[9px] font-medium">
+                    17 Tools
+                  </span>
+                  <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/15 rounded-full text-emerald-400 text-[9px] font-medium flex items-center gap-1">
+                    <Shield size={9} /> Sandboxed
+                  </span>
+                  <span className="px-2 py-0.5 bg-blue-500/10 border border-blue-500/15 rounded-full text-blue-400 text-[9px] font-medium flex items-center gap-1">
+                    <Cpu size={9} /> Electron
+                  </span>
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="p-5">
+                <h3 className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-3">Capabilities</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {DESKTOP_FEATURES.map((f) => (
+                    <div key={f.title} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-surface-light hover:bg-surface-light/80 transition-colors">
+                      <div className="text-gold mt-0.5 shrink-0">{f.icon}</div>
+                      <div>
+                        <p className="text-[11px] font-medium">{f.title}</p>
+                        <p className="text-[9px] text-muted leading-relaxed">{f.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Download Actions */}
+              <div className="p-5 border-t border-border bg-surface/50">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <a
+                    href={DESKTOP_DOWNLOAD_URL}
+                    className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-gold hover:bg-gold/90 text-black font-semibold rounded-xl transition-colors text-sm"
+                  >
+                    <Download size={16} />
+                    Download for Windows
+                  </a>
+                  <button
+                    onClick={handleCopyCmd}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-surface-light hover:bg-surface border border-border text-muted rounded-xl transition-colors text-xs font-mono"
+                  >
+                    {copiedCmd ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                    npx shortstack-agent
+                  </button>
+                </div>
+                <div className="flex items-start gap-2 mt-3 p-2.5 bg-surface-light rounded-lg">
+                  <Info size={11} className="text-muted mt-0.5 shrink-0" />
+                  <p className="text-[9px] text-muted leading-relaxed">
+                    Requires Windows 10+ and Node.js 18+. Creates a <span className="text-foreground/70 font-mono">~/ShortStack-Agent</span> workspace. macOS &amp; Linux coming soon.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* ─── Chrome Extension Card ─────────────────────── */}
+            <div className="card overflow-hidden p-0">
+              {/* Hero */}
+              <div className="bg-gradient-to-br from-blue-500/10 via-surface to-surface p-5 border-b border-border">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 bg-blue-500/10 border border-blue-500/20 rounded-xl flex items-center justify-center">
+                    <Globe size={24} className="text-blue-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold">Chrome Extension</h2>
+                    <p className="text-[10px] text-muted">Chrome &bull; Manifest V3</p>
+                  </div>
+                </div>
+                <p className="text-xs text-muted leading-relaxed">
+                  AI-powered browser companion. Analyze competitors, respond to reviews, generate content, audit SEO — all with one click from any page.
+                </p>
+                <div className="flex items-center gap-2 mt-3">
+                  <span className="px-2 py-0.5 bg-blue-500/10 border border-blue-500/15 rounded-full text-blue-400 text-[9px] font-medium">
+                    16 Features
+                  </span>
+                  <span className="px-2 py-0.5 bg-purple-500/10 border border-purple-500/15 rounded-full text-purple-400 text-[9px] font-medium flex items-center gap-1">
+                    <Layout size={9} /> Side Panel
+                  </span>
+                  <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/15 rounded-full text-emerald-400 text-[9px] font-medium flex items-center gap-1">
+                    <Sparkles size={9} /> AI-Powered
+                  </span>
+                </div>
+              </div>
+
+              {/* Features */}
+              <div className="p-5">
+                <h3 className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-3">Capabilities</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {EXTENSION_FEATURES.map((f) => (
+                    <div key={f.title} className="flex items-start gap-2.5 p-2.5 rounded-lg bg-surface-light hover:bg-surface-light/80 transition-colors">
+                      <div className="text-blue-400 mt-0.5 shrink-0">{f.icon}</div>
+                      <div>
+                        <p className="text-[11px] font-medium">{f.title}</p>
+                        <p className="text-[9px] text-muted leading-relaxed">{f.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Install Actions */}
+              <div className="p-5 border-t border-border bg-surface/50">
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <a
+                    href={EXTENSION_DOWNLOAD_URL}
+                    className="flex-1 flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl transition-colors text-sm"
+                  >
+                    <Download size={16} />
+                    Download Extension
+                  </a>
+                  <button
+                    onClick={() => setShowExtSteps(!showExtSteps)}
+                    className="flex items-center justify-center gap-2 px-4 py-3 bg-surface-light hover:bg-surface border border-border text-muted rounded-xl transition-colors text-xs"
+                  >
+                    Install Guide
+                    {showExtSteps ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                  </button>
+                </div>
+
+                {/* Install steps accordion */}
+                {showExtSteps && (
+                  <div className="mt-3 p-3 bg-surface-light rounded-xl border border-border space-y-2">
+                    <h4 className="text-[10px] font-semibold mb-2">Manual Install (Developer Mode)</h4>
+                    {INSTALL_STEPS_EXTENSION.map((step, i) => (
+                      <div key={i} className="flex items-start gap-2.5">
+                        <div className="w-5 h-5 bg-blue-500/15 border border-blue-500/20 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                          <span className="text-blue-400 text-[9px] font-bold">{i + 1}</span>
+                        </div>
+                        <p className="text-[10px] text-muted leading-relaxed">{step}</p>
+                      </div>
+                    ))}
+                    <div className="flex items-start gap-2 mt-2 p-2 bg-blue-500/5 border border-blue-500/10 rounded-lg">
+                      <Info size={10} className="text-blue-400 mt-0.5 shrink-0" />
+                      <p className="text-[9px] text-muted leading-relaxed">
+                        Chrome Web Store listing coming soon. The extension auto-connects to your ShortStack account.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {!showExtSteps && (
+                  <div className="flex items-start gap-2 mt-3 p-2.5 bg-surface-light rounded-lg">
+                    <Info size={11} className="text-muted mt-0.5 shrink-0" />
+                    <p className="text-[9px] text-muted leading-relaxed">
+                      Works on Chrome, Edge, Brave, and any Chromium browser. Requires ShortStack OS account.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Better Together CTA */}
+          <div className="card bg-gradient-to-r from-gold/5 via-surface to-blue-500/5 border-border p-6">
+            <h3 className="text-sm font-bold text-center mb-1">Better Together</h3>
+            <p className="text-[10px] text-muted text-center mb-5 max-w-lg mx-auto">
+              The Desktop Agent and Chrome Extension create a seamless research-to-execution workflow.
+            </p>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center">
+                <div className="w-10 h-10 bg-blue-500/10 border border-blue-500/15 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Globe size={18} className="text-blue-400" />
+                </div>
+                <h4 className="text-xs font-semibold mb-0.5">Research</h4>
+                <p className="text-[9px] text-muted">Analyze competitors, extract data, audit SEO</p>
+              </div>
+              <div className="text-center">
+                <div className="w-10 h-10 bg-surface-light border border-border rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <ArrowRight size={18} className="text-muted" />
+                </div>
+                <h4 className="text-xs font-semibold mb-0.5">Plan</h4>
+                <p className="text-[9px] text-muted">AI generates strategies from your findings</p>
+              </div>
+              <div className="text-center">
+                <div className="w-10 h-10 bg-gold/10 border border-gold/15 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Monitor size={18} className="text-gold" />
+                </div>
+                <h4 className="text-xs font-semibold mb-0.5">Execute</h4>
+                <p className="text-[9px] text-muted">Desktop Agent builds, scaffolds, organizes</p>
+              </div>
+            </div>
+          </div>
+
+          {/* System Requirements */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="card">
+              <h4 className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-3">Desktop Agent Requirements</h4>
+              <div className="space-y-1.5 text-[11px]">
+                <div className="flex justify-between"><span className="text-muted">OS</span><span>Windows 10 / 11</span></div>
+                <div className="flex justify-between"><span className="text-muted">Runtime</span><span>Node.js 18+</span></div>
+                <div className="flex justify-between"><span className="text-muted">RAM</span><span>4 GB minimum</span></div>
+                <div className="flex justify-between"><span className="text-muted">Disk</span><span>~200 MB + workspace</span></div>
+                <div className="flex justify-between"><span className="text-muted">Network</span><span>Internet required for AI</span></div>
+              </div>
+            </div>
+            <div className="card">
+              <h4 className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-3">Chrome Extension Requirements</h4>
+              <div className="space-y-1.5 text-[11px]">
+                <div className="flex justify-between"><span className="text-muted">Browser</span><span>Chrome / Edge / Brave</span></div>
+                <div className="flex justify-between"><span className="text-muted">Version</span><span>Chrome 114+</span></div>
+                <div className="flex justify-between"><span className="text-muted">Manifest</span><span>V3</span></div>
+                <div className="flex justify-between"><span className="text-muted">Permissions</span><span>Active tab, Side panel</span></div>
+                <div className="flex justify-between"><span className="text-muted">Account</span><span>ShortStack OS login</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ═══ ACTIVITY TAB ═══ */}
       {tab === "Activity" && (
         <div className="space-y-4">
+          {/* Resource Usage Strip */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="card p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] text-muted uppercase tracking-wider flex items-center gap-1"><Cpu size={10} /> CPU</span>
+                <span className="text-xs font-mono font-bold text-gold">{cpuUsage}%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-surface-light">
+                <div className="h-2 rounded-full bg-gold transition-all" style={{ width: `${cpuUsage}%` }} />
+              </div>
+            </div>
+            <div className="card p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] text-muted uppercase tracking-wider flex items-center gap-1"><MemoryStick size={10} /> Memory</span>
+                <span className="text-xs font-mono font-bold text-blue-400">{memUsage}%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-surface-light">
+                <div className="h-2 rounded-full bg-blue-400 transition-all" style={{ width: `${memUsage}%` }} />
+              </div>
+            </div>
+            <div className="card p-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] text-muted uppercase tracking-wider flex items-center gap-1"><HardDrive size={10} /> Disk</span>
+                <span className="text-xs font-mono font-bold text-emerald-400">{diskUsage}%</span>
+              </div>
+              <div className="w-full h-2 rounded-full bg-surface-light">
+                <div className="h-2 rounded-full bg-emerald-400 transition-all" style={{ width: `${diskUsage}%` }} />
+              </div>
+            </div>
+          </div>
+
           <div className="card">
             <h2 className="text-sm font-bold flex items-center gap-2 mb-3">
               <Zap size={14} className="text-gold" /> Live Agent Activity
