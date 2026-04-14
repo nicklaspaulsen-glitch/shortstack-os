@@ -703,3 +703,178 @@ BEGIN
   RETURN QUERY SELECT v_base, v_commission, v_base + v_commission, v_deal_count;
 END;
 $$ LANGUAGE plpgsql;
+
+-- ============================================
+-- SECTION 9: GPU AI TOOLS
+-- ============================================
+
+CREATE TABLE voice_profiles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  embedding JSONB,
+  sample_duration DECIMAL(8,2),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_voice_profiles_user ON voice_profiles(user_id);
+
+CREATE TABLE lora_models (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  client_id UUID REFERENCES clients(id) ON DELETE SET NULL,
+  name TEXT NOT NULL,
+  trigger_word TEXT,
+  runpod_job_id TEXT,
+  status TEXT DEFAULT 'pending',
+  config JSONB DEFAULT '{}',
+  lora_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_lora_models_user ON lora_models(user_id);
+CREATE INDEX idx_lora_models_status ON lora_models(status);
+
+CREATE TABLE batch_generations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  total_images INTEGER NOT NULL DEFAULT 1,
+  model TEXT DEFAULT 'flux',
+  style TEXT,
+  job_ids JSONB DEFAULT '[]',
+  status TEXT DEFAULT 'pending',
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_batch_generations_user ON batch_generations(user_id);
+
+-- ============================================
+-- SECTION 10: CLIENT UPLOADS
+-- ============================================
+
+CREATE TABLE client_uploads (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  client_id UUID NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  file_name TEXT NOT NULL,
+  file_type TEXT DEFAULT 'unknown',
+  file_size BIGINT DEFAULT 0,
+  file_url TEXT,
+  category TEXT,
+  status TEXT DEFAULT 'active',
+  uploaded_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_client_uploads_client ON client_uploads(client_id);
+CREATE INDEX idx_client_uploads_category ON client_uploads(category);
+
+-- ============================================
+-- SECTION 11: NOTIFICATIONS
+-- ============================================
+
+CREATE TABLE notifications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  type TEXT DEFAULT 'info',
+  title TEXT NOT NULL,
+  description TEXT,
+  link TEXT,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_notifications_user ON notifications(user_id, is_read);
+CREATE INDEX idx_notifications_created ON notifications(created_at DESC);
+
+-- ============================================
+-- SECTION 12: COMMUNITY FORUM
+-- ============================================
+
+CREATE TABLE community_posts (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  author_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  content TEXT,
+  type TEXT DEFAULT 'discussion',
+  pinned BOOLEAN DEFAULT false,
+  upvotes INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_community_posts_author ON community_posts(author_id);
+CREATE INDEX idx_community_posts_pinned ON community_posts(pinned DESC, created_at DESC);
+
+CREATE TABLE community_comments (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  post_id UUID NOT NULL REFERENCES community_posts(id) ON DELETE CASCADE,
+  author_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_community_comments_post ON community_comments(post_id);
+
+-- ============================================
+-- SECTION 13: SOFTWARE LICENSES
+-- ============================================
+
+CREATE TABLE licenses (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  license_key TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  tier TEXT DEFAULT 'Starter',
+  status TEXT DEFAULT 'trial',
+  stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
+  machine_id TEXT,
+  activated_at TIMESTAMPTZ,
+  expires_at TIMESTAMPTZ,
+  metadata JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_licenses_email ON licenses(email);
+CREATE INDEX idx_licenses_status ON licenses(status);
+
+-- ============================================
+-- SECTION 14: AD ACTIONS
+-- ============================================
+
+CREATE TABLE ad_actions (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  campaign_id UUID REFERENCES campaigns(id) ON DELETE CASCADE,
+  client_id UUID REFERENCES clients(id) ON DELETE SET NULL,
+  platform TEXT,
+  action_type TEXT NOT NULL,
+  title TEXT,
+  description TEXT,
+  ai_reasoning TEXT,
+  proposed_changes JSONB DEFAULT '{}',
+  current_values JSONB DEFAULT '{}',
+  parameters JSONB DEFAULT '{}',
+  estimated_impact TEXT,
+  priority TEXT DEFAULT 'medium',
+  status TEXT DEFAULT 'proposed',
+  approved_at TIMESTAMPTZ,
+  executed_at TIMESTAMPTZ,
+  error_message TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_ad_actions_campaign ON ad_actions(campaign_id);
+CREATE INDEX idx_ad_actions_status ON ad_actions(status);
+
+-- ============================================
+-- SECTION 15: APP SETTINGS
+-- ============================================
+
+CREATE TABLE settings (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  key TEXT NOT NULL UNIQUE,
+  value JSONB,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);

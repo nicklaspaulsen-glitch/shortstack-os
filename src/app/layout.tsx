@@ -6,6 +6,7 @@ import PWARegister from "@/components/pwa-register";
 import ElectronBannerCleanup from "@/components/electron-banner-cleanup";
 import SFXProvider from "@/components/sfx-provider";
 import ThemeProvider from "@/components/theme-provider";
+import { CookieConsent } from "@/components/cookie-consent";
 
 export const metadata: Metadata = {
   title: {
@@ -56,6 +57,7 @@ export default function RootLayout({
           </ThemeProvider>
           <PWARegister />
           <ElectronBannerCleanup />
+          <CookieConsent />
           <Toaster
             position="top-right"
             toastOptions={{

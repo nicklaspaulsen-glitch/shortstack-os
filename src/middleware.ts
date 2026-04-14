@@ -49,6 +49,6 @@ export const config = {
      * NOTE: api/agents is NOT excluded — those routes must do their own
      * auth checks. Excluding them would leave sensitive AI endpoints open.
      */
-    "/((?!_next/static|_next/image|favicon\\.ico|icons|api/cron|api/webhooks|api/tts|api/app|api/license|api/oauth|api/telegram|api/twilio/sms-webhook|api/discord/webhook|tiktok.*\\.txt|manifest\\.json|\\.well-known).*)",
+    "/((?!_next/static|_next/image|favicon\\.ico|icons|api/cron|api/webhooks|api/billing/webhook|api/health|api/tts|api/app|api/license|api/oauth|api/telegram|api/twilio/sms-webhook|api/twilio/voice-webhook|api/discord/webhook|tiktok.*\\.txt|manifest\\.json|\\.well-known).*)",
   ],
 };

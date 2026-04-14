@@ -36,6 +36,42 @@ export async function POST(request: NextRequest) {
       const invoice = event.data.object as Stripe.Invoice;
       const customerId = invoice.customer as string;
 
+      // Check if this is an agency owner renewal first
+      const { data: agencyOwner } = await supabase
+        .from("profiles")
+        .select("id, full_name, email, plan_tier")
+        .eq("stripe_customer_id", customerId)
+        .single();
+
+      if (agencyOwner) {
+        // Agency owner subscription renewal — ensure plan stays active
+        await supabase.from("trinity_log").insert({
+          action_type: "custom",
+          description: `Agency renewal: $${((invoice.amount_paid || 0) / 100).toFixed(2)} — ${agencyOwner.plan_tier} plan`,
+          status: "completed",
+          user_id: agencyOwner.id,
+          result: {
+            type: "agency_renewal",
+            amount: (invoice.amount_paid || 0) / 100,
+            stripe_invoice_id: invoice.id,
+          },
+        });
+
+        const chatId = process.env.TELEGRAM_CHAT_ID;
+        const botToken = process.env.TELEGRAM_BOT_TOKEN;
+        if (chatId && botToken) {
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: `💰 Agency Renewal!\n\n${agencyOwner.full_name || agencyOwner.email}: $${((invoice.amount_paid || 0) / 100).toFixed(2)}\nPlan: ${agencyOwner.plan_tier}`,
+            }),
+          }).catch(() => {});
+        }
+        // Don't break — also check clients table in case they manage client billing too
+      }
+
       // Find the client by stripe_customer_id
       const { data: client } = await supabase
         .from("clients")
@@ -90,6 +126,36 @@ export async function POST(request: NextRequest) {
     case "invoice.payment_failed": {
       const invoice = event.data.object as Stripe.Invoice;
       const customerId = invoice.customer as string;
+
+      // Check if this is an agency owner's failed payment
+      const { data: failedAgency } = await supabase
+        .from("profiles")
+        .select("id, full_name, email, plan_tier")
+        .eq("stripe_customer_id", customerId)
+        .single();
+
+      if (failedAgency) {
+        await supabase.from("trinity_log").insert({
+          action_type: "custom",
+          description: `Agency payment failed: ${failedAgency.full_name || failedAgency.email} — $${((invoice.amount_due || 0) / 100).toFixed(2)}`,
+          status: "failed",
+          user_id: failedAgency.id,
+          result: { type: "agency_payment_failed", stripe_invoice_id: invoice.id },
+        });
+
+        const chatId = process.env.TELEGRAM_CHAT_ID;
+        const botToken = process.env.TELEGRAM_BOT_TOKEN;
+        if (chatId && botToken) {
+          await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: `🚨 Agency Payment Failed!\n\n${failedAgency.full_name || failedAgency.email}\nPlan: ${failedAgency.plan_tier}\nAmount: $${((invoice.amount_due || 0) / 100).toFixed(2)}\nACTION NEEDED`,
+            }),
+          }).catch(() => {});
+        }
+      }
 
       const { data: client } = await supabase
         .from("clients")
