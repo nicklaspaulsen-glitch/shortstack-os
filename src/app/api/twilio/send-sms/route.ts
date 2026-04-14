@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { lead_ids, message_template, from_number, batch_size, use_ai } = await request.json();
+  const { lead_ids, message_template, from_number, client_id, batch_size, use_ai } = await request.json();
 
   // Cap batch size to prevent runaway SMS costs
   const safeBatchSize = Math.min(batch_size || 20, 50);
@@ -19,6 +19,18 @@ export async function POST(request: NextRequest) {
   if (!sid || !token) return NextResponse.json({ error: "Twilio not configured" }, { status: 500 });
 
   const serviceSupabase = createServiceClient();
+
+  // Resolve sender number: explicit from_number → client's provisioned number → system default
+  let resolvedFrom = from_number || "";
+  if (!resolvedFrom && client_id) {
+    const { data: clientRow } = await serviceSupabase
+      .from("clients")
+      .select("twilio_phone_number")
+      .eq("id", client_id)
+      .single();
+    if (clientRow?.twilio_phone_number) resolvedFrom = clientRow.twilio_phone_number;
+  }
+  if (!resolvedFrom) resolvedFrom = process.env.TWILIO_DEFAULT_NUMBER || "";
 
   // Get leads with phone numbers
   let leads;
@@ -71,7 +83,7 @@ export async function POST(request: NextRequest) {
           },
           body: new URLSearchParams({
             To: lead.phone!,
-            From: from_number || process.env.TWILIO_DEFAULT_NUMBER || "",
+            From: resolvedFrom,
             Body: message,
           }),
         }

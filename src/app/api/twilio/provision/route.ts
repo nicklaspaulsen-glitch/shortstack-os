@@ -1,35 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { importPhoneNumber, createAgent, DEFAULT_COLD_CALL_PROMPT, DEFAULT_FIRST_MESSAGE } from "@/lib/services/eleven-agents";
 
 // Provision a Twilio phone number for a client
-// Enables SMS outreach and call forwarding
+// Full pipeline: Twilio purchase → ElevenLabs phone import → ElevenAgent creation
+// Gives each client their own phone number for AI calls + SMS
 //
 // Required env vars:
-//   TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
-//
-// The provisioned number is stored on the client record
-// and can receive inbound SMS (routed via webhook)
+//   TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, ELEVENLABS_API_KEY
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { client_id, area_code, country } = await request.json();
+  const { client_id, area_code, country, agent_name, voice_id, skip_agent } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 
-  const sid = process.env.TWILIO_ACCOUNT_SID;
-  const token = process.env.TWILIO_AUTH_TOKEN;
+  const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+  const twilioToken = process.env.TWILIO_AUTH_TOKEN;
 
-  if (!sid || !token) {
+  if (!twilioSid || !twilioToken) {
     return NextResponse.json({ error: "Twilio not configured. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN." }, { status: 500 });
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
-  const auth = Buffer.from(`${sid}:${token}`).toString("base64");
+  const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
+  const serviceSupabase = createServiceClient();
+
+  // Get client info for naming
+  const { data: client } = await serviceSupabase
+    .from("clients")
+    .select("business_name, industry")
+    .eq("id", client_id)
+    .single();
+
+  const clientName = client?.business_name || "Client";
 
   try {
-    // 1. Search for available numbers
+    // ── Step 1: Search for available Twilio numbers ──
     const searchParams = new URLSearchParams({
       SmsEnabled: "true",
       VoiceEnabled: "true",
@@ -38,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     const countryCode = country || "US";
     const searchRes = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${sid}/AvailablePhoneNumbers/${countryCode}/Local.json?${searchParams}`,
+      `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/AvailablePhoneNumbers/${countryCode}/Local.json?${searchParams}`,
       { headers: { Authorization: `Basic ${auth}` } }
     );
     const searchData = await searchRes.json();
@@ -49,9 +58,9 @@ export async function POST(request: NextRequest) {
 
     const number = searchData.available_phone_numbers[0];
 
-    // 2. Purchase the number
+    // ── Step 2: Purchase the Twilio number ──
     const buyRes = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${sid}/IncomingPhoneNumbers.json`,
+      `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/IncomingPhoneNumbers.json`,
       {
         method: "POST",
         headers: {
@@ -62,7 +71,7 @@ export async function POST(request: NextRequest) {
           PhoneNumber: number.phone_number,
           SmsUrl: `${baseUrl}/api/twilio/sms-webhook?client_id=${client_id}`,
           VoiceUrl: `${baseUrl}/api/twilio/voice-webhook?client_id=${client_id}`,
-          FriendlyName: `ShortStack - ${client_id}`,
+          FriendlyName: `ShortStack - ${clientName}`,
         }),
       }
     );
@@ -73,35 +82,73 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: buyData.message || "Failed to provision number" }, { status: 500 });
     }
 
-    // 3. Save to client record
-    await supabase
+    // ── Step 3: Import phone number to ElevenLabs ──
+    let elevenPhoneId = "";
+    const elevenResult = await importPhoneNumber({
+      phoneNumber: buyData.phone_number,
+      label: `${clientName} Caller`,
+      twilioSid,
+      twilioToken,
+    });
+
+    if (elevenResult.error) {
+      console.warn("[provision] ElevenLabs phone import failed:", elevenResult.error);
+      // Non-fatal — the number still works for SMS, just not AI calls yet
+    } else {
+      elevenPhoneId = elevenResult.phoneNumberId;
+    }
+
+    // ── Step 4: Create a per-client ElevenAgent (unless skipped) ──
+    let elevenAgentId = "";
+    if (!skip_agent && elevenPhoneId) {
+      const agentResult = await createAgent({
+        name: agent_name || `${clientName} AI Caller`,
+        firstMessage: DEFAULT_FIRST_MESSAGE,
+        systemPrompt: DEFAULT_COLD_CALL_PROMPT,
+        voiceId: voice_id,
+        language: "en",
+        maxDurationSeconds: 300,
+      });
+
+      if (agentResult.error) {
+        console.warn("[provision] ElevenAgent creation failed:", agentResult.error);
+      } else {
+        elevenAgentId = agentResult.agentId;
+      }
+    }
+
+    // ── Step 5: Save everything to client record ──
+    await serviceSupabase
       .from("clients")
       .update({
-        metadata: {
-          twilio_phone: buyData.phone_number,
-          twilio_sid: buyData.sid,
-          twilio_provisioned_at: new Date().toISOString(),
-        },
+        twilio_phone_number: buyData.phone_number,
+        twilio_phone_sid: buyData.sid,
+        ...(elevenPhoneId && { eleven_phone_number_id: elevenPhoneId }),
+        ...(elevenAgentId && { eleven_agent_id: elevenAgentId }),
       })
       .eq("id", client_id);
 
-    // 4. Log
-    await supabase.from("trinity_log").insert({
+    // ── Step 6: Log ──
+    await serviceSupabase.from("trinity_log").insert({
       action_type: "custom",
-      description: `Phone number provisioned: ${buyData.friendly_name} (${buyData.phone_number})`,
+      description: `Phone provisioned for ${clientName}: ${buyData.phone_number}${elevenAgentId ? " + AI agent created" : ""}`,
       client_id,
       status: "completed",
       result: {
-        type: "twilio_provision",
+        type: "client_phone_provision",
         phone: buyData.phone_number,
-        sid: buyData.sid,
+        twilio_sid: buyData.sid,
+        eleven_phone_id: elevenPhoneId || null,
+        eleven_agent_id: elevenAgentId || null,
       },
     });
 
     return NextResponse.json({
       success: true,
       phone_number: buyData.phone_number,
-      sid: buyData.sid,
+      twilio_sid: buyData.sid,
+      eleven_phone_number_id: elevenPhoneId || null,
+      eleven_agent_id: elevenAgentId || null,
     });
   } catch (err) {
     console.error("Twilio provision error:", err);

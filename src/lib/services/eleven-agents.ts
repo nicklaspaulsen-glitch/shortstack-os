@@ -222,7 +222,8 @@ export async function listConversations(agentId?: string): Promise<Array<Record<
 
 export async function runElevenAgentCalls(
   supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>,
-  maxCalls: number = 10
+  maxCalls: number = 10,
+  clientId?: string,
 ): Promise<{
   totalCalled: number;
   errors: number;
@@ -234,20 +235,37 @@ export async function runElevenAgentCalls(
     leads: [] as Array<{ business: string; phone: string; status: string; conversationId?: string }>,
   };
 
-  // Get agent config from settings
-  const { data: settingsRow } = await supabase
-    .from("system_health")
-    .select("metadata")
-    .eq("integration_name", "agent_settings")
-    .single();
+  // Resolve agent config: per-client first, then system-wide fallback
+  let agentId = "";
+  let phoneNumberId = "";
 
-  const settings = (settingsRow?.metadata as Record<string, Record<string, unknown>> | null) || {};
-  const elevenConfig = settings.eleven_agents || {};
-  const agentId = elevenConfig.agent_id as string;
-  const phoneNumberId = elevenConfig.phone_number_id as string;
+  if (clientId) {
+    const { data: clientRow } = await supabase
+      .from("clients")
+      .select("eleven_agent_id, eleven_phone_number_id")
+      .eq("id", clientId)
+      .single();
+
+    if (clientRow?.eleven_agent_id) agentId = clientRow.eleven_agent_id;
+    if (clientRow?.eleven_phone_number_id) phoneNumberId = clientRow.eleven_phone_number_id;
+  }
+
+  // Fallback to system-wide config
+  if (!agentId || !phoneNumberId) {
+    const { data: settingsRow } = await supabase
+      .from("system_health")
+      .select("metadata")
+      .eq("integration_name", "agent_settings")
+      .single();
+
+    const settings = (settingsRow?.metadata as Record<string, Record<string, unknown>> | null) || {};
+    const elevenConfig = settings.eleven_agents || {};
+    if (!agentId) agentId = elevenConfig.agent_id as string;
+    if (!phoneNumberId) phoneNumberId = elevenConfig.phone_number_id as string;
+  }
 
   if (!agentId || !phoneNumberId) {
-    return { ...results, errors: 1, leads: [{ business: "Config", phone: "", status: "ElevenAgent not configured (need agent_id + phone_number_id)" }] };
+    return { ...results, errors: 1, leads: [{ business: "Config", phone: "", status: "ElevenAgent not configured — provision a phone for this client or set a system-wide agent" }] };
   }
 
   // Get leads recently called in last 48h to prevent duplicates

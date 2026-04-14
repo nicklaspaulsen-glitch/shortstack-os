@@ -24,22 +24,42 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid phone number format" }, { status: 400 });
   }
 
-  // Get agent config from system_health
+  // Resolve agent config: per-client first, then system-wide fallback
   const supabase = createServiceClient();
-  const { data: settingsRow } = await supabase
-    .from("system_health")
-    .select("metadata")
-    .eq("integration_name", "agent_settings")
-    .single();
+  let agentId = "";
+  let phoneNumberId = "";
 
-  const settings = (settingsRow?.metadata as Record<string, Record<string, unknown>> | null) || {};
-  const elevenConfig = settings.eleven_agents || {};
-  const agentId = elevenConfig.agent_id as string;
-  const phoneNumberId = elevenConfig.phone_number_id as string;
+  // If client_id provided, try per-client agent
+  if (body.client_id) {
+    const { data: clientRow } = await supabase
+      .from("clients")
+      .select("eleven_agent_id, eleven_phone_number_id, business_name")
+      .eq("id", body.client_id)
+      .single();
+
+    if (clientRow?.eleven_agent_id && clientRow?.eleven_phone_number_id) {
+      agentId = clientRow.eleven_agent_id;
+      phoneNumberId = clientRow.eleven_phone_number_id;
+    }
+  }
+
+  // Fallback to system-wide config
+  if (!agentId || !phoneNumberId) {
+    const { data: settingsRow } = await supabase
+      .from("system_health")
+      .select("metadata")
+      .eq("integration_name", "agent_settings")
+      .single();
+
+    const settings = (settingsRow?.metadata as Record<string, Record<string, unknown>> | null) || {};
+    const elevenConfig = settings.eleven_agents || {};
+    if (!agentId) agentId = elevenConfig.agent_id as string;
+    if (!phoneNumberId) phoneNumberId = elevenConfig.phone_number_id as string;
+  }
 
   if (!agentId || !phoneNumberId) {
     return NextResponse.json(
-      { error: "ElevenAgent not configured. Go to AI Caller → Setup to configure agent and phone number." },
+      { error: "ElevenAgent not configured. Provision a phone number for this client or configure a system-wide agent." },
       { status: 400 }
     );
   }

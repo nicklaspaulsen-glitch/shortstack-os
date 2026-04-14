@@ -137,9 +137,17 @@ CREATE TABLE clients (
   contract_status contract_status DEFAULT 'draft',
   pandadoc_contract_id TEXT,
   ghl_contact_id TEXT,
+  ghl_subaccount_id TEXT,             -- GHL subaccount for client email/CRM
   stripe_customer_id TEXT,
+  stripe_subscription_id TEXT,
+  twilio_phone_number TEXT,           -- provisioned Twilio number (+15551234567)
+  twilio_phone_sid TEXT,              -- Twilio IncomingPhoneNumber SID
+  eleven_agent_id TEXT,               -- ElevenLabs ConvAI agent for AI calls
+  eleven_phone_number_id TEXT,        -- ElevenLabs phone linked to Twilio
+  zernio_profile_id TEXT,             -- Zernio profile for social publishing
   health_score INTEGER DEFAULT 100, -- 0-100
   notes TEXT,
+  metadata JSONB DEFAULT '{}',        -- extensible integration data
   is_active BOOLEAN DEFAULT true,
   onboarded_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT now(),
