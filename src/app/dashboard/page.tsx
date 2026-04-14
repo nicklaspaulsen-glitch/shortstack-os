@@ -237,6 +237,38 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* ─── AI Studio Quick Access ──────────────────────────────── */}
+      <div className="card-static">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-semibold flex items-center gap-2">
+            <Sparkles size={14} className="text-purple-400" /> AI Studio
+            <span className="text-[9px] text-muted font-normal bg-purple-500/10 text-purple-400 px-2 py-0.5 rounded-full">GPU-Powered</span>
+          </h2>
+          <Link href="/dashboard/ai-studio" className="text-[10px] text-gold hover:underline flex items-center gap-0.5 font-medium">
+            Open Studio <ChevronRight size={10} />
+          </Link>
+        </div>
+        <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+          {[
+            { label: "Transcribe", icon: "🎙️", href: "/dashboard/ai-studio?tab=transcribe", desc: "Speech → Text" },
+            { label: "Upscale", icon: "🔍", href: "/dashboard/ai-studio?tab=upscale", desc: "Enhance images" },
+            { label: "Remove BG", icon: "✂️", href: "/dashboard/ai-studio?tab=remove-bg", desc: "Background removal" },
+            { label: "Voice Clone", icon: "🗣️", href: "/dashboard/ai-studio?tab=voice-clone", desc: "AI voice synthesis" },
+            { label: "AI Video", icon: "🎬", href: "/dashboard/ai-video", desc: "Image → Video" },
+            { label: "Music Gen", icon: "🎵", href: "/dashboard/ai-studio?tab=music-gen", desc: "AI music creation" },
+            { label: "Image Gen", icon: "🎨", href: "/dashboard/ai-studio?tab=batch-generate", desc: "FLUX / SDXL" },
+            { label: "LoRA Train", icon: "🧠", href: "/dashboard/ai-studio?tab=train-lora", desc: "Custom AI models" },
+          ].map((tool) => (
+            <Link key={tool.label} href={tool.href}
+              className="flex flex-col items-center gap-1 p-2.5 rounded-xl border border-border hover:border-purple-500/20 hover:bg-purple-500/5 transition-all group cursor-pointer text-center">
+              <span className="text-lg">{tool.icon}</span>
+              <span className="text-[10px] font-medium text-muted group-hover:text-foreground transition-colors">{tool.label}</span>
+              <span className="text-[8px] text-muted/60 hidden md:block">{tool.desc}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
       {/* ─── Pipeline + Outreach ───────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Lead Pipeline */}
