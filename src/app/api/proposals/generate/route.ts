@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Sales Proposal Generator — Creates premium proposal PDFs for prospects
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   const body = await request.json();
   const { prospect_name, business_name, industry, services, package_tier, mrr, pain_points, goals } = body;

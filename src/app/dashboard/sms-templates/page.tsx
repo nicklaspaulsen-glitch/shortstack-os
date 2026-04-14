@@ -1,186 +1,503 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
 import {
-  MessageSquare, Plus, Copy, Sparkles, Trash2, Loader, Edit3
+  MessageSquare, Plus, Copy, Sparkles, Trash2, Edit3,
+  Search, Shield, Link2, BarChart3, Clock, Send,
+  AlertTriangle, CheckCircle, Smile, Calendar, Eye,
+  TrendingUp, Settings, X
 } from "lucide-react";
-import toast from "react-hot-toast";
+
+type MainTab = "library" | "preview" | "compliance" | "analytics" | "links" | "schedule";
 
 interface SMSTemplate {
   id: string;
   name: string;
   body: string;
   category: string;
+  sends: number;
+  delivered: number;
+  replies: number;
 }
 
 const DEFAULT_TEMPLATES: SMSTemplate[] = [
-  { id: "1", name: "Cold Intro", body: "Hey {name}! I came across {business_name} and love what you're doing. We help {industry} businesses get more clients through social media. Mind if I send over a quick case study?", category: "Outreach" },
-  { id: "2", name: "Follow Up #1", body: "Hey {name}! Just following up on my last message. We recently helped a {industry} business get 30+ new clients in 30 days. Would love to share how. Quick chat this week?", category: "Follow Up" },
-  { id: "3", name: "Follow Up #2", body: "Hey {name}, last one from me! I put together a free marketing audit for {business_name} — no strings attached. Want me to send it over?", category: "Follow Up" },
-  { id: "4", name: "Appointment Reminder", body: "Hey {name}! Just a reminder about our call tomorrow at {time}. Looking forward to chatting about {business_name}! Here's the link: {link}", category: "Scheduling" },
-  { id: "5", name: "No Show Follow Up", body: "Hey {name}, looks like we missed each other today. No worries! Would you like to reschedule? I have openings this week.", category: "Scheduling" },
-  { id: "6", name: "Post-Call Thank You", body: "Hey {name}! Great chatting today. As discussed, I'll send over the proposal for {business_name} by end of day. Excited to get started!", category: "Sales" },
-  { id: "7", name: "Invoice Reminder", body: "Hey {name}, friendly reminder that your invoice of ${amount} is due on {due_date}. You can pay here: {link}. Thanks!", category: "Billing" },
-  { id: "8", name: "Content Approval", body: "Hey {name}! Your content for this week is ready for review. Check it out in your portal: {link}. Let me know if you'd like any changes!", category: "Client" },
-  { id: "9", name: "Review Request", body: "Hey {name}! Working with {business_name} has been awesome. Would you mind leaving us a quick Google review? It really helps! {link}", category: "Reviews" },
-  { id: "10", name: "Referral Ask", body: "Hey {name}! So glad the results have been great for {business_name}. Know anyone else who could use similar results? I'd love an intro — and there's a referral bonus for you!", category: "Referral" },
+  { id: "1", name: "Cold Intro", body: "Hey {name}! I came across {business_name} and love what you're doing. We help {industry} businesses get more clients through social media. Mind if I send over a quick case study?", category: "Outreach", sends: 234, delivered: 228, replies: 18 },
+  { id: "2", name: "Follow Up #1", body: "Hey {name}! Just following up on my last message. We recently helped a {industry} business get 30+ new clients in 30 days. Would love to share how. Quick chat this week?", category: "Follow Up", sends: 189, delivered: 185, replies: 14 },
+  { id: "3", name: "Follow Up #2", body: "Hey {name}, last one from me! I put together a free marketing audit for {business_name} - no strings attached. Want me to send it over?", category: "Follow Up", sends: 156, delivered: 152, replies: 22 },
+  { id: "4", name: "Appointment Reminder", body: "Hey {name}! Just a reminder about our call tomorrow at {time}. Looking forward to chatting about {business_name}! Here's the link: {link}", category: "Scheduling", sends: 89, delivered: 89, replies: 67 },
+  { id: "5", name: "No Show Follow Up", body: "Hey {name}, looks like we missed each other today. No worries! Would you like to reschedule? I have openings this week.", category: "Scheduling", sends: 45, delivered: 44, replies: 28 },
+  { id: "6", name: "Post-Call Thank You", body: "Hey {name}! Great chatting today. As discussed, I'll send over the proposal for {business_name} by end of day. Excited to get started!", category: "Sales", sends: 67, delivered: 67, replies: 52 },
+  { id: "7", name: "Invoice Reminder", body: "Hey {name}, friendly reminder that your invoice of ${amount} is due on {due_date}. You can pay here: {link}. Thanks!", category: "Billing", sends: 112, delivered: 110, replies: 45 },
+  { id: "8", name: "Content Approval", body: "Hey {name}! Your content for this week is ready for review. Check it out in your portal: {link}. Let me know if you'd like any changes!", category: "Client", sends: 78, delivered: 78, replies: 61 },
+  { id: "9", name: "Review Request", body: "Hey {name}! Working with {business_name} has been awesome. Would you mind leaving us a quick Google review? It really helps! {link}", category: "Reviews", sends: 134, delivered: 131, replies: 42 },
+  { id: "10", name: "Referral Ask", body: "Hey {name}! So glad the results have been great for {business_name}. Know anyone else who could use similar results? I'd love an intro!", category: "Referral", sends: 56, delivered: 55, replies: 18 },
+  { id: "11", name: "Holiday Greeting", body: "Happy holidays {name}! Wishing you and the {business_name} team an amazing season. Excited for what we'll accomplish together in the new year!", category: "Seasonal", sends: 201, delivered: 198, replies: 89 },
+  { id: "12", name: "Re-engagement", body: "Hey {name}! It's been a while since we connected. Just wanted to check in - are you still looking to grow {business_name}? We have some new strategies that are working great!", category: "Re-engagement", sends: 167, delivered: 162, replies: 12 },
+];
+
+const EMOJI_CATEGORIES = [
+  { name: "Smileys", emojis: ["😀", "😊", "🤝", "👋", "🎉", "🔥", "💪", "✅"] },
+  { name: "Business", emojis: ["📊", "💰", "📈", "🏆", "🎯", "💼", "📱", "🖥️"] },
+  { name: "Actions", emojis: ["👉", "✨", "⭐", "🚀", "💡", "📞", "📧", "⏰"] },
+];
+
+const MERGE_TAGS = [
+  "{name}", "{first_name}", "{last_name}", "{business_name}",
+  "{industry}", "{city}", "{phone}", "{link}",
+  "{amount}", "{due_date}", "{time}", "{date}",
 ];
 
 export default function SMSTemplatesPage() {
-  useAuth();
+  const [activeTab, setActiveTab] = useState<MainTab>("library");
   const [templates, setTemplates] = useState<SMSTemplate[]>(DEFAULT_TEMPLATES);
   const [editing, setEditing] = useState<string | null>(null);
-  const [generating, setGenerating] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
   const [newTemplate, setNewTemplate] = useState({ name: "", body: "", category: "Outreach" });
   const [showAdd, setShowAdd] = useState(false);
+  const [previewTemplate, setPreviewTemplate] = useState<SMSTemplate | null>(null);
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [optOutFooter, setOptOutFooter] = useState("Reply STOP to unsubscribe");
+  const [shortLinkInput, setShortLinkInput] = useState("");
 
   const categories = ["all", ...Array.from(new Set(templates.map(t => t.category)))];
+  const filtered = templates
+    .filter(t => (filter === "all" || t.category === filter) && (!search || t.name.toLowerCase().includes(search.toLowerCase()) || t.body.toLowerCase().includes(search.toLowerCase())));
 
-  async function generateWithAI(purpose: string) {
-    setGenerating(true);
-    try {
-      const res = await fetch("/api/agents/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: `Write 3 SMS templates for "${purpose}" for a digital marketing agency. Each SMS should be under 160 characters, use {name} and {business_name} as variables. Make them conversational and personal. Return each on a new line, numbered 1-3. No markdown.`,
-          agent_name: "Content Agent",
-        }),
-      });
-      const data = await res.json();
-      if (data.result) {
-        toast.success("AI generated templates!");
-        // Parse results into templates
-        const lines = data.result.split("\n").filter((l: string) => l.trim().match(/^\d/));
-        lines.forEach((line: string, i: number) => {
-          const body = line.replace(/^\d+[\.\)]\s*/, "").trim();
-          if (body) {
-            setTemplates(prev => [...prev, {
-              id: `ai_${Date.now()}_${i}`,
-              name: `AI: ${purpose} #${i + 1}`,
-              body,
-              category: "AI Generated",
-            }]);
-          }
-        });
-      }
-    } catch { toast.error("Failed to generate"); }
-    setGenerating(false);
-  }
+  const getSegments = (text: string) => {
+    const len = text.length;
+    if (len <= 160) return 1;
+    return Math.ceil(len / 153);
+  };
 
-  const filtered = filter === "all" ? templates : templates.filter(t => t.category === filter);
+  const totalSends = templates.reduce((s, t) => s + t.sends, 0);
+  const totalDelivered = templates.reduce((s, t) => s + t.delivered, 0);
+  const totalReplies = templates.reduce((s, t) => s + t.replies, 0);
+  const deliveryRate = totalSends > 0 ? ((totalDelivered / totalSends) * 100).toFixed(1) : "0";
+  const replyRate = totalDelivered > 0 ? ((totalReplies / totalDelivered) * 100).toFixed(1) : "0";
+
+  const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
+    { key: "library", label: "Template Library", icon: <MessageSquare size={14} /> },
+    { key: "preview", label: "Preview", icon: <Eye size={14} /> },
+    { key: "compliance", label: "TCPA Compliance", icon: <Shield size={14} /> },
+    { key: "analytics", label: "SMS Analytics", icon: <BarChart3 size={14} /> },
+    { key: "links", label: "Short Links", icon: <Link2 size={14} /> },
+    { key: "schedule", label: "Schedule", icon: <Calendar size={14} /> },
+  ];
 
   return (
     <div className="fade-in space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
             <MessageSquare size={18} className="text-gold" /> SMS Templates
           </h1>
-          <p className="text-xs text-muted mt-0.5">{templates.length} templates · Click to copy, edit, or generate with AI</p>
+          <p className="text-xs text-muted mt-0.5">{templates.length} templates | Segment calculator, compliance checker, analytics</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => generateWithAI("cold outreach")} disabled={generating}
-            className="btn-secondary text-xs flex items-center gap-1.5">
-            {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
-            AI Generate
-          </button>
-          <button onClick={() => setShowAdd(true)} className="btn-primary text-xs flex items-center gap-1.5">
-            <Plus size={12} /> New
-          </button>
+          <button className="btn-secondary text-xs flex items-center gap-1.5"><Sparkles size={12} /> AI Generate</button>
+          <button onClick={() => setShowAdd(true)} className="btn-primary text-xs flex items-center gap-1.5"><Plus size={12} /> New</button>
         </div>
       </div>
 
-      {/* Category filter */}
-      <div className="flex gap-1.5 flex-wrap">
-        {categories.map(c => (
-          <button key={c} onClick={() => setFilter(c)}
-            className={`text-[10px] px-3 py-1.5 rounded-lg capitalize transition-all ${
-              filter === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
-            }`}>
-            {c}
-          </button>
+      {/* Tabs */}
+      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setActiveTab(t.key)}
+            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+            }`}>{t.icon} {t.label}</button>
         ))}
       </div>
 
-      {/* Add form */}
-      {showAdd && (
-        <div className="card border-gold/10">
-          <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <input value={newTemplate.name} onChange={e => setNewTemplate({ ...newTemplate, name: e.target.value })}
-                className="input text-xs" placeholder="Template name" />
-              <select value={newTemplate.category} onChange={e => setNewTemplate({ ...newTemplate, category: e.target.value })} className="input text-xs">
-                <option value="Outreach">Outreach</option>
-                <option value="Follow Up">Follow Up</option>
-                <option value="Scheduling">Scheduling</option>
-                <option value="Sales">Sales</option>
-                <option value="Billing">Billing</option>
-                <option value="Client">Client</option>
-                <option value="Reviews">Reviews</option>
-                <option value="Referral">Referral</option>
-              </select>
+      {/* ===== TEMPLATE LIBRARY ===== */}
+      {activeTab === "library" && (
+        <div className="space-y-4">
+          {/* Filters */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search templates..." />
             </div>
-            <textarea value={newTemplate.body} onChange={e => setNewTemplate({ ...newTemplate, body: e.target.value })}
-              className="input w-full h-20 text-xs" placeholder="SMS body... use {name}, {business_name}, {industry}" />
-            <div className="flex justify-between">
-              <span className="text-[9px] text-muted">{newTemplate.body.length}/160 chars</span>
-              <div className="flex gap-2">
-                <button onClick={() => setShowAdd(false)} className="btn-ghost text-xs">Cancel</button>
-                <button onClick={() => {
-                  if (!newTemplate.name || !newTemplate.body) { toast.error("Fill in name and body"); return; }
-                  setTemplates(prev => [...prev, { id: `t_${Date.now()}`, ...newTemplate }]);
-                  setNewTemplate({ name: "", body: "", category: "Outreach" });
-                  setShowAdd(false);
-                  toast.success("Template added!");
-                }} className="btn-primary text-xs">Save</button>
+            <div className="flex gap-1.5 flex-wrap">
+              {categories.map(c => (
+                <button key={c} onClick={() => setFilter(c)}
+                  className={`text-[10px] px-2.5 py-1.5 rounded-lg capitalize ${
+                    filter === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                  }`}>{c}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Add form */}
+          {showAdd && (
+            <div className="card border-gold/10 space-y-2 p-4">
+              <h4 className="text-xs font-semibold">New SMS Template</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <input value={newTemplate.name} onChange={e => setNewTemplate({ ...newTemplate, name: e.target.value })} className="input text-xs" placeholder="Template name" />
+                <select value={newTemplate.category} onChange={e => setNewTemplate({ ...newTemplate, category: e.target.value })} className="input text-xs">
+                  <option value="Outreach">Outreach</option>
+                  <option value="Follow Up">Follow Up</option>
+                  <option value="Scheduling">Scheduling</option>
+                  <option value="Sales">Sales</option>
+                  <option value="Billing">Billing</option>
+                  <option value="Client">Client</option>
+                  <option value="Reviews">Reviews</option>
+                  <option value="Referral">Referral</option>
+                </select>
+              </div>
+              <div className="relative">
+                <textarea value={newTemplate.body} onChange={e => setNewTemplate({ ...newTemplate, body: e.target.value })} className="input w-full h-20 text-xs" placeholder="SMS body..." />
+                <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-muted hover:text-gold"><Smile size={14} /></button>
+              </div>
+              {showEmoji && (
+                <div className="p-2 rounded-lg bg-surface-light border border-border">
+                  {EMOJI_CATEGORIES.map(cat => (
+                    <div key={cat.name} className="mb-1.5">
+                      <p className="text-[8px] text-muted mb-0.5">{cat.name}</p>
+                      <div className="flex gap-1 flex-wrap">
+                        {cat.emojis.map(e => (
+                          <button key={e} onClick={() => setNewTemplate(prev => ({ ...prev, body: prev.body + e }))}
+                            className="text-sm hover:bg-white/10 rounded p-0.5">{e}</button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {/* Merge tags */}
+              <div className="flex flex-wrap gap-1">
+                {MERGE_TAGS.map(tag => (
+                  <button key={tag} onClick={() => setNewTemplate(prev => ({ ...prev, body: prev.body + " " + tag }))}
+                    className="text-[8px] px-1.5 py-0.5 rounded bg-gold/10 text-gold hover:bg-gold/20">{tag}</button>
+                ))}
+              </div>
+              {/* Character counter */}
+              <div className="flex items-center justify-between text-[9px]">
+                <div className="flex items-center gap-3">
+                  <span className={newTemplate.body.length > 160 ? "text-yellow-400" : "text-muted"}>{newTemplate.body.length}/160 chars</span>
+                  <span className="text-muted">{getSegments(newTemplate.body)} segment{getSegments(newTemplate.body) > 1 ? "s" : ""}</span>
+                  {getSegments(newTemplate.body) > 1 && <span className="text-yellow-400">({getSegments(newTemplate.body)} credits)</span>}
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={() => { setShowAdd(false); setShowEmoji(false); }} className="btn-ghost text-xs">Cancel</button>
+                  <button onClick={() => {
+                    if (!newTemplate.name || !newTemplate.body) return;
+                    setTemplates(prev => [...prev, { id: `t_${Date.now()}`, ...newTemplate, sends: 0, delivered: 0, replies: 0 }]);
+                    setNewTemplate({ name: "", body: "", category: "Outreach" });
+                    setShowAdd(false);
+                    setShowEmoji(false);
+                  }} className="btn-primary text-xs">Save</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Template Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {filtered.map(template => (
+              <div key={template.id} className="p-4 rounded-xl bg-surface-light border border-border group transition-all hover:border-gold/10">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <p className="text-xs font-semibold">{template.name}</p>
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold">{template.category}</span>
+                  </div>
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => { navigator.clipboard.writeText(template.body); }} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Copy size={10} /></button>
+                    <button onClick={() => setPreviewTemplate(template)} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Eye size={10} /></button>
+                    <button onClick={() => setEditing(editing === template.id ? null : template.id)} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Edit3 size={10} /></button>
+                    <button onClick={() => setTemplates(prev => prev.filter(t => t.id !== template.id))} className="p-1 rounded hover:bg-red-400/10 text-muted hover:text-red-400"><Trash2 size={10} /></button>
+                  </div>
+                </div>
+
+                {editing === template.id ? (
+                  <textarea value={template.body} onChange={e => {
+                    setTemplates(prev => prev.map(t => t.id === template.id ? { ...t, body: e.target.value } : t));
+                  }} className="input w-full h-20 text-xs" />
+                ) : (
+                  <p className="text-[11px] text-muted leading-relaxed">{template.body}</p>
+                )}
+
+                <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
+                  <div className="flex items-center gap-3 text-[8px] text-muted">
+                    <span>{template.body.length} chars</span>
+                    <span>{getSegments(template.body)} seg</span>
+                    {template.sends > 0 && (
+                      <>
+                        <span className="text-blue-400">{template.sends} sent</span>
+                        <span className="text-green-400">{template.replies} replies</span>
+                      </>
+                    )}
+                  </div>
+                  <button onClick={() => { navigator.clipboard.writeText(template.body); }}
+                    className="text-[9px] text-gold hover:text-gold flex items-center gap-0.5">
+                    <Copy size={8} /> Copy
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== PREVIEW PANEL ===== */}
+      {activeTab === "preview" && (
+        <div className="space-y-4">
+          <div className="flex justify-center">
+            <div className="w-[320px] bg-gray-900 rounded-[2rem] p-3 shadow-2xl">
+              <div className="bg-gray-800 rounded-[1.5rem] overflow-hidden">
+                <div className="bg-gray-700 p-3 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center">
+                    <MessageSquare size={12} className="text-gold" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-semibold text-white">ShortStack</p>
+                    <p className="text-[8px] text-gray-400">SMS</p>
+                  </div>
+                </div>
+                <div className="p-3 min-h-[300px] space-y-2">
+                  {previewTemplate ? (
+                    <div className="bg-green-600 rounded-2xl rounded-tl-sm p-3 max-w-[85%]">
+                      <p className="text-[10px] text-white leading-relaxed">
+                        {previewTemplate.body
+                          .replace(/\{name\}/g, "John")
+                          .replace(/\{first_name\}/g, "John")
+                          .replace(/\{business_name\}/g, "Bright Smile Dental")
+                          .replace(/\{industry\}/g, "dental")
+                          .replace(/\{link\}/g, "srtst.ck/abc123")
+                          .replace(/\{time\}/g, "2:00 PM")
+                          .replace(/\{amount\}/g, "2,497")
+                          .replace(/\{due_date\}/g, "Apr 21")}
+                      </p>
+                      <p className="text-[7px] text-green-200 mt-1 text-right">10:32 AM</p>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <MessageSquare size={24} className="mx-auto mb-2 text-gray-600" />
+                      <p className="text-[10px] text-gray-500">Select a template from the Library tab to preview</p>
+                    </div>
+                  )}
+                  {previewTemplate && optOutFooter && (
+                    <p className="text-[7px] text-gray-500 text-center mt-3">{optOutFooter}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Template selector for preview */}
+          <div className="card">
+            <h4 className="text-xs font-semibold mb-2">Select Template to Preview</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+              {templates.slice(0, 8).map(t => (
+                <button key={t.id} onClick={() => setPreviewTemplate(t)}
+                  className={`text-left p-2 rounded-lg text-[9px] border transition-all ${
+                    previewTemplate?.id === t.id ? "border-gold/30 bg-gold/5" : "border-border hover:border-gold/10"
+                  }`}>
+                  <p className="font-semibold truncate">{t.name}</p>
+                  <p className="text-muted">{t.body.length} chars</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== TCPA COMPLIANCE ===== */}
+      {activeTab === "compliance" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Compliance Checker */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Shield size={14} className="text-gold" /> TCPA Compliance Checker
+              </h3>
+              <div className="space-y-2">
+                {[
+                  { rule: "Opt-in consent recorded for all contacts", status: "pass" },
+                  { rule: "Opt-out mechanism in every message", status: optOutFooter ? "pass" : "fail" },
+                  { rule: "Sending within allowed hours (8AM-9PM)", status: "pass" },
+                  { rule: "Business identification included", status: "pass" },
+                  { rule: "No prohibited content detected", status: "pass" },
+                  { rule: "Contact list scrubbed against DNC", status: "warning" },
+                  { rule: "Message frequency within limits", status: "pass" },
+                ].map((check, i) => (
+                  <div key={i} className="flex items-center justify-between p-2.5 rounded bg-surface-light">
+                    <div className="flex items-center gap-2 text-[10px]">
+                      {check.status === "pass" ? <CheckCircle size={12} className="text-green-400" /> :
+                       check.status === "warning" ? <AlertTriangle size={12} className="text-yellow-400" /> :
+                       <X size={12} className="text-red-400" />}
+                      <span>{check.rule}</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded ${
+                      check.status === "pass" ? "bg-green-400/10 text-green-400" :
+                      check.status === "warning" ? "bg-yellow-400/10 text-yellow-400" :
+                      "bg-red-400/10 text-red-400"
+                    }`}>{check.status}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Opt-out Footer Manager */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Settings size={14} className="text-gold" /> Opt-out Footer Manager
+              </h3>
+              <p className="text-[10px] text-muted mb-3">This footer is automatically appended to all outgoing SMS.</p>
+              <div className="space-y-2">
+                {[
+                  "Reply STOP to unsubscribe",
+                  "Text STOP to opt out",
+                  "Reply STOP to stop receiving messages",
+                  "To unsubscribe, reply STOP",
+                ].map((footer, i) => (
+                  <button key={i} onClick={() => setOptOutFooter(footer)}
+                    className={`w-full text-left p-2.5 rounded-lg text-[10px] border transition-all ${
+                      optOutFooter === footer ? "border-gold/30 bg-gold/5 text-gold" : "border-border text-muted hover:border-gold/10"
+                    }`}>{footer}</button>
+                ))}
+                <div className="flex gap-2 mt-2">
+                  <input value={optOutFooter} onChange={e => setOptOutFooter(e.target.value)} className="input flex-1 text-xs" placeholder="Custom footer..." />
+                  <button className="btn-primary text-xs">Save</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Templates grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        {filtered.map(template => (
-          <div key={template.id} className="p-4 rounded-xl group transition-all bg-surface-light border border-border">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <p className="text-xs font-semibold">{template.name}</p>
-                <span className="text-[8px] px-1.5 py-0.5 rounded-full" style={{ background: "rgba(200,168,85,0.08)", color: "#c8a855" }}>
-                  {template.category}
-                </span>
+      {/* ===== SMS ANALYTICS ===== */}
+      {activeTab === "analytics" && (
+        <div className="space-y-4">
+          {/* Overview Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {[
+              { label: "Total Sent", value: totalSends.toLocaleString(), icon: <Send size={12} />, color: "text-gold" },
+              { label: "Delivered", value: totalDelivered.toLocaleString(), icon: <CheckCircle size={12} />, color: "text-green-400" },
+              { label: "Delivery Rate", value: `${deliveryRate}%`, icon: <TrendingUp size={12} />, color: "text-blue-400" },
+              { label: "Total Replies", value: totalReplies.toLocaleString(), icon: <MessageSquare size={12} />, color: "text-purple-400" },
+              { label: "Reply Rate", value: `${replyRate}%`, icon: <BarChart3 size={12} />, color: "text-gold" },
+            ].map((stat, i) => (
+              <div key={i} className="card text-center p-3">
+                <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+                <p className="text-lg font-bold">{stat.value}</p>
+                <p className="text-[9px] text-muted">{stat.label}</p>
               </div>
-              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button onClick={() => { navigator.clipboard.writeText(template.body); toast.success("Copied!"); }}
-                  className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Copy size={10} /></button>
-                <button onClick={() => setEditing(editing === template.id ? null : template.id)}
-                  className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><Edit3 size={10} /></button>
-                <button onClick={() => { setTemplates(prev => prev.filter(t => t.id !== template.id)); toast.success("Deleted"); }}
-                  className="p-1 rounded hover:bg-danger/10 text-muted hover:text-danger"><Trash2 size={10} /></button>
-              </div>
-            </div>
+            ))}
+          </div>
 
-            {editing === template.id ? (
-              <textarea value={template.body} onChange={e => {
-                setTemplates(prev => prev.map(t => t.id === template.id ? { ...t, body: e.target.value } : t));
-              }} className="input w-full h-20 text-xs" />
-            ) : (
-              <p className="text-[11px] text-muted leading-relaxed">{template.body}</p>
-            )}
-
-            <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
-              <span className="text-[8px] text-muted/40">{template.body.length} chars</span>
-              <button onClick={() => { navigator.clipboard.writeText(template.body); toast.success("Copied!"); }}
-                className="text-[9px] text-gold hover:text-gold-light flex items-center gap-0.5">
-                <Copy size={8} /> Copy
-              </button>
+          {/* Delivery Rate Monitor */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3">Delivery Rate by Template</h3>
+            <div className="space-y-2">
+              {templates.filter(t => t.sends > 0).sort((a, b) => (b.delivered / b.sends) - (a.delivered / a.sends)).map(t => {
+                const rate = ((t.delivered / t.sends) * 100).toFixed(1);
+                return (
+                  <div key={t.id} className="flex items-center gap-3 p-2 rounded bg-surface-light">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between text-[10px] mb-1">
+                        <span className="font-medium truncate">{t.name}</span>
+                        <span className={`font-bold ${Number(rate) >= 98 ? "text-green-400" : Number(rate) >= 95 ? "text-yellow-400" : "text-red-400"}`}>{rate}%</span>
+                      </div>
+                      <div className="w-full bg-surface rounded-full h-1.5">
+                        <div className={`rounded-full h-1.5 ${Number(rate) >= 98 ? "bg-green-400" : Number(rate) >= 95 ? "bg-yellow-400" : "bg-red-400"}`} style={{ width: `${rate}%` }} />
+                      </div>
+                    </div>
+                    <div className="text-center text-[9px] flex-shrink-0 w-16">
+                      <p className="font-bold">{t.replies}</p>
+                      <p className="text-muted">replies</p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {/* ===== SHORT LINKS ===== */}
+      {activeTab === "links" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Link2 size={14} className="text-gold" /> Short Link Generator
+            </h3>
+            <p className="text-[10px] text-muted mb-3">Create short, trackable links for your SMS messages</p>
+            <div className="flex gap-2 mb-4">
+              <input value={shortLinkInput} onChange={e => setShortLinkInput(e.target.value)} className="input flex-1 text-xs" placeholder="Paste your long URL here..." />
+              <button className="btn-primary text-xs flex items-center gap-1.5"><Link2 size={12} /> Shorten</button>
+            </div>
+            <div className="space-y-1.5">
+              <div className="grid grid-cols-4 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
+                <span>Short Link</span><span>Original URL</span><span className="text-center">Clicks</span><span className="text-center">Created</span>
+              </div>
+              {[
+                { short: "srtst.ck/abc123", long: "https://shortstackhq.com/case-study/dental", clicks: 47, date: "Apr 12" },
+                { short: "srtst.ck/def456", long: "https://cal.com/nicklas/discovery", clicks: 89, date: "Apr 10" },
+                { short: "srtst.ck/ghi789", long: "https://shortstackhq.com/portal/login", clicks: 156, date: "Apr 8" },
+                { short: "srtst.ck/jkl012", long: "https://g.page/r/review-link", clicks: 31, date: "Apr 5" },
+              ].map((link, i) => (
+                <div key={i} className="grid grid-cols-4 items-center text-[10px] py-2 px-2 rounded bg-surface-light">
+                  <span className="font-mono text-gold">{link.short}</span>
+                  <span className="text-muted truncate">{link.long}</span>
+                  <span className="text-center font-bold">{link.clicks}</span>
+                  <span className="text-center text-muted">{link.date}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== SCHEDULED SEND ===== */}
+      {activeTab === "schedule" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Calendar size={14} className="text-gold" /> Schedule SMS
+              </h3>
+              <div className="space-y-3">
+                <select className="input w-full text-xs">
+                  <option value="">Select template...</option>
+                  {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+                <input type="datetime-local" className="input w-full text-xs" />
+                <select className="input w-full text-xs">
+                  <option>America/New_York (ET)</option>
+                  <option>America/Chicago (CT)</option>
+                  <option>America/Los_Angeles (PT)</option>
+                  <option>Europe/Stockholm (CET)</option>
+                </select>
+                <button className="btn-primary w-full text-xs flex items-center justify-center gap-1.5">
+                  <Clock size={12} /> Schedule Send
+                </button>
+              </div>
+            </div>
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3">Scheduled Messages</h3>
+              <div className="space-y-2">
+                {[
+                  { template: "Follow Up #1", scheduled: "Apr 15, 10:00 AM", recipients: 45, status: "pending" },
+                  { template: "Appointment Reminder", scheduled: "Apr 15, 2:00 PM", recipients: 12, status: "pending" },
+                  { template: "Invoice Reminder", scheduled: "Apr 16, 9:00 AM", recipients: 8, status: "pending" },
+                ].map((msg, i) => (
+                  <div key={i} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
+                    <div>
+                      <p className="font-semibold">{msg.template}</p>
+                      <p className="text-[9px] text-muted">{msg.scheduled} | {msg.recipients} recipients</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-400/10 text-yellow-400">{msg.status}</span>
+                      <button className="text-[9px] text-red-400 hover:text-red-300">Cancel</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

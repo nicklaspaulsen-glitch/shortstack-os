@@ -1,25 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { useManagedClient } from "@/lib/use-managed-client";
-import { createClient } from "@/lib/supabase/client";
-import { formatCurrency } from "@/lib/utils";
+import { useState } from "react";
 import {
-  DollarSign, Plus, Loader
+  DollarSign, Plus, TrendingUp, TrendingDown, Target,
+  Clock, Award, FileText, Calculator, BarChart3,
+  ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
+  Calendar, ArrowRight, Briefcase, Shield
 } from "lucide-react";
-import Modal from "@/components/ui/modal";
-import toast from "react-hot-toast";
+
+type MainTab = "pipeline" | "forecast" | "analysis" | "scoring" | "templates" | "commission";
 
 interface Deal {
   id: string;
-  client_id: string | null;
   title: string;
+  company: string;
   amount: number;
-  status: "open" | "won" | "lost";
   stage: string;
-  source: string | null;
-  created_at: string;
+  probability: number;
+  owner: string;
+  daysInStage: number;
+  source: string;
+  nextAction: string;
+  competitor: string;
+  closeDate: string;
 }
 
 const STAGES = [
@@ -31,223 +34,554 @@ const STAGES = [
   { key: "closed_lost", label: "Closed Lost", color: "#ef4444" },
 ];
 
+const MOCK_DEALS: Deal[] = [
+  { id: "1", title: "Growth Package", company: "Bright Smile Dental", amount: 2497, stage: "proposal", probability: 60, owner: "Nicklas", daysInStage: 3, source: "Cold Outreach", nextAction: "Follow up on proposal", competitor: "LocaliQ", closeDate: "2026-04-28" },
+  { id: "2", title: "Full-Service Marketing", company: "Peak Fitness Gym", amount: 4997, stage: "negotiation", probability: 75, owner: "Nicklas", daysInStage: 2, source: "Referral", nextAction: "Send revised pricing", competitor: "None", closeDate: "2026-04-21" },
+  { id: "3", title: "Social Media Management", company: "Atlas Legal Group", amount: 1997, stage: "qualified", probability: 40, owner: "Nicklas", daysInStage: 5, source: "Website", nextAction: "Book discovery call", competitor: "Scorpion", closeDate: "2026-05-10" },
+  { id: "4", title: "SEO + Paid Ads", company: "Swift Plumbing Co", amount: 3497, stage: "prospect", probability: 20, owner: "Nicklas", daysInStage: 1, source: "Cold DM", nextAction: "Send intro email", competitor: "—", closeDate: "2026-05-20" },
+  { id: "5", title: "Content Creation", company: "Green Lawn Masters", amount: 1497, stage: "prospect", probability: 15, owner: "Nicklas", daysInStage: 7, source: "Instagram", nextAction: "Send case study", competitor: "Freelancer", closeDate: "2026-05-15" },
+  { id: "6", title: "AI Receptionist + Ads", company: "CloudNine HVAC", amount: 3997, stage: "qualified", probability: 45, owner: "Nicklas", daysInStage: 4, source: "Cold Call", nextAction: "Demo scheduled", competitor: "ServiceTitan", closeDate: "2026-05-05" },
+  { id: "7", title: "Website + Funnel", company: "Sunrise Bakery", amount: 5497, stage: "proposal", probability: 55, owner: "Nicklas", daysInStage: 6, source: "Referral", nextAction: "Waiting for feedback", competitor: "Wix Agency", closeDate: "2026-04-30" },
+  { id: "8", title: "Full Stack Growth", company: "Elite Auto Detailing", amount: 6497, stage: "negotiation", probability: 80, owner: "Nicklas", daysInStage: 1, source: "Website", nextAction: "Contract review", competitor: "None", closeDate: "2026-04-18" },
+  { id: "9", title: "Starter Package", company: "Zen Yoga Studio", amount: 997, stage: "closed_won", probability: 100, owner: "Nicklas", daysInStage: 0, source: "Cold Outreach", nextAction: "Onboarding", competitor: "—", closeDate: "2026-04-10" },
+  { id: "10", title: "Ads Management", company: "TrueNorth Roofing", amount: 2997, stage: "closed_lost", probability: 0, owner: "Nicklas", daysInStage: 0, source: "Cold DM", nextAction: "—", competitor: "In-house", closeDate: "2026-04-08" },
+];
+
+const formatCurrency = (n: number) => `$${n.toLocaleString()}`;
+
 export default function DealsPage() {
-  useAuth();
-  const { clientId: managedClientId } = useManagedClient();
-  const supabase = createClient();
-  const [deals, setDeals] = useState<Deal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showCreate, setShowCreate] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
-  const [form, setForm] = useState({
-    title: "", amount: "", client_id: "", stage: "prospect", source: "",
-  });
+  const [activeTab, setActiveTab] = useState<MainTab>("pipeline");
+  const [expandedDeal, setExpandedDeal] = useState<string | null>(null);
+  const [forecastPeriod, setForecastPeriod] = useState<"month" | "quarter">("month");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [dealForm, setDealForm] = useState({ title: "", company: "", amount: "", stage: "prospect", source: "cold_outreach" });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, [managedClientId]);
+  const openDeals = MOCK_DEALS.filter(d => !["closed_won", "closed_lost"].includes(d.stage));
+  const wonDeals = MOCK_DEALS.filter(d => d.stage === "closed_won");
+  const lostDeals = MOCK_DEALS.filter(d => d.stage === "closed_lost");
+  const totalPipeline = openDeals.reduce((s, d) => s + d.amount, 0);
+  const wonValue = wonDeals.reduce((s, d) => s + d.amount, 0);
+  const lostValue = lostDeals.reduce((s, d) => s + d.amount, 0);
+  const avgDealSize = openDeals.length > 0 ? Math.round(totalPipeline / openDeals.length) : 0;
+  const winRate = wonDeals.length + lostDeals.length > 0 ? Math.round((wonDeals.length / (wonDeals.length + lostDeals.length)) * 100) : 0;
+  const weightedPipeline = openDeals.reduce((s, d) => s + (d.amount * d.probability / 100), 0);
 
-  async function fetchData() {
-    try {
-      setLoading(true);
-      let dealsQuery = supabase.from("deals").select("*").order("created_at", { ascending: false });
-      if (managedClientId) dealsQuery = dealsQuery.eq("client_id", managedClientId);
-
-      const [{ data: d }, { data: cl }] = await Promise.all([
-        dealsQuery,
-        supabase.from("clients").select("id, business_name").eq("is_active", true),
-      ]);
-      setDeals(d || []);
-      setClients(cl || []);
-    } catch (err) {
-      console.error("[Deals] fetchData error:", err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function createDeal() {
-    if (!form.title || !form.amount) { toast.error("Title and amount required"); return; }
-    setCreating(true);
-    await supabase.from("deals").insert({
-      title: form.title,
-      amount: parseFloat(form.amount) || 0,
-      client_id: form.client_id || null,
-      status: "open",
-      stage: form.stage,
-      source: form.source || null,
-    });
-    toast.success("Deal created!");
-    setShowCreate(false);
-    setForm({ title: "", amount: "", client_id: "", stage: "prospect", source: "" });
-    fetchData();
-    setCreating(false);
-  }
-
-  async function updateStage(dealId: string, stage: string) {
-    const status = stage === "closed_won" ? "won" : stage === "closed_lost" ? "lost" : "open";
-    await supabase.from("deals").update({ stage, status }).eq("id", dealId);
-    toast.success("Deal updated!");
-    fetchData();
-  }
-
-  const totalValue = deals.filter(d => d.status === "open").reduce((s, d) => s + d.amount, 0);
-  const wonValue = deals.filter(d => d.status === "won").reduce((s, d) => s + d.amount, 0);
-  const lostValue = deals.filter(d => d.status === "lost").reduce((s, d) => s + d.amount, 0);
-  const winRate = deals.length > 0 ? Math.round((deals.filter(d => d.status === "won").length / deals.filter(d => d.status !== "open").length) * 100) || 0 : 0;
-
-  if (loading) return <div className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-gold" /></div>;
+  const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
+    { key: "pipeline", label: "Pipeline Board", icon: <BarChart3 size={14} /> },
+    { key: "forecast", label: "Revenue Forecast", icon: <TrendingUp size={14} /> },
+    { key: "analysis", label: "Win/Loss Analysis", icon: <Target size={14} /> },
+    { key: "scoring", label: "Deal Scoring", icon: <Zap size={14} /> },
+    { key: "templates", label: "Contracts", icon: <FileText size={14} /> },
+    { key: "commission", label: "Commissions", icon: <Calculator size={14} /> },
+  ];
 
   return (
     <div className="fade-in space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
             <DollarSign size={18} className="text-gold" /> Deals Pipeline
           </h1>
-          <p className="text-xs text-muted mt-0.5">Track deals from prospect to closed</p>
+          <p className="text-xs text-muted mt-0.5">Track deals from prospect to closed with AI scoring</p>
         </div>
-        <button onClick={() => setShowCreate(true)} className="btn-primary text-xs flex items-center gap-1.5">
+        <button onClick={() => setShowCreateModal(!showCreateModal)} className="btn-primary text-xs flex items-center gap-1.5">
           <Plus size={12} /> New Deal
         </button>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-4 gap-3">
-        <div className="card text-center">
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <div className="w-6 h-6 rounded-lg bg-gold/10 flex items-center justify-center">
-              <DollarSign size={12} className="text-gold" />
-            </div>
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+        {[
+          { label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={12} />, color: "text-gold" },
+          { label: "Weighted", value: formatCurrency(Math.round(weightedPipeline)), icon: <Target size={12} />, color: "text-purple-400" },
+          { label: "Won", value: formatCurrency(wonValue), icon: <CheckCircle size={12} />, color: "text-green-400" },
+          { label: "Lost", value: formatCurrency(lostValue), icon: <TrendingDown size={12} />, color: "text-red-400" },
+          { label: "Win Rate", value: `${winRate}%`, icon: <Award size={12} />, color: "text-blue-400" },
+          { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-gold" },
+        ].map((stat, i) => (
+          <div key={i} className="card text-center p-3">
+            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+            <p className="text-lg font-bold">{stat.value}</p>
+            <p className="text-[9px] text-muted">{stat.label}</p>
           </div>
-          <p className="text-xl font-bold text-gold">{formatCurrency(totalValue)}</p>
-          <p className="text-[10px] text-muted">Pipeline Value</p>
-        </div>
-        <div className="card text-center">
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <div className="w-6 h-6 rounded-lg bg-success/10 flex items-center justify-center">
-              <DollarSign size={12} className="text-success" />
-            </div>
-          </div>
-          <p className="text-xl font-bold text-success">{formatCurrency(wonValue)}</p>
-          <p className="text-[10px] text-muted">Won</p>
-        </div>
-        <div className="card text-center">
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <div className="w-6 h-6 rounded-lg bg-danger/10 flex items-center justify-center">
-              <DollarSign size={12} className="text-danger" />
-            </div>
-          </div>
-          <p className="text-xl font-bold text-danger">{formatCurrency(lostValue)}</p>
-          <p className="text-[10px] text-muted">Lost</p>
-        </div>
-        <div className="card text-center">
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <div className="w-6 h-6 rounded-lg bg-info/10 flex items-center justify-center">
-              <DollarSign size={12} className="text-info" />
-            </div>
-          </div>
-          <p className="text-xl font-bold">{winRate}%</p>
-          <p className="text-[10px] text-muted">Win Rate</p>
-        </div>
+        ))}
       </div>
 
-      {/* Pipeline Kanban */}
-      <div className="flex gap-3 overflow-x-auto pb-4">
-        {STAGES.map(stage => {
-          const stageDeals = deals.filter(d => (d.stage || "prospect") === stage.key);
-          const stageValue = stageDeals.reduce((s, d) => s + d.amount, 0);
+      {/* Tabs */}
+      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setActiveTab(t.key)}
+            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+            }`}>
+            {t.icon} {t.label}
+          </button>
+        ))}
+      </div>
 
-          return (
-            <div key={stage.key} className="flex-shrink-0 w-[220px]">
-              <div className="flex items-center justify-between mb-2 px-1">
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full" style={{ background: stage.color }} />
-                  <span className="text-[10px] font-bold uppercase tracking-wider">{stage.label}</span>
-                </div>
-                <span className="text-[9px] font-mono" style={{ color: stage.color }}>{stageDeals.length}</span>
-              </div>
-              <p className="text-[9px] text-muted mb-2 px-1">{formatCurrency(stageValue)}</p>
+      {/* Create Deal Inline */}
+      {showCreateModal && (
+        <div className="card border-gold/10 p-4 space-y-3">
+          <h3 className="text-sm font-semibold">Quick Create Deal</h3>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+            <input value={dealForm.title} onChange={e => setDealForm({...dealForm, title: e.target.value})} className="input text-xs" placeholder="Deal title" />
+            <input value={dealForm.company} onChange={e => setDealForm({...dealForm, company: e.target.value})} className="input text-xs" placeholder="Company name" />
+            <input type="number" value={dealForm.amount} onChange={e => setDealForm({...dealForm, amount: e.target.value})} className="input text-xs" placeholder="Amount" />
+            <select value={dealForm.stage} onChange={e => setDealForm({...dealForm, stage: e.target.value})} className="input text-xs">
+              {STAGES.filter(s => !s.key.startsWith("closed")).map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
+            </select>
+            <button className="btn-primary text-xs">Create</button>
+          </div>
+        </div>
+      )}
 
-              <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                {stageDeals.length === 0 && (
-                  <div className="text-center py-6 border border-dashed rounded-lg" style={{ borderColor: `${stage.color}20` }}>
-                    <p className="text-[9px] text-muted">No deals</p>
+      {/* ===== PIPELINE BOARD (Kanban) ===== */}
+      {activeTab === "pipeline" && (
+        <div className="space-y-4">
+          {/* Kanban */}
+          <div className="flex gap-3 overflow-x-auto pb-4">
+            {STAGES.map(stage => {
+              const stageDeals = MOCK_DEALS.filter(d => d.stage === stage.key);
+              const stageValue = stageDeals.reduce((s, d) => s + d.amount, 0);
+              return (
+                <div key={stage.key} className="flex-shrink-0 w-[240px]">
+                  <div className="flex items-center justify-between mb-2 px-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full" style={{ background: stage.color }} />
+                      <span className="text-[10px] font-bold uppercase tracking-wider">{stage.label}</span>
+                    </div>
+                    <span className="text-[9px] font-mono" style={{ color: stage.color }}>{stageDeals.length}</span>
                   </div>
-                )}
-                {stageDeals.map(deal => (
-                  <div key={deal.id} className="p-3 rounded-lg space-y-1.5 bg-surface-light border border-border">
-                    <p className="text-[11px] font-semibold truncate">{deal.title}</p>
-                    <p className="text-sm font-bold" style={{ color: stage.color }}>{formatCurrency(deal.amount)}</p>
-                    {deal.source && <p className="text-[8px] text-muted">Source: {deal.source}</p>}
-                    <div className="flex gap-1 pt-1">
-                      {STAGES.filter(s => s.key !== stage.key && s.key !== "closed_lost").slice(0, 3).map(s => (
-                        <button key={s.key} onClick={() => updateStage(deal.id, s.key)}
-                          className="text-[7px] px-1.5 py-0.5 rounded transition-all hover:opacity-80"
-                          style={{ background: `${s.color}15`, color: s.color, border: `1px solid ${s.color}20` }}>
-                          {s.label.split(" ")[0]}
-                        </button>
-                      ))}
+                  <p className="text-[9px] text-muted mb-2 px-1">{formatCurrency(stageValue)}</p>
+                  <div className="space-y-2 max-h-[500px] overflow-y-auto">
+                    {stageDeals.length === 0 && (
+                      <div className="text-center py-8 border border-dashed rounded-lg" style={{ borderColor: `${stage.color}20` }}>
+                        <p className="text-[9px] text-muted">Drop deals here</p>
+                      </div>
+                    )}
+                    {stageDeals.map(deal => (
+                      <div key={deal.id}
+                        onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
+                        className="p-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer">
+                        <p className="text-[11px] font-semibold truncate">{deal.title}</p>
+                        <p className="text-[9px] text-muted">{deal.company}</p>
+                        <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(deal.amount)}</p>
+                        <div className="flex items-center justify-between mt-2">
+                          <span className="text-[8px] text-muted flex items-center gap-0.5"><Clock size={8} /> {deal.daysInStage}d</span>
+                          <span className="text-[8px] text-muted">{deal.probability}% prob</span>
+                        </div>
+                        {expandedDeal === deal.id && (
+                          <div className="mt-2 pt-2 border-t border-border space-y-1.5">
+                            <p className="text-[9px]"><span className="text-muted">Source:</span> {deal.source}</p>
+                            <p className="text-[9px]"><span className="text-muted">Next:</span> {deal.nextAction}</p>
+                            <p className="text-[9px]"><span className="text-muted">Competitor:</span> {deal.competitor}</p>
+                            <p className="text-[9px]"><span className="text-muted">Close:</span> {deal.closeDate}</p>
+                            <div className="flex gap-1 pt-1">
+                              {STAGES.filter(s => s.key !== stage.key && s.key !== "closed_lost").slice(0, 3).map(s => (
+                                <button key={s.key} className="text-[7px] px-1.5 py-0.5 rounded" style={{ background: `${s.color}15`, color: s.color, border: `1px solid ${s.color}20` }}>
+                                  {s.label.split(" ")[0]}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Deal Velocity Tracker */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Clock size={14} className="text-gold" /> Deal Velocity Tracker
+            </h3>
+            <div className="grid grid-cols-4 gap-3">
+              {[
+                { stage: "Prospect to Qualified", avg: "4.2 days", trend: "faster" },
+                { stage: "Qualified to Proposal", avg: "6.8 days", trend: "slower" },
+                { stage: "Proposal to Negotiation", avg: "3.1 days", trend: "faster" },
+                { stage: "Negotiation to Close", avg: "5.5 days", trend: "faster" },
+              ].map((v, i) => (
+                <div key={i} className="bg-surface-light rounded-lg p-3 text-center">
+                  <p className="text-[9px] text-muted mb-1">{v.stage}</p>
+                  <p className="text-sm font-bold">{v.avg}</p>
+                  <p className={`text-[8px] flex items-center justify-center gap-0.5 ${v.trend === "faster" ? "text-green-400" : "text-red-400"}`}>
+                    {v.trend === "faster" ? <TrendingDown size={8} /> : <TrendingUp size={8} />} {v.trend}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted mt-3">Average sales cycle: <span className="text-gold font-semibold">19.6 days</span> (down from 24.3 days last month)</p>
+          </div>
+
+          {/* Deal Timeline */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Calendar size={14} className="text-gold" /> Recent Deal Timeline
+            </h3>
+            <div className="space-y-3">
+              {[
+                { date: "Apr 14", event: "Elite Auto Detailing moved to Negotiation", type: "stage", deal: "$6,497" },
+                { date: "Apr 12", event: "Proposal sent to Sunrise Bakery", type: "proposal", deal: "$5,497" },
+                { date: "Apr 10", event: "Zen Yoga Studio - CLOSED WON", type: "won", deal: "$997" },
+                { date: "Apr 8", event: "TrueNorth Roofing - CLOSED LOST (went in-house)", type: "lost", deal: "$2,997" },
+                { date: "Apr 5", event: "Discovery call with Atlas Legal Group", type: "call", deal: "$1,997" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className="flex flex-col items-center">
+                    <div className={`w-3 h-3 rounded-full ${
+                      item.type === "won" ? "bg-green-400" : item.type === "lost" ? "bg-red-400" : item.type === "proposal" ? "bg-yellow-400" : "bg-blue-400"
+                    }`} />
+                    {i < 4 && <div className="w-px h-8 bg-border" />}
+                  </div>
+                  <div>
+                    <p className="text-xs">{item.event}</p>
+                    <div className="flex gap-2 mt-0.5">
+                      <span className="text-[9px] text-muted">{item.date}</span>
+                      <span className="text-[9px] text-gold font-semibold">{item.deal}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== REVENUE FORECAST ===== */}
+      {activeTab === "forecast" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold">Revenue Forecast</h3>
+            <div className="flex gap-1">
+              {(["month", "quarter"] as const).map(p => (
+                <button key={p} onClick={() => setForecastPeriod(p)}
+                  className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
+                    forecastPeriod === p ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                  }`}>{p}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="card text-center p-5 border-red-400/10">
+              <p className="text-[10px] text-muted mb-1 uppercase font-semibold">Conservative</p>
+              <p className="text-2xl font-bold text-red-400">{formatCurrency(Math.round(weightedPipeline * 0.6))}</p>
+              <p className="text-[9px] text-muted mt-1">60% of weighted pipeline</p>
+            </div>
+            <div className="card text-center p-5 border-gold/10">
+              <p className="text-[10px] text-muted mb-1 uppercase font-semibold">Most Likely</p>
+              <p className="text-2xl font-bold text-gold">{formatCurrency(Math.round(weightedPipeline))}</p>
+              <p className="text-[9px] text-muted mt-1">Weighted probability</p>
+            </div>
+            <div className="card text-center p-5 border-green-400/10">
+              <p className="text-[10px] text-muted mb-1 uppercase font-semibold">Best Case</p>
+              <p className="text-2xl font-bold text-green-400">{formatCurrency(totalPipeline)}</p>
+              <p className="text-[9px] text-muted mt-1">100% close rate</p>
+            </div>
+          </div>
+          {/* Monthly breakdown */}
+          <div className="card">
+            <h4 className="text-xs font-semibold mb-3">Monthly Revenue Trend</h4>
+            <div className="flex items-end gap-3 h-40">
+              {[
+                { month: "Nov", actual: 8500, forecast: 0 },
+                { month: "Dec", actual: 12400, forecast: 0 },
+                { month: "Jan", actual: 15200, forecast: 0 },
+                { month: "Feb", actual: 18900, forecast: 0 },
+                { month: "Mar", actual: 22400, forecast: 0 },
+                { month: "Apr", actual: wonValue, forecast: Math.round(weightedPipeline) },
+                { month: "May", actual: 0, forecast: Math.round(weightedPipeline * 1.15) },
+              ].map((m, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div className="w-full flex flex-col gap-0.5">
+                    {m.forecast > 0 && (
+                      <div className="w-full bg-gold/20 rounded-t border border-dashed border-gold/30"
+                        style={{ height: `${(m.forecast / 25000) * 100}%`, minHeight: m.forecast > 0 ? 8 : 0 }} />
+                    )}
+                    <div className="w-full bg-gold rounded-t"
+                      style={{ height: `${(m.actual / 25000) * 100}%`, minHeight: m.actual > 0 ? 8 : 0 }} />
+                  </div>
+                  <span className="text-[8px] text-muted">{m.month}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-4 mt-3 text-[9px] text-muted">
+              <span className="flex items-center gap-1"><div className="w-2 h-2 bg-gold rounded" /> Actual</span>
+              <span className="flex items-center gap-1"><div className="w-2 h-2 bg-gold/20 border border-dashed border-gold/30 rounded" /> Forecast</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== WIN/LOSS ANALYSIS ===== */}
+      {activeTab === "analysis" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Win Reasons */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <CheckCircle size={14} className="text-green-400" /> Win Factors
+              </h3>
+              <div className="space-y-2">
+                {[
+                  { reason: "Strong initial demo", pct: 85 },
+                  { reason: "Competitive pricing", pct: 72 },
+                  { reason: "Case study presented", pct: 68 },
+                  { reason: "Fast response time", pct: 64 },
+                  { reason: "Referral introduction", pct: 58 },
+                ].map((r, i) => (
+                  <div key={i}>
+                    <div className="flex justify-between text-[10px] mb-1">
+                      <span>{r.reason}</span>
+                      <span className="text-green-400 font-bold">{r.pct}%</span>
+                    </div>
+                    <div className="w-full bg-surface-light rounded-full h-1.5">
+                      <div className="bg-green-400 rounded-full h-1.5" style={{ width: `${r.pct}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          );
-        })}
-      </div>
-
-      {/* Create Deal Modal */}
-      <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="New Deal" size="md">
-        <div className="space-y-3">
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Deal Title *</label>
-            <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })}
-              className="input w-full" placeholder="e.g. Growth Package — Bright Smile Dental" />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Amount *</label>
-              <input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })}
-                className="input w-full" placeholder="2497" />
-            </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Stage</label>
-              <select value={form.stage} onChange={e => setForm({ ...form, stage: e.target.value })} className="input w-full">
-                {STAGES.filter(s => !s.key.startsWith("closed")).map(s => (
-                  <option key={s.key} value={s.key}>{s.label}</option>
+            {/* Loss Reasons */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <AlertTriangle size={14} className="text-red-400" /> Loss Reasons
+              </h3>
+              <div className="space-y-2">
+                {[
+                  { reason: "Went with competitor", pct: 38 },
+                  { reason: "Budget constraints", pct: 28 },
+                  { reason: "Decided to go in-house", pct: 18 },
+                  { reason: "No response / ghosted", pct: 12 },
+                  { reason: "Timing not right", pct: 4 },
+                ].map((r, i) => (
+                  <div key={i}>
+                    <div className="flex justify-between text-[10px] mb-1">
+                      <span>{r.reason}</span>
+                      <span className="text-red-400 font-bold">{r.pct}%</span>
+                    </div>
+                    <div className="w-full bg-surface-light rounded-full h-1.5">
+                      <div className="bg-red-400 rounded-full h-1.5" style={{ width: `${r.pct}%` }} />
+                    </div>
+                  </div>
                 ))}
-              </select>
+              </div>
             </div>
           </div>
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client</label>
-            <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} className="input w-full">
-              <option value="">Select client</option>
-              {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Source</label>
-            <select value={form.source} onChange={e => setForm({ ...form, source: e.target.value })} className="input w-full">
-              <option value="">Select source</option>
-              <option value="cold_outreach">Cold Outreach</option>
-              <option value="referral">Referral</option>
-              <option value="website">Website</option>
-              <option value="social_media">Social Media</option>
-              <option value="ads">Paid Ads</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div className="flex justify-end gap-2 pt-1">
-            <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
-            <button onClick={createDeal} disabled={creating} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-              {creating ? <Loader size={12} className="animate-spin" /> : <DollarSign size={12} />}
-              {creating ? "Creating..." : "Create Deal"}
-            </button>
+          {/* Competitor notes */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Shield size={14} className="text-gold" /> Competitor Intelligence
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {[
+                { name: "LocaliQ", wins: 2, losses: 5, avgDeal: "$2,200", weakness: "Higher pricing, slow onboarding" },
+                { name: "Scorpion", wins: 1, losses: 3, avgDeal: "$3,500", weakness: "Long contracts, limited customization" },
+                { name: "ServiceTitan", wins: 0, losses: 2, avgDeal: "$4,000", weakness: "Focused on SaaS not services" },
+              ].map((c, i) => (
+                <div key={i} className="bg-surface-light rounded-lg p-3 border border-border">
+                  <p className="text-xs font-semibold mb-1 flex items-center gap-1.5"><Briefcase size={10} /> {c.name}</p>
+                  <div className="grid grid-cols-2 gap-2 my-2">
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-green-400">{c.wins}</p>
+                      <p className="text-[8px] text-muted">We won</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-red-400">{c.losses}</p>
+                      <p className="text-[8px] text-muted">We lost</p>
+                    </div>
+                  </div>
+                  <p className="text-[9px] text-muted">Avg deal: {c.avgDeal}</p>
+                  <p className="text-[9px] text-muted mt-0.5">Weakness: {c.weakness}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </Modal>
+      )}
+
+      {/* ===== DEAL SCORING ===== */}
+      {activeTab === "scoring" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Zap size={14} className="text-gold" /> AI Deal Scoring
+          </h3>
+          <div className="space-y-2">
+            {openDeals.sort((a, b) => b.probability - a.probability).map(deal => {
+              const score = Math.round(deal.probability * 0.4 + (deal.amount > 3000 ? 30 : 15) + (deal.daysInStage < 5 ? 20 : 5));
+              const scoreColor = score >= 70 ? "text-green-400" : score >= 40 ? "text-yellow-400" : "text-red-400";
+              const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
+              return (
+                <div key={deal.id} className="card p-4 flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-surface-light flex items-center justify-center flex-shrink-0">
+                    <p className={`text-lg font-bold ${scoreColor}`}>{score}</p>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-semibold truncate">{deal.title}</p>
+                      <span className="text-[9px] text-muted">({deal.company})</span>
+                    </div>
+                    <div className="w-full bg-surface-light rounded-full h-1.5 mt-1.5">
+                      <div className={`${scoreBg} rounded-full h-1.5`} style={{ width: `${score}%` }} />
+                    </div>
+                    <div className="flex gap-4 mt-1.5 text-[9px] text-muted">
+                      <span>Stage: {STAGES.find(s => s.key === deal.stage)?.label}</span>
+                      <span>{deal.daysInStage}d in stage</span>
+                      <span>{deal.probability}% probability</span>
+                    </div>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <p className="text-sm font-bold text-gold">{formatCurrency(deal.amount)}</p>
+                    <p className="text-[9px] text-muted">Close: {deal.closeDate}</p>
+                  </div>
+                  <ChevronRight size={14} className="text-muted flex-shrink-0" />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Stage Automation */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <ArrowRight size={14} className="text-gold" /> Deal Stage Automation
+            </h3>
+            <div className="space-y-2">
+              {[
+                { trigger: "Score reaches 80+", action: "Auto-move to Proposal stage", active: true },
+                { trigger: "No activity for 7 days", action: "Send automated follow-up email", active: true },
+                { trigger: "Proposal viewed 3+ times", action: "Notify owner + move to Negotiation", active: false },
+                { trigger: "Deal value > $5,000", action: "Require manager approval before close", active: true },
+              ].map((rule, i) => (
+                <div key={i} className={`flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border ${!rule.active ? "opacity-50" : ""}`}>
+                  <div className="flex items-center gap-2">
+                    <Zap size={12} className="text-gold" />
+                    <div>
+                      <p className="text-[10px] font-semibold">When: {rule.trigger}</p>
+                      <p className="text-[9px] text-muted">Then: {rule.action}</p>
+                    </div>
+                  </div>
+                  <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-gold" : "bg-surface"}`}>
+                    <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== CONTRACT TEMPLATES + PROPOSALS ===== */}
+      {activeTab === "templates" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Contract Templates */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <FileText size={14} className="text-gold" /> Contract Templates
+              </h3>
+              <div className="space-y-2">
+                {[
+                  { name: "Standard Service Agreement", pages: 4, lastUsed: "Apr 10" },
+                  { name: "Monthly Retainer Contract", pages: 3, lastUsed: "Apr 8" },
+                  { name: "Project-Based Agreement", pages: 5, lastUsed: "Mar 25" },
+                  { name: "NDA / Confidentiality", pages: 2, lastUsed: "Mar 15" },
+                ].map((t, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer">
+                    <div className="flex items-center gap-2">
+                      <FileText size={14} className="text-muted" />
+                      <div>
+                        <p className="text-xs font-medium">{t.name}</p>
+                        <p className="text-[9px] text-muted">{t.pages} pages | Last used: {t.lastUsed}</p>
+                      </div>
+                    </div>
+                    <ChevronRight size={12} className="text-muted" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Proposal Generator */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Star size={14} className="text-gold" /> Quick Proposal
+              </h3>
+              <div className="space-y-2">
+                <input className="input w-full text-xs" placeholder="Client business name" />
+                <input className="input w-full text-xs" placeholder="Industry" />
+                <div className="grid grid-cols-2 gap-2">
+                  <input type="number" className="input w-full text-xs" placeholder="Monthly price" />
+                  <select className="input w-full text-xs">
+                    <option>3-month term</option>
+                    <option>6-month term</option>
+                    <option>12-month term</option>
+                  </select>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {["Content", "Ads", "SEO", "Web", "Email", "AI"].map(s => (
+                    <button key={s} className="text-[9px] px-2 py-1 rounded border border-border hover:border-gold/20 hover:bg-gold/5 text-muted hover:text-gold transition-all">{s}</button>
+                  ))}
+                </div>
+                <button className="btn-primary w-full text-xs flex items-center justify-center gap-1.5">
+                  <Zap size={12} /> Generate Proposal PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== COMMISSION CALCULATOR ===== */}
+      {activeTab === "commission" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Calculator size={14} className="text-gold" /> Commission Calculator
+          </h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="card text-center p-5">
+              <p className="text-[10px] text-muted uppercase mb-1">This Month</p>
+              <p className="text-3xl font-bold text-gold">{formatCurrency(Math.round(wonValue * 0.15))}</p>
+              <p className="text-[10px] text-muted mt-1">15% of {formatCurrency(wonValue)} closed</p>
+            </div>
+            <div className="card text-center p-5">
+              <p className="text-[10px] text-muted uppercase mb-1">Projected</p>
+              <p className="text-3xl font-bold text-purple-400">{formatCurrency(Math.round(weightedPipeline * 0.15))}</p>
+              <p className="text-[10px] text-muted mt-1">Based on weighted pipeline</p>
+            </div>
+            <div className="card text-center p-5">
+              <p className="text-[10px] text-muted uppercase mb-1">YTD Earnings</p>
+              <p className="text-3xl font-bold text-green-400">{formatCurrency(12450)}</p>
+              <p className="text-[10px] text-muted mt-1">Jan - Apr 2026</p>
+            </div>
+          </div>
+          {/* Deal-by-deal breakdown */}
+          <div className="card">
+            <h4 className="text-xs font-semibold mb-3">Commission Breakdown</h4>
+            <div className="space-y-1.5">
+              <div className="grid grid-cols-5 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
+                <span>Deal</span><span>Amount</span><span>Rate</span><span>Commission</span><span>Status</span>
+              </div>
+              {MOCK_DEALS.filter(d => d.stage === "closed_won" || d.probability >= 50).map(deal => {
+                const rate = deal.amount >= 5000 ? 0.20 : deal.amount >= 3000 ? 0.15 : 0.10;
+                const commission = Math.round(deal.amount * rate);
+                return (
+                  <div key={deal.id} className="grid grid-cols-5 text-[10px] py-2 px-2 rounded bg-surface-light items-center">
+                    <span className="font-medium truncate">{deal.title}</span>
+                    <span>{formatCurrency(deal.amount)}</span>
+                    <span className="text-gold">{(rate * 100).toFixed(0)}%</span>
+                    <span className="font-bold text-green-400">{formatCurrency(commission)}</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
+                      deal.stage === "closed_won" ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"
+                    }`}>{deal.stage === "closed_won" ? "Paid" : "Pending"}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -35,6 +35,10 @@ import {
   ImageIcon,
   Heart,
   Upload,
+  BookOpen,
+  FolderOpen,
+  Target,
+  Receipt,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -70,11 +74,14 @@ const navItems: NavItem[] = [
   { label: "AI Video Gen", href: "/dashboard/ai-video", icon: <Film size={16} />, roles: ["admin", "team_member"] },
   { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"] },
   { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: <ImageIcon size={16} />, roles: ["admin", "team_member"] },
+  { label: "Brand Voice", href: "/dashboard/brand-voice", icon: <BookOpen size={16} />, roles: ["admin", "team_member"] },
+  { label: "Content Library", href: "/dashboard/content-library", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"] },
   { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
 
   // ── Automate ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate" },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"] },
+  { label: "AI Studio", href: "/dashboard/ai-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"] },
   { label: "Desktop Agent", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin"] },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"] },
   { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <Phone size={16} />, roles: ["admin"] },
@@ -88,6 +95,8 @@ const navItems: NavItem[] = [
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin"] },
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Client Health", href: "/dashboard/client-health", icon: <Heart size={16} />, roles: ["admin"] },
+  { label: "Competitors", href: "/dashboard/competitor-tracker", icon: <Target size={16} />, roles: ["admin"] },
+  { label: "Invoices", href: "/dashboard/invoice-templates", icon: <Receipt size={16} />, roles: ["admin"] },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },

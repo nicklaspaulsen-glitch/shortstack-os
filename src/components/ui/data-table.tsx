@@ -6,7 +6,7 @@ interface Column {
   key: string;
   label: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  render?: (item: any) => ReactNode;
+  render?: (item: any, index?: number) => ReactNode;
   className?: string;
 }
 
@@ -53,7 +53,7 @@ export default function DataTable({
               >
                 {columns.map((col) => (
                   <td key={col.key} className={col.className}>
-                    {col.render ? col.render(item) : String(item[col.key] ?? "-")}
+                    {col.render ? col.render(item, i) : String(item[col.key] ?? "-")}
                   </td>
                 ))}
               </tr>

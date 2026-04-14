@@ -7,7 +7,10 @@ import {
   Globe, Sparkles, Loader, ExternalLink, Copy,
   Code, Zap, Eye, Mail, CheckCircle, Wand2,
   Palette, Layout, Search, BarChart3, Smartphone,
-  Monitor, Tablet, FileText, RefreshCw, Layers
+  Monitor, Tablet, FileText, RefreshCw, Layers,
+  Shield, Link, Image as ImageIcon, Settings, AlertTriangle,
+  Clock, Plus, Trash2, Edit3, MapPin, Hash,
+  PenTool, Gauge, BookOpen,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -54,13 +57,68 @@ export default function WebsitesPage() {
   const [deploying, setDeploying] = useState(false);
   const [generatedHtml, setGeneratedHtml] = useState("");
   const [deployUrl, setDeployUrl] = useState("");
-  const [tab, setTab] = useState<"build" | "preview" | "deploy" | "seo" | "demos">("build");
+  const [tab, setTab] = useState<"build" | "preview" | "deploy" | "seo" | "demos" | "pages" | "domains" | "analytics" | "blog">("build");
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const supabase = createClient();
 
   const [proBuilderPrompt, setProBuilderPrompt] = useState("");
   const [proBuilderLoading, setProBuilderLoading] = useState(false);
   const [demos, setDemos] = useState<Array<{ id: string; business_name: string; url: string; status: string; created_at: string; client_id: string | null }>>([]);
+
+  // Page manager state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [pages] = useState([
+    { id: "1", name: "Home", slug: "/", status: "published" as const, lastEdited: "2026-04-12" },
+    { id: "2", name: "About", slug: "/about", status: "published" as const, lastEdited: "2026-04-10" },
+    { id: "3", name: "Services", slug: "/services", status: "draft" as const, lastEdited: "2026-04-13" },
+    { id: "4", name: "Contact", slug: "/contact", status: "published" as const, lastEdited: "2026-04-08" },
+    { id: "5", name: "Blog", slug: "/blog", status: "published" as const, lastEdited: "2026-04-14" },
+    { id: "6", name: "Pricing", slug: "/pricing", status: "draft" as const, lastEdited: "2026-04-11" },
+  ]);
+
+  // Domain manager state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [domains] = useState([
+    { domain: "clientsite.vercel.app", type: "vercel" as const, ssl: true, primary: true },
+    { domain: "www.clientbusiness.com", type: "custom" as const, ssl: true, primary: false },
+  ]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [newDomain, setNewDomain] = useState("");
+
+  // Analytics state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [siteAnalytics] = useState({
+    visitors: 1247, pageViews: 3891, bounceRate: 42.3, avgDuration: "2m 14s",
+    speedScore: 92, mobileScore: 88, seoScore: 85, accessibilityScore: 94,
+    topPages: [
+      { page: "/", views: 1420 },
+      { page: "/services", views: 892 },
+      { page: "/about", views: 645 },
+      { page: "/contact", views: 534 },
+      { page: "/blog", views: 400 },
+    ],
+  });
+
+  // Blog manager state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [blogPosts] = useState([
+    { id: "1", title: "5 Tips for Growing Your Business Online", status: "published" as const, date: "2026-04-10", views: 342 },
+    { id: "2", title: "Why Every Local Business Needs a Website", status: "published" as const, date: "2026-04-07", views: 218 },
+    { id: "3", title: "How AI is Changing Web Design", status: "draft" as const, date: "2026-04-13", views: 0 },
+    { id: "4", title: "SEO Best Practices for 2026", status: "scheduled" as const, date: "2026-04-18", views: 0 },
+  ]);
+
+  // Form embed state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [formEmbedType, setFormEmbedType] = useState<"contact" | "newsletter" | "booking" | "custom">("contact");
+
+  // Sitemap/meta state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [faviconUrl, setFaviconUrl] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [ogImageUrl, setOgImageUrl] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [sitemapEnabled, setSitemapEnabled] = useState(true);
 
   const [config, setConfig] = useState({
     business_name: "",
@@ -311,10 +369,25 @@ export default function WebsitesPage() {
         </select>
       </div>
 
-      <div className="tab-group w-fit">
-        {(["build", "preview", "deploy", "seo", "demos"] as const).map(t => (
-          <button key={t} onClick={() => { setTab(t); if (t === "demos") fetchDemos(); }} className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "build" ? "Build" : t === "preview" ? "Preview" : t === "deploy" ? "Deploy" : t === "seo" ? "SEO Tips" : `Demos (${demos.length})`}
+      <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
+        {([
+          { id: "build" as const, label: "Build", icon: Wand2 },
+          { id: "preview" as const, label: "Preview", icon: Eye },
+          { id: "pages" as const, label: "Pages", icon: FileText },
+          { id: "deploy" as const, label: "Deploy", icon: Globe },
+          { id: "domains" as const, label: "Domains", icon: Link },
+          { id: "seo" as const, label: "SEO", icon: Search },
+          { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
+          { id: "blog" as const, label: "Blog", icon: BookOpen },
+          { id: "demos" as const, label: `Demos (${demos.length})`, icon: Layers },
+        ]).map(t => (
+          <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "demos") fetchDemos(); }}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors whitespace-nowrap ${
+              tab === t.id
+                ? "bg-surface-light text-gold border border-border border-b-transparent -mb-px"
+                : "text-muted hover:text-foreground"
+            }`}>
+            <t.icon size={12} /> {t.label}
           </button>
         ))}
       </div>
@@ -673,45 +746,272 @@ export default function WebsitesPage() {
         </div>
       )}
 
+      {/* ================================================================== */}
+      {/* PAGES TAB                                                           */}
+      {/* ================================================================== */}
+      {tab === "pages" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted">Manage individual pages of your website</p>
+            <button onClick={() => toast.success("New page created (demo)")} className="btn-primary text-[10px] flex items-center gap-1"><Plus size={10} /> Add Page</button>
+          </div>
+          <div className="space-y-1.5">
+            <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+              <div className="col-span-3">Page Name</div><div className="col-span-3">Slug</div><div className="col-span-2">Status</div><div className="col-span-2">Last Edited</div><div className="col-span-2 text-right">Actions</div>
+            </div>
+            {pages.map(page => (
+              <div key={page.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border hover:border-border/80">
+                <div className="col-span-3"><p className="text-sm font-semibold flex items-center gap-1.5"><FileText size={12} className="text-muted" /> {page.name}</p></div>
+                <div className="col-span-3"><span className="text-[10px] font-mono text-muted">{page.slug}</span></div>
+                <div className="col-span-2">
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full border ${page.status === "published" ? "text-green-400 border-green-400/30 bg-green-400/10" : "text-yellow-400 border-yellow-400/30 bg-yellow-400/10"}`}>
+                    {page.status === "published" ? "Published" : "Draft"}
+                  </span>
+                </div>
+                <div className="col-span-2"><span className="text-[10px] text-muted">{page.lastEdited}</span></div>
+                <div className="col-span-2 flex justify-end gap-1.5">
+                  <button onClick={() => toast.success("Editing page (demo)")} className="p-1.5 rounded-md hover:bg-surface text-muted hover:text-foreground"><Edit3 size={12} /></button>
+                  <button onClick={() => toast.success("Page SEO (demo)")} className="p-1.5 rounded-md hover:bg-surface text-muted hover:text-foreground"><Search size={12} /></button>
+                  <button onClick={() => toast("Cannot delete (demo)")} className="p-1.5 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400"><Trash2 size={12} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Search size={13} className="text-gold" /> Per-Page SEO Settings</p>
+            <div className="space-y-3">
+              <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Page Title Tag</label><input className="input w-full text-xs" placeholder="Business Name | Page Title - Primary Keyword" /></div>
+              <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Meta Description</label><textarea className="input w-full h-16 text-xs" placeholder="150-160 character description with CTA..." /></div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Canonical URL</label><input className="input w-full text-xs" placeholder="https://..." /></div>
+                <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Robots</label><select className="input w-full text-xs"><option>index, follow</option><option>noindex, follow</option><option>index, nofollow</option><option>noindex, nofollow</option></select></div>
+              </div>
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Code size={13} className="text-gold" /> Form Embed</p>
+            <div className="flex gap-2 mb-3">
+              {(["contact", "newsletter", "booking", "custom"] as const).map(type => (
+                <button key={type} onClick={() => setFormEmbedType(type)} className={`px-3 py-1.5 rounded-lg text-[10px] border transition-colors ${formEmbedType === type ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>{type.charAt(0).toUpperCase() + type.slice(1)}</button>
+              ))}
+            </div>
+            <div className="bg-surface-light rounded-lg p-3 border border-border">
+              <pre className="text-[9px] text-muted font-mono whitespace-pre-wrap">{`<iframe src="https://yoursite.com/forms/${formEmbedType}" width="100%" height="400" frameborder="0" style="border:none;"></iframe>`}</pre>
+            </div>
+            <button onClick={() => { navigator.clipboard.writeText(`<iframe src="https://yoursite.com/forms/${formEmbedType}" width="100%" height="400" frameborder="0"></iframe>`); toast.success("Embed code copied!"); }} className="btn-secondary text-[10px] mt-2 flex items-center gap-1"><Copy size={10} /> Copy Embed Code</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="card p-4">
+              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><MapPin size={13} className="text-gold" /> Sitemap</p>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] text-muted">Auto-generate sitemap.xml</span>
+                <button onClick={() => setSitemapEnabled(!sitemapEnabled)} className={`w-10 h-5 rounded-full transition-colors relative ${sitemapEnabled ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${sitemapEnabled ? "left-5" : "left-0.5"}`} />
+                </button>
+              </div>
+              <p className="text-[9px] text-muted">Includes all published pages. Updates on publish.</p>
+              <button onClick={() => toast.success("Sitemap regenerated")} className="btn-secondary text-[10px] mt-2 flex items-center gap-1"><RefreshCw size={10} /> Regenerate</button>
+            </div>
+            <div className="card p-4">
+              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><ImageIcon size={13} className="text-gold" /> Favicon & OG Image</p>
+              <div className="space-y-2">
+                <div><label className="block text-[10px] text-muted mb-1">Favicon URL</label><input value={faviconUrl} onChange={e => setFaviconUrl(e.target.value)} className="input w-full text-xs" placeholder="https://...favicon.ico" /></div>
+                <div><label className="block text-[10px] text-muted mb-1">OG Image URL</label><input value={ogImageUrl} onChange={e => setOgImageUrl(e.target.value)} className="input w-full text-xs" placeholder="https://...og-image.png" /></div>
+                <button onClick={() => toast.success("Meta images updated")} className="btn-secondary text-[10px] flex items-center gap-1"><CheckCircle size={10} /> Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* DOMAINS TAB                                                         */}
+      {/* ================================================================== */}
+      {tab === "domains" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Link size={13} className="text-gold" /> Connected Domains</p>
+            <div className="space-y-2">
+              {domains.map(d => (
+                <div key={d.domain} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+                  <div className="flex items-center gap-3">
+                    <Globe size={14} className={d.type === "custom" ? "text-gold" : "text-muted"} />
+                    <div>
+                      <p className="text-sm font-semibold">{d.domain}</p>
+                      <p className="text-[9px] text-muted">{d.type === "custom" ? "Custom Domain" : "Vercel Subdomain"}{d.primary && " (Primary)"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {d.ssl && <span className="text-[9px] flex items-center gap-1 text-green-400"><Shield size={10} /> SSL</span>}
+                    <button onClick={() => toast("Domain settings (demo)")} className="p-1.5 rounded-md hover:bg-surface text-muted hover:text-foreground"><Settings size={12} /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Plus size={13} className="text-gold" /> Add Custom Domain</p>
+            <div className="flex gap-2 mb-3">
+              <input value={newDomain} onChange={e => setNewDomain(e.target.value)} className="input flex-1 text-xs" placeholder="www.yourdomain.com" />
+              <button onClick={() => { if (newDomain) { toast.success(`Domain ${newDomain} added (demo)`); setNewDomain(""); } }} className="btn-primary text-xs">Add Domain</button>
+            </div>
+            <div className="bg-surface-light rounded-lg p-3 border border-border">
+              <p className="text-[10px] font-semibold mb-2">DNS Configuration</p>
+              <div className="space-y-1.5 text-[9px] text-muted font-mono">
+                <p>Type: <span className="text-foreground">A</span> | Name: <span className="text-foreground">@</span> | Value: <span className="text-gold">76.76.21.21</span></p>
+                <p>Type: <span className="text-foreground">CNAME</span> | Name: <span className="text-foreground">www</span> | Value: <span className="text-gold">cname.vercel-dns.com</span></p>
+              </div>
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Shield size={13} className="text-gold" /> SSL Certificates</p>
+            <div className="space-y-2">
+              {domains.map(d => (
+                <div key={d.domain + "-ssl"} className="flex items-center justify-between p-2.5 rounded-lg border border-border">
+                  <div className="flex items-center gap-2"><Shield size={12} className={d.ssl ? "text-green-400" : "text-red-400"} /><span className="text-xs">{d.domain}</span></div>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${d.ssl ? "bg-green-400/10 text-green-400 border border-green-400/30" : "bg-red-400/10 text-red-400 border border-red-400/30"}`}>{d.ssl ? "Valid" : "Not Configured"}</span>
+                </div>
+              ))}
+              <p className="text-[9px] text-muted mt-1">SSL certificates auto-provision via Let&apos;s Encrypt when DNS is configured.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* ANALYTICS TAB                                                       */}
+      {/* ================================================================== */}
+      {tab === "analytics" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Eye size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Visitors</p></div><p className="text-lg font-bold text-gold">{siteAnalytics.visitors.toLocaleString()}</p><p className="text-[10px] text-muted mt-0.5">this month</p></div>
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><FileText size={12} className="text-blue-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Page Views</p></div><p className="text-lg font-bold text-blue-400">{siteAnalytics.pageViews.toLocaleString()}</p><p className="text-[10px] text-muted mt-0.5">{(siteAnalytics.pageViews / siteAnalytics.visitors).toFixed(1)} per visitor</p></div>
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><AlertTriangle size={12} className="text-yellow-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Bounce Rate</p></div><p className="text-lg font-bold text-yellow-400">{siteAnalytics.bounceRate}%</p></div>
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-purple-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Avg Duration</p></div><p className="text-lg font-bold text-purple-400">{siteAnalytics.avgDuration}</p></div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Gauge size={13} className="text-gold" /> Performance Scores</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { label: "Speed", score: siteAnalytics.speedScore, icon: Zap },
+                { label: "Mobile", score: siteAnalytics.mobileScore, icon: Smartphone },
+                { label: "SEO", score: siteAnalytics.seoScore, icon: Search },
+                { label: "Accessibility", score: siteAnalytics.accessibilityScore, icon: Eye },
+              ].map(metric => (
+                <div key={metric.label} className="text-center p-3 rounded-lg bg-surface-light border border-border">
+                  <metric.icon size={16} className={`mx-auto mb-2 ${metric.score >= 90 ? "text-green-400" : metric.score >= 70 ? "text-yellow-400" : "text-red-400"}`} />
+                  <p className={`text-2xl font-bold ${metric.score >= 90 ? "text-green-400" : metric.score >= 70 ? "text-yellow-400" : "text-red-400"}`}>{metric.score}</p>
+                  <p className="text-[10px] text-muted mt-1">{metric.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><BarChart3 size={13} className="text-gold" /> Top Pages</p>
+            <div className="space-y-2">
+              {siteAnalytics.topPages.map(page => {
+                const maxViews = Math.max(...siteAnalytics.topPages.map(p => p.views));
+                return (
+                  <div key={page.page} className="flex items-center gap-3">
+                    <span className="text-[10px] font-mono text-muted w-24 shrink-0">{page.page}</span>
+                    <div className="flex-1 h-4 rounded bg-surface-light border border-border overflow-hidden"><div className="h-full rounded bg-gold/50 transition-all duration-500" style={{ width: `${(page.views / maxViews) * 100}%` }} /></div>
+                    <span className="text-[10px] font-semibold text-foreground w-16 text-right">{page.views.toLocaleString()}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Smartphone size={13} className="text-gold" /> Device Breakdown</p>
+            <div className="grid grid-cols-3 gap-3">
+              {[{ device: "Desktop", pct: 52, icon: Monitor }, { device: "Mobile", pct: 38, icon: Smartphone }, { device: "Tablet", pct: 10, icon: Tablet }].map(d => (
+                <div key={d.device} className="text-center p-3 rounded-lg bg-surface-light border border-border">
+                  <d.icon size={16} className="mx-auto mb-2 text-muted" /><p className="text-lg font-bold text-foreground">{d.pct}%</p><p className="text-[10px] text-muted">{d.device}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* BLOG TAB                                                            */}
+      {/* ================================================================== */}
+      {tab === "blog" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted">Manage blog posts for your website</p>
+            <button onClick={() => toast.success("New blog post created (demo)")} className="btn-primary text-[10px] flex items-center gap-1"><PenTool size={10} /> New Post</button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Total Posts</p><p className="text-lg font-bold text-gold">{blogPosts.length}</p></div>
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Published</p><p className="text-lg font-bold text-green-400">{blogPosts.filter(p => p.status === "published").length}</p></div>
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Drafts</p><p className="text-lg font-bold text-yellow-400">{blogPosts.filter(p => p.status === "draft").length}</p></div>
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Total Views</p><p className="text-lg font-bold text-blue-400">{blogPosts.reduce((s, p) => s + p.views, 0)}</p></div>
+          </div>
+          <div className="space-y-1.5">
+            <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+              <div className="col-span-5">Title</div><div className="col-span-2">Status</div><div className="col-span-2">Date</div><div className="col-span-1 text-right">Views</div><div className="col-span-2 text-right">Actions</div>
+            </div>
+            {blogPosts.map(post => (
+              <div key={post.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2.5 rounded-xl bg-surface-light border border-border hover:border-border/80">
+                <div className="col-span-5"><p className="text-sm font-semibold truncate">{post.title}</p></div>
+                <div className="col-span-2">
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full border ${post.status === "published" ? "text-green-400 border-green-400/30 bg-green-400/10" : post.status === "scheduled" ? "text-blue-400 border-blue-400/30 bg-blue-400/10" : "text-yellow-400 border-yellow-400/30 bg-yellow-400/10"}`}>{post.status.charAt(0).toUpperCase() + post.status.slice(1)}</span>
+                </div>
+                <div className="col-span-2"><span className="text-[10px] text-muted">{post.date}</span></div>
+                <div className="col-span-1 text-right"><span className="text-[10px] text-foreground">{post.views}</span></div>
+                <div className="col-span-2 flex justify-end gap-1.5">
+                  <button onClick={() => toast.success("Editing post (demo)")} className="p-1.5 rounded-md hover:bg-surface text-muted hover:text-foreground"><Edit3 size={12} /></button>
+                  <button onClick={() => toast.success("Post deleted (demo)")} className="p-1.5 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400"><Trash2 size={12} /></button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Sparkles size={13} className="text-gold" /> AI Blog Tools</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {[
+                { label: "Generate Post", desc: "AI writes a full blog post", icon: PenTool, color: "text-gold" },
+                { label: "SEO Optimize", desc: "Optimize existing posts", icon: Search, color: "text-green-400" },
+                { label: "Generate Ideas", desc: "Get 10 blog topic ideas", icon: Sparkles, color: "text-purple-400" },
+                { label: "Bulk Schedule", desc: "Schedule posts for the month", icon: Hash, color: "text-blue-400" },
+              ].map(tool => (
+                <button key={tool.label} onClick={() => toast.success(`${tool.label} (demo)`)} className="card-hover p-3 text-left">
+                  <tool.icon size={14} className={`${tool.color} mb-1.5`} /><p className="text-[10px] font-semibold">{tool.label}</p><p className="text-[9px] text-muted">{tool.desc}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Demos Tab */}
       {tab === "demos" && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted">All demo sites created for prospects and clients</p>
-            <button onClick={() => setTab("build")} className="btn-primary text-[10px] flex items-center gap-1">
-              <Sparkles size={10} /> New Demo
-            </button>
+            <button onClick={() => setTab("build")} className="btn-primary text-[10px] flex items-center gap-1"><Sparkles size={10} /> New Demo</button>
           </div>
           {demos.length === 0 ? (
-            <div className="card text-center py-12">
-              <Globe size={20} className="mx-auto mb-2 text-muted/30" />
-              <p className="text-xs text-muted">No demos yet. Create one to show prospects their website.</p>
-            </div>
+            <div className="card text-center py-12"><Globe size={20} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No demos yet. Create one to show prospects their website.</p></div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {demos.map((d) => (
                 <div key={d.id} className="card-hover p-4">
                   <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h3 className="text-xs font-semibold">{d.business_name}</h3>
-                      <p className="text-[9px] text-muted">{new Date(d.created_at).toLocaleDateString()}</p>
-                    </div>
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${d.status === "demo" ? "bg-gold/10 text-gold" : d.status === "live" ? "bg-success/10 text-success" : "bg-surface-light text-muted"}`}>
-                      {d.status === "demo" ? "Demo" : d.status === "live" ? "Live" : d.status}
-                    </span>
+                    <div><h3 className="text-xs font-semibold">{d.business_name}</h3><p className="text-[9px] text-muted">{new Date(d.created_at).toLocaleDateString()}</p></div>
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${d.status === "demo" ? "bg-gold/10 text-gold" : d.status === "live" ? "bg-success/10 text-success" : "bg-surface-light text-muted"}`}>{d.status === "demo" ? "Demo" : d.status === "live" ? "Live" : d.status}</span>
                   </div>
                   {d.url && (
                     <div className="bg-surface-light rounded-lg px-2.5 py-1.5 mb-2.5 flex items-center justify-between border border-border">
                       <a href={d.url} target="_blank" rel="noopener" className="text-[10px] text-gold hover:text-gold-light truncate">{d.url}</a>
-                      <button onClick={() => { navigator.clipboard.writeText(d.url); toast.success("Copied!"); }}>
-                        <Copy size={10} className="text-muted hover:text-foreground shrink-0 ml-2" />
-                      </button>
+                      <button onClick={() => { navigator.clipboard.writeText(d.url); toast.success("Copied!"); }}><Copy size={10} className="text-muted hover:text-foreground shrink-0 ml-2" /></button>
                     </div>
                   )}
                   <div className="flex gap-1.5">
                     {d.url && <a href={d.url} target="_blank" rel="noopener" className="btn-secondary text-[9px] py-1 px-2 flex items-center gap-1"><ExternalLink size={9} /> View</a>}
-                    <button onClick={() => { navigator.clipboard.writeText(`Hey! Here's a preview of your new website: ${d.url}\n\nLet me know what you think!`); toast.success("Message copied!"); }}
-                      className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1"><Mail size={9} /> Send</button>
+                    <button onClick={() => { navigator.clipboard.writeText(`Hey! Here's a preview of your new website: ${d.url}\n\nLet me know what you think!`); toast.success("Message copied!"); }} className="btn-ghost text-[9px] py-1 px-2 flex items-center gap-1"><Mail size={9} /> Send</button>
                   </div>
                 </div>
               ))}

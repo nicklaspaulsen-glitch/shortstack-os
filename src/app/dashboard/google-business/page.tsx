@@ -1,302 +1,492 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { createClient } from "@/lib/supabase/client";
-import { formatRelativeTime } from "@/lib/utils";
+import { useState } from "react";
 import {
-  MapPin, Star, Send, Loader, RefreshCw,
-  Reply, PenTool
+  MapPin, Star, Send, RefreshCw, Reply, PenTool, Eye,
+  BarChart3, Image, Clock, Calendar, Plus,
+  TrendingUp, Globe, Settings, CheckCircle,
+  ArrowUpRight, Sparkles, MessageSquare, Tag
 } from "lucide-react";
-import toast from "react-hot-toast";
+
+/* ------------------------------------------------------------------ */
+/*  Mock Data                                                          */
+/* ------------------------------------------------------------------ */
 
 interface Review {
-  reviewId: string;
-  reviewer: { displayName: string; profilePhotoUrl: string };
-  starRating: string;
-  comment: string;
-  createTime: string;
-  updateTime: string;
+  id: string;
   name: string;
-  reviewReply?: { comment: string; updateTime: string };
+  stars: number;
+  comment: string;
+  date: string;
+  replied: boolean;
+  replyText?: string;
 }
 
+const MOCK_REVIEWS: Review[] = [
+  { id: "r1", name: "Sarah Johnson", stars: 5, comment: "Absolutely fantastic service! The team went above and beyond to deliver our project on time.", date: "2026-04-01", replied: true, replyText: "Thank you so much Sarah! We loved working with you." },
+  { id: "r2", name: "Mike Peters", stars: 4, comment: "Great experience overall. Results exceeded expectations.", date: "2026-03-28", replied: false },
+  { id: "r3", name: "Emily Chen", stars: 5, comment: "Best agency we have ever worked with. Consistent results every month.", date: "2026-03-25", replied: false },
+  { id: "r4", name: "David Brown", stars: 3, comment: "Decent work but took longer than expected.", date: "2026-03-20", replied: false },
+  { id: "r5", name: "Lisa Martinez", stars: 5, comment: "Incredible ROI on our ad campaigns. They really know their stuff.", date: "2026-03-15", replied: true, replyText: "Thanks Lisa! We love seeing great results for our clients." },
+  { id: "r6", name: "James Wilson", stars: 4, comment: "Professional team with great attention to detail.", date: "2026-03-10", replied: false },
+];
+
+const MOCK_POSTS = [
+  { id: "gp1", content: "Spring special! Get 20% off your first month of marketing services.", date: "2026-04-10", views: 342, clicks: 28, type: "offer" },
+  { id: "gp2", content: "We just helped another local business increase their leads by 40% in 30 days!", date: "2026-04-05", views: 256, clicks: 19, type: "update" },
+  { id: "gp3", content: "Excited to announce we're now offering AI-powered social media management.", date: "2026-03-28", views: 189, clicks: 12, type: "update" },
+];
+
+const QA_DATA = [
+  { id: "qa1", question: "What services do you offer?", answer: "We offer social media management, paid advertising, SEO, content creation, and web design.", askedBy: "Google User", date: "2026-04-08" },
+  { id: "qa2", question: "Do you work with small businesses?", answer: "Absolutely! We specialize in helping small and medium businesses grow their online presence.", askedBy: "Google User", date: "2026-03-22" },
+  { id: "qa3", question: "What are your hours?", answer: null, askedBy: "Google User", date: "2026-04-12" },
+];
+
+const INSIGHTS = {
+  views: { total: 2450, search: 1680, maps: 770, trend: "+12%" },
+  searches: { direct: 890, discovery: 1240, branded: 320, trend: "+8%" },
+  actions: { website: 342, directions: 156, calls: 89, messages: 67, trend: "+15%" },
+  photos: { views: 1890, count: 24, trend: "+5%" },
+};
+
+const LOCATIONS = [
+  { id: "loc1", name: "ShortStack Digital - Main Office", address: "123 Main St, Miami, FL", verified: true, rating: 4.6, reviews: 48 },
+  { id: "loc2", name: "ShortStack Digital - Tampa", address: "456 Bay Dr, Tampa, FL", verified: true, rating: 4.8, reviews: 12 },
+  { id: "loc3", name: "ShortStack Digital - Orlando", address: "789 Lake Ave, Orlando, FL", verified: false, rating: 0, reviews: 0 },
+];
+
+const CATEGORIES = ["Marketing Agency", "Digital Marketing Service", "Social Media Agency", "Advertising Agency", "SEO Service"];
+const SELECTED_CATEGORIES = ["Marketing Agency", "Digital Marketing Service"];
+
+const COMPETITOR_DATA = [
+  { name: "Your Business", rating: 4.6, reviews: 48, photos: 24 },
+  { name: "Rival Marketing Co", rating: 4.3, reviews: 67, photos: 31 },
+  { name: "Digital First Agency", rating: 4.7, reviews: 22, photos: 15 },
+  { name: "Growth Hackers Inc", rating: 3.9, reviews: 89, photos: 8 },
+];
+
+const HOLIDAY_HOURS = [
+  { holiday: "Memorial Day", date: "May 26, 2026", hours: "Closed" },
+  { holiday: "Independence Day", date: "Jul 4, 2026", hours: "Closed" },
+  { holiday: "Labor Day", date: "Sep 7, 2026", hours: "Closed" },
+  { holiday: "Thanksgiving", date: "Nov 26, 2026", hours: "Closed" },
+];
+
+const SCHEDULED_POSTS = [
+  { id: "sp1", content: "Happy Monday! Start your week with a free marketing audit.", date: "2026-04-15 09:00", status: "scheduled" },
+  { id: "sp2", content: "New blog post: 5 ways to improve your Google ranking in 2026.", date: "2026-04-17 10:00", status: "draft" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Page Component                                                     */
+/* ------------------------------------------------------------------ */
+
 export default function GoogleBusinessPage() {
-  useAuth();
-  const supabase = createClient();
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [totalReviews, setTotalReviews] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [connected, setConnected] = useState(true);
-  const [tab, setTab] = useState<"reviews" | "post">("reviews");
-  const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
-  const [selectedClient, setSelectedClient] = useState("");
+  const [activeTab, setActiveTab] = useState<"reviews" | "posts" | "insights" | "qa" | "photos" | "settings">("reviews");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
-  const [replying, setReplying] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("loc1");
   const [postContent, setPostContent] = useState("");
-  const [posting, setPosting] = useState(false);
-  const [generating, setGenerating] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [aiReply, setAiReply] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }) => {
-      setClients(data || []);
-      if (data?.[0]) setSelectedClient(data[0].id);
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const avgRating = (MOCK_REVIEWS.reduce((s, r) => s + r.stars, 0) / MOCK_REVIEWS.length).toFixed(1);
+  const needsReply = MOCK_REVIEWS.filter(r => !r.replied).length;
 
-  useEffect(() => {
-    if (selectedClient) fetchReviews();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedClient]);
-
-  async function fetchReviews() {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/integrations/google-business?client_id=${selectedClient}&action=reviews`);
-      const data = await res.json();
-      if (data.error?.includes("not connected") || data.connected === false) {
-        setConnected(false);
-      } else {
-        setReviews(data.reviews || []);
-        setTotalReviews(data.total || 0);
-      }
-    } catch { setConnected(false); }
-    setLoading(false);
+  function generateReply(review: Review) {
+    setReplyingTo(review.id);
+    setTimeout(() => {
+      const templates: Record<number, string> = {
+        5: `Thank you so much, ${review.name}! We're thrilled to hear about your positive experience. Your support means the world to us!`,
+        4: `Thanks for the great review, ${review.name}! We appreciate your feedback and are always working to improve.`,
+        3: `Thank you for your feedback, ${review.name}. We're committed to improving and would love to discuss how we can do better.`,
+      };
+      setAiReply(prev => ({ ...prev, [review.id]: templates[review.stars] || templates[3] }));
+      setReplyText(templates[review.stars] || templates[3]);
+    }, 800);
   }
 
-  async function replyToReview(reviewName: string) {
-    if (!replyText.trim()) return;
-    setReplying(true);
-    try {
-      const res = await fetch("/api/integrations/google-business", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ client_id: selectedClient, action: "reply_review", review_name: reviewName, comment: replyText }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast.success("Reply posted!");
-        setReplyingTo(null);
-        setReplyText("");
-        fetchReviews();
-      } else {
-        toast.error(data.error || "Failed");
-      }
-    } catch { toast.error("Error"); }
-    setReplying(false);
-  }
+  const renderStars = (rating: number, size: number = 10) => (
+    <div className="flex gap-0.5">
+      {[1, 2, 3, 4, 5].map(i => (
+        <Star key={i} size={size} className={i <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted/30"} />
+      ))}
+    </div>
+  );
 
-  async function createPost() {
-    if (!postContent.trim()) return;
-    setPosting(true);
-    try {
-      const res = await fetch("/api/integrations/google-business", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ client_id: selectedClient, action: "create_post", summary: postContent }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast.success("Post published to Google Business!");
-        setPostContent("");
-      } else {
-        toast.error(data.error || "Failed");
-      }
-    } catch { toast.error("Error"); }
-    setPosting(false);
-  }
-
-  async function generateReply(review: Review) {
-    setGenerating(true);
-    setReplyingTo(review.name);
-    try {
-      const res = await fetch("/api/content/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: `Write a short, professional reply to this Google Business review. Be grateful and warm. Review: "${review.comment}" (${review.starRating} stars by ${review.reviewer.displayName}). Keep it under 100 words.`,
-          max_tokens: 200,
-        }),
-      });
-      const data = await res.json();
-      if (data.text) setReplyText(data.text);
-    } catch { toast.error("Failed to generate reply"); }
-    setGenerating(false);
-  }
-
-  const starMap: Record<string, number> = { ONE: 1, TWO: 2, THREE: 3, FOUR: 4, FIVE: 5 };
-  const avgRating = reviews.length > 0
-    ? (reviews.reduce((s, r) => s + (starMap[r.starRating] || 0), 0) / reviews.length).toFixed(1)
-    : "0";
-
-  if (!connected && !loading) {
-    return (
-      <div className="fade-in space-y-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#4285F4]/10 rounded-xl flex items-center justify-center">
-            <MapPin size={20} className="text-[#4285F4]" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Google Business</h1>
-            <p className="text-xs text-muted">Manage reviews and local presence</p>
-          </div>
-        </div>
-        <div className="card p-8 text-center">
-          <MapPin size={32} className="text-muted/30 mx-auto mb-3" />
-          <h2 className="text-sm font-semibold mb-1">Google Business Not Connected</h2>
-          <p className="text-xs text-muted mb-3">Connect a client&apos;s Google Business account via OAuth in the Integrations page.</p>
-        </div>
-      </div>
-    );
-  }
+  const tabs = [
+    { id: "reviews" as const, label: "Reviews", icon: Star },
+    { id: "posts" as const, label: "Posts", icon: PenTool },
+    { id: "insights" as const, label: "Insights", icon: BarChart3 },
+    { id: "qa" as const, label: "Q&A", icon: MessageSquare },
+    { id: "photos" as const, label: "Photos", icon: Image },
+    { id: "settings" as const, label: "Settings", icon: Settings },
+  ];
 
   return (
     <div className="fade-in space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#4285F4]/10 rounded-xl flex items-center justify-center">
             <MapPin size={20} className="text-[#4285F4]" />
           </div>
           <div>
-            <h1 className="page-header mb-0">Google Business</h1>
-            <p className="text-xs text-muted">Reviews, posts & local SEO management</p>
+            <h1 className="text-lg font-bold">Google Business</h1>
+            <p className="text-xs text-muted">Manage listings, reviews, posts & local SEO</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[160px]">
-            {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
+          <select value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)}
+            className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground min-w-[160px]">
+            {LOCATIONS.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
           </select>
-          <button onClick={fetchReviews} className="btn-secondary text-xs flex items-center gap-1.5">
+          <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted flex items-center gap-1.5">
             <RefreshCw size={12} /> Refresh
           </button>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <div className="card p-3 text-center">
           <p className="text-lg font-bold text-gold">{avgRating}</p>
-          <p className="text-[10px] text-muted flex items-center justify-center gap-0.5"><Star size={9} /> Avg Rating</p>
+          <p className="text-[10px] text-muted flex items-center justify-center gap-0.5">{renderStars(Math.round(Number(avgRating)))} Avg</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold">{totalReviews}</p>
+          <p className="text-lg font-bold">{MOCK_REVIEWS.length}</p>
           <p className="text-[10px] text-muted">Total Reviews</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-success">{reviews.filter(r => !r.reviewReply).length}</p>
+          <p className="text-lg font-bold text-yellow-400">{needsReply}</p>
           <p className="text-[10px] text-muted">Needs Reply</p>
+        </div>
+        <div className="card p-3 text-center">
+          <p className="text-lg font-bold text-green-400 flex items-center justify-center gap-0.5">{INSIGHTS.views.total.toLocaleString()} <ArrowUpRight size={10} /></p>
+          <p className="text-[10px] text-muted">Profile Views</p>
+        </div>
+        <div className="card p-3 text-center">
+          <p className="text-lg font-bold text-[#4285F4]">{INSIGHTS.actions.website + INSIGHTS.actions.calls}</p>
+          <p className="text-[10px] text-muted">Actions Taken</p>
         </div>
       </div>
 
+      {/* Multi-location */}
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {LOCATIONS.map(l => (
+          <div key={l.id} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[10px] whitespace-nowrap shrink-0 cursor-pointer transition-all ${
+            selectedLocation === l.id ? "border-[#4285F4]/30 bg-[#4285F4]/10 text-[#4285F4]" : "border-border text-muted"
+          }`} onClick={() => setSelectedLocation(l.id)}>
+            <MapPin size={10} />
+            <span className="font-medium">{l.name.split(" - ")[1] || l.name}</span>
+            {l.verified ? <CheckCircle size={8} className="text-green-400" /> : <Clock size={8} className="text-yellow-400" />}
+            {l.rating > 0 && <span>{l.rating}<Star size={7} className="inline fill-yellow-400 text-yellow-400 ml-0.5" /></span>}
+          </div>
+        ))}
+      </div>
+
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        {([
-          { id: "reviews", label: "Reviews", icon: <Star size={13} /> },
-          { id: "post", label: "Create Post", icon: <PenTool size={13} /> },
-        ] as const).map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-[#4285F4]/10 text-[#4285F4] font-medium" : "text-muted hover:text-foreground"
+      <div className="flex gap-1 overflow-x-auto pb-1">
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setActiveTab(t.id)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
+              activeTab === t.id ? "bg-[#4285F4]/10 border-[#4285F4]/20 text-[#4285F4] font-medium" : "border-border text-muted hover:text-foreground"
             }`}>
-            {t.icon} {t.label}
+            <t.icon size={12} /> {t.label}
           </button>
         ))}
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12"><Loader size={20} className="animate-spin text-[#4285F4]" /></div>
-      ) : (
-        <>
+      {/* ---- TAB: Reviews ---- */}
+      {activeTab === "reviews" && (
+        <div className="space-y-3">
+          {/* Rating distribution */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3">Rating Distribution</h3>
+            <div className="space-y-1.5">
+              {[5, 4, 3, 2, 1].map(r => {
+                const count = MOCK_REVIEWS.filter(rev => rev.stars === r).length;
+                const pct = Math.round((count / MOCK_REVIEWS.length) * 100);
+                return (
+                  <div key={r} className="flex items-center gap-2">
+                    <span className="text-xs w-4 text-right">{r}</span>
+                    <Star size={8} className="fill-yellow-400 text-yellow-400" />
+                    <div className="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
+                      <div className="h-full rounded-full bg-yellow-400/40" style={{ width: `${pct}%` }} />
+                    </div>
+                    <span className="text-[10px] text-muted w-10 text-right">{count} ({pct}%)</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Reviews */}
-          {tab === "reviews" && (
-            <div className="space-y-2">
-              {reviews.length === 0 ? (
-                <div className="card p-8 text-center text-muted text-sm">No reviews found</div>
-              ) : (
-                reviews.map((review, i) => {
-                  const stars = starMap[review.starRating] || 0;
-                  return (
-                    <div key={i} className="card p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded-full bg-surface-light flex items-center justify-center text-xs font-bold text-gold shrink-0">
-                          {review.reviewer.displayName?.charAt(0) || "?"}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <span className="text-xs font-semibold">{review.reviewer.displayName}</span>
-                              <div className="flex items-center gap-0.5 mt-0.5">
-                                {Array.from({ length: 5 }).map((_, si) => (
-                                  <Star key={si} size={10} className={si < stars ? "text-gold fill-gold" : "text-muted/30"} />
-                                ))}
-                              </div>
-                            </div>
-                            <span className="text-[9px] text-muted">{formatRelativeTime(review.createTime)}</span>
-                          </div>
-                          {review.comment && <p className="text-xs text-muted mt-2 leading-relaxed">{review.comment}</p>}
-
-                          {/* Existing reply */}
-                          {review.reviewReply && (
-                            <div className="mt-2 pl-3 border-l-2 border-gold/20">
-                              <p className="text-[10px] text-muted"><span className="font-medium text-gold">Your reply:</span> {review.reviewReply.comment}</p>
-                            </div>
-                          )}
-
-                          {/* Reply form */}
-                          {replyingTo === review.name ? (
-                            <div className="mt-2 space-y-2">
-                              <textarea value={replyText} onChange={e => setReplyText(e.target.value)}
-                                className="input w-full h-16 text-xs" placeholder="Write a reply..." />
-                              <div className="flex gap-1.5">
-                                <button onClick={() => replyToReview(review.name)} disabled={replying}
-                                  className="btn-primary text-[10px] px-2 py-1 flex items-center gap-1">
-                                  {replying ? <Loader size={10} className="animate-spin" /> : <Send size={10} />} Reply
-                                </button>
-                                <button onClick={() => generateReply(review)} disabled={generating}
-                                  className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                                  {generating ? <Loader size={10} className="animate-spin" /> : <Star size={10} />} AI Reply
-                                </button>
-                                <button onClick={() => { setReplyingTo(null); setReplyText(""); }}
-                                  className="btn-ghost text-[10px] px-2 py-1">Cancel</button>
-                              </div>
-                            </div>
-                          ) : (
-                            !review.reviewReply && (
-                              <button onClick={() => setReplyingTo(review.name)}
-                                className="mt-2 text-[10px] text-[#4285F4] hover:underline flex items-center gap-1">
-                                <Reply size={10} /> Reply
-                              </button>
-                            )
-                          )}
-                        </div>
+          {MOCK_REVIEWS.map(review => (
+            <div key={review.id} className="card p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-[#4285F4]/10 flex items-center justify-center text-xs font-bold text-[#4285F4] shrink-0">
+                  {review.name.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-semibold">{review.name}</span>
+                      <div className="flex items-center gap-1 mt-0.5">{renderStars(review.stars)}</div>
+                    </div>
+                    <span className="text-[9px] text-muted">{review.date}</span>
+                  </div>
+                  <p className="text-xs text-muted mt-2 leading-relaxed">{review.comment}</p>
+                  {review.replied && review.replyText && (
+                    <div className="mt-2 pl-3 border-l-2 border-[#4285F4]/20">
+                      <p className="text-[10px] text-muted"><span className="font-medium text-[#4285F4]">Your reply:</span> {review.replyText}</p>
+                    </div>
+                  )}
+                  {replyingTo === review.id && (
+                    <div className="mt-2 space-y-2">
+                      <textarea value={replyText} onChange={e => setReplyText(e.target.value)}
+                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-16" placeholder="Write a reply..." />
+                      <div className="flex gap-1.5">
+                        <button className="px-2 py-1 rounded-lg bg-[#4285F4] text-white text-[10px] font-medium flex items-center gap-1"><Send size={8} /> Reply</button>
+                        <button onClick={() => generateReply(review)} className="px-2 py-1 rounded-lg border border-border text-[10px] text-muted flex items-center gap-1"><Sparkles size={8} /> AI Reply</button>
+                        <button onClick={() => { setReplyingTo(null); setReplyText(""); }} className="px-2 py-1 rounded-lg border border-border text-[10px] text-muted">Cancel</button>
                       </div>
                     </div>
-                  );
-                })
-              )}
+                  )}
+                  {!review.replied && replyingTo !== review.id && (
+                    <button onClick={() => setReplyingTo(review.id)} className="mt-2 text-[10px] text-[#4285F4] hover:underline flex items-center gap-1"><Reply size={10} /> Reply</button>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
+          ))}
+        </div>
+      )}
+
+      {/* ---- TAB: Posts ---- */}
+      {activeTab === "posts" && (
+        <div className="space-y-4">
+          {/* Post Scheduler */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#4285F4]" /> Post Scheduler</h3>
+            <div className="space-y-2 mb-3">
+              {SCHEDULED_POSTS.map(sp => (
+                <div key={sp.id} className="flex items-center justify-between p-2 rounded-lg border border-border">
+                  <div>
+                    <p className="text-[10px] font-medium">{sp.content}</p>
+                    <p className="text-[9px] text-muted flex items-center gap-1"><Clock size={8} /> {sp.date}</p>
+                  </div>
+                  <span className={`text-[9px] px-2 py-0.5 rounded ${sp.status === "scheduled" ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"}`}>{sp.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Create Post */}
-          {tab === "post" && (
-            <div className="card space-y-4">
-              <h2 className="section-header">Create Google Business Post</h2>
-              <p className="text-[10px] text-muted">Posts appear on your Google Business listing and in Google Maps/Search.</p>
-              <div>
-                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Post Content *</label>
-                <textarea value={postContent} onChange={e => setPostContent(e.target.value)}
-                  className="input w-full h-28 text-xs" placeholder="Share an update, promotion, or news about the business..." />
-              </div>
-              <button onClick={createPost} disabled={posting || !postContent.trim()}
-                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                {posting ? <Loader size={12} className="animate-spin" /> : <Send size={12} />}
-                Publish Post
-              </button>
+          <div className="card p-4 space-y-3">
+            <h2 className="text-xs font-semibold">Create GBP Post</h2>
+            <textarea value={postContent} onChange={e => setPostContent(e.target.value)}
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24" placeholder="Share an update, promotion, or news..." />
+            <div className="flex gap-2">
+              <button className="px-3 py-1.5 rounded-lg bg-[#4285F4] text-white text-xs font-semibold flex items-center gap-1.5"><Send size={12} /> Publish</button>
+              <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted flex items-center gap-1.5"><Calendar size={12} /> Schedule</button>
             </div>
-          )}
-        </>
+          </div>
+
+          {/* Recent Posts */}
+          <div className="space-y-2">
+            {MOCK_POSTS.map(p => (
+              <div key={p.id} className="card p-3">
+                <p className="text-xs">{p.content}</p>
+                <div className="flex items-center gap-3 mt-2 text-[9px] text-muted">
+                  <span>{p.date}</span>
+                  <span className="flex items-center gap-0.5"><Eye size={8} /> {p.views} views</span>
+                  <span className="flex items-center gap-0.5"><ArrowUpRight size={8} /> {p.clicks} clicks</span>
+                  <span className="bg-[#4285F4]/10 text-[#4285F4] px-1.5 py-0.5 rounded">{p.type}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Insights ---- */}
+      {activeTab === "insights" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="card p-3">
+              <p className="text-[9px] text-muted uppercase mb-1">Profile Views</p>
+              <p className="text-xl font-bold">{INSIGHTS.views.total.toLocaleString()}</p>
+              <span className="text-[9px] text-green-400 flex items-center gap-0.5"><TrendingUp size={8} /> {INSIGHTS.views.trend}</span>
+            </div>
+            <div className="card p-3">
+              <p className="text-[9px] text-muted uppercase mb-1">Search Impressions</p>
+              <p className="text-xl font-bold">{(INSIGHTS.searches.direct + INSIGHTS.searches.discovery).toLocaleString()}</p>
+              <span className="text-[9px] text-green-400 flex items-center gap-0.5"><TrendingUp size={8} /> {INSIGHTS.searches.trend}</span>
+            </div>
+            <div className="card p-3">
+              <p className="text-[9px] text-muted uppercase mb-1">Website Clicks</p>
+              <p className="text-xl font-bold">{INSIGHTS.actions.website}</p>
+              <span className="text-[9px] text-green-400 flex items-center gap-0.5"><TrendingUp size={8} /> {INSIGHTS.actions.trend}</span>
+            </div>
+            <div className="card p-3">
+              <p className="text-[9px] text-muted uppercase mb-1">Phone Calls</p>
+              <p className="text-xl font-bold">{INSIGHTS.actions.calls}</p>
+            </div>
+          </div>
+
+          {/* Search breakdown */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3">How Customers Find You</h3>
+            <div className="space-y-2">
+              {[
+                { label: "Direct searches", value: INSIGHTS.searches.direct, color: "bg-[#4285F4]" },
+                { label: "Discovery searches", value: INSIGHTS.searches.discovery, color: "bg-green-400" },
+                { label: "Branded searches", value: INSIGHTS.searches.branded, color: "bg-gold" },
+              ].map(s => (
+                <div key={s.label}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px]">{s.label}</span>
+                    <span className="text-[10px] font-mono text-muted">{s.value}</span>
+                  </div>
+                  <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                    <div className={`h-full rounded-full ${s.color}/40`} style={{ width: `${(s.value / (INSIGHTS.searches.direct + INSIGHTS.searches.discovery + INSIGHTS.searches.branded)) * 100}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Competitor Comparison */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Eye size={12} className="text-[#4285F4]" /> Competitor Comparison</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-[10px]">
+                <thead><tr className="border-b border-border">
+                  <th className="text-left py-2 text-muted">Business</th>
+                  <th className="text-center py-2 text-muted">Rating</th>
+                  <th className="text-center py-2 text-muted">Reviews</th>
+                  <th className="text-center py-2 text-muted">Photos</th>
+                </tr></thead>
+                <tbody>
+                  {COMPETITOR_DATA.map(c => (
+                    <tr key={c.name} className="border-b border-border/30">
+                      <td className={`py-2 font-medium ${c.name === "Your Business" ? "text-[#4285F4]" : ""}`}>{c.name}</td>
+                      <td className="text-center py-2">{c.rating}<Star size={7} className="inline fill-yellow-400 text-yellow-400 ml-0.5" /></td>
+                      <td className="text-center py-2">{c.reviews}</td>
+                      <td className="text-center py-2">{c.photos}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Q&A ---- */}
+      {activeTab === "qa" && (
+        <div className="card p-4">
+          <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><MessageSquare size={12} className="text-[#4285F4]" /> Q&A Manager</h3>
+          <div className="space-y-3">
+            {QA_DATA.map(qa => (
+              <div key={qa.id} className="p-3 rounded-lg border border-border">
+                <p className="text-xs font-medium">Q: {qa.question}</p>
+                <p className="text-[9px] text-muted mb-2">Asked by {qa.askedBy} &middot; {qa.date}</p>
+                {qa.answer ? (
+                  <p className="text-[10px] text-muted pl-3 border-l-2 border-[#4285F4]/20">A: {qa.answer}</p>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <input className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" placeholder="Type an answer..." />
+                    <button className="px-2 py-1 rounded-lg bg-[#4285F4] text-white text-[10px] font-medium">Answer</button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Photos ---- */}
+      {activeTab === "photos" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-semibold flex items-center gap-2"><Image size={12} className="text-[#4285F4]" /> Photo Gallery</h3>
+              <button className="px-3 py-1.5 rounded-lg bg-[#4285F4] text-white text-[10px] font-semibold flex items-center gap-1"><Plus size={10} /> Upload</button>
+            </div>
+            <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="aspect-square rounded-lg bg-white/[0.02] border border-border flex items-center justify-center">
+                  <Image size={20} className="text-muted/20" />
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted mt-2">{INSIGHTS.photos.count} photos &middot; {INSIGHTS.photos.views.toLocaleString()} total views</p>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Settings ---- */}
+      {activeTab === "settings" && (
+        <div className="space-y-4">
+          {/* Categories */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Tag size={12} className="text-[#4285F4]" /> Category Optimizer</h3>
+            <div className="flex flex-wrap gap-1.5">
+              {CATEGORIES.map(c => (
+                <span key={c} className={`text-[10px] px-2.5 py-1 rounded-lg border ${
+                  SELECTED_CATEGORIES.includes(c) ? "border-[#4285F4]/30 bg-[#4285F4]/10 text-[#4285F4]" : "border-border text-muted"
+                }`}>{c}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Service Area */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Globe size={12} className="text-[#4285F4]" /> Service Area</h3>
+            <div className="flex flex-wrap gap-1.5">
+              {["Miami, FL", "Fort Lauderdale, FL", "Tampa, FL", "Orlando, FL", "Palm Beach, FL"].map(a => (
+                <span key={a} className="text-[10px] px-2.5 py-1 rounded-lg border border-[#4285F4]/20 bg-[#4285F4]/5 text-[#4285F4]">{a}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Holiday Hours */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#4285F4]" /> Holiday Hours</h3>
+            <div className="space-y-2">
+              {HOLIDAY_HOURS.map(h => (
+                <div key={h.holiday} className="flex items-center justify-between p-2 rounded-lg border border-border">
+                  <div>
+                    <p className="text-[10px] font-medium">{h.holiday}</p>
+                    <p className="text-[9px] text-muted">{h.date}</p>
+                  </div>
+                  <span className="text-[10px] text-red-400">{h.hours}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Update Tracker */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Clock size={12} className="text-[#4285F4]" /> Recent Listing Updates</h3>
+            <div className="space-y-1.5 text-[10px]">
+              {[
+                { update: "Business hours updated", date: "Apr 10, 2026" },
+                { update: "New photo uploaded", date: "Apr 8, 2026" },
+                { update: "Service description updated", date: "Apr 5, 2026" },
+                { update: "Holiday hours set for Memorial Day", date: "Apr 1, 2026" },
+              ].map((u, i) => (
+                <div key={i} className="flex items-center justify-between p-2 rounded-lg border border-border">
+                  <span className="text-muted">{u.update}</span>
+                  <span className="text-muted">{u.date}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

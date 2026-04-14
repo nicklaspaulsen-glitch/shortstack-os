@@ -1,10 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Get engagement data + AI-suggested replies for comments
 export async function POST(request: NextRequest) {
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await authSupabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
+
   const { client_id, action } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  const access = await verifyClientAccess(authSupabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const supabase = createServiceClient();
 

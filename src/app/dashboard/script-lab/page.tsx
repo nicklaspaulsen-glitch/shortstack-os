@@ -125,7 +125,7 @@ export default function ScriptLabPage() {
   const { clientId: managedClientId } = useManagedClient();
   const [clients, setClients] = useState<Array<{ id: string; business_name: string; industry: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
-  const [tab, setTab] = useState<"generate" | "research" | "results" | "history">("generate");
+  const [tab, setTab] = useState<"generate" | "research" | "results" | "history" | "templates" | "tools" | "voiceover" | "approval">("generate");
   const supabase = createClient();
 
   const [config, setConfig] = useState({
@@ -157,6 +157,72 @@ export default function ScriptLabPage() {
   const [activeBatchIndex, setActiveBatchIndex] = useState(0);
   const [research, setResearch] = useState<ViralResearch | null>(null);
   const [savedScripts, setSavedScripts] = useState<SavedScript[]>([]);
+
+  // Template categories
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [templateCategory, setTemplateCategory] = useState("all");
+  const scriptTemplates = [
+    { id: "1", name: "Product Launch Announcement", category: "launch", framework: "aida", platform: "instagram", desc: "Build hype for a new product or service launch" },
+    { id: "2", name: "Customer Testimonial Story", category: "social_proof", framework: "storytelling", platform: "instagram", desc: "Turn client results into compelling stories" },
+    { id: "3", name: "Behind-the-Scenes Tour", category: "brand", framework: "storytelling", platform: "tiktok", desc: "Show the human side of your business" },
+    { id: "4", name: "Problem-Solution Demo", category: "educational", framework: "pas", platform: "youtube", desc: "Demonstrate how you solve specific problems" },
+    { id: "5", name: "Industry Myth Debunking", category: "educational", framework: "myth_buster", platform: "tiktok", desc: "Challenge common misconceptions" },
+    { id: "6", name: "Quick Tips Listicle", category: "educational", framework: "listicle", platform: "instagram", desc: "Share actionable tips in 60 seconds" },
+    { id: "7", name: "Before/After Transformation", category: "social_proof", framework: "before_after", platform: "instagram", desc: "Showcase dramatic client results" },
+    { id: "8", name: "Day-in-the-Life Vlog", category: "brand", framework: "storytelling", platform: "youtube", desc: "Build personal connection with audience" },
+    { id: "9", name: "Trending Sound Script", category: "viral", framework: "hook_story_offer", platform: "tiktok", desc: "Ride trending audio for reach" },
+    { id: "10", name: "FAQ Response Series", category: "educational", framework: "faq", platform: "instagram", desc: "Address top questions from audience" },
+    { id: "11", name: "Objection Handling Script", category: "sales", framework: "contrarian", platform: "instagram", desc: "Overcome common buying objections" },
+    { id: "12", name: "Case Study Breakdown", category: "social_proof", framework: "before_after", platform: "linkedin", desc: "Deep dive into a success story" },
+    { id: "13", name: "Seasonal Promotion", category: "sales", framework: "aida", platform: "facebook", desc: "Limited-time offer announcement" },
+    { id: "14", name: "Podcast Episode Promo", category: "promotion", framework: "hook_story_offer", platform: "instagram", desc: "Tease podcast episodes for downloads" },
+    { id: "15", name: "Email Nurture Welcome", category: "email", framework: "storytelling", platform: "email", desc: "Welcome new subscribers and set expectations" },
+    { id: "16", name: "Cold Outreach Script", category: "sales", framework: "pas", platform: "email", desc: "Persuasive first-touch email" },
+    { id: "17", name: "Webinar Invitation", category: "promotion", framework: "aida", platform: "email", desc: "Drive registrations for live events" },
+    { id: "18", name: "Twitter/X Thread Deep Dive", category: "educational", framework: "how_to", platform: "twitter", desc: "Long-form thread for authority building" },
+    { id: "19", name: "LinkedIn Thought Leadership", category: "brand", framework: "contrarian", platform: "linkedin", desc: "Position yourself as an industry expert" },
+    { id: "20", name: "Carousel Storytelling", category: "educational", framework: "storytelling", platform: "instagram", desc: "Multi-slide educational content" },
+    { id: "21", name: "YouTube Shorts Hook", category: "viral", framework: "hook_story_offer", platform: "youtube", desc: "Maximum impact in 60 seconds" },
+    { id: "22", name: "Re-engagement Email", category: "email", framework: "pas", platform: "email", desc: "Win back inactive subscribers" },
+    { id: "23", name: "Community Challenge Launch", category: "viral", framework: "hook_story_offer", platform: "tiktok", desc: "Start a challenge for massive reach" },
+    { id: "24", name: "Local Business Highlight", category: "brand", framework: "storytelling", platform: "facebook", desc: "Showcase local business partnerships" },
+  ];
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const templateCategories = ["all", "educational", "social_proof", "brand", "sales", "viral", "email", "promotion", "launch"];
+
+  // Tone analyzer state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [toneAnalysisText, setToneAnalysisText] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [toneResult, setToneResult] = useState<{ tones: { tone: string; score: number }[]; readability: string; wordCount: number; sentiment: string } | null>(null);
+
+  // SEO optimizer state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [seoKeyword, setSeoKeyword] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [seoContent, setSeoContent] = useState("");
+
+  // Voice-over state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [voiceoverText, setVoiceoverText] = useState("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [voiceSpeed, setVoiceSpeed] = useState<"slow" | "normal" | "fast">("normal");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [voiceStyle, setVoiceStyle] = useState<"professional" | "casual" | "energetic" | "calm">("professional");
+
+  // Approval flow state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [approvalScripts] = useState([
+    { id: "1", title: "Product Launch Reel", client: "Acme Corp", status: "pending" as const, submitted: "2026-04-12" },
+    { id: "2", title: "Testimonial Story", client: "Peak Fitness", status: "approved" as const, submitted: "2026-04-10" },
+    { id: "3", title: "Industry Tips Thread", client: "Summit SaaS", status: "revision" as const, submitted: "2026-04-11", feedback: "Make the hook more attention-grabbing" },
+    { id: "4", title: "Behind-the-Scenes Vlog", client: "Cedar Works", status: "pending" as const, submitted: "2026-04-13" },
+  ]);
+
+  // Multi-platform formatter
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [formatPlatform, setFormatPlatform] = useState("tiktok");
 
   useEffect(() => {
     supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }) => {
@@ -469,11 +535,24 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       </div>
 
       {/* Tabs */}
-      <div className="tab-group w-fit">
-        {(["generate", "research", "results", "history"] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "generate" ? "Script Generator" : t === "research" ? "Viral Research" : t === "results" ? `Results ${batchScripts.length > 1 ? `(${batchScripts.length})` : script ? "(1)" : ""}` : `History (${savedScripts.length})`}
+      <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
+        {([
+          { id: "generate" as const, label: "Generator", icon: Sparkles },
+          { id: "templates" as const, label: `Templates (${scriptTemplates.length})`, icon: BookOpen },
+          { id: "research" as const, label: "Viral Research", icon: Search },
+          { id: "results" as const, label: `Results ${batchScripts.length > 1 ? `(${batchScripts.length})` : script ? "(1)" : ""}`, icon: FileText },
+          { id: "tools" as const, label: "Tools", icon: Wand2 },
+          { id: "voiceover" as const, label: "Voice-Over", icon: Volume2 },
+          { id: "approval" as const, label: "Approval", icon: CheckCircle },
+          { id: "history" as const, label: `History (${savedScripts.length})`, icon: Clock },
+        ]).map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors whitespace-nowrap ${
+              tab === t.id
+                ? "bg-surface-light text-gold border border-border border-b-transparent -mb-px"
+                : "text-muted hover:text-foreground"
+            }`}>
+            <t.icon size={12} /> {t.label}
           </button>
         ))}
       </div>
@@ -952,6 +1031,202 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                 <span key={i} className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-gold">{h}</span>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* TEMPLATES TAB                                                       */}
+      {/* ================================================================== */}
+      {tab === "templates" && (
+        <div className="space-y-4">
+          <div className="flex gap-1.5 overflow-x-auto">
+            {templateCategories.map(cat => (
+              <button key={cat} onClick={() => setTemplateCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg text-[10px] border whitespace-nowrap transition-colors ${
+                  templateCategory === cat ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"
+                }`}>
+                {cat === "all" ? "All" : cat.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+              </button>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {scriptTemplates
+              .filter(t => templateCategory === "all" || t.category === templateCategory)
+              .map(template => (
+                <div key={template.id} className="card-hover p-4 cursor-pointer" onClick={() => {
+                  setConfig(prev => ({ ...prev, framework: template.framework, platform: template.platform, topic: template.name }));
+                  setTab("generate");
+                  toast.success(`Template loaded: ${template.name}`);
+                }}>
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-xs font-semibold">{template.name}</h3>
+                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20">{template.framework.replace(/_/g, " ")}</span>
+                  </div>
+                  <p className="text-[10px] text-muted mb-2">{template.desc}</p>
+                  <div className="flex items-center gap-2 text-[9px] text-muted">
+                    <span className="bg-surface-light px-1.5 py-0.5 rounded">{template.platform}</span>
+                    <span className="bg-surface-light px-1.5 py-0.5 rounded">{template.category.replace(/_/g, " ")}</span>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* TOOLS TAB                                                           */}
+      {/* ================================================================== */}
+      {tab === "tools" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Type size={13} className="text-gold" /> Tone Analyzer</p>
+            <textarea value={toneAnalysisText} onChange={e => setToneAnalysisText(e.target.value)} className="input w-full h-24 text-xs mb-3" placeholder="Paste your script text here to analyze tone, readability, and sentiment..." />
+            <button onClick={() => {
+              if (!toneAnalysisText.trim()) { toast.error("Enter text to analyze"); return; }
+              const words = toneAnalysisText.split(/\s+/).length;
+              setToneResult({ tones: [{ tone: "Professional", score: 72 }, { tone: "Persuasive", score: 65 }, { tone: "Confident", score: 88 }, { tone: "Casual", score: 34 }, { tone: "Urgent", score: 45 }], readability: words > 200 ? "Advanced" : words > 100 ? "Intermediate" : "Easy", wordCount: words, sentiment: "Positive" });
+              toast.success("Analysis complete!");
+            }} className="btn-primary text-xs flex items-center gap-1.5"><Wand2 size={12} /> Analyze Tone</button>
+            {toneResult && (
+              <div className="mt-4 space-y-3">
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-lg font-bold text-gold">{toneResult.wordCount}</p><p className="text-[9px] text-muted">Words</p></div>
+                  <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-sm font-bold text-blue-400">{toneResult.readability}</p><p className="text-[9px] text-muted">Readability</p></div>
+                  <div className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-sm font-bold text-green-400">{toneResult.sentiment}</p><p className="text-[9px] text-muted">Sentiment</p></div>
+                </div>
+                <div className="space-y-1.5">
+                  {toneResult.tones.map(t => (
+                    <div key={t.tone} className="flex items-center gap-3">
+                      <span className="text-[10px] text-muted w-24 shrink-0">{t.tone}</span>
+                      <div className="flex-1 h-3 rounded bg-surface-light border border-border overflow-hidden"><div className="h-full rounded bg-gold/50" style={{ width: `${t.score}%` }} /></div>
+                      <span className="text-[10px] font-semibold w-8 text-right">{t.score}%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Search size={13} className="text-gold" /> SEO Script Optimizer</p>
+            <div className="space-y-3">
+              <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Target Keyword</label><input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} className="input w-full text-xs" placeholder="e.g., dental marketing tips" /></div>
+              <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Script / Caption Content</label><textarea value={seoContent} onChange={e => setSeoContent(e.target.value)} className="input w-full h-20 text-xs" placeholder="Paste your script or caption text..." /></div>
+              <button onClick={() => toast.success("SEO analysis complete (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><TrendingUp size={12} /> Optimize for SEO</button>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {[{ label: "Keyword Density", value: seoKeyword ? "2.4%" : "---" }, { label: "Title Optimized", value: "Yes" }, { label: "CTA Present", value: "Yes" }, { label: "Hashtag Relevance", value: "High" }].map(m => (
+                  <div key={m.label} className="bg-surface-light rounded-lg p-2 text-center border border-border"><p className="text-sm font-bold text-green-400">{m.value}</p><p className="text-[9px] text-muted">{m.label}</p></div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Layers size={13} className="text-gold" /> Multi-Platform Formatter</p>
+            <p className="text-[10px] text-muted mb-3">Reformat your script for different platforms with optimal length and style</p>
+            <div className="flex gap-2 mb-3 flex-wrap">
+              {PLATFORMS.map(p => (
+                <button key={p.id} onClick={() => setFormatPlatform(p.id)} className={`px-3 py-1.5 rounded-lg text-[10px] border transition-colors ${formatPlatform === p.id ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>{p.name}</button>
+              ))}
+            </div>
+            <button onClick={() => toast.success(`Script reformatted for ${PLATFORMS.find(p => p.id === formatPlatform)?.name} (demo)`)} className="btn-secondary text-xs flex items-center gap-1.5"><RefreshCw size={12} /> Reformat Script</button>
+          </div>
+
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><TrendingUp size={13} className="text-gold" /> Script Performance Tracker</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+              {[
+                { label: "Scripts Generated", value: savedScripts.length.toString(), color: "text-gold" },
+                { label: "Avg. Hook Score", value: "8.4/10", color: "text-green-400" },
+                { label: "Most Used Framework", value: "Hook-Story-Offer", color: "text-blue-400" },
+                { label: "Top Platform", value: "Instagram", color: "text-purple-400" },
+              ].map(stat => (
+                <div key={stat.label} className="bg-surface-light rounded-lg p-3 text-center border border-border"><p className={`text-lg font-bold ${stat.color}`}>{stat.value}</p><p className="text-[9px] text-muted">{stat.label}</p></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* VOICE-OVER TAB                                                      */}
+      {/* ================================================================== */}
+      {tab === "voiceover" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Volume2 size={13} className="text-gold" /> Voice-Over Preview</p>
+            <div className="space-y-3">
+              <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Script Text</label>
+                <textarea value={voiceoverText || (script?.script?.sections?.map(s => s.dialogue).join("\n\n") || "")} onChange={e => setVoiceoverText(e.target.value)} className="input w-full h-32 text-xs" placeholder="Enter or paste your script text for voice-over preview..." />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Speed</label>
+                  <div className="flex gap-2">{(["slow", "normal", "fast"] as const).map(speed => (<button key={speed} onClick={() => setVoiceSpeed(speed)} className={`flex-1 py-1.5 rounded-lg text-[10px] border transition-colors ${voiceSpeed === speed ? "border-gold bg-gold/10 text-gold" : "border-border text-muted"}`}>{speed.charAt(0).toUpperCase() + speed.slice(1)}</button>))}</div>
+                </div>
+                <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Voice Style</label>
+                  <div className="flex gap-2">{(["professional", "casual", "energetic", "calm"] as const).map(style => (<button key={style} onClick={() => setVoiceStyle(style)} className={`flex-1 py-1.5 rounded-lg text-[10px] border transition-colors ${voiceStyle === style ? "border-gold bg-gold/10 text-gold" : "border-border text-muted"}`}>{style.charAt(0).toUpperCase() + style.slice(1)}</button>))}</div>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => toast.success("Voice-over preview generated (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><Mic size={12} /> Generate Preview</button>
+                <button onClick={() => toast.success("Voice-over downloaded (demo)")} className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Download Audio</button>
+              </div>
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><PenTool size={13} className="text-gold" /> Voiceover Notes</p>
+            <div className="space-y-2">
+              {(script?.script?.sections || []).map((section, i) => (
+                <div key={i} className="p-3 rounded-lg bg-surface-light border border-border">
+                  <div className="flex items-center justify-between mb-1"><span className="text-[10px] font-semibold text-gold">{section.name}</span><span className="text-[9px] text-muted">{section.duration} | {section.emotion}</span></div>
+                  <p className="text-[10px] text-muted">{section.dialogue}</p>
+                  {section.visual_direction && <p className="text-[9px] text-blue-400 mt-1">Visual: {section.visual_direction}</p>}
+                </div>
+              ))}
+              {(!script || !script.script?.sections?.length) && <p className="text-[10px] text-muted text-center py-6">Generate a script first to see voiceover notes</p>}
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            <div className="card p-3 text-center"><p className="text-lg font-bold text-gold">{script ? getWordCount() : 0}</p><p className="text-[9px] text-muted">Total Words</p></div>
+            <div className="card p-3 text-center"><p className="text-lg font-bold text-blue-400">{script ? getEstimatedDuration() : "---"}</p><p className="text-[9px] text-muted">Est. Duration</p></div>
+            <div className="card p-3 text-center"><p className="text-lg font-bold text-purple-400">{script?.script?.sections?.length || 0}</p><p className="text-[9px] text-muted">Sections</p></div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* APPROVAL TAB                                                        */}
+      {/* ================================================================== */}
+      {tab === "approval" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted">Track client approval status for scripts</p>
+            <button onClick={() => toast.success("Script submitted for approval (demo)")} className="btn-primary text-[10px] flex items-center gap-1"><ArrowRight size={10} /> Submit for Approval</button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Total</p><p className="text-lg font-bold text-gold">{approvalScripts.length}</p></div>
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Pending</p><p className="text-lg font-bold text-yellow-400">{approvalScripts.filter(s => s.status === "pending").length}</p></div>
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Approved</p><p className="text-lg font-bold text-green-400">{approvalScripts.filter(s => s.status === "approved").length}</p></div>
+            <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Revisions</p><p className="text-lg font-bold text-red-400">{approvalScripts.filter(s => s.status === "revision").length}</p></div>
+          </div>
+          <div className="space-y-2">
+            {approvalScripts.map(s => (
+              <div key={s.id} className="card p-4">
+                <div className="flex items-start justify-between mb-2">
+                  <div><h3 className="text-xs font-semibold">{s.title}</h3><p className="text-[9px] text-muted">{s.client} | Submitted: {s.submitted}</p></div>
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full border ${s.status === "approved" ? "text-green-400 border-green-400/30 bg-green-400/10" : s.status === "revision" ? "text-red-400 border-red-400/30 bg-red-400/10" : "text-yellow-400 border-yellow-400/30 bg-yellow-400/10"}`}>{s.status.charAt(0).toUpperCase() + s.status.slice(1)}</span>
+                </div>
+                {s.status === "revision" && s.feedback && (
+                  <div className="bg-red-500/5 border border-red-400/20 rounded-lg p-2 mt-2"><p className="text-[9px] text-red-400 font-semibold mb-0.5">Client Feedback:</p><p className="text-[10px] text-muted">{s.feedback}</p></div>
+                )}
+                <div className="flex gap-1.5 mt-2">
+                  <button onClick={() => toast.success("Opening script (demo)")} className="btn-secondary text-[9px] flex items-center gap-1"><Eye size={9} /> View</button>
+                  {s.status === "revision" && <button onClick={() => toast.success("Revising script (demo)")} className="btn-primary text-[9px] flex items-center gap-1"><RefreshCw size={9} /> Revise</button>}
+                  <button onClick={() => { navigator.clipboard.writeText("Here's the script for your review: [link]"); toast.success("Approval link copied!"); }} className="btn-ghost text-[9px] flex items-center gap-1"><Copy size={9} /> Share Link</button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

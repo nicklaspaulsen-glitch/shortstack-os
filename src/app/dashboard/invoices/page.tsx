@@ -1,238 +1,577 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { useManagedClient } from "@/lib/use-managed-client";
-import { createClient } from "@/lib/supabase/client";
-import { Invoice } from "@/lib/types";
-import { formatCurrency, formatDate } from "@/lib/utils";
-import StatusBadge from "@/components/ui/status-badge";
+import { useState } from "react";
 import {
-  CreditCard, Plus, Send,
-  Clock, CheckCircle, AlertTriangle, Loader
+  CreditCard, Plus, Send, Clock, CheckCircle, AlertTriangle,
+  FileText, Download, RefreshCw,
+  BarChart3, Globe, Copy, ChevronRight,
+  X, Search, Zap, ArrowRight
 } from "lucide-react";
-import Modal from "@/components/ui/modal";
-import toast from "react-hot-toast";
+
+type MainTab = "all" | "builder" | "recurring" | "reminders" | "templates" | "aging" | "revenue";
+
+interface Invoice {
+  id: string;
+  client: string;
+  amount: number;
+  status: "draft" | "sent" | "paid" | "overdue" | "cancelled";
+  dueDate: string;
+  sentDate: string;
+  description: string;
+  currency: string;
+  tax: number;
+  recurring: boolean;
+  paymentLink: string;
+}
+
+const MOCK_INVOICES: Invoice[] = [
+  { id: "INV-001", client: "Bright Smile Dental", amount: 2497, status: "paid", dueDate: "2026-04-07", sentDate: "2026-03-31", description: "Growth Package - April 2026", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv001" },
+  { id: "INV-002", client: "Peak Fitness Gym", amount: 4997, status: "paid", dueDate: "2026-04-10", sentDate: "2026-04-03", description: "Full-Service Marketing - April", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv002" },
+  { id: "INV-003", client: "Atlas Legal Group", amount: 1997, status: "sent", dueDate: "2026-04-21", sentDate: "2026-04-14", description: "Social Media + SEO - April", currency: "USD", tax: 199.70, recurring: true, paymentLink: "pay.stripe.com/inv003" },
+  { id: "INV-004", client: "Swift Plumbing Co", amount: 3497, status: "overdue", dueDate: "2026-04-05", sentDate: "2026-03-29", description: "Ads + Web Design - March", currency: "USD", tax: 0, recurring: false, paymentLink: "pay.stripe.com/inv004" },
+  { id: "INV-005", client: "CloudNine HVAC", amount: 3997, status: "sent", dueDate: "2026-04-28", sentDate: "2026-04-14", description: "AI Receptionist + Ads - April", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv005" },
+  { id: "INV-006", client: "Sunrise Bakery", amount: 5497, status: "draft", dueDate: "2026-05-01", sentDate: "", description: "Website + Funnel Build", currency: "USD", tax: 549.70, recurring: false, paymentLink: "" },
+  { id: "INV-007", client: "Elite Auto Detailing", amount: 6497, status: "paid", dueDate: "2026-04-15", sentDate: "2026-04-08", description: "Full Stack Growth - April", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv007" },
+  { id: "INV-008", client: "Green Lawn Masters", amount: 1497, status: "overdue", dueDate: "2026-03-28", sentDate: "2026-03-21", description: "Content Creation - March", currency: "EUR", tax: 0, recurring: false, paymentLink: "pay.stripe.com/inv008" },
+];
+
+const INVOICE_TEMPLATES = [
+  { id: "1", name: "Standard Service", description: "Monthly retainer invoice", sections: ["Services", "Amount", "Due Date"] },
+  { id: "2", name: "Project-Based", description: "One-time project billing", sections: ["Milestones", "Deliverables", "Total"] },
+  { id: "3", name: "Itemized", description: "Detailed line-item breakdown", sections: ["Line Items", "Subtotal", "Tax", "Total"] },
+  { id: "4", name: "Quick Invoice", description: "Simple amount-only invoice", sections: ["Description", "Amount", "Due Date"] },
+];
+
+const formatCurrency = (amount: number, currency: string = "USD") => {
+  if (currency === "EUR") return `€${amount.toLocaleString()}`;
+  if (currency === "GBP") return `£${amount.toLocaleString()}`;
+  return `$${amount.toLocaleString()}`;
+};
 
 export default function InvoicesPage() {
-  useAuth();
-  const { clientId: managedClientId } = useManagedClient();
-  const supabase = createClient();
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
-  const [loading, setLoading] = useState(true);
-  const [showCreate, setShowCreate] = useState(false);
-  const [creating, setCreating] = useState(false);
-  const [filter, setFilter] = useState<"all" | "sent" | "paid" | "overdue">("all");
-  const [form, setForm] = useState({
-    client_id: "", amount: "", description: "", due_days: "7",
-  });
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, [managedClientId]);
-
-  async function fetchData() {
-    try {
-      setLoading(true);
-      let invQuery = supabase.from("invoices").select("*").order("created_at", { ascending: false });
-      if (managedClientId) invQuery = invQuery.eq("client_id", managedClientId);
-
-      const [{ data: inv }, { data: cl }] = await Promise.all([
-        invQuery,
-        supabase.from("clients").select("id, business_name").eq("is_active", true),
-      ]);
-      setInvoices(inv || []);
-      setClients(cl || []);
-    } catch (err) {
-      console.error("[Invoices] fetchData error:", err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function createInvoice() {
-    if (!form.client_id || !form.amount) { toast.error("Client and amount required"); return; }
-    setCreating(true);
-    const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + parseInt(form.due_days));
-
-    await supabase.from("invoices").insert({
-      client_id: form.client_id,
-      amount: parseFloat(form.amount),
-      description: form.description || `Invoice — ${clients.find(c => c.id === form.client_id)?.business_name}`,
-      status: "sent",
-      due_date: dueDate.toISOString().split("T")[0],
-    });
-
-    toast.success("Invoice created!");
-    setShowCreate(false);
-    setForm({ client_id: "", amount: "", description: "", due_days: "7" });
-    fetchData();
-    setCreating(false);
-  }
-
-  async function sendPaymentLink(invoice: Invoice) {
-    toast.loading("Creating payment link...");
-    try {
-      const res = await fetch("/api/invoices/pay", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invoice_id: invoice.id }),
-      });
-      toast.dismiss();
-      const data = await res.json();
-      if (data.checkout_url) {
-        navigator.clipboard.writeText(data.checkout_url);
-        toast.success("Payment link copied! Send to client.");
-      } else {
-        toast.error(data.error || "Failed to create link");
-      }
-    } catch { toast.dismiss(); toast.error("Error"); }
-  }
+  const [activeTab, setActiveTab] = useState<MainTab>("all");
+  const [filter, setFilter] = useState<"all" | "sent" | "paid" | "overdue" | "draft">("all");
+  const [search, setSearch] = useState("");
+  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [taxRate, setTaxRate] = useState(0);
+  const [expandedInvoice, setExpandedInvoice] = useState<string | null>(null);
 
   const today = new Date().toISOString().split("T")[0];
-  const filtered = invoices.filter(inv => {
-    if (filter === "all") return true;
-    if (filter === "overdue") return inv.status === "sent" && inv.due_date && inv.due_date < today;
-    return inv.status === filter;
+  const filtered = MOCK_INVOICES.filter(inv => {
+    const statusMatch = filter === "all" || (filter === "overdue" ? inv.status === "sent" && inv.dueDate < today || inv.status === "overdue" : inv.status === filter);
+    const searchMatch = !search || inv.client.toLowerCase().includes(search.toLowerCase()) || inv.id.toLowerCase().includes(search.toLowerCase());
+    return statusMatch && searchMatch;
   });
 
-  const totalSent = invoices.filter(i => i.status === "sent").reduce((s, i) => s + i.amount, 0);
-  const totalPaid = invoices.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
-  const totalOverdue = invoices.filter(i => i.status === "sent" && i.due_date && i.due_date < today).reduce((s, i) => s + i.amount, 0);
+  const totalSent = MOCK_INVOICES.filter(i => i.status === "sent").reduce((s, i) => s + i.amount, 0);
+  const totalPaid = MOCK_INVOICES.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
+  const totalOverdue = MOCK_INVOICES.filter(i => i.status === "overdue").reduce((s, i) => s + i.amount, 0);
+  const totalDraft = MOCK_INVOICES.filter(i => i.status === "draft").reduce((s, i) => s + i.amount, 0);
+  const recurringTotal = MOCK_INVOICES.filter(i => i.recurring && i.status !== "cancelled").reduce((s, i) => s + i.amount, 0);
 
-  if (loading) return <div className="flex items-center justify-center py-20"><Loader size={20} className="animate-spin text-gold" /></div>;
+  const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
+    { key: "all", label: "All Invoices", icon: <CreditCard size={14} /> },
+    { key: "builder", label: "Invoice Builder", icon: <Plus size={14} /> },
+    { key: "recurring", label: "Recurring", icon: <RefreshCw size={14} /> },
+    { key: "reminders", label: "Reminders", icon: <Clock size={14} /> },
+    { key: "templates", label: "Templates", icon: <FileText size={14} /> },
+    { key: "aging", label: "Aging Report", icon: <AlertTriangle size={14} /> },
+    { key: "revenue", label: "Revenue", icon: <BarChart3 size={14} /> },
+  ];
 
   return (
     <div className="fade-in space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
             <CreditCard size={18} className="text-gold" /> Invoices
           </h1>
-          <p className="text-xs text-muted mt-0.5">{invoices.length} invoices · Track payments and send reminders</p>
+          <p className="text-xs text-muted mt-0.5">{MOCK_INVOICES.length} invoices | Track payments, reminders, recurring billing</p>
         </div>
-        <button onClick={() => setShowCreate(true)} className="btn-primary text-xs flex items-center gap-1.5">
+        <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs flex items-center gap-1.5">
           <Plus size={12} /> New Invoice
         </button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-3">
-        <div className="card text-center">
-          <p className="text-[10px] text-muted">Outstanding</p>
-          <p className="text-xl font-bold text-warning">{formatCurrency(totalSent)}</p>
-        </div>
-        <div className="card text-center">
-          <p className="text-[10px] text-muted">Collected</p>
-          <p className="text-xl font-bold text-success">{formatCurrency(totalPaid)}</p>
-        </div>
-        <div className="card text-center">
-          <p className="text-[10px] text-muted">Overdue</p>
-          <p className="text-xl font-bold text-danger">{formatCurrency(totalOverdue)}</p>
-        </div>
-        <div className="card text-center">
-          <p className="text-[10px] text-muted">Total</p>
-          <p className="text-xl font-bold text-foreground">{formatCurrency(totalPaid + totalSent)}</p>
-        </div>
-      </div>
-
-      {/* Filter tabs */}
-      <div className="flex gap-1.5">
-        {(["all", "sent", "paid", "overdue"] as const).map(f => (
-          <button key={f} onClick={() => setFilter(f)}
-            className={`text-[10px] px-3 py-1.5 rounded-lg transition-all capitalize ${
-              filter === f ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
-            }`}>
-            {f} {f !== "all" && `(${f === "overdue" ? invoices.filter(i => i.status === "sent" && i.due_date && i.due_date < today).length : invoices.filter(i => i.status === f).length})`}
-          </button>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        {[
+          { label: "Outstanding", value: formatCurrency(totalSent), icon: <Clock size={12} />, color: "text-yellow-400" },
+          { label: "Collected", value: formatCurrency(totalPaid), icon: <CheckCircle size={12} />, color: "text-green-400" },
+          { label: "Overdue", value: formatCurrency(totalOverdue), icon: <AlertTriangle size={12} />, color: "text-red-400" },
+          { label: "Draft", value: formatCurrency(totalDraft), icon: <FileText size={12} />, color: "text-muted" },
+          { label: "Monthly Recurring", value: formatCurrency(recurringTotal), icon: <RefreshCw size={12} />, color: "text-gold" },
+        ].map((stat, i) => (
+          <div key={i} className="card text-center p-3">
+            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+            <p className="text-lg font-bold">{stat.value}</p>
+            <p className="text-[9px] text-muted">{stat.label}</p>
+          </div>
         ))}
       </div>
 
-      {/* Invoice list */}
-      <div className="space-y-2">
-        {filtered.length === 0 ? (
-          <div className="card text-center py-12">
-            <CreditCard size={24} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-xs text-muted">No invoices found</p>
-          </div>
-        ) : (
-          filtered.map(inv => {
-            const isOverdue = inv.status === "sent" && inv.due_date && inv.due_date < today;
-            return (
-              <div key={inv.id} className={`flex items-center justify-between p-4 rounded-xl transition-all bg-surface-light border ${isOverdue ? "border-danger/15" : "border-border"}`}>
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    inv.status === "paid" ? "bg-success/10" : isOverdue ? "bg-danger/10" : "bg-warning/10"
-                  }`}>
-                    {inv.status === "paid" ? <CheckCircle size={16} className="text-success" /> :
-                     isOverdue ? <AlertTriangle size={16} className="text-danger" /> :
-                     <Clock size={16} className="text-warning" />}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold">{inv.description || "Invoice"}</p>
-                    <p className="text-[10px] text-muted">
-                      Due: {inv.due_date ? formatDate(inv.due_date) : "—"}
-                      {isOverdue && <span className="text-danger ml-1">OVERDUE</span>}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <p className="text-lg font-bold">{formatCurrency(inv.amount)}</p>
-                  <StatusBadge status={inv.status} />
-                  {inv.status === "sent" && (
-                    <button onClick={() => sendPaymentLink(inv)}
-                      className="btn-ghost text-[9px] flex items-center gap-1">
-                      <Send size={10} /> Payment Link
-                    </button>
-                  )}
-                </div>
-              </div>
-            );
-          })
-        )}
+      {/* Tabs */}
+      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setActiveTab(t.key)}
+            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+            }`}>{t.icon} {t.label}</button>
+        ))}
       </div>
 
-      {/* Create Modal */}
-      <Modal isOpen={showCreate} onClose={() => setShowCreate(false)} title="Create Invoice" size="md">
-        <div className="space-y-3">
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client *</label>
-            <select value={form.client_id} onChange={e => setForm({ ...form, client_id: e.target.value })} className="input w-full">
-              <option value="">Select client</option>
-              {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-            </select>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Amount *</label>
-              <input type="number" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })}
-                className="input w-full" placeholder="2497" />
+      {/* ===== ALL INVOICES ===== */}
+      {activeTab === "all" && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search invoices..." />
             </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Due In (days)</label>
-              <select value={form.due_days} onChange={e => setForm({ ...form, due_days: e.target.value })} className="input w-full">
-                <option value="7">7 days</option>
-                <option value="14">14 days</option>
-                <option value="30">30 days</option>
-                <option value="60">60 days</option>
-              </select>
+            <div className="flex gap-1.5">
+              {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (
+                <button key={f} onClick={() => setFilter(f)}
+                  className={`text-[10px] px-3 py-1.5 rounded-lg capitalize ${
+                    filter === f ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                  }`}>{f}</button>
+              ))}
             </div>
           </div>
-          <div>
-            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Description</label>
-            <input value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
-              className="input w-full" placeholder="e.g. Growth Package — April 2026" />
-          </div>
-          <div className="flex justify-end gap-2 pt-1">
-            <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
-            <button onClick={createInvoice} disabled={creating} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-              {creating ? <Loader size={12} className="animate-spin" /> : <CreditCard size={12} />}
-              {creating ? "Creating..." : "Create & Send"}
-            </button>
+
+          <div className="space-y-2">
+            {filtered.length === 0 ? (
+              <div className="card text-center py-12">
+                <CreditCard size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No invoices found</p>
+              </div>
+            ) : (
+              filtered.map(inv => {
+                const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";
+                return (
+                  <div key={inv.id}>
+                    <div onClick={() => setExpandedInvoice(expandedInvoice === inv.id ? null : inv.id)}
+                      className={`flex items-center justify-between p-4 rounded-xl bg-surface-light border transition-all cursor-pointer ${
+                        isOverdue ? "border-red-400/15" : "border-border hover:border-gold/10"
+                      }`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                          inv.status === "paid" ? "bg-green-400/10" : isOverdue ? "bg-red-400/10" : inv.status === "draft" ? "bg-surface" : "bg-yellow-400/10"
+                        }`}>
+                          {inv.status === "paid" ? <CheckCircle size={16} className="text-green-400" /> :
+                           isOverdue ? <AlertTriangle size={16} className="text-red-400" /> :
+                           inv.status === "draft" ? <FileText size={16} className="text-muted" /> :
+                           <Clock size={16} className="text-yellow-400" />}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold">{inv.client}</p>
+                            <span className="text-[8px] font-mono text-muted">{inv.id}</span>
+                            {inv.recurring && <RefreshCw size={8} className="text-gold" />}
+                            {inv.currency !== "USD" && <Globe size={8} className="text-blue-400" />}
+                          </div>
+                          <p className="text-[10px] text-muted">{inv.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <p className="text-lg font-bold">{formatCurrency(inv.amount, inv.currency)}</p>
+                          <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                        </div>
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full ${
+                          inv.status === "paid" ? "bg-green-400/10 text-green-400" :
+                          isOverdue ? "bg-red-400/10 text-red-400" :
+                          inv.status === "draft" ? "bg-white/5 text-muted" :
+                          "bg-yellow-400/10 text-yellow-400"
+                        }`}>{isOverdue ? "overdue" : inv.status}</span>
+                        <ChevronRight size={14} className="text-muted" />
+                      </div>
+                    </div>
+                    {expandedInvoice === inv.id && (
+                      <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-2">
+                        <div className="grid grid-cols-4 gap-3 text-[10px]">
+                          <div><span className="text-muted">Sent:</span> <span>{inv.sentDate || "Not sent"}</span></div>
+                          <div><span className="text-muted">Due:</span> <span>{inv.dueDate}</span></div>
+                          <div><span className="text-muted">Tax:</span> <span>{inv.tax > 0 ? formatCurrency(inv.tax) : "None"}</span></div>
+                          <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
+                        </div>
+                        <div className="flex gap-2 pt-2">
+                          {inv.status === "sent" && <button className="btn-ghost text-[9px] flex items-center gap-1"><Send size={9} /> Resend</button>}
+                          {inv.paymentLink && <button className="btn-ghost text-[9px] flex items-center gap-1"><Copy size={9} /> Copy Pay Link</button>}
+                          <button className="btn-ghost text-[9px] flex items-center gap-1"><Download size={9} /> PDF</button>
+                          {inv.status === "draft" && <button className="btn-primary text-[9px] flex items-center gap-1"><Send size={9} /> Send</button>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
-      </Modal>
+      )}
+
+      {/* ===== INVOICE BUILDER ===== */}
+      {activeTab === "builder" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2 space-y-3">
+              <div className="card space-y-3">
+                <h3 className="text-sm font-semibold">Invoice Builder</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Client</label>
+                    <select className="input w-full text-xs">
+                      <option value="">Select client...</option>
+                      {Array.from(new Set(MOCK_INVOICES.map(i => i.client))).map(c => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Currency</label>
+                    <select value={selectedCurrency} onChange={e => setSelectedCurrency(e.target.value)} className="input w-full text-xs">
+                      <option value="USD">USD ($)</option>
+                      <option value="EUR">EUR (€)</option>
+                      <option value="GBP">GBP (£)</option>
+                      <option value="SEK">SEK (kr)</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Description</label>
+                  <input className="input w-full text-xs" placeholder="e.g., Growth Package - April 2026" />
+                </div>
+
+                {/* Line Items */}
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Line Items</label>
+                  <div className="space-y-1.5">
+                    <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-1 px-2">
+                      <span className="col-span-5">Description</span>
+                      <span className="col-span-2 text-center">Qty</span>
+                      <span className="col-span-2 text-center">Rate</span>
+                      <span className="col-span-2 text-right">Amount</span>
+                      <span className="col-span-1"></span>
+                    </div>
+                    {[
+                      { desc: "Social Media Management", qty: 1, rate: 997 },
+                      { desc: "Paid Ads Management", qty: 1, rate: 1500 },
+                    ].map((item, i) => (
+                      <div key={i} className="grid grid-cols-12 items-center text-[10px] py-1.5 px-2 rounded bg-surface-light">
+                        <span className="col-span-5">{item.desc}</span>
+                        <span className="col-span-2 text-center">{item.qty}</span>
+                        <span className="col-span-2 text-center">{formatCurrency(item.rate, selectedCurrency)}</span>
+                        <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
+                        <button className="col-span-1 text-right text-muted hover:text-red-400"><X size={10} /></button>
+                      </div>
+                    ))}
+                    <button className="text-[9px] text-gold flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
+                  </div>
+                </div>
+
+                {/* Tax Calculator */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Tax Rate (%)</label>
+                    <input type="number" value={taxRate} onChange={e => setTaxRate(Number(e.target.value))} className="input w-full text-xs" placeholder="0" />
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Due In</label>
+                    <select className="input w-full text-xs">
+                      <option value="7">7 days</option>
+                      <option value="14">14 days</option>
+                      <option value="30">30 days</option>
+                      <option value="60">60 days</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-3">
+              <div className="card p-4">
+                <h4 className="text-xs font-semibold mb-3">Invoice Summary</h4>
+                <div className="space-y-2 text-[10px]">
+                  <div className="flex justify-between"><span className="text-muted">Subtotal</span><span>{formatCurrency(2497, selectedCurrency)}</span></div>
+                  <div className="flex justify-between"><span className="text-muted">Tax ({taxRate}%)</span><span>{formatCurrency(Math.round(2497 * taxRate / 100), selectedCurrency)}</span></div>
+                  <div className="border-t border-border pt-2 flex justify-between font-bold">
+                    <span>Total</span><span className="text-gold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
+                  </div>
+                </div>
+                <button className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
+                  <Send size={12} /> Create & Send
+                </button>
+                <button className="btn-secondary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
+                  <FileText size={12} /> Save as Draft
+                </button>
+              </div>
+
+              {/* Quick Invoice from Proposal */}
+              <div className="card border-gold/10 p-4">
+                <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
+                  <Zap size={12} className="text-gold" /> Quick Invoice
+                </h4>
+                <p className="text-[9px] text-muted mb-3">Generate invoice from an accepted proposal</p>
+                <select className="input w-full text-xs mb-2">
+                  <option value="">Select proposal...</option>
+                  <option value="1">Bright Smile Dental - $2,497/mo</option>
+                  <option value="2">Peak Fitness Gym - $4,997/mo</option>
+                </select>
+                <button className="btn-gold w-full text-xs flex items-center justify-center gap-1.5 bg-gold/10 text-gold border border-gold/20 rounded-lg py-1.5 hover:bg-gold/20 transition-all">
+                  <ArrowRight size={12} /> Create from Proposal
+                </button>
+              </div>
+
+              {/* Payment Link */}
+              <div className="card p-4">
+                <h4 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
+                  <CreditCard size={12} className="text-gold" /> Payment Links
+                </h4>
+                <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
+                <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
+                  <CreditCard size={12} /> Generate Payment Link
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== RECURRING INVOICES ===== */}
+      {activeTab === "recurring" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <RefreshCw size={14} className="text-gold" /> Recurring Invoices
+            </h3>
+            <button className="btn-primary text-xs flex items-center gap-1.5"><Plus size={12} /> Add Recurring</button>
+          </div>
+          <div className="space-y-2">
+            {MOCK_INVOICES.filter(i => i.recurring).map(inv => (
+              <div key={inv.id} className="card p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <RefreshCw size={14} className="text-gold" />
+                  <div>
+                    <p className="text-xs font-semibold">{inv.client}</p>
+                    <p className="text-[10px] text-muted">{inv.description}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-[10px]">
+                  <div className="text-center">
+                    <p className="font-bold text-gold">{formatCurrency(inv.amount)}</p>
+                    <p className="text-[8px] text-muted">Monthly</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-medium">1st of month</p>
+                    <p className="text-[8px] text-muted">Next invoice</p>
+                  </div>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400">Active</span>
+                  <button className="text-[9px] text-muted hover:text-red-400">Pause</button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="card text-center p-4">
+            <p className="text-sm font-bold text-gold">{formatCurrency(recurringTotal)}/mo</p>
+            <p className="text-[10px] text-muted">Total monthly recurring revenue from invoices</p>
+          </div>
+        </div>
+      )}
+
+      {/* ===== LATE PAYMENT REMINDERS ===== */}
+      {activeTab === "reminders" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Clock size={14} className="text-gold" /> Late Payment Reminder Settings
+          </h3>
+          <div className="space-y-2">
+            {[
+              { delay: "1 day overdue", message: "Friendly reminder that your invoice is due", enabled: true },
+              { delay: "3 days overdue", message: "Your invoice is 3 days past due", enabled: true },
+              { delay: "7 days overdue", message: "Important: Payment overdue - please resolve", enabled: true },
+              { delay: "14 days overdue", message: "Final notice before account review", enabled: false },
+              { delay: "30 days overdue", message: "Account suspension warning", enabled: false },
+            ].map((reminder, i) => (
+              <div key={i} className={`card p-4 flex items-center justify-between ${!reminder.enabled ? "opacity-50" : ""}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${i < 2 ? "bg-yellow-400/10" : i < 4 ? "bg-orange-400/10" : "bg-red-400/10"}`}>
+                    <Clock size={14} className={i < 2 ? "text-yellow-400" : i < 4 ? "text-orange-400" : "text-red-400"} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold">{reminder.delay}</p>
+                    <p className="text-[10px] text-muted">{reminder.message}</p>
+                  </div>
+                </div>
+                <div className={`w-8 h-4 rounded-full ${reminder.enabled ? "bg-gold" : "bg-surface-light"}`}>
+                  <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${reminder.enabled ? "ml-4" : "ml-0.5"}`} />
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Currently overdue */}
+          <div className="card">
+            <h4 className="text-xs font-semibold mb-3 flex items-center gap-2 text-red-400">
+              <AlertTriangle size={12} /> Currently Overdue
+            </h4>
+            <div className="space-y-1.5">
+              {MOCK_INVOICES.filter(i => i.status === "overdue").map(inv => (
+                <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
+                  <div>
+                    <p className="font-semibold">{inv.client} - {inv.id}</p>
+                    <p className="text-[9px] text-muted">Due: {inv.dueDate}</p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <p className="font-bold text-red-400">{formatCurrency(inv.amount)}</p>
+                    <button className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Send Reminder</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== INVOICE TEMPLATES ===== */}
+      {activeTab === "templates" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold">Invoice Templates</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {INVOICE_TEMPLATES.map(t => (
+              <div key={t.id} className="card p-4 hover:border-gold/10 transition-all cursor-pointer">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center">
+                    <FileText size={16} className="text-gold" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold">{t.name}</p>
+                    <p className="text-[10px] text-muted">{t.description}</p>
+                  </div>
+                </div>
+                <div className="flex gap-1.5 mt-2">
+                  {t.sections.map(s => (
+                    <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted">{s}</span>
+                  ))}
+                </div>
+                <button className="btn-secondary text-[9px] mt-3 w-full">Use Template</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== AGING REPORT ===== */}
+      {activeTab === "aging" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <AlertTriangle size={14} className="text-gold" /> Accounts Receivable Aging
+          </h3>
+          <div className="grid grid-cols-5 gap-3">
+            {[
+              { range: "Current", amount: totalSent - totalOverdue, count: MOCK_INVOICES.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-green-400" },
+              { range: "1-7 days", amount: 3497, count: 1, color: "text-yellow-400" },
+              { range: "8-14 days", amount: 0, count: 0, color: "text-orange-400" },
+              { range: "15-30 days", amount: 1497, count: 1, color: "text-red-400" },
+              { range: "30+ days", amount: 0, count: 0, color: "text-red-400" },
+            ].map((bucket, i) => (
+              <div key={i} className="card text-center p-3">
+                <p className="text-[9px] text-muted uppercase mb-1">{bucket.range}</p>
+                <p className={`text-lg font-bold ${bucket.color}`}>{formatCurrency(bucket.amount)}</p>
+                <p className="text-[8px] text-muted">{bucket.count} invoice{bucket.count !== 1 ? "s" : ""}</p>
+              </div>
+            ))}
+          </div>
+          <div className="card">
+            <h4 className="text-xs font-semibold mb-3">Invoice History</h4>
+            <div className="space-y-1">
+              <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
+                <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
+              </div>
+              {MOCK_INVOICES.map(inv => {
+                const dueDate = new Date(inv.dueDate);
+                const ageDays = Math.max(0, Math.floor((Date.now() - dueDate.getTime()) / 86400000));
+                return (
+                  <div key={inv.id} className="grid grid-cols-6 text-[10px] py-2 px-2 rounded bg-surface-light items-center">
+                    <span className="font-mono text-muted">{inv.id}</span>
+                    <span className="font-medium">{inv.client}</span>
+                    <span className="font-bold">{formatCurrency(inv.amount, inv.currency)}</span>
+                    <span className="text-muted">{inv.dueDate}</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
+                      inv.status === "paid" ? "bg-green-400/10 text-green-400" :
+                      inv.status === "overdue" ? "bg-red-400/10 text-red-400" :
+                      "bg-yellow-400/10 text-yellow-400"
+                    }`}>{inv.status}</span>
+                    <span className={ageDays > 7 ? "text-red-400" : "text-muted"}>{ageDays}d</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== REVENUE SUMMARY ===== */}
+      {activeTab === "revenue" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <BarChart3 size={14} className="text-gold" /> Revenue Summary
+          </h3>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="card text-center p-5">
+              <p className="text-[10px] text-muted uppercase mb-1">This Month</p>
+              <p className="text-2xl font-bold text-gold">{formatCurrency(totalPaid)}</p>
+              <p className="text-[9px] text-green-400 mt-1">+18% from last month</p>
+            </div>
+            <div className="card text-center p-5">
+              <p className="text-[10px] text-muted uppercase mb-1">This Quarter</p>
+              <p className="text-2xl font-bold text-purple-400">{formatCurrency(totalPaid * 3)}</p>
+              <p className="text-[9px] text-muted mt-1">Q2 2026</p>
+            </div>
+            <div className="card text-center p-5">
+              <p className="text-[10px] text-muted uppercase mb-1">Year to Date</p>
+              <p className="text-2xl font-bold text-green-400">{formatCurrency(totalPaid * 4)}</p>
+              <p className="text-[9px] text-muted mt-1">Jan - Apr 2026</p>
+            </div>
+          </div>
+          {/* Monthly bar chart */}
+          <div className="card">
+            <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
+            <div className="flex items-end gap-3 h-40">
+              {[
+                { month: "Jan", amount: 8500 },
+                { month: "Feb", amount: 12400 },
+                { month: "Mar", amount: 18900 },
+                { month: "Apr", amount: totalPaid },
+              ].map((m, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
+                  <div className="w-full bg-gold rounded-t" style={{ height: `${(m.amount / 20000) * 100}%`, minHeight: 8 }} />
+                  <span className="text-[8px] text-muted">{m.month}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Collection rate */}
+          <div className="card">
+            <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-surface-light rounded-lg p-3 text-center">
+                <p className="text-xl font-bold text-green-400">92%</p>
+                <p className="text-[9px] text-muted">Collection Rate</p>
+              </div>
+              <div className="bg-surface-light rounded-lg p-3 text-center">
+                <p className="text-xl font-bold">8.2</p>
+                <p className="text-[9px] text-muted">Avg Days to Pay</p>
+              </div>
+              <div className="bg-surface-light rounded-lg p-3 text-center">
+                <p className="text-xl font-bold text-gold">{formatCurrency(recurringTotal)}</p>
+                <p className="text-[9px] text-muted">Monthly Recurring</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -14,6 +14,7 @@ import {
   TrendingUp, Users, Heart, Share2
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { getMaxStorageUpload, formatBytes } from "@/lib/plan-config";
 
 interface ClientUpload {
   id: string;
@@ -114,11 +115,18 @@ export default function ClientUploadsPage() {
     if (profile) fetchData();
   }, [profile, fetchData]);
 
+  const maxUpload = getMaxStorageUpload(profile?.plan_tier);
+  const maxUploadLabel = formatBytes(maxUpload);
+
   async function handleFileUpload(files: File[]) {
     if (!clientId) return;
     setUploading(true);
 
     for (const file of files) {
+      if (maxUpload !== -1 && file.size > maxUpload) {
+        toast.error(`${file.name} is too large (max ${maxUploadLabel})`);
+        continue;
+      }
       try {
         const ext = file.name.split(".").pop() || "bin";
         const path = `clients/${clientId}/${Date.now()}-${file.name}`;
@@ -309,7 +317,7 @@ export default function ClientUploadsPage() {
                   <Upload size={20} className="text-gold" />
                 </div>
                 <p className="text-sm font-medium">Drop files here or click to upload</p>
-                <p className="text-[10px] text-muted">Images, videos, documents, brand assets — any file type</p>
+                <p className="text-[10px] text-muted">Images, videos, documents, brand assets — max {maxUploadLabel} per file</p>
               </div>
             )}
           </div>

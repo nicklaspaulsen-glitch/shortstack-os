@@ -1,216 +1,532 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { createClient } from "@/lib/supabase/client";
+import { useState } from "react";
 import {
-  Mail, Send, Sparkles, Loader,
-  Bold, Italic, Link2, List, Image as ImageIcon, Save
+  Mail, Send, Sparkles, Bold, Italic, Link2, List,
+  Image as ImageIcon, Save, Monitor, Smartphone, Code,
+  Clock, Eye, AlertTriangle, CheckCircle, Copy, Type,
+  Paperclip, Palette, Hash, AtSign, MousePointerClick,
+  X, Plus, Calendar, Phone
 } from "lucide-react";
-import toast from "react-hot-toast";
+
+type MainTab = "compose" | "templates" | "preview" | "spam-check" | "scheduler" | "signatures";
+
+const TEMPLATE_GALLERY = [
+  { id: "1", name: "Cold Intro", category: "Outreach", subject: "Quick question about {business}", preview: "Hey! I came across your business..." },
+  { id: "2", name: "Follow Up #1", category: "Outreach", subject: "Following up", preview: "Just bumping this to the top..." },
+  { id: "3", name: "Follow Up #2", category: "Outreach", subject: "Last try", preview: "I know you're busy so I'll keep..." },
+  { id: "4", name: "Breakup Email", category: "Outreach", subject: "Closing your file", preview: "Since I haven't heard back..." },
+  { id: "5", name: "Case Study", category: "Value", subject: "How we helped a {industry} grow 3x", preview: "I wanted to share a quick story..." },
+  { id: "6", name: "Free Audit", category: "Value", subject: "Free marketing audit for {business}", preview: "I put together a free audit..." },
+  { id: "7", name: "Video Loom", category: "Value", subject: "Made you a quick video, {name}", preview: "I recorded a short video showing..." },
+  { id: "8", name: "Proposal Send", category: "Sales", subject: "Your proposal is ready", preview: "Great chatting today! Here's the..." },
+  { id: "9", name: "Welcome", category: "Onboarding", subject: "Welcome to ShortStack!", preview: "Welcome aboard! We're thrilled..." },
+  { id: "10", name: "Monthly Report", category: "Client", subject: "Your monthly report is ready", preview: "Here's your monthly marketing..." },
+  { id: "11", name: "Invoice", category: "Billing", subject: "Invoice #{number} due", preview: "This is a friendly reminder that..." },
+  { id: "12", name: "Referral Ask", category: "Retention", subject: "Quick favor, {name}?", preview: "Love working with {business}..." },
+  { id: "13", name: "Review Request", category: "Retention", subject: "Would you leave us a review?", preview: "Your opinion means the world..." },
+  { id: "14", name: "Contract Renewal", category: "Sales", subject: "Time to renew - {business}", preview: "Your current contract is set to..." },
+  { id: "15", name: "Holiday Promo", category: "Promo", subject: "Special holiday offer for {business}", preview: "As a valued client, we wanted..." },
+];
+
+const VARIABLES = [
+  { tag: "{first_name}", label: "First Name", example: "John" },
+  { tag: "{last_name}", label: "Last Name", example: "Smith" },
+  { tag: "{business_name}", label: "Business", example: "Bright Smile Dental" },
+  { tag: "{company}", label: "Company", example: "ShortStack" },
+  { tag: "{industry}", label: "Industry", example: "Dental" },
+  { tag: "{city}", label: "City", example: "Miami" },
+  { tag: "{website}", label: "Website", example: "brightsmile.com" },
+  { tag: "{link}", label: "Custom Link", example: "https://..." },
+  { tag: "{amount}", label: "Amount", example: "$2,497" },
+  { tag: "{date}", label: "Date", example: "April 14, 2026" },
+  { tag: "{sender_name}", label: "Sender Name", example: "Nicklas" },
+  { tag: "{calendar_link}", label: "Calendar", example: "https://cal.com/..." },
+];
+
+const SUBJECT_IDEAS = [
+  "Quick question about {business_name}",
+  "I noticed something about {business_name}",
+  "How we helped a {industry} grow 3x",
+  "{first_name}, quick thought for {business_name}",
+  "Free audit for {business_name} - no strings",
+  "Made you a quick video, {first_name}",
+  "3 things holding {business_name} back",
+  "{first_name}, are you still looking for more clients?",
+];
 
 export default function EmailComposerPage() {
-  useAuth();
-  const supabase = createClient();
-  const [clients, setClients] = useState<Array<{ id: string; business_name: string; email: string }>>([]);
-  const [leads, setLeads] = useState<Array<{ id: string; business_name: string; email: string | null }>>([]);
-  const [sending, setSending] = useState(false);
-  const [generating, setGenerating] = useState(false);
-  const [recipientType, setRecipientType] = useState<"client" | "lead" | "custom">("custom");
+  const [activeTab, setActiveTab] = useState<MainTab>("compose");
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
+  const [showHtml, setShowHtml] = useState(false);
+  const [linkTracking, setLinkTracking] = useState(true);
+  const [templateCategory, setTemplateCategory] = useState("all");
+  const [showVarPanel, setShowVarPanel] = useState(false);
+  const [showSubjectAI, setShowSubjectAI] = useState(false);
+  const [attachments, setAttachments] = useState<string[]>([]);
+  const [scheduledTime, setScheduledTime] = useState("");
 
   const [email, setEmail] = useState({
     to: "",
     subject: "",
-    body: "",
+    body: "Hey {first_name},\n\nI came across {business_name} and love what you're doing in {industry}. We help businesses like yours get 2-3x more clients through digital marketing.\n\nWould you be open to a quick 15-minute call this week?\n\nBest,\nNicklas",
     fromName: "Nicklas at ShortStack",
+    replyTo: "nicklas@shortstackhq.com",
   });
 
-  useEffect(() => {
-    Promise.all([
-      supabase.from("clients").select("id, business_name, email").eq("is_active", true),
-      supabase.from("leads").select("id, business_name, email").not("email", "is", null).limit(100),
-    ]).then(([{ data: cl }, { data: ld }]) => {
-      setClients(cl || []);
-      setLeads(ld || []);
-    });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const wordCount = email.body.split(/\s+/).filter(Boolean).length;
+  const charCount = email.body.length;
 
-  async function generateWithAI() {
-    if (!email.subject && !email.to) { toast.error("Enter a subject or recipient first"); return; }
-    setGenerating(true);
-    try {
-      const res = await fetch("/api/agents/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: `Write a professional marketing email with subject "${email.subject || "follow up"}". To: ${email.to || "a business owner"}. From: ${email.fromName}. Keep it under 150 words, conversational, personal. Include a clear CTA. No HTML tags, just plain text with line breaks. No markdown.`,
-          agent_name: "Content Agent",
-        }),
-      });
-      const data = await res.json();
-      if (data.result) {
-        setEmail(prev => ({ ...prev, body: data.result }));
-        toast.success("Email generated!");
-      }
-    } catch { toast.error("Failed to generate"); }
-    setGenerating(false);
-  }
+  const spamChecks = [
+    { rule: "No spam trigger words", pass: !email.body.toLowerCase().includes("free money") && !email.body.toLowerCase().includes("act now"), weight: 20 },
+    { rule: "Subject line under 60 chars", pass: email.subject.length < 60 && email.subject.length > 0, weight: 15 },
+    { rule: "Has personalization tags", pass: email.body.includes("{"), weight: 15 },
+    { rule: "No excessive caps", pass: email.body === email.body || (email.body.replace(/[^A-Z]/g, "").length / email.body.length) < 0.3, weight: 10 },
+    { rule: "Body length 50-300 words", pass: wordCount >= 50 && wordCount <= 300, weight: 10 },
+    { rule: "Has clear CTA", pass: email.body.toLowerCase().includes("call") || email.body.toLowerCase().includes("chat") || email.body.toLowerCase().includes("link"), weight: 10 },
+    { rule: "From name is set", pass: email.fromName.length > 0, weight: 10 },
+    { rule: "Link tracking enabled", pass: linkTracking, weight: 5 },
+    { rule: "Reply-to address set", pass: email.replyTo.length > 0, weight: 5 },
+  ];
+  const spamScore = spamChecks.reduce((s, c) => s + (c.pass ? c.weight : 0), 0);
 
-  async function sendEmail() {
-    if (!email.to || !email.subject || !email.body) { toast.error("Fill in all fields"); return; }
-    setSending(true);
+  const filteredTemplates = TEMPLATE_GALLERY.filter(t =>
+    templateCategory === "all" || t.category === templateCategory
+  );
 
-    try {
-      // Log the email send
-      await supabase.from("outreach_log").insert({
-        platform: "email",
-        business_name: email.to,
-        recipient_handle: email.to,
-        message_text: `Subject: ${email.subject}\n\n${email.body}`,
-        status: "sent",
-        metadata: { source: "email_composer", from: email.fromName },
-      });
-
-      await supabase.from("trinity_log").insert({
-        agent: "outreach",
-        action_type: "outreach",
-        description: `Email sent to ${email.to}: "${email.subject}"`,
-        status: "completed",
-      });
-
-      toast.success("Email logged! Send via GHL or your email provider.");
-      setEmail(prev => ({ ...prev, subject: "", body: "", to: "" }));
-    } catch { toast.error("Failed to send"); }
-    setSending(false);
-  }
+  const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
+    { key: "compose", label: "Compose", icon: <Mail size={14} /> },
+    { key: "templates", label: "Templates", icon: <Copy size={14} /> },
+    { key: "preview", label: "Preview", icon: <Eye size={14} /> },
+    { key: "spam-check", label: "Spam Check", icon: <AlertTriangle size={14} /> },
+    { key: "scheduler", label: "Schedule", icon: <Calendar size={14} /> },
+    { key: "signatures", label: "Signatures", icon: <Palette size={14} /> },
+  ];
 
   return (
     <div className="fade-in space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
             <Mail size={18} className="text-gold" /> Email Composer
           </h1>
-          <p className="text-xs text-muted mt-0.5">Write and send emails to clients and leads</p>
+          <p className="text-xs text-muted mt-0.5">Write, preview, test, and schedule emails</p>
         </div>
-        <button onClick={generateWithAI} disabled={generating} className="btn-secondary text-xs flex items-center gap-1.5">
-          {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
-          AI Write
-        </button>
+        <div className="flex gap-2">
+          <button className="btn-secondary text-xs flex items-center gap-1.5">
+            <Sparkles size={12} /> AI Write
+          </button>
+          <button className="btn-primary text-xs flex items-center gap-1.5">
+            <Send size={12} /> Send
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Composer */}
-        <div className="lg:col-span-2 space-y-3">
-          {/* Recipient */}
-          <div className="card space-y-2">
-            <div className="flex gap-1.5 mb-2">
-              {(["custom", "client", "lead"] as const).map(t => (
-                <button key={t} onClick={() => setRecipientType(t)}
-                  className={`text-[10px] px-2.5 py-1 rounded-lg capitalize transition-all ${
-                    recipientType === t ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
-                  }`}>{t}</button>
-              ))}
+      {/* Tabs */}
+      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setActiveTab(t.key)}
+            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+            }`}>{t.icon} {t.label}</button>
+        ))}
+      </div>
+
+      {/* ===== COMPOSE TAB ===== */}
+      {activeTab === "compose" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-2 space-y-3">
+            {/* Recipient + From */}
+            <div className="card space-y-2">
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">To</label>
+                  <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="input w-full text-xs" placeholder="Recipient email or select from list..." />
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From</label>
+                  <input value={email.fromName} onChange={e => setEmail({ ...email, fromName: e.target.value })} className="input w-full text-xs" />
+                </div>
+              </div>
+              <div>
+                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Reply-To</label>
+                <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="input w-full text-xs" />
+              </div>
             </div>
 
-            {recipientType === "custom" && (
-              <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })}
-                className="input w-full" placeholder="Email address" />
+            {/* Subject + AI Subject Line Generator */}
+            <div className="relative">
+              <input value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
+                className="input w-full text-sm font-medium pr-24" placeholder="Subject line..." />
+              <button onClick={() => setShowSubjectAI(!showSubjectAI)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
+                <Sparkles size={9} /> AI Ideas
+              </button>
+            </div>
+            {showSubjectAI && (
+              <div className="card border-gold/10 p-3 space-y-1.5">
+                <p className="text-[10px] font-semibold text-gold mb-2">AI Subject Line Suggestions</p>
+                {SUBJECT_IDEAS.map((idea, i) => (
+                  <button key={i} onClick={() => { setEmail({ ...email, subject: idea }); setShowSubjectAI(false); }}
+                    className="block w-full text-left text-[10px] p-2 rounded hover:bg-gold/5 transition-all text-muted hover:text-foreground">
+                    {idea}
+                  </button>
+                ))}
+              </div>
             )}
-            {recipientType === "client" && (
-              <select value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="input w-full">
-                <option value="">Select client...</option>
-                {clients.map(c => <option key={c.id} value={c.email}>{c.business_name} ({c.email})</option>)}
-              </select>
+
+            {/* Rich Text Toolbar */}
+            <div className="flex items-center gap-1 p-1.5 rounded-lg bg-surface-light border border-border">
+              {[
+                { icon: <Bold size={12} />, label: "Bold" },
+                { icon: <Italic size={12} />, label: "Italic" },
+                { icon: <Link2 size={12} />, label: "Link" },
+                { icon: <List size={12} />, label: "List" },
+                { icon: <ImageIcon size={12} />, label: "Image" },
+                { icon: <Type size={12} />, label: "Heading" },
+              ].map(tool => (
+                <button key={tool.label} className="p-2 rounded text-muted hover:text-foreground hover:bg-white/5 transition-colors" title={tool.label}>
+                  {tool.icon}
+                </button>
+              ))}
+              <div className="w-px h-4 bg-border mx-1" />
+              <button onClick={() => setShowVarPanel(!showVarPanel)} className="p-2 rounded text-muted hover:text-gold hover:bg-gold/5 transition-colors flex items-center gap-1" title="Insert Variable">
+                <Hash size={12} /> <span className="text-[9px]">Variables</span>
+              </button>
+              <div className="w-px h-4 bg-border mx-1" />
+              <button onClick={() => setShowHtml(!showHtml)} className={`p-2 rounded transition-colors flex items-center gap-1 ${showHtml ? "text-gold bg-gold/10" : "text-muted hover:text-foreground hover:bg-white/5"}`}>
+                <Code size={12} /> <span className="text-[9px]">HTML</span>
+              </button>
+              <div className="ml-auto flex items-center gap-2">
+                <label className="flex items-center gap-1 text-[9px] text-muted cursor-pointer">
+                  <MousePointerClick size={9} />
+                  <span>Link Tracking</span>
+                  <button onClick={() => setLinkTracking(!linkTracking)}
+                    className={`w-6 h-3 rounded-full ml-1 ${linkTracking ? "bg-gold" : "bg-surface"}`}>
+                    <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${linkTracking ? "ml-3" : "ml-0.5"}`} />
+                  </button>
+                </label>
+              </div>
+            </div>
+
+            {/* Variable Insertion Panel */}
+            {showVarPanel && (
+              <div className="card border-gold/10 p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[10px] font-semibold text-gold">Insert Variable</p>
+                  <button onClick={() => setShowVarPanel(false)} className="text-muted hover:text-foreground"><X size={12} /></button>
+                </div>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {VARIABLES.map(v => (
+                    <button key={v.tag} onClick={() => setEmail(prev => ({ ...prev, body: prev.body + " " + v.tag }))}
+                      className="text-left p-2 rounded bg-surface-light border border-border hover:border-gold/20 transition-all">
+                      <p className="text-[9px] font-mono text-gold">{v.tag}</p>
+                      <p className="text-[8px] text-muted">{v.label} ({v.example})</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
-            {recipientType === "lead" && (
-              <select value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="input w-full">
-                <option value="">Select lead...</option>
-                {leads.filter(l => l.email).map(l => <option key={l.id} value={l.email!}>{l.business_name} ({l.email})</option>)}
-              </select>
+
+            {/* Body Editor / HTML Source */}
+            {showHtml ? (
+              <textarea value={`<html><body><p>${email.body.replace(/\n/g, "</p><p>")}</p></body></html>`}
+                className="input w-full text-xs font-mono leading-relaxed" style={{ minHeight: 300, resize: "vertical" }}
+                readOnly />
+            ) : (
+              <textarea value={email.body} onChange={e => setEmail({ ...email, body: e.target.value })}
+                className="input w-full text-sm leading-relaxed" style={{ minHeight: 300, resize: "vertical" }}
+                placeholder="Write your email here..." />
             )}
+
+            {/* Attachment Manager */}
+            <div className="card p-3">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[10px] font-semibold flex items-center gap-1.5"><Paperclip size={10} /> Attachments ({attachments.length})</p>
+                <button onClick={() => setAttachments(prev => [...prev, `file_${prev.length + 1}.pdf`])}
+                  className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1">
+                  <Plus size={9} /> Add
+                </button>
+              </div>
+              {attachments.length === 0 ? (
+                <p className="text-[9px] text-muted text-center py-3">No attachments. Click Add to attach files.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {attachments.map((file, i) => (
+                    <div key={i} className="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-light border border-border text-[9px]">
+                      <Paperclip size={9} className="text-muted" />
+                      <span>{file}</span>
+                      <button onClick={() => setAttachments(prev => prev.filter((_, j) => j !== i))} className="text-muted hover:text-red-400"><X size={8} /></button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-3 text-[10px] text-muted">
+                <span>From: {email.fromName}</span>
+                <span>{wordCount} words</span>
+                <span>{charCount} chars</span>
+                <span className={`flex items-center gap-1 ${spamScore >= 80 ? "text-green-400" : spamScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>
+                  <AlertTriangle size={9} /> Spam score: {spamScore}/100
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button className="btn-ghost text-xs flex items-center gap-1"><Save size={12} /> Draft</button>
+                <button className="btn-secondary text-xs flex items-center gap-1"><Send size={12} /> Test Send</button>
+                <button className="btn-primary text-xs flex items-center gap-1"><Send size={12} /> Send</button>
+              </div>
+            </div>
           </div>
 
-          {/* Subject */}
-          <input value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
-            className="input w-full text-sm font-medium" placeholder="Subject line..." />
+          {/* Sidebar */}
+          <div className="space-y-3">
+            {/* Quick stats */}
+            <div className="card">
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Composer Stats</h3>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="text-center p-2 rounded bg-surface-light">
+                  <p className="text-sm font-bold text-gold">{wordCount}</p>
+                  <p className="text-[8px] text-muted">Words</p>
+                </div>
+                <div className="text-center p-2 rounded bg-surface-light">
+                  <p className="text-sm font-bold">{VARIABLES.filter(v => email.body.includes(v.tag)).length}</p>
+                  <p className="text-[8px] text-muted">Variables</p>
+                </div>
+                <div className="text-center p-2 rounded bg-surface-light">
+                  <p className="text-sm font-bold">{attachments.length}</p>
+                  <p className="text-[8px] text-muted">Attachments</p>
+                </div>
+                <div className="text-center p-2 rounded bg-surface-light">
+                  <p className={`text-sm font-bold ${spamScore >= 80 ? "text-green-400" : "text-yellow-400"}`}>{spamScore}%</p>
+                  <p className="text-[8px] text-muted">Spam Score</p>
+                </div>
+              </div>
+            </div>
 
-          {/* Toolbar */}
-          <div className="flex gap-1 p-1 rounded-lg bg-surface-light border border-border">
-            {[
-              { icon: <Bold size={12} />, label: "Bold" },
-              { icon: <Italic size={12} />, label: "Italic" },
-              { icon: <Link2 size={12} />, label: "Link" },
-              { icon: <List size={12} />, label: "List" },
-              { icon: <ImageIcon size={12} />, label: "Image" },
-            ].map(tool => (
-              <button key={tool.label} className="p-2 rounded text-muted hover:text-foreground hover:bg-white/5 transition-colors" title={tool.label}>
-                {tool.icon}
+            {/* Quick Templates */}
+            <div className="card">
+              <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Templates</h3>
+              <div className="space-y-1">
+                {TEMPLATE_GALLERY.slice(0, 6).map(t => (
+                  <button key={t.id} onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview + "\n\nBest,\nNicklas" }))}
+                    className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-white/[0.03] border border-border">
+                    <p className="font-semibold">{t.name}</p>
+                    <p className="text-muted truncate">{t.subject}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== TEMPLATE GALLERY ===== */}
+      {activeTab === "templates" && (
+        <div className="space-y-4">
+          <div className="flex gap-1.5 flex-wrap">
+            {["all", "Outreach", "Value", "Sales", "Onboarding", "Client", "Billing", "Retention", "Promo"].map(c => (
+              <button key={c} onClick={() => setTemplateCategory(c)}
+                className={`text-[10px] px-3 py-1.5 rounded-lg ${
+                  templateCategory === c ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+                }`}>{c}</button>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
+            {filteredTemplates.map(t => (
+              <button key={t.id} onClick={() => { setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview + "\n\nBest,\nNicklas" })); setActiveTab("compose"); }}
+                className="text-left p-3 rounded-xl bg-surface-light border border-border hover:border-gold/10 transition-all">
+                <p className="text-[10px] font-semibold">{t.name}</p>
+                <p className="text-[9px] text-gold mt-0.5">{t.category}</p>
+                <p className="text-[9px] text-muted mt-1 line-clamp-2">{t.subject}</p>
               </button>
             ))}
           </div>
+        </div>
+      )}
 
-          {/* Body */}
-          <textarea value={email.body} onChange={e => setEmail({ ...email, body: e.target.value })}
-            className="input w-full text-sm leading-relaxed" style={{ minHeight: 300, resize: "vertical" }}
-            placeholder="Write your email here... or click AI Write to generate one." />
-
-          {/* Send */}
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2 text-[10px] text-muted">
-              <span>From: {email.fromName}</span>
-              <span>·</span>
-              <span>{email.body.split(/\s+/).filter(Boolean).length} words</span>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => toast.success("Draft saved!")} className="btn-ghost text-xs flex items-center gap-1">
-                <Save size={12} /> Save Draft
-              </button>
-              <button onClick={sendEmail} disabled={sending || !email.to || !email.body}
-                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                {sending ? <Loader size={12} className="animate-spin" /> : <Send size={12} />}
-                {sending ? "Sending..." : "Send Email"}
-              </button>
+      {/* ===== PREVIEW MODE ===== */}
+      {activeTab === "preview" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-center gap-2">
+            <button onClick={() => setPreviewMode("desktop")}
+              className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
+                previewMode === "desktop" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+              }`}><Monitor size={12} /> Desktop</button>
+            <button onClick={() => setPreviewMode("mobile")}
+              className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 ${
+                previewMode === "mobile" ? "bg-gold/10 text-gold border border-gold/20" : "text-muted border border-white/[0.05]"
+              }`}><Smartphone size={12} /> Mobile</button>
+          </div>
+          <div className="flex justify-center">
+            <div className={`bg-white rounded-lg shadow-2xl overflow-hidden ${previewMode === "desktop" ? "w-full max-w-2xl" : "w-[375px]"}`}>
+              <div className="bg-gray-100 p-3 border-b border-gray-200">
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                  </div>
+                  <div className="flex-1 text-center">
+                    <p className="text-[10px] text-gray-500 font-mono">Inbox</p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-sm font-semibold text-gray-900 mb-1">{email.subject || "No subject"}</p>
+                <p className="text-[10px] text-gray-500 mb-4">From: {email.fromName} &lt;{email.replyTo}&gt;</p>
+                <div className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
+                  {email.body.replace(/\{first_name\}/g, "John").replace(/\{business_name\}/g, "Bright Smile Dental").replace(/\{industry\}/g, "dental").replace(/\{company\}/g, "ShortStack").replace(/\{city\}/g, "Miami")}
+                </div>
+                {attachments.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <p className="text-[10px] text-gray-500 mb-2">Attachments ({attachments.length})</p>
+                    <div className="flex gap-2">
+                      {attachments.map((f, i) => (
+                        <div key={i} className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 text-[9px] text-gray-600">
+                          <Paperclip size={8} /> {f}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
+      )}
 
-        {/* Quick templates sidebar */}
-        <div className="space-y-3">
-          <div className="card">
-            <h3 className="section-header">Quick Templates</h3>
-            <div className="space-y-1.5">
-              {[
-                { name: "Cold Intro", subject: "Quick question about {business}", body: "Hey!\n\nI came across your business and love what you're doing. We help businesses like yours get 2-3x more clients through digital marketing.\n\nWould you be open to a quick 15-minute call this week?\n\nBest,\nNicklas" },
-                { name: "Follow Up", subject: "Following up", body: "Hey!\n\nJust bumping this to the top of your inbox. I recently helped a similar business go from 10 to 50+ new clients per month.\n\nHappy to share how — takes 15 minutes.\n\nBest,\nNicklas" },
-                { name: "Proposal Send", subject: "Your proposal is ready", body: "Hey!\n\nGreat chatting today! As discussed, here's the proposal for your marketing.\n\nTake a look and let me know if you have any questions. I'm confident we can get you great results.\n\nBest,\nNicklas" },
-                { name: "Welcome", subject: "Welcome to ShortStack!", body: "Hey!\n\nWelcome aboard! We're thrilled to have you as a client.\n\nHere's what happens next:\n1. You'll get access to your client portal\n2. We'll schedule your onboarding call\n3. We'll start your first content batch\n\nBest,\nThe ShortStack Team" },
-                { name: "Monthly Report", subject: "Your monthly report is ready", body: "Hey!\n\nYour monthly marketing report is ready. Here's a quick summary of what we accomplished this month.\n\nFull report is in your portal. Let me know if you have any questions!\n\nBest,\nNicklas" },
-              ].map(t => (
-                <button key={t.name} onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.body }))}
-                  className="w-full text-left p-2.5 rounded-lg text-[10px] transition-all hover:bg-white/[0.03] border border-border">
-                  <p className="font-semibold">{t.name}</p>
-                  <p className="text-muted truncate">{t.subject}</p>
-                </button>
-              ))}
+      {/* ===== SPAM SCORE CHECKER ===== */}
+      {activeTab === "spam-check" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="card text-center p-6">
+              <div className={`w-24 h-24 rounded-full border-4 flex items-center justify-center mx-auto mb-3 ${
+                spamScore >= 80 ? "border-green-400" : spamScore >= 50 ? "border-yellow-400" : "border-red-400"
+              }`}>
+                <div>
+                  <p className={`text-3xl font-bold ${spamScore >= 80 ? "text-green-400" : spamScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>{spamScore}</p>
+                  <p className="text-[9px] text-muted">/ 100</p>
+                </div>
+              </div>
+              <h3 className="text-sm font-semibold">Spam Score</h3>
+              <p className={`text-[10px] mt-1 ${spamScore >= 80 ? "text-green-400" : spamScore >= 50 ? "text-yellow-400" : "text-red-400"}`}>
+                {spamScore >= 80 ? "Excellent - Safe to send" : spamScore >= 50 ? "Fair - Review suggestions" : "Poor - High spam risk"}
+              </p>
             </div>
-          </div>
-
-          <div className="card">
-            <h3 className="section-header">Variables</h3>
-            <div className="flex flex-wrap gap-1">
-              {["{name}", "{business}", "{industry}", "{city}", "{link}", "{amount}"].map(v => (
-                <button key={v} onClick={() => setEmail(prev => ({ ...prev, body: prev.body + " " + v }))}
-                  className="text-[9px] px-2 py-1 rounded text-gold hover:bg-gold/10 transition-colors"
-                  style={{ background: "rgba(200,168,85,0.04)", border: "1px solid rgba(200,168,85,0.08)" }}>
-                  {v}
-                </button>
-              ))}
+            <div className="card col-span-1 lg:col-span-2">
+              <h3 className="text-sm font-semibold mb-3">Deliverability Checklist</h3>
+              <div className="space-y-2">
+                {spamChecks.map((check, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light">
+                    <div className="flex items-center gap-2 text-[10px]">
+                      {check.pass ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-red-400" />}
+                      <span>{check.rule}</span>
+                    </div>
+                    <span className={`text-[9px] font-bold ${check.pass ? "text-green-400" : "text-red-400"}`}>
+                      {check.pass ? `+${check.weight}` : `0/${check.weight}`}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* ===== SCHEDULE ===== */}
+      {activeTab === "scheduler" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Calendar size={14} className="text-gold" /> Schedule Send
+              </h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Date & Time</label>
+                  <input type="datetime-local" value={scheduledTime} onChange={e => setScheduledTime(e.target.value)} className="input w-full text-xs" />
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Timezone</label>
+                  <select className="input w-full text-xs">
+                    <option>America/New_York (ET)</option>
+                    <option>America/Chicago (CT)</option>
+                    <option>America/Los_Angeles (PT)</option>
+                    <option>Europe/London (GMT)</option>
+                    <option>Europe/Stockholm (CET)</option>
+                  </select>
+                </div>
+                <button className="btn-primary w-full text-xs flex items-center justify-center gap-1.5">
+                  <Clock size={12} /> Schedule Email
+                </button>
+              </div>
+            </div>
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
+              <p className="text-[10px] text-muted mb-3">Based on your audience engagement data</p>
+              <div className="space-y-2">
+                {[
+                  { day: "Tuesday", time: "10:00 AM", score: 92 },
+                  { day: "Wednesday", time: "9:30 AM", score: 88 },
+                  { day: "Thursday", time: "2:00 PM", score: 84 },
+                  { day: "Monday", time: "11:00 AM", score: 78 },
+                  { day: "Friday", time: "10:00 AM", score: 65 },
+                ].map((slot, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                    <span className="font-medium">{slot.day} at {slot.time}</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-20 bg-surface rounded-full h-1.5">
+                        <div className="bg-gold rounded-full h-1.5" style={{ width: `${slot.score}%` }} />
+                      </div>
+                      <span className="text-gold font-bold">{slot.score}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== SIGNATURE BUILDER ===== */}
+      {activeTab === "signatures" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Palette size={14} className="text-gold" /> Signature Builder
+          </h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="card space-y-3">
+              <h4 className="text-xs font-semibold">Edit Signature</h4>
+              <input className="input w-full text-xs" placeholder="Full Name" defaultValue="Nicklas" />
+              <input className="input w-full text-xs" placeholder="Title" defaultValue="Founder, ShortStack" />
+              <input className="input w-full text-xs" placeholder="Phone" defaultValue="+1 (555) 123-4567" />
+              <input className="input w-full text-xs" placeholder="Email" defaultValue="nicklas@shortstackhq.com" />
+              <input className="input w-full text-xs" placeholder="Website" defaultValue="https://shortstackhq.com" />
+              <input className="input w-full text-xs" placeholder="Calendar link" defaultValue="https://cal.com/nicklas" />
+              <button className="btn-primary w-full text-xs">Save Signature</button>
+            </div>
+            <div className="card">
+              <h4 className="text-xs font-semibold mb-3">Preview</h4>
+              <div className="p-4 rounded-lg bg-white">
+                <div className="border-t-2 border-amber-500 pt-3">
+                  <p className="text-sm font-bold text-gray-900">Nicklas</p>
+                  <p className="text-[10px] text-gray-500">Founder, ShortStack</p>
+                  <div className="mt-2 space-y-0.5">
+                    <p className="text-[10px] text-gray-600 flex items-center gap-1"><Phone size={9} /> +1 (555) 123-4567</p>
+                    <p className="text-[10px] text-gray-600 flex items-center gap-1"><Mail size={9} /> nicklas@shortstackhq.com</p>
+                    <p className="text-[10px] text-amber-600 flex items-center gap-1"><AtSign size={9} /> shortstackhq.com</p>
+                  </div>
+                  <p className="text-[9px] text-amber-600 mt-2 font-medium">Book a call: cal.com/nicklas</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

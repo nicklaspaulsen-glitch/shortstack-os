@@ -58,7 +58,7 @@ export default function WorkflowsPage() {
   const [agentChat, setAgentChat] = useState<Array<{ role: "user" | "agent"; content: string; workflow?: Workflow }>>([]);
   const [agentInput, setAgentInput] = useState("");
   const [agentThinking, setAgentThinking] = useState(false);
-  const [tab, setTab] = useState<"builder" | "presets" | "history" | "agent" | "n8n">("builder");
+  const [tab, setTab] = useState<"builder" | "presets" | "history" | "agent" | "n8n" | "analytics" | "triggers" | "sharing">("builder");
   const [presetSearch, setPresetSearch] = useState("");
   const [presetCategory, setPresetCategory] = useState("all");
   const [presetDifficulty, setPresetDifficulty] = useState<"all" | "easy" | "medium" | "advanced">("all");
@@ -66,6 +66,51 @@ export default function WorkflowsPage() {
   const [n8nLoading, setN8nLoading] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
+
+  // Test mode
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [testMode, setTestMode] = useState(false);
+
+  // Analytics data
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [workflowAnalytics] = useState({
+    totalRuns: 847,
+    successRate: 94.2,
+    avgDuration: "3.2s",
+    activeWorkflows: workflows.filter(w => w.status === "completed").length,
+    failedRuns: 49,
+    topWorkflow: "Lead Notification",
+    runsThisWeek: 142,
+    savedHours: 28,
+  });
+
+  // Run history detail
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [runHistory] = useState([
+    { id: "R001", workflow: "New Lead Alert", status: "success" as const, duration: "1.2s", steps: 3, timestamp: "2026-04-14 09:23" },
+    { id: "R002", workflow: "Client Onboarding", status: "success" as const, duration: "4.5s", steps: 6, timestamp: "2026-04-14 08:15" },
+    { id: "R003", workflow: "Invoice Generator", status: "failed" as const, duration: "2.1s", steps: 4, timestamp: "2026-04-13 16:42", error: "Stripe API timeout" },
+    { id: "R004", workflow: "Weekly Report", status: "success" as const, duration: "8.3s", steps: 8, timestamp: "2026-04-13 10:00" },
+    { id: "R005", workflow: "Follow-Up Sequence", status: "success" as const, duration: "1.8s", steps: 3, timestamp: "2026-04-13 09:30" },
+    { id: "R006", workflow: "Content Generator", status: "failed" as const, duration: "5.2s", steps: 5, timestamp: "2026-04-12 14:20", error: "AI rate limit exceeded" },
+  ]);
+
+  // Error handling
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [errorNotifications, setErrorNotifications] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [retryOnFailure, setRetryOnFailure] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [maxRetries] = useState(3);
+
+  // Shared workflows
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [sharedWorkflows] = useState([
+    { id: "1", name: "Lead Scrape + Notify", author: "System", downloads: 342, rating: 4.8 },
+    { id: "2", name: "Client Onboarding Suite", author: "System", downloads: 218, rating: 4.6 },
+    { id: "3", name: "Auto Content Pipeline", author: "Community", downloads: 156, rating: 4.4 },
+    { id: "4", name: "Invoice + Follow-Up", author: "System", downloads: 189, rating: 4.7 },
+  ]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); fetchN8n(); }, []);
@@ -277,11 +322,24 @@ export default function WorkflowsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="tab-group w-fit">
-        {(["builder", "presets", "agent", "n8n", "history"] as const).map(t => (
-          <button key={t} onClick={() => { setTab(t); if (t === "n8n") fetchN8n(); }}
-            className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "builder" ? "Builder" : t === "presets" ? `Presets (${WORKFLOW_PRESETS.length})` : t === "agent" ? "AI Agent" : t === "n8n" ? "n8n Live" : "History"}
+      <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
+        {([
+          { id: "builder" as const, label: "Builder", icon: Zap },
+          { id: "presets" as const, label: `Presets (${WORKFLOW_PRESETS.length})`, icon: BookOpen },
+          { id: "triggers" as const, label: "Triggers & Actions", icon: GitBranch },
+          { id: "agent" as const, label: "AI Agent", icon: Bot },
+          { id: "n8n" as const, label: "n8n Live", icon: Globe },
+          { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
+          { id: "sharing" as const, label: "Sharing", icon: Users },
+          { id: "history" as const, label: "History", icon: Clock },
+        ]).map(t => (
+          <button key={t.id} onClick={() => { setTab(t.id); if (t.id === "n8n") fetchN8n(); }}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-t-lg transition-colors whitespace-nowrap ${
+              tab === t.id
+                ? "bg-surface-light text-gold border border-border border-b-transparent -mb-px"
+                : "text-muted hover:text-foreground"
+            }`}>
+            <t.icon size={12} /> {t.label}
           </button>
         ))}
       </div>
@@ -703,6 +761,175 @@ export default function WorkflowsPage() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* TRIGGERS & ACTIONS TAB                                              */}
+      {/* ================================================================== */}
+      {tab === "triggers" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Zap size={13} className="text-gold" /> Trigger Library (15+)</p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {[
+                { name: "New Lead Scraped", icon: Users, color: "text-blue-400", desc: "When scraper finds a lead" },
+                { name: "Client Created", icon: UserPlus, color: "text-green-400", desc: "New client is added" },
+                { name: "Deal Closed", icon: CreditCard, color: "text-gold", desc: "Deal status changes to won" },
+                { name: "Form Submitted", icon: FileText, color: "text-purple-400", desc: "Website form submission" },
+                { name: "Email Received", icon: Mail, color: "text-cyan-400", desc: "Incoming email from client" },
+                { name: "Schedule Trigger", icon: Calendar, color: "text-orange-400", desc: "Time-based recurring trigger" },
+                { name: "Webhook Received", icon: Webhook, color: "text-yellow-400", desc: "External webhook fires" },
+                { name: "Invoice Paid", icon: CreditCard, color: "text-emerald-400", desc: "Client pays invoice" },
+                { name: "Task Completed", icon: FileText, color: "text-pink-400", desc: "Team member completes task" },
+                { name: "Review Posted", icon: Star, color: "text-amber-400", desc: "New review on Google/Yelp" },
+                { name: "Lead Score Change", icon: Target, color: "text-red-400", desc: "Lead score threshold met" },
+                { name: "Appointment Booked", icon: Calendar, color: "text-teal-400", desc: "Client books appointment" },
+                { name: "Chat Message", icon: MessageCircle, color: "text-violet-400", desc: "New chat from prospect" },
+                { name: "Campaign Launched", icon: Globe, color: "text-indigo-400", desc: "New ad campaign starts" },
+                { name: "Manual Trigger", icon: Play, color: "text-muted", desc: "Run on-demand manually" },
+              ].map(trigger => (
+                <button key={trigger.name} onClick={() => { setPrompt(`When: ${trigger.name} - ${trigger.desc}`); setShowCreate(true); setTab("builder"); }}
+                  className="card-hover p-3 text-left flex items-start gap-2">
+                  <trigger.icon size={14} className={`${trigger.color} mt-0.5 shrink-0`} />
+                  <div><p className="text-[10px] font-semibold">{trigger.name}</p><p className="text-[9px] text-muted">{trigger.desc}</p></div>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Play size={13} className="text-gold" /> Action Library (20+)</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {["Send Email", "Send SMS", "Send Telegram", "Send Slack Message", "Create Task", "Update Lead Status", "Add Tag", "Generate Content", "Create Invoice", "Fire Webhook", "Add to CRM", "Schedule Meeting", "Generate Report", "Push Notification", "Create Proposal", "Update Database", "Run AI Analysis", "Deploy Website", "Generate Social Posts", "Send Voice Message"].map((action, i) => (
+                <div key={action} className="px-3 py-2 rounded-lg border border-border text-[10px] font-medium flex items-center gap-1.5">
+                  <span className={`w-2 h-2 rounded-full ${["bg-cyan-400", "bg-green-400", "bg-blue-400", "bg-purple-400", "bg-gold", "bg-orange-400", "bg-teal-400", "bg-pink-400", "bg-emerald-400", "bg-yellow-400"][i % 10]}`} />
+                  {action}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="card p-4">
+              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><GitBranch size={13} className="text-gold" /> Condition Nodes</p>
+              <div className="space-y-2">
+                {["If lead has email", "If deal value > $1000", "If client is active", "If score > 80", "If tag contains X", "If time is between 9-5"].map(cond => (
+                  <div key={cond} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]"><GitBranch size={10} className="text-amber-400" /> {cond}</div>
+                ))}
+              </div>
+            </div>
+            <div className="card p-4">
+              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Clock size={13} className="text-gold" /> Delay Nodes</p>
+              <div className="space-y-2">
+                {["Wait 5 minutes", "Wait 1 hour", "Wait 24 hours", "Wait 3 days", "Wait until specific time", "Wait until next business day"].map(delay => (
+                  <div key={delay} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border text-[10px]"><Clock size={10} className="text-muted" /> {delay}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Bell size={13} className="text-gold" /> Error Handling</p>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <div><p className="text-xs font-semibold">Error Notifications</p><p className="text-[9px] text-muted">Get notified when a step fails</p></div>
+                <button onClick={() => setErrorNotifications(!errorNotifications)} className={`w-10 h-5 rounded-full transition-colors relative ${errorNotifications ? "bg-gold" : "bg-surface-light border border-border"}`}><span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${errorNotifications ? "left-5" : "left-0.5"}`} /></button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div><p className="text-xs font-semibold">Auto-Retry on Failure</p><p className="text-[9px] text-muted">Retry failed steps up to {maxRetries}x</p></div>
+                <button onClick={() => setRetryOnFailure(!retryOnFailure)} className={`w-10 h-5 rounded-full transition-colors relative ${retryOnFailure ? "bg-gold" : "bg-surface-light border border-border"}`}><span className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all ${retryOnFailure ? "left-5" : "left-0.5"}`} /></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* ANALYTICS TAB                                                       */}
+      {/* ================================================================== */}
+      {tab === "analytics" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Play size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Total Runs</p></div><p className="text-lg font-bold text-gold">{workflowAnalytics.totalRuns}</p></div>
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Target size={12} className="text-green-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Success Rate</p></div><p className="text-lg font-bold text-green-400">{workflowAnalytics.successRate}%</p></div>
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-blue-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Avg Duration</p></div><p className="text-lg font-bold text-blue-400">{workflowAnalytics.avgDuration}</p></div>
+            <div className="card p-3"><div className="flex items-center gap-1.5 mb-1"><Zap size={12} className="text-purple-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Hours Saved</p></div><p className="text-lg font-bold text-purple-400">{workflowAnalytics.savedHours}h</p></div>
+          </div>
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold flex items-center gap-1.5"><Clock size={13} className="text-gold" /> Recent Runs</p>
+              <div className="flex items-center gap-2">
+                <span className="text-[9px] text-muted flex items-center gap-1"><span className={`w-2 h-2 rounded-full ${testMode ? "bg-yellow-400" : "bg-green-400"}`} />{testMode ? "Test Mode" : "Live Mode"}</span>
+                <button onClick={() => setTestMode(!testMode)} className="btn-secondary text-[9px] flex items-center gap-1">{testMode ? <Play size={9} /> : <Eye size={9} />} {testMode ? "Go Live" : "Test Mode"}</button>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <div className="grid grid-cols-12 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
+                <div className="col-span-1">ID</div><div className="col-span-3">Workflow</div><div className="col-span-2">Status</div><div className="col-span-2">Duration</div><div className="col-span-1">Steps</div><div className="col-span-3">Time</div>
+              </div>
+              {runHistory.map(run => (
+                <div key={run.id} className="grid grid-cols-12 gap-2 items-center px-3 py-2 rounded-lg bg-surface-light border border-border">
+                  <div className="col-span-1"><span className="text-[9px] font-mono text-muted">{run.id}</span></div>
+                  <div className="col-span-3"><span className="text-[10px] font-semibold">{run.workflow}</span></div>
+                  <div className="col-span-2"><span className={`text-[9px] px-2 py-0.5 rounded-full border ${run.status === "success" ? "text-green-400 border-green-400/30 bg-green-400/10" : "text-red-400 border-red-400/30 bg-red-400/10"}`}>{run.status === "success" ? "Success" : "Failed"}</span></div>
+                  <div className="col-span-2"><span className="text-[10px] text-muted">{run.duration}</span></div>
+                  <div className="col-span-1"><span className="text-[10px] text-muted">{run.steps}</span></div>
+                  <div className="col-span-3"><span className="text-[9px] text-muted">{run.timestamp}</span></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================== */}
+      {/* SHARING TAB                                                         */}
+      {/* ================================================================== */}
+      {tab === "sharing" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted">Share workflows with your team or the community</p>
+            <button onClick={() => toast.success("Workflow shared (demo)")} className="btn-primary text-[10px] flex items-center gap-1"><Send size={10} /> Share Workflow</button>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Users size={13} className="text-gold" /> Community Workflows</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {sharedWorkflows.map(sw => (
+                <div key={sw.id} className="p-3 rounded-lg bg-surface-light border border-border">
+                  <div className="flex items-start justify-between mb-2">
+                    <div><h3 className="text-xs font-semibold">{sw.name}</h3><p className="text-[9px] text-muted">by {sw.author}</p></div>
+                    <div className="flex items-center gap-1 text-[9px] text-gold"><Star size={9} /> {sw.rating}</div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] text-muted">{sw.downloads} downloads</span>
+                    <button onClick={() => toast.success(`Imported "${sw.name}" (demo)`)} className="btn-secondary text-[9px] flex items-center gap-1"><RotateCcw size={9} /> Import</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="card p-4">
+              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Send size={13} className="text-gold" /> Export Workflows</p>
+              <p className="text-[10px] text-muted mb-3">Export as JSON to share or back up</p>
+              <button onClick={() => toast.success("Workflows exported (demo)")} className="btn-primary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Export All</button>
+            </div>
+            <div className="card p-4">
+              <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><RotateCcw size={13} className="text-gold" /> Import Workflows</p>
+              <p className="text-[10px] text-muted mb-3">Import from JSON or shared links</p>
+              <button onClick={() => toast.success("Import dialog opened (demo)")} className="btn-secondary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Import JSON</button>
+            </div>
+          </div>
+          <div className="card p-4">
+            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><GitBranch size={13} className="text-gold" /> Workflow Versioning</p>
+            <p className="text-[10px] text-muted mb-3">Each edit creates a new version. Rollback anytime.</p>
+            <div className="space-y-1.5">
+              {["v3 - Added delay node (Current)", "v2 - Updated email template", "v1 - Initial version"].map((version, i) => (
+                <div key={version} className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
+                  <span className="text-[10px] flex items-center gap-2"><GitBranch size={10} className={i === 0 ? "text-gold" : "text-muted"} /><span className={i === 0 ? "font-semibold text-gold" : "text-muted"}>{version}</span></span>
+                  {i > 0 && <button onClick={() => toast.success("Rolled back (demo)")} className="btn-ghost text-[9px]"><RotateCcw size={9} /> Rollback</button>}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 

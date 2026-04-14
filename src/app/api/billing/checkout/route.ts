@@ -10,10 +10,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 const PRICE_IDS: Record<string, string | undefined> = {
   starter: process.env.STRIPE_PRICE_STARTER,
   growth: process.env.STRIPE_PRICE_GROWTH,
-  enterprise: process.env.STRIPE_PRICE_ENTERPRISE,
+  pro: process.env.STRIPE_PRICE_PRO,
+  business: process.env.STRIPE_PRICE_BUSINESS,
+  unlimited: process.env.STRIPE_PRICE_UNLIMITED,
   starter_annual: process.env.STRIPE_PRICE_STARTER_ANNUAL,
   growth_annual: process.env.STRIPE_PRICE_GROWTH_ANNUAL,
-  enterprise_annual: process.env.STRIPE_PRICE_ENTERPRISE_ANNUAL,
+  pro_annual: process.env.STRIPE_PRICE_PRO_ANNUAL,
+  business_annual: process.env.STRIPE_PRICE_BUSINESS_ANNUAL,
+  unlimited_annual: process.env.STRIPE_PRICE_UNLIMITED_ANNUAL,
 };
 
 // Agency self-checkout — creates a Stripe Checkout Session for the agency's own plan

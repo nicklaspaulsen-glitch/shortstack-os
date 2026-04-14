@@ -20,6 +20,7 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/api/surveys") ||
     path.startsWith("/demo") ||
     path.startsWith("/style-preview") ||
+    path.startsWith("/sound-preview") ||
     path.startsWith("/privacy") ||
     path.startsWith("/terms")
   ) {

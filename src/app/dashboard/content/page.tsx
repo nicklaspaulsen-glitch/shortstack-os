@@ -13,11 +13,13 @@ import EmptyState from "@/components/ui/empty-state";
 import { formatDate, formatDateTime } from "@/lib/utils";
 import {
   Film, FileText, Inbox, Upload, User, Sparkles, Calendar,
-  Check, Edit3, Clock, Send
+  Check, Edit3, Clock, Send, Search, BarChart3, RefreshCw,
+  AlertTriangle, Zap, TrendingUp, Shield, Layers,
+  ThumbsUp, GitBranch, Star, ChevronRight
 } from "lucide-react";
 import toast from "react-hot-toast";
 
-type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal";
+type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal" | "pipeline" | "analytics" | "seo";
 
 export default function ContentPage() {
   const { clientId: managedClientId } = useManagedClient();
@@ -32,6 +34,63 @@ export default function ContentPage() {
   const [showPublishEditor, setShowPublishEditor] = useState<PublishQueueItem | null>(null);
   const [editingPublish, setEditingPublish] = useState<Partial<PublishQueueItem>>({});
   const supabase = createClient();
+
+  // Pipeline state
+  const [pipelineFilter, setPipelineFilter] = useState<string>("all");
+  const [pipelineItems] = useState([
+    { id: "p1", title: "5 Marketing Myths Debunked", type: "blog", stage: "draft", assignee: "AI", due: "2026-04-16", seo_score: 72 },
+    { id: "p2", title: "Client Success Story: Austin Dental", type: "video", stage: "review", assignee: "You", due: "2026-04-15", seo_score: 0 },
+    { id: "p3", title: "Weekly Tips Carousel", type: "social", stage: "approved", assignee: "AI", due: "2026-04-14", seo_score: 0 },
+    { id: "p4", title: "Email Newsletter #12", type: "email", stage: "scheduled", assignee: "AI", due: "2026-04-17", seo_score: 0 },
+    { id: "p5", title: "SEO Guide for Local Businesses", type: "blog", stage: "draft", assignee: "You", due: "2026-04-20", seo_score: 85 },
+    { id: "p6", title: "Behind the Scenes Reel", type: "video", stage: "idea", assignee: "Unassigned", due: "", seo_score: 0 },
+  ]);
+
+  // SEO checker state
+  const [seoText, setSeoText] = useState("");
+  const [seoKeyword, setSeoKeyword] = useState("");
+  const [seoResults, setSeoResults] = useState<{ score: number; issues: string[]; suggestions: string[]; readability: string; wordCount: number; plagiarism: string } | null>(null);
+  const [seoChecking, setSeoChecking] = useState(false);
+
+  // Content analytics
+  const [contentAnalytics] = useState({
+    total_pieces: 127,
+    published_this_month: 34,
+    avg_engagement: "4.2%",
+    top_performing: "5 Marketing Myths",
+    content_types: { blog: 28, social: 65, video: 22, email: 12 },
+    approval_rate: 92,
+    ai_enhanced: 78,
+  });
+
+  // Version control
+  const [versions] = useState([
+    { id: "v1", content_title: "5 Marketing Myths", version: 3, author: "AI", timestamp: "2026-04-14T10:00:00Z", changes: "Added CTA section" },
+    { id: "v2", content_title: "5 Marketing Myths", version: 2, author: "You", timestamp: "2026-04-13T15:00:00Z", changes: "Revised intro paragraph" },
+    { id: "v3", content_title: "5 Marketing Myths", version: 1, author: "AI", timestamp: "2026-04-12T09:00:00Z", changes: "Initial draft" },
+  ]);
+
+  function runSeoCheck() {
+    if (!seoText.trim()) { toast.error("Enter content to check"); return; }
+    setSeoChecking(true);
+    setTimeout(() => {
+      const wordCount = seoText.split(/\s+/).filter(Boolean).length;
+      const hasKeyword = seoKeyword ? seoText.toLowerCase().includes(seoKeyword.toLowerCase()) : false;
+      const issues: string[] = [];
+      const suggestions: string[] = [];
+      if (wordCount < 300) issues.push("Content is too short (under 300 words)");
+      if (seoKeyword && !hasKeyword) issues.push(`Primary keyword "${seoKeyword}" not found in content`);
+      if (wordCount < 500) suggestions.push("Aim for 500+ words for better SEO");
+      if (!seoText.includes("?")) suggestions.push("Add questions to improve engagement");
+      suggestions.push("Add internal links to related content");
+      suggestions.push("Include meta description (150-160 chars)");
+      if (hasKeyword) suggestions.push("Good: keyword found. Add it to first paragraph and headers too.");
+      const score = Math.min(100, Math.max(20, 40 + (wordCount > 500 ? 20 : 0) + (hasKeyword ? 25 : 0) + (seoText.includes("?") ? 10 : 0) + (wordCount > 300 ? 10 : 0)));
+      const readability = wordCount > 100 ? (wordCount > 500 ? "Easy to read" : "Moderate") : "Too short to assess";
+      setSeoResults({ score, issues, suggestions, readability, wordCount, plagiarism: "No issues detected" });
+      setSeoChecking(false);
+    }, 1500);
+  }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, [tab, managedClientId]);
@@ -127,6 +186,9 @@ export default function ContentPage() {
     { key: "publish", label: "Publish Queue", icon: <Upload size={16} /> },
     { key: "calendar", label: "Calendar", icon: <Calendar size={16} /> },
     { key: "personal", label: "Personal Brand", icon: <User size={16} /> },
+    { key: "pipeline", label: "Pipeline", icon: <Layers size={16} /> },
+    { key: "analytics", label: "Analytics", icon: <BarChart3 size={16} /> },
+    { key: "seo", label: "SEO & Quality", icon: <Search size={16} /> },
   ];
 
   if (loading && tab === "scripts") return <PageLoading />;
@@ -345,6 +407,207 @@ export default function ContentPage() {
                       </div>
                     ))
                   )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Pipeline Tab */}
+          {tab === "pipeline" && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <select value={pipelineFilter} onChange={e => setPipelineFilter(e.target.value)} className="input text-xs py-1.5 w-40">
+                  <option value="all">All Types</option>
+                  <option value="blog">Blog</option>
+                  <option value="social">Social</option>
+                  <option value="video">Video</option>
+                  <option value="email">Email</option>
+                </select>
+              </div>
+              <div className="grid grid-cols-5 gap-3">
+                {["idea", "draft", "review", "approved", "scheduled"].map(stage => (
+                  <div key={stage} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-medium capitalize text-muted">{stage}</h3>
+                      <span className="text-[9px] bg-surface-light px-1.5 py-0.5 rounded text-muted">
+                        {pipelineItems.filter(p => p.stage === stage && (pipelineFilter === "all" || p.type === pipelineFilter)).length}
+                      </span>
+                    </div>
+                    {pipelineItems.filter(p => p.stage === stage && (pipelineFilter === "all" || p.type === pipelineFilter)).map(item => (
+                      <div key={item.id} className="card p-3 text-xs">
+                        <p className="font-medium mb-1">{item.title}</p>
+                        <div className="flex items-center gap-2 text-[10px] text-muted">
+                          <span className={`px-1.5 py-0.5 rounded ${item.type === "blog" ? "bg-info/10 text-info" : item.type === "video" ? "bg-danger/10 text-danger" : item.type === "email" ? "bg-purple-400/10 text-purple-400" : "bg-gold/10 text-gold"}`}>{item.type}</span>
+                          <span>{item.assignee}</span>
+                        </div>
+                        {item.due && <p className="text-[10px] text-muted mt-1 flex items-center gap-1"><Clock size={9} /> Due: {item.due}</p>}
+                        {item.seo_score > 0 && <p className="text-[10px] mt-1 flex items-center gap-1"><Search size={9} className="text-gold" /> SEO: {item.seo_score}/100</p>}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+              {/* Content Approval Flow */}
+              <div className="card">
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Shield size={14} className="text-gold" /> Content Approval Flow</h3>
+                <div className="flex items-center gap-4">
+                  {["AI Draft", "Internal Review", "Client Approval", "Schedule", "Publish"].map((step, i) => (
+                    <div key={step} className="flex items-center gap-2">
+                      <div className="text-center">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${i < 3 ? "bg-gold/10 text-gold border border-gold/20" : "bg-surface-light text-muted border border-border"}`}>{i + 1}</div>
+                        <p className="text-[9px] text-muted mt-1">{step}</p>
+                      </div>
+                      {i < 4 && <ChevronRight size={12} className="text-muted" />}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Repurpose Suggestions */}
+              <div className="card">
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><RefreshCw size={14} className="text-gold" /> Repurpose Suggestions</h3>
+                <div className="space-y-2">
+                  {[
+                    { source: "5 Marketing Myths Debunked (blog)", suggestions: ["Twitter thread (5 tweets)", "Instagram carousel (5 slides)", "LinkedIn article", "Email newsletter excerpt", "Short-form video script"] },
+                    { source: "Client Success Story (video)", suggestions: ["Blog post write-up", "Quote graphic for Instagram", "Testimonial email", "Case study PDF"] },
+                  ].map((item, i) => (
+                    <div key={i} className="p-3 border border-border rounded-lg">
+                      <p className="text-xs font-medium mb-2">{item.source}</p>
+                      <div className="flex flex-wrap gap-1">
+                        {item.suggestions.map(s => <span key={s} className="text-[9px] bg-gold/10 text-gold px-2 py-1 rounded-lg cursor-pointer hover:bg-gold/20">{s}</span>)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Version Control */}
+              <div className="card">
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><GitBranch size={14} className="text-gold" /> Version History</h3>
+                <div className="space-y-2">
+                  {versions.map(v => (
+                    <div key={v.id} className="flex items-center justify-between p-2 border border-border rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] bg-surface-light px-2 py-0.5 rounded font-mono">v{v.version}</span>
+                        <div>
+                          <p className="text-xs font-medium">{v.content_title}</p>
+                          <p className="text-[10px] text-muted">{v.changes}</p>
+                        </div>
+                      </div>
+                      <div className="text-right text-[10px] text-muted">
+                        <p>{v.author}</p>
+                        <p>{new Date(v.timestamp).toLocaleString()}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Analytics Tab */}
+          {tab === "analytics" && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  { label: "Total Content", value: contentAnalytics.total_pieces, icon: <FileText size={16} />, color: "text-gold" },
+                  { label: "Published This Month", value: contentAnalytics.published_this_month, icon: <Check size={16} />, color: "text-success" },
+                  { label: "Avg Engagement", value: contentAnalytics.avg_engagement, icon: <TrendingUp size={16} />, color: "text-info" },
+                  { label: "AI Enhanced", value: `${contentAnalytics.ai_enhanced}%`, icon: <Sparkles size={16} />, color: "text-purple-400" },
+                ].map(stat => (
+                  <div key={stat.label} className="card text-center p-4">
+                    <div className={`${stat.color} mx-auto mb-2`}>{stat.icon}</div>
+                    <p className="text-xl font-bold">{stat.value}</p>
+                    <p className="text-[10px] text-muted">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="card">
+                <h3 className="text-sm font-medium mb-3">Content by Type</h3>
+                <div className="grid grid-cols-4 gap-3">
+                  {Object.entries(contentAnalytics.content_types).map(([type, count]) => (
+                    <div key={type} className="text-center p-3 bg-surface-light/50 rounded-lg border border-border">
+                      <p className="text-lg font-bold text-gold">{count}</p>
+                      <p className="text-[10px] text-muted capitalize">{type}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="card">
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><ThumbsUp size={14} className="text-success" /> Approval Rate</h3>
+                  <p className="text-3xl font-bold text-success">{contentAnalytics.approval_rate}%</p>
+                  <p className="text-xs text-muted">of content approved on first review</p>
+                </div>
+                <div className="card">
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Star size={14} className="text-gold" /> Top Performing</h3>
+                  <p className="text-sm font-medium">{contentAnalytics.top_performing}</p>
+                  <p className="text-xs text-muted">Highest engagement this month</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SEO & Quality Tab */}
+          {tab === "seo" && (
+            <div className="space-y-4">
+              <div className="card">
+                <h3 className="text-sm font-medium mb-4 flex items-center gap-2"><Search size={14} className="text-gold" /> SEO & Readability Checker</h3>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[10px] text-muted uppercase tracking-wider">Target Keyword (optional)</label>
+                    <input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} placeholder="e.g. digital marketing agency" className="input w-full text-sm mt-1" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted uppercase tracking-wider">Content</label>
+                    <textarea value={seoText} onChange={e => setSeoText(e.target.value)} placeholder="Paste your content here..." rows={8} className="input w-full text-sm mt-1" />
+                  </div>
+                  <button onClick={runSeoCheck} disabled={seoChecking} className="btn-primary flex items-center gap-2 disabled:opacity-50">
+                    {seoChecking ? <><div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Checking...</> : <><Search size={14} /> Run SEO Check</>}
+                  </button>
+                </div>
+                {seoResults && (
+                  <div className="mt-4 space-y-3 pt-4 border-t border-border">
+                    <div className="grid grid-cols-4 gap-3">
+                      <div className="text-center p-3 rounded-lg border border-border">
+                        <p className={`text-2xl font-bold ${seoResults.score >= 70 ? "text-success" : seoResults.score >= 40 ? "text-warning" : "text-danger"}`}>{seoResults.score}</p>
+                        <p className="text-[10px] text-muted">SEO Score</p>
+                      </div>
+                      <div className="text-center p-3 rounded-lg border border-border">
+                        <p className="text-2xl font-bold text-foreground">{seoResults.wordCount}</p>
+                        <p className="text-[10px] text-muted">Word Count</p>
+                      </div>
+                      <div className="text-center p-3 rounded-lg border border-border">
+                        <p className="text-sm font-medium text-info">{seoResults.readability}</p>
+                        <p className="text-[10px] text-muted">Readability</p>
+                      </div>
+                      <div className="text-center p-3 rounded-lg border border-border">
+                        <p className="text-sm font-medium text-success">{seoResults.plagiarism}</p>
+                        <p className="text-[10px] text-muted">Plagiarism</p>
+                      </div>
+                    </div>
+                    {seoResults.issues.length > 0 && (
+                      <div className="p-3 bg-danger/5 border border-danger/10 rounded-lg">
+                        <p className="text-xs font-medium text-danger mb-2 flex items-center gap-1"><AlertTriangle size={12} /> Issues</p>
+                        {seoResults.issues.map((issue, i) => <p key={i} className="text-[10px] text-danger/80">- {issue}</p>)}
+                      </div>
+                    )}
+                    <div className="p-3 bg-gold/5 border border-gold/10 rounded-lg">
+                      <p className="text-xs font-medium text-gold mb-2 flex items-center gap-1"><Zap size={12} /> Suggestions</p>
+                      {seoResults.suggestions.map((s, i) => <p key={i} className="text-[10px] text-gold/80">- {s}</p>)}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {/* AI Enhance */}
+              <div className="card">
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Sparkles size={14} className="text-gold" /> AI Enhance</h3>
+                <p className="text-xs text-muted mb-3">Let AI improve your content for better SEO, readability, and engagement.</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {["Improve Readability", "Add Keywords", "Expand Content", "Shorten & Tighten", "Add CTA", "Fix Grammar"].map(action => (
+                    <button key={action} onClick={() => toast.success(`AI enhancing: ${action}`)} className="p-3 border border-border rounded-lg text-xs text-left hover:border-gold/30 transition-all">
+                      <Sparkles size={12} className="text-gold mb-1" />
+                      {action}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>

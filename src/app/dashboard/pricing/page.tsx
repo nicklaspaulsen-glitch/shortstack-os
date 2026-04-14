@@ -1,74 +1,123 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Zap, Crown, Building2, Plus, ArrowRight, Sparkles, Globe, PenTool, Film, Bot, Phone } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
+import {
+  Check, Zap, TrendingUp, Crown, Building2, Infinity,
+  Plus, ArrowRight, Sparkles, Globe, PenTool, Film, Bot, Phone,
+  Shield, Code, Users, Headphones, Lock,
+} from "lucide-react";
+import { PLAN_TIERS, formatBytes } from "@/lib/plan-config";
 
 interface Plan {
+  key: string;
   name: string;
   price: number;
   tokens: string;
-  tokensNum: number;
   description: string;
   icon: React.ReactNode;
   features: string[];
   popular?: boolean;
+  highlight?: string;
 }
 
 const PLANS: Plan[] = [
   {
+    key: "Starter",
     name: "Starter",
-    price: 997,
-    tokens: "500K",
-    tokensNum: 500000,
-    description: "For solo agencies getting started with AI automation",
+    price: PLAN_TIERS.Starter.price_monthly,
+    tokens: PLAN_TIERS.Starter.tokens_label,
+    description: "For solo agencies getting started with AI",
     icon: <Zap size={20} />,
     features: [
-      "Up to 5 clients",
-      "500K AI tokens / month",
+      `Up to ${PLAN_TIERS.Starter.max_clients} clients`,
+      `${PLAN_TIERS.Starter.tokens_label} AI tokens / month`,
       "Lead Finder + CRM",
-      "Social Manager (3 platforms)",
+      `Social Manager (${PLAN_TIERS.Starter.social_platforms} platforms)`,
       "AI Script Lab",
       "Client Portal",
+      `Upload limit: ${formatBytes(PLAN_TIERS.Starter.max_storage_upload)} / file`,
       "Email support",
     ],
   },
   {
+    key: "Growth",
     name: "Growth",
-    price: 2497,
-    tokens: "2M",
-    tokensNum: 2000000,
+    price: PLAN_TIERS.Growth.price_monthly,
+    tokens: PLAN_TIERS.Growth.tokens_label,
     description: "For growing agencies scaling operations",
-    icon: <Crown size={20} />,
-    popular: true,
+    icon: <TrendingUp size={20} />,
     features: [
-      "Up to 25 clients",
-      "2M AI tokens / month",
+      `Up to ${PLAN_TIERS.Growth.max_clients} clients`,
+      `${PLAN_TIERS.Growth.tokens_label} AI tokens / month`,
       "Everything in Starter",
       "AI Agents + Agent HQ",
       "Workflows & Automations",
       "Social Manager (all platforms)",
       "Design Studio + Video Editor",
-      "AI Caller (500 min/mo)",
+      `AI Caller (${PLAN_TIERS.Growth.caller_minutes} min/mo)`,
+      `Upload limit: ${formatBytes(PLAN_TIERS.Growth.max_storage_upload)} / file`,
       "Priority support",
     ],
   },
   {
-    name: "Enterprise",
-    price: 4997,
-    tokens: "Unlimited",
-    tokensNum: -1,
+    key: "Pro",
+    name: "Pro",
+    price: PLAN_TIERS.Pro.price_monthly,
+    tokens: PLAN_TIERS.Pro.tokens_label,
     description: "For established agencies running at scale",
+    icon: <Crown size={20} />,
+    popular: true,
+    highlight: "Most Popular",
+    features: [
+      `Up to ${PLAN_TIERS.Pro.max_clients} clients`,
+      `${PLAN_TIERS.Pro.tokens_label} AI tokens / month`,
+      "Everything in Growth",
+      `${PLAN_TIERS.Pro.team_members} team members`,
+      `AI Caller (${PLAN_TIERS.Pro.caller_minutes} min/mo)`,
+      "API access + Webhooks",
+      `Upload limit: ${formatBytes(PLAN_TIERS.Pro.max_storage_upload)} / file`,
+      "Advanced analytics",
+      "Priority support",
+    ],
+  },
+  {
+    key: "Business",
+    name: "Business",
+    price: PLAN_TIERS.Business.price_monthly,
+    tokens: PLAN_TIERS.Business.tokens_label,
+    description: "For large agencies & multi-brand operations",
     icon: <Building2 size={20} />,
+    features: [
+      `Up to ${PLAN_TIERS.Business.max_clients} clients`,
+      `${PLAN_TIERS.Business.tokens_label} AI tokens / month`,
+      "Everything in Pro",
+      `${PLAN_TIERS.Business.team_members} team members`,
+      "White-label branding",
+      "Custom AI model tuning",
+      `AI Caller (${PLAN_TIERS.Business.caller_minutes.toLocaleString()} min/mo)`,
+      `Upload limit: ${formatBytes(PLAN_TIERS.Business.max_storage_upload)} / file`,
+      "Dedicated success manager",
+    ],
+  },
+  {
+    key: "Unlimited",
+    name: "Unlimited",
+    price: PLAN_TIERS.Unlimited.price_monthly,
+    tokens: PLAN_TIERS.Unlimited.tokens_label,
+    description: "Unlimited everything. No caps. No limits.",
+    icon: <Infinity size={20} />,
+    highlight: "Best Value",
     features: [
       "Unlimited clients",
       "Unlimited AI tokens",
-      "Everything in Growth",
-      "White-label branding",
-      "Custom AI model tuning",
-      "AI Caller (unlimited)",
-      "Dedicated success manager",
-      "API access + Webhooks",
+      "Everything in Business",
+      "Unlimited team members",
+      "Unlimited AI Caller",
+      "Unlimited uploads",
       "SLA guarantee",
+      "Dedicated support + Slack channel",
+      "Custom integrations",
     ],
   },
 ];
@@ -91,10 +140,28 @@ const ADD_ONS: AddOn[] = [
 ];
 
 export default function PricingPage() {
+  const { profile } = useAuth();
   const [annual, setAnnual] = useState(false);
+  const currentPlan = profile?.plan_tier || null;
+
+  async function handleSubscribe(planKey: string) {
+    try {
+      const res = await fetch("/api/billing/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planKey.toLowerCase(), billing: annual ? "annual" : "monthly" }),
+      });
+      const data = await res.json();
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
+      }
+    } catch {
+      // Toast will be shown by the API error handler
+    }
+  }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8">
       {/* Header */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/10 text-gold text-xs font-medium">
@@ -121,63 +188,177 @@ export default function PricingPage() {
         </div>
       </div>
 
-      {/* Plans */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Plans grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {PLANS.map((plan) => {
           const monthlyPrice = annual ? Math.round(plan.price * 0.8) : plan.price;
+          const isCurrentPlan = currentPlan === plan.key;
+          const tierConfig = PLAN_TIERS[plan.key as keyof typeof PLAN_TIERS];
+
           return (
             <div
-              key={plan.name}
-              className={`relative rounded-2xl border p-6 flex flex-col transition-all hover:shadow-card-hover ${
+              key={plan.key}
+              className={`relative rounded-2xl border p-5 flex flex-col transition-all hover:shadow-card-hover ${
                 plan.popular
                   ? "border-gold/30 bg-gold/[0.03] shadow-card ring-1 ring-gold/10"
+                  : isCurrentPlan
+                  ? "border-success/30 bg-success/[0.03] ring-1 ring-success/10"
                   : "border-border bg-surface shadow-soft"
               }`}
             >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-gold text-white text-[10px] font-bold uppercase tracking-wider">
-                  Most Popular
+              {plan.highlight && (
+                <div className={`absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-white text-[9px] font-bold uppercase tracking-wider ${
+                  plan.popular ? "bg-gold" : "bg-gradient-to-r from-red-500 to-orange-500"
+                }`}>
+                  {plan.highlight}
                 </div>
               )}
 
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${plan.popular ? "bg-gold/10 text-gold" : "bg-surface-light text-muted"}`}>
+              {isCurrentPlan && !plan.highlight && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-success text-white text-[9px] font-bold uppercase tracking-wider">
+                  Current Plan
+                </div>
+              )}
+
+              <div
+                className="w-9 h-9 rounded-xl flex items-center justify-center mb-3"
+                style={{ backgroundColor: `${tierConfig.color}15`, color: tierConfig.color }}
+              >
                 {plan.icon}
               </div>
 
-              <h3 className="text-lg font-bold text-foreground">{plan.name}</h3>
-              <p className="text-xs text-muted mt-1">{plan.description}</p>
+              <h3 className="text-base font-bold text-foreground">{plan.name}</h3>
+              <p className="text-[10px] text-muted mt-0.5 leading-relaxed">{plan.description}</p>
 
-              <div className="mt-4 mb-1">
-                <span className="text-3xl font-bold text-foreground">${monthlyPrice.toLocaleString()}</span>
-                <span className="text-xs text-muted">/month</span>
+              <div className="mt-3 mb-1">
+                <span className="text-2xl font-bold text-foreground">${monthlyPrice.toLocaleString()}</span>
+                <span className="text-[10px] text-muted">/mo</span>
               </div>
-              <p className="text-[11px] text-muted mb-5">
-                {plan.tokensNum > 0 ? `${plan.tokens} AI tokens included` : "Unlimited AI tokens"}
-                {annual && <span className="text-gold ml-1">({`$${(monthlyPrice * 12).toLocaleString()}/yr`})</span>}
+              <p className="text-[10px] text-muted mb-4">
+                {plan.tokens === "Unlimited" ? "Unlimited AI tokens" : `${plan.tokens} AI tokens included`}
+                {annual && <span className="text-gold ml-1">(${(monthlyPrice * 12).toLocaleString()}/yr)</span>}
               </p>
 
               <button
-                className={`w-full py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  plan.popular
+                onClick={() => handleSubscribe(plan.key)}
+                disabled={isCurrentPlan}
+                className={`w-full py-2 rounded-xl text-xs font-medium transition-all ${
+                  isCurrentPlan
+                    ? "bg-success/10 text-success border border-success/20 cursor-default"
+                    : plan.popular
                     ? "bg-gold text-white hover:bg-gold/90 shadow-sm"
                     : "bg-surface-light text-foreground hover:bg-gold/10 hover:text-gold border border-border"
                 }`}
               >
-                Get Started
-                <ArrowRight size={14} className="inline ml-1.5" />
+                {isCurrentPlan ? "Current Plan" : "Get Started"}
+                {!isCurrentPlan && <ArrowRight size={12} className="inline ml-1" />}
               </button>
 
-              <div className="mt-6 pt-5 border-t border-border space-y-2.5">
+              <div className="mt-4 pt-4 border-t border-border space-y-2">
                 {plan.features.map((f) => (
-                  <div key={f} className="flex items-start gap-2.5">
-                    <Check size={14} className={`mt-0.5 shrink-0 ${plan.popular ? "text-gold" : "text-gold"}`} />
-                    <span className="text-xs text-foreground/80">{f}</span>
+                  <div key={f} className="flex items-start gap-2">
+                    <Check size={12} className="mt-0.5 shrink-0 text-gold" />
+                    <span className="text-[10px] text-foreground/80 leading-relaxed">{f}</span>
                   </div>
                 ))}
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Feature comparison highlights */}
+      <div className="rounded-2xl border border-border bg-surface p-6">
+        <h2 className="text-sm font-bold text-foreground mb-4">What scales with your plan</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+              <Users size={14} className="text-blue-400" />
+              Clients
+            </div>
+            <div className="space-y-1">
+              {PLANS.map(p => (
+                <div key={p.key} className="flex justify-between text-[10px]">
+                  <span className="text-muted">{p.name}</span>
+                  <span className="font-mono font-medium text-foreground">
+                    {PLAN_TIERS[p.key as keyof typeof PLAN_TIERS].max_clients === -1
+                      ? "Unlimited"
+                      : PLAN_TIERS[p.key as keyof typeof PLAN_TIERS].max_clients}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+              <Bot size={14} className="text-purple-400" />
+              AI Tokens
+            </div>
+            <div className="space-y-1">
+              {PLANS.map(p => (
+                <div key={p.key} className="flex justify-between text-[10px]">
+                  <span className="text-muted">{p.name}</span>
+                  <span className="font-mono font-medium text-foreground">{p.tokens}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+              <Film size={14} className="text-gold" />
+              Upload Limit
+            </div>
+            <div className="space-y-1">
+              {PLANS.map(p => {
+                const t = PLAN_TIERS[p.key as keyof typeof PLAN_TIERS];
+                return (
+                  <div key={p.key} className="flex justify-between text-[10px]">
+                    <span className="text-muted">{p.name}</span>
+                    <span className="font-mono font-medium text-foreground">
+                      {formatBytes(t.max_storage_upload)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs font-medium text-foreground">
+              <Phone size={14} className="text-emerald-400" />
+              AI Caller
+            </div>
+            <div className="space-y-1">
+              {PLANS.map(p => {
+                const t = PLAN_TIERS[p.key as keyof typeof PLAN_TIERS];
+                return (
+                  <div key={p.key} className="flex justify-between text-[10px]">
+                    <span className="text-muted">{p.name}</span>
+                    <span className="font-mono font-medium text-foreground">
+                      {t.caller_minutes === -1 ? "Unlimited" : t.caller_minutes === 0 ? "---" : `${t.caller_minutes} min`}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Enterprise features callout */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { icon: <Shield size={16} />, label: "White-label", desc: "Your brand, your platform", plans: "Business+" },
+          { icon: <Code size={16} />, label: "API Access", desc: "Full REST API + webhooks", plans: "Pro+" },
+          { icon: <Lock size={16} />, label: "SLA Guarantee", desc: "99.9% uptime commitment", plans: "Unlimited" },
+          { icon: <Headphones size={16} />, label: "Dedicated Support", desc: "Named success manager", plans: "Business+" },
+        ].map((item) => (
+          <div key={item.label} className="rounded-xl border border-border bg-surface p-4">
+            <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-gold mb-2">{item.icon}</div>
+            <p className="text-xs font-medium text-foreground">{item.label}</p>
+            <p className="text-[10px] text-muted mt-0.5">{item.desc}</p>
+            <p className="text-[9px] text-gold font-medium mt-1.5">{item.plans}</p>
+          </div>
+        ))}
       </div>
 
       {/* Token Usage Explainer */}
@@ -241,7 +422,10 @@ export default function PricingPage() {
         <p className="text-xs text-muted mb-4">
           Start with Starter and upgrade anytime. All plans include a 14-day free trial.
         </p>
-        <button className="px-5 py-2 rounded-xl bg-gold text-white text-xs font-medium hover:bg-gold/90 transition-colors">
+        <button
+          onClick={() => handleSubscribe("Starter")}
+          className="px-5 py-2 rounded-xl bg-gold text-white text-xs font-medium hover:bg-gold/90 transition-colors"
+        >
           Start Free Trial
         </button>
       </div>

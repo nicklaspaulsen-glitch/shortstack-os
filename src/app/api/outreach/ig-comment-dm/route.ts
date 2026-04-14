@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyClientAccess } from "@/lib/verify-client-access";
 
 // Instagram Comment-to-DM Automation
 // When someone comments a trigger keyword on your post, auto-send them a DM
 // This is the same approach ManyChat uses — fully compliant with Meta's API
 export async function POST(request: NextRequest) {
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const { action, client_id, trigger_keyword, dm_message, post_id } = await request.json();
+
+  const access = await verifyClientAccess(authSupabase, user.id, client_id);
+  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const supabase = createServiceClient();
 

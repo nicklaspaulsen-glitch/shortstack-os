@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Midjourney Prompt Generator — creates optimized prompts for Midjourney
 // Users copy the prompt and paste into Discord
@@ -7,6 +8,10 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   const { description, type, aspect_ratio, style } = await request.json();
   if (!description) return NextResponse.json({ error: "Description required" }, { status: 400 });

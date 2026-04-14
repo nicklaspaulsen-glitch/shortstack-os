@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // AI Trend Analyzer — Finds trending topics per industry for content opportunities
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   const { industry, client_id, platform } = await request.json();
 

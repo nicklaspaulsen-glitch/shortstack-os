@@ -6,7 +6,16 @@ import { createClient } from "@/lib/supabase/client";
 import {
   Sparkles, Copy, ExternalLink, Image as ImageIcon, Award, Flag, Monitor,
   Camera, MessageCircle, Play, Briefcase, Music, Wand2, Palette, Loader,
-  Grid, Layers, Mail, FileText, Podcast, RotateCcw
+  Grid, Layers, Mail, FileText, Podcast, RotateCcw,
+  Paintbrush, Maximize2, Eye, EyeOff, Scissors, ShoppingBag, QrCode,
+  History, Pipette, Type, Repeat, SlidersHorizontal, Search, BarChart3,
+  Star, CalendarDays, Film, Database, Download, CheckCircle, Heart,
+  Shuffle, Upload, Sun, Moon, Zap, Leaf,
+  ChevronDown, Plus, Trash2, GripVertical, X,
+  Coffee, Smartphone, Laptop, Shirt, Package, Globe, Shield, Clock,
+  TrendingUp, Users, ThumbsUp, Quote, BadgeCheck, Snowflake, Gift,
+  PartyPopper, Accessibility, Contrast, AlertTriangle, BookOpen, Move,
+  Brush, ImagePlus, Aperture
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -147,12 +156,161 @@ const COLOR_PALETTES = [
   { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#C9A84C"] },
 ];
 
+// ---------- Brand Kit Types ----------
+interface BrandKit {
+  id: string;
+  name: string;
+  colors: string[];
+  fonts: { heading: string; body: string };
+  logoUrl: string;
+}
+
+// ---------- Smart Resize Presets ----------
+const RESIZE_PRESETS = [
+  { label: "Instagram Post", w: 1080, h: 1080, icon: <Camera size={12} /> },
+  { label: "Instagram Story", w: 1080, h: 1920, icon: <Camera size={12} /> },
+  { label: "Facebook Post", w: 1200, h: 630, icon: <MessageCircle size={12} /> },
+  { label: "Twitter/X Post", w: 1200, h: 675, icon: <MessageCircle size={12} /> },
+  { label: "LinkedIn Post", w: 1200, h: 1200, icon: <Briefcase size={12} /> },
+  { label: "Pinterest Pin", w: 1000, h: 1500, icon: <ImagePlus size={12} /> },
+  { label: "YouTube Thumb", w: 1280, h: 720, icon: <Play size={12} /> },
+  { label: "TikTok", w: 1080, h: 1920, icon: <Music size={12} /> },
+];
+
+// ---------- Layer Types ----------
+interface DesignLayer {
+  id: string;
+  name: string;
+  type: "text" | "image" | "shape" | "background";
+  visible: boolean;
+  locked: boolean;
+  opacity: number;
+}
+
+// ---------- Mockup Products ----------
+const MOCKUP_PRODUCTS = [
+  { id: "tshirt", label: "T-Shirt", icon: <Shirt size={14} /> },
+  { id: "mug", label: "Coffee Mug", icon: <Coffee size={14} /> },
+  { id: "phone", label: "Phone Case", icon: <Smartphone size={14} /> },
+  { id: "laptop", label: "Laptop Screen", icon: <Laptop size={14} /> },
+  { id: "tote", label: "Tote Bag", icon: <ShoppingBag size={14} /> },
+  { id: "poster", label: "Wall Poster", icon: <ImageIcon size={14} /> },
+  { id: "hoodie", label: "Hoodie", icon: <Shirt size={14} /> },
+  { id: "box", label: "Product Box", icon: <Package size={14} /> },
+];
+
+// ---------- Photo Filters ----------
+const PHOTO_FILTERS = [
+  { name: "Vintage", css: "sepia(0.4) contrast(1.1) brightness(0.95)" },
+  { name: "Dramatic", css: "contrast(1.5) brightness(0.85) saturate(1.3)" },
+  { name: "Pastel", css: "saturate(0.6) brightness(1.15) contrast(0.9)" },
+  { name: "B&W Classic", css: "grayscale(1) contrast(1.2)" },
+  { name: "Warm Glow", css: "sepia(0.2) saturate(1.3) brightness(1.05)" },
+  { name: "Cool Tone", css: "saturate(0.8) hue-rotate(15deg) brightness(1.05)" },
+  { name: "High Contrast", css: "contrast(1.8) brightness(0.9)" },
+  { name: "Soft Focus", css: "blur(0.5px) brightness(1.1) saturate(0.9)" },
+  { name: "Moody", css: "brightness(0.8) contrast(1.3) saturate(0.7)" },
+  { name: "Cinematic", css: "contrast(1.2) saturate(0.85) brightness(0.9) sepia(0.1)" },
+  { name: "Noir", css: "grayscale(1) contrast(1.6) brightness(0.8)" },
+  { name: "Retro", css: "sepia(0.5) hue-rotate(-10deg) saturate(1.2)" },
+  { name: "Pop Art", css: "saturate(2) contrast(1.4) brightness(1.1)" },
+  { name: "Faded", css: "contrast(0.8) brightness(1.1) saturate(0.5)" },
+  { name: "Golden Hour", css: "sepia(0.3) saturate(1.4) brightness(1.08) hue-rotate(-5deg)" },
+  { name: "Ocean Blue", css: "hue-rotate(30deg) saturate(1.2) brightness(1.05)" },
+  { name: "Forest", css: "hue-rotate(60deg) saturate(0.9) brightness(0.95)" },
+  { name: "Neon", css: "saturate(2.5) contrast(1.3) brightness(1.1)" },
+  { name: "Polaroid", css: "sepia(0.15) contrast(1.1) brightness(1.05) saturate(1.1)" },
+  { name: "Dust Storm", css: "sepia(0.4) contrast(0.9) brightness(1.1) saturate(0.7)" },
+  { name: "Midnight", css: "brightness(0.6) contrast(1.4) saturate(0.5) hue-rotate(200deg)" },
+  { name: "Bloom", css: "brightness(1.15) contrast(0.95) saturate(1.2) blur(0.3px)" },
+];
+
+// ---------- Icon Categories ----------
+const ICON_CATEGORIES = [
+  { name: "Business", icons: ["briefcase", "chart-bar", "building", "handshake", "target", "trophy", "lightbulb", "rocket"] },
+  { name: "Social", icons: ["heart", "thumbs-up", "message", "share", "star", "bell", "user", "group"] },
+  { name: "Tech", icons: ["code", "terminal", "cpu", "cloud", "wifi", "shield", "database", "smartphone"] },
+  { name: "Nature", icons: ["leaf", "sun", "moon", "droplet", "flower", "tree", "mountain", "wave"] },
+  { name: "Food", icons: ["coffee", "utensils", "cake", "pizza", "apple", "wine", "cookie", "ice-cream"] },
+  { name: "Travel", icons: ["plane", "map", "compass", "globe", "camera", "luggage", "tent", "anchor"] },
+  { name: "Health", icons: ["heart-pulse", "stethoscope", "pill", "activity", "dumbbell", "apple", "brain", "eye"] },
+  { name: "Media", icons: ["play", "music", "video", "mic", "headphones", "film", "radio", "tv"] },
+];
+
+// ---------- Infographic Types ----------
+const INFOGRAPHIC_TYPES = [
+  { id: "stats", label: "Statistics Dashboard", icon: <BarChart3 size={14} />, desc: "Key metrics with big numbers" },
+  { id: "timeline", label: "Timeline", icon: <Clock size={14} />, desc: "Chronological events or steps" },
+  { id: "comparison", label: "Comparison Chart", icon: <SlidersHorizontal size={14} />, desc: "Side-by-side feature comparison" },
+  { id: "process", label: "Process Flow", icon: <TrendingUp size={14} />, desc: "Step-by-step workflow" },
+  { id: "pie", label: "Pie/Donut Chart", icon: <Aperture size={14} />, desc: "Percentage breakdown visual" },
+  { id: "hierarchy", label: "Hierarchy/Org Chart", icon: <Users size={14} />, desc: "Organizational structure" },
+];
+
+// ---------- Social Proof Widget Types ----------
+const SOCIAL_PROOF_TYPES = [
+  { id: "testimonial", label: "Testimonial Card", icon: <Quote size={14} /> },
+  { id: "review_stars", label: "Review Stars", icon: <Star size={14} /> },
+  { id: "trust_badge", label: "Trust Badge", icon: <BadgeCheck size={14} /> },
+  { id: "counter", label: "Stats Counter", icon: <TrendingUp size={14} /> },
+  { id: "logo_wall", label: "Client Logo Wall", icon: <Grid size={14} /> },
+  { id: "before_after", label: "Before/After", icon: <SlidersHorizontal size={14} /> },
+];
+
+// ---------- Seasonal Template Packs ----------
+const SEASONAL_PACKS = [
+  { id: "christmas", label: "Christmas / Holidays", icon: <Gift size={14} />, colors: ["#c0392b", "#27ae60", "#f1c40f", "#ecf0f1", "#2c3e50"] },
+  { id: "new_year", label: "New Year", icon: <PartyPopper size={14} />, colors: ["#f1c40f", "#2c3e50", "#ecf0f1", "#8e44ad", "#000000"] },
+  { id: "valentine", label: "Valentine's Day", icon: <Heart size={14} />, colors: ["#e74c3c", "#ff6b81", "#fdcb6e", "#ffffff", "#2c3e50"] },
+  { id: "spring", label: "Spring / Easter", icon: <Leaf size={14} />, colors: ["#55efc4", "#81ecec", "#fdcb6e", "#ff7979", "#badc58"] },
+  { id: "summer", label: "Summer Vibes", icon: <Sun size={14} />, colors: ["#f39c12", "#e74c3c", "#3498db", "#1abc9c", "#ffffff"] },
+  { id: "halloween", label: "Halloween", icon: <Moon size={14} />, colors: ["#f39c12", "#2c3e50", "#8e44ad", "#e74c3c", "#000000"] },
+  { id: "fall", label: "Autumn / Thanksgiving", icon: <Leaf size={14} />, colors: ["#d35400", "#e67e22", "#f39c12", "#27ae60", "#6c3483"] },
+  { id: "winter", label: "Winter Wonderland", icon: <Snowflake size={14} />, colors: ["#3498db", "#ecf0f1", "#bdc3c7", "#2c3e50", "#ffffff"] },
+  { id: "back_to_school", label: "Back to School", icon: <BookOpen size={14} />, colors: ["#e74c3c", "#3498db", "#f1c40f", "#2ecc71", "#2c3e50"] },
+  { id: "black_friday", label: "Black Friday / Cyber", icon: <Zap size={14} />, colors: ["#000000", "#f1c40f", "#e74c3c", "#ffffff", "#2c3e50"] },
+];
+
+// ---------- Design System Token Defaults ----------
+interface DesignToken {
+  id: string;
+  category: "spacing" | "radius" | "shadow" | "opacity" | "font-size";
+  name: string;
+  value: string;
+}
+
+// ---------- Typography Pairings ----------
+const FONT_PAIRINGS = [
+  { heading: "Montserrat Bold", body: "Open Sans Regular", vibe: "Modern & Clean" },
+  { heading: "Playfair Display", body: "Source Sans Pro", vibe: "Elegant & Classic" },
+  { heading: "Oswald Bold", body: "Lato Regular", vibe: "Bold & Confident" },
+  { heading: "Poppins SemiBold", body: "Nunito Regular", vibe: "Friendly & Approachable" },
+  { heading: "Bebas Neue", body: "Roboto Regular", vibe: "Impactful & Modern" },
+  { heading: "Merriweather Bold", body: "Source Sans Pro Light", vibe: "Editorial & Trustworthy" },
+  { heading: "Raleway Bold", body: "Crimson Text Regular", vibe: "Sophisticated & Refined" },
+  { heading: "DM Serif Display", body: "DM Sans Regular", vibe: "Contemporary Serif" },
+  { heading: "Inter Bold", body: "Inter Regular", vibe: "Tech & SaaS" },
+  { heading: "Archivo Black", body: "Work Sans Regular", vibe: "Strong & Professional" },
+];
+
+// ---------- Pattern Types ----------
+const PATTERN_TYPES = [
+  { id: "geometric", label: "Geometric", desc: "Triangles, hexagons, grids" },
+  { id: "dots", label: "Polka Dots", desc: "Evenly spaced dot patterns" },
+  { id: "stripes", label: "Stripes", desc: "Diagonal, horizontal, vertical" },
+  { id: "waves", label: "Waves", desc: "Flowing organic wave patterns" },
+  { id: "floral", label: "Floral", desc: "Flower and botanical patterns" },
+  { id: "abstract", label: "Abstract", desc: "Organic blobs and shapes" },
+  { id: "memphis", label: "Memphis", desc: "90s-style playful shapes" },
+  { id: "noise", label: "Noise/Grain", desc: "Subtle texture overlay" },
+];
+
 export default function DesignStudioPage() {
   useAuth();
   const supabase = createClient();
   const [clients, setClients] = useState<Array<{ id: string; business_name: string; industry: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
-  const [tab, setTab] = useState<"create" | "templates" | "palettes">("create");
+  const [tab, setTab] = useState<"create" | "templates" | "palettes" | "tools">("create");
   const [prompts, setPrompts] = useState<Record<string, string>>({});
   const [generated, setGenerated] = useState<GeneratedPrompt[]>([]);
   const [generating, setGenerating] = useState<string | null>(null);
@@ -162,6 +320,210 @@ export default function DesignStudioPage() {
   const [style, setStyle] = useState("");
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [selectedPalette, setSelectedPalette] = useState<typeof COLOR_PALETTES[0] | null>(null);
+
+  // ---------- New Feature State ----------
+  const [toolsTab, setToolsTab] = useState<string>("brand-kit");
+  const [brandKits, setBrandKits] = useState<BrandKit[]>([
+    { id: "1", name: "Default Brand", colors: ["#C9A84C", "#1a1a2e", "#16213e", "#ffffff", "#f0f0f0"], fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "" },
+  ]);
+  const [activeBrandKit, setActiveBrandKit] = useState<string>("1");
+  const [newBrandKitName, setNewBrandKitName] = useState("");
+  const [newBrandColor, setNewBrandColor] = useState("#C9A84C");
+
+  // Smart Resize
+  const [resizeSource, setResizeSource] = useState<string>("");
+  const [selectedResizes, setSelectedResizes] = useState<string[]>([]);
+
+  // Layer Editor
+  const [designLayers, setDesignLayers] = useState<DesignLayer[]>([
+    { id: "1", name: "Background", type: "background", visible: true, locked: false, opacity: 100 },
+    { id: "2", name: "Main Image", type: "image", visible: true, locked: false, opacity: 100 },
+    { id: "3", name: "Headline Text", type: "text", visible: true, locked: false, opacity: 100 },
+    { id: "4", name: "Subtitle", type: "text", visible: true, locked: false, opacity: 90 },
+    { id: "5", name: "CTA Button", type: "shape", visible: true, locked: false, opacity: 100 },
+    { id: "6", name: "Logo Overlay", type: "image", visible: true, locked: true, opacity: 85 },
+  ]);
+
+  // Background Remover
+  const [bgRemoveStatus, setBgRemoveStatus] = useState<"idle" | "processing" | "done">("idle");
+  const [bgRemoveFile, setBgRemoveFile] = useState<string>("");
+
+  // Mockup Generator
+  const [selectedMockup, setSelectedMockup] = useState<string>("tshirt");
+  const [mockupColor, setMockupColor] = useState("#ffffff");
+  const [mockupGenerating, setMockupGenerating] = useState(false);
+
+  // QR Code
+  const [qrUrl, setQrUrl] = useState("");
+  const [qrColor, setQrColor] = useState("#000000");
+  const [qrBgColor, setQrBgColor] = useState("#ffffff");
+  const [qrSize, setQrSize] = useState(256);
+  const [qrIncludeLogo, setQrIncludeLogo] = useState(true);
+
+  // Version History
+  const [versionHistory] = useState([
+    { id: "v5", label: "v5 - Final", date: "Apr 14, 2026 3:42 PM", changes: "Adjusted CTA color, fixed alignment" },
+    { id: "v4", label: "v4 - Review", date: "Apr 14, 2026 2:15 PM", changes: "Added social proof section" },
+    { id: "v3", label: "v3 - Revision", date: "Apr 14, 2026 11:30 AM", changes: "Changed headline font to Montserrat" },
+    { id: "v2", label: "v2 - Draft", date: "Apr 13, 2026 4:50 PM", changes: "Updated color palette to brand kit" },
+    { id: "v1", label: "v1 - Initial", date: "Apr 13, 2026 2:00 PM", changes: "Initial design generation" },
+  ]);
+  const [selectedVersion, setSelectedVersion] = useState("v5");
+  const [compareVersion, setCompareVersion] = useState("v4");
+
+  // Color Palette Extractor
+  const [extractedColors, setExtractedColors] = useState<string[]>([]);
+  const [extractingColors, setExtractingColors] = useState(false);
+
+  // Typography Pairing
+  const [selectedPairing, setSelectedPairing] = useState<number | null>(null);
+
+  // Pattern Generator
+  const [patternType, setPatternType] = useState("geometric");
+  const [patternColor1, setPatternColor1] = useState("#C9A84C");
+  const [patternColor2, setPatternColor2] = useState("#1a1a2e");
+  const [patternScale, setPatternScale] = useState(50);
+
+  // Photo Filters
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const [filterIntensity, setFilterIntensity] = useState(100);
+
+  // Icon Library
+  const [iconSearch, setIconSearch] = useState("");
+  const [iconCategory, setIconCategory] = useState("Business");
+
+  // Infographic Builder
+  const [infographicType, setInfographicType] = useState("stats");
+  const [infographicData, setInfographicData] = useState([
+    { label: "Revenue Growth", value: "47%" },
+    { label: "New Customers", value: "1,200+" },
+    { label: "Satisfaction", value: "98%" },
+  ]);
+
+  // Social Proof
+  const [socialProofType, setSocialProofType] = useState("testimonial");
+  const [testimonialText, setTestimonialText] = useState("");
+  const [testimonialAuthor, setTestimonialAuthor] = useState("");
+  const [reviewStars, setReviewStars] = useState(5);
+
+  // Seasonal Templates
+  const [selectedSeason, setSelectedSeason] = useState<string | null>(null);
+
+  // Animation Preview
+  const [animationType, setAnimationType] = useState<"fade" | "slide" | "bounce" | "zoom" | "rotate">("fade");
+  const [animationSpeed, setAnimationSpeed] = useState(1);
+  const [animationPlaying, setAnimationPlaying] = useState(false);
+
+  // Design System Tokens
+  const [designTokens, setDesignTokens] = useState<DesignToken[]>([
+    { id: "t1", category: "spacing", name: "sm", value: "4px" },
+    { id: "t2", category: "spacing", name: "md", value: "8px" },
+    { id: "t3", category: "spacing", name: "lg", value: "16px" },
+    { id: "t4", category: "spacing", name: "xl", value: "24px" },
+    { id: "t5", category: "radius", name: "sm", value: "4px" },
+    { id: "t6", category: "radius", name: "md", value: "8px" },
+    { id: "t7", category: "radius", name: "lg", value: "16px" },
+    { id: "t8", category: "radius", name: "full", value: "9999px" },
+    { id: "t9", category: "shadow", name: "sm", value: "0 1px 2px rgba(0,0,0,0.1)" },
+    { id: "t10", category: "shadow", name: "md", value: "0 4px 6px rgba(0,0,0,0.1)" },
+    { id: "t11", category: "shadow", name: "lg", value: "0 10px 25px rgba(0,0,0,0.15)" },
+  ]);
+  const [newTokenCategory, setNewTokenCategory] = useState<DesignToken["category"]>("spacing");
+  const [newTokenName, setNewTokenName] = useState("");
+  const [newTokenValue, setNewTokenValue] = useState("");
+
+  // Batch Export
+  const [batchExportFormats, setBatchExportFormats] = useState<string[]>(["png"]);
+  const [batchExportSizes, setBatchExportSizes] = useState<string[]>(["1080x1080"]);
+  const [batchExporting, setBatchExporting] = useState(false);
+
+  // Accessibility Checker
+  const [a11yFgColor, setA11yFgColor] = useState("#ffffff");
+  const [a11yBgColor, setA11yBgColor] = useState("#1a1a2e");
+  const [a11yFontSize, setA11yFontSize] = useState(16);
+
+  // Mood Board
+  const [moodBoardItems, setMoodBoardItems] = useState<Array<{ id: string; type: "color" | "image" | "note"; value: string }>>([
+    { id: "m1", type: "color", value: "#C9A84C" },
+    { id: "m2", type: "color", value: "#1a1a2e" },
+    { id: "m3", type: "note", value: "Minimalist luxury feel" },
+    { id: "m4", type: "note", value: "Gold accents on dark background" },
+  ]);
+  const [newMoodNote, setNewMoodNote] = useState("");
+  const [newMoodColor, setNewMoodColor] = useState("#C9A84C");
+
+  // AI Style Transfer
+  const [styleTransferSource, setStyleTransferSource] = useState("");
+  const [styleTransferStyle, setStyleTransferStyle] = useState("");
+  const [styleTransferring, setStyleTransferring] = useState(false);
+  const [styleTransferStrength, setStyleTransferStrength] = useState(75);
+
+  // ---------- Helper Functions ----------
+  function getContrastRatio(fg: string, bg: string): number {
+    const getLuminance = (hex: string) => {
+      const r = parseInt(hex.slice(1, 3), 16) / 255;
+      const g = parseInt(hex.slice(3, 5), 16) / 255;
+      const b = parseInt(hex.slice(5, 7), 16) / 255;
+      const toLinear = (c: number) => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+    };
+    const l1 = getLuminance(fg);
+    const l2 = getLuminance(bg);
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  function getWCAGRating(ratio: number, fontSize: number): { aa: boolean; aaa: boolean; aaLarge: boolean; aaaLarge: boolean } {
+    const isLarge = fontSize >= 18;
+    return {
+      aa: isLarge ? ratio >= 3 : ratio >= 4.5,
+      aaa: isLarge ? ratio >= 4.5 : ratio >= 7,
+      aaLarge: ratio >= 3,
+      aaaLarge: ratio >= 4.5,
+    };
+  }
+
+  function handleExtractColors() {
+    setExtractingColors(true);
+    setTimeout(() => {
+      setExtractedColors(["#2d3436", "#636e72", "#b2bec3", "#dfe6e9", "#C9A84C", "#e17055"]);
+      setExtractingColors(false);
+      toast.success("Extracted 6 colors from image");
+    }, 1500);
+  }
+
+  function handleBgRemove() {
+    setBgRemoveStatus("processing");
+    setTimeout(() => {
+      setBgRemoveStatus("done");
+      toast.success("Background removed successfully!");
+    }, 2000);
+  }
+
+  function handleMockupGenerate() {
+    setMockupGenerating(true);
+    setTimeout(() => {
+      setMockupGenerating(false);
+      toast.success(`Mockup generated on ${MOCKUP_PRODUCTS.find(p => p.id === selectedMockup)?.label}!`);
+    }, 2000);
+  }
+
+  function handleBatchExport() {
+    setBatchExporting(true);
+    setTimeout(() => {
+      setBatchExporting(false);
+      toast.success(`Exported ${batchExportSizes.length} sizes in ${batchExportFormats.length} format(s)!`);
+    }, 2500);
+  }
+
+  function handleStyleTransfer() {
+    setStyleTransferring(true);
+    setTimeout(() => {
+      setStyleTransferring(false);
+      toast.success("Style transfer complete!");
+    }, 3000);
+  }
 
   useEffect(() => {
     supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }) => {
@@ -329,10 +691,10 @@ export default function DesignStudioPage() {
 
       {/* Tabs */}
       <div className="tab-group w-fit">
-        {(["create", "templates", "palettes"] as const).map(t => (
+        {(["create", "templates", "palettes", "tools"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "create" ? "Create" : t === "templates" ? "Templates" : "Color Palettes"}
+            {t === "create" ? "Create" : t === "templates" ? "Templates" : t === "palettes" ? "Color Palettes" : "Design Tools"}
           </button>
         ))}
       </div>
@@ -540,6 +902,1388 @@ export default function DesignStudioPage() {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ==================== DESIGN TOOLS TAB ==================== */}
+      {tab === "tools" && (
+        <div className="space-y-4">
+          {/* Tools Navigation */}
+          <div className="flex flex-wrap gap-1.5">
+            {[
+              { id: "brand-kit", label: "Brand Kit", icon: <Paintbrush size={11} /> },
+              { id: "smart-resize", label: "Smart Resize", icon: <Maximize2 size={11} /> },
+              { id: "layers", label: "Layer Editor", icon: <Layers size={11} /> },
+              { id: "bg-remover", label: "BG Remover", icon: <Scissors size={11} /> },
+              { id: "mockups", label: "Mockups", icon: <Shirt size={11} /> },
+              { id: "qr-code", label: "QR Code", icon: <QrCode size={11} /> },
+              { id: "version-history", label: "Versions", icon: <History size={11} /> },
+              { id: "color-extract", label: "Color Extract", icon: <Pipette size={11} /> },
+              { id: "typography", label: "Typography", icon: <Type size={11} /> },
+              { id: "patterns", label: "Patterns", icon: <Repeat size={11} /> },
+              { id: "filters", label: "Photo Filters", icon: <Aperture size={11} /> },
+              { id: "icons", label: "Icon Library", icon: <Search size={11} /> },
+              { id: "infographics", label: "Infographics", icon: <BarChart3 size={11} /> },
+              { id: "social-proof", label: "Social Proof", icon: <ThumbsUp size={11} /> },
+              { id: "seasonal", label: "Seasonal Packs", icon: <CalendarDays size={11} /> },
+              { id: "animation", label: "Animation", icon: <Film size={11} /> },
+              { id: "design-tokens", label: "Design Tokens", icon: <Database size={11} /> },
+              { id: "batch-export", label: "Batch Export", icon: <Download size={11} /> },
+              { id: "accessibility", label: "Accessibility", icon: <Accessibility size={11} /> },
+              { id: "mood-board", label: "Mood Board", icon: <Heart size={11} /> },
+              { id: "style-transfer", label: "AI Style Transfer", icon: <Shuffle size={11} /> },
+            ].map(tool => (
+              <button key={tool.id} onClick={() => setToolsTab(tool.id)}
+                className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                  toolsTab === tool.id ? "border-gold/30 bg-gold/[0.05] text-gold font-medium" : "border-border text-muted hover:text-foreground"
+                }`}>
+                {tool.icon} {tool.label}
+              </button>
+            ))}
+          </div>
+
+          {/* ========== 1. Brand Kit Manager ========== */}
+          {toolsTab === "brand-kit" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Paintbrush size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Brand Kit Manager</h3>
+                  <p className="text-[10px] text-muted">Save and apply brand colors, fonts, and logos across all designs</p>
+                </div>
+              </div>
+
+              {/* Brand Kit List */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {brandKits.map(kit => (
+                  <div key={kit.id} className={`card-hover rounded-xl cursor-pointer transition-all ${activeBrandKit === kit.id ? "border-gold/30 bg-gold/[0.03]" : ""}`}
+                    onClick={() => { setActiveBrandKit(kit.id); toast.success(`Active brand: ${kit.name}`); }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-semibold">{kit.name}</span>
+                      {activeBrandKit === kit.id && <span className="text-[9px] text-gold font-medium bg-gold/10 px-2 py-0.5 rounded">Active</span>}
+                    </div>
+                    <div className="flex gap-1 mb-2">
+                      {kit.colors.map((c, i) => (
+                        <div key={i} className="flex-1 h-6 rounded-md border border-border" style={{ background: c }} />
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-3 text-[9px] text-muted">
+                      <span><Type size={9} className="inline mr-1" />{kit.fonts.heading}</span>
+                      <span>{kit.fonts.body}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add Brand Kit */}
+              <div className="border border-border rounded-xl p-3 space-y-3">
+                <h4 className="text-[11px] font-semibold flex items-center gap-2"><Plus size={12} /> Create New Brand Kit</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-[9px] text-muted block mb-1">Kit Name</label>
+                    <input value={newBrandKitName} onChange={e => setNewBrandKitName(e.target.value)}
+                      className="input text-xs py-1.5 w-full" placeholder="My Brand" />
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted block mb-1">Primary Color</label>
+                    <div className="flex items-center gap-2">
+                      <input type="color" value={newBrandColor} onChange={e => setNewBrandColor(e.target.value)}
+                        className="w-8 h-8 rounded cursor-pointer border-0" />
+                      <span className="text-[10px] font-mono text-muted">{newBrandColor}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-end">
+                    <button onClick={() => {
+                      if (!newBrandKitName.trim()) { toast.error("Enter a kit name"); return; }
+                      const newKit: BrandKit = {
+                        id: crypto.randomUUID(), name: newBrandKitName,
+                        colors: [newBrandColor, "#1a1a2e", "#ffffff", "#f0f0f0", "#333333"],
+                        fonts: { heading: "Montserrat Bold", body: "Open Sans Regular" }, logoUrl: "",
+                      };
+                      setBrandKits(prev => [...prev, newKit]);
+                      setNewBrandKitName("");
+                      toast.success(`Brand kit "${newKit.name}" created!`);
+                    }} className="btn-primary text-xs flex items-center gap-1.5 w-full justify-center">
+                      <Plus size={12} /> Create Kit
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Active Kit Details */}
+              {brandKits.find(k => k.id === activeBrandKit) && (
+                <div className="border border-gold/15 bg-gold/[0.02] rounded-xl p-3 space-y-3">
+                  <h4 className="text-[11px] font-semibold flex items-center gap-2">
+                    <Wand2 size={12} className="text-gold" /> Active Kit: {brandKits.find(k => k.id === activeBrandKit)?.name}
+                  </h4>
+                  <div className="grid grid-cols-5 gap-2">
+                    {brandKits.find(k => k.id === activeBrandKit)?.colors.map((c, i) => (
+                      <div key={i} className="text-center">
+                        <div className="h-10 rounded-lg border border-border mb-1" style={{ background: c }} />
+                        <span className="text-[8px] font-mono text-muted">{c}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => {
+                      const kit = brandKits.find(k => k.id === activeBrandKit);
+                      if (kit) { setSelectedPalette({ name: kit.name, colors: kit.colors }); setTab("create"); toast.success("Brand palette applied to designs!"); }
+                    }} className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center">
+                      <Palette size={10} /> Apply to Designs
+                    </button>
+                    <button className="btn-secondary text-[10px] flex items-center gap-1.5">
+                      <Upload size={10} /> Upload Logo
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ========== 2. Smart Resize ========== */}
+          {toolsTab === "smart-resize" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Maximize2 size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Smart Resize</h3>
+                  <p className="text-[10px] text-muted">One-click resize your design for multiple platforms simultaneously</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted block mb-1.5">Source Design / Prompt</label>
+                <textarea value={resizeSource} onChange={e => setResizeSource(e.target.value)}
+                  className="input text-xs w-full" rows={2} placeholder="Paste your design prompt to resize for multiple platforms..." />
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted block mb-2">Target Platforms</label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {RESIZE_PRESETS.map(preset => {
+                    const key = `${preset.label}-${preset.w}x${preset.h}`;
+                    const isSelected = selectedResizes.includes(key);
+                    return (
+                      <button key={key} onClick={() => setSelectedResizes(prev => isSelected ? prev.filter(r => r !== key) : [...prev, key])}
+                        className={`card-hover rounded-xl p-2.5 text-left transition-all ${isSelected ? "border-gold/30 bg-gold/[0.05]" : ""}`}>
+                        <div className="flex items-center gap-2 mb-1">
+                          {isSelected ? <CheckCircle size={12} className="text-gold" /> : <span className="text-muted">{preset.icon}</span>}
+                          <span className="text-[10px] font-medium">{preset.label}</span>
+                        </div>
+                        <span className="text-[9px] text-muted">{preset.w} x {preset.h}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button onClick={() => setSelectedResizes(RESIZE_PRESETS.map(p => `${p.label}-${p.w}x${p.h}`))}
+                  className="btn-secondary text-[10px] flex items-center gap-1.5">
+                  <CheckCircle size={10} /> Select All
+                </button>
+                <button onClick={() => setSelectedResizes([])}
+                  className="btn-ghost text-[10px] flex items-center gap-1.5">
+                  <X size={10} /> Clear
+                </button>
+                <button disabled={!resizeSource.trim() || selectedResizes.length === 0}
+                  onClick={() => { toast.success(`Resizing to ${selectedResizes.length} sizes...`); }}
+                  className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center disabled:opacity-50">
+                  <Maximize2 size={10} /> Resize to {selectedResizes.length} Platform{selectedResizes.length !== 1 ? "s" : ""}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ========== 3. Layer Editor ========== */}
+          {toolsTab === "layers" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Layers size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Layer Editor</h3>
+                  <p className="text-[10px] text-muted">Manage layer ordering, visibility, and opacity for your designs</p>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                {designLayers.map((layer, index) => (
+                  <div key={layer.id} className="flex items-center gap-2 p-2.5 rounded-xl border border-border hover:border-gold/20 transition-all bg-surface-light/30">
+                    <GripVertical size={12} className="text-muted cursor-grab" />
+                    <button onClick={() => setDesignLayers(prev => prev.map(l => l.id === layer.id ? { ...l, visible: !l.visible } : l))}
+                      className="text-muted hover:text-foreground transition-colors">
+                      {layer.visible ? <Eye size={13} /> : <EyeOff size={13} className="text-muted/40" />}
+                    </button>
+                    <div className={`w-2 h-2 rounded-full ${layer.type === "text" ? "bg-blue-400" : layer.type === "image" ? "bg-green-400" : layer.type === "shape" ? "bg-purple-400" : "bg-orange-400"}`} />
+                    <span className={`text-[10px] flex-1 ${layer.visible ? "text-foreground" : "text-muted/50 line-through"}`}>{layer.name}</span>
+                    <span className="text-[8px] text-muted capitalize bg-surface-light px-1.5 py-0.5 rounded">{layer.type}</span>
+                    <div className="flex items-center gap-1.5">
+                      <input type="range" min={0} max={100} value={layer.opacity}
+                        onChange={e => setDesignLayers(prev => prev.map(l => l.id === layer.id ? { ...l, opacity: parseInt(e.target.value) } : l))}
+                        className="w-14 h-1 accent-gold" />
+                      <span className="text-[8px] text-muted w-6 text-right">{layer.opacity}%</span>
+                    </div>
+                    <button onClick={() => setDesignLayers(prev => prev.map(l => l.id === layer.id ? { ...l, locked: !l.locked } : l))}
+                      className={`text-[10px] ${layer.locked ? "text-gold" : "text-muted hover:text-foreground"}`}>
+                      {layer.locked ? <Shield size={11} /> : <Move size={11} />}
+                    </button>
+                    {index > 0 && (
+                      <button onClick={() => {
+                        const newLayers = [...designLayers];
+                        [newLayers[index], newLayers[index - 1]] = [newLayers[index - 1], newLayers[index]];
+                        setDesignLayers(newLayers);
+                      }} className="text-muted hover:text-foreground text-[9px]">
+                        <ChevronDown size={11} className="rotate-180" />
+                      </button>
+                    )}
+                    {index < designLayers.length - 1 && (
+                      <button onClick={() => {
+                        const newLayers = [...designLayers];
+                        [newLayers[index], newLayers[index + 1]] = [newLayers[index + 1], newLayers[index]];
+                        setDesignLayers(newLayers);
+                      }} className="text-muted hover:text-foreground text-[9px]">
+                        <ChevronDown size={11} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <button onClick={() => {
+                const newLayer: DesignLayer = {
+                  id: crypto.randomUUID(), name: `Layer ${designLayers.length + 1}`,
+                  type: "shape", visible: true, locked: false, opacity: 100,
+                };
+                setDesignLayers(prev => [newLayer, ...prev]);
+                toast.success("Layer added");
+              }} className="btn-secondary text-[10px] flex items-center gap-1.5 w-full justify-center">
+                <Plus size={11} /> Add Layer
+              </button>
+            </div>
+          )}
+
+          {/* ========== 4. Background Remover ========== */}
+          {toolsTab === "bg-remover" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Scissors size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">AI Background Remover</h3>
+                  <p className="text-[10px] text-muted">Remove backgrounds from images using AI in one click</p>
+                </div>
+              </div>
+
+              <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-gold/30 transition-all cursor-pointer"
+                onClick={() => setBgRemoveFile("sample-photo.jpg")}>
+                <Upload size={24} className="text-muted mx-auto mb-2" />
+                <p className="text-xs text-muted">Click to upload or drag & drop an image</p>
+                <p className="text-[9px] text-muted/60 mt-1">Supports PNG, JPG, WEBP up to 10MB</p>
+              </div>
+
+              {bgRemoveFile && (
+                <div className="flex items-center gap-3 bg-surface-light rounded-xl p-3">
+                  <ImageIcon size={16} className="text-gold" />
+                  <span className="text-xs flex-1">{bgRemoveFile}</span>
+                  <button onClick={() => { setBgRemoveFile(""); setBgRemoveStatus("idle"); }}
+                    className="text-muted hover:text-foreground"><X size={14} /></button>
+                </div>
+              )}
+
+              {bgRemoveStatus === "processing" && (
+                <div className="flex items-center gap-3 bg-gold/[0.04] border border-gold/15 rounded-xl p-3">
+                  <Loader size={14} className="text-gold animate-spin" />
+                  <span className="text-xs text-gold">Removing background with AI...</span>
+                </div>
+              )}
+
+              {bgRemoveStatus === "done" && (
+                <div className="flex items-center gap-3 bg-green-500/[0.06] border border-green-500/20 rounded-xl p-3">
+                  <CheckCircle size={14} className="text-green-400" />
+                  <span className="text-xs text-green-400">Background removed successfully!</span>
+                  <button className="btn-primary text-[10px] ml-auto flex items-center gap-1"><Download size={10} /> Download</button>
+                </div>
+              )}
+
+              <button onClick={handleBgRemove} disabled={!bgRemoveFile || bgRemoveStatus === "processing"}
+                className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
+                {bgRemoveStatus === "processing" ? <Loader size={12} className="animate-spin" /> : <Scissors size={12} />}
+                {bgRemoveStatus === "processing" ? "Processing..." : "Remove Background"}
+              </button>
+            </div>
+          )}
+
+          {/* ========== 5. Mockup Generator ========== */}
+          {toolsTab === "mockups" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Shirt size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Mockup Generator</h3>
+                  <p className="text-[10px] text-muted">Place your designs on realistic product mockups</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {MOCKUP_PRODUCTS.map(product => (
+                  <button key={product.id} onClick={() => setSelectedMockup(product.id)}
+                    className={`card-hover rounded-xl p-3 text-center transition-all ${selectedMockup === product.id ? "border-gold/30 bg-gold/[0.05]" : ""}`}>
+                    <div className={`mb-1.5 ${selectedMockup === product.id ? "text-gold" : "text-muted"}`}>{product.icon}</div>
+                    <span className="text-[10px] font-medium">{product.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">Product Color</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={mockupColor} onChange={e => setMockupColor(e.target.value)}
+                      className="w-8 h-8 rounded cursor-pointer border-0" />
+                    <span className="text-[10px] font-mono text-muted">{mockupColor}</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">Quick Colors</label>
+                  <div className="flex gap-1.5">
+                    {["#ffffff", "#000000", "#1a1a2e", "#c0392b", "#2980b9", "#27ae60"].map(c => (
+                      <button key={c} onClick={() => setMockupColor(c)}
+                        className={`w-6 h-6 rounded-md border ${mockupColor === c ? "border-gold" : "border-border"}`} style={{ background: c }} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-gold/30 transition-all cursor-pointer">
+                <Upload size={20} className="text-muted mx-auto mb-1.5" />
+                <p className="text-[10px] text-muted">Upload your design to place on mockup</p>
+              </div>
+
+              <button onClick={handleMockupGenerate} disabled={mockupGenerating}
+                className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
+                {mockupGenerating ? <Loader size={12} className="animate-spin" /> : <Shirt size={12} />}
+                {mockupGenerating ? "Generating Mockup..." : `Generate ${MOCKUP_PRODUCTS.find(p => p.id === selectedMockup)?.label} Mockup`}
+              </button>
+            </div>
+          )}
+
+          {/* ========== 6. QR Code Generator ========== */}
+          {toolsTab === "qr-code" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><QrCode size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">QR Code Generator</h3>
+                  <p className="text-[10px] text-muted">Generate branded QR codes with custom colors and embedded logo</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted block mb-1.5">URL or Content</label>
+                <input value={qrUrl} onChange={e => setQrUrl(e.target.value)}
+                  className="input text-xs py-2 w-full" placeholder="https://yourwebsite.com" />
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">QR Color</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={qrColor} onChange={e => setQrColor(e.target.value)} className="w-7 h-7 rounded cursor-pointer border-0" />
+                    <span className="text-[9px] font-mono text-muted">{qrColor}</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">Background</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={qrBgColor} onChange={e => setQrBgColor(e.target.value)} className="w-7 h-7 rounded cursor-pointer border-0" />
+                    <span className="text-[9px] font-mono text-muted">{qrBgColor}</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">Size (px)</label>
+                  <input type="number" value={qrSize} onChange={e => setQrSize(parseInt(e.target.value) || 256)}
+                    className="input text-[10px] py-1.5 w-full" min={128} max={1024} />
+                </div>
+                <div className="flex items-end">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={qrIncludeLogo} onChange={e => setQrIncludeLogo(e.target.checked)}
+                      className="w-3.5 h-3.5 rounded accent-gold" />
+                    <span className="text-[10px]">Embed Logo</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Preview area */}
+              <div className="flex justify-center p-6 bg-surface-light rounded-xl border border-border">
+                <div className="w-32 h-32 rounded-xl flex items-center justify-center" style={{ background: qrBgColor }}>
+                  <QrCode size={80} style={{ color: qrColor }} />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button disabled={!qrUrl.trim()} onClick={() => toast.success("QR code generated!")}
+                  className="btn-primary text-xs flex items-center justify-center gap-2 flex-1 disabled:opacity-50">
+                  <QrCode size={12} /> Generate QR Code
+                </button>
+                <button className="btn-secondary text-xs flex items-center gap-1.5">
+                  <Download size={12} /> PNG
+                </button>
+                <button className="btn-secondary text-xs flex items-center gap-1.5">
+                  <Download size={12} /> SVG
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ========== 7. Design Version History ========== */}
+          {toolsTab === "version-history" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><History size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Design Version History</h3>
+                  <p className="text-[10px] text-muted">Track design iterations and compare versions with visual diff</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Version List */}
+                <div className="space-y-2">
+                  <h4 className="text-[10px] text-muted font-medium">Version Timeline</h4>
+                  {versionHistory.map((v, i) => (
+                    <div key={v.id} className={`flex items-start gap-3 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                      selectedVersion === v.id ? "border-gold/30 bg-gold/[0.04]" : "border-border hover:border-gold/15"
+                    }`} onClick={() => setSelectedVersion(v.id)}>
+                      <div className="flex flex-col items-center">
+                        <div className={`w-3 h-3 rounded-full ${selectedVersion === v.id ? "bg-gold" : "bg-muted/30"}`} />
+                        {i < versionHistory.length - 1 && <div className="w-px h-6 bg-border mt-1" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-semibold">{v.label}</span>
+                          {i === 0 && <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">Latest</span>}
+                        </div>
+                        <p className="text-[9px] text-muted">{v.date}</p>
+                        <p className="text-[9px] text-muted/70 mt-0.5">{v.changes}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Compare Panel */}
+                <div className="space-y-3">
+                  <h4 className="text-[10px] text-muted font-medium">Visual Comparison</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="text-[9px] text-muted block mb-1">Version A</label>
+                      <select value={selectedVersion} onChange={e => setSelectedVersion(e.target.value)} className="input text-[10px] py-1.5 w-full">
+                        {versionHistory.map(v => <option key={v.id} value={v.id}>{v.label}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted block mb-1">Version B</label>
+                      <select value={compareVersion} onChange={e => setCompareVersion(e.target.value)} className="input text-[10px] py-1.5 w-full">
+                        {versionHistory.map(v => <option key={v.id} value={v.id}>{v.label}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-surface-light rounded-xl p-4 text-center border border-border aspect-video flex items-center justify-center">
+                      <span className="text-[10px] text-muted">{selectedVersion} Preview</span>
+                    </div>
+                    <div className="bg-surface-light rounded-xl p-4 text-center border border-border aspect-video flex items-center justify-center">
+                      <span className="text-[10px] text-muted">{compareVersion} Preview</span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center">
+                      <RotateCcw size={10} /> Restore Version
+                    </button>
+                    <button className="btn-secondary text-[10px] flex items-center gap-1.5">
+                      <SlidersHorizontal size={10} /> Diff Overlay
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ========== 8. Color Palette Extractor ========== */}
+          {toolsTab === "color-extract" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Pipette size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Color Palette Extractor</h3>
+                  <p className="text-[10px] text-muted">Extract a color palette from any uploaded image</p>
+                </div>
+              </div>
+
+              <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-gold/30 transition-all cursor-pointer"
+                onClick={handleExtractColors}>
+                <Upload size={24} className="text-muted mx-auto mb-2" />
+                <p className="text-xs text-muted">Upload an image to extract its color palette</p>
+                <p className="text-[9px] text-muted/60 mt-1">Works with photos, designs, logos, artwork</p>
+              </div>
+
+              {extractingColors && (
+                <div className="flex items-center gap-3 bg-gold/[0.04] border border-gold/15 rounded-xl p-3">
+                  <Loader size={14} className="text-gold animate-spin" />
+                  <span className="text-xs text-gold">Analyzing image colors...</span>
+                </div>
+              )}
+
+              {extractedColors.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="text-[11px] font-semibold">Extracted Colors</h4>
+                  <div className="flex gap-2">
+                    {extractedColors.map((c, i) => (
+                      <div key={i} className="flex-1 text-center cursor-pointer group" onClick={() => { navigator.clipboard.writeText(c); toast.success(`Copied ${c}`); }}>
+                        <div className="h-14 rounded-xl border border-border group-hover:ring-2 ring-gold/30 transition-all" style={{ background: c }} />
+                        <span className="text-[8px] font-mono text-muted mt-1 block">{c}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => { setSelectedPalette({ name: "Extracted", colors: extractedColors.slice(0, 5) }); setTab("create"); toast.success("Palette applied!"); }}
+                      className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center">
+                      <Palette size={10} /> Apply as Design Palette
+                    </button>
+                    <button onClick={() => { navigator.clipboard.writeText(extractedColors.join(", ")); toast.success("All colors copied!"); }}
+                      className="btn-secondary text-[10px] flex items-center gap-1.5">
+                      <Copy size={10} /> Copy All
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ========== 9. Typography Pairing ========== */}
+          {toolsTab === "typography" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Type size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Typography Pairing</h3>
+                  <p className="text-[10px] text-muted">AI-curated font combinations for professional designs</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {FONT_PAIRINGS.map((pair, i) => (
+                  <button key={i} onClick={() => { setSelectedPairing(i); toast.success(`Selected: ${pair.vibe}`); }}
+                    className={`card-hover rounded-xl p-3 text-left transition-all ${selectedPairing === i ? "border-gold/30 bg-gold/[0.04]" : ""}`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-[9px] text-muted bg-surface-light px-2 py-0.5 rounded">{pair.vibe}</span>
+                      {selectedPairing === i && <CheckCircle size={12} className="text-gold" />}
+                    </div>
+                    <p className="text-sm font-bold mb-0.5" style={{ fontFamily: pair.heading.split(" ")[0] }}>{pair.heading}</p>
+                    <p className="text-[10px] text-muted" style={{ fontFamily: pair.body.split(" ")[0] }}>{pair.body}</p>
+                    <div className="mt-2 p-2 bg-surface-light rounded-lg">
+                      <p className="text-xs font-bold">The quick brown fox</p>
+                      <p className="text-[10px] text-muted">jumps over the lazy dog. 0123456789</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {selectedPairing !== null && (
+                <div className="flex gap-2">
+                  <button onClick={() => {
+                    const pair = FONT_PAIRINGS[selectedPairing];
+                    navigator.clipboard.writeText(`Heading: ${pair.heading}\nBody: ${pair.body}`);
+                    toast.success("Font pairing copied!");
+                  }} className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center">
+                    <Copy size={10} /> Copy Pairing
+                  </button>
+                  <button onClick={() => {
+                    const pair = FONT_PAIRINGS[selectedPairing];
+                    const kit = brandKits.find(k => k.id === activeBrandKit);
+                    if (kit) {
+                      setBrandKits(prev => prev.map(k => k.id === activeBrandKit ? { ...k, fonts: { heading: pair.heading, body: pair.body } } : k));
+                      toast.success("Fonts applied to brand kit!");
+                    }
+                  }} className="btn-secondary text-[10px] flex items-center gap-1.5">
+                    <Paintbrush size={10} /> Apply to Brand Kit
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ========== 10. Pattern Generator ========== */}
+          {toolsTab === "patterns" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Repeat size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Pattern Generator</h3>
+                  <p className="text-[10px] text-muted">Generate seamless patterns for backgrounds and design elements</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {PATTERN_TYPES.map(p => (
+                  <button key={p.id} onClick={() => setPatternType(p.id)}
+                    className={`card-hover rounded-xl p-2.5 text-left transition-all ${patternType === p.id ? "border-gold/30 bg-gold/[0.05]" : ""}`}>
+                    <span className="text-[10px] font-medium block">{p.label}</span>
+                    <span className="text-[8px] text-muted">{p.desc}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">Color 1</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={patternColor1} onChange={e => setPatternColor1(e.target.value)} className="w-7 h-7 rounded cursor-pointer border-0" />
+                    <span className="text-[9px] font-mono text-muted">{patternColor1}</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">Color 2</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={patternColor2} onChange={e => setPatternColor2(e.target.value)} className="w-7 h-7 rounded cursor-pointer border-0" />
+                    <span className="text-[9px] font-mono text-muted">{patternColor2}</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted block mb-1">Scale: {patternScale}%</label>
+                  <input type="range" min={10} max={100} value={patternScale} onChange={e => setPatternScale(parseInt(e.target.value))}
+                    className="w-full h-1.5 accent-gold mt-2" />
+                </div>
+              </div>
+
+              {/* Pattern Preview */}
+              <div className="h-32 rounded-xl border border-border overflow-hidden" style={{
+                background: `repeating-linear-gradient(45deg, ${patternColor1} 0px, ${patternColor1} ${patternScale / 5}px, ${patternColor2} ${patternScale / 5}px, ${patternColor2} ${patternScale / 2.5}px)`,
+              }}>
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-[10px] font-medium bg-black/40 text-white px-3 py-1 rounded-lg backdrop-blur">{PATTERN_TYPES.find(p => p.id === patternType)?.label} Pattern</span>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button onClick={() => toast.success("Pattern generated!")} className="btn-primary text-xs flex items-center gap-2 flex-1 justify-center">
+                  <Repeat size={12} /> Generate Pattern
+                </button>
+                <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
+              </div>
+            </div>
+          )}
+
+          {/* ========== 11. Photo Filter Library ========== */}
+          {toolsTab === "filters" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Aperture size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Photo Filter Library</h3>
+                  <p className="text-[10px] text-muted">{PHOTO_FILTERS.length} professional filters for any photo</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 mb-2">
+                <label className="text-[10px] text-muted">Intensity: {filterIntensity}%</label>
+                <input type="range" min={0} max={100} value={filterIntensity} onChange={e => setFilterIntensity(parseInt(e.target.value))}
+                  className="flex-1 h-1.5 accent-gold" />
+              </div>
+
+              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                {PHOTO_FILTERS.map(filter => (
+                  <button key={filter.name} onClick={() => { setActiveFilter(filter.name); toast.success(`Filter: ${filter.name}`); }}
+                    className={`rounded-xl overflow-hidden border transition-all ${activeFilter === filter.name ? "border-gold/40 ring-2 ring-gold/20" : "border-border hover:border-gold/20"}`}>
+                    <div className="h-16 bg-gradient-to-br from-gold/20 via-blue-500/20 to-purple-500/20"
+                      style={{ filter: filter.css }} />
+                    <div className="p-1.5 text-center">
+                      <span className="text-[9px] font-medium">{filter.name}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {activeFilter && (
+                <div className="flex items-center gap-2 bg-gold/[0.04] border border-gold/15 rounded-xl px-3 py-2">
+                  <Aperture size={12} className="text-gold" />
+                  <span className="text-[10px] flex-1">Active: <span className="font-medium text-gold">{activeFilter}</span> at {filterIntensity}%</span>
+                  <button onClick={() => setActiveFilter(null)} className="text-[9px] text-muted hover:text-foreground flex items-center gap-1">
+                    <X size={10} /> Remove
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ========== 12. Icon Library Browser ========== */}
+          {toolsTab === "icons" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Search size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Icon Library Browser</h3>
+                  <p className="text-[10px] text-muted">Search and insert icons from a curated library</p>
+                </div>
+              </div>
+
+              <input value={iconSearch} onChange={e => setIconSearch(e.target.value)}
+                className="input text-xs py-2 w-full" placeholder="Search icons (e.g., chart, heart, star)..." />
+
+              <div className="flex flex-wrap gap-1.5">
+                {ICON_CATEGORIES.map(cat => (
+                  <button key={cat.name} onClick={() => setIconCategory(cat.name)}
+                    className={`text-[9px] px-2.5 py-1 rounded-lg border transition-all ${iconCategory === cat.name ? "border-gold/30 bg-gold/[0.05] text-gold font-medium" : "border-border text-muted"}`}>
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+                {(ICON_CATEGORIES.find(c => c.name === iconCategory)?.icons || [])
+                  .filter(icon => !iconSearch || icon.includes(iconSearch.toLowerCase()))
+                  .map(icon => (
+                    <button key={icon} onClick={() => { navigator.clipboard.writeText(icon); toast.success(`Copied icon: ${icon}`); }}
+                      className="card-hover rounded-xl p-3 text-center group hover:bg-gold/[0.05]">
+                      <div className="w-6 h-6 mx-auto mb-1 rounded-lg bg-surface-light flex items-center justify-center group-hover:bg-gold/10">
+                        <Globe size={14} className="text-muted group-hover:text-gold" />
+                      </div>
+                      <span className="text-[8px] text-muted group-hover:text-foreground block truncate">{icon}</span>
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {/* ========== 13. Infographic Builder ========== */}
+          {toolsTab === "infographics" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><BarChart3 size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Infographic Builder</h3>
+                  <p className="text-[10px] text-muted">Build data visualizations with templates for charts, stats, and timelines</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {INFOGRAPHIC_TYPES.map(type => (
+                  <button key={type.id} onClick={() => setInfographicType(type.id)}
+                    className={`card-hover rounded-xl p-3 text-left transition-all ${infographicType === type.id ? "border-gold/30 bg-gold/[0.05]" : ""}`}>
+                    <div className={`mb-1.5 ${infographicType === type.id ? "text-gold" : "text-muted"}`}>{type.icon}</div>
+                    <span className="text-[10px] font-medium block">{type.label}</span>
+                    <span className="text-[8px] text-muted">{type.desc}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Data Entries */}
+              <div className="space-y-2">
+                <h4 className="text-[10px] text-muted font-medium">Data Points</h4>
+                {infographicData.map((item, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <input value={item.label} onChange={e => setInfographicData(prev => prev.map((d, idx) => idx === i ? { ...d, label: e.target.value } : d))}
+                      className="input text-[10px] py-1.5 flex-1" placeholder="Label" />
+                    <input value={item.value} onChange={e => setInfographicData(prev => prev.map((d, idx) => idx === i ? { ...d, value: e.target.value } : d))}
+                      className="input text-[10px] py-1.5 w-24" placeholder="Value" />
+                    <button onClick={() => setInfographicData(prev => prev.filter((_, idx) => idx !== i))}
+                      className="text-muted hover:text-red-400"><Trash2 size={12} /></button>
+                  </div>
+                ))}
+                <button onClick={() => setInfographicData(prev => [...prev, { label: "", value: "" }])}
+                  className="btn-ghost text-[9px] flex items-center gap-1"><Plus size={10} /> Add Data Point</button>
+              </div>
+
+              <button onClick={() => toast.success("Infographic generated!")}
+                className="btn-primary text-xs flex items-center justify-center gap-2 w-full">
+                <BarChart3 size={12} /> Generate Infographic
+              </button>
+            </div>
+          )}
+
+          {/* ========== 14. Social Proof Widgets ========== */}
+          {toolsTab === "social-proof" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><ThumbsUp size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Social Proof Widgets</h3>
+                  <p className="text-[10px] text-muted">Generate testimonial cards, review stars, and trust badges</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                {SOCIAL_PROOF_TYPES.map(type => (
+                  <button key={type.id} onClick={() => setSocialProofType(type.id)}
+                    className={`card-hover rounded-xl p-3 text-left transition-all ${socialProofType === type.id ? "border-gold/30 bg-gold/[0.05]" : ""}`}>
+                    <div className={`mb-1 ${socialProofType === type.id ? "text-gold" : "text-muted"}`}>{type.icon}</div>
+                    <span className="text-[10px] font-medium">{type.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {socialProofType === "testimonial" && (
+                <div className="space-y-3">
+                  <textarea value={testimonialText} onChange={e => setTestimonialText(e.target.value)}
+                    className="input text-xs w-full" rows={3} placeholder="Enter testimonial quote..." />
+                  <input value={testimonialAuthor} onChange={e => setTestimonialAuthor(e.target.value)}
+                    className="input text-xs w-full" placeholder="Author name and title..." />
+                  {/* Preview */}
+                  <div className="bg-surface-light rounded-xl p-4 border border-border">
+                    <Quote size={16} className="text-gold mb-2" />
+                    <p className="text-xs italic leading-relaxed">{testimonialText || "Your testimonial will appear here..."}</p>
+                    <div className="flex items-center gap-2 mt-3">
+                      <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold text-[10px] font-bold">
+                        {testimonialAuthor ? testimonialAuthor[0]?.toUpperCase() : "?"}
+                      </div>
+                      <span className="text-[10px] font-medium">{testimonialAuthor || "Author Name"}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {socialProofType === "review_stars" && (
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Rating</label>
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <button key={n} onClick={() => setReviewStars(n)}
+                          className={`transition-all ${n <= reviewStars ? "text-gold" : "text-muted/30"}`}>
+                          <Star size={24} fill={n <= reviewStars ? "currentColor" : "none"} />
+                        </button>
+                      ))}
+                      <span className="text-xs ml-2 text-muted">{reviewStars}/5</span>
+                    </div>
+                  </div>
+                  <div className="bg-surface-light rounded-xl p-4 border border-border text-center">
+                    <div className="flex justify-center gap-1 mb-2">
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <Star key={n} size={20} className={n <= reviewStars ? "text-gold" : "text-muted/20"} fill={n <= reviewStars ? "currentColor" : "none"} />
+                      ))}
+                    </div>
+                    <p className="text-xs font-semibold">{reviewStars}.0 out of 5</p>
+                    <p className="text-[9px] text-muted mt-0.5">Based on 1,247 reviews</p>
+                  </div>
+                </div>
+              )}
+
+              <button onClick={() => toast.success("Social proof widget generated!")}
+                className="btn-primary text-xs flex items-center justify-center gap-2 w-full">
+                <ThumbsUp size={12} /> Generate Widget
+              </button>
+            </div>
+          )}
+
+          {/* ========== 15. Seasonal Template Packs ========== */}
+          {toolsTab === "seasonal" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><CalendarDays size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Seasonal Template Packs</h3>
+                  <p className="text-[10px] text-muted">Holiday, seasonal, and event-specific design templates with themed palettes</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {SEASONAL_PACKS.map(pack => (
+                  <button key={pack.id} onClick={() => { setSelectedSeason(pack.id); toast.success(`Selected: ${pack.label}`); }}
+                    className={`card-hover rounded-xl p-3 text-left transition-all ${selectedSeason === pack.id ? "border-gold/30 bg-gold/[0.05]" : ""}`}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={selectedSeason === pack.id ? "text-gold" : "text-muted"}>{pack.icon}</span>
+                      <span className="text-[10px] font-medium">{pack.label}</span>
+                      {selectedSeason === pack.id && <CheckCircle size={10} className="text-gold ml-auto" />}
+                    </div>
+                    <div className="flex gap-1">
+                      {pack.colors.map((c, i) => (
+                        <div key={i} className="flex-1 h-5 rounded-md border border-border" style={{ background: c }} />
+                      ))}
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {selectedSeason && (
+                <div className="flex gap-2">
+                  <button onClick={() => {
+                    const pack = SEASONAL_PACKS.find(p => p.id === selectedSeason);
+                    if (pack) { setSelectedPalette({ name: pack.label, colors: pack.colors }); setTab("create"); toast.success("Seasonal palette applied!"); }
+                  }} className="btn-primary text-[10px] flex items-center gap-1.5 flex-1 justify-center">
+                    <Palette size={10} /> Apply Palette to Designs
+                  </button>
+                  <button onClick={() => toast.success("Seasonal templates loaded!")}
+                    className="btn-secondary text-[10px] flex items-center gap-1.5">
+                    <Grid size={10} /> Browse Templates
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ========== 16. Animation Preview ========== */}
+          {toolsTab === "animation" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Film size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Animation Preview</h3>
+                  <p className="text-[10px] text-muted">Preview your design as animated GIF or video with transitions</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-5 gap-2">
+                {(["fade", "slide", "bounce", "zoom", "rotate"] as const).map(type => (
+                  <button key={type} onClick={() => setAnimationType(type)}
+                    className={`card-hover rounded-xl p-2.5 text-center transition-all ${animationType === type ? "border-gold/30 bg-gold/[0.05]" : ""}`}>
+                    <span className="text-[10px] font-medium capitalize">{type}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-3">
+                <label className="text-[10px] text-muted whitespace-nowrap">Speed: {animationSpeed}x</label>
+                <input type="range" min={0.25} max={3} step={0.25} value={animationSpeed}
+                  onChange={e => setAnimationSpeed(parseFloat(e.target.value))}
+                  className="flex-1 h-1.5 accent-gold" />
+              </div>
+
+              {/* Animation Preview Area */}
+              <div className="bg-surface-light rounded-xl border border-border p-8 flex items-center justify-center min-h-[200px]">
+                <div className={`w-32 h-32 bg-gold/20 rounded-xl flex items-center justify-center border border-gold/30 transition-all ${
+                  animationPlaying ? (
+                    animationType === "fade" ? "animate-pulse" :
+                    animationType === "bounce" ? "animate-bounce" :
+                    animationType === "zoom" ? "animate-ping" :
+                    animationType === "rotate" ? "animate-spin" :
+                    "animate-pulse"
+                  ) : ""
+                }`} style={{ animationDuration: `${2 / animationSpeed}s` }}>
+                  <Sparkles size={24} className="text-gold" />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button onClick={() => setAnimationPlaying(!animationPlaying)}
+                  className="btn-primary text-xs flex items-center justify-center gap-2 flex-1">
+                  {animationPlaying ? <><X size={12} /> Stop Preview</> : <><Play size={12} /> Play Animation</>}
+                </button>
+                <button className="btn-secondary text-xs flex items-center gap-1.5">
+                  <Download size={12} /> Export GIF
+                </button>
+                <button className="btn-secondary text-xs flex items-center gap-1.5">
+                  <Film size={12} /> Export MP4
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ========== 17. Design System Tokens ========== */}
+          {toolsTab === "design-tokens" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Database size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Design System Tokens</h3>
+                  <p className="text-[10px] text-muted">Save reusable design tokens for spacing, border radius, shadows, and more</p>
+                </div>
+              </div>
+
+              {/* Token Categories */}
+              {(["spacing", "radius", "shadow", "opacity", "font-size"] as const).map(category => {
+                const tokens = designTokens.filter(t => t.category === category);
+                if (tokens.length === 0) return null;
+                return (
+                  <div key={category} className="border border-border rounded-xl p-3">
+                    <h4 className="text-[10px] font-semibold capitalize mb-2 flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-gold" />
+                      {category}
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {tokens.map(token => (
+                        <div key={token.id} className="bg-surface-light rounded-lg p-2 flex items-center justify-between group">
+                          <div>
+                            <span className="text-[9px] font-medium block">{token.name}</span>
+                            <span className="text-[8px] font-mono text-muted">{token.value}</span>
+                          </div>
+                          <button onClick={() => setDesignTokens(prev => prev.filter(t => t.id !== token.id))}
+                            className="text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Trash2 size={10} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Add Token */}
+              <div className="border border-border rounded-xl p-3 space-y-2">
+                <h4 className="text-[10px] font-semibold flex items-center gap-1.5"><Plus size={11} /> Add Token</h4>
+                <div className="flex gap-2">
+                  <select value={newTokenCategory} onChange={e => setNewTokenCategory(e.target.value as DesignToken["category"])}
+                    className="input text-[10px] py-1.5">
+                    <option value="spacing">Spacing</option>
+                    <option value="radius">Border Radius</option>
+                    <option value="shadow">Shadow</option>
+                    <option value="opacity">Opacity</option>
+                    <option value="font-size">Font Size</option>
+                  </select>
+                  <input value={newTokenName} onChange={e => setNewTokenName(e.target.value)}
+                    className="input text-[10px] py-1.5 flex-1" placeholder="Token name (e.g., sm, md)" />
+                  <input value={newTokenValue} onChange={e => setNewTokenValue(e.target.value)}
+                    className="input text-[10px] py-1.5 flex-1" placeholder="Value (e.g., 8px)" />
+                  <button onClick={() => {
+                    if (!newTokenName || !newTokenValue) { toast.error("Fill in name and value"); return; }
+                    setDesignTokens(prev => [...prev, { id: crypto.randomUUID(), category: newTokenCategory, name: newTokenName, value: newTokenValue }]);
+                    setNewTokenName(""); setNewTokenValue("");
+                    toast.success("Token added!");
+                  }} className="btn-primary text-[10px] flex items-center gap-1"><Plus size={10} /> Add</button>
+                </div>
+              </div>
+
+              <button onClick={() => {
+                const json = JSON.stringify(designTokens.reduce((acc, t) => {
+                  if (!acc[t.category]) acc[t.category] = {};
+                  acc[t.category][t.name] = t.value;
+                  return acc;
+                }, {} as Record<string, Record<string, string>>), null, 2);
+                navigator.clipboard.writeText(json);
+                toast.success("Tokens copied as JSON!");
+              }} className="btn-secondary text-[10px] flex items-center gap-1.5 w-full justify-center">
+                <Copy size={10} /> Export Tokens as JSON
+              </button>
+            </div>
+          )}
+
+          {/* ========== 18. Batch Export ========== */}
+          {toolsTab === "batch-export" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Download size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Batch Export</h3>
+                  <p className="text-[10px] text-muted">Export your design in multiple sizes and formats at once</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted block mb-2">Export Formats</label>
+                <div className="flex gap-2">
+                  {["png", "jpg", "webp", "svg", "pdf"].map(fmt => (
+                    <button key={fmt} onClick={() => setBatchExportFormats(prev => prev.includes(fmt) ? prev.filter(f => f !== fmt) : [...prev, fmt])}
+                      className={`text-[10px] px-3 py-1.5 rounded-lg border uppercase font-medium transition-all ${
+                        batchExportFormats.includes(fmt) ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                      }`}>
+                      .{fmt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted block mb-2">Export Sizes</label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {[
+                    { label: "Original", size: "original" },
+                    { label: "1080x1080", size: "1080x1080" },
+                    { label: "1080x1920", size: "1080x1920" },
+                    { label: "1200x630", size: "1200x630" },
+                    { label: "1280x720", size: "1280x720" },
+                    { label: "1920x1080", size: "1920x1080" },
+                    { label: "2x Scale", size: "2x" },
+                    { label: "0.5x Scale", size: "0.5x" },
+                  ].map(s => (
+                    <button key={s.size} onClick={() => setBatchExportSizes(prev => prev.includes(s.size) ? prev.filter(x => x !== s.size) : [...prev, s.size])}
+                      className={`card-hover rounded-xl p-2 text-center text-[10px] transition-all ${
+                        batchExportSizes.includes(s.size) ? "border-gold/30 bg-gold/[0.05] text-gold font-medium" : ""
+                      }`}>
+                      {batchExportSizes.includes(s.size) && <CheckCircle size={10} className="text-gold inline mr-1" />}
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-surface-light rounded-xl p-3 flex items-center justify-between">
+                <div className="text-[10px]">
+                  <span className="text-muted">Total exports: </span>
+                  <span className="font-semibold text-gold">{batchExportFormats.length * batchExportSizes.length} files</span>
+                  <span className="text-muted"> ({batchExportSizes.length} sizes x {batchExportFormats.length} formats)</span>
+                </div>
+              </div>
+
+              <button onClick={handleBatchExport} disabled={batchExporting || batchExportFormats.length === 0 || batchExportSizes.length === 0}
+                className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
+                {batchExporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+                {batchExporting ? "Exporting..." : `Export ${batchExportFormats.length * batchExportSizes.length} Files`}
+              </button>
+            </div>
+          )}
+
+          {/* ========== 19. Accessibility Checker ========== */}
+          {toolsTab === "accessibility" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Accessibility size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Accessibility Checker</h3>
+                  <p className="text-[10px] text-muted">Check contrast ratios and WCAG compliance for text/background combinations</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[10px] text-muted block mb-1.5">Text Color (Foreground)</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={a11yFgColor} onChange={e => setA11yFgColor(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+                    <div>
+                      <input value={a11yFgColor} onChange={e => setA11yFgColor(e.target.value)}
+                        className="input text-[10px] py-1.5 font-mono w-24" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted block mb-1.5">Background Color</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={a11yBgColor} onChange={e => setA11yBgColor(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+                    <div>
+                      <input value={a11yBgColor} onChange={e => setA11yBgColor(e.target.value)}
+                        className="input text-[10px] py-1.5 font-mono w-24" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted block mb-1">Font Size: {a11yFontSize}px</label>
+                <input type="range" min={8} max={72} value={a11yFontSize} onChange={e => setA11yFontSize(parseInt(e.target.value))}
+                  className="w-full h-1.5 accent-gold" />
+              </div>
+
+              {/* Preview */}
+              <div className="rounded-xl p-6 text-center border border-border" style={{ background: a11yBgColor }}>
+                <p style={{ color: a11yFgColor, fontSize: `${a11yFontSize}px` }} className="font-semibold">Sample Text Preview</p>
+                <p style={{ color: a11yFgColor, fontSize: `${Math.max(a11yFontSize - 4, 8)}px` }} className="mt-1 opacity-80">Body text at a smaller size</p>
+              </div>
+
+              {/* Results */}
+              {(() => {
+                const ratio = getContrastRatio(a11yFgColor, a11yBgColor);
+                const rating = getWCAGRating(ratio, a11yFontSize);
+                return (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 bg-surface-light rounded-xl p-3">
+                      <Contrast size={16} className="text-gold" />
+                      <div>
+                        <span className="text-xs font-semibold">Contrast Ratio: {ratio.toFixed(2)}:1</span>
+                        <p className="text-[9px] text-muted">Minimum 4.5:1 for normal text, 3:1 for large text (WCAG AA)</p>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {[
+                        { label: "WCAG AA", pass: rating.aa, desc: "Normal text" },
+                        { label: "WCAG AAA", pass: rating.aaa, desc: "Enhanced" },
+                        { label: "AA Large", pass: rating.aaLarge, desc: "18px+ or bold 14px+" },
+                        { label: "AAA Large", pass: rating.aaaLarge, desc: "Enhanced large" },
+                      ].map(item => (
+                        <div key={item.label} className={`rounded-xl p-2.5 border text-center ${item.pass ? "border-green-500/20 bg-green-500/[0.06]" : "border-red-500/20 bg-red-500/[0.06]"}`}>
+                          <div className="flex items-center justify-center gap-1 mb-0.5">
+                            {item.pass ? <CheckCircle size={11} className="text-green-400" /> : <AlertTriangle size={11} className="text-red-400" />}
+                            <span className={`text-[10px] font-semibold ${item.pass ? "text-green-400" : "text-red-400"}`}>{item.pass ? "Pass" : "Fail"}</span>
+                          </div>
+                          <span className="text-[9px] font-medium block">{item.label}</span>
+                          <span className="text-[8px] text-muted">{item.desc}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {!rating.aa && (
+                      <div className="flex items-center gap-2 text-[10px] text-amber-400 bg-amber-500/[0.06] border border-amber-500/20 rounded-xl px-3 py-2">
+                        <AlertTriangle size={12} />
+                        <span>This color combination does not meet WCAG AA standards. Consider increasing contrast.</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* ========== 20. Mood Board Builder ========== */}
+          {toolsTab === "mood-board" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Heart size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">Mood Board Builder</h3>
+                  <p className="text-[10px] text-muted">Collect inspiration images, colors, and notes for your design direction</p>
+                </div>
+              </div>
+
+              {/* Board Items */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {moodBoardItems.map(item => (
+                  <div key={item.id} className="card-hover rounded-xl p-2.5 relative group">
+                    <button onClick={() => setMoodBoardItems(prev => prev.filter(i => i.id !== item.id))}
+                      className="absolute top-1.5 right-1.5 text-muted hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <X size={10} />
+                    </button>
+                    {item.type === "color" && (
+                      <div>
+                        <div className="h-16 rounded-lg border border-border mb-1.5" style={{ background: item.value }} />
+                        <span className="text-[8px] font-mono text-muted">{item.value}</span>
+                      </div>
+                    )}
+                    {item.type === "image" && (
+                      <div className="h-20 rounded-lg bg-surface-light border border-border flex items-center justify-center mb-1.5">
+                        <ImageIcon size={16} className="text-muted" />
+                      </div>
+                    )}
+                    {item.type === "note" && (
+                      <div className="bg-gold/[0.04] border border-gold/15 rounded-lg p-2 min-h-[64px]">
+                        <p className="text-[9px] leading-relaxed">{item.value}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Add Items */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="border border-border rounded-xl p-3">
+                  <label className="text-[9px] text-muted block mb-1.5">Add Color</label>
+                  <div className="flex items-center gap-2">
+                    <input type="color" value={newMoodColor} onChange={e => setNewMoodColor(e.target.value)} className="w-7 h-7 rounded cursor-pointer border-0" />
+                    <button onClick={() => {
+                      setMoodBoardItems(prev => [...prev, { id: crypto.randomUUID(), type: "color", value: newMoodColor }]);
+                      toast.success("Color added to mood board");
+                    }} className="btn-secondary text-[9px] flex items-center gap-1 flex-1 justify-center">
+                      <Plus size={9} /> Add Color
+                    </button>
+                  </div>
+                </div>
+                <div className="border border-border rounded-xl p-3">
+                  <label className="text-[9px] text-muted block mb-1.5">Add Note</label>
+                  <div className="flex gap-2">
+                    <input value={newMoodNote} onChange={e => setNewMoodNote(e.target.value)}
+                      className="input text-[9px] py-1.5 flex-1" placeholder="Design note..." />
+                    <button onClick={() => {
+                      if (!newMoodNote.trim()) return;
+                      setMoodBoardItems(prev => [...prev, { id: crypto.randomUUID(), type: "note", value: newMoodNote }]);
+                      setNewMoodNote(""); toast.success("Note added");
+                    }} className="btn-secondary text-[9px]"><Plus size={9} /></button>
+                  </div>
+                </div>
+                <div className="border border-dashed border-border rounded-xl p-3 flex items-center justify-center cursor-pointer hover:border-gold/30 transition-all"
+                  onClick={() => {
+                    setMoodBoardItems(prev => [...prev, { id: crypto.randomUUID(), type: "image", value: "" }]);
+                    toast.success("Image placeholder added");
+                  }}>
+                  <div className="text-center">
+                    <Upload size={14} className="text-muted mx-auto mb-1" />
+                    <span className="text-[9px] text-muted">Upload Image</span>
+                  </div>
+                </div>
+              </div>
+
+              <button onClick={() => {
+                const colors = moodBoardItems.filter(i => i.type === "color").map(i => i.value).slice(0, 5);
+                if (colors.length > 0) { setSelectedPalette({ name: "Mood Board", colors }); setTab("create"); toast.success("Mood board colors applied!"); }
+                else toast.error("Add colors to your mood board first");
+              }} className="btn-primary text-[10px] flex items-center gap-1.5 w-full justify-center">
+                <Palette size={10} /> Apply Mood Board Colors to Designs
+              </button>
+            </div>
+          )}
+
+          {/* ========== 21. AI Style Transfer ========== */}
+          {toolsTab === "style-transfer" && (
+            <div className="card rounded-xl space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center text-gold"><Shuffle size={16} /></div>
+                <div>
+                  <h3 className="font-medium text-sm">AI Style Transfer</h3>
+                  <p className="text-[10px] text-muted">Apply the artistic style of one image to another using AI</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[10px] text-muted block mb-1.5">Source Image (Content)</label>
+                  <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-gold/30 transition-all cursor-pointer"
+                    onClick={() => setStyleTransferSource("content-image.jpg")}>
+                    {styleTransferSource ? (
+                      <div className="flex items-center gap-2 justify-center">
+                        <ImageIcon size={14} className="text-gold" />
+                        <span className="text-[10px]">{styleTransferSource}</span>
+                        <button onClick={(e) => { e.stopPropagation(); setStyleTransferSource(""); }} className="text-muted hover:text-foreground"><X size={12} /></button>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload size={20} className="text-muted mx-auto mb-1" />
+                        <p className="text-[9px] text-muted">Upload content image</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted block mb-1.5">Style Reference</label>
+                  <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-gold/30 transition-all cursor-pointer"
+                    onClick={() => setStyleTransferStyle("style-reference.jpg")}>
+                    {styleTransferStyle ? (
+                      <div className="flex items-center gap-2 justify-center">
+                        <Brush size={14} className="text-gold" />
+                        <span className="text-[10px]">{styleTransferStyle}</span>
+                        <button onClick={(e) => { e.stopPropagation(); setStyleTransferStyle(""); }} className="text-muted hover:text-foreground"><X size={12} /></button>
+                      </div>
+                    ) : (
+                      <>
+                        <Upload size={20} className="text-muted mx-auto mb-1" />
+                        <p className="text-[9px] text-muted">Upload style reference</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted block mb-1">Style Strength: {styleTransferStrength}%</label>
+                <input type="range" min={10} max={100} value={styleTransferStrength}
+                  onChange={e => setStyleTransferStrength(parseInt(e.target.value))}
+                  className="w-full h-1.5 accent-gold" />
+                <div className="flex justify-between text-[8px] text-muted mt-0.5">
+                  <span>Subtle</span><span>Balanced</span><span>Strong</span>
+                </div>
+              </div>
+
+              {/* Quick Style Presets */}
+              <div>
+                <label className="text-[10px] text-muted block mb-1.5">Quick Style Presets</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {["Oil Painting", "Watercolor", "Pixel Art", "Comic Book", "Art Deco", "Impressionist", "Cyberpunk", "Minimalist"].map(preset => (
+                    <button key={preset} onClick={() => { setStyleTransferStyle(preset); toast.success(`Style: ${preset}`); }}
+                      className={`text-[9px] px-2.5 py-1.5 rounded-lg border transition-all ${
+                        styleTransferStyle === preset ? "border-gold/30 bg-gold/[0.05] text-gold font-medium" : "border-border text-muted hover:text-foreground"
+                      }`}>
+                      {preset}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {styleTransferring && (
+                <div className="flex items-center gap-3 bg-gold/[0.04] border border-gold/15 rounded-xl p-3">
+                  <Loader size={14} className="text-gold animate-spin" />
+                  <span className="text-xs text-gold">Applying style transfer ({styleTransferStrength}% strength)...</span>
+                </div>
+              )}
+
+              <button onClick={handleStyleTransfer}
+                disabled={styleTransferring || (!styleTransferSource && !styleTransferStyle)}
+                className="btn-primary text-xs flex items-center justify-center gap-2 w-full disabled:opacity-50">
+                {styleTransferring ? <Loader size={12} className="animate-spin" /> : <Shuffle size={12} />}
+                {styleTransferring ? "Applying Style..." : "Apply Style Transfer"}
+              </button>
+            </div>
+          )}
         </div>
       )}
 

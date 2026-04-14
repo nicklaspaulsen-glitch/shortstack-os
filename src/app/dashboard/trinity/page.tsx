@@ -1,15 +1,11 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { TrinityLogEntry } from "@/lib/types";
-import StatusBadge from "@/components/ui/status-badge";
-import DataTable from "@/components/ui/data-table";
-import { PageLoading } from "@/components/ui/loading";
-import { formatRelativeTime } from "@/lib/utils";
-import { Bot, Send, History, Terminal } from "lucide-react";
-
-type Tab = "chat" | "log";
+import { useState, useRef, useEffect } from "react";
+import {
+  Bot, Send, History, CheckCircle, XCircle,
+  BarChart3, Shield, ArrowRight,
+  Layers, Star, Eye
+} from "lucide-react";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -17,52 +13,91 @@ interface ChatMessage {
   timestamp: Date;
 }
 
+interface AgentStatus {
+  name: string;
+  status: "active" | "idle" | "error";
+  lastAction: string;
+  actionsToday: number;
+  successRate: number;
+}
+
+const MOCK_AGENTS: AgentStatus[] = [
+  { name: "Lead Finder", status: "active", lastAction: "Scraped 48 leads", actionsToday: 12, successRate: 96 },
+  { name: "Outreach Bot", status: "active", lastAction: "Sent 12 DMs", actionsToday: 8, successRate: 100 },
+  { name: "Content Engine", status: "idle", lastAction: "Generated captions", actionsToday: 5, successRate: 100 },
+  { name: "Invoice Agent", status: "idle", lastAction: "Chased 2 invoices", actionsToday: 2, successRate: 100 },
+  { name: "Retention Agent", status: "error", lastAction: "Health check failed", actionsToday: 1, successRate: 50 },
+  { name: "SEO Agent", status: "idle", lastAction: "Keyword analysis", actionsToday: 3, successRate: 89 },
+  { name: "Analytics", status: "active", lastAction: "Generated report", actionsToday: 4, successRate: 100 },
+  { name: "Competitor Spy", status: "idle", lastAction: "Monitored 3 competitors", actionsToday: 1, successRate: 100 },
+];
+
+const MOCK_OUTPUTS = [
+  { id: "o1", agent: "Content Engine", type: "Instagram Caption", preview: "5 tips to get more patients in your dental practice...", quality: 92, time: "14:32" },
+  { id: "o2", agent: "Lead Finder", type: "Lead Batch", preview: "48 dentists in Miami with email + phone", quality: 85, time: "14:15" },
+  { id: "o3", agent: "Outreach Bot", type: "DM Campaign", preview: "12 personalized DMs sent to Instagram leads", quality: 88, time: "13:45" },
+  { id: "o4", agent: "SEO Agent", type: "Keyword Report", preview: "Top 20 keywords for dental marketing in FL", quality: 91, time: "13:00" },
+];
+
+const MOCK_HISTORY = [
+  { id: "h1", action: "Built website for Acme Dental", status: "success", agent: "Trinity", time: "Yesterday 16:00" },
+  { id: "h2", action: "Set up AI receptionist for Peak Fitness", status: "success", agent: "Trinity", time: "Yesterday 14:00" },
+  { id: "h3", action: "Created Discord server for client community", status: "success", agent: "Trinity", time: "Apr 12 10:00" },
+  { id: "h4", action: "Generated 30-day content calendar", status: "success", agent: "Trinity", time: "Apr 11 09:00" },
+  { id: "h5", action: "Automated client onboarding workflow", status: "success", agent: "Trinity", time: "Apr 10 15:00" },
+  { id: "h6", action: "Failed to deploy website - DNS error", status: "failed", agent: "Trinity", time: "Apr 10 11:00" },
+];
+
+const TABS = ["Chat", "Dashboard", "Agents", "Outputs", "Queue", "Cost", "Quality", "Fallback", "History", "Analytics"] as const;
+type Tab = typeof TABS[number];
+
+const FALLBACK_CHAIN = [
+  { primary: "Claude 3.5 Sonnet", fallback: "GPT-4o", trigger: "Rate limit or timeout" },
+  { primary: "ElevenLabs", fallback: "Google TTS", trigger: "API down or quota exceeded" },
+  { primary: "Supabase", fallback: "Local cache", trigger: "Connection timeout" },
+];
+
+const MOCK_QUEUE = [
+  { id: "tq1", task: "Generate weekly report for all clients", priority: "high", agent: "Analytics", eta: "~5 min" },
+  { id: "tq2", task: "Process 3 content calendar requests", priority: "medium", agent: "Content Engine", eta: "~12 min" },
+  { id: "tq3", task: "Send follow-up DMs to warm leads", priority: "medium", agent: "Outreach Bot", eta: "~8 min" },
+  { id: "tq4", task: "Scrape new leads for Phoenix, AZ", priority: "low", agent: "Lead Finder", eta: "~15 min" },
+];
+
 export default function TrinityPage() {
-  const [tab, setTab] = useState<Tab>("chat");
-  const [logs, setLogs] = useState<TrinityLogEntry[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [tab, setTab] = useState<Tab>("Chat");
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "assistant", content: "Hey, I am Trinity — ShortStack AI agent. I can build websites, set up AI receptionists, create chatbots, manage automations, set up Discord servers, and much more. What do you need?", timestamp: new Date() },
+    { role: "assistant", content: "Hey, I am Trinity -- ShortStack AI agent. I can build websites, set up AI receptionists, create chatbots, manage automations, set up Discord servers, and much more. What do you need?", timestamp: new Date() },
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [agentWeights, setAgentWeights] = useState<Record<string, number>>({
+    "Lead Finder": 80, "Outreach Bot": 70, "Content Engine": 90, "Invoice Agent": 60,
+    "Retention Agent": 50, "SEO Agent": 75, "Analytics": 85, "Competitor Spy": 65,
+  });
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchLogs(); }, []);
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
-
-  async function fetchLogs() {
-    const { data } = await supabase.from("trinity_log").select("*").order("created_at", { ascending: false }).limit(100);
-    setLogs(data || []);
-    setLoading(false);
-  }
 
   async function sendMessage() {
     if (!input.trim() || sending) return;
-
     const userMsg: ChatMessage = { role: "user", content: input, timestamp: new Date() };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages(prev => [...prev, userMsg]);
     setInput("");
     setSending(true);
-
     try {
       const res = await fetch("/api/trinity/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),
       });
       const data = await res.json();
-
-      setMessages((prev) => [...prev, {
+      setMessages(prev => [...prev, {
         role: "assistant",
         content: data.reply || "I processed that command. Check the action log for details.",
         timestamp: new Date(),
       }]);
-      fetchLogs();
     } catch {
-      setMessages((prev) => [...prev, {
+      setMessages(prev => [...prev, {
         role: "assistant",
         content: "Sorry, I encountered an error processing that.",
         timestamp: new Date(),
@@ -72,41 +107,40 @@ export default function TrinityPage() {
   }
 
   return (
-    <div className="fade-in space-y-6">
+    <div className="fade-in space-y-5">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-3">
-            <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-              <Bot size={24} className="text-gold" />
-            </div>
-            Trinity AI
-          </h1>
-          <p className="text-muted text-sm">ShortStack autonomous AI agent — chat or use Telegram</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+            <Bot size={24} className="text-gold" />
+          </div>
+          <div>
+            <h1 className="page-header mb-0">Trinity AI</h1>
+            <p className="text-muted text-xs">ShortStack autonomous AI agent -- chat, orchestrate, and monitor</p>
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        <button onClick={() => setTab("chat")}
-          className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === "chat" ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
-        ><Terminal size={16} /> Chat</button>
-        <button onClick={() => setTab("log")}
-          className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === "log" ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
-        ><History size={16} /> Action Log</button>
+      {/* Tabs */}
+      <div className="flex gap-1 overflow-x-auto pb-1">
+        {TABS.map(t => (
+          <button key={t} onClick={() => setTab(t)}
+            className={`px-3 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${
+              tab === t ? "bg-gold/15 text-gold border border-gold/20" : "text-muted border border-transparent hover:text-foreground"
+            }`}>{t}</button>
+        ))}
       </div>
 
-      {tab === "chat" && (
-        <div className="card p-0 flex flex-col h-[calc(100vh-300px)] min-h-[400px]">
-          {/* Chat Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+      {/* ═══ CHAT TAB ═══ */}
+      {tab === "Chat" && (
+        <div className="card p-0 flex flex-col" style={{ height: "calc(100vh - 280px)", minHeight: 400 }}>
+          <div className="flex-1 overflow-y-auto p-5 space-y-3">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[70%] rounded-2xl px-4 py-3 ${
-                  msg.role === "user"
-                    ? "bg-gold text-black rounded-br-sm"
-                    : "bg-surface-light text-foreground rounded-bl-sm"
+                  msg.role === "user" ? "bg-gold text-black rounded-br-sm" : "bg-surface-light text-foreground rounded-bl-sm"
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                  <p className={`text-xs mt-1 ${msg.role === "user" ? "text-black/50" : "text-muted"}`}>
+                  <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-black/50" : "text-muted"}`}>
                     {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </p>
                 </div>
@@ -114,64 +148,267 @@ export default function TrinityPage() {
             ))}
             {sending && (
               <div className="flex justify-start">
-                <div className="bg-surface-light rounded-2xl rounded-bl-sm px-4 py-3">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                  </div>
+                <div className="bg-surface-light rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1">
+                  <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <div className="w-2 h-2 bg-gold rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                 </div>
               </div>
             )}
             <div ref={chatEndRef} />
           </div>
-
-          {/* Input */}
           <div className="border-t border-border p-4">
-            <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-3">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Tell Trinity what to do..."
-                className="input flex-1"
-                disabled={sending}
-              />
+            <form onSubmit={e => { e.preventDefault(); sendMessage(); }} className="flex gap-3">
+              <input type="text" value={input} onChange={e => setInput(e.target.value)}
+                placeholder="Tell Trinity what to do..." className="input flex-1" disabled={sending} />
               <button type="submit" disabled={sending || !input.trim()} className="btn-primary px-4 disabled:opacity-50">
                 <Send size={18} />
               </button>
             </form>
             <div className="flex flex-wrap gap-2 mt-3">
-              {["Build a website", "Set up AI receptionist", "Create Discord server", "Run email campaign", "Generate leads"].map((cmd) => (
+              {["Build a website", "Set up AI receptionist", "Create Discord server", "Run email campaign", "Generate leads"].map(cmd => (
                 <button key={cmd} onClick={() => setInput(cmd)}
-                  className="text-xs bg-surface-light px-3 py-1.5 rounded-full text-muted hover:text-foreground hover:bg-border transition-all"
-                >{cmd}</button>
+                  className="text-xs bg-surface-light px-3 py-1.5 rounded-full text-muted hover:text-foreground hover:bg-border transition-all">{cmd}</button>
               ))}
             </div>
           </div>
         </div>
       )}
 
-      {tab === "log" && (
-        loading ? <PageLoading /> : (
-          <DataTable
-            columns={[
-              { key: "action_type", label: "Action", render: (l: TrinityLogEntry) => (
-                <span className="capitalize font-medium">{l.action_type.replace("_", " ")}</span>
-              )},
-              { key: "description", label: "Description", render: (l: TrinityLogEntry) => (
-                <p className="text-sm max-w-md truncate">{l.description}</p>
-              )},
-              { key: "command", label: "Command", render: (l: TrinityLogEntry) => (
-                <p className="text-xs text-muted max-w-xs truncate">{l.command || "-"}</p>
-              )},
-              { key: "status", label: "Status", render: (l: TrinityLogEntry) => <StatusBadge status={l.status} /> },
-              { key: "created_at", label: "Time", render: (l: TrinityLogEntry) => formatRelativeTime(l.created_at) },
-            ]}
-            data={logs}
-            emptyMessage="No actions taken yet."
-          />
-        )
+      {/* ═══ DASHBOARD TAB ═══ */}
+      {tab === "Dashboard" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="card p-3 text-center">
+              <p className="text-[9px] text-muted uppercase">Total Agents</p>
+              <p className="text-xl font-bold text-gold">{MOCK_AGENTS.length}</p>
+            </div>
+            <div className="card p-3 text-center">
+              <p className="text-[9px] text-muted uppercase">Active Now</p>
+              <p className="text-xl font-bold text-emerald-400">{MOCK_AGENTS.filter(a => a.status === "active").length}</p>
+            </div>
+            <div className="card p-3 text-center">
+              <p className="text-[9px] text-muted uppercase">Actions Today</p>
+              <p className="text-xl font-bold text-foreground">{MOCK_AGENTS.reduce((s, a) => s + a.actionsToday, 0)}</p>
+            </div>
+            <div className="card p-3 text-center">
+              <p className="text-[9px] text-muted uppercase">Errors</p>
+              <p className={`text-xl font-bold ${MOCK_AGENTS.filter(a => a.status === "error").length > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                {MOCK_AGENTS.filter(a => a.status === "error").length}
+              </p>
+            </div>
+          </div>
+          <div className="card">
+            <h3 className="text-xs font-bold mb-3">Response Time Comparison (ms)</h3>
+            <div className="flex items-end gap-2 h-28">
+              {[
+                { name: "Claude", ms: 340, color: "bg-gold/60" },
+                { name: "GPT-4o", ms: 520, color: "bg-blue-400/60" },
+                { name: "Gemini", ms: 410, color: "bg-purple-400/60" },
+              ].map(m => (
+                <div key={m.name} className="flex-1 flex flex-col items-center gap-1">
+                  <span className="text-[9px] font-mono">{m.ms}ms</span>
+                  <div className={`w-full rounded-t ${m.color}`} style={{ height: `${(m.ms / 600) * 100}%` }} />
+                  <span className="text-[8px] text-muted">{m.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ AGENTS TAB ═══ */}
+      {tab === "Agents" && (
+        <div className="card">
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Agent Status Grid</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+            {MOCK_AGENTS.map(a => (
+              <div key={a.name} className={`p-3 rounded-xl border ${
+                a.status === "error" ? "border-red-500/15 bg-red-500/5" : a.status === "active" ? "border-emerald-500/10 bg-emerald-500/5" : "border-border bg-surface-light"
+              }`}>
+                <div className="flex items-center gap-1.5 mb-2">
+                  <div className={`w-2 h-2 rounded-full ${a.status === "active" ? "bg-emerald-400" : a.status === "error" ? "bg-red-400 animate-pulse" : "bg-amber-400"}`} />
+                  <p className="text-xs font-semibold">{a.name}</p>
+                </div>
+                <p className="text-[9px] text-muted mb-1">{a.lastAction}</p>
+                <div className="flex justify-between text-[9px]">
+                  <span className="text-muted">{a.actionsToday} today</span>
+                  <span className={a.successRate >= 90 ? "text-emerald-400" : "text-amber-400"}>{a.successRate}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ OUTPUTS TAB ═══ */}
+      {tab === "Outputs" && (
+        <div className="card">
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-gold" /> Combined Output Viewer</h2>
+          <div className="space-y-2">
+            {MOCK_OUTPUTS.map(o => (
+              <div key={o.id} className="p-3 rounded-xl bg-surface-light border border-border">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-semibold text-gold">{o.agent}</span>
+                  <span className="text-[9px] bg-surface px-1.5 py-0.5 rounded text-muted">{o.type}</span>
+                  <span className="text-[9px] text-muted ml-auto">{o.time}</span>
+                </div>
+                <p className="text-xs text-muted">{o.preview}</p>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className="text-[9px] text-muted">Quality:</span>
+                  <div className="w-20 h-1.5 rounded-full bg-surface">
+                    <div className={`h-1.5 rounded-full ${o.quality >= 90 ? "bg-emerald-400" : o.quality >= 80 ? "bg-gold" : "bg-amber-400"}`}
+                      style={{ width: `${o.quality}%` }} />
+                  </div>
+                  <span className="text-[9px] font-mono">{o.quality}%</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ QUEUE TAB ═══ */}
+      {tab === "Queue" && (
+        <div className="card">
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-gold" /> Unified Task Queue</h2>
+          <div className="space-y-2">
+            {MOCK_QUEUE.map(q => (
+              <div key={q.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+                <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
+                  q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-gold/10 text-gold" : "bg-blue-500/10 text-blue-400"
+                }`}>{q.priority}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium">{q.task}</p>
+                  <p className="text-[9px] text-muted">{q.agent} &middot; ETA: {q.eta}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ COST TAB ═══ */}
+      {tab === "Cost" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Today</p><p className="text-xl font-bold text-gold">$4.82</p></div>
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">This Week</p><p className="text-xl font-bold text-foreground">$28.45</p></div>
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">This Month</p><p className="text-xl font-bold text-foreground">$142.80</p></div>
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Per Task Avg</p><p className="text-xl font-bold text-foreground">$0.12</p></div>
+          </div>
+          <div className="card">
+            <h3 className="text-xs font-bold mb-3">Cost by Agent</h3>
+            <div className="space-y-2">
+              {MOCK_AGENTS.slice(0, 5).map(a => (
+                <div key={a.name} className="flex items-center gap-3">
+                  <span className="text-[10px] w-28 shrink-0">{a.name}</span>
+                  <div className="flex-1 h-2 rounded-full bg-surface-light">
+                    <div className="h-2 rounded-full bg-gold" style={{ width: `${Math.random() * 60 + 20}%` }} />
+                  </div>
+                  <span className="text-[10px] font-mono text-gold w-12 text-right">${(Math.random() * 2 + 0.5).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ QUALITY TAB ═══ */}
+      {tab === "Quality" && (
+        <div className="card">
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-gold" /> Quality Comparison</h2>
+          <div className="space-y-2">
+            {MOCK_AGENTS.map(a => (
+              <div key={a.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                <span className="text-[10px] w-28 shrink-0 font-medium">{a.name}</span>
+                <div className="flex-1 h-2 rounded-full bg-surface">
+                  <div className={`h-2 rounded-full ${a.successRate >= 95 ? "bg-emerald-400" : a.successRate >= 80 ? "bg-gold" : "bg-red-400"}`}
+                    style={{ width: `${a.successRate}%` }} />
+                </div>
+                <span className={`text-[10px] font-mono w-10 text-right ${a.successRate >= 90 ? "text-emerald-400" : "text-amber-400"}`}>{a.successRate}%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ FALLBACK TAB ═══ */}
+      {tab === "Fallback" && (
+        <div className="card">
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Fallback Chain Editor</h2>
+          <div className="space-y-2">
+            {FALLBACK_CHAIN.map((f, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+                <div className="bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded text-[10px] font-medium">{f.primary}</div>
+                <ArrowRight size={12} className="text-muted" />
+                <div className="bg-amber-500/10 text-amber-400 px-2 py-1 rounded text-[10px] font-medium">{f.fallback}</div>
+                <span className="text-[9px] text-muted ml-auto">{f.trigger}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-[9px] text-muted mt-3">Trinity automatically falls back to secondary providers when primary services are unavailable.</p>
+        </div>
+      )}
+
+      {/* ═══ HISTORY TAB ═══ */}
+      {tab === "History" && (
+        <div className="card">
+          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-gold" /> Action History</h2>
+          <div className="space-y-1.5">
+            {MOCK_HISTORY.map(h => (
+              <div key={h.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                {h.status === "success" ? <CheckCircle size={12} className="text-emerald-400 shrink-0" /> : <XCircle size={12} className="text-red-400 shrink-0" />}
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs">{h.action}</p>
+                  <p className="text-[9px] text-muted">{h.time}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ ANALYTICS TAB ═══ */}
+      {tab === "Analytics" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-gold" /> Trinity Analytics</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="bg-surface-light rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-gold">1,247</p>
+                <p className="text-[9px] text-muted">Tasks This Month</p>
+              </div>
+              <div className="bg-surface-light rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-emerald-400">96.2%</p>
+                <p className="text-[9px] text-muted">Success Rate</p>
+              </div>
+              <div className="bg-surface-light rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-blue-400">3.4s</p>
+                <p className="text-[9px] text-muted">Avg Response</p>
+              </div>
+              <div className="bg-surface-light rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-foreground">$142</p>
+                <p className="text-[9px] text-muted">Monthly Cost</p>
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <h3 className="text-xs font-bold mb-3">Agent Weighting Controls</h3>
+            <p className="text-[10px] text-muted mb-3">Adjust priority weighting for each agent in the Trinity orchestration layer.</p>
+            <div className="space-y-2">
+              {Object.entries(agentWeights).map(([name, weight]) => (
+                <div key={name} className="flex items-center gap-3">
+                  <span className="text-[10px] w-28 shrink-0">{name}</span>
+                  <input type="range" min={0} max={100} value={weight}
+                    onChange={e => setAgentWeights(prev => ({ ...prev, [name]: Number(e.target.value) }))}
+                    className="flex-1 accent-gold" />
+                  <span className="text-[10px] font-mono w-8 text-right">{weight}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

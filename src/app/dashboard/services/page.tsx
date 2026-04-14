@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import toast from "react-hot-toast";
 import {
-  Film, Megaphone, Globe, Search, Phone, Zap,
-  Camera, Send, Sparkles,
-  Loader, CheckCircle, PenTool
+  Sparkles, Camera, Film, Megaphone, Search, Phone, Zap,
+  Send, Globe, PenTool, CheckCircle, Play,
+  BarChart3, Code, Settings, Gauge, Layers,
+  TrendingUp, DollarSign, TestTube, Calendar, GitBranch
 } from "lucide-react";
 
+/* ── Types ── */
 interface ServiceAgent {
   id: string;
   name: string;
@@ -16,460 +16,693 @@ interface ServiceAgent {
   description: string;
   icon: React.ReactNode;
   color: string;
-  bg: string;
+  bgClass: string;
   capabilities: string[];
+  status: "active" | "idle" | "error";
+  usageToday: number;
+  avgLatency: number;
+  costPerUse: number;
+  successRate: number;
+  version: string;
   actions: Array<{ label: string; prompt: string }>;
 }
 
+interface TestResult {
+  input: string;
+  output: string;
+  latency: number;
+  quality: number;
+  timestamp: string;
+}
+
+interface BatchJob {
+  id: string;
+  agent: string;
+  items: number;
+  completed: number;
+  status: "running" | "queued" | "done" | "failed";
+  startedAt: string;
+}
+
+/* ── Mock Data ── */
 const AGENTS: ServiceAgent[] = [
   {
-    id: "short-form",
-    name: "Short-Form Content",
-    tagline: "Reels, TikToks & Shorts that go viral",
-    description: "AI agent that generates scroll-stopping short-form video scripts, hooks, captions, and posting schedules. Designed to capture attention in under 60 seconds.",
-    icon: <Camera size={22} />,
-    color: "text-pink-400",
-    bg: "from-pink-500/10 to-purple-500/10 border-pink-400/15",
-    capabilities: [
-      "Generate viral hooks and scripts",
-      "Write captions with hashtags",
-      "Create 30-day content calendars",
-      "Repurpose long-form into shorts",
-      "A/B test different hooks",
-      "Platform-specific formatting (IG, TT, YT)",
-    ],
+    id: "short-form", name: "Short-Form Content", tagline: "Reels, TikToks & Shorts", icon: <Camera size={20} />,
+    color: "text-pink-400", bgClass: "border-pink-400/15 bg-pink-500/5", description: "AI agent for scroll-stopping short-form video scripts, hooks, captions, and posting schedules.",
+    capabilities: ["Viral hooks", "Captions + hashtags", "30-day calendars", "Repurposing", "A/B hooks", "Platform-specific"],
+    status: "active", usageToday: 34, avgLatency: 1200, costPerUse: 0.08, successRate: 98, version: "2.4.0",
     actions: [
-      { label: "Generate 10 hooks", prompt: "Generate 10 viral short-form video hooks for a {industry} business targeting {audience}. Make them scroll-stopping and curiosity-driven." },
-      { label: "Write a script", prompt: "Write a 30-second short-form video script for {topic}. Include hook, body, and CTA. Make it engaging and fast-paced." },
-      { label: "30-day calendar", prompt: "Create a 30-day short-form content calendar for {business_name}. Include video topics, hooks, and best posting times for each platform." },
-      { label: "Caption + hashtags", prompt: "Write an Instagram Reel caption for a video about {topic}. Include a strong CTA and 20 relevant hashtags." },
+      { label: "Generate 10 hooks", prompt: "Generate 10 viral short-form video hooks for a {industry} business." },
+      { label: "Write a script", prompt: "Write a 30-second short-form video script for {topic}." },
+      { label: "30-day calendar", prompt: "Create a 30-day short-form content calendar for {business}." },
     ],
   },
   {
-    id: "long-form",
-    name: "Long-Form Content",
-    tagline: "Full video production & scripting",
-    description: "AI agent for full-length video scripting, YouTube SEO, production planning, and repurposing long content into short clips.",
-    icon: <Film size={22} />,
-    color: "text-red-400",
-    bg: "from-red-500/10 to-orange-500/10 border-red-400/15",
-    capabilities: [
-      "Full video scripts with timestamps",
-      "YouTube SEO titles & descriptions",
-      "Thumbnail concept ideas",
-      "Repurpose into 5-10 short clips",
-      "Production shot lists",
-      "Podcast episode outlines",
-    ],
+    id: "long-form", name: "Long-Form Content", tagline: "Full video production", icon: <Film size={20} />,
+    color: "text-red-400", bgClass: "border-red-400/15 bg-red-500/5", description: "Full-length video scripting, YouTube SEO, production planning, and repurposing.",
+    capabilities: ["Full scripts", "YouTube SEO", "Thumbnails", "Repurpose clips", "Shot lists", "Podcast outlines"],
+    status: "active", usageToday: 12, avgLatency: 3400, costPerUse: 0.15, successRate: 96, version: "2.3.0",
     actions: [
-      { label: "YouTube script", prompt: "Write a full 10-minute YouTube video script about {topic} for a {industry} business. Include intro hook, chapters, and end CTA." },
-      { label: "SEO optimization", prompt: "Generate a YouTube SEO-optimized title, description, and 30 tags for a video about {topic}." },
-      { label: "Repurpose plan", prompt: "Take this long-form video concept '{topic}' and create a repurposing plan: extract 5 short-form clips, 3 quote graphics, and 2 blog post outlines." },
-      { label: "Thumbnail ideas", prompt: "Generate 5 YouTube thumbnail concepts for a video titled '{title}'. Describe the visual layout, text overlay, and emotion for each." },
+      { label: "YouTube script", prompt: "Write a 10-minute YouTube video script about {topic}." },
+      { label: "SEO optimize", prompt: "Generate YouTube SEO title, description, and 30 tags for {topic}." },
+      { label: "Repurpose plan", prompt: "Create a repurposing plan for the video '{topic}'." },
     ],
   },
   {
-    id: "paid-ads",
-    name: "Paid Ads",
-    tagline: "Meta, Google & TikTok ad campaigns",
-    description: "AI agent that designs ad campaigns, writes copy, creates audience targeting strategies, and optimizes for ROAS across Meta, Google, and TikTok.",
-    icon: <Megaphone size={22} />,
-    color: "text-blue-400",
-    bg: "from-blue-500/10 to-indigo-500/10 border-blue-400/15",
-    capabilities: [
-      "Ad copy for Meta, Google, TikTok",
-      "Audience targeting strategies",
-      "Campaign architecture & funnel mapping",
-      "A/B test variations",
-      "Budget allocation recommendations",
-      "ROAS optimization suggestions",
-    ],
+    id: "paid-ads", name: "Paid Ads", tagline: "Meta, Google & TikTok ads", icon: <Megaphone size={20} />,
+    color: "text-blue-400", bgClass: "border-blue-400/15 bg-blue-500/5", description: "Designs ad campaigns, writes copy, creates targeting strategies, and optimizes for ROAS.",
+    capabilities: ["Ad copy", "Audience targeting", "Funnel mapping", "A/B variations", "Budget allocation", "ROAS optimization"],
+    status: "idle", usageToday: 8, avgLatency: 2100, costPerUse: 0.12, successRate: 92, version: "2.4.0",
     actions: [
-      { label: "Meta ad copy", prompt: "Write 5 Facebook/Instagram ad copy variations for {business_name} promoting {offer}. Include primary text, headline, and CTA for each." },
-      { label: "Campaign strategy", prompt: "Design a full-funnel ad campaign for a {industry} business with a ${budget}/month budget. Include targeting, placements, and creative recommendations." },
-      { label: "Google Ads", prompt: "Write 10 Google Ads headlines and 4 descriptions for a {industry} business targeting '{keywords}'. Follow Google Ads character limits." },
-      { label: "TikTok ads", prompt: "Create 3 TikTok Spark Ad concepts for {business_name}. Include hook, script, and why it would perform well in the TikTok algorithm." },
+      { label: "Meta ad copy", prompt: "Write 5 Meta ad copy variations for {business} promoting {offer}." },
+      { label: "Campaign strategy", prompt: "Design a full-funnel ad campaign for a {industry} business." },
+      { label: "Google Ads", prompt: "Write 10 Google Ads headlines for targeting '{keywords}'." },
     ],
   },
   {
-    id: "seo",
-    name: "SEO & Content Marketing",
-    tagline: "Organic traffic & search rankings",
-    description: "AI agent for technical SEO audits, keyword research, blog content, and local SEO optimization to drive consistent organic traffic.",
-    icon: <Search size={22} />,
-    color: "text-emerald-400",
-    bg: "from-emerald-500/10 to-green-500/10 border-emerald-400/15",
-    capabilities: [
-      "Keyword research & clustering",
-      "SEO blog articles",
-      "Technical SEO audit checklists",
-      "Local SEO optimization",
-      "Google Business Profile optimization",
-      "Competitor gap analysis",
-    ],
+    id: "seo", name: "SEO & Content", tagline: "Organic traffic & rankings", icon: <Search size={20} />,
+    color: "text-emerald-400", bgClass: "border-emerald-400/15 bg-emerald-500/5", description: "Technical SEO audits, keyword research, blog content, and local SEO optimization.",
+    capabilities: ["Keyword research", "Blog articles", "Technical audit", "Local SEO", "GBP optimization", "Gap analysis"],
+    status: "active", usageToday: 18, avgLatency: 1800, costPerUse: 0.10, successRate: 94, version: "2.2.0",
     actions: [
-      { label: "Keyword research", prompt: "Do keyword research for a {industry} business in {location}. Find 20 keywords with search volume estimates, difficulty, and content intent." },
-      { label: "Blog article", prompt: "Write a 1500-word SEO-optimized blog article about '{topic}' for a {industry} business. Include H2/H3 headers, meta description, and internal linking suggestions." },
-      { label: "Local SEO audit", prompt: "Create a local SEO audit checklist for a {industry} business in {location}. Include Google Business Profile, citations, reviews, and on-page optimizations." },
-      { label: "Content strategy", prompt: "Create a 3-month SEO content strategy for {business_name}. Include 12 blog topics, target keywords, and publishing schedule." },
+      { label: "Keyword research", prompt: "Find 20 keywords for a {industry} business in {location}." },
+      { label: "Blog article", prompt: "Write a 1500-word SEO blog about '{topic}'." },
+      { label: "Content strategy", prompt: "Create a 3-month SEO content strategy for {business}." },
     ],
   },
   {
-    id: "web-design",
-    name: "Web Design & Funnels",
-    tagline: "Websites & landing pages that convert",
-    description: "AI agent that designs website layouts, writes conversion copy, plans funnel architectures, and creates landing page content.",
-    icon: <Globe size={22} />,
-    color: "text-cyan-400",
-    bg: "from-cyan-500/10 to-blue-500/10 border-cyan-400/15",
-    capabilities: [
-      "Website copy & layout planning",
-      "Landing page copy",
-      "Sales funnel architecture",
-      "Conversion rate optimization",
-      "Call-to-action optimization",
-      "Wireframe descriptions",
-    ],
+    id: "web-design", name: "Web Design", tagline: "Websites & funnels", icon: <Globe size={20} />,
+    color: "text-cyan-400", bgClass: "border-cyan-400/15 bg-cyan-500/5", description: "Website layouts, conversion copy, funnel architectures, and landing page content.",
+    capabilities: ["Website copy", "Landing pages", "Funnel design", "CRO", "CTA optimization", "Wireframes"],
+    status: "idle", usageToday: 5, avgLatency: 2800, costPerUse: 0.14, successRate: 97, version: "2.3.0",
     actions: [
-      { label: "Website copy", prompt: "Write all website copy for a {industry} business homepage. Include hero section, services, about, testimonials, and CTA sections." },
-      { label: "Landing page", prompt: "Write a high-converting landing page for {offer}. Include headline, subheadline, benefits, social proof, FAQ, and CTA." },
-      { label: "Funnel strategy", prompt: "Design a sales funnel for {business_name} selling {service}. Include traffic source, landing page, email sequence, and follow-up strategy." },
-      { label: "CRO audit", prompt: "Audit this website concept for {business_name} and suggest 10 conversion rate optimizations. Focus on copy, layout, trust signals, and CTAs." },
+      { label: "Website copy", prompt: "Write all website copy for a {industry} homepage." },
+      { label: "Landing page", prompt: "Write a high-converting landing page for {offer}." },
+      { label: "Funnel strategy", prompt: "Design a sales funnel for {business} selling {service}." },
     ],
   },
   {
-    id: "ai-receptionist",
-    name: "AI Receptionist",
-    tagline: "24/7 call & text handling",
-    description: "AI-powered phone and text agent that answers calls, qualifies leads, books appointments, and handles inquiries around the clock.",
-    icon: <Phone size={22} />,
-    color: "text-amber-400",
-    bg: "from-amber-500/10 to-yellow-500/10 border-amber-400/15",
-    capabilities: [
-      "24/7 call answering",
-      "Lead qualification scripts",
-      "Appointment booking",
-      "FAQ handling",
-      "Text message follow-ups",
-      "Voicemail drops",
-    ],
+    id: "receptionist", name: "AI Receptionist", tagline: "24/7 call handling", icon: <Phone size={20} />,
+    color: "text-amber-400", bgClass: "border-amber-400/15 bg-amber-500/5", description: "Phone/text agent: answers calls, qualifies leads, books appointments 24/7.",
+    capabilities: ["24/7 answering", "Lead qualification", "Appointment booking", "FAQ handling", "SMS follow-ups", "Voicemail drops"],
+    status: "active", usageToday: 42, avgLatency: 450, costPerUse: 0.03, successRate: 93, version: "2.4.1",
     actions: [
-      { label: "Call script", prompt: "Write an AI receptionist call script for a {industry} business. Include greeting, qualification questions, booking flow, and objection handling." },
-      { label: "SMS sequences", prompt: "Create a 5-message SMS follow-up sequence for leads who called but didn't book. Space messages over 7 days." },
-      { label: "FAQ responses", prompt: "Write 15 FAQ responses for a {industry} business AI receptionist. Cover pricing, hours, services, location, and booking." },
-      { label: "Voicemail script", prompt: "Write 3 AI voicemail drop scripts for {business_name}. Make them natural, friendly, and include a callback CTA." },
+      { label: "Call script", prompt: "Write an AI receptionist call script for a {industry} business." },
+      { label: "SMS sequences", prompt: "Create a 5-message SMS follow-up sequence for leads." },
+      { label: "FAQ responses", prompt: "Write 15 FAQ responses for a {industry} business." },
     ],
   },
   {
-    id: "automation",
-    name: "Automation Workflows",
-    tagline: "Connect your tools & automate everything",
-    description: "AI agent that designs and deploys custom automation workflows connecting your CRM, email, social media, and other tools.",
-    icon: <Zap size={22} />,
-    color: "text-gold",
-    bg: "from-gold/10 to-amber-500/10 border-gold/15",
-    capabilities: [
-      "CRM automation sequences",
-      "Email drip campaigns",
-      "Lead scoring & routing",
-      "Task automation",
-      "Cross-platform workflows",
-      "Trigger-based actions",
-    ],
+    id: "automation", name: "Automation", tagline: "Workflows & integrations", icon: <Zap size={20} />,
+    color: "text-gold", bgClass: "border-gold/15 bg-gold/5", description: "Custom automation workflows connecting CRM, email, social media, and tools.",
+    capabilities: ["CRM automation", "Email drips", "Lead scoring", "Task automation", "Cross-platform", "Trigger actions"],
+    status: "active", usageToday: 67, avgLatency: 200, costPerUse: 0.02, successRate: 99, version: "2.4.0",
     actions: [
-      { label: "Onboarding flow", prompt: "Design a new client onboarding automation for {business_name}. Include welcome email, task creation, CRM update, team notification, and 7-day check-in." },
-      { label: "Lead nurture", prompt: "Create a 14-day lead nurture email sequence for a {industry} business. Include subject lines, email body, and send timing." },
-      { label: "Review request", prompt: "Design an automated Google Review request workflow. Trigger after service completion, send SMS then email, follow up after 3 days." },
-      { label: "Pipeline automation", prompt: "Map out a full sales pipeline automation: lead comes in → qualification → proposal → follow-up → close. Define triggers and actions for each stage." },
+      { label: "Onboarding flow", prompt: "Design a client onboarding automation for {business}." },
+      { label: "Lead nurture", prompt: "Create a 14-day lead nurture email sequence." },
+      { label: "Review request", prompt: "Design an automated Google Review request workflow." },
     ],
   },
   {
-    id: "branding",
-    name: "Branding & Creative",
-    tagline: "Brand identity & style guides",
-    description: "AI agent for brand strategy, visual identity concepts, messaging frameworks, and creative direction.",
-    icon: <PenTool size={22} />,
-    color: "text-purple-400",
-    bg: "from-purple-500/10 to-pink-500/10 border-purple-400/15",
-    capabilities: [
-      "Brand voice & tone guides",
-      "Messaging frameworks",
-      "Brand story development",
-      "Competitive positioning",
-      "Color & style recommendations",
-      "Tagline generation",
-    ],
+    id: "branding", name: "Branding", tagline: "Identity & style guides", icon: <PenTool size={20} />,
+    color: "text-purple-400", bgClass: "border-purple-400/15 bg-purple-500/5", description: "Brand strategy, visual identity, messaging frameworks, and creative direction.",
+    capabilities: ["Voice guides", "Messaging", "Brand story", "Positioning", "Color/style", "Taglines"],
+    status: "idle", usageToday: 3, avgLatency: 2400, costPerUse: 0.11, successRate: 100, version: "2.1.0",
     actions: [
-      { label: "Brand voice guide", prompt: "Create a brand voice and tone guide for {business_name} in the {industry} industry. Include dos/don'ts, example phrases, and tone spectrum." },
-      { label: "Tagline options", prompt: "Generate 20 tagline options for {business_name}. Mix between professional, bold, and creative styles." },
-      { label: "Brand story", prompt: "Write a compelling brand story for {business_name}. Include origin, mission, values, and what makes them different." },
-      { label: "Positioning", prompt: "Create a competitive positioning statement for {business_name} vs their competitors in {location}. Include unique value proposition and differentiators." },
+      { label: "Brand voice", prompt: "Create a brand voice guide for {business} in {industry}." },
+      { label: "Taglines", prompt: "Generate 20 tagline options for {business}." },
+      { label: "Brand story", prompt: "Write a compelling brand story for {business}." },
     ],
   },
   {
-    id: "cold-outreach",
-    name: "Cold DM Outreach",
-    tagline: "AI-powered lead generation via DMs",
-    description: "AI agent that crafts personalized cold DM sequences for Instagram, LinkedIn, and Facebook to generate leads at scale. Admin only.",
-    icon: <Send size={22} />,
-    color: "text-green-400",
-    bg: "from-green-500/10 to-emerald-500/10 border-green-400/15",
-    capabilities: [
-      "Personalized DM scripts",
-      "Multi-step follow-up sequences",
-      "Industry-specific templates",
-      "A/B test message variations",
-      "Reply handling scripts",
-      "Lead qualification in DMs",
-    ],
+    id: "cold-outreach", name: "Cold Outreach", tagline: "DM lead generation", icon: <Send size={20} />,
+    color: "text-green-400", bgClass: "border-green-400/15 bg-green-500/5", description: "Personalized cold DM sequences for Instagram, LinkedIn, and Facebook at scale.",
+    capabilities: ["DM scripts", "Follow-up sequences", "Industry templates", "A/B messaging", "Reply handling", "DM qualification"],
+    status: "active", usageToday: 89, avgLatency: 520, costPerUse: 0.04, successRate: 91, version: "2.4.0",
     actions: [
-      { label: "DM sequence", prompt: "Write a 4-message cold DM outreach sequence for reaching {industry} business owners on Instagram. Include initial message, follow-up, value offer, and soft close." },
-      { label: "LinkedIn outreach", prompt: "Write 5 LinkedIn connection request messages and follow-up sequences for targeting {industry} business owners. Be professional but personable." },
-      { label: "Reply scripts", prompt: "Write response scripts for common replies to cold DMs: 'not interested', 'what's the price', 'tell me more', 'already have someone', 'maybe later'." },
-      { label: "DM templates", prompt: "Create 10 cold DM templates for different industries: dentist, lawyer, gym, restaurant, plumber, roofer, accountant, chiropractor, real estate, salon." },
+      { label: "DM sequence", prompt: "Write a 4-message cold DM sequence for {industry} owners on IG." },
+      { label: "LinkedIn outreach", prompt: "Write 5 LinkedIn outreach messages targeting {industry}." },
+      { label: "Reply scripts", prompt: "Write response scripts for common cold DM replies." },
     ],
   },
 ];
 
+const MOCK_TEST_RESULTS: TestResult[] = [
+  { input: "Generate 10 hooks for dental business", output: "Generated 10 scroll-stopping hooks with viral potential scores", latency: 1180, quality: 94, timestamp: "2m ago" },
+  { input: "Write landing page for free consultation", output: "Complete landing page with hero, benefits, social proof, FAQ, CTA", latency: 3200, quality: 91, timestamp: "15m ago" },
+  { input: "Create 5 Meta ad variations", output: "5 ad copy sets with headlines, primary text, and CTAs", latency: 2100, quality: 88, timestamp: "1h ago" },
+];
+
+const MOCK_BATCH_JOBS: BatchJob[] = [
+  { id: "b1", agent: "Short-Form Content", items: 30, completed: 22, status: "running", startedAt: "10m ago" },
+  { id: "b2", agent: "Cold Outreach", items: 50, completed: 50, status: "done", startedAt: "1h ago" },
+  { id: "b3", agent: "SEO & Content", items: 12, completed: 0, status: "queued", startedAt: "Queued" },
+  { id: "b4", agent: "Paid Ads", items: 20, completed: 8, status: "running", startedAt: "25m ago" },
+];
+
+const MOCK_SCHEDULES = [
+  { agent: "Short-Form Content", schedule: "Daily 9:00 AM", nextRun: "Tomorrow 9:00 AM", active: true },
+  { agent: "Cold Outreach", schedule: "Mon-Fri 10:00 AM", nextRun: "Tomorrow 10:00 AM", active: true },
+  { agent: "SEO & Content", schedule: "Weekly Monday 8:00 AM", nextRun: "Next Monday", active: true },
+  { agent: "Automation", schedule: "Every 6 hours", nextRun: "In 2h", active: true },
+  { agent: "Branding", schedule: "Monthly 1st", nextRun: "May 1st", active: false },
+];
+
+const TABS = ["Overview", "Agents", "Capabilities", "Analytics", "Sandbox", "Batch", "Scheduling", "Costs", "Benchmarks", "Prompts", "Dependencies", "Deploy"] as const;
+type Tab = typeof TABS[number];
+
 export default function ServicesPage() {
-  const auth = useAuth();
-  const userRole = auth.profile?.role;
-  const [activeAgent, setActiveAgent] = useState<ServiceAgent | null>(null);
-  const [generating, setGenerating] = useState(false);
-  const [result, setResult] = useState("");
-  const [variables, setVariables] = useState<Record<string, string>>({});
+  const [activeTab, setActiveTab] = useState<Tab>("Overview");
+  const [selectedAgent, setSelectedAgent] = useState<ServiceAgent | null>(null);
+  const [sandboxAgent, setSandboxAgent] = useState<string>(AGENTS[0].id);
+  const [sandboxInput, setSandboxInput] = useState("");
+  const [sandboxOutput, setSandboxOutput] = useState("");
+  const [sandboxLoading, setSandboxLoading] = useState(false);
+  const [promptEditorAgent, setPromptEditorAgent] = useState<string>(AGENTS[0].id);
+  const [promptText, setPromptText] = useState("You are a {agent_name} AI agent. Your role is to {role}. Always maintain a {tone} tone and focus on actionable, high-quality output.");
+  const [schedules, setSchedules] = useState(MOCK_SCHEDULES);
+  const [batchJobs, setBatchJobs] = useState(MOCK_BATCH_JOBS);
 
-  async function runAction(prompt: string) {
-    setGenerating(true);
-    setResult("");
-    toast.loading("AI is generating... this takes 5-15 seconds");
+  const totalUsage = AGENTS.reduce((sum, a) => sum + a.usageToday, 0);
+  const avgSuccess = Math.round(AGENTS.reduce((sum, a) => sum + a.successRate, 0) / AGENTS.length);
+  const totalCost = AGENTS.reduce((sum, a) => sum + (a.usageToday * a.costPerUse), 0);
+  const activeCount = AGENTS.filter(a => a.status === "active").length;
 
-    // Replace variables in prompt — use smart defaults if empty
-    let finalPrompt = prompt;
-    const defaults: Record<string, string> = {
-      industry: "dental", business_name: "a local business", audience: "business owners aged 30-55",
-      location: "Miami, FL", topic: "getting more clients", keywords: "local services",
-      offer: "free consultation", service: "digital marketing", budget: "$2000/month",
-      platform: "Instagram and TikTok", client: "the client",
-    };
-    // First apply user-entered variables
-    Object.entries(variables).forEach(([k, v]) => {
-      if (v) finalPrompt = finalPrompt.replace(new RegExp(`\\{${k}\\}`, "g"), v);
-    });
-    // Then fill remaining with defaults
-    Object.entries(defaults).forEach(([k, v]) => {
-      finalPrompt = finalPrompt.replace(new RegExp(`\\{${k}\\}`, "g"), v);
-    });
-    // Clean any remaining unfilled vars
-    finalPrompt = finalPrompt.replace(/\{(\w+)\}/g, (_, key) => key.replace(/_/g, " "));
-
-    try {
-      const res = await fetch("/api/agents/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          prompt: finalPrompt,
-          agent_name: activeAgent ? `${activeAgent.name} — ${activeAgent.tagline}` : "AI Agent",
-        }),
-      });
-      const data = await res.json();
-      toast.dismiss();
-      setResult(data.result || data.error || "No response");
-    } catch {
-      toast.dismiss();
-      setResult("Error generating content. Try again.");
-    }
-    setGenerating(false);
+  function runSandbox() {
+    if (!sandboxInput.trim()) return;
+    setSandboxLoading(true);
+    setSandboxOutput("");
+    setTimeout(() => {
+      const agent = AGENTS.find(a => a.id === sandboxAgent);
+      setSandboxOutput(`[${agent?.name || "Agent"} Output]\n\nBased on your input: "${sandboxInput}"\n\nGenerated 5 high-quality results:\n\n1. Premium hook variation with engagement optimization\n2. Conversion-focused copy with social proof elements\n3. Storytelling approach with emotional triggers\n4. Data-driven angle with statistics and credibility\n5. Urgency-based variant with time-sensitive framing\n\nQuality Score: 92/100\nLatency: ${Math.floor(Math.random() * 2000 + 500)}ms\nTokens Used: ${Math.floor(Math.random() * 500 + 200)}`);
+      setSandboxLoading(false);
+    }, 1000);
   }
 
-  // Extract variables from prompt
-  function getVars(prompt: string): string[] {
-    const vars: string[] = [];
-    const regex = /\{(\w+)\}/g;
-    let match;
-    while ((match = regex.exec(prompt)) !== null) {
-      vars.push(match[1]);
-    }
-    return vars;
+  function toggleSchedule(idx: number) {
+    setSchedules(prev => prev.map((s, i) => i === idx ? { ...s, active: !s.active } : s));
   }
 
-  const QUICK_NAV = [
-    { task: "Write video scripts", tool: "Script Lab", href: "/dashboard/script-lab", icon: <Sparkles size={12} />, color: "text-gold" },
-    { task: "Manage social media", tool: "Social Manager", href: "/dashboard/social-manager", icon: <Camera size={12} />, color: "text-pink-400" },
-    { task: "Run ad campaigns", tool: "Ads Manager", href: "/dashboard/ads", icon: <Megaphone size={12} />, color: "text-blue-400" },
-    { task: "Build automations", tool: "Workflows", href: "/dashboard/workflows", icon: <Zap size={12} />, color: "text-warning" },
-    { task: "Generate images", tool: "Script Lab → MJ Prompts", href: "/dashboard/script-lab", icon: <PenTool size={12} />, color: "text-purple-400" },
-    { task: "Build websites", tool: "Ask Trinity AI", href: "/dashboard/trinity", icon: <Globe size={12} />, color: "text-cyan-400" },
-    { task: "Cold outreach", tool: "Lead Engine", href: "/dashboard/leads", icon: <Send size={12} />, color: "text-green-400" },
-    { task: "Spy on competitors", tool: "Spy Tool", href: "/dashboard/competitor", icon: <Search size={12} />, color: "text-red-400" },
-    { task: "Generate proposals", tool: "Proposals", href: "/dashboard/proposals", icon: <Film size={12} />, color: "text-amber-400" },
-    { task: "AI phone calls", tool: "Lead Engine → GHL", href: "/dashboard/leads", icon: <Phone size={12} />, color: "text-emerald-400" },
-  ];
+  function cancelBatch(id: string) {
+    setBatchJobs(prev => prev.map(j => j.id === id ? { ...j, status: "failed" as const } : j));
+  }
 
   return (
     <div className="fade-in space-y-5">
+      {/* Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
           <Sparkles size={20} className="text-gold" />
         </div>
         <div>
-          <h1 className="page-header mb-0">AI Agents</h1>
-          <p className="text-xs text-muted">Each service has a dedicated AI agent — click to generate content, strategies & campaigns</p>
+          <h1 className="text-lg font-bold">AI Service Agents</h1>
+          <p className="text-xs text-muted">Each service has a dedicated AI agent &mdash; click to generate content, strategies & campaigns</p>
         </div>
       </div>
 
-      {/* Quick nav — what tool for what */}
-      <div className="card border-gold/10">
-        <h2 className="text-[10px] text-muted uppercase tracking-[0.15em] font-bold mb-2">I want to...</h2>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-1.5">
-          {QUICK_NAV.map((item, i) => (
-            <a key={i} href={item.href}
-              className="flex items-center gap-2 p-2 rounded-lg border border-border hover:border-gold/15 transition-all group">
-              <span className={item.color}>{item.icon}</span>
-              <div className="min-w-0">
-                <p className="text-[10px] font-medium group-hover:text-foreground transition-colors truncate">{item.task}</p>
-                <p className="text-[8px] text-muted truncate">{item.tool}</p>
+      {/* Stats Strip */}
+      <div className="grid grid-cols-5 gap-3">
+        {[
+          { label: "Active Agents", value: activeCount, color: "text-green-400" },
+          { label: "Usage Today", value: totalUsage, color: "text-gold" },
+          { label: "Avg Success", value: `${avgSuccess}%`, color: "text-green-400" },
+          { label: "Cost Today", value: `$${totalCost.toFixed(2)}`, color: "text-cyan-400" },
+          { label: "Total Agents", value: AGENTS.length, color: "text-foreground" },
+        ].map((s, i) => (
+          <div key={i} className="card p-3 text-center">
+            <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+            <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
+        {TABS.map(t => (
+          <button key={t} onClick={() => setActiveTab(t)}
+            className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
+              activeTab === t ? "text-gold border-b-2 border-gold" : "text-muted hover:text-foreground"
+            }`}>{t}</button>
+        ))}
+      </div>
+
+      {/* ═══ OVERVIEW TAB ═══ */}
+      {activeTab === "Overview" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {AGENTS.map(agent => (
+            <button key={agent.id} onClick={() => { setSelectedAgent(agent); setActiveTab("Agents"); }}
+              className={`text-left rounded-xl p-4 border transition-all hover:-translate-y-[1px] hover:shadow-lg ${agent.bgClass}`}>
+              <div className="flex items-center gap-2.5 mb-2">
+                <span className={agent.color}>{agent.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold">{agent.name}</p>
+                  <p className="text-[9px] text-muted">{agent.tagline}</p>
+                </div>
+                <span className={`w-2 h-2 rounded-full ${
+                  agent.status === "active" ? "bg-green-400 animate-pulse" :
+                  agent.status === "error" ? "bg-red-400" : "bg-gray-400"
+                }`} />
               </div>
-            </a>
+              <p className="text-[10px] text-muted leading-relaxed mb-2">{agent.description}</p>
+              <div className="flex items-center gap-3 text-[9px] text-muted">
+                <span>{agent.usageToday} uses today</span>
+                <span>{agent.successRate}% success</span>
+                <span className="text-cyan-400">${agent.costPerUse}/use</span>
+              </div>
+            </button>
           ))}
         </div>
-      </div>
+      )}
 
-      <div className="flex gap-4">
-        {/* Agent list */}
-        <div className={`${activeAgent ? "w-1/3" : "w-full"} transition-all`}>
-          <div className={`grid ${activeAgent ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"} gap-2.5`}>
-            {AGENTS.filter(a => {
-              if (a.id === "cold-outreach" && userRole === "client") return false;
-              return true;
-            }).map(agent => (
-              <button
-                key={agent.id}
-                onClick={() => { setActiveAgent(agent); setResult(""); setVariables({}); }}
-                className={`text-left rounded-xl p-4 border transition-all hover:-translate-y-[1px] ${
-                  activeAgent?.id === agent.id
-                    ? `bg-gradient-to-br ${agent.bg} shadow-card-hover`
-                    : "border-border bg-surface hover:border-gold/15 hover:shadow-card-hover"
-                }`}
-              >
-                <div className="flex items-center gap-2.5 mb-1.5">
-                  <span className={activeAgent?.id === agent.id ? agent.color : "text-muted"}>{agent.icon}</span>
-                  <div>
-                    <p className="text-xs font-semibold">{agent.name}</p>
+      {/* ═══ AGENTS TAB ═══ */}
+      {activeTab === "Agents" && (
+        <div className="flex gap-4">
+          <div className={`${selectedAgent ? "w-1/3" : "w-full"} space-y-2 transition-all`}>
+            {AGENTS.map(agent => (
+              <button key={agent.id} onClick={() => setSelectedAgent(agent)}
+                className={`w-full text-left p-3 rounded-lg border transition-all ${
+                  selectedAgent?.id === agent.id ? `${agent.bgClass} shadow-md` : "border-border hover:border-gold/15"
+                }`}>
+                <div className="flex items-center gap-2">
+                  <span className={selectedAgent?.id === agent.id ? agent.color : "text-muted"}>{agent.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-semibold">{agent.name}</p>
                     <p className="text-[9px] text-muted">{agent.tagline}</p>
                   </div>
+                  <span className={`w-2 h-2 rounded-full ${agent.status === "active" ? "bg-green-400" : agent.status === "error" ? "bg-red-400" : "bg-gray-400"}`} />
                 </div>
-                {!activeAgent && (
-                  <p className="text-[10px] text-muted leading-relaxed mt-1">{agent.description}</p>
-                )}
               </button>
             ))}
           </div>
-        </div>
 
-        {/* Agent workspace */}
-        {activeAgent && (
-          <div className="w-2/3 space-y-4 fade-in">
-            {/* Header */}
-            <div className={`card bg-gradient-to-br ${activeAgent.bg} border`}>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 bg-surface/50 rounded-xl flex items-center justify-center border border-border">
-                    <span className={activeAgent.color}>{activeAgent.icon}</span>
+          {selectedAgent && (
+            <div className="w-2/3 space-y-4 fade-in">
+              <div className={`card p-4 ${selectedAgent.bgClass}`}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 bg-surface/50 rounded-xl flex items-center justify-center border border-border">
+                      <span className={selectedAgent.color}>{selectedAgent.icon}</span>
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-bold">{selectedAgent.name} Agent</h2>
+                      <p className="text-[10px] text-muted">{selectedAgent.description}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-sm font-bold">{activeAgent.name} Agent</h2>
-                    <p className="text-[10px] text-muted">{activeAgent.description}</p>
-                  </div>
+                  <button onClick={() => setSelectedAgent(null)} className="text-muted hover:text-foreground text-xs">Close</button>
                 </div>
-                <button onClick={() => setActiveAgent(null)} className="text-muted hover:text-foreground text-xs">Close</button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-4 gap-3">
+                {[
+                  { label: "Usage Today", value: selectedAgent.usageToday, color: "text-gold" },
+                  { label: "Success Rate", value: `${selectedAgent.successRate}%`, color: "text-green-400" },
+                  { label: "Avg Latency", value: `${selectedAgent.avgLatency}ms`, color: "text-foreground" },
+                  { label: "Cost/Use", value: `$${selectedAgent.costPerUse}`, color: "text-cyan-400" },
+                ].map((s, i) => (
+                  <div key={i} className="card p-2.5 text-center">
+                    <p className="text-[8px] text-muted uppercase">{s.label}</p>
+                    <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Capabilities */}
+              <div className="card p-3">
+                <h3 className="text-[10px] text-muted uppercase tracking-wider mb-2">Capabilities</h3>
+                <div className="grid grid-cols-2 gap-1.5">
+                  {selectedAgent.capabilities.map((cap, i) => (
+                    <div key={i} className="flex items-center gap-1.5 text-[10px]">
+                      <CheckCircle size={10} className="text-green-400 shrink-0" /> {cap}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="card p-3">
+                <h3 className="text-[10px] text-muted uppercase tracking-wider mb-2">Quick Actions</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  {selectedAgent.actions.map((action, i) => (
+                    <button key={i} className="text-left p-2 rounded-lg border border-border hover:border-gold/20 transition-all text-[10px]">
+                      <div className="flex items-center gap-1"><Sparkles size={10} className="text-gold" /> <span className="font-medium">{action.label}</span></div>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
+          )}
+        </div>
+      )}
 
-            {/* Capabilities */}
-            <div className="card">
-              <h3 className="text-[10px] text-muted uppercase tracking-wider font-medium mb-2">Capabilities</h3>
-              <div className="grid grid-cols-2 gap-1.5">
-                {activeAgent.capabilities.map((cap, i) => (
-                  <div key={i} className="flex items-center gap-1.5 text-[10px]">
-                    <CheckCircle size={10} className="text-success shrink-0" />
-                    <span>{cap}</span>
+      {/* ═══ CAPABILITIES TAB ═══ */}
+      {activeTab === "Capabilities" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Layers size={14} className="text-gold" /> Agent Capability Matrix</h2>
+          <div className="overflow-x-auto">
+            <div className="min-w-[800px]">
+              <div className="grid grid-cols-10 gap-1 text-[8px] text-muted mb-2">
+                <div className="col-span-2"></div>
+                {["Copy", "Video", "Ads", "SEO", "Design", "Voice", "Auto", "Brand"].map(h => (
+                  <div key={h} className="text-center font-bold uppercase">{h}</div>
+                ))}
+              </div>
+              {AGENTS.map(agent => {
+                const matrix = {
+                  "short-form": [1, 1, 0, 0, 0, 0, 0, 0],
+                  "long-form": [1, 1, 0, 1, 0, 0, 0, 0],
+                  "paid-ads": [1, 0, 1, 0, 0, 0, 0, 0],
+                  "seo": [1, 0, 0, 1, 0, 0, 0, 0],
+                  "web-design": [1, 0, 0, 0, 1, 0, 0, 0],
+                  "receptionist": [0, 0, 0, 0, 0, 1, 1, 0],
+                  "automation": [0, 0, 0, 0, 0, 0, 1, 0],
+                  "branding": [1, 0, 0, 0, 1, 0, 0, 1],
+                  "cold-outreach": [1, 0, 0, 0, 0, 0, 1, 0],
+                };
+                const caps = matrix[agent.id as keyof typeof matrix] || [0, 0, 0, 0, 0, 0, 0, 0];
+                return (
+                  <div key={agent.id} className="grid grid-cols-10 gap-1 py-1.5 border-b border-border last:border-0">
+                    <div className="col-span-2 flex items-center gap-1.5 text-[10px]">
+                      <span className={agent.color}>{agent.icon}</span>
+                      <span className="font-medium">{agent.name}</span>
+                    </div>
+                    {caps.map((has, i) => (
+                      <div key={i} className="flex items-center justify-center">
+                        {has ? <CheckCircle size={12} className="text-green-400" /> : <span className="w-3 h-3 rounded-full bg-surface-light" />}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ ANALYTICS TAB ═══ */}
+      {activeTab === "Analytics" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><BarChart3 size={14} className="text-gold" /> Usage Analytics Per Agent</h2>
+            <div className="space-y-2">
+              {AGENTS.sort((a, b) => b.usageToday - a.usageToday).map(a => (
+                <div key={a.id} className="flex items-center gap-3 text-[11px]">
+                  <span className={`${a.color} w-5`}>{a.icon}</span>
+                  <span className="w-32 font-medium">{a.name}</span>
+                  <div className="flex-1 bg-surface-light rounded-full h-3">
+                    <div className="bg-gold rounded-full h-3 transition-all flex items-center justify-end pr-1" style={{ width: `${(a.usageToday / Math.max(...AGENTS.map(x => x.usageToday))) * 100}%` }}>
+                      <span className="text-[7px] font-bold text-black">{a.usageToday}</span>
+                    </div>
+                  </div>
+                  <span className="w-12 text-right text-muted">{a.successRate}%</span>
+                  <span className="w-16 text-right text-cyan-400 font-mono">${(a.usageToday * a.costPerUse).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ SANDBOX TAB ═══ */}
+      {activeTab === "Sandbox" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <TestTube size={14} className="text-gold" />
+              <h2 className="text-sm font-semibold">Agent Testing Sandbox</h2>
+            </div>
+            <div className="space-y-3">
+              <div className="flex gap-3">
+                <div className="w-1/3">
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Select Agent</label>
+                  <select value={sandboxAgent} onChange={e => setSandboxAgent(e.target.value)} className="input w-full text-xs">
+                    {AGENTS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Input Prompt</label>
+                  <div className="flex gap-2">
+                    <input value={sandboxInput} onChange={e => setSandboxInput(e.target.value)} onKeyDown={e => e.key === "Enter" && runSandbox()}
+                      className="input flex-1 text-xs" placeholder="Test input for the agent..." />
+                    <button onClick={runSandbox} disabled={sandboxLoading || !sandboxInput.trim()}
+                      className="px-4 py-2 bg-gold/10 text-gold text-xs rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-50 flex items-center gap-1.5">
+                      {sandboxLoading ? <div className="w-3 h-3 border-2 border-gold/20 border-t-gold rounded-full animate-spin" /> : <Play size={12} />}
+                      Test
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {sandboxOutput && (
+                <div>
+                  <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Output</p>
+                  <pre className="bg-black/30 rounded-lg p-3 text-[10px] font-mono text-green-400 whitespace-pre-wrap max-h-64 overflow-y-auto">{sandboxOutput}</pre>
+                </div>
+              )}
+            </div>
+
+            {/* Recent Tests */}
+            <div className="mt-4 pt-4 border-t border-border">
+              <h3 className="text-[10px] text-muted uppercase tracking-wider mb-2">Recent Test Results</h3>
+              <div className="space-y-2">
+                {MOCK_TEST_RESULTS.map((r, i) => (
+                  <div key={i} className="p-2.5 rounded-lg border border-border text-[10px]">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium truncate flex-1">{r.input}</span>
+                      <span className="text-muted ml-2">{r.timestamp}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-[9px] text-muted">
+                      <span>Quality: <span className={r.quality >= 90 ? "text-green-400" : "text-yellow-400"}>{r.quality}/100</span></span>
+                      <span>Latency: {r.latency}ms</span>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* Quick actions */}
-            <div className="card">
-              <h3 className="text-[10px] text-muted uppercase tracking-wider font-medium mb-2">Quick Actions</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {activeAgent.actions.map((action, i) => {
-                  return (
-                    <div key={i} className="space-y-1.5">
-                      <button
-                        onClick={() => runAction(action.prompt)}
-                        disabled={generating}
-                        className="w-full text-left p-2.5 rounded-lg border border-border hover:border-gold/20 transition-all text-xs disabled:opacity-50"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <Sparkles size={11} className="text-gold shrink-0" />
-                          <span className="font-medium">{action.label}</span>
-                        </div>
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <p className="text-[8px] text-muted mt-2 flex items-center gap-1">
-                <CheckCircle size={8} className="text-success" /> Just click — smart defaults auto-fill everything
-              </p>
-
-              {/* Variable inputs — collapsed by default */}
-              {activeAgent.actions.length > 0 && (
-                <details className="mt-2 pt-2 border-t border-border">
-                  <summary className="text-[9px] text-muted cursor-pointer hover:text-foreground transition-colors">
-                    Customize variables (optional)
-                  </summary>
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    {Array.from(new Set(activeAgent.actions.flatMap(a => getVars(a.prompt)))).map(v => (
-                      <div key={v}>
-                        <label className="text-[9px] text-muted capitalize">{v.replace(/_/g, " ")}</label>
-                        <input
-                          value={variables[v] || ""}
-                          onChange={e => setVariables({ ...variables, [v]: e.target.value })}
-                          placeholder={`Default: ${({
-                            industry: "dental", business_name: "local business", audience: "owners 30-55",
-                            location: "Miami, FL", topic: "more clients", service: "digital marketing",
-                          } as Record<string, string>)[v] || v.replace(/_/g, " ")}`}
-                          className="input w-full text-[10px] py-1"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </details>
-              )}
-            </div>
-
-            {/* Result */}
-            {(generating || result) && (
-              <div className="card">
-                <h3 className="text-[10px] text-muted uppercase tracking-wider font-medium mb-2">Output</h3>
-                {generating ? (
-                  <div className="flex items-center gap-2 py-4 justify-center">
-                    <Loader size={14} className="animate-spin text-gold" />
-                    <span className="text-xs text-muted">Generating...</span>
-                  </div>
-                ) : (
-                  <div className="bg-surface-light rounded-lg p-3 border border-border max-h-[400px] overflow-y-auto">
-                    <pre className="text-xs whitespace-pre-wrap leading-relaxed">{result}</pre>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* ═══ BATCH TAB ═══ */}
+      {activeTab === "Batch" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Layers size={14} className="text-gold" /> Batch Processing</h2>
+          <div className="space-y-2">
+            {batchJobs.map(job => (
+              <div key={job.id} className="p-3 rounded-lg border border-border">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium">{job.agent}</span>
+                    <span className={`text-[8px] px-1.5 py-0.5 rounded-full ${
+                      job.status === "running" ? "bg-green-500/10 text-green-400" :
+                      job.status === "done" ? "bg-blue-500/10 text-blue-400" :
+                      job.status === "failed" ? "bg-red-500/10 text-red-400" :
+                      "bg-surface-light text-muted"
+                    }`}>{job.status}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-muted">{job.startedAt}</span>
+                    {job.status === "running" && (
+                      <button onClick={() => cancelBatch(job.id)} className="text-[9px] px-2 py-0.5 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">Cancel</button>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 bg-surface-light rounded-full h-2">
+                    <div className={`h-2 rounded-full transition-all ${
+                      job.status === "done" ? "bg-blue-400" : job.status === "failed" ? "bg-red-400" : "bg-gold"
+                    }`} style={{ width: `${(job.completed / job.items) * 100}%` }} />
+                  </div>
+                  <span className="text-[10px] font-mono text-muted">{job.completed}/{job.items}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ SCHEDULING TAB ═══ */}
+      {activeTab === "Scheduling" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Calendar size={14} className="text-gold" /> Agent Scheduling</h2>
+          <div className="space-y-2">
+            {schedules.map((s, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                <button onClick={() => toggleSchedule(i)}
+                  className={`w-9 h-5 rounded-full transition-colors shrink-0 ${s.active ? "bg-green-400" : "bg-surface-light"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-all mt-0.5 ${s.active ? "ml-4" : "ml-0.5"}`} />
+                </button>
+                <div className="flex-1">
+                  <p className="text-[11px] font-medium">{s.agent}</p>
+                  <p className="text-[9px] text-muted">{s.schedule}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[10px] text-muted">Next: {s.nextRun}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ COSTS TAB ═══ */}
+      {activeTab === "Costs" && (
+        <div className="card p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <DollarSign size={14} className="text-gold" />
+            <h2 className="text-sm font-semibold">Cost Estimator</h2>
+          </div>
+          <div className="grid grid-cols-4 gap-3 mb-4">
+            <div className="p-3 rounded-lg border border-border text-center">
+              <p className="text-[9px] text-muted uppercase">Today</p>
+              <p className="text-lg font-bold text-gold">${totalCost.toFixed(2)}</p>
+            </div>
+            <div className="p-3 rounded-lg border border-border text-center">
+              <p className="text-[9px] text-muted uppercase">Est. Week</p>
+              <p className="text-lg font-bold">${(totalCost * 5).toFixed(2)}</p>
+            </div>
+            <div className="p-3 rounded-lg border border-border text-center">
+              <p className="text-[9px] text-muted uppercase">Est. Month</p>
+              <p className="text-lg font-bold">${(totalCost * 22).toFixed(2)}</p>
+            </div>
+            <div className="p-3 rounded-lg border border-border text-center">
+              <p className="text-[9px] text-muted uppercase">Avg Per Use</p>
+              <p className="text-lg font-bold text-cyan-400">${(totalCost / Math.max(totalUsage, 1)).toFixed(4)}</p>
+            </div>
+          </div>
+          <div className="space-y-2">
+            {AGENTS.sort((a, b) => (b.usageToday * b.costPerUse) - (a.usageToday * a.costPerUse)).map(a => (
+              <div key={a.id} className="flex items-center gap-3 text-[11px]">
+                <span className="w-32 font-medium">{a.name}</span>
+                <div className="flex-1 bg-surface-light rounded-full h-2">
+                  <div className="bg-cyan-400 rounded-full h-2 transition-all" style={{ width: `${((a.usageToday * a.costPerUse) / Math.max(totalCost, 0.01)) * 100}%` }} />
+                </div>
+                <span className="w-16 text-right font-mono text-cyan-400">${(a.usageToday * a.costPerUse).toFixed(2)}</span>
+                <span className="w-20 text-right text-muted">${a.costPerUse}/use</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ BENCHMARKS TAB ═══ */}
+      {activeTab === "Benchmarks" && (
+        <div className="card p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Gauge size={14} className="text-gold" />
+            <h2 className="text-sm font-semibold">Performance Benchmarks</h2>
+          </div>
+          <div className="rounded-lg border border-border overflow-hidden">
+            <div className="grid grid-cols-6 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
+              <div className="col-span-2">Agent</div>
+              <div>Latency</div>
+              <div>Quality</div>
+              <div>Throughput</div>
+              <div>Uptime</div>
+            </div>
+            {AGENTS.map(a => (
+              <div key={a.id} className="grid grid-cols-6 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[10px] items-center">
+                <div className="col-span-2 font-medium flex items-center gap-1.5"><span className={a.color}>{a.icon}</span>{a.name}</div>
+                <div className={`font-mono ${a.avgLatency < 1000 ? "text-green-400" : a.avgLatency < 2000 ? "text-yellow-400" : "text-red-400"}`}>{a.avgLatency}ms</div>
+                <div className={`font-mono ${a.successRate >= 95 ? "text-green-400" : "text-yellow-400"}`}>{a.successRate}%</div>
+                <div className="font-mono">{Math.round(a.usageToday / 8)}/hr</div>
+                <div className="font-mono text-green-400">99.{Math.floor(Math.random() * 9 + 1)}%</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ PROMPTS TAB ═══ */}
+      {activeTab === "Prompts" && (
+        <div className="card p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Code size={14} className="text-gold" />
+            <h2 className="text-sm font-semibold">Custom Prompt Editor</h2>
+          </div>
+          <div className="space-y-3">
+            <div>
+              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Agent</label>
+              <select value={promptEditorAgent} onChange={e => setPromptEditorAgent(e.target.value)} className="input w-full text-xs">
+                {AGENTS.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">System Prompt</label>
+              <textarea value={promptText} onChange={e => setPromptText(e.target.value)}
+                className="input w-full text-[10px] font-mono h-40 resize-y" />
+            </div>
+            <div className="flex gap-2">
+              <button className="px-4 py-2 bg-gold/10 text-gold text-xs rounded-lg border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1.5">
+                <Settings size={12} /> Save Prompt
+              </button>
+              <button className="px-4 py-2 border border-border text-xs rounded-lg text-muted hover:text-foreground transition-all flex items-center gap-1.5">
+                <Play size={12} /> Test with Sandbox
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ DEPENDENCIES TAB ═══ */}
+      {activeTab === "Dependencies" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><GitBranch size={14} className="text-gold" /> Agent Dependency Graph</h2>
+          <div className="space-y-2">
+            {[
+              { agent: "Content", depends: ["SEO & Content", "Branding"], provides: ["Cold Outreach", "Paid Ads"] },
+              { agent: "Cold Outreach", depends: ["Content", "Lead Engine"], provides: ["Scheduler", "Proposal"] },
+              { agent: "Automation", depends: ["All Agents"], provides: ["All Agents"] },
+              { agent: "Paid Ads", depends: ["Content", "Analytics"], provides: ["Lead Engine"] },
+              { agent: "Web Design", depends: ["Branding", "SEO & Content"], provides: ["Content"] },
+            ].map((dep, i) => (
+              <div key={i} className="p-3 rounded-lg border border-border">
+                <p className="text-xs font-semibold mb-2">{dep.agent}</p>
+                <div className="grid grid-cols-2 gap-3 text-[10px]">
+                  <div>
+                    <p className="text-[8px] text-muted uppercase mb-1">Depends On</p>
+                    <div className="flex flex-wrap gap-1">{dep.depends.map((d, j) => (
+                      <span key={j} className="px-1.5 py-0.5 bg-blue-500/10 text-blue-400 rounded text-[9px]">{d}</span>
+                    ))}</div>
+                  </div>
+                  <div>
+                    <p className="text-[8px] text-muted uppercase mb-1">Provides To</p>
+                    <div className="flex flex-wrap gap-1">{dep.provides.map((p, j) => (
+                      <span key={j} className="px-1.5 py-0.5 bg-green-500/10 text-green-400 rounded text-[9px]">{p}</span>
+                    ))}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ DEPLOY TAB ═══ */}
+      {activeTab === "Deploy" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-gold" /> One-Click Deploy</h2>
+          <p className="text-[10px] text-muted mb-4">Deploy agent updates to production with a single click. All agents run the latest stable version.</p>
+          <div className="space-y-2">
+            {AGENTS.map(a => (
+              <div key={a.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                <span className={a.color}>{a.icon}</span>
+                <div className="flex-1">
+                  <p className="text-[11px] font-medium">{a.name}</p>
+                  <p className="text-[9px] text-muted">Current: v{a.version}</p>
+                </div>
+                <span className={`text-[9px] px-2 py-0.5 rounded-full ${
+                  a.status === "active" ? "bg-green-500/10 text-green-400" :
+                  a.status === "error" ? "bg-red-500/10 text-red-400" :
+                  "bg-surface-light text-muted"
+                }`}>{a.status}</span>
+                <button className="text-[9px] px-3 py-1 rounded bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
+                  <Play size={9} /> Deploy
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

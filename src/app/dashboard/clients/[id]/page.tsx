@@ -11,7 +11,8 @@ import { PageLoading } from "@/components/ui/loading";
 import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
   ArrowLeft, FileText, CreditCard, CheckCircle, Circle,
-  Film, Megaphone, Download, Sparkles
+  Film, Megaphone, Download, Sparkles, Plus, Loader, Rocket,
+  Target, Palette, BarChart3, ChevronDown, ChevronRight, Zap
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -288,21 +289,12 @@ export default function ClientDetailPage() {
         />
       )}
 
-      {/* Tasks */}
+      {/* Tasks — Onboarding Checklist + Custom Tasks */}
       {tab === "tasks" && (
-        <DataTable
-          columns={[
-            { key: "title", label: "Task", render: (t: ClientTask) => (
-              <div className="flex items-center gap-2">
-                {t.is_completed ? <CheckCircle size={14} className="text-success" /> : <Circle size={14} className="text-muted" />}
-                <span className={t.is_completed ? "line-through text-muted" : ""}>{t.title}</span>
-              </div>
-            )},
-            { key: "due_date", label: "Due", render: (t: ClientTask) => t.due_date ? formatDate(t.due_date) : "-" },
-            { key: "is_completed", label: "Status", render: (t: ClientTask) => <StatusBadge status={t.is_completed ? "completed" : "pending"} /> },
-          ]}
-          data={tasks}
-          emptyMessage="No tasks"
+        <ClientTasksTab
+          clientId={client.id}
+          tasks={tasks}
+          onRefresh={fetchAll}
         />
       )}
 
@@ -505,6 +497,340 @@ function TelegramBotSetup({ clientId, client, onUpdate }: { clientId: string; cl
               {setting ? "Setting up..." : "Connect Bot"}
             </button>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Onboarding Phases ──────────────────────────────────────────── */
+const ONBOARDING_PHASES = [
+  {
+    phase: "Setup & Discovery",
+    icon: <Rocket size={14} />,
+    color: "text-blue-400",
+    bg: "bg-blue-400/10",
+    tasks: [
+      { title: "Complete client onboarding form", description: "Fill in business details, goals, and preferences" },
+      { title: "Connect social media accounts", description: "Link Instagram, TikTok, Facebook, LinkedIn via Zernio" },
+      { title: "Upload brand assets (logo, colors, fonts)", description: "Add brand kit to Design Studio for consistent content" },
+      { title: "Set up client portal access", description: "Ensure client can log in and view their dashboard" },
+      { title: "Schedule discovery call", description: "30-min call to understand business goals and pain points" },
+      { title: "Define target audience personas", description: "Create 2-3 ideal customer profiles" },
+      { title: "Audit existing online presence", description: "Review website, social profiles, Google Business listing" },
+    ],
+  },
+  {
+    phase: "Strategy & Planning",
+    icon: <Target size={14} />,
+    color: "text-gold",
+    bg: "bg-gold/10",
+    tasks: [
+      { title: "Create content strategy document", description: "Define content pillars, posting frequency, and tone" },
+      { title: "Build first month content calendar", description: "Plan 30 days of posts across all platforms" },
+      { title: "Set up hashtag strategy", description: "Research and save platform-specific hashtag sets" },
+      { title: "Define KPIs and success metrics", description: "Agree on engagement, growth, and conversion targets" },
+      { title: "Competitor analysis complete", description: "Analyze top 3-5 competitors and identify opportunities" },
+      { title: "SEO keyword research", description: "Identify target keywords for website and content" },
+    ],
+  },
+  {
+    phase: "Content Production",
+    icon: <Palette size={14} />,
+    color: "text-purple-400",
+    bg: "bg-purple-400/10",
+    tasks: [
+      { title: "Write first 5 video scripts", description: "Use AI Script Lab to create platform-specific scripts" },
+      { title: "Design social media templates", description: "Create branded templates in Design Studio" },
+      { title: "Generate first batch of thumbnails", description: "Create thumbnails for upcoming content" },
+      { title: "Record/produce first video", description: "First piece of content ready for review" },
+      { title: "Client reviews and approves first content", description: "Get sign-off on initial content batch" },
+      { title: "Set up content approval workflow", description: "Define review process and turnaround times" },
+    ],
+  },
+  {
+    phase: "Launch & Growth",
+    icon: <BarChart3 size={14} />,
+    color: "text-emerald-400",
+    bg: "bg-emerald-400/10",
+    tasks: [
+      { title: "Publish first week of content", description: "Launch across all connected platforms" },
+      { title: "Set up engagement monitoring", description: "Configure Social Manager inbox and auto-replies" },
+      { title: "Launch lead generation campaign", description: "Start outreach via DM, email, or ads" },
+      { title: "Set up automated reporting", description: "Schedule weekly/monthly performance reports" },
+      { title: "First performance review (Week 2)", description: "Review metrics and adjust strategy" },
+      { title: "Scale content production", description: "Increase posting frequency based on results" },
+      { title: "Launch paid ad campaigns", description: "Set up Meta/TikTok/Google ads if included in plan" },
+    ],
+  },
+  {
+    phase: "Optimization & Scaling",
+    icon: <Zap size={14} />,
+    color: "text-pink-400",
+    bg: "bg-pink-400/10",
+    tasks: [
+      { title: "A/B test content formats", description: "Compare video vs carousel vs static performance" },
+      { title: "Optimize posting times", description: "Use analytics to find best posting windows" },
+      { title: "Set up retargeting campaigns", description: "Re-engage website visitors and video viewers" },
+      { title: "Launch email/SMS sequences", description: "Nurture leads with automated follow-ups" },
+      { title: "Monthly strategy review", description: "Comprehensive performance review and planning" },
+      { title: "Expand to new platforms", description: "Add platforms based on audience research" },
+    ],
+  },
+];
+
+/* ─── Client Tasks Tab Component ─────────────────────────────────── */
+function ClientTasksTab({ clientId, tasks, onRefresh }: {
+  clientId: string;
+  tasks: ClientTask[];
+  onRefresh: () => void;
+}) {
+  const supabase = createClient();
+  const [expandedPhases, setExpandedPhases] = useState<Record<string, boolean>>({ "Setup & Discovery": true, "Strategy & Planning": true });
+  const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [addingTask, setAddingTask] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+  const [taskView, setTaskView] = useState<"checklist" | "custom">("checklist");
+
+  const onboardingTaskMap = new Map<string, ClientTask>();
+  tasks.forEach(t => onboardingTaskMap.set(t.title, t));
+
+  const allOnboardingTitles = new Set(ONBOARDING_PHASES.flatMap(p => p.tasks.map(t => t.title)));
+  const customTasks = tasks.filter(t => !allOnboardingTitles.has(t.title));
+  const onboardingTasks = tasks.filter(t => allOnboardingTitles.has(t.title));
+
+  const totalOnboarding = ONBOARDING_PHASES.reduce((s, p) => s + p.tasks.length, 0);
+  const completedOnboarding = onboardingTasks.filter(t => t.is_completed).length;
+  const progressPercent = totalOnboarding > 0 ? Math.round((completedOnboarding / totalOnboarding) * 100) : 0;
+
+  async function toggleTask(taskTitle: string, currentlyCompleted: boolean) {
+    const existing = onboardingTaskMap.get(taskTitle);
+    if (existing) {
+      await supabase.from("client_tasks").update({
+        is_completed: !currentlyCompleted,
+        completed_at: !currentlyCompleted ? new Date().toISOString() : null,
+      }).eq("id", existing.id);
+    } else {
+      const phase = ONBOARDING_PHASES.find(p => p.tasks.some(t => t.title === taskTitle));
+      const taskDef = phase?.tasks.find(t => t.title === taskTitle);
+      await supabase.from("client_tasks").insert({
+        client_id: clientId,
+        title: taskTitle,
+        description: taskDef?.description || null,
+        is_completed: true,
+        completed_at: new Date().toISOString(),
+      });
+    }
+    onRefresh();
+  }
+
+  async function seedOnboardingTasks() {
+    setSeeding(true);
+    const existingTitles = new Set(tasks.map(t => t.title));
+    const toInsert = ONBOARDING_PHASES.flatMap(phase =>
+      phase.tasks
+        .filter(t => !existingTitles.has(t.title))
+        .map(t => ({
+          client_id: clientId,
+          title: t.title,
+          description: t.description,
+          is_completed: false,
+        }))
+    );
+    if (toInsert.length > 0) {
+      await supabase.from("client_tasks").insert(toInsert);
+      toast.success(`Created ${toInsert.length} onboarding tasks`);
+    } else {
+      toast.success("All onboarding tasks already exist");
+    }
+    setSeeding(false);
+    onRefresh();
+  }
+
+  async function addCustomTask() {
+    if (!newTaskTitle.trim()) return;
+    setAddingTask(true);
+    await supabase.from("client_tasks").insert({
+      client_id: clientId,
+      title: newTaskTitle.trim(),
+      is_completed: false,
+    });
+    setNewTaskTitle("");
+    setAddingTask(false);
+    onRefresh();
+  }
+
+  async function toggleCustomTask(taskId: string, currentlyCompleted: boolean) {
+    await supabase.from("client_tasks").update({
+      is_completed: !currentlyCompleted,
+      completed_at: !currentlyCompleted ? new Date().toISOString() : null,
+    }).eq("id", taskId);
+    onRefresh();
+  }
+
+  return (
+    <div className="space-y-5">
+      {/* Progress header */}
+      <div className="card p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="text-xs font-bold">Client Onboarding Progress</h3>
+            <p className="text-[10px] text-muted">{completedOnboarding} of {totalOnboarding} steps completed</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`text-lg font-bold font-mono ${progressPercent === 100 ? "text-success" : "text-gold"}`}>
+              {progressPercent}%
+            </span>
+            {onboardingTasks.length === 0 && (
+              <button onClick={seedOnboardingTasks} disabled={seeding}
+                className="btn-primary text-[10px] py-1.5 px-3 flex items-center gap-1">
+                {seeding ? <Loader size={10} className="animate-spin" /> : <Rocket size={10} />}
+                {seeding ? "Creating..." : "Initialize Checklist"}
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="h-2 bg-surface-light rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-500 ${progressPercent === 100 ? "bg-success" : "bg-gold"}`}
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+        <div className="flex gap-2 mt-3">
+          {ONBOARDING_PHASES.map(phase => {
+            const phaseCompleted = phase.tasks.filter(t => onboardingTaskMap.get(t.title)?.is_completed).length;
+            const phaseTotal = phase.tasks.length;
+            const done = phaseCompleted === phaseTotal && onboardingTasks.length > 0;
+            return (
+              <div key={phase.phase} className={`flex-1 text-center p-2 rounded-lg ${done ? "bg-success/10" : "bg-surface-light"}`}>
+                <div className={`flex items-center justify-center gap-1 ${done ? "text-success" : phase.color}`}>
+                  {phase.icon}
+                  <span className="text-[8px] font-bold">{phaseCompleted}/{phaseTotal}</span>
+                </div>
+                <p className="text-[7px] text-muted mt-0.5 truncate">{phase.phase}</p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* View toggle */}
+      <div className="tab-group w-fit">
+        <button onClick={() => setTaskView("checklist")}
+          className={taskView === "checklist" ? "tab-item-active" : "tab-item-inactive"}>
+          Onboarding Checklist
+        </button>
+        <button onClick={() => setTaskView("custom")}
+          className={taskView === "custom" ? "tab-item-active" : "tab-item-inactive"}>
+          Custom Tasks ({customTasks.length})
+        </button>
+      </div>
+
+      {/* Onboarding checklist */}
+      {taskView === "checklist" && (
+        <div className="space-y-3">
+          {ONBOARDING_PHASES.map(phase => {
+            const isExpanded = expandedPhases[phase.phase] ?? false;
+            const phaseCompleted = phase.tasks.filter(t => onboardingTaskMap.get(t.title)?.is_completed).length;
+            const allDone = phaseCompleted === phase.tasks.length && onboardingTasks.length > 0;
+
+            return (
+              <div key={phase.phase} className={`card overflow-hidden ${allDone ? "border-success/20" : ""}`}>
+                <button
+                  onClick={() => setExpandedPhases(prev => ({ ...prev, [phase.phase]: !prev[phase.phase] }))}
+                  className="w-full p-3 flex items-center justify-between hover:bg-surface-light/50 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className={`w-7 h-7 rounded-lg ${phase.bg} flex items-center justify-center ${phase.color}`}>
+                      {allDone ? <CheckCircle size={14} className="text-success" /> : phase.icon}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-xs font-semibold">{phase.phase}</p>
+                      <p className="text-[9px] text-muted">{phaseCompleted} of {phase.tasks.length} completed</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {allDone && <span className="text-[8px] text-success font-bold bg-success/10 px-2 py-0.5 rounded-full">DONE</span>}
+                    {isExpanded ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
+                  </div>
+                </button>
+
+                {isExpanded && (
+                  <div className="px-3 pb-3 space-y-1">
+                    {phase.tasks.map(taskDef => {
+                      const existing = onboardingTaskMap.get(taskDef.title);
+                      const isCompleted = existing?.is_completed ?? false;
+                      return (
+                        <button
+                          key={taskDef.title}
+                          onClick={() => toggleTask(taskDef.title, isCompleted)}
+                          className={`w-full flex items-start gap-2.5 p-2 rounded-lg text-left transition-colors hover:bg-surface-light/50 ${isCompleted ? "opacity-60" : ""}`}
+                        >
+                          {isCompleted
+                            ? <CheckCircle size={14} className="text-success shrink-0 mt-0.5" />
+                            : <Circle size={14} className="text-muted shrink-0 mt-0.5" />}
+                          <div>
+                            <p className={`text-[11px] font-medium ${isCompleted ? "line-through text-muted" : ""}`}>{taskDef.title}</p>
+                            <p className="text-[9px] text-muted">{taskDef.description}</p>
+                            {existing?.completed_at && (
+                              <p className="text-[8px] text-success mt-0.5">Completed {formatRelativeTime(existing.completed_at)}</p>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Custom tasks */}
+      {taskView === "custom" && (
+        <div className="space-y-3">
+          <div className="card p-3 flex items-center gap-2">
+            <input
+              value={newTaskTitle}
+              onChange={e => setNewTaskTitle(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && addCustomTask()}
+              placeholder="Add a custom task..."
+              className="input flex-1 text-xs"
+            />
+            <button onClick={addCustomTask} disabled={addingTask || !newTaskTitle.trim()}
+              className="btn-primary text-[10px] py-1.5 px-3 flex items-center gap-1">
+              {addingTask ? <Loader size={10} className="animate-spin" /> : <Plus size={10} />}
+              Add
+            </button>
+          </div>
+
+          {customTasks.length === 0 ? (
+            <div className="card-static text-center py-8">
+              <Circle size={24} className="text-muted mx-auto mb-2" />
+              <p className="text-xs text-muted">No custom tasks yet</p>
+              <p className="text-[10px] text-muted/60">Add tasks specific to this client above</p>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {customTasks.map(task => (
+                <button
+                  key={task.id}
+                  onClick={() => toggleCustomTask(task.id, task.is_completed)}
+                  className={`w-full card card-hover p-3 flex items-center gap-3 text-left ${task.is_completed ? "opacity-60" : ""}`}
+                >
+                  {task.is_completed
+                    ? <CheckCircle size={14} className="text-success shrink-0" />
+                    : <Circle size={14} className="text-muted shrink-0" />}
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-xs font-medium ${task.is_completed ? "line-through text-muted" : ""}`}>{task.title}</p>
+                    {task.description && <p className="text-[9px] text-muted truncate">{task.description}</p>}
+                  </div>
+                  <StatusBadge status={task.is_completed ? "completed" : "pending"} />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

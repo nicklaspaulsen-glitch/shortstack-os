@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export const maxDuration = 60;
 
@@ -9,6 +10,10 @@ export async function POST(request: NextRequest) {
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await authSupabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const limited = checkAiRateLimit(user.id, profile?.plan_tier);
+  if (limited) return limited;
 
   const supabase = createServiceClient();
   const apiKey = process.env.ANTHROPIC_API_KEY;

@@ -5,13 +5,13 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink, Key, Shield, Mail, Download, Upload, Trash2, AlertTriangle, Eye, Lock, Database } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import toast from "react-hot-toast";
 import { applyTheme } from "@/components/theme-provider";
 import { getPlanConfig } from "@/lib/plan-config";
 
-type Tab = "agents" | "integrations" | "automation" | "notifications" | "general";
+type Tab = "general" | "agents" | "integrations" | "automation" | "notifications" | "billing" | "api_keys" | "white_label" | "smtp" | "security" | "data" | "danger";
 
 interface AgentConfig {
   id: string;
@@ -69,6 +69,34 @@ export default function SettingsPage() {
   const [, forceRender] = useState(0);
   const rerender = () => forceRender(n => n + 1);
   const supabase = createClient();
+
+  // API Keys
+  const [apiKeys, setApiKeys] = useState([
+    { id: "ak1", name: "Production Key", key: "ss_live_••••••••••••abcd", created: "2026-03-15", last_used: "2026-04-14", status: "active" },
+    { id: "ak2", name: "Development Key", key: "ss_test_••••••••••••efgh", created: "2026-04-01", last_used: "2026-04-13", status: "active" },
+  ]);
+  const [newKeyName, setNewKeyName] = useState("");
+
+  // White-label
+  const [whiteLabel, setWhiteLabel] = useState({ company_name: "", logo_url: "", primary_color: "#C9A84C", domain: "", favicon_url: "", support_email: "" });
+
+  // SMTP
+  const [smtp, setSmtp] = useState({ host: "", port: "587", username: "", password: "", from_name: "", from_email: "", encryption: "tls" });
+  const [smtpTesting, setSmtpTesting] = useState(false);
+
+  // Security
+  const [twoFA, setTwoFA] = useState(false);
+  const [sessions] = useState([
+    { device: "Chrome on Windows", ip: "192.168.1.1", last_active: "2026-04-14T10:30:00Z", current: true },
+    { device: "Safari on iPhone", ip: "192.168.1.5", last_active: "2026-04-13T22:00:00Z", current: false },
+  ]);
+
+  // Timezone
+  const [timezone, setTimezone] = useState("Europe/Copenhagen");
+  const [language, setLanguage] = useState("en");
+
+  // Danger zone
+  const [deleteConfirm, setDeleteConfirm] = useState("");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); }, []);
@@ -141,6 +169,13 @@ export default function SettingsPage() {
     { key: "integrations", label: "Integrations", icon: <Globe size={16} /> },
     { key: "automation", label: "Automation", icon: <Zap size={16} /> },
     { key: "notifications", label: "Notifications", icon: <Bell size={16} /> },
+    { key: "billing", label: "Billing", icon: <CreditCard size={16} /> },
+    { key: "api_keys", label: "API Keys", icon: <Key size={16} /> },
+    { key: "white_label", label: "White Label", icon: <Palette size={16} /> },
+    { key: "smtp", label: "SMTP", icon: <Mail size={16} /> },
+    { key: "security", label: "Security", icon: <Shield size={16} /> },
+    { key: "data", label: "Import/Export", icon: <Database size={16} /> },
+    { key: "danger", label: "Danger Zone", icon: <AlertTriangle size={16} /> },
   ];
 
   return (
@@ -984,6 +1019,209 @@ export default function SettingsPage() {
           <div className="card">
             <h3 className="section-header">Slack Notifications</h3>
             <p className="text-sm text-muted">Same events sent to #shortstack-alerts channel in Slack</p>
+          </div>
+        </div>
+      )}
+
+      {/* Billing Tab */}
+      {tab === "billing" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="section-header">Current Plan</h3>
+            <div className="flex items-center justify-between p-4 bg-gold/5 border border-gold/20 rounded-xl">
+              <div>
+                <p className="text-lg font-bold" style={{ color: getPlanConfig(profile?.plan_tier).color }}>{getPlanConfig(profile?.plan_tier).badge_label}</p>
+                <p className="text-xs text-muted">${getPlanConfig(profile?.plan_tier).price_monthly}/month</p>
+              </div>
+              <button className="btn-primary text-xs">Upgrade Plan</button>
+            </div>
+          </div>
+          <div className="card">
+            <h3 className="section-header">Usage This Month</h3>
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { label: "AI Requests", used: "1,247", limit: getPlanConfig(profile?.plan_tier).ai_requests_per_min === -1 ? "Unlimited" : `${getPlanConfig(profile?.plan_tier).ai_requests_per_min}/min` },
+                { label: "Clients", used: String(clients.length), limit: getPlanConfig(profile?.plan_tier).max_clients === -1 ? "Unlimited" : String(getPlanConfig(profile?.plan_tier).max_clients) },
+                { label: "AI Tokens", used: "124K", limit: getPlanConfig(profile?.plan_tier).tokens_label },
+              ].map(u => (
+                <div key={u.label} className="p-3 bg-surface-light/50 rounded-lg border border-border text-center">
+                  <p className="text-sm font-bold text-gold">{u.used}</p>
+                  <p className="text-[10px] text-muted">{u.label}</p>
+                  <p className="text-[9px] text-muted">Limit: {u.limit}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card">
+            <h3 className="section-header">Payment Method</h3>
+            <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
+              <CreditCard size={20} className="text-gold" />
+              <div><p className="text-sm font-medium">Visa ending in 4242</p><p className="text-xs text-muted">Expires 12/2027</p></div>
+              <button className="ml-auto text-xs text-gold hover:underline">Update</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* API Keys Tab */}
+      {tab === "api_keys" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="section-header">API Keys</h3>
+            <p className="text-xs text-muted mb-4">Manage your API keys for external integrations. Keep these secret.</p>
+            <div className="space-y-2 mb-4">
+              {apiKeys.map(k => (
+                <div key={k.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
+                  <div>
+                    <p className="text-sm font-medium">{k.name}</p>
+                    <p className="text-xs font-mono text-muted">{k.key}</p>
+                    <p className="text-[10px] text-muted">Created: {k.created} | Last used: {k.last_used}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <StatusBadge status={k.status} />
+                    <button onClick={() => { setApiKeys(prev => prev.filter(x => x.id !== k.id)); toast.success("Key revoked"); }} className="text-xs text-danger hover:underline">Revoke</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input value={newKeyName} onChange={e => setNewKeyName(e.target.value)} placeholder="Key name..." className="input flex-1 text-sm" />
+              <button onClick={() => { if (!newKeyName) { toast.error("Enter a name"); return; } setApiKeys(prev => [...prev, { id: `ak_${Date.now()}`, name: newKeyName, key: `ss_live_${Math.random().toString(36).slice(2, 14)}`, created: "2026-04-14", last_used: "Never", status: "active" }]); setNewKeyName(""); toast.success("Key generated"); }} className="btn-primary text-xs">Generate Key</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* White Label Tab */}
+      {tab === "white_label" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="section-header">White Label Settings</h3>
+            <p className="text-xs text-muted mb-4">Rebrand ShortStack as your own platform for client-facing portals.</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div><label className="block text-xs text-muted mb-1">Company Name</label><input value={whiteLabel.company_name} onChange={e => setWhiteLabel({ ...whiteLabel, company_name: e.target.value })} placeholder="Your Agency Name" className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">Custom Domain</label><input value={whiteLabel.domain} onChange={e => setWhiteLabel({ ...whiteLabel, domain: e.target.value })} placeholder="app.youragency.com" className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">Logo URL</label><input value={whiteLabel.logo_url} onChange={e => setWhiteLabel({ ...whiteLabel, logo_url: e.target.value })} placeholder="https://..." className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">Favicon URL</label><input value={whiteLabel.favicon_url} onChange={e => setWhiteLabel({ ...whiteLabel, favicon_url: e.target.value })} placeholder="https://..." className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">Primary Color</label><input type="color" value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="input w-full h-10" /></div>
+              <div><label className="block text-xs text-muted mb-1">Support Email</label><input value={whiteLabel.support_email} onChange={e => setWhiteLabel({ ...whiteLabel, support_email: e.target.value })} placeholder="support@youragency.com" className="input w-full text-sm" /></div>
+            </div>
+            <button onClick={() => toast.success("White label settings saved")} className="btn-primary mt-4 flex items-center gap-2"><Save size={14} /> Save White Label</button>
+          </div>
+        </div>
+      )}
+
+      {/* SMTP Tab */}
+      {tab === "smtp" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="section-header">Email SMTP Configuration</h3>
+            <p className="text-xs text-muted mb-4">Configure your own SMTP server for sending emails from your domain.</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div><label className="block text-xs text-muted mb-1">SMTP Host</label><input value={smtp.host} onChange={e => setSmtp({ ...smtp, host: e.target.value })} placeholder="smtp.gmail.com" className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">Port</label><input value={smtp.port} onChange={e => setSmtp({ ...smtp, port: e.target.value })} placeholder="587" className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">Username</label><input value={smtp.username} onChange={e => setSmtp({ ...smtp, username: e.target.value })} placeholder="you@example.com" className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">Password</label><input type="password" value={smtp.password} onChange={e => setSmtp({ ...smtp, password: e.target.value })} placeholder="App password" className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">From Name</label><input value={smtp.from_name} onChange={e => setSmtp({ ...smtp, from_name: e.target.value })} placeholder="Your Agency" className="input w-full text-sm" /></div>
+              <div><label className="block text-xs text-muted mb-1">From Email</label><input value={smtp.from_email} onChange={e => setSmtp({ ...smtp, from_email: e.target.value })} placeholder="noreply@youragency.com" className="input w-full text-sm" /></div>
+            </div>
+            <div className="flex gap-2 mt-4">
+              <button onClick={() => toast.success("SMTP settings saved")} className="btn-primary flex items-center gap-2"><Save size={14} /> Save</button>
+              <button onClick={() => { setSmtpTesting(true); setTimeout(() => { setSmtpTesting(false); toast.success("SMTP test email sent!"); }, 2000); }} disabled={smtpTesting} className="btn-secondary flex items-center gap-2 disabled:opacity-50">{smtpTesting ? "Testing..." : "Send Test Email"}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Security Tab */}
+      {tab === "security" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="section-header">Two-Factor Authentication</h3>
+            <div className="flex items-center justify-between p-4 bg-surface-light/50 rounded-lg border border-border">
+              <div><p className="text-sm font-medium">2FA via Authenticator App</p><p className="text-xs text-muted">{twoFA ? "Enabled and protecting your account" : "Not enabled - we recommend enabling 2FA"}</p></div>
+              <button onClick={() => { setTwoFA(!twoFA); toast.success(twoFA ? "2FA disabled" : "2FA enabled"); }} className={`px-3 py-1.5 rounded text-xs ${twoFA ? "bg-danger/10 text-danger border border-danger/20" : "bg-success/10 text-success border border-success/20"}`}>{twoFA ? "Disable" : "Enable"}</button>
+            </div>
+          </div>
+          <div className="card">
+            <h3 className="section-header">Active Sessions</h3>
+            <div className="space-y-2">
+              {sessions.map((s, i) => (
+                <div key={i} className="flex items-center justify-between p-3 border border-border rounded-lg">
+                  <div><p className="text-sm font-medium">{s.device} {s.current && <span className="text-[9px] bg-success/10 text-success px-1.5 py-0.5 rounded-full ml-1">Current</span>}</p><p className="text-xs text-muted">IP: {s.ip} | Last active: {new Date(s.last_active).toLocaleString()}</p></div>
+                  {!s.current && <button className="text-xs text-danger hover:underline">Revoke</button>}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card">
+            <h3 className="section-header">Password</h3>
+            <button onClick={() => toast.success("Password reset email sent")} className="btn-secondary text-xs flex items-center gap-2"><Lock size={14} /> Change Password</button>
+          </div>
+        </div>
+      )}
+
+      {/* Import/Export Tab */}
+      {tab === "data" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="card">
+              <h3 className="section-header flex items-center gap-2"><Download size={16} /> Export Data</h3>
+              <p className="text-xs text-muted mb-3">Download your data as CSV or JSON.</p>
+              <div className="space-y-2">
+                {["Clients", "Leads", "Invoices", "Content Scripts", "Outreach Log", "All Data"].map(item => (
+                  <button key={item} onClick={() => toast.success(`Exporting ${item}...`)} className="w-full text-left p-2.5 border border-border rounded-lg text-xs hover:border-gold/30 transition-all flex items-center justify-between">
+                    <span>{item}</span><Download size={12} className="text-gold" />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="card">
+              <h3 className="section-header flex items-center gap-2"><Upload size={16} /> Import Data</h3>
+              <p className="text-xs text-muted mb-3">Import data from CSV files.</p>
+              <div className="space-y-2">
+                {["Clients (CSV)", "Leads (CSV)", "Contacts (CSV)"].map(item => (
+                  <button key={item} onClick={() => toast.success(`Import ${item} - coming soon`)} className="w-full text-left p-2.5 border border-border rounded-lg text-xs hover:border-gold/30 transition-all flex items-center justify-between">
+                    <span>{item}</span><Upload size={12} className="text-gold" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="card">
+            <h3 className="section-header">Timezone & Language</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div><label className="block text-xs text-muted mb-1">Timezone</label><select value={timezone} onChange={e => setTimezone(e.target.value)} className="input w-full text-sm"><option value="Europe/Copenhagen">Europe/Copenhagen (CET)</option><option value="America/New_York">America/New York (EST)</option><option value="America/Los_Angeles">America/Los Angeles (PST)</option><option value="UTC">UTC</option></select></div>
+              <div><label className="block text-xs text-muted mb-1">Language</label><select value={language} onChange={e => setLanguage(e.target.value)} className="input w-full text-sm"><option value="en">English</option><option value="da">Danish</option><option value="es">Spanish</option><option value="de">German</option></select></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Danger Zone Tab */}
+      {tab === "danger" && (
+        <div className="space-y-4">
+          <div className="p-4 bg-danger/5 border border-danger/20 rounded-xl">
+            <h3 className="text-sm font-medium text-danger flex items-center gap-2"><AlertTriangle size={14} /> Danger Zone</h3>
+            <p className="text-xs text-muted mt-1">These actions are irreversible. Proceed with extreme caution.</p>
+          </div>
+          <div className="card border-danger/20">
+            <h3 className="section-header text-danger">Delete Account</h3>
+            <p className="text-xs text-muted mb-3">Permanently delete your account and all associated data. This cannot be undone.</p>
+            <div className="flex gap-2">
+              <input value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} placeholder="Type DELETE to confirm" className="input flex-1 text-sm" />
+              <button disabled={deleteConfirm !== "DELETE"} onClick={() => toast.error("Account deletion is disabled in demo")} className="px-4 py-2 bg-danger text-white rounded-lg text-xs disabled:opacity-30"><Trash2 size={14} /></button>
+            </div>
+          </div>
+          <div className="card border-warning/20">
+            <h3 className="section-header text-warning">Reset All Data</h3>
+            <p className="text-xs text-muted mb-2">Reset all clients, leads, and content to a fresh state. Your account settings will be preserved.</p>
+            <button onClick={() => toast.error("Data reset is disabled in demo")} className="btn-secondary text-xs text-warning border-warning/20">Reset Data</button>
+          </div>
+          <div className="card">
+            <h3 className="section-header">Audit Log</h3>
+            <p className="text-xs text-muted mb-2">View a complete history of all actions taken on your account.</p>
+            <a href="/dashboard/audit" className="text-xs text-gold hover:underline flex items-center gap-1"><Eye size={12} /> View Audit Log</a>
           </div>
         </div>
       )}

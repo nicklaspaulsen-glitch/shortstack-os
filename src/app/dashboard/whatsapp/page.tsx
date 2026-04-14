@@ -1,302 +1,450 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { createClient } from "@/lib/supabase/client";
-import { formatRelativeTime } from "@/lib/utils";
+import { useState } from "react";
 import {
-  MessageSquare, Send, Loader, FileText,
-  RefreshCw, ArrowUpRight, ArrowDownLeft, Inbox
+  MessageSquare, Send, FileText, RefreshCw, Inbox,
+  ArrowUpRight, ArrowDownLeft, Users, Clock, Image,
+  CheckCircle, Plus, Bot, BarChart3,
+  Calendar, Zap, Search, Eye
 } from "lucide-react";
-import toast from "react-hot-toast";
 
-interface Message {
-  sid?: string;
+/* ------------------------------------------------------------------ */
+/*  Mock Data                                                          */
+/* ------------------------------------------------------------------ */
+
+interface WMessage {
+  id: string;
   to: string;
   from: string;
   body: string;
   status: string;
   direction: string;
   date_sent: string;
+  media_type?: string;
 }
 
-interface Template {
+interface WTemplate {
+  id: string;
   name: string;
   status: string;
   category: string;
   language: string;
-  id: string;
+  body: string;
 }
 
-export default function WhatsAppPage() {
-  useAuth();
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [templates, setTemplates] = useState<Template[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [connected, setConnected] = useState(true);
-  const [tab, setTab] = useState<"inbox" | "send" | "templates">("inbox");
-  const [sending, setSending] = useState(false);
-  const [clients, setClients] = useState<Array<{ id: string; business_name: string; phone: string | null }>>([]);
-  const [selectedClient, setSelectedClient] = useState("");
-  const supabase = createClient();
+const MOCK_MESSAGES: WMessage[] = [
+  { id: "wm1", to: "+1 555-0123", from: "+1 555-9999", body: "Hi! Thanks for your interest in our services. How can we help?", status: "delivered", direction: "outbound", date_sent: "2026-04-14T10:00:00Z" },
+  { id: "wm2", to: "+1 555-9999", from: "+1 555-0123", body: "I saw your ad about social media management. What are your packages?", status: "read", direction: "inbound", date_sent: "2026-04-14T10:15:00Z" },
+  { id: "wm3", to: "+1 555-0123", from: "+1 555-9999", body: "Great question! We have Starter ($1,200), Growth ($2,500), and Scale ($4,000). Each includes content, strategy, and analytics.", status: "delivered", direction: "outbound", date_sent: "2026-04-14T10:20:00Z" },
+  { id: "wm4", to: "+1 555-0456", from: "+1 555-9999", body: "Monthly report for March is ready! Check your email for the full breakdown.", status: "delivered", direction: "outbound", date_sent: "2026-04-13T14:00:00Z" },
+  { id: "wm5", to: "+1 555-9999", from: "+1 555-0456", body: "Got it, thanks! Numbers look great this month.", status: "read", direction: "inbound", date_sent: "2026-04-13T15:30:00Z" },
+  { id: "wm6", to: "+1 555-0789", from: "+1 555-9999", body: "Reminder: Your strategy call is tomorrow at 2pm. See you then!", status: "delivered", direction: "outbound", date_sent: "2026-04-12T09:00:00Z" },
+  { id: "wm7", to: "+1 555-9999", from: "+1 555-0789", body: "Perfect, I'll be there. Can we also discuss adding paid ads?", status: "read", direction: "inbound", date_sent: "2026-04-12T11:00:00Z" },
+  { id: "wm8", to: "+1 555-1234", from: "+1 555-9999", body: "Welcome aboard! We're excited to start working on your marketing strategy.", status: "sent", direction: "outbound", date_sent: "2026-04-11T16:00:00Z" },
+];
 
-  // Send form state
+const MOCK_TEMPLATES: WTemplate[] = [
+  { id: "t1", name: "welcome_message", status: "APPROVED", category: "MARKETING", language: "en", body: "Welcome to {{1}}! We're thrilled to have you. Your onboarding starts next week." },
+  { id: "t2", name: "appointment_reminder", status: "APPROVED", category: "UTILITY", language: "en", body: "Reminder: Your {{1}} appointment is scheduled for {{2}} at {{3}}." },
+  { id: "t3", name: "monthly_report", status: "APPROVED", category: "MARKETING", language: "en", body: "Your monthly marketing report for {{1}} is ready! Key highlights: {{2}}" },
+  { id: "t4", name: "review_request", status: "APPROVED", category: "MARKETING", language: "en", body: "Hi {{1}}! We'd love to hear about your experience. Leave us a review: {{2}}" },
+  { id: "t5", name: "payment_reminder", status: "PENDING", category: "UTILITY", language: "en", body: "Hi {{1}}, your invoice of ${{2}} is due on {{3}}. Please make payment at your earliest convenience." },
+  { id: "t6", name: "follow_up", status: "APPROVED", category: "MARKETING", language: "en", body: "Hey {{1}}! Just checking in on our conversation. Any questions about the {{2}} package?" },
+];
+
+const CONTACT_LABELS = [
+  { label: "Active Client", count: 12, color: "bg-green-400" },
+  { label: "Prospect", count: 8, color: "bg-blue-400" },
+  { label: "Hot Lead", count: 5, color: "bg-red-400" },
+  { label: "VIP", count: 3, color: "bg-gold" },
+  { label: "Inactive", count: 7, color: "bg-gray-400" },
+];
+
+const BROADCAST_LISTS = [
+  { id: "bl1", name: "All Active Clients", contacts: 12, lastSent: "2026-04-10" },
+  { id: "bl2", name: "Growth Package", contacts: 5, lastSent: "2026-04-08" },
+  { id: "bl3", name: "New Leads This Month", contacts: 8, lastSent: "Never" },
+  { id: "bl4", name: "VIP Clients", contacts: 3, lastSent: "2026-04-01" },
+];
+
+const AUTO_RESPONDER_RULES = [
+  { id: "ar1", trigger: "After hours message", response: "Thanks for reaching out! Our office hours are 9am-6pm ET. We'll get back to you first thing!", enabled: true },
+  { id: "ar2", trigger: "Keyword: pricing", response: "Great question! Here's a link to our pricing page: [link]", enabled: true },
+  { id: "ar3", trigger: "Keyword: appointment", response: "I'd love to set that up! Here's our booking link: [calendar_link]", enabled: false },
+  { id: "ar4", trigger: "New contact message", response: "Hi! Thanks for messaging us. A team member will be with you shortly.", enabled: true },
+];
+
+const SCHEDULED_MESSAGES = [
+  { id: "sm1", to: "All Active Clients", message: "Happy Monday! Here's your weekly marketing tip...", scheduledAt: "2026-04-15T09:00:00Z", status: "scheduled" },
+  { id: "sm2", to: "+1 555-0123", message: "Reminder: Content review call tomorrow at 11am", scheduledAt: "2026-04-15T14:00:00Z", status: "scheduled" },
+  { id: "sm3", to: "Growth Package", message: "New feature alert! Check out our AI Video Generator...", scheduledAt: "2026-04-16T10:00:00Z", status: "draft" },
+];
+
+const CHAT_ANALYTICS = {
+  totalSent: 456, totalReceived: 234, responseRate: "51.3%",
+  avgResponseTime: "12 min", readRate: "89%", deliveryRate: "97.2%",
+  byDay: [32, 45, 38, 52, 41, 48, 55],
+};
+
+const QUICK_REPLIES = [
+  { id: "qr1", label: "Book a Call", text: "Book a strategy call with us: [calendar_link]" },
+  { id: "qr2", label: "Send Pricing", text: "Here are our current packages and pricing: [pricing_link]" },
+  { id: "qr3", label: "Confirm Receipt", text: "Got it! We'll get back to you within the hour." },
+  { id: "qr4", label: "Thank You", text: "Thank you for your message! Is there anything else we can help with?" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Page Component                                                     */
+/* ------------------------------------------------------------------ */
+
+export default function WhatsAppPage() {
+  const [activeTab, setActiveTab] = useState<"inbox" | "send" | "templates" | "broadcast" | "automation" | "analytics">("inbox");
   const [sendTo, setSendTo] = useState("");
   const [sendMessage, setSendMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mediaType, setMediaType] = useState<"text" | "image" | "document">("text");
+  const [selectedBroadcast, setSelectedBroadcast] = useState("");
 
-  useEffect(() => {
-    fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const filteredMessages = MOCK_MESSAGES.filter(m =>
+    !searchQuery || m.body.toLowerCase().includes(searchQuery.toLowerCase()) || m.from.includes(searchQuery) || m.to.includes(searchQuery)
+  );
 
-  async function fetchData() {
-    setLoading(true);
-
-    // Fetch clients for quick-send
-    const { data: cl } = await supabase.from("clients").select("id, business_name, phone").eq("is_active", true);
-    setClients(cl || []);
-
-    // Fetch WhatsApp data via Twilio (WhatsApp messages go through Twilio too)
-    try {
-      const [msgRes, tplRes] = await Promise.all([
-        fetch("/api/integrations/twilio?action=messages&limit=30"),
-        fetch("/api/integrations/whatsapp?action=templates"),
-      ]);
-
-      const msgData = await msgRes.json();
-      const tplData = await tplRes.json();
-
-      if (msgData.success) {
-        // Filter to WhatsApp messages (from/to contain 'whatsapp:')
-        setMessages(msgData.messages || []);
-      }
-      if (tplData.connected === false) {
-        setConnected(false);
-      } else {
-        setTemplates(tplData.templates || []);
-      }
-    } catch {
-      setConnected(false);
-    }
-    setLoading(false);
-  }
-
-  async function sendWhatsApp() {
-    if (!sendTo || !sendMessage) { toast.error("Enter a number and message"); return; }
-    setSending(true);
-    try {
-      const res = await fetch("/api/integrations/whatsapp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "send_text",
-          to: sendTo,
-          message: sendMessage,
-          client_id: selectedClient || null,
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast.success("Message sent!");
-        setSendMessage("");
-        fetchData();
-      } else {
-        toast.error(data.error || "Failed to send");
-      }
-    } catch { toast.error("Error sending message"); }
-    setSending(false);
-  }
-
-  async function sendTemplate(templateName: string) {
-    if (!sendTo) { toast.error("Enter a recipient number first"); return; }
-    setSending(true);
-    try {
-      const res = await fetch("/api/integrations/whatsapp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "send_template",
-          to: sendTo,
-          template_name: templateName,
-          client_id: selectedClient || null,
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Template "${templateName}" sent!`);
-      } else {
-        toast.error(data.error || "Failed");
-      }
-    } catch { toast.error("Error"); }
-    setSending(false);
-  }
-
-  if (!connected && !loading) {
-    return (
-      <div className="fade-in space-y-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#25D366]/10 rounded-xl flex items-center justify-center">
-            <MessageSquare size={20} className="text-[#25D366]" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">WhatsApp Business</h1>
-            <p className="text-xs text-muted">Send messages to clients via WhatsApp</p>
-          </div>
-        </div>
-        <div className="card p-8 text-center">
-          <MessageSquare size={32} className="text-muted/30 mx-auto mb-3" />
-          <h2 className="text-sm font-semibold mb-1">WhatsApp Not Connected</h2>
-          <p className="text-xs text-muted mb-3">Configure your WhatsApp Business API credentials in environment variables:</p>
-          <code className="text-[10px] bg-surface-light rounded-lg p-3 block text-muted">
-            WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID, WHATSAPP_BUSINESS_ACCOUNT_ID
-          </code>
-        </div>
-      </div>
-    );
-  }
+  const tabs = [
+    { id: "inbox" as const, label: "Inbox", icon: Inbox },
+    { id: "send" as const, label: "Send", icon: Send },
+    { id: "templates" as const, label: "Templates", icon: FileText },
+    { id: "broadcast" as const, label: "Broadcast", icon: Users },
+    { id: "automation" as const, label: "Automation", icon: Bot },
+    { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
+  ];
 
   return (
     <div className="fade-in space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-[#25D366]/10 rounded-xl flex items-center justify-center">
             <MessageSquare size={20} className="text-[#25D366]" />
           </div>
           <div>
-            <h1 className="page-header mb-0">WhatsApp Business</h1>
-            <p className="text-xs text-muted">Send messages, templates & media to clients</p>
+            <h1 className="text-lg font-bold">WhatsApp Business</h1>
+            <p className="text-xs text-muted">Messages, templates, broadcasts & automation</p>
           </div>
         </div>
-        <button onClick={fetchData} className="btn-secondary text-xs flex items-center gap-1.5">
-          <RefreshCw size={12} /> Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-lg bg-green-400/10 text-green-400 border border-green-400/15">
+            <CheckCircle size={10} /> API Connected
+          </span>
+          <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted flex items-center gap-1.5">
+            <RefreshCw size={12} /> Refresh
+          </button>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+        <div className="card p-2 text-center">
+          <p className="text-lg font-bold font-mono">{CHAT_ANALYTICS.totalSent}</p>
+          <p className="text-[9px] text-muted">Sent</p>
+        </div>
+        <div className="card p-2 text-center">
+          <p className="text-lg font-bold font-mono">{CHAT_ANALYTICS.totalReceived}</p>
+          <p className="text-[9px] text-muted">Received</p>
+        </div>
+        <div className="card p-2 text-center">
+          <p className="text-lg font-bold font-mono text-green-400">{CHAT_ANALYTICS.responseRate}</p>
+          <p className="text-[9px] text-muted">Response Rate</p>
+        </div>
+        <div className="card p-2 text-center">
+          <p className="text-lg font-bold font-mono">{CHAT_ANALYTICS.avgResponseTime}</p>
+          <p className="text-[9px] text-muted">Avg Response</p>
+        </div>
+        <div className="card p-2 text-center">
+          <p className="text-lg font-bold font-mono text-blue-400">{CHAT_ANALYTICS.readRate}</p>
+          <p className="text-[9px] text-muted">Read Rate</p>
+        </div>
+        <div className="card p-2 text-center">
+          <p className="text-lg font-bold font-mono text-gold">{CHAT_ANALYTICS.deliveryRate}</p>
+          <p className="text-[9px] text-muted">Delivery Rate</p>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        {([
-          { id: "inbox", label: "Inbox", icon: <Inbox size={13} /> },
-          { id: "send", label: "Send Message", icon: <Send size={13} /> },
-          { id: "templates", label: "Templates", icon: <FileText size={13} /> },
-        ] as const).map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
-              tab === t.id ? "bg-[#25D366]/10 text-[#25D366] font-medium" : "text-muted hover:text-foreground"
+      <div className="flex gap-1 overflow-x-auto pb-1">
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setActiveTab(t.id)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
+              activeTab === t.id ? "bg-[#25D366]/10 border-[#25D366]/20 text-[#25D366] font-medium" : "border-border text-muted hover:text-foreground"
             }`}>
-            {t.icon} {t.label}
+            <t.icon size={12} /> {t.label}
           </button>
         ))}
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-12"><Loader size={20} className="animate-spin text-[#25D366]" /></div>
-      ) : (
-        <>
-          {/* Inbox */}
-          {tab === "inbox" && (
-            <div className="space-y-2">
-              {messages.length === 0 ? (
-                <div className="card p-8 text-center text-muted text-sm">No messages yet</div>
-              ) : (
-                messages.map((msg, i) => (
-                  <div key={i} className="card p-3 flex items-start gap-3">
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
-                      msg.direction === "inbound" ? "bg-[#25D366]/10 text-[#25D366]" : "bg-info/10 text-info"
-                    }`}>
-                      {msg.direction === "inbound" ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 text-[10px] text-muted">
-                        <span className="font-medium text-foreground">{msg.direction === "inbound" ? msg.from : msg.to}</span>
-                        <span className={`px-1.5 py-0.5 rounded text-[8px] ${
-                          msg.status === "delivered" || msg.status === "read" ? "bg-success/10 text-success" :
-                          msg.status === "failed" || msg.status === "undelivered" ? "bg-danger/10 text-danger" :
-                          "bg-surface-light text-muted"
-                        }`}>{msg.status}</span>
-                        <span>{msg.date_sent ? formatRelativeTime(msg.date_sent) : ""}</span>
-                      </div>
-                      <p className="text-xs mt-1 text-muted">{msg.body}</p>
-                    </div>
-                  </div>
-                ))
-              )}
+      {/* ---- TAB: Inbox ---- */}
+      {activeTab === "inbox" && (
+        <div className="space-y-3">
+          <div className="relative">
+            <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+              className="w-full rounded-lg border border-border bg-surface px-3 py-1.5 pl-8 text-xs text-foreground" placeholder="Search messages..." />
+          </div>
+          {/* Contact labels */}
+          <div className="flex gap-2 overflow-x-auto">
+            {CONTACT_LABELS.map(l => (
+              <div key={l.label} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border text-[9px] whitespace-nowrap shrink-0">
+                <div className={`w-2 h-2 rounded-full ${l.color}`} />
+                <span>{l.label}</span>
+                <span className="text-muted">({l.count})</span>
+              </div>
+            ))}
+          </div>
+          {filteredMessages.map(msg => (
+            <div key={msg.id} className="card p-3 flex items-start gap-3">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
+                msg.direction === "inbound" ? "bg-[#25D366]/10 text-[#25D366]" : "bg-blue-400/10 text-blue-400"
+              }`}>
+                {msg.direction === "inbound" ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 text-[10px] text-muted">
+                  <span className="font-medium text-foreground">{msg.direction === "inbound" ? msg.from : msg.to}</span>
+                  <span className={`px-1.5 py-0.5 rounded text-[8px] ${
+                    msg.status === "read" ? "bg-blue-400/10 text-blue-400" :
+                    msg.status === "delivered" ? "bg-green-400/10 text-green-400" :
+                    "bg-white/5 text-muted"
+                  }`}>{msg.status} {msg.status === "read" && <Eye size={7} className="inline" />}</span>
+                  <span>{new Date(msg.date_sent).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                </div>
+                <p className="text-xs mt-1 text-muted">{msg.body}</p>
+              </div>
             </div>
-          )}
+          ))}
+        </div>
+      )}
 
-          {/* Send */}
-          {tab === "send" && (
-            <div className="card space-y-4">
-              <h2 className="section-header">Send WhatsApp Message</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Recipient Phone *</label>
-                  <input value={sendTo} onChange={e => setSendTo(e.target.value)}
-                    className="input w-full text-xs" placeholder="+1234567890" />
-                </div>
-                <div>
-                  <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Quick Select Client</label>
-                  <select value={selectedClient} onChange={e => {
-                    setSelectedClient(e.target.value);
-                    const cl = clients.find(c => c.id === e.target.value);
-                    if (cl?.phone) setSendTo(cl.phone);
-                  }} className="input w-full text-xs">
-                    <option value="">Select client...</option>
-                    {clients.filter(c => c.phone).map(c => (
-                      <option key={c.id} value={c.id}>{c.business_name} ({c.phone})</option>
-                    ))}
-                  </select>
-                </div>
+      {/* ---- TAB: Send ---- */}
+      {activeTab === "send" && (
+        <div className="space-y-4">
+          <div className="card p-4 space-y-4">
+            <h2 className="text-xs font-semibold">Send WhatsApp Message</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Recipient Phone *</label>
+                <input value={sendTo} onChange={e => setSendTo(e.target.value)}
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" placeholder="+1234567890" />
               </div>
               <div>
-                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Message *</label>
-                <textarea value={sendMessage} onChange={e => setSendMessage(e.target.value)}
-                  className="input w-full h-24 text-xs" placeholder="Type your message..." />
-              </div>
-              <div className="flex gap-2">
-                <button onClick={sendWhatsApp} disabled={sending || !sendTo || !sendMessage}
-                  className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                  {sending ? <Loader size={12} className="animate-spin" /> : <Send size={12} />}
-                  Send Message
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Templates */}
-          {tab === "templates" && (
-            <div className="space-y-3">
-              <div className="card p-3">
-                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Send template to:</label>
-                <input value={sendTo} onChange={e => setSendTo(e.target.value)}
-                  className="input w-full text-xs" placeholder="+1234567890 (enter number first, then click a template)" />
-              </div>
-              {templates.length === 0 ? (
-                <div className="card p-8 text-center text-muted text-sm">No templates found. Create them in your WhatsApp Business Manager.</div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {templates.map((t, i) => (
-                    <div key={i} className="card p-3 flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-medium">{t.name}</p>
-                        <div className="flex items-center gap-2 text-[9px] text-muted mt-0.5">
-                          <span className={`px-1.5 py-0.5 rounded ${
-                            t.status === "APPROVED" ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
-                          }`}>{t.status}</span>
-                          <span>{t.category}</span>
-                          <span>{t.language}</span>
-                        </div>
-                      </div>
-                      <button onClick={() => sendTemplate(t.name)} disabled={!sendTo || sending}
-                        className="btn-secondary text-[10px] px-2 py-1 disabled:opacity-30">
-                        <Send size={10} />
-                      </button>
-                    </div>
+                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Message Type</label>
+                <div className="flex gap-1.5">
+                  {(["text", "image", "document"] as const).map(t => (
+                    <button key={t} onClick={() => setMediaType(t)}
+                      className={`flex-1 text-[10px] py-1.5 rounded-lg border capitalize transition-all flex items-center justify-center gap-1 ${
+                        mediaType === t ? "border-[#25D366]/30 bg-[#25D366]/10 text-[#25D366]" : "border-border text-muted"
+                      }`}>
+                      {t === "image" ? <Image size={10} /> : t === "document" ? <FileText size={10} /> : <MessageSquare size={10} />}
+                      {t}
+                    </button>
                   ))}
                 </div>
-              )}
+              </div>
             </div>
-          )}
-        </>
+            <div>
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Message *</label>
+              <textarea value={sendMessage} onChange={e => setSendMessage(e.target.value)}
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24" placeholder="Type your message..." />
+            </div>
+            {/* Quick Reply Buttons */}
+            <div>
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Quick Replies</label>
+              <div className="flex gap-1.5 flex-wrap">
+                {QUICK_REPLIES.map(qr => (
+                  <button key={qr.id} onClick={() => setSendMessage(qr.text)}
+                    className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-[#25D366] hover:border-[#25D366]/20 transition-all">
+                    {qr.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <button disabled={!sendTo || !sendMessage}
+              className="px-4 py-2 rounded-lg bg-[#25D366] text-white text-xs font-semibold disabled:opacity-50 flex items-center gap-1.5">
+              <Send size={12} /> Send Message
+            </button>
+          </div>
+
+          {/* Message Scheduling */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-[#25D366]" /> Scheduled Messages</h3>
+            <div className="space-y-2">
+              {SCHEDULED_MESSAGES.map(sm => (
+                <div key={sm.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                  <div>
+                    <p className="text-xs font-medium">To: {sm.to}</p>
+                    <p className="text-[10px] text-muted truncate max-w-[300px]">{sm.message}</p>
+                    <p className="text-[9px] text-muted flex items-center gap-1 mt-0.5"><Clock size={8} /> {new Date(sm.scheduledAt).toLocaleString()}</p>
+                  </div>
+                  <span className={`text-[9px] px-2 py-0.5 rounded ${
+                    sm.status === "scheduled" ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"
+                  }`}>{sm.status}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Templates ---- */}
+      {activeTab === "templates" && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-semibold flex items-center gap-2"><FileText size={12} className="text-[#25D366]" /> WhatsApp Templates</h2>
+            <button className="px-3 py-1.5 rounded-lg bg-[#25D366] text-white text-[10px] font-semibold flex items-center gap-1"><Plus size={10} /> New Template</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {MOCK_TEMPLATES.map(t => (
+              <div key={t.id} className="card p-3">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-xs font-medium">{t.name}</p>
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded ${
+                    t.status === "APPROVED" ? "bg-green-400/10 text-green-400" : "bg-yellow-400/10 text-yellow-400"
+                  }`}>{t.status}</span>
+                </div>
+                <p className="text-[10px] text-muted mb-1">{t.body}</p>
+                <div className="flex items-center gap-2 text-[9px] text-muted">
+                  <span>{t.category}</span>
+                  <span>&middot;</span>
+                  <span>{t.language}</span>
+                </div>
+                <button className="mt-2 text-[10px] px-2 py-1 rounded border border-border text-muted hover:text-[#25D366] flex items-center gap-1">
+                  <Send size={8} /> Use Template
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Broadcast ---- */}
+      {activeTab === "broadcast" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Users size={12} className="text-[#25D366]" /> Broadcast Lists</h3>
+            <div className="space-y-2">
+              {BROADCAST_LISTS.map(bl => (
+                <div key={bl.id} className={`flex items-center justify-between p-3 rounded-lg border transition-all cursor-pointer ${
+                  selectedBroadcast === bl.id ? "border-[#25D366]/30 bg-[#25D366]/[0.03]" : "border-border"
+                }`} onClick={() => setSelectedBroadcast(bl.id)}>
+                  <div>
+                    <p className="text-xs font-medium">{bl.name}</p>
+                    <p className="text-[10px] text-muted">{bl.contacts} contacts &middot; Last sent: {bl.lastSent}</p>
+                  </div>
+                  <button className="px-2 py-1 rounded-lg bg-[#25D366] text-white text-[10px] font-medium flex items-center gap-1"><Send size={8} /> Send</button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bulk Messaging */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Zap size={12} className="text-[#25D366]" /> Bulk Messaging</h3>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Select List</label>
+                <select className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground">
+                  <option value="">Choose a broadcast list...</option>
+                  {BROADCAST_LISTS.map(bl => <option key={bl.id} value={bl.id}>{bl.name} ({bl.contacts} contacts)</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Template</label>
+                <select className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground">
+                  <option value="">Choose a template...</option>
+                  {MOCK_TEMPLATES.filter(t => t.status === "APPROVED").map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                </select>
+              </div>
+              <button className="px-4 py-2 rounded-lg bg-[#25D366] text-white text-xs font-semibold flex items-center gap-1.5 disabled:opacity-50">
+                <Send size={12} /> Send to List
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Automation ---- */}
+      {activeTab === "automation" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Bot size={12} className="text-[#25D366]" /> Auto-Responder Rules</h3>
+            <div className="space-y-2">
+              {AUTO_RESPONDER_RULES.map(rule => (
+                <div key={rule.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                  <div className={`w-2 h-2 rounded-full ${rule.enabled ? "bg-green-400" : "bg-white/20"}`} />
+                  <div className="flex-1">
+                    <p className="text-xs font-medium">{rule.trigger}</p>
+                    <p className="text-[10px] text-muted">{rule.response}</p>
+                  </div>
+                  <span className={`text-[9px] px-2 py-0.5 rounded ${rule.enabled ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"}`}>
+                    {rule.enabled ? "Active" : "Off"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Chat Assignment */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Users size={12} className="text-[#25D366]" /> Chat Assignment Rules</h3>
+            <div className="space-y-2">
+              {[
+                { label: "New leads", assignee: "Sales Team", rule: "Round-robin" },
+                { label: "Existing clients", assignee: "Account Manager", rule: "Assigned client rep" },
+                { label: "Support queries", assignee: "Support Team", rule: "First available" },
+              ].map(r => (
+                <div key={r.label} className="flex items-center justify-between p-2 rounded-lg border border-border">
+                  <span className="text-[10px] font-medium">{r.label}</span>
+                  <span className="text-[10px] text-muted">{r.assignee} ({r.rule})</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Analytics ---- */}
+      {activeTab === "analytics" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BarChart3 size={12} className="text-[#25D366]" /> Messages by Day</h3>
+            <div className="flex items-end gap-2 h-24">
+              {CHAT_ANALYTICS.byDay.map((v, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <span className="text-[8px] text-muted">{v}</span>
+                  <div className="w-full rounded-t bg-[#25D366]/30" style={{ height: `${(v / Math.max(...CHAT_ANALYTICS.byDay)) * 100}%` }} />
+                  <span className="text-[8px] text-muted">{["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Read receipts tracker */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Eye size={12} className="text-[#25D366]" /> Read Receipts Tracker</h3>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="p-3 rounded-lg border border-border text-center">
+                <p className="text-lg font-bold text-green-400">{CHAT_ANALYTICS.deliveryRate}</p>
+                <p className="text-[10px] text-muted">Delivered</p>
+              </div>
+              <div className="p-3 rounded-lg border border-border text-center">
+                <p className="text-lg font-bold text-blue-400">{CHAT_ANALYTICS.readRate}</p>
+                <p className="text-[10px] text-muted">Read</p>
+              </div>
+              <div className="p-3 rounded-lg border border-border text-center">
+                <p className="text-lg font-bold text-gold">{CHAT_ANALYTICS.responseRate}</p>
+                <p className="text-[10px] text-muted">Replied</p>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

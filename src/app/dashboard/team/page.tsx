@@ -1,320 +1,521 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { TeamMember, Deal, Payroll } from "@/lib/types";
-import StatCard from "@/components/ui/stat-card";
-import StatusBadge from "@/components/ui/status-badge";
-import DataTable from "@/components/ui/data-table";
-import Modal from "@/components/ui/modal";
-import { PageLoading } from "@/components/ui/loading";
-import { formatCurrency, formatDate } from "@/lib/utils";
-import { Users, DollarSign, Trophy, Plus, FileDown, Briefcase } from "lucide-react";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import {
+  Users, Trophy, DollarSign, Briefcase,
+  Clock, MessageSquare, CheckCircle,
+  Shield, BarChart3, UserPlus, Mail, MapPin, Globe,
+  Activity, X, Search
+} from "lucide-react";
 
-type Tab = "team" | "deals" | "payroll";
+type TeamTab = "members" | "performance" | "workload" | "activity" | "permissions";
+
+interface TeamMemberData {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  avatar: string;
+  status: "online" | "away" | "offline";
+  skills: string[];
+  clients: string[];
+  hoursThisWeek: number;
+  dealsWon: number;
+  revenue: number;
+  joinDate: string;
+  country: string;
+  availability: Record<string, boolean>;
+  onboardingComplete: boolean;
+  onboardingChecklist: { task: string; done: boolean }[];
+  recentActivity: { action: string; time: string }[];
+}
+
+const MOCK_MEMBERS: TeamMemberData[] = [
+  {
+    id: "1", name: "Nicklas", email: "nicklas@shortstackcreative.com", role: "Founder / CEO", avatar: "N",
+    status: "online", skills: ["Strategy", "Sales", "AI Systems", "Automation"],
+    clients: ["Bright Dental", "Metro Realty", "FitPro Gym"], hoursThisWeek: 42, dealsWon: 8, revenue: 24500,
+    joinDate: "2024-01-01", country: "Sweden",
+    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: false, Sun: false },
+    onboardingComplete: true,
+    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
+    recentActivity: [{ action: "Closed deal with Metro Realty", time: "2h ago" }, { action: "Updated ad campaign", time: "4h ago" }],
+  },
+  {
+    id: "2", name: "Sarah Chen", email: "sarah@shortstackcreative.com", role: "Content Manager", avatar: "S",
+    status: "online", skills: ["Content Strategy", "Copywriting", "Social Media", "SEO"],
+    clients: ["Luxe Salon", "Green Eats"], hoursThisWeek: 38, dealsWon: 3, revenue: 8500,
+    joinDate: "2024-06-15", country: "USA",
+    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: false, Sun: false },
+    onboardingComplete: true,
+    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
+    recentActivity: [{ action: "Published 5 posts for Luxe Salon", time: "1h ago" }, { action: "Wrote blog for Green Eats", time: "3h ago" }],
+  },
+  {
+    id: "3", name: "James Wilson", email: "james@shortstackcreative.com", role: "Video Editor", avatar: "J",
+    status: "away", skills: ["Video Editing", "Motion Graphics", "Thumbnail Design", "Premiere Pro"],
+    clients: ["FitPro Gym", "Green Eats", "Bright Dental"], hoursThisWeek: 35, dealsWon: 0, revenue: 0,
+    joinDate: "2024-09-01", country: "Philippines",
+    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: true, Sun: false },
+    onboardingComplete: true,
+    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
+    recentActivity: [{ action: "Delivered 3 reels for FitPro", time: "30m ago" }, { action: "Started video for Bright Dental", time: "2h ago" }],
+  },
+  {
+    id: "4", name: "Maria Rodriguez", email: "maria@shortstackcreative.com", role: "Ads Manager", avatar: "M",
+    status: "online", skills: ["Meta Ads", "Google Ads", "Analytics", "Landing Pages"],
+    clients: ["Metro Realty", "Bright Dental", "Luxe Salon"], hoursThisWeek: 40, dealsWon: 2, revenue: 6200,
+    joinDate: "2025-01-10", country: "Colombia",
+    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: false, Sun: false },
+    onboardingComplete: true,
+    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
+    recentActivity: [{ action: "Optimized Metro Realty campaign", time: "1h ago" }, { action: "Created ad set for Luxe Salon", time: "5h ago" }],
+  },
+  {
+    id: "5", name: "Alex Park", email: "alex@shortstackcreative.com", role: "Cold Caller", avatar: "A",
+    status: "offline", skills: ["Cold Calling", "Lead Gen", "CRM", "Sales Scripts"],
+    clients: [], hoursThisWeek: 28, dealsWon: 5, revenue: 12000,
+    joinDate: "2025-11-01", country: "South Korea",
+    availability: { Mon: true, Tue: true, Wed: true, Thu: false, Fri: true, Sat: false, Sun: false },
+    onboardingComplete: false,
+    onboardingChecklist: [
+      { task: "Set up profile", done: true }, { task: "Connect integrations", done: true },
+      { task: "Complete CRM training", done: true }, { task: "First mock call", done: true },
+      { task: "Shadow senior caller", done: false }, { task: "Complete compliance training", done: false },
+    ],
+    recentActivity: [{ action: "Made 45 calls today", time: "1h ago" }, { action: "Booked 3 discovery calls", time: "3h ago" }],
+  },
+];
+
+const ROLES = ["Founder / CEO", "Content Manager", "Video Editor", "Ads Manager", "Cold Caller", "Account Manager", "Developer", "Designer"];
+
+const PERMISSIONS: { feature: string; roles: Record<string, boolean> }[] = [
+  { feature: "View Dashboard", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": true, "Ads Manager": true, "Cold Caller": true } },
+  { feature: "Manage Clients", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": false, "Ads Manager": true, "Cold Caller": false } },
+  { feature: "Access Financials", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": false, "Cold Caller": false } },
+  { feature: "Edit Content", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": true, "Ads Manager": false, "Cold Caller": false } },
+  { feature: "Manage Ads", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": true, "Cold Caller": false } },
+  { feature: "View Reports", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": false, "Ads Manager": true, "Cold Caller": true } },
+  { feature: "Send Invoices", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": false, "Cold Caller": false } },
+  { feature: "Manage Team", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": false, "Cold Caller": false } },
+];
+
+const STATUS_COLORS = { online: "bg-emerald-400", away: "bg-yellow-400", offline: "bg-gray-500" };
 
 export default function TeamPage() {
-  const [tab, setTab] = useState<Tab>("team");
-  const [members, setMembers] = useState<TeamMember[]>([]);
-  const [deals, setDeals] = useState<Deal[]>([]);
-  const [payroll, setPayroll] = useState<Payroll[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showAddMember, setShowAddMember] = useState(false);
-  const [showAddDeal, setShowAddDeal] = useState(false);
-  const supabase = createClient();
+  const [tab, setTab] = useState<TeamTab>("members");
+  const [members] = useState<TeamMemberData[]>(MOCK_MEMBERS);
+  const [showInvite, setShowInvite] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [inviteForm, setInviteForm] = useState({ name: "", email: "", role: ROLES[0] });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [expandedChat, setExpandedChat] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const totalRevenue = members.reduce((s, m) => s + m.revenue, 0);
+  const totalDeals = members.reduce((s, m) => s + m.dealsWon, 0);
+  const avgHours = Math.round(members.reduce((s, m) => s + m.hoursThisWeek, 0) / members.length);
+  const onlineCount = members.filter(m => m.status === "online").length;
 
-  async function fetchData() {
-    try {
-      setLoading(true);
-      const [{ data: m }, { data: d }, { data: p }] = await Promise.all([
-        supabase.from("team_members").select("*").order("full_name"),
-        supabase.from("deals").select("*").order("created_at", { ascending: false }),
-        supabase.from("payroll").select("*").order("month", { ascending: false }),
-      ]);
-      setMembers(m || []);
-      setDeals(d || []);
-      setPayroll(p || []);
-    } catch (err) {
-      console.error("[TeamPage] fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const filteredMembers = members.filter(m =>
+    m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    m.role.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const totalPayroll = payroll
-    .filter((p) => p.month === new Date().toISOString().slice(0, 7) + "-01")
-    .reduce((sum, p) => sum + p.total_amount, 0);
-
-  const totalDealsWon = deals.filter((d) => d.status === "won").reduce((sum, d) => sum + d.amount, 0);
-  const dealsThisMonth = deals.filter((d) => d.status === "won" && d.closed_at && d.closed_at.startsWith(new Date().toISOString().slice(0, 7))).length;
-
-  async function addTeamMember(formData: FormData) {
-    const { error } = await supabase.from("team_members").insert({
-      full_name: formData.get("full_name"),
-      email: formData.get("email"),
-      role: formData.get("role"),
-      base_pay: parseFloat(formData.get("base_pay") as string) || 0,
-      commission_rate: parseFloat(formData.get("commission_rate") as string) || 0,
-      payment_method: formData.get("payment_method"),
-      country: formData.get("country"),
-    });
-    if (error) toast.error("Failed to add");
-    else { toast.success("Team member added"); setShowAddMember(false); fetchData(); }
-  }
-
-  async function addDeal(formData: FormData) {
-    const { error } = await supabase.from("deals").insert({
-      client_name: formData.get("client_name"),
-      service: formData.get("service"),
-      amount: parseFloat(formData.get("amount") as string) || 0,
-      status: formData.get("status"),
-      closed_by: formData.get("closed_by") || null,
-      cold_called_by: formData.get("cold_called_by") || null,
-      closed_at: formData.get("status") === "won" ? new Date().toISOString() : null,
-    });
-    if (error) toast.error("Failed to add deal");
-    else { toast.success("Deal added"); setShowAddDeal(false); fetchData(); }
-  }
-
-  async function generatePayroll() {
-    const month = new Date();
-    month.setDate(1);
-    const monthStr = month.toISOString().split("T")[0];
-
-    for (const member of members) {
-      const memberDeals = deals.filter(
-        (d) => d.closed_by === member.id && d.status === "won" &&
-        d.closed_at && d.closed_at.startsWith(month.toISOString().slice(0, 7))
-      );
-      const commissionTotal = memberDeals.reduce((sum, d) => sum + d.amount, 0) * (member.commission_rate / 100);
-      const total = member.base_pay + commissionTotal;
-
-      const { data: existing } = await supabase
-        .from("payroll")
-        .select("id")
-        .eq("team_member_id", member.id)
-        .eq("month", monthStr)
-        .single();
-
-      if (existing) {
-        await supabase.from("payroll").update({
-          base_amount: member.base_pay,
-          commission_amount: commissionTotal,
-          total_amount: total,
-          deals_closed: memberDeals.length,
-        }).eq("id", existing.id);
-      } else {
-        await supabase.from("payroll").insert({
-          team_member_id: member.id,
-          month: monthStr,
-          base_amount: member.base_pay,
-          commission_amount: commissionTotal,
-          total_amount: total,
-          deals_closed: memberDeals.length,
-        });
-      }
-    }
-    toast.success("Payroll generated");
-    fetchData();
-  }
-
-  if (loading) return <PageLoading />;
+  const TABS: { id: TeamTab; label: string; icon: React.ReactNode }[] = [
+    { id: "members", label: "Members", icon: <Users size={13} /> },
+    { id: "performance", label: "Performance", icon: <Trophy size={13} /> },
+    { id: "workload", label: "Workload", icon: <BarChart3 size={13} /> },
+    { id: "activity", label: "Activity", icon: <Activity size={13} /> },
+    { id: "permissions", label: "Permissions", icon: <Shield size={13} /> },
+  ];
 
   return (
-    <div className="fade-in space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="fade-in space-y-5">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="page-header mb-0">Team & Payroll</h1>
-          <p className="text-muted text-sm">Manage team, deals, and payroll</p>
+          <h1 className="page-header mb-0 flex items-center gap-2"><Users size={18} className="text-gold" /> Team</h1>
+          <p className="text-xs text-muted mt-0.5">{members.length} members - {onlineCount} online</p>
         </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowAddMember(true)} className="btn-secondary flex items-center gap-2">
-            <Plus size={16} /> Add Member
-          </button>
-          <button onClick={() => setShowAddDeal(true)} className="btn-primary flex items-center gap-2">
-            <Trophy size={16} /> Log Deal
-          </button>
+        <button onClick={() => setShowInvite(true)} className="btn-primary text-xs flex items-center gap-1.5">
+          <UserPlus size={12} /> Invite Member
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div className="card p-3">
+          <div className="flex items-center gap-1.5 mb-1"><Users size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Active Members</p></div>
+          <p className="text-lg font-bold">{members.length}</p>
+          <p className="text-[10px] text-emerald-400">{onlineCount} online now</p>
+        </div>
+        <div className="card p-3">
+          <div className="flex items-center gap-1.5 mb-1"><Trophy size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Total Deals</p></div>
+          <p className="text-lg font-bold text-gold">{totalDeals}</p>
+          <p className="text-[10px] text-muted">this quarter</p>
+        </div>
+        <div className="card p-3">
+          <div className="flex items-center gap-1.5 mb-1"><DollarSign size={12} className="text-emerald-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Revenue</p></div>
+          <p className="text-lg font-bold text-emerald-400">${totalRevenue.toLocaleString()}</p>
+          <p className="text-[10px] text-muted">team-generated</p>
+        </div>
+        <div className="card p-3">
+          <div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-blue-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Avg Hours/Week</p></div>
+          <p className="text-lg font-bold text-blue-400">{avgHours}h</p>
+          <p className="text-[10px] text-muted">across team</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Team Members" value={members.filter((m) => m.is_active).length} icon={<Users size={18} />} />
-        <StatCard label="Deals Won (Total)" value={formatCurrency(totalDealsWon)} icon={<Trophy size={18} />} />
-        <StatCard label="Deals This Month" value={dealsThisMonth} icon={<Briefcase size={18} />} />
-        <StatCard label="Payroll This Month" value={formatCurrency(totalPayroll)} icon={<DollarSign size={18} />} />
-      </div>
-
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        {(["team", "deals", "payroll"] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm rounded-md capitalize transition-all ${tab === t ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
-          >{t}</button>
+      {/* Tabs */}
+      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
+        {TABS.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
+              tab === t.id ? "bg-gold/10 text-gold font-medium" : "text-muted hover:text-foreground"
+            }`}>
+            {t.icon} {t.label}
+          </button>
         ))}
       </div>
 
-      {tab === "team" && (
-        <DataTable
-          columns={[
-            { key: "full_name", label: "Name", render: (m: TeamMember) => (
-              <div>
-                <p className="font-medium">{m.full_name}</p>
-                <p className="text-xs text-muted">{m.email}</p>
-              </div>
-            )},
-            { key: "role", label: "Role", render: (m: TeamMember) => <span className="text-gold">{m.role}</span> },
-            { key: "base_pay", label: "Base Pay", render: (m: TeamMember) => formatCurrency(m.base_pay) },
-            { key: "commission_rate", label: "Commission", render: (m: TeamMember) => `${m.commission_rate}%` },
-            { key: "payment_method", label: "Payment", render: (m: TeamMember) => m.payment_method || "-" },
-            { key: "country", label: "Country", render: (m: TeamMember) => m.country || "-" },
-            { key: "is_active", label: "Status", render: (m: TeamMember) => <StatusBadge status={m.is_active ? "active" : "inactive"} /> },
-          ]}
-          data={members}
-          emptyMessage="No team members yet."
-        />
-      )}
-
-      {tab === "deals" && (
-        <DataTable
-          columns={[
-            { key: "client_name", label: "Client" },
-            { key: "service", label: "Service" },
-            { key: "amount", label: "Amount", render: (d: Deal) => formatCurrency(d.amount) },
-            { key: "status", label: "Status", render: (d: Deal) => <StatusBadge status={d.status} /> },
-            { key: "closed_by", label: "Closed By", render: (d: Deal) => members.find((m) => m.id === d.closed_by)?.full_name || "-" },
-            { key: "cold_called_by", label: "Cold Called By", render: (d: Deal) => members.find((m) => m.id === d.cold_called_by)?.full_name || "-" },
-            { key: "closed_at", label: "Closed", render: (d: Deal) => d.closed_at ? formatDate(d.closed_at) : "-" },
-          ]}
-          data={deals}
-          emptyMessage="No deals logged yet."
-        />
-      )}
-
-      {tab === "payroll" && (
+      {/* Members Tab */}
+      {tab === "members" && (
         <div className="space-y-4">
-          <div className="flex justify-end">
-            <button onClick={generatePayroll} className="btn-primary flex items-center gap-2">
-              <FileDown size={16} /> Generate Payroll
-            </button>
+          <div className="relative">
+            <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
+            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+              className="input w-full text-xs pl-8" placeholder="Search team members..." />
           </div>
-          <DataTable
-            columns={[
-              { key: "team_member_id", label: "Team Member", render: (p: Payroll) => members.find((m) => m.id === p.team_member_id)?.full_name || "-" },
-              { key: "month", label: "Month", render: (p: Payroll) => formatDate(p.month) },
-              { key: "base_amount", label: "Base", render: (p: Payroll) => formatCurrency(p.base_amount) },
-              { key: "commission_amount", label: "Commission", render: (p: Payroll) => formatCurrency(p.commission_amount) },
-              { key: "total_amount", label: "Total", render: (p: Payroll) => <span className="text-gold font-bold">{formatCurrency(p.total_amount)}</span> },
-              { key: "deals_closed", label: "Deals" },
-              { key: "status", label: "Status", render: (p: Payroll) => <StatusBadge status={p.status} /> },
-            ]}
-            data={payroll}
-            emptyMessage="No payroll records. Click 'Generate Payroll' to calculate."
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredMembers.map(member => (
+              <div key={member.id} className="card p-4 hover:border-gold/10 transition-all cursor-pointer" onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}>
+                <div className="flex items-start gap-3">
+                  <div className="relative">
+                    <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-lg font-bold text-gold">{member.avatar}</div>
+                    <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0a0a0a] ${STATUS_COLORS[member.status]}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold truncate">{member.name}</p>
+                    <p className="text-[10px] text-gold">{member.role}</p>
+                    <p className="text-[10px] text-muted flex items-center gap-1"><Mail size={8} /> {member.email}</p>
+                    <p className="text-[10px] text-muted flex items-center gap-1"><MapPin size={8} /> {member.country}</p>
+                  </div>
+                </div>
+                {/* Skills */}
+                <div className="flex flex-wrap gap-1 mt-3">
+                  {member.skills.map(skill => (
+                    <span key={skill} className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/5 text-gold border border-gold/10">{skill}</span>
+                  ))}
+                </div>
+                {/* Quick Stats */}
+                <div className="grid grid-cols-3 gap-2 mt-3 text-center">
+                  <div className="p-1.5 rounded-lg bg-surface-light">
+                    <p className="text-xs font-bold">{member.clients.length}</p>
+                    <p className="text-[8px] text-muted">Clients</p>
+                  </div>
+                  <div className="p-1.5 rounded-lg bg-surface-light">
+                    <p className="text-xs font-bold">{member.hoursThisWeek}h</p>
+                    <p className="text-[8px] text-muted">This Week</p>
+                  </div>
+                  <div className="p-1.5 rounded-lg bg-surface-light">
+                    <p className="text-xs font-bold text-emerald-400">{member.dealsWon}</p>
+                    <p className="text-[8px] text-muted">Deals</p>
+                  </div>
+                </div>
+                {/* Expanded Details */}
+                {selectedMember === member.id && (
+                  <div className="mt-3 pt-3 border-t border-border space-y-3">
+                    {/* Availability Calendar */}
+                    <div>
+                      <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Availability</p>
+                      <div className="flex gap-1">
+                        {Object.entries(member.availability).map(([day, available]) => (
+                          <div key={day} className={`flex-1 text-center py-1 rounded text-[9px] ${available ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-muted/30"}`}>
+                            {day}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Client Assignments */}
+                    <div>
+                      <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Client Assignments</p>
+                      {member.clients.length > 0 ? (
+                        <div className="flex flex-wrap gap-1">
+                          {member.clients.map(c => (
+                            <span key={c} className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400">{c}</span>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-[9px] text-muted">No clients assigned</p>
+                      )}
+                    </div>
+                    {/* Onboarding Checklist */}
+                    {!member.onboardingComplete && (
+                      <div>
+                        <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Onboarding Progress</p>
+                        <div className="space-y-1">
+                          {member.onboardingChecklist.map((item, idx) => (
+                            <div key={idx} className="flex items-center gap-2 text-[10px]">
+                              <CheckCircle size={10} className={item.done ? "text-emerald-400" : "text-muted/30"} />
+                              <span className={item.done ? "text-muted line-through" : ""}>{item.task}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-1.5">
+                          <div className="h-1.5 rounded-full bg-surface-light overflow-hidden">
+                            <div className="h-full bg-gold rounded-full" style={{ width: `${(member.onboardingChecklist.filter(i => i.done).length / member.onboardingChecklist.length) * 100}%` }} />
+                          </div>
+                          <p className="text-[9px] text-muted mt-0.5">{member.onboardingChecklist.filter(i => i.done).length}/{member.onboardingChecklist.length} complete</p>
+                        </div>
+                      </div>
+                    )}
+                    {/* Recent Activity */}
+                    <div>
+                      <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Recent Activity</p>
+                      {member.recentActivity.map((act, idx) => (
+                        <div key={idx} className="flex items-center gap-2 text-[10px] py-1">
+                          <Activity size={9} className="text-gold shrink-0" />
+                          <span className="flex-1">{act.action}</span>
+                          <span className="text-muted">{act.time}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Team Chat Preview */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-gold" /> Team Chat</h2>
+            <div className="space-y-2">
+              {[
+                { from: "Nicklas", msg: "New client incoming - Metro Realty. Maria, can you handle ads?", time: "10:30 AM" },
+                { from: "Maria", msg: "On it! I'll set up the campaign structure today.", time: "10:32 AM" },
+                { from: "Sarah", msg: "Content calendar for next week is ready for review.", time: "10:45 AM" },
+                { from: "James", msg: "Just delivered the 3 reels for FitPro. Check Slack for previews.", time: "11:00 AM" },
+                { from: "Alex", msg: "Booked 3 discovery calls today. One is a dentist in Houston.", time: "11:15 AM" },
+              ].map((chat, idx) => (
+                <div key={idx} className="flex items-start gap-2 p-2 rounded-lg hover:bg-white/[0.02]">
+                  <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold shrink-0">{chat.from[0]}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-semibold">{chat.from}</span>
+                      <span className="text-[9px] text-muted">{chat.time}</span>
+                    </div>
+                    <p className="text-[11px] text-muted">{chat.msg}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Add Team Member Modal */}
-      <Modal isOpen={showAddMember} onClose={() => setShowAddMember(false)} title="Add Team Member">
-        <form onSubmit={(e) => { e.preventDefault(); addTeamMember(new FormData(e.currentTarget)); }} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-muted mb-1">Full Name *</label>
-              <input name="full_name" className="input w-full" required />
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Email *</label>
-              <input name="email" type="email" className="input w-full" required />
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Role *</label>
-              <select name="role" className="input w-full" required>
-                <option value="Cold Caller">Cold Caller</option>
-                <option value="Video Editor">Video Editor</option>
-                <option value="Ads Manager">Ads Manager</option>
-                <option value="Account Manager">Account Manager</option>
-                <option value="Content Creator">Content Creator</option>
-                <option value="Developer">Developer</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Country</label>
-              <input name="country" className="input w-full" />
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Base Pay ($)</label>
-              <input name="base_pay" type="number" step="0.01" className="input w-full" />
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Commission Rate (%)</label>
-              <input name="commission_rate" type="number" step="0.01" className="input w-full" />
+      {/* Performance Tab */}
+      {tab === "performance" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Trophy size={13} className="text-gold" /> Performance Rankings</h2>
+            <div className="space-y-2">
+              {[...members].sort((a, b) => b.revenue - a.revenue).map((member, idx) => (
+                <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${idx === 0 ? "bg-gold/20 text-gold" : idx === 1 ? "bg-gray-300/20 text-gray-300" : idx === 2 ? "bg-amber-700/20 text-amber-600" : "bg-surface text-muted"}`}>
+                    #{idx + 1}
+                  </div>
+                  <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-sm font-bold text-gold">{member.avatar}</div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold">{member.name}</p>
+                    <p className="text-[10px] text-muted">{member.role}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-emerald-400">${member.revenue.toLocaleString()}</p>
+                    <p className="text-[9px] text-muted">{member.dealsWon} deals</p>
+                  </div>
+                  <div className="w-24">
+                    <div className="h-2 rounded-full bg-surface overflow-hidden">
+                      <div className="h-full bg-gold rounded-full" style={{ width: `${(member.revenue / Math.max(members[0]?.revenue || 1, 1)) * 100}%` }} />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-          <div>
-            <label className="block text-sm text-muted mb-1">Payment Method</label>
-            <select name="payment_method" className="input w-full">
-              <option value="bank_transfer">Bank Transfer</option>
-              <option value="paypal">PayPal</option>
-              <option value="wise">Wise</option>
-              <option value="crypto">Crypto</option>
-            </select>
+          {/* Time Tracking Summary */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Time Tracking Summary</h2>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {members.map(m => (
+                <div key={m.id} className="p-3 rounded-lg bg-surface-light text-center border border-border">
+                  <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold mx-auto mb-1">{m.avatar}</div>
+                  <p className="text-[10px] font-semibold truncate">{m.name}</p>
+                  <p className="text-lg font-bold text-blue-400">{m.hoursThisWeek}h</p>
+                  <p className="text-[9px] text-muted">this week</p>
+                  <div className="h-1.5 rounded-full bg-surface overflow-hidden mt-1">
+                    <div className="h-full rounded-full" style={{ width: `${(m.hoursThisWeek / 45) * 100}%`, background: m.hoursThisWeek > 40 ? "#ef4444" : m.hoursThisWeek > 30 ? "#c8a855" : "#3b82f6" }} />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="flex justify-end gap-3 pt-4">
-            <button type="button" onClick={() => setShowAddMember(false)} className="btn-secondary">Cancel</button>
-            <button type="submit" className="btn-primary">Add Member</button>
-          </div>
-        </form>
-      </Modal>
+        </div>
+      )}
 
-      {/* Add Deal Modal */}
-      <Modal isOpen={showAddDeal} onClose={() => setShowAddDeal(false)} title="Log Deal">
-        <form onSubmit={(e) => { e.preventDefault(); addDeal(new FormData(e.currentTarget)); }} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-muted mb-1">Client Name *</label>
-              <input name="client_name" className="input w-full" required />
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Service *</label>
-              <input name="service" className="input w-full" required />
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Amount ($) *</label>
-              <input name="amount" type="number" step="0.01" className="input w-full" required />
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Status *</label>
-              <select name="status" className="input w-full" required>
-                <option value="open">Open</option>
-                <option value="won">Won</option>
-                <option value="lost">Lost</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Closed By</label>
-              <select name="closed_by" className="input w-full">
-                <option value="">Select...</option>
-                {members.map((m) => <option key={m.id} value={m.id}>{m.full_name}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm text-muted mb-1">Cold Called By</label>
-              <select name="cold_called_by" className="input w-full">
-                <option value="">Select...</option>
-                {members.map((m) => <option key={m.id} value={m.id}>{m.full_name}</option>)}
-              </select>
+      {/* Workload Tab */}
+      {tab === "workload" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Workload Distribution</h2>
+            <div className="space-y-3">
+              {members.map(m => {
+                const load = m.clients.length * 20 + m.hoursThisWeek;
+                const maxLoad = 100;
+                const pct = Math.min((load / maxLoad) * 100, 100);
+                const loadLevel = pct > 80 ? "Overloaded" : pct > 50 ? "Balanced" : "Available";
+                const loadColor = pct > 80 ? "text-red-400" : pct > 50 ? "text-gold" : "text-emerald-400";
+                const barColor = pct > 80 ? "#ef4444" : pct > 50 ? "#c8a855" : "#10b981";
+                return (
+                  <div key={m.id} className="p-3 rounded-lg bg-surface-light border border-border">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">{m.avatar}</div>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-semibold">{m.name}</p>
+                          <span className={`text-[9px] font-medium ${loadColor}`}>{loadLevel}</span>
+                        </div>
+                        <p className="text-[10px] text-muted">{m.role} - {m.clients.length} clients - {m.hoursThisWeek}h/week</p>
+                      </div>
+                    </div>
+                    <div className="h-2 rounded-full bg-surface overflow-hidden">
+                      <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: barColor }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
-          <div className="flex justify-end gap-3 pt-4">
-            <button type="button" onClick={() => setShowAddDeal(false)} className="btn-secondary">Cancel</button>
-            <button type="submit" className="btn-primary">Log Deal</button>
+          {/* Client Assignments Overview */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Briefcase size={13} className="text-blue-400" /> Client Assignments</h2>
+            <div className="space-y-2">
+              {["Bright Dental", "Luxe Salon", "FitPro Gym", "Metro Realty", "Green Eats"].map(client => {
+                const assigned = members.filter(m => m.clients.includes(client));
+                return (
+                  <div key={client} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                    <Globe size={14} className="text-gold shrink-0" />
+                    <span className="text-xs font-semibold flex-1">{client}</span>
+                    <div className="flex -space-x-2">
+                      {assigned.map(m => (
+                        <div key={m.id} className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold border-2 border-[#0a0a0a]" title={m.name}>{m.avatar}</div>
+                      ))}
+                    </div>
+                    <span className="text-[10px] text-muted">{assigned.length} member{assigned.length !== 1 ? "s" : ""}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </form>
-      </Modal>
+        </div>
+      )}
+
+      {/* Activity Tab */}
+      {tab === "activity" && (
+        <div className="card">
+          <h2 className="section-header flex items-center gap-2"><Activity size={13} className="text-gold" /> Team Activity Feed</h2>
+          <div className="space-y-2">
+            {members.flatMap(m => m.recentActivity.map(a => ({ ...a, member: m.name, avatar: m.avatar })))
+              .sort(() => Math.random() - 0.5)
+              .map((act, idx) => (
+                <div key={idx} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.02] border-b border-border">
+                  <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">{act.avatar}</div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px]"><span className="font-semibold">{act.member}</span> {act.action}</p>
+                  </div>
+                  <span className="text-[9px] text-muted shrink-0">{act.time}</span>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* Permissions Tab */}
+      {tab === "permissions" && (
+        <div className="card overflow-x-auto">
+          <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-gold" /> Role Permissions Matrix</h2>
+          <table className="w-full text-xs">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="text-left py-2 pr-4 text-muted font-semibold">Feature</th>
+                {["Founder / CEO", "Content Manager", "Video Editor", "Ads Manager", "Cold Caller"].map(role => (
+                  <th key={role} className="text-center py-2 px-2 text-muted font-semibold text-[10px]">{role.split(" / ")[0]}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {PERMISSIONS.map((perm, idx) => (
+                <tr key={idx} className="border-b border-border/50">
+                  <td className="py-2.5 pr-4 font-medium">{perm.feature}</td>
+                  {Object.values(perm.roles).map((allowed, rIdx) => (
+                    <td key={rIdx} className="text-center py-2.5">
+                      {allowed ? (
+                        <CheckCircle size={14} className="text-emerald-400 mx-auto" />
+                      ) : (
+                        <X size={14} className="text-red-400/30 mx-auto" />
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Invite Modal */}
+      {showInvite && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
+          <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Invite Team Member</h3>
+              <button onClick={() => setShowInvite(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+            </div>
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Full Name</label>
+              <input value={inviteForm.name} onChange={e => setInviteForm({ ...inviteForm, name: e.target.value })} className="input w-full text-xs" placeholder="John Smith" />
+            </div>
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Email</label>
+              <input type="email" value={inviteForm.email} onChange={e => setInviteForm({ ...inviteForm, email: e.target.value })} className="input w-full text-xs" placeholder="john@example.com" />
+            </div>
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Role</label>
+              <select value={inviteForm.role} onChange={e => setInviteForm({ ...inviteForm, role: e.target.value })} className="input w-full text-xs">
+                {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+              </select>
+            </div>
+            {/* Onboarding Checklist Preview */}
+            <div>
+              <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Auto-assigned onboarding tasks</p>
+              <div className="space-y-1">
+                {["Set up profile", "Connect integrations", "Complete role training", "First task assignment", "Team introduction call", "Review SOPs"].map((task, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-[10px] text-muted">
+                    <CheckCircle size={9} className="text-muted/30" />
+                    {task}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 pt-1">
+              <button onClick={() => setShowInvite(false)} className="btn-secondary text-xs">Cancel</button>
+              <button className="btn-primary text-xs flex items-center gap-1.5" onClick={() => setShowInvite(false)}>
+                <Mail size={12} /> Send Invite
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

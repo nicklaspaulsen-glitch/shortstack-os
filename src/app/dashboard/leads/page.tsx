@@ -1,447 +1,613 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { Lead, OutreachEntry, FollowUp } from "@/lib/types";
-import StatCard from "@/components/ui/stat-card";
-import StatusBadge from "@/components/ui/status-badge";
-import DataTable from "@/components/ui/data-table";
-import { PageLoading } from "@/components/ui/loading";
-import { formatRelativeTime, formatDate } from "@/lib/utils";
+import { useState } from "react";
 import {
-  Zap, MessageSquare, RefreshCw, Search,
-  Phone, Globe, Mail, Star
+  Zap, MessageSquare, Search, Phone, Globe, Mail, Star,
+  TrendingUp, Users, Target, ArrowDownRight,
+  CheckCircle, AlertTriangle, Tag, Upload, Download, Flame,
+  Clock, UserPlus, BarChart3,
+  RefreshCw, Bell, Layers, GitBranch
 } from "lucide-react";
-import toast from "react-hot-toast";
 
-type Tab = "leads" | "outreach" | "followups" | "ghl";
+type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
+
+interface MockLead {
+  id: string;
+  business_name: string;
+  phone: string;
+  email: string;
+  industry: string;
+  city: string;
+  source: string;
+  status: string;
+  score: number;
+  tags: string[];
+  lastActivity: string;
+  website: string;
+  rating: number;
+  reviews: number;
+  assigned: string;
+  engagements: number;
+}
+
+const MOCK_LEADS: MockLead[] = [
+  { id: "1", business_name: "Bright Smile Dental", phone: "+1 (555) 234-5678", email: "info@brightsmile.com", industry: "Dental", city: "Miami", source: "Google Maps", status: "qualified", score: 92, tags: ["high-value", "responsive"], lastActivity: "2h ago", website: "brightsmile.com", rating: 4.8, reviews: 234, assigned: "Nicklas", engagements: 8 },
+  { id: "2", business_name: "Peak Fitness Gym", phone: "+1 (555) 345-6789", email: "owner@peakfitness.com", industry: "Fitness", city: "Austin", source: "Instagram DM", status: "contacted", score: 78, tags: ["warm"], lastActivity: "5h ago", website: "peakfitness.com", rating: 4.5, reviews: 156, assigned: "Nicklas", engagements: 5 },
+  { id: "3", business_name: "Swift Plumbing Co", phone: "+1 (555) 456-7890", email: "swift@plumbing.net", industry: "Plumbing", city: "Dallas", source: "Cold Call", status: "new", score: 45, tags: ["needs-nurture"], lastActivity: "2d ago", website: "swiftplumbing.com", rating: 4.2, reviews: 89, assigned: "Unassigned", engagements: 1 },
+  { id: "4", business_name: "Atlas Legal Group", phone: "+1 (555) 567-8901", email: "info@atlaslegal.com", industry: "Legal", city: "Chicago", source: "Website Form", status: "qualified", score: 88, tags: ["high-value", "decision-maker"], lastActivity: "1h ago", website: "atlaslegal.com", rating: 4.9, reviews: 312, assigned: "Nicklas", engagements: 12 },
+  { id: "5", business_name: "Green Lawn Masters", phone: "+1 (555) 678-9012", email: "contact@greenlawn.com", industry: "Landscaping", city: "Tampa", source: "Facebook", status: "new", score: 35, tags: [], lastActivity: "5d ago", website: "greenlawnmasters.com", rating: 3.9, reviews: 45, assigned: "Unassigned", engagements: 0 },
+  { id: "6", business_name: "CloudNine HVAC", phone: "+1 (555) 789-0123", email: "service@cloudninehvac.com", industry: "HVAC", city: "Phoenix", source: "Google Maps", status: "contacted", score: 65, tags: ["follow-up"], lastActivity: "1d ago", website: "cloudninehvac.com", rating: 4.4, reviews: 178, assigned: "Nicklas", engagements: 3 },
+  { id: "7", business_name: "Sunrise Bakery", phone: "+1 (555) 890-1234", email: "hello@sunrise-bakery.com", industry: "Restaurant", city: "San Diego", source: "Referral", status: "booked", score: 95, tags: ["hot", "referral"], lastActivity: "30m ago", website: "sunrise-bakery.com", rating: 4.7, reviews: 567, assigned: "Nicklas", engagements: 15 },
+  { id: "8", business_name: "Elite Auto Detailing", phone: "+1 (555) 901-2345", email: "elite@autodetail.com", industry: "Automotive", city: "Las Vegas", source: "TikTok", status: "converted", score: 100, tags: ["client", "upsell"], lastActivity: "3h ago", website: "eliteautodetail.com", rating: 4.6, reviews: 201, assigned: "Nicklas", engagements: 20 },
+];
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const SOURCES = ["Google Maps", "Instagram DM", "Cold Call", "Website Form", "Facebook", "Referral", "TikTok", "LinkedIn", "Cold Email"];
 
 export default function LeadEnginePage() {
-  const [tab, setTab] = useState<Tab>("leads");
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [outreach, setOutreach] = useState<OutreachEntry[]>([]);
-  const [followups, setFollowups] = useState<FollowUp[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<MainTab>("leads");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [industryFilter, setIndustryFilter] = useState("");
-  const [stats, setStats] = useState({
-    leadsToday: 0, totalLeads: 0, dmsSent: 0, dmsTarget: 80,
-    repliesThisWeek: 0, pendingFollowups: 0, ghlSynced: 0, ghlFailed: 0,
-  });
-  const [outreachConfig, setOutreachConfig] = useState<Record<string, { enabled: boolean; limit: number }>>({
-    instagram: { enabled: true, limit: 20 },
-    linkedin: { enabled: true, limit: 20 },
-    facebook: { enabled: true, limit: 20 },
-    tiktok: { enabled: true, limit: 20 },
-  });
-  const supabase = createClient();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [selectedLead, setSelectedLead] = useState<string | null>(null);
+  const [tagInput, setTagInput] = useState("");
+  const [hotAlerts, setHotAlerts] = useState(true);
+  const [expandedLead, setExpandedLead] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, statusFilter, industryFilter]);
-
-  async function fetchData() {
-    setLoading(true);
-    const today = new Date().toISOString().split("T")[0];
-    const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
-
-    // Fetch stats
-    const [
-      { count: leadsToday },
-      { count: totalLeads },
-      { count: dmsSent },
-      { count: replies },
-      { count: pendingFollowups },
-      { count: ghlSynced },
-      { count: ghlFailed },
-    ] = await Promise.all([
-      supabase.from("leads").select("*", { count: "exact", head: true }).gte("scraped_at", today),
-      supabase.from("leads").select("*", { count: "exact", head: true }),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).gte("sent_at", today),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied").gte("sent_at", weekAgo),
-      supabase.from("follow_up_queue").select("*", { count: "exact", head: true }).eq("status", "pending"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("ghl_sync_status", "synced"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("ghl_sync_status", "failed"),
-    ]);
-
-    setStats({
-      leadsToday: leadsToday || 0,
-      totalLeads: totalLeads || 0,
-      dmsSent: dmsSent || 0,
-      dmsTarget: 80,
-      repliesThisWeek: replies || 0,
-      pendingFollowups: pendingFollowups || 0,
-      ghlSynced: ghlSynced || 0,
-      ghlFailed: ghlFailed || 0,
-    });
-
-    // Fetch tab data
-    if (tab === "leads") {
-      let query = supabase.from("leads").select("*").order("scraped_at", { ascending: false }).limit(100);
-      if (statusFilter) query = query.eq("status", statusFilter);
-      if (industryFilter) query = query.eq("industry", industryFilter);
-      const { data } = await query;
-      setLeads(data || []);
-    } else if (tab === "outreach") {
-      const { data } = await supabase.from("outreach_log").select("*").order("sent_at", { ascending: false }).limit(100);
-      setOutreach(data || []);
-    } else if (tab === "followups") {
-      const { data } = await supabase.from("follow_up_queue").select("*").order("scheduled_date").eq("status", "pending").limit(100);
-      setFollowups(data || []);
-    }
-
-    setLoading(false);
-  }
-
-  const filteredLeads = leads.filter((l) =>
-    !searchQuery || l.business_name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredLeads = MOCK_LEADS.filter(l =>
+    (!searchQuery || l.business_name.toLowerCase().includes(searchQuery.toLowerCase()) || l.email.toLowerCase().includes(searchQuery.toLowerCase())) &&
+    (!statusFilter || l.status === statusFilter) &&
+    (!industryFilter || l.industry === industryFilter)
   );
 
-  const tabs: { key: Tab; label: string }[] = [
-    { key: "leads", label: "All Leads" },
-    { key: "outreach", label: "Outreach Tracker" },
-    { key: "followups", label: "Follow-up Queue" },
-    { key: "ghl", label: "GHL Sync" },
-  ];
+  const industries = Array.from(new Set(MOCK_LEADS.map(l => l.industry)));
+  const totalLeads = MOCK_LEADS.length;
+  const hotLeads = MOCK_LEADS.filter(l => l.score >= 80).length;
+  const qualifiedLeads = MOCK_LEADS.filter(l => l.status === "qualified" || l.status === "booked").length;
+  const convertedLeads = MOCK_LEADS.filter(l => l.status === "converted").length;
 
-  const industries = ["plumber", "dentist", "lawyer", "gym", "electrician", "roofer", "accountant", "chiropractor", "real estate agent", "restaurant"];
+  const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
+    { key: "leads", label: "All Leads", icon: <Users size={14} /> },
+    { key: "scoring", label: "Lead Scoring", icon: <Target size={14} /> },
+    { key: "routing", label: "Smart Routing", icon: <GitBranch size={14} /> },
+    { key: "attribution", label: "Source Attribution", icon: <BarChart3 size={14} /> },
+    { key: "nurture", label: "Nurture Sequences", icon: <Mail size={14} /> },
+    { key: "enrichment", label: "Enrichment", icon: <Zap size={14} /> },
+    { key: "funnel", label: "Conversion Funnel", icon: <TrendingUp size={14} /> },
+    { key: "tags", label: "Tags & Alerts", icon: <Tag size={14} /> },
+  ];
 
   return (
     <div className="fade-in space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="page-header mb-0">Lead Engine</h1>
-          <p className="text-muted text-sm">Automated lead scraping, outreach & GHL import</p>
+          <h1 className="page-header mb-0 flex items-center gap-3">
+            <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+              <Zap size={24} className="text-gold" />
+            </div>
+            Lead Engine
+          </h1>
+          <p className="text-muted text-sm">Automated lead scoring, routing, enrichment & nurture</p>
         </div>
-        <button onClick={fetchData} className="btn-secondary flex items-center gap-2">
-          <RefreshCw size={16} />
-          Refresh
-        </button>
+        <div className="flex gap-2">
+          <button className="btn-secondary text-xs flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
+          <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
+          <button className="btn-primary text-xs flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
+        </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Leads Scraped Today" value={stats.leadsToday} icon={<Zap size={18} />} change={`${stats.totalLeads} total`} />
-        <StatCard
-          label="DMs Sent Today"
-          value={`${stats.dmsSent}/${stats.dmsTarget}`}
-          icon={<MessageSquare size={18} />}
-          change={`${Math.round((stats.dmsSent / stats.dmsTarget) * 100)}% of target`}
-        />
-        <StatCard label="Replies This Week" value={stats.repliesThisWeek} changeType="positive" change="Keep going!" />
-        <StatCard label="Pending Follow-ups" value={stats.pendingFollowups} change={`${stats.ghlSynced} synced to GHL`} />
-      </div>
-
-      {/* Outreach Control Panel */}
-      <div className="card">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-medium">Outreach Control Panel</h3>
-          <div className="flex items-center gap-2">
-            {/* Email outreach */}
-            <button onClick={async () => {
-              toast.loading("Sending cold emails...");
-              const res = await fetch("/api/outreach/email", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ batch_size: 20, from_name: "ShortStack Team" }),
-              });
-              toast.dismiss();
-              const data = await res.json();
-              if (data.success) { toast.success(`${data.sent} emails sent!`); fetchData(); }
-              else toast.error(data.error || "Failed");
-            }} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5">
-              <Mail size={12} /> Email Blast
-            </button>
-
-            {/* AI cold calls */}
-            <button onClick={async () => {
-              const { data: newLeads } = await supabase.from("leads").select("id, phone, business_name, industry").not("phone", "is", null).eq("status", "new").limit(5);
-              if (!newLeads || newLeads.length === 0) { toast.error("No leads with phone numbers"); return; }
-              toast.loading(`AI calling ${newLeads.length} leads...`);
-              let called = 0;
-              for (const lead of newLeads) {
-                const res = await fetch("/api/call", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ lead_id: lead.id, phone: lead.phone, business_name: lead.business_name, industry: lead.industry }),
-                });
-                const data = await res.json();
-                if (data.success) called++;
-              }
-              toast.dismiss();
-              toast.success(`${called} AI calls initiated`);
-              fetchData();
-            }} className="btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5">
-              <Phone size={12} /> AI Calls
-            </button>
-
-            {/* DM outreach */}
-            <button onClick={async () => {
-              const platforms = Object.entries(outreachConfig).filter(([, v]) => v.enabled).map(([k]) => k);
-              if (platforms.length === 0) { toast.error("Select at least one platform"); return; }
-              toast.loading("Sending DMs...");
-              const res = await fetch("/api/outreach/send-now", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ platforms, count_per_platform: Object.values(outreachConfig)[0]?.limit || 5 }),
-              });
-              toast.dismiss();
-              const data = await res.json();
-              if (data.success) { toast.success(`${data.totalSent} DMs sent!`); fetchData(); }
-              else toast.error("Failed to send");
-            }} className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1.5">
-              <MessageSquare size={12} /> Send DMs
-            </button>
+      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+        {[
+          { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-gold" },
+          { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
+          { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
+          { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
+          { label: "Avg Score", value: Math.round(MOCK_LEADS.reduce((s, l) => s + l.score, 0) / totalLeads), icon: <Target size={12} />, color: "text-blue-400" },
+          { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
+        ].map((stat, i) => (
+          <div key={i} className="card text-center p-3">
+            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+            <p className="text-lg font-bold">{stat.value}</p>
+            <p className="text-[9px] text-muted">{stat.label}</p>
           </div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {(["instagram", "linkedin", "facebook", "tiktok"] as const).map((platform) => (
-            <div key={platform} className={`p-3 rounded-xl border transition-all ${outreachConfig[platform]?.enabled ? "border-gold/30 bg-gold/5" : "border-border opacity-50"}`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium capitalize">{platform}</span>
-                <button onClick={() => setOutreachConfig(prev => ({
-                  ...prev,
-                  [platform]: { ...prev[platform], enabled: !prev[platform]?.enabled }
-                }))} className={`w-8 h-4 rounded-full transition-all ${outreachConfig[platform]?.enabled ? "bg-gold" : "bg-surface-light"}`}>
-                  <div className={`w-3 h-3 bg-white rounded-full transition-all ${outreachConfig[platform]?.enabled ? "translate-x-4" : "translate-x-0.5"}`} />
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <input type="range" min="0" max="50" value={outreachConfig[platform]?.limit || 20}
-                  onChange={(e) => setOutreachConfig(prev => ({
-                    ...prev,
-                    [platform]: { ...prev[platform], limit: parseInt(e.target.value) }
-                  }))}
-                  className="flex-1 accent-gold h-1" disabled={!outreachConfig[platform]?.enabled} />
-                <span className="text-xs text-gold font-mono w-8">{outreachConfig[platform]?.limit || 20}</span>
-              </div>
-              <div className="w-full bg-surface-light rounded-full h-1.5 mt-2">
-                <div className="bg-gold rounded-full h-1.5 transition-all" style={{ width: "0%" }} />
-              </div>
-              <p className="text-[10px] text-muted mt-1">0/{outreachConfig[platform]?.limit || 20} sent today</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted">Total daily:</span>
-            <span className="text-sm font-bold text-gold">
-              {Object.values(outreachConfig).filter(v => v.enabled).reduce((s, v) => s + (v.limit || 0), 0)} DMs
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted">Auto follow-up:</span>
-            <span className="text-xs text-success">Day 3 + Day 7</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted">Schedule:</span>
-            <span className="text-xs">9:00 AM CET daily</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm rounded-md transition-all ${
-              tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
-            }`}
-          >
-            {t.label}
-          </button>
         ))}
       </div>
 
-      {/* Filters (for leads tab) */}
-      {tab === "leads" && (
-        <div className="flex flex-wrap gap-3">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-            <input
-              type="text"
-              placeholder="Search businesses..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input w-full pl-10"
-            />
-          </div>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="input"
-          >
-            <option value="">All Statuses</option>
-            <option value="new">New</option>
-            <option value="called">Called</option>
-            <option value="not_interested">Not Interested</option>
-            <option value="booked">Booked</option>
-            <option value="converted">Converted</option>
-          </select>
-          <select
-            value={industryFilter}
-            onChange={(e) => setIndustryFilter(e.target.value)}
-            className="input"
-          >
-            <option value="">All Industries</option>
-            {industries.map((i) => (
-              <option key={i} value={i}>{i.charAt(0).toUpperCase() + i.slice(1)}</option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {loading ? (
-        <PageLoading />
-      ) : (
-        <>
-          {/* Leads Table */}
-          {tab === "leads" && (
-            <DataTable
-              columns={[
-                { key: "business_name", label: "Business", render: (l: Lead) => (
-                  <div>
-                    <p className="font-medium">{l.business_name}</p>
-                    <p className="text-xs text-muted">{l.industry}</p>
-                  </div>
-                )},
-                { key: "phone", label: "Phone", render: (l: Lead) => l.phone ? (
-                  <a href={`tel:${l.phone}`} className="text-gold hover:text-gold-light flex items-center gap-1">
-                    <Phone size={12} /> {l.phone}
-                  </a>
-                ) : <span className="text-muted">-</span> },
-                { key: "email", label: "Email", render: (l: Lead) => l.email ? (
-                  <a href={`mailto:${l.email}`} className="text-gold hover:text-gold-light flex items-center gap-1">
-                    <Mail size={12} /> {l.email}
-                  </a>
-                ) : <span className="text-muted">-</span> },
-                { key: "website", label: "Website", render: (l: Lead) => l.website ? (
-                  <a href={l.website} target="_blank" rel="noopener" className="text-gold hover:text-gold-light flex items-center gap-1">
-                    <Globe size={12} /> Visit
-                  </a>
-                ) : <span className="text-muted">-</span> },
-                { key: "google_rating", label: "Rating", render: (l: Lead) => l.google_rating ? (
-                  <span className="flex items-center gap-1">
-                    <Star size={12} className="text-gold" /> {l.google_rating} ({l.review_count})
-                  </span>
-                ) : <span className="text-muted">-</span> },
-                { key: "source", label: "Source", render: (l: Lead) => (
-                  <span className="text-xs capitalize">{l.source.replace("_", " ")}</span>
-                )},
-                { key: "status", label: "Status", render: (l: Lead) => <StatusBadge status={l.status} /> },
-                { key: "ghl_sync_status", label: "GHL", render: (l: Lead) => <StatusBadge status={l.ghl_sync_status} /> },
-                { key: "scraped_at", label: "Scraped", render: (l: Lead) => (
-                  <span className="text-xs text-muted">{formatRelativeTime(l.scraped_at)}</span>
-                )},
-              ]}
-              data={filteredLeads}
-              emptyMessage="No leads found. Run the scraper to get started."
-            />
-          )}
-
-          {/* Outreach Table */}
-          {tab === "outreach" && (
-            <DataTable
-              columns={[
-                { key: "platform", label: "Platform", render: (o: OutreachEntry) => (
-                  <span className="capitalize font-medium">{o.platform}</span>
-                )},
-                { key: "business_name", label: "Business" },
-                { key: "message_text", label: "Message", render: (o: OutreachEntry) => (
-                  <p className="text-xs text-muted max-w-xs truncate">{o.message_text}</p>
-                )},
-                { key: "status", label: "Status", render: (o: OutreachEntry) => <StatusBadge status={o.status} /> },
-                { key: "reply_text", label: "Reply", render: (o: OutreachEntry) => o.reply_text ? (
-                  <p className="text-xs text-success max-w-xs truncate">{o.reply_text}</p>
-                ) : <span className="text-muted">-</span> },
-                { key: "sent_at", label: "Sent", render: (o: OutreachEntry) => (
-                  <span className="text-xs text-muted">{formatRelativeTime(o.sent_at)}</span>
-                )},
-              ]}
-              data={outreach}
-              emptyMessage="No outreach messages sent yet."
-            />
-          )}
-
-          {/* Follow-up Queue */}
-          {tab === "followups" && (
-            <DataTable
-              columns={[
-                { key: "platform", label: "Platform", render: (f: FollowUp) => (
-                  <span className="capitalize">{f.platform}</span>
-                )},
-                { key: "followup_number", label: "Follow-up #", render: (f: FollowUp) => (
-                  <span>{f.followup_number === 1 ? "Day 3" : "Day 7"}</span>
-                )},
-                { key: "scheduled_date", label: "Scheduled", render: (f: FollowUp) => (
-                  <span>{formatDate(f.scheduled_date)}</span>
-                )},
-                { key: "status", label: "Status", render: (f: FollowUp) => <StatusBadge status={f.status} /> },
-                { key: "message_text", label: "Message", render: (f: FollowUp) => (
-                  <p className="text-xs text-muted max-w-xs truncate">{f.message_text || "Will be generated"}</p>
-                )},
-              ]}
-              data={followups}
-              emptyMessage="No pending follow-ups."
-            />
-          )}
-
-          {/* GHL Sync Tab */}
-          {tab === "ghl" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-4">
-                <StatCard label="Synced to GHL" value={stats.ghlSynced} changeType="positive" />
-                <StatCard label="Failed Syncs" value={stats.ghlFailed} changeType={stats.ghlFailed > 0 ? "negative" : "neutral"} />
-                <StatCard label="Pending" value={stats.totalLeads - stats.ghlSynced - stats.ghlFailed} />
-              </div>
-              <DataTable
-                columns={[
-                  { key: "business_name", label: "Business" },
-                  { key: "phone", label: "Phone" },
-                  { key: "ghl_contact_id", label: "GHL ID", render: (l: Lead) => l.ghl_contact_id || <span className="text-muted">-</span> },
-                  { key: "ghl_sync_status", label: "Sync Status", render: (l: Lead) => <StatusBadge status={l.ghl_sync_status} /> },
-                  { key: "ghl_synced_at", label: "Synced At", render: (l: Lead) => l.ghl_synced_at ? formatRelativeTime(l.ghl_synced_at) : "-" },
-                ]}
-                data={leads.filter((l) => l.ghl_sync_status !== "pending")}
-                emptyMessage="No GHL sync data yet."
-              />
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Weekly Stats */}
-      <div className="card">
-        <h3 className="section-header">Weekly Overview</h3>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-gold">{stats.totalLeads}</p>
-            <p className="text-xs text-muted">Total Leads</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold">{stats.dmsSent}</p>
-            <p className="text-xs text-muted">DMs Sent</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-success">{stats.repliesThisWeek}</p>
-            <p className="text-xs text-muted">Replies</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-info">0</p>
-            <p className="text-xs text-muted">Calls Booked</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-gold">{stats.ghlSynced}</p>
-            <p className="text-xs text-muted">GHL Imports</p>
-          </div>
-        </div>
+      {/* Tabs */}
+      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+        {TABS.map(t => (
+          <button key={t.key} onClick={() => setActiveTab(t.key)}
+            className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
+              activeTab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+            }`}>{t.icon} {t.label}</button>
+        ))}
       </div>
+
+      {/* ===== ALL LEADS TAB ===== */}
+      {activeTab === "leads" && (
+        <div className="space-y-4">
+          {/* Filters */}
+          <div className="flex flex-wrap gap-3">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+              <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input w-full pl-9 text-xs" />
+            </div>
+            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="input text-xs">
+              <option value="">All Statuses</option>
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="qualified">Qualified</option>
+              <option value="booked">Booked</option>
+              <option value="converted">Converted</option>
+            </select>
+            <select value={industryFilter} onChange={e => setIndustryFilter(e.target.value)} className="input text-xs">
+              <option value="">All Industries</option>
+              {industries.map(i => <option key={i} value={i}>{i}</option>)}
+            </select>
+          </div>
+
+          {/* Lead Table */}
+          <div className="space-y-1.5">
+            <div className="grid grid-cols-12 text-[9px] text-muted uppercase tracking-wider font-semibold py-2 px-3">
+              <span className="col-span-3">Business</span>
+              <span className="col-span-2">Contact</span>
+              <span>Source</span>
+              <span className="text-center">Score</span>
+              <span>Status</span>
+              <span className="text-center">Rating</span>
+              <span>Tags</span>
+              <span>Activity</span>
+              <span className="text-center">Actions</span>
+            </div>
+            {filteredLeads.map(lead => (
+              <div key={lead.id}>
+                <div onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
+                  className="grid grid-cols-12 items-center py-2.5 px-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer text-[10px]">
+                  <div className="col-span-3">
+                    <p className="text-xs font-semibold">{lead.business_name}</p>
+                    <p className="text-[9px] text-muted">{lead.industry} | {lead.city}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-muted flex items-center gap-1"><Mail size={9} /> {lead.email}</p>
+                    <p className="text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone}</p>
+                  </div>
+                  <span className="text-muted">{lead.source}</span>
+                  <div className="text-center">
+                    <span className={`font-bold ${lead.score >= 80 ? "text-green-400" : lead.score >= 50 ? "text-yellow-400" : "text-red-400"}`}>{lead.score}</span>
+                  </div>
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
+                    lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
+                    lead.status === "booked" ? "bg-green-400/10 text-green-400" :
+                    lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
+                    lead.status === "contacted" ? "bg-yellow-400/10 text-yellow-400" :
+                    "bg-white/5 text-muted"
+                  }`}>{lead.status}</span>
+                  <div className="text-center flex items-center justify-center gap-0.5">
+                    <Star size={9} className="text-gold" />
+                    <span>{lead.rating}</span>
+                    <span className="text-muted">({lead.reviews})</span>
+                  </div>
+                  <div className="flex gap-0.5 flex-wrap">
+                    {lead.tags.slice(0, 2).map(tag => (
+                      <span key={tag} className="text-[8px] px-1 py-0.5 rounded bg-gold/10 text-gold">{tag}</span>
+                    ))}
+                  </div>
+                  <span className="text-muted">{lead.lastActivity}</span>
+                  <div className="flex items-center justify-center gap-1">
+                    <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><Phone size={10} /></button>
+                    <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><Mail size={10} /></button>
+                    <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><MessageSquare size={10} /></button>
+                  </div>
+                </div>
+                {/* Engagement Timeline */}
+                {expandedLead === lead.id && (
+                  <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border">
+                    <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><Clock size={10} /> Engagement Timeline</h4>
+                    <div className="space-y-2">
+                      {[
+                        { action: "Email opened", time: "2h ago", type: "email" },
+                        { action: "Clicked link in email", time: "2h ago", type: "click" },
+                        { action: "Visited website", time: "1d ago", type: "web" },
+                        { action: "Cold DM sent", time: "3d ago", type: "dm" },
+                        { action: "Scraped from Google Maps", time: "5d ago", type: "scrape" },
+                      ].map((e, i) => (
+                        <div key={i} className="flex items-center gap-2 text-[9px]">
+                          <div className={`w-1.5 h-1.5 rounded-full ${
+                            e.type === "email" ? "bg-blue-400" : e.type === "click" ? "bg-green-400" : e.type === "web" ? "bg-purple-400" : e.type === "dm" ? "bg-pink-400" : "bg-muted"
+                          }`} />
+                          <span>{e.action}</span>
+                          <span className="text-muted ml-auto">{e.time}</span>
+                        </div>
+                      ))}
+                    </div>
+                    {/* Qualification Checklist */}
+                    <div className="mt-3 pt-3 border-t border-border">
+                      <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><CheckCircle size={10} /> Qualification Checklist</h4>
+                      <div className="grid grid-cols-2 gap-1">
+                        {[
+                          { item: "Has phone number", check: !!lead.phone },
+                          { item: "Has email", check: !!lead.email },
+                          { item: "Website found", check: !!lead.website },
+                          { item: "Rating 4.0+", check: lead.rating >= 4.0 },
+                          { item: "Engaged (opened/clicked)", check: lead.engagements >= 3 },
+                          { item: "Decision maker identified", check: lead.tags.includes("decision-maker") },
+                        ].map((q, i) => (
+                          <div key={i} className="flex items-center gap-1.5 text-[9px]">
+                            {q.check ? <CheckCircle size={9} className="text-green-400" /> : <div className="w-2.5 h-2.5 rounded border border-muted" />}
+                            <span className={q.check ? "" : "text-muted"}>{q.item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Duplicate Detection */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Layers size={14} className="text-yellow-400" /> Duplicate Detection
+            </h3>
+            <div className="space-y-2">
+              {[
+                { a: "Bright Smile Dental", b: "BrightSmile Dental Care", field: "Business name", confidence: 92 },
+                { a: "info@brightsmile.com", b: "contact@brightsmile.com", field: "Domain match", confidence: 85 },
+              ].map((d, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-yellow-400/5 border border-yellow-400/10">
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle size={14} className="text-yellow-400" />
+                    <div>
+                      <p className="text-[10px]"><span className="font-semibold">{d.a}</span> <span className="text-muted">may be duplicate of</span> <span className="font-semibold">{d.b}</span></p>
+                      <p className="text-[9px] text-muted">Match: {d.field} ({d.confidence}% confidence)</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <button className="text-[9px] px-2 py-1 rounded bg-green-400/10 text-green-400 border border-green-400/20">Merge</button>
+                    <button className="text-[9px] px-2 py-1 rounded bg-white/5 text-muted border border-border">Dismiss</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== LEAD SCORING MATRIX ===== */}
+      {activeTab === "scoring" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Scoring Rules */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Target size={14} className="text-gold" /> Scoring Matrix
+              </h3>
+              <div className="space-y-1.5">
+                {[
+                  { factor: "Has phone number", points: "+15", category: "Data" },
+                  { factor: "Has email", points: "+10", category: "Data" },
+                  { factor: "Google rating 4.5+", points: "+20", category: "Quality" },
+                  { factor: "50+ reviews", points: "+15", category: "Quality" },
+                  { factor: "Opened email", points: "+10", category: "Engagement" },
+                  { factor: "Clicked link", points: "+15", category: "Engagement" },
+                  { factor: "Replied to DM", points: "+25", category: "Engagement" },
+                  { factor: "Visited website", points: "+5", category: "Engagement" },
+                  { factor: "Booked call", points: "+30", category: "Intent" },
+                  { factor: "No response 7d", points: "-10", category: "Decay" },
+                  { factor: "Bounced email", points: "-20", category: "Data" },
+                  { factor: "Unsubscribed", points: "-50", category: "Disqualify" },
+                ].map((r, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted">{r.category}</span>
+                      <span>{r.factor}</span>
+                    </div>
+                    <span className={`font-bold ${r.points.startsWith("+") ? "text-green-400" : "text-red-400"}`}>{r.points}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Score Distribution */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3">Score Distribution</h3>
+              <div className="space-y-3">
+                {[
+                  { range: "90-100 (Hot)", count: 2, pct: 25, color: "bg-red-400" },
+                  { range: "70-89 (Warm)", count: 2, pct: 25, color: "bg-orange-400" },
+                  { range: "50-69 (Lukewarm)", count: 2, pct: 25, color: "bg-yellow-400" },
+                  { range: "0-49 (Cold)", count: 2, pct: 25, color: "bg-blue-400" },
+                ].map((d, i) => (
+                  <div key={i}>
+                    <div className="flex justify-between text-[10px] mb-1">
+                      <span>{d.range}</span>
+                      <span className="text-muted">{d.count} leads ({d.pct}%)</span>
+                    </div>
+                    <div className="w-full bg-surface-light rounded-full h-2">
+                      <div className={`${d.color} rounded-full h-2`} style={{ width: `${d.pct}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Hot Lead Alerts */}
+              <div className="mt-4 pt-4 border-t border-border">
+                <h4 className="text-xs font-semibold mb-2 flex items-center gap-2">
+                  <Bell size={12} className="text-red-400" /> Hot Lead Alerts
+                </h4>
+                <div className="space-y-1.5">
+                  {MOCK_LEADS.filter(l => l.score >= 80).map(lead => (
+                    <div key={lead.id} className="flex items-center justify-between p-2 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
+                      <div className="flex items-center gap-2">
+                        <Flame size={10} className="text-red-400" />
+                        <span className="font-semibold">{lead.business_name}</span>
+                        <span className="text-muted">Score: {lead.score}</span>
+                      </div>
+                      <button className="text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold">Contact Now</button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== SMART ROUTING ===== */}
+      {activeTab === "routing" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <GitBranch size={14} className="text-gold" /> Smart Lead Routing Rules
+          </h3>
+          <div className="space-y-2">
+            {[
+              { condition: "Score >= 80", action: "Assign to Nicklas (Closer)", priority: "High", active: true },
+              { condition: "Industry = Dental", action: "Route to Dental specialist queue", priority: "Medium", active: true },
+              { condition: "Source = Referral", action: "Priority queue + auto-call within 1hr", priority: "High", active: true },
+              { condition: "City = Miami", action: "Assign to local rep", priority: "Low", active: false },
+              { condition: "No phone number", action: "Route to email nurture sequence", priority: "Medium", active: true },
+              { condition: "Score < 30", action: "Add to cold storage (revisit in 30d)", priority: "Low", active: true },
+            ].map((rule, i) => (
+              <div key={i} className={`card p-4 flex items-center justify-between ${!rule.active ? "opacity-50" : ""}`}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${rule.priority === "High" ? "bg-red-400" : rule.priority === "Medium" ? "bg-yellow-400" : "bg-blue-400"}`} />
+                  <div>
+                    <p className="text-xs font-semibold">If: {rule.condition}</p>
+                    <p className="text-[10px] text-muted">Then: {rule.action}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded ${
+                    rule.priority === "High" ? "bg-red-400/10 text-red-400" : rule.priority === "Medium" ? "bg-yellow-400/10 text-yellow-400" : "bg-blue-400/10 text-blue-400"
+                  }`}>{rule.priority}</span>
+                  <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-gold" : "bg-surface-light"}`}>
+                    <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== SOURCE ATTRIBUTION ===== */}
+      {activeTab === "attribution" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <BarChart3 size={14} className="text-gold" /> Lead Source Attribution
+          </h3>
+          <div className="space-y-2">
+            {[
+              { source: "Google Maps Scraper", leads: 156, qualified: 42, converted: 8, revenue: 18500, cost: 0 },
+              { source: "Instagram DMs", leads: 89, qualified: 28, converted: 5, revenue: 12400, cost: 0 },
+              { source: "Cold Email", leads: 234, qualified: 35, converted: 6, revenue: 14200, cost: 50 },
+              { source: "Website Forms", leads: 67, qualified: 31, converted: 9, revenue: 28400, cost: 200 },
+              { source: "Referrals", leads: 23, qualified: 18, converted: 12, revenue: 42000, cost: 0 },
+              { source: "Facebook Ads", leads: 145, qualified: 22, converted: 4, revenue: 9800, cost: 1500 },
+              { source: "TikTok", leads: 78, qualified: 15, converted: 3, revenue: 7200, cost: 0 },
+              { source: "Cold Calls", leads: 112, qualified: 20, converted: 4, revenue: 11000, cost: 0 },
+            ].map((s, i) => (
+              <div key={i} className="card p-3 flex items-center gap-4">
+                <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center flex-shrink-0">
+                  <Globe size={14} className="text-gold" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold">{s.source}</p>
+                  <div className="w-full bg-surface-light rounded-full h-1.5 mt-1">
+                    <div className="bg-gold rounded-full h-1.5" style={{ width: `${(s.converted / Math.max(...[156, 89, 234, 67, 23, 145, 78, 112].map((_, j) => [8, 5, 6, 9, 12, 4, 3, 4][j]))) * 100}%` }} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-5 gap-4 text-center text-[10px] flex-shrink-0">
+                  <div><p className="font-bold">{s.leads}</p><p className="text-[8px] text-muted">Leads</p></div>
+                  <div><p className="font-bold text-blue-400">{s.qualified}</p><p className="text-[8px] text-muted">Qualified</p></div>
+                  <div><p className="font-bold text-green-400">{s.converted}</p><p className="text-[8px] text-muted">Converted</p></div>
+                  <div><p className="font-bold text-gold">${(s.revenue / 1000).toFixed(1)}K</p><p className="text-[8px] text-muted">Revenue</p></div>
+                  <div><p className="font-bold">{s.cost > 0 ? `$${s.cost}` : "Free"}</p><p className="text-[8px] text-muted">Cost</p></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== NURTURE SEQUENCES ===== */}
+      {activeTab === "nurture" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <Mail size={14} className="text-gold" /> Lead Nurture Sequences
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {[
+              { name: "New Lead Welcome", enrolled: 45, completed: 12, steps: 5, type: "Email + SMS" },
+              { name: "Cold Lead Re-engagement", enrolled: 89, completed: 8, steps: 4, type: "Email" },
+              { name: "Post-Demo Follow Up", enrolled: 23, completed: 15, steps: 3, type: "Email + Call" },
+              { name: "Free Audit Nurture", enrolled: 67, completed: 22, steps: 6, type: "Email + SMS" },
+              { name: "Monthly Value Drop", enrolled: 156, completed: 0, steps: 12, type: "Email" },
+              { name: "Seasonal Campaign", enrolled: 34, completed: 34, steps: 3, type: "Email + SMS" },
+            ].map((seq, i) => (
+              <div key={i} className="card p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-semibold">{seq.name}</p>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-400">{seq.type}</span>
+                </div>
+                <div className="flex items-center gap-4 text-[10px] text-muted">
+                  <span>{seq.steps} steps</span>
+                  <span>{seq.enrolled} enrolled</span>
+                  <span className="text-green-400">{seq.completed} completed</span>
+                </div>
+                <div className="w-full bg-surface-light rounded-full h-1.5 mt-2">
+                  <div className="bg-green-400 rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%` }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== ENRICHMENT ===== */}
+      {activeTab === "enrichment" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Zap size={14} className="text-gold" /> Lead Enrichment Panel
+            </h3>
+            <button className="btn-primary text-xs flex items-center gap-1.5"><RefreshCw size={12} /> Enrich All Missing</button>
+          </div>
+          <div className="grid grid-cols-4 gap-3 mb-4">
+            {[
+              { label: "Fully Enriched", value: 5, total: totalLeads, color: "text-green-400" },
+              { label: "Partial Data", value: 2, total: totalLeads, color: "text-yellow-400" },
+              { label: "Missing Email", value: 1, total: totalLeads, color: "text-red-400" },
+              { label: "Missing Phone", value: 1, total: totalLeads, color: "text-red-400" },
+            ].map((s, i) => (
+              <div key={i} className="card text-center p-3">
+                <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
+                <p className="text-[9px] text-muted">{s.label}</p>
+                <p className="text-[8px] text-muted">of {s.total} leads</p>
+              </div>
+            ))}
+          </div>
+          <div className="space-y-1.5">
+            {MOCK_LEADS.map(lead => (
+              <div key={lead.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border text-[10px]">
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                    lead.email !== "---" && lead.phone !== "---" ? "bg-green-400/10" : "bg-yellow-400/10"
+                  }`}>
+                    {lead.email !== "---" && lead.phone !== "---" ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-yellow-400" />}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{lead.business_name}</p>
+                    <p className="text-[9px] text-muted">{lead.industry} | {lead.city}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex gap-2">
+                    <span className={lead.email !== "---" ? "text-green-400" : "text-red-400"}>{lead.email !== "---" ? "Email" : "No email"}</span>
+                    <span className={lead.phone !== "---" ? "text-green-400" : "text-red-400"}>{lead.phone !== "---" ? "Phone" : "No phone"}</span>
+                    <span className={lead.website ? "text-green-400" : "text-red-400"}>{lead.website ? "Website" : "No site"}</span>
+                  </div>
+                  <button className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Enrich</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== CONVERSION FUNNEL ===== */}
+      {activeTab === "funnel" && (
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold flex items-center gap-2">
+            <TrendingUp size={14} className="text-gold" /> Lead Conversion Funnel
+          </h3>
+          <div className="flex flex-col items-center gap-2">
+            {[
+              { stage: "Total Leads Scraped", count: 904, pct: 100, color: "bg-blue-400" },
+              { stage: "Contacted (DM/Email/Call)", count: 521, pct: 57.6, color: "bg-purple-400" },
+              { stage: "Replied / Engaged", count: 156, pct: 17.3, color: "bg-yellow-400" },
+              { stage: "Qualified (Score 70+)", count: 89, pct: 9.8, color: "bg-orange-400" },
+              { stage: "Booked Discovery Call", count: 47, pct: 5.2, color: "bg-green-400" },
+              { stage: "Converted to Client", count: 18, pct: 2.0, color: "bg-gold" },
+            ].map((s, i) => (
+              <div key={i} className="w-full max-w-2xl">
+                <div className="flex items-center justify-between mb-1 text-[10px]">
+                  <span className="font-semibold">{s.stage}</span>
+                  <span className="text-muted">{s.count} ({s.pct}%)</span>
+                </div>
+                <div className="w-full bg-surface-light rounded-full h-6 overflow-hidden">
+                  <div className={`${s.color} h-6 rounded-full flex items-center justify-center`} style={{ width: `${s.pct}%` }}>
+                    {s.pct > 15 && <span className="text-[8px] font-bold text-black">{s.count}</span>}
+                  </div>
+                </div>
+                {i < 5 && (
+                  <div className="flex justify-center my-1">
+                    <ArrowDownRight size={12} className="text-muted/30" />
+                    <span className="text-[8px] text-muted ml-1">
+                      {i === 0 ? "57.6% contact rate" : i === 1 ? "29.9% reply rate" : i === 2 ? "57.1% qualify rate" : i === 3 ? "52.8% book rate" : "38.3% close rate"}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===== TAGS & ALERTS ===== */}
+      {activeTab === "tags" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Lead Tagging System */}
+            <div className="card">
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Tag size={14} className="text-gold" /> Lead Tagging System
+              </h3>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {["high-value", "responsive", "warm", "needs-nurture", "follow-up", "hot", "referral", "decision-maker", "client", "upsell", "no-budget", "competitor-user"].map(tag => (
+                  <span key={tag} className="text-[9px] px-2 py-1 rounded-full bg-gold/10 text-gold border border-gold/20 cursor-pointer hover:bg-gold/20 transition-all">{tag}</span>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <input value={tagInput} onChange={e => setTagInput(e.target.value)} className="input flex-1 text-xs" placeholder="Create new tag..." />
+                <button className="btn-primary text-xs px-3">Add</button>
+              </div>
+            </div>
+            {/* Hot Lead Alerts Config */}
+            <div className="card">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold flex items-center gap-2">
+                  <Bell size={14} className="text-red-400" /> Hot Lead Alert Settings
+                </h3>
+                <button onClick={() => setHotAlerts(!hotAlerts)}
+                  className={`w-10 h-5 rounded-full transition-all flex items-center ${hotAlerts ? "bg-gold justify-end" : "bg-surface-light justify-start"}`}>
+                  <div className="w-4 h-4 bg-white rounded-full mx-0.5 shadow" />
+                </button>
+              </div>
+              <div className="space-y-2">
+                {[
+                  { trigger: "Lead score reaches 80+", channel: "Slack + Email", active: true },
+                  { trigger: "Lead replies to outreach", channel: "Slack + Push", active: true },
+                  { trigger: "Lead books a call", channel: "Slack + SMS", active: true },
+                  { trigger: "Lead visits pricing page", channel: "Slack", active: false },
+                ].map((alert, i) => (
+                  <div key={i} className={`flex items-center justify-between p-2.5 rounded-lg bg-surface-light text-[10px] ${!alert.active ? "opacity-50" : ""}`}>
+                    <div>
+                      <p className="font-semibold">{alert.trigger}</p>
+                      <p className="text-[9px] text-muted">Notify via: {alert.channel}</p>
+                    </div>
+                    <div className={`w-6 h-3 rounded-full ${alert.active ? "bg-green-400" : "bg-surface"}`}>
+                      <div className={`w-2.5 h-2.5 bg-white rounded-full mt-px ${alert.active ? "ml-3" : "ml-0.5"}`} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

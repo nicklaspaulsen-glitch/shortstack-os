@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { verifyClientAccess } from "@/lib/verify-client-access";
+import { getMaxStorageUpload } from "@/lib/plan-config";
 
 export async function GET(req: NextRequest) {
   const clientId = req.nextUrl.searchParams.get("client_id");
@@ -56,6 +57,13 @@ export async function POST(req: NextRequest) {
 
   const access = await verifyClientAccess(supabase, user.id, client_id);
   if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  // Enforce plan-tier file size limits
+  const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
+  const maxSize = getMaxStorageUpload(profile?.plan_tier);
+  if (maxSize !== -1 && file_size && file_size > maxSize) {
+    return NextResponse.json({ error: "File too large for your plan" }, { status: 413 });
+  }
 
   const service = createServiceClient();
   const { data, error } = await service.from("client_uploads").insert({

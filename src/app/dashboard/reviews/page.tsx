@@ -1,206 +1,508 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Star, MessageSquare, Send, Sparkles, TrendingUp, Users, Clock } from 'lucide-react'
-import toast from 'react-hot-toast'
-import { useAuth } from '@/lib/auth-context'
-import { createClient } from '@/lib/supabase/client'
+import { useState } from "react";
+import {
+  Star, MessageSquare, Send, Sparkles, TrendingUp, Users, Clock,
+  BarChart3, QrCode, Code, Bell, Eye,
+  Copy, Award, Smile, Frown, Meh,
+  Mail, Phone, AlertTriangle
+} from "lucide-react";
 
-const mockReviews = [
-  { id: 1, name: 'Sarah Johnson', rating: 5, text: 'Absolutely fantastic service! The team went above and beyond to deliver our project on time. Highly recommend to anyone looking for quality work.', date: '2026-04-01', responded: true },
-  { id: 2, name: 'Mike Peters', rating: 4, text: 'Great experience overall. Communication was excellent and the results exceeded expectations. Only minor delays on the timeline.', date: '2026-03-28', responded: true },
-  { id: 3, name: 'Emily Chen', rating: 5, text: 'Best agency we have ever worked with. They truly understand our brand and deliver consistent results every month.', date: '2026-03-25', responded: false },
-  { id: 4, name: 'David Brown', rating: 3, text: 'Decent work but took longer than expected. The final product was good but the process could be smoother.', date: '2026-03-20', responded: false },
-  { id: 5, name: 'Lisa Martinez', rating: 5, text: 'Incredible ROI on our ad campaigns. They really know what they are doing when it comes to digital marketing.', date: '2026-03-15', responded: true },
-  { id: 6, name: 'James Wilson', rating: 4, text: 'Professional team with great attention to detail. Would definitely use their services again for our next project.', date: '2026-03-10', responded: false },
-]
+/* ------------------------------------------------------------------ */
+/*  Mock Data                                                          */
+/* ------------------------------------------------------------------ */
+
+const MOCK_REVIEWS = [
+  { id: 1, name: "Sarah Johnson", rating: 5, text: "Absolutely fantastic service! The team went above and beyond to deliver our project on time. Highly recommend to anyone looking for quality work.", date: "2026-04-01", source: "Google", responded: true, sentiment: "positive" },
+  { id: 2, name: "Mike Peters", rating: 4, text: "Great experience overall. Communication was excellent and the results exceeded expectations. Only minor delays on the timeline.", date: "2026-03-28", source: "Google", responded: true, sentiment: "positive" },
+  { id: 3, name: "Emily Chen", rating: 5, text: "Best agency we have ever worked with. They truly understand our brand and deliver consistent results every month.", date: "2026-03-25", source: "Facebook", responded: false, sentiment: "positive" },
+  { id: 4, name: "David Brown", rating: 3, text: "Decent work but took longer than expected. The final product was good but the process could be smoother.", date: "2026-03-20", source: "Google", responded: false, sentiment: "neutral" },
+  { id: 5, name: "Lisa Martinez", rating: 5, text: "Incredible ROI on our ad campaigns. They really know what they are doing when it comes to digital marketing.", date: "2026-03-15", source: "Yelp", responded: true, sentiment: "positive" },
+  { id: 6, name: "James Wilson", rating: 4, text: "Professional team with great attention to detail. Would definitely use their services again for our next project.", date: "2026-03-10", source: "Google", responded: false, sentiment: "positive" },
+  { id: 7, name: "Anna Thompson", rating: 2, text: "Communication was lacking and we had to follow up multiple times to get updates. Results were okay but not what was promised.", date: "2026-03-05", source: "Google", responded: false, sentiment: "negative" },
+  { id: 8, name: "Robert Kim", rating: 5, text: "Switched from another agency and the difference is night and day. ShortStack actually delivers on their promises.", date: "2026-02-28", source: "Facebook", responded: true, sentiment: "positive" },
+];
+
+const RESPONSE_TEMPLATES = [
+  { id: "rt1", name: "5-Star Thank You", text: "Thank you so much for the wonderful review, {name}! We're thrilled to hear about your positive experience. Your support means the world to us!" },
+  { id: "rt2", name: "4-Star Appreciation", text: "Thank you for the great feedback, {name}! We're glad you had a positive experience. We'll keep working to exceed your expectations." },
+  { id: "rt3", name: "3-Star Improvement", text: "Thank you for your honest feedback, {name}. We appreciate your time and will use your input to improve. Please reach out so we can make it right." },
+  { id: "rt4", name: "Negative Response", text: "We're sorry to hear about your experience, {name}. This isn't the standard we hold ourselves to. Please contact us directly so we can resolve this." },
+  { id: "rt5", name: "Follow-Up Request", text: "Thank you for choosing us, {name}! We'd love to hear more about your experience. If you have a moment, a review on Google would mean a lot to us." },
+];
+
+const COMPETITOR_DATA = [
+  { name: "Your Business", rating: 4.6, reviews: 48, responseRate: 75 },
+  { name: "Competitor A", rating: 4.2, reviews: 156, responseRate: 45 },
+  { name: "Competitor B", rating: 4.8, reviews: 23, responseRate: 90 },
+  { name: "Competitor C", rating: 3.9, reviews: 89, responseRate: 30 },
+];
+
+const REVIEW_CAMPAIGNS = [
+  { id: "rc1", name: "Post-Service Follow-up", sent: 45, received: 12, rate: "26.7%", active: true },
+  { id: "rc2", name: "Quarterly Check-in", sent: 30, received: 8, rate: "26.7%", active: true },
+  { id: "rc3", name: "Happy Customer Blast", sent: 20, received: 7, rate: "35.0%", active: false },
+];
+
+const MONITORING_ALERTS = [
+  { id: "ma1", type: "new", message: "New 5-star review from Robert Kim on Facebook", time: "2h ago" },
+  { id: "ma2", type: "warning", message: "2-star review detected from Anna Thompson - needs response", time: "1d ago" },
+  { id: "ma3", type: "milestone", message: "You've reached 45+ reviews on Google!", time: "3d ago" },
+  { id: "ma4", type: "reminder", message: "3 reviews pending response (older than 48h)", time: "5d ago" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Page Component                                                     */
+/* ------------------------------------------------------------------ */
 
 export default function ReviewsPage() {
-  useAuth()
-  const supabase = createClient()
+  const [reviews] = useState(MOCK_REVIEWS);
+  const [activeTab, setActiveTab] = useState<"reviews" | "campaigns" | "widgets" | "analytics" | "competitors" | "testimonials">("reviews");
+  const [aiResponses, setAiResponses] = useState<Record<number, string>>({});
+  const [loadingId, setLoadingId] = useState<number | null>(null);
+  const [filterSource, setFilterSource] = useState("all");
+  const [filterRating, setFilterRating] = useState(0);
+  const [requestName, setRequestName] = useState("");
+  const [requestContact, setRequestContact] = useState("");
+  const [requestMethod, setRequestMethod] = useState<"sms" | "email">("sms");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [showQR, setShowQR] = useState(false);
+  const [widgetStyle, setWidgetStyle] = useState<"badge" | "carousel" | "grid">("badge");
 
-  const [reviews] = useState(mockReviews)
-  const [loadingId, setLoadingId] = useState<number | null>(null)
-  const [aiResponses, setAiResponses] = useState<Record<number, string>>({})
-  const [requestName, setRequestName] = useState('')
-  const [requestContact, setRequestContact] = useState('')
-  const [sendingRequest, setSendingRequest] = useState(false)
+  const avgRating = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
+  const responseRate = Math.round((reviews.filter(r => r.responded).length / reviews.length) * 100);
+  const sentimentPositive = reviews.filter(r => r.sentiment === "positive").length;
+  const sentimentNeutral = reviews.filter(r => r.sentiment === "neutral").length;
+  const sentimentNegative = reviews.filter(r => r.sentiment === "negative").length;
 
-  const avgRating = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)
-  const responseRate = Math.round((reviews.filter(r => r.responded).length / reviews.length) * 100)
-
-  const handleAISuggest = async (review: typeof mockReviews[0]) => {
-    setLoadingId(review.id)
-    try {
-      const res = await fetch('/api/trinity/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `Write a professional, friendly response to this ${review.rating}-star Google review from ${review.name}: "${review.text}". Keep it concise (2-3 sentences), thank them, and sound authentic.`
-        })
-      })
-      if (!res.ok) throw new Error('Failed to generate response')
-      const data = await res.json()
-      setAiResponses(prev => ({ ...prev, [review.id]: data.response || data.message || 'Response generated successfully.' }))
-      toast.success('AI response generated!')
-    } catch {
-      toast.error('Failed to generate AI response')
-    } finally {
-      setLoadingId(null)
-    }
+  function handleAISuggest(review: typeof MOCK_REVIEWS[0]) {
+    setLoadingId(review.id);
+    setTimeout(() => {
+      const templates: Record<number, string> = {
+        5: `Thank you so much for the amazing review, ${review.name}! We're absolutely thrilled to hear you had such a great experience. Your kind words motivate our team every day!`,
+        4: `Thank you for the wonderful feedback, ${review.name}! We're glad you enjoyed working with us. We'll keep pushing to make every experience even better!`,
+        3: `Thanks for your honest feedback, ${review.name}. We value your input and are working on improving the areas you mentioned. Please don't hesitate to reach out!`,
+        2: `We're sorry to hear about your experience, ${review.name}. This falls short of our standards. Please contact us directly so we can make things right.`,
+        1: `We sincerely apologize for your experience, ${review.name}. We take this very seriously and would like to resolve this. Please reach out to our team.`,
+      };
+      setAiResponses(prev => ({ ...prev, [review.id]: templates[review.rating] || templates[3] }));
+      setLoadingId(null);
+    }, 1000);
   }
 
-  const handleRequestReview = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!requestName.trim() || !requestContact.trim()) {
-      toast.error('Please fill in all fields')
-      return
-    }
-    setSendingRequest(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    toast.success(`Review request sent to ${requestName}!`)
-    setRequestName('')
-    setRequestContact('')
-    setSendingRequest(false)
-  }
-
-  const renderStars = (rating: number) => (
+  const renderStars = (rating: number, size: number = 14) => (
     <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map(i => (
-        <Star key={i} size={14} className={i <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted'} />
+        <Star key={i} size={size} className={i <= rating ? "fill-yellow-400 text-yellow-400" : "text-muted/30"} />
       ))}
     </div>
-  )
+  );
 
-  void supabase
+  const filteredReviews = reviews.filter(r => {
+    if (filterSource !== "all" && r.source !== filterSource) return false;
+    if (filterRating > 0 && r.rating !== filterRating) return false;
+    return true;
+  });
+
+  const ratingDistribution = [5, 4, 3, 2, 1].map(r => ({
+    rating: r,
+    count: reviews.filter(rev => rev.rating === r).length,
+    pct: Math.round((reviews.filter(rev => rev.rating === r).length / reviews.length) * 100),
+  }));
+
+  const tabs = [
+    { id: "reviews" as const, label: "Reviews", icon: Star },
+    { id: "campaigns" as const, label: "Campaigns", icon: Send },
+    { id: "widgets" as const, label: "Widgets", icon: Code },
+    { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
+    { id: "competitors" as const, label: "Competitors", icon: Eye },
+    { id: "testimonials" as const, label: "Testimonials", icon: Award },
+  ];
 
   return (
-    <div className="fade-in space-y-6">
-      <div className="page-header">
-        <div>
-          <h1 className="text-lg font-bold">Google Review Management</h1>
-          <p className="text-xs text-muted">Monitor, respond to, and request Google reviews</p>
-        </div>
+    <div className="fade-in space-y-5">
+      {/* Header */}
+      <div>
+        <h1 className="text-lg font-bold flex items-center gap-2"><Star size={18} className="text-gold" /> Review Management</h1>
+        <p className="text-xs text-muted">Monitor, respond to, and collect reviews across platforms</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-yellow-500/10">
-              <TrendingUp size={18} className="text-yellow-400" />
-            </div>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="card p-3">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-yellow-400/10"><TrendingUp size={14} className="text-yellow-400" /></div>
             <div>
-              <p className="text-[10px] text-muted uppercase tracking-wider">Average Rating</p>
-              <div className="flex items-center gap-2">
-                <p className="text-xl font-bold">{avgRating}</p>
-                {renderStars(Math.round(Number(avgRating)))}
+              <p className="text-[9px] text-muted uppercase">Avg Rating</p>
+              <div className="flex items-center gap-1">
+                <p className="text-lg font-bold">{avgRating}</p>
+                {renderStars(Math.round(Number(avgRating)), 10)}
               </div>
             </div>
           </div>
         </div>
-        <div className="card">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-500/10">
-              <Users size={18} className="text-blue-400" />
-            </div>
+        <div className="card p-3">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-blue-400/10"><Users size={14} className="text-blue-400" /></div>
             <div>
-              <p className="text-[10px] text-muted uppercase tracking-wider">Total Reviews</p>
-              <p className="text-xl font-bold">{reviews.length}</p>
+              <p className="text-[9px] text-muted uppercase">Total Reviews</p>
+              <p className="text-lg font-bold">{reviews.length}</p>
             </div>
           </div>
         </div>
-        <div className="card">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-green-500/10">
-              <Clock size={18} className="text-green-400" />
-            </div>
+        <div className="card p-3">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-green-400/10"><Clock size={14} className="text-green-400" /></div>
             <div>
-              <p className="text-[10px] text-muted uppercase tracking-wider">Response Rate</p>
-              <p className="text-xl font-bold">{responseRate}%</p>
+              <p className="text-[9px] text-muted uppercase">Response Rate</p>
+              <p className="text-lg font-bold">{responseRate}%</p>
+            </div>
+          </div>
+        </div>
+        <div className="card p-3">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-green-400/10"><Smile size={14} className="text-green-400" /></div>
+            <div>
+              <p className="text-[9px] text-muted uppercase">Positive</p>
+              <p className="text-lg font-bold text-green-400">{sentimentPositive}</p>
+            </div>
+          </div>
+        </div>
+        <div className="card p-3">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-lg bg-red-400/10"><Frown size={14} className="text-red-400" /></div>
+            <div>
+              <p className="text-[9px] text-muted uppercase">Negative</p>
+              <p className="text-lg font-bold text-red-400">{sentimentNegative}</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Reviews List */}
-      <div>
-        <h2 className="section-header">Recent Reviews</h2>
-        <div className="space-y-3">
-          {reviews.map(review => (
-            <div key={review.id} className="card-hover">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-1">
-                    <span className="text-xs font-semibold">{review.name}</span>
-                    {renderStars(review.rating)}
-                    <span className="text-[10px] text-muted">{review.date}</span>
-                    {review.responded && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-500/10 text-green-400">Responded</span>
+      {/* Alerts */}
+      <div className="flex gap-2 overflow-x-auto pb-1">
+        {MONITORING_ALERTS.map(a => (
+          <div key={a.id} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[10px] whitespace-nowrap shrink-0 ${
+            a.type === "warning" ? "bg-red-400/5 border-red-400/15 text-red-400" :
+            a.type === "new" ? "bg-green-400/5 border-green-400/15 text-green-400" :
+            a.type === "milestone" ? "bg-gold/5 border-gold/15 text-gold" :
+            "bg-blue-400/5 border-blue-400/15 text-blue-400"
+          }`}>
+            {a.type === "warning" ? <AlertTriangle size={10} /> : a.type === "new" ? <Star size={10} /> : <Bell size={10} />}
+            {a.message}
+            <span className="text-muted">{a.time}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-1 overflow-x-auto pb-1">
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setActiveTab(t.id)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs whitespace-nowrap transition-all border ${
+              activeTab === t.id ? "bg-gold/10 border-gold/20 text-gold font-medium" : "border-border text-muted hover:text-foreground"
+            }`}>
+            <t.icon size={12} /> {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* ---- TAB: Reviews ---- */}
+      {activeTab === "reviews" && (
+        <div className="space-y-4">
+          {/* Rating Distribution */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3">Star Rating Distribution</h3>
+            <div className="space-y-1.5">
+              {ratingDistribution.map(r => (
+                <div key={r.rating} className="flex items-center gap-2">
+                  <span className="text-xs w-8 text-right font-mono">{r.rating}<Star size={8} className="inline text-yellow-400 ml-0.5" /></span>
+                  <div className="flex-1 bg-white/5 rounded-full h-2 overflow-hidden">
+                    <div className="h-full rounded-full bg-yellow-400/40" style={{ width: `${r.pct}%` }} />
+                  </div>
+                  <span className="text-[10px] text-muted w-16 text-right">{r.count} ({r.pct}%)</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Filters */}
+          <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-1">
+              {["all", "Google", "Facebook", "Yelp"].map(s => (
+                <button key={s} onClick={() => setFilterSource(s)}
+                  className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all capitalize ${
+                    filterSource === s ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                  }`}>{s}</button>
+              ))}
+            </div>
+            <div className="flex gap-1">
+              {[0, 5, 4, 3, 2, 1].map(r => (
+                <button key={r} onClick={() => setFilterRating(r)}
+                  className={`text-[10px] px-2 py-1 rounded-lg border transition-all ${
+                    filterRating === r ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                  }`}>{r === 0 ? "All" : `${r}★`}</button>
+              ))}
+            </div>
+          </div>
+
+          {/* Reviews list */}
+          <div className="space-y-3">
+            {filteredReviews.map(review => (
+              <div key={review.id} className="card p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-1 flex-wrap">
+                      <span className="text-xs font-semibold">{review.name}</span>
+                      {renderStars(review.rating)}
+                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-muted">{review.source}</span>
+                      <span className="text-[10px] text-muted">{review.date}</span>
+                      {review.responded && <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-400/10 text-green-400">Responded</span>}
+                      {review.sentiment === "positive" ? <Smile size={12} className="text-green-400" /> :
+                       review.sentiment === "negative" ? <Frown size={12} className="text-red-400" /> :
+                       <Meh size={12} className="text-yellow-400" />}
+                    </div>
+                    <p className="text-xs leading-relaxed">{review.text}</p>
+                    {aiResponses[review.id] && (
+                      <div className="mt-2 p-2 rounded-lg bg-gold/5 border border-gold/15">
+                        <p className="text-[10px] text-gold font-medium mb-1 flex items-center gap-1"><Sparkles size={8} /> AI Suggested Response:</p>
+                        <p className="text-xs text-muted">{aiResponses[review.id]}</p>
+                        <div className="flex gap-1.5 mt-2">
+                          <button onClick={() => navigator.clipboard.writeText(aiResponses[review.id])} className="text-[9px] px-2 py-0.5 rounded border border-border text-muted flex items-center gap-1"><Copy size={8} /> Copy</button>
+                          <button className="text-[9px] px-2 py-0.5 rounded bg-gold text-black font-medium flex items-center gap-1"><Send size={8} /> Post Reply</button>
+                        </div>
+                      </div>
                     )}
                   </div>
-                  <p className="text-xs text-foreground leading-relaxed">{review.text}</p>
-                  {aiResponses[review.id] && (
-                    <div className="mt-2 p-2 rounded-lg bg-purple-500/10 border border-purple-500/20">
-                      <p className="text-[10px] text-purple-400 font-medium mb-1">AI Suggested Response:</p>
-                      <p className="text-xs text-foreground">{aiResponses[review.id]}</p>
-                    </div>
-                  )}
+                  <button onClick={() => handleAISuggest(review)} disabled={loadingId === review.id}
+                    className="px-3 py-1.5 rounded-lg bg-gold text-black text-[10px] font-semibold flex items-center gap-1 shrink-0">
+                    <Sparkles size={10} /> {loadingId === review.id ? "Generating..." : "AI Respond"}
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleAISuggest(review)}
-                  disabled={loadingId === review.id}
-                  className="btn-primary flex items-center gap-1.5 text-[10px] shrink-0"
-                >
-                  <Sparkles size={12} />
-                  {loadingId === review.id ? 'Generating...' : 'AI Suggest Response'}
-                </button>
               </div>
-            </div>
-          ))}
-        </div>
-      </div>
+            ))}
+          </div>
 
-      {/* Request Review */}
-      <div>
-        <h2 className="section-header">Request a Review</h2>
-        <div className="card">
-          <form onSubmit={handleRequestReview} className="flex flex-col sm:flex-row gap-3">
-            <div className="flex-1">
-              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Client Name</label>
-              <input
-                type="text"
-                value={requestName}
-                onChange={e => setRequestName(e.target.value)}
-                placeholder="John Smith"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs focus:outline-none focus:border-purple-500/50"
-              />
+          {/* Request Review */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3">Request a Review</h3>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input value={requestName} onChange={e => setRequestName(e.target.value)} placeholder="Client Name" className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
+              <input value={requestContact} onChange={e => setRequestContact(e.target.value)} placeholder="Phone or Email" className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" />
+              <div className="flex gap-1">
+                <button onClick={() => setRequestMethod("sms")} className={`p-2 rounded-lg border ${requestMethod === "sms" ? "border-gold/30 text-gold" : "border-border text-muted"}`}><Phone size={14} /></button>
+                <button onClick={() => setRequestMethod("email")} className={`p-2 rounded-lg border ${requestMethod === "email" ? "border-gold/30 text-gold" : "border-border text-muted"}`}><Mail size={14} /></button>
+              </div>
+              <button className="px-4 py-2 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1"><Send size={12} /> Send Request</button>
             </div>
-            <div className="flex-1">
-              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Phone or Email</label>
-              <input
-                type="text"
-                value={requestContact}
-                onChange={e => setRequestContact(e.target.value)}
-                placeholder="email@example.com or (555) 123-4567"
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-xs focus:outline-none focus:border-purple-500/50"
-              />
-            </div>
-            <div className="flex items-end">
-              <button type="submit" disabled={sendingRequest} className="btn-primary flex items-center gap-1.5 text-xs">
-                <Send size={12} />
-                {sendingRequest ? 'Sending...' : 'Send Request'}
-              </button>
-            </div>
-          </form>
-          <div className="mt-3 flex items-start gap-2 p-2 rounded-lg bg-white/5">
-            <MessageSquare size={14} className="text-muted mt-0.5 shrink-0" />
-            <p className="text-[10px] text-muted">
-              A personalized review request will be sent via SMS or email with a direct link to your Google Business profile.
-            </p>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* ---- TAB: Campaigns ---- */}
+      {activeTab === "campaigns" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Send size={12} className="text-gold" /> Review Request Campaigns</h3>
+            <div className="space-y-2">
+              {REVIEW_CAMPAIGNS.map(c => (
+                <div key={c.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                  <div>
+                    <p className="text-xs font-medium">{c.name}</p>
+                    <p className="text-[10px] text-muted">{c.sent} sent &middot; {c.received} received &middot; {c.rate} conversion</p>
+                  </div>
+                  <span className={`text-[9px] px-2 py-0.5 rounded ${c.active ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"}`}>
+                    {c.active ? "Active" : "Paused"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Response Templates */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><MessageSquare size={12} className="text-gold" /> Response Templates</h3>
+            <div className="space-y-2">
+              {RESPONSE_TEMPLATES.map(t => (
+                <div key={t.id} className="p-3 rounded-lg border border-border">
+                  <p className="text-xs font-medium mb-1">{t.name}</p>
+                  <p className="text-[10px] text-muted">{t.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Widgets ---- */}
+      {activeTab === "widgets" && (
+        <div className="space-y-4">
+          {/* QR Code */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><QrCode size={12} className="text-gold" /> QR Code Generator</h3>
+            <div className="flex items-center gap-4">
+              <div className="w-32 h-32 bg-white rounded-xl flex items-center justify-center">
+                <div className="text-center">
+                  <QrCode size={48} className="text-black mx-auto" />
+                  <p className="text-[8px] text-black mt-1">Scan to review</p>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs text-muted mb-2">Print this QR code and place it at your location. Customers can scan to leave a Google review.</p>
+                <div className="flex gap-2">
+                  <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted flex items-center gap-1"><Copy size={10} /> Copy Link</button>
+                  <button className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold">Download QR</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Embeddable Widget */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Code size={12} className="text-gold" /> Embeddable Review Widget</h3>
+            <div className="flex gap-1.5 mb-3">
+              {(["badge", "carousel", "grid"] as const).map(s => (
+                <button key={s} onClick={() => setWidgetStyle(s)}
+                  className={`text-[10px] px-3 py-1 rounded-lg border capitalize transition-all ${
+                    widgetStyle === s ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted"
+                  }`}>{s}</button>
+              ))}
+            </div>
+            {/* Widget preview */}
+            <div className="p-4 rounded-lg border border-border bg-white/[0.02]">
+              {widgetStyle === "badge" && (
+                <div className="flex items-center gap-3 justify-center">
+                  <Star size={24} className="fill-yellow-400 text-yellow-400" />
+                  <div>
+                    <p className="text-lg font-bold">{avgRating}</p>
+                    <p className="text-[10px] text-muted">{reviews.length} reviews on Google</p>
+                  </div>
+                </div>
+              )}
+              {widgetStyle === "carousel" && (
+                <div className="flex gap-2 overflow-x-auto">
+                  {reviews.slice(0, 3).map(r => (
+                    <div key={r.id} className="min-w-[200px] p-3 rounded-lg border border-border">
+                      {renderStars(r.rating, 10)}
+                      <p className="text-[10px] text-muted mt-1 line-clamp-2">{r.text}</p>
+                      <p className="text-[9px] text-gold mt-1">- {r.name}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {widgetStyle === "grid" && (
+                <div className="grid grid-cols-2 gap-2">
+                  {reviews.slice(0, 4).map(r => (
+                    <div key={r.id} className="p-2 rounded-lg border border-border">
+                      {renderStars(r.rating, 8)}
+                      <p className="text-[9px] text-muted mt-1 line-clamp-2">{r.text}</p>
+                      <p className="text-[8px] text-gold mt-1">- {r.name}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="mt-3">
+              <p className="text-[10px] text-muted mb-1">Embed code:</p>
+              <code className="block text-[9px] p-2 rounded-lg bg-white/[0.02] border border-border text-muted font-mono break-all">
+                {`<script src="https://shortstackos.com/widget.js" data-style="${widgetStyle}"></script>`}
+              </code>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Analytics ---- */}
+      {activeTab === "analytics" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BarChart3 size={12} className="text-gold" /> Review Analytics</h3>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="p-3 rounded-lg border border-border text-center">
+                <p className="text-2xl font-bold text-green-400">{sentimentPositive}</p>
+                <p className="text-[10px] text-muted flex items-center justify-center gap-1"><Smile size={10} /> Positive</p>
+              </div>
+              <div className="p-3 rounded-lg border border-border text-center">
+                <p className="text-2xl font-bold text-yellow-400">{sentimentNeutral}</p>
+                <p className="text-[10px] text-muted flex items-center justify-center gap-1"><Meh size={10} /> Neutral</p>
+              </div>
+              <div className="p-3 rounded-lg border border-border text-center">
+                <p className="text-2xl font-bold text-red-400">{sentimentNegative}</p>
+                <p className="text-[10px] text-muted flex items-center justify-center gap-1"><Frown size={10} /> Negative</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Reviews over time */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3">Reviews Over Time</h3>
+            <div className="flex items-end gap-1 h-24">
+              {["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"].map((m, i) => {
+                const count = [3, 5, 4, 7, 6, 8, 5][i];
+                return (
+                  <div key={m} className="flex-1 flex flex-col items-center gap-1">
+                    <span className="text-[8px] text-muted">{count}</span>
+                    <div className="w-full rounded-t bg-gold/30" style={{ height: `${(count / 8) * 100}%` }} />
+                    <span className="text-[8px] text-muted">{m}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Competitors ---- */}
+      {activeTab === "competitors" && (
+        <div className="card p-4">
+          <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Eye size={12} className="text-gold" /> Competitor Comparison</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[10px]">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2 text-muted">Business</th>
+                  <th className="text-center py-2 text-muted">Rating</th>
+                  <th className="text-center py-2 text-muted">Total Reviews</th>
+                  <th className="text-center py-2 text-muted">Response Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPETITOR_DATA.map(c => (
+                  <tr key={c.name} className="border-b border-border/30">
+                    <td className={`py-2 font-medium ${c.name === "Your Business" ? "text-gold" : ""}`}>{c.name}</td>
+                    <td className="text-center py-2">{c.rating} <Star size={8} className="inline fill-yellow-400 text-yellow-400" /></td>
+                    <td className="text-center py-2">{c.reviews}</td>
+                    <td className="text-center py-2">{c.responseRate}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Testimonials ---- */}
+      {activeTab === "testimonials" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Award size={12} className="text-gold" /> Testimonial Collector</h3>
+            <p className="text-[10px] text-muted mb-3">Select reviews to feature as testimonials on your website.</p>
+            <div className="space-y-2">
+              {reviews.filter(r => r.rating >= 4).map(r => (
+                <div key={r.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                  <input type="checkbox" className="rounded" />
+                  <div className="flex-1">
+                    {renderStars(r.rating, 10)}
+                    <p className="text-[10px] text-muted mt-0.5 line-clamp-1">{r.text}</p>
+                    <p className="text-[9px] text-gold">- {r.name}, {r.source}</p>
+                  </div>
+                  <button className="text-[10px] text-muted hover:text-foreground flex items-center gap-1"><Copy size={8} /> Use</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }

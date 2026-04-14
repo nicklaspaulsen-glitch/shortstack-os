@@ -1,682 +1,777 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { createClient } from "@/lib/supabase/client";
+import { useState } from "react";
 import {
   Bot, Activity, CheckCircle, XCircle, Clock, RefreshCw,
-  Zap, Heart, Shield,
-  Search, Sparkles, Send, BarChart3, Star, Film, Eye,
-  CreditCard, UserPlus, Globe, Megaphone, FileText,
-  ChevronDown, ChevronRight, ArrowRight, Plus, Cpu, Trash2
+  Shield, Search, Sparkles, Send, BarChart3, Star,
+  Eye, CreditCard, UserPlus, Globe, Megaphone, FileText,
+  ChevronDown, ChevronRight, ArrowRight, Plus, Cpu, Trash2,
+  AlertTriangle, Settings, Play, Pause, GitBranch, DollarSign,
+  TrendingUp, Layers, MessageSquare, History, Gauge
 } from "lucide-react";
-import toast from "react-hot-toast";
 
+/* ── Types ── */
 interface Agent {
   id: string;
   name: string;
   role: string;
-  endpoint: string;
-  status: "working" | "idle" | "error";
+  status: "working" | "idle" | "error" | "paused";
   lastAction: string;
   lastActionTime: string;
   actionsToday: number;
   successRate: number;
-  isCustom?: boolean;
-  executionCount?: number;
+  costToday: number;
+  avgLatency: number;
+  version: string;
 }
 
-interface CustomAgentRow {
-  id: string;
-  name: string;
-  slug: string;
-  role: string;
-  capabilities: string[];
-  execution_count: number;
-  last_executed_at: string | null;
-  created_at: string;
+interface ChainEntry {
+  from: string;
+  to: string;
+  label: string;
+  trigger: string;
+  active: boolean;
 }
 
 interface TimelineEntry {
   id: string;
   agent: string;
   action: string;
-  details: Record<string, unknown>;
-  status: string;
-  created_at: string;
+  status: "success" | "error" | "pending";
+  time: string;
+  cost: number;
 }
 
-const AGENTS_CONFIG: Omit<Agent, "status" | "lastAction" | "lastActionTime" | "actionsToday" | "successRate">[] = [
-  { id: "lead-engine", name: "Lead Engine", role: "Scrapes & qualifies leads", endpoint: "/api/agents/lead-engine/health" },
-  { id: "outreach", name: "Outreach", role: "Cold DMs, emails & follow-ups", endpoint: "/api/agents/outreach/health" },
-  { id: "content", name: "Content", role: "Scripts, captions & scheduling", endpoint: "/api/agents/content/health" },
-  { id: "ads", name: "Ads Manager", role: "Campaign creation & optimization", endpoint: "/api/agents/ads/health" },
-  { id: "reviews", name: "Reviews", role: "Google review monitoring", endpoint: "/api/agents/reviews/health" },
-  { id: "analytics", name: "Analytics", role: "KPIs & reporting", endpoint: "/api/agents/analytics/health" },
-  { id: "trinity", name: "Trinity", role: "Central AI coordinator", endpoint: "/api/agents/trinity/health" },
-  { id: "competitor", name: "Competitor", role: "Competitor monitoring", endpoint: "/api/agents/competitor/health" },
-  { id: "invoice", name: "Invoice", role: "Billing & payment chase", endpoint: "/api/agents/invoice/health" },
-  { id: "onboarding", name: "Onboarding", role: "Client setup automation", endpoint: "/api/agents/onboarding/health" },
-  { id: "seo", name: "SEO", role: "Rankings & keyword tracking", endpoint: "/api/agents/seo/health" },
-  { id: "reputation", name: "Reputation", role: "Brand mention monitoring", endpoint: "/api/agents/reputation/health" },
-  { id: "retention", name: "Retention", role: "Churn prevention", endpoint: "/api/agents/retention/health" },
-  { id: "proposal", name: "Proposal", role: "Auto-generates proposals", endpoint: "/api/agents/proposal/health" },
-  { id: "scheduler", name: "Scheduler", role: "Meetings & reminders", endpoint: "/api/agents/scheduler/health" },
-  { id: "social-media", name: "Social Media", role: "Auto-posting & engagement", endpoint: "/api/agents/social-media/health" },
-  { id: "video", name: "Video", role: "Video rendering & editing", endpoint: "/api/agents/video/health" },
-  { id: "design", name: "Design", role: "Graphics & brand assets", endpoint: "/api/agents/design/health" },
-  { id: "website", name: "Website", role: "Uptime & page generation", endpoint: "/api/agents/website/health" },
-  { id: "production", name: "Production", role: "Edit requests & deadlines", endpoint: "/api/agents/production/health" },
-];
+interface SpawnedAgent {
+  id: string;
+  name: string;
+  role: string;
+  runs: number;
+  lastRun: string;
+  capabilities: string[];
+}
 
+interface AgentTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  installs: number;
+}
+
+/* ── Mock Data ── */
 const AGENT_ICONS: Record<string, React.ReactNode> = {
-  "lead-engine": <Search size={15} />,
-  "outreach": <Send size={15} />,
-  "content": <Sparkles size={15} />,
-  "ads": <Film size={15} />,
-  "reviews": <Star size={15} />,
-  "analytics": <BarChart3 size={15} />,
-  "trinity": <Shield size={15} />,
-  "competitor": <Eye size={15} />,
-  "invoice": <CreditCard size={15} />,
-  "onboarding": <UserPlus size={15} />,
-  "seo": <Globe size={15} />,
-  "reputation": <Megaphone size={15} />,
-  "retention": <Heart size={15} />,
-  "proposal": <FileText size={15} />,
-  "scheduler": <Clock size={15} />,
-  "social-media": <Send size={15} />,
-  "video": <Film size={15} />,
-  "design": <Sparkles size={15} />,
-  "website": <Globe size={15} />,
-  "production": <Film size={15} />,
+  "lead-engine": <Search size={15} />, "outreach": <Send size={15} />, "content": <Sparkles size={15} />,
+  "ads": <Megaphone size={15} />, "reviews": <Star size={15} />, "analytics": <BarChart3 size={15} />,
+  "trinity": <Shield size={15} />, "competitor": <Eye size={15} />, "invoice": <CreditCard size={15} />,
+  "onboarding": <UserPlus size={15} />, "seo": <Globe size={15} />, "retention": <Sparkles size={15} />,
+  "proposal": <FileText size={15} />, "scheduler": <Clock size={15} />,
 };
 
-const AGENT_COLORS: Record<string, string> = {
-  "lead-engine": "emerald", "outreach": "blue", "content": "purple", "ads": "orange",
-  "reviews": "amber", "analytics": "cyan", "trinity": "gold", "competitor": "red",
-  "invoice": "green", "onboarding": "sky", "seo": "lime", "reputation": "fuchsia",
-  "retention": "rose", "proposal": "violet", "scheduler": "teal", "social-media": "pink",
-  "video": "indigo", "design": "amber", "website": "emerald", "production": "slate",
-};
-
-const CHAINS = [
-  { from: "Lead Engine", to: "Outreach", label: "New lead scraped", trigger: "Send DM" },
-  { from: "Outreach", to: "Proposal", label: "Reply received", trigger: "Generate proposal" },
-  { from: "Outreach", to: "Scheduler", label: "Call booked", trigger: "Schedule meeting" },
-  { from: "Proposal", to: "Onboarding", label: "Deal won", trigger: "Start onboarding" },
-  { from: "Onboarding", to: "Invoice", label: "Client onboarded", trigger: "Send first invoice" },
-  { from: "Onboarding", to: "Content", label: "Client onboarded", trigger: "Generate content" },
-  { from: "Analytics", to: "Retention", label: "Health drops", trigger: "Re-engage client" },
-  { from: "Invoice", to: "Retention", label: "Invoice overdue", trigger: "Chase payment" },
-  { from: "Content", to: "Social Media", label: "Content ready", trigger: "Schedule posts" },
-  { from: "Reviews", to: "Reputation", label: "New review", trigger: "Auto-respond" },
-  { from: "Competitor", to: "Content", label: "Viral detected", trigger: "Counter-content" },
-  { from: "Competitor", to: "Ads", label: "Price change", trigger: "Adjust ads" },
+const MOCK_AGENTS: Agent[] = [
+  { id: "lead-engine", name: "Lead Engine", role: "Scrapes & qualifies leads", status: "working", lastAction: "Scraped 42 leads from Google Maps", lastActionTime: "3m ago", actionsToday: 127, successRate: 96, costToday: 2.14, avgLatency: 340, version: "2.4.1" },
+  { id: "outreach", name: "Outreach", role: "Cold DMs, emails & follow-ups", status: "working", lastAction: "Sent 15 follow-up emails", lastActionTime: "8m ago", actionsToday: 89, successRate: 92, costToday: 1.87, avgLatency: 520, version: "2.3.0" },
+  { id: "content", name: "Content", role: "Scripts, captions & scheduling", status: "idle", lastAction: "Generated weekly calendar", lastActionTime: "1h ago", actionsToday: 34, successRate: 98, costToday: 3.21, avgLatency: 1200, version: "2.4.0" },
+  { id: "ads", name: "Ads Manager", role: "Campaign creation & optimization", status: "idle", lastAction: "Optimized Meta budget allocation", lastActionTime: "2h ago", actionsToday: 12, successRate: 88, costToday: 0.95, avgLatency: 450, version: "2.2.0" },
+  { id: "reviews", name: "Reviews", role: "Google review monitoring", status: "error", lastAction: "API rate limit exceeded", lastActionTime: "15m ago", actionsToday: 8, successRate: 65, costToday: 0.12, avgLatency: 890, version: "2.1.0" },
+  { id: "analytics", name: "Analytics", role: "KPIs & reporting", status: "working", lastAction: "Generated client health reports", lastActionTime: "5m ago", actionsToday: 56, successRate: 99, costToday: 1.45, avgLatency: 280, version: "2.4.1" },
+  { id: "trinity", name: "Trinity", role: "Central AI coordinator", status: "working", lastAction: "Orchestrated 3-agent chain", lastActionTime: "1m ago", actionsToday: 203, successRate: 97, costToday: 4.56, avgLatency: 150, version: "3.0.0" },
+  { id: "competitor", name: "Competitor", role: "Competitor monitoring", status: "paused", lastAction: "Detected pricing change", lastActionTime: "4h ago", actionsToday: 3, successRate: 100, costToday: 0.34, avgLatency: 2100, version: "2.0.0" },
+  { id: "invoice", name: "Invoice", role: "Billing & payment chase", status: "idle", lastAction: "Sent 3 payment reminders", lastActionTime: "6h ago", actionsToday: 7, successRate: 100, costToday: 0.08, avgLatency: 200, version: "2.3.0" },
+  { id: "onboarding", name: "Onboarding", role: "Client setup automation", status: "working", lastAction: "Onboarded Acme Dental", lastActionTime: "20m ago", actionsToday: 4, successRate: 100, costToday: 0.67, avgLatency: 3400, version: "2.4.0" },
+  { id: "seo", name: "SEO", role: "Rankings & keyword tracking", status: "idle", lastAction: "Crawled 12 client sites", lastActionTime: "3h ago", actionsToday: 18, successRate: 94, costToday: 0.92, avgLatency: 1800, version: "2.2.0" },
+  { id: "retention", name: "Retention", role: "Churn prevention", status: "idle", lastAction: "Flagged 2 at-risk clients", lastActionTime: "5h ago", actionsToday: 5, successRate: 100, costToday: 0.23, avgLatency: 600, version: "2.1.0" },
+  { id: "proposal", name: "Proposal", role: "Auto-generates proposals", status: "idle", lastAction: "Generated proposal for Beta Corp", lastActionTime: "1d ago", actionsToday: 1, successRate: 100, costToday: 0.56, avgLatency: 4500, version: "2.3.0" },
+  { id: "scheduler", name: "Scheduler", role: "Meetings & reminders", status: "working", lastAction: "Booked 3 calls today", lastActionTime: "12m ago", actionsToday: 14, successRate: 93, costToday: 0.18, avgLatency: 320, version: "2.4.0" },
 ];
+
+const MOCK_CHAINS: ChainEntry[] = [
+  { from: "Lead Engine", to: "Outreach", label: "New lead scraped", trigger: "Send DM", active: true },
+  { from: "Outreach", to: "Proposal", label: "Reply received", trigger: "Generate proposal", active: true },
+  { from: "Outreach", to: "Scheduler", label: "Call booked", trigger: "Schedule meeting", active: true },
+  { from: "Proposal", to: "Onboarding", label: "Deal won", trigger: "Start onboarding", active: true },
+  { from: "Onboarding", to: "Invoice", label: "Client onboarded", trigger: "Send first invoice", active: true },
+  { from: "Onboarding", to: "Content", label: "Client onboarded", trigger: "Generate content", active: true },
+  { from: "Analytics", to: "Retention", label: "Health drops", trigger: "Re-engage client", active: true },
+  { from: "Invoice", to: "Retention", label: "Invoice overdue", trigger: "Chase payment", active: false },
+  { from: "Content", to: "Outreach", label: "Content ready", trigger: "Schedule posts", active: true },
+  { from: "Competitor", to: "Content", label: "Viral detected", trigger: "Counter-content", active: false },
+  { from: "Competitor", to: "Ads", label: "Price change", trigger: "Adjust ads", active: true },
+  { from: "Reviews", to: "Retention", label: "Bad review", trigger: "Owner alert", active: true },
+];
+
+const MOCK_TIMELINE: TimelineEntry[] = [
+  { id: "1", agent: "Trinity", action: "Orchestrated lead-engine -> outreach chain", status: "success", time: "1m ago", cost: 0.03 },
+  { id: "2", agent: "Lead Engine", action: "Scraped 42 leads from Google Maps - Miami dentists", status: "success", time: "3m ago", cost: 0.12 },
+  { id: "3", agent: "Outreach", action: "Sent 15 follow-up emails to warm leads", status: "success", time: "8m ago", cost: 0.08 },
+  { id: "4", agent: "Reviews", action: "Google Places API rate limit exceeded", status: "error", time: "15m ago", cost: 0.00 },
+  { id: "5", agent: "Onboarding", action: "Completed onboarding for Acme Dental", status: "success", time: "20m ago", cost: 0.34 },
+  { id: "6", agent: "Analytics", action: "Generated daily KPI digest for 8 clients", status: "success", time: "25m ago", cost: 0.18 },
+  { id: "7", agent: "Scheduler", action: "Booked discovery call with Beta Corp", status: "success", time: "30m ago", cost: 0.02 },
+  { id: "8", agent: "Content", action: "Generated 7-day content calendar for Delta Fitness", status: "success", time: "1h ago", cost: 0.45 },
+  { id: "9", agent: "Trinity", action: "Spawned temp agent for competitor pricing report", status: "success", time: "1h ago", cost: 0.15 },
+  { id: "10", agent: "Lead Engine", action: "Enriched 28 leads with email/phone data", status: "success", time: "2h ago", cost: 0.22 },
+];
+
+const MOCK_SPAWNED: SpawnedAgent[] = [
+  { id: "s1", name: "Pricing Analyst", role: "Competitor pricing research", runs: 14, lastRun: "1h ago", capabilities: ["price scraping", "trend analysis"] },
+  { id: "s2", name: "Review Responder", role: "Auto-respond to Google reviews", runs: 45, lastRun: "30m ago", capabilities: ["sentiment analysis", "reply generation"] },
+  { id: "s3", name: "Email Validator", role: "Bulk email verification", runs: 8, lastRun: "3h ago", capabilities: ["MX lookup", "bounce prediction"] },
+];
+
+const MOCK_TEMPLATES: AgentTemplate[] = [
+  { id: "t1", name: "Social Listener", description: "Monitor brand mentions across social platforms", category: "monitoring", installs: 234 },
+  { id: "t2", name: "Invoice Chaser", description: "Auto-send payment reminders on schedule", category: "billing", installs: 189 },
+  { id: "t3", name: "Blog Writer", description: "Generate SEO blog posts from keyword clusters", category: "content", installs: 312 },
+  { id: "t4", name: "Appointment Setter", description: "Book meetings from inbound leads", category: "sales", installs: 456 },
+  { id: "t5", name: "Data Enricher", description: "Enrich leads with LinkedIn and web data", category: "data", installs: 178 },
+  { id: "t6", name: "Churn Predictor", description: "ML-based client churn risk scoring", category: "analytics", installs: 98 },
+];
+
+const MOCK_COMMS = [
+  { from: "Trinity", to: "Lead Engine", message: "Start Miami dentist scrape batch", time: "3m ago", type: "command" },
+  { from: "Lead Engine", to: "Trinity", message: "Batch complete: 42 leads, 38 qualified", time: "3m ago", type: "response" },
+  { from: "Trinity", to: "Outreach", message: "Process 38 qualified leads for DM sequence", time: "2m ago", type: "command" },
+  { from: "Outreach", to: "Trinity", message: "15 emails sent, 23 queued for tomorrow", time: "1m ago", type: "response" },
+  { from: "Reviews", to: "Trinity", message: "ERROR: Google API rate limit hit, retrying in 5m", time: "15m ago", type: "error" },
+  { from: "Trinity", to: "Reviews", message: "Acknowledged. Switching to backup API key", time: "15m ago", type: "command" },
+];
+
+const TABS = ["Dashboard", "Agents", "Chains", "Timeline", "Spawned", "Marketplace", "Orchestration", "Costs", "Performance", "Failures", "Comms", "Builder"] as const;
+type Tab = typeof TABS[number];
 
 export default function AgentSupervisorPage() {
-  useAuth();
-  const supabase = createClient();
-  const [agents, setAgents] = useState<Agent[]>([]);
-  const [customAgents, setCustomAgents] = useState<CustomAgentRow[]>([]);
-  const [timeline, setTimeline] = useState<TimelineEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [checkingHealth, setCheckingHealth] = useState<string | null>(null);
-  const [repairing, setRepairing] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<Tab>("Dashboard");
+  const [agents, setAgents] = useState<Agent[]>(MOCK_AGENTS);
+  const [chains, setChains] = useState<ChainEntry[]>(MOCK_CHAINS);
+  const [spawned, setSpawned] = useState<SpawnedAgent[]>(MOCK_SPAWNED);
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
-  const [showChains, setShowChains] = useState(false);
-  const [showSpawnedAgents, setShowSpawnedAgents] = useState(true);
-  const [spawning, setSpawning] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [spawnTask, setSpawnTask] = useState("");
+  const [priorityQueue, setPriorityQueue] = useState([
+    { id: "pq1", task: "Scrape 100 leads - Austin plumbers", agent: "Lead Engine", priority: "high", status: "running", eta: "3m" },
+    { id: "pq2", task: "Generate proposals for 5 warm leads", agent: "Proposal", priority: "high", status: "queued", eta: "10m" },
+    { id: "pq3", task: "Weekly content calendar - all clients", agent: "Content", priority: "medium", status: "queued", eta: "25m" },
+    { id: "pq4", task: "Competitor pricing update", agent: "Competitor", priority: "low", status: "queued", eta: "1h" },
+    { id: "pq5", task: "Monthly analytics report", agent: "Analytics", priority: "medium", status: "queued", eta: "45m" },
+  ]);
+  const [builderName, setBuilderName] = useState("");
+  const [builderRole, setBuilderRole] = useState("");
+  const [builderTrigger, setBuilderTrigger] = useState("");
+  const [builderCapabilities, setBuilderCapabilities] = useState<string[]>([]);
+  const [chatMessages, setChatMessages] = useState<Array<{ role: "user" | "chief"; content: string }>>([]);
+  const [chatInput, setChatInput] = useState("");
 
-  const fetchData = useCallback(async (isInitial = false) => {
-    if (isInitial) setLoading(true);
-    const today = new Date().toISOString().split("T")[0];
-
-    const [{ data: logs }, { data: spawned }] = await Promise.all([
-      supabase.from("trinity_log").select("*").order("created_at", { ascending: false }).limit(50),
-      supabase.from("custom_agents").select("*").eq("is_active", true).order("execution_count", { ascending: false }),
-    ]);
-
-    const logEntries = logs || [];
-    setCustomAgents(spawned || []);
-
-    const builtAgents: Agent[] = AGENTS_CONFIG.map((cfg) => {
-      const agentLogs = logEntries.filter((l: TimelineEntry) => l.agent === cfg.id || l.agent === cfg.name.toLowerCase().replace(/ /g, "_"));
-      const todayLogs = agentLogs.filter((l: TimelineEntry) => l.created_at >= today);
-      const successLogs = agentLogs.filter((l: TimelineEntry) => l.status === "success");
-      const latestLog = agentLogs[0];
-      const hasError = agentLogs.slice(0, 3).some((l: TimelineEntry) => l.status === "error");
-      const hasRecent = latestLog && (Date.now() - new Date(latestLog.created_at).getTime()) < 3600000;
-
-      return {
-        ...cfg,
-        status: hasError ? "error" : hasRecent ? "working" : "idle",
-        lastAction: latestLog?.action || "No activity",
-        lastActionTime: latestLog?.created_at || "",
-        actionsToday: todayLogs.length,
-        successRate: agentLogs.length > 0 ? Math.round((successLogs.length / agentLogs.length) * 100) : 100,
-      };
-    });
-
-    setAgents(builtAgents);
-    setTimeline(logEntries.slice(0, 15) as TimelineEntry[]);
-    setLoading(false);
-  }, [supabase]);
-
-  async function spawnAgent() {
-    if (!spawnTask.trim()) return;
-    setSpawning(true);
-    try {
-      const res = await fetch("/api/agents/spawn", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ task: spawnTask, spawned_by: "manual" }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Spawned "${data.agent.name}"!`);
-        setSpawnTask("");
-        fetchData();
-      } else {
-        toast.error(data.error || "Failed to spawn agent");
-      }
-    } catch {
-      toast.error("Connection error");
-    }
-    setSpawning(false);
-  }
-
-  async function deactivateAgent(id: string) {
-    await supabase.from("custom_agents").update({ is_active: false }).eq("id", id);
-    toast.success("Agent deactivated");
-    fetchData();
-  }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(true); }, []);
-
-  async function healthCheck(agentId: string) {
-    setCheckingHealth(agentId);
-    try {
-      const agent = AGENTS_CONFIG.find((a) => a.id === agentId);
-      if (!agent) return;
-      const res = await fetch(agent.endpoint);
-      if (res.ok) {
-        toast.success(`${agent.name} is healthy`);
-        setAgents((prev) => prev.map((a) => a.id === agentId ? { ...a, status: "working" } : a));
-      } else {
-        toast.error(`${agent.name} returned an error`);
-        setAgents((prev) => prev.map((a) => a.id === agentId ? { ...a, status: "error" } : a));
-      }
-    } catch {
-      toast.error("Health check failed");
-    }
-    setCheckingHealth(null);
-  }
-
-  async function repairAgent(agentId: string) {
-    setRepairing(agentId);
-    const agent = AGENTS_CONFIG.find((a) => a.id === agentId);
-    if (!agent) return;
-    toast.loading(`Repairing ${agent.name}...`);
-    try {
-      const res = await fetch(`/api/agents/${agentId}/repair`, { method: "POST" });
-      toast.dismiss();
-      if (res.ok) {
-        toast.success(`${agent.name} repaired`);
-        setAgents((prev) => prev.map((a) => a.id === agentId ? { ...a, status: "idle" } : a));
-        await supabase.from("trinity_log").insert({
-          agent: agentId, action: "auto_repair",
-          details: { triggered_by: "supervisor" }, status: "success",
-        });
-        fetchData();
-      } else {
-        toast.error(`Repair failed`);
-      }
-    } catch { toast.dismiss(); toast.error("Repair failed"); }
-    setRepairing(null);
-  }
-
+  const agentsWorking = agents.filter(a => a.status === "working").length;
+  const agentsError = agents.filter(a => a.status === "error").length;
   const totalActionsToday = agents.reduce((sum, a) => sum + a.actionsToday, 0);
-  const avgSuccessRate = agents.length > 0
-    ? Math.round(agents.reduce((sum, a) => sum + a.successRate, 0) / agents.length) : 0;
-  const agentsWorking = agents.filter((a) => a.status === "working").length;
-  const agentsError = agents.filter((a) => a.status === "error").length;
+  const avgSuccessRate = agents.length > 0 ? Math.round(agents.reduce((sum, a) => sum + a.successRate, 0) / agents.length) : 0;
+  const totalCostToday = agents.reduce((sum, a) => sum + a.costToday, 0);
 
-  function formatTime(ts: string) {
-    if (!ts) return "--";
-    const diff = Date.now() - new Date(ts).getTime();
-    if (diff < 60000) return "Just now";
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-    return `${Math.floor(diff / 86400000)}d ago`;
+  const filteredAgents = statusFilter === "all" ? agents : agents.filter(a => a.status === statusFilter);
+
+  function toggleAgentStatus(id: string) {
+    setAgents(prev => prev.map(a => {
+      if (a.id !== id) return a;
+      return { ...a, status: a.status === "paused" ? "idle" : "paused" };
+    }));
   }
 
-  if (loading) {
-    return (
-      <div className="fade-in flex items-center justify-center h-64">
-        <RefreshCw size={20} className="animate-spin text-gold" />
-      </div>
-    );
+  function toggleChain(idx: number) {
+    setChains(prev => prev.map((c, i) => i === idx ? { ...c, active: !c.active } : c));
+  }
+
+  function spawnAgent() {
+    if (!spawnTask.trim()) return;
+    const newAgent: SpawnedAgent = {
+      id: `s${spawned.length + 1}`,
+      name: spawnTask.split(" ").slice(0, 2).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
+      role: spawnTask,
+      runs: 0,
+      lastRun: "Never",
+      capabilities: ["custom task"],
+    };
+    setSpawned(prev => [newAgent, ...prev]);
+    setSpawnTask("");
+  }
+
+  function removeSpawned(id: string) {
+    setSpawned(prev => prev.filter(s => s.id !== id));
+  }
+
+  function sendChat() {
+    if (!chatInput.trim()) return;
+    const msg = chatInput.trim();
+    setChatInput("");
+    setChatMessages(prev => [...prev, { role: "user", content: msg }]);
+    setTimeout(() => {
+      setChatMessages(prev => [...prev, { role: "chief", content: `Analyzing "${msg}"... All ${agentsWorking} active agents performing within normal parameters. ${agentsError} agent(s) need attention. Total cost today: $${totalCostToday.toFixed(2)}.` }]);
+    }, 500);
+  }
+
+  function removePriorityItem(id: string) {
+    setPriorityQueue(prev => prev.filter(p => p.id !== id));
+  }
+
+  function addBuilderCapability(cap: string) {
+    if (cap && !builderCapabilities.includes(cap)) {
+      setBuilderCapabilities(prev => [...prev, cap]);
+    }
   }
 
   return (
-    <div className="fade-in space-y-6 max-w-[1400px] mx-auto">
+    <div className="fade-in space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-3">
-            Agent Control Center
-          </h1>
-          <p className="text-sm text-muted mt-0.5">{agents.length + customAgents.length} agents &middot; {agentsWorking} active &middot; {agentsError > 0 ? <span className="text-danger">{agentsError} errors</span> : <span className="text-success">no errors</span>}</p>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+            <Bot size={20} className="text-gold" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold">Agent Supervisor</h1>
+            <p className="text-xs text-muted">{agents.length + spawned.length} agents &middot; {agentsWorking} active &middot; {agentsError > 0 ? <span className="text-red-400">{agentsError} errors</span> : <span className="text-green-400">no errors</span>}</p>
+          </div>
         </div>
-        <button
-          onClick={() => { toast.loading("Checking all..."); Promise.all(agents.map((a) => healthCheck(a.id))).then(() => toast.dismiss()); }}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gold/10 text-gold text-xs font-medium border border-gold/20 hover:bg-gold/20 transition-all"
-        >
-          <Heart size={14} /> Health Check All
+        <button onClick={() => setAgents(prev => prev.map(a => ({ ...a, status: a.status === "error" ? "idle" : a.status })))}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gold/10 text-gold text-xs font-medium border border-gold/20 hover:bg-gold/20 transition-all">
+          <RefreshCw size={14} /> Health Check All
         </button>
       </div>
 
-      {/* Summary Bar */}
-      <div className="grid grid-cols-5 gap-4">
-        <div className="card-static text-center">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Active</p>
-          <p className="text-2xl font-bold text-success mt-1">{agentsWorking}</p>
-        </div>
-        <div className="card-static text-center">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Actions Today</p>
-          <p className="text-2xl font-bold text-foreground mt-1">{totalActionsToday}</p>
-        </div>
-        <div className="card-static text-center">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Success Rate</p>
-          <p className={`text-2xl font-bold mt-1 ${avgSuccessRate >= 90 ? "text-success" : avgSuccessRate >= 70 ? "text-warning" : "text-danger"}`}>
-            {avgSuccessRate}%
-          </p>
-        </div>
-        <div className="card-static text-center">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Errors</p>
-          <p className={`text-2xl font-bold mt-1 ${agentsError === 0 ? "text-success" : "text-danger"}`}>
-            {agentsError}
-          </p>
-        </div>
-        <div className="card-static text-center">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Spawned</p>
-          <p className="text-2xl font-bold text-gold mt-1">{customAgents.length}</p>
-        </div>
+      {/* Stats Strip */}
+      <div className="grid grid-cols-6 gap-3">
+        {[
+          { label: "Active", value: agentsWorking, color: "text-green-400" },
+          { label: "Actions Today", value: totalActionsToday, color: "text-foreground" },
+          { label: "Success Rate", value: `${avgSuccessRate}%`, color: avgSuccessRate >= 90 ? "text-green-400" : "text-yellow-400" },
+          { label: "Errors", value: agentsError, color: agentsError === 0 ? "text-green-400" : "text-red-400" },
+          { label: "Spawned", value: spawned.length, color: "text-gold" },
+          { label: "Cost Today", value: `$${totalCostToday.toFixed(2)}`, color: "text-cyan-400" },
+        ].map((s, i) => (
+          <div key={i} className="card p-3 text-center">
+            <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+            <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
+          </div>
+        ))}
       </div>
 
-      {/* Agent List — Clean table/row style */}
-      <div className="rounded-xl border border-border bg-surface overflow-hidden">
-        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-          <h2 className="text-sm font-semibold flex items-center gap-2">
-            <Bot size={15} /> All Agents
-          </h2>
-          <span className="text-[10px] text-muted">{agents.length} total</span>
-        </div>
+      {/* Tab Navigation */}
+      <div className="flex gap-1 border-b border-border overflow-x-auto pb-px">
+        {TABS.map(t => (
+          <button key={t} onClick={() => setActiveTab(t)}
+            className={`px-3 py-2 text-[11px] font-medium whitespace-nowrap transition-all ${
+              activeTab === t ? "text-gold border-b-2 border-gold" : "text-muted hover:text-foreground"
+            }`}>
+            {t}
+          </button>
+        ))}
+      </div>
 
-        {/* Header row */}
-        <div className="hidden md:grid grid-cols-12 gap-2 px-5 py-2 border-b border-border text-[10px] text-muted uppercase tracking-wider">
-          <div className="col-span-3">Agent</div>
-          <div className="col-span-2">Status</div>
-          <div className="col-span-3">Last Action</div>
-          <div className="col-span-1 text-center">Today</div>
-          <div className="col-span-1 text-center">Rate</div>
-          <div className="col-span-2 text-right">Actions</div>
-        </div>
-
-        {agents.map((agent) => {
-          const color = AGENT_COLORS[agent.id] || "gold";
-          const isExpanded = expandedAgent === agent.id;
-
-          return (
-            <div key={agent.id} className="border-b border-border last:border-0">
-              {/* Main row */}
-              <div
-                className="grid grid-cols-12 gap-2 px-5 py-3 items-center hover:bg-surface-light transition-colors cursor-pointer"
-                onClick={() => setExpandedAgent(isExpanded ? null : agent.id)}
-              >
-                {/* Agent name + icon */}
-                <div className="col-span-3 flex items-center gap-3">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
-                    agent.status === "error" ? "bg-red-500/10 text-red-400" :
-                    agent.status === "working" ? `bg-${color}-500/10 text-${color}-400` :
-                    "bg-surface-light text-muted"
-                  }`} style={{
-                    backgroundColor: agent.status === "error" ? "rgba(239,68,68,0.1)" :
-                      agent.status === "working" ? undefined : undefined,
-                  }}>
-                    {AGENT_ICONS[agent.id] || <Bot size={15} />}
-                  </div>
-                  <div>
-                    <p className="text-[12px] font-medium">{agent.name}</p>
-                    <p className="text-[9px] text-muted hidden sm:block">{agent.role}</p>
-                  </div>
-                </div>
-
-                {/* Status */}
-                <div className="col-span-2">
-                  <span className={`inline-flex items-center gap-1.5 text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                    agent.status === "working" ? "bg-success/10 text-success" :
-                    agent.status === "error" ? "bg-danger/10 text-danger" :
-                    "bg-warning/10 text-warning"
-                  }`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${
-                      agent.status === "working" ? "bg-success" :
-                      agent.status === "error" ? "bg-danger animate-pulse" :
-                      "bg-warning"
+      {/* ═══ DASHBOARD TAB ═══ */}
+      {activeTab === "Dashboard" && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Live Status Grid */}
+          <div className="lg:col-span-2 card p-4">
+            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Activity size={14} /> Live Agent Status</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {agents.slice(0, 8).map(a => (
+                <div key={a.id} className={`p-2.5 rounded-lg border transition-all ${
+                  a.status === "working" ? "border-green-500/20 bg-green-500/5" :
+                  a.status === "error" ? "border-red-500/20 bg-red-500/5" :
+                  a.status === "paused" ? "border-yellow-500/20 bg-yellow-500/5" :
+                  "border-border"
+                }`}>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className={`w-2 h-2 rounded-full ${
+                      a.status === "working" ? "bg-green-400 animate-pulse" :
+                      a.status === "error" ? "bg-red-400 animate-pulse" :
+                      a.status === "paused" ? "bg-yellow-400" : "bg-gray-400"
                     }`} />
-                    {agent.status === "working" ? "Active" : agent.status === "error" ? "Error" : "Idle"}
-                  </span>
+                    <span className="text-[10px] font-semibold">{a.name}</span>
+                  </div>
+                  <p className="text-[9px] text-muted truncate">{a.lastAction}</p>
+                  <div className="flex items-center justify-between mt-1 text-[8px] text-muted">
+                    <span>{a.actionsToday} actions</span>
+                    <span>{a.successRate}%</span>
+                  </div>
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Last Action */}
-                <div className="col-span-3 hidden md:flex items-center gap-2">
-                  <span className="text-[11px] text-muted truncate">{agent.lastAction}</span>
-                  <span className="text-[9px] text-muted/60 shrink-0">{formatTime(agent.lastActionTime)}</span>
-                </div>
-
-                {/* Actions Today */}
-                <div className="col-span-1 text-center">
-                  <span className="text-[11px] font-mono font-medium">{agent.actionsToday}</span>
-                </div>
-
-                {/* Success Rate */}
-                <div className="col-span-1 text-center">
-                  <span className={`text-[11px] font-mono font-medium ${
-                    agent.successRate >= 90 ? "text-success" : agent.successRate >= 70 ? "text-warning" : "text-danger"
-                  }`}>{agent.successRate}%</span>
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-2 flex items-center justify-end gap-2">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); healthCheck(agent.id); }}
-                    disabled={checkingHealth === agent.id}
-                    className="text-[10px] px-2 py-1 rounded border border-border text-muted hover:text-foreground hover:border-border transition-all disabled:opacity-30"
-                  >
-                    {checkingHealth === agent.id ? <RefreshCw size={10} className="animate-spin" /> : "Check"}
-                  </button>
-                  {agent.status === "error" && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); repairAgent(agent.id); }}
-                      disabled={repairing === agent.id}
-                      className="text-[10px] px-2 py-1 rounded bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-30"
-                    >
-                      {repairing === agent.id ? <RefreshCw size={10} className="animate-spin" /> : "Repair"}
-                    </button>
-                  )}
-                  {isExpanded ? <ChevronDown size={12} className="text-muted" /> : <ChevronRight size={12} className="text-muted" />}
-                </div>
-              </div>
-
-              {/* Expanded detail */}
-              {isExpanded && (
-                <div className="px-5 pb-3 pl-16 border-t border-border">
-                  <div className="grid grid-cols-3 gap-4 py-3 text-[10px]">
-                    <div>
-                      <span className="text-muted">Endpoint</span>
-                      <p className="text-foreground font-mono mt-0.5 text-[9px]">{agent.endpoint}</p>
-                    </div>
-                    <div>
-                      <span className="text-muted">Success Rate</span>
-                      <div className="flex items-center gap-2 mt-1">
-                        <div className="w-20 bg-surface-light rounded-full h-1.5">
-                          <div className={`h-1.5 rounded-full transition-all ${
-                            agent.successRate >= 90 ? "bg-success" : agent.successRate >= 70 ? "bg-warning" : "bg-danger"
-                          }`} style={{ width: `${agent.successRate}%` }} />
-                        </div>
-                        <span className="font-mono">{agent.successRate}%</span>
-                      </div>
-                    </div>
-                    <div>
-                      <span className="text-muted">Last Active</span>
-                      <p className="text-foreground mt-0.5">{formatTime(agent.lastActionTime)}</p>
-                    </div>
+          {/* Nexus Chat */}
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Shield size={14} className="text-gold" />
+              <h2 className="text-sm font-semibold">Nexus</h2>
+              <span className="text-[8px] px-1.5 py-0.5 bg-green-500/10 text-green-400 rounded-full">Online</span>
+            </div>
+            <div className="space-y-2 max-h-48 overflow-y-auto mb-3">
+              {chatMessages.length === 0 && (
+                <div className="text-center py-4">
+                  <p className="text-[10px] text-muted mb-2">Ask about agent status or performance</p>
+                  <div className="flex flex-wrap justify-center gap-1">
+                    {["Agent status", "Performance report", "Any problems?"].map((s, i) => (
+                      <button key={i} onClick={() => setChatInput(s)}
+                        className="text-[9px] bg-surface-light px-2 py-1 rounded-lg text-muted hover:text-foreground border border-border transition-all">{s}</button>
+                    ))}
                   </div>
                 </div>
               )}
+              {chatMessages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[85%] rounded-lg px-3 py-2 text-[10px] ${
+                    msg.role === "user" ? "bg-gold/10 border border-gold/10" : "bg-surface-light border border-border"
+                  }`}>
+                    {msg.role === "chief" && <p className="text-[8px] text-gold font-semibold mb-0.5">NEXUS</p>}
+                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          );
-        })}
-      </div>
-
-      {/* Spawned Sub-Agents */}
-      <div className="rounded-xl border border-gold/10 bg-white overflow-hidden">
-        <div className="px-5 py-3 border-b border-border flex items-center justify-between">
-          <button onClick={() => setShowSpawnedAgents(!showSpawnedAgents)} className="flex items-center gap-2">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Cpu size={15} className="text-gold" /> Spawned Sub-Agents
-              <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full">{customAgents.length}</span>
-            </h2>
-            {showSpawnedAgents ? <ChevronDown size={12} className="text-muted" /> : <ChevronRight size={12} className="text-muted" />}
-          </button>
+            <form onSubmit={(e) => { e.preventDefault(); sendChat(); }} className="flex gap-2">
+              <input value={chatInput} onChange={e => setChatInput(e.target.value)} placeholder="Ask Nexus..."
+                className="input flex-1 text-[10px] py-1.5" />
+              <button type="submit" className="px-2.5 py-1.5 bg-gold/10 text-gold text-xs rounded-lg border border-gold/20 hover:bg-gold/20 transition-all">
+                <Send size={11} />
+              </button>
+            </form>
+          </div>
         </div>
+      )}
 
-        {showSpawnedAgents && (
-          <div className="p-5 space-y-3">
-            <p className="text-[10px] text-muted">Nexus can dynamically create specialist agents for tasks that don&apos;t fit existing agents. Spawn one manually or let Nexus decide.</p>
+      {/* ═══ AGENTS TAB ═══ */}
+      {activeTab === "Agents" && (
+        <div className="space-y-3">
+          {/* Filters */}
+          <div className="flex gap-2">
+            {["all", "working", "idle", "error", "paused"].map(s => (
+              <button key={s} onClick={() => setStatusFilter(s)}
+                className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${
+                  statusFilter === s ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                }`}>{s} {s !== "all" && `(${agents.filter(a => a.status === s).length})`}</button>
+            ))}
+          </div>
 
-            {/* Manual spawn */}
-            <div className="flex gap-2">
-              <input
-                value={spawnTask}
-                onChange={e => setSpawnTask(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && spawnAgent()}
-                placeholder="Describe a task to spawn an agent for..."
-                className="input flex-1 text-xs"
-              />
-              <button onClick={spawnAgent} disabled={spawning || !spawnTask.trim()}
-                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50 shrink-0">
-                {spawning ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
-                Spawn
+          {/* Agent Table */}
+          <div className="rounded-xl border border-border overflow-hidden">
+            <div className="hidden md:grid grid-cols-12 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
+              <div className="col-span-3">Agent</div>
+              <div className="col-span-1">Status</div>
+              <div className="col-span-3">Last Action</div>
+              <div className="col-span-1 text-center">Actions</div>
+              <div className="col-span-1 text-center">Rate</div>
+              <div className="col-span-1 text-center">Cost</div>
+              <div className="col-span-2 text-right">Controls</div>
+            </div>
+            {filteredAgents.map(agent => {
+              const isExpanded = expandedAgent === agent.id;
+              return (
+                <div key={agent.id} className="border-b border-border last:border-0">
+                  <div className="grid grid-cols-12 gap-2 px-4 py-3 items-center hover:bg-surface-light/50 transition-colors cursor-pointer"
+                    onClick={() => setExpandedAgent(isExpanded ? null : agent.id)}>
+                    <div className="col-span-3 flex items-center gap-2.5">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                        agent.status === "error" ? "bg-red-500/10 text-red-400" :
+                        agent.status === "working" ? "bg-green-500/10 text-green-400" :
+                        agent.status === "paused" ? "bg-yellow-500/10 text-yellow-400" :
+                        "bg-surface-light text-muted"
+                      }`}>{AGENT_ICONS[agent.id] || <Bot size={15} />}</div>
+                      <div>
+                        <p className="text-[11px] font-medium">{agent.name}</p>
+                        <p className="text-[9px] text-muted">{agent.role}</p>
+                      </div>
+                    </div>
+                    <div className="col-span-1">
+                      <span className={`inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded-full ${
+                        agent.status === "working" ? "bg-green-500/10 text-green-400" :
+                        agent.status === "error" ? "bg-red-500/10 text-red-400" :
+                        agent.status === "paused" ? "bg-yellow-500/10 text-yellow-400" :
+                        "bg-gray-500/10 text-gray-400"
+                      }`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${
+                          agent.status === "working" ? "bg-green-400" : agent.status === "error" ? "bg-red-400 animate-pulse" :
+                          agent.status === "paused" ? "bg-yellow-400" : "bg-gray-400"
+                        }`} />
+                        {agent.status}
+                      </span>
+                    </div>
+                    <div className="col-span-3 hidden md:block">
+                      <p className="text-[10px] text-muted truncate">{agent.lastAction}</p>
+                      <p className="text-[8px] text-muted/60">{agent.lastActionTime}</p>
+                    </div>
+                    <div className="col-span-1 text-center text-[10px] font-mono">{agent.actionsToday}</div>
+                    <div className="col-span-1 text-center">
+                      <span className={`text-[10px] font-mono ${agent.successRate >= 90 ? "text-green-400" : agent.successRate >= 70 ? "text-yellow-400" : "text-red-400"}`}>{agent.successRate}%</span>
+                    </div>
+                    <div className="col-span-1 text-center text-[10px] font-mono text-cyan-400">${agent.costToday.toFixed(2)}</div>
+                    <div className="col-span-2 flex items-center justify-end gap-1.5">
+                      <button onClick={(e) => { e.stopPropagation(); toggleAgentStatus(agent.id); }}
+                        className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
+                        {agent.status === "paused" ? <Play size={10} /> : <Pause size={10} />}
+                      </button>
+                      <button onClick={(e) => { e.stopPropagation(); setAgents(prev => prev.map(a => a.id === agent.id ? { ...a, status: "working" } : a)); }}
+                        className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
+                        <RefreshCw size={10} />
+                      </button>
+                      {isExpanded ? <ChevronDown size={12} className="text-muted" /> : <ChevronRight size={12} className="text-muted" />}
+                    </div>
+                  </div>
+                  {isExpanded && (
+                    <div className="px-4 pb-3 pl-14 border-t border-border">
+                      <div className="grid grid-cols-4 gap-4 py-3 text-[10px]">
+                        <div><span className="text-muted">Avg Latency</span><p className="font-mono mt-0.5">{agent.avgLatency}ms</p></div>
+                        <div><span className="text-muted">Version</span><p className="font-mono mt-0.5">{agent.version}</p></div>
+                        <div>
+                          <span className="text-muted">Success Rate</span>
+                          <div className="flex items-center gap-2 mt-1">
+                            <div className="w-20 bg-surface-light rounded-full h-1.5">
+                              <div className={`h-1.5 rounded-full ${agent.successRate >= 90 ? "bg-green-400" : agent.successRate >= 70 ? "bg-yellow-400" : "bg-red-400"}`} style={{ width: `${agent.successRate}%` }} />
+                            </div>
+                            <span className="font-mono">{agent.successRate}%</span>
+                          </div>
+                        </div>
+                        <div><span className="text-muted">Cost Today</span><p className="font-mono mt-0.5 text-cyan-400">${agent.costToday.toFixed(2)}</p></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ CHAINS TAB ═══ */}
+      {activeTab === "Chains" && (
+        <div className="space-y-3">
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <GitBranch size={14} className="text-gold" />
+              <h2 className="text-sm font-semibold">Agent Chain Visualization</h2>
+              <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full">{chains.filter(c => c.active).length} active</span>
+            </div>
+            <div className="space-y-1.5">
+              {chains.map((chain, i) => (
+                <div key={i} className={`flex items-center gap-2 py-2 px-3 rounded-lg border transition-all ${
+                  chain.active ? "border-border" : "border-border/50 opacity-50"
+                }`}>
+                  <button onClick={() => toggleChain(i)}
+                    className={`w-8 h-4 rounded-full transition-colors ${chain.active ? "bg-green-400" : "bg-surface-light"}`}>
+                    <div className={`w-3 h-3 rounded-full bg-white shadow transition-all mt-0.5 ${chain.active ? "ml-4" : "ml-0.5"}`} />
+                  </button>
+                  <span className="text-[11px] font-medium w-28 shrink-0">{chain.from}</span>
+                  <ArrowRight size={12} className="text-gold shrink-0" />
+                  <span className="text-[11px] font-medium text-gold w-28 shrink-0">{chain.to}</span>
+                  <span className="text-[10px] text-muted flex-1 truncate">{chain.label} &rarr; {chain.trigger}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ TIMELINE TAB ═══ */}
+      {activeTab === "Timeline" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><History size={14} /> Activity Timeline</h2>
+          <div className="space-y-2">
+            {MOCK_TIMELINE.map(entry => (
+              <div key={entry.id} className="flex items-start gap-3 py-2.5 border-b border-border last:border-0">
+                <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
+                  entry.status === "success" ? "bg-green-500/10" : entry.status === "error" ? "bg-red-500/10" : "bg-yellow-500/10"
+                }`}>
+                  {entry.status === "success" ? <CheckCircle size={12} className="text-green-400" /> :
+                   entry.status === "error" ? <XCircle size={12} className="text-red-400" /> :
+                   <Clock size={12} className="text-yellow-400" />}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-medium">{entry.agent}</span>
+                    <span className="text-[9px] text-muted">{entry.time}</span>
+                    {entry.cost > 0 && <span className="text-[9px] text-cyan-400">${entry.cost.toFixed(2)}</span>}
+                  </div>
+                  <p className="text-[10px] text-muted">{entry.action}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ SPAWNED TAB ═══ */}
+      {activeTab === "Spawned" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Cpu size={14} className="text-gold" />
+              <h2 className="text-sm font-semibold">Spawned Sub-Agents</h2>
+            </div>
+            <p className="text-[10px] text-muted mb-3">Create specialist agents for tasks that don&apos;t fit existing agents.</p>
+            <div className="flex gap-2 mb-4">
+              <input value={spawnTask} onChange={e => setSpawnTask(e.target.value)} onKeyDown={e => e.key === "Enter" && spawnAgent()}
+                className="input flex-1 text-xs" placeholder="Describe a task to spawn an agent for..." />
+              <button onClick={spawnAgent} disabled={!spawnTask.trim()}
+                className="px-4 py-2 bg-gold/10 text-gold text-xs font-medium rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-50 flex items-center gap-1.5">
+                <Plus size={12} /> Spawn
               </button>
             </div>
-
-            {/* Custom agents list */}
-            {customAgents.length > 0 ? (
-              <div className="space-y-1.5">
-                {customAgents.map(agent => (
-                  <div key={agent.id} className="flex items-center justify-between p-3 rounded-xl bg-surface-light border border-border hover:border-gold/20 transition-all group">
+            {spawned.length > 0 ? (
+              <div className="space-y-2">
+                {spawned.map(agent => (
+                  <div key={agent.id} className="flex items-center justify-between p-3 rounded-lg border border-border hover:border-gold/20 transition-all group">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center">
-                        <Cpu size={14} className="text-gold" />
-                      </div>
+                      <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center"><Cpu size={14} className="text-gold" /></div>
                       <div>
                         <p className="text-xs font-semibold">{agent.name}</p>
                         <p className="text-[9px] text-muted">{agent.role}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1.5">
-                        {agent.capabilities?.slice(0, 2).map((cap, i) => (
-                          <span key={i} className="text-[8px] bg-surface px-1.5 py-0.5 rounded-full text-muted border border-border">{cap}</span>
-                        ))}
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[10px] font-mono font-medium">{agent.execution_count}x</p>
-                        <p className="text-[8px] text-muted">runs</p>
-                      </div>
-                      <button onClick={() => deactivateAgent(agent.id)}
-                        className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-danger/5 hover:text-danger transition-all"
-                        title="Deactivate">
-                        <Trash2 size={11} />
-                      </button>
+                      <div className="flex gap-1">{agent.capabilities.map((c, i) => (
+                        <span key={i} className="text-[8px] bg-surface-light px-1.5 py-0.5 rounded-full text-muted border border-border">{c}</span>
+                      ))}</div>
+                      <div className="text-right"><p className="text-[10px] font-mono">{agent.runs}x</p><p className="text-[8px] text-muted">{agent.lastRun}</p></div>
+                      <button onClick={() => removeSpawned(agent.id)} className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-500/5 hover:text-red-400 transition-all"><Trash2 size={11} /></button>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-6">
-                <Cpu size={24} className="mx-auto mb-2 text-muted/20" />
-                <p className="text-[10px] text-muted">No sub-agents spawned yet. Ask Nexus or spawn one manually.</p>
+              <div className="text-center py-8"><Cpu size={24} className="mx-auto mb-2 text-muted/20" /><p className="text-[10px] text-muted">No sub-agents spawned yet</p></div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ═══ MARKETPLACE TAB ═══ */}
+      {activeTab === "Marketplace" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Layers size={14} className="text-gold" /> Agent Templates</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {MOCK_TEMPLATES.map(t => (
+                <div key={t.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs font-semibold">{t.name}</span>
+                    <span className="text-[8px] px-1.5 py-0.5 bg-surface-light rounded-full text-muted">{t.category}</span>
+                  </div>
+                  <p className="text-[10px] text-muted mb-2">{t.description}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] text-muted">{t.installs} installs</span>
+                    <button className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all">Install</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ ORCHESTRATION TAB ═══ */}
+      {activeTab === "Orchestration" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Settings size={14} className="text-gold" /> Priority Queue</h2>
+            <div className="space-y-2">
+              {priorityQueue.map(item => (
+                <div key={item.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                  <span className={`text-[8px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                    item.priority === "high" ? "bg-red-500/10 text-red-400" :
+                    item.priority === "medium" ? "bg-yellow-500/10 text-yellow-400" :
+                    "bg-blue-500/10 text-blue-400"
+                  }`}>{item.priority}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-medium truncate">{item.task}</p>
+                    <p className="text-[9px] text-muted">{item.agent} &middot; ETA {item.eta}</p>
+                  </div>
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${
+                    item.status === "running" ? "bg-green-500/10 text-green-400" : "bg-surface-light text-muted"
+                  }`}>{item.status}</span>
+                  <button onClick={() => removePriorityItem(item.id)} className="text-muted hover:text-red-400 transition-colors"><Trash2 size={11} /></button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ COSTS TAB ═══ */}
+      {activeTab === "Costs" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <DollarSign size={14} className="text-gold" />
+              <h2 className="text-sm font-semibold">Cost-Per-Task Tracking</h2>
+            </div>
+            <div className="flex items-center gap-4 mb-4 p-3 rounded-lg border border-border">
+              <div><p className="text-[9px] text-muted uppercase">Today</p><p className="text-lg font-bold text-gold">${totalCostToday.toFixed(2)}</p></div>
+              <div><p className="text-[9px] text-muted uppercase">This Week</p><p className="text-lg font-bold text-foreground">${(totalCostToday * 5.2).toFixed(2)}</p></div>
+              <div><p className="text-[9px] text-muted uppercase">This Month</p><p className="text-lg font-bold text-foreground">${(totalCostToday * 22.5).toFixed(2)}</p></div>
+              <div><p className="text-[9px] text-muted uppercase">Avg/Task</p><p className="text-lg font-bold text-cyan-400">${(totalCostToday / Math.max(totalActionsToday, 1)).toFixed(4)}</p></div>
+            </div>
+            <div className="space-y-2">
+              {agents.sort((a, b) => b.costToday - a.costToday).map(a => (
+                <div key={a.id} className="flex items-center gap-3 text-[11px]">
+                  <span className="w-24 font-medium">{a.name}</span>
+                  <div className="flex-1 bg-surface-light rounded-full h-2">
+                    <div className="bg-gold rounded-full h-2 transition-all" style={{ width: `${(a.costToday / Math.max(totalCostToday, 0.01)) * 100}%` }} />
+                  </div>
+                  <span className="w-16 text-right font-mono text-cyan-400">${a.costToday.toFixed(2)}</span>
+                  <span className="w-16 text-right text-muted">{a.actionsToday} tasks</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ PERFORMANCE TAB ═══ */}
+      {activeTab === "Performance" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Gauge size={14} className="text-gold" />
+              <h2 className="text-sm font-semibold">Agent Performance Comparison</h2>
+            </div>
+            <div className="rounded-lg border border-border overflow-hidden">
+              <div className="grid grid-cols-7 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
+                <div className="col-span-2">Agent</div>
+                <div>Actions</div>
+                <div>Success</div>
+                <div>Latency</div>
+                <div>Cost</div>
+                <div>Efficiency</div>
+              </div>
+              {agents.sort((a, b) => b.actionsToday - a.actionsToday).map(a => {
+                const efficiency = Math.round((a.successRate * a.actionsToday) / Math.max(a.costToday * 100, 1));
+                return (
+                  <div key={a.id} className="grid grid-cols-7 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[10px] items-center">
+                    <div className="col-span-2 font-medium flex items-center gap-1.5">{AGENT_ICONS[a.id] || <Bot size={12} />} {a.name}</div>
+                    <div className="font-mono">{a.actionsToday}</div>
+                    <div className={`font-mono ${a.successRate >= 90 ? "text-green-400" : a.successRate >= 70 ? "text-yellow-400" : "text-red-400"}`}>{a.successRate}%</div>
+                    <div className="font-mono">{a.avgLatency}ms</div>
+                    <div className="font-mono text-cyan-400">${a.costToday.toFixed(2)}</div>
+                    <div>
+                      <div className="w-full bg-surface-light rounded-full h-1.5">
+                        <div className="bg-gold rounded-full h-1.5" style={{ width: `${Math.min(efficiency * 10, 100)}%` }} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ FAILURES TAB ═══ */}
+      {activeTab === "Failures" && (
+        <div className="space-y-4">
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <AlertTriangle size={14} className="text-red-400" />
+              <h2 className="text-sm font-semibold">Failure Analysis</h2>
+            </div>
+            {agents.filter(a => a.status === "error" || a.successRate < 80).length === 0 ? (
+              <div className="text-center py-8">
+                <CheckCircle size={24} className="mx-auto mb-2 text-green-400" />
+                <p className="text-xs text-muted">No failures detected. All agents healthy.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {agents.filter(a => a.status === "error" || a.successRate < 80).map(a => (
+                  <div key={a.id} className="p-3 rounded-lg border border-red-500/20 bg-red-500/5">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <XCircle size={14} className="text-red-400" />
+                        <span className="text-xs font-semibold">{a.name}</span>
+                        <span className="text-[9px] text-red-400">{a.status === "error" ? "Active Error" : `Low Success (${a.successRate}%)`}</span>
+                      </div>
+                      <button onClick={() => setAgents(prev => prev.map(ag => ag.id === a.id ? { ...ag, status: "idle", successRate: 95 } : ag))}
+                        className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all">Repair</button>
+                    </div>
+                    <p className="text-[10px] text-muted">{a.lastAction}</p>
+                    <div className="mt-2 text-[9px] text-muted">Recommended: Check API credentials, verify endpoint accessibility, review rate limits</div>
+                  </div>
+                ))}
               </div>
             )}
           </div>
-        )}
-      </div>
-
-      {/* Agent Chains + Timeline */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Agent Chains */}
-        <div className="rounded-xl border border-border bg-surface">
-          <button
-            onClick={() => setShowChains(!showChains)}
-            className="w-full px-5 py-3 flex items-center justify-between hover:bg-surface-light transition-colors"
-          >
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Zap size={15} className="text-gold" /> Agent Chains
-              <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full">{CHAINS.length} active</span>
-            </h2>
-            {showChains ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
-          </button>
-          {showChains && (
-            <div className="px-5 pb-4 space-y-1.5">
-              <p className="text-[10px] text-muted mb-2">Automated triggers between agents</p>
-              {CHAINS.map((chain, i) => (
-                <div key={i} className="flex items-center gap-2 py-1.5 text-[10px]">
-                  <span className="text-foreground font-medium w-24 shrink-0">{chain.from}</span>
-                  <ArrowRight size={10} className="text-gold shrink-0" />
-                  <span className="text-gold font-medium w-24 shrink-0">{chain.to}</span>
-                  <span className="text-muted truncate">{chain.label} &rarr; {chain.trigger}</span>
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 ml-auto" />
-                </div>
-              ))}
-            </div>
-          )}
         </div>
+      )}
 
-        {/* Activity Timeline */}
-        <div className="rounded-xl border border-border bg-surface p-5">
-          <h2 className="text-sm font-semibold flex items-center gap-2 mb-4">
-            <Activity size={15} /> Recent Activity
-          </h2>
-          <div className="space-y-2 max-h-[400px] overflow-y-auto">
-            {timeline.length === 0 ? (
-              <p className="text-xs text-muted text-center py-8">No recent activity</p>
-            ) : (
-              timeline.map((entry) => (
-                <div key={entry.id} className="flex items-start gap-3 py-2 border-b border-border last:border-0">
-                  <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
-                    entry.status === "success" ? "bg-success/10" :
-                    entry.status === "error" ? "bg-danger/10" : "bg-warning/10"
-                  }`}>
-                    {entry.status === "success" ? <CheckCircle size={11} className="text-success" /> :
-                     entry.status === "error" ? <XCircle size={11} className="text-danger" /> :
-                     <Clock size={11} className="text-warning" />}
+      {/* ═══ COMMS TAB ═══ */}
+      {activeTab === "Comms" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><MessageSquare size={14} className="text-gold" /> Inter-Agent Communication Log</h2>
+          <div className="space-y-2">
+            {MOCK_COMMS.map((msg, i) => (
+              <div key={i} className={`flex items-start gap-3 p-2.5 rounded-lg border ${
+                msg.type === "error" ? "border-red-500/20 bg-red-500/5" : "border-border"
+              }`}>
+                <div className={`w-6 h-6 rounded flex items-center justify-center text-[8px] font-bold shrink-0 ${
+                  msg.type === "command" ? "bg-blue-500/10 text-blue-400" :
+                  msg.type === "error" ? "bg-red-500/10 text-red-400" :
+                  "bg-green-500/10 text-green-400"
+                }`}>{msg.type === "command" ? "CMD" : msg.type === "error" ? "ERR" : "RES"}</div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 text-[10px]">
+                    <span className="font-medium">{msg.from}</span>
+                    <ArrowRight size={10} className="text-muted" />
+                    <span className="font-medium text-gold">{msg.to}</span>
+                    <span className="text-muted ml-auto">{msg.time}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-medium capitalize">{entry.agent?.replace(/_/g, " ") || "System"}</span>
-                      <span className="text-[9px] text-muted">{formatTime(entry.created_at)}</span>
-                    </div>
-                    <p className="text-[10px] text-muted truncate">{entry.action}</p>
-                  </div>
+                  <p className="text-[10px] text-muted mt-0.5">{msg.message}</p>
                 </div>
-              ))
-            )}
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Chief Agent Chat */}
-      <ChiefChat />
-    </div>
-  );
-}
-
-function ChiefChat() {
-  const [messages, setMessages] = useState<Array<{ role: "user" | "chief"; content: string; spawned?: string }>>([]);
-  const [input, setInput] = useState("");
-  const [thinking, setThinking] = useState(false);
-
-  async function sendMessage() {
-    if (!input.trim() || thinking) return;
-    const msg = input.trim();
-    setInput("");
-    setMessages(prev => [...prev, { role: "user", content: msg }]);
-    setThinking(true);
-    try {
-      const res = await fetch("/api/agents/chief", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg, history: messages.slice(-10) }),
-      });
-      const data = await res.json();
-      setMessages(prev => [...prev, {
-        role: "chief",
-        content: data.reply || "No response.",
-        spawned: data.spawned_agent?.name,
-      }]);
-    } catch {
-      setMessages(prev => [...prev, { role: "chief", content: "Connection error." }]);
-    }
-    setThinking(false);
-  }
-
-  return (
-    <div className="rounded-xl border border-gold/10 card-static">
-      <div className="flex items-center gap-3 pb-3 border-b border-border mb-4">
-        <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center">
-          <Shield size={16} className="text-gold" />
+      {/* ═══ BUILDER TAB ═══ */}
+      {activeTab === "Builder" && (
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-gold" /> Custom Agent Builder</h2>
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Agent Name</label>
+                <input value={builderName} onChange={e => setBuilderName(e.target.value)} className="input w-full text-xs" placeholder="e.g. Email Validator" />
+              </div>
+              <div>
+                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Role Description</label>
+                <input value={builderRole} onChange={e => setBuilderRole(e.target.value)} className="input w-full text-xs" placeholder="e.g. Validates email deliverability" />
+              </div>
+            </div>
+            <div>
+              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Trigger Condition</label>
+              <input value={builderTrigger} onChange={e => setBuilderTrigger(e.target.value)} className="input w-full text-xs" placeholder="e.g. When new lead is scraped" />
+            </div>
+            <div>
+              <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Capabilities</label>
+              <div className="flex flex-wrap gap-1.5 mb-2">
+                {builderCapabilities.map((c, i) => (
+                  <span key={i} className="text-[9px] px-2 py-0.5 bg-gold/10 text-gold rounded-full border border-gold/20 flex items-center gap-1">
+                    {c} <button onClick={() => setBuilderCapabilities(prev => prev.filter((_, j) => j !== i))} className="text-gold/50 hover:text-gold">x</button>
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <input id="cap-input" className="input flex-1 text-xs" placeholder="Add capability..."
+                  onKeyDown={e => { if (e.key === "Enter") { addBuilderCapability((e.target as HTMLInputElement).value); (e.target as HTMLInputElement).value = ""; } }} />
+              </div>
+            </div>
+            <button disabled={!builderName.trim()} onClick={() => {
+              setSpawned(prev => [...prev, { id: `s${prev.length + 1}`, name: builderName, role: builderRole, runs: 0, lastRun: "Never", capabilities: builderCapabilities }]);
+              setBuilderName(""); setBuilderRole(""); setBuilderTrigger(""); setBuilderCapabilities([]);
+            }} className="px-4 py-2 bg-gold/10 text-gold text-xs font-medium rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-50 flex items-center gap-1.5">
+              <Plus size={12} /> Create Agent
+            </button>
+          </div>
         </div>
-        <div>
-          <p className="text-sm font-semibold">Nexus</p>
-          <p className="text-[10px] text-success flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-success inline-block" /> Chief Agent &middot; Online
-          </p>
-        </div>
-      </div>
-
-      <div className="space-y-2 max-h-[200px] overflow-y-auto mb-3">
-        {messages.length === 0 && (
-          <div className="text-center py-4">
-            <p className="text-[10px] text-muted mb-3">Ask about agent status, performance, or strategy</p>
-            <div className="flex flex-wrap justify-center gap-1.5">
-              {["Agent status overview", "Performance report", "Any problems?", "What should we improve?"].map((s, i) => (
-                <button key={i} onClick={() => setInput(s)}
-                  className="text-[10px] bg-surface-light px-2.5 py-1 rounded-lg text-muted hover:text-foreground border border-border hover:border-border transition-all">
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[80%] rounded-lg px-3 py-2 ${
-              msg.role === "user" ? "bg-gold/10 border border-gold/10" : "bg-surface-light border border-border"
-            }`}>
-              {msg.role === "chief" && <p className="text-[8px] text-gold font-semibold mb-0.5 uppercase tracking-wider">Nexus</p>}
-              {msg.spawned && (
-                <div className="flex items-center gap-1.5 mb-1.5 text-[9px] bg-gold/10 text-gold px-2 py-1 rounded-md">
-                  <Cpu size={10} /> Spawned: {msg.spawned}
-                </div>
-              )}
-              <p className="text-[11px] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
-            </div>
-          </div>
-        ))}
-        {thinking && (
-          <div className="flex justify-start">
-            <div className="bg-surface-light border border-border rounded-lg px-3 py-2 flex items-center gap-1.5">
-              <div className="w-3 h-3 border-2 border-gold/20 border-t-gold rounded-full animate-spin" />
-              <span className="text-[10px] text-muted">Analyzing...</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex gap-2">
-        <input type="text" value={input} onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask Nexus anything..."
-          className="input flex-1 text-[11px] py-2 rounded-lg bg-surface-light border-border" disabled={thinking} />
-        <button type="submit" disabled={!input.trim() || thinking}
-          className="px-3 py-2 bg-gold/10 text-gold text-xs rounded-lg border border-gold/20 hover:bg-gold/20 transition-all disabled:opacity-30">
-          <Send size={12} />
-        </button>
-      </form>
+      )}
     </div>
   );
 }
