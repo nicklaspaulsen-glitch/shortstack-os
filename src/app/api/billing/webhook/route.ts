@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { sendPaymentFailedEmail } from "@/lib/email";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
@@ -154,6 +155,14 @@ export async function POST(request: NextRequest) {
               text: `🚨 Agency Payment Failed!\n\n${failedAgency.full_name || failedAgency.email}\nPlan: ${failedAgency.plan_tier}\nAmount: $${((invoice.amount_due || 0) / 100).toFixed(2)}\nACTION NEEDED`,
             }),
           }).catch(() => {});
+        }
+
+        // Send payment failed email to the agency owner
+        if (failedAgency.email) {
+          sendPaymentFailedEmail(
+            failedAgency.email,
+            failedAgency.full_name || "there"
+          ).catch(() => {});
         }
       }
 
