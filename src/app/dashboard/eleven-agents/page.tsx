@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Phone, PhoneCall, Plus, RefreshCw, Play, Pause,
-  Clock,
+  Clock, Trash2, X, Loader2, Check,
   BarChart3, FileText, Mic, Users, AlertTriangle, Volume2,
   TrendingUp, Calendar, Shield, ArrowRight, Copy
 } from "lucide-react";
@@ -145,6 +145,113 @@ export default function ElevenAgentsPage() {
     { id: "tr4", trigger: "Lead wants to book appointment", action: "Transfer to scheduling", number: "+1 (305) 555-3000", active: false },
   ]);
 
+  // ── Live API State ──
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const [liveAgents, setLiveAgents] = useState<any[]>([]);
+  const [liveConversations, setLiveConversations] = useState<any[]>([]);
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+  const [apiLoading, setApiLoading] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [createForm, setCreateForm] = useState({ name: "", firstMessage: "", systemPrompt: "", voiceId: "", maxDuration: 300 });
+  const [createLoading, setCreateLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
+  const [apiSuccess, setApiSuccess] = useState("");
+
+  const loadAgents = useCallback(async () => {
+    setApiLoading(true);
+    setApiError("");
+    try {
+      const [agentsRes, convosRes] = await Promise.all([
+        fetch("/api/agents/eleven?type=agents"),
+        fetch("/api/agents/eleven?type=conversations"),
+      ]);
+      if (agentsRes.ok) {
+        const data = await agentsRes.json();
+        setLiveAgents(data.agents || []);
+      } else {
+        const err = await agentsRes.json().catch(() => ({}));
+        if (agentsRes.status !== 401 && agentsRes.status !== 403) setApiError(err.error || "Failed to load agents");
+      }
+      if (convosRes.ok) {
+        const data = await convosRes.json();
+        setLiveConversations(data.conversations || []);
+      }
+    } catch (err) {
+      setApiError(String(err));
+    }
+    setApiLoading(false);
+  }, []);
+
+  useEffect(() => { loadAgents(); }, [loadAgents]);
+
+  async function handleCreateAgent() {
+    if (!createForm.name.trim()) { setApiError("Agent name is required"); return; }
+    setCreateLoading(true);
+    setApiError("");
+    setApiSuccess("");
+    try {
+      const res = await fetch("/api/agents/eleven", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "create_agent",
+          name: createForm.name,
+          firstMessage: createForm.firstMessage || undefined,
+          systemPrompt: createForm.systemPrompt || undefined,
+          voiceId: createForm.voiceId || undefined,
+          maxDuration: createForm.maxDuration || 300,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setApiError(data.error);
+      } else {
+        setApiSuccess(`Agent created! ID: ${data.agentId}`);
+        setShowCreateForm(false);
+        setCreateForm({ name: "", firstMessage: "", systemPrompt: "", voiceId: "", maxDuration: 300 });
+        loadAgents();
+      }
+    } catch (err) {
+      setApiError(String(err));
+    }
+    setCreateLoading(false);
+  }
+
+  async function handleDeleteAgent(agentId: string) {
+    if (!confirm("Delete this agent permanently from ElevenLabs?")) return;
+    setApiError("");
+    try {
+      const res = await fetch("/api/agents/eleven", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete_agent", agentId }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setApiSuccess("Agent deleted");
+        loadAgents();
+      } else {
+        setApiError("Failed to delete agent");
+      }
+    } catch (err) {
+      setApiError(String(err));
+    }
+  }
+
+  async function handleLoadDefaults() {
+    try {
+      const res = await fetch("/api/agents/eleven?type=defaults");
+      if (res.ok) {
+        const data = await res.json();
+        setCreateForm(prev => ({
+          ...prev,
+          firstMessage: data.firstMessage || prev.firstMessage,
+          systemPrompt: data.prompt || prev.systemPrompt,
+        }));
+      }
+    } catch {}
+  }
+
   const totalCallsToday = agents.reduce((sum, a) => sum + a.callsToday, 0);
   const avgSuccessRate = agents.length > 0 ? Math.round(agents.reduce((sum, a) => sum + a.successRate, 0) / agents.length) : 0;
   const totalCost = MOCK_CALLS.reduce((sum, c) => sum + c.cost, 0);
@@ -208,8 +315,9 @@ export default function ElevenAgentsPage() {
             <p className="text-xs text-muted">AI voice agents for outbound cold calling &amp; inbound handling</p>
           </div>
         </div>
-        <button className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-xs text-muted hover:text-foreground transition-all">
-          <RefreshCw size={12} /> Refresh
+        <button onClick={() => loadAgents()} disabled={apiLoading}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-xs text-muted hover:text-foreground transition-all disabled:opacity-50">
+          <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
         </button>
       </div>
 
@@ -243,11 +351,132 @@ export default function ElevenAgentsPage() {
       {/* ═══ DASHBOARD TAB ═══ */}
       {activeTab === "Dashboard" && (
         <div className="space-y-4">
-          {/* Agents Grid */}
+          {/* Error / Success Banners */}
+          {apiError && (
+            <div className="flex items-center gap-2 p-3 rounded-lg border border-red-500/20 bg-red-500/5 text-red-400 text-[11px]">
+              <AlertTriangle size={14} />
+              <span className="flex-1">{apiError}</span>
+              <button onClick={() => setApiError("")} className="hover:text-red-300"><X size={12} /></button>
+            </div>
+          )}
+          {apiSuccess && (
+            <div className="flex items-center gap-2 p-3 rounded-lg border border-green-500/20 bg-green-500/5 text-green-400 text-[11px]">
+              <Check size={14} />
+              <span className="flex-1">{apiSuccess}</span>
+              <button onClick={() => setApiSuccess("")} className="hover:text-green-300"><X size={12} /></button>
+            </div>
+          )}
+
+          {/* ── Live Agents from ElevenLabs API ── */}
           <div className="card p-4">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} /> Your Agents</h2>
-              <button className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1"><Plus size={10} /> New Agent</button>
+              <h2 className="text-sm font-semibold flex items-center gap-2">
+                <Phone size={14} /> Your Agents
+                {apiLoading && <Loader2 size={12} className="animate-spin text-muted" />}
+                <span className="text-[9px] text-muted font-normal">({liveAgents.length} from ElevenLabs)</span>
+              </h2>
+              <button onClick={() => { setShowCreateForm(!showCreateForm); if (!showCreateForm) handleLoadDefaults(); }}
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
+                {showCreateForm ? <><X size={10} /> Cancel</> : <><Plus size={10} /> New Agent</>}
+              </button>
+            </div>
+
+            {/* ── Create Agent Form ── */}
+            {showCreateForm && (
+              <div className="mb-4 p-4 rounded-lg border border-gold/20 bg-gold/5 space-y-3">
+                <h3 className="text-xs font-semibold text-gold">Create New ElevenLabs Agent</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[9px] text-muted uppercase block mb-1">Agent Name *</label>
+                    <input value={createForm.name} onChange={e => setCreateForm(f => ({ ...f, name: e.target.value }))}
+                      className="input text-xs w-full" placeholder="e.g. ShortStack Cold Caller" />
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase block mb-1">Max Call Duration (seconds)</label>
+                    <input type="number" value={createForm.maxDuration} onChange={e => setCreateForm(f => ({ ...f, maxDuration: parseInt(e.target.value) || 300 }))}
+                      className="input text-xs w-full" placeholder="300" />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase block mb-1">First Message</label>
+                  <input value={createForm.firstMessage} onChange={e => setCreateForm(f => ({ ...f, firstMessage: e.target.value }))}
+                    className="input text-xs w-full" placeholder="Hi! This is Alex from ShortStack..." />
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase block mb-1">System Prompt (AI Personality &amp; Script)</label>
+                  <textarea value={createForm.systemPrompt} onChange={e => setCreateForm(f => ({ ...f, systemPrompt: e.target.value }))}
+                    className="input text-xs w-full h-32 resize-y" placeholder="You are Alex, a friendly sales rep..." />
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase block mb-1">Voice ID (optional — defaults to Rachel)</label>
+                  <input value={createForm.voiceId} onChange={e => setCreateForm(f => ({ ...f, voiceId: e.target.value }))}
+                    className="input text-xs w-full" placeholder="21m00Tcm4TlvDq8ikWAM" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <button onClick={handleCreateAgent} disabled={createLoading || !createForm.name.trim()}
+                    className="px-4 py-2 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center gap-2">
+                    {createLoading ? <><Loader2 size={12} className="animate-spin" /> Creating...</> : <><Plus size={12} /> Create Agent</>}
+                  </button>
+                  <button onClick={handleLoadDefaults} className="px-3 py-2 rounded-lg border border-border text-xs text-muted hover:text-foreground transition-all">
+                    Load Default Script
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── Live Agent Cards ── */}
+            {liveAgents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {liveAgents.map((agent: Record<string, unknown>) => {
+                  const agentId = (agent.agent_id || agent.id || "") as string;
+                  const name = (agent.name || "Unnamed Agent") as string;
+                  const convConfig = agent.conversation_config as Record<string, unknown> | undefined;
+                  const agentConfig = convConfig?.agent as Record<string, unknown> | undefined;
+                  const ttsConfig = convConfig?.tts as Record<string, unknown> | undefined;
+                  const language = (agentConfig?.language || "en") as string;
+                  const voiceId = (ttsConfig?.voice_id || "default") as string;
+                  return (
+                    <div key={agentId} className="p-3 rounded-lg border border-purple-500/20 bg-purple-500/5 transition-all">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                            <Phone size={14} className="text-purple-400" />
+                          </div>
+                          <div>
+                            <p className="text-[11px] font-semibold">{name}</p>
+                            <p className="text-[9px] text-muted font-mono">{agentId.slice(0, 16)}...</p>
+                          </div>
+                        </div>
+                        <button onClick={() => handleDeleteAgent(agentId)}
+                          className="p-1.5 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 text-[9px] text-muted">
+                        <div><span className="block text-[8px] uppercase">Language</span><span className="text-foreground font-mono">{language}</span></div>
+                        <div><span className="block text-[8px] uppercase">Voice</span><span className="text-foreground font-mono">{voiceId.slice(0, 10)}</span></div>
+                        <div><span className="block text-[8px] uppercase">Status</span><span className="text-green-400 font-mono">Live</span></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : !apiLoading ? (
+              <div className="p-6 text-center border border-dashed border-border rounded-lg">
+                <Phone size={24} className="text-muted mx-auto mb-2" />
+                <p className="text-xs text-muted mb-2">No agents found on ElevenLabs</p>
+                <button onClick={() => { setShowCreateForm(true); handleLoadDefaults(); }}
+                  className="text-[10px] px-3 py-1.5 bg-gold/10 text-gold rounded-lg border border-gold/20 hover:bg-gold/20 transition-all">
+                  Create Your First Agent
+                </button>
+              </div>
+            ) : null}
+          </div>
+
+          {/* ── Demo Agents (local state) ── */}
+          <div className="card p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm font-semibold flex items-center gap-2"><Phone size={14} /> Quick Agent Profiles <span className="text-[9px] text-muted font-normal">(local config)</span></h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {agents.map(agent => (
@@ -279,21 +508,42 @@ export default function ElevenAgentsPage() {
             </div>
           </div>
 
-          {/* Recent Calls Preview */}
+          {/* ── Recent Conversations from API ── */}
           <div className="card p-4">
-            <h2 className="text-sm font-semibold mb-3">Recent Calls</h2>
-            <div className="space-y-1.5">
-              {MOCK_CALLS.slice(0, 5).map(call => (
-                <div key={call.id} className="flex items-center gap-3 p-2 rounded-lg border border-border text-[10px]">
-                  <span className={`w-2 h-2 rounded-full ${call.sentiment === "positive" ? "bg-green-400" : call.sentiment === "negative" ? "bg-red-400" : "bg-yellow-400"}`} />
-                  <span className="font-medium w-32">{call.contactName}</span>
-                  <span className="text-muted font-mono w-28">{call.phone}</span>
-                  <span className="text-muted w-12">{formatDuration(call.duration)}</span>
-                  <span className={`px-1.5 py-0.5 rounded text-[8px] ${outcomeColors[call.outcome]}`}>{call.outcome.replace("_", " ")}</span>
-                  <span className="text-muted ml-auto">{call.startTime}</span>
-                </div>
-              ))}
-            </div>
+            <h2 className="text-sm font-semibold mb-3">Recent Conversations {liveConversations.length > 0 && <span className="text-[9px] text-muted font-normal">({liveConversations.length} from API)</span>}</h2>
+            {liveConversations.length > 0 ? (
+              <div className="space-y-1.5">
+                {liveConversations.slice(0, 10).map((convo: Record<string, unknown>, i: number) => {
+                  const convId = (convo.conversation_id || convo.id || "") as string;
+                  const status = (convo.status || "unknown") as string;
+                  const agentId = (convo.agent_id || "") as string;
+                  return (
+                    <div key={convId || i} className="flex items-center gap-3 p-2 rounded-lg border border-border text-[10px]">
+                      <span className={`w-2 h-2 rounded-full ${status === "done" ? "bg-green-400" : status === "failed" ? "bg-red-400" : "bg-yellow-400"}`} />
+                      <span className="font-mono text-muted w-40 truncate">{convId}</span>
+                      <span className="text-muted w-24 truncate">Agent: {agentId.slice(0, 8)}...</span>
+                      <span className={`px-1.5 py-0.5 rounded text-[8px] ${
+                        status === "done" ? "bg-green-500/10 text-green-400" : status === "failed" ? "bg-red-500/10 text-red-400" : "bg-yellow-500/10 text-yellow-400"
+                      }`}>{status}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {MOCK_CALLS.slice(0, 5).map(call => (
+                  <div key={call.id} className="flex items-center gap-3 p-2 rounded-lg border border-border text-[10px]">
+                    <span className={`w-2 h-2 rounded-full ${call.sentiment === "positive" ? "bg-green-400" : call.sentiment === "negative" ? "bg-red-400" : "bg-yellow-400"}`} />
+                    <span className="font-medium w-32">{call.contactName}</span>
+                    <span className="text-muted font-mono w-28">{call.phone}</span>
+                    <span className="text-muted w-12">{formatDuration(call.duration)}</span>
+                    <span className={`px-1.5 py-0.5 rounded text-[8px] ${outcomeColors[call.outcome]}`}>{call.outcome.replace("_", " ")}</span>
+                    <span className="text-muted ml-auto">{call.startTime}</span>
+                  </div>
+                ))}
+                <p className="text-[9px] text-muted text-center mt-2">Showing demo data — create an agent and make calls to see live data</p>
+              </div>
+            )}
           </div>
         </div>
       )}

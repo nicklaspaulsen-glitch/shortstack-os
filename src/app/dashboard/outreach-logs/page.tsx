@@ -164,7 +164,7 @@ export default function OutreachLogsPage() {
       await fetch("/api/outreach/entries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "delete", entry_ids: [...selectedIds] }),
+        body: JSON.stringify({ action: "delete", entry_ids: Array.from(selectedIds) }),
       });
       setSelectedIds(new Set());
       fetchEntries();
