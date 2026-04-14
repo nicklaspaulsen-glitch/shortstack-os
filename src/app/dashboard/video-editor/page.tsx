@@ -17,12 +17,22 @@ import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 const VIDEO_TYPES = [
   { id: "reel", name: "Reel / TikTok", aspect: "9:16", duration: 30, icon: <Camera size={14} />, desc: "Vertical short-form" },
   { id: "youtube", name: "YouTube Video", aspect: "16:9", duration: 60, icon: <Monitor size={14} />, desc: "Horizontal long-form" },
+  { id: "youtube_short", name: "YouTube Short", aspect: "9:16", duration: 60, icon: <Film size={14} />, desc: "Vertical YouTube format" },
   { id: "ad", name: "Ad Creative", aspect: "1:1", duration: 15, icon: <Zap size={14} />, desc: "Square ad format" },
   { id: "story", name: "Story", aspect: "9:16", duration: 15, icon: <Film size={14} />, desc: "Full-screen ephemeral" },
   { id: "explainer", name: "Explainer", aspect: "16:9", duration: 90, icon: <BookOpen size={14} />, desc: "Educational walkthrough" },
   { id: "testimonial", name: "Testimonial", aspect: "1:1", duration: 30, icon: <Mic size={14} />, desc: "Client success story" },
   { id: "product_demo", name: "Product Demo", aspect: "16:9", duration: 45, icon: <Eye size={14} />, desc: "Feature showcase" },
   { id: "carousel_video", name: "Carousel Video", aspect: "1:1", duration: 60, icon: <Layers size={14} />, desc: "Multi-slide video" },
+  { id: "podcast_clip", name: "Podcast Clip", aspect: "1:1", duration: 60, icon: <Mic size={14} />, desc: "Audio waveform + captions" },
+  { id: "before_after", name: "Before / After", aspect: "9:16", duration: 20, icon: <Scissors size={14} />, desc: "Side-by-side comparison" },
+  { id: "countdown", name: "Countdown/Reveal", aspect: "9:16", duration: 15, icon: <Clock size={14} />, desc: "Suspense + reveal" },
+  { id: "tutorial", name: "Tutorial/How-To", aspect: "16:9", duration: 120, icon: <BookOpen size={14} />, desc: "Step-by-step guide" },
+  { id: "vlog", name: "Vlog Style", aspect: "16:9", duration: 180, icon: <Camera size={14} />, desc: "Personal/behind scenes" },
+  { id: "promo", name: "Promo Video", aspect: "16:9", duration: 30, icon: <Zap size={14} />, desc: "High-energy promotion" },
+  { id: "slideshow", name: "Photo Slideshow", aspect: "1:1", duration: 30, icon: <Layers size={14} />, desc: "Image + music sequence" },
+  { id: "lyric_video", name: "Lyric/Quote Video", aspect: "9:16", duration: 30, icon: <Wand2 size={14} />, desc: "Animated text + bg" },
+  { id: "reaction", name: "Reaction Video", aspect: "9:16", duration: 30, icon: <Eye size={14} />, desc: "Split screen react" },
 ];
 
 const STYLES = [
@@ -34,6 +44,18 @@ const STYLES = [
   { id: "corporate", name: "Corporate", desc: "Professional, trust-focused" },
   { id: "retro", name: "Retro / Y2K", desc: "Nostalgic, colorful, playful" },
   { id: "cinematic", name: "Cinematic", desc: "Film grain, moody lighting" },
+  { id: "glassmorphism", name: "Glassmorphism", desc: "Frosted glass, blur effects" },
+  { id: "brutalist", name: "Brutalist", desc: "Raw, bold typography" },
+  { id: "3d-depth", name: "3D Depth", desc: "Parallax, layered depth" },
+  { id: "anime", name: "Anime / Manga", desc: "Japanese animation style" },
+  { id: "vaporwave", name: "Vaporwave", desc: "Purple/pink retro aesthetic" },
+  { id: "luxury", name: "Luxury / Gold", desc: "Dark + gold, premium feel" },
+  { id: "organic", name: "Organic / Nature", desc: "Earth tones, natural feel" },
+  { id: "glitch", name: "Glitch Art", desc: "Digital distortion effects" },
+  { id: "pop-art", name: "Pop Art", desc: "Bold colors, comic style" },
+  { id: "watercolor", name: "Watercolor", desc: "Soft painted aesthetic" },
+  { id: "newspaper", name: "Newspaper / Editorial", desc: "Print media look" },
+  { id: "cyberpunk", name: "Cyberpunk", desc: "Futuristic neon dystopia" },
 ];
 
 const MUSIC_MOODS = [
@@ -44,6 +66,15 @@ const MUSIC_MOODS = [
   { id: "corporate", name: "Corporate", emoji: "💼" },
   { id: "trendy", name: "Trendy/Pop", emoji: "🔥" },
   { id: "emotional", name: "Emotional", emoji: "❤️" },
+  { id: "lofi", name: "Lo-Fi", emoji: "🎧" },
+  { id: "cinematic", name: "Cinematic", emoji: "🎞️" },
+  { id: "edm", name: "EDM/Electronic", emoji: "⚡" },
+  { id: "hip-hop", name: "Hip-Hop", emoji: "🎤" },
+  { id: "acoustic", name: "Acoustic", emoji: "🎸" },
+  { id: "jazz", name: "Jazz", emoji: "🎷" },
+  { id: "ambient", name: "Ambient", emoji: "🌊" },
+  { id: "epic", name: "Epic/Orchestral", emoji: "🎻" },
+  { id: "funk", name: "Funk/Groove", emoji: "🕺" },
   { id: "none", name: "No Music", emoji: "🔇" },
 ];
 
@@ -53,6 +84,13 @@ const CAPTION_STYLES = [
   { id: "word_highlight", name: "Word-by-Word Highlight" },
   { id: "centered_bold", name: "Centered Bold" },
   { id: "karaoke", name: "Karaoke Style" },
+  { id: "typewriter", name: "Typewriter Effect" },
+  { id: "bounce", name: "Bounce Animation" },
+  { id: "gradient_text", name: "Gradient Text" },
+  { id: "neon_glow", name: "Neon Glow Text" },
+  { id: "handwritten", name: "Handwritten Style" },
+  { id: "subtitle_bar", name: "Subtitle Bar (Netflix)" },
+  { id: "pop_in", name: "Pop-In Words" },
 ];
 
 interface StoryboardScene {

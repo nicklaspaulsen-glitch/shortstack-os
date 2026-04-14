@@ -13,7 +13,8 @@ import {
   MessageSquare, Sparkles, Send, Clock, CheckCircle,
   Loader, Settings, ArrowRight, Globe, Film,
   Briefcase, Lightbulb, Video, LayoutGrid, FileText as FileTextIcon,
-  ToggleLeft, ToggleRight, Zap, Shield, Activity, Hash
+  ToggleLeft, ToggleRight, Zap, Shield, Activity, Hash,
+  Copy, Layers
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -37,7 +38,7 @@ export default function SocialManagerPage() {
   const [posting, setPosting] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [weekConfig, setWeekConfig] = useState({ posts_per_day: 1, tone: "professional yet approachable", topics: "" });
-  const [tab, setTab] = useState<"dashboard" | "scheduled" | "published" | "config">("dashboard");
+  const [tab, setTab] = useState<"dashboard" | "calendar" | "scheduled" | "published" | "hashtags" | "config">("dashboard");
   const [suggestions, setSuggestions] = useState<Array<{ id: string; description: string; status: string; metadata: Record<string, unknown>; created_at: string }>>([]);
   const [autopilotConfig, setAutopilotConfig] = useState<Record<string, unknown>>({});
   const [savingConfig, setSavingConfig] = useState(false);
@@ -265,10 +266,10 @@ export default function SocialManagerPage() {
 
       {/* Tabs */}
       <div className="tab-group w-fit">
-        {(["dashboard", "scheduled", "published", "config"] as const).map(t => (
+        {(["dashboard", "calendar", "scheduled", "published", "hashtags", "config"] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={tab === t ? "tab-item-active" : "tab-item-inactive"}>
-            {t === "dashboard" ? "Dashboard" : t === "scheduled" ? `Queue (${scheduledPosts.length})` : t === "published" ? "Published" : "Settings"}
+            {t === "dashboard" ? "Dashboard" : t === "calendar" ? "Calendar" : t === "scheduled" ? `Queue (${scheduledPosts.length})` : t === "published" ? "Published" : t === "hashtags" ? "Hashtags" : "Settings"}
           </button>
         ))}
       </div>
@@ -412,6 +413,204 @@ export default function SocialManagerPage() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Calendar Tab */}
+      {tab === "calendar" && (() => {
+        const today = new Date();
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+        const days = Array.from({ length: 7 }, (_, i) => {
+          const d = new Date(startOfWeek);
+          d.setDate(startOfWeek.getDate() + i);
+          return d;
+        });
+        const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const allPosts = [...scheduledPosts, ...recentPosts];
+
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold">Content Calendar — This Week</h2>
+              <button onClick={generateWeek} disabled={generating}
+                className="btn-primary text-xs flex items-center gap-1.5">
+                {generating ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                Fill Week with AI
+              </button>
+            </div>
+
+            {/* Weekly grid */}
+            <div className="grid grid-cols-7 gap-2">
+              {days.map((day, i) => {
+                const dayStr = day.toISOString().split("T")[0];
+                const isToday = dayStr === today.toISOString().split("T")[0];
+                const dayPosts = allPosts.filter(p => p.scheduled_at?.startsWith(dayStr));
+
+                return (
+                  <div key={i} className={`rounded-xl border p-2.5 min-h-[160px] ${
+                    isToday ? "border-gold/30 bg-gold/[0.03]" : "border-border bg-surface"
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className={`text-[10px] font-semibold ${isToday ? "text-gold" : "text-muted"}`}>
+                        {dayNames[i]}
+                      </span>
+                      <span className={`text-[10px] font-mono ${isToday ? "text-gold" : "text-muted"}`}>
+                        {day.getDate()}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      {dayPosts.map(post => (
+                        <div key={post.id} className={`p-1.5 rounded-lg text-[9px] cursor-pointer transition-all hover:scale-[1.02] ${
+                          post.status === "published"
+                            ? "bg-success/10 border border-success/20 text-success"
+                            : "bg-gold/5 border border-gold/15 text-foreground"
+                        }`}>
+                          <div className="flex items-center gap-1 mb-0.5">
+                            {PLATFORM_ICONS[post.platform] || <Globe size={8} />}
+                            <span className="capitalize font-medium">{post.platform}</span>
+                          </div>
+                          <p className="truncate">{post.title}</p>
+                        </div>
+                      ))}
+                      {dayPosts.length === 0 && (
+                        <p className="text-[8px] text-muted/40 text-center mt-6">Empty</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Content pillars */}
+            <div className="card">
+              <h3 className="section-header flex items-center gap-2 mb-3">
+                <Layers size={13} className="text-gold" /> Content Pillars
+              </h3>
+              <p className="text-[10px] text-muted mb-3">Balanced content strategy across different post types</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {[
+                  { name: "Educational", desc: "Tips, how-tos, industry insights", color: "text-blue-400", bg: "bg-blue-400/10" },
+                  { name: "Social Proof", desc: "Reviews, testimonials, case studies", color: "text-success", bg: "bg-success/10" },
+                  { name: "Behind the Scenes", desc: "Team, process, day-in-the-life", color: "text-purple-400", bg: "bg-purple-400/10" },
+                  { name: "Promotional", desc: "Offers, CTAs, product features", color: "text-gold", bg: "bg-gold/10" },
+                  { name: "Engagement", desc: "Polls, questions, challenges", color: "text-pink-400", bg: "bg-pink-400/10" },
+                  { name: "Trending", desc: "Memes, trends, cultural moments", color: "text-orange-400", bg: "bg-orange-400/10" },
+                  { name: "Storytelling", desc: "Client stories, founder journey", color: "text-cyan-400", bg: "bg-cyan-400/10" },
+                  { name: "Value Bombs", desc: "Quick wins, cheat sheets, lists", color: "text-emerald-400", bg: "bg-emerald-400/10" },
+                ].map(pillar => (
+                  <div key={pillar.name} className={`p-3 rounded-xl border border-border hover:border-gold/10 transition-all`}>
+                    <div className={`w-7 h-7 ${pillar.bg} rounded-lg flex items-center justify-center mb-1.5`}>
+                      <Sparkles size={12} className={pillar.color} />
+                    </div>
+                    <p className="text-[10px] font-semibold">{pillar.name}</p>
+                    <p className="text-[8px] text-muted">{pillar.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Best posting times */}
+            <div className="card">
+              <h3 className="section-header flex items-center gap-2 mb-3">
+                <Clock size={13} className="text-gold" /> Best Posting Times
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {[
+                  { platform: "Instagram", times: ["9:00 AM", "12:00 PM", "5:00 PM"], days: "Tue, Thu, Sat" },
+                  { platform: "TikTok", times: ["7:00 AM", "10:00 AM", "7:00 PM"], days: "Mon, Wed, Fri" },
+                  { platform: "LinkedIn", times: ["8:00 AM", "12:00 PM", "5:30 PM"], days: "Tue, Wed, Thu" },
+                  { platform: "Facebook", times: ["9:00 AM", "1:00 PM", "4:00 PM"], days: "Wed, Fri, Sun" },
+                  { platform: "YouTube", times: ["2:00 PM", "4:00 PM", "9:00 PM"], days: "Fri, Sat, Sun" },
+                  { platform: "Twitter/X", times: ["8:00 AM", "11:00 AM", "4:00 PM"], days: "Mon-Fri" },
+                ].map(p => (
+                  <div key={p.platform} className="p-3 bg-surface-light rounded-xl border border-border">
+                    <div className="flex items-center gap-2 mb-2">
+                      {PLATFORM_ICONS[p.platform.toLowerCase()] || <Globe size={12} />}
+                      <span className="text-xs font-semibold">{p.platform}</span>
+                    </div>
+                    <div className="space-y-1">
+                      {p.times.map(t => (
+                        <span key={t} className="inline-block text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded mr-1">{t}</span>
+                      ))}
+                    </div>
+                    <p className="text-[8px] text-muted mt-1.5">Best days: {p.days}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Hashtag Research Tab */}
+      {tab === "hashtags" && (
+        <div className="space-y-4">
+          <div className="card border-gold/10 relative overflow-hidden">
+            <div className="absolute inset-0 bg-mesh opacity-30" />
+            <div className="relative">
+              <div className="flex items-center gap-2 mb-3">
+                <Hash size={16} className="text-gold" />
+                <h2 className="text-sm font-semibold">Trending Hashtag Research</h2>
+              </div>
+              <p className="text-xs text-muted mb-4">AI-curated hashtag sets for maximum reach. Click any set to copy.</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {[
+                  { category: "Growth & Marketing", tags: ["#marketingtips", "#digitalmarketing", "#growthhacking", "#socialmediatips", "#contentcreator", "#businessgrowth", "#marketingstrategy", "#smallbusiness", "#entrepreneurlife", "#brandbuilding"] },
+                  { category: "Engagement Boosters", tags: ["#relatable", "#trending", "#viral", "#fyp", "#explore", "#instagood", "#photooftheday", "#motivation", "#inspiration", "#love"] },
+                  { category: "Industry Specific", tags: ["#agencylife", "#clientwork", "#marketingagency", "#creativeagency", "#socialmediamanager", "#contentmarketing", "#seo", "#ppc", "#branding", "#webdesign"] },
+                  { category: "Local Business", tags: ["#localbusiness", "#supportlocal", "#shoplocal", "#smallbusinessowner", "#communityover-competition", "#localmarketing", "#googlereviews", "#localseo", "#neighborhoodbusiness", "#hometown"] },
+                  { category: "Reels & Video", tags: ["#reels", "#reelsinstagram", "#tiktokviral", "#shortsvideo", "#videocontent", "#reelsviral", "#instareels", "#contentcreation", "#videoediting", "#behindthescenes"] },
+                  { category: "Call to Action", tags: ["#linkinbio", "#booknow", "#freeConsultation", "#limitedoffer", "#dmme", "#getstarted", "#learnmore", "#signupnow", "#actnow", "#dontmissout"] },
+                ].map(set => (
+                  <div key={set.category} className="p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
+                    <h4 className="text-[10px] font-semibold text-gold mb-2">{set.category}</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {set.tags.map(tag => (
+                        <button key={tag} onClick={() => { navigator.clipboard.writeText(tag); toast.success(`Copied ${tag}`); }}
+                          className="text-[9px] bg-surface px-2 py-0.5 rounded text-muted hover:text-gold hover:bg-gold/5 transition-all cursor-pointer">
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                    <button onClick={() => { navigator.clipboard.writeText(set.tags.join(" ")); toast.success("All hashtags copied!"); }}
+                      className="mt-2 text-[9px] text-gold hover:underline flex items-center gap-1">
+                      <Copy size={9} /> Copy all
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Caption templates */}
+          <div className="card">
+            <h3 className="section-header flex items-center gap-2 mb-3">
+              <FileTextIcon size={13} className="text-gold" /> Caption Templates
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {[
+                { name: "Hook + Value + CTA", template: "[HOOK that stops the scroll]\n\n[3 value points]\n\n[CTA] Save this for later!" },
+                { name: "Before/After Story", template: "Before working with us: [pain point]\nAfter: [transformation]\n\nReady for your transformation? Link in bio" },
+                { name: "Controversial Take", template: "Unpopular opinion: [bold statement]\n\nHere's why...\n[explanation]\n\nAgree or disagree? Comment below" },
+                { name: "Listicle", template: "5 [things/mistakes/secrets] that [outcome]:\n\n1.\n2.\n3.\n4.\n5.\n\nWhich one surprised you? Comment below!" },
+                { name: "Behind the Scenes", template: "POV: A day in the life at [business]\n\n[authentic moment or process]\n\nThis is what we love about what we do" },
+                { name: "Client Spotlight", template: "Huge shoutout to @[client]!\n\n[What we helped them achieve]\n[Specific result/metric]\n\nWant results like this? DM us 'GROW'" },
+              ].map(t => (
+                <div key={t.name} className="p-3 bg-surface-light rounded-xl border border-border">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <h4 className="text-[10px] font-semibold">{t.name}</h4>
+                    <button onClick={() => { navigator.clipboard.writeText(t.template); toast.success("Template copied!"); }}
+                      className="text-[9px] text-gold hover:underline flex items-center gap-1">
+                      <Copy size={9} /> Copy
+                    </button>
+                  </div>
+                  <pre className="text-[9px] text-muted whitespace-pre-wrap font-sans">{t.template}</pre>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 

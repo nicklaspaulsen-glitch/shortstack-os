@@ -82,6 +82,35 @@ const TEMPLATES: TemplatePreset[] = [
   { label: "Presentation Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "modern, clean, corporate", category: "presentations" },
   { label: "Phone Mockup", icon: <Monitor size={12} />, width: 1080, height: 1920, style: "device frame, app screenshot, professional", category: "mockups" },
   { label: "Desktop Mockup", icon: <Monitor size={12} />, width: 1920, height: 1080, style: "laptop/desktop frame, website screenshot", category: "mockups" },
+  { label: "T-Shirt Mockup", icon: <Monitor size={12} />, width: 1200, height: 1200, style: "apparel mockup, flat lay, clean background", category: "mockups" },
+  { label: "Business Card", icon: <Grid size={12} />, width: 1050, height: 600, style: "3.5x2 inches, professional, minimal, premium", category: "brochures" },
+  { label: "Flyer / Poster", icon: <FileText size={12} />, width: 1080, height: 1527, style: "A4, event flyer, bold headline, clear CTA", category: "brochures" },
+  { label: "Menu Design", icon: <FileText size={12} />, width: 1080, height: 1527, style: "restaurant menu, elegant, organized sections", category: "brochures" },
+  { label: "Invoice Template", icon: <FileText size={12} />, width: 1080, height: 1527, style: "professional invoice, clean, branded", category: "brochures" },
+  // Infographics
+  { label: "Stat Infographic", icon: <Grid size={12} />, width: 1080, height: 1920, style: "vertical, data-rich, charts, icons, numbered", category: "infographics" },
+  { label: "Timeline Infographic", icon: <Grid size={12} />, width: 1080, height: 1920, style: "chronological, milestones, connected steps", category: "infographics" },
+  { label: "Process Flow", icon: <Grid size={12} />, width: 1200, height: 800, style: "step-by-step, arrows, numbered stages", category: "infographics" },
+  { label: "Comparison Chart", icon: <Grid size={12} />, width: 1080, height: 1080, style: "side-by-side, pros/cons, feature comparison", category: "infographics" },
+  { label: "Pie Chart Visual", icon: <Grid size={12} />, width: 1080, height: 1080, style: "circular data visualization, percentage breakdown", category: "infographics" },
+  // Presentations
+  { label: "Pitch Deck Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "startup pitch, clean, data-focused, investor-ready", category: "presentations" },
+  { label: "Case Study Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "before/after results, metrics, professional", category: "presentations" },
+  { label: "Team Intro Slide", icon: <Layers size={12} />, width: 1920, height: 1080, style: "team photos, roles, grid layout", category: "presentations" },
+  // More social
+  { label: "Twitter/X Post", icon: <MessageCircle size={12} />, width: 1200, height: 675, style: "concise, bold statement, minimal design", category: "social" },
+  { label: "Threads Post", icon: <MessageCircle size={12} />, width: 1080, height: 1080, style: "text-heavy, thread-style, numbered points", category: "social" },
+  { label: "WhatsApp Status", icon: <MessageCircle size={12} />, width: 1080, height: 1920, style: "vertical, eye-catching, personal feel", category: "social" },
+  // More ads
+  { label: "TikTok Ad", icon: <Music size={12} />, width: 1080, height: 1920, style: "native TikTok feel, UGC-style, authentic", category: "ads" },
+  { label: "Story Ad (FB/IG)", icon: <Camera size={12} />, width: 1080, height: 1920, style: "full-screen, swipe-up CTA, engaging", category: "ads" },
+  { label: "Retargeting Ad", icon: <Flag size={12} />, width: 1080, height: 1080, style: "reminder-style, social proof, urgency", category: "ads" },
+  // Email
+  { label: "Newsletter Banner", icon: <Mail size={12} />, width: 600, height: 300, style: "engaging, brand colors, clear CTA", category: "email_headers" },
+  { label: "Email Footer", icon: <Mail size={12} />, width: 600, height: 150, style: "social links, contact info, minimal", category: "email_headers" },
+  // Podcast
+  { label: "Episode Art Square", icon: <Podcast size={12} />, width: 1080, height: 1080, style: "episode number, guest name, bold visual", category: "podcast_covers" },
+  { label: "Audiogram Template", icon: <Podcast size={12} />, width: 1080, height: 1080, style: "waveform, captions, speaker photo", category: "podcast_covers" },
 ];
 
 const INDUSTRY_STYLES: Record<string, string> = {
@@ -93,6 +122,18 @@ const INDUSTRY_STYLES: Record<string, string> = {
   tech: "Sleek, minimal, blue/purple gradients, futuristic, clean",
   beauty: "Elegant, soft pastels, clean typography, luxury feel",
   ecommerce: "Product-focused, clean white, lifestyle shots, aspirational",
+  automotive: "Bold, dynamic angles, metallic tones, speed & power, premium",
+  education: "Approachable, bright colors, playful yet professional, knowledge-focused",
+  finance: "Trustworthy, navy/green, charts & growth imagery, stability",
+  healthcare: "Clean, calming blues/greens, caring, professional, HIPAA-aware",
+  construction: "Industrial, bold, hard-hat imagery, progress, strength",
+  travel: "Wanderlust, vivid landscapes, adventure, golden hour, dreamy",
+  fashion: "High-contrast, editorial, runway-inspired, trendsetting, bold typography",
+  wedding: "Romantic, soft tones, elegant script fonts, floral, timeless",
+  music: "Dark, vibrant neon, concert energy, album art inspired, bold",
+  saas: "Clean UI, gradient backgrounds, screenshots, feature highlights, modern",
+  nonprofit: "Warm, community-focused, impact imagery, hopeful, mission-driven",
+  pet: "Playful, warm, cute animal photos, bright and friendly",
 };
 
 const COLOR_PALETTES = [

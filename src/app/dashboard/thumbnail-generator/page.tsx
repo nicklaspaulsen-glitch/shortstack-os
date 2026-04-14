@@ -39,6 +39,18 @@ const THUMBNAIL_STYLES = [
   { id: "news_breaking", name: "News / Breaking", desc: "Red banners, urgent", gradient: "from-red-700 to-red-500" },
   { id: "tutorial_howto", name: "Tutorial / How-To", desc: "Step indicators", gradient: "from-blue-500 to-cyan-400" },
   { id: "listicle", name: "Listicle", desc: "Numbered, grid layout", gradient: "from-orange-400 to-amber-300" },
+  { id: "split_screen", name: "Split Screen", desc: "Before/after, vs layout", gradient: "from-emerald-500 to-blue-500" },
+  { id: "neon_glow", name: "Neon Glow", desc: "Glowing text, dark bg", gradient: "from-violet-600 to-fuchsia-500" },
+  { id: "vlog_style", name: "Vlog / Casual", desc: "Authentic, personal", gradient: "from-amber-300 to-yellow-200" },
+  { id: "podcast_style", name: "Podcast", desc: "Guest faces, episode #", gradient: "from-indigo-500 to-purple-500" },
+  { id: "retro_vintage", name: "Retro / Vintage", desc: "Faded, grain, nostalgia", gradient: "from-amber-600 to-orange-400" },
+  { id: "tech_futuristic", name: "Tech / Futuristic", desc: "Circuits, blue glow, sci-fi", gradient: "from-cyan-500 to-blue-700" },
+  { id: "comic_book", name: "Comic Book", desc: "Pop art, speech bubbles", gradient: "from-yellow-400 to-red-500" },
+  { id: "luxury_premium", name: "Luxury / Premium", desc: "Black + gold, elegant", gradient: "from-yellow-600 to-amber-900" },
+  { id: "fitness_energy", name: "Fitness / Energy", desc: "Sweat, action, power", gradient: "from-red-500 to-orange-500" },
+  { id: "food_recipe", name: "Food / Recipe", desc: "Appetizing, warm tones", gradient: "from-orange-300 to-red-400" },
+  { id: "real_estate", name: "Real Estate", desc: "Property showcase, clean", gradient: "from-teal-500 to-emerald-500" },
+  { id: "gaming", name: "Gaming", desc: "Bold, dark, neon accents", gradient: "from-purple-600 to-pink-600" },
 ];
 
 const PLATFORM_SIZES = [
@@ -58,11 +70,19 @@ const COLOR_THEMES = [
   { id: "green_white", name: "Green & White", colors: ["#10B981", "#FFFFFF"] },
   { id: "purple_pink", name: "Purple & Pink", colors: ["#8B5CF6", "#EC4899"] },
   { id: "orange_yellow", name: "Orange & Yellow", colors: ["#F97316", "#EAB308"] },
+  { id: "cyan_dark", name: "Cyan & Dark", colors: ["#06B6D4", "#0F172A"] },
+  { id: "pink_white", name: "Pink & White", colors: ["#F472B6", "#FFFFFF"] },
+  { id: "navy_gold", name: "Navy & Gold", colors: ["#1E3A5F", "#D4AF37"] },
+  { id: "black_white", name: "Black & White", colors: ["#000000", "#FFFFFF"] },
+  { id: "teal_coral", name: "Teal & Coral", colors: ["#14B8A6", "#F87171"] },
+  { id: "lime_dark", name: "Lime & Dark", colors: ["#84CC16", "#1C1917"] },
 ];
 
 const MOODS = [
   "Dramatic", "Funny", "Shocking", "Inspiring",
   "Educational", "Luxurious", "Scary", "Exciting",
+  "Mysterious", "Urgent", "Calm", "Controversial",
+  "Nostalgic", "Futuristic", "Playful", "Elegant",
 ];
 
 interface ThumbnailResult {
