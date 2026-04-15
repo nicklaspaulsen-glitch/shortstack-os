@@ -45,10 +45,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const profileFetchedRef = useRef(false);
 
   const fetchProfile = async (userId: string): Promise<boolean> => {
+    // Primary: fetch via server API (reliable — uses service client, bypasses RLS)
+    try {
+      const res = await fetch(`/api/profile?t=${Date.now()}`);
+      if (res.ok) {
+        const json = await res.json();
+        if (json.profile) {
+          setProfile(json.profile);
+          localStorage.setItem("ss_profile", JSON.stringify(json.profile));
+          profileFetchedRef.current = true;
+          return true;
+        }
+      }
+    } catch {
+      console.warn("[auth] Server profile fetch failed — trying client");
+    }
+
+    // Fallback: client-side Supabase query
     try {
       const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
       if (error) {
-        console.warn("[auth] Profile fetch error:", error.message);
+        console.warn("[auth] Client profile fetch error:", error.message);
         return false;
       }
       if (data) {

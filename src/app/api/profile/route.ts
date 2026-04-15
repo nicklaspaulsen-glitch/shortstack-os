@@ -10,14 +10,33 @@ export async function GET() {
   }
 
   const service = createServiceClient();
-  const { data: profile, error } = await service
+  let { data: profile, error } = await service
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
+  // Auto-create profile if missing (first login after account creation)
   if (error || !profile) {
-    return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    const { data: created, error: createErr } = await service
+      .from("profiles")
+      .insert({
+        id: user.id,
+        email: user.email || "",
+        full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "",
+        role: user.user_metadata?.role || "admin",
+        timezone: "UTC",
+        is_active: true,
+      })
+      .select("*")
+      .single();
+
+    if (createErr || !created) {
+      console.error("[profile] Auto-create error:", createErr);
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+    profile = created;
+    console.log("[profile] Auto-created profile for", user.email);
   }
 
   return NextResponse.json({ profile }, {
