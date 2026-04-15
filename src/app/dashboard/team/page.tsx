@@ -2,78 +2,179 @@
 
 import { useState } from "react";
 import {
-  Users, Trophy, DollarSign, Briefcase,
-  Clock, MessageSquare, CheckCircle,
-  Shield, BarChart3, UserPlus, Mail, MapPin,
-  Activity, X, Search
+  Users, CheckCircle,
+  Clock,
+  Shield, BarChart3, UserPlus, Mail,
+  Activity, X, Search, Crown, Pencil,
+  Settings, Lock, Unlock,
+  AlertTriangle
 } from "lucide-react";
 
-type TeamTab = "members" | "performance" | "workload" | "activity" | "permissions";
+type TeamTab = "members" | "permissions" | "roles" | "activity" | "capacity";
 
-interface TeamMemberData {
+interface TeamMember {
   id: string;
   name: string;
   email: string;
   role: string;
   avatar: string;
   status: "online" | "away" | "offline";
-  skills: string[];
-  clients: string[];
+  lastActive: string;
+  clients: number;
   hoursThisWeek: number;
-  dealsWon: number;
-  revenue: number;
+  tasksCompleted: number;
+  tasksAssigned: number;
   joinDate: string;
-  country: string;
-  availability: Record<string, boolean>;
-  onboardingComplete: boolean;
-  onboardingChecklist: { task: string; done: boolean }[];
-  recentActivity: { action: string; time: string }[];
+  recentActions: { action: string; resource: string; time: string }[];
 }
 
-const MOCK_MEMBERS: TeamMemberData[] = [];
+type RoleId = "owner" | "admin" | "manager" | "creator" | "viewer";
 
-const ROLES = ["Founder / CEO", "Content Manager", "Video Editor", "Ads Manager", "Cold Caller", "Account Manager", "Developer", "Designer"];
+interface RoleDefinition {
+  id: RoleId;
+  label: string;
+  description: string;
+  color: string;
+  memberCount: number;
+}
 
-const PERMISSIONS: { feature: string; roles: Record<string, boolean> }[] = [
-  { feature: "View Dashboard", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": true, "Ads Manager": true, "Cold Caller": true } },
-  { feature: "Manage Clients", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": false, "Ads Manager": true, "Cold Caller": false } },
-  { feature: "Access Financials", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": false, "Cold Caller": false } },
-  { feature: "Edit Content", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": true, "Ads Manager": false, "Cold Caller": false } },
-  { feature: "Manage Ads", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": true, "Cold Caller": false } },
-  { feature: "View Reports", roles: { "Founder / CEO": true, "Content Manager": true, "Video Editor": false, "Ads Manager": true, "Cold Caller": true } },
-  { feature: "Send Invoices", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": false, "Cold Caller": false } },
-  { feature: "Manage Team", roles: { "Founder / CEO": true, "Content Manager": false, "Video Editor": false, "Ads Manager": false, "Cold Caller": false } },
+interface PermissionRow {
+  feature: string;
+  category: string;
+  owner: boolean;
+  admin: boolean;
+  manager: boolean;
+  creator: boolean;
+  viewer: boolean;
+}
+
+const MOCK_MEMBERS: TeamMember[] = [
+  {
+    id: "tm-1", name: "Alex Rivera", email: "alex@shortstack.dev", role: "owner",
+    avatar: "AR", status: "online", lastActive: "Now", clients: 24, hoursThisWeek: 42,
+    tasksCompleted: 18, tasksAssigned: 22, joinDate: "Jan 2025",
+    recentActions: [
+      { action: "Updated billing", resource: "Workspace Settings", time: "5 min ago" },
+      { action: "Approved content", resource: "FitBrand Social Post", time: "1 hour ago" },
+      { action: "Invited member", resource: "Team", time: "3 hours ago" },
+    ]
+  },
+  {
+    id: "tm-2", name: "Sarah Chen", email: "sarah@shortstack.dev", role: "admin",
+    avatar: "SC", status: "online", lastActive: "2 min ago", clients: 12, hoursThisWeek: 38,
+    tasksCompleted: 24, tasksAssigned: 28, joinDate: "Feb 2025",
+    recentActions: [
+      { action: "Created report", resource: "Monthly Analytics", time: "30 min ago" },
+      { action: "Assigned client", resource: "Peak Gym to Mike", time: "2 hours ago" },
+    ]
+  },
+  {
+    id: "tm-3", name: "Mike Johnson", email: "mike@shortstack.dev", role: "manager",
+    avatar: "MJ", status: "away", lastActive: "15 min ago", clients: 8, hoursThisWeek: 35,
+    tasksCompleted: 14, tasksAssigned: 20, joinDate: "Mar 2025",
+    recentActions: [
+      { action: "Published content", resource: "BrightSmile Blog", time: "1 hour ago" },
+      { action: "Sent report", resource: "Weekly Client Report", time: "Yesterday" },
+    ]
+  },
+  {
+    id: "tm-4", name: "Lisa Park", email: "lisa@shortstack.dev", role: "creator",
+    avatar: "LP", status: "online", lastActive: "5 min ago", clients: 6, hoursThisWeek: 44,
+    tasksCompleted: 31, tasksAssigned: 35, joinDate: "Apr 2025",
+    recentActions: [
+      { action: "Created carousel", resource: "UrbanEats Instagram", time: "20 min ago" },
+      { action: "Edited video", resource: "FitBrand Reel #12", time: "2 hours ago" },
+    ]
+  },
+  {
+    id: "tm-5", name: "Tom Bradley", email: "tom@shortstack.dev", role: "viewer",
+    avatar: "TB", status: "offline", lastActive: "2 days ago", clients: 0, hoursThisWeek: 5,
+    tasksCompleted: 0, tasksAssigned: 0, joinDate: "Apr 2026",
+    recentActions: [
+      { action: "Viewed dashboard", resource: "Analytics", time: "2 days ago" },
+    ]
+  },
 ];
 
-const STATUS_COLORS = { online: "bg-emerald-400", away: "bg-yellow-400", offline: "bg-gray-500" };
+const ROLE_DEFINITIONS: RoleDefinition[] = [
+  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#C9A84C", memberCount: 1 },
+  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#3b82f6", memberCount: 1 },
+  { id: "manager", label: "Manager", description: "Client management, reports, content creation and approval", color: "#8b5cf6", memberCount: 2 },
+  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#10b981", memberCount: 3 },
+  { id: "viewer", label: "Viewer", description: "Read-only access to dashboards and reports", color: "#6b7280", memberCount: 1 },
+];
+
+const PERMISSIONS: PermissionRow[] = [
+  { feature: "View Dashboard", category: "Core", owner: true, admin: true, manager: true, creator: true, viewer: true },
+  { feature: "View Analytics", category: "Core", owner: true, admin: true, manager: true, creator: false, viewer: true },
+  { feature: "Manage Clients", category: "Clients", owner: true, admin: true, manager: true, creator: false, viewer: false },
+  { feature: "Delete Clients", category: "Clients", owner: true, admin: true, manager: false, creator: false, viewer: false },
+  { feature: "Create Content", category: "Content", owner: true, admin: true, manager: true, creator: true, viewer: false },
+  { feature: "Approve Content", category: "Content", owner: true, admin: true, manager: true, creator: false, viewer: false },
+  { feature: "Publish Content", category: "Content", owner: true, admin: true, manager: true, creator: false, viewer: false },
+  { feature: "View Reports", category: "Reports", owner: true, admin: true, manager: true, creator: false, viewer: true },
+  { feature: "Export Reports", category: "Reports", owner: true, admin: true, manager: true, creator: false, viewer: false },
+  { feature: "Generate Reports", category: "Reports", owner: true, admin: true, manager: true, creator: false, viewer: false },
+  { feature: "Access Financials", category: "Finance", owner: true, admin: false, manager: false, creator: false, viewer: false },
+  { feature: "Manage Billing", category: "Finance", owner: true, admin: false, manager: false, creator: false, viewer: false },
+  { feature: "Send Invoices", category: "Finance", owner: true, admin: true, manager: false, creator: false, viewer: false },
+  { feature: "Manage Team", category: "Admin", owner: true, admin: true, manager: false, creator: false, viewer: false },
+  { feature: "Manage Integrations", category: "Admin", owner: true, admin: true, manager: false, creator: false, viewer: false },
+  { feature: "Workspace Settings", category: "Admin", owner: true, admin: true, manager: false, creator: false, viewer: false },
+  { feature: "Delete Workspace", category: "Admin", owner: true, admin: false, manager: false, creator: false, viewer: false },
+  { feature: "View Audit Log", category: "Security", owner: true, admin: true, manager: false, creator: false, viewer: false },
+  { feature: "API Access", category: "Security", owner: true, admin: true, manager: false, creator: false, viewer: false },
+];
+
+const STATUS_COLORS: Record<string, string> = { online: "bg-emerald-400", away: "bg-yellow-400", offline: "bg-gray-500" };
+
+const ROLE_COLORS: Record<string, string> = {
+  owner: "bg-gold/10 text-gold border-gold/20",
+  admin: "bg-blue-400/10 text-blue-400 border-blue-400/20",
+  manager: "bg-purple-400/10 text-purple-400 border-purple-400/20",
+  creator: "bg-emerald-400/10 text-emerald-400 border-emerald-400/20",
+  viewer: "bg-gray-400/10 text-gray-400 border-gray-400/20",
+};
 
 export default function TeamPage() {
   const [tab, setTab] = useState<TeamTab>("members");
-  const [members] = useState<TeamMemberData[]>(MOCK_MEMBERS);
+  const [members] = useState<TeamMember[]>(MOCK_MEMBERS);
   const [showInvite, setShowInvite] = useState(false);
+  const [showCustomRole, setShowCustomRole] = useState(false);
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [inviteForm, setInviteForm] = useState({ name: "", email: "", role: ROLES[0] });
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [expandedChat, setExpandedChat] = useState<string | null>(null);
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [inviteForm, setInviteForm] = useState({ name: "", email: "", role: "creator" as RoleId });
+  const [customRoleName, setCustomRoleName] = useState("");
+  const [customPermissions, setCustomPermissions] = useState<Record<string, boolean>>({});
 
-  const totalRevenue = members.reduce((s, m) => s + m.revenue, 0);
-  const totalDeals = members.reduce((s, m) => s + m.dealsWon, 0);
-  const avgHours = members.length > 0 ? Math.round(members.reduce((s, m) => s + m.hoursThisWeek, 0) / members.length) : 0;
   const onlineCount = members.filter(m => m.status === "online").length;
+  const totalTasks = members.reduce((s, m) => s + m.tasksAssigned, 0);
+  const completedTasks = members.reduce((s, m) => s + m.tasksCompleted, 0);
+  const avgHours = members.length > 0 ? Math.round(members.reduce((s, m) => s + m.hoursThisWeek, 0) / members.length) : 0;
 
-  const filteredMembers = members.filter(m =>
-    m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    m.role.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredMembers = members.filter(m => {
+    const matchesSearch = m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      m.role.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = roleFilter === "all" || m.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
 
   const TABS: { id: TeamTab; label: string; icon: React.ReactNode }[] = [
     { id: "members", label: "Members", icon: <Users size={13} /> },
-    { id: "performance", label: "Performance", icon: <Trophy size={13} /> },
-    { id: "workload", label: "Workload", icon: <BarChart3 size={13} /> },
-    { id: "activity", label: "Activity", icon: <Activity size={13} /> },
     { id: "permissions", label: "Permissions", icon: <Shield size={13} /> },
+    { id: "roles", label: "Roles", icon: <Crown size={13} /> },
+    { id: "activity", label: "Access Log", icon: <Activity size={13} /> },
+    { id: "capacity", label: "Capacity", icon: <BarChart3 size={13} /> },
   ];
+
+  // Group permissions by category
+  const permCategories = PERMISSIONS.reduce<Record<string, PermissionRow[]>>((acc, p) => {
+    if (!acc[p.category]) acc[p.category] = [];
+    acc[p.category].push(p);
+    return acc;
+  }, {});
 
   return (
     <div className="fade-in space-y-5">
@@ -81,7 +182,7 @@ export default function TeamPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2"><Users size={18} className="text-gold" /> Team</h1>
-          <p className="text-xs text-muted mt-0.5">{members.length} members - {onlineCount} online</p>
+          <p className="text-xs text-muted mt-0.5">{members.length} members &middot; {onlineCount} online</p>
         </div>
         <button onClick={() => setShowInvite(true)} className="btn-primary text-xs flex items-center gap-1.5">
           <UserPlus size={12} /> Invite Member
@@ -91,19 +192,19 @@ export default function TeamPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
         <div className="card p-3">
-          <div className="flex items-center gap-1.5 mb-1"><Users size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Active Members</p></div>
+          <div className="flex items-center gap-1.5 mb-1"><Users size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Team Size</p></div>
           <p className="text-lg font-bold">{members.length}</p>
           <p className="text-[10px] text-emerald-400">{onlineCount} online now</p>
         </div>
         <div className="card p-3">
-          <div className="flex items-center gap-1.5 mb-1"><Trophy size={12} className="text-gold" /><p className="text-[10px] text-muted uppercase tracking-wider">Total Deals</p></div>
-          <p className="text-lg font-bold text-gold">{totalDeals}</p>
-          <p className="text-[10px] text-muted">this quarter</p>
+          <div className="flex items-center gap-1.5 mb-1"><Shield size={12} className="text-purple-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Roles</p></div>
+          <p className="text-lg font-bold text-purple-400">{ROLE_DEFINITIONS.length}</p>
+          <p className="text-[10px] text-muted">defined roles</p>
         </div>
         <div className="card p-3">
-          <div className="flex items-center gap-1.5 mb-1"><DollarSign size={12} className="text-emerald-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Revenue</p></div>
-          <p className="text-lg font-bold text-emerald-400">${totalRevenue.toLocaleString()}</p>
-          <p className="text-[10px] text-muted">team-generated</p>
+          <div className="flex items-center gap-1.5 mb-1"><CheckCircle size={12} className="text-emerald-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Tasks Done</p></div>
+          <p className="text-lg font-bold text-emerald-400">{completedTasks}/{totalTasks}</p>
+          <p className="text-[10px] text-muted">this week</p>
         </div>
         <div className="card p-3">
           <div className="flex items-center gap-1.5 mb-1"><Clock size={12} className="text-blue-400" /><p className="text-[10px] text-muted uppercase tracking-wider">Avg Hours/Week</p></div>
@@ -124,281 +225,290 @@ export default function TeamPage() {
         ))}
       </div>
 
-      {/* Members Tab */}
+      {/* ═══ MEMBERS TAB ═══ */}
       {tab === "members" && (
         <div className="space-y-4">
-          <div className="relative">
-            <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
-            <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              className="input w-full text-xs pl-8" placeholder="Search team members..." />
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="relative flex-1 min-w-[200px]">
+              <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
+              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                className="input w-full text-xs pl-8" placeholder="Search members..." />
+            </div>
+            <div className="flex gap-1 bg-surface rounded-lg p-0.5">
+              <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-gold/20 text-gold" : "text-muted"}`}>All</button>
+              {ROLE_DEFINITIONS.map(r => (
+                <button key={r.id} onClick={() => setRoleFilter(r.id)} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === r.id ? "bg-gold/20 text-gold" : "text-muted"}`}>{r.label}</button>
+              ))}
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {filteredMembers.length === 0 && (
-              <div className="col-span-full text-center py-12 text-muted text-xs">No team members yet. Invite someone to get started.</div>
-            )}
-            {filteredMembers.map(member => (
-              <div key={member.id} className="card p-4 hover:border-gold/10 transition-all cursor-pointer" onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}>
-                <div className="flex items-start gap-3">
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-lg font-bold text-gold">{member.avatar}</div>
-                    <div className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-[#0a0a0a] ${STATUS_COLORS[member.status]}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold truncate">{member.name}</p>
-                    <p className="text-[10px] text-gold">{member.role}</p>
-                    <p className="text-[10px] text-muted flex items-center gap-1"><Mail size={8} /> {member.email}</p>
-                    <p className="text-[10px] text-muted flex items-center gap-1"><MapPin size={8} /> {member.country}</p>
-                  </div>
-                </div>
-                {/* Skills */}
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {member.skills.map(skill => (
-                    <span key={skill} className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/5 text-gold border border-gold/10">{skill}</span>
-                  ))}
-                </div>
-                {/* Quick Stats */}
-                <div className="grid grid-cols-3 gap-2 mt-3 text-center">
-                  <div className="p-1.5 rounded-lg bg-surface-light">
-                    <p className="text-xs font-bold">{member.clients.length}</p>
-                    <p className="text-[8px] text-muted">Clients</p>
-                  </div>
-                  <div className="p-1.5 rounded-lg bg-surface-light">
-                    <p className="text-xs font-bold">{member.hoursThisWeek}h</p>
-                    <p className="text-[8px] text-muted">This Week</p>
-                  </div>
-                  <div className="p-1.5 rounded-lg bg-surface-light">
-                    <p className="text-xs font-bold text-emerald-400">{member.dealsWon}</p>
-                    <p className="text-[8px] text-muted">Deals</p>
-                  </div>
-                </div>
-                {/* Expanded Details */}
-                {selectedMember === member.id && (
-                  <div className="mt-3 pt-3 border-t border-border space-y-3">
-                    {/* Availability Calendar */}
-                    <div>
-                      <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Availability</p>
-                      <div className="flex gap-1">
-                        {Object.entries(member.availability).map(([day, available]) => (
-                          <div key={day} className={`flex-1 text-center py-1 rounded text-[9px] ${available ? "bg-emerald-400/10 text-emerald-400" : "bg-surface-light text-muted/30"}`}>
-                            {day}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Client Assignments */}
-                    <div>
-                      <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Client Assignments</p>
-                      {member.clients.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {member.clients.map(c => (
-                            <span key={c} className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400">{c}</span>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-[9px] text-muted">No clients assigned</p>
-                      )}
-                    </div>
-                    {/* Onboarding Checklist */}
-                    {!member.onboardingComplete && (
-                      <div>
-                        <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Onboarding Progress</p>
-                        <div className="space-y-1">
-                          {member.onboardingChecklist.map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-[10px]">
-                              <CheckCircle size={10} className={item.done ? "text-emerald-400" : "text-muted/30"} />
-                              <span className={item.done ? "text-muted line-through" : ""}>{item.task}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="mt-1.5">
-                          <div className="h-1.5 rounded-full bg-surface-light overflow-hidden">
-                            <div className="h-full bg-gold rounded-full" style={{ width: `${(member.onboardingChecklist.filter(i => i.done).length / member.onboardingChecklist.length) * 100}%` }} />
-                          </div>
-                          <p className="text-[9px] text-muted mt-0.5">{member.onboardingChecklist.filter(i => i.done).length}/{member.onboardingChecklist.length} complete</p>
-                        </div>
-                      </div>
-                    )}
-                    {/* Recent Activity */}
-                    <div>
-                      <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Recent Activity</p>
-                      {member.recentActivity.map((act, idx) => (
-                        <div key={idx} className="flex items-center gap-2 text-[10px] py-1">
-                          <Activity size={9} className="text-gold shrink-0" />
-                          <span className="flex-1">{act.action}</span>
-                          <span className="text-muted">{act.time}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+
+          {/* Members Table */}
+          <div className="card overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Member</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Role</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">Status</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden lg:table-cell">Last Active</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden lg:table-cell">Clients</th>
+                  <th className="text-right py-2.5 px-3 text-muted font-semibold text-[10px]">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMembers.length === 0 && (
+                  <tr><td colSpan={6} className="text-center py-12 text-muted">No members match your search.</td></tr>
                 )}
+                {filteredMembers.map(member => (
+                  <tr key={member.id} className="border-b border-border/50 hover:bg-surface-light/50 transition-colors cursor-pointer"
+                    onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}>
+                    <td className="py-2.5 px-3">
+                      <div className="flex items-center gap-2.5">
+                        <div className="relative">
+                          <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-[10px] font-bold text-gold">{member.avatar}</div>
+                          <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface)] ${STATUS_COLORS[member.status]}`} />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold">{member.name}</p>
+                          <p className="text-[9px] text-muted">{member.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-2.5 px-3">
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium border ${ROLE_COLORS[member.role] || "bg-surface-light text-muted border-border"}`}>
+                        {member.role}
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-3 hidden md:table-cell">
+                      <span className={`text-[9px] capitalize ${member.status === "online" ? "text-emerald-400" : member.status === "away" ? "text-yellow-400" : "text-gray-400"}`}>
+                        {member.status}
+                      </span>
+                    </td>
+                    <td className="py-2.5 px-3 text-[10px] text-muted hidden lg:table-cell">{member.lastActive}</td>
+                    <td className="py-2.5 px-3 text-[10px] font-medium hidden lg:table-cell">{member.clients}</td>
+                    <td className="py-2.5 px-3 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" onClick={e => e.stopPropagation()}><Pencil size={11} /></button>
+                        <button className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" onClick={e => e.stopPropagation()}><Mail size={11} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Expanded Member Detail */}
+          {selectedMember && (() => {
+            const m = members.find(mem => mem.id === selectedMember);
+            if (!m) return null;
+            return (
+              <div className="card p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-lg font-bold text-gold">{m.avatar}</div>
+                      <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[var(--color-surface)] ${STATUS_COLORS[m.status]}`} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold">{m.name}</p>
+                      <p className="text-[10px] text-muted">{m.email}</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setSelectedMember(null)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
+                    <p className="text-lg font-bold">{m.clients}</p><p className="text-[8px] text-muted">Clients</p>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
+                    <p className="text-lg font-bold text-blue-400">{m.hoursThisWeek}h</p><p className="text-[8px] text-muted">This Week</p>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
+                    <p className="text-lg font-bold text-emerald-400">{m.tasksCompleted}</p><p className="text-[8px] text-muted">Tasks Done</p>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-surface-light text-center border border-border">
+                    <p className="text-lg font-bold text-gold">{m.tasksAssigned > 0 ? Math.round((m.tasksCompleted / m.tasksAssigned) * 100) : 0}%</p><p className="text-[8px] text-muted">Completion</p>
+                  </div>
+                </div>
+
+                {/* Recent Actions */}
+                <div>
+                  <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-2">Recent Actions</p>
+                  <div className="space-y-1.5">
+                    {m.recentActions.map((act, i) => (
+                      <div key={i} className="flex items-center gap-2.5 p-2 rounded-lg bg-surface-light border border-border">
+                        <Activity size={10} className="text-gold shrink-0" />
+                        <span className="text-[10px] flex-1"><span className="font-medium">{act.action}</span> <span className="text-muted">on</span> {act.resource}</span>
+                        <span className="text-[9px] text-muted shrink-0">{act.time}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* ═══ PERMISSIONS TAB ═══ */}
+      {tab === "permissions" && (
+        <div className="card overflow-x-auto">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-bold flex items-center gap-2"><Shield size={14} className="text-gold" /> Role Permissions Matrix</h2>
+            <button onClick={() => setShowCustomRole(true)} className="btn-secondary text-[10px] flex items-center gap-1.5"><Settings size={10} /> Custom Role Builder</button>
+          </div>
+          {Object.entries(permCategories).map(([category, perms]) => (
+            <div key={category} className="mb-4">
+              <p className="text-[9px] text-muted uppercase tracking-wider font-bold mb-2 px-2">{category}</p>
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-2 pr-4 text-muted font-semibold text-[10px] w-48 pl-2">Feature</th>
+                    {ROLE_DEFINITIONS.map(role => (
+                      <th key={role.id} className="text-center py-2 px-2 text-[10px] font-semibold" style={{ color: role.color }}>{role.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {perms.map((perm, idx) => (
+                    <tr key={idx} className="border-b border-border/30">
+                      <td className="py-2 pr-4 font-medium pl-2">{perm.feature}</td>
+                      {(["owner", "admin", "manager", "creator", "viewer"] as RoleId[]).map(roleId => (
+                        <td key={roleId} className="text-center py-2">
+                          {perm[roleId] ? (
+                            <CheckCircle size={14} className="text-emerald-400 mx-auto" />
+                          ) : (
+                            <X size={14} className="text-red-400/30 mx-auto" />
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ═══ ROLES TAB ═══ */}
+      {tab === "roles" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {ROLE_DEFINITIONS.map(role => (
+              <div key={role.id} className="card p-4 hover:border-gold/10 transition-all">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${role.color}15` }}>
+                    <Shield size={16} style={{ color: role.color }} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-bold">{role.label}</p>
+                    <p className="text-[9px] text-muted">{role.memberCount} member{role.memberCount !== 1 ? "s" : ""}</p>
+                  </div>
+                  <button className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors"><Pencil size={11} /></button>
+                </div>
+                <p className="text-[10px] text-muted mb-3">{role.description}</p>
+                <div className="flex items-center gap-1.5">
+                  <div className="flex-1 h-1.5 rounded-full bg-surface-light overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${(PERMISSIONS.filter(p => p[role.id]).length / PERMISSIONS.length) * 100}%`, background: role.color }} />
+                  </div>
+                  <span className="text-[9px] text-muted">{PERMISSIONS.filter(p => p[role.id]).length}/{PERMISSIONS.length} permissions</span>
+                </div>
+              </div>
+            ))}
+
+            {/* Add Custom Role Card */}
+            <button onClick={() => setShowCustomRole(true)}
+              className="card p-4 border-dashed hover:border-gold/20 transition-all flex flex-col items-center justify-center gap-2 min-h-[160px]">
+              <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
+                <Settings size={16} className="text-gold" />
+              </div>
+              <p className="text-xs font-bold text-muted">Create Custom Role</p>
+              <p className="text-[9px] text-muted text-center">Define a role with specific permissions for your team</p>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ ACCESS LOG TAB ═══ */}
+      {tab === "activity" && (
+        <div className="card">
+          <h2 className="section-header flex items-center gap-2"><Activity size={13} className="text-gold" /> Per-Member Access Log</h2>
+          <div className="space-y-2">
+            {members.flatMap(m =>
+              m.recentActions.map(a => ({
+                ...a,
+                member: m.name,
+                avatar: m.avatar,
+                role: m.role,
+              }))
+            ).map((act, idx) => (
+              <div key={idx} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-surface-light border-b border-border/30 transition-colors">
+                <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold shrink-0">{act.avatar}</div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px]">
+                    <span className="font-semibold">{act.member}</span>
+                    <span className={`ml-1.5 text-[8px] px-1.5 py-0.5 rounded-full border ${ROLE_COLORS[act.role] || "bg-surface-light text-muted border-border"}`}>{act.role}</span>
+                  </p>
+                  <p className="text-[10px] text-muted mt-0.5">{act.action} on <span className="text-foreground">{act.resource}</span></p>
+                </div>
+                <span className="text-[9px] text-muted shrink-0">{act.time}</span>
               </div>
             ))}
           </div>
-
-          {/* Team Chat Preview */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-gold" /> Team Chat</h2>
-            <div className="text-center py-8 text-muted text-xs">No messages yet.</div>
-          </div>
         </div>
       )}
 
-      {/* Performance Tab */}
-      {tab === "performance" && (
+      {/* ═══ CAPACITY TAB ═══ */}
+      {tab === "capacity" && (
         <div className="space-y-4">
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Trophy size={13} className="text-gold" /> Performance Rankings</h2>
-            <div className="space-y-2">
-              {members.length === 0 && (
-                <div className="text-center py-8 text-muted text-xs">No performance data yet.</div>
-              )}
-              {[...members].sort((a, b) => b.revenue - a.revenue).map((member, idx) => (
-                <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${idx === 0 ? "bg-gold/20 text-gold" : idx === 1 ? "bg-gray-300/20 text-gray-300" : idx === 2 ? "bg-amber-700/20 text-amber-600" : "bg-surface text-muted"}`}>
-                    #{idx + 1}
-                  </div>
-                  <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-sm font-bold text-gold">{member.avatar}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold">{member.name}</p>
-                    <p className="text-[10px] text-muted">{member.role}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-bold text-emerald-400">${member.revenue.toLocaleString()}</p>
-                    <p className="text-[9px] text-muted">{member.dealsWon} deals</p>
-                  </div>
-                  <div className="w-24">
-                    <div className="h-2 rounded-full bg-surface overflow-hidden">
-                      <div className="h-full bg-gold rounded-full" style={{ width: `${(member.revenue / Math.max([...members].sort((a, b) => b.revenue - a.revenue)[0]?.revenue || 1, 1)) * 100}%` }} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* Time Tracking Summary */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Time Tracking Summary</h2>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-              {members.length === 0 && (
-                <div className="col-span-full text-center py-8 text-muted text-xs">No time tracking data yet.</div>
-              )}
-              {members.map(m => (
-                <div key={m.id} className="p-3 rounded-lg bg-surface-light text-center border border-border">
-                  <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold mx-auto mb-1">{m.avatar}</div>
-                  <p className="text-[10px] font-semibold truncate">{m.name}</p>
-                  <p className="text-lg font-bold text-blue-400">{m.hoursThisWeek}h</p>
-                  <p className="text-[9px] text-muted">this week</p>
-                  <div className="h-1.5 rounded-full bg-surface overflow-hidden mt-1">
-                    <div className="h-full rounded-full" style={{ width: `${(m.hoursThisWeek / 45) * 100}%`, background: m.hoursThisWeek > 40 ? "#ef4444" : m.hoursThisWeek > 30 ? "#c8a855" : "#3b82f6" }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Workload Tab */}
-      {tab === "workload" && (
-        <div className="space-y-4">
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Workload Distribution</h2>
+            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Team Capacity Tracker</h2>
+            <p className="text-[10px] text-muted mb-4">See who has bandwidth and who is overloaded.</p>
             <div className="space-y-3">
-              {members.length === 0 && (
-                <div className="text-center py-8 text-muted text-xs">No workload data yet.</div>
-              )}
               {members.map(m => {
-                const load = m.clients.length * 20 + m.hoursThisWeek;
-                const maxLoad = 100;
-                const pct = Math.min((load / maxLoad) * 100, 100);
-                const loadLevel = pct > 80 ? "Overloaded" : pct > 50 ? "Balanced" : "Available";
-                const loadColor = pct > 80 ? "text-red-400" : pct > 50 ? "text-gold" : "text-emerald-400";
-                const barColor = pct > 80 ? "#ef4444" : pct > 50 ? "#c8a855" : "#10b981";
+                const taskLoad = m.tasksAssigned > 0 ? (m.tasksAssigned / 30) * 100 : 0;
+                const hourLoad = (m.hoursThisWeek / 45) * 100;
+                const combinedLoad = Math.min(Math.round((taskLoad + hourLoad) / 2), 100);
+                const loadLevel = combinedLoad > 80 ? "Overloaded" : combinedLoad > 50 ? "Balanced" : "Available";
+                const loadColor = combinedLoad > 80 ? "text-red-400" : combinedLoad > 50 ? "text-gold" : "text-emerald-400";
+                const barColor = combinedLoad > 80 ? "#ef4444" : combinedLoad > 50 ? "#C9A84C" : "#10b981";
                 return (
                   <div key={m.id} className="p-3 rounded-lg bg-surface-light border border-border">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">{m.avatar}</div>
+                      <div className="relative">
+                        <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-[10px] font-bold text-gold">{m.avatar}</div>
+                        <div className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full border-2 border-[var(--color-surface-light)] ${STATUS_COLORS[m.status]}`} />
+                      </div>
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
                           <p className="text-xs font-semibold">{m.name}</p>
-                          <span className={`text-[9px] font-medium ${loadColor}`}>{loadLevel}</span>
+                          <div className="flex items-center gap-2">
+                            {combinedLoad > 80 && <AlertTriangle size={10} className="text-red-400" />}
+                            <span className={`text-[9px] font-medium ${loadColor}`}>{loadLevel}</span>
+                          </div>
                         </div>
-                        <p className="text-[10px] text-muted">{m.role} - {m.clients.length} clients - {m.hoursThisWeek}h/week</p>
+                        <p className="text-[10px] text-muted">{m.role} &middot; {m.tasksAssigned} tasks &middot; {m.hoursThisWeek}h/week &middot; {m.clients} clients</p>
                       </div>
                     </div>
-                    <div className="h-2 rounded-full bg-surface overflow-hidden">
-                      <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: barColor }} />
+                    <div className="h-2.5 rounded-full bg-surface overflow-hidden">
+                      <div className="h-full rounded-full transition-all" style={{ width: `${combinedLoad}%`, background: barColor }} />
+                    </div>
+                    <div className="flex items-center justify-between mt-1">
+                      <span className="text-[9px] text-muted">{combinedLoad}% capacity used</span>
+                      <span className="text-[9px] text-muted">{m.tasksCompleted}/{m.tasksAssigned} tasks done</span>
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
-          {/* Client Assignments Overview */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Briefcase size={13} className="text-blue-400" /> Client Assignments</h2>
-            <div className="text-center py-8 text-muted text-xs">No client assignments yet.</div>
-          </div>
         </div>
       )}
 
-      {/* Activity Tab */}
-      {tab === "activity" && (
-        <div className="card">
-          <h2 className="section-header flex items-center gap-2"><Activity size={13} className="text-gold" /> Team Activity Feed</h2>
-          <div className="space-y-2">
-            {members.length === 0 && (
-              <div className="text-center py-8 text-muted text-xs">No recent activity yet.</div>
-            )}
-            {members.flatMap(m => m.recentActivity.map(a => ({ ...a, member: m.name, avatar: m.avatar })))
-              .sort(() => Math.random() - 0.5)
-              .map((act, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/[0.02] border-b border-border">
-                  <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">{act.avatar}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px]"><span className="font-semibold">{act.member}</span> {act.action}</p>
-                  </div>
-                  <span className="text-[9px] text-muted shrink-0">{act.time}</span>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
-
-      {/* Permissions Tab */}
-      {tab === "permissions" && (
-        <div className="card overflow-x-auto">
-          <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-gold" /> Role Permissions Matrix</h2>
-          <table className="w-full text-xs">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="text-left py-2 pr-4 text-muted font-semibold">Feature</th>
-                {["Founder / CEO", "Content Manager", "Video Editor", "Ads Manager", "Cold Caller"].map(role => (
-                  <th key={role} className="text-center py-2 px-2 text-muted font-semibold text-[10px]">{role.split(" / ")[0]}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {PERMISSIONS.map((perm, idx) => (
-                <tr key={idx} className="border-b border-border/50">
-                  <td className="py-2.5 pr-4 font-medium">{perm.feature}</td>
-                  {Object.values(perm.roles).map((allowed, rIdx) => (
-                    <td key={rIdx} className="text-center py-2.5">
-                      {allowed ? (
-                        <CheckCircle size={14} className="text-emerald-400 mx-auto" />
-                      ) : (
-                        <X size={14} className="text-red-400/30 mx-auto" />
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Invite Modal */}
+      {/* ═══ INVITE MODAL ═══ */}
       {showInvite && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
           <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
@@ -407,28 +517,32 @@ export default function TeamPage() {
               <button onClick={() => setShowInvite(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Full Name</label>
-              <input value={inviteForm.name} onChange={e => setInviteForm({ ...inviteForm, name: e.target.value })} className="input w-full text-xs" placeholder="John Smith" />
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Email Address</label>
+              <input type="email" value={inviteForm.email} onChange={e => setInviteForm({ ...inviteForm, email: e.target.value })}
+                className="input w-full text-xs" placeholder="colleague@company.com" />
             </div>
             <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Email</label>
-              <input type="email" value={inviteForm.email} onChange={e => setInviteForm({ ...inviteForm, email: e.target.value })} className="input w-full text-xs" placeholder="john@example.com" />
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Full Name</label>
+              <input value={inviteForm.name} onChange={e => setInviteForm({ ...inviteForm, name: e.target.value })}
+                className="input w-full text-xs" placeholder="John Smith" />
             </div>
             <div>
               <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Role</label>
-              <select value={inviteForm.role} onChange={e => setInviteForm({ ...inviteForm, role: e.target.value })} className="input w-full text-xs">
-                {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
-              </select>
-            </div>
-            {/* Onboarding Checklist Preview */}
-            <div>
-              <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Auto-assigned onboarding tasks</p>
-              <div className="space-y-1">
-                {["Set up profile", "Connect integrations", "Complete role training", "First task assignment", "Team introduction call", "Review SOPs"].map((task, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-[10px] text-muted">
-                    <CheckCircle size={9} className="text-muted/30" />
-                    {task}
-                  </div>
+              <div className="space-y-1.5">
+                {ROLE_DEFINITIONS.filter(r => r.id !== "owner").map(role => (
+                  <button key={role.id} onClick={() => setInviteForm({ ...inviteForm, role: role.id })}
+                    className={`w-full p-2.5 rounded-lg border text-left transition-all ${
+                      inviteForm.role === role.id
+                        ? "border-gold/30 bg-gold/[0.03]"
+                        : "border-border hover:border-gold/10"
+                    }`}>
+                    <div className="flex items-center gap-2">
+                      <Shield size={12} style={{ color: role.color }} />
+                      <span className="text-xs font-semibold">{role.label}</span>
+                      {inviteForm.role === role.id && <CheckCircle size={10} className="text-gold ml-auto" />}
+                    </div>
+                    <p className="text-[9px] text-muted mt-0.5 ml-5">{role.description}</p>
+                  </button>
                 ))}
               </div>
             </div>
@@ -436,6 +550,49 @@ export default function TeamPage() {
               <button onClick={() => setShowInvite(false)} className="btn-secondary text-xs">Cancel</button>
               <button className="btn-primary text-xs flex items-center gap-1.5" onClick={() => setShowInvite(false)}>
                 <Mail size={12} /> Send Invite
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ CUSTOM ROLE BUILDER MODAL ═══ */}
+      {showCustomRole && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCustomRole(false)}>
+          <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold flex items-center gap-2"><Settings size={14} className="text-gold" /> Custom Role Builder</h3>
+              <button onClick={() => setShowCustomRole(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+            </div>
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Role Name</label>
+              <input value={customRoleName} onChange={e => setCustomRoleName(e.target.value)}
+                className="input w-full text-xs" placeholder="e.g. Content Reviewer" />
+            </div>
+            <div>
+              <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-2">Toggle Permissions</p>
+              {Object.entries(permCategories).map(([category, perms]) => (
+                <div key={category} className="mb-3">
+                  <p className="text-[9px] text-muted uppercase tracking-wider font-bold mb-1.5">{category}</p>
+                  <div className="space-y-1">
+                    {perms.map(perm => (
+                      <div key={perm.feature} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light border border-border">
+                        <button onClick={() => setCustomPermissions(prev => ({ ...prev, [perm.feature]: !prev[perm.feature] }))}
+                          className={`w-8 h-4 rounded-full transition-colors ${customPermissions[perm.feature] ? "bg-emerald-400" : "bg-surface"}`}>
+                          <div className={`w-3.5 h-3.5 rounded-full bg-white shadow transition-all mt-[1px] ${customPermissions[perm.feature] ? "ml-4" : "ml-0.5"}`} />
+                        </button>
+                        <span className="text-[10px] flex-1">{perm.feature}</span>
+                        {customPermissions[perm.feature] ? <Unlock size={10} className="text-emerald-400" /> : <Lock size={10} className="text-muted/30" />}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end gap-2 pt-1">
+              <button onClick={() => setShowCustomRole(false)} className="btn-secondary text-xs">Cancel</button>
+              <button className="btn-primary text-xs flex items-center gap-1.5" onClick={() => setShowCustomRole(false)}>
+                <CheckCircle size={12} /> Create Role
               </button>
             </div>
           </div>

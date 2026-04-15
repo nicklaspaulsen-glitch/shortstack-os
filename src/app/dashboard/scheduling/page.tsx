@@ -4,11 +4,13 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Calendar, Clock, Users, Link2, Copy, Globe,
   Plus, Settings, Mail, Shuffle, BarChart3, Shield,
-  X, Check, ExternalLink, Edit3, AlertCircle, Loader2
+  X, Check, ExternalLink, Edit3, AlertCircle, Loader2,
+  Sparkles, Brain, Timer, MapPin,
+  AlertTriangle, Zap, Star, Eye
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 
-type ScheduleTab = "booking_pages" | "availability" | "analytics" | "settings";
+type ScheduleTab = "booking_pages" | "availability" | "ai_smart" | "analytics" | "settings";
 
 interface MeetingType {
   id: string;
@@ -41,6 +43,20 @@ interface Booking {
   meeting_types: { name: string; duration: number; color: string | null } | null;
 }
 
+interface PrepCard {
+  id: string;
+  guestName: string;
+  meetingType: string;
+  date: string;
+  time: string;
+  clientSince: string;
+  lastMeeting: string;
+  dealValue: string;
+  notes: string[];
+  talking_points: string[];
+  sentiment: "positive" | "neutral" | "at_risk";
+}
+
 const TIME_SLOTS = [
   "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
   "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
@@ -68,6 +84,64 @@ const COLOR_OPTIONS = [
   "#C9A84C", "#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#06b6d4",
 ];
 
+/* ------------------------------------------------------------------ */
+/*  AI Mock Data                                                       */
+/* ------------------------------------------------------------------ */
+const AI_SUGGESTED_TIMES = [
+  { time: "10:00 AM", day: "Tuesday", score: 96, reason: "Highest booking acceptance rate" },
+  { time: "2:00 PM", day: "Wednesday", score: 91, reason: "Client engagement peaks after lunch" },
+  { time: "11:00 AM", day: "Thursday", score: 88, reason: "Low conflict probability" },
+  { time: "9:30 AM", day: "Monday", score: 85, reason: "First meetings show higher attendance" },
+  { time: "3:00 PM", day: "Friday", score: 78, reason: "Good for wrap-up meetings" },
+];
+
+const CONFLICT_ALERTS = [
+  { id: "c1", type: "overlap", title: "Potential Overlap", description: "Discovery Call (2:00 PM) and Review Meeting (2:30 PM) on Apr 18 have only 30min gap with no buffer", severity: "warning" },
+  { id: "c2", type: "back_to_back", title: "Back-to-Back Meetings", description: "3 meetings from 10:00 AM to 12:30 PM on Apr 17 with no breaks", severity: "warning" },
+  { id: "c3", type: "timezone", title: "Late Meeting for Client", description: "Call with Sunrise Yoga (PST) at 5:00 PM your time is 8:00 PM their time", severity: "info" },
+];
+
+const MOCK_PREP_CARDS: PrepCard[] = [
+  {
+    id: "p1", guestName: "Sarah Mitchell", meetingType: "Discovery Call", date: "Apr 16, 2026", time: "10:00 AM",
+    clientSince: "New Lead", lastMeeting: "None", dealValue: "$2,500/mo",
+    notes: ["Interested in social media management", "Currently spending $800/mo on ads with poor ROI", "Referred by Mike Torres"],
+    talking_points: ["Ask about current marketing pain points", "Present social media case studies", "Discuss package options for her budget"],
+    sentiment: "positive",
+  },
+  {
+    id: "p2", guestName: "David Chen", meetingType: "Monthly Review", date: "Apr 17, 2026", time: "2:00 PM",
+    clientSince: "Oct 2025", lastMeeting: "Mar 15, 2026", dealValue: "$3,200/mo",
+    notes: ["Growth package client", "Website traffic up 23% last month", "Wants to discuss TikTok strategy"],
+    talking_points: ["Review March performance metrics", "Present TikTok content plan", "Discuss potential upsell to Pro package"],
+    sentiment: "positive",
+  },
+  {
+    id: "p3", guestName: "Rosa Vega", meetingType: "Retention Call", date: "Apr 18, 2026", time: "11:00 AM",
+    clientSince: "Jan 2026", lastMeeting: "Feb 28, 2026", dealValue: "$1,500/mo",
+    notes: ["Expressed concern about ROI last month", "Competitor offered lower pricing", "Has not opened last 2 reports"],
+    talking_points: ["Address ROI concerns with latest data", "Present competitive analysis", "Offer loyalty discount if needed"],
+    sentiment: "at_risk",
+  },
+];
+
+const HEATMAP_DATA: Record<string, Record<string, number>> = {
+  "Mon": { "09": 3, "10": 8, "11": 6, "12": 2, "13": 4, "14": 7, "15": 5, "16": 3 },
+  "Tue": { "09": 5, "10": 10, "11": 8, "12": 3, "13": 6, "14": 9, "15": 7, "16": 4 },
+  "Wed": { "09": 4, "10": 7, "11": 9, "12": 2, "13": 5, "14": 8, "15": 6, "16": 3 },
+  "Thu": { "09": 6, "10": 9, "11": 7, "12": 3, "13": 5, "14": 6, "15": 4, "16": 2 },
+  "Fri": { "09": 2, "10": 5, "11": 4, "12": 1, "13": 3, "14": 4, "15": 6, "16": 5 },
+};
+
+const TEAM_MEMBERS = [
+  { id: "m1", name: "Nicklas", role: "Owner", bookingsThisWeek: 12, color: "#C9A84C" },
+  { id: "m2", name: "Sarah", role: "Account Manager", bookingsThisWeek: 8, color: "#3b82f6" },
+  { id: "m3", name: "Maria", role: "Strategist", bookingsThisWeek: 6, color: "#10b981" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  Component                                                          */
+/* ------------------------------------------------------------------ */
 export default function SchedulingPage() {
   const [tab, setTab] = useState<ScheduleTab>("booking_pages");
   const [meetingTypes, setMeetingTypes] = useState<MeetingType[]>([]);
@@ -87,6 +161,12 @@ export default function SchedulingPage() {
   const [reschedulePolicy, setReschedulePolicy] = useState("24h");
   const [cancelPolicy, setCancelPolicy] = useState("24h");
 
+  // AI smart state
+  const [autoBuffer, setAutoBuffer] = useState(true);
+  const [bufferMinutes, setBufferMinutes] = useState(10);
+  const [showPrepCard, setShowPrepCard] = useState<string | null>(null);
+  const [detectedTimezone] = useState("America/Chicago (CDT, UTC-5)");
+
   // Create form state
   const [newMeeting, setNewMeeting] = useState({
     name: "",
@@ -98,7 +178,7 @@ export default function SchedulingPage() {
     max_bookings_per_day: "",
   });
 
-  // ── Fetch meeting types ──
+  // Fetch meeting types
   const fetchMeetingTypes = useCallback(async () => {
     try {
       const res = await fetch("/api/scheduling");
@@ -110,7 +190,7 @@ export default function SchedulingPage() {
     }
   }, []);
 
-  // ── Fetch bookings ──
+  // Fetch bookings
   const fetchBookings = useCallback(async () => {
     try {
       const res = await fetch("/api/scheduling/bookings");
@@ -126,7 +206,7 @@ export default function SchedulingPage() {
     Promise.all([fetchMeetingTypes(), fetchBookings()]).finally(() => setLoading(false));
   }, [fetchMeetingTypes, fetchBookings]);
 
-  // ── Create meeting type ──
+  // Create meeting type
   const handleCreate = async () => {
     if (!newMeeting.name) return;
     setCreating(true);
@@ -154,11 +234,10 @@ export default function SchedulingPage() {
     }
   };
 
-  // ── Toggle meeting type active/inactive ──
+  // Toggle meeting type active/inactive
   const toggleMeetingType = async (id: string) => {
     const mt = meetingTypes.find(m => m.id === id);
     if (!mt) return;
-    // Optimistic update
     setMeetingTypes(prev => prev.map(m => m.id === id ? { ...m, active: !m.active } : m));
     const res = await fetch("/api/scheduling", {
       method: "PATCH",
@@ -166,12 +245,11 @@ export default function SchedulingPage() {
       body: JSON.stringify({ id, active: !mt.active }),
     });
     if (!res.ok) {
-      // Revert on failure
       setMeetingTypes(prev => prev.map(m => m.id === id ? { ...m, active: mt.active } : m));
     }
   };
 
-  // ── Delete meeting type ──
+  // Delete meeting type
   const deleteMeetingType = async (id: string) => {
     setMeetingTypes(prev => prev.filter(m => m.id !== id));
     const res = await fetch("/api/scheduling", {
@@ -180,11 +258,11 @@ export default function SchedulingPage() {
       body: JSON.stringify({ id }),
     });
     if (!res.ok) {
-      fetchMeetingTypes(); // Refetch on failure
+      fetchMeetingTypes();
     }
   };
 
-  // ── Update booking status ──
+  // Update booking status
   const updateBookingStatus = async (id: string, status: string) => {
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status: status as Booking["status"] } : b));
     const res = await fetch("/api/scheduling/bookings", {
@@ -202,12 +280,15 @@ export default function SchedulingPage() {
   const totalBookings = bookings.length;
   const confirmedBookings = bookings.filter(b => b.status === "confirmed").length;
   const conversionRate = totalBookings > 0 ? Math.round((confirmedBookings / totalBookings) * 100) : 0;
+  const noShowCount = bookings.filter(b => b.status === "no_show").length;
+  const noShowRate = totalBookings > 0 ? Math.round((noShowCount / totalBookings) * 100) : 0;
 
   const copyLink = (url: string) => { navigator.clipboard.writeText(url); };
 
   const TABS: { id: ScheduleTab; label: string; icon: React.ReactNode }[] = [
     { id: "booking_pages", label: "Booking Pages", icon: <Calendar size={13} /> },
     { id: "availability", label: "Availability", icon: <Clock size={13} /> },
+    { id: "ai_smart", label: "AI Smart", icon: <Brain size={13} /> },
     { id: "analytics", label: "Analytics", icon: <BarChart3 size={13} /> },
     { id: "settings", label: "Settings", icon: <Settings size={13} /> },
   ];
@@ -229,11 +310,14 @@ export default function SchedulingPage() {
             <Calendar size={20} className="text-gold" />
           </div>
           <div>
-            <h1 className="page-header mb-0">Scheduling</h1>
-            <p className="text-xs text-muted">Manage booking pages, availability, and meetings</p>
+            <h1 className="page-header mb-0">AI Smart Scheduler</h1>
+            <p className="text-xs text-muted">Intelligent scheduling with AI-powered insights and conflict detection</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 text-[10px] bg-blue-400/[0.08] text-blue-400 px-2.5 py-1 rounded-md border border-blue-400/15">
+            <Globe size={10} /><span className="font-medium">{detectedTimezone.split(" ")[0].split("/")[1]}</span>
+          </div>
           <button onClick={() => setShowLinkGen(true)} className="btn-secondary text-xs flex items-center gap-1.5">
             <Link2 size={12} /> Get Booking Link
           </button>
@@ -244,7 +328,7 @@ export default function SchedulingPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid grid-cols-5 gap-3">
         <div className="card p-3 text-center">
           <p className="text-lg font-bold">{meetingTypes.filter(m => m.active).length}</p>
           <p className="text-[10px] text-muted">Active Types</p>
@@ -261,6 +345,10 @@ export default function SchedulingPage() {
           <p className="text-lg font-bold text-blue-400">{conversionRate}%</p>
           <p className="text-[10px] text-muted">Conversion Rate</p>
         </div>
+        <div className="card p-3 text-center">
+          <p className="text-lg font-bold text-orange-400">{noShowRate}%</p>
+          <p className="text-[10px] text-muted">No-Show Rate</p>
+        </div>
       </div>
 
       {/* Tabs */}
@@ -275,10 +363,9 @@ export default function SchedulingPage() {
         ))}
       </div>
 
-      {/* Booking Pages Tab */}
+      {/* ---- TAB: Booking Pages ---- */}
       {tab === "booking_pages" && (
         <div className="space-y-4">
-          {/* Meeting Types */}
           {meetingTypes.length === 0 ? (
             <EmptyState
               icon={<Calendar size={24} />}
@@ -467,7 +554,7 @@ export default function SchedulingPage() {
         </div>
       )}
 
-      {/* Availability Tab */}
+      {/* ---- TAB: Availability ---- */}
       {tab === "availability" && (
         <div className="space-y-4">
           <div className="card">
@@ -537,7 +624,7 @@ export default function SchedulingPage() {
             </div>
           </div>
 
-          {/* Integration Status */}
+          {/* Calendar Integration */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-gold" /> Calendar Integration</h2>
             <div className="space-y-2">
@@ -564,7 +651,230 @@ export default function SchedulingPage() {
         </div>
       )}
 
-      {/* Analytics Tab */}
+      {/* ---- TAB: AI SMART ---- */}
+      {tab === "ai_smart" && (
+        <div className="space-y-4">
+          {/* AI Suggested Times */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
+              <Brain size={13} className="text-gold" /> AI-Suggested Optimal Meeting Times
+            </h3>
+            <p className="text-[10px] text-muted mb-3">Based on your past 90 days of booking patterns and client preferences</p>
+            <div className="space-y-2">
+              {AI_SUGGESTED_TIMES.map((slot, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-gold/20 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center shrink-0">
+                    <span className="text-xs font-bold text-gold">{slot.score}</span>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-semibold">{slot.day} at {slot.time}</p>
+                      {i === 0 && (
+                        <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium flex items-center gap-0.5">
+                          <Star size={7} /> Top Pick
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] text-muted">{slot.reason}</p>
+                  </div>
+                  <div className="w-24 h-1.5 rounded-full bg-surface-light overflow-hidden">
+                    <div className="h-full rounded-full bg-gold transition-all" style={{ width: `${slot.score}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Smart Conflict Detection */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
+              <AlertTriangle size={13} className="text-amber-400" /> Smart Conflict Detection
+            </h3>
+            {CONFLICT_ALERTS.length === 0 ? (
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-400/[0.05] border border-emerald-400/20">
+                <Check size={14} className="text-emerald-400" />
+                <span className="text-xs text-emerald-400">No scheduling conflicts detected</span>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {CONFLICT_ALERTS.map(alert => (
+                  <div key={alert.id} className={`flex items-start gap-3 p-3 rounded-xl border ${
+                    alert.severity === "warning" ? "border-amber-500/20 bg-amber-500/[0.03]" : "border-blue-400/20 bg-blue-400/[0.03]"
+                  }`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                      alert.severity === "warning" ? "bg-amber-500/10" : "bg-blue-400/10"
+                    }`}>
+                      {alert.severity === "warning"
+                        ? <AlertTriangle size={14} className="text-amber-400" />
+                        : <Globe size={14} className="text-blue-400" />
+                      }
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold">{alert.title}</p>
+                      <p className="text-[10px] text-muted">{alert.description}</p>
+                    </div>
+                    <button className="text-[10px] px-2 py-1 rounded-lg border border-border text-muted hover:text-foreground transition-all shrink-0">
+                      Resolve
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Buffer Time Management */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
+              <Timer size={13} className="text-blue-400" /> Auto Buffer Management
+            </h3>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-surface-light border border-border mb-3">
+              <div>
+                <p className="text-xs font-semibold">Automatic Buffer Time</p>
+                <p className="text-[10px] text-muted">Automatically add buffer between back-to-back meetings</p>
+              </div>
+              <button onClick={() => setAutoBuffer(!autoBuffer)}
+                className={`w-10 h-5 rounded-full transition-all relative ${autoBuffer ? "bg-gold" : "bg-white/10"}`}>
+                <div className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: autoBuffer ? 22 : 2 }} />
+              </button>
+            </div>
+            {autoBuffer && (
+              <div className="flex items-center gap-3 p-3 rounded-xl border border-border">
+                <span className="text-xs text-muted">Buffer duration:</span>
+                <div className="flex gap-1.5">
+                  {[5, 10, 15, 20, 30].map(min => (
+                    <button key={min} onClick={() => setBufferMinutes(min)}
+                      className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
+                        bufferMinutes === min ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                      }`}>
+                      {min}m
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Client Timezone Display */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
+              <MapPin size={13} className="text-emerald-400" /> Client Timezone Auto-Detection
+            </h3>
+            <div className="flex items-center gap-2 p-3 rounded-xl bg-emerald-400/[0.05] border border-emerald-400/20 mb-3">
+              <Check size={12} className="text-emerald-400" />
+              <span className="text-xs text-emerald-400">Your timezone: {detectedTimezone}</span>
+            </div>
+            <div className="space-y-1.5">
+              {[
+                { name: "Sarah Mitchell", tz: "America/New_York (EDT)", offset: "+1h from you" },
+                { name: "David Chen", tz: "America/Los_Angeles (PDT)", offset: "-2h from you" },
+                { name: "Rosa Vega", tz: "America/Chicago (CDT)", offset: "Same as you" },
+              ].map((client, i) => (
+                <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border text-xs">
+                  <Globe size={12} className="text-blue-400 shrink-0" />
+                  <span className="font-medium w-28">{client.name}</span>
+                  <span className="text-muted flex-1">{client.tz}</span>
+                  <span className="text-[10px] text-gold">{client.offset}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Meeting Prep Cards */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
+              <Sparkles size={13} className="text-gold" /> AI Meeting Prep Cards
+            </h3>
+            <p className="text-[10px] text-muted mb-3">AI-generated prep briefs for your upcoming meetings</p>
+            <div className="space-y-3">
+              {MOCK_PREP_CARDS.map(prep => (
+                <div key={prep.id} className={`rounded-2xl border overflow-hidden transition-all ${
+                  prep.sentiment === "at_risk" ? "border-red-500/20" : "border-border hover:border-gold/20"
+                }`}>
+                  <div className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold ${
+                        prep.sentiment === "at_risk" ? "bg-red-500/10 text-red-400" :
+                        prep.sentiment === "positive" ? "bg-emerald-400/10 text-emerald-400" :
+                        "bg-surface-light text-muted"
+                      }`}>
+                        {prep.guestName.split(" ").map(n => n[0]).join("")}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-semibold">{prep.guestName}</p>
+                          <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${
+                            prep.sentiment === "at_risk" ? "bg-red-400/10 text-red-400" :
+                            prep.sentiment === "positive" ? "bg-emerald-400/10 text-emerald-400" :
+                            "bg-surface-light text-muted"
+                          }`}>
+                            {prep.sentiment === "at_risk" ? "At Risk" : prep.sentiment === "positive" ? "Positive" : "Neutral"}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-muted">{prep.meetingType} -- {prep.date} at {prep.time}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => setShowPrepCard(showPrepCard === prep.id ? null : prep.id)}
+                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-gold hover:border-gold/20 transition-all flex items-center gap-1">
+                      <Eye size={10} /> {showPrepCard === prep.id ? "Hide" : "View"} Brief
+                    </button>
+                  </div>
+
+                  {showPrepCard === prep.id && (
+                    <div className="px-4 pb-4 pt-0 space-y-3">
+                      <div className="h-px bg-border" />
+                      {/* Quick Info */}
+                      <div className="grid grid-cols-3 gap-2">
+                        <div className="p-2 rounded-lg bg-surface-light border border-border text-center">
+                          <p className="text-[8px] text-muted uppercase tracking-wider">Client Since</p>
+                          <p className="text-[10px] font-semibold">{prep.clientSince}</p>
+                        </div>
+                        <div className="p-2 rounded-lg bg-surface-light border border-border text-center">
+                          <p className="text-[8px] text-muted uppercase tracking-wider">Last Meeting</p>
+                          <p className="text-[10px] font-semibold">{prep.lastMeeting}</p>
+                        </div>
+                        <div className="p-2 rounded-lg bg-surface-light border border-border text-center">
+                          <p className="text-[8px] text-muted uppercase tracking-wider">Deal Value</p>
+                          <p className="text-[10px] font-semibold text-gold">{prep.dealValue}</p>
+                        </div>
+                      </div>
+
+                      {/* Notes */}
+                      <div>
+                        <p className="text-[9px] text-muted uppercase tracking-wider font-semibold mb-1.5">Key Notes</p>
+                        <div className="space-y-1">
+                          {prep.notes.map((note, i) => (
+                            <div key={i} className="flex items-start gap-1.5 text-[10px] text-muted">
+                              <span className="text-gold mt-0.5">-</span>
+                              <span>{note}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Talking Points */}
+                      <div className="p-3 rounded-xl bg-gold/[0.03] border border-gold/20">
+                        <p className="text-[9px] text-gold uppercase tracking-wider font-semibold mb-1.5 flex items-center gap-1">
+                          <Sparkles size={9} /> AI Suggested Talking Points
+                        </p>
+                        <div className="space-y-1">
+                          {prep.talking_points.map((tp, i) => (
+                            <div key={i} className="flex items-start gap-1.5 text-[10px] text-foreground">
+                              <Check size={9} className="text-gold mt-0.5 shrink-0" />
+                              <span>{tp}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---- TAB: Analytics ---- */}
       {tab === "analytics" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -579,18 +889,72 @@ export default function SchedulingPage() {
               </p>
             </div>
             <div className="card p-3 text-center">
-              <p className="text-[10px] text-muted">Confirmed</p>
-              <p className="text-2xl font-bold text-blue-400">{confirmedBookings}</p>
+              <p className="text-[10px] text-muted">No-Show Rate</p>
+              <p className="text-2xl font-bold text-orange-400">{noShowRate}%</p>
             </div>
             <div className="card p-3 text-center">
-              <p className="text-[10px] text-muted">Cancellation Rate</p>
-              <p className="text-2xl font-bold text-red-400">
-                {totalBookings > 0 ? Math.round((bookings.filter(b => b.status === "cancelled").length / totalBookings) * 100) : 0}%
+              <p className="text-[10px] text-muted">Avg Duration</p>
+              <p className="text-2xl font-bold text-blue-400">
+                {meetingTypes.length > 0 ? Math.round(meetingTypes.reduce((s, m) => s + m.duration, 0) / meetingTypes.length) : 0}m
               </p>
             </div>
           </div>
 
-          {/* Bookings by Type Chart */}
+          {/* Popular Times Heatmap */}
+          <div className="card p-4">
+            <h2 className="section-header flex items-center gap-2">
+              <Zap size={13} className="text-gold" /> Popular Times Heatmap
+            </h2>
+            <p className="text-[10px] text-muted mb-3">Booking frequency by day and hour (last 90 days)</p>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th className="text-[9px] text-muted font-semibold py-1 text-left w-12" />
+                    {["09", "10", "11", "12", "13", "14", "15", "16"].map(h => (
+                      <th key={h} className="text-[9px] text-muted font-semibold py-1 text-center">{parseInt(h) > 12 ? `${parseInt(h) - 12}PM` : `${parseInt(h)}AM`}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(HEATMAP_DATA).map(([day, hours]) => (
+                    <tr key={day}>
+                      <td className="text-[9px] font-semibold text-muted pr-2 py-0.5">{day}</td>
+                      {["09", "10", "11", "12", "13", "14", "15", "16"].map(h => {
+                        const val = hours[h] || 0;
+                        const max = 10;
+                        const intensity = val / max;
+                        return (
+                          <td key={h} className="py-0.5 px-0.5">
+                            <div className="w-full h-7 rounded flex items-center justify-center text-[8px] font-bold transition-all"
+                              style={{
+                                background: intensity > 0.7 ? "rgba(201,168,76,0.35)" : intensity > 0.4 ? "rgba(201,168,76,0.2)" : intensity > 0.1 ? "rgba(201,168,76,0.08)" : "rgba(255,255,255,0.02)",
+                                color: intensity > 0.4 ? "#C9A84C" : "rgba(255,255,255,0.2)"
+                              }}>
+                              {val}
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex items-center gap-3 mt-3 justify-center">
+              <div className="flex items-center gap-1 text-[8px] text-muted">
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.08)" }} /> Low
+              </div>
+              <div className="flex items-center gap-1 text-[8px] text-muted">
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.2)" }} /> Medium
+              </div>
+              <div className="flex items-center gap-1 text-[8px] text-muted">
+                <div className="w-3 h-3 rounded" style={{ background: "rgba(201,168,76,0.35)" }} /> High
+              </div>
+            </div>
+          </div>
+
+          {/* Bookings by Type */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Bookings by Meeting Type</h2>
             {meetingTypes.length === 0 ? (
@@ -615,7 +979,7 @@ export default function SchedulingPage() {
             )}
           </div>
 
-          {/* Popular Times */}
+          {/* Popular Booking Times */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Popular Booking Times</h2>
             {bookings.length === 0 ? (
@@ -660,34 +1024,48 @@ export default function SchedulingPage() {
         </div>
       )}
 
-      {/* Settings Tab */}
+      {/* ---- TAB: Settings ---- */}
       {tab === "settings" && (
         <div className="space-y-4">
+          {/* Round-Robin */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Shuffle size={13} className="text-gold" /> Team Round-Robin</h2>
-            <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light">
+            <h2 className="section-header flex items-center gap-2"><Shuffle size={13} className="text-gold" /> Round-Robin Team Scheduling</h2>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light mb-3">
               <div>
                 <p className="text-xs font-semibold">Enable Round-Robin Scheduling</p>
                 <p className="text-[10px] text-muted">Automatically distribute bookings among team members</p>
               </div>
               <button onClick={() => setRoundRobin(!roundRobin)}
                 className={`w-10 h-5 rounded-full transition-all relative ${roundRobin ? "bg-gold" : "bg-surface"}`}>
-                <div className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all ${roundRobin ? "left-5.5" : "left-0.5"}`} style={{ left: roundRobin ? 22 : 2 }} />
+                <div className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: roundRobin ? 22 : 2 }} />
               </button>
             </div>
             {roundRobin && (
-              <div className="mt-2 space-y-1.5">
-                {["Nicklas", "Sarah", "Maria"].map(name => (
-                  <div key={name} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light text-xs">
-                    <Check size={12} className="text-emerald-400" />
-                    <span>{name}</span>
-                    <span className="text-muted ml-auto">Active in rotation</span>
+              <div className="space-y-2">
+                {TEAM_MEMBERS.map(member => (
+                  <div key={member.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style={{ background: member.color }}>
+                      {member.name[0]}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-medium">{member.name}</p>
+                      <p className="text-[9px] text-muted">{member.role}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs font-bold">{member.bookingsThisWeek}</p>
+                      <p className="text-[9px] text-muted">this week</p>
+                    </div>
+                    <div className="w-16 h-1.5 rounded-full bg-surface overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${(member.bookingsThisWeek / 15) * 100}%`, background: member.color }} />
+                    </div>
+                    <Check size={14} className="text-emerald-400" />
                   </div>
                 ))}
               </div>
             )}
           </div>
 
+          {/* Timezone */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Timezone Detection</h2>
             <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light">
@@ -697,11 +1075,12 @@ export default function SchedulingPage() {
               </div>
               <button onClick={() => setAutoTimezone(!autoTimezone)}
                 className={`w-10 h-5 rounded-full transition-all relative ${autoTimezone ? "bg-gold" : "bg-surface"}`}>
-                <div className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all`} style={{ left: autoTimezone ? 22 : 2 }} />
+                <div className="w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all" style={{ left: autoTimezone ? 22 : 2 }} />
               </button>
             </div>
           </div>
 
+          {/* Policies */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Reschedule / Cancel Policy</h2>
             <div className="grid grid-cols-2 gap-4">
@@ -730,7 +1109,7 @@ export default function SchedulingPage() {
         </div>
       )}
 
-      {/* Link Generator Modal */}
+      {/* ---- Link Generator Modal ---- */}
       {showLinkGen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowLinkGen(false)}>
           <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
@@ -768,7 +1147,7 @@ export default function SchedulingPage() {
         </div>
       )}
 
-      {/* Create Meeting Type Modal */}
+      {/* ---- Create Meeting Type Modal ---- */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreateModal(false)}>
           <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>

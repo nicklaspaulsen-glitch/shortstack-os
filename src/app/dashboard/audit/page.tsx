@@ -3,78 +3,104 @@
 import { useState } from "react";
 import {
   Activity, Search, Download, CheckCircle, AlertTriangle,
-  Clock, Zap, Users, Mail, FileText, Globe, Settings, Bot,
-  Shield, Lock, Eye, Bell, Database, ArrowRight,
-  ChevronDown, ChevronRight
+  Clock, Settings,
+  Shield, Lock, Eye, Database,
+  LogIn, Pencil, Trash2,
+  Mail, UserPlus, AlertCircle, X, Copy
 } from "lucide-react";
+
+type AuditTab = "trail" | "security" | "retention" | "export";
+type ActionType = "login" | "create" | "update" | "delete" | "export" | "send" | "config";
 
 interface AuditEntry {
   id: string;
-  agent: string;
-  action: string;
-  description: string;
-  status: "success" | "failed" | "pending";
   timestamp: string;
-  clientId: string | null;
-  clientName: string | null;
-  before?: string;
-  after?: string;
-  ip?: string;
-  sensitiveData?: boolean;
+  user: string;
+  userAvatar: string;
+  action: ActionType;
+  resource: string;
+  details: string;
+  ip: string;
+  status: "success" | "failed" | "warning";
+  sensitive: boolean;
 }
 
-const MOCK_ENTRIES: AuditEntry[] = [];
+interface SecurityAlert {
+  id: string;
+  type: "failed_login" | "permission_change" | "data_export" | "suspicious_ip" | "api_key_used";
+  severity: "critical" | "high" | "medium" | "low";
+  message: string;
+  user: string;
+  timestamp: string;
+  resolved: boolean;
+}
 
-const AGENT_MAP: Record<string, { icon: React.ReactNode; color: string }> = {
-  "Lead Finder": { icon: <Users size={11} />, color: "text-blue-400" },
-  "Outreach Bot": { icon: <Mail size={11} />, color: "text-pink-400" },
-  "Content Engine": { icon: <FileText size={11} />, color: "text-purple-400" },
-  "Automation": { icon: <Zap size={11} />, color: "text-yellow-400" },
-  "Website Agent": { icon: <Globe size={11} />, color: "text-green-400" },
-  "System": { icon: <Settings size={11} />, color: "text-muted" },
-  "Invoice Agent": { icon: <FileText size={11} />, color: "text-emerald-400" },
-  "Retention Agent": { icon: <Zap size={11} />, color: "text-rose-400" },
-  "SEO Agent": { icon: <Globe size={11} />, color: "text-lime-400" },
+const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; color: string }> = {
+  login: { icon: <LogIn size={11} />, label: "Login", color: "text-blue-400" },
+  create: { icon: <UserPlus size={11} />, label: "Create", color: "text-emerald-400" },
+  update: { icon: <Pencil size={11} />, label: "Update", color: "text-gold" },
+  delete: { icon: <Trash2 size={11} />, label: "Delete", color: "text-red-400" },
+  export: { icon: <Download size={11} />, label: "Export", color: "text-purple-400" },
+  send: { icon: <Mail size={11} />, label: "Send", color: "text-pink-400" },
+  config: { icon: <Settings size={11} />, label: "Config Change", color: "text-amber-400" },
 };
 
-const COMPLIANCE_ITEMS = [
-  { label: "GDPR data export available", status: true },
-  { label: "Client data deletion workflow", status: true },
-  { label: "API key rotation (30 days)", status: true },
-  { label: "Audit log retention (90 days)", status: true },
-  { label: "Two-factor authentication", status: false },
-  { label: "Sensitive data encryption at rest", status: true },
-  { label: "Access logs enabled", status: true },
-  { label: "Webhook signing enabled", status: true },
-  { label: "SOC 2 compliance", status: false },
-  { label: "Automated backup verification", status: true },
+const MOCK_ENTRIES: AuditEntry[] = [
+  { id: "a-1", timestamp: "2026-04-15 09:42:18", user: "Alex Rivera", userAvatar: "AR", action: "login", resource: "Dashboard", details: "Successful login via SSO", ip: "192.168.1.101", status: "success", sensitive: false },
+  { id: "a-2", timestamp: "2026-04-15 09:38:05", user: "Sarah Chen", userAvatar: "SC", action: "create", resource: "Client: Peak Gym", details: "New client created with starter plan", ip: "192.168.1.102", status: "success", sensitive: false },
+  { id: "a-3", timestamp: "2026-04-15 09:22:41", user: "Mike Johnson", userAvatar: "MJ", action: "update", resource: "Invoice #1042", details: "Changed amount from $1,800 to $2,400", ip: "192.168.1.103", status: "success", sensitive: true },
+  { id: "a-4", timestamp: "2026-04-15 08:55:12", user: "Lisa Park", userAvatar: "LP", action: "send", resource: "Email Campaign", details: "Sent 'April Newsletter' to 342 recipients", ip: "192.168.1.104", status: "success", sensitive: false },
+  { id: "a-5", timestamp: "2026-04-15 08:30:00", user: "Unknown", userAvatar: "??", action: "login", resource: "Dashboard", details: "Failed login attempt - wrong password (3 attempts)", ip: "45.33.128.91", status: "failed", sensitive: true },
+  { id: "a-6", timestamp: "2026-04-15 08:15:33", user: "Alex Rivera", userAvatar: "AR", action: "config", resource: "Workspace Settings", details: "Changed API rate limit from 10K to 50K", ip: "192.168.1.101", status: "success", sensitive: true },
+  { id: "a-7", timestamp: "2026-04-14 17:42:00", user: "Sarah Chen", userAvatar: "SC", action: "export", resource: "Client Report", details: "Exported Q1 analytics report (PDF, 24 pages)", ip: "192.168.1.102", status: "success", sensitive: false },
+  { id: "a-8", timestamp: "2026-04-14 16:20:11", user: "Alex Rivera", userAvatar: "AR", action: "delete", resource: "Client: Test Account", details: "Permanently deleted test client and all data", ip: "192.168.1.101", status: "success", sensitive: true },
+  { id: "a-9", timestamp: "2026-04-14 14:08:45", user: "Mike Johnson", userAvatar: "MJ", action: "create", resource: "Content: Blog Post", details: "Created 'SEO Tips for Local Businesses'", ip: "192.168.1.103", status: "success", sensitive: false },
+  { id: "a-10", timestamp: "2026-04-14 11:30:22", user: "Alex Rivera", userAvatar: "AR", action: "config", resource: "Team Permissions", details: "Changed Mike Johnson role from Creator to Manager", ip: "192.168.1.101", status: "success", sensitive: true },
+  { id: "a-11", timestamp: "2026-04-14 09:15:00", user: "Tom Bradley", userAvatar: "TB", action: "login", resource: "Dashboard", details: "First login after invite", ip: "10.0.0.55", status: "success", sensitive: false },
+  { id: "a-12", timestamp: "2026-04-13 18:00:00", user: "System", userAvatar: "SY", action: "export", resource: "Nightly Backup", details: "Automated database backup completed (2.4 GB)", ip: "127.0.0.1", status: "success", sensitive: false },
 ];
 
-const TABS = ["Trail", "Data Changes", "Access Log", "Compliance", "Alerts", "Retention", "Export"] as const;
-type Tab = typeof TABS[number];
-const AGENT_FILTERS = ["All", "Lead Finder", "Outreach Bot", "Content Engine", "System", "Invoice Agent", "Retention Agent", "SEO Agent"];
-const DATE_RANGES = [
-  { label: "Today", days: 1 },
-  { label: "7 Days", days: 7 },
-  { label: "30 Days", days: 30 },
-  { label: "All", days: 0 },
+const MOCK_ALERTS: SecurityAlert[] = [
+  { id: "sa-1", type: "failed_login", severity: "high", message: "3 failed login attempts from IP 45.33.128.91", user: "Unknown", timestamp: "2026-04-15 08:30", resolved: false },
+  { id: "sa-2", type: "permission_change", severity: "medium", message: "Role changed for Mike Johnson: Creator to Manager", user: "Alex Rivera", timestamp: "2026-04-14 11:30", resolved: true },
+  { id: "sa-3", type: "data_export", severity: "low", message: "Large data export: Q1 analytics report (24 pages)", user: "Sarah Chen", timestamp: "2026-04-14 17:42", resolved: true },
+  { id: "sa-4", type: "suspicious_ip", severity: "critical", message: "Login attempt from flagged IP address (known VPN exit node)", user: "Unknown", timestamp: "2026-04-13 22:15", resolved: false },
+  { id: "sa-5", type: "api_key_used", severity: "medium", message: "API key 'prod-key-v2' used 4,200 times in 1 hour (unusual spike)", user: "System", timestamp: "2026-04-13 15:00", resolved: true },
 ];
+
+const SEVERITY_STYLES: Record<string, string> = {
+  critical: "bg-red-500/10 text-red-400 border-red-500/20",
+  high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+  medium: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+  low: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+};
+
+const ACTION_FILTERS: ActionType[] = ["login", "create", "update", "delete", "export", "send", "config"];
 
 export default function AuditPage() {
-  const [tab, setTab] = useState<Tab>("Trail");
+  const [tab, setTab] = useState<AuditTab>("trail");
   const [entries] = useState(MOCK_ENTRIES);
-  const [activeAgent, setActiveAgent] = useState("All");
+  const [alerts] = useState(MOCK_ALERTS);
   const [searchQuery, setSearchQuery] = useState("");
-  const [dateRange, setDateRange] = useState(0);
+  const [actionFilter, setActionFilter] = useState<ActionType | "all">("all");
+  const [userFilter, setUserFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState<"today" | "7d" | "30d" | "all">("all");
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
   const [showSensitiveOnly, setShowSensitiveOnly] = useState(false);
-  const [alertEmail, setAlertEmail] = useState("");
   const [retentionDays, setRetentionDays] = useState(90);
 
+  const uniqueUsers = Array.from(new Set(entries.map(e => e.user)));
+
   const filtered = entries.filter(e => {
-    if (activeAgent !== "All" && e.agent !== activeAgent) return false;
-    if (searchQuery && !e.description.toLowerCase().includes(searchQuery.toLowerCase()) && !e.agent.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    if (showSensitiveOnly && !e.sensitiveData) return false;
+    if (actionFilter !== "all" && e.action !== actionFilter) return false;
+    if (userFilter !== "all" && e.user !== userFilter) return false;
+    if (showSensitiveOnly && !e.sensitive) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return e.user.toLowerCase().includes(q) || e.details.toLowerCase().includes(q) || e.resource.toLowerCase().includes(q);
+    }
+    if (dateFilter === "today") return e.timestamp.startsWith("2026-04-15");
+    if (dateFilter === "7d") return true; // mock: all within 7 days
     return true;
   });
 
@@ -82,27 +108,35 @@ export default function AuditPage() {
     total: entries.length,
     success: entries.filter(e => e.status === "success").length,
     failed: entries.filter(e => e.status === "failed").length,
-    sensitive: entries.filter(e => e.sensitiveData).length,
+    sensitive: entries.filter(e => e.sensitive).length,
+    unresolvedAlerts: alerts.filter(a => !a.resolved).length,
   };
 
   function exportCSV() {
-    const csv = "Timestamp,Agent,Action,Description,Status,Client\n" +
-      filtered.map(e => `"${e.timestamp}","${e.agent}","${e.action}","${e.description}","${e.status}","${e.clientName || ""}"`).join("\n");
+    const csv = "Timestamp,User,Action,Resource,Details,IP,Status\n" +
+      filtered.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = "audit_trail.csv"; a.click();
+    const a = document.createElement("a"); a.href = url; a.download = "audit_log.csv"; a.click();
+    URL.revokeObjectURL(url);
   }
 
-  const agentStyle = (agent: string) => AGENT_MAP[agent] || { icon: <Bot size={11} />, color: "text-gold" };
+  const TABS: { id: AuditTab; label: string; icon: React.ReactNode; badge?: number }[] = [
+    { id: "trail", label: "Audit Trail", icon: <Activity size={13} /> },
+    { id: "security", label: "Security Alerts", icon: <Shield size={13} />, badge: stats.unresolvedAlerts },
+    { id: "retention", label: "Retention", icon: <Clock size={13} /> },
+    { id: "export", label: "Export", icon: <Download size={13} /> },
+  ];
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between">
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-2">
-            <Activity size={18} className="text-gold" /> Audit Trail
+            <Activity size={18} className="text-gold" /> Audit Log
           </h1>
-          <p className="text-xs text-muted mt-0.5">Complete activity history across all AI agents and system actions</p>
+          <p className="text-xs text-muted mt-0.5">Comprehensive log of all user actions in the system</p>
         </div>
         <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
           <Download size={12} /> Export CSV
@@ -110,7 +144,7 @@ export default function AuditPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
         <div className="card p-3 text-center">
           <p className="text-[9px] text-muted uppercase">Total Actions</p>
           <p className="text-xl font-bold text-gold">{stats.total}</p>
@@ -127,242 +161,370 @@ export default function AuditPage() {
           <p className="text-[9px] text-muted uppercase">Sensitive</p>
           <p className="text-xl font-bold text-amber-400">{stats.sensitive}</p>
         </div>
+        <div className="card p-3 text-center">
+          <p className="text-[9px] text-muted uppercase">Alerts</p>
+          <p className={`text-xl font-bold ${stats.unresolvedAlerts > 0 ? "text-red-400" : "text-emerald-400"}`}>{stats.unresolvedAlerts}</p>
+        </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto">
+      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit flex-wrap">
         {TABS.map(t => (
-          <button key={t} onClick={() => setTab(t)}
-            className={`px-3 py-1.5 rounded-lg text-[10px] font-medium whitespace-nowrap transition-all ${
-              tab === t ? "bg-gold/15 text-gold border border-gold/20" : "text-muted border border-transparent hover:text-foreground"
-            }`}>{t}</button>
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-all ${
+              tab === t.id ? "bg-gold/10 text-gold font-medium" : "text-muted hover:text-foreground"
+            }`}>
+            {t.icon} {t.label}
+            {t.badge !== undefined && t.badge > 0 && (
+              <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400 font-bold">{t.badge}</span>
+            )}
+          </button>
         ))}
       </div>
 
-      {/* ═══ TRAIL TAB ═══ */}
-      {tab === "Trail" && (
+      {/* ═══ AUDIT TRAIL TAB ═══ */}
+      {tab === "trail" && (
         <div className="space-y-3">
           {/* Filters */}
           <div className="flex items-center gap-3 flex-wrap">
-            <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-              {AGENT_FILTERS.slice(0, 6).map(a => (
-                <button key={a} onClick={() => setActiveAgent(a)}
-                  className={`px-2 py-1 rounded-md text-[9px] font-medium transition-colors ${activeAgent === a ? "bg-gold/20 text-gold" : "text-muted hover:text-foreground"}`}>{a}</button>
-              ))}
-            </div>
-            <div className="flex gap-1">
-              {DATE_RANGES.map(dr => (
-                <button key={dr.label} onClick={() => setDateRange(dr.days)}
-                  className={`px-2 py-1 rounded text-[9px] ${dateRange === dr.days ? "bg-gold/20 text-gold" : "text-muted"}`}>{dr.label}</button>
-              ))}
-            </div>
-            <div className="relative flex-1 max-w-xs">
+            <div className="relative flex-1 min-w-[200px] max-w-sm">
               <Search size={11} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search..." className="input w-full pl-7 text-xs py-1.5" />
+                placeholder="Search actions, users, resources..." className="input w-full pl-7 text-xs py-1.5" />
             </div>
+
+            {/* Action type filter */}
+            <div className="flex gap-1 bg-surface rounded-lg p-0.5">
+              <button onClick={() => setActionFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${actionFilter === "all" ? "bg-gold/20 text-gold" : "text-muted"}`}>All</button>
+              {ACTION_FILTERS.map(af => (
+                <button key={af} onClick={() => setActionFilter(af)}
+                  className={`px-2 py-1 rounded-md text-[9px] font-medium capitalize ${actionFilter === af ? "bg-gold/20 text-gold" : "text-muted"}`}>
+                  {ACTION_STYLES[af].label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* User filter */}
+            <select value={userFilter} onChange={e => setUserFilter(e.target.value)} className="input text-xs py-1.5">
+              <option value="all">All Users</option>
+              {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
+            </select>
+
+            {/* Date filter */}
+            <div className="flex gap-1">
+              {([["today", "Today"], ["7d", "7 Days"], ["30d", "30 Days"], ["all", "All"]] as const).map(([val, label]) => (
+                <button key={val} onClick={() => setDateFilter(val)}
+                  className={`px-2 py-1 rounded text-[9px] ${dateFilter === val ? "bg-gold/20 text-gold" : "text-muted"}`}>{label}</button>
+              ))}
+            </div>
+
+            {/* Sensitive toggle */}
             <button onClick={() => setShowSensitiveOnly(!showSensitiveOnly)}
               className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${showSensitiveOnly ? "bg-amber-400/15 text-amber-400" : "text-muted"}`}>
               <Lock size={9} /> Sensitive Only
             </button>
+
+            <span className="text-[9px] text-muted ml-auto">{filtered.length} entries</span>
           </div>
 
-          {/* Timeline */}
-          <div className="space-y-1.5">
-            {filtered.length === 0 && (
-              <div className="card text-center py-12">
-                <Activity size={28} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-sm text-muted">No audit entries yet.</p>
-              </div>
-            )}
-            {filtered.map(entry => {
-              const style = agentStyle(entry.agent);
-              return (
-                <div key={entry.id}>
-                  <button onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}
-                    className="w-full card p-3 flex items-center gap-3 text-left hover:border-gold/10 transition-all">
-                    <div className="shrink-0 w-6 h-6 rounded-full bg-surface-light flex items-center justify-center">
-                      <span className={style.color}>{style.icon}</span>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-semibold ${style.color}`}>{entry.agent}</span>
-                        <span className="text-[9px] text-muted font-mono">{entry.timestamp}</span>
-                        {entry.sensitiveData && <Lock size={9} className="text-amber-400" />}
-                      </div>
-                      <p className="text-xs truncate mt-0.5">{entry.description}</p>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {entry.clientName && <span className="text-[9px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded">{entry.clientName}</span>}
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium flex items-center gap-1 ${
-                        entry.status === "success" ? "bg-emerald-500/10 text-emerald-400" : entry.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-amber-500/10 text-amber-400"
-                      }`}>
-                        {entry.status === "success" ? <CheckCircle size={9} /> : entry.status === "failed" ? <AlertTriangle size={9} /> : <Clock size={9} />}
-                        {entry.status}
-                      </span>
-                      {expandedEntry === entry.id ? <ChevronDown size={12} className="text-muted" /> : <ChevronRight size={12} className="text-muted" />}
-                    </div>
-                  </button>
-                  {expandedEntry === entry.id && (
-                    <div className="mx-3 mb-2 p-3 rounded-lg bg-surface-light border border-border space-y-2 text-[10px]">
-                      <div className="grid grid-cols-3 gap-2">
-                        <div><span className="text-muted">Action Type</span><p className="font-mono mt-0.5">{entry.action}</p></div>
-                        <div><span className="text-muted">Agent</span><p className="mt-0.5">{entry.agent}</p></div>
-                        <div><span className="text-muted">Client</span><p className="mt-0.5">{entry.clientName || "System"}</p></div>
-                      </div>
-                      {entry.before && entry.after && (
-                        <div className="flex items-center gap-2 p-2 rounded bg-surface border border-border">
-                          <span className="text-muted">Change:</span>
-                          <span className="text-red-400 line-through">{entry.before}</span>
-                          <ArrowRight size={10} className="text-muted" />
-                          <span className="text-emerald-400">{entry.after}</span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* ═══ DATA CHANGES TAB ═══ */}
-      {tab === "Data Changes" && (
-        <div className="card">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Database size={14} className="text-gold" /> Data Change Viewer</h2>
-          <div className="space-y-2">
-            {entries.filter(e => e.before && e.after).map(e => (
-              <div key={e.id} className="p-3 rounded-lg bg-surface-light border border-border">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xs font-semibold">{e.description}</span>
-                  <span className="text-[9px] text-muted">{e.timestamp}</span>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-2 rounded bg-red-500/5 border border-red-500/10">
-                    <p className="text-[9px] text-red-400 uppercase font-semibold mb-1">Before</p>
-                    <p className="text-xs font-mono">{e.before}</p>
-                  </div>
-                  <div className="p-2 rounded bg-emerald-500/5 border border-emerald-500/10">
-                    <p className="text-[9px] text-emerald-400 uppercase font-semibold mb-1">After</p>
-                    <p className="text-xs font-mono">{e.after}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {entries.filter(e => e.before && e.after).length === 0 && (
-              <p className="text-xs text-muted text-center py-8">No data changes recorded in this period.</p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ═══ ACCESS LOG TAB ═══ */}
-      {tab === "Access Log" && (
-        <div className="card">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-gold" /> Access Log</h2>
-          <p className="text-xs text-muted text-center py-8">No access log entries yet.</p>
-        </div>
-      )}
-
-      {/* ═══ COMPLIANCE TAB ═══ */}
-      {tab === "Compliance" && (
-        <div className="card">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Compliance Checklist</h2>
-          <div className="space-y-2">
-            {COMPLIANCE_ITEMS.map((item, i) => (
-              <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                {item.status ? (
-                  <CheckCircle size={14} className="text-emerald-400 shrink-0" />
-                ) : (
-                  <AlertTriangle size={14} className="text-amber-400 shrink-0" />
+          {/* Audit Table */}
+          <div className="card overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Timestamp</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">User</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Action</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px]">Resource</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden lg:table-cell">Details</th>
+                  <th className="text-left py-2.5 px-3 text-muted font-semibold text-[10px] hidden md:table-cell">IP</th>
+                  <th className="text-center py-2.5 px-3 text-muted font-semibold text-[10px]">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.length === 0 && (
+                  <tr><td colSpan={7} className="text-center py-12">
+                    <Activity size={28} className="mx-auto mb-2 text-muted/30" />
+                    <p className="text-sm text-muted">No audit entries match your filters.</p>
+                  </td></tr>
                 )}
-                <span className="text-[10px] flex-1">{item.label}</span>
-                <span className={`text-[9px] px-2 py-0.5 rounded-full ${item.status ? "bg-emerald-500/10 text-emerald-400" : "bg-amber-500/10 text-amber-400"}`}>
-                  {item.status ? "Passing" : "Action Needed"}
-                </span>
+                {filtered.map(entry => {
+                  const style = ACTION_STYLES[entry.action];
+                  return (
+                    <tr key={entry.id}
+                      className="border-b border-border/30 hover:bg-surface-light/50 transition-colors cursor-pointer"
+                      onClick={() => setExpandedEntry(expandedEntry === entry.id ? null : entry.id)}>
+                      <td className="py-2.5 px-3">
+                        <span className="text-[10px] font-mono text-muted">{entry.timestamp}</span>
+                      </td>
+                      <td className="py-2.5 px-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-md bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold shrink-0">{entry.userAvatar}</div>
+                          <span className="text-[10px] font-medium truncate">{entry.user}</span>
+                          {entry.sensitive && <Lock size={8} className="text-amber-400 shrink-0" />}
+                        </div>
+                      </td>
+                      <td className="py-2.5 px-3">
+                        <span className={`flex items-center gap-1 text-[10px] font-medium ${style.color}`}>
+                          {style.icon} {style.label}
+                        </span>
+                      </td>
+                      <td className="py-2.5 px-3 text-[10px] font-medium">{entry.resource}</td>
+                      <td className="py-2.5 px-3 text-[10px] text-muted truncate max-w-[200px] hidden lg:table-cell">{entry.details}</td>
+                      <td className="py-2.5 px-3 text-[10px] font-mono text-muted hidden md:table-cell">{entry.ip}</td>
+                      <td className="py-2.5 px-3 text-center">
+                        <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium inline-flex items-center gap-1 ${
+                          entry.status === "success" ? "bg-emerald-500/10 text-emerald-400" :
+                          entry.status === "failed" ? "bg-red-500/10 text-red-400" :
+                          "bg-amber-500/10 text-amber-400"
+                        }`}>
+                          {entry.status === "success" ? <CheckCircle size={8} /> : entry.status === "failed" ? <AlertTriangle size={8} /> : <Clock size={8} />}
+                          {entry.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Expanded Detail */}
+          {expandedEntry && (() => {
+            const e = entries.find(en => en.id === expandedEntry);
+            if (!e) return null;
+            const style = ACTION_STYLES[e.action];
+            return (
+              <div className="card p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold flex items-center gap-2">
+                    <span className={style.color}>{style.icon}</span> Action Details
+                  </h3>
+                  <button onClick={() => setExpandedEntry(null)} className="text-muted hover:text-foreground"><X size={14} /></button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                    <p className="text-[8px] text-muted uppercase">Timestamp</p>
+                    <p className="text-[10px] font-mono mt-0.5">{e.timestamp}</p>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                    <p className="text-[8px] text-muted uppercase">User</p>
+                    <p className="text-[10px] font-medium mt-0.5">{e.user}</p>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                    <p className="text-[8px] text-muted uppercase">Action</p>
+                    <p className={`text-[10px] font-medium mt-0.5 ${style.color}`}>{style.label}</p>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-surface-light border border-border">
+                    <p className="text-[8px] text-muted uppercase">IP Address</p>
+                    <p className="text-[10px] font-mono mt-0.5">{e.ip}</p>
+                  </div>
+                </div>
+                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                  <p className="text-[8px] text-muted uppercase mb-1">Full Details</p>
+                  <p className="text-[10px]">{e.details}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                  <p className="text-[8px] text-muted uppercase mb-1">Resource</p>
+                  <p className="text-[10px] font-medium">{e.resource}</p>
+                </div>
+                {e.sensitive && (
+                  <div className="p-2.5 rounded-lg bg-amber-500/5 border border-amber-500/10 flex items-center gap-2">
+                    <Lock size={11} className="text-amber-400 shrink-0" />
+                    <p className="text-[10px] text-amber-400">This action involved sensitive data or configuration changes.</p>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
-          <div className="mt-3 p-3 rounded-lg bg-surface-light border border-border">
-            <p className="text-[10px] text-muted">Compliance Score: <span className="text-gold font-bold">{COMPLIANCE_ITEMS.filter(i => i.status).length}/{COMPLIANCE_ITEMS.length}</span> ({Math.round((COMPLIANCE_ITEMS.filter(i => i.status).length / COMPLIANCE_ITEMS.length) * 100)}%)</p>
-          </div>
+            );
+          })()}
         </div>
       )}
 
-      {/* ═══ ALERTS TAB ═══ */}
-      {tab === "Alerts" && (
-        <div className="card">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Bell size={14} className="text-gold" /> Automated Audit Alerts</h2>
-          <p className="text-[10px] text-muted mb-3">Get notified when specific audit events occur.</p>
-          <div className="space-y-2 mb-4">
-            {[
-              { trigger: "Permission change detected", enabled: true },
-              { trigger: "Sensitive data accessed", enabled: true },
-              { trigger: "Failed action rate > 10%", enabled: false },
-              { trigger: "API key rotation overdue", enabled: true },
-              { trigger: "New IP address login", enabled: false },
-            ].map((alert, i) => (
-              <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                <div className={`w-8 h-4 rounded-full transition-colors ${alert.enabled ? "bg-emerald-400" : "bg-surface"}`}>
-                  <div className={`w-3.5 h-3.5 rounded-full bg-white shadow transition-all mt-[1px] ${alert.enabled ? "ml-4" : "ml-0.5"}`} />
+      {/* ═══ SECURITY ALERTS TAB ═══ */}
+      {tab === "security" && (
+        <div className="space-y-4">
+          {/* Unresolved alerts */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Shield size={13} className="text-red-400" /> Unresolved Alerts</h2>
+            <div className="space-y-2">
+              {alerts.filter(a => !a.resolved).length === 0 && (
+                <div className="text-center py-8">
+                  <CheckCircle size={24} className="mx-auto mb-2 text-emerald-400" />
+                  <p className="text-xs text-muted">All alerts resolved. System secure.</p>
                 </div>
-                <span className="text-[10px] flex-1">{alert.trigger}</span>
-              </div>
-            ))}
+              )}
+              {alerts.filter(a => !a.resolved).map(alert => (
+                <div key={alert.id} className={`p-3 rounded-lg border ${SEVERITY_STYLES[alert.severity]}`}>
+                  <div className="flex items-start gap-3">
+                    <AlertCircle size={14} className="shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="text-[9px] uppercase font-bold">{alert.severity}</span>
+                        <span className="text-[9px] opacity-60">{alert.timestamp}</span>
+                      </div>
+                      <p className="text-[11px] font-medium">{alert.message}</p>
+                      <p className="text-[9px] opacity-60 mt-0.5">User: {alert.user}</p>
+                    </div>
+                    <button className="text-[9px] px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-colors font-medium shrink-0">
+                      Resolve
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div>
-            <label className="text-[9px] text-muted uppercase mb-1 block">Alert Email</label>
-            <input value={alertEmail} onChange={e => setAlertEmail(e.target.value)}
-              className="input w-full text-xs" placeholder="admin@shortstack.dev" />
+
+          {/* Resolved alerts */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-emerald-400" /> Resolved Alerts</h2>
+            <div className="space-y-2">
+              {alerts.filter(a => a.resolved).map(alert => (
+                <div key={alert.id} className="p-3 rounded-lg bg-surface-light border border-border">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle size={12} className="text-emerald-400 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-medium">{alert.message}</p>
+                      <p className="text-[9px] text-muted">{alert.timestamp} &middot; {alert.user}</p>
+                    </div>
+                    <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${SEVERITY_STYLES[alert.severity]}`}>{alert.severity}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Security Overview */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-gold" /> Security Overview</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                <p className="text-[9px] text-muted uppercase">Failed Logins (7d)</p>
+                <p className="text-lg font-bold text-red-400">3</p>
+              </div>
+              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                <p className="text-[9px] text-muted uppercase">Config Changes (7d)</p>
+                <p className="text-lg font-bold text-amber-400">5</p>
+              </div>
+              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                <p className="text-[9px] text-muted uppercase">Data Exports (7d)</p>
+                <p className="text-lg font-bold text-purple-400">2</p>
+              </div>
+              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                <p className="text-[9px] text-muted uppercase">Unique IPs (7d)</p>
+                <p className="text-lg font-bold text-blue-400">6</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       {/* ═══ RETENTION TAB ═══ */}
-      {tab === "Retention" && (
-        <div className="card">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Clock size={14} className="text-gold" /> Audit Retention Settings</h2>
-          <div className="space-y-3">
-            <div>
-              <label className="text-[9px] text-muted uppercase mb-1 block">Retention Period (days)</label>
-              <input type="number" value={retentionDays} onChange={e => setRetentionDays(Number(e.target.value))}
-                className="input w-32 text-xs" min={30} max={365} />
+      {tab === "retention" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Retention Policy</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Retention Period (days)</label>
+                <div className="flex items-center gap-3">
+                  <input type="number" value={retentionDays} onChange={e => setRetentionDays(Number(e.target.value))}
+                    className="input w-32 text-xs" min={30} max={365} />
+                  <div className="flex gap-1">
+                    {[30, 60, 90, 180, 365].map(d => (
+                      <button key={d} onClick={() => setRetentionDays(d)}
+                        className={`px-2 py-1 rounded text-[9px] ${retentionDays === d ? "bg-gold/20 text-gold" : "text-muted hover:text-foreground"}`}>{d}d</button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <p className="text-[10px] text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                  <p className="text-[9px] text-muted uppercase">Active Entries</p>
+                  <p className="text-lg font-bold text-gold mt-0.5">{entries.length}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                  <p className="text-[9px] text-muted uppercase">Storage Used</p>
+                  <p className="text-lg font-bold text-blue-400 mt-0.5">2.4 MB</p>
+                </div>
+                <div className="p-3 rounded-lg bg-surface-light border border-border">
+                  <p className="text-[9px] text-muted uppercase">Archived</p>
+                  <p className="text-lg font-bold text-muted mt-0.5">0</p>
+                </div>
+              </div>
             </div>
-            <p className="text-[10px] text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
-            <div className="p-3 rounded-lg bg-surface-light border border-border text-[10px]">
-              <p>Current storage: <span className="font-bold text-gold">0 entries</span></p>
-              <p className="text-muted mt-0.5">No audit data stored yet.</p>
+          </div>
+
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Database size={13} className="text-purple-400" /> Data Lifecycle</h2>
+            <div className="space-y-2">
+              {[
+                { stage: "Active", desc: `0 - ${retentionDays} days`, status: "Current data, fully searchable", color: "text-emerald-400" },
+                { stage: "Archived", desc: `${retentionDays} - ${retentionDays * 2} days`, status: "Compressed storage, on-demand access", color: "text-amber-400" },
+                { stage: "Deleted", desc: `After ${retentionDays * 2} days`, status: "Permanently removed", color: "text-red-400" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                  <div className={`w-2 h-2 rounded-full ${item.color === "text-emerald-400" ? "bg-emerald-400" : item.color === "text-amber-400" ? "bg-amber-400" : "bg-red-400"}`} />
+                  <div className="flex-1">
+                    <p className={`text-[10px] font-semibold ${item.color}`}>{item.stage}</p>
+                    <p className="text-[9px] text-muted">{item.desc}</p>
+                  </div>
+                  <span className="text-[9px] text-muted">{item.status}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       )}
 
       {/* ═══ EXPORT TAB ═══ */}
-      {tab === "Export" && (
+      {tab === "export" && (
         <div className="card">
-          <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Download size={14} className="text-gold" /> Export Audit Report</h2>
+          <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-gold" /> Export Audit Report</h2>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block">Start Date</label>
+                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Start Date</label>
                 <input type="date" className="input w-full text-xs" defaultValue="2026-04-01" />
               </div>
               <div>
-                <label className="text-[9px] text-muted uppercase mb-1 block">End Date</label>
-                <input type="date" className="input w-full text-xs" defaultValue="2026-04-14" />
+                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">End Date</label>
+                <input type="date" className="input w-full text-xs" defaultValue="2026-04-15" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Format</label>
+                <select className="input w-full text-xs">
+                  <option>CSV</option>
+                  <option>JSON</option>
+                  <option>PDF Report</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by Action</label>
+                <select className="input w-full text-xs">
+                  <option>All Actions</option>
+                  {ACTION_FILTERS.map(af => <option key={af} value={af}>{ACTION_STYLES[af].label}</option>)}
+                </select>
               </div>
             </div>
             <div>
-              <label className="text-[9px] text-muted uppercase mb-1 block">Format</label>
+              <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Filter by User</label>
               <select className="input w-full text-xs">
-                <option>CSV</option>
-                <option>JSON</option>
-                <option>PDF Report</option>
+                <option>All Users</option>
+                {uniqueUsers.map(u => <option key={u} value={u}>{u}</option>)}
               </select>
+            </div>
+            <div className="p-3 rounded-lg bg-surface-light border border-border text-[10px] text-muted">
+              Estimated export size: <span className="font-bold text-gold">{filtered.length} entries</span> ({(filtered.length * 0.2).toFixed(1)} KB)
             </div>
             <div className="flex gap-2">
               <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
+              <button className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Copy to Clipboard</button>
             </div>
           </div>
         </div>

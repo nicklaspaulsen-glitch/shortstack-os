@@ -2,91 +2,193 @@
 
 import { useState } from "react";
 import {
-  FileText, Sparkles, Building, MapPin, Target, DollarSign,
+  FileText, Sparkles, Building, Target, DollarSign,
   Plus, Eye, Clock, CheckCircle, Download, Send, Users,
-  Palette, BarChart3, Edit3, Copy,
-  Layers, TrendingUp,
-  X, AlertTriangle
+  Palette, BarChart3, Edit3, Copy, Layers, TrendingUp,
+  X, AlertTriangle, ChevronRight, Trash2, ArrowUpRight,
+  FileCheck, Calendar, PenTool, Star
 } from "lucide-react";
-import EmptyState from "@/components/empty-state";
 
-type MainTab = "builder" | "templates" | "tracking" | "history" | "analytics" | "acceptance";
+/* ------------------------------------------------------------------ */
+/*  Types                                                              */
+/* ------------------------------------------------------------------ */
+type MainTab = "list" | "builder" | "preview" | "templates" | "analytics";
 
-const SERVICES = [
-  "Short-Form Content", "Long-Form Content", "Paid Ads (Meta/Google/TikTok)",
-  "SEO & Content Marketing", "Web Design & Funnels", "AI Receptionist",
-  "Automation Workflows", "Branding & Creative", "Social Media Management",
-  "Email Marketing", "Cold DM Outreach",
-];
+type ProposalStatus = "draft" | "sent" | "viewed" | "accepted" | "declined";
 
-const TEMPLATE_STYLES = [
-  { id: "1", name: "Modern Minimal", description: "Clean, white-space heavy, professional", color: "#c8a855", preview: "Minimal" },
-  { id: "2", name: "Bold & Dark", description: "Dark theme with gold accents", color: "#1a1a2e", preview: "Dark" },
-  { id: "3", name: "Corporate Blue", description: "Traditional business proposal style", color: "#3b82f6", preview: "Corporate" },
-  { id: "4", name: "Startup Fresh", description: "Colorful, modern startup aesthetic", color: "#10b981", preview: "Fresh" },
-  { id: "5", name: "Premium Gold", description: "Luxury feel with gold elements", color: "#f59e0b", preview: "Premium" },
-  { id: "6", name: "Clean Slate", description: "Ultra minimal, content-first", color: "#6b7280", preview: "Slate" },
-];
+interface Proposal {
+  id: string;
+  client: string;
+  projectTitle: string;
+  date: string;
+  status: ProposalStatus;
+  amount: number;
+  views: number;
+  lastViewed: string | null;
+  signedDate: string | null;
+}
 
-const MOCK_PROPOSALS: { id: string; client: string; amount: string; status: string; views: number; timeSpent: string; sentDate: string; services: string[]; version: number }[] = [];
+interface LineItem {
+  id: string;
+  service: string;
+  hours: number;
+  rate: number;
+}
 
 interface ProposalSection {
   id: string;
   type: string;
   title: string;
+  content: string;
   enabled: boolean;
-  order: number;
 }
 
-const DEFAULT_SECTIONS: ProposalSection[] = [
-  { id: "1", type: "intro", title: "Introduction & About Us", enabled: true, order: 1 },
-  { id: "2", type: "analysis", title: "Situation Analysis", enabled: true, order: 2 },
-  { id: "3", type: "services", title: "Proposed Services", enabled: true, order: 3 },
-  { id: "4", type: "pricing", title: "Investment & Pricing", enabled: true, order: 4 },
-  { id: "5", type: "timeline", title: "Timeline & Milestones", enabled: true, order: 5 },
-  { id: "6", type: "results", title: "Expected Results", enabled: true, order: 6 },
-  { id: "7", type: "testimonials", title: "Client Testimonials", enabled: true, order: 7 },
-  { id: "8", type: "terms", title: "Terms & Conditions", enabled: true, order: 8 },
-  { id: "9", type: "signature", title: "Digital Signature", enabled: true, order: 9 },
-  { id: "10", type: "custom", title: "Custom Section", enabled: false, order: 10 },
+/* ------------------------------------------------------------------ */
+/*  Mock Data                                                          */
+/* ------------------------------------------------------------------ */
+const MOCK_PROPOSALS: Proposal[] = [
+  { id: "p1", client: "Bright Smile Dental", projectTitle: "Full Digital Marketing Package", date: "2026-04-10", status: "accepted", amount: 8500, views: 12, lastViewed: "2026-04-12", signedDate: "2026-04-13" },
+  { id: "p2", client: "Summit HVAC", projectTitle: "SEO & Paid Ads Campaign", date: "2026-04-08", status: "viewed", amount: 4200, views: 5, lastViewed: "2026-04-14", signedDate: null },
+  { id: "p3", client: "Legal Edge Partners", projectTitle: "Content Marketing Strategy", date: "2026-04-05", status: "sent", amount: 6800, views: 0, lastViewed: null, signedDate: null },
+  { id: "p4", client: "FreshBite Restaurant", projectTitle: "Social Media Management", date: "2026-04-02", status: "declined", amount: 3200, views: 8, lastViewed: "2026-04-06", signedDate: null },
+  { id: "p5", client: "GreenScape Landscaping", projectTitle: "Website Redesign + SEO", date: "2026-03-28", status: "draft", amount: 12000, views: 0, lastViewed: null, signedDate: null },
+  { id: "p6", client: "TechStart Labs", projectTitle: "Brand Identity & Funnels", date: "2026-04-12", status: "sent", amount: 9500, views: 2, lastViewed: "2026-04-14", signedDate: null },
+  { id: "p7", client: "Peak Performance Gym", projectTitle: "Lead Generation System", date: "2026-04-01", status: "accepted", amount: 5600, views: 14, lastViewed: "2026-04-09", signedDate: "2026-04-10" },
 ];
 
-export default function ProposalsPage() {
-  const [activeTab, setActiveTab] = useState<MainTab>("builder");
-  const [form, setForm] = useState({
-    business_name: "", industry: "", location: "", services: [] as string[],
-    pain_points: "", budget: "", contact_name: "", email: "",
-  });
-  const [selectedStyle, setSelectedStyle] = useState("1");
-  const [sections, setSections] = useState<ProposalSection[]>(DEFAULT_SECTIONS);
-  const [showBranding, setShowBranding] = useState(false);
-  const [branding, setBranding] = useState({ logo: "", color: "#c8a855", company: "ShortStack" });
+const STATUS_CONFIG: Record<ProposalStatus, { label: string; color: string; bg: string }> = {
+  draft: { label: "Draft", color: "text-muted", bg: "bg-white/5" },
+  sent: { label: "Sent", color: "text-blue-400", bg: "bg-blue-400/10" },
+  viewed: { label: "Viewed", color: "text-purple-400", bg: "bg-purple-400/10" },
+  accepted: { label: "Accepted", color: "text-green-400", bg: "bg-green-400/10" },
+  declined: { label: "Declined", color: "text-red-400", bg: "bg-red-400/10" },
+};
 
-  const toggleService = (s: string) => {
-    setForm(prev => ({
-      ...prev,
-      services: prev.services.includes(s) ? prev.services.filter(x => x !== s) : [...prev.services, s],
-    }));
+const DEFAULT_SECTIONS: ProposalSection[] = [
+  { id: "s1", type: "summary", title: "Executive Summary", content: "", enabled: true },
+  { id: "s2", type: "scope", title: "Scope of Work", content: "", enabled: true },
+  { id: "s3", type: "pricing", title: "Pricing Table", content: "", enabled: true },
+  { id: "s4", type: "timeline", title: "Timeline & Milestones", content: "", enabled: true },
+  { id: "s5", type: "terms", title: "Terms & Conditions", content: "", enabled: true },
+];
+
+const TEMPLATE_STYLES = [
+  { id: "t1", name: "Modern Minimal", desc: "Clean white-space, professional", color: "#c8a855" },
+  { id: "t2", name: "Bold & Dark", desc: "Dark theme with gold accents", color: "#1a1a2e" },
+  { id: "t3", name: "Corporate Blue", desc: "Traditional business style", color: "#3b82f6" },
+  { id: "t4", name: "Startup Fresh", desc: "Colorful modern aesthetic", color: "#10b981" },
+];
+
+const fmtCurrency = (n: number) => "$" + n.toLocaleString();
+
+/* ------------------------------------------------------------------ */
+/*  Component                                                          */
+/* ------------------------------------------------------------------ */
+export default function ProposalsPage() {
+  const [activeTab, setActiveTab] = useState<MainTab>("list");
+  const [proposals, setProposals] = useState<Proposal[]>(MOCK_PROPOSALS);
+  const [statusFilter, setStatusFilter] = useState<ProposalStatus | "all">("all");
+  const [selectedStyle, setSelectedStyle] = useState("t1");
+
+  // Builder state
+  const [builderClient, setBuilderClient] = useState("");
+  const [builderProject, setBuilderProject] = useState("");
+  const [builderDate, setBuilderDate] = useState("2026-04-15");
+  const [sections, setSections] = useState<ProposalSection[]>(DEFAULT_SECTIONS);
+  const [lineItems, setLineItems] = useState<LineItem[]>([
+    { id: "li1", service: "Website Design & Development", hours: 40, rate: 150 },
+    { id: "li2", service: "SEO Setup & Optimization", hours: 20, rate: 125 },
+    { id: "li3", service: "Content Creation (10 posts)", hours: 15, rate: 100 },
+  ]);
+  const [aiGenerating, setAiGenerating] = useState<string | null>(null);
+  const [aiBrief, setAiBrief] = useState("");
+
+  // e-Sign state
+  const [signatureName, setSignatureName] = useState("");
+  const [signatureAgreed, setSignatureAgreed] = useState(false);
+
+  // Preview state
+  const [previewProposal, setPreviewProposal] = useState<Proposal | null>(null);
+
+  // Send modal
+  const [showSendModal, setShowSendModal] = useState(false);
+  const [sendEmail, setSendEmail] = useState("");
+  const [sendMessage, setSendMessage] = useState("Hi, please review the attached proposal at your convenience.");
+
+  /* ------- Derived ------- */
+  const filtered = statusFilter === "all" ? proposals : proposals.filter(p => p.status === statusFilter);
+  const totalValue = proposals.reduce((s, p) => s + p.amount, 0);
+  const accepted = proposals.filter(p => p.status === "accepted");
+  const wonValue = accepted.reduce((s, p) => s + p.amount, 0);
+  const convRate = proposals.length > 0 ? Math.round((accepted.length / proposals.length) * 100) : 0;
+  const pending = proposals.filter(p => p.status === "sent" || p.status === "viewed");
+  const lineTotal = lineItems.reduce((s, li) => s + li.hours * li.rate, 0);
+
+  /* ------- Handlers ------- */
+  const addLineItem = () => {
+    setLineItems(prev => [...prev, { id: `li${Date.now()}`, service: "", hours: 0, rate: 0 }]);
+  };
+  const removeLineItem = (id: string) => {
+    setLineItems(prev => prev.filter(li => li.id !== id));
+  };
+  const updateLineItem = (id: string, field: keyof LineItem, value: string | number) => {
+    setLineItems(prev => prev.map(li => li.id === id ? { ...li, [field]: value } : li));
   };
 
   const toggleSection = (id: string) => {
     setSections(prev => prev.map(s => s.id === id ? { ...s, enabled: !s.enabled } : s));
   };
 
-  const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
-    { key: "builder", label: "Proposal Builder", icon: <FileText size={14} /> },
-    { key: "templates", label: "Template Gallery", icon: <Palette size={14} /> },
-    { key: "tracking", label: "Tracking", icon: <Eye size={14} /> },
-    { key: "history", label: "Version History", icon: <Layers size={14} /> },
-    { key: "analytics", label: "Analytics", icon: <BarChart3 size={14} /> },
-    { key: "acceptance", label: "Acceptance Flow", icon: <CheckCircle size={14} /> },
-  ];
+  const updateSectionContent = (id: string, content: string) => {
+    setSections(prev => prev.map(s => s.id === id ? { ...s, content } : s));
+  };
 
-  const totalSent = MOCK_PROPOSALS.length;
-  const accepted = MOCK_PROPOSALS.filter(p => p.status === "accepted").length;
-  const viewed = MOCK_PROPOSALS.filter(p => p.views > 0).length;
-  const avgTimeSpent = "14m 23s";
-  const convRate = totalSent > 0 ? Math.round((accepted / totalSent) * 100) : 0;
+  const handleAiGenerate = (sectionId: string) => {
+    setAiGenerating(sectionId);
+    setTimeout(() => {
+      const generated: Record<string, string> = {
+        s1: `We propose a comprehensive digital strategy for ${builderClient || "your organization"} focused on driving measurable growth. Our approach combines data-driven marketing with creative excellence to deliver results within the first 90 days.`,
+        s2: `Phase 1: Discovery & audit of current digital presence. Phase 2: Strategy development and asset creation. Phase 3: Launch campaigns across selected channels. Phase 4: Ongoing optimization with monthly reporting and ROI tracking.`,
+        s3: "See pricing table below for detailed line-item breakdown.",
+        s4: `Week 1-2: Onboarding & discovery. Week 3-4: Strategy presentation. Week 5-8: Asset creation & campaign setup. Week 9-12: Launch & initial optimization. Ongoing: Monthly reporting & continuous improvement.`,
+        s5: "Payment terms: 50% upfront, 50% upon project completion. Monthly retainers billed on the 1st. 30-day cancellation notice required. All work remains property of client upon final payment.",
+      };
+      updateSectionContent(sectionId, generated[sectionId] || "Generated content placeholder.");
+      setAiGenerating(null);
+    }, 1200);
+  };
+
+  const handleSendProposal = () => {
+    if (!builderClient || !builderProject) return;
+    const newProposal: Proposal = {
+      id: `p${Date.now()}`,
+      client: builderClient,
+      projectTitle: builderProject,
+      date: builderDate,
+      status: "sent",
+      amount: lineTotal,
+      views: 0,
+      lastViewed: null,
+      signedDate: null,
+    };
+    setProposals(prev => [newProposal, ...prev]);
+    setShowSendModal(false);
+    setActiveTab("list");
+  };
+
+  const openPreview = (p: Proposal) => {
+    setPreviewProposal(p);
+    setActiveTab("preview");
+  };
+
+  /* ------- Tabs ------- */
+  const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
+    { key: "list", label: "All Proposals", icon: <FileText size={14} /> },
+    { key: "builder", label: "Proposal Builder", icon: <PenTool size={14} /> },
+    { key: "preview", label: "Preview", icon: <Eye size={14} /> },
+    { key: "templates", label: "Templates", icon: <Palette size={14} /> },
+    { key: "analytics", label: "Analytics", icon: <BarChart3 size={14} /> },
+  ];
 
   return (
     <div className="fade-in space-y-5">
@@ -96,9 +198,9 @@ export default function ProposalsPage() {
           <h1 className="page-header mb-0 flex items-center gap-2">
             <FileText size={18} className="text-gold" /> Proposals
           </h1>
-          <p className="text-xs text-muted mt-0.5">Build, track, and close proposals with AI-powered generation</p>
+          <p className="text-xs text-muted mt-0.5">Build, send, track, and close proposals</p>
         </div>
-        <button className="btn-primary text-xs flex items-center gap-1.5">
+        <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs flex items-center gap-1.5">
           <Plus size={12} /> New Proposal
         </button>
       </div>
@@ -106,11 +208,11 @@ export default function ProposalsPage() {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {[
-          { label: "Total Sent", value: totalSent, icon: <Send size={12} />, color: "text-gold" },
-          { label: "Viewed", value: viewed, icon: <Eye size={12} />, color: "text-blue-400" },
-          { label: "Accepted", value: accepted, icon: <CheckCircle size={12} />, color: "text-green-400" },
-          { label: "Conv Rate", value: `${convRate}%`, icon: <TrendingUp size={12} />, color: "text-purple-400" },
-          { label: "Avg Time Spent", value: avgTimeSpent, icon: <Clock size={12} />, color: "text-gold" },
+          { label: "Total Proposals", value: proposals.length, icon: <FileText size={12} />, color: "text-gold" },
+          { label: "Pipeline Value", value: fmtCurrency(totalValue), icon: <DollarSign size={12} />, color: "text-blue-400" },
+          { label: "Won Value", value: fmtCurrency(wonValue), icon: <CheckCircle size={12} />, color: "text-green-400" },
+          { label: "Conversion Rate", value: `${convRate}%`, icon: <TrendingUp size={12} />, color: "text-purple-400" },
+          { label: "Pending Review", value: pending.length, icon: <Clock size={12} />, color: "text-gold" },
         ].map((stat, i) => (
           <div key={i} className="card text-center p-3">
             <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
@@ -130,185 +232,304 @@ export default function ProposalsPage() {
         ))}
       </div>
 
-      {/* ===== PROPOSAL BUILDER ===== */}
+      {/* ============================================================ */}
+      {/*  LIST VIEW                                                    */}
+      {/* ============================================================ */}
+      {activeTab === "list" && (
+        <div className="space-y-4">
+          {/* Status filter pills */}
+          <div className="flex gap-1.5 flex-wrap">
+            {(["all", "draft", "sent", "viewed", "accepted", "declined"] as const).map(s => {
+              const count = s === "all" ? proposals.length : proposals.filter(p => p.status === s).length;
+              return (
+                <button key={s} onClick={() => setStatusFilter(s)}
+                  className={`px-3 py-1.5 text-[10px] rounded-lg border transition-all capitalize ${
+                    statusFilter === s ? "bg-gold/10 border-gold/20 text-gold font-medium" : "border-border text-muted hover:border-gold/10"
+                  }`}>
+                  {s === "all" ? "All" : STATUS_CONFIG[s].label} ({count})
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Proposal cards */}
+          <div className="space-y-2">
+            {filtered.map(p => {
+              const cfg = STATUS_CONFIG[p.status];
+              return (
+                <div key={p.id} className="card p-4 flex items-center justify-between group">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.bg}`}>
+                      {p.status === "accepted" ? <CheckCircle size={16} className={cfg.color} /> :
+                       p.status === "viewed" ? <Eye size={16} className={cfg.color} /> :
+                       p.status === "declined" ? <X size={16} className={cfg.color} /> :
+                       p.status === "sent" ? <Send size={16} className={cfg.color} /> :
+                       <Edit3 size={16} className={cfg.color} />}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold truncate">{p.client}</p>
+                      <p className="text-[10px] text-muted truncate">{p.projectTitle}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-5 text-[10px] flex-shrink-0">
+                    <div className="text-center hidden sm:block">
+                      <p className="font-bold text-gold">{fmtCurrency(p.amount)}</p>
+                      <p className="text-[8px] text-muted">Value</p>
+                    </div>
+                    <div className="text-center hidden md:block">
+                      <p className="font-bold">{p.views}</p>
+                      <p className="text-[8px] text-muted">Views</p>
+                    </div>
+                    <div className="text-center hidden md:block">
+                      <p className="font-bold text-muted">{p.date}</p>
+                      <p className="text-[8px] text-muted">Created</p>
+                    </div>
+                    <span className={`text-[9px] px-2.5 py-1 rounded-full font-medium ${cfg.bg} ${cfg.color}`}>
+                      {cfg.label}
+                    </span>
+                    <button onClick={() => openPreview(p)} className="opacity-0 group-hover:opacity-100 transition-opacity text-muted hover:text-gold">
+                      <ChevronRight size={14} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/*  PROPOSAL BUILDER                                             */}
+      {/* ============================================================ */}
       {activeTab === "builder" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Main builder area */}
           <div className="lg:col-span-2 space-y-4">
-            {/* Prospect Details */}
+            {/* Client & Project Details */}
             <div className="card space-y-3">
-              <h2 className="text-sm font-semibold">Prospect Details</h2>
-              <div className="grid grid-cols-2 gap-3">
+              <h2 className="text-sm font-semibold flex items-center gap-2">
+                <Building size={14} className="text-gold" /> Client & Project Details
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Business Name *</label>
-                  <div className="relative">
-                    <Building size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                    <input value={form.business_name} onChange={e => setForm({ ...form, business_name: e.target.value })} className="input w-full text-xs pl-9" placeholder="e.g., Bright Smile Dental" />
-                  </div>
+                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Client Name *</label>
+                  <input value={builderClient} onChange={e => setBuilderClient(e.target.value)}
+                    className="input w-full text-xs" placeholder="e.g., Bright Smile Dental" />
                 </div>
                 <div>
-                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Contact Name</label>
-                  <div className="relative">
-                    <Users size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                    <input value={form.contact_name} onChange={e => setForm({ ...form, contact_name: e.target.value })} className="input w-full text-xs pl-9" placeholder="e.g., Dr. John Smith" />
-                  </div>
+                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Project Title *</label>
+                  <input value={builderProject} onChange={e => setBuilderProject(e.target.value)}
+                    className="input w-full text-xs" placeholder="e.g., Full Marketing Package" />
                 </div>
                 <div>
-                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Industry *</label>
-                  <div className="relative">
-                    <Target size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                    <input value={form.industry} onChange={e => setForm({ ...form, industry: e.target.value })} className="input w-full text-xs pl-9" placeholder="Dental, HVAC, Legal" />
-                  </div>
+                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Date</label>
+                  <input type="date" value={builderDate} onChange={e => setBuilderDate(e.target.value)}
+                    className="input w-full text-xs" />
                 </div>
-                <div>
-                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Location</label>
-                  <div className="relative">
-                    <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                    <input value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} className="input w-full text-xs pl-9" placeholder="Miami, FL" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Budget Range</label>
-                  <div className="relative">
-                    <DollarSign size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                    <input value={form.budget} onChange={e => setForm({ ...form, budget: e.target.value })} className="input w-full text-xs pl-9" placeholder="$1,000 - $2,500/mo" />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Email</label>
-                  <input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="input w-full text-xs" placeholder="contact@business.com" />
-                </div>
-              </div>
-              <div>
-                <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Pain Points / Challenges</label>
-                <textarea value={form.pain_points} onChange={e => setForm({ ...form, pain_points: e.target.value })} className="input w-full h-16 text-xs" placeholder="Not enough new patients, competitors outranking on Google..." />
               </div>
             </div>
 
-            {/* Services */}
-            <div className="card">
-              <h2 className="text-sm font-semibold mb-2">Services</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                {SERVICES.map(s => (
-                  <button key={s} onClick={() => toggleService(s)}
-                    className={`text-[10px] p-2 rounded-lg border text-left transition-all ${
-                      form.services.includes(s) ? "bg-gold/10 border-gold/20 text-gold" : "border-border text-muted hover:border-gold/15"
-                    }`}>
-                    {form.services.includes(s) ? "+" : ""} {s}
-                  </button>
-                ))}
-              </div>
+            {/* Sections with AI generate */}
+            <div className="card space-y-3">
+              <h2 className="text-sm font-semibold flex items-center gap-2">
+                <Layers size={14} className="text-gold" /> Proposal Sections
+              </h2>
+              {sections.map(section => (
+                <div key={section.id} className={`rounded-xl border p-3 transition-all ${
+                  section.enabled ? "border-border bg-surface-light" : "border-border/50 opacity-50"
+                }`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => toggleSection(section.id)}
+                        className={`w-8 h-4 rounded-full transition-all flex items-center ${
+                          section.enabled ? "bg-gold justify-end" : "bg-surface justify-start"
+                        }`}>
+                        <div className="w-3 h-3 bg-white rounded-full mx-0.5 shadow" />
+                      </button>
+                      <span className="text-[11px] font-semibold">{section.title}</span>
+                    </div>
+                    {section.enabled && section.type !== "pricing" && (
+                      <button onClick={() => handleAiGenerate(section.id)}
+                        disabled={aiGenerating === section.id}
+                        className="text-[9px] text-gold flex items-center gap-1 hover:underline disabled:opacity-50">
+                        <Sparkles size={10} />
+                        {aiGenerating === section.id ? "Generating..." : "AI Generate"}
+                      </button>
+                    )}
+                  </div>
+                  {section.enabled && section.type !== "pricing" && (
+                    <div>
+                      {!section.content && (
+                        <div className="mb-2">
+                          <input value={aiBrief} onChange={e => setAiBrief(e.target.value)}
+                            className="input w-full text-[10px]"
+                            placeholder="Optional: describe what this section should cover..." />
+                        </div>
+                      )}
+                      <textarea
+                        value={section.content}
+                        onChange={e => updateSectionContent(section.id, e.target.value)}
+                        className="input w-full text-[10px] h-20 resize-none"
+                        placeholder={`Write or AI-generate ${section.title.toLowerCase()} content...`}
+                      />
+                    </div>
+                  )}
+                  {section.enabled && section.type === "pricing" && (
+                    <p className="text-[9px] text-muted">Pricing is managed in the table below.</p>
+                  )}
+                </div>
+              ))}
             </div>
 
-            {/* Dynamic Pricing Table */}
+            {/* Pricing Line Items */}
             <div className="card">
               <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                <DollarSign size={14} className="text-gold" /> Dynamic Pricing Table
+                <DollarSign size={14} className="text-gold" /> Pricing Table
               </h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-[10px]">
                   <thead>
                     <tr className="text-[9px] text-muted uppercase tracking-wider border-b border-border">
-                      <th className="text-left py-2">Service</th>
-                      <th className="text-center py-2">Setup Fee</th>
-                      <th className="text-center py-2">Monthly</th>
-                      <th className="text-center py-2">Included</th>
+                      <th className="text-left py-2 pr-2">Service</th>
+                      <th className="text-center py-2 w-20">Hours</th>
+                      <th className="text-center py-2 w-24">Rate ($/hr)</th>
+                      <th className="text-center py-2 w-24">Total</th>
+                      <th className="w-8"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {(form.services.length > 0 ? form.services : ["Short-Form Content", "Paid Ads (Meta/Google/TikTok)"]).map((service, i) => (
-                      <tr key={i} className="border-b border-border/50">
-                        <td className="py-2 font-medium">{service}</td>
-                        <td className="py-2 text-center text-muted">$500</td>
-                        <td className="py-2 text-center text-gold font-bold">$997</td>
-                        <td className="py-2 text-center"><CheckCircle size={10} className="text-green-400 mx-auto" /></td>
+                    {lineItems.map(li => (
+                      <tr key={li.id} className="border-b border-border/50">
+                        <td className="py-2 pr-2">
+                          <input value={li.service}
+                            onChange={e => updateLineItem(li.id, "service", e.target.value)}
+                            className="input w-full text-[10px]" placeholder="Service name" />
+                        </td>
+                        <td className="py-2">
+                          <input type="number" value={li.hours}
+                            onChange={e => updateLineItem(li.id, "hours", Number(e.target.value))}
+                            className="input w-full text-[10px] text-center" />
+                        </td>
+                        <td className="py-2">
+                          <input type="number" value={li.rate}
+                            onChange={e => updateLineItem(li.id, "rate", Number(e.target.value))}
+                            className="input w-full text-[10px] text-center" />
+                        </td>
+                        <td className="py-2 text-center font-bold text-gold">
+                          {fmtCurrency(li.hours * li.rate)}
+                        </td>
+                        <td className="py-2">
+                          <button onClick={() => removeLineItem(li.id)} className="text-muted hover:text-red-400">
+                            <Trash2 size={10} />
+                          </button>
+                        </td>
                       </tr>
                     ))}
-                    <tr className="font-bold">
-                      <td className="py-2">Total</td>
-                      <td className="py-2 text-center">${(form.services.length || 2) * 500}</td>
-                      <td className="py-2 text-center text-gold">${(form.services.length || 2) * 997}/mo</td>
+                  </tbody>
+                  <tfoot>
+                    <tr className="font-bold text-xs">
+                      <td className="py-3" colSpan={3}>Total</td>
+                      <td className="py-3 text-center text-gold text-sm">{fmtCurrency(lineTotal)}</td>
                       <td></td>
                     </tr>
-                  </tbody>
+                  </tfoot>
                 </table>
               </div>
-            </div>
-
-            {/* Proposal Sections */}
-            <div className="card">
-              <h2 className="text-sm font-semibold mb-3">Proposal Sections</h2>
-              <div className="space-y-1.5">
-                {sections.map(section => (
-                  <div key={section.id} className={`flex items-center justify-between p-2.5 rounded-lg bg-surface-light border border-border ${!section.enabled ? "opacity-50" : ""}`}>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] text-muted w-5 text-center">{section.order}</span>
-                      <span className="text-[10px] font-medium">{section.title}</span>
-                    </div>
-                    <button onClick={() => toggleSection(section.id)}
-                      className={`w-8 h-4 rounded-full transition-all flex items-center ${section.enabled ? "bg-gold justify-end" : "bg-surface justify-start"}`}>
-                      <div className="w-3 h-3 bg-white rounded-full mx-0.5 shadow" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <button className="btn-secondary text-xs mt-3 flex items-center gap-1.5"><Plus size={10} /> Add Custom Section</button>
-            </div>
-          </div>
-
-          {/* Right sidebar */}
-          <div className="space-y-4">
-            {/* Generate Button */}
-            <div className="card border-gold/10 text-center p-5 relative overflow-hidden">
-              <div className="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <Sparkles size={24} className="text-gold" />
-              </div>
-              <h3 className="text-sm font-semibold mb-1">Generate Proposal</h3>
-              <p className="text-[10px] text-muted mb-4">AI writes a custom PDF proposal</p>
-              <button className="btn-primary w-full text-xs flex items-center justify-center gap-1.5 disabled:opacity-50">
-                <Sparkles size={12} /> Generate PDF Proposal
+              <button onClick={addLineItem} className="btn-secondary text-xs mt-3 flex items-center gap-1.5">
+                <Plus size={10} /> Add Line Item
               </button>
             </div>
 
-            {/* Client Branding */}
+            {/* e-Sign Placeholder */}
             <div className="card">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="text-xs font-semibold flex items-center gap-1.5"><Palette size={12} /> Client Branding</h3>
-                <button onClick={() => setShowBranding(!showBranding)} className="text-[9px] text-gold">{showBranding ? "Collapse" : "Expand"}</button>
+              <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <Edit3 size={14} className="text-gold" /> e-Signature
+              </h2>
+              <p className="text-[10px] text-muted mb-3">Client signs digitally when they accept the proposal.</p>
+              <div className="border-2 border-dashed border-border rounded-xl p-6 text-center mb-3">
+                <p className="text-sm text-muted italic font-serif">
+                  {signatureName || "Client Signature"}
+                </p>
+                <div className="w-48 mx-auto mt-2 border-b border-muted/30" />
+                <p className="text-[9px] text-muted mt-1">Signature Line</p>
               </div>
-              {showBranding && (
-                <div className="space-y-2">
-                  <input value={branding.company} onChange={e => setBranding({ ...branding, company: e.target.value })} className="input w-full text-xs" placeholder="Company name" />
-                  <div className="flex items-center gap-2">
-                    <label className="text-[9px] text-muted">Brand Color:</label>
-                    <input type="color" value={branding.color} onChange={e => setBranding({ ...branding, color: e.target.value })} className="w-6 h-6 rounded cursor-pointer" />
-                    <span className="text-[9px] font-mono text-muted">{branding.color}</span>
-                  </div>
-                  <div className="border-2 border-dashed border-border rounded-lg p-4 text-center">
-                    <p className="text-[9px] text-muted">Drop logo here or click to upload</p>
-                  </div>
+              <div className="flex gap-3 items-end">
+                <div className="flex-1">
+                  <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Signer Full Name</label>
+                  <input value={signatureName} onChange={e => setSignatureName(e.target.value)}
+                    className="input w-full text-xs" placeholder="John Smith" />
                 </div>
-              )}
+                <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer pb-2">
+                  <input type="checkbox" checked={signatureAgreed}
+                    onChange={e => setSignatureAgreed(e.target.checked)}
+                    className="rounded" />
+                  I agree to the terms
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="space-y-4">
+            {/* Send Proposal CTA */}
+            <div className="card border-gold/10 text-center p-5 relative overflow-hidden">
+              <div className="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <Send size={24} className="text-gold" />
+              </div>
+              <h3 className="text-sm font-semibold mb-1">Ready to Send?</h3>
+              <p className="text-[10px] text-muted mb-1">Total Value: <span className="text-gold font-bold">{fmtCurrency(lineTotal)}</span></p>
+              <p className="text-[10px] text-muted mb-4">{sections.filter(s => s.enabled).length} sections enabled</p>
+              <button
+                onClick={() => setShowSendModal(true)}
+                disabled={!builderClient || !builderProject}
+                className="btn-primary w-full text-xs flex items-center justify-center gap-1.5 disabled:opacity-40">
+                <Send size={12} /> Send Proposal
+              </button>
             </div>
 
-            {/* PDF Export + Actions */}
+            {/* Actions */}
             <div className="card space-y-2">
-              <h3 className="text-xs font-semibold">Actions</h3>
+              <h3 className="text-xs font-semibold">Quick Actions</h3>
               <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5"><Download size={12} /> Export as PDF</button>
-              <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5"><Send size={12} /> Email to Client</button>
-              <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5"><Copy size={12} /> Copy Shareable Link</button>
-              <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5"><Eye size={12} /> Preview Live</button>
+              <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5"><Copy size={12} /> Copy Link</button>
+              <button onClick={() => setActiveTab("preview")} className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5"><Eye size={12} /> Preview</button>
+            </div>
+
+            {/* Status Tracking */}
+            <div className="card">
+              <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
+                <BarChart3 size={12} className="text-gold" /> Status Tracking
+              </h3>
+              <div className="space-y-1.5">
+                {[
+                  { step: "Created", done: true },
+                  { step: "Sections Written", done: sections.some(s => s.content.length > 0) },
+                  { step: "Pricing Added", done: lineItems.length > 0 },
+                  { step: "Sent to Client", done: false },
+                  { step: "Client Opened", done: false },
+                  { step: "Client Signed", done: false },
+                ].map((s, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[10px] p-2 rounded-lg bg-surface-light">
+                    {s.done
+                      ? <CheckCircle size={12} className="text-green-400" />
+                      : <div className="w-3 h-3 rounded-full border border-border" />
+                    }
+                    <span className={s.done ? "text-foreground" : "text-muted"}>{s.step}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Auto Follow-up */}
             <div className="card">
-              <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Clock size={12} /> Auto Follow-up</h3>
+              <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5"><Clock size={12} /> Follow-up Rules</h3>
               <div className="space-y-1.5">
                 {[
-                  { delay: "3 days", action: "Send reminder email if not viewed" },
-                  { delay: "7 days", action: "Send follow-up with urgency" },
-                  { delay: "14 days", action: "Mark as expired if no action" },
+                  { delay: "3 days", action: "Reminder if not viewed" },
+                  { delay: "7 days", action: "Follow-up with urgency" },
+                  { delay: "14 days", action: "Mark as expired" },
                 ].map((rule, i) => (
-                  <div key={i} className="flex items-center gap-2 text-[9px] p-2 rounded bg-surface-light">
+                  <div key={i} className="flex items-center gap-2 text-[9px] p-2 rounded-lg bg-surface-light">
                     <Clock size={9} className="text-gold" />
                     <span className="text-gold font-semibold">{rule.delay}</span>
                     <span className="text-muted">{rule.action}</span>
@@ -320,137 +541,143 @@ export default function ProposalsPage() {
         </div>
       )}
 
-      {/* ===== TEMPLATE GALLERY ===== */}
+      {/* ============================================================ */}
+      {/*  PREVIEW                                                      */}
+      {/* ============================================================ */}
+      {activeTab === "preview" && (
+        <div className="max-w-3xl mx-auto space-y-4">
+          <div className="card p-8 space-y-6" style={{ background: "var(--color-surface)", borderColor: "var(--color-border)" }}>
+            {/* Letterhead */}
+            <div className="border-b border-border pb-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight">PROPOSAL</h2>
+                  <p className="text-[10px] text-muted mt-1">ShortStack Digital Agency</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-muted">Prepared for</p>
+                  <p className="text-sm font-bold text-gold">{previewProposal?.client || builderClient || "Client Name"}</p>
+                  <p className="text-[10px] text-muted mt-1">{previewProposal?.date || builderDate}</p>
+                </div>
+              </div>
+              <div className="mt-3 h-1 w-24 rounded-full bg-gold" />
+            </div>
+
+            {/* Project Title */}
+            <div>
+              <p className="text-[9px] text-muted uppercase tracking-widest">Project</p>
+              <h3 className="text-lg font-bold mt-0.5">{previewProposal?.projectTitle || builderProject || "Project Title"}</h3>
+            </div>
+
+            {/* Sections */}
+            {sections.filter(s => s.enabled && s.type !== "pricing").map(section => (
+              <div key={section.id} className="space-y-1">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gold">{section.title}</h4>
+                <p className="text-[11px] text-muted leading-relaxed">
+                  {section.content || `[${section.title} content will appear here]`}
+                </p>
+              </div>
+            ))}
+
+            {/* Pricing in Preview */}
+            {sections.find(s => s.type === "pricing" && s.enabled) && (
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-gold mb-2">Investment</h4>
+                <table className="w-full text-[10px]">
+                  <thead>
+                    <tr className="border-b border-border text-[9px] text-muted uppercase">
+                      <th className="text-left py-2">Service</th>
+                      <th className="text-center py-2">Hours</th>
+                      <th className="text-center py-2">Rate</th>
+                      <th className="text-right py-2">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {lineItems.map(li => (
+                      <tr key={li.id} className="border-b border-border/30">
+                        <td className="py-2">{li.service || "Service"}</td>
+                        <td className="py-2 text-center">{li.hours}</td>
+                        <td className="py-2 text-center">{fmtCurrency(li.rate)}/hr</td>
+                        <td className="py-2 text-right font-semibold">{fmtCurrency(li.hours * li.rate)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colSpan={3} className="py-3 text-right font-bold text-xs">Total Investment</td>
+                      <td className="py-3 text-right text-sm font-bold text-gold">{fmtCurrency(previewProposal?.amount || lineTotal)}</td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            )}
+
+            {/* Signature Block */}
+            <div className="border-t border-border pt-6 mt-6">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-gold mb-4">Acceptance & Signature</h4>
+              <div className="grid grid-cols-2 gap-8">
+                <div>
+                  <p className="text-[9px] text-muted mb-8">Agency Representative</p>
+                  <div className="border-b border-muted/30 mb-1" />
+                  <p className="text-[10px]">ShortStack Agency</p>
+                  <p className="text-[9px] text-muted">Date: {builderDate}</p>
+                </div>
+                <div>
+                  <p className="text-[9px] text-muted mb-8">Client Signature</p>
+                  <div className="border-b border-muted/30 mb-1" />
+                  <p className="text-[10px]">{signatureName || "________________________"}</p>
+                  <p className="text-[9px] text-muted">Date: _______________</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/*  TEMPLATES                                                    */}
+      {/* ============================================================ */}
       {activeTab === "templates" && (
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold">Proposal Template Styles</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <h3 className="text-sm font-semibold">Choose a Template Style</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {TEMPLATE_STYLES.map(style => (
               <div key={style.id} onClick={() => setSelectedStyle(style.id)}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                   selectedStyle === style.id ? "border-gold/30 bg-gold/5" : "border-border bg-surface-light hover:border-gold/10"
                 }`}>
-                <div className="h-32 rounded-lg mb-3 flex items-center justify-center" style={{ background: `${style.color}15`, border: `2px solid ${style.color}30` }}>
-                  <p className="text-sm font-bold" style={{ color: style.color }}>{style.preview}</p>
+                <div className="h-28 rounded-lg mb-3 flex items-center justify-center"
+                  style={{ background: `${style.color}15`, border: `2px solid ${style.color}30` }}>
+                  <FileCheck size={24} style={{ color: style.color }} />
                 </div>
                 <p className="text-xs font-semibold">{style.name}</p>
-                <p className="text-[10px] text-muted mt-0.5">{style.description}</p>
-                {selectedStyle === style.id && <p className="text-[9px] text-gold mt-1 flex items-center gap-1"><CheckCircle size={9} /> Selected</p>}
+                <p className="text-[10px] text-muted mt-0.5">{style.desc}</p>
+                {selectedStyle === style.id && (
+                  <p className="text-[9px] text-gold mt-1.5 flex items-center gap-1"><CheckCircle size={9} /> Selected</p>
+                )}
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* ===== PROPOSAL TRACKING ===== */}
-      {activeTab === "tracking" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Eye size={14} className="text-gold" /> Proposal Tracking
-          </h3>
-          {MOCK_PROPOSALS.length === 0 ? (
-            <EmptyState
-              icon={<FileText size={24} />}
-              title="No proposals yet"
-              description="Create your first proposal to start closing deals"
-              actionLabel="Build a Proposal"
-              onAction={() => setActiveTab("builder")}
-            />
-          ) : (
-          <div className="space-y-2">
-            {MOCK_PROPOSALS.map(p => (
-              <div key={p.id} className="card p-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                    p.status === "accepted" ? "bg-green-400/10" : p.status === "viewed" ? "bg-blue-400/10" : p.status === "declined" ? "bg-red-400/10" : "bg-surface-light"
-                  }`}>
-                    {p.status === "accepted" ? <CheckCircle size={16} className="text-green-400" /> :
-                     p.status === "viewed" ? <Eye size={16} className="text-blue-400" /> :
-                     p.status === "declined" ? <X size={16} className="text-red-400" /> :
-                     <Clock size={16} className="text-muted" />}
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold">{p.client}</p>
-                    <p className="text-[10px] text-muted">{p.services.join(", ")} | {p.amount}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-6 text-[10px]">
-                  <div className="text-center">
-                    <p className="font-bold">{p.views}</p>
-                    <p className="text-[8px] text-muted">Views</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-bold">{p.timeSpent}</p>
-                    <p className="text-[8px] text-muted">Time Spent</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-bold text-muted">{p.sentDate}</p>
-                    <p className="text-[8px] text-muted">Sent</p>
-                  </div>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                    p.status === "accepted" ? "bg-green-400/10 text-green-400" :
-                    p.status === "viewed" ? "bg-blue-400/10 text-blue-400" :
-                    p.status === "declined" ? "bg-red-400/10 text-red-400" :
-                    p.status === "expired" ? "bg-muted/10 text-muted" :
-                    "bg-yellow-400/10 text-yellow-400"
-                  }`}>{p.status}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          )}
-        </div>
-      )}
-
-      {/* ===== VERSION HISTORY ===== */}
-      {activeTab === "history" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <Layers size={14} className="text-gold" /> Proposal Version History
-          </h3>
-          {MOCK_PROPOSALS.filter(p => p.version > 1).length === 0 ? (
-            <EmptyState
-              icon={<Layers size={24} />}
-              title="No version history"
-              description="Proposal versions will appear here once you create and revise proposals"
-            />
-          ) : (
-            MOCK_PROPOSALS.filter(p => p.version > 1).map(p => (
-              <div key={p.id} className="card">
-                <p className="text-xs font-semibold mb-3">{p.client} - {p.amount}</p>
-                <div className="space-y-1.5">
-                  {Array.from({ length: p.version }, (_, i) => p.version - i).map(v => (
-                    <div key={v} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${v === p.version ? "bg-gold" : "bg-muted"}`} />
-                        <span className={v === p.version ? "font-semibold" : "text-muted"}>Version {v}</span>
-                        {v === p.version && <span className="text-[8px] px-1 py-0.5 rounded bg-gold/10 text-gold">Current</span>}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-muted">{v === p.version ? p.sentDate : `Mar ${20 + v}`}</span>
-                        {v !== p.version && <button className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-muted hover:text-gold">Restore</button>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {/* ===== ANALYTICS ===== */}
+      {/* ============================================================ */}
+      {/*  ANALYTICS                                                    */}
+      {/* ============================================================ */}
       {activeTab === "analytics" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Performance Metrics */}
             <div className="card">
-              <h3 className="text-sm font-semibold mb-3">Proposal Performance</h3>
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <BarChart3 size={13} className="text-gold" /> Proposal Performance
+              </h3>
               <div className="space-y-3">
                 {[
-                  { label: "View-to-Accept Rate", value: `${viewed > 0 ? Math.round((accepted / viewed) * 100) : 0}%`, bar: viewed > 0 ? (accepted / viewed) * 100 : 0 },
-                  { label: "Avg Time to Decision", value: "4.2 days", bar: 58 },
-                  { label: "Most Viewed Section", value: "Pricing (92%)", bar: 92 },
-                  { label: "Avg Sections Read", value: "6.4 / 9", bar: 71 },
+                  { label: "View-to-Accept Rate", value: "57%", bar: 57 },
+                  { label: "Avg Time to Decision", value: "3.8 days", bar: 48 },
+                  { label: "Most Viewed Section", value: "Pricing (94%)", bar: 94 },
+                  { label: "Avg Sections Read", value: "4.2 / 5", bar: 84 },
                 ].map((m, i) => (
                   <div key={i}>
                     <div className="flex justify-between text-[10px] mb-1">
@@ -458,76 +685,125 @@ export default function ProposalsPage() {
                       <span className="text-gold font-bold">{m.value}</span>
                     </div>
                     <div className="w-full bg-surface-light rounded-full h-1.5">
-                      <div className="bg-gold rounded-full h-1.5" style={{ width: `${m.bar}%` }} />
+                      <div className="bg-gold rounded-full h-1.5 transition-all" style={{ width: `${m.bar}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+
+            {/* Revenue from Proposals */}
             <div className="card">
-              <h3 className="text-sm font-semibold mb-3">Revenue from Proposals</h3>
-              <div className="space-y-2">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-surface-light rounded-lg p-3 text-center">
-                    <p className="text-xl font-bold text-gold">$16,885</p>
-                    <p className="text-[9px] text-muted">Monthly from accepted</p>
-                  </div>
-                  <div className="bg-surface-light rounded-lg p-3 text-center">
-                    <p className="text-xl font-bold text-purple-400">$202,620</p>
-                    <p className="text-[9px] text-muted">Annual projected</p>
-                  </div>
+              <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                <DollarSign size={13} className="text-green-400" /> Revenue from Proposals
+              </h3>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <div className="bg-surface-light rounded-xl p-3 text-center">
+                  <p className="text-xl font-bold text-gold">{fmtCurrency(wonValue)}</p>
+                  <p className="text-[9px] text-muted">Won revenue</p>
                 </div>
-                <div className="bg-surface-light rounded-lg p-3 text-center">
-                  <p className="text-xl font-bold text-muted">$11,888</p>
-                  <p className="text-[9px] text-muted">Lost from declined/expired</p>
+                <div className="bg-surface-light rounded-xl p-3 text-center">
+                  <p className="text-xl font-bold text-purple-400">{fmtCurrency(wonValue * 12)}</p>
+                  <p className="text-[9px] text-muted">Annual projection</p>
                 </div>
               </div>
+              <div className="bg-surface-light rounded-xl p-3 text-center">
+                <p className="text-xl font-bold text-muted">{fmtCurrency(proposals.filter(p => p.status === "declined").reduce((s, p) => s + p.amount, 0))}</p>
+                <p className="text-[9px] text-muted">Lost from declined</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Monthly trend - CSS bar chart */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Calendar size={13} className="text-blue-400" /> Monthly Proposal Activity
+            </h3>
+            <div className="flex items-end gap-2 h-32">
+              {[
+                { month: "Jan", sent: 3, won: 1 },
+                { month: "Feb", sent: 5, won: 3 },
+                { month: "Mar", sent: 4, won: 2 },
+                { month: "Apr", sent: 7, won: 2 },
+              ].map((m, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div className="w-full flex gap-0.5 items-end justify-center" style={{ height: "100px" }}>
+                    <div className="w-1/3 rounded-t bg-blue-400/60" style={{ height: `${(m.sent / 7) * 100}%`, minHeight: 4 }} />
+                    <div className="w-1/3 rounded-t bg-green-400/60" style={{ height: `${(m.won / 7) * 100}%`, minHeight: 4 }} />
+                  </div>
+                  <span className="text-[8px] text-muted">{m.month}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-center gap-4 mt-2">
+              <span className="text-[9px] flex items-center gap-1"><div className="w-3 h-2 rounded bg-blue-400/60" /> Sent</span>
+              <span className="text-[9px] flex items-center gap-1"><div className="w-3 h-2 rounded bg-green-400/60" /> Won</span>
+            </div>
+          </div>
+
+          {/* Top proposals */}
+          <div className="card">
+            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+              <Star size={13} className="text-gold" /> Top Proposals by Value
+            </h3>
+            <div className="space-y-2">
+              {[...proposals].sort((a, b) => b.amount - a.amount).slice(0, 5).map((p, i) => {
+                const maxAmt = Math.max(...proposals.map(pr => pr.amount));
+                const cfg = STATUS_CONFIG[p.status];
+                return (
+                  <div key={p.id} className="flex items-center gap-3">
+                    <span className="text-[10px] text-muted w-4">#{i + 1}</span>
+                    <div className="flex-1">
+                      <div className="flex justify-between text-[10px] mb-0.5">
+                        <span className="font-medium">{p.client}</span>
+                        <span className="font-bold text-gold">{fmtCurrency(p.amount)}</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-surface-light overflow-hidden">
+                        <div className="h-full rounded-full bg-gold/70" style={{ width: `${(p.amount / maxAmt) * 100}%` }} />
+                      </div>
+                    </div>
+                    <span className={`text-[8px] px-2 py-0.5 rounded-full ${cfg.bg} ${cfg.color}`}>{cfg.label}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
       )}
 
-      {/* ===== ACCEPTANCE FLOW ===== */}
-      {activeTab === "acceptance" && (
-        <div className="space-y-4">
-          <h3 className="text-sm font-semibold flex items-center gap-2">
-            <CheckCircle size={14} className="text-gold" /> Proposal Acceptance Flow
-          </h3>
-          <div className="card">
-            <p className="text-[10px] text-muted mb-4">Configure what happens when a client views, accepts, or declines a proposal.</p>
-            <div className="space-y-3">
-              {[
-                { trigger: "Client opens proposal link", action: "Send notification to Slack + mark as 'Viewed'", icon: <Eye size={14} className="text-blue-400" /> },
-                { trigger: "Client spends 5+ minutes reading", action: "Flag as highly interested + notify team", icon: <Clock size={14} className="text-purple-400" /> },
-                { trigger: "Client clicks 'Accept & Sign'", action: "Collect digital signature + generate contract + send welcome email", icon: <CheckCircle size={14} className="text-green-400" /> },
-                { trigger: "Client clicks 'Decline'", action: "Ask for reason + schedule follow-up call", icon: <X size={14} className="text-red-400" /> },
-                { trigger: "Proposal expires (14 days)", action: "Send 'last chance' email + mark as expired", icon: <AlertTriangle size={14} className="text-yellow-400" /> },
-              ].map((step, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-surface-light">
-                  <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center flex-shrink-0">{step.icon}</div>
-                  <div>
-                    <p className="text-xs font-semibold">{step.trigger}</p>
-                    <p className="text-[10px] text-muted">{step.action}</p>
-                  </div>
-                </div>
-              ))}
+      {/* ============================================================ */}
+      {/*  SEND MODAL                                                   */}
+      {/* ============================================================ */}
+      {showSendModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="card w-full max-w-md p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <Send size={14} className="text-gold" /> Send Proposal
+              </h3>
+              <button onClick={() => setShowSendModal(false)} className="text-muted hover:text-foreground">
+                <X size={16} />
+              </button>
             </div>
-          </div>
-
-          {/* Digital Signature */}
-          <div className="card">
-            <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-              <Edit3 size={14} className="text-gold" /> Digital Signature
-            </h3>
-            <p className="text-[10px] text-muted mb-3">Clients can sign proposals digitally. No PDFs or printing needed.</p>
-            <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-              <p className="text-sm text-muted italic">Signature preview area</p>
-              <p className="text-[9px] text-muted mt-1">Clients draw or type their signature here</p>
+            <div className="p-3 rounded-xl bg-surface-light text-[10px]">
+              <p className="font-semibold">{builderClient}</p>
+              <p className="text-muted">{builderProject} &middot; {fmtCurrency(lineTotal)}</p>
             </div>
-            <div className="flex gap-2 mt-3">
-              <button className="btn-secondary text-xs flex-1">Type Signature</button>
-              <button className="btn-secondary text-xs flex-1">Draw Signature</button>
-              <button className="btn-primary text-xs flex-1">Upload Signature</button>
+            <div>
+              <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Recipient Email</label>
+              <input value={sendEmail} onChange={e => setSendEmail(e.target.value)}
+                className="input w-full text-xs" placeholder="client@company.com" />
+            </div>
+            <div>
+              <label className="block text-[9px] text-muted mb-1 uppercase tracking-wider">Message</label>
+              <textarea value={sendMessage} onChange={e => setSendMessage(e.target.value)}
+                className="input w-full text-xs h-20 resize-none" />
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => setShowSendModal(false)} className="btn-secondary flex-1 text-xs">Cancel</button>
+              <button onClick={handleSendProposal} className="btn-primary flex-1 text-xs flex items-center justify-center gap-1.5">
+                <Send size={12} /> Send Now
+              </button>
             </div>
           </div>
         </div>
