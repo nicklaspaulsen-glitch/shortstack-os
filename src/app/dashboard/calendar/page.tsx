@@ -43,20 +43,7 @@ const TIMEZONES = [
   { label: "CET (UTC+1)", value: "Europe/Berlin" },
 ];
 
-const MOCK_EVENTS: CalEvent[] = [
-  { id: "1", title: "Discovery Call", client: "Bright Dental", date: "2026-04-14", time: "09:00", duration: 30, type: "video", category: "call", recurring: false, teamMember: "Nicklas", color: "#10b981" },
-  { id: "2", title: "Content Review", client: "Luxe Salon", date: "2026-04-14", time: "11:00", duration: 45, type: "video", category: "content", recurring: true, teamMember: "Sarah", color: "#8b5cf6" },
-  { id: "3", title: "Ad Campaign Deadline", client: "FitPro Gym", date: "2026-04-15", time: "17:00", duration: 0, type: "call", category: "deadline", recurring: false, teamMember: "James", color: "#ef4444" },
-  { id: "4", title: "Strategy Session", client: "Metro Realty", date: "2026-04-15", time: "14:00", duration: 60, type: "video", category: "meeting", recurring: false, teamMember: "Nicklas", color: "#3b82f6" },
-  { id: "5", title: "Monthly Review", client: "Green Eats", date: "2026-04-16", time: "10:00", duration: 60, type: "video", category: "meeting", recurring: true, teamMember: "Maria", color: "#3b82f6" },
-  { id: "6", title: "Onboarding Call", client: "Bright Dental", date: "2026-04-16", time: "15:00", duration: 30, type: "call", category: "call", recurring: false, teamMember: "Nicklas", color: "#10b981" },
-  { id: "7", title: "Social Post Deadline", client: "Luxe Salon", date: "2026-04-17", time: "12:00", duration: 0, type: "call", category: "deadline", recurring: true, teamMember: "Sarah", color: "#ef4444" },
-  { id: "8", title: "Website Launch Meeting", client: "FitPro Gym", date: "2026-04-17", time: "09:30", duration: 45, type: "in_person", category: "meeting", recurring: false, teamMember: "Alex", color: "#3b82f6" },
-  { id: "9", title: "Follow Up Call", client: "Metro Realty", date: "2026-04-18", time: "11:00", duration: 15, type: "call", category: "call", recurring: false, teamMember: "Nicklas", color: "#10b981" },
-  { id: "10", title: "Video Shoot", client: "Green Eats", date: "2026-04-18", time: "13:00", duration: 120, type: "in_person", category: "content", recurring: false, teamMember: "James", color: "#8b5cf6" },
-  { id: "11", title: "Ad Review", client: "Bright Dental", date: "2026-04-20", time: "10:00", duration: 30, type: "video", category: "meeting", recurring: false, teamMember: "Sarah", color: "#3b82f6" },
-  { id: "12", title: "SEO Check-in", client: "Luxe Salon", date: "2026-04-21", time: "14:00", duration: 30, type: "video", category: "call", recurring: true, teamMember: "Alex", color: "#10b981" },
-];
+const MOCK_EVENTS: CalEvent[] = [];
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   call: <Phone size={10} />,
@@ -524,18 +511,22 @@ export default function CalendarPage() {
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Repeat size={13} className="text-purple-400" /> Recurring Events</h2>
             <div className="space-y-2">
-              {events.filter(e => e.recurring).map(evt => (
-                <div key={evt.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                  <Repeat size={12} className="text-purple-400 shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium truncate">{evt.title}</p>
-                    <p className="text-[10px] text-muted">{evt.client} - Every {new Date(evt.date).toLocaleDateString("en-US", { weekday: "long" })} at {evt.time}</p>
+              {events.filter(e => e.recurring).length === 0 ? (
+                <p className="text-xs text-muted text-center py-8">No recurring events</p>
+              ) : (
+                events.filter(e => e.recurring).map(evt => (
+                  <div key={evt.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                    <Repeat size={12} className="text-purple-400 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium truncate">{evt.title}</p>
+                      <p className="text-[10px] text-muted">{evt.client} - Every {new Date(evt.date).toLocaleDateString("en-US", { weekday: "long" })} at {evt.time}</p>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
+                      {CATEGORY_CONFIG[evt.category].label}
+                    </span>
                   </div>
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${CATEGORY_CONFIG[evt.category].bg} ${CATEGORY_CONFIG[evt.category].color}`}>
-                    {CATEGORY_CONFIG[evt.category].label}
-                  </span>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>

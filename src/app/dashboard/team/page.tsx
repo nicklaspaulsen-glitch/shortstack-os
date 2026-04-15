@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   Users, Trophy, DollarSign, Briefcase,
   Clock, MessageSquare, CheckCircle,
-  Shield, BarChart3, UserPlus, Mail, MapPin, Globe,
+  Shield, BarChart3, UserPlus, Mail, MapPin,
   Activity, X, Search
 } from "lucide-react";
 
@@ -30,62 +30,7 @@ interface TeamMemberData {
   recentActivity: { action: string; time: string }[];
 }
 
-const MOCK_MEMBERS: TeamMemberData[] = [
-  {
-    id: "1", name: "Nicklas", email: "nicklas@shortstackcreative.com", role: "Founder / CEO", avatar: "N",
-    status: "online", skills: ["Strategy", "Sales", "AI Systems", "Automation"],
-    clients: ["Bright Dental", "Metro Realty", "FitPro Gym"], hoursThisWeek: 42, dealsWon: 8, revenue: 24500,
-    joinDate: "2024-01-01", country: "Sweden",
-    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: false, Sun: false },
-    onboardingComplete: true,
-    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
-    recentActivity: [{ action: "Closed deal with Metro Realty", time: "2h ago" }, { action: "Updated ad campaign", time: "4h ago" }],
-  },
-  {
-    id: "2", name: "Sarah Chen", email: "sarah@shortstackcreative.com", role: "Content Manager", avatar: "S",
-    status: "online", skills: ["Content Strategy", "Copywriting", "Social Media", "SEO"],
-    clients: ["Luxe Salon", "Green Eats"], hoursThisWeek: 38, dealsWon: 3, revenue: 8500,
-    joinDate: "2024-06-15", country: "USA",
-    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: false, Sun: false },
-    onboardingComplete: true,
-    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
-    recentActivity: [{ action: "Published 5 posts for Luxe Salon", time: "1h ago" }, { action: "Wrote blog for Green Eats", time: "3h ago" }],
-  },
-  {
-    id: "3", name: "James Wilson", email: "james@shortstackcreative.com", role: "Video Editor", avatar: "J",
-    status: "away", skills: ["Video Editing", "Motion Graphics", "Thumbnail Design", "Premiere Pro"],
-    clients: ["FitPro Gym", "Green Eats", "Bright Dental"], hoursThisWeek: 35, dealsWon: 0, revenue: 0,
-    joinDate: "2024-09-01", country: "Philippines",
-    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: true, Sun: false },
-    onboardingComplete: true,
-    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
-    recentActivity: [{ action: "Delivered 3 reels for FitPro", time: "30m ago" }, { action: "Started video for Bright Dental", time: "2h ago" }],
-  },
-  {
-    id: "4", name: "Maria Rodriguez", email: "maria@shortstackcreative.com", role: "Ads Manager", avatar: "M",
-    status: "online", skills: ["Meta Ads", "Google Ads", "Analytics", "Landing Pages"],
-    clients: ["Metro Realty", "Bright Dental", "Luxe Salon"], hoursThisWeek: 40, dealsWon: 2, revenue: 6200,
-    joinDate: "2025-01-10", country: "Colombia",
-    availability: { Mon: true, Tue: true, Wed: true, Thu: true, Fri: true, Sat: false, Sun: false },
-    onboardingComplete: true,
-    onboardingChecklist: [{ task: "Set up profile", done: true }, { task: "Connect integrations", done: true }],
-    recentActivity: [{ action: "Optimized Metro Realty campaign", time: "1h ago" }, { action: "Created ad set for Luxe Salon", time: "5h ago" }],
-  },
-  {
-    id: "5", name: "Alex Park", email: "alex@shortstackcreative.com", role: "Cold Caller", avatar: "A",
-    status: "offline", skills: ["Cold Calling", "Lead Gen", "CRM", "Sales Scripts"],
-    clients: [], hoursThisWeek: 28, dealsWon: 5, revenue: 12000,
-    joinDate: "2025-11-01", country: "South Korea",
-    availability: { Mon: true, Tue: true, Wed: true, Thu: false, Fri: true, Sat: false, Sun: false },
-    onboardingComplete: false,
-    onboardingChecklist: [
-      { task: "Set up profile", done: true }, { task: "Connect integrations", done: true },
-      { task: "Complete CRM training", done: true }, { task: "First mock call", done: true },
-      { task: "Shadow senior caller", done: false }, { task: "Complete compliance training", done: false },
-    ],
-    recentActivity: [{ action: "Made 45 calls today", time: "1h ago" }, { action: "Booked 3 discovery calls", time: "3h ago" }],
-  },
-];
+const MOCK_MEMBERS: TeamMemberData[] = [];
 
 const ROLES = ["Founder / CEO", "Content Manager", "Video Editor", "Ads Manager", "Cold Caller", "Account Manager", "Developer", "Designer"];
 
@@ -114,7 +59,7 @@ export default function TeamPage() {
 
   const totalRevenue = members.reduce((s, m) => s + m.revenue, 0);
   const totalDeals = members.reduce((s, m) => s + m.dealsWon, 0);
-  const avgHours = Math.round(members.reduce((s, m) => s + m.hoursThisWeek, 0) / members.length);
+  const avgHours = members.length > 0 ? Math.round(members.reduce((s, m) => s + m.hoursThisWeek, 0) / members.length) : 0;
   const onlineCount = members.filter(m => m.status === "online").length;
 
   const filteredMembers = members.filter(m =>
@@ -188,6 +133,9 @@ export default function TeamPage() {
               className="input w-full text-xs pl-8" placeholder="Search team members..." />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {filteredMembers.length === 0 && (
+              <div className="col-span-full text-center py-12 text-muted text-xs">No team members yet. Invite someone to get started.</div>
+            )}
             {filteredMembers.map(member => (
               <div key={member.id} className="card p-4 hover:border-gold/10 transition-all cursor-pointer" onClick={() => setSelectedMember(selectedMember === member.id ? null : member.id)}>
                 <div className="flex items-start gap-3">
@@ -290,26 +238,7 @@ export default function TeamPage() {
           {/* Team Chat Preview */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-gold" /> Team Chat</h2>
-            <div className="space-y-2">
-              {[
-                { from: "Nicklas", msg: "New client incoming - Metro Realty. Maria, can you handle ads?", time: "10:30 AM" },
-                { from: "Maria", msg: "On it! I'll set up the campaign structure today.", time: "10:32 AM" },
-                { from: "Sarah", msg: "Content calendar for next week is ready for review.", time: "10:45 AM" },
-                { from: "James", msg: "Just delivered the 3 reels for FitPro. Check Slack for previews.", time: "11:00 AM" },
-                { from: "Alex", msg: "Booked 3 discovery calls today. One is a dentist in Houston.", time: "11:15 AM" },
-              ].map((chat, idx) => (
-                <div key={idx} className="flex items-start gap-2 p-2 rounded-lg hover:bg-white/[0.02]">
-                  <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold shrink-0">{chat.from[0]}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-semibold">{chat.from}</span>
-                      <span className="text-[9px] text-muted">{chat.time}</span>
-                    </div>
-                    <p className="text-[11px] text-muted">{chat.msg}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <div className="text-center py-8 text-muted text-xs">No messages yet.</div>
           </div>
         </div>
       )}
@@ -320,6 +249,9 @@ export default function TeamPage() {
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Trophy size={13} className="text-gold" /> Performance Rankings</h2>
             <div className="space-y-2">
+              {members.length === 0 && (
+                <div className="text-center py-8 text-muted text-xs">No performance data yet.</div>
+              )}
               {[...members].sort((a, b) => b.revenue - a.revenue).map((member, idx) => (
                 <div key={member.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${idx === 0 ? "bg-gold/20 text-gold" : idx === 1 ? "bg-gray-300/20 text-gray-300" : idx === 2 ? "bg-amber-700/20 text-amber-600" : "bg-surface text-muted"}`}>
@@ -336,7 +268,7 @@ export default function TeamPage() {
                   </div>
                   <div className="w-24">
                     <div className="h-2 rounded-full bg-surface overflow-hidden">
-                      <div className="h-full bg-gold rounded-full" style={{ width: `${(member.revenue / Math.max(members[0]?.revenue || 1, 1)) * 100}%` }} />
+                      <div className="h-full bg-gold rounded-full" style={{ width: `${(member.revenue / Math.max([...members].sort((a, b) => b.revenue - a.revenue)[0]?.revenue || 1, 1)) * 100}%` }} />
                     </div>
                   </div>
                 </div>
@@ -347,6 +279,9 @@ export default function TeamPage() {
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Time Tracking Summary</h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+              {members.length === 0 && (
+                <div className="col-span-full text-center py-8 text-muted text-xs">No time tracking data yet.</div>
+              )}
               {members.map(m => (
                 <div key={m.id} className="p-3 rounded-lg bg-surface-light text-center border border-border">
                   <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold mx-auto mb-1">{m.avatar}</div>
@@ -369,6 +304,9 @@ export default function TeamPage() {
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Workload Distribution</h2>
             <div className="space-y-3">
+              {members.length === 0 && (
+                <div className="text-center py-8 text-muted text-xs">No workload data yet.</div>
+              )}
               {members.map(m => {
                 const load = m.clients.length * 20 + m.hoursThisWeek;
                 const maxLoad = 100;
@@ -399,23 +337,7 @@ export default function TeamPage() {
           {/* Client Assignments Overview */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Briefcase size={13} className="text-blue-400" /> Client Assignments</h2>
-            <div className="space-y-2">
-              {["Bright Dental", "Luxe Salon", "FitPro Gym", "Metro Realty", "Green Eats"].map(client => {
-                const assigned = members.filter(m => m.clients.includes(client));
-                return (
-                  <div key={client} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                    <Globe size={14} className="text-gold shrink-0" />
-                    <span className="text-xs font-semibold flex-1">{client}</span>
-                    <div className="flex -space-x-2">
-                      {assigned.map(m => (
-                        <div key={m.id} className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold border-2 border-[#0a0a0a]" title={m.name}>{m.avatar}</div>
-                      ))}
-                    </div>
-                    <span className="text-[10px] text-muted">{assigned.length} member{assigned.length !== 1 ? "s" : ""}</span>
-                  </div>
-                );
-              })}
-            </div>
+            <div className="text-center py-8 text-muted text-xs">No client assignments yet.</div>
           </div>
         </div>
       )}
@@ -425,6 +347,9 @@ export default function TeamPage() {
         <div className="card">
           <h2 className="section-header flex items-center gap-2"><Activity size={13} className="text-gold" /> Team Activity Feed</h2>
           <div className="space-y-2">
+            {members.length === 0 && (
+              <div className="text-center py-8 text-muted text-xs">No recent activity yet.</div>
+            )}
             {members.flatMap(m => m.recentActivity.map(a => ({ ...a, member: m.name, avatar: m.avatar })))
               .sort(() => Math.random() - 0.5)
               .map((act, idx) => (

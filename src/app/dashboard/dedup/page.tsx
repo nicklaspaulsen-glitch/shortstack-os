@@ -32,52 +32,9 @@ interface PreventionRule {
   active: boolean;
 }
 
-const MOCK_DUPLICATES: DuplicateGroup[] = [
-  {
-    id: "d1", field: "email", matchValue: "smith@dental.com", confidence: 98,
-    leads: [
-      { id: "l1", name: "Dr. Smith Dental", email: "smith@dental.com", phone: "(555) 111-2222", status: "warm-lead", created: "2026-04-10", source: "Cold Call" },
-      { id: "l2", name: "Smith Dental Practice", email: "smith@dental.com", phone: null, status: "new", created: "2026-04-12", source: "Website" },
-    ],
-  },
-  {
-    id: "d2", field: "phone", matchValue: "(555) 333-4444", confidence: 92,
-    leads: [
-      { id: "l3", name: "FitPro Gym Portland", email: "info@fitpro.com", phone: "(555) 333-4444", status: "booked-call", created: "2026-04-08", source: "Referral" },
-      { id: "l4", name: "FitPro Gym", email: "mark@fitpro.com", phone: "(555) 333-4444", status: "warm-lead", created: "2026-04-11", source: "Facebook Ad" },
-      { id: "l5", name: "Fit Pro Gym LLC", email: null, phone: "5553334444", status: "new", created: "2026-04-13", source: "Google Ad" },
-    ],
-  },
-  {
-    id: "d3", field: "name", matchValue: "luxe salon", confidence: 85,
-    leads: [
-      { id: "l6", name: "Luxe Salon", email: "info@luxesalon.com", phone: "(555) 555-6666", status: "closed-won", created: "2026-03-15", source: "Cold Call" },
-      { id: "l7", name: "LUXE SALON", email: "luxe@gmail.com", phone: null, status: "new", created: "2026-04-14", source: "Instagram" },
-    ],
-  },
-  {
-    id: "d4", field: "email", matchValue: "anna@greeneats.com", confidence: 100,
-    leads: [
-      { id: "l8", name: "Green Eats Restaurant", email: "anna@greeneats.com", phone: "(555) 777-8888", status: "closed-won", created: "2026-02-20", source: "Referral" },
-      { id: "l9", name: "Anna - Green Eats", email: "anna@greeneats.com", phone: "(555) 777-8888", status: "warm-lead", created: "2026-04-05", source: "Website" },
-    ],
-  },
-  {
-    id: "d5", field: "name", matchValue: "metro realty", confidence: 78,
-    leads: [
-      { id: "l10", name: "Metro Realty Group", email: "tom@metrorealty.com", phone: "(555) 999-0000", status: "sent-proposal", created: "2026-03-28", source: "LinkedIn" },
-      { id: "l11", name: "MetroRealty", email: "info@metrorealty.com", phone: null, status: "new", created: "2026-04-13", source: "Cold Email" },
-    ],
-  },
-];
+const MOCK_DUPLICATES: DuplicateGroup[] = [];
 
-const MOCK_HISTORY: ScanHistory[] = [
-  { id: "h1", date: "2026-04-14", found: 5, merged: 3, auto: false },
-  { id: "h2", date: "2026-04-07", found: 8, merged: 6, auto: true },
-  { id: "h3", date: "2026-03-31", found: 3, merged: 3, auto: true },
-  { id: "h4", date: "2026-03-24", found: 12, merged: 10, auto: true },
-  { id: "h5", date: "2026-03-17", found: 6, merged: 4, auto: false },
-];
+const MOCK_HISTORY: ScanHistory[] = [];
 
 const MOCK_RULES: PreventionRule[] = [
   { id: "pr1", field: "email", action: "block", active: true },
@@ -369,6 +326,9 @@ export default function DedupPage() {
         <div className="card">
           <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Scan History</h2>
           <div className="space-y-2">
+            {MOCK_HISTORY.length === 0 && (
+              <p className="text-xs text-muted text-center py-8">No scan history yet. Run your first scan to start.</p>
+            )}
             {MOCK_HISTORY.map(h => (
               <div key={h.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
                 <div className="text-center w-14 shrink-0">

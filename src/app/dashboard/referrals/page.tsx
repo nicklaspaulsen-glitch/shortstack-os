@@ -21,22 +21,9 @@ interface Referral {
   source: string;
 }
 
-const MOCK_REFERRALS: Referral[] = [
-  { id: "r1", referred_name: "Fresh Juice Bar", referred_email: "owner@freshjuice.com", status: "converted", commission_earned: 250, created_at: "2026-02-15", source: "referral_link" },
-  { id: "r2", referred_name: "City Yoga Studio", referred_email: "info@cityyoga.com", status: "converted", commission_earned: 200, created_at: "2026-03-01", source: "email_invite" },
-  { id: "r3", referred_name: "Apex Roofing", referred_email: "mike@apexroof.com", status: "signed_up", commission_earned: 0, created_at: "2026-03-20", source: "referral_link" },
-  { id: "r4", referred_name: "Bloom Florist", referred_email: "sarah@bloomflorist.com", status: "pending", commission_earned: 0, created_at: "2026-04-05", source: "social_share" },
-  { id: "r5", referred_name: "Swift Auto Repair", referred_email: "dave@swiftauto.com", status: "pending", commission_earned: 0, created_at: "2026-04-10", source: "email_invite" },
-  { id: "r6", referred_name: "Golden Nails Spa", referred_email: "jen@goldennails.com", status: "converted", commission_earned: 300, created_at: "2026-01-20", source: "referral_link" },
-];
+const MOCK_REFERRALS: Referral[] = [];
 
-const TOP_REFERRERS = [
-  { name: "Alex M.", referrals: 8, earned: 1200, tier: "Gold" },
-  { name: "Sarah K.", referrals: 5, earned: 750, tier: "Silver" },
-  { name: "Mike T.", referrals: 3, earned: 450, tier: "Silver" },
-  { name: "Priya S.", referrals: 2, earned: 200, tier: "Bronze" },
-  { name: "Carlos R.", referrals: 1, earned: 100, tier: "Bronze" },
-];
+const TOP_REFERRERS: { name: string; referrals: number; earned: number; tier: string }[] = [];
 
 const EMAIL_TEMPLATES = [
   { id: "et1", name: "Personal Introduction", subject: "I thought you might be interested in this", preview: "Hey {name}, I've been working with an amazing marketing team and thought of you..." },
@@ -46,21 +33,17 @@ const EMAIL_TEMPLATES = [
 ];
 
 const REFERRAL_ANALYTICS = {
-  totalClicks: 342,
-  uniqueVisitors: 218,
-  signups: 12,
-  conversions: 6,
-  conversionRate: "2.8%",
-  avgDaysToConvert: 14,
-  topSource: "Direct Link",
-  monthlyTrend: [2, 3, 1, 4, 3, 6],
+  totalClicks: 0,
+  uniqueVisitors: 0,
+  signups: 0,
+  conversions: 0,
+  conversionRate: "0%",
+  avgDaysToConvert: 0,
+  topSource: "—",
+  monthlyTrend: [] as number[],
 };
 
-const PAYOUT_HISTORY = [
-  { id: "ph1", date: "2026-04-01", amount: 450, method: "Bank Transfer", status: "paid" },
-  { id: "ph2", date: "2026-03-01", amount: 200, method: "Bank Transfer", status: "paid" },
-  { id: "ph3", date: "2026-02-01", amount: 100, method: "PayPal", status: "paid" },
-];
+const PAYOUT_HISTORY: { id: string; date: string; amount: number; method: string; status: string }[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
@@ -219,29 +202,33 @@ export default function ReferralsPage() {
           {/* Referral history */}
           <div className="card p-4">
             <h2 className="text-xs font-semibold mb-3 flex items-center gap-1.5"><TrendingUp size={12} /> Referral History</h2>
-            <div className="space-y-1.5">
-              {referrals.map(r => (
-                <div key={r.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
-                  <div className="flex items-center gap-3 min-w-0">
-                    {statusIcon(r.status)}
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold truncate">{r.referred_name}</p>
-                      <p className="text-[10px] text-muted truncate">{r.referred_email}</p>
+            {referrals.length === 0 ? (
+              <div className="text-center py-8"><TrendingUp size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No referrals yet. Share your link to get started!</p></div>
+            ) : (
+              <div className="space-y-1.5">
+                {referrals.map(r => (
+                  <div key={r.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {statusIcon(r.status)}
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold truncate">{r.referred_name}</p>
+                        <p className="text-[10px] text-muted truncate">{r.referred_email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="text-[8px] bg-white/5 text-muted px-1.5 py-0.5 rounded">{r.source}</span>
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full ${
+                        r.status === "converted" ? "bg-green-400/10 text-green-400" :
+                        r.status === "signed_up" ? "bg-blue-400/10 text-blue-400" :
+                        "bg-white/5 text-muted"
+                      }`}>{r.status}</span>
+                      {r.commission_earned > 0 && <span className="text-xs text-gold font-mono">${r.commission_earned}</span>}
+                      <span className="text-[9px] text-muted">{new Date(r.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-[8px] bg-white/5 text-muted px-1.5 py-0.5 rounded">{r.source}</span>
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                      r.status === "converted" ? "bg-green-400/10 text-green-400" :
-                      r.status === "signed_up" ? "bg-blue-400/10 text-blue-400" :
-                      "bg-white/5 text-muted"
-                    }`}>{r.status}</span>
-                    {r.commission_earned > 0 && <span className="text-xs text-gold font-mono">${r.commission_earned}</span>}
-                    <span className="text-[9px] text-muted">{new Date(r.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Reward tiers */}
@@ -276,21 +263,25 @@ export default function ReferralsPage() {
       {activeTab === "leaderboard" && (
         <div className="card p-4">
           <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Award size={12} className="text-gold" /> Top Referrers</h3>
-          <div className="space-y-2">
-            {TOP_REFERRERS.map((r, i) => (
-              <div key={r.name} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
-                  i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-white/5 text-muted"
-                }`}>{i + 1}</span>
-                <div className="flex-1">
-                  <p className="text-xs font-medium">{r.name}</p>
-                  <p className="text-[10px] text-muted">{r.tier} tier</p>
+          {TOP_REFERRERS.length === 0 ? (
+            <div className="text-center py-8"><Award size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No referrers yet</p></div>
+          ) : (
+            <div className="space-y-2">
+              {TOP_REFERRERS.map((r, i) => (
+                <div key={r.name} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ${
+                    i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-white/5 text-muted"
+                  }`}>{i + 1}</span>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium">{r.name}</p>
+                    <p className="text-[10px] text-muted">{r.tier} tier</p>
+                  </div>
+                  <span className="text-xs text-muted">{r.referrals} referrals</span>
+                  <span className="text-xs font-bold text-gold">${r.earned.toLocaleString()}</span>
                 </div>
-                <span className="text-xs text-muted">{r.referrals} referrals</span>
-                <span className="text-xs font-bold text-gold">${r.earned.toLocaleString()}</span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -334,15 +325,19 @@ export default function ReferralsPage() {
           {/* Trend chart */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3">Referrals Over Time</h3>
-            <div className="flex items-end gap-2 h-24">
-              {REFERRAL_ANALYTICS.monthlyTrend.map((v, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-[8px] text-muted">{v}</span>
-                  <div className="w-full rounded-t bg-gold/30" style={{ height: `${(v / Math.max(...REFERRAL_ANALYTICS.monthlyTrend)) * 100}%` }} />
-                  <span className="text-[8px] text-muted">{["Nov", "Dec", "Jan", "Feb", "Mar", "Apr"][i]}</span>
-                </div>
-              ))}
-            </div>
+            {REFERRAL_ANALYTICS.monthlyTrend.length === 0 ? (
+              <div className="text-center py-8"><BarChart3 size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No trend data yet</p></div>
+            ) : (
+              <div className="flex items-end gap-2 h-24">
+                {REFERRAL_ANALYTICS.monthlyTrend.map((v, i) => (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                    <span className="text-[8px] text-muted">{v}</span>
+                    <div className="w-full rounded-t bg-gold/30" style={{ height: `${(v / Math.max(...REFERRAL_ANALYTICS.monthlyTrend, 1)) * 100}%` }} />
+                    <span className="text-[8px] text-muted">{["Nov", "Dec", "Jan", "Feb", "Mar", "Apr"][i]}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Commission Calculator */}
@@ -384,17 +379,21 @@ export default function ReferralsPage() {
 
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><DollarSign size={12} className="text-gold" /> Payout History</h3>
-            <div className="space-y-2">
-              {PAYOUT_HISTORY.map(p => (
-                <div key={p.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
-                  <div>
-                    <p className="text-xs font-medium">${p.amount.toLocaleString()}</p>
-                    <p className="text-[10px] text-muted">{p.method} &middot; {p.date}</p>
+            {PAYOUT_HISTORY.length === 0 ? (
+              <div className="text-center py-8"><DollarSign size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No payouts yet</p></div>
+            ) : (
+              <div className="space-y-2">
+                {PAYOUT_HISTORY.map(p => (
+                  <div key={p.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                    <div>
+                      <p className="text-xs font-medium">${p.amount.toLocaleString()}</p>
+                      <p className="text-[10px] text-muted">{p.method} &middot; {p.date}</p>
+                    </div>
+                    <span className="text-[9px] px-2 py-0.5 rounded bg-green-400/10 text-green-400">{p.status}</span>
                   </div>
-                  <span className="text-[9px] px-2 py-0.5 rounded bg-green-400/10 text-green-400">{p.status}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="card p-4">

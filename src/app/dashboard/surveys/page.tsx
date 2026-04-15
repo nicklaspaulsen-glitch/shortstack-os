@@ -48,39 +48,9 @@ const QUESTION_TYPES: { type: QuestionType; label: string; icon: React.ReactNode
   { type: "rating", label: "Star Rating", icon: <Star size={12} /> },
 ];
 
-const MOCK_SURVEYS: Survey[] = [
-  {
-    id: "s1", name: "Client Satisfaction Q2", active: true, responses: 23, responseRate: 76,
-    thankYouMessage: "Thanks for your feedback!",
-    followUpEnabled: true,
-    questions: [
-      { id: "q1", type: "nps", text: "How likely are you to recommend us to a friend?", required: true },
-      { id: "q2", type: "csat", text: "How satisfied are you with our service?", required: true },
-      { id: "q3", type: "open_text", text: "What could we improve?", required: false },
-    ],
-  },
-  {
-    id: "s2", name: "Onboarding Experience", active: true, responses: 8, responseRate: 62,
-    thankYouMessage: "Thank you for helping us improve!",
-    followUpEnabled: false,
-    questions: [
-      { id: "q4", type: "rating", text: "Rate your onboarding experience", required: true },
-      { id: "q5", type: "multiple_choice", text: "What was most helpful?", options: ["Kickoff call", "Tutorial videos", "Documentation", "Support team"], required: true },
-      { id: "q6", type: "open_text", text: "Any suggestions?", required: false },
-    ],
-  },
-];
+const MOCK_SURVEYS: Survey[] = [];
 
-const MOCK_RESPONSES: SurveyResponse[] = [
-  { id: "r1", surveyId: "s1", respondent: "Bright Dental", answers: { "q1": 9, "q2": 5, "q3": "Love the content quality!" }, submittedAt: "2026-04-14T09:00:00Z", segment: "Enterprise" },
-  { id: "r2", surveyId: "s1", respondent: "Luxe Salon", answers: { "q1": 8, "q2": 4, "q3": "Would like faster turnaround" }, submittedAt: "2026-04-13T14:00:00Z", segment: "Growth" },
-  { id: "r3", surveyId: "s1", respondent: "FitPro Gym", answers: { "q1": 10, "q2": 5, "q3": "" }, submittedAt: "2026-04-12T11:00:00Z", segment: "Growth" },
-  { id: "r4", surveyId: "s1", respondent: "Metro Realty", answers: { "q1": 6, "q2": 3, "q3": "Need more communication" }, submittedAt: "2026-04-11T16:00:00Z", segment: "Starter" },
-  { id: "r5", surveyId: "s1", respondent: "Green Eats", answers: { "q1": 9, "q2": 5, "q3": "Everything is great" }, submittedAt: "2026-04-10T10:00:00Z", segment: "Enterprise" },
-  { id: "r6", surveyId: "s1", respondent: "Peak Fitness", answers: { "q1": 4, "q2": 2, "q3": "Not seeing ROI yet" }, submittedAt: "2026-04-09T09:00:00Z", segment: "Starter" },
-  { id: "r7", surveyId: "s2", respondent: "Valley Dental", answers: { "q4": 4, "q5": "Kickoff call" }, submittedAt: "2026-04-08T13:00:00Z", segment: "Starter" },
-  { id: "r8", surveyId: "s2", respondent: "Bloom Florist", answers: { "q4": 3, "q5": "Documentation", "q6": "More video tutorials please" }, submittedAt: "2026-04-07T15:00:00Z", segment: "Growth" },
-];
+const MOCK_RESPONSES: SurveyResponse[] = [];
 
 const TEMPLATES: { name: string; desc: string; questions: SurveyQuestion[] }[] = [
   { name: "NPS Survey", desc: "Net Promoter Score", questions: [{ id: "t1", type: "nps", text: "How likely are you to recommend us?", required: true }, { id: "t2", type: "open_text", text: "Tell us why", required: false }] },
@@ -159,7 +129,7 @@ export default function SurveysPage() {
         </div>
         <div className="card text-center">
           <p className="text-[10px] text-blue-400">Response Rate</p>
-          <p className="text-2xl font-bold text-blue-400">72%</p>
+          <p className="text-2xl font-bold text-blue-400">--</p>
           <p className="text-[8px] text-muted">avg across surveys</p>
         </div>
       </div>
@@ -205,7 +175,12 @@ export default function SurveysPage() {
               <div className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /><span className="text-[9px] text-emerald-400">Real-time</span></div>
             </div>
             <div className="mt-3 space-y-2">
-              {surveys.map(s => (
+              {surveys.length === 0 ? (
+                <div className="text-center py-6">
+                  <BarChart3 size={18} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-[10px] text-muted">No surveys yet. Create one in the Builder tab.</p>
+                </div>
+              ) : surveys.map(s => (
                 <div key={s.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
                   <div className={`w-3 h-8 rounded-full ${s.active ? "bg-emerald-400" : "bg-gray-500"}`} />
                   <div className="flex-1">
@@ -227,11 +202,10 @@ export default function SurveysPage() {
             <div className="grid grid-cols-3 gap-3">
               {["Enterprise", "Growth", "Starter"].map(seg => {
                 const segResponses = allResponses.filter(r => r.segment === seg);
-                const rate = seg === "Enterprise" ? 85 : seg === "Growth" ? 72 : 55;
                 return (
                   <div key={seg} className="p-3 rounded-lg bg-surface-light text-center border border-border">
                     <p className="text-[10px] text-muted">{seg}</p>
-                    <p className="text-xl font-bold text-gold">{rate}%</p>
+                    <p className="text-xl font-bold text-gold">--</p>
                     <p className="text-[9px] text-muted">{segResponses.length} responses</p>
                   </div>
                 );
@@ -337,6 +311,12 @@ export default function SurveysPage() {
             <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export CSV</button>
           </div>
           <div className="space-y-2">
+            {filteredResponses.length === 0 && (
+              <div className="card text-center py-8">
+                <MessageSquare size={20} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No responses yet</p>
+              </div>
+            )}
             {filteredResponses.map(r => (
               <div key={r.id} className="card p-4">
                 <div className="flex items-center justify-between mb-2">

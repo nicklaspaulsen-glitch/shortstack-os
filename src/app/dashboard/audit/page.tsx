@@ -23,20 +23,7 @@ interface AuditEntry {
   sensitiveData?: boolean;
 }
 
-const MOCK_ENTRIES: AuditEntry[] = [
-  { id: "au1", agent: "Lead Finder", action: "lead_scrape", description: "Scraped 48 leads from Google Maps for dentists in Miami", status: "success", timestamp: "2026-04-14 14:32:01", clientId: null, clientName: null },
-  { id: "au2", agent: "Outreach Bot", action: "dm_send", description: "Sent 12 Instagram DMs for cold outreach campaign", status: "success", timestamp: "2026-04-14 14:15:00", clientId: "cl_42", clientName: "Acme Dental" },
-  { id: "au3", agent: "Content Engine", action: "content_gen", description: "Generated 5 Instagram captions with hashtags", status: "success", timestamp: "2026-04-14 13:45:00", clientId: "cl_42", clientName: "Acme Dental" },
-  { id: "au4", agent: "System", action: "permission_change", description: "User alex@shortstack.dev role changed from member to admin", status: "success", timestamp: "2026-04-14 12:00:00", clientId: null, clientName: null, before: "member", after: "admin", sensitiveData: true },
-  { id: "au5", agent: "Invoice Agent", action: "invoice_chase", description: "Sent payment reminder to FastFix HVAC ($499 overdue 7d)", status: "success", timestamp: "2026-04-14 11:30:00", clientId: "cl_18", clientName: "FastFix HVAC" },
-  { id: "au6", agent: "Retention Agent", action: "health_check", description: "Failed to fetch client health data - timeout", status: "failed", timestamp: "2026-04-14 10:00:00", clientId: null, clientName: null },
-  { id: "au7", agent: "SEO Agent", action: "seo_analysis", description: "Analyzed keyword rankings for 3 competitors", status: "success", timestamp: "2026-04-14 09:15:00", clientId: "cl_35", clientName: "Peak Fitness" },
-  { id: "au8", agent: "System", action: "data_export", description: "Client data exported for GDPR request - Bella Salon", status: "success", timestamp: "2026-04-13 16:00:00", clientId: "cl_22", clientName: "Bella Salon", sensitiveData: true },
-  { id: "au9", agent: "Website Agent", action: "website_deploy", description: "Deployed updated website for Metro Plumbing", status: "success", timestamp: "2026-04-13 14:00:00", clientId: "cl_31", clientName: "Metro Plumbing" },
-  { id: "au10", agent: "System", action: "api_key_rotated", description: "OpenAI API key rotated by admin", status: "success", timestamp: "2026-04-13 10:00:00", clientId: null, clientName: null, sensitiveData: true },
-  { id: "au11", agent: "Automation", action: "workflow_trigger", description: "New client onboarding workflow triggered for Sunrise Realty", status: "success", timestamp: "2026-04-12 09:00:00", clientId: "cl_45", clientName: "Sunrise Realty" },
-  { id: "au12", agent: "Lead Finder", action: "lead_scrape", description: "Failed to scrape LinkedIn - rate limited", status: "failed", timestamp: "2026-04-12 08:00:00", clientId: null, clientName: null },
-];
+const MOCK_ENTRIES: AuditEntry[] = [];
 
 const AGENT_MAP: Record<string, { icon: React.ReactNode; color: string }> = {
   "Lead Finder": { icon: <Users size={11} />, color: "text-blue-400" },
@@ -182,6 +169,12 @@ export default function AuditPage() {
 
           {/* Timeline */}
           <div className="space-y-1.5">
+            {filtered.length === 0 && (
+              <div className="card text-center py-12">
+                <Activity size={28} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-sm text-muted">No audit entries yet.</p>
+              </div>
+            )}
             {filtered.map(entry => {
               const style = agentStyle(entry.agent);
               return (
@@ -268,24 +261,7 @@ export default function AuditPage() {
       {tab === "Access Log" && (
         <div className="card">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-gold" /> Access Log</h2>
-          <div className="space-y-1.5">
-            {[
-              { user: "alex@shortstack.dev", action: "Login", ip: "72.134.xx.xx", time: "14:32", device: "Chrome / Mac" },
-              { user: "alex@shortstack.dev", action: "Viewed client data", ip: "72.134.xx.xx", time: "14:35", device: "Chrome / Mac" },
-              { user: "api-key-prod", action: "API call /api/agents/lead-engine", ip: "34.102.xx.xx", time: "14:30", device: "Server" },
-              { user: "api-key-prod", action: "API call /api/content/generate", ip: "34.102.xx.xx", time: "13:45", device: "Server" },
-              { user: "alex@shortstack.dev", action: "Changed permissions", ip: "72.134.xx.xx", time: "12:00", device: "Chrome / Mac" },
-              { user: "cron-worker", action: "Health check execution", ip: "34.102.xx.xx", time: "11:30", device: "Server" },
-            ].map((log, i) => (
-              <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border text-[10px]">
-                <span className="text-gold font-mono w-10">{log.time}</span>
-                <span className="font-medium w-36 truncate">{log.user}</span>
-                <span className="text-muted flex-1 truncate">{log.action}</span>
-                <span className="text-muted font-mono">{log.ip}</span>
-                <span className="text-[9px] text-muted">{log.device}</span>
-              </div>
-            ))}
-          </div>
+          <p className="text-xs text-muted text-center py-8">No access log entries yet.</p>
         </div>
       )}
 
@@ -355,8 +331,8 @@ export default function AuditPage() {
             </div>
             <p className="text-[10px] text-muted">Audit logs older than {retentionDays} days will be automatically archived and removed from the active view.</p>
             <div className="p-3 rounded-lg bg-surface-light border border-border text-[10px]">
-              <p>Current storage: <span className="font-bold text-gold">12 entries</span> spanning 3 days</p>
-              <p className="text-muted mt-0.5">Estimated storage at {retentionDays} days: ~1,200 entries (~2.4 MB)</p>
+              <p>Current storage: <span className="font-bold text-gold">0 entries</span></p>
+              <p className="text-muted mt-0.5">No audit data stored yet.</p>
             </div>
           </div>
         </div>

@@ -24,23 +24,9 @@ interface Invoice {
   paymentLink: string;
 }
 
-const MOCK_INVOICES: Invoice[] = [
-  { id: "INV-001", client: "Bright Smile Dental", amount: 2497, status: "paid", dueDate: "2026-04-07", sentDate: "2026-03-31", description: "Growth Package - April 2026", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv001" },
-  { id: "INV-002", client: "Peak Fitness Gym", amount: 4997, status: "paid", dueDate: "2026-04-10", sentDate: "2026-04-03", description: "Full-Service Marketing - April", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv002" },
-  { id: "INV-003", client: "Atlas Legal Group", amount: 1997, status: "sent", dueDate: "2026-04-21", sentDate: "2026-04-14", description: "Social Media + SEO - April", currency: "USD", tax: 199.70, recurring: true, paymentLink: "pay.stripe.com/inv003" },
-  { id: "INV-004", client: "Swift Plumbing Co", amount: 3497, status: "overdue", dueDate: "2026-04-05", sentDate: "2026-03-29", description: "Ads + Web Design - March", currency: "USD", tax: 0, recurring: false, paymentLink: "pay.stripe.com/inv004" },
-  { id: "INV-005", client: "CloudNine HVAC", amount: 3997, status: "sent", dueDate: "2026-04-28", sentDate: "2026-04-14", description: "AI Receptionist + Ads - April", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv005" },
-  { id: "INV-006", client: "Sunrise Bakery", amount: 5497, status: "draft", dueDate: "2026-05-01", sentDate: "", description: "Website + Funnel Build", currency: "USD", tax: 549.70, recurring: false, paymentLink: "" },
-  { id: "INV-007", client: "Elite Auto Detailing", amount: 6497, status: "paid", dueDate: "2026-04-15", sentDate: "2026-04-08", description: "Full Stack Growth - April", currency: "USD", tax: 0, recurring: true, paymentLink: "pay.stripe.com/inv007" },
-  { id: "INV-008", client: "Green Lawn Masters", amount: 1497, status: "overdue", dueDate: "2026-03-28", sentDate: "2026-03-21", description: "Content Creation - March", currency: "EUR", tax: 0, recurring: false, paymentLink: "pay.stripe.com/inv008" },
-];
+const MOCK_INVOICES: Invoice[] = [];
 
-const INVOICE_TEMPLATES = [
-  { id: "1", name: "Standard Service", description: "Monthly retainer invoice", sections: ["Services", "Amount", "Due Date"] },
-  { id: "2", name: "Project-Based", description: "One-time project billing", sections: ["Milestones", "Deliverables", "Total"] },
-  { id: "3", name: "Itemized", description: "Detailed line-item breakdown", sections: ["Line Items", "Subtotal", "Tax", "Total"] },
-  { id: "4", name: "Quick Invoice", description: "Simple amount-only invoice", sections: ["Description", "Amount", "Due Date"] },
-];
+const INVOICE_TEMPLATES: { id: string; name: string; description: string; sections: string[] }[] = [];
 
 const formatCurrency = (amount: number, currency: string = "USD") => {
   if (currency === "EUR") return `€${amount.toLocaleString()}`;
@@ -349,7 +335,12 @@ export default function InvoicesPage() {
             <button className="btn-primary text-xs flex items-center gap-1.5"><Plus size={12} /> Add Recurring</button>
           </div>
           <div className="space-y-2">
-            {MOCK_INVOICES.filter(i => i.recurring).map(inv => (
+            {MOCK_INVOICES.filter(i => i.recurring).length === 0 ? (
+              <div className="card text-center py-8">
+                <RefreshCw size={20} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No recurring invoices yet</p>
+              </div>
+            ) : MOCK_INVOICES.filter(i => i.recurring).map(inv => (
               <div key={inv.id} className="card p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RefreshCw size={14} className="text-gold" />
@@ -416,7 +407,9 @@ export default function InvoicesPage() {
               <AlertTriangle size={12} /> Currently Overdue
             </h4>
             <div className="space-y-1.5">
-              {MOCK_INVOICES.filter(i => i.status === "overdue").map(inv => (
+              {MOCK_INVOICES.filter(i => i.status === "overdue").length === 0 ? (
+                <p className="text-[10px] text-muted text-center py-4">No overdue invoices</p>
+              ) : MOCK_INVOICES.filter(i => i.status === "overdue").map(inv => (
                 <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
                   <div>
                     <p className="font-semibold">{inv.client} - {inv.id}</p>
@@ -437,6 +430,12 @@ export default function InvoicesPage() {
       {activeTab === "templates" && (
         <div className="space-y-4">
           <h3 className="text-sm font-semibold">Invoice Templates</h3>
+          {INVOICE_TEMPLATES.length === 0 && (
+            <div className="card text-center py-8">
+              <FileText size={20} className="mx-auto mb-2 text-muted/30" />
+              <p className="text-xs text-muted">No invoice templates yet</p>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {INVOICE_TEMPLATES.map(t => (
               <div key={t.id} className="card p-4 hover:border-gold/10 transition-all cursor-pointer">
@@ -470,9 +469,9 @@ export default function InvoicesPage() {
           <div className="grid grid-cols-5 gap-3">
             {[
               { range: "Current", amount: totalSent - totalOverdue, count: MOCK_INVOICES.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-green-400" },
-              { range: "1-7 days", amount: 3497, count: 1, color: "text-yellow-400" },
+              { range: "1-7 days", amount: 0, count: 0, color: "text-yellow-400" },
               { range: "8-14 days", amount: 0, count: 0, color: "text-orange-400" },
-              { range: "15-30 days", amount: 1497, count: 1, color: "text-red-400" },
+              { range: "15-30 days", amount: 0, count: 0, color: "text-red-400" },
               { range: "30+ days", amount: 0, count: 0, color: "text-red-400" },
             ].map((bucket, i) => (
               <div key={i} className="card text-center p-3">
@@ -488,7 +487,11 @@ export default function InvoicesPage() {
               <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                 <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
               </div>
-              {MOCK_INVOICES.map(inv => {
+              {MOCK_INVOICES.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-[10px] text-muted">No invoice history yet</p>
+                </div>
+              ) : MOCK_INVOICES.map(inv => {
                 const dueDate = new Date(inv.dueDate);
                 const ageDays = Math.max(0, Math.floor((Date.now() - dueDate.getTime()) / 86400000));
                 return (
@@ -521,7 +524,7 @@ export default function InvoicesPage() {
             <div className="card text-center p-5">
               <p className="text-[10px] text-muted uppercase mb-1">This Month</p>
               <p className="text-2xl font-bold text-gold">{formatCurrency(totalPaid)}</p>
-              <p className="text-[9px] text-green-400 mt-1">+18% from last month</p>
+              <p className="text-[9px] text-muted mt-1">Current month</p>
             </div>
             <div className="card text-center p-5">
               <p className="text-[10px] text-muted uppercase mb-1">This Quarter</p>
@@ -538,15 +541,19 @@ export default function InvoicesPage() {
           <div className="card">
             <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
             <div className="flex items-end gap-3 h-40">
-              {[
-                { month: "Jan", amount: 8500 },
-                { month: "Feb", amount: 12400 },
-                { month: "Mar", amount: 18900 },
+              {MOCK_INVOICES.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <p className="text-[10px] text-muted">No revenue data yet</p>
+                </div>
+              ) : [
+                { month: "Jan", amount: 0 },
+                { month: "Feb", amount: 0 },
+                { month: "Mar", amount: 0 },
                 { month: "Apr", amount: totalPaid },
               ].map((m, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center gap-1">
                   <p className="text-[9px] font-bold">{formatCurrency(m.amount)}</p>
-                  <div className="w-full bg-gold rounded-t" style={{ height: `${(m.amount / 20000) * 100}%`, minHeight: 8 }} />
+                  <div className="w-full bg-gold rounded-t" style={{ height: `${m.amount > 0 ? Math.max((m.amount / 20000) * 100, 4) : 0}%`, minHeight: m.amount > 0 ? 8 : 2 }} />
                   <span className="text-[8px] text-muted">{m.month}</span>
                 </div>
               ))}
@@ -557,11 +564,11 @@ export default function InvoicesPage() {
             <h4 className="text-xs font-semibold mb-3">Collection Metrics</h4>
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-surface-light rounded-lg p-3 text-center">
-                <p className="text-xl font-bold text-green-400">92%</p>
+                <p className="text-xl font-bold text-green-400">--</p>
                 <p className="text-[9px] text-muted">Collection Rate</p>
               </div>
               <div className="bg-surface-light rounded-lg p-3 text-center">
-                <p className="text-xl font-bold">8.2</p>
+                <p className="text-xl font-bold">--</p>
                 <p className="text-[9px] text-muted">Avg Days to Pay</p>
               </div>
               <div className="bg-surface-light rounded-lg p-3 text-center">

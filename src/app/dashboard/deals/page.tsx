@@ -5,7 +5,7 @@ import {
   DollarSign, Plus, TrendingUp, TrendingDown, Target,
   Clock, Award, FileText, Calculator, BarChart3,
   ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
-  Calendar, ArrowRight, Briefcase, Shield
+  Calendar, ArrowRight, Shield
 } from "lucide-react";
 
 type MainTab = "pipeline" | "forecast" | "analysis" | "scoring" | "templates" | "commission";
@@ -34,18 +34,7 @@ const STAGES = [
   { key: "closed_lost", label: "Closed Lost", color: "#ef4444" },
 ];
 
-const MOCK_DEALS: Deal[] = [
-  { id: "1", title: "Growth Package", company: "Bright Smile Dental", amount: 2497, stage: "proposal", probability: 60, owner: "Nicklas", daysInStage: 3, source: "Cold Outreach", nextAction: "Follow up on proposal", competitor: "LocaliQ", closeDate: "2026-04-28" },
-  { id: "2", title: "Full-Service Marketing", company: "Peak Fitness Gym", amount: 4997, stage: "negotiation", probability: 75, owner: "Nicklas", daysInStage: 2, source: "Referral", nextAction: "Send revised pricing", competitor: "None", closeDate: "2026-04-21" },
-  { id: "3", title: "Social Media Management", company: "Atlas Legal Group", amount: 1997, stage: "qualified", probability: 40, owner: "Nicklas", daysInStage: 5, source: "Website", nextAction: "Book discovery call", competitor: "Scorpion", closeDate: "2026-05-10" },
-  { id: "4", title: "SEO + Paid Ads", company: "Swift Plumbing Co", amount: 3497, stage: "prospect", probability: 20, owner: "Nicklas", daysInStage: 1, source: "Cold DM", nextAction: "Send intro email", competitor: "—", closeDate: "2026-05-20" },
-  { id: "5", title: "Content Creation", company: "Green Lawn Masters", amount: 1497, stage: "prospect", probability: 15, owner: "Nicklas", daysInStage: 7, source: "Instagram", nextAction: "Send case study", competitor: "Freelancer", closeDate: "2026-05-15" },
-  { id: "6", title: "AI Receptionist + Ads", company: "CloudNine HVAC", amount: 3997, stage: "qualified", probability: 45, owner: "Nicklas", daysInStage: 4, source: "Cold Call", nextAction: "Demo scheduled", competitor: "ServiceTitan", closeDate: "2026-05-05" },
-  { id: "7", title: "Website + Funnel", company: "Sunrise Bakery", amount: 5497, stage: "proposal", probability: 55, owner: "Nicklas", daysInStage: 6, source: "Referral", nextAction: "Waiting for feedback", competitor: "Wix Agency", closeDate: "2026-04-30" },
-  { id: "8", title: "Full Stack Growth", company: "Elite Auto Detailing", amount: 6497, stage: "negotiation", probability: 80, owner: "Nicklas", daysInStage: 1, source: "Website", nextAction: "Contract review", competitor: "None", closeDate: "2026-04-18" },
-  { id: "9", title: "Starter Package", company: "Zen Yoga Studio", amount: 997, stage: "closed_won", probability: 100, owner: "Nicklas", daysInStage: 0, source: "Cold Outreach", nextAction: "Onboarding", competitor: "—", closeDate: "2026-04-10" },
-  { id: "10", title: "Ads Management", company: "TrueNorth Roofing", amount: 2997, stage: "closed_lost", probability: 0, owner: "Nicklas", daysInStage: 0, source: "Cold DM", nextAction: "—", competitor: "In-house", closeDate: "2026-04-08" },
-];
+const MOCK_DEALS: Deal[] = [];
 
 const formatCurrency = (n: number) => `$${n.toLocaleString()}`;
 
@@ -201,10 +190,10 @@ export default function DealsPage() {
             </h3>
             <div className="grid grid-cols-4 gap-3">
               {[
-                { stage: "Prospect to Qualified", avg: "4.2 days", trend: "faster" },
-                { stage: "Qualified to Proposal", avg: "6.8 days", trend: "slower" },
-                { stage: "Proposal to Negotiation", avg: "3.1 days", trend: "faster" },
-                { stage: "Negotiation to Close", avg: "5.5 days", trend: "faster" },
+                { stage: "Prospect to Qualified", avg: "0 days", trend: "faster" },
+                { stage: "Qualified to Proposal", avg: "0 days", trend: "faster" },
+                { stage: "Proposal to Negotiation", avg: "0 days", trend: "faster" },
+                { stage: "Negotiation to Close", avg: "0 days", trend: "faster" },
               ].map((v, i) => (
                 <div key={i} className="bg-surface-light rounded-lg p-3 text-center">
                   <p className="text-[9px] text-muted mb-1">{v.stage}</p>
@@ -215,7 +204,7 @@ export default function DealsPage() {
                 </div>
               ))}
             </div>
-            <p className="text-[10px] text-muted mt-3">Average sales cycle: <span className="text-gold font-semibold">19.6 days</span> (down from 24.3 days last month)</p>
+            <p className="text-[10px] text-muted mt-3">Average sales cycle: <span className="text-gold font-semibold">0 days</span></p>
           </div>
 
           {/* Deal Timeline */}
@@ -223,31 +212,7 @@ export default function DealsPage() {
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Calendar size={14} className="text-gold" /> Recent Deal Timeline
             </h3>
-            <div className="space-y-3">
-              {[
-                { date: "Apr 14", event: "Elite Auto Detailing moved to Negotiation", type: "stage", deal: "$6,497" },
-                { date: "Apr 12", event: "Proposal sent to Sunrise Bakery", type: "proposal", deal: "$5,497" },
-                { date: "Apr 10", event: "Zen Yoga Studio - CLOSED WON", type: "won", deal: "$997" },
-                { date: "Apr 8", event: "TrueNorth Roofing - CLOSED LOST (went in-house)", type: "lost", deal: "$2,997" },
-                { date: "Apr 5", event: "Discovery call with Atlas Legal Group", type: "call", deal: "$1,997" },
-              ].map((item, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="flex flex-col items-center">
-                    <div className={`w-3 h-3 rounded-full ${
-                      item.type === "won" ? "bg-green-400" : item.type === "lost" ? "bg-red-400" : item.type === "proposal" ? "bg-yellow-400" : "bg-blue-400"
-                    }`} />
-                    {i < 4 && <div className="w-px h-8 bg-border" />}
-                  </div>
-                  <div>
-                    <p className="text-xs">{item.event}</p>
-                    <div className="flex gap-2 mt-0.5">
-                      <span className="text-[9px] text-muted">{item.date}</span>
-                      <span className="text-[9px] text-gold font-semibold">{item.deal}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <div className="text-center py-8 text-muted text-xs">No deal activity yet.</div>
           </div>
         </div>
       )}
@@ -288,11 +253,11 @@ export default function DealsPage() {
             <h4 className="text-xs font-semibold mb-3">Monthly Revenue Trend</h4>
             <div className="flex items-end gap-3 h-40">
               {[
-                { month: "Nov", actual: 8500, forecast: 0 },
-                { month: "Dec", actual: 12400, forecast: 0 },
-                { month: "Jan", actual: 15200, forecast: 0 },
-                { month: "Feb", actual: 18900, forecast: 0 },
-                { month: "Mar", actual: 22400, forecast: 0 },
+                { month: "Nov", actual: 0, forecast: 0 },
+                { month: "Dec", actual: 0, forecast: 0 },
+                { month: "Jan", actual: 0, forecast: 0 },
+                { month: "Feb", actual: 0, forecast: 0 },
+                { month: "Mar", actual: 0, forecast: 0 },
                 { month: "Apr", actual: wonValue, forecast: Math.round(weightedPipeline) },
                 { month: "May", actual: 0, forecast: Math.round(weightedPipeline * 1.15) },
               ].map((m, i) => (
@@ -326,50 +291,14 @@ export default function DealsPage() {
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <CheckCircle size={14} className="text-green-400" /> Win Factors
               </h3>
-              <div className="space-y-2">
-                {[
-                  { reason: "Strong initial demo", pct: 85 },
-                  { reason: "Competitive pricing", pct: 72 },
-                  { reason: "Case study presented", pct: 68 },
-                  { reason: "Fast response time", pct: 64 },
-                  { reason: "Referral introduction", pct: 58 },
-                ].map((r, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between text-[10px] mb-1">
-                      <span>{r.reason}</span>
-                      <span className="text-green-400 font-bold">{r.pct}%</span>
-                    </div>
-                    <div className="w-full bg-surface-light rounded-full h-1.5">
-                      <div className="bg-green-400 rounded-full h-1.5" style={{ width: `${r.pct}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <div className="text-center py-8 text-muted text-xs">No win data yet.</div>
             </div>
             {/* Loss Reasons */}
             <div className="card">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <AlertTriangle size={14} className="text-red-400" /> Loss Reasons
               </h3>
-              <div className="space-y-2">
-                {[
-                  { reason: "Went with competitor", pct: 38 },
-                  { reason: "Budget constraints", pct: 28 },
-                  { reason: "Decided to go in-house", pct: 18 },
-                  { reason: "No response / ghosted", pct: 12 },
-                  { reason: "Timing not right", pct: 4 },
-                ].map((r, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between text-[10px] mb-1">
-                      <span>{r.reason}</span>
-                      <span className="text-red-400 font-bold">{r.pct}%</span>
-                    </div>
-                    <div className="w-full bg-surface-light rounded-full h-1.5">
-                      <div className="bg-red-400 rounded-full h-1.5" style={{ width: `${r.pct}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <div className="text-center py-8 text-muted text-xs">No loss data yet.</div>
             </div>
           </div>
           {/* Competitor notes */}
@@ -377,29 +306,7 @@ export default function DealsPage() {
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Shield size={14} className="text-gold" /> Competitor Intelligence
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              {[
-                { name: "LocaliQ", wins: 2, losses: 5, avgDeal: "$2,200", weakness: "Higher pricing, slow onboarding" },
-                { name: "Scorpion", wins: 1, losses: 3, avgDeal: "$3,500", weakness: "Long contracts, limited customization" },
-                { name: "ServiceTitan", wins: 0, losses: 2, avgDeal: "$4,000", weakness: "Focused on SaaS not services" },
-              ].map((c, i) => (
-                <div key={i} className="bg-surface-light rounded-lg p-3 border border-border">
-                  <p className="text-xs font-semibold mb-1 flex items-center gap-1.5"><Briefcase size={10} /> {c.name}</p>
-                  <div className="grid grid-cols-2 gap-2 my-2">
-                    <div className="text-center">
-                      <p className="text-sm font-bold text-green-400">{c.wins}</p>
-                      <p className="text-[8px] text-muted">We won</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-sm font-bold text-red-400">{c.losses}</p>
-                      <p className="text-[8px] text-muted">We lost</p>
-                    </div>
-                  </div>
-                  <p className="text-[9px] text-muted">Avg deal: {c.avgDeal}</p>
-                  <p className="text-[9px] text-muted mt-0.5">Weakness: {c.weakness}</p>
-                </div>
-              ))}
-            </div>
+            <div className="text-center py-8 text-muted text-xs">No competitor data yet.</div>
           </div>
         </div>
       )}
@@ -411,6 +318,9 @@ export default function DealsPage() {
             <Zap size={14} className="text-gold" /> AI Deal Scoring
           </h3>
           <div className="space-y-2">
+            {openDeals.length === 0 && (
+              <div className="text-center py-8 text-muted text-xs">No open deals to score yet.</div>
+            )}
             {openDeals.sort((a, b) => b.probability - a.probability).map(deal => {
               const score = Math.round(deal.probability * 0.4 + (deal.amount > 3000 ? 30 : 15) + (deal.daysInStage < 5 ? 20 : 5));
               const scoreColor = score >= 70 ? "text-green-400" : score >= 40 ? "text-yellow-400" : "text-red-400";
@@ -552,8 +462,8 @@ export default function DealsPage() {
             </div>
             <div className="card text-center p-5">
               <p className="text-[10px] text-muted uppercase mb-1">YTD Earnings</p>
-              <p className="text-3xl font-bold text-green-400">{formatCurrency(12450)}</p>
-              <p className="text-[10px] text-muted mt-1">Jan - Apr 2026</p>
+              <p className="text-3xl font-bold text-green-400">{formatCurrency(0)}</p>
+              <p className="text-[10px] text-muted mt-1">No data yet</p>
             </div>
           </div>
           {/* Deal-by-deal breakdown */}
@@ -563,6 +473,9 @@ export default function DealsPage() {
               <div className="grid grid-cols-5 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                 <span>Deal</span><span>Amount</span><span>Rate</span><span>Commission</span><span>Status</span>
               </div>
+              {MOCK_DEALS.filter(d => d.stage === "closed_won" || d.probability >= 50).length === 0 && (
+                <div className="text-center py-8 text-muted text-xs">No commission data yet.</div>
+              )}
               {MOCK_DEALS.filter(d => d.stage === "closed_won" || d.probability >= 50).map(deal => {
                 const rate = deal.amount >= 5000 ? 0.20 : deal.amount >= 3000 ? 0.15 : 0.10;
                 const commission = Math.round(deal.amount * rate);

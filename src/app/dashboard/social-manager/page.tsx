@@ -18,10 +18,10 @@ import {
   Search, Download, Eye, Upload, LineChart, Repeat,
   GitCompare, Reply, Handshake, Music2,
   Target, Flame, Link, AtSign,
-  PieChart, Star, ThumbsUp, Heart, Share2,
-  Grid3X3, ArrowUpRight, Columns, BookOpen, Wand2,
+  PieChart, ThumbsUp, Heart, Share2,
+  Grid3X3, Columns, BookOpen, Wand2,
   CircleDot, Inbox, UserPlus, AlertCircle,
-  Plus, Minus, X, Check
+  Plus, X, Check
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -64,51 +64,17 @@ export default function SocialManagerPage() {
   const [bioResults, setBioResults] = useState<string[]>([]);
   const [generatingBio, setGeneratingBio] = useState(false);
   const [bulkCsv, setBulkCsv] = useState("");
-  const [competitorHandles, setCompetitorHandles] = useState<Array<{ handle: string; platform: string; frequency: string; lastPost: string }>>([
-    { handle: "@competitor1", platform: "instagram", frequency: "2.3/day", lastPost: "2h ago" },
-    { handle: "@rival_brand", platform: "tiktok", frequency: "1.8/day", lastPost: "5h ago" },
-    { handle: "@industry_leader", platform: "linkedin", frequency: "1.1/day", lastPost: "1d ago" },
-  ]);
+  const [competitorHandles, setCompetitorHandles] = useState<Array<{ handle: string; platform: string; frequency: string; lastPost: string }>>([]);
   const [newCompetitor, setNewCompetitor] = useState("");
-  const [listeningKeywords, setListeningKeywords] = useState<string[]>(["brand name", "industry term", "product name"]);
+  const [listeningKeywords, setListeningKeywords] = useState<string[]>([]);
   const [newKeyword, setNewKeyword] = useState("");
-  const [storySlides, setStorySlides] = useState<Array<{ id: number; text: string; type: string }>>([
-    { id: 1, text: "Hook slide", type: "text" },
-    { id: 2, text: "Value slide", type: "image" },
-    { id: 3, text: "CTA slide", type: "text" },
-  ]);
-  const [carouselSlides, setCarouselSlides] = useState<Array<{ id: number; heading: string; body: string }>>([
-    { id: 1, heading: "Slide 1 - Hook", body: "Start with a bold statement..." },
-    { id: 2, heading: "Slide 2 - Problem", body: "Identify the pain point..." },
-    { id: 3, heading: "Slide 3 - Solution", body: "Present your answer..." },
-    { id: 4, heading: "Slide 4 - Proof", body: "Show results/testimonials..." },
-    { id: 5, heading: "Slide 5 - CTA", body: "Tell them what to do next..." },
-  ]);
-  const [linkBioLinks, setLinkBioLinks] = useState<Array<{ id: number; label: string; url: string; clicks: number }>>([
-    { id: 1, label: "Website", url: "https://example.com", clicks: 234 },
-    { id: 2, label: "Book a Call", url: "https://cal.com/example", clicks: 187 },
-    { id: 3, label: "Latest Offer", url: "https://example.com/offer", clicks: 156 },
-  ]);
-  const [autoReplyRules, setAutoReplyRules] = useState<Array<{ id: number; trigger: string; response: string; active: boolean }>>([
-    { id: 1, trigger: "price", response: "Thanks for your interest! Check our pricing at the link in bio or DM us for a custom quote.", active: true },
-    { id: 2, trigger: "hours", response: "We're open Mon-Fri 9AM-6PM. Feel free to book online anytime!", active: true },
-    { id: 3, trigger: "location", response: "We're located at [address]. See Google Maps link in our bio!", active: false },
-  ]);
-  const [collabOpportunities] = useState([
-    { id: 1, brand: "FitLife Co", niche: "Health & Wellness", followers: "45K", status: "outreach", match: 92 },
-    { id: 2, brand: "TechStart Hub", niche: "Technology", followers: "78K", status: "negotiating", match: 87 },
-    { id: 3, brand: "EcoVibe", niche: "Sustainability", followers: "32K", status: "confirmed", match: 95 },
-    { id: 4, brand: "StyleBox", niche: "Fashion", followers: "120K", status: "outreach", match: 74 },
-    { id: 5, brand: "FoodieFirst", niche: "Food & Beverage", followers: "56K", status: "completed", match: 88 },
-  ]);
+  const [storySlides, setStorySlides] = useState<Array<{ id: number; text: string; type: string }>>([]);
+  const [carouselSlides, setCarouselSlides] = useState<Array<{ id: number; heading: string; body: string }>>([]);
+  const [linkBioLinks, setLinkBioLinks] = useState<Array<{ id: number; label: string; url: string; clicks: number }>>([]);
+  const [autoReplyRules, setAutoReplyRules] = useState<Array<{ id: number; trigger: string; response: string; active: boolean }>>([]);
+  const [collabOpportunities] = useState<Array<{ id: number; brand: string; niche: string; followers: string; status: string; match: number }>>([]);
   const [influencerNiche, setInfluencerNiche] = useState("");
-  const [contentPillars] = useState([
-    { name: "Educational", target: 30, actual: 28, color: "bg-blue-400" },
-    { name: "Promotional", target: 20, actual: 24, color: "bg-gold" },
-    { name: "Engagement", target: 25, actual: 22, color: "bg-pink-400" },
-    { name: "Social Proof", target: 15, actual: 18, color: "bg-green-400" },
-    { name: "Behind Scenes", target: 10, actual: 8, color: "bg-purple-400" },
-  ]);
+  const [contentPillars] = useState<Array<{ name: string; target: number; actual: number; color: string }>>([]);
   const [toolsSubTab, setToolsSubTab] = useState<"repurpose" | "ab-test" | "viral" | "bio" | "preview" | "bulk" | "carousel" | "story" | "linkinbio" | "templates" | "recycler">("repurpose");
   const [analyticsSubTab, setAnalyticsSubTab] = useState<"engagement" | "heatmap" | "hashtags" | "growth" | "comparison" | "pillars">("engagement");
   const [inboxSubTab, setInboxSubTab] = useState<"messages" | "listening" | "ugc" | "autoreplies">("messages");
@@ -1298,40 +1264,53 @@ export default function SocialManagerPage() {
                   <p className="text-[10px] text-muted">Plan multi-slide posts for Instagram/LinkedIn</p>
                 </div>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {carouselSlides.map((slide, i) => (
-                  <div key={slide.id} className="min-w-[200px] p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all shrink-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[9px] font-bold text-gold">SLIDE {i + 1}</span>
-                      {carouselSlides.length > 1 && (
-                        <button onClick={() => setCarouselSlides(carouselSlides.filter(s => s.id !== slide.id))}
-                          className="text-muted hover:text-red-400 transition-all"><X size={10} /></button>
-                      )}
-                    </div>
-                    <input value={slide.heading} onChange={e => {
-                      const updated = [...carouselSlides];
-                      updated[i] = { ...slide, heading: e.target.value };
-                      setCarouselSlides(updated);
-                    }} className="input w-full text-xs mb-1.5" placeholder="Slide heading..." />
-                    <textarea value={slide.body} onChange={e => {
-                      const updated = [...carouselSlides];
-                      updated[i] = { ...slide, body: e.target.value };
-                      setCarouselSlides(updated);
-                    }} className="input w-full text-[10px] h-16" placeholder="Slide content..." />
+              {carouselSlides.length === 0 ? (
+                <div className="text-center py-6">
+                  <Columns size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted mb-2">No slides yet. Add your first slide to start building.</p>
+                  <button onClick={() => setCarouselSlides([{ id: Date.now(), heading: "Slide 1", body: "" }])}
+                    className="btn-primary text-xs flex items-center gap-1.5 mx-auto">
+                    <Plus size={12} /> Add First Slide
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    {carouselSlides.map((slide, i) => (
+                      <div key={slide.id} className="min-w-[200px] p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all shrink-0">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-[9px] font-bold text-gold">SLIDE {i + 1}</span>
+                          {carouselSlides.length > 1 && (
+                            <button onClick={() => setCarouselSlides(carouselSlides.filter(s => s.id !== slide.id))}
+                              className="text-muted hover:text-red-400 transition-all"><X size={10} /></button>
+                          )}
+                        </div>
+                        <input value={slide.heading} onChange={e => {
+                          const updated = [...carouselSlides];
+                          updated[i] = { ...slide, heading: e.target.value };
+                          setCarouselSlides(updated);
+                        }} className="input w-full text-xs mb-1.5" placeholder="Slide heading..." />
+                        <textarea value={slide.body} onChange={e => {
+                          const updated = [...carouselSlides];
+                          updated[i] = { ...slide, body: e.target.value };
+                          setCarouselSlides(updated);
+                        }} className="input w-full text-[10px] h-16" placeholder="Slide content..." />
+                      </div>
+                    ))}
+                    <button onClick={() => setCarouselSlides([...carouselSlides, { id: Date.now(), heading: `Slide ${carouselSlides.length + 1}`, body: "" }])}
+                      className="min-w-[60px] flex items-center justify-center border border-dashed border-border rounded-xl hover:border-gold/30 transition-all">
+                      <Plus size={16} className="text-muted" />
+                    </button>
                   </div>
-                ))}
-                <button onClick={() => setCarouselSlides([...carouselSlides, { id: Date.now(), heading: `Slide ${carouselSlides.length + 1}`, body: "" }])}
-                  className="min-w-[60px] flex items-center justify-center border border-dashed border-border rounded-xl hover:border-gold/30 transition-all">
-                  <Plus size={16} className="text-muted" />
-                </button>
-              </div>
-              <button onClick={() => {
-                const text = carouselSlides.map((s, i) => `[Slide ${i + 1}] ${s.heading}\n${s.body}`).join("\n\n");
-                navigator.clipboard.writeText(text);
-                toast.success("Carousel outline copied!");
-              }} className="btn-primary text-xs flex items-center gap-1.5">
-                <Copy size={12} /> Copy Carousel Outline
-              </button>
+                  <button onClick={() => {
+                    const text = carouselSlides.map((s, i) => `[Slide ${i + 1}] ${s.heading}\n${s.body}`).join("\n\n");
+                    navigator.clipboard.writeText(text);
+                    toast.success("Carousel outline copied!");
+                  }} className="btn-primary text-xs flex items-center gap-1.5">
+                    <Copy size={12} /> Copy Carousel Outline
+                  </button>
+                </>
+              )}
             </div>
           )}
 
@@ -1347,40 +1326,53 @@ export default function SocialManagerPage() {
                   <p className="text-[10px] text-muted">Visual story sequence planner for Instagram/TikTok</p>
                 </div>
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {storySlides.map((slide, i) => (
-                  <div key={slide.id} className="min-w-[120px] aspect-[9/16] max-h-[200px] p-2.5 bg-surface-light rounded-xl border border-border hover:border-pink-400/20 transition-all shrink-0 flex flex-col">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[8px] font-bold text-pink-400">{i + 1}/{storySlides.length}</span>
-                      {storySlides.length > 1 && (
-                        <button onClick={() => setStorySlides(storySlides.filter(s => s.id !== slide.id))}
-                          className="text-muted hover:text-red-400"><X size={8} /></button>
-                      )}
-                    </div>
-                    <select value={slide.type} onChange={e => {
-                      const updated = [...storySlides];
-                      updated[i] = { ...slide, type: e.target.value };
-                      setStorySlides(updated);
-                    }} className="input text-[8px] py-0.5 mb-1">
-                      <option value="text">Text</option>
-                      <option value="image">Image</option>
-                      <option value="video">Video</option>
-                      <option value="poll">Poll</option>
-                      <option value="quiz">Quiz</option>
-                    </select>
-                    <textarea value={slide.text} onChange={e => {
-                      const updated = [...storySlides];
-                      updated[i] = { ...slide, text: e.target.value };
-                      setStorySlides(updated);
-                    }} className="input flex-1 text-[9px] resize-none" placeholder="Slide content..." />
+              {storySlides.length === 0 ? (
+                <div className="text-center py-6">
+                  <CircleDot size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted mb-2">No story slides yet. Add your first slide to start planning.</p>
+                  <button onClick={() => setStorySlides([{ id: Date.now(), text: "", type: "text" }])}
+                    className="btn-primary text-xs flex items-center gap-1.5 mx-auto">
+                    <Plus size={12} /> Add First Slide
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-2 overflow-x-auto pb-2">
+                    {storySlides.map((slide, i) => (
+                      <div key={slide.id} className="min-w-[120px] aspect-[9/16] max-h-[200px] p-2.5 bg-surface-light rounded-xl border border-border hover:border-pink-400/20 transition-all shrink-0 flex flex-col">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[8px] font-bold text-pink-400">{i + 1}/{storySlides.length}</span>
+                          {storySlides.length > 1 && (
+                            <button onClick={() => setStorySlides(storySlides.filter(s => s.id !== slide.id))}
+                              className="text-muted hover:text-red-400"><X size={8} /></button>
+                          )}
+                        </div>
+                        <select value={slide.type} onChange={e => {
+                          const updated = [...storySlides];
+                          updated[i] = { ...slide, type: e.target.value };
+                          setStorySlides(updated);
+                        }} className="input text-[8px] py-0.5 mb-1">
+                          <option value="text">Text</option>
+                          <option value="image">Image</option>
+                          <option value="video">Video</option>
+                          <option value="poll">Poll</option>
+                          <option value="quiz">Quiz</option>
+                        </select>
+                        <textarea value={slide.text} onChange={e => {
+                          const updated = [...storySlides];
+                          updated[i] = { ...slide, text: e.target.value };
+                          setStorySlides(updated);
+                        }} className="input flex-1 text-[9px] resize-none" placeholder="Slide content..." />
+                      </div>
+                    ))}
+                    <button onClick={() => setStorySlides([...storySlides, { id: Date.now(), text: "", type: "text" }])}
+                      className="min-w-[60px] aspect-[9/16] max-h-[200px] flex items-center justify-center border border-dashed border-border rounded-xl hover:border-pink-400/30">
+                      <Plus size={14} className="text-muted" />
+                    </button>
                   </div>
-                ))}
-                <button onClick={() => setStorySlides([...storySlides, { id: Date.now(), text: "", type: "text" }])}
-                  className="min-w-[60px] aspect-[9/16] max-h-[200px] flex items-center justify-center border border-dashed border-border rounded-xl hover:border-pink-400/30">
-                  <Plus size={14} className="text-muted" />
-                </button>
-              </div>
-              <p className="text-[9px] text-muted">Tip: Best-performing stories have 3-7 slides with a hook, value, and CTA</p>
+                  <p className="text-[9px] text-muted">Tip: Best-performing stories have 3-7 slides with a hook, value, and CTA</p>
+                </>
+              )}
             </div>
           )}
 
@@ -1396,35 +1388,48 @@ export default function SocialManagerPage() {
                   <p className="text-[10px] text-muted">Manage your link-in-bio pages per platform</p>
                 </div>
               </div>
-              <div className="space-y-2">
-                {linkBioLinks.map((link, i) => (
-                  <div key={link.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                    <div className="w-8 h-8 bg-surface rounded-lg flex items-center justify-center text-xs font-bold text-gold">{i + 1}</div>
-                    <div className="flex-1 min-w-0">
-                      <input value={link.label} onChange={e => {
-                        const updated = [...linkBioLinks];
-                        updated[i] = { ...link, label: e.target.value };
-                        setLinkBioLinks(updated);
-                      }} className="text-xs font-semibold bg-transparent border-0 outline-none w-full" />
-                      <input value={link.url} onChange={e => {
-                        const updated = [...linkBioLinks];
-                        updated[i] = { ...link, url: e.target.value };
-                        setLinkBioLinks(updated);
-                      }} className="text-[9px] text-muted bg-transparent border-0 outline-none w-full" />
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-xs font-bold text-gold">{link.clicks}</p>
-                      <p className="text-[8px] text-muted">clicks</p>
-                    </div>
-                    <button onClick={() => setLinkBioLinks(linkBioLinks.filter(l => l.id !== link.id))}
-                      className="text-muted hover:text-red-400 shrink-0"><X size={12} /></button>
+              {linkBioLinks.length === 0 ? (
+                <div className="text-center py-6">
+                  <Link size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted mb-2">No links added yet.</p>
+                  <button onClick={() => setLinkBioLinks([{ id: Date.now(), label: "New Link", url: "https://", clicks: 0 }])}
+                    className="text-[10px] text-gold hover:underline flex items-center gap-1 mx-auto">
+                    <Plus size={10} /> Add Your First Link
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    {linkBioLinks.map((link, i) => (
+                      <div key={link.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
+                        <div className="w-8 h-8 bg-surface rounded-lg flex items-center justify-center text-xs font-bold text-gold">{i + 1}</div>
+                        <div className="flex-1 min-w-0">
+                          <input value={link.label} onChange={e => {
+                            const updated = [...linkBioLinks];
+                            updated[i] = { ...link, label: e.target.value };
+                            setLinkBioLinks(updated);
+                          }} className="text-xs font-semibold bg-transparent border-0 outline-none w-full" />
+                          <input value={link.url} onChange={e => {
+                            const updated = [...linkBioLinks];
+                            updated[i] = { ...link, url: e.target.value };
+                            setLinkBioLinks(updated);
+                          }} className="text-[9px] text-muted bg-transparent border-0 outline-none w-full" />
+                        </div>
+                        <div className="text-right shrink-0">
+                          <p className="text-xs font-bold text-gold">{link.clicks}</p>
+                          <p className="text-[8px] text-muted">clicks</p>
+                        </div>
+                        <button onClick={() => setLinkBioLinks(linkBioLinks.filter(l => l.id !== link.id))}
+                          className="text-muted hover:text-red-400 shrink-0"><X size={12} /></button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <button onClick={() => setLinkBioLinks([...linkBioLinks, { id: Date.now(), label: "New Link", url: "https://", clicks: 0 }])}
-                className="text-[10px] text-gold hover:underline flex items-center gap-1">
-                <Plus size={10} /> Add Link
-              </button>
+                  <button onClick={() => setLinkBioLinks([...linkBioLinks, { id: Date.now(), label: "New Link", url: "https://", clicks: 0 }])}
+                    className="text-[10px] text-gold hover:underline flex items-center gap-1">
+                    <Plus size={10} /> Add Link
+                  </button>
+                </>
+              )}
             </div>
           )}
 
@@ -1504,18 +1509,12 @@ export default function SocialManagerPage() {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {recentPosts.slice(0, 8).map((post) => {
-                    const engScore = Math.floor(Math.random() * 50) + 50;
-                    return (
+                  {recentPosts.slice(0, 8).map((post) => (
                       <div key={post.id} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
                         <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={14} />}</div>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-medium truncate">{post.title}</p>
                           <p className="text-[9px] text-muted">{post.scheduled_at ? formatRelativeTime(post.scheduled_at) : ""}</p>
-                        </div>
-                        <div className="shrink-0 text-right">
-                          <div className={`text-[10px] font-bold ${engScore > 75 ? "text-success" : "text-gold"}`}>{engScore}%</div>
-                          <p className="text-[8px] text-muted">engagement</p>
                         </div>
                         <button onClick={() => {
                           const meta = (post.metadata as Record<string, unknown>) || {};
@@ -1526,8 +1525,7 @@ export default function SocialManagerPage() {
                           <RefreshCw size={9} /> Recycle
                         </button>
                       </div>
-                    );
-                  })}
+                    ))}
                 </div>
               )}
             </div>
@@ -1567,58 +1565,26 @@ export default function SocialManagerPage() {
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-4">
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <p className="text-lg font-bold text-gold">4.2%</p>
+                    <p className="text-lg font-bold text-gold">0%</p>
                     <p className="text-[9px] text-muted">Avg Engagement Rate</p>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <ArrowUpRight size={10} className="text-success" />
-                      <span className="text-[9px] text-success">+0.8%</span>
-                    </div>
                   </div>
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <p className="text-lg font-bold text-blue-400">1.2K</p>
+                    <p className="text-lg font-bold text-blue-400">0</p>
                     <p className="text-[9px] text-muted">Avg Likes/Post</p>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <ArrowUpRight size={10} className="text-success" />
-                      <span className="text-[9px] text-success">+15%</span>
-                    </div>
                   </div>
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <p className="text-lg font-bold text-pink-400">89</p>
+                    <p className="text-lg font-bold text-pink-400">0</p>
                     <p className="text-[9px] text-muted">Avg Comments/Post</p>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <ArrowUpRight size={10} className="text-success" />
-                      <span className="text-[9px] text-success">+23%</span>
-                    </div>
                   </div>
                   <div className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <p className="text-lg font-bold text-purple-400">342</p>
+                    <p className="text-lg font-bold text-purple-400">0</p>
                     <p className="text-[9px] text-muted">Avg Shares/Post</p>
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <TrendingUp size={10} className="text-gold" />
-                      <span className="text-[9px] text-gold">Trending</span>
-                    </div>
                   </div>
                 </div>
                 {/* Per-post engagement */}
                 <h3 className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-2">Per-Post Breakdown</h3>
-                <div className="space-y-1.5">
-                  {(recentPosts.length > 0 ? recentPosts : scheduledPosts).slice(0, 8).map((post) => {
-                    const rate = (Math.random() * 8 + 1).toFixed(1);
-                    const trending = parseFloat(rate) > 5;
-                    return (
-                      <div key={post.id} className="flex items-center gap-3 p-2 bg-surface-light rounded-lg border border-border">
-                        <div className="shrink-0">{PLATFORM_ICONS[post.platform] || <Globe size={12} />}</div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-[10px] font-medium truncate">{post.title}</p>
-                          <p className="text-[8px] text-muted capitalize">{post.platform}</p>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <span className={`text-xs font-bold ${trending ? "text-success" : "text-foreground"}`}>{rate}%</span>
-                          {trending && <Flame size={10} className="text-orange-400" />}
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div className="text-center py-4">
+                  <p className="text-[10px] text-muted">No per-post engagement data yet.</p>
                 </div>
               </div>
             </div>
@@ -1632,55 +1598,9 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Best Time to Post Heatmap</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Darker cells = higher engagement. Based on your audience activity patterns.</p>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr>
-                      <th className="text-[8px] text-muted font-semibold p-1 text-left">Day</th>
-                      {["6AM", "8AM", "10AM", "12PM", "2PM", "4PM", "6PM", "8PM", "10PM"].map(h => (
-                        <th key={h} className="text-[7px] text-muted font-medium p-1 text-center">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
-                      <tr key={day}>
-                        <td className="text-[9px] font-semibold text-muted p-1">{day}</td>
-                        {[6, 8, 10, 12, 14, 16, 18, 20, 22].map((hour, hi) => {
-                          // Simulate engagement patterns
-                          const patterns: Record<string, number[]> = {
-                            Mon: [20, 45, 70, 80, 55, 40, 65, 50, 25],
-                            Tue: [25, 60, 85, 90, 65, 50, 70, 55, 30],
-                            Wed: [30, 55, 75, 85, 60, 45, 60, 45, 20],
-                            Thu: [20, 50, 80, 85, 70, 55, 75, 60, 35],
-                            Fri: [15, 40, 65, 75, 50, 35, 55, 70, 45],
-                            Sat: [10, 30, 50, 60, 55, 45, 50, 65, 40],
-                            Sun: [10, 25, 45, 55, 50, 40, 45, 60, 35],
-                          };
-                          const val = patterns[day]?.[hi] ?? 30;
-                          return (
-                            <td key={hour} className="p-0.5">
-                              <div className={`w-full h-7 rounded flex items-center justify-center text-[7px] font-bold transition-all cursor-pointer hover:scale-110 ${
-                                val >= 80 ? "bg-success/60 text-white" :
-                                val >= 60 ? "bg-success/30 text-success" :
-                                val >= 40 ? "bg-gold/20 text-gold" :
-                                "bg-surface-light text-muted/50"
-                              }`}>
-                                {val}
-                              </div>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="flex items-center gap-3 mt-3 justify-end">
-                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-surface-light" /><span className="text-[8px] text-muted">Low</span></div>
-                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-gold/20" /><span className="text-[8px] text-muted">Medium</span></div>
-                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-success/30" /><span className="text-[8px] text-muted">Good</span></div>
-                <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-success/60" /><span className="text-[8px] text-muted">Best</span></div>
+              <div className="text-center py-8">
+                <Grid3X3 size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No engagement data yet. Publish content to generate your best-times heatmap.</p>
               </div>
             </div>
           )}
@@ -1693,40 +1613,9 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Hashtag Performance Analytics</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Track which hashtags drive the most engagement and reach</p>
-              <div className="space-y-2">
-                {[
-                  { tag: "#marketingtips", posts: 24, reach: "45.2K", engagement: "6.8%", trend: "up" },
-                  { tag: "#smallbusiness", posts: 18, reach: "32.1K", engagement: "5.4%", trend: "up" },
-                  { tag: "#growthhacking", posts: 15, reach: "28.7K", engagement: "4.9%", trend: "stable" },
-                  { tag: "#socialmedia", posts: 22, reach: "25.3K", engagement: "3.2%", trend: "down" },
-                  { tag: "#contentcreator", posts: 12, reach: "19.8K", engagement: "7.1%", trend: "up" },
-                  { tag: "#entrepreneurlife", posts: 16, reach: "18.4K", engagement: "4.5%", trend: "stable" },
-                  { tag: "#digitalmarketing", posts: 20, reach: "15.6K", engagement: "3.8%", trend: "down" },
-                  { tag: "#branding", posts: 10, reach: "12.3K", engagement: "5.9%", trend: "up" },
-                ].map(h => (
-                  <div key={h.tag} className="flex items-center gap-3 p-2.5 bg-surface-light rounded-lg border border-border hover:border-gold/10 transition-all">
-                    <span className="text-xs font-mono font-semibold text-gold min-w-[140px]">{h.tag}</span>
-                    <div className="flex-1 grid grid-cols-3 gap-2 text-center">
-                      <div>
-                        <p className="text-[10px] font-bold">{h.posts}</p>
-                        <p className="text-[7px] text-muted">Posts</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-bold">{h.reach}</p>
-                        <p className="text-[7px] text-muted">Reach</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-bold">{h.engagement}</p>
-                        <p className="text-[7px] text-muted">Eng Rate</p>
-                      </div>
-                    </div>
-                    <div className="shrink-0">
-                      {h.trend === "up" && <ArrowUpRight size={12} className="text-success" />}
-                      {h.trend === "stable" && <Minus size={12} className="text-gold" />}
-                      {h.trend === "down" && <TrendingUp size={12} className="text-red-400 rotate-180" />}
-                    </div>
-                  </div>
-                ))}
+              <div className="text-center py-8">
+                <Hash size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No hashtag analytics yet. Start posting with hashtags to see performance data.</p>
               </div>
             </div>
           )}
@@ -1739,45 +1628,9 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Audience Growth Tracker</h2>
               </div>
               <p className="text-[10px] text-muted mb-4">Track follower growth over time across all platforms</p>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5 mb-4">
-                {[
-                  { platform: "instagram", followers: "12.4K", growth: "+342", pct: "+2.8%" },
-                  { platform: "tiktok", followers: "8.7K", growth: "+891", pct: "+11.4%" },
-                  { platform: "linkedin", followers: "5.2K", growth: "+128", pct: "+2.5%" },
-                  { platform: "facebook", followers: "3.8K", growth: "+67", pct: "+1.8%" },
-                  { platform: "youtube", followers: "2.1K", growth: "+203", pct: "+10.7%" },
-                ].map(p => (
-                  <div key={p.platform} className="p-3 bg-surface-light rounded-xl border border-border text-center">
-                    <div className="flex justify-center mb-1.5">{PLATFORM_ICONS[p.platform] || <Globe size={14} />}</div>
-                    <p className="text-sm font-bold">{p.followers}</p>
-                    <p className="text-[9px] text-success">{p.growth} ({p.pct})</p>
-                    <p className="text-[8px] text-muted capitalize mt-0.5">{p.platform}</p>
-                  </div>
-                ))}
-              </div>
-              {/* Growth chart visualization */}
-              <div className="p-3 bg-surface-light rounded-xl border border-border">
-                <h4 className="text-[10px] font-semibold mb-3">30-Day Growth Trend</h4>
-                <div className="flex items-end gap-1 h-32">
-                  {Array.from({ length: 30 }, (_, i) => {
-                    const base = 50 + i * 1.5;
-                    const variance = Math.sin(i * 0.5) * 15 + Math.random() * 10;
-                    const height = Math.max(10, Math.min(100, base + variance));
-                    return (
-                      <div key={i} className="flex-1 group relative">
-                        <div className="w-full bg-gold/30 rounded-t hover:bg-gold/50 transition-all cursor-pointer"
-                          style={{ height: `${height}%` }} />
-                        <div className="hidden group-hover:block absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-surface border border-border rounded px-1.5 py-0.5 text-[7px] text-muted whitespace-nowrap z-10">
-                          Day {i + 1}: +{Math.floor(variance + 20)}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="flex justify-between mt-1">
-                  <span className="text-[7px] text-muted">30 days ago</span>
-                  <span className="text-[7px] text-muted">Today</span>
-                </div>
+              <div className="text-center py-8">
+                <LineChart size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No audience growth data yet. Connect accounts and start posting to track growth.</p>
               </div>
             </div>
           )}
@@ -1790,40 +1643,9 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Platform Analytics Comparison</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Side-by-side metrics across all your platforms</p>
-              <div className="overflow-x-auto">
-                <table className="w-full text-[10px]">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left p-2 text-muted font-semibold">Metric</th>
-                      {["Instagram", "TikTok", "LinkedIn", "Facebook", "YouTube"].map(p => (
-                        <th key={p} className="text-center p-2 font-semibold">
-                          <div className="flex items-center justify-center gap-1">
-                            {PLATFORM_ICONS[p.toLowerCase()] || <Globe size={10} />}
-                            <span>{p}</span>
-                          </div>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {[
-                      { metric: "Followers", values: ["12.4K", "8.7K", "5.2K", "3.8K", "2.1K"] },
-                      { metric: "Eng. Rate", values: ["4.2%", "6.8%", "3.1%", "2.4%", "5.6%"] },
-                      { metric: "Reach/Post", values: ["3.2K", "5.1K", "1.8K", "980", "2.4K"] },
-                      { metric: "Posts/Week", values: ["5", "7", "3", "4", "2"] },
-                      { metric: "Best Content", values: ["Reels", "Duets", "Articles", "Videos", "Shorts"] },
-                      { metric: "Growth Rate", values: ["+2.8%", "+11.4%", "+2.5%", "+1.8%", "+10.7%"] },
-                      { metric: "Clicks/Post", values: ["89", "12", "156", "45", "67"] },
-                    ].map(row => (
-                      <tr key={row.metric} className="border-b border-border/50 hover:bg-surface-light/50">
-                        <td className="p-2 font-semibold text-muted">{row.metric}</td>
-                        {row.values.map((v, i) => (
-                          <td key={i} className="p-2 text-center font-medium">{v}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="text-center py-8">
+                <BarChart3 size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No platform comparison data yet. Publish content across platforms to see metrics.</p>
               </div>
             </div>
           )}
@@ -1836,50 +1658,59 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Content Pillar Planner</h2>
               </div>
               <p className="text-[10px] text-muted mb-4">Visual breakdown of content categories with target vs actual percentages</p>
-              <div className="space-y-3">
-                {contentPillars.map((pillar) => {
-                  const diff = pillar.actual - pillar.target;
-                  return (
-                    <div key={pillar.name} className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div className={`w-3 h-3 rounded-sm ${pillar.color}`} />
-                          <span className="text-[10px] font-semibold">{pillar.name}</span>
+              {contentPillars.length === 0 ? (
+                <div className="text-center py-8">
+                  <PieChart size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted">No content pillar data yet. Publish content to see your category breakdown.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-3">
+                    {contentPillars.map((pillar) => {
+                      const diff = pillar.actual - pillar.target;
+                      return (
+                        <div key={pillar.name} className="space-y-1">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className={`w-3 h-3 rounded-sm ${pillar.color}`} />
+                              <span className="text-[10px] font-semibold">{pillar.name}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-[9px]">
+                              <span className="text-muted">Target: {pillar.target}%</span>
+                              <span className="font-bold">Actual: {pillar.actual}%</span>
+                              <span className={diff >= 0 ? "text-success" : "text-orange-400"}>
+                                {diff >= 0 ? "+" : ""}{diff}%
+                              </span>
+                            </div>
+                          </div>
+                          <div className="relative w-full h-4 bg-surface-light rounded-full overflow-hidden">
+                            <div className={`absolute h-full ${pillar.color} opacity-30 rounded-full`} style={{ width: `${pillar.target}%` }} />
+                            <div className={`absolute h-full ${pillar.color} rounded-full transition-all duration-700`} style={{ width: `${pillar.actual}%` }} />
+                            <div className="absolute h-full border-r-2 border-dashed border-foreground/20" style={{ left: `${pillar.target}%` }} />
+                          </div>
                         </div>
-                        <div className="flex items-center gap-3 text-[9px]">
-                          <span className="text-muted">Target: {pillar.target}%</span>
-                          <span className="font-bold">Actual: {pillar.actual}%</span>
-                          <span className={diff >= 0 ? "text-success" : "text-orange-400"}>
-                            {diff >= 0 ? "+" : ""}{diff}%
-                          </span>
-                        </div>
-                      </div>
-                      <div className="relative w-full h-4 bg-surface-light rounded-full overflow-hidden">
-                        <div className={`absolute h-full ${pillar.color} opacity-30 rounded-full`} style={{ width: `${pillar.target}%` }} />
-                        <div className={`absolute h-full ${pillar.color} rounded-full transition-all duration-700`} style={{ width: `${pillar.actual}%` }} />
-                        <div className="absolute h-full border-r-2 border-dashed border-foreground/20" style={{ left: `${pillar.target}%` }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="mt-4 p-3 bg-surface-light rounded-xl border border-border">
-                <h4 className="text-[10px] font-semibold mb-2">Recommendations</h4>
-                <ul className="space-y-1">
-                  {contentPillars.filter(p => p.actual < p.target).map(p => (
-                    <li key={p.name} className="text-[9px] text-muted flex items-start gap-1.5">
-                      <AlertCircle size={9} className="text-orange-400 mt-0.5 shrink-0" />
-                      <span>Increase <strong>{p.name}</strong> content by {p.target - p.actual}% to reach target</span>
-                    </li>
-                  ))}
-                  {contentPillars.filter(p => p.actual > p.target).map(p => (
-                    <li key={p.name} className="text-[9px] text-muted flex items-start gap-1.5">
-                      <Check size={9} className="text-success mt-0.5 shrink-0" />
-                      <span><strong>{p.name}</strong> is {p.actual - p.target}% above target — consider rebalancing</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-4 p-3 bg-surface-light rounded-xl border border-border">
+                    <h4 className="text-[10px] font-semibold mb-2">Recommendations</h4>
+                    <ul className="space-y-1">
+                      {contentPillars.filter(p => p.actual < p.target).map(p => (
+                        <li key={p.name} className="text-[9px] text-muted flex items-start gap-1.5">
+                          <AlertCircle size={9} className="text-orange-400 mt-0.5 shrink-0" />
+                          <span>Increase <strong>{p.name}</strong> content by {p.target - p.actual}% to reach target</span>
+                        </li>
+                      ))}
+                      {contentPillars.filter(p => p.actual > p.target).map(p => (
+                        <li key={p.name} className="text-[9px] text-muted flex items-start gap-1.5">
+                          <Check size={9} className="text-success mt-0.5 shrink-0" />
+                          <span><strong>{p.name}</strong> is {p.actual - p.target}% above target — consider rebalancing</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -1911,35 +1742,12 @@ export default function SocialManagerPage() {
               <div className="flex items-center gap-2 mb-3">
                 <Inbox size={16} className="text-gold" />
                 <h2 className="text-sm font-semibold">Social Inbox</h2>
-                <span className="ml-auto text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-medium">12 unread</span>
+                <span className="ml-auto text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-medium">0 unread</span>
               </div>
               <p className="text-[10px] text-muted mb-3">Unified view of DMs and comments across all platforms</p>
-              <div className="space-y-2">
-                {[
-                  { platform: "instagram", type: "DM", from: "@sarah_fitness", message: "Hey! Love your content. Are you open to collabs?", time: "2m ago", unread: true },
-                  { platform: "instagram", type: "Comment", from: "@john_doe", message: "This is so helpful! Can you make more content like this?", time: "15m ago", unread: true },
-                  { platform: "tiktok", type: "Comment", from: "@viral_queen", message: "Totally agree with point #3! Sharing this with my audience", time: "1h ago", unread: true },
-                  { platform: "facebook", type: "DM", from: "Mike Johnson", message: "Hi, I'm interested in your services. Can we schedule a call?", time: "2h ago", unread: false },
-                  { platform: "linkedin", type: "Comment", from: "Jane Smith", message: "Great insights. Would love to connect and discuss further.", time: "3h ago", unread: false },
-                  { platform: "instagram", type: "Comment", from: "@brand_fan", message: "Just purchased based on this post! Amazing results so far", time: "5h ago", unread: false },
-                  { platform: "tiktok", type: "DM", from: "@content_king", message: "Would you be interested in a duet collaboration?", time: "6h ago", unread: false },
-                  { platform: "facebook", type: "Comment", from: "Alex Rivera", message: "What's the pricing for your premium plan?", time: "8h ago", unread: false },
-                ].map((msg, i) => (
-                  <div key={i} className={`flex items-start gap-3 p-2.5 rounded-xl border transition-all cursor-pointer ${
-                    msg.unread ? "bg-gold/[0.03] border-gold/15 hover:border-gold/30" : "bg-surface-light border-border hover:border-gold/10"
-                  }`}>
-                    <div className="shrink-0 mt-1">{PLATFORM_ICONS[msg.platform] || <Globe size={14} />}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-semibold">{msg.from}</span>
-                        <span className="text-[8px] bg-surface px-1.5 py-0.5 rounded text-muted">{msg.type}</span>
-                        {msg.unread && <div className="w-1.5 h-1.5 rounded-full bg-gold" />}
-                      </div>
-                      <p className="text-[10px] text-muted mt-0.5 truncate">{msg.message}</p>
-                    </div>
-                    <span className="text-[8px] text-muted shrink-0">{msg.time}</span>
-                  </div>
-                ))}
+              <div className="text-center py-8">
+                <Inbox size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No messages yet. DMs and comments will appear here.</p>
               </div>
             </div>
           )}
@@ -1977,27 +1785,8 @@ export default function SocialManagerPage() {
                 ))}
               </div>
               <h4 className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-2">Recent Mentions</h4>
-              <div className="space-y-2">
-                {[
-                  { platform: "instagram", source: "@happy_client", content: "Just had an amazing experience with [brand name]! Highly recommend.", sentiment: "positive", time: "1h ago" },
-                  { platform: "tiktok", source: "@reviewer_2024", content: "Comparing [brand name] vs competitors — here's what I found...", sentiment: "neutral", time: "3h ago" },
-                  { platform: "linkedin", source: "Industry Blog", content: "Top 10 tools featuring [product name] for small businesses", sentiment: "positive", time: "5h ago" },
-                  { platform: "facebook", source: "Local Group", content: "Anyone tried [brand name]? Looking for recommendations.", sentiment: "neutral", time: "8h ago" },
-                ].map((mention, i) => (
-                  <div key={i} className="flex items-start gap-3 p-2.5 bg-surface-light rounded-xl border border-border">
-                    <div className="shrink-0 mt-1">{PLATFORM_ICONS[mention.platform] || <Globe size={14} />}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-semibold">{mention.source}</span>
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded ${
-                          mention.sentiment === "positive" ? "bg-success/10 text-success" : "bg-surface text-muted"
-                        }`}>{mention.sentiment}</span>
-                      </div>
-                      <p className="text-[10px] text-muted mt-0.5">{mention.content}</p>
-                    </div>
-                    <span className="text-[8px] text-muted shrink-0">{mention.time}</span>
-                  </div>
-                ))}
+              <div className="text-center py-4">
+                <p className="text-[10px] text-muted">No mentions found yet. Add keywords above to start monitoring.</p>
               </div>
             </div>
           )}
@@ -2012,46 +1801,24 @@ export default function SocialManagerPage() {
               <p className="text-[10px] text-muted mb-3">Track user-generated content and brand mentions</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-4">
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
-                  <p className="text-lg font-bold text-gold">47</p>
+                  <p className="text-lg font-bold text-gold">0</p>
                   <p className="text-[9px] text-muted">Total Mentions</p>
                 </div>
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
-                  <p className="text-lg font-bold text-success">32</p>
+                  <p className="text-lg font-bold text-success">0</p>
                   <p className="text-[9px] text-muted">Positive</p>
                 </div>
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
-                  <p className="text-lg font-bold text-blue-400">12</p>
+                  <p className="text-lg font-bold text-blue-400">0</p>
                   <p className="text-[9px] text-muted">Repostable</p>
                 </div>
                 <div className="p-2.5 bg-surface-light rounded-xl border border-border text-center">
-                  <p className="text-lg font-bold text-pink-400">8</p>
+                  <p className="text-lg font-bold text-pink-400">0</p>
                   <p className="text-[9px] text-muted">Replied</p>
                 </div>
               </div>
-              <div className="space-y-2">
-                {[
-                  { user: "@lifestyle_blogger", platform: "instagram", content: "Obsessed with my results from [brand]! Full review on stories", type: "Story Mention", repostable: true },
-                  { user: "@tech_reviewer", platform: "tiktok", content: "Testing [product] for 30 days — here's day 15 update", type: "Video Tag", repostable: true },
-                  { user: "@mom_of_3", platform: "facebook", content: "Best purchase I made this year! Thanks [brand]", type: "Post Tag", repostable: false },
-                  { user: "@fitness_guru", platform: "instagram", content: "Using [product] as part of my morning routine — game changer", type: "Reel Tag", repostable: true },
-                ].map((ugc, i) => (
-                  <div key={i} className="flex items-start gap-3 p-2.5 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                    <div className="shrink-0 mt-1">{PLATFORM_ICONS[ugc.platform] || <Globe size={14} />}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-semibold">{ugc.user}</span>
-                        <span className="text-[8px] bg-surface px-1.5 py-0.5 rounded text-muted">{ugc.type}</span>
-                      </div>
-                      <p className="text-[10px] text-muted mt-0.5">{ugc.content}</p>
-                    </div>
-                    {ugc.repostable && (
-                      <button onClick={() => toast.success("Added to repost queue!")}
-                        className="text-[9px] text-gold flex items-center gap-1 hover:underline shrink-0">
-                        <Share2 size={9} /> Repost
-                      </button>
-                    )}
-                  </div>
-                ))}
+              <div className="text-center py-4">
+                <p className="text-[10px] text-muted">No user-generated content tracked yet.</p>
               </div>
             </div>
           )}
@@ -2064,35 +1831,49 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Auto-Reply Rules</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Set up automatic responses to common comments and DMs</p>
-              <div className="space-y-2">
-                {autoReplyRules.map(rule => (
-                  <div key={rule.id} className={`p-3 rounded-xl border transition-all ${
-                    rule.active ? "bg-surface-light border-success/20" : "bg-surface-light border-border opacity-60"
-                  }`}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-semibold">Trigger: &ldquo;{rule.trigger}&rdquo;</span>
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded ${rule.active ? "bg-success/10 text-success" : "bg-surface text-muted"}`}>
-                          {rule.active ? "Active" : "Inactive"}
-                        </span>
-                      </div>
-                      <button onClick={() => {
-                        setAutoReplyRules(autoReplyRules.map(r => r.id === rule.id ? { ...r, active: !r.active } : r));
-                      }} className={`w-8 h-4 rounded-full transition-all flex items-center ${
-                        rule.active ? "bg-success justify-end" : "bg-surface border border-border justify-start"
+              {autoReplyRules.length === 0 ? (
+                <div className="text-center py-6">
+                  <Reply size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted mb-2">No auto-reply rules yet.</p>
+                  <button onClick={() => {
+                    setAutoReplyRules([{ id: Date.now(), trigger: "new keyword", response: "Your auto-reply message here...", active: false }]);
+                  }} className="text-[10px] text-gold hover:underline flex items-center gap-1 mx-auto">
+                    <Plus size={10} /> Add Your First Rule
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    {autoReplyRules.map(rule => (
+                      <div key={rule.id} className={`p-3 rounded-xl border transition-all ${
+                        rule.active ? "bg-surface-light border-success/20" : "bg-surface-light border-border opacity-60"
                       }`}>
-                        <div className={`w-3 h-3 rounded-full mx-0.5 ${rule.active ? "bg-white" : "bg-muted/40"}`} />
-                      </button>
-                    </div>
-                    <p className="text-[10px] text-muted">{rule.response}</p>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-semibold">Trigger: &ldquo;{rule.trigger}&rdquo;</span>
+                            <span className={`text-[8px] px-1.5 py-0.5 rounded ${rule.active ? "bg-success/10 text-success" : "bg-surface text-muted"}`}>
+                              {rule.active ? "Active" : "Inactive"}
+                            </span>
+                          </div>
+                          <button onClick={() => {
+                            setAutoReplyRules(autoReplyRules.map(r => r.id === rule.id ? { ...r, active: !r.active } : r));
+                          }} className={`w-8 h-4 rounded-full transition-all flex items-center ${
+                            rule.active ? "bg-success justify-end" : "bg-surface border border-border justify-start"
+                          }`}>
+                            <div className={`w-3 h-3 rounded-full mx-0.5 ${rule.active ? "bg-white" : "bg-muted/40"}`} />
+                          </button>
+                        </div>
+                        <p className="text-[10px] text-muted">{rule.response}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <button onClick={() => {
-                setAutoReplyRules([...autoReplyRules, { id: Date.now(), trigger: "new keyword", response: "Your auto-reply message here...", active: false }]);
-              }} className="mt-3 text-[10px] text-gold hover:underline flex items-center gap-1">
-                <Plus size={10} /> Add New Rule
-              </button>
+                  <button onClick={() => {
+                    setAutoReplyRules([...autoReplyRules, { id: Date.now(), trigger: "new keyword", response: "Your auto-reply message here...", active: false }]);
+                  }} className="mt-3 text-[10px] text-gold hover:underline flex items-center gap-1">
+                    <Plus size={10} /> Add New Rule
+                  </button>
+                </>
+              )}
             </div>
           )}
         </div>
@@ -2141,27 +1922,34 @@ export default function SocialManagerPage() {
                   }
                 }} className="btn-primary text-xs px-3"><Plus size={12} /></button>
               </div>
-              <div className="space-y-2">
-                {competitorHandles.map((comp, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                    <div className="shrink-0">{PLATFORM_ICONS[comp.platform] || <Globe size={14} />}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold">{comp.handle}</p>
-                      <p className="text-[9px] text-muted capitalize">{comp.platform}</p>
+              {competitorHandles.length === 0 ? (
+                <div className="text-center py-6">
+                  <Target size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted">No competitors tracked yet. Add a handle above to start monitoring.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {competitorHandles.map((comp, i) => (
+                    <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
+                      <div className="shrink-0">{PLATFORM_ICONS[comp.platform] || <Globe size={14} />}</div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold">{comp.handle}</p>
+                        <p className="text-[9px] text-muted capitalize">{comp.platform}</p>
+                      </div>
+                      <div className="text-center px-3">
+                        <p className="text-[10px] font-bold">{comp.frequency}</p>
+                        <p className="text-[8px] text-muted">Post freq</p>
+                      </div>
+                      <div className="text-center px-3">
+                        <p className="text-[10px] font-medium text-muted">{comp.lastPost}</p>
+                        <p className="text-[8px] text-muted">Last post</p>
+                      </div>
+                      <button onClick={() => setCompetitorHandles(competitorHandles.filter((_, idx) => idx !== i))}
+                        className="text-muted hover:text-red-400 shrink-0"><X size={12} /></button>
                     </div>
-                    <div className="text-center px-3">
-                      <p className="text-[10px] font-bold">{comp.frequency}</p>
-                      <p className="text-[8px] text-muted">Post freq</p>
-                    </div>
-                    <div className="text-center px-3">
-                      <p className="text-[10px] font-medium text-muted">{comp.lastPost}</p>
-                      <p className="text-[8px] text-muted">Last post</p>
-                    </div>
-                    <button onClick={() => setCompetitorHandles(competitorHandles.filter((_, idx) => idx !== i))}
-                      className="text-muted hover:text-red-400 shrink-0"><X size={12} /></button>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -2179,36 +1967,9 @@ export default function SocialManagerPage() {
                 <button onClick={() => toast.success("Searching influencers...")}
                   className="btn-primary text-xs flex items-center gap-1.5"><Search size={12} /> Search</button>
               </div>
-              <div className="space-y-2">
-                {[
-                  { name: "@fit_with_sarah", niche: "Fitness", followers: "25.4K", engagement: "6.2%", platform: "instagram", price: "$200-400" },
-                  { name: "@techie_tom", niche: "Technology", followers: "18.7K", engagement: "5.8%", platform: "tiktok", price: "$150-300" },
-                  { name: "@clean_eats", niche: "Food & Health", followers: "32.1K", engagement: "7.4%", platform: "instagram", price: "$300-500" },
-                  { name: "@local_adventures", niche: "Travel & Local", followers: "15.2K", engagement: "8.1%", platform: "tiktok", price: "$100-250" },
-                  { name: "@biz_mindset", niche: "Business", followers: "42.5K", engagement: "4.3%", platform: "linkedin", price: "$400-700" },
-                  { name: "@diy_queen", niche: "Lifestyle & DIY", followers: "28.9K", engagement: "6.9%", platform: "instagram", price: "$250-450" },
-                ].map((inf, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                    <div className="w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center shrink-0">
-                      <Users size={12} className="text-gold" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-xs font-semibold">{inf.name}</p>
-                        {PLATFORM_ICONS[inf.platform] || <Globe size={10} />}
-                      </div>
-                      <p className="text-[9px] text-muted">{inf.niche} | {inf.followers} followers | {inf.engagement} eng</p>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-[10px] font-medium text-gold">{inf.price}</p>
-                      <p className="text-[8px] text-muted">est. cost</p>
-                    </div>
-                    <button onClick={() => toast.success(`Saved ${inf.name} to contacts!`)}
-                      className="text-[9px] text-gold hover:underline shrink-0 flex items-center gap-1">
-                      <Plus size={9} /> Save
-                    </button>
-                  </div>
-                ))}
+              <div className="text-center py-8">
+                <Users size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No influencer results yet. Search by niche above to find collaborators.</p>
               </div>
             </div>
           )}
@@ -2221,33 +1982,40 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Collab Manager</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Track brand collaboration opportunities and partnerships</p>
-              <div className="space-y-2">
-                {collabOpportunities.map(collab => (
-                  <div key={collab.id} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                    <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center shrink-0">
-                      <Handshake size={16} className="text-gold" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold">{collab.brand}</p>
-                      <p className="text-[9px] text-muted">{collab.niche} | {collab.followers} followers</p>
-                    </div>
-                    <div className="text-center px-2 shrink-0">
-                      <div className={`text-[10px] font-bold ${collab.match >= 90 ? "text-success" : collab.match >= 80 ? "text-gold" : "text-muted"}`}>
-                        {collab.match}%
+              {collabOpportunities.length === 0 ? (
+                <div className="text-center py-8">
+                  <Handshake size={24} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-xs text-muted">No collaboration opportunities yet.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {collabOpportunities.map(collab => (
+                    <div key={collab.id} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
+                      <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center shrink-0">
+                        <Handshake size={16} className="text-gold" />
                       </div>
-                      <p className="text-[7px] text-muted">match</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold">{collab.brand}</p>
+                        <p className="text-[9px] text-muted">{collab.niche} | {collab.followers} followers</p>
+                      </div>
+                      <div className="text-center px-2 shrink-0">
+                        <div className={`text-[10px] font-bold ${collab.match >= 90 ? "text-success" : collab.match >= 80 ? "text-gold" : "text-muted"}`}>
+                          {collab.match}%
+                        </div>
+                        <p className="text-[7px] text-muted">match</p>
+                      </div>
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium shrink-0 ${
+                        collab.status === "confirmed" ? "bg-success/10 text-success" :
+                        collab.status === "negotiating" ? "bg-gold/10 text-gold" :
+                        collab.status === "completed" ? "bg-blue-400/10 text-blue-400" :
+                        "bg-surface text-muted"
+                      }`}>
+                        {collab.status}
+                      </span>
                     </div>
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium shrink-0 ${
-                      collab.status === "confirmed" ? "bg-success/10 text-success" :
-                      collab.status === "negotiating" ? "bg-gold/10 text-gold" :
-                      collab.status === "completed" ? "bg-blue-400/10 text-blue-400" :
-                      "bg-surface text-muted"
-                    }`}>
-                      {collab.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -2259,43 +2027,9 @@ export default function SocialManagerPage() {
                 <h2 className="text-sm font-semibold">Trending Audio Finder</h2>
               </div>
               <p className="text-[10px] text-muted mb-3">Find trending TikTok and Reels sounds to use in your content</p>
-              <div className="space-y-2">
-                {[
-                  { name: "Original Sound - viral_creator", platform: "tiktok", uses: "2.4M", trend: "rising", genre: "Trending" },
-                  { name: "Espresso - Sabrina Carpenter", platform: "instagram", uses: "1.8M", trend: "peak", genre: "Pop" },
-                  { name: "Nasty - Tinashe", platform: "tiktok", uses: "3.1M", trend: "rising", genre: "Dance" },
-                  { name: "Storytelling Beat", platform: "instagram", uses: "890K", trend: "rising", genre: "Voiceover" },
-                  { name: "Motivational Speech Remix", platform: "tiktok", uses: "1.2M", trend: "stable", genre: "Motivation" },
-                  { name: "Calm Background - Lofi Mix", platform: "instagram", uses: "650K", trend: "rising", genre: "Ambient" },
-                  { name: "Business Podcast Intro", platform: "tiktok", uses: "420K", trend: "new", genre: "Business" },
-                  { name: "Aesthetic Transition Beat", platform: "instagram", uses: "1.5M", trend: "peak", genre: "Aesthetic" },
-                ].map((audio, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-surface-light rounded-xl border border-border hover:border-gold/10 transition-all">
-                    <div className="w-10 h-10 bg-surface rounded-xl flex items-center justify-center shrink-0">
-                      <Music2 size={16} className="text-muted" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold truncate">{audio.name}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        {PLATFORM_ICONS[audio.platform] || <Globe size={10} />}
-                        <span className="text-[9px] text-muted">{audio.uses} uses</span>
-                        <span className="text-[8px] bg-surface px-1.5 py-0.5 rounded text-muted">{audio.genre}</span>
-                      </div>
-                    </div>
-                    <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium shrink-0 ${
-                      audio.trend === "rising" ? "bg-success/10 text-success" :
-                      audio.trend === "peak" ? "bg-gold/10 text-gold" :
-                      audio.trend === "new" ? "bg-purple-400/10 text-purple-400" :
-                      "bg-surface text-muted"
-                    }`}>
-                      {audio.trend === "rising" ? "Rising" : audio.trend === "peak" ? "Peak" : audio.trend === "new" ? "New" : "Stable"}
-                    </span>
-                    <button onClick={() => toast.success(`Saved "${audio.name}" to favorites!`)}
-                      className="text-[9px] text-gold hover:underline shrink-0 flex items-center gap-1">
-                      <Star size={9} /> Save
-                    </button>
-                  </div>
-                ))}
+              <div className="text-center py-8">
+                <Music2 size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No trending audio data yet.</p>
               </div>
             </div>
           )}

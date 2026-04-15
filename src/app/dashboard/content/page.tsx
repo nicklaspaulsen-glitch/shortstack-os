@@ -37,14 +37,7 @@ export default function ContentPage() {
 
   // Pipeline state
   const [pipelineFilter, setPipelineFilter] = useState<string>("all");
-  const [pipelineItems] = useState([
-    { id: "p1", title: "5 Marketing Myths Debunked", type: "blog", stage: "draft", assignee: "AI", due: "2026-04-16", seo_score: 72 },
-    { id: "p2", title: "Client Success Story: Austin Dental", type: "video", stage: "review", assignee: "You", due: "2026-04-15", seo_score: 0 },
-    { id: "p3", title: "Weekly Tips Carousel", type: "social", stage: "approved", assignee: "AI", due: "2026-04-14", seo_score: 0 },
-    { id: "p4", title: "Email Newsletter #12", type: "email", stage: "scheduled", assignee: "AI", due: "2026-04-17", seo_score: 0 },
-    { id: "p5", title: "SEO Guide for Local Businesses", type: "blog", stage: "draft", assignee: "You", due: "2026-04-20", seo_score: 85 },
-    { id: "p6", title: "Behind the Scenes Reel", type: "video", stage: "idea", assignee: "Unassigned", due: "", seo_score: 0 },
-  ]);
+  const [pipelineItems] = useState<Array<{ id: string; title: string; type: string; stage: string; assignee: string; due: string; seo_score: number }>>([]);
 
   // SEO checker state
   const [seoText, setSeoText] = useState("");
@@ -54,21 +47,17 @@ export default function ContentPage() {
 
   // Content analytics
   const [contentAnalytics] = useState({
-    total_pieces: 127,
-    published_this_month: 34,
-    avg_engagement: "4.2%",
-    top_performing: "5 Marketing Myths",
-    content_types: { blog: 28, social: 65, video: 22, email: 12 },
-    approval_rate: 92,
-    ai_enhanced: 78,
+    total_pieces: 0,
+    published_this_month: 0,
+    avg_engagement: "0%",
+    top_performing: "N/A",
+    content_types: { blog: 0, social: 0, video: 0, email: 0 },
+    approval_rate: 0,
+    ai_enhanced: 0,
   });
 
   // Version control
-  const [versions] = useState([
-    { id: "v1", content_title: "5 Marketing Myths", version: 3, author: "AI", timestamp: "2026-04-14T10:00:00Z", changes: "Added CTA section" },
-    { id: "v2", content_title: "5 Marketing Myths", version: 2, author: "You", timestamp: "2026-04-13T15:00:00Z", changes: "Revised intro paragraph" },
-    { id: "v3", content_title: "5 Marketing Myths", version: 1, author: "AI", timestamp: "2026-04-12T09:00:00Z", changes: "Initial draft" },
-  ]);
+  const [versions] = useState<Array<{ id: string; content_title: string; version: number; author: string; timestamp: string; changes: string }>>([]);
 
   function runSeoCheck() {
     if (!seoText.trim()) { toast.error("Enter content to check"); return; }
@@ -424,6 +413,12 @@ export default function ContentPage() {
                   <option value="email">Email</option>
                 </select>
               </div>
+              {pipelineItems.length === 0 && (
+                <div className="card text-center py-12">
+                  <Layers size={28} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-sm text-muted">No content in the pipeline yet.</p>
+                </div>
+              )}
               <div className="grid grid-cols-5 gap-3">
                 {["idea", "draft", "review", "approved", "scheduled"].map(stage => (
                   <div key={stage} className="space-y-2">
@@ -465,39 +460,31 @@ export default function ContentPage() {
               {/* Repurpose Suggestions */}
               <div className="card">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><RefreshCw size={14} className="text-gold" /> Repurpose Suggestions</h3>
-                <div className="space-y-2">
-                  {[
-                    { source: "5 Marketing Myths Debunked (blog)", suggestions: ["Twitter thread (5 tweets)", "Instagram carousel (5 slides)", "LinkedIn article", "Email newsletter excerpt", "Short-form video script"] },
-                    { source: "Client Success Story (video)", suggestions: ["Blog post write-up", "Quote graphic for Instagram", "Testimonial email", "Case study PDF"] },
-                  ].map((item, i) => (
-                    <div key={i} className="p-3 border border-border rounded-lg">
-                      <p className="text-xs font-medium mb-2">{item.source}</p>
-                      <div className="flex flex-wrap gap-1">
-                        {item.suggestions.map(s => <span key={s} className="text-[9px] bg-gold/10 text-gold px-2 py-1 rounded-lg cursor-pointer hover:bg-gold/20">{s}</span>)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs text-muted text-center py-6">No repurpose suggestions yet. Add content to the pipeline to get started.</p>
               </div>
               {/* Version Control */}
               <div className="card">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><GitBranch size={14} className="text-gold" /> Version History</h3>
                 <div className="space-y-2">
-                  {versions.map(v => (
-                    <div key={v.id} className="flex items-center justify-between p-2 border border-border rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <span className="text-[10px] bg-surface-light px-2 py-0.5 rounded font-mono">v{v.version}</span>
-                        <div>
-                          <p className="text-xs font-medium">{v.content_title}</p>
-                          <p className="text-[10px] text-muted">{v.changes}</p>
+                  {versions.length === 0 ? (
+                    <p className="text-xs text-muted text-center py-6">No version history yet.</p>
+                  ) : (
+                    versions.map(v => (
+                      <div key={v.id} className="flex items-center justify-between p-2 border border-border rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] bg-surface-light px-2 py-0.5 rounded font-mono">v{v.version}</span>
+                          <div>
+                            <p className="text-xs font-medium">{v.content_title}</p>
+                            <p className="text-[10px] text-muted">{v.changes}</p>
+                          </div>
+                        </div>
+                        <div className="text-right text-[10px] text-muted">
+                          <p>{v.author}</p>
+                          <p>{new Date(v.timestamp).toLocaleString()}</p>
                         </div>
                       </div>
-                      <div className="text-right text-[10px] text-muted">
-                        <p>{v.author}</p>
-                        <p>{new Date(v.timestamp).toLocaleString()}</p>
-                      </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             </div>

@@ -40,65 +40,7 @@ interface Conversation {
   internalNotes: string[];
 }
 
-const MOCK_CONVERSATIONS: Conversation[] = [
-  {
-    lead_id: "l1", business_name: "Sunrise Bakery", phone: "+1 555-0123", email: "emma@sunrise.com",
-    last_message: "That sounds great! When can we start?", last_date: "2026-04-14T10:30:00Z", unread: 2,
-    status: "open", priority: "high", assignee: "Alex M.", tags: ["hot-lead", "content"], sentiment: "positive", avgResponseTime: "12m",
-    internalNotes: ["Very interested in content package", "Budget: $3k/mo"],
-    messages: [
-      { id: "m1", direction: "outbound", platform: "email", text: "Hi Emma! I wanted to follow up on our conversation about social media management for Sunrise Bakery.", status: "delivered", date: "2026-04-13T09:00:00Z" },
-      { id: "m2", direction: "inbound", platform: "email", text: "Hi! Yes, I've been thinking about it. What packages do you offer?", status: "read", date: "2026-04-13T14:22:00Z", sender: "Emma Liu" },
-      { id: "m3", direction: "outbound", platform: "email", text: "Great question! We have three tiers: Starter ($1,200/mo), Growth ($2,500/mo), and Scale ($4,000/mo). Based on your goals, I'd recommend Growth.", status: "delivered", date: "2026-04-13T14:45:00Z" },
-      { id: "m4", direction: "inbound", platform: "email", text: "The Growth package sounds perfect. Can you send me a proposal?", status: "read", date: "2026-04-14T08:15:00Z", sender: "Emma Liu" },
-      { id: "m5", direction: "outbound", platform: "email", text: "Absolutely! I'll have a custom proposal ready by end of day. It'll include content calendar, strategy overview, and expected results.", status: "sent", date: "2026-04-14T09:00:00Z" },
-      { id: "m6", direction: "inbound", platform: "email", text: "That sounds great! When can we start?", status: "unread", date: "2026-04-14T10:30:00Z", sender: "Emma Liu" },
-    ],
-  },
-  {
-    lead_id: "l2", business_name: "Metro Legal Group", phone: "+1 555-0456", email: "james@metrolegal.com",
-    last_message: "I need to discuss this with my partner first", last_date: "2026-04-12T16:00:00Z", unread: 0,
-    status: "pending", priority: "medium", assignee: "Sarah K.", tags: ["follow-up", "legal"], sentiment: "neutral", avgResponseTime: "2h 15m",
-    internalNotes: ["Decision maker is the senior partner", "Needs case studies for legal industry"],
-    messages: [
-      { id: "m7", direction: "outbound", platform: "sms", text: "Hi James, just checking in on the marketing proposal we sent last week.", status: "delivered", date: "2026-04-12T10:00:00Z" },
-      { id: "m8", direction: "inbound", platform: "sms", text: "I need to discuss this with my partner first", status: "read", date: "2026-04-12T16:00:00Z", sender: "James Park" },
-    ],
-  },
-  {
-    lead_id: "l3", business_name: "FreshCuts Barbershop", phone: "+1 555-0789", email: "jamal@freshcuts.com",
-    last_message: "Your prices are too high for us right now", last_date: "2026-04-11T11:30:00Z", unread: 0,
-    status: "open", priority: "low", assignee: "Alex M.", tags: ["price-sensitive"], sentiment: "negative", avgResponseTime: "45m",
-    internalNotes: ["Offered 15% discount - declined", "May revisit in Q3"],
-    messages: [
-      { id: "m9", direction: "outbound", platform: "instagram", text: "Hey Jamal! Love the content you've been posting. We could help amplify your reach.", status: "delivered", date: "2026-04-10T15:00:00Z" },
-      { id: "m10", direction: "inbound", platform: "instagram", text: "Thanks! What would that cost?", status: "read", date: "2026-04-10T17:30:00Z", sender: "Jamal Brooks" },
-      { id: "m11", direction: "outbound", platform: "instagram", text: "Our starter package is $1,200/mo and includes social management, content creation, and basic ads.", status: "delivered", date: "2026-04-11T09:00:00Z" },
-      { id: "m12", direction: "inbound", platform: "instagram", text: "Your prices are too high for us right now", status: "read", date: "2026-04-11T11:30:00Z", sender: "Jamal Brooks" },
-    ],
-  },
-  {
-    lead_id: "l4", business_name: "Elite Auto Detailing", phone: "+1 555-1234", email: "carlos@eliteauto.com",
-    last_message: "Can you schedule a call for Thursday?", last_date: "2026-04-14T08:00:00Z", unread: 1,
-    status: "open", priority: "high", assignee: "Sarah K.", tags: ["upsell", "existing-client"], sentiment: "positive", avgResponseTime: "8m",
-    internalNotes: ["Current Growth client", "Interested in adding paid ads"],
-    messages: [
-      { id: "m13", direction: "inbound", platform: "sms", text: "Hey, I wanted to talk about adding paid ads to our package.", status: "read", date: "2026-04-13T16:00:00Z", sender: "Carlos Reyes" },
-      { id: "m14", direction: "outbound", platform: "sms", text: "That's great to hear Carlos! Paid ads would be a perfect addition. Want to hop on a call to discuss?", status: "delivered", date: "2026-04-13T16:15:00Z" },
-      { id: "m15", direction: "inbound", platform: "sms", text: "Can you schedule a call for Thursday?", status: "unread", date: "2026-04-14T08:00:00Z", sender: "Carlos Reyes" },
-    ],
-  },
-  {
-    lead_id: "l5", business_name: "CloudTech Solutions", phone: null, email: "priya@cloudtech.io",
-    last_message: "We'll pass for now, thanks", last_date: "2026-04-08T09:00:00Z", unread: 0,
-    status: "resolved", priority: "low", assignee: "Alex M.", tags: ["lost", "tech"], sentiment: "negative", avgResponseTime: "1h 30m",
-    internalNotes: ["Lost to competitor", "Re-engage in 3 months"],
-    messages: [
-      { id: "m16", direction: "outbound", platform: "linkedin", text: "Hi Priya, I noticed CloudTech has been growing fast. We help tech companies scale their marketing.", status: "delivered", date: "2026-04-07T10:00:00Z" },
-      { id: "m17", direction: "inbound", platform: "linkedin", text: "We'll pass for now, thanks", status: "read", date: "2026-04-08T09:00:00Z", sender: "Priya Sharma" },
-    ],
-  },
-];
+const MOCK_CONVERSATIONS: Conversation[] = [];
 
 const CANNED_RESPONSES = [
   { id: "cr1", name: "Introduction", text: "Hi {name}! I'm {agent} from ShortStack Digital. I noticed {business} and thought we could help you grow your online presence." },

@@ -27,23 +27,9 @@ interface TicketItem {
   satisfaction: number | null;
 }
 
-const MOCK_TICKETS: TicketItem[] = [
-  { id: "TK-001", subject: "Website not loading", description: "Client reports their generated website returns 502 error since yesterday morning.", client: "Acme Dental", priority: "urgent", status: "open", assignee: "Alex", category: "Technical", created: "2h ago", updated: "30 min ago", slaDeadline: "2h left", notes: ["Checked server logs - memory spike at 3am", "Restarted service, monitoring"], satisfaction: null },
-  { id: "TK-002", subject: "Need content calendar changes", description: "Client wants to add Mother's Day theme to next week's calendar.", client: "Bella Salon", priority: "medium", status: "in_progress", assignee: "Maria", category: "Content", created: "1d ago", updated: "4h ago", slaDeadline: "8h left", notes: ["Reached out to content team"], satisfaction: null },
-  { id: "TK-003", subject: "Invoice discrepancy", description: "Charged $499 but plan is $399/mo. Client requesting refund of $100.", client: "FastFix HVAC", priority: "high", status: "open", assignee: "Unassigned", category: "Billing", created: "3h ago", updated: "3h ago", slaDeadline: "5h left", notes: [], satisfaction: null },
-  { id: "TK-004", subject: "Add Instagram account", description: "New Instagram business account needs to be connected to the platform.", client: "Peak Fitness", priority: "low", status: "in_progress", assignee: "Alex", category: "Setup", created: "2d ago", updated: "1d ago", slaDeadline: "On time", notes: ["Sent OAuth link to client"], satisfaction: null },
-  { id: "TK-005", subject: "Lead quality concern", description: "Client reports 60% of scraped leads have invalid phone numbers.", client: "Metro Plumbing", priority: "high", status: "resolved", assignee: "Jordan", category: "Lead Gen", created: "3d ago", updated: "1d ago", slaDeadline: "Met", notes: ["Adjusted scraper filters", "Re-ran with phone validation", "Client confirmed improvement"], satisfaction: 4 },
-  { id: "TK-006", subject: "Logo update on all materials", description: "Client rebranded, needs new logo across website, social, and email templates.", client: "Sunrise Realty", priority: "medium", status: "closed", assignee: "Maria", category: "Design", created: "5d ago", updated: "2d ago", slaDeadline: "Met", notes: ["Updated all assets", "Client approved"], satisfaction: 5 },
-  { id: "TK-007", subject: "AI receptionist giving wrong hours", description: "The AI phone agent is telling callers they're open until 9pm, but they close at 6pm.", client: "Downtown Chiro", priority: "urgent", status: "open", assignee: "Jordan", category: "AI Agent", created: "1h ago", updated: "1h ago", slaDeadline: "3h left", notes: [], satisfaction: null },
-];
+const MOCK_TICKETS: TicketItem[] = [];
 
-const CANNED_RESPONSES = [
-  { label: "Acknowledge", text: "Thanks for reaching out! We've received your request and are looking into it. You'll hear back within 24 hours." },
-  { label: "Need More Info", text: "Could you provide more details about this issue? Screenshots or specific examples would help us resolve this faster." },
-  { label: "Resolved", text: "Great news! This issue has been resolved. Please let us know if you experience any further problems." },
-  { label: "Escalated", text: "We've escalated this to our senior team for priority review. You'll receive an update within 2 hours." },
-  { label: "Scheduled Fix", text: "We've identified the issue and scheduled a fix for the next maintenance window. Expected resolution: within 48 hours." },
-];
+const CANNED_RESPONSES: { label: string; text: string }[] = [];
 
 const CATEGORIES = ["All", "Technical", "Content", "Billing", "Setup", "Lead Gen", "Design", "AI Agent"];
 const STATUSES: Status[] = ["open", "in_progress", "resolved", "closed"];
@@ -196,7 +182,9 @@ export default function TicketsPage() {
               <div className={`px-3 py-1.5 rounded-lg text-[10px] font-semibold capitalize ${statusColor[status]}`}>
                 {status.replace("_", " ")} ({tickets.filter(t => t.status === status).length})
               </div>
-              {tickets.filter(t => t.status === status).map(ticket => (
+              {tickets.filter(t => t.status === status).length === 0 ? (
+                <p className="text-[10px] text-muted text-center py-4">No tickets</p>
+              ) : tickets.filter(t => t.status === status).map(ticket => (
                 <div key={ticket.id} onClick={() => { setExpandedTicket(expandedTicket === ticket.id ? null : ticket.id); setTab("List"); }}
                   className="card p-3 cursor-pointer hover:border-gold/15 transition-all">
                   <div className="flex items-center gap-1.5 mb-1">
@@ -255,6 +243,12 @@ export default function TicketsPage() {
           )}
 
           {/* Ticket List */}
+          {filtered.length === 0 && (
+            <div className="card text-center py-8">
+              <Ticket size={20} className="mx-auto mb-2 text-muted/30" />
+              <p className="text-xs text-muted">No tickets yet</p>
+            </div>
+          )}
           {filtered.map(ticket => (
             <div key={ticket.id} className={`rounded-xl border transition-all ${ticket.priority === "urgent" ? "border-red-500/15" : "border-border"} bg-surface-light`}>
               <div className="flex items-start gap-3 p-4 cursor-pointer" onClick={() => setExpandedTicket(expandedTicket === ticket.id ? null : ticket.id)}>
@@ -407,7 +401,7 @@ export default function TicketsPage() {
                 <p className="text-[9px] text-muted">Resolved</p>
               </div>
               <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-blue-400">4.2h</p>
+                <p className="text-xl font-bold text-blue-400">--</p>
                 <p className="text-[9px] text-muted">Avg Resolution Time</p>
               </div>
               <div className="bg-surface-light rounded-xl p-3 text-center">
@@ -459,6 +453,12 @@ export default function TicketsPage() {
             <MessageSquare size={14} className="text-gold" /> Canned Responses
           </h2>
           <p className="text-[10px] text-muted">Quick-reply templates for common ticket scenarios.</p>
+          {CANNED_RESPONSES.length === 0 && (
+            <div className="card text-center py-8">
+              <MessageSquare size={20} className="mx-auto mb-2 text-muted/30" />
+              <p className="text-xs text-muted">No canned responses yet</p>
+            </div>
+          )}
           {CANNED_RESPONSES.map((r, i) => (
             <div key={i} className="card p-3 hover:border-gold/15 transition-all">
               <div className="flex items-center justify-between mb-1.5">

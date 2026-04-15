@@ -74,26 +74,19 @@ export default function WorkflowsPage() {
   // Analytics data
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [workflowAnalytics] = useState({
-    totalRuns: 847,
-    successRate: 94.2,
-    avgDuration: "3.2s",
+    totalRuns: 0,
+    successRate: 0,
+    avgDuration: "--",
     activeWorkflows: workflows.filter(w => w.status === "completed").length,
-    failedRuns: 49,
-    topWorkflow: "Lead Notification",
-    runsThisWeek: 142,
-    savedHours: 28,
+    failedRuns: 0,
+    topWorkflow: "--",
+    runsThisWeek: 0,
+    savedHours: 0,
   });
 
   // Run history detail
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [runHistory] = useState([
-    { id: "R001", workflow: "New Lead Alert", status: "success" as const, duration: "1.2s", steps: 3, timestamp: "2026-04-14 09:23" },
-    { id: "R002", workflow: "Client Onboarding", status: "success" as const, duration: "4.5s", steps: 6, timestamp: "2026-04-14 08:15" },
-    { id: "R003", workflow: "Invoice Generator", status: "failed" as const, duration: "2.1s", steps: 4, timestamp: "2026-04-13 16:42", error: "Stripe API timeout" },
-    { id: "R004", workflow: "Weekly Report", status: "success" as const, duration: "8.3s", steps: 8, timestamp: "2026-04-13 10:00" },
-    { id: "R005", workflow: "Follow-Up Sequence", status: "success" as const, duration: "1.8s", steps: 3, timestamp: "2026-04-13 09:30" },
-    { id: "R006", workflow: "Content Generator", status: "failed" as const, duration: "5.2s", steps: 5, timestamp: "2026-04-12 14:20", error: "AI rate limit exceeded" },
-  ]);
+  const [runHistory] = useState<{ id: string; workflow: string; status: "success" | "failed"; duration: string; steps: number; timestamp: string; error?: string }[]>([]);
 
   // Error handling
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -105,12 +98,7 @@ export default function WorkflowsPage() {
 
   // Shared workflows
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [sharedWorkflows] = useState([
-    { id: "1", name: "Lead Scrape + Notify", author: "System", downloads: 342, rating: 4.8 },
-    { id: "2", name: "Client Onboarding Suite", author: "System", downloads: 218, rating: 4.6 },
-    { id: "3", name: "Auto Content Pipeline", author: "Community", downloads: 156, rating: 4.4 },
-    { id: "4", name: "Invoice + Follow-Up", author: "System", downloads: 189, rating: 4.7 },
-  ]);
+  const [sharedWorkflows] = useState<{ id: string; name: string; author: string; downloads: number; rating: number }[]>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); fetchN8n(); }, []);
@@ -865,7 +853,12 @@ export default function WorkflowsPage() {
               <div className="grid grid-cols-12 gap-2 px-3 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
                 <div className="col-span-1">ID</div><div className="col-span-3">Workflow</div><div className="col-span-2">Status</div><div className="col-span-2">Duration</div><div className="col-span-1">Steps</div><div className="col-span-3">Time</div>
               </div>
-              {runHistory.map(run => (
+              {runHistory.length === 0 ? (
+                <div className="text-center py-6">
+                  <Clock size={18} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-[10px] text-muted">No workflow runs yet</p>
+                </div>
+              ) : runHistory.map(run => (
                 <div key={run.id} className="grid grid-cols-12 gap-2 items-center px-3 py-2 rounded-lg bg-surface-light border border-border">
                   <div className="col-span-1"><span className="text-[9px] font-mono text-muted">{run.id}</span></div>
                   <div className="col-span-3"><span className="text-[10px] font-semibold">{run.workflow}</span></div>
@@ -892,7 +885,12 @@ export default function WorkflowsPage() {
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Users size={13} className="text-gold" /> Community Workflows</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {sharedWorkflows.map(sw => (
+              {sharedWorkflows.length === 0 ? (
+                <div className="col-span-2 text-center py-6">
+                  <Users size={18} className="mx-auto mb-2 text-muted/30" />
+                  <p className="text-[10px] text-muted">No shared workflows yet</p>
+                </div>
+              ) : sharedWorkflows.map(sw => (
                 <div key={sw.id} className="p-3 rounded-lg bg-surface-light border border-border">
                   <div className="flex items-start justify-between mb-2">
                     <div><h3 className="text-xs font-semibold">{sw.name}</h3><p className="text-[9px] text-muted">by {sw.author}</p></div>

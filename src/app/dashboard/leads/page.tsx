@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import {
-  Zap, MessageSquare, Search, Phone, Globe, Mail, Star,
+  Zap, MessageSquare, Search, Phone, Mail, Star,
   TrendingUp, Users, Target, ArrowDownRight,
   CheckCircle, AlertTriangle, Tag, Upload, Download, Flame,
   Clock, UserPlus, BarChart3,
@@ -30,16 +30,7 @@ interface MockLead {
   engagements: number;
 }
 
-const MOCK_LEADS: MockLead[] = [
-  { id: "1", business_name: "Bright Smile Dental", phone: "+1 (555) 234-5678", email: "info@brightsmile.com", industry: "Dental", city: "Miami", source: "Google Maps", status: "qualified", score: 92, tags: ["high-value", "responsive"], lastActivity: "2h ago", website: "brightsmile.com", rating: 4.8, reviews: 234, assigned: "Nicklas", engagements: 8 },
-  { id: "2", business_name: "Peak Fitness Gym", phone: "+1 (555) 345-6789", email: "owner@peakfitness.com", industry: "Fitness", city: "Austin", source: "Instagram DM", status: "contacted", score: 78, tags: ["warm"], lastActivity: "5h ago", website: "peakfitness.com", rating: 4.5, reviews: 156, assigned: "Nicklas", engagements: 5 },
-  { id: "3", business_name: "Swift Plumbing Co", phone: "+1 (555) 456-7890", email: "swift@plumbing.net", industry: "Plumbing", city: "Dallas", source: "Cold Call", status: "new", score: 45, tags: ["needs-nurture"], lastActivity: "2d ago", website: "swiftplumbing.com", rating: 4.2, reviews: 89, assigned: "Unassigned", engagements: 1 },
-  { id: "4", business_name: "Atlas Legal Group", phone: "+1 (555) 567-8901", email: "info@atlaslegal.com", industry: "Legal", city: "Chicago", source: "Website Form", status: "qualified", score: 88, tags: ["high-value", "decision-maker"], lastActivity: "1h ago", website: "atlaslegal.com", rating: 4.9, reviews: 312, assigned: "Nicklas", engagements: 12 },
-  { id: "5", business_name: "Green Lawn Masters", phone: "+1 (555) 678-9012", email: "contact@greenlawn.com", industry: "Landscaping", city: "Tampa", source: "Facebook", status: "new", score: 35, tags: [], lastActivity: "5d ago", website: "greenlawnmasters.com", rating: 3.9, reviews: 45, assigned: "Unassigned", engagements: 0 },
-  { id: "6", business_name: "CloudNine HVAC", phone: "+1 (555) 789-0123", email: "service@cloudninehvac.com", industry: "HVAC", city: "Phoenix", source: "Google Maps", status: "contacted", score: 65, tags: ["follow-up"], lastActivity: "1d ago", website: "cloudninehvac.com", rating: 4.4, reviews: 178, assigned: "Nicklas", engagements: 3 },
-  { id: "7", business_name: "Sunrise Bakery", phone: "+1 (555) 890-1234", email: "hello@sunrise-bakery.com", industry: "Restaurant", city: "San Diego", source: "Referral", status: "booked", score: 95, tags: ["hot", "referral"], lastActivity: "30m ago", website: "sunrise-bakery.com", rating: 4.7, reviews: 567, assigned: "Nicklas", engagements: 15 },
-  { id: "8", business_name: "Elite Auto Detailing", phone: "+1 (555) 901-2345", email: "elite@autodetail.com", industry: "Automotive", city: "Las Vegas", source: "TikTok", status: "converted", score: 100, tags: ["client", "upsell"], lastActivity: "3h ago", website: "eliteautodetail.com", rating: 4.6, reviews: 201, assigned: "Nicklas", engagements: 20 },
-];
+const MOCK_LEADS: MockLead[] = [];
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SOURCES = ["Google Maps", "Instagram DM", "Cold Call", "Website Form", "Facebook", "Referral", "TikTok", "LinkedIn", "Cold Email"];
@@ -105,7 +96,7 @@ export default function LeadEnginePage() {
           { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
           { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
           { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
-          { label: "Avg Score", value: Math.round(MOCK_LEADS.reduce((s, l) => s + l.score, 0) / totalLeads), icon: <Target size={12} />, color: "text-blue-400" },
+          { label: "Avg Score", value: totalLeads > 0 ? Math.round(MOCK_LEADS.reduce((s, l) => s + l.score, 0) / totalLeads) : 0, icon: <Target size={12} />, color: "text-blue-400" },
           { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
         ].map((stat, i) => (
           <div key={i} className="card text-center p-3">
@@ -162,6 +153,9 @@ export default function LeadEnginePage() {
               <span>Activity</span>
               <span className="text-center">Actions</span>
             </div>
+            {filteredLeads.length === 0 && (
+              <div className="text-center py-12 text-muted text-xs">No leads yet. Add or import leads to get started.</div>
+            )}
             {filteredLeads.map(lead => (
               <div key={lead.id}>
                 <div onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
@@ -206,23 +200,7 @@ export default function LeadEnginePage() {
                 {expandedLead === lead.id && (
                   <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border">
                     <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><Clock size={10} /> Engagement Timeline</h4>
-                    <div className="space-y-2">
-                      {[
-                        { action: "Email opened", time: "2h ago", type: "email" },
-                        { action: "Clicked link in email", time: "2h ago", type: "click" },
-                        { action: "Visited website", time: "1d ago", type: "web" },
-                        { action: "Cold DM sent", time: "3d ago", type: "dm" },
-                        { action: "Scraped from Google Maps", time: "5d ago", type: "scrape" },
-                      ].map((e, i) => (
-                        <div key={i} className="flex items-center gap-2 text-[9px]">
-                          <div className={`w-1.5 h-1.5 rounded-full ${
-                            e.type === "email" ? "bg-blue-400" : e.type === "click" ? "bg-green-400" : e.type === "web" ? "bg-purple-400" : e.type === "dm" ? "bg-pink-400" : "bg-muted"
-                          }`} />
-                          <span>{e.action}</span>
-                          <span className="text-muted ml-auto">{e.time}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <div className="text-center py-4 text-muted text-[9px]">No engagement data yet.</div>
                     {/* Qualification Checklist */}
                     <div className="mt-3 pt-3 border-t border-border">
                       <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><CheckCircle size={10} /> Qualification Checklist</h4>
@@ -253,26 +231,7 @@ export default function LeadEnginePage() {
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Layers size={14} className="text-yellow-400" /> Duplicate Detection
             </h3>
-            <div className="space-y-2">
-              {[
-                { a: "Bright Smile Dental", b: "BrightSmile Dental Care", field: "Business name", confidence: 92 },
-                { a: "info@brightsmile.com", b: "contact@brightsmile.com", field: "Domain match", confidence: 85 },
-              ].map((d, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-yellow-400/5 border border-yellow-400/10">
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle size={14} className="text-yellow-400" />
-                    <div>
-                      <p className="text-[10px]"><span className="font-semibold">{d.a}</span> <span className="text-muted">may be duplicate of</span> <span className="font-semibold">{d.b}</span></p>
-                      <p className="text-[9px] text-muted">Match: {d.field} ({d.confidence}% confidence)</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-1.5">
-                    <button className="text-[9px] px-2 py-1 rounded bg-green-400/10 text-green-400 border border-green-400/20">Merge</button>
-                    <button className="text-[9px] px-2 py-1 rounded bg-white/5 text-muted border border-border">Dismiss</button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <div className="text-center py-8 text-muted text-xs">No duplicates detected.</div>
           </div>
         </div>
       )}
@@ -316,10 +275,10 @@ export default function LeadEnginePage() {
               <h3 className="text-sm font-semibold mb-3">Score Distribution</h3>
               <div className="space-y-3">
                 {[
-                  { range: "90-100 (Hot)", count: 2, pct: 25, color: "bg-red-400" },
-                  { range: "70-89 (Warm)", count: 2, pct: 25, color: "bg-orange-400" },
-                  { range: "50-69 (Lukewarm)", count: 2, pct: 25, color: "bg-yellow-400" },
-                  { range: "0-49 (Cold)", count: 2, pct: 25, color: "bg-blue-400" },
+                  { range: "90-100 (Hot)", count: 0, pct: 0, color: "bg-red-400" },
+                  { range: "70-89 (Warm)", count: 0, pct: 0, color: "bg-orange-400" },
+                  { range: "50-69 (Lukewarm)", count: 0, pct: 0, color: "bg-yellow-400" },
+                  { range: "0-49 (Cold)", count: 0, pct: 0, color: "bg-blue-400" },
                 ].map((d, i) => (
                   <div key={i}>
                     <div className="flex justify-between text-[10px] mb-1">
@@ -398,37 +357,7 @@ export default function LeadEnginePage() {
           <h3 className="text-sm font-semibold flex items-center gap-2">
             <BarChart3 size={14} className="text-gold" /> Lead Source Attribution
           </h3>
-          <div className="space-y-2">
-            {[
-              { source: "Google Maps Scraper", leads: 156, qualified: 42, converted: 8, revenue: 18500, cost: 0 },
-              { source: "Instagram DMs", leads: 89, qualified: 28, converted: 5, revenue: 12400, cost: 0 },
-              { source: "Cold Email", leads: 234, qualified: 35, converted: 6, revenue: 14200, cost: 50 },
-              { source: "Website Forms", leads: 67, qualified: 31, converted: 9, revenue: 28400, cost: 200 },
-              { source: "Referrals", leads: 23, qualified: 18, converted: 12, revenue: 42000, cost: 0 },
-              { source: "Facebook Ads", leads: 145, qualified: 22, converted: 4, revenue: 9800, cost: 1500 },
-              { source: "TikTok", leads: 78, qualified: 15, converted: 3, revenue: 7200, cost: 0 },
-              { source: "Cold Calls", leads: 112, qualified: 20, converted: 4, revenue: 11000, cost: 0 },
-            ].map((s, i) => (
-              <div key={i} className="card p-3 flex items-center gap-4">
-                <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center flex-shrink-0">
-                  <Globe size={14} className="text-gold" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold">{s.source}</p>
-                  <div className="w-full bg-surface-light rounded-full h-1.5 mt-1">
-                    <div className="bg-gold rounded-full h-1.5" style={{ width: `${(s.converted / Math.max(...[156, 89, 234, 67, 23, 145, 78, 112].map((_, j) => [8, 5, 6, 9, 12, 4, 3, 4][j]))) * 100}%` }} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-5 gap-4 text-center text-[10px] flex-shrink-0">
-                  <div><p className="font-bold">{s.leads}</p><p className="text-[8px] text-muted">Leads</p></div>
-                  <div><p className="font-bold text-blue-400">{s.qualified}</p><p className="text-[8px] text-muted">Qualified</p></div>
-                  <div><p className="font-bold text-green-400">{s.converted}</p><p className="text-[8px] text-muted">Converted</p></div>
-                  <div><p className="font-bold text-gold">${(s.revenue / 1000).toFixed(1)}K</p><p className="text-[8px] text-muted">Revenue</p></div>
-                  <div><p className="font-bold">{s.cost > 0 ? `$${s.cost}` : "Free"}</p><p className="text-[8px] text-muted">Cost</p></div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <div className="text-center py-12 text-muted text-xs">No source attribution data yet.</div>
         </div>
       )}
 
@@ -438,31 +367,7 @@ export default function LeadEnginePage() {
           <h3 className="text-sm font-semibold flex items-center gap-2">
             <Mail size={14} className="text-gold" /> Lead Nurture Sequences
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {[
-              { name: "New Lead Welcome", enrolled: 45, completed: 12, steps: 5, type: "Email + SMS" },
-              { name: "Cold Lead Re-engagement", enrolled: 89, completed: 8, steps: 4, type: "Email" },
-              { name: "Post-Demo Follow Up", enrolled: 23, completed: 15, steps: 3, type: "Email + Call" },
-              { name: "Free Audit Nurture", enrolled: 67, completed: 22, steps: 6, type: "Email + SMS" },
-              { name: "Monthly Value Drop", enrolled: 156, completed: 0, steps: 12, type: "Email" },
-              { name: "Seasonal Campaign", enrolled: 34, completed: 34, steps: 3, type: "Email + SMS" },
-            ].map((seq, i) => (
-              <div key={i} className="card p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs font-semibold">{seq.name}</p>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-400">{seq.type}</span>
-                </div>
-                <div className="flex items-center gap-4 text-[10px] text-muted">
-                  <span>{seq.steps} steps</span>
-                  <span>{seq.enrolled} enrolled</span>
-                  <span className="text-green-400">{seq.completed} completed</span>
-                </div>
-                <div className="w-full bg-surface-light rounded-full h-1.5 mt-2">
-                  <div className="bg-green-400 rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
+          <div className="text-center py-12 text-muted text-xs">No nurture sequences configured yet.</div>
         </div>
       )}
 
@@ -477,10 +382,10 @@ export default function LeadEnginePage() {
           </div>
           <div className="grid grid-cols-4 gap-3 mb-4">
             {[
-              { label: "Fully Enriched", value: 5, total: totalLeads, color: "text-green-400" },
-              { label: "Partial Data", value: 2, total: totalLeads, color: "text-yellow-400" },
-              { label: "Missing Email", value: 1, total: totalLeads, color: "text-red-400" },
-              { label: "Missing Phone", value: 1, total: totalLeads, color: "text-red-400" },
+              { label: "Fully Enriched", value: 0, total: totalLeads, color: "text-green-400" },
+              { label: "Partial Data", value: 0, total: totalLeads, color: "text-yellow-400" },
+              { label: "Missing Email", value: 0, total: totalLeads, color: "text-red-400" },
+              { label: "Missing Phone", value: 0, total: totalLeads, color: "text-red-400" },
             ].map((s, i) => (
               <div key={i} className="card text-center p-3">
                 <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
@@ -490,6 +395,9 @@ export default function LeadEnginePage() {
             ))}
           </div>
           <div className="space-y-1.5">
+            {MOCK_LEADS.length === 0 && (
+              <div className="text-center py-8 text-muted text-xs">No leads to enrich yet.</div>
+            )}
             {MOCK_LEADS.map(lead => (
               <div key={lead.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border text-[10px]">
                 <div className="flex items-center gap-3">
@@ -525,12 +433,12 @@ export default function LeadEnginePage() {
           </h3>
           <div className="flex flex-col items-center gap-2">
             {[
-              { stage: "Total Leads Scraped", count: 904, pct: 100, color: "bg-blue-400" },
-              { stage: "Contacted (DM/Email/Call)", count: 521, pct: 57.6, color: "bg-purple-400" },
-              { stage: "Replied / Engaged", count: 156, pct: 17.3, color: "bg-yellow-400" },
-              { stage: "Qualified (Score 70+)", count: 89, pct: 9.8, color: "bg-orange-400" },
-              { stage: "Booked Discovery Call", count: 47, pct: 5.2, color: "bg-green-400" },
-              { stage: "Converted to Client", count: 18, pct: 2.0, color: "bg-gold" },
+              { stage: "Total Leads Scraped", count: 0, pct: 0, color: "bg-blue-400" },
+              { stage: "Contacted (DM/Email/Call)", count: 0, pct: 0, color: "bg-purple-400" },
+              { stage: "Replied / Engaged", count: 0, pct: 0, color: "bg-yellow-400" },
+              { stage: "Qualified (Score 70+)", count: 0, pct: 0, color: "bg-orange-400" },
+              { stage: "Booked Discovery Call", count: 0, pct: 0, color: "bg-green-400" },
+              { stage: "Converted to Client", count: 0, pct: 0, color: "bg-gold" },
             ].map((s, i) => (
               <div key={i} className="w-full max-w-2xl">
                 <div className="flex items-center justify-between mb-1 text-[10px]">
@@ -546,7 +454,7 @@ export default function LeadEnginePage() {
                   <div className="flex justify-center my-1">
                     <ArrowDownRight size={12} className="text-muted/30" />
                     <span className="text-[8px] text-muted ml-1">
-                      {i === 0 ? "57.6% contact rate" : i === 1 ? "29.9% reply rate" : i === 2 ? "57.1% qualify rate" : i === 3 ? "52.8% book rate" : "38.3% close rate"}
+                      {i === 0 ? "0% contact rate" : i === 1 ? "0% reply rate" : i === 2 ? "0% qualify rate" : i === 3 ? "0% book rate" : "0% close rate"}
                     </span>
                   </div>
                 )}

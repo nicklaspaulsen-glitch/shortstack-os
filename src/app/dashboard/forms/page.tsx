@@ -133,13 +133,7 @@ const TEMPLATES = [
   ]},
 ];
 
-const MOCK_SUBMISSIONS: FormSubmission[] = [
-  { id: "s1", formId: "f1", data: { "Full Name": "Dr. Sarah Mitchell", "Email": "sarah@mitchell.com", "Phone": "(555) 987-6543", "Message": "Interested in social media management for my dental practice" }, submittedAt: "2026-04-14T09:30:00Z", source: "Website" },
-  { id: "s2", formId: "f1", data: { "Full Name": "Mike Chen", "Email": "mike@fitprogym.com", "Phone": "(555) 321-4567" }, submittedAt: "2026-04-13T14:15:00Z", source: "Landing Page" },
-  { id: "s3", formId: "f2", data: { "Business Name": "Luxe Salon", "Email": "info@luxesalon.com", "Phone": "(555) 654-3210", "Budget": "$3k-$5k", "Service": "Full Service" }, submittedAt: "2026-04-12T11:00:00Z", source: "Facebook Ad" },
-  { id: "s4", formId: "f1", data: { "Full Name": "Anna Lopez", "Email": "anna@metrorealty.com" }, submittedAt: "2026-04-11T16:45:00Z", source: "Email Link" },
-  { id: "s5", formId: "f2", data: { "Business Name": "Green Eats", "Email": "hello@greeneats.com", "Budget": "$1k-$3k", "Service": "Social Media" }, submittedAt: "2026-04-10T10:20:00Z", source: "Google Ad" },
-];
+const MOCK_SUBMISSIONS: FormSubmission[] = [];
 
 export default function FormsPage() {
   const [tab, setTab] = useState<FormTab>("builder");
@@ -160,9 +154,9 @@ export default function FormsPage() {
       thankYouMessage: "Thank you for your submission! We'll be in touch soon.",
       accentColor: "#C9A84C",
       spamProtection: true,
-      views: Math.floor(Math.random() * 500) + 100,
-      starts: Math.floor(Math.random() * 300) + 50,
-      completions: Math.floor(Math.random() * 100) + 20,
+      views: 0,
+      starts: 0,
+      completions: 0,
     };
     setForms(prev => [...prev, newForm]);
     setActiveForm(newForm);
@@ -218,7 +212,7 @@ export default function FormsPage() {
   }
 
   const totalSubmissions = MOCK_SUBMISSIONS.length;
-  const avgCompletionRate = forms.length > 0 ? Math.round(forms.reduce((s, f) => s + (f.views > 0 ? (f.completions / f.views) * 100 : 0), 0) / forms.length) : 42;
+  const avgCompletionRate = forms.length > 0 ? Math.round(forms.reduce((s, f) => s + (f.views > 0 ? (f.completions / f.views) * 100 : 0), 0) / forms.length) : 0;
 
   const TABS: { id: FormTab; label: string; icon: React.ReactNode }[] = [
     { id: "builder", label: "Builder", icon: <FileText size={13} /> },
@@ -492,26 +486,30 @@ export default function FormsPage() {
             <h2 className="section-header mb-0">Recent Submissions</h2>
             <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export CSV</button>
           </div>
-          <div className="space-y-2">
-            {MOCK_SUBMISSIONS.map(sub => (
-              <div key={sub.id} className="card p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400">{sub.source}</span>
-                    <span className="text-[9px] text-muted">{new Date(sub.submittedAt).toLocaleString()}</span>
+          {MOCK_SUBMISSIONS.length === 0 ? (
+            <div className="card text-center py-12"><MessageSquare size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No submissions yet</p></div>
+          ) : (
+            <div className="space-y-2">
+              {MOCK_SUBMISSIONS.map(sub => (
+                <div key={sub.id} className="card p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400">{sub.source}</span>
+                      <span className="text-[9px] text-muted">{new Date(sub.submittedAt).toLocaleString()}</span>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.entries(sub.data).map(([key, val]) => (
+                      <div key={key}>
+                        <p className="text-[9px] text-muted">{key}</p>
+                        <p className="text-xs font-medium">{val}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(sub.data).map(([key, val]) => (
-                    <div key={key}>
-                      <p className="text-[9px] text-muted">{key}</p>
-                      <p className="text-xs font-medium">{val}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -522,53 +520,32 @@ export default function FormsPage() {
             <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Form Funnel</h2>
             <div className="flex items-end gap-4 h-40 justify-center">
               {[
-                { label: "Views", value: 1247, color: "#3b82f6" },
-                { label: "Starts", value: 834, color: "#8b5cf6" },
-                { label: "Completions", value: 523, color: "#10b981" },
-              ].map(item => (
+                { label: "Views", value: 0, color: "#3b82f6" },
+                { label: "Starts", value: 0, color: "#8b5cf6" },
+                { label: "Completions", value: 0, color: "#10b981" },
+              ].map(item => {
+                const maxVal = Math.max(1, ...[0, 0, 0]);
+                return (
                 <div key={item.label} className="flex flex-col items-center gap-1">
                   <p className="text-xs font-bold" style={{ color: item.color }}>{item.value}</p>
-                  <div className="w-20 rounded-t-lg" style={{ height: `${(item.value / 1247) * 120}px`, background: item.color }} />
+                  <div className="w-20 rounded-t-lg" style={{ height: `${(item.value / maxVal) * 120}px`, background: item.color }} />
                   <p className="text-[10px] text-muted">{item.label}</p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div className="card">
               <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-blue-400" /> Traffic Sources</h2>
               <div className="space-y-2">
-                {[
-                  { source: "Website", count: 45, pct: 42 },
-                  { source: "Facebook Ad", count: 28, pct: 26 },
-                  { source: "Google Ad", count: 18, pct: 17 },
-                  { source: "Email Link", count: 12, pct: 11 },
-                  { source: "Direct", count: 5, pct: 4 },
-                ].map(s => (
-                  <div key={s.source} className="flex items-center gap-2 text-xs">
-                    <span className="w-24 truncate">{s.source}</span>
-                    <div className="flex-1 h-2 rounded-full bg-surface-light overflow-hidden">
-                      <div className="h-full rounded-full bg-blue-400" style={{ width: `${s.pct}%` }} />
-                    </div>
-                    <span className="text-muted w-10 text-right">{s.pct}%</span>
-                  </div>
-                ))}
+                <div className="text-center py-4"><p className="text-[10px] text-muted">No traffic data yet</p></div>
               </div>
             </div>
             <div className="card">
               <h2 className="section-header flex items-center gap-2"><Zap size={13} className="text-gold" /> Drop-off Points</h2>
               <div className="space-y-2">
-                {[
-                  { field: "Phone Number", dropoff: 23 },
-                  { field: "Budget Range", dropoff: 15 },
-                  { field: "Message", dropoff: 8 },
-                  { field: "File Upload", dropoff: 31 },
-                ].map(d => (
-                  <div key={d.field} className="flex items-center gap-2 text-xs">
-                    <span className="flex-1">{d.field}</span>
-                    <span className="text-red-400 font-bold">{d.dropoff}% leave</span>
-                  </div>
-                ))}
+                <div className="text-center py-4"><p className="text-[10px] text-muted">No drop-off data yet</p></div>
               </div>
             </div>
           </div>

@@ -36,25 +36,9 @@ const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label:
   api: { icon: <Globe size={12} />, color: "text-indigo-400", label: "API" },
 };
 
-const MOCK_LOGS: LogEntry[] = [
-  { id: "1", user: "Nicklas", type: "lead_gen", action: "create", entity: "Lead", entityId: "ld_123", details: "New lead created: Dr. Smith Dental", timestamp: "2026-04-14T10:30:00Z", ip: "85.24.112.55" },
-  { id: "2", user: "System", type: "automation", action: "execute", entity: "Workflow", entityId: "wf_45", details: "Auto-assigned lead to Sarah", timestamp: "2026-04-14T10:30:01Z", ip: "system" },
-  { id: "3", user: "Sarah", type: "outreach", action: "send", entity: "Email", entityId: "em_789", details: "Sent follow-up email to Luxe Salon", timestamp: "2026-04-14T10:15:00Z", ip: "104.28.55.12" },
-  { id: "4", user: "Nicklas", type: "billing", action: "create", entity: "Invoice", entityId: "inv_456", details: "Created invoice #456 for FitPro Gym - $2,497", beforeValue: "", afterValue: "$2,497", timestamp: "2026-04-14T09:45:00Z", ip: "85.24.112.55" },
-  { id: "5", user: "Maria", type: "content", action: "publish", entity: "Post", entityId: "post_321", details: "Published 3 posts to Bright Dental Instagram", timestamp: "2026-04-14T09:30:00Z", ip: "181.55.42.10" },
-  { id: "6", user: "James", type: "content", action: "upload", entity: "Video", entityId: "vid_654", details: "Uploaded reel edit for FitPro Gym", timestamp: "2026-04-14T09:00:00Z", ip: "122.55.168.3" },
-  { id: "7", user: "System", type: "automation", action: "execute", entity: "Campaign", entityId: "camp_12", details: "Triggered drip email sequence for 12 leads", timestamp: "2026-04-14T08:00:00Z", ip: "system" },
-  { id: "8", user: "Nicklas", type: "login", action: "login", entity: "Session", entityId: "sess_99", details: "Logged in from Sweden", timestamp: "2026-04-14T07:55:00Z", ip: "85.24.112.55" },
-  { id: "9", user: "Alex", type: "lead_gen", action: "update", entity: "Lead", entityId: "ld_100", details: "Updated lead status: cold-lead -> warm-lead", beforeValue: "cold-lead", afterValue: "warm-lead", timestamp: "2026-04-13T17:30:00Z", ip: "211.42.88.15" },
-  { id: "10", user: "API", type: "api", action: "sync", entity: "Integration", entityId: "int_5", details: "Synced 45 contacts from Calendly", timestamp: "2026-04-13T17:00:00Z", ip: "api" },
-  { id: "11", user: "System", type: "system", action: "backup", entity: "Database", entityId: "db_1", details: "Automatic database backup completed", timestamp: "2026-04-13T03:00:00Z", ip: "system" },
-  { id: "12", user: "Unknown", type: "login", action: "failed_login", entity: "Session", entityId: "sess_err", details: "Failed login attempt from unknown IP", timestamp: "2026-04-13T02:15:00Z", ip: "195.22.44.88" },
-  { id: "13", user: "Sarah", type: "user", action: "update", entity: "Client", entityId: "cl_33", details: "Updated Green Eats contact info", beforeValue: "anna@old.com", afterValue: "anna@greeneats.com", timestamp: "2026-04-13T14:00:00Z", ip: "104.28.55.12" },
-  { id: "14", user: "Maria", type: "billing", action: "receive", entity: "Payment", entityId: "pay_77", details: "Payment received: Luxe Salon - $4,997", timestamp: "2026-04-13T11:00:00Z", ip: "181.55.42.10" },
-  { id: "15", user: "Nicklas", type: "lead_gen", action: "delete", entity: "Lead", entityId: "ld_50", details: "Deleted spam lead: test@test.com", timestamp: "2026-04-13T10:00:00Z", ip: "85.24.112.55" },
-];
+const MOCK_LOGS: LogEntry[] = [];
 
-const USERS = ["All", "Nicklas", "Sarah", "Maria", "James", "Alex", "System", "API"];
+const USERS = ["All"];
 
 export default function ActivityLogPage() {
   const [tab, setTab] = useState<ActivityTab>("feed");
@@ -280,9 +264,12 @@ export default function ActivityLogPage() {
       {tab === "users" && (
         <div className="card">
           <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-gold" /> User Activity Breakdown</h2>
+          {Object.keys(userActivity).length === 0 ? (
+            <div className="text-center py-8"><Users size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No user activity yet</p></div>
+          ) : (
           <div className="space-y-2">
             {Object.entries(userActivity).sort((a, b) => b[1] - a[1]).map(([user, count]) => {
-              const pct = (count / logs.length) * 100;
+              const pct = logs.length > 0 ? (count / logs.length) * 100 : 0;
               const types: Record<string, number> = {};
               logs.filter(l => l.user === user).forEach(l => { types[l.type] = (types[l.type] || 0) + 1; });
               return (
@@ -311,6 +298,7 @@ export default function ActivityLogPage() {
               );
             })}
           </div>
+          )}
         </div>
       )}
 
@@ -318,6 +306,9 @@ export default function ActivityLogPage() {
       {tab === "audit" && (
         <div className="card">
           <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-gold" /> Audit Trail (Before/After)</h2>
+          {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).length === 0 ? (
+            <div className="text-center py-8"><Eye size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No audit trail entries yet</p></div>
+          ) : (
           <div className="space-y-2">
             {logs.filter(l => l.beforeValue !== undefined || l.afterValue !== undefined).map(log => (
               <div key={log.id} className="p-3 rounded-lg bg-surface-light border border-border">
@@ -339,6 +330,7 @@ export default function ActivityLogPage() {
               </div>
             ))}
           </div>
+          )}
         </div>
       )}
 
@@ -365,21 +357,25 @@ export default function ActivityLogPage() {
           </div>
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Key size={13} className="text-gold" /> Login History</h2>
-            <div className="space-y-2">
-              {logs.filter(l => l.type === "login").map(log => (
-                <div key={log.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                  <Key size={12} className={log.action === "failed_login" ? "text-red-400" : "text-emerald-400"} />
-                  <div className="flex-1">
-                    <p className="text-xs font-medium">{log.user} - {log.details}</p>
-                    <p className="text-[9px] text-muted">{new Date(log.timestamp).toLocaleString()}</p>
+            {logs.filter(l => l.type === "login").length === 0 ? (
+              <div className="text-center py-8"><Key size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No login history yet</p></div>
+            ) : (
+              <div className="space-y-2">
+                {logs.filter(l => l.type === "login").map(log => (
+                  <div key={log.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
+                    <Key size={12} className={log.action === "failed_login" ? "text-red-400" : "text-emerald-400"} />
+                    <div className="flex-1">
+                      <p className="text-xs font-medium">{log.user} - {log.details}</p>
+                      <p className="text-[9px] text-muted">{new Date(log.timestamp).toLocaleString()}</p>
+                    </div>
+                    <span className="text-[9px] font-mono text-muted">{log.ip}</span>
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full ${log.action === "failed_login" ? "bg-red-400/10 text-red-400" : "bg-emerald-400/10 text-emerald-400"}`}>
+                      {log.action === "failed_login" ? "Failed" : "Success"}
+                    </span>
                   </div>
-                  <span className="text-[9px] font-mono text-muted">{log.ip}</span>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${log.action === "failed_login" ? "bg-red-400/10 text-red-400" : "bg-emerald-400/10 text-emerald-400"}`}>
-                    {log.action === "failed_login" ? "Failed" : "Success"}
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
