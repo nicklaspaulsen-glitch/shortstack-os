@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Globe, Palette, Type, Image as ImageIcon, Sparkles,
   Loader, Search, Download, Copy, Check, ExternalLink,
   Megaphone, FileText, Film, Mail, MessageSquare,
   Layout, Wand2, Eye, Share2, Zap,
-  ChevronRight, RefreshCw, Link2, Hash
+  ChevronRight, RefreshCw, Link2, Hash,
+  ChevronDown, Braces, ClipboardList, FileCode
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -47,6 +48,20 @@ export default function BrandKitPage() {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (exportMenuRef.current && !exportMenuRef.current.contains(e.target as Node)) {
+        setShowExportMenu(false);
+      }
+    }
+    if (showExportMenu) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [showExportMenu]);
 
   async function scrapeBrand() {
     if (!url.trim()) {
@@ -98,13 +113,16 @@ export default function BrandKitPage() {
     }, 3000);
   }
 
-  function downloadBrandKit() {
+  function exportAsJSON() {
     if (!brand) return;
     const kit = {
       name: brand.siteName,
       description: brand.description,
+      favicon: brand.favicon,
+      ogImage: brand.ogImage,
       colors: brand.colors,
       fonts: brand.fonts,
+      images: brand.images,
       socialLinks: brand.socialLinks,
       headings: brand.headings,
       ctaTexts: brand.ctaTexts,
@@ -116,7 +134,82 @@ export default function BrandKitPage() {
     a.download = `${brand.siteName.replace(/\s+/g, "-").toLowerCase() || "brand"}-kit.json`;
     a.click();
     URL.revokeObjectURL(a.href);
-    toast.success("Brand kit downloaded!");
+    setShowExportMenu(false);
+    toast.success("Brand kit JSON downloaded!");
+  }
+
+  function exportCSSVariables() {
+    if (!brand) return;
+    const lines: string[] = [":root {"];
+
+    brand.colors.forEach((color, i) => {
+      const label = i === 0 ? "primary" : i === 1 ? "secondary" : i === 2 ? "accent" : `color-${i + 1}`;
+      lines.push(`  --brand-${label}: ${color};`);
+    });
+
+    if (brand.fonts.length > 0) {
+      lines.push(`  --brand-font-heading: '${brand.fonts[0]}';`);
+    }
+    if (brand.fonts.length > 1) {
+      lines.push(`  --brand-font-body: '${brand.fonts[1]}';`);
+    } else if (brand.fonts.length === 1) {
+      lines.push(`  --brand-font-body: '${brand.fonts[0]}';`);
+    }
+
+    lines.push("}");
+
+    const css = `/* Brand Kit — ${brand.siteName || "Extracted Brand"} */\n/* Generated ${new Date().toISOString()} */\n\n${lines.join("\n")}\n`;
+    const blob = new Blob([css], { type: "text/css" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${brand.siteName.replace(/\s+/g, "-").toLowerCase() || "brand"}-variables.css`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    setShowExportMenu(false);
+    toast.success("CSS variables downloaded!");
+  }
+
+  function copyBrandSummary() {
+    if (!brand) return;
+    const parts: string[] = [];
+    parts.push(`BRAND KIT — ${brand.siteName || "Unknown"}`);
+    parts.push("=".repeat(40));
+
+    if (brand.description) {
+      parts.push(`\nDescription: ${brand.description}`);
+    }
+
+    if (brand.colors.length > 0) {
+      parts.push(`\nColors (${brand.colors.length}):`);
+      brand.colors.forEach((c, i) => {
+        const label = i === 0 ? "Primary" : i === 1 ? "Secondary" : i === 2 ? "Accent" : `Color ${i + 1}`;
+        parts.push(`  ${label}: ${c}`);
+      });
+    }
+
+    if (brand.fonts.length > 0) {
+      parts.push(`\nFonts (${brand.fonts.length}):`);
+      brand.fonts.forEach((f) => parts.push(`  - ${f}`));
+    }
+
+    if (brand.headings.length > 0) {
+      parts.push(`\nKey Headlines (${brand.headings.length}):`);
+      brand.headings.forEach((h) => parts.push(`  - ${h}`));
+    }
+
+    if (brand.ctaTexts.length > 0) {
+      parts.push(`\nCTA Texts (${brand.ctaTexts.length}):`);
+      brand.ctaTexts.forEach((cta) => parts.push(`  - ${cta}`));
+    }
+
+    if (brand.socialLinks.length > 0) {
+      parts.push(`\nSocial Links (${brand.socialLinks.length}):`);
+      brand.socialLinks.forEach((s) => parts.push(`  ${s.platform}: ${s.url}`));
+    }
+
+    navigator.clipboard.writeText(parts.join("\n"));
+    setShowExportMenu(false);
+    toast.success("Brand summary copied to clipboard!");
   }
 
   const tabs: { key: MainTab; label: string; icon: React.ReactNode; disabled?: boolean }[] = [
@@ -142,9 +235,49 @@ export default function BrandKitPage() {
         <div className="flex items-center gap-2">
           {brand && (
             <>
-              <button onClick={downloadBrandKit} className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
-                <Download size={13} /> Export Kit
-              </button>
+              <div className="relative" ref={exportMenuRef}>
+                <button
+                  onClick={() => setShowExportMenu((v) => !v)}
+                  className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5"
+                >
+                  <Download size={13} /> Export Kit <ChevronDown size={12} className={`transition-transform ${showExportMenu ? "rotate-180" : ""}`} />
+                </button>
+
+                {showExportMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-surface border border-border/30 rounded-xl shadow-2xl z-50 py-1 overflow-hidden">
+                    <button
+                      onClick={exportAsJSON}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-gold/5 transition-colors"
+                    >
+                      <Braces size={14} className="text-gold shrink-0" />
+                      <div>
+                        <p className="font-medium">Export as JSON</p>
+                        <p className="text-[10px] text-muted">Full brand data file</p>
+                      </div>
+                    </button>
+                    <button
+                      onClick={copyBrandSummary}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-gold/5 transition-colors"
+                    >
+                      <ClipboardList size={14} className="text-gold shrink-0" />
+                      <div>
+                        <p className="font-medium">Copy Brand Summary</p>
+                        <p className="text-[10px] text-muted">Formatted text to clipboard</p>
+                      </div>
+                    </button>
+                    <button
+                      onClick={exportCSSVariables}
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-left hover:bg-gold/5 transition-colors"
+                    >
+                      <FileCode size={14} className="text-gold shrink-0" />
+                      <div>
+                        <p className="font-medium">Export CSS Variables</p>
+                        <p className="text-[10px] text-muted">Colors &amp; fonts as CSS</p>
+                      </div>
+                    </button>
+                  </div>
+                )}
+              </div>
               <button onClick={() => { setBrand(null); setUrl(""); setTab("extract"); }} className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
                 <RefreshCw size={13} /> New Scan
               </button>

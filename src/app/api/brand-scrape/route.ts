@@ -82,16 +82,16 @@ function extractBrandData(html: string, origin: string): BrandData {
 
   // Site name from <title> or og:site_name
   const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-  if (titleMatch) data.siteName = titleMatch[1].trim();
+  if (titleMatch) data.siteName = decodeHtmlEntities(titleMatch[1].trim());
 
   const ogSiteName = html.match(/property=["']og:site_name["']\s+content=["']([^"']+)["']/i)
     || html.match(/content=["']([^"']+)["']\s+property=["']og:site_name["']/i);
-  if (ogSiteName) data.siteName = ogSiteName[1].trim();
+  if (ogSiteName) data.siteName = decodeHtmlEntities(ogSiteName[1].trim());
 
   // Description
   const descMatch = html.match(/name=["']description["']\s+content=["']([^"']+)["']/i)
     || html.match(/content=["']([^"']+)["']\s+name=["']description["']/i);
-  if (descMatch) data.description = descMatch[1].trim();
+  if (descMatch) data.description = decodeHtmlEntities(descMatch[1].trim());
 
   // Favicon
   const faviconMatch = html.match(/rel=["'](?:shortcut )?icon["'][^>]*href=["']([^"']+)["']/i)
@@ -206,7 +206,7 @@ function extractBrandData(html: string, origin: string): BrandData {
   const headingRegex = /<h[12][^>]*>([^<]+)<\/h[12]>/gi;
   let hMatch;
   while ((hMatch = headingRegex.exec(html)) !== null) {
-    const text = hMatch[1].trim();
+    const text = decodeHtmlEntities(hMatch[1].trim());
     if (text.length > 3 && text.length < 200) {
       data.headings.push(text);
     }
@@ -217,7 +217,7 @@ function extractBrandData(html: string, origin: string): BrandData {
   const ctaRegex = /<(?:a|button)[^>]*class=["'][^"']*(?:btn|button|cta)[^"']*["'][^>]*>([^<]+)</gi;
   let ctaMatch;
   while ((ctaMatch = ctaRegex.exec(html)) !== null) {
-    const text = ctaMatch[1].trim();
+    const text = decodeHtmlEntities(ctaMatch[1].trim());
     if (text.length > 1 && text.length < 60) {
       data.ctaTexts.push(text);
     }
@@ -225,6 +225,18 @@ function extractBrandData(html: string, origin: string): BrandData {
   data.ctaTexts = data.ctaTexts.slice(0, 8);
 
   return data;
+}
+
+function decodeHtmlEntities(text: string): string {
+  return text
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(parseInt(dec, 10)))
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, " ");
 }
 
 function resolveUrl(url: string, origin: string): string {

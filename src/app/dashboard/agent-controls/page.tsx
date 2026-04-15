@@ -69,39 +69,13 @@ interface AgentTemplate {
 }
 
 /* ── Mock Data ── */
-const MOCK_AGENTS: AgentConfig[] = [
-  { id: "lead-engine", name: "Lead Engine", icon: <Search size={16} />, color: "text-emerald-400", enabled: true, schedule: "08:00", rateLimit: 100, ratePeriod: "hour", priority: "high", fallbackAgent: "outreach", lastRun: "3m ago", actionsToday: 127, costToday: 2.14, successRate: 96 },
-  { id: "outreach", name: "Outreach", icon: <Send size={16} />, color: "text-blue-400", enabled: true, schedule: "09:00", rateLimit: 50, ratePeriod: "hour", priority: "high", fallbackAgent: "content", lastRun: "8m ago", actionsToday: 89, costToday: 1.87, successRate: 92 },
-  { id: "content", name: "Content", icon: <Sparkles size={16} />, color: "text-purple-400", enabled: true, schedule: "07:00", rateLimit: 20, ratePeriod: "hour", priority: "medium", fallbackAgent: "lead-engine", lastRun: "1h ago", actionsToday: 34, costToday: 3.21, successRate: 98 },
-  { id: "retention", name: "Retention", icon: <Heart size={16} />, color: "text-rose-400", enabled: true, schedule: "10:00", rateLimit: 30, ratePeriod: "day", priority: "medium", fallbackAgent: "analytics", lastRun: "5h ago", actionsToday: 5, costToday: 0.23, successRate: 100 },
-  { id: "invoice", name: "Invoice", icon: <CreditCard size={16} />, color: "text-green-400", enabled: true, schedule: "11:00", rateLimit: 20, ratePeriod: "day", priority: "low", fallbackAgent: "retention", lastRun: "6h ago", actionsToday: 7, costToday: 0.08, successRate: 100 },
-  { id: "health", name: "Health Monitor", icon: <Activity size={16} />, color: "text-cyan-400", enabled: true, schedule: "*/30", rateLimit: 200, ratePeriod: "hour", priority: "critical", fallbackAgent: "trinity", lastRun: "2m ago", actionsToday: 48, costToday: 0.12, successRate: 100 },
-  { id: "analytics", name: "Analytics", icon: <BarChart3 size={16} />, color: "text-amber-400", enabled: true, schedule: "06:00", rateLimit: 60, ratePeriod: "hour", priority: "medium", fallbackAgent: "health", lastRun: "25m ago", actionsToday: 56, costToday: 1.45, successRate: 99 },
-  { id: "daily-brief", name: "Daily Brief", icon: <Shield size={16} />, color: "text-gold", enabled: true, schedule: "07:30", rateLimit: 1, ratePeriod: "day", priority: "low", fallbackAgent: "analytics", lastRun: "7h ago", actionsToday: 1, costToday: 0.34, successRate: 100 },
-  { id: "competitor", name: "Competitor", icon: <Eye size={16} />, color: "text-red-400", enabled: false, schedule: "12:00", rateLimit: 10, ratePeriod: "hour", priority: "low", fallbackAgent: "content", lastRun: "1d ago", actionsToday: 0, costToday: 0, successRate: 95 },
-  { id: "seo", name: "SEO", icon: <Search size={16} />, color: "text-lime-400", enabled: true, schedule: "05:00", rateLimit: 30, ratePeriod: "hour", priority: "medium", fallbackAgent: "content", lastRun: "3h ago", actionsToday: 18, costToday: 0.92, successRate: 94 },
-];
+const MOCK_AGENTS: AgentConfig[] = [];
 
-const MOCK_PERMISSIONS: PermissionRule[] = MOCK_AGENTS.map(a => ({
-  agent: a.name, canRead: true, canWrite: a.enabled, canDelete: a.priority === "critical" || a.priority === "high",
-  canSpawn: ["Lead Engine", "Outreach", "Content"].includes(a.name), canChain: true,
-}));
+const MOCK_PERMISSIONS: PermissionRule[] = [];
 
-const MOCK_ALERTS: AlertRule[] = [
-  { id: "al1", name: "Agent Failure", condition: "Any agent error rate > 10%", action: "Send notification", channel: "Slack #alerts", active: true },
-  { id: "al2", name: "Cost Spike", condition: "Hourly cost exceeds $5", action: "Pause non-critical agents", channel: "Email + Slack", active: true },
-  { id: "al3", name: "Rate Limit Hit", condition: "Agent hits rate limit", action: "Log and notify", channel: "Dashboard", active: true },
-  { id: "al4", name: "Low Success Rate", condition: "Success rate drops below 80%", action: "Auto-restart agent", channel: "Slack #ops", active: false },
-  { id: "al5", name: "Idle Agent", condition: "Agent inactive for 2+ hours", action: "Health check trigger", channel: "Dashboard", active: true },
-];
+const MOCK_ALERTS: AlertRule[] = [];
 
-const MOCK_CHAINS: ChainRule[] = [
-  { id: "ch1", trigger: "lead.scraped", source: "Lead Engine", target: "Outreach", condition: "lead_score >= 70", active: true },
-  { id: "ch2", trigger: "outreach.replied", source: "Outreach", target: "Content", condition: "sentiment === 'positive'", active: true },
-  { id: "ch3", trigger: "client.health_drop", source: "Analytics", target: "Retention", condition: "health_score < 50", active: true },
-  { id: "ch4", trigger: "invoice.overdue", source: "Invoice", target: "Outreach", condition: "days_overdue >= 7", active: false },
-  { id: "ch5", trigger: "content.generated", source: "Content", target: "Analytics", condition: "always", active: true },
-];
+const MOCK_CHAINS: ChainRule[] = [];
 
 const MOCK_INPUT_SCHEMA: SchemaField[] = [
   { name: "client_id", type: "string (UUID)", required: true, description: "Target client identifier" },
@@ -136,7 +110,7 @@ export default function AgentControlsPage() {
   const [permissions, setPermissions] = useState(MOCK_PERMISSIONS);
   const [alerts, setAlerts] = useState(MOCK_ALERTS);
   const [chains, setChains] = useState(MOCK_CHAINS);
-  const [sandboxAgent, setSandboxAgent] = useState(MOCK_AGENTS[0].id);
+  const [sandboxAgent, setSandboxAgent] = useState(MOCK_AGENTS[0]?.id ?? "");
   const [sandboxInput, setSandboxInput] = useState('{\n  "client_id": "c_123",\n  "action_type": "scrape",\n  "parameters": { "location": "Miami" }\n}');
   const [sandboxOutput, setSandboxOutput] = useState("");
   const [sandboxLoading, setSandboxLoading] = useState(false);

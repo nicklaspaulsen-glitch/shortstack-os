@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
+import { useManagedClient } from "@/lib/use-managed-client";
 import {
   Search, ChevronDown, Mail, Phone, MessageSquare,
   ExternalLink, Star, Download, LayoutGrid, LayoutList,
@@ -102,6 +103,7 @@ const PAGE_SIZE = 50;
 export default function CRMPage() {
   useAuth();
   const supabase = createClient();
+  const { clientId: managedClientId } = useManagedClient();
 
   const [leads, setLeads] = useState<CRMLead[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -117,16 +119,18 @@ export default function CRMPage() {
   const [page, setPage] = useState(0);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchLeads(); cleanupStaleLeads(); }, []);
+  useEffect(() => { fetchLeads(); cleanupStaleLeads(); }, [managedClientId]);
 
   async function fetchLeads() {
     try {
       setLoading(true);
-      const { data: leadsData } = await supabase
+      let query = supabase
         .from("leads")
         .select("id, business_name, owner_name, phone, email, website, city, state, industry, google_rating, review_count, instagram_url, facebook_url, linkedin_url, tiktok_url, status, created_at")
         .order("created_at", { ascending: false })
         .limit(2000);
+      if (managedClientId) query = query.eq("client_id", managedClientId);
+      const { data: leadsData } = await query;
 
       if (!leadsData || leadsData.length === 0) {
         setLeads([]);
@@ -216,6 +220,19 @@ export default function CRMPage() {
 
     return result;
   }, [leads, activeTab, search, sortBy]);
+
+  // Search-only filter for pipeline view (no status tab filter — pipeline shows all columns)
+  const searchFiltered = useMemo(() => {
+    if (!search) return leads;
+    const q = search.toLowerCase();
+    return leads.filter(l =>
+      l.business_name.toLowerCase().includes(q) ||
+      (l.industry && l.industry.toLowerCase().includes(q)) ||
+      (l.city && l.city.toLowerCase().includes(q)) ||
+      (l.email && l.email.toLowerCase().includes(q)) ||
+      (l.owner_name && l.owner_name.toLowerCase().includes(q))
+    );
+  }, [leads, search]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const paginated = useMemo(() => filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE), [filtered, page]);
@@ -660,7 +677,7 @@ export default function CRMPage() {
       {viewMode === "pipeline" && (
         <div className="flex gap-3 overflow-x-auto pb-4" style={{ minHeight: "500px" }}>
           {STATUS_TABS.filter(t => t.key !== "all").map(stage => {
-            const stageLeads = leads.filter(l => mapToCRMStatus(l.status) === stage.key);
+            const stageLeads = searchFiltered.filter(l => mapToCRMStatus(l.status) === stage.key);
             const stageColor: Record<string, string> = {
               new: "#3b82f6", contacted: "#f59e0b", replied: "#10b981", booked: "#a855f7", converted: "#C9A84C",
             };

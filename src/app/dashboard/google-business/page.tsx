@@ -22,61 +22,29 @@ interface Review {
   replyText?: string;
 }
 
-const MOCK_REVIEWS: Review[] = [
-  { id: "r1", name: "Sarah Johnson", stars: 5, comment: "Absolutely fantastic service! The team went above and beyond to deliver our project on time.", date: "2026-04-01", replied: true, replyText: "Thank you so much Sarah! We loved working with you." },
-  { id: "r2", name: "Mike Peters", stars: 4, comment: "Great experience overall. Results exceeded expectations.", date: "2026-03-28", replied: false },
-  { id: "r3", name: "Emily Chen", stars: 5, comment: "Best agency we have ever worked with. Consistent results every month.", date: "2026-03-25", replied: false },
-  { id: "r4", name: "David Brown", stars: 3, comment: "Decent work but took longer than expected.", date: "2026-03-20", replied: false },
-  { id: "r5", name: "Lisa Martinez", stars: 5, comment: "Incredible ROI on our ad campaigns. They really know their stuff.", date: "2026-03-15", replied: true, replyText: "Thanks Lisa! We love seeing great results for our clients." },
-  { id: "r6", name: "James Wilson", stars: 4, comment: "Professional team with great attention to detail.", date: "2026-03-10", replied: false },
-];
+const MOCK_REVIEWS: Review[] = [];
 
-const MOCK_POSTS = [
-  { id: "gp1", content: "Spring special! Get 20% off your first month of marketing services.", date: "2026-04-10", views: 342, clicks: 28, type: "offer" },
-  { id: "gp2", content: "We just helped another local business increase their leads by 40% in 30 days!", date: "2026-04-05", views: 256, clicks: 19, type: "update" },
-  { id: "gp3", content: "Excited to announce we're now offering AI-powered social media management.", date: "2026-03-28", views: 189, clicks: 12, type: "update" },
-];
+const MOCK_POSTS: { id: string; content: string; date: string; views: number; clicks: number; type: string }[] = [];
 
-const QA_DATA = [
-  { id: "qa1", question: "What services do you offer?", answer: "We offer social media management, paid advertising, SEO, content creation, and web design.", askedBy: "Google User", date: "2026-04-08" },
-  { id: "qa2", question: "Do you work with small businesses?", answer: "Absolutely! We specialize in helping small and medium businesses grow their online presence.", askedBy: "Google User", date: "2026-03-22" },
-  { id: "qa3", question: "What are your hours?", answer: null, askedBy: "Google User", date: "2026-04-12" },
-];
+const QA_DATA: { id: string; question: string; answer: string | null; askedBy: string; date: string }[] = [];
 
 const INSIGHTS = {
-  views: { total: 2450, search: 1680, maps: 770, trend: "+12%" },
-  searches: { direct: 890, discovery: 1240, branded: 320, trend: "+8%" },
-  actions: { website: 342, directions: 156, calls: 89, messages: 67, trend: "+15%" },
-  photos: { views: 1890, count: 24, trend: "+5%" },
+  views: { total: 0, search: 0, maps: 0, trend: "--" },
+  searches: { direct: 0, discovery: 0, branded: 0, trend: "--" },
+  actions: { website: 0, directions: 0, calls: 0, messages: 0, trend: "--" },
+  photos: { views: 0, count: 0, trend: "--" },
 };
 
-const LOCATIONS = [
-  { id: "loc1", name: "ShortStack Digital - Main Office", address: "123 Main St, Miami, FL", verified: true, rating: 4.6, reviews: 48 },
-  { id: "loc2", name: "ShortStack Digital - Tampa", address: "456 Bay Dr, Tampa, FL", verified: true, rating: 4.8, reviews: 12 },
-  { id: "loc3", name: "ShortStack Digital - Orlando", address: "789 Lake Ave, Orlando, FL", verified: false, rating: 0, reviews: 0 },
-];
+const LOCATIONS: { id: string; name: string; address: string; verified: boolean; rating: number; reviews: number }[] = [];
 
 const CATEGORIES = ["Marketing Agency", "Digital Marketing Service", "Social Media Agency", "Advertising Agency", "SEO Service"];
 const SELECTED_CATEGORIES = ["Marketing Agency", "Digital Marketing Service"];
 
-const COMPETITOR_DATA = [
-  { name: "Your Business", rating: 4.6, reviews: 48, photos: 24 },
-  { name: "Rival Marketing Co", rating: 4.3, reviews: 67, photos: 31 },
-  { name: "Digital First Agency", rating: 4.7, reviews: 22, photos: 15 },
-  { name: "Growth Hackers Inc", rating: 3.9, reviews: 89, photos: 8 },
-];
+const COMPETITOR_DATA: { name: string; rating: number; reviews: number; photos: number }[] = [];
 
-const HOLIDAY_HOURS = [
-  { holiday: "Memorial Day", date: "May 26, 2026", hours: "Closed" },
-  { holiday: "Independence Day", date: "Jul 4, 2026", hours: "Closed" },
-  { holiday: "Labor Day", date: "Sep 7, 2026", hours: "Closed" },
-  { holiday: "Thanksgiving", date: "Nov 26, 2026", hours: "Closed" },
-];
+const HOLIDAY_HOURS: { holiday: string; date: string; hours: string }[] = [];
 
-const SCHEDULED_POSTS = [
-  { id: "sp1", content: "Happy Monday! Start your week with a free marketing audit.", date: "2026-04-15 09:00", status: "scheduled" },
-  { id: "sp2", content: "New blog post: 5 ways to improve your Google ranking in 2026.", date: "2026-04-17 10:00", status: "draft" },
-];
+const SCHEDULED_POSTS: { id: string; content: string; date: string; status: string }[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
@@ -91,7 +59,7 @@ export default function GoogleBusinessPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [aiReply, setAiReply] = useState<Record<string, string>>({});
 
-  const avgRating = (MOCK_REVIEWS.reduce((s, r) => s + r.stars, 0) / MOCK_REVIEWS.length).toFixed(1);
+  const avgRating = MOCK_REVIEWS.length ? (MOCK_REVIEWS.reduce((s, r) => s + r.stars, 0) / MOCK_REVIEWS.length).toFixed(1) : "0.0";
   const needsReply = MOCK_REVIEWS.filter(r => !r.replied).length;
 
   function generateReply(review: Review) {
@@ -207,7 +175,7 @@ export default function GoogleBusinessPage() {
             <div className="space-y-1.5">
               {[5, 4, 3, 2, 1].map(r => {
                 const count = MOCK_REVIEWS.filter(rev => rev.stars === r).length;
-                const pct = Math.round((count / MOCK_REVIEWS.length) * 100);
+                const pct = MOCK_REVIEWS.length ? Math.round((count / MOCK_REVIEWS.length) * 100) : 0;
                 return (
                   <div key={r} className="flex items-center gap-2">
                     <span className="text-xs w-4 text-right">{r}</span>

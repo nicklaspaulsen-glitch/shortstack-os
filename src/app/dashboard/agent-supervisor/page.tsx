@@ -68,65 +68,15 @@ const AGENT_ICONS: Record<string, React.ReactNode> = {
   "proposal": <FileText size={15} />, "scheduler": <Clock size={15} />,
 };
 
-const MOCK_AGENTS: Agent[] = [
-  { id: "lead-engine", name: "Lead Engine", role: "Scrapes & qualifies leads", status: "working", lastAction: "Scraped 42 leads from Google Maps", lastActionTime: "3m ago", actionsToday: 127, successRate: 96, costToday: 2.14, avgLatency: 340, version: "2.4.1" },
-  { id: "outreach", name: "Outreach", role: "Cold DMs, emails & follow-ups", status: "working", lastAction: "Sent 15 follow-up emails", lastActionTime: "8m ago", actionsToday: 89, successRate: 92, costToday: 1.87, avgLatency: 520, version: "2.3.0" },
-  { id: "content", name: "Content", role: "Scripts, captions & scheduling", status: "idle", lastAction: "Generated weekly calendar", lastActionTime: "1h ago", actionsToday: 34, successRate: 98, costToday: 3.21, avgLatency: 1200, version: "2.4.0" },
-  { id: "ads", name: "Ads Manager", role: "Campaign creation & optimization", status: "idle", lastAction: "Optimized Meta budget allocation", lastActionTime: "2h ago", actionsToday: 12, successRate: 88, costToday: 0.95, avgLatency: 450, version: "2.2.0" },
-  { id: "reviews", name: "Reviews", role: "Google review monitoring", status: "error", lastAction: "API rate limit exceeded", lastActionTime: "15m ago", actionsToday: 8, successRate: 65, costToday: 0.12, avgLatency: 890, version: "2.1.0" },
-  { id: "analytics", name: "Analytics", role: "KPIs & reporting", status: "working", lastAction: "Generated client health reports", lastActionTime: "5m ago", actionsToday: 56, successRate: 99, costToday: 1.45, avgLatency: 280, version: "2.4.1" },
-  { id: "trinity", name: "Trinity", role: "Central AI coordinator", status: "working", lastAction: "Orchestrated 3-agent chain", lastActionTime: "1m ago", actionsToday: 203, successRate: 97, costToday: 4.56, avgLatency: 150, version: "3.0.0" },
-  { id: "competitor", name: "Competitor", role: "Competitor monitoring", status: "paused", lastAction: "Detected pricing change", lastActionTime: "4h ago", actionsToday: 3, successRate: 100, costToday: 0.34, avgLatency: 2100, version: "2.0.0" },
-  { id: "invoice", name: "Invoice", role: "Billing & payment chase", status: "idle", lastAction: "Sent 3 payment reminders", lastActionTime: "6h ago", actionsToday: 7, successRate: 100, costToday: 0.08, avgLatency: 200, version: "2.3.0" },
-  { id: "onboarding", name: "Onboarding", role: "Client setup automation", status: "working", lastAction: "Onboarded Acme Dental", lastActionTime: "20m ago", actionsToday: 4, successRate: 100, costToday: 0.67, avgLatency: 3400, version: "2.4.0" },
-  { id: "seo", name: "SEO", role: "Rankings & keyword tracking", status: "idle", lastAction: "Crawled 12 client sites", lastActionTime: "3h ago", actionsToday: 18, successRate: 94, costToday: 0.92, avgLatency: 1800, version: "2.2.0" },
-  { id: "retention", name: "Retention", role: "Churn prevention", status: "idle", lastAction: "Flagged 2 at-risk clients", lastActionTime: "5h ago", actionsToday: 5, successRate: 100, costToday: 0.23, avgLatency: 600, version: "2.1.0" },
-  { id: "proposal", name: "Proposal", role: "Auto-generates proposals", status: "idle", lastAction: "Generated proposal for Beta Corp", lastActionTime: "1d ago", actionsToday: 1, successRate: 100, costToday: 0.56, avgLatency: 4500, version: "2.3.0" },
-  { id: "scheduler", name: "Scheduler", role: "Meetings & reminders", status: "working", lastAction: "Booked 3 calls today", lastActionTime: "12m ago", actionsToday: 14, successRate: 93, costToday: 0.18, avgLatency: 320, version: "2.4.0" },
-];
+const MOCK_AGENTS: Agent[] = [];
 
-const MOCK_CHAINS: ChainEntry[] = [
-  { from: "Lead Engine", to: "Outreach", label: "New lead scraped", trigger: "Send DM", active: true },
-  { from: "Outreach", to: "Proposal", label: "Reply received", trigger: "Generate proposal", active: true },
-  { from: "Outreach", to: "Scheduler", label: "Call booked", trigger: "Schedule meeting", active: true },
-  { from: "Proposal", to: "Onboarding", label: "Deal won", trigger: "Start onboarding", active: true },
-  { from: "Onboarding", to: "Invoice", label: "Client onboarded", trigger: "Send first invoice", active: true },
-  { from: "Onboarding", to: "Content", label: "Client onboarded", trigger: "Generate content", active: true },
-  { from: "Analytics", to: "Retention", label: "Health drops", trigger: "Re-engage client", active: true },
-  { from: "Invoice", to: "Retention", label: "Invoice overdue", trigger: "Chase payment", active: false },
-  { from: "Content", to: "Outreach", label: "Content ready", trigger: "Schedule posts", active: true },
-  { from: "Competitor", to: "Content", label: "Viral detected", trigger: "Counter-content", active: false },
-  { from: "Competitor", to: "Ads", label: "Price change", trigger: "Adjust ads", active: true },
-  { from: "Reviews", to: "Retention", label: "Bad review", trigger: "Owner alert", active: true },
-];
+const MOCK_CHAINS: ChainEntry[] = [];
 
-const MOCK_TIMELINE: TimelineEntry[] = [
-  { id: "1", agent: "Trinity", action: "Orchestrated lead-engine -> outreach chain", status: "success", time: "1m ago", cost: 0.03 },
-  { id: "2", agent: "Lead Engine", action: "Scraped 42 leads from Google Maps - Miami dentists", status: "success", time: "3m ago", cost: 0.12 },
-  { id: "3", agent: "Outreach", action: "Sent 15 follow-up emails to warm leads", status: "success", time: "8m ago", cost: 0.08 },
-  { id: "4", agent: "Reviews", action: "Google Places API rate limit exceeded", status: "error", time: "15m ago", cost: 0.00 },
-  { id: "5", agent: "Onboarding", action: "Completed onboarding for Acme Dental", status: "success", time: "20m ago", cost: 0.34 },
-  { id: "6", agent: "Analytics", action: "Generated daily KPI digest for 8 clients", status: "success", time: "25m ago", cost: 0.18 },
-  { id: "7", agent: "Scheduler", action: "Booked discovery call with Beta Corp", status: "success", time: "30m ago", cost: 0.02 },
-  { id: "8", agent: "Content", action: "Generated 7-day content calendar for Delta Fitness", status: "success", time: "1h ago", cost: 0.45 },
-  { id: "9", agent: "Trinity", action: "Spawned temp agent for competitor pricing report", status: "success", time: "1h ago", cost: 0.15 },
-  { id: "10", agent: "Lead Engine", action: "Enriched 28 leads with email/phone data", status: "success", time: "2h ago", cost: 0.22 },
-];
+const MOCK_TIMELINE: TimelineEntry[] = [];
 
-const MOCK_SPAWNED: SpawnedAgent[] = [
-  { id: "s1", name: "Pricing Analyst", role: "Competitor pricing research", runs: 14, lastRun: "1h ago", capabilities: ["price scraping", "trend analysis"] },
-  { id: "s2", name: "Review Responder", role: "Auto-respond to Google reviews", runs: 45, lastRun: "30m ago", capabilities: ["sentiment analysis", "reply generation"] },
-  { id: "s3", name: "Email Validator", role: "Bulk email verification", runs: 8, lastRun: "3h ago", capabilities: ["MX lookup", "bounce prediction"] },
-];
+const MOCK_SPAWNED: SpawnedAgent[] = [];
 
-const MOCK_TEMPLATES: AgentTemplate[] = [
-  { id: "t1", name: "Social Listener", description: "Monitor brand mentions across social platforms", category: "monitoring", installs: 234 },
-  { id: "t2", name: "Invoice Chaser", description: "Auto-send payment reminders on schedule", category: "billing", installs: 189 },
-  { id: "t3", name: "Blog Writer", description: "Generate SEO blog posts from keyword clusters", category: "content", installs: 312 },
-  { id: "t4", name: "Appointment Setter", description: "Book meetings from inbound leads", category: "sales", installs: 456 },
-  { id: "t5", name: "Data Enricher", description: "Enrich leads with LinkedIn and web data", category: "data", installs: 178 },
-  { id: "t6", name: "Churn Predictor", description: "ML-based client churn risk scoring", category: "analytics", installs: 98 },
-];
+const MOCK_TEMPLATES: AgentTemplate[] = [];
 
 const MOCK_COMMS = [
   { from: "Trinity", to: "Lead Engine", message: "Start Miami dentist scrape batch", time: "3m ago", type: "command" },

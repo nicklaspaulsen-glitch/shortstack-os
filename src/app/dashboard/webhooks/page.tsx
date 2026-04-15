@@ -56,20 +56,9 @@ const TEMPLATES = [
   { name: "n8n Workflow", url: "https://n8n.example.com/webhook/...", events: ["lead.created", "content.generated"] },
 ];
 
-const MOCK_WEBHOOKS: WebhookConfig[] = [
-  { id: "wh_1", name: "Zapier Lead Sync", url: "https://hooks.zapier.com/catch/12345/abcde", events: ["lead.created", "lead.replied"], active: true, lastTriggered: "5 min ago", secret: "whsec_abc123def456", retryCount: 3, rateLimit: 100, successCount: 847, failCount: 3 },
-  { id: "wh_2", name: "Slack Deal Alerts", url: "https://hooks.slack.com/services/T00/B00/xxx", events: ["deal.won", "deal.lost"], active: true, lastTriggered: "2h ago", secret: "whsec_ghi789jkl012", retryCount: 3, rateLimit: 50, successCount: 124, failCount: 0 },
-  { id: "wh_3", name: "CRM Sync (Paused)", url: "https://api.hubspot.com/webhooks/v1", events: ["lead.created", "client.onboarded"], active: false, lastTriggered: "3d ago", secret: "whsec_mno345pqr678", retryCount: 5, rateLimit: 200, successCount: 56, failCount: 12 },
-];
+const MOCK_WEBHOOKS: WebhookConfig[] = [];
 
-const MOCK_DELIVERIES: DeliveryLog[] = [
-  { id: "d1", webhookId: "wh_1", webhookName: "Zapier Lead Sync", event: "lead.created", statusCode: 200, responseTime: 142, timestamp: "2 min ago", payload: '{"lead_id":"ld_42","name":"John Doe","email":"john@example.com"}', response: '{"status":"success"}' },
-  { id: "d2", webhookId: "wh_2", webhookName: "Slack Deal Alerts", event: "deal.won", statusCode: 200, responseTime: 89, timestamp: "2h ago", payload: '{"deal_id":"dl_18","value":2500,"client":"Acme Inc"}', response: '{"ok":true}' },
-  { id: "d3", webhookId: "wh_1", webhookName: "Zapier Lead Sync", event: "lead.replied", statusCode: 200, responseTime: 156, timestamp: "4h ago", payload: '{"lead_id":"ld_38","reply":"Interested, send me info"}', response: '{"status":"success"}' },
-  { id: "d4", webhookId: "wh_3", webhookName: "CRM Sync", event: "lead.created", statusCode: 500, responseTime: 3200, timestamp: "3d ago", payload: '{"lead_id":"ld_35","name":"Jane Smith"}', response: '{"error":"Internal server error"}' },
-  { id: "d5", webhookId: "wh_1", webhookName: "Zapier Lead Sync", event: "lead.created", statusCode: 200, responseTime: 128, timestamp: "5h ago", payload: '{"lead_id":"ld_37","name":"Bob Wilson"}', response: '{"status":"success"}' },
-  { id: "d6", webhookId: "wh_3", webhookName: "CRM Sync", event: "client.onboarded", statusCode: 429, responseTime: 45, timestamp: "3d ago", payload: '{"client_id":"cl_12"}', response: '{"error":"Rate limit exceeded"}' },
-];
+const MOCK_DELIVERIES: DeliveryLog[] = [];
 
 const TABS = ["Endpoints", "Delivery Log", "Test", "Templates", "Settings"] as const;
 type Tab = typeof TABS[number];

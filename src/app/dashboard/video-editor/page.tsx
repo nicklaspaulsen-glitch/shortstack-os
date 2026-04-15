@@ -259,8 +259,6 @@ export default function VideoEditorPage() {
   const [selectedBrandKit, setSelectedBrandKit] = useState("");
   const [brandKits] = useState([
     { id: "bk1", name: "Default Brand", colors: ["#C9A84C", "#1a1a1a", "#ffffff"], font: "Inter", logo: "logo.png" },
-    { id: "bk2", name: "Client - Dental Pro", colors: ["#2196F3", "#0D47A1", "#E3F2FD"], font: "Poppins", logo: "dental-logo.png" },
-    { id: "bk3", name: "Client - FitLife", colors: ["#FF5722", "#E64A19", "#FBE9E7"], font: "Montserrat", logo: "fit-logo.png" },
   ]);
   const [selectedMotionGraphics, setSelectedMotionGraphics] = useState<string[]>([]);
   const [motionGraphicsCategory, setMotionGraphicsCategory] = useState("lower-thirds");

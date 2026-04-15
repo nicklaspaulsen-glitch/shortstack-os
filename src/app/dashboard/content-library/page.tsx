@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { createClient } from "@/lib/supabase/client";
 import {
   FolderOpen, Upload, Search, Grid, List, Image as ImageIcon,
   Video, Music, FileText, File, Palette, Tag, Trash2, Eye,
@@ -10,6 +9,36 @@ import {
   CheckSquare, Square, FolderPlus, ArrowUpDown, Loader
 } from "lucide-react";
 import toast from "react-hot-toast";
+import EmptyState from "@/components/empty-state";
+
+// ── DB-aligned types ──
+
+interface DbAsset {
+  id: string;
+  user_id: string;
+  name: string;
+  file_url: string;
+  file_type: string;
+  file_size: number;
+  mime_type: string | null;
+  tags: string[];
+  collection_id: string | null;
+  width: number | null;
+  height: number | null;
+  created_at: string;
+}
+
+interface DbCollection {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  color: string | null;
+  asset_count: number;
+  created_at: string;
+}
+
+// ── View-layer types for the existing UI ──
 
 interface Asset {
   id: string;
@@ -32,7 +61,52 @@ interface Collection {
   name: string;
   assetCount: number;
   color: string;
+  description: string;
 }
+
+// ── Helpers ──
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function dbAssetToView(a: DbAsset): Asset {
+  const typeMap: Record<string, Asset["type"]> = {
+    image: "image",
+    video: "video",
+    audio: "audio",
+    document: "document",
+  };
+  return {
+    id: a.id,
+    name: a.name,
+    type: typeMap[a.file_type] || "document",
+    url: a.file_url,
+    thumbnail: a.file_type === "image" ? a.file_url : "",
+    size: formatBytes(a.file_size),
+    dimensions: a.width && a.height ? `${a.width}x${a.height}` : "N/A",
+    uploadDate: new Date(a.created_at).toISOString().split("T")[0],
+    tags: a.tags || [],
+    client: "Unassigned",
+    usedIn: [],
+    collection: a.collection_id || "",
+    starred: false,
+  };
+}
+
+function dbCollectionToView(c: DbCollection): Collection {
+  return {
+    id: c.id,
+    name: c.name,
+    assetCount: c.asset_count,
+    color: c.color || "blue",
+    description: c.description || "",
+  };
+}
+
+// ── Constants ──
 
 const CATEGORIES = [
   { key: "all", label: "All Assets", icon: <FolderOpen size={14} /> },
@@ -42,30 +116,6 @@ const CATEGORIES = [
   { key: "document", label: "Documents", icon: <FileText size={14} /> },
   { key: "template", label: "Templates", icon: <File size={14} /> },
   { key: "brand", label: "Brand Assets", icon: <Palette size={14} /> },
-];
-
-const MOCK_ASSETS: Asset[] = [
-  { id: "1", name: "hero-banner-q1.png", type: "image", url: "#", thumbnail: "", size: "2.4 MB", dimensions: "1920x1080", uploadDate: "2026-04-10", tags: ["banner", "hero", "homepage"], client: "Meridian Health", usedIn: ["Q1 Campaign", "Website Redesign"], collection: "Q1 Content", starred: true },
-  { id: "2", name: "product-demo.mp4", type: "video", url: "#", thumbnail: "", size: "48.2 MB", dimensions: "1920x1080", uploadDate: "2026-04-08", tags: ["demo", "product", "video"], client: "Meridian Health", usedIn: ["Product Launch"], collection: "Product Assets", starred: false },
-  { id: "3", name: "podcast-intro.mp3", type: "audio", url: "#", thumbnail: "", size: "1.1 MB", dimensions: "N/A", uploadDate: "2026-04-05", tags: ["podcast", "intro", "audio"], client: "Neon Skateshop", usedIn: ["Weekly Podcast"], collection: "Audio Assets", starred: false },
-  { id: "4", name: "brand-guidelines.pdf", type: "document", url: "#", thumbnail: "", size: "5.8 MB", dimensions: "N/A", uploadDate: "2026-04-02", tags: ["brand", "guidelines", "pdf"], client: "Ashford Legal", usedIn: [], collection: "Brand Assets", starred: true },
-  { id: "5", name: "social-template-pack.psd", type: "template", url: "#", thumbnail: "", size: "12.3 MB", dimensions: "1080x1080", uploadDate: "2026-03-28", tags: ["template", "social", "instagram"], client: "Neon Skateshop", usedIn: ["March Posts", "April Posts"], collection: "Templates", starred: false },
-  { id: "6", name: "logo-primary.svg", type: "brand", url: "#", thumbnail: "", size: "24 KB", dimensions: "512x512", uploadDate: "2026-03-25", tags: ["logo", "brand", "primary"], client: "Meridian Health", usedIn: ["All Campaigns"], collection: "Brand Assets", starred: true },
-  { id: "7", name: "testimonial-sarah.mp4", type: "video", url: "#", thumbnail: "", size: "22.1 MB", dimensions: "1080x1920", uploadDate: "2026-04-12", tags: ["testimonial", "vertical", "reels"], client: "Meridian Health", usedIn: ["Social Q1"], collection: "Q1 Content", starred: false },
-  { id: "8", name: "infographic-stats.png", type: "image", url: "#", thumbnail: "", size: "890 KB", dimensions: "1080x1350", uploadDate: "2026-04-11", tags: ["infographic", "stats", "carousel"], client: "Ashford Legal", usedIn: ["LinkedIn Campaign"], collection: "Q1 Content", starred: false },
-  { id: "9", name: "ad-copy-v2.docx", type: "document", url: "#", thumbnail: "", size: "42 KB", dimensions: "N/A", uploadDate: "2026-04-09", tags: ["copy", "ads", "draft"], client: "Neon Skateshop", usedIn: ["Spring Ads"], collection: "Campaign X", starred: false },
-  { id: "10", name: "email-header.png", type: "template", url: "#", thumbnail: "", size: "320 KB", dimensions: "600x200", uploadDate: "2026-04-07", tags: ["email", "header", "newsletter"], client: "Meridian Health", usedIn: ["April Newsletter"], collection: "Templates", starred: false },
-  { id: "11", name: "icon-set.svg", type: "brand", url: "#", thumbnail: "", size: "56 KB", dimensions: "Various", uploadDate: "2026-04-01", tags: ["icons", "brand", "ui"], client: "Ashford Legal", usedIn: ["Website", "App"], collection: "Brand Assets", starred: false },
-  { id: "12", name: "bg-music-chill.mp3", type: "audio", url: "#", thumbnail: "", size: "3.4 MB", dimensions: "N/A", uploadDate: "2026-03-30", tags: ["music", "background", "chill"], client: "Neon Skateshop", usedIn: ["TikTok Videos"], collection: "Audio Assets", starred: false },
-];
-
-const MOCK_COLLECTIONS: Collection[] = [
-  { id: "1", name: "Q1 Content", assetCount: 3, color: "blue" },
-  { id: "2", name: "Campaign X", assetCount: 1, color: "purple" },
-  { id: "3", name: "Brand Assets", assetCount: 3, color: "gold" },
-  { id: "4", name: "Templates", assetCount: 2, color: "green" },
-  { id: "5", name: "Product Assets", assetCount: 1, color: "pink" },
-  { id: "6", name: "Audio Assets", assetCount: 2, color: "orange" },
 ];
 
 const TYPE_ICON: Record<string, React.ReactNode> = {
@@ -86,16 +136,17 @@ const TYPE_BG: Record<string, string> = {
   brand: "bg-gold/10",
 };
 
+// ── Component ──
+
 export default function ContentLibraryPage() {
   useAuth();
-  const supabase = createClient();
 
-  const [assets, setAssets] = useState<Asset[]>(MOCK_ASSETS);
-  const [collections] = useState<Collection[]>(MOCK_COLLECTIONS);
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [category, setCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [clientFilter, setClientFilter] = useState("all");
+  const [collectionFilter, setCollectionFilter] = useState("all");
   const [selectedAssets, setSelectedAssets] = useState<Set<string>>(new Set());
   const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -105,14 +156,157 @@ export default function ContentLibraryPage() {
   const [sortBy, setSortBy] = useState<"date" | "name" | "size">("date");
   const [showCollections, setShowCollections] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  void supabase;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const clients = Array.from(new Set(assets.map(a => a.client)));
+  // ── Data fetching ──
+
+  const fetchAssets = useCallback(async () => {
+    try {
+      const res = await fetch("/api/content-library");
+      if (!res.ok) throw new Error("Failed to load assets");
+      const json = await res.json();
+      setAssets((json.assets || []).map((a: DbAsset) => dbAssetToView(a)));
+    } catch {
+      // Silently handle — empty state is fine
+    }
+  }, []);
+
+  const fetchCollections = useCallback(async () => {
+    try {
+      const res = await fetch("/api/content-library/collections");
+      if (!res.ok) throw new Error("Failed to load collections");
+      const json = await res.json();
+      setCollections((json.collections || []).map((c: DbCollection) => dbCollectionToView(c)));
+    } catch {
+      // Silently handle
+    }
+  }, []);
+
+  useEffect(() => {
+    Promise.all([fetchAssets(), fetchCollections()]).finally(() => setLoading(false));
+  }, [fetchAssets, fetchCollections]);
+
+  // ── Upload logic ──
+
+  const uploadFiles = async (files: File[]) => {
+    if (files.length === 0) return;
+    setUploading(true);
+
+    let successCount = 0;
+    for (const file of files) {
+      try {
+        const form = new FormData();
+        form.append("file", file);
+        if (collectionFilter !== "all") form.append("collection_id", collectionFilter);
+
+        const res = await fetch("/api/content-library", { method: "POST", body: form });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: "Upload failed" }));
+          toast.error(`Failed to upload ${file.name}: ${err.error}`);
+          continue;
+        }
+        const json = await res.json();
+        if (json.asset) {
+          setAssets(prev => [dbAssetToView(json.asset), ...prev]);
+          successCount++;
+        }
+      } catch {
+        toast.error(`Failed to upload ${file.name}`);
+      }
+    }
+
+    setUploading(false);
+    if (successCount > 0) toast.success(`Uploaded ${successCount} file(s)`);
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    const files = Array.from(e.dataTransfer.files);
+    await uploadFiles(files);
+  };
+
+  const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    await uploadFiles(files);
+    // Reset input so the same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  // ── Asset operations ──
+
+  const deleteAsset = async (id: string) => {
+    try {
+      const res = await fetch(`/api/content-library?id=${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      setAssets(prev => prev.filter(a => a.id !== id));
+      setSelectedAssets(prev => { const next = new Set(prev); next.delete(id); return next; });
+      toast.success("Asset deleted");
+    } catch {
+      toast.error("Failed to delete asset");
+    }
+  };
+
+  const updateAssetTags = async (id: string, tags: string[]) => {
+    try {
+      const res = await fetch("/api/content-library", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, tags }),
+      });
+      if (!res.ok) throw new Error();
+      const json = await res.json();
+      if (json.asset) {
+        setAssets(prev => prev.map(a => a.id === id ? dbAssetToView(json.asset) : a));
+      }
+    } catch {
+      toast.error("Failed to update tags");
+    }
+  };
+
+  // ── Collection operations ──
+
+  const createCollection = async () => {
+    if (!newCollectionName.trim()) return;
+    try {
+      const res = await fetch("/api/content-library/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newCollectionName.trim() }),
+      });
+      if (!res.ok) throw new Error();
+      const json = await res.json();
+      if (json.collection) {
+        setCollections(prev => [dbCollectionToView(json.collection), ...prev]);
+      }
+      toast.success(`Collection "${newCollectionName}" created`);
+      setNewCollectionName("");
+      setShowNewCollection(false);
+    } catch {
+      toast.error("Failed to create collection");
+    }
+  };
+
+  const deleteCollection = async (id: string) => {
+    try {
+      const res = await fetch(`/api/content-library/collections?id=${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error();
+      setCollections(prev => prev.filter(c => c.id !== id));
+      // Reset filter if the deleted collection was selected
+      if (collectionFilter === id) setCollectionFilter("all");
+      toast.success("Collection deleted");
+    } catch {
+      toast.error("Failed to delete collection");
+    }
+  };
+
+  // ── Filtering & sorting ──
 
   const filteredAssets = assets
     .filter(a => category === "all" || a.type === category)
-    .filter(a => clientFilter === "all" || a.client === clientFilter)
+    .filter(a => collectionFilter === "all" || a.collection === collectionFilter)
     .filter(a => {
       if (!searchQuery) return true;
       const q = searchQuery.toLowerCase();
@@ -123,6 +317,8 @@ export default function ContentLibraryPage() {
       if (sortBy === "size") return parseFloat(a.size) - parseFloat(b.size);
       return new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime();
     });
+
+  // ── Selection helpers ──
 
   const toggleSelect = (id: string) => {
     setSelectedAssets(prev => {
@@ -145,64 +341,55 @@ export default function ContentLibraryPage() {
     toast.success("Updated");
   };
 
-  const bulkDelete = () => {
+  // ── Bulk actions ──
+
+  const bulkDelete = async () => {
     if (selectedAssets.size === 0) return;
+    const ids = Array.from(selectedAssets);
+    let deleted = 0;
+    for (const id of ids) {
+      try {
+        const res = await fetch(`/api/content-library?id=${id}`, { method: "DELETE" });
+        if (res.ok) deleted++;
+      } catch { /* continue */ }
+    }
     setAssets(prev => prev.filter(a => !selectedAssets.has(a.id)));
-    toast.success(`Deleted ${selectedAssets.size} asset(s)`);
+    toast.success(`Deleted ${deleted} asset(s)`);
     setSelectedAssets(new Set());
   };
 
-  const bulkTag = () => {
+  const bulkTag = async () => {
     if (!bulkTagInput.trim() || selectedAssets.size === 0) return;
     const newTag = bulkTagInput.trim().toLowerCase();
-    setAssets(prev => prev.map(a =>
-      selectedAssets.has(a.id) && !a.tags.includes(newTag)
-        ? { ...a, tags: [...a.tags, newTag] }
-        : a
-    ));
-    toast.success(`Tagged ${selectedAssets.size} asset(s) with "${newTag}"`);
+    const ids = Array.from(selectedAssets);
+    let updated = 0;
+
+    for (const id of ids) {
+      const asset = assets.find(a => a.id === id);
+      if (!asset || asset.tags.includes(newTag)) continue;
+      const newTags = [...asset.tags, newTag];
+      await updateAssetTags(id, newTags);
+      updated++;
+    }
+
+    // Refetch to get clean state
+    await fetchAssets();
+    toast.success(`Tagged ${updated} asset(s) with "${newTag}"`);
     setBulkTagInput("");
   };
 
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault();
-    setDragging(false);
-    const files = Array.from(e.dataTransfer.files);
-    if (files.length === 0) return;
-    setUploading(true);
-    await new Promise(r => setTimeout(r, 1500));
-    const newAssets: Asset[] = files.map((f, i) => {
-      let type: Asset["type"] = "document";
-      if (f.type.startsWith("image/")) type = "image";
-      else if (f.type.startsWith("video/")) type = "video";
-      else if (f.type.startsWith("audio/")) type = "audio";
-      return {
-        id: String(Date.now() + i),
-        name: f.name,
-        type,
-        url: "#",
-        thumbnail: "",
-        size: `${(f.size / 1024 / 1024).toFixed(1)} MB`,
-        dimensions: "Unknown",
-        uploadDate: new Date().toISOString().split("T")[0],
-        tags: [],
-        client: clientFilter !== "all" ? clientFilter : "Unassigned",
-        usedIn: [],
-        collection: "",
-        starred: false,
-      };
-    });
-    setAssets(prev => [...newAssets, ...prev]);
-    setUploading(false);
-    toast.success(`Uploaded ${files.length} file(s)`);
-  };
+  // ── Loading state ──
 
-  const createCollection = () => {
-    if (!newCollectionName.trim()) return;
-    toast.success(`Collection "${newCollectionName}" created`);
-    setNewCollectionName("");
-    setShowNewCollection(false);
-  };
+  if (loading) {
+    return (
+      <div className="fade-in flex items-center justify-center py-20">
+        <div className="text-center">
+          <Loader size={24} className="animate-spin text-gold mx-auto mb-3" />
+          <p className="text-sm text-muted">Loading content library...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fade-in space-y-6">
@@ -219,7 +406,13 @@ export default function ContentLibraryPage() {
           </button>
           <label className="btn-primary text-xs flex items-center gap-1 cursor-pointer">
             <Upload size={14} /> Upload
-            <input type="file" multiple className="hidden" onChange={() => toast.success("Files selected for upload")} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              className="hidden"
+              onChange={handleFileInput}
+            />
           </label>
         </div>
       </div>
@@ -271,17 +464,33 @@ export default function ContentLibraryPage() {
               <button onClick={createCollection} className="btn-primary text-xs">Create</button>
             </div>
           )}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
-            {collections.map(c => (
-              <div key={c.id} className="card cursor-pointer hover:border-white/20 transition-all p-3">
-                <div className={`w-8 h-8 rounded-lg bg-${c.color}-500/20 flex items-center justify-center mb-2`}>
-                  <FolderOpen size={14} className={`text-${c.color}-400`} />
+          {collections.length === 0 && !showNewCollection ? (
+            <p className="text-xs text-muted text-center py-4">No collections yet. Create one to organize your assets.</p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
+              {collections.map(c => (
+                <div
+                  key={c.id}
+                  className={`card cursor-pointer hover:border-white/20 transition-all p-3 relative group ${
+                    collectionFilter === c.id ? "border border-gold/40 bg-gold/5" : ""
+                  }`}
+                  onClick={() => setCollectionFilter(collectionFilter === c.id ? "all" : c.id)}
+                >
+                  <button
+                    onClick={e => { e.stopPropagation(); deleteCollection(c.id); }}
+                    className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-all text-muted hover:text-red-400"
+                  >
+                    <X size={12} />
+                  </button>
+                  <div className={`w-8 h-8 rounded-lg bg-${c.color}-500/20 flex items-center justify-center mb-2`}>
+                    <FolderOpen size={14} className={`text-${c.color}-400`} />
+                  </div>
+                  <p className="text-xs font-semibold truncate">{c.name}</p>
+                  <p className="text-[10px] text-muted">{c.assetCount} assets</p>
                 </div>
-                <p className="text-xs font-semibold truncate">{c.name}</p>
-                <p className="text-[10px] text-muted">{c.assetCount} assets</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -315,14 +524,14 @@ export default function ContentLibraryPage() {
           />
         </div>
 
-        {/* Client Filter */}
+        {/* Collection Filter */}
         <select
-          value={clientFilter}
-          onChange={e => setClientFilter(e.target.value)}
+          value={collectionFilter}
+          onChange={e => setCollectionFilter(e.target.value)}
           className="input text-xs"
         >
-          <option value="all">All Clients</option>
-          {clients.map(c => <option key={c} value={c}>{c}</option>)}
+          <option value="all">All Collections</option>
+          {collections.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
 
         {/* Sort */}
@@ -367,8 +576,32 @@ export default function ContentLibraryPage() {
         </div>
       )}
 
+      {/* Empty state */}
+      {filteredAssets.length === 0 && !uploading && (
+        <div className="card text-center py-12">
+          <FolderOpen size={32} className="mx-auto mb-3 text-muted" />
+          <p className="text-sm font-medium mb-1">
+            {assets.length === 0 ? "No assets yet" : "No matching assets"}
+          </p>
+          <p className="text-xs text-muted">
+            {assets.length === 0
+              ? "Upload files using the drop zone above or the Upload button."
+              : "Try adjusting your filters or search query."}
+          </p>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {filteredAssets.length === 0 && (
+        <EmptyState
+          icon={<FolderOpen size={24} />}
+          title="No assets yet"
+          description="Upload your first file to get started"
+        />
+      )}
+
       {/* Asset Grid */}
-      {viewMode === "grid" ? (
+      {filteredAssets.length > 0 && viewMode === "grid" && (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
           {filteredAssets.map(asset => (
             <div
@@ -396,9 +629,14 @@ export default function ContentLibraryPage() {
               {/* Thumbnail */}
               <div
                 onClick={() => setPreviewAsset(asset)}
-                className={`w-full aspect-square rounded-lg mb-2 flex items-center justify-center ${TYPE_BG[asset.type]}`}
+                className={`w-full aspect-square rounded-lg mb-2 flex items-center justify-center overflow-hidden ${TYPE_BG[asset.type]}`}
               >
-                {TYPE_ICON[asset.type]}
+                {asset.type === "image" && asset.thumbnail ? (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={asset.thumbnail} alt={asset.name} className="w-full h-full object-cover rounded-lg" />
+                ) : (
+                  TYPE_ICON[asset.type]
+                )}
               </div>
 
               <p className="text-xs font-medium truncate">{asset.name}</p>
@@ -414,7 +652,10 @@ export default function ContentLibraryPage() {
             </div>
           ))}
         </div>
-      ) : (
+      )}
+
+      {/* Asset List */}
+      {filteredAssets.length > 0 && viewMode === "list" && (
         <div className="card overflow-hidden">
           <table className="w-full">
             <thead>
@@ -426,11 +667,9 @@ export default function ContentLibraryPage() {
                 </th>
                 <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Name</th>
                 <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Type</th>
-                <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Client</th>
                 <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Size</th>
-                <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Used In</th>
                 <th className="text-left p-2 text-[10px] text-muted uppercase tracking-wider">Date</th>
-                <th className="p-2 w-8"></th>
+                <th className="p-2 w-20"></th>
               </tr>
             </thead>
             <tbody>
@@ -460,22 +699,17 @@ export default function ContentLibraryPage() {
                     </div>
                   </td>
                   <td className="p-2 text-xs text-muted capitalize">{asset.type}</td>
-                  <td className="p-2 text-xs text-muted">{asset.client}</td>
                   <td className="p-2 text-xs text-muted">{asset.size}</td>
-                  <td className="p-2">
-                    {asset.usedIn.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {asset.usedIn.map(u => (
-                          <span key={u} className="px-1.5 py-0.5 rounded bg-blue-500/10 text-[9px] text-blue-400">{u}</span>
-                        ))}
-                      </div>
-                    ) : <span className="text-[10px] text-muted">Not used</span>}
-                  </td>
                   <td className="p-2 text-xs text-muted">{asset.uploadDate}</td>
                   <td className="p-2">
-                    <button onClick={() => setPreviewAsset(asset)} className="text-muted hover:text-white">
-                      <Eye size={14} />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => setPreviewAsset(asset)} className="text-muted hover:text-white">
+                        <Eye size={14} />
+                      </button>
+                      <button onClick={() => deleteAsset(asset.id)} className="text-muted hover:text-red-400">
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -499,8 +733,8 @@ export default function ContentLibraryPage() {
           <p className="text-xl font-bold text-purple-400">{assets.filter(a => a.type === "video").length}</p>
         </div>
         <div className="card">
-          <p className="text-[10px] text-muted uppercase tracking-wider">Starred</p>
-          <p className="text-xl font-bold text-gold">{assets.filter(a => a.starred).length}</p>
+          <p className="text-[10px] text-muted uppercase tracking-wider">Collections</p>
+          <p className="text-xl font-bold text-gold">{collections.length}</p>
         </div>
       </div>
 
@@ -512,11 +746,16 @@ export default function ContentLibraryPage() {
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
               <button onClick={() => setPreviewAsset(null)} className="text-muted hover:text-white"><X size={16} /></button>
             </div>
-            <div className={`w-full aspect-video rounded-lg mb-4 flex items-center justify-center ${TYPE_BG[previewAsset.type]}`}>
-              <div className="text-center">
-                <div className="scale-[3] mb-6">{TYPE_ICON[previewAsset.type]}</div>
-                <p className="text-xs text-muted mt-2">{previewAsset.type.toUpperCase()} Preview</p>
-              </div>
+            <div className={`w-full aspect-video rounded-lg mb-4 flex items-center justify-center overflow-hidden ${TYPE_BG[previewAsset.type]}`}>
+              {previewAsset.type === "image" && previewAsset.url ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={previewAsset.url} alt={previewAsset.name} className="w-full h-full object-contain" />
+              ) : (
+                <div className="text-center">
+                  <div className="scale-[3] mb-6">{TYPE_ICON[previewAsset.type]}</div>
+                  <p className="text-xs text-muted mt-2">{previewAsset.type.toUpperCase()} Preview</p>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-2 gap-3 text-xs mb-4">
               <div>
@@ -528,38 +767,33 @@ export default function ContentLibraryPage() {
                 <p>{previewAsset.dimensions}</p>
               </div>
               <div>
-                <p className="text-[10px] text-muted uppercase tracking-wider">Client</p>
-                <p>{previewAsset.client}</p>
+                <p className="text-[10px] text-muted uppercase tracking-wider">Type</p>
+                <p className="capitalize">{previewAsset.type}</p>
               </div>
               <div>
                 <p className="text-[10px] text-muted uppercase tracking-wider">Uploaded</p>
                 <p>{previewAsset.uploadDate}</p>
               </div>
             </div>
-            <div className="mb-3">
-              <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Tags</p>
-              <div className="flex flex-wrap gap-1">
-                {previewAsset.tags.map(t => (
-                  <span key={t} className="px-2 py-0.5 rounded-full bg-white/10 text-[10px]">{t}</span>
-                ))}
-              </div>
-            </div>
-            {previewAsset.usedIn.length > 0 && (
+            {previewAsset.tags.length > 0 && (
               <div className="mb-3">
-                <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Used In</p>
+                <p className="text-[10px] text-muted uppercase tracking-wider mb-1">Tags</p>
                 <div className="flex flex-wrap gap-1">
-                  {previewAsset.usedIn.map(u => (
-                    <span key={u} className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px]">{u}</span>
+                  {previewAsset.tags.map(t => (
+                    <span key={t} className="px-2 py-0.5 rounded-full bg-white/10 text-[10px]">{t}</span>
                   ))}
                 </div>
               </div>
             )}
             <div className="flex gap-2">
-              <button onClick={() => { toast.success("Download started"); }} className="btn-primary text-xs flex items-center gap-1 flex-1">
+              <a href={previewAsset.url} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs flex items-center gap-1 flex-1 justify-center" download>
                 <Download size={12} /> Download
-              </button>
+              </a>
               <button onClick={() => { navigator.clipboard.writeText(previewAsset.url); toast.success("Link copied"); }} className="btn-ghost text-xs flex items-center gap-1">
                 <Copy size={12} /> Copy Link
+              </button>
+              <button onClick={() => { deleteAsset(previewAsset.id); setPreviewAsset(null); }} className="btn-ghost text-xs flex items-center gap-1 text-red-400 hover:text-red-300">
+                <Trash2 size={12} /> Delete
               </button>
             </div>
           </div>

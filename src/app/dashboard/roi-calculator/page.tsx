@@ -26,14 +26,7 @@ interface IndustryBenchmark {
   avgDealValue: number;
 }
 
-const MOCK_TRACKING: MonthlyTracking[] = [
-  { month: "Nov 2025", leads: 18, deals: 2, revenue: 6000, investment: 3500, roi: 71 },
-  { month: "Dec 2025", leads: 22, deals: 3, revenue: 9000, investment: 3500, roi: 157 },
-  { month: "Jan 2026", leads: 28, deals: 3, revenue: 9000, investment: 3500, roi: 157 },
-  { month: "Feb 2026", leads: 32, deals: 4, revenue: 12000, investment: 3500, roi: 243 },
-  { month: "Mar 2026", leads: 35, deals: 5, revenue: 15000, investment: 3500, roi: 329 },
-  { month: "Apr 2026", leads: 38, deals: 5, revenue: 15000, investment: 3500, roi: 329 },
-];
+const MOCK_TRACKING: MonthlyTracking[] = [];
 
 const BENCHMARKS: IndustryBenchmark[] = [
   { industry: "Dental", avgROI: 312, avgLeads: 35, avgCloseRate: 18, avgDealValue: 3500 },

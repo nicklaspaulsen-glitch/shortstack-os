@@ -21,6 +21,10 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     const saved = localStorage.getItem("ss-theme") || "nordic";
     applyTheme(saved);
 
+    // Hydrate data-theme attribute for CSS variable dark mode overrides
+    const isLight = saved === "nordic" || saved === "light";
+    document.documentElement.setAttribute("data-theme", isLight ? "light" : "dark");
+
     // Apply saved zoom
     const zoom = localStorage.getItem("ss-zoom");
     if (zoom) document.documentElement.style.zoom = zoom;
@@ -68,4 +72,10 @@ export function applyTheme(themeId: string) {
   const isLight = themeId === "nordic" || themeId === "light";
   root.classList.toggle("theme-light", isLight);
   root.classList.toggle("theme-dark", !isLight);
+
+  // Set data-theme attribute for CSS variable overrides
+  root.setAttribute("data-theme", isLight ? "light" : "dark");
+
+  // Persist dark mode state for the quick toggle
+  localStorage.setItem("ss_theme", isLight ? "light" : "dark");
 }

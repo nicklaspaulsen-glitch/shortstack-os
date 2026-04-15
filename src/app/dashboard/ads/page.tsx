@@ -962,7 +962,11 @@ export default function AdsPage() {
                     <h3 className="text-xs font-semibold flex items-center gap-2">
                       <Type size={13} /> Copy Variations
                     </h3>
-                    {((generatedCopy as Record<string, unknown>).variations as Array<Record<string, string>>).map((v, i) => (
+                    {((generatedCopy as Record<string, unknown>).variations as Array<Record<string, string>>).map((v, i) => {
+                      const perfLevel = (v.estimated_performance || "").toLowerCase();
+                      const isHigh = perfLevel.startsWith("high");
+                      const isMedium = perfLevel.startsWith("medium");
+                      return (
                       <div key={i} className="card group">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
@@ -970,8 +974,11 @@ export default function AdsPage() {
                             <span className="text-[9px] text-muted uppercase tracking-wider">{v.hook_type}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
-                            {v.estimated_performance === "high" && (
+                            {isHigh && (
                               <span className="text-[8px] bg-success/10 text-success font-bold px-1.5 py-0.5 rounded-full">HIGH</span>
+                            )}
+                            {isMedium && (
+                              <span className="text-[8px] bg-warning/10 text-warning font-bold px-1.5 py-0.5 rounded-full">MED</span>
                             )}
                             <button onClick={() => {
                               navigator.clipboard.writeText(`${v.headline}\n\n${v.primary_text}\n\n${v.cta}`);
@@ -987,8 +994,17 @@ export default function AdsPage() {
                           <span className="text-[9px] text-muted">{v.description}</span>
                           <span className="text-[10px] bg-gold/10 text-gold font-semibold px-2 py-0.5 rounded-full">{v.cta}</span>
                         </div>
+                        {v.image_concept && (
+                          <div className="mt-2 pt-2 border-t border-border">
+                            <div className="flex items-center gap-1.5">
+                              <ImageIcon size={10} className="text-muted shrink-0" />
+                              <span className="text-[9px] text-muted">{v.image_concept}</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
 

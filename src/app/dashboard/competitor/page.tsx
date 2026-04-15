@@ -7,6 +7,7 @@ import {
   Shield, Zap, Calendar, AlertTriangle,
   CheckCircle, Target, Activity
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 interface CompetitorProfile {
   id: string;
@@ -22,39 +23,9 @@ interface CompetitorProfile {
   lastAnalyzed: string;
 }
 
-const MOCK_COMPETITORS: CompetitorProfile[] = [
-  {
-    id: "c1", name: "AgencyX", url: "agencyx.com", industry: "Digital Marketing",
-    followers: { ig: 12400, fb: 8200, tt: 5600, li: 3100, yt: 2800 },
-    postingFreq: 5, engagement: 3.2,
-    strengths: ["Strong video content", "Active community", "Good SEO rankings"],
-    weaknesses: ["Slow response time", "Outdated website", "No AI tools"],
-    priceRange: "$997-$2,997/mo", lastAnalyzed: "2 days ago",
-  },
-  {
-    id: "c2", name: "GrowthLab", url: "growthlab.io", industry: "Growth Marketing",
-    followers: { ig: 8900, fb: 15400, tt: 2300, li: 7800, yt: 1200 },
-    postingFreq: 3, engagement: 2.8,
-    strengths: ["Enterprise clients", "Data-driven approach", "Strong LinkedIn"],
-    weaknesses: ["Low social engagement", "No TikTok presence", "Generic content"],
-    priceRange: "$1,497-$4,997/mo", lastAnalyzed: "1 week ago",
-  },
-  {
-    id: "c3", name: "ViralNest", url: "viralnest.co", industry: "Social Media",
-    followers: { ig: 24800, fb: 6100, tt: 18900, li: 1200, yt: 8400 },
-    postingFreq: 12, engagement: 5.1,
-    strengths: ["Viral TikTok content", "Young audience", "Creative campaigns"],
-    weaknesses: ["No B2B focus", "High churn", "Inconsistent quality"],
-    priceRange: "$499-$1,497/mo", lastAnalyzed: "3 days ago",
-  },
-];
+const MOCK_COMPETITORS: CompetitorProfile[] = [];
 
-const MOCK_ALERTS = [
-  { id: "a1", competitor: "AgencyX", event: "Launched new AI feature on website", time: "2h ago", type: "feature" },
-  { id: "a2", competitor: "ViralNest", event: "Posted viral TikTok (124K views)", time: "1d ago", type: "content" },
-  { id: "a3", competitor: "GrowthLab", event: "Changed pricing (raised $200/mo)", time: "3d ago", type: "pricing" },
-  { id: "a4", competitor: "AgencyX", event: "New Google Ads campaign detected", time: "5d ago", type: "ads" },
-];
+const MOCK_ALERTS: { id: string; competitor: string; event: string; time: string; type: string }[] = [];
 
 const quickAnalyses = [
   { label: "Social Media Audit", icon: Megaphone, prompt: "Perform a comprehensive social media audit..." },
@@ -143,6 +114,13 @@ export default function CompetitorPage() {
           </div>
 
           {/* Competitor Cards */}
+          {competitors.length === 0 && (
+            <EmptyState
+              icon={<Crosshair size={24} />}
+              title="No competitors tracked"
+              description="Add a competitor to start monitoring"
+            />
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {competitors.map(c => (
               <div key={c.id} onClick={() => setSelectedCompetitor(selectedCompetitor?.id === c.id ? null : c)}
@@ -332,6 +310,13 @@ export default function CompetitorPage() {
           <h2 className="text-sm font-bold flex items-center gap-2">
             <Activity size={14} className="text-gold" /> Competitor Change Alerts
           </h2>
+          {MOCK_ALERTS.length === 0 && (
+            <EmptyState
+              icon={<Activity size={24} />}
+              title="No competitor alerts"
+              description="Alerts will appear here when competitors make changes"
+            />
+          )}
           {MOCK_ALERTS.map(a => (
             <div key={a.id} className="card p-3 flex items-start gap-3">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${

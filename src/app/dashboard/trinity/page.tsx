@@ -21,32 +21,11 @@ interface AgentStatus {
   successRate: number;
 }
 
-const MOCK_AGENTS: AgentStatus[] = [
-  { name: "Lead Finder", status: "active", lastAction: "Scraped 48 leads", actionsToday: 12, successRate: 96 },
-  { name: "Outreach Bot", status: "active", lastAction: "Sent 12 DMs", actionsToday: 8, successRate: 100 },
-  { name: "Content Engine", status: "idle", lastAction: "Generated captions", actionsToday: 5, successRate: 100 },
-  { name: "Invoice Agent", status: "idle", lastAction: "Chased 2 invoices", actionsToday: 2, successRate: 100 },
-  { name: "Retention Agent", status: "error", lastAction: "Health check failed", actionsToday: 1, successRate: 50 },
-  { name: "SEO Agent", status: "idle", lastAction: "Keyword analysis", actionsToday: 3, successRate: 89 },
-  { name: "Analytics", status: "active", lastAction: "Generated report", actionsToday: 4, successRate: 100 },
-  { name: "Competitor Spy", status: "idle", lastAction: "Monitored 3 competitors", actionsToday: 1, successRate: 100 },
-];
+const MOCK_AGENTS: AgentStatus[] = [];
 
-const MOCK_OUTPUTS = [
-  { id: "o1", agent: "Content Engine", type: "Instagram Caption", preview: "5 tips to get more patients in your dental practice...", quality: 92, time: "14:32" },
-  { id: "o2", agent: "Lead Finder", type: "Lead Batch", preview: "48 dentists in Miami with email + phone", quality: 85, time: "14:15" },
-  { id: "o3", agent: "Outreach Bot", type: "DM Campaign", preview: "12 personalized DMs sent to Instagram leads", quality: 88, time: "13:45" },
-  { id: "o4", agent: "SEO Agent", type: "Keyword Report", preview: "Top 20 keywords for dental marketing in FL", quality: 91, time: "13:00" },
-];
+const MOCK_OUTPUTS: Array<{ id: string; agent: string; type: string; preview: string; quality: number; time: string }> = [];
 
-const MOCK_HISTORY = [
-  { id: "h1", action: "Built website for Acme Dental", status: "success", agent: "Trinity", time: "Yesterday 16:00" },
-  { id: "h2", action: "Set up AI receptionist for Peak Fitness", status: "success", agent: "Trinity", time: "Yesterday 14:00" },
-  { id: "h3", action: "Created Discord server for client community", status: "success", agent: "Trinity", time: "Apr 12 10:00" },
-  { id: "h4", action: "Generated 30-day content calendar", status: "success", agent: "Trinity", time: "Apr 11 09:00" },
-  { id: "h5", action: "Automated client onboarding workflow", status: "success", agent: "Trinity", time: "Apr 10 15:00" },
-  { id: "h6", action: "Failed to deploy website - DNS error", status: "failed", agent: "Trinity", time: "Apr 10 11:00" },
-];
+const MOCK_HISTORY: Array<{ id: string; action: string; status: string; agent: string; time: string }> = [];
 
 const TABS = ["Chat", "Dashboard", "Agents", "Outputs", "Queue", "Cost", "Quality", "Fallback", "History", "Analytics"] as const;
 type Tab = typeof TABS[number];
@@ -57,12 +36,7 @@ const FALLBACK_CHAIN = [
   { primary: "Supabase", fallback: "Local cache", trigger: "Connection timeout" },
 ];
 
-const MOCK_QUEUE = [
-  { id: "tq1", task: "Generate weekly report for all clients", priority: "high", agent: "Analytics", eta: "~5 min" },
-  { id: "tq2", task: "Process 3 content calendar requests", priority: "medium", agent: "Content Engine", eta: "~12 min" },
-  { id: "tq3", task: "Send follow-up DMs to warm leads", priority: "medium", agent: "Outreach Bot", eta: "~8 min" },
-  { id: "tq4", task: "Scrape new leads for Phoenix, AZ", priority: "low", agent: "Lead Finder", eta: "~15 min" },
-];
+const MOCK_QUEUE: Array<{ id: string; task: string; priority: string; agent: string; eta: string }> = [];
 
 export default function TrinityPage() {
   const [tab, setTab] = useState<Tab>("Chat");

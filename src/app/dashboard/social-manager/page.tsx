@@ -25,14 +25,36 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import Modal from "@/components/ui/modal";
+
+const SUPPORTED_PLATFORMS = [
+  { key: "instagram", label: "Instagram", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20", description: "Connect your Instagram Business or Creator account" },
+  { key: "facebook", label: "Facebook", color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20", description: "Connect your Facebook Page for publishing" },
+  { key: "tiktok", label: "TikTok", color: "text-white", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your TikTok account for video publishing" },
+  { key: "linkedin", label: "LinkedIn", color: "text-blue-400", bg: "bg-blue-600/10", border: "border-blue-600/20", description: "Connect your LinkedIn profile or company page" },
+  { key: "twitter", label: "Twitter / X", color: "text-zinc-300", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your X (Twitter) account" },
+] as const;
 
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   instagram: <Camera size={14} className="text-pink-400" />,
   facebook: <MessageSquare size={14} className="text-blue-400" />,
   tiktok: <Music size={14} className="text-white" />,
   linkedin: <Briefcase size={14} className="text-blue-400" />,
+  twitter: <AtSign size={14} className="text-zinc-300" />,
   youtube: <Film size={14} className="text-red-400" />,
 };
+
+interface SocialAccount {
+  id: string;
+  platform: string;
+  account_name: string;
+  account_id: string | null;
+  is_active: boolean;
+  created_at: string;
+  token_expires_at: string | null;
+  status: "active" | "expired" | "revoked";
+  metadata: Record<string, unknown> | null;
+}
 
 export default function SocialManagerPage() {
   useAuth();
@@ -79,6 +101,13 @@ export default function SocialManagerPage() {
   const [analyticsSubTab, setAnalyticsSubTab] = useState<"engagement" | "heatmap" | "hashtags" | "growth" | "comparison" | "pillars">("engagement");
   const [inboxSubTab, setInboxSubTab] = useState<"messages" | "listening" | "ugc" | "autoreplies">("messages");
   const [collabsSubTab, setCollabsSubTab] = useState<"competitors" | "influencers" | "collabs" | "trending">("competitors");
+  // Social connection state
+  const [connectedAccounts, setConnectedAccounts] = useState<SocialAccount[]>([]);
+  const [connectModalOpen, setConnectModalOpen] = useState(false);
+  const [connectingPlatform, setConnectingPlatform] = useState<string | null>(null);
+  const [confirmPlatform, setConfirmPlatform] = useState<typeof SUPPORTED_PLATFORMS[number] | null>(null);
+  const [zernioConfigured, setZernioConfigured] = useState(true);
+  const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
   const supabase = createClient();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,9 +124,25 @@ export default function SocialManagerPage() {
     if (selectedClient) {
       fetchPosts();
       fetchSuggestions();
+      fetchConnectedAccounts();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedClient]);
+
+  // Check URL for ?connected= param (Zernio OAuth callback)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const connected = params.get("connected");
+      if (connected) {
+        toast.success(`${connected.charAt(0).toUpperCase() + connected.slice(1)} connected successfully!`);
+        fetchConnectedAccounts();
+        // Clean up URL
+        window.history.replaceState({}, "", window.location.pathname);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function fetchClients() {
     try {
@@ -121,6 +166,92 @@ export default function SocialManagerPage() {
     } finally {
       setLoading(false);
     }
+  }
+
+  async function fetchConnectedAccounts() {
+    if (!selectedClient) return;
+    try {
+      const res = await fetch(`/api/social/connect?client_id=${selectedClient}&zernio=true`);
+      const data = await res.json();
+      setConnectedAccounts(data.accounts || []);
+      setZernioConfigured(data.zernio_configured !== false);
+    } catch {
+      console.error("[SocialManager] Failed to fetch connected accounts");
+    }
+  }
+
+  async function connectPlatform(platform: string) {
+    if (!selectedClient) return;
+    setConnectingPlatform(platform);
+    try {
+      const res = await fetch("/api/social/connect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: selectedClient,
+          platform,
+          action: "zernio_oauth",
+        }),
+      });
+      const data = await res.json();
+
+      if (data.zernio_not_configured) {
+        toast.error("Zernio API key not configured. Add ZERNIO_API_KEY in Settings.");
+        setZernioConfigured(false);
+        setConnectingPlatform(null);
+        setConfirmPlatform(null);
+        return;
+      }
+
+      if (data.oauth_url) {
+        toast.success(`Redirecting to ${platform} authorization...`);
+        window.location.href = data.oauth_url;
+      } else if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.error("Could not get OAuth URL from Zernio");
+      }
+    } catch {
+      toast.error("Failed to initiate connection");
+    }
+    setConnectingPlatform(null);
+    setConfirmPlatform(null);
+  }
+
+  async function disconnectAccount(account: SocialAccount) {
+    setDisconnectingId(account.id);
+    try {
+      const res = await fetch("/api/social/connect", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          account_id: account.id,
+          client_id: selectedClient,
+          zernio_account_id: account.account_id,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`${account.platform} disconnected`);
+        fetchConnectedAccounts();
+        fetchClients(); // Refresh client account list
+      } else {
+        toast.error("Failed to disconnect");
+      }
+    } catch {
+      toast.error("Error disconnecting account");
+    }
+    setDisconnectingId(null);
+  }
+
+  function requireConnectedAccounts(): boolean {
+    const activeAccounts = connectedAccounts.filter(a => a.status === "active");
+    if (activeAccounts.length === 0) {
+      toast.error("Connect at least one social account first");
+      setConnectModalOpen(true);
+      return false;
+    }
+    return true;
   }
 
   async function fetchAutopilotConfig() {
@@ -188,6 +319,7 @@ export default function SocialManagerPage() {
 
   async function generateWeek() {
     if (!selectedClient) return;
+    if (!requireConnectedAccounts()) return;
     setGenerating(true);
     toast.loading("AI is creating your content plan...");
     try {
@@ -283,22 +415,219 @@ export default function SocialManagerPage() {
         </div>
       </div>
 
-      {/* Connected platforms */}
+      {/* Connected platforms bar */}
       {currentClient && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[10px] text-muted">Connected:</span>
-          {currentClient.accounts.length > 0 ? (
-            currentClient.accounts.map(p => (
-              <div key={p} className="flex items-center gap-1 text-[10px] bg-surface-light px-2 py-0.5 rounded border border-border">
-                {PLATFORM_ICONS[p] || <Globe size={10} />}
-                <span className="capitalize">{p}</span>
-              </div>
-            ))
+          {connectedAccounts.filter(a => a.is_active).length > 0 ? (
+            <>
+              {connectedAccounts.filter(a => a.is_active).map(account => (
+                <div key={account.id} className="flex items-center gap-1.5 text-[10px] bg-surface-light px-2 py-0.5 rounded border border-border group relative">
+                  <span className={`w-1.5 h-1.5 rounded-full ${account.status === "active" ? "bg-emerald-400" : account.status === "expired" ? "bg-red-400" : "bg-zinc-500"}`} />
+                  {PLATFORM_ICONS[account.platform] || <Globe size={10} />}
+                  <span className="capitalize">{account.account_name || account.platform}</span>
+                  {account.status === "expired" && (
+                    <span className="text-[8px] text-red-400 ml-0.5">expired</span>
+                  )}
+                </div>
+              ))}
+              <button onClick={() => setConnectModalOpen(true)}
+                className="flex items-center gap-1 text-[10px] text-gold hover:text-gold/80 transition-colors px-1.5 py-0.5">
+                <Plus size={10} /> Add
+              </button>
+            </>
           ) : (
-            <span className="text-[10px] text-warning">No accounts connected — go to Socials page</span>
+            <button onClick={() => setConnectModalOpen(true)}
+              className="flex items-center gap-1.5 text-[10px] text-gold hover:text-gold/80 bg-gold/5 border border-gold/20 rounded px-2.5 py-1 transition-all hover:bg-gold/10">
+              <Plus size={10} />
+              Connect Social Accounts
+            </button>
           )}
         </div>
       )}
+
+      {/* Connect Accounts Section — shown when no accounts connected */}
+      {currentClient && connectedAccounts.filter(a => a.is_active).length === 0 && (
+        <div className="card border-gold/10 relative overflow-hidden">
+          <div className="absolute inset-0 bg-mesh opacity-20" />
+          <div className="relative text-center py-6">
+            <div className="w-12 h-12 bg-gold/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <Globe size={22} className="text-gold" />
+            </div>
+            <h2 className="text-sm font-semibold mb-1">Connect Your Social Accounts</h2>
+            <p className="text-xs text-muted mb-4 max-w-md mx-auto">
+              Link your social media accounts through Zernio to enable AI-powered content creation, scheduling, and auto-publishing.
+            </p>
+
+            {!zernioConfigured && (
+              <div className="bg-warning/10 border border-warning/20 rounded-lg p-3 mb-4 max-w-sm mx-auto">
+                <div className="flex items-center gap-2 text-warning text-xs">
+                  <AlertCircle size={14} />
+                  <span>Zernio API key not configured. Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment.</span>
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center justify-center gap-2 flex-wrap max-w-lg mx-auto">
+              {SUPPORTED_PLATFORMS.map(p => (
+                <button key={p.key}
+                  onClick={() => { setConfirmPlatform(p); setConnectModalOpen(true); }}
+                  disabled={!zernioConfigured || connectingPlatform === p.key}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border transition-all text-xs font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:scale-[1.02] ${p.bg} ${p.border} ${p.color}`}>
+                  {connectingPlatform === p.key ? (
+                    <Loader size={13} className="animate-spin" />
+                  ) : (
+                    PLATFORM_ICONS[p.key] || <Globe size={13} />
+                  )}
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Connect Modal */}
+      <Modal isOpen={connectModalOpen} onClose={() => { setConnectModalOpen(false); setConfirmPlatform(null); }} title="Connect Social Account" size="md">
+        <div className="p-5 space-y-4">
+          {!zernioConfigured ? (
+            <div className="text-center py-4">
+              <div className="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <AlertCircle size={22} className="text-warning" />
+              </div>
+              <h3 className="text-sm font-semibold mb-2">Zernio Setup Required</h3>
+              <p className="text-xs text-muted mb-3">
+                Social account connections are powered by Zernio. To get started:
+              </p>
+              <ol className="text-xs text-muted text-left max-w-sm mx-auto space-y-2 mb-4">
+                <li className="flex items-start gap-2">
+                  <span className="text-gold font-bold">1.</span>
+                  <span>Sign up at <span className="text-gold">zernio.com</span> and get your API key</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gold font-bold">2.</span>
+                  <span>Add <code className="bg-surface px-1 rounded text-[10px]">ZERNIO_API_KEY</code> to your environment variables</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gold font-bold">3.</span>
+                  <span>Restart the application and connect your accounts</span>
+                </li>
+              </ol>
+              <button onClick={() => setConnectModalOpen(false)}
+                className="btn-primary text-xs">
+                Got it
+              </button>
+            </div>
+          ) : confirmPlatform ? (
+            <div className="text-center py-2">
+              <div className={`w-12 h-12 ${confirmPlatform.bg} rounded-xl flex items-center justify-center mx-auto mb-3 border ${confirmPlatform.border}`}>
+                {PLATFORM_ICONS[confirmPlatform.key] ? (
+                  <span className="scale-150">{PLATFORM_ICONS[confirmPlatform.key]}</span>
+                ) : (
+                  <Globe size={22} className={confirmPlatform.color} />
+                )}
+              </div>
+              <h3 className="text-sm font-semibold mb-1">Connect {confirmPlatform.label}</h3>
+              <p className="text-xs text-muted mb-4">{confirmPlatform.description}</p>
+
+              <div className="bg-surface-light rounded-lg p-3 mb-4 text-left">
+                <p className="text-[10px] text-muted uppercase tracking-wider mb-2">What happens next:</p>
+                <ul className="text-xs text-muted space-y-1.5">
+                  <li className="flex items-start gap-2">
+                    <ArrowRight size={10} className="text-gold mt-0.5 shrink-0" />
+                    <span>You&apos;ll be redirected to Zernio to authorize {confirmPlatform.label}</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight size={10} className="text-gold mt-0.5 shrink-0" />
+                    <span>Log in to your {confirmPlatform.label} account and grant permissions</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <ArrowRight size={10} className="text-gold mt-0.5 shrink-0" />
+                    <span>You&apos;ll be redirected back here when complete</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="flex items-center justify-center gap-2">
+                <button onClick={() => setConfirmPlatform(null)}
+                  className="px-4 py-2 text-xs text-muted hover:text-foreground transition-colors">
+                  Back
+                </button>
+                <button onClick={() => connectPlatform(confirmPlatform.key)}
+                  disabled={connectingPlatform === confirmPlatform.key}
+                  className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                  {connectingPlatform === confirmPlatform.key ? (
+                    <Loader size={12} className="animate-spin" />
+                  ) : (
+                    <Zap size={12} />
+                  )}
+                  {connectingPlatform === confirmPlatform.key ? "Connecting..." : `Connect ${confirmPlatform.label}`}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="text-xs text-muted mb-4">Select a platform to connect via Zernio OAuth:</p>
+              <div className="grid grid-cols-1 gap-2">
+                {SUPPORTED_PLATFORMS.map(p => {
+                  const alreadyConnected = connectedAccounts.find(a => a.platform === p.key && a.is_active);
+                  return (
+                    <button key={p.key}
+                      onClick={() => alreadyConnected ? undefined : setConfirmPlatform(p)}
+                      disabled={!!alreadyConnected}
+                      className={`flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${
+                        alreadyConnected
+                          ? "bg-surface-light/50 border-border opacity-60 cursor-default"
+                          : `${p.bg} ${p.border} hover:scale-[1.01] cursor-pointer`
+                      }`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${p.bg} border ${p.border}`}>
+                        {PLATFORM_ICONS[p.key] || <Globe size={14} />}
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-xs font-medium">{p.label}</span>
+                        <p className="text-[10px] text-muted">{p.description}</p>
+                      </div>
+                      {alreadyConnected ? (
+                        <span className="flex items-center gap-1 text-[10px] text-emerald-400">
+                          <Check size={10} /> Connected
+                        </span>
+                      ) : (
+                        <ArrowRight size={14} className="text-muted" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Show already-connected accounts with disconnect option */}
+              {connectedAccounts.filter(a => a.is_active).length > 0 && (
+                <div className="mt-4 pt-4 border-t border-border">
+                  <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Connected Accounts</p>
+                  <div className="space-y-1.5">
+                    {connectedAccounts.filter(a => a.is_active).map(account => (
+                      <div key={account.id} className="flex items-center justify-between p-2 rounded-lg bg-surface-light">
+                        <div className="flex items-center gap-2">
+                          <span className={`w-1.5 h-1.5 rounded-full ${account.status === "active" ? "bg-emerald-400" : "bg-red-400"}`} />
+                          {PLATFORM_ICONS[account.platform] || <Globe size={12} />}
+                          <span className="text-xs">{account.account_name || account.platform}</span>
+                          {account.status === "expired" && (
+                            <span className="text-[8px] bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded">Token Expired</span>
+                          )}
+                        </div>
+                        <button onClick={() => disconnectAccount(account)}
+                          disabled={disconnectingId === account.id}
+                          className="text-[10px] text-red-400 hover:text-red-300 transition-colors disabled:opacity-50">
+                          {disconnectingId === account.id ? <Loader size={10} className="animate-spin" /> : "Disconnect"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </Modal>
 
       {/* Tabs */}
       <div className="tab-group w-fit flex-wrap">

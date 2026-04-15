@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
   const status = searchParams.get("status");
   const industry = searchParams.get("industry");
   const source = searchParams.get("source");
+  const clientId = searchParams.get("client_id");
   // Sanitize search input — strip wildcard characters to prevent ilike abuse
   const rawSearch = searchParams.get("search");
   const search = rawSearch ? rawSearch.replace(/[%_\\]/g, "") : null;
@@ -26,6 +27,7 @@ export async function GET(request: NextRequest) {
     .order("scraped_at", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
+  if (clientId) query = query.eq("client_id", clientId);
   if (status) query = query.eq("status", status);
   if (industry) query = query.eq("industry", industry);
   if (source) query = query.eq("source", source);

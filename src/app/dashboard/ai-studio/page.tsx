@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import {
   Mic, ImagePlus, Scissors, Film, Music, Volume2, Layers, Sparkles,
   Upload, Download, Play, Loader, X,
-  Wand2, Zap, Copy,
+  Wand2, Zap, Copy, Palette, AlertTriangle,
   ArrowUpRight, FileAudio, Brain
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -22,6 +22,7 @@ interface JobResult {
 // ── Tool configs ─────────────────────────────────────────────────
 const TOOLS = [
   { id: "transcribe", name: "Transcribe", desc: "Audio/video to text with timestamps", icon: Mic, color: "#60a5fa", tag: "Whisper V3" },
+  { id: "image-gen", name: "Image Gen", desc: "Generate images from text prompts", icon: Palette, color: "#818cf8", tag: "FLUX/DALL-E" },
   { id: "upscale", name: "Upscale", desc: "4x AI image upscaling", icon: ArrowUpRight, color: "#34d399", tag: "Real-ESRGAN" },
   { id: "remove-bg", name: "Remove BG", desc: "One-click background removal", icon: Scissors, color: "#f472b6", tag: "REMBG/SAM" },
   { id: "img-to-video", name: "Image to Video", desc: "Animate still images into video", icon: Film, color: "#a78bfa", tag: "SVD" },
@@ -51,7 +52,7 @@ export default function AIStudioPage() {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-muted bg-surface-light px-2 py-1 rounded-lg">
-            8 tools available
+            9 tools available
           </span>
         </div>
       </div>
@@ -94,6 +95,7 @@ export default function AIStudioPage() {
       {/* Active tool panel */}
       <div className="bg-surface border border-border rounded-2xl p-5">
         {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
+        {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} />}
         {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
         {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
         {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
@@ -130,7 +132,7 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
       const fd = new FormData();
       fd.append("file", file);
       fd.append("language", language);
-      const res = await fetch("/api/ai/transcribe", { method: "POST", body: fd });
+      const res = await fetch("/api/ai-studio/transcribe", { method: "POST", body: fd });
       const data = await res.json();
       if (data.text) {
         setTranscript(data.text);
@@ -227,6 +229,156 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
   );
 }
 
+// ── IMAGE GEN TOOL ──────────────────────────────────────────────
+function ImageGenTool({ processing, setProcessing }: ToolProps) {
+  const [prompt, setPrompt] = useState("");
+  const [style, setStyle] = useState("");
+  const [size, setSize] = useState("1024x1024");
+  const [images, setImages] = useState<string[]>([]);
+  const [setupRequired, setSetupRequired] = useState(false);
+
+  const styles = [
+    { value: "", label: "None" },
+    { value: "photorealistic", label: "Photo" },
+    { value: "modern", label: "Modern" },
+    { value: "minimalist", label: "Minimal" },
+    { value: "bold", label: "Bold" },
+    { value: "luxury", label: "Luxury" },
+    { value: "dark", label: "Dark" },
+    { value: "vintage", label: "Vintage" },
+    { value: "playful", label: "Playful" },
+  ];
+
+  const sizes = [
+    { value: "1024x1024", label: "1:1" },
+    { value: "1024x1792", label: "9:16" },
+    { value: "1792x1024", label: "16:9" },
+    { value: "768x1024", label: "3:4" },
+  ];
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) return toast.error("Enter a prompt");
+    setProcessing(true);
+    setImages([]);
+    setSetupRequired(false);
+    try {
+      const [w, h] = size.split("x").map(Number);
+      const res = await fetch("/api/ai-studio/image-gen", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          width: w,
+          height: h,
+          style: style || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.images) {
+        setImages(data.images);
+        toast.success(`Generated ${data.images.length} image(s)`);
+      } else if (data.job_id) {
+        toast.success("Generating... check back in a moment");
+      } else if (data.error === "setup_required") {
+        setSetupRequired(true);
+        toast.error("API key not configured");
+      } else {
+        toast.error(data.error || "Generation failed");
+      }
+    } catch { toast.error("Generation failed"); }
+    setProcessing(false);
+  };
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-4">
+        <Palette size={16} className="text-indigo-400" />
+        <h2 className="text-sm font-bold text-foreground">Image Generator</h2>
+        <span className="text-[9px] bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded-full">FLUX / DALL-E</span>
+      </div>
+
+      {setupRequired && (
+        <div className="mb-4 p-3 rounded-xl border border-yellow-500/20 bg-yellow-500/5 flex items-start gap-2">
+          <AlertTriangle size={14} className="text-yellow-400 mt-0.5 shrink-0" />
+          <div>
+            <p className="text-xs font-medium text-yellow-400">Setup Required</p>
+            <p className="text-[10px] text-muted mt-0.5">
+              Configure REPLICATE_API_TOKEN, RUNPOD_API_KEY, or OPENAI_API_KEY in your environment to enable image generation.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-3">
+          <textarea
+            value={prompt}
+            onChange={e => setPrompt(e.target.value)}
+            placeholder="Describe the image you want to create... e.g. 'A modern tech startup office with warm lighting, clean desks, and large windows overlooking a city skyline'"
+            className="w-full h-24 text-xs bg-surface-light border border-border rounded-xl px-3 py-2 text-foreground resize-none"
+          />
+
+          <div>
+            <span className="text-[10px] text-muted mb-1 block">Style</span>
+            <div className="flex flex-wrap gap-1.5">
+              {styles.map(s => (
+                <button key={s.value} onClick={() => setStyle(s.value)}
+                  className={`text-[10px] px-2.5 py-1 rounded-lg ${
+                    style === s.value
+                      ? "bg-indigo-500 text-white font-semibold"
+                      : "bg-surface-light text-muted"
+                  }`}>{s.label}</button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <span className="text-[10px] text-muted mb-1 block">Aspect Ratio</span>
+            <div className="flex gap-1.5">
+              {sizes.map(s => (
+                <button key={s.value} onClick={() => setSize(s.value)}
+                  className={`text-[10px] px-2.5 py-1 rounded-lg ${
+                    size === s.value
+                      ? "bg-indigo-500 text-white font-semibold"
+                      : "bg-surface-light text-muted"
+                  }`}>{s.label}</button>
+              ))}
+            </div>
+          </div>
+
+          <button onClick={handleGenerate} disabled={processing || !prompt.trim()}
+            className="w-full px-4 py-2.5 bg-indigo-500 text-white text-xs font-semibold rounded-lg hover:bg-indigo-600 disabled:opacity-40 flex items-center justify-center gap-1.5">
+            {processing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+            Generate Image
+          </button>
+        </div>
+
+        <div className="bg-surface-light rounded-xl p-4 min-h-[200px] flex items-center justify-center">
+          {images.length > 0 ? (
+            <div className="text-center space-y-2">
+              {images.map((img, i) => (
+                <div key={i}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={img} alt={`Generated ${i + 1}`} className="max-h-[300px] mx-auto rounded-lg" />
+                  <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
+                    className="inline-flex items-center gap-1 mt-1 text-[10px] text-indigo-400 hover:underline">
+                    <Download size={10} /> Download
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center">
+              <Palette size={32} className="mx-auto mb-2 text-muted/30" />
+              <p className="text-xs text-muted">Generated image will appear here</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── UPSCALE TOOL ─────────────────────────────────────────────────
 function UpscaleTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -251,7 +403,7 @@ function UpscaleTool({ processing, setProcessing }: ToolProps) {
       fd.append("file", file);
       fd.append("scale", String(scale));
       fd.append("face_enhance", String(faceEnhance));
-      const res = await fetch("/api/ai/upscale", { method: "POST", body: fd });
+      const res = await fetch("/api/ai-studio/upscale", { method: "POST", body: fd });
       const data = await res.json();
       if (data.image) {
         const img = data.image.startsWith("data:") ? data.image : `data:image/png;base64,${data.image}`;
@@ -347,7 +499,7 @@ function RemoveBgTool({ processing, setProcessing }: ToolProps) {
       const fd = new FormData();
       fd.append("file", file);
       if (bgColor) fd.append("bg_color", bgColor);
-      const res = await fetch("/api/ai/remove-bg", { method: "POST", body: fd });
+      const res = await fetch("/api/ai-studio/remove-bg", { method: "POST", body: fd });
       const data = await res.json();
       if (data.image) {
         const img = data.image.startsWith("data:") ? data.image : `data:image/png;base64,${data.image}`;

@@ -59,59 +59,17 @@ interface ScriptTemplate {
 }
 
 /* ── Mock Data ── */
-const MOCK_AGENTS: VoiceAgent[] = [
-  { id: "a1", name: "ShortStack Cold Caller", voice: "Alex - Professional Male", language: "English", status: "active", callsToday: 47, successRate: 34, avgDuration: 142 },
-  { id: "a2", name: "Appointment Setter", voice: "Sarah - Warm Female", language: "English", status: "active", callsToday: 23, successRate: 52, avgDuration: 98 },
-  { id: "a3", name: "Follow-Up Agent", voice: "Marcus - Casual Male", language: "English", status: "inactive", callsToday: 0, successRate: 41, avgDuration: 67 },
-  { id: "a4", name: "Spanish Outreach", voice: "Maria - Professional Female", language: "Spanish", status: "active", callsToday: 15, successRate: 29, avgDuration: 156 },
-];
+const MOCK_AGENTS: VoiceAgent[] = [];
 
-const MOCK_CALLS: CallRecord[] = [
-  { id: "c1", agent: "ShortStack Cold Caller", contactName: "Dr. James Wilson", phone: "+1 (305) 555-0142", duration: 187, outcome: "qualified", sentiment: "positive", startTime: "10:23 AM", cost: 0.14, hasTranscript: true },
-  { id: "c2", agent: "ShortStack Cold Caller", contactName: "Lisa Chen", phone: "+1 (415) 555-0198", duration: 45, outcome: "not_interested", sentiment: "negative", startTime: "10:15 AM", cost: 0.04, hasTranscript: true },
-  { id: "c3", agent: "Appointment Setter", contactName: "Mike Rodriguez", phone: "+1 (786) 555-0234", duration: 210, outcome: "callback", sentiment: "neutral", startTime: "10:08 AM", cost: 0.16, hasTranscript: true },
-  { id: "c4", agent: "ShortStack Cold Caller", contactName: "Jennifer Park", phone: "+1 (212) 555-0167", duration: 0, outcome: "no_answer", sentiment: "neutral", startTime: "10:01 AM", cost: 0.01, hasTranscript: false },
-  { id: "c5", agent: "Appointment Setter", contactName: "Robert Davis", phone: "+1 (323) 555-0289", duration: 156, outcome: "qualified", sentiment: "positive", startTime: "9:54 AM", cost: 0.12, hasTranscript: true },
-  { id: "c6", agent: "ShortStack Cold Caller", contactName: "Amanda Foster", phone: "+1 (555) 555-0345", duration: 32, outcome: "voicemail", sentiment: "neutral", startTime: "9:48 AM", cost: 0.03, hasTranscript: true },
-  { id: "c7", agent: "Spanish Outreach", contactName: "Carlos Mendez", phone: "+1 (305) 555-0456", duration: 198, outcome: "qualified", sentiment: "positive", startTime: "9:40 AM", cost: 0.15, hasTranscript: true },
-  { id: "c8", agent: "ShortStack Cold Caller", contactName: "Susan Thompson", phone: "+1 (404) 555-0567", duration: 78, outcome: "callback", sentiment: "neutral", startTime: "9:32 AM", cost: 0.06, hasTranscript: true },
-];
+const MOCK_CALLS: CallRecord[] = [];
 
-const MOCK_TRANSCRIPT: TranscriptEntry[] = [
-  { speaker: "ai", text: "Hi, is this Dr. Wilson? This is Alex from ShortStack Digital. How are you doing today?", timestamp: "0:00", sentiment: "neutral" },
-  { speaker: "human", text: "Yes, this is Dr. Wilson. What's this about?", timestamp: "0:05", sentiment: "neutral" },
-  { speaker: "ai", text: "Great to connect with you, Dr. Wilson! I noticed your practice in Miami and wanted to share how we've helped dental practices like yours get 30-40% more new patients through AI-powered marketing.", timestamp: "0:08", sentiment: "positive" },
-  { speaker: "human", text: "Hmm, that sounds interesting. We've been trying to grow our patient base actually.", timestamp: "0:22", sentiment: "positive" },
-  { speaker: "ai", text: "Perfect! We specifically work with dental practices and use AI to handle your social media, run targeted ads, and even automate follow-ups with leads. Would you be open to a quick 15-minute demo?", timestamp: "0:28", sentiment: "positive" },
-  { speaker: "human", text: "Sure, I could do that. When are you available?", timestamp: "0:42", sentiment: "positive" },
-  { speaker: "ai", text: "Wonderful! I have availability tomorrow at 2 PM or Thursday at 10 AM. Which works better for you?", timestamp: "0:46", sentiment: "positive" },
-  { speaker: "human", text: "Thursday at 10 works. Send me the details.", timestamp: "0:52", sentiment: "positive" },
-];
+const MOCK_TRANSCRIPT: TranscriptEntry[] = [];
 
-const MOCK_VOICES: VoiceClone[] = [
-  { id: "v1", name: "Alex - Professional Male", gender: "Male", accent: "American", sampleCount: 12, status: "ready" },
-  { id: "v2", name: "Sarah - Warm Female", gender: "Female", accent: "American", sampleCount: 8, status: "ready" },
-  { id: "v3", name: "Marcus - Casual Male", gender: "Male", accent: "American", sampleCount: 15, status: "ready" },
-  { id: "v4", name: "Maria - Professional Female", gender: "Female", accent: "Spanish", sampleCount: 10, status: "ready" },
-  { id: "v5", name: "Custom Brand Voice", gender: "Male", accent: "British", sampleCount: 3, status: "training" },
-];
+const MOCK_VOICES: VoiceClone[] = [];
 
-const MOCK_SCRIPTS: ScriptTemplate[] = [
-  { id: "s1", name: "Cold Intro - Dental", category: "cold-call", variables: ["business_name", "industry", "pain_point"], openRate: 72, conversionRate: 18 },
-  { id: "s2", name: "Cold Intro - Legal", category: "cold-call", variables: ["business_name", "specialty", "location"], openRate: 65, conversionRate: 14 },
-  { id: "s3", name: "Follow-Up After Demo", category: "follow-up", variables: ["contact_name", "demo_date", "proposal_link"], openRate: 89, conversionRate: 34 },
-  { id: "s4", name: "Appointment Reminder", category: "reminder", variables: ["contact_name", "date", "time"], openRate: 95, conversionRate: 82 },
-  { id: "s5", name: "Reactivation - Dormant Lead", category: "reactivation", variables: ["contact_name", "last_contact", "new_offer"], openRate: 58, conversionRate: 12 },
-  { id: "s6", name: "Review Request", category: "retention", variables: ["contact_name", "service_date", "review_link"], openRate: 78, conversionRate: 45 },
-];
+const MOCK_SCRIPTS: ScriptTemplate[] = [];
 
-const MOCK_CONTACTS = [
-  { id: "ct1", name: "Acme Dental List", count: 450, lastCalled: "2h ago", status: "active" },
-  { id: "ct2", name: "Miami Lawyers", count: 230, lastCalled: "1d ago", status: "paused" },
-  { id: "ct3", name: "Gym Owners - Texas", count: 180, lastCalled: "3d ago", status: "completed" },
-  { id: "ct4", name: "Warm Leads Q1", count: 67, lastCalled: "4h ago", status: "active" },
-  { id: "ct5", name: "Reactivation List", count: 320, lastCalled: "Never", status: "new" },
-];
+const MOCK_CONTACTS: { id: string; name: string; count: number; lastCalled: string; status: string }[] = [];
 
 const TABS = ["Dashboard", "Calls", "Transcripts", "Sentiment", "Voices", "Scripts", "A/B Tests", "Scheduling", "Contacts", "Analytics", "Compliance", "Transfer Rules"] as const;
 type Tab = typeof TABS[number];
@@ -149,8 +107,10 @@ export default function ElevenAgentsPage() {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [liveAgents, setLiveAgents] = useState<any[]>([]);
   const [liveConversations, setLiveConversations] = useState<any[]>([]);
+  const [liveVoices, setLiveVoices] = useState<any[]>([]);
   /* eslint-enable @typescript-eslint/no-explicit-any */
   const [apiLoading, setApiLoading] = useState(false);
+  const [voicesLoading, setVoicesLoading] = useState(false);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [createForm, setCreateForm] = useState({ name: "", firstMessage: "", systemPrompt: "", voiceId: "", maxDuration: 300 });
   const [createLoading, setCreateLoading] = useState(false);
@@ -162,8 +122,8 @@ export default function ElevenAgentsPage() {
     setApiError("");
     try {
       const [agentsRes, convosRes] = await Promise.all([
-        fetch("/api/agents/eleven?type=agents"),
-        fetch("/api/agents/eleven?type=conversations"),
+        fetch("/api/eleven-agents"),
+        fetch("/api/eleven-agents/calls"),
       ]);
       if (agentsRes.ok) {
         const data = await agentsRes.json();
@@ -182,7 +142,21 @@ export default function ElevenAgentsPage() {
     setApiLoading(false);
   }, []);
 
-  useEffect(() => { loadAgents(); }, [loadAgents]);
+  const loadVoices = useCallback(async () => {
+    setVoicesLoading(true);
+    try {
+      const res = await fetch("/api/eleven-agents/voices");
+      if (res.ok) {
+        const data = await res.json();
+        setLiveVoices(data.voices || []);
+      }
+    } catch {
+      // silent — voices are supplementary
+    }
+    setVoicesLoading(false);
+  }, []);
+
+  useEffect(() => { loadAgents(); loadVoices(); }, [loadAgents, loadVoices]);
 
   async function handleCreateAgent() {
     if (!createForm.name.trim()) { setApiError("Agent name is required"); return; }
@@ -190,7 +164,7 @@ export default function ElevenAgentsPage() {
     setApiError("");
     setApiSuccess("");
     try {
-      const res = await fetch("/api/agents/eleven", {
+      const res = await fetch("/api/eleven-agents", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -221,7 +195,7 @@ export default function ElevenAgentsPage() {
     if (!confirm("Delete this agent permanently from ElevenLabs?")) return;
     setApiError("");
     try {
-      const res = await fetch("/api/agents/eleven", {
+      const res = await fetch("/api/eleven-agents", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "delete_agent", agentId }),
@@ -239,17 +213,11 @@ export default function ElevenAgentsPage() {
   }
 
   async function handleLoadDefaults() {
-    try {
-      const res = await fetch("/api/agents/eleven?type=defaults");
-      if (res.ok) {
-        const data = await res.json();
-        setCreateForm(prev => ({
-          ...prev,
-          firstMessage: data.firstMessage || prev.firstMessage,
-          systemPrompt: data.prompt || prev.systemPrompt,
-        }));
-      }
-    } catch {}
+    setCreateForm(prev => ({
+      ...prev,
+      firstMessage: prev.firstMessage || "Hi! This is Alex from ShortStack. We help businesses automate their outreach. Do you have a moment to chat?",
+      systemPrompt: prev.systemPrompt || "You are Alex, a friendly and professional sales representative for ShortStack. Your goal is to qualify leads and book demo appointments. Be concise, listen actively, and handle objections gracefully.",
+    }));
   }
 
   const totalCallsToday = agents.reduce((sum, a) => sum + a.callsToday, 0);
@@ -315,7 +283,7 @@ export default function ElevenAgentsPage() {
             <p className="text-xs text-muted">AI voice agents for outbound cold calling &amp; inbound handling</p>
           </div>
         </div>
-        <button onClick={() => loadAgents()} disabled={apiLoading}
+        <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
           className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-xs text-muted hover:text-foreground transition-all disabled:opacity-50">
           <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
         </button>
@@ -328,7 +296,7 @@ export default function ElevenAgentsPage() {
           { label: "Qualified", value: qualifiedCalls, color: "text-green-400" },
           { label: "Success Rate", value: `${avgSuccessRate}%`, color: avgSuccessRate >= 30 ? "text-green-400" : "text-yellow-400" },
           { label: "Active Agents", value: agents.filter(a => a.status === "active").length, color: "text-purple-400" },
-          { label: "Avg Duration", value: `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s`, color: "text-foreground" },
+          { label: "Avg Duration", value: agents.length ? `${Math.round(agents.reduce((s, a) => s + a.avgDuration, 0) / agents.length)}s` : "—", color: "text-foreground" },
           { label: "Cost Today", value: `$${totalCost.toFixed(2)}`, color: "text-cyan-400" },
         ].map((s, i) => (
           <div key={i} className="card p-3 text-center">
@@ -551,40 +519,96 @@ export default function ElevenAgentsPage() {
       {/* ═══ CALLS TAB ═══ */}
       {activeTab === "Calls" && (
         <div className="space-y-3">
-          <div className="flex gap-2">
-            {["all", "qualified", "callback", "not_interested", "voicemail", "no_answer"].map(f => (
-              <button key={f} onClick={() => setCallFilter(f)}
-                className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${
-                  callFilter === f ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
-                }`}>{f.replace("_", " ")}</button>
-            ))}
-          </div>
-          <div className="rounded-xl border border-border overflow-hidden">
-            <div className="grid grid-cols-8 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
-              <div className="col-span-2">Contact</div>
-              <div>Agent</div>
-              <div>Duration</div>
-              <div>Outcome</div>
-              <div>Sentiment</div>
-              <div>Cost</div>
-              <div>Time</div>
-            </div>
-            {filteredCalls.map(call => (
-              <div key={call.id} className="grid grid-cols-8 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[10px] items-center hover:bg-surface-light/50 cursor-pointer"
-                onClick={() => setSelectedCall(selectedCall === call.id ? null : call.id)}>
-                <div className="col-span-2">
-                  <p className="font-medium">{call.contactName}</p>
-                  <p className="text-[9px] text-muted font-mono">{call.phone}</p>
-                </div>
-                <div className="text-muted truncate">{call.agent}</div>
-                <div className="font-mono">{formatDuration(call.duration)}</div>
-                <div><span className={`px-1.5 py-0.5 rounded text-[8px] ${outcomeColors[call.outcome]}`}>{call.outcome.replace("_", " ")}</span></div>
-                <div className={sentimentColors[call.sentiment]}>{call.sentiment}</div>
-                <div className="font-mono text-cyan-400">${call.cost.toFixed(2)}</div>
-                <div className="text-muted">{call.startTime}</div>
+          {liveConversations.length > 0 ? (
+            <>
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold flex items-center gap-2">
+                  <PhoneCall size={14} /> Call History
+                  <span className="text-[9px] text-muted font-normal">({liveConversations.length} conversations)</span>
+                </h2>
+                <button onClick={() => loadAgents()} disabled={apiLoading}
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all disabled:opacity-50 flex items-center gap-1">
+                  <RefreshCw size={10} className={apiLoading ? "animate-spin" : ""} /> Refresh
+                </button>
               </div>
-            ))}
-          </div>
+              <div className="rounded-xl border border-border overflow-hidden">
+                <div className="grid grid-cols-5 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
+                  <div>Conversation ID</div>
+                  <div>Agent</div>
+                  <div>Status</div>
+                  <div>Duration</div>
+                  <div>Started</div>
+                </div>
+                {liveConversations.map((convo: Record<string, unknown>, i: number) => {
+                  const convId = (convo.conversation_id || convo.id || "") as string;
+                  const status = (convo.status || "unknown") as string;
+                  const agentId = (convo.agent_id || "") as string;
+                  const startTime = convo.start_time_unix_secs
+                    ? new Date((convo.start_time_unix_secs as number) * 1000).toLocaleString()
+                    : (convo.created_at as string) || "";
+                  const callDuration = (convo.call_duration_secs as number) || 0;
+                  return (
+                    <div key={convId || i} className="grid grid-cols-5 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[10px] items-center hover:bg-surface-light/50">
+                      <div className="font-mono text-muted truncate">{convId}</div>
+                      <div className="text-muted truncate">{agentId ? `${agentId.slice(0, 12)}...` : "---"}</div>
+                      <div>
+                        <span className={`px-1.5 py-0.5 rounded text-[8px] ${
+                          status === "done" ? "bg-green-500/10 text-green-400" : status === "failed" ? "bg-red-500/10 text-red-400" : "bg-yellow-500/10 text-yellow-400"
+                        }`}>{status}</span>
+                      </div>
+                      <div className="font-mono">{callDuration > 0 ? formatDuration(callDuration) : "---"}</div>
+                      <div className="text-muted">{startTime}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                {["all", "qualified", "callback", "not_interested", "voicemail", "no_answer"].map(f => (
+                  <button key={f} onClick={() => setCallFilter(f)}
+                    className={`text-[10px] px-3 py-1.5 rounded-lg border capitalize transition-all ${
+                      callFilter === f ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                    }`}>{f.replace("_", " ")}</button>
+                ))}
+              </div>
+              {filteredCalls.length > 0 ? (
+                <div className="rounded-xl border border-border overflow-hidden">
+                  <div className="grid grid-cols-8 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light">
+                    <div className="col-span-2">Contact</div>
+                    <div>Agent</div>
+                    <div>Duration</div>
+                    <div>Outcome</div>
+                    <div>Sentiment</div>
+                    <div>Cost</div>
+                    <div>Time</div>
+                  </div>
+                  {filteredCalls.map(call => (
+                    <div key={call.id} className="grid grid-cols-8 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[10px] items-center hover:bg-surface-light/50 cursor-pointer"
+                      onClick={() => setSelectedCall(selectedCall === call.id ? null : call.id)}>
+                      <div className="col-span-2">
+                        <p className="font-medium">{call.contactName}</p>
+                        <p className="text-[9px] text-muted font-mono">{call.phone}</p>
+                      </div>
+                      <div className="text-muted truncate">{call.agent}</div>
+                      <div className="font-mono">{formatDuration(call.duration)}</div>
+                      <div><span className={`px-1.5 py-0.5 rounded text-[8px] ${outcomeColors[call.outcome]}`}>{call.outcome.replace("_", " ")}</span></div>
+                      <div className={sentimentColors[call.sentiment]}>{call.sentiment}</div>
+                      <div className="font-mono text-cyan-400">${call.cost.toFixed(2)}</div>
+                      <div className="text-muted">{call.startTime}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="p-6 text-center border border-dashed border-border rounded-lg">
+                  <PhoneCall size={24} className="text-muted mx-auto mb-2" />
+                  <p className="text-xs text-muted">No call history yet</p>
+                  <p className="text-[10px] text-muted mt-1">Create an agent and make calls to see live data here</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -671,29 +695,58 @@ export default function ElevenAgentsPage() {
       {/* ═══ VOICES TAB ═══ */}
       {activeTab === "Voices" && (
         <div className="card p-4">
-          <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Mic size={14} className="text-gold" /> Voice Clone Manager</h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Mic size={14} className="text-gold" /> ElevenLabs Voices
+              {voicesLoading && <Loader2 size={12} className="animate-spin text-muted" />}
+              <span className="text-[9px] text-muted font-normal">({liveVoices.length} available)</span>
+            </h2>
+            <button onClick={() => loadVoices()} disabled={voicesLoading}
+              className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all disabled:opacity-50 flex items-center gap-1">
+              <RefreshCw size={10} className={voicesLoading ? "animate-spin" : ""} /> Refresh
+            </button>
+          </div>
           <div className="space-y-2">
-            {MOCK_VOICES.map(v => (
-              <div key={v.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                  <Volume2 size={16} className="text-purple-400" />
+            {liveVoices.length > 0 ? liveVoices.map((v: Record<string, unknown>) => {
+              const voiceId = (v.voice_id || v.id || "") as string;
+              const name = (v.name || "Unnamed") as string;
+              const labels = v.labels as Record<string, string> | undefined;
+              const category = (v.category || "") as string;
+              const gender = labels?.gender || labels?.Gender || "";
+              const accent = labels?.accent || labels?.Accent || "";
+              const useCase = labels?.use_case || labels?.["use case"] || "";
+              return (
+                <div key={voiceId} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                    <Volume2 size={16} className="text-purple-400" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-medium">{name}</p>
+                    <p className="text-[9px] text-muted truncate">
+                      {[gender, accent, useCase, category].filter(Boolean).join(" \u00b7 ")}
+                    </p>
+                  </div>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">ready</span>
+                  <button onClick={() => {
+                    navigator.clipboard.writeText(voiceId);
+                    setApiSuccess(`Copied voice ID: ${voiceId}`);
+                    setTimeout(() => setApiSuccess(""), 2000);
+                  }}
+                    className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all flex items-center gap-1">
+                    <Copy size={10} /> Copy ID
+                  </button>
                 </div>
-                <div className="flex-1">
-                  <p className="text-[11px] font-medium">{v.name}</p>
-                  <p className="text-[9px] text-muted">{v.gender} &middot; {v.accent} &middot; {v.sampleCount} samples</p>
-                </div>
-                <span className={`text-[9px] px-2 py-0.5 rounded-full ${
-                  v.status === "ready" ? "bg-green-500/10 text-green-400" :
-                  v.status === "training" ? "bg-yellow-500/10 text-yellow-400" :
-                  "bg-surface-light text-muted"
-                }`}>{v.status}</span>
-                <button onClick={() => setPlayingVoice(playingVoice === v.id ? null : v.id)}
-                  className="text-[9px] px-2 py-1 rounded border border-border text-muted hover:text-foreground transition-all flex items-center gap-1">
-                  {playingVoice === v.id ? <Pause size={10} /> : <Play size={10} />}
-                  {playingVoice === v.id ? "Stop" : "Preview"}
+              );
+            }) : !voicesLoading ? (
+              <div className="p-6 text-center border border-dashed border-border rounded-lg">
+                <Volume2 size={24} className="text-muted mx-auto mb-2" />
+                <p className="text-xs text-muted">No voices loaded</p>
+                <button onClick={() => loadVoices()}
+                  className="mt-2 text-[10px] px-3 py-1.5 bg-gold/10 text-gold rounded-lg border border-gold/20 hover:bg-gold/20 transition-all">
+                  Load Voices
                 </button>
               </div>
-            ))}
+            ) : null}
           </div>
         </div>
       )}

@@ -49,75 +49,21 @@ const INSTALL_STEPS_EXTENSION = [
 
 /* ── Monitoring mock data ──────────────────────────────────── */
 
-const MOCK_ACTIVITY = [
-  { id: "a1", agent: "Content Engine", action: "Generated 5 Instagram captions", status: "success", time: "2 min ago", cpu: 12 },
-  { id: "a2", agent: "Lead Finder", action: "Scraped 48 leads from Google Maps", status: "success", time: "8 min ago", cpu: 34 },
-  { id: "a3", agent: "Outreach Bot", action: "Sent 12 cold DMs on Instagram", status: "success", time: "15 min ago", cpu: 8 },
-  { id: "a4", agent: "SEO Agent", action: "Analyzed 3 competitor keywords", status: "warning", time: "22 min ago", cpu: 18 },
-  { id: "a5", agent: "Invoice Agent", action: "Chased 2 overdue invoices", status: "success", time: "1h ago", cpu: 5 },
-  { id: "a6", agent: "Retention Agent", action: "Flagged 1 at-risk client", status: "error", time: "2h ago", cpu: 9 },
-];
+const MOCK_ACTIVITY: Array<{ id: string; agent: string; action: string; status: string; time: string; cpu: number }> = [];
 
-const MOCK_QUEUE: Array<{ id: string; title: string; priority: "high" | "medium" | "low"; status: "pending" | "running" | "done"; agent: string; eta: string }> = [
-  { id: "q1", title: "Generate weekly content calendar", priority: "high", status: "running", agent: "Content Engine", eta: "~2 min" },
-  { id: "q2", title: "Scrape dentists in Miami", priority: "high", status: "pending", agent: "Lead Finder", eta: "~5 min" },
-  { id: "q3", title: "Send follow-up emails batch", priority: "medium", status: "pending", agent: "Outreach Bot", eta: "~8 min" },
-  { id: "q4", title: "Update client health scores", priority: "medium", status: "pending", agent: "Retention Agent", eta: "~3 min" },
-  { id: "q5", title: "Create brand kit for Acme", priority: "low", status: "done", agent: "Design Agent", eta: "Done" },
-];
+const MOCK_QUEUE: Array<{ id: string; title: string; priority: "high" | "medium" | "low"; status: "pending" | "running" | "done"; agent: string; eta: string }> = [];
 
-const MOCK_LOGS = [
-  { ts: "14:32:01", level: "info", agent: "Content Engine", msg: "Starting content generation for client #42" },
-  { ts: "14:32:03", level: "info", agent: "Content Engine", msg: "Fetched brand voice profile successfully" },
-  { ts: "14:32:08", level: "info", agent: "Content Engine", msg: "Generated 5/5 captions, writing to DB" },
-  { ts: "14:32:09", level: "success", agent: "Content Engine", msg: "Task completed in 8.2s" },
-  { ts: "14:31:45", level: "info", agent: "Lead Finder", msg: "Initiating Google Maps scrape: dentist, Miami FL" },
-  { ts: "14:31:50", level: "warn", agent: "Lead Finder", msg: "Rate limit warning — slowing requests" },
-  { ts: "14:31:58", level: "info", agent: "Lead Finder", msg: "Scraped 48 results, filtering duplicates" },
-  { ts: "14:32:00", level: "error", agent: "Retention Agent", msg: "Failed to fetch health data: timeout after 30s" },
-  { ts: "14:30:12", level: "info", agent: "Outreach Bot", msg: "Queued 12 DMs for delivery via Instagram API" },
-  { ts: "14:30:15", level: "success", agent: "Outreach Bot", msg: "All 12 DMs sent successfully" },
-];
+const MOCK_LOGS: Array<{ ts: string; level: string; agent: string; msg: string }> = [];
 
-const MOCK_ERRORS = [
-  { id: "e1", agent: "Retention Agent", error: "Timeout fetching client health data", time: "2h ago", retries: 2, resolved: false },
-  { id: "e2", agent: "SEO Agent", error: "Google API rate limit exceeded", time: "4h ago", retries: 3, resolved: true },
-  { id: "e3", agent: "Invoice Agent", error: "Stripe webhook signature mismatch", time: "1d ago", retries: 1, resolved: true },
-];
+const MOCK_ERRORS: Array<{ id: string; agent: string; error: string; time: string; retries: number; resolved: boolean }> = [];
 
-const MOCK_MARKETPLACE = [
-  { id: "m1", name: "Reddit Scraper", desc: "Scrape leads from Reddit threads", author: "ShortStack", installs: 234, rating: 4.8 },
-  { id: "m2", name: "Podcast Outreach", desc: "Find & pitch podcast hosts", author: "Community", installs: 89, rating: 4.5 },
-  { id: "m3", name: "Review Responder", desc: "Auto-reply to Google reviews", author: "ShortStack", installs: 512, rating: 4.9 },
-  { id: "m4", name: "Email Warmup", desc: "Warm up cold email domains", author: "Community", installs: 178, rating: 4.3 },
-  { id: "m5", name: "LinkedIn Scraper", desc: "Extract LinkedIn profile data", author: "ShortStack", installs: 345, rating: 4.7 },
-  { id: "m6", name: "Slack Notifier", desc: "Push agent events to Slack", author: "Community", installs: 156, rating: 4.6 },
-];
+const MOCK_MARKETPLACE: Array<{ id: string; name: string; desc: string; author: string; installs: number; rating: number }> = [];
 
-const MOCK_SCHEDULES = [
-  { id: "s1", agent: "Lead Finder", schedule: "Every day at 09:00", next: "Tomorrow 09:00", enabled: true },
-  { id: "s2", agent: "Outreach Bot", schedule: "Mon-Fri at 10:00", next: "Tomorrow 10:00", enabled: true },
-  { id: "s3", agent: "Content Engine", schedule: "Every Monday at 08:00", next: "Mon 08:00", enabled: true },
-  { id: "s4", agent: "Invoice Agent", schedule: "1st of month at 09:00", next: "May 1 09:00", enabled: false },
-  { id: "s5", agent: "Retention Agent", schedule: "Every day at 17:00", next: "Today 17:00", enabled: true },
-];
+const MOCK_SCHEDULES: Array<{ id: string; agent: string; schedule: string; next: string; enabled: boolean }> = [];
 
-const MOCK_VERSIONS = [
-  { ver: "v2.4.0", date: "Apr 14, 2026", changes: "Added Reddit scraper agent, improved lead scoring" },
-  { ver: "v2.3.2", date: "Apr 10, 2026", changes: "Fixed outreach rate limiter, added DM templates" },
-  { ver: "v2.3.0", date: "Apr 5, 2026", changes: "New content calendar generation, bulk actions" },
-  { ver: "v2.2.1", date: "Mar 28, 2026", changes: "Hotfix: Invoice agent Stripe webhook" },
-  { ver: "v2.2.0", date: "Mar 20, 2026", changes: "Agent marketplace launch, custom agent builder" },
-];
+const MOCK_VERSIONS: Array<{ ver: string; date: string; changes: string }> = [];
 
-const MOCK_METRICS = [
-  { label: "Tasks Completed", value: "1,247", change: "+12%", positive: true },
-  { label: "Avg Response Time", value: "3.2s", change: "-0.8s", positive: true },
-  { label: "Error Rate", value: "1.8%", change: "-0.3%", positive: true },
-  { label: "Uptime", value: "99.97%", change: "+0.02%", positive: true },
-  { label: "API Calls Today", value: "8,432", change: "+340", positive: true },
-  { label: "Cost Today", value: "$4.82", change: "-$0.41", positive: true },
-];
+const MOCK_METRICS: Array<{ label: string; value: string; change: string; positive: boolean }> = [];
 
 const MAIN_TABS = ["Downloads", "Activity", "Queue", "Logs", "Errors", "Schedule", "Marketplace", "Metrics", "Config", "Versions"] as const;
 type Tab = typeof MAIN_TABS[number];

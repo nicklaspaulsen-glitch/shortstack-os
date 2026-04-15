@@ -12,86 +12,35 @@ import {
 const tabs = ["Servers", "Commands", "Auto-Roles", "Welcome", "Moderation", "Analytics", "Events", "Embeds", "Webhooks", "Announcements", "Insights"] as const;
 type Tab = (typeof tabs)[number];
 
-const mockServers = [
-  { id: "1", name: "ShortStack HQ", guildId: "112233", members: 47, channels: 12, online: 32, status: "healthy", client: "Internal", invite: "https://discord.gg/abc123" },
-  { id: "2", name: "Acme Corp Portal", guildId: "445566", members: 18, channels: 8, online: 7, status: "healthy", client: "Acme Corp", invite: "https://discord.gg/def456" },
-  { id: "3", name: "Starter Co Hub", guildId: "778899", members: 12, channels: 7, online: 3, status: "warning", client: "Starter Co", invite: "https://discord.gg/ghi789" },
-  { id: "4", name: "BigBrand Community", guildId: "101112", members: 156, channels: 15, online: 64, status: "healthy", client: "BigBrand", invite: "https://discord.gg/jkl012" },
-];
+const mockServers: { id: string; name: string; guildId: string; members: number; channels: number; online: number; status: string; client: string; invite: string }[] = [];
 
-const mockChannels = [
-  { id: "c1", name: "welcome", type: "text", synced: true, messages: 12 },
-  { id: "c2", name: "announcements", type: "text", synced: true, messages: 34 },
-  { id: "c3", name: "general", type: "text", synced: true, messages: 892 },
-  { id: "c4", name: "content-approvals", type: "text", synced: true, messages: 67 },
-  { id: "c5", name: "deliverables", type: "text", synced: false, messages: 23 },
-  { id: "c6", name: "support", type: "text", synced: true, messages: 145 },
-  { id: "c7", name: "Voice Chat", type: "voice", synced: true, messages: 0 },
-  { id: "c8", name: "Team Meeting", type: "voice", synced: false, messages: 0 },
-];
+const mockChannels: { id: string; name: string; type: string; synced: boolean; messages: number }[] = [];
 
-const mockCommands = [
-  { name: "/status", desc: "Agent activity, leads today, active clients", category: "Info", enabled: true },
-  { name: "/leads", desc: "Last 5 scraped leads with details", category: "Info", enabled: true },
-  { name: "/clients", desc: "Active clients, MRR, health scores", category: "Info", enabled: true },
-  { name: "/report", desc: "Weekly MRR, leads, and outreach summary", category: "Reports", enabled: true },
-  { name: "/schedule", desc: "View upcoming scheduled tasks", category: "Tools", enabled: true },
-  { name: "/ticket", desc: "Create a support ticket from Discord", category: "Tools", enabled: true },
-  { name: "/assign", desc: "Assign a task to a team member", category: "Tools", enabled: false },
-  { name: "/feedback", desc: "Submit client feedback to the dashboard", category: "Tools", enabled: true },
-  { name: "/help", desc: "List all available bot commands", category: "Info", enabled: true },
-  { name: "/analytics", desc: "Quick analytics snapshot for a client", category: "Reports", enabled: false },
-];
+const mockCommands: { name: string; desc: string; category: string; enabled: boolean }[] = [];
 
-const mockAutoRoles = [
-  { id: "r1", trigger: "On Join", role: "Member", color: "#5865F2", enabled: true },
-  { id: "r2", trigger: "Reaction: checkmark", role: "Verified", color: "#57F287", enabled: true },
-  { id: "r3", trigger: "Reaction: star", role: "VIP", color: "#FEE75C", enabled: true },
-  { id: "r4", trigger: "Command: /subscribe", role: "Subscriber", color: "#EB459E", enabled: false },
-  { id: "r5", trigger: "On Boost", role: "Booster", color: "#F47FFF", enabled: true },
-];
+const mockAutoRoles: { id: string; trigger: string; role: string; color: string; enabled: boolean }[] = [];
 
-const mockModRules = [
-  { id: "m1", name: "Anti-Spam", desc: "Block repeated messages within 5 seconds", action: "Mute 10min", enabled: true },
-  { id: "m2", name: "Link Filter", desc: "Delete messages with unapproved links", action: "Delete + Warn", enabled: true },
-  { id: "m3", name: "Profanity Filter", desc: "Auto-remove messages with blacklisted words", action: "Delete", enabled: true },
-  { id: "m4", name: "Raid Protection", desc: "Lock server if 10+ joins in 30 seconds", action: "Lockdown", enabled: false },
-  { id: "m5", name: "Mention Limit", desc: "Max 5 mentions per message", action: "Delete + Warn", enabled: true },
-];
+const mockModRules: { id: string; name: string; desc: string; action: string; enabled: boolean }[] = [];
 
-const mockEvents = [
-  { id: "e1", title: "Weekly Standup", date: "2026-04-15", time: "10:00 AM", channel: "#team-meeting", attendees: 8, recurring: true },
-  { id: "e2", title: "Client Onboarding: Acme", date: "2026-04-16", time: "2:00 PM", channel: "#acme-general", attendees: 5, recurring: false },
-  { id: "e3", title: "Community Game Night", date: "2026-04-18", time: "7:00 PM", channel: "#events", attendees: 24, recurring: true },
-  { id: "e4", title: "Q2 Strategy Review", date: "2026-04-20", time: "11:00 AM", channel: "#leadership", attendees: 4, recurring: false },
-];
+const mockEvents: { id: string; title: string; date: string; time: string; channel: string; attendees: number; recurring: boolean }[] = [];
 
-const mockWebhooks = [
-  { id: "w1", name: "Lead Alert", url: "https://discord.com/api/webhooks/1234/abc", channel: "#alerts", lastFired: "2 min ago", status: "active" },
-  { id: "w2", name: "Daily Report", url: "https://discord.com/api/webhooks/5678/def", channel: "#reports", lastFired: "6 hrs ago", status: "active" },
-  { id: "w3", name: "Error Logger", url: "https://discord.com/api/webhooks/9012/ghi", channel: "#dev-logs", lastFired: "1 day ago", status: "active" },
-  { id: "w4", name: "CRM Sync", url: "https://discord.com/api/webhooks/3456/jkl", channel: "#crm-updates", lastFired: "Never", status: "inactive" },
-];
+const mockWebhooks: { id: string; name: string; url: string; channel: string; lastFired: string; status: string }[] = [];
 
-const mockAnnouncements = [
-  { id: "a1", title: "New Feature: AI Reply Suggestions", body: "We have launched AI-powered reply suggestions...", scheduled: "2026-04-15 9:00 AM", channels: ["#announcements", "#general"], status: "scheduled" },
-  { id: "a2", title: "Maintenance Window April 20", body: "Brief downtime expected between 2-3 AM...", scheduled: "2026-04-18 12:00 PM", channels: ["#announcements"], status: "draft" },
-  { id: "a3", title: "Welcome New Team Members", body: "Please welcome Sarah and Mike to the team...", scheduled: "2026-04-12 10:00 AM", channels: ["#announcements", "#general"], status: "sent" },
-];
+const mockAnnouncements: { id: string; title: string; body: string; scheduled: string; channels: string[]; status: string }[] = [];
 
 const dailyActivity = [
-  { day: "Mon", messages: 342, members: 28 },
-  { day: "Tue", messages: 456, members: 31 },
-  { day: "Wed", messages: 389, members: 29 },
-  { day: "Thu", messages: 512, members: 35 },
-  { day: "Fri", messages: 278, members: 22 },
-  { day: "Sat", messages: 134, members: 14 },
-  { day: "Sun", messages: 98, members: 11 },
+  { day: "Mon", messages: 0, members: 0 },
+  { day: "Tue", messages: 0, members: 0 },
+  { day: "Wed", messages: 0, members: 0 },
+  { day: "Thu", messages: 0, members: 0 },
+  { day: "Fri", messages: 0, members: 0 },
+  { day: "Sat", messages: 0, members: 0 },
+  { day: "Sun", messages: 0, members: 0 },
 ];
 
 export default function DiscordPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Servers");
-  const [selectedServer, setSelectedServer] = useState(mockServers[0].id);
+  const [selectedServer, setSelectedServer] = useState(mockServers[0]?.id ?? "");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [commandFilter, setCommandFilter] = useState("All");
   const [commands, setCommands] = useState(mockCommands);

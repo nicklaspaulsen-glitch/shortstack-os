@@ -7,6 +7,7 @@ import {
   BarChart3, ShieldAlert, ThumbsUp, MessageSquare, Zap, Eye,
   ArrowUpRight, ArrowDownRight, Target, Lightbulb, Calendar
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -34,29 +35,14 @@ interface ClientHealth {
   revenue_trend: number[];
 }
 
-const MOCK_CLIENTS: ClientHealth[] = [
-  { id: "1", business_name: "Bright Smiles Dental", contact_name: "Dr. Sarah Chen", email: "sarah@brightsmiles.com", package_tier: "Growth", mrr: 2500, health_score: 92, is_active: true, tasks_done: 18, tasks_total: 20, content_count: 34, invoices_pending: 0, nps: 9, last_contact: "2026-04-13", trend: 5, engagement: 88, satisfaction: 95, risk_factors: [], revenue_trend: [2200, 2300, 2400, 2500, 2500, 2500] },
-  { id: "2", business_name: "Peak Fitness Studio", contact_name: "Mike Torres", email: "mike@peakfit.com", package_tier: "Scale", mrr: 4000, health_score: 85, is_active: true, tasks_done: 22, tasks_total: 25, content_count: 41, invoices_pending: 0, nps: 8, last_contact: "2026-04-12", trend: 3, engagement: 82, satisfaction: 88, risk_factors: ["Late on approval cycle"], revenue_trend: [3500, 3800, 3800, 4000, 4000, 4000] },
-  { id: "3", business_name: "Metro Legal Group", contact_name: "James Park", email: "james@metrolegal.com", package_tier: "Growth", mrr: 2000, health_score: 64, is_active: true, tasks_done: 8, tasks_total: 15, content_count: 12, invoices_pending: 1, nps: 6, last_contact: "2026-04-05", trend: -8, engagement: 45, satisfaction: 62, risk_factors: ["Low engagement", "Pending invoice", "Missed 2 meetings"], revenue_trend: [2500, 2500, 2200, 2000, 2000, 2000] },
-  { id: "4", business_name: "Urban Plumbing Co", contact_name: "Dave Wilson", email: "dave@urbanplumb.com", package_tier: "Starter", mrr: 1200, health_score: 38, is_active: true, tasks_done: 3, tasks_total: 12, content_count: 5, invoices_pending: 2, nps: 4, last_contact: "2026-03-20", trend: -15, engagement: 22, satisfaction: 35, risk_factors: ["2 unpaid invoices", "No contact in 25 days", "Low task completion", "Requested cancellation info"], revenue_trend: [1500, 1500, 1200, 1200, 1200, 1200] },
-  { id: "5", business_name: "Sunrise Bakery", contact_name: "Emma Liu", email: "emma@sunrisebake.com", package_tier: "Growth", mrr: 2200, health_score: 78, is_active: true, tasks_done: 14, tasks_total: 18, content_count: 28, invoices_pending: 0, nps: 7, last_contact: "2026-04-11", trend: 2, engagement: 72, satisfaction: 78, risk_factors: ["Slightly below avg engagement"], revenue_trend: [1800, 2000, 2000, 2200, 2200, 2200] },
-  { id: "6", business_name: "Elite Auto Detailing", contact_name: "Carlos Reyes", email: "carlos@eliteauto.com", package_tier: "Scale", mrr: 3500, health_score: 91, is_active: true, tasks_done: 19, tasks_total: 20, content_count: 45, invoices_pending: 0, nps: 10, last_contact: "2026-04-14", trend: 8, engagement: 94, satisfaction: 96, risk_factors: [], revenue_trend: [2800, 3000, 3200, 3500, 3500, 3500] },
-  { id: "7", business_name: "CloudTech Solutions", contact_name: "Priya Sharma", email: "priya@cloudtech.io", package_tier: "Growth", mrr: 2800, health_score: 55, is_active: true, tasks_done: 9, tasks_total: 16, content_count: 15, invoices_pending: 1, nps: 5, last_contact: "2026-04-02", trend: -5, engagement: 40, satisfaction: 52, risk_factors: ["Low engagement", "Slow response times", "Invoice overdue"], revenue_trend: [2800, 2800, 2800, 2800, 2800, 2800] },
-  { id: "8", business_name: "Fresh Cuts Barbershop", contact_name: "Jamal Brooks", email: "jamal@freshcuts.com", package_tier: "Starter", mrr: 1000, health_score: 45, is_active: true, tasks_done: 5, tasks_total: 10, content_count: 8, invoices_pending: 1, nps: 5, last_contact: "2026-03-28", trend: -10, engagement: 35, satisfaction: 48, risk_factors: ["Pending invoice", "Low content volume", "No contact in 17 days"], revenue_trend: [1200, 1200, 1000, 1000, 1000, 1000] },
-];
+const MOCK_CLIENTS: ClientHealth[] = [];
 
 const HEALTH_HISTORY = [
-  { month: "Nov", avg: 68 }, { month: "Dec", avg: 71 }, { month: "Jan", avg: 73 },
-  { month: "Feb", avg: 70 }, { month: "Mar", avg: 75 }, { month: "Apr", avg: 74 },
+  { month: "Nov", avg: 0 }, { month: "Dec", avg: 0 }, { month: "Jan", avg: 0 },
+  { month: "Feb", avg: 0 }, { month: "Mar", avg: 0 }, { month: "Apr", avg: 0 },
 ];
 
-const HEALTH_ALERTS = [
-  { id: "a1", client: "Urban Plumbing Co", type: "critical", message: "No contact in 25 days - immediate outreach recommended", time: "2h ago" },
-  { id: "a2", client: "Metro Legal Group", type: "warning", message: "Health score dropped 8 points this month", time: "5h ago" },
-  { id: "a3", client: "Fresh Cuts Barbershop", type: "warning", message: "Invoice overdue by 17 days", time: "1d ago" },
-  { id: "a4", client: "CloudTech Solutions", type: "info", message: "Engagement rate below 50% for 2 consecutive weeks", time: "1d ago" },
-  { id: "a5", client: "Peak Fitness Studio", type: "info", message: "Content approval cycle exceeding SLA", time: "2d ago" },
-];
+const HEALTH_ALERTS: { id: string; client: string; type: string; message: string; time: string }[] = [];
 
 const ALGORITHM_WEIGHTS = [
   { factor: "Task Completion", weight: 25, description: "Percentage of assigned tasks completed on time" },
@@ -274,6 +260,15 @@ export default function ClientHealthPage() {
           </div>
 
           {/* Client Cards - Red/Yellow/Green */}
+          {filtered.length === 0 && clients.length === 0 && (
+            <EmptyState
+              icon={<Heart size={24} />}
+              title="No clients yet"
+              description="Add clients to track their health scores"
+              actionLabel="Add Clients"
+              actionHref="/dashboard/clients"
+            />
+          )}
           <div className="space-y-2">
             {filtered.map(client => (
               <div key={client.id} className={`rounded-xl border p-4 transition-all cursor-pointer hover:border-gold/20 ${

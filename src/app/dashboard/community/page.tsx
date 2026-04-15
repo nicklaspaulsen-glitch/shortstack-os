@@ -1,32 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   MessageSquare, Plus, Pin, Heart, Send, Users,
   Megaphone, HelpCircle, Sparkles, BookOpen, ChevronDown,
   Search, Calendar, Award, Bell, Shield, Vote,
-  TrendingUp, Clock, Hash
+  TrendingUp, Clock, Hash, Loader2, Trash2,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
-/*  Mock Data                                                          */
+/*  Types                                                              */
 /* ------------------------------------------------------------------ */
 
 interface Post {
   id: string;
-  author: string;
-  avatar: string;
-  role: string;
+  user_id: string;
+  author_name: string;
+  author_avatar: string | null;
   title: string;
   content: string;
-  type: string;
+  category: string;
   pinned: boolean;
   likes: number;
-  comments: number;
+  comments_count: number;
   created_at: string;
+  updated_at: string;
 }
 
-const MOCK_POSTS: Post[] = [];
+/* ------------------------------------------------------------------ */
+/*  Constants                                                          */
+/* ------------------------------------------------------------------ */
 
 const TYPE_CONFIG: Record<string, { bg: string; icon: typeof MessageSquare }> = {
   announcement: { bg: "bg-gold/10 text-gold border-gold/20", icon: Megaphone },
@@ -37,15 +40,10 @@ const TYPE_CONFIG: Record<string, { bg: string; icon: typeof MessageSquare }> = 
 };
 
 const MEMBERS: { name: string; role: string; level: string; badge: string; posts: number; joined: string; online: boolean }[] = [];
-
 const EVENTS: { id: string; title: string; date: string; type: string; attendees: number }[] = [];
-
 const POLLS: { id: string; question: string; options: { label: string; votes: number }[]; totalVotes: number; endsIn: string }[] = [];
-
 const RESOURCES: { title: string; type: string; downloads: number; icon: typeof Calendar }[] = [];
-
 const TRENDING: { topic: string; posts: number; trend: string }[] = [];
-
 const LEADERBOARD: { name: string; points: number; posts: number; helpful: number }[] = [];
 
 const GUIDELINES = [
@@ -56,6 +54,25 @@ const GUIDELINES = [
   "Use appropriate channels for different types of content",
   "Report any violations to admins privately",
 ];
+
+/* ------------------------------------------------------------------ */
+/*  Helpers                                                            */
+/* ------------------------------------------------------------------ */
+
+function timeAgo(dateStr: string): string {
+  const now = Date.now();
+  const then = new Date(dateStr).getTime();
+  const seconds = Math.floor((now - then) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+}
 
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
@@ -70,8 +87,116 @@ export default function CommunityPage() {
   const [votedPolls, setVotedPolls] = useState<Record<string, number>>({});
   const [showNewPost, setShowNewPost] = useState(false);
 
-  function toggleLike(postId: string) {
-    setLikedPosts(prev => prev.includes(postId) ? prev.filter(p => p !== postId) : [...prev, postId]);
+  // Database-backed state
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // New post form state
+  const [newTitle, setNewTitle] = useState("");
+  const [newContent, setNewContent] = useState("");
+  const [newCategory, setNewCategory] = useState("discussion");
+
+  /* ---- Fetch posts ---- */
+  const fetchPosts = useCallback(async () => {
+    try {
+      setError(null);
+      const res = await fetch("/api/community?limit=50");
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to fetch posts");
+      }
+      const data = await res.json();
+      setPosts(data.posts ?? []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load posts");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  /* ---- Create post ---- */
+  async function handleCreatePost() {
+    if (!newTitle.trim() || !newContent.trim()) return;
+    setCreating(true);
+    try {
+      const res = await fetch("/api/community", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newTitle,
+          content: newContent,
+          category: newCategory,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to create post");
+      }
+      const data = await res.json();
+      // Prepend new post to list
+      setPosts(prev => [data.post, ...prev]);
+      // Reset form
+      setNewTitle("");
+      setNewContent("");
+      setNewCategory("discussion");
+      setShowNewPost(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create post");
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  /* ---- Like post ---- */
+  async function toggleLike(postId: string) {
+    const alreadyLiked = likedPosts.includes(postId);
+    // Optimistic UI update
+    setLikedPosts(prev =>
+      alreadyLiked ? prev.filter(p => p !== postId) : [...prev, postId]
+    );
+
+    if (!alreadyLiked) {
+      try {
+        const res = await fetch("/api/community", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: postId, action: "like" }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setPosts(prev =>
+            prev.map(p => (p.id === postId ? { ...p, likes: data.post.likes } : p))
+          );
+        }
+      } catch {
+        // Revert on failure
+        setLikedPosts(prev => prev.filter(p => p !== postId));
+      }
+    }
+  }
+
+  /* ---- Delete post ---- */
+  async function handleDelete(postId: string) {
+    setPosts(prev => prev.filter(p => p.id !== postId));
+    try {
+      const res = await fetch("/api/community", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: postId }),
+      });
+      if (!res.ok) {
+        // Revert — refetch
+        fetchPosts();
+      }
+    } catch {
+      fetchPosts();
+    }
   }
 
   function votePoll(pollId: string, optionIdx: number) {
@@ -87,8 +212,9 @@ export default function CommunityPage() {
     { id: "showcase", label: "Showcase", icon: Sparkles },
   ];
 
-  const filteredPosts = MOCK_POSTS.filter(p => {
-    if (filter !== "all" && p.type !== filter) return false;
+  // Client-side filtering on fetched data
+  const filteredPosts = posts.filter(p => {
+    if (filter !== "all" && p.category !== filter) return false;
     if (searchQuery && !p.title.toLowerCase().includes(searchQuery.toLowerCase()) && !p.content.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -131,7 +257,7 @@ export default function CommunityPage() {
           <p className="text-[10px] text-muted">Online Now</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono">{MOCK_POSTS.length}</p>
+          <p className="text-lg font-bold font-mono">{posts.length}</p>
           <p className="text-[10px] text-muted">Posts This Week</p>
         </div>
         <div className="card p-3 text-center">
@@ -151,6 +277,14 @@ export default function CommunityPage() {
           </button>
         ))}
       </div>
+
+      {/* Error banner */}
+      {error && (
+        <div className="card p-3 border-red-400/30 bg-red-400/5 text-red-400 text-xs flex items-center justify-between">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-[10px] underline">Dismiss</button>
+        </div>
+      )}
 
       {/* ---- TAB: Feed ---- */}
       {activeTab === "feed" && (
@@ -199,17 +333,39 @@ export default function CommunityPage() {
             <div className="card p-4 border-gold/20">
               <h3 className="text-xs font-semibold mb-3">Create New Post</h3>
               <div className="space-y-3">
-                <select className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground">
+                <select
+                  value={newCategory}
+                  onChange={e => setNewCategory(e.target.value)}
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
+                >
                   <option value="discussion">Discussion</option>
                   <option value="question">Question</option>
                   <option value="resource">Resource</option>
                   <option value="showcase">Showcase</option>
+                  <option value="announcement">Announcement</option>
                 </select>
-                <input className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground" placeholder="Post title..." />
-                <textarea className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24" placeholder="Share your thoughts..." />
+                <input
+                  value={newTitle}
+                  onChange={e => setNewTitle(e.target.value)}
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
+                  placeholder="Post title..."
+                />
+                <textarea
+                  value={newContent}
+                  onChange={e => setNewContent(e.target.value)}
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24"
+                  placeholder="Share your thoughts..."
+                />
                 <div className="flex justify-end gap-2">
                   <button onClick={() => setShowNewPost(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
-                  <button className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1"><Send size={10} /> Post</button>
+                  <button
+                    onClick={handleCreatePost}
+                    disabled={creating || !newTitle.trim() || !newContent.trim()}
+                    className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1 disabled:opacity-50"
+                  >
+                    {creating ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
+                    {creating ? "Posting..." : "Post"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -217,24 +373,36 @@ export default function CommunityPage() {
 
           {/* Posts */}
           <div className="space-y-3">
-            {filteredPosts.length === 0 ? (
-              <div className="card text-center py-12"><MessageSquare size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No posts yet. Be the first to share!</p></div>
+            {loading ? (
+              <div className="card text-center py-12">
+                <Loader2 size={24} className="mx-auto mb-2 text-muted/50 animate-spin" />
+                <p className="text-xs text-muted">Loading posts...</p>
+              </div>
+            ) : filteredPosts.length === 0 ? (
+              <div className="card text-center py-12">
+                <MessageSquare size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">
+                  {posts.length === 0
+                    ? "No posts yet. Be the first to share!"
+                    : "No posts match your filters."}
+                </p>
+              </div>
             ) : filteredPosts.map(post => {
-              const tc = TYPE_CONFIG[post.type] || { bg: "bg-white/5 text-muted border-border", icon: MessageSquare };
+              const tc = TYPE_CONFIG[post.category] || { bg: "bg-white/5 text-muted border-border", icon: MessageSquare };
               const TypeIcon = tc.icon;
+              const liked = likedPosts.includes(post.id);
               return (
                 <div key={post.id} className={`card p-4 transition-all ${post.pinned ? "border-gold/20 bg-gold/[0.02]" : ""}`}>
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold shrink-0">
-                      {post.avatar}
+                      {post.author_avatar || post.author_name.charAt(0).toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-semibold">{post.author}</span>
-                        {post.role === "admin" && <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded font-medium">ADMIN</span>}
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded border ${tc.bg}`}><TypeIcon size={8} className="inline mr-0.5" />{post.type}</span>
+                        <span className="text-xs font-semibold">{post.author_name}</span>
+                        <span className={`text-[8px] px-1.5 py-0.5 rounded border ${tc.bg}`}><TypeIcon size={8} className="inline mr-0.5" />{post.category}</span>
                         {post.pinned && <Pin size={10} className="text-gold" />}
-                        <span className="text-[9px] text-muted ml-auto">{post.created_at}</span>
+                        <span className="text-[9px] text-muted ml-auto">{timeAgo(post.created_at)}</span>
                       </div>
                       <h3 className="text-sm font-medium mt-0.5">{post.title}</h3>
                       <p className="text-xs text-muted mt-1.5 leading-relaxed">
@@ -242,13 +410,17 @@ export default function CommunityPage() {
                       </p>
                       <div className="flex items-center gap-3 mt-3">
                         <button onClick={() => toggleLike(post.id)}
-                          className={`flex items-center gap-1 text-[10px] transition-colors ${likedPosts.includes(post.id) ? "text-red-400" : "text-muted hover:text-red-400"}`}>
-                          <Heart size={12} fill={likedPosts.includes(post.id) ? "currentColor" : "none"} /> {post.likes + (likedPosts.includes(post.id) ? 1 : 0)}
+                          className={`flex items-center gap-1 text-[10px] transition-colors ${liked ? "text-red-400" : "text-muted hover:text-red-400"}`}>
+                          <Heart size={12} fill={liked ? "currentColor" : "none"} /> {post.likes + (liked ? 1 : 0)}
                         </button>
                         <button onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
                           className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground">
-                          <MessageSquare size={12} /> {post.comments}
+                          <MessageSquare size={12} /> {post.comments_count}
                           <ChevronDown size={10} className={expandedPost === post.id ? "rotate-180" : ""} />
+                        </button>
+                        <button onClick={() => handleDelete(post.id)}
+                          className="flex items-center gap-1 text-[10px] text-muted hover:text-red-400 ml-auto">
+                          <Trash2 size={12} />
                         </button>
                       </div>
                     </div>

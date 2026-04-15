@@ -147,26 +147,11 @@ const AGENTS: ServiceAgent[] = [
   },
 ];
 
-const MOCK_TEST_RESULTS: TestResult[] = [
-  { input: "Generate 10 hooks for dental business", output: "Generated 10 scroll-stopping hooks with viral potential scores", latency: 1180, quality: 94, timestamp: "2m ago" },
-  { input: "Write landing page for free consultation", output: "Complete landing page with hero, benefits, social proof, FAQ, CTA", latency: 3200, quality: 91, timestamp: "15m ago" },
-  { input: "Create 5 Meta ad variations", output: "5 ad copy sets with headlines, primary text, and CTAs", latency: 2100, quality: 88, timestamp: "1h ago" },
-];
+const MOCK_TEST_RESULTS: TestResult[] = [];
 
-const MOCK_BATCH_JOBS: BatchJob[] = [
-  { id: "b1", agent: "Short-Form Content", items: 30, completed: 22, status: "running", startedAt: "10m ago" },
-  { id: "b2", agent: "Cold Outreach", items: 50, completed: 50, status: "done", startedAt: "1h ago" },
-  { id: "b3", agent: "SEO & Content", items: 12, completed: 0, status: "queued", startedAt: "Queued" },
-  { id: "b4", agent: "Paid Ads", items: 20, completed: 8, status: "running", startedAt: "25m ago" },
-];
+const MOCK_BATCH_JOBS: BatchJob[] = [];
 
-const MOCK_SCHEDULES = [
-  { agent: "Short-Form Content", schedule: "Daily 9:00 AM", nextRun: "Tomorrow 9:00 AM", active: true },
-  { agent: "Cold Outreach", schedule: "Mon-Fri 10:00 AM", nextRun: "Tomorrow 10:00 AM", active: true },
-  { agent: "SEO & Content", schedule: "Weekly Monday 8:00 AM", nextRun: "Next Monday", active: true },
-  { agent: "Automation", schedule: "Every 6 hours", nextRun: "In 2h", active: true },
-  { agent: "Branding", schedule: "Monthly 1st", nextRun: "May 1st", active: false },
-];
+const MOCK_SCHEDULES: Array<{ agent: string; schedule: string; nextRun: string; active: boolean }> = [];
 
 const TABS = ["Overview", "Agents", "Capabilities", "Analytics", "Sandbox", "Batch", "Scheduling", "Costs", "Benchmarks", "Prompts", "Dependencies", "Deploy"] as const;
 type Tab = typeof TABS[number];

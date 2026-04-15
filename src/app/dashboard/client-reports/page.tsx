@@ -6,18 +6,13 @@ import {
   Copy, Calendar, Eye, Clock, Layout, Palette, Sliders, Filter,
   ChevronDown, CheckCircle, Mail, FileDown, Layers, PlusCircle, Trash2
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
 /* ------------------------------------------------------------------ */
 
-const MOCK_CLIENTS = [
-  { id: "1", business_name: "Bright Smiles Dental", package_tier: "Growth", mrr: 2500, health_score: 92, services: ["Social Media", "SEO"] },
-  { id: "2", business_name: "Peak Fitness Studio", package_tier: "Scale", mrr: 4000, health_score: 85, services: ["Social Media", "Paid Ads", "Content"] },
-  { id: "3", business_name: "Metro Legal Group", package_tier: "Growth", mrr: 2000, health_score: 64, services: ["SEO", "Web Design"] },
-  { id: "4", business_name: "Urban Plumbing Co", package_tier: "Starter", mrr: 1200, health_score: 38, services: ["Social Media"] },
-  { id: "5", business_name: "Elite Auto Detailing", package_tier: "Scale", mrr: 3500, health_score: 91, services: ["Social Media", "Paid Ads", "SEO"] },
-];
+const MOCK_CLIENTS: { id: string; business_name: string; package_tier: string; mrr: number; health_score: number; services: string[] }[] = [];
 
 const REPORT_TEMPLATES = [
   { id: "t1", name: "Monthly Performance", description: "Full marketing performance overview with KPIs", widgets: 8, icon: BarChart3 },
@@ -174,6 +169,16 @@ export default function ClientReportsPage() {
       {/* ---- TAB: Generate ---- */}
       {activeTab === "generate" && (
         <div className="space-y-4">
+          {MOCK_CLIENTS.length === 0 && (
+            <EmptyState
+              icon={<FileText size={24} />}
+              title="No client reports yet"
+              description="Add a client and generate your first report"
+              actionLabel="Add Client"
+              actionHref="/dashboard/clients"
+            />
+          )}
+
           {/* Client selector + options */}
           <div className="card p-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

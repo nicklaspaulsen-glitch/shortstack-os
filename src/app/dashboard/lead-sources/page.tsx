@@ -24,17 +24,7 @@ interface LeadSource {
   lastLead: string;
 }
 
-const MOCK_SOURCES: LeadSource[] = [
-  { id: "google_maps", name: "Google Maps", icon: <MapPin size={14} />, color: "#4285f4", count: 342, converted: 48, costPerLead: 0, roi: 0, quality: 82, trend: "up", trendPct: 15, status: "active", lastLead: "2h ago" },
-  { id: "cold_outreach", name: "Cold Outreach", icon: <MessageSquare size={14} />, color: "#c8a855", count: 218, converted: 31, costPerLead: 2.40, roi: 340, quality: 71, trend: "up", trendPct: 8, status: "active", lastLead: "4h ago" },
-  { id: "referral", name: "Referral", icon: <Users size={14} />, color: "#10b981", count: 89, converted: 28, costPerLead: 0, roi: 0, quality: 95, trend: "flat", trendPct: 0, status: "active", lastLead: "1d ago" },
-  { id: "website", name: "Website Form", icon: <Globe size={14} />, color: "#8b5cf6", count: 156, converted: 22, costPerLead: 8.50, roi: 180, quality: 68, trend: "up", trendPct: 22, status: "active", lastLead: "6h ago" },
-  { id: "social_media", name: "Social Media", icon: <Phone size={14} />, color: "#ec4899", count: 124, converted: 15, costPerLead: 5.20, roi: 220, quality: 58, trend: "down", trendPct: -5, status: "active", lastLead: "12h ago" },
-  { id: "ads", name: "Paid Ads", icon: <Target size={14} />, color: "#f59e0b", count: 198, converted: 34, costPerLead: 12.80, roi: 410, quality: 76, trend: "up", trendPct: 18, status: "active", lastLead: "1h ago" },
-  { id: "form", name: "Landing Pages", icon: <FileText size={14} />, color: "#3b82f6", count: 87, converted: 19, costPerLead: 6.40, roi: 290, quality: 74, trend: "up", trendPct: 12, status: "active", lastLead: "3h ago" },
-  { id: "csv_import", name: "CSV Import", icon: <FileText size={14} />, color: "#06b6d4", count: 45, converted: 4, costPerLead: 0, roi: 0, quality: 42, trend: "down", trendPct: -20, status: "inactive", lastLead: "2w ago" },
-  { id: "manual", name: "Manual Entry", icon: <Plus size={14} />, color: "#6b7280", count: 32, converted: 8, costPerLead: 0, roi: 0, quality: 65, trend: "flat", trendPct: 0, status: "active", lastLead: "1d ago" },
-];
+const MOCK_SOURCES: LeadSource[] = [];
 
 const UTM_DATA = [
   { source: "google", medium: "cpc", campaign: "dental-leads-miami", leads: 82, converted: 14 },
@@ -66,7 +56,7 @@ export default function LeadSourcesPage() {
 
   const totalLeads = sources.reduce((s, c) => s + c.count, 0);
   const totalConverted = sources.reduce((s, c) => s + c.converted, 0);
-  const avgQuality = Math.round(sources.reduce((s, c) => s + c.quality, 0) / sources.length);
+  const avgQuality = sources.length > 0 ? Math.round(sources.reduce((s, c) => s + c.quality, 0) / sources.length) : 0;
   const overallConvRate = totalLeads > 0 ? ((totalConverted / totalLeads) * 100).toFixed(1) : "0";
 
   const sorted = [...sources].sort((a, b) => {

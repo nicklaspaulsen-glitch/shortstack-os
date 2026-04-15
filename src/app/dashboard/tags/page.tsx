@@ -36,32 +36,9 @@ const TAG_COLORS = [
 
 const CATEGORIES = ["Lead Status", "Priority", "Source", "Industry", "Custom"];
 
-const MOCK_TAGS: TagItem[] = [
-  { id: "t1", name: "hot-lead", color: "#ef4444", count: 24, category: "Lead Status", parent: null, autoRule: "Score > 80", lastUsed: "2026-04-14" },
-  { id: "t2", name: "warm-lead", color: "#f59e0b", count: 42, category: "Lead Status", parent: null, autoRule: "Score 50-80", lastUsed: "2026-04-14" },
-  { id: "t3", name: "cold-lead", color: "#3b82f6", count: 67, category: "Lead Status", parent: null, autoRule: "Score < 50", lastUsed: "2026-04-13" },
-  { id: "t4", name: "booked-call", color: "#10b981", count: 18, category: "Lead Status", parent: null, autoRule: "Appointment created", lastUsed: "2026-04-14" },
-  { id: "t5", name: "sent-proposal", color: "#8b5cf6", count: 12, category: "Lead Status", parent: null, autoRule: null, lastUsed: "2026-04-12" },
-  { id: "t6", name: "closed-won", color: "#c8a855", count: 8, category: "Lead Status", parent: null, autoRule: "Deal status = won", lastUsed: "2026-04-10" },
-  { id: "t7", name: "closed-lost", color: "#6b7280", count: 5, category: "Lead Status", parent: null, autoRule: "Deal status = lost", lastUsed: "2026-04-09" },
-  { id: "t8", name: "needs-followup", color: "#f97316", count: 31, category: "Priority", parent: null, autoRule: "No contact in 7d", lastUsed: "2026-04-14" },
-  { id: "t9", name: "cold-outreach", color: "#06b6d4", count: 56, category: "Source", parent: null, autoRule: null, lastUsed: "2026-04-13" },
-  { id: "t10", name: "referral", color: "#ec4899", count: 9, category: "Source", parent: null, autoRule: null, lastUsed: "2026-04-11" },
-  { id: "t11", name: "vip-client", color: "#c8a855", count: 5, category: "Priority", parent: null, autoRule: "MRR > $3000", lastUsed: "2026-04-14" },
-  { id: "t12", name: "high-budget", color: "#10b981", count: 7, category: "Priority", parent: null, autoRule: null, lastUsed: "2026-04-12" },
-  { id: "t13", name: "dental", color: "#3b82f6", count: 15, category: "Industry", parent: null, autoRule: null, lastUsed: "2026-04-13" },
-  { id: "t14", name: "fitness", color: "#ef4444", count: 11, category: "Industry", parent: null, autoRule: null, lastUsed: "2026-04-11" },
-  { id: "t15", name: "real-estate", color: "#8b5cf6", count: 8, category: "Industry", parent: null, autoRule: null, lastUsed: "2026-04-10" },
-];
+const MOCK_TAGS: TagItem[] = [];
 
-const MOCK_RULES: AutoRule[] = [
-  { id: "r1", name: "Hot Lead Auto-tag", condition: "Lead score > 80", tag: "hot-lead", active: true, triggered: 24 },
-  { id: "r2", name: "Warm Lead Auto-tag", condition: "Lead score 50-80", tag: "warm-lead", active: true, triggered: 42 },
-  { id: "r3", name: "Needs Follow-up", condition: "No contact in 7 days", tag: "needs-followup", active: true, triggered: 31 },
-  { id: "r4", name: "VIP Auto-tag", condition: "MRR > $3,000", tag: "vip-client", active: true, triggered: 5 },
-  { id: "r5", name: "Won Deal Tag", condition: "Deal status changes to won", tag: "closed-won", active: true, triggered: 8 },
-  { id: "r6", name: "Booked Appointment", condition: "Calendar event created", tag: "booked-call", active: false, triggered: 0 },
-];
+const MOCK_RULES: AutoRule[] = [];
 
 export default function TagsPage() {
   const [tab, setTab] = useState<TagTab>("manager");

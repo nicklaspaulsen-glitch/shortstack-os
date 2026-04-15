@@ -52,75 +52,14 @@ const PLATFORM_COLORS: Record<string, string> = {
   Twitter: "text-sky-400 bg-sky-500/10",
 };
 
-const INITIAL_COMPETITORS: Competitor[] = [
-  {
-    id: "1", name: "BrightMedia Agency", url: "https://brightmedia.com", industry: "Digital Marketing",
-    platforms: [
-      { name: "Instagram", handle: "@brightmedia", followers: 45200, active: true },
-      { name: "LinkedIn", handle: "brightmedia-agency", followers: 12800, active: true },
-      { name: "TikTok", handle: "@brightmediaagency", followers: 8900, active: true },
-      { name: "YouTube", handle: "BrightMediaAgency", followers: 3200, active: true },
-    ],
-    estimatedFollowers: 70100, notes: "Strong presence in healthcare and SaaS verticals. Known for data-driven content strategies.",
-    swot: {
-      strengths: ["Strong video content", "Large team (30+)", "Enterprise clients"],
-      weaknesses: ["Slow response times", "Generic templates", "No AI tooling"],
-      opportunities: ["They don't target local businesses", "Weak TikTok strategy", "No podcast content"],
-      threats: ["Aggressive pricing", "Well-funded", "Strong referral network"],
-    },
-    contentFrequency: { Instagram: 2.1, LinkedIn: 1.3, TikTok: 0.8, YouTube: 0.4 },
-    engagementRate: 3.2, alerts: [
-      { id: "a1", type: "campaign", message: "Launched new 'Digital Transformation' campaign series", date: "2026-04-12", read: false },
-      { id: "a2", type: "growth", message: "Instagram followers up 12% this month", date: "2026-04-10", read: true },
-    ],
-    lastUpdated: "2026-04-13",
-  },
-  {
-    id: "2", name: "Vortex Creative", url: "https://vortexcreative.io", industry: "Creative Agency",
-    platforms: [
-      { name: "Instagram", handle: "@vortex.creative", followers: 28400, active: true },
-      { name: "TikTok", handle: "@vortexcreative", followers: 52100, active: true },
-      { name: "Facebook", handle: "VortexCreativeStudio", followers: 9800, active: false },
-    ],
-    estimatedFollowers: 90300, notes: "TikTok-first strategy. Strong with Gen Z brands and DTC companies.",
-    swot: {
-      strengths: ["Viral TikTok content", "Young creative team", "DTC expertise"],
-      weaknesses: ["Weak B2B presence", "No long-form content", "High turnover"],
-      opportunities: ["No LinkedIn strategy", "Missing email marketing", "Weak analytics offering"],
-      threats: ["Growing fast", "Lower pricing", "Strong brand aesthetic"],
-    },
-    contentFrequency: { Instagram: 3.0, TikTok: 4.2, Facebook: 0.3 },
-    engagementRate: 5.1, alerts: [
-      { id: "a3", type: "content", message: "Started a new weekly TikTok series 'Marketing in 60s'", date: "2026-04-11", read: false },
-    ],
-    lastUpdated: "2026-04-12",
-  },
-  {
-    id: "3", name: "Apex Digital Partners", url: "https://apexdigital.com", industry: "Performance Marketing",
-    platforms: [
-      { name: "LinkedIn", handle: "apex-digital-partners", followers: 34200, active: true },
-      { name: "Twitter", handle: "@apexdigitalHQ", followers: 18700, active: true },
-      { name: "YouTube", handle: "ApexDigitalPartners", followers: 7500, active: true },
-    ],
-    estimatedFollowers: 60400, notes: "Focused on ROI-driven campaigns. Heavy LinkedIn thought leadership.",
-    swot: {
-      strengths: ["Data analytics expertise", "Case study library", "LinkedIn authority"],
-      weaknesses: ["No visual social presence", "Boring content style", "Slow to adopt trends"],
-      opportunities: ["No Instagram or TikTok", "Missing influencer marketing", "Weak creative services"],
-      threats: ["Deep industry expertise", "High-value clients", "Published book"],
-    },
-    contentFrequency: { LinkedIn: 2.5, Twitter: 3.1, YouTube: 0.6 },
-    engagementRate: 2.8, alerts: [],
-    lastUpdated: "2026-04-11",
-  },
-];
+const INITIAL_COMPETITORS: Competitor[] = [];
 
 export default function CompetitorTrackerPage() {
   useAuth();
   const supabase = createClient();
 
   const [competitors, setCompetitors] = useState<Competitor[]>(INITIAL_COMPETITORS);
-  const [selectedCompetitor, setSelectedCompetitor] = useState<string>("1");
+  const [selectedCompetitor, setSelectedCompetitor] = useState<string>("");
   const [tab, setTab] = useState<"overview" | "analysis" | "content-gaps" | "alerts">("overview");
   const [showAddForm, setShowAddForm] = useState(false);
   const [newName, setNewName] = useState("");

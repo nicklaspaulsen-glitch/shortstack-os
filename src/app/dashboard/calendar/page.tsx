@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Calendar, Clock, Plus, Phone, Video, MapPin,
   ChevronLeft, ChevronRight, Check, X, Filter,
   Users, Download,
-  Repeat, Eye, Star, AlertCircle
+  Repeat, Eye, Star, AlertCircle, Loader2
 } from "lucide-react";
 
 type ViewMode = "month" | "week" | "day";
@@ -33,8 +33,8 @@ const CATEGORY_CONFIG: Record<EventCategory, { label: string; color: string; bg:
   call: { label: "Call", color: "text-emerald-400", bg: "bg-emerald-400/10" },
 };
 
-const TEAM_MEMBERS = ["All", "Nicklas", "Sarah", "James", "Maria", "Alex"];
-const CLIENTS = ["All", "Bright Dental", "Luxe Salon", "FitPro Gym", "Metro Realty", "Green Eats"];
+const TEAM_MEMBERS = ["All", "Nicklas"];
+const CLIENTS = ["All"];
 const TIMEZONES = [
   { label: "EST (UTC-5)", value: "America/New_York" },
   { label: "CST (UTC-6)", value: "America/Chicago" },
@@ -43,7 +43,46 @@ const TIMEZONES = [
   { label: "CET (UTC+1)", value: "Europe/Berlin" },
 ];
 
-const MOCK_EVENTS: CalEvent[] = [];
+function categoryToColor(category: EventCategory): string {
+  switch (category) {
+    case "meeting": return "#3b82f6";
+    case "deadline": return "#ef4444";
+    case "content": return "#8b5cf6";
+    case "call": return "#10b981";
+    default: return "#3b82f6";
+  }
+}
+
+interface DbCalendarEvent {
+  id: string;
+  user_id: string;
+  title: string;
+  client: string | null;
+  team_member: string;
+  date: string;
+  time: string;
+  duration: string;
+  category: string;
+  type: string;
+  recurring: boolean;
+  created_at: string;
+}
+
+function dbToCalEvent(row: DbCalendarEvent): CalEvent {
+  return {
+    id: row.id,
+    title: row.title,
+    client: row.client || "",
+    date: row.date,
+    time: row.time,
+    duration: parseInt(row.duration, 10) || 30,
+    type: row.type as CalEvent["type"],
+    category: row.category as EventCategory,
+    recurring: row.recurring,
+    teamMember: row.team_member,
+    color: categoryToColor(row.category as EventCategory),
+  };
+}
 
 const TYPE_ICONS: Record<string, React.ReactNode> = {
   call: <Phone size={10} />,
@@ -54,7 +93,9 @@ const TYPE_ICONS: Record<string, React.ReactNode> = {
 export default function CalendarPage() {
   const [tab, setTab] = useState<CalendarTab>("calendar");
   const [viewMode, setViewMode] = useState<ViewMode>("week");
-  const [events, setEvents] = useState<CalEvent[]>(MOCK_EVENTS);
+  const [events, setEvents] = useState<CalEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState("All");
   const [selectedClient, setSelectedClient] = useState("All");
   const [selectedCategories, setSelectedCategories] = useState<EventCategory[]>(["meeting", "deadline", "content", "call"]);
@@ -74,6 +115,23 @@ export default function CalendarPage() {
     duration: 30, type: "video" as CalEvent["type"], category: "meeting" as EventCategory,
     recurring: false, teamMember: "Nicklas",
   });
+
+  const fetchEvents = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/calendar");
+      if (res.ok) {
+        const json = await res.json();
+        setEvents((json.events as DbCalendarEvent[]).map(dbToCalEvent));
+      }
+    } catch (err) {
+      console.error("Failed to fetch calendar events:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchEvents(); }, [fetchEvents]);
 
   const toggleCategory = (cat: EventCategory) => {
     setSelectedCategories(prev =>
@@ -109,23 +167,56 @@ export default function CalendarPage() {
   const upcomingDeadlines = filteredEvents.filter(e => e.category === "deadline" && e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
 
   const handleDragStart = (eventId: string) => { setDraggedEvent(eventId); };
-  const handleDrop = (dateStr: string) => {
+  const handleDrop = async (dateStr: string) => {
     if (!draggedEvent) return;
+    // Optimistic update
     setEvents(prev => prev.map(e => e.id === draggedEvent ? { ...e, date: dateStr } : e));
+    const id = draggedEvent;
     setDraggedEvent(null);
+    try {
+      await fetch("/api/calendar", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, date: dateStr }),
+      });
+    } catch (err) {
+      console.error("Failed to update event date:", err);
+      fetchEvents(); // re-sync on failure
+    }
   };
 
-  const createEvent = () => {
-    const evt: CalEvent = {
-      id: `evt_${Date.now()}`,
-      ...newEvent,
-      color: CATEGORY_CONFIG[newEvent.category].color.includes("blue") ? "#3b82f6"
-        : newEvent.category === "deadline" ? "#ef4444"
-        : newEvent.category === "content" ? "#8b5cf6" : "#10b981",
-    };
-    setEvents(prev => [...prev, evt]);
-    setShowCreate(false);
-    setNewEvent({ title: "", client: "Bright Dental", date: "2026-04-14", time: "10:00", duration: 30, type: "video", category: "meeting", recurring: false, teamMember: "Nicklas" });
+  const createEvent = async () => {
+    setSaving(true);
+    try {
+      const res = await fetch("/api/calendar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newEvent.title,
+          client: newEvent.client,
+          team_member: newEvent.teamMember,
+          date: newEvent.date,
+          time: newEvent.time,
+          duration: String(newEvent.duration),
+          category: newEvent.category,
+          type: newEvent.type,
+          recurring: newEvent.recurring,
+        }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        const saved = dbToCalEvent(json.event);
+        setEvents(prev => [...prev, saved]);
+        setShowCreate(false);
+        setNewEvent({ title: "", client: "Bright Dental", date: "2026-04-14", time: "10:00", duration: 30, type: "video", category: "meeting", recurring: false, teamMember: "Nicklas" });
+      } else {
+        console.error("Failed to create event:", await res.text());
+      }
+    } catch (err) {
+      console.error("Failed to create event:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Month view: build a 6-week grid
@@ -175,6 +266,14 @@ export default function CalendarPage() {
           </button>
         ))}
       </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 size={24} className="animate-spin text-gold" />
+          <span className="ml-2 text-sm text-muted">Loading events...</span>
+        </div>
+      )}
 
       {/* Filters Panel */}
       {showFilters && (
@@ -262,7 +361,7 @@ export default function CalendarPage() {
         </div>
       )}
 
-      {tab === "calendar" && (
+      {!loading && tab === "calendar" && (
         <>
           {/* Week Navigation */}
           <div className="flex items-center justify-between">
@@ -397,7 +496,7 @@ export default function CalendarPage() {
       )}
 
       {/* Today's Agenda Tab */}
-      {tab === "agenda" && (
+      {!loading && tab === "agenda" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-3">
             <div className="card">
@@ -476,7 +575,7 @@ export default function CalendarPage() {
       )}
 
       {/* Deadlines Tab */}
-      {tab === "deadlines" && (
+      {!loading && tab === "deadlines" && (
         <div className="space-y-3">
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><AlertCircle size={13} className="text-red-400" /> Upcoming Deadlines</h2>
@@ -623,8 +722,9 @@ export default function CalendarPage() {
 
             <div className="flex justify-end gap-2 pt-1">
               <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
-              <button onClick={createEvent} disabled={!newEvent.title} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-                <Calendar size={12} /> Create Event
+              <button onClick={createEvent} disabled={!newEvent.title || saving} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                {saving ? <Loader2 size={12} className="animate-spin" /> : <Calendar size={12} />}
+                {saving ? "Saving..." : "Create Event"}
               </button>
             </div>
           </div>

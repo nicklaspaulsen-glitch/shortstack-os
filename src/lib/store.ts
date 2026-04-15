@@ -29,11 +29,11 @@ interface AppStore {
   setManagedClient: (client: ManagedClient | null) => void;
 }
 
-// Restore managed client from sessionStorage on load
+// Restore managed client from localStorage (survives tab close) with sessionStorage fallback
 function getPersistedManagedClient(): ManagedClient | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = sessionStorage.getItem("managed_client");
+    const raw = localStorage.getItem("ss_selected_client") || sessionStorage.getItem("managed_client");
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -53,8 +53,10 @@ export const useAppStore = create<AppStore>((set) => ({
   setManagedClient: (client) => {
     if (typeof window !== "undefined") {
       if (client) {
+        localStorage.setItem("ss_selected_client", JSON.stringify(client));
         sessionStorage.setItem("managed_client", JSON.stringify(client));
       } else {
+        localStorage.removeItem("ss_selected_client");
         sessionStorage.removeItem("managed_client");
       }
     }

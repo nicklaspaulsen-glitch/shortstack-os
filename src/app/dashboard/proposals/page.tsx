@@ -8,6 +8,7 @@ import {
   Layers, TrendingUp,
   X, AlertTriangle
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type MainTab = "builder" | "templates" | "tracking" | "history" | "analytics" | "acceptance";
 
@@ -27,13 +28,7 @@ const TEMPLATE_STYLES = [
   { id: "6", name: "Clean Slate", description: "Ultra minimal, content-first", color: "#6b7280", preview: "Slate" },
 ];
 
-const MOCK_PROPOSALS = [
-  { id: "1", client: "Bright Smile Dental", amount: "$2,497/mo", status: "viewed", views: 5, timeSpent: "12m 34s", sentDate: "Apr 10", services: ["Content", "Ads"], version: 2 },
-  { id: "2", client: "Peak Fitness Gym", amount: "$4,997/mo", status: "accepted", views: 8, timeSpent: "28m 12s", sentDate: "Apr 8", services: ["Full Stack"], version: 1 },
-  { id: "3", client: "Atlas Legal Group", amount: "$1,997/mo", status: "sent", views: 0, timeSpent: "0s", sentDate: "Apr 12", services: ["Social", "SEO"], version: 1 },
-  { id: "4", client: "Swift Plumbing Co", amount: "$3,497/mo", status: "expired", views: 2, timeSpent: "4m 56s", sentDate: "Mar 28", services: ["Ads", "Web"], version: 1 },
-  { id: "5", client: "CloudNine HVAC", amount: "$3,997/mo", status: "declined", views: 3, timeSpent: "8m 22s", sentDate: "Apr 5", services: ["Content", "AI"], version: 3 },
-];
+const MOCK_PROPOSALS: { id: string; client: string; amount: string; status: string; views: number; timeSpent: string; sentDate: string; services: string[]; version: number }[] = [];
 
 interface ProposalSection {
   id: string;
@@ -353,6 +348,15 @@ export default function ProposalsPage() {
           <h3 className="text-sm font-semibold flex items-center gap-2">
             <Eye size={14} className="text-gold" /> Proposal Tracking
           </h3>
+          {MOCK_PROPOSALS.length === 0 ? (
+            <EmptyState
+              icon={<FileText size={24} />}
+              title="No proposals yet"
+              description="Create your first proposal to start closing deals"
+              actionLabel="Build a Proposal"
+              onAction={() => setActiveTab("builder")}
+            />
+          ) : (
           <div className="space-y-2">
             {MOCK_PROPOSALS.map(p => (
               <div key={p.id} className="card p-4 flex items-center justify-between">
@@ -394,6 +398,7 @@ export default function ProposalsPage() {
               </div>
             ))}
           </div>
+          )}
         </div>
       )}
 
@@ -403,26 +408,34 @@ export default function ProposalsPage() {
           <h3 className="text-sm font-semibold flex items-center gap-2">
             <Layers size={14} className="text-gold" /> Proposal Version History
           </h3>
-          {MOCK_PROPOSALS.filter(p => p.version > 1).map(p => (
-            <div key={p.id} className="card">
-              <p className="text-xs font-semibold mb-3">{p.client} - {p.amount}</p>
-              <div className="space-y-1.5">
-                {Array.from({ length: p.version }, (_, i) => p.version - i).map(v => (
-                  <div key={v} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-2 h-2 rounded-full ${v === p.version ? "bg-gold" : "bg-muted"}`} />
-                      <span className={v === p.version ? "font-semibold" : "text-muted"}>Version {v}</span>
-                      {v === p.version && <span className="text-[8px] px-1 py-0.5 rounded bg-gold/10 text-gold">Current</span>}
+          {MOCK_PROPOSALS.filter(p => p.version > 1).length === 0 ? (
+            <EmptyState
+              icon={<Layers size={24} />}
+              title="No version history"
+              description="Proposal versions will appear here once you create and revise proposals"
+            />
+          ) : (
+            MOCK_PROPOSALS.filter(p => p.version > 1).map(p => (
+              <div key={p.id} className="card">
+                <p className="text-xs font-semibold mb-3">{p.client} - {p.amount}</p>
+                <div className="space-y-1.5">
+                  {Array.from({ length: p.version }, (_, i) => p.version - i).map(v => (
+                    <div key={v} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${v === p.version ? "bg-gold" : "bg-muted"}`} />
+                        <span className={v === p.version ? "font-semibold" : "text-muted"}>Version {v}</span>
+                        {v === p.version && <span className="text-[8px] px-1 py-0.5 rounded bg-gold/10 text-gold">Current</span>}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted">{v === p.version ? p.sentDate : `Mar ${20 + v}`}</span>
+                        {v !== p.version && <button className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-muted hover:text-gold">Restore</button>}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-muted">{v === p.version ? p.sentDate : `Mar ${20 + v}`}</span>
-                      {v !== p.version && <button className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-muted hover:text-gold">Restore</button>}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       )}
 

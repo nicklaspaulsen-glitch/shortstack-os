@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink, Key, Shield, Mail, Download, Upload, Trash2, AlertTriangle, Eye, Lock, Database } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink, Key, Shield, Mail, Download, Upload, Trash2, AlertTriangle, Eye, Lock, Database, RotateCcw, CheckCircle2, Loader2, Server, ChevronDown, ChevronUp, Send, ToggleLeft, ToggleRight, Cloud, XCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import toast from "react-hot-toast";
 import { applyTheme } from "@/components/theme-provider";
@@ -78,11 +78,21 @@ export default function SettingsPage() {
   const [newKeyName, setNewKeyName] = useState("");
 
   // White-label
-  const [whiteLabel, setWhiteLabel] = useState({ company_name: "", logo_url: "", primary_color: "#C9A84C", domain: "", favicon_url: "", support_email: "" });
+  const [whiteLabel, setWhiteLabel] = useState({
+    company_name: "", logo_url: "", primary_color: "#C9A84C", accent_color: "#B8942F",
+    favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "",
+  });
+  const [wlSaving, setWlSaving] = useState(false);
+  const [wlLoaded, setWlLoaded] = useState(false);
 
   // SMTP
-  const [smtp, setSmtp] = useState({ host: "", port: "587", username: "", password: "", from_name: "", from_email: "", encryption: "tls" });
+  const [smtp, setSmtp] = useState({ host: "", port: "587", username: "", password: "", from_name: "", from_email: "", use_tls: true, provider: "" as string });
   const [smtpTesting, setSmtpTesting] = useState(false);
+  const [smtpSaving, setSmtpSaving] = useState(false);
+  const [smtpLoaded, setSmtpLoaded] = useState(false);
+  const [smtpVerified, setSmtpVerified] = useState(false);
+  const [smtpTestResult, setSmtpTestResult] = useState<{ success: boolean; message: string; hint?: string } | null>(null);
+  const [smtpProviderOpen, setSmtpProviderOpen] = useState(false);
 
   // Security
   const [twoFA, setTwoFA] = useState(false);
@@ -95,12 +105,48 @@ export default function SettingsPage() {
   const [timezone, setTimezone] = useState("Europe/Copenhagen");
   const [language, setLanguage] = useState("en");
 
+  // Social connections
+  const [socialAccounts, setSocialAccounts] = useState<Array<{
+    id: string; platform: string; account_name: string; account_id: string | null;
+    is_active: boolean; created_at: string; token_expires_at: string | null;
+    status: "active" | "expired" | "revoked"; metadata: Record<string, unknown> | null;
+  }>>([]);
+  const [disconnectingSocial, setDisconnectingSocial] = useState<string | null>(null);
+  const [socialLoading, setSocialLoading] = useState(false);
+
   // Danger zone
   const [deleteConfirm, setDeleteConfirm] = useState("");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => { fetchData(); fetchSocialAccounts(); }, []);
   useEffect(() => { if (profile?.nickname) setNickname(profile.nickname); }, [profile]);
+
+  // Fetch white-label config when the tab opens
+  useEffect(() => {
+    if (tab !== "white_label" || wlLoaded) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/white-label?t=${Date.now()}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (json.config) {
+            setWhiteLabel({
+              company_name: json.config.company_name || "",
+              logo_url: json.config.logo_url || "",
+              primary_color: json.config.primary_color || "#C9A84C",
+              accent_color: json.config.accent_color || "#B8942F",
+              favicon_url: json.config.favicon_url || "",
+              login_text: json.config.login_text || "",
+              show_powered_by: json.config.show_powered_by ?? true,
+              domain: json.config.domain || "",
+              support_email: json.config.support_email || "",
+            });
+          }
+        }
+      } catch { /* keep defaults */ }
+      setWlLoaded(true);
+    })();
+  }, [tab, wlLoaded]);
 
   async function fetchData() {
     try {
@@ -141,6 +187,60 @@ export default function SettingsPage() {
     }
   }
 
+  async function fetchSocialAccounts() {
+    setSocialLoading(true);
+    try {
+      // Get first active client to fetch social accounts
+      const { data: firstClient } = await supabase
+        .from("clients")
+        .select("id")
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+
+      if (firstClient) {
+        const res = await fetch(`/api/social/connect?client_id=${firstClient.id}&zernio=true`);
+        const data = await res.json();
+        setSocialAccounts(data.accounts || []);
+      }
+    } catch {
+      console.error("[Settings] Failed to fetch social accounts");
+    }
+    setSocialLoading(false);
+  }
+
+  async function disconnectSocialAccount(account: { id: string; account_id: string | null; platform: string }) {
+    setDisconnectingSocial(account.id);
+    try {
+      const { data: firstClient } = await supabase
+        .from("clients")
+        .select("id")
+        .eq("is_active", true)
+        .limit(1)
+        .single();
+
+      const res = await fetch("/api/social/connect", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          account_id: account.id,
+          client_id: firstClient?.id,
+          zernio_account_id: account.account_id,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`${account.platform} disconnected`);
+        fetchSocialAccounts();
+      } else {
+        toast.error("Failed to disconnect");
+      }
+    } catch {
+      toast.error("Error disconnecting account");
+    }
+    setDisconnectingSocial(null);
+  }
+
   function saveAgentConfig(config: AgentConfig) {
     const updated = agentConfigs.map(a => a.client_id === config.client_id ? config : a);
     setAgentConfigs(updated);
@@ -161,6 +261,122 @@ export default function SettingsPage() {
     setSfxEnabled(next);
     safeSet("sfx_enabled", String(next));
     toast.success(next ? "Sound effects enabled" : "Sound effects muted");
+  }
+
+  // SMTP providers
+  const smtpProviders = [
+    { name: "Gmail", host: "smtp.gmail.com", port: "587", use_tls: true, icon: "G", color: "#EA4335", hint: "Use an App Password (Settings > Security > 2-Step Verification > App Passwords)" },
+    { name: "Outlook / Microsoft 365", host: "smtp.office365.com", port: "587", use_tls: true, icon: "O", color: "#0078D4", hint: "Use your Microsoft account credentials" },
+    { name: "SendGrid", host: "smtp.sendgrid.net", port: "587", use_tls: true, icon: "SG", color: "#1A82E2", hint: "Username is 'apikey', password is your SendGrid API key" },
+    { name: "Mailgun", host: "smtp.mailgun.org", port: "587", use_tls: true, icon: "MG", color: "#F06B54", hint: "Find credentials under Sending > Domain settings > SMTP" },
+    { name: "AWS SES", host: "email-smtp.us-east-1.amazonaws.com", port: "587", use_tls: true, icon: "SES", color: "#FF9900", hint: "Use SMTP credentials from the SES console (not IAM keys)" },
+  ];
+
+  // Load SMTP config from API
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (tab === "smtp" && !smtpLoaded) {
+      (async () => {
+        try {
+          const res = await fetch("/api/smtp");
+          if (res.ok) {
+            const { config } = await res.json();
+            if (config) {
+              setSmtp({
+                host: config.host || "",
+                port: String(config.port || "587"),
+                username: config.username || "",
+                password: config.password_encrypted || "",
+                from_name: config.from_name || "",
+                from_email: config.from_email || "",
+                use_tls: config.use_tls ?? true,
+                provider: config.provider || "",
+              });
+              setSmtpVerified(config.verified || false);
+            }
+          }
+        } catch { /* ignore fetch errors */ }
+        setSmtpLoaded(true);
+      })();
+    }
+  }, [tab, smtpLoaded]);
+
+  async function saveSmtp() {
+    setSmtpSaving(true);
+    setSmtpTestResult(null);
+    try {
+      const res = await fetch("/api/smtp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          host: smtp.host,
+          port: smtp.port,
+          username: smtp.username,
+          password: smtp.password,
+          from_email: smtp.from_email,
+          from_name: smtp.from_name,
+          use_tls: smtp.use_tls,
+          provider: smtp.provider || null,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("SMTP settings saved");
+        setSmtpVerified(false); // Needs re-verification after changes
+      } else {
+        toast.error(data.error || "Failed to save SMTP settings");
+      }
+    } catch {
+      toast.error("Network error — could not save");
+    }
+    setSmtpSaving(false);
+  }
+
+  async function testSmtp() {
+    setSmtpTesting(true);
+    setSmtpTestResult(null);
+    try {
+      const res = await fetch("/api/smtp/test", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          host: smtp.host,
+          port: smtp.port,
+          username: smtp.username,
+          password: smtp.password,
+          from_email: smtp.from_email,
+          from_name: smtp.from_name,
+          use_tls: smtp.use_tls,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSmtpTestResult({ success: true, message: data.message });
+        setSmtpVerified(true);
+        toast.success("Test email sent successfully!");
+      } else {
+        setSmtpTestResult({ success: false, message: data.error, hint: data.hint });
+        toast.error("SMTP test failed");
+      }
+    } catch {
+      setSmtpTestResult({ success: false, message: "Network error — could not reach the server" });
+      toast.error("Network error");
+    }
+    setSmtpTesting(false);
+  }
+
+  function applySmtpProvider(provider: typeof smtpProviders[number]) {
+    setSmtp(prev => ({
+      ...prev,
+      host: provider.host,
+      port: provider.port,
+      use_tls: provider.use_tls,
+      provider: provider.name,
+    }));
+    setSmtpProviderOpen(false);
+    setSmtpVerified(false);
+    setSmtpTestResult(null);
+    toast.success(`${provider.name} template applied`);
   }
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
@@ -415,6 +631,26 @@ export default function SettingsPage() {
                 }}
                   className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
                   <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
+                </button>
+              </div>
+
+              {/* Dark Mode */}
+              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
+                <div>
+                  <p className="text-xs font-medium">Dark Mode</p>
+                  <p className="text-[10px] text-muted">Switch between light and dark appearance</p>
+                </div>
+                <button onClick={() => {
+                  const currentTheme = safeGet("ss-theme") || "nordic";
+                  const isCurrentlyLight = currentTheme === "nordic" || currentTheme === "light";
+                  const newTheme = isCurrentlyLight ? "midnight" : "nordic";
+                  safeSet("ss-theme", newTheme);
+                  applyTheme(newTheme);
+                  rerender();
+                  toast.success(isCurrentlyLight ? "Dark mode enabled" : "Light mode enabled");
+                }}
+                  className={`w-10 h-5 rounded-full transition-all ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "translate-x-5" : "translate-x-0.5"}`} />
                 </button>
               </div>
 
@@ -906,6 +1142,69 @@ export default function SettingsPage() {
       {/* Integrations Tab */}
       {tab === "integrations" && (
         <div className="space-y-4">
+          {/* Connected Social Accounts via Zernio */}
+          <div>
+            <h3 className="text-xs text-muted uppercase tracking-wider mb-2">Connected Social Accounts</h3>
+            {socialLoading ? (
+              <div className="card p-6 text-center">
+                <Loader2 size={16} className="animate-spin mx-auto text-muted" />
+              </div>
+            ) : socialAccounts.filter(a => a.is_active).length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {socialAccounts.filter(a => a.is_active).map(account => (
+                  <div key={account.id} className="card-hover p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <span className={`w-2 h-2 rounded-full ${
+                          account.status === "active" ? "bg-emerald-400" :
+                          account.status === "expired" ? "bg-red-400" : "bg-zinc-500"
+                        }`} />
+                        <div>
+                          <p className="font-medium text-sm capitalize flex items-center gap-1.5">
+                            {account.platform}
+                            {account.status === "expired" && (
+                              <span className="text-[9px] bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded-full font-normal">expired</span>
+                            )}
+                          </p>
+                          <p className="text-xs text-muted">{account.account_name || "Connected"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <StatusBadge status={account.status === "active" ? "active" : account.status === "expired" ? "error" : "inactive"} />
+                        <button
+                          onClick={() => disconnectSocialAccount(account)}
+                          disabled={disconnectingSocial === account.id}
+                          className="text-xs text-red-400 hover:text-red-300 transition-colors px-2 py-1 rounded hover:bg-red-500/10 disabled:opacity-50"
+                          title="Disconnect account">
+                          {disconnectingSocial === account.id ? (
+                            <Loader2 size={12} className="animate-spin" />
+                          ) : (
+                            <XCircle size={14} />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    {account.token_expires_at && (
+                      <p className="text-[10px] text-muted mt-2">
+                        Token expires: {new Date(account.token_expires_at).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="card p-6 text-center">
+                <Globe size={20} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted mb-2">No social accounts connected</p>
+                <p className="text-[10px] text-muted/70 mb-3">Go to Social Manager to connect accounts via Zernio</p>
+                <a href="/dashboard/social-manager" className="text-xs text-gold hover:underline">
+                  Open Social Manager
+                </a>
+              </div>
+            )}
+          </div>
+
+          {/* Service Integrations */}
           {["Core", "AI", "CRM", "Communication", "Payments", "Social", "APIs", "Domains", "Voice AI", "Automation", "Publishing"].map(category => {
             const items = INTEGRATIONS.filter(i => i.category === category);
             if (items.length === 0) return null;
@@ -1093,41 +1392,228 @@ export default function SettingsPage() {
       )}
 
       {/* White Label Tab */}
-      {tab === "white_label" && (
-        <div className="space-y-4">
-          <div className="card">
-            <h3 className="section-header">White Label Settings</h3>
-            <p className="text-xs text-muted mb-4">Rebrand ShortStack as your own platform for client-facing portals.</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div><label className="block text-xs text-muted mb-1">Company Name</label><input value={whiteLabel.company_name} onChange={e => setWhiteLabel({ ...whiteLabel, company_name: e.target.value })} placeholder="Your Agency Name" className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">Custom Domain</label><input value={whiteLabel.domain} onChange={e => setWhiteLabel({ ...whiteLabel, domain: e.target.value })} placeholder="app.youragency.com" className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">Logo URL</label><input value={whiteLabel.logo_url} onChange={e => setWhiteLabel({ ...whiteLabel, logo_url: e.target.value })} placeholder="https://..." className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">Favicon URL</label><input value={whiteLabel.favicon_url} onChange={e => setWhiteLabel({ ...whiteLabel, favicon_url: e.target.value })} placeholder="https://..." className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">Primary Color</label><input type="color" value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="input w-full h-10" /></div>
-              <div><label className="block text-xs text-muted mb-1">Support Email</label><input value={whiteLabel.support_email} onChange={e => setWhiteLabel({ ...whiteLabel, support_email: e.target.value })} placeholder="support@youragency.com" className="input w-full text-sm" /></div>
-            </div>
-            <button onClick={() => toast.success("White label settings saved")} className="btn-primary mt-4 flex items-center gap-2"><Save size={14} /> Save White Label</button>
-          </div>
-        </div>
-      )}
+      {tab === "white_label" && (<WhiteLabelTabContent whiteLabel={whiteLabel} setWhiteLabel={setWhiteLabel} wlSaving={wlSaving} setWlSaving={setWlSaving} />)}
 
       {/* SMTP Tab */}
       {tab === "smtp" && (
-        <div className="space-y-4">
-          <div className="card">
-            <h3 className="section-header">Email SMTP Configuration</h3>
-            <p className="text-xs text-muted mb-4">Configure your own SMTP server for sending emails from your domain.</p>
-            <div className="grid grid-cols-2 gap-4">
-              <div><label className="block text-xs text-muted mb-1">SMTP Host</label><input value={smtp.host} onChange={e => setSmtp({ ...smtp, host: e.target.value })} placeholder="smtp.gmail.com" className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">Port</label><input value={smtp.port} onChange={e => setSmtp({ ...smtp, port: e.target.value })} placeholder="587" className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">Username</label><input value={smtp.username} onChange={e => setSmtp({ ...smtp, username: e.target.value })} placeholder="you@example.com" className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">Password</label><input type="password" value={smtp.password} onChange={e => setSmtp({ ...smtp, password: e.target.value })} placeholder="App password" className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">From Name</label><input value={smtp.from_name} onChange={e => setSmtp({ ...smtp, from_name: e.target.value })} placeholder="Your Agency" className="input w-full text-sm" /></div>
-              <div><label className="block text-xs text-muted mb-1">From Email</label><input value={smtp.from_email} onChange={e => setSmtp({ ...smtp, from_email: e.target.value })} placeholder="noreply@youragency.com" className="input w-full text-sm" /></div>
+        <div className="space-y-4 max-w-3xl">
+          {/* Status banner */}
+          {smtpVerified && (
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-success/10 border border-success/20">
+              <CheckCircle2 size={16} className="text-success" />
+              <span className="text-sm text-success font-medium">SMTP verified and ready to send</span>
             </div>
-            <div className="flex gap-2 mt-4">
-              <button onClick={() => toast.success("SMTP settings saved")} className="btn-primary flex items-center gap-2"><Save size={14} /> Save</button>
-              <button onClick={() => { setSmtpTesting(true); setTimeout(() => { setSmtpTesting(false); toast.success("SMTP test email sent!"); }, 2000); }} disabled={smtpTesting} className="btn-secondary flex items-center gap-2 disabled:opacity-50">{smtpTesting ? "Testing..." : "Send Test Email"}</button>
+          )}
+
+          {/* Quick-start provider templates */}
+          <div className="card">
+            <button
+              onClick={() => setSmtpProviderOpen(!smtpProviderOpen)}
+              className="w-full flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <Cloud size={16} className="text-gold" />
+                <h3 className="section-header mb-0">Quick Setup &mdash; Provider Templates</h3>
+              </div>
+              {smtpProviderOpen ? <ChevronUp size={16} className="text-muted" /> : <ChevronDown size={16} className="text-muted" />}
+            </button>
+            {smtpProviderOpen && (
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {smtpProviders.map(p => (
+                  <button
+                    key={p.name}
+                    onClick={() => applySmtpProvider(p)}
+                    className={`group p-3 rounded-lg border text-left transition-all hover:border-gold/40 hover:bg-gold/5 ${
+                      smtp.provider === p.name ? "border-gold/50 bg-gold/5" : "border-border"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <span
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[10px] font-bold shrink-0"
+                        style={{ backgroundColor: p.color }}
+                      >
+                        {p.icon}
+                      </span>
+                      <span className="font-medium text-sm">{p.name}</span>
+                      {smtp.provider === p.name && <CheckCircle2 size={14} className="text-gold ml-auto" />}
+                    </div>
+                    <p className="text-[10px] text-muted leading-relaxed">{p.hint}</p>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* SMTP Configuration Form */}
+          <div className="card">
+            <div className="flex items-center gap-2 mb-1">
+              <Server size={16} className="text-gold" />
+              <h3 className="section-header mb-0">SMTP Server Configuration</h3>
+            </div>
+            <p className="text-xs text-muted mb-4">Configure your SMTP server to send emails from your own domain. All credentials are stored encrypted.</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-muted mb-1">SMTP Host <span className="text-gold">*</span></label>
+                <input
+                  value={smtp.host}
+                  onChange={e => { setSmtp({ ...smtp, host: e.target.value }); setSmtpVerified(false); }}
+                  placeholder="smtp.gmail.com"
+                  className="input w-full text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-muted mb-1">Port <span className="text-gold">*</span></label>
+                <div className="flex gap-2">
+                  <input
+                    value={smtp.port}
+                    onChange={e => { setSmtp({ ...smtp, port: e.target.value }); setSmtpVerified(false); }}
+                    placeholder="587"
+                    className="input w-full text-sm"
+                  />
+                  <div className="flex gap-1">
+                    {["587", "465", "25"].map(portOption => (
+                      <button
+                        key={portOption}
+                        onClick={() => { setSmtp({ ...smtp, port: portOption }); setSmtpVerified(false); }}
+                        className={`px-2 py-1 text-[10px] rounded border transition-all ${
+                          smtp.port === portOption ? "border-gold/50 bg-gold/10 text-gold" : "border-border text-muted hover:border-gold/30"
+                        }`}
+                      >
+                        {portOption}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-muted mb-1">Username <span className="text-gold">*</span></label>
+                <input
+                  value={smtp.username}
+                  onChange={e => { setSmtp({ ...smtp, username: e.target.value }); setSmtpVerified(false); }}
+                  placeholder="you@example.com"
+                  className="input w-full text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-muted mb-1">Password <span className="text-gold">*</span></label>
+                <input
+                  type="password"
+                  value={smtp.password}
+                  onChange={e => { setSmtp({ ...smtp, password: e.target.value }); setSmtpVerified(false); }}
+                  placeholder="App password or API key"
+                  className="input w-full text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-muted mb-1">From Email <span className="text-gold">*</span></label>
+                <input
+                  value={smtp.from_email}
+                  onChange={e => { setSmtp({ ...smtp, from_email: e.target.value }); setSmtpVerified(false); }}
+                  placeholder="noreply@youragency.com"
+                  className="input w-full text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-muted mb-1">From Name</label>
+                <input
+                  value={smtp.from_name}
+                  onChange={e => setSmtp({ ...smtp, from_name: e.target.value })}
+                  placeholder="Your Agency Name"
+                  className="input w-full text-sm"
+                />
+              </div>
+            </div>
+
+            {/* TLS toggle */}
+            <div className="flex items-center justify-between mt-4 p-3 bg-surface-light/50 rounded-lg border border-border">
+              <div>
+                <p className="text-sm font-medium">TLS / SSL Encryption</p>
+                <p className="text-[10px] text-muted">Required by most providers. Port 465 uses implicit SSL; ports 587/25 use STARTTLS.</p>
+              </div>
+              <button
+                onClick={() => { setSmtp({ ...smtp, use_tls: !smtp.use_tls }); setSmtpVerified(false); }}
+                className="flex items-center gap-1.5 transition-all"
+              >
+                {smtp.use_tls
+                  ? <ToggleRight size={28} className="text-gold" />
+                  : <ToggleLeft size={28} className="text-muted" />
+                }
+                <span className={`text-xs font-medium ${smtp.use_tls ? "text-gold" : "text-muted"}`}>
+                  {smtp.use_tls ? "Enabled" : "Disabled"}
+                </span>
+              </button>
+            </div>
+
+            {/* Test result banner */}
+            {smtpTestResult && (
+              <div className={`mt-4 p-3 rounded-lg border ${
+                smtpTestResult.success
+                  ? "bg-success/10 border-success/20"
+                  : "bg-danger/10 border-danger/20"
+              }`}>
+                <div className="flex items-start gap-2">
+                  {smtpTestResult.success
+                    ? <CheckCircle2 size={16} className="text-success mt-0.5 shrink-0" />
+                    : <XCircle size={16} className="text-danger mt-0.5 shrink-0" />
+                  }
+                  <div>
+                    <p className={`text-sm font-medium ${smtpTestResult.success ? "text-success" : "text-danger"}`}>
+                      {smtpTestResult.success ? "Connection Successful" : "Connection Failed"}
+                    </p>
+                    <p className="text-xs text-muted mt-0.5">{smtpTestResult.message}</p>
+                    {smtpTestResult.hint && (
+                      <p className="text-xs text-muted/70 mt-1 italic">{smtpTestResult.hint}</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-3 mt-5">
+              <button
+                onClick={saveSmtp}
+                disabled={smtpSaving || !smtp.host || !smtp.port || !smtp.username || !smtp.from_email}
+                className="btn-primary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {smtpSaving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+                {smtpSaving ? "Saving..." : "Save Configuration"}
+              </button>
+              <button
+                onClick={testSmtp}
+                disabled={smtpTesting || !smtp.host || !smtp.port || !smtp.username || !smtp.from_email}
+                className="btn-secondary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {smtpTesting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                {smtpTesting ? "Sending Test..." : "Test Connection"}
+              </button>
+            </div>
+          </div>
+
+          {/* Help section */}
+          <div className="card">
+            <div className="flex items-center gap-2 mb-3">
+              <Info size={16} className="text-gold" />
+              <h3 className="section-header mb-0">Setup Guide</h3>
+            </div>
+            <div className="space-y-2 text-xs text-muted">
+              <div className="flex items-start gap-2 p-2 bg-surface-light/30 rounded">
+                <span className="text-gold font-bold mt-px">1.</span>
+                <p>Select a provider template above or enter your SMTP server details manually.</p>
+              </div>
+              <div className="flex items-start gap-2 p-2 bg-surface-light/30 rounded">
+                <span className="text-gold font-bold mt-px">2.</span>
+                <p>Enter your credentials. For Gmail, enable 2-Step Verification and create an App Password at <span className="text-gold">myaccount.google.com/apppasswords</span>.</p>
+              </div>
+              <div className="flex items-start gap-2 p-2 bg-surface-light/30 rounded">
+                <span className="text-gold font-bold mt-px">3.</span>
+                <p>Click <strong className="text-foreground">Save Configuration</strong>, then <strong className="text-foreground">Test Connection</strong> to verify everything works. A test email will be sent to your account.</p>
+              </div>
+              <div className="flex items-start gap-2 p-2 bg-surface-light/30 rounded">
+                <span className="text-gold font-bold mt-px">4.</span>
+                <p>Common ports: <strong className="text-foreground">587</strong> (STARTTLS, recommended), <strong className="text-foreground">465</strong> (implicit SSL), <strong className="text-foreground">25</strong> (unencrypted, not recommended).</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1305,6 +1791,267 @@ export default function SettingsPage() {
           </div>
         )}
       </Modal>
+    </div>
+  );
+}
+
+/* ─── White Label Tab (extracted component) ──────────────────────────── */
+type WLState = { company_name: string; logo_url: string; primary_color: string; accent_color: string; favicon_url: string; login_text: string; show_powered_by: boolean; domain: string; support_email: string };
+
+function WhiteLabelTabContent({
+  whiteLabel,
+  setWhiteLabel,
+  wlSaving,
+  setWlSaving,
+}: {
+  whiteLabel: WLState;
+  setWhiteLabel: React.Dispatch<React.SetStateAction<WLState>>;
+  wlSaving: boolean;
+  setWlSaving: (v: boolean) => void;
+}) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Left column — Config form */}
+      <div className="lg:col-span-2 space-y-4">
+        <div className="card">
+          <h3 className="section-header flex items-center gap-2">
+            <Palette size={14} className="text-gold" /> Branding
+          </h3>
+          <p className="text-xs text-muted mb-4">Rebrand ShortStack as your own platform. Changes apply across the sidebar, login page, and client portal.</p>
+
+          <div className="space-y-4">
+            {/* Company Name */}
+            <div>
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Company Name</label>
+              <input value={whiteLabel.company_name} onChange={e => setWhiteLabel({ ...whiteLabel, company_name: e.target.value })} placeholder="Your Agency Name (replaces ShortStack)" className="input w-full text-sm" />
+              <p className="text-[9px] text-muted mt-1">Displayed in the sidebar, page titles, and client-facing UI</p>
+            </div>
+
+            {/* Logo Upload */}
+            <div>
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Logo URL</label>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg border border-border bg-surface-light flex items-center justify-center overflow-hidden shrink-0">
+                  {whiteLabel.logo_url ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={whiteLabel.logo_url} alt="Logo" className="w-full h-full object-contain" />
+                  ) : (
+                    <Palette size={16} className="text-muted" />
+                  )}
+                </div>
+                <input value={whiteLabel.logo_url} onChange={e => setWhiteLabel({ ...whiteLabel, logo_url: e.target.value })} placeholder="https://yourdomain.com/logo.png" className="input flex-1 text-sm" />
+              </div>
+              <p className="text-[9px] text-muted mt-1">Square image recommended (PNG/SVG, at least 128x128px)</p>
+            </div>
+
+            {/* Colors */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Primary Color</label>
+                <div className="flex items-center gap-2">
+                  <input type="color" value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border cursor-pointer" style={{ padding: 2 }} />
+                  <input value={whiteLabel.primary_color} onChange={e => setWhiteLabel({ ...whiteLabel, primary_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#C9A84C" />
+                </div>
+                <p className="text-[9px] text-muted mt-1">Replaces gold (#C9A84C) across buttons, links, active states</p>
+              </div>
+              <div>
+                <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Accent Color</label>
+                <div className="flex items-center gap-2">
+                  <input type="color" value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="w-10 h-10 rounded-lg border border-border cursor-pointer" style={{ padding: 2 }} />
+                  <input value={whiteLabel.accent_color} onChange={e => setWhiteLabel({ ...whiteLabel, accent_color: e.target.value })} className="input flex-1 text-sm font-mono" placeholder="#B8942F" />
+                </div>
+                <p className="text-[9px] text-muted mt-1">Secondary accent for hover states and highlights</p>
+              </div>
+            </div>
+
+            {/* Favicon */}
+            <div>
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Favicon URL</label>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded border border-border bg-surface-light flex items-center justify-center overflow-hidden shrink-0">
+                  {whiteLabel.favicon_url ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={whiteLabel.favicon_url} alt="Favicon" className="w-full h-full object-contain" />
+                  ) : (
+                    <Globe size={12} className="text-muted" />
+                  )}
+                </div>
+                <input value={whiteLabel.favicon_url} onChange={e => setWhiteLabel({ ...whiteLabel, favicon_url: e.target.value })} placeholder="https://yourdomain.com/favicon.ico" className="input flex-1 text-sm" />
+              </div>
+            </div>
+
+            {/* Login Page Text */}
+            <div>
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Custom Login Page Text</label>
+              <textarea
+                value={whiteLabel.login_text}
+                onChange={e => setWhiteLabel({ ...whiteLabel, login_text: e.target.value })}
+                placeholder="Welcome to your agency dashboard. Sign in to manage your campaigns, analytics, and more."
+                rows={3}
+                className="input w-full text-sm resize-none"
+              />
+              <p className="text-[9px] text-muted mt-1">Shown on the login page below your logo</p>
+            </div>
+
+            {/* Powered By toggle */}
+            <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
+              <div>
+                <p className="text-xs font-medium">Show &quot;Powered by ShortStack&quot;</p>
+                <p className="text-[10px] text-muted">Display attribution footer in sidebar and client portal</p>
+              </div>
+              <button onClick={() => setWhiteLabel({ ...whiteLabel, show_powered_by: !whiteLabel.show_powered_by })}
+                className={`w-10 h-5 rounded-full transition-colors ${whiteLabel.show_powered_by ? "bg-gold" : "bg-surface-light border border-border"}`}>
+                <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${whiteLabel.show_powered_by ? "translate-x-5" : "translate-x-0.5"}`} />
+              </button>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-2 mt-5 pt-4 border-t border-border">
+            <button
+              disabled={wlSaving}
+              onClick={async () => {
+                setWlSaving(true);
+                try {
+                  const res = await fetch("/api/white-label", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      company_name: whiteLabel.company_name || null,
+                      logo_url: whiteLabel.logo_url || null,
+                      primary_color: whiteLabel.primary_color || null,
+                      accent_color: whiteLabel.accent_color || null,
+                      favicon_url: whiteLabel.favicon_url || null,
+                      login_text: whiteLabel.login_text || null,
+                      show_powered_by: whiteLabel.show_powered_by,
+                    }),
+                  });
+                  if (res.ok) {
+                    if (whiteLabel.primary_color && whiteLabel.primary_color !== "#C9A84C") {
+                      document.documentElement.style.setProperty("--color-accent", whiteLabel.primary_color);
+                      document.documentElement.style.setProperty("--wl-primary", whiteLabel.primary_color);
+                    } else {
+                      document.documentElement.style.removeProperty("--wl-primary");
+                    }
+                    if (whiteLabel.accent_color && whiteLabel.accent_color !== "#B8942F") {
+                      document.documentElement.style.setProperty("--wl-accent", whiteLabel.accent_color);
+                    } else {
+                      document.documentElement.style.removeProperty("--wl-accent");
+                    }
+                    localStorage.setItem("ss_white_label", JSON.stringify(whiteLabel));
+                    window.dispatchEvent(new Event("white-label-update"));
+                    toast.success("White label branding saved");
+                  } else {
+                    toast.error("Failed to save — try again");
+                  }
+                } catch {
+                  toast.error("Connection error");
+                }
+                setWlSaving(false);
+              }}
+              className="btn-primary text-xs flex items-center gap-2"
+            >
+              <Save size={12} /> {wlSaving ? "Saving..." : "Save White Label"}
+            </button>
+            <button
+              onClick={() => {
+                setWhiteLabel({ company_name: "", logo_url: "", primary_color: "#C9A84C", accent_color: "#B8942F", favicon_url: "", login_text: "", show_powered_by: true, domain: "", support_email: "" });
+                toast.success("Reset to defaults — click Save to apply");
+              }}
+              className="btn-secondary text-xs flex items-center gap-2"
+            >
+              <RotateCcw size={12} /> Reset to Defaults
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Right column — Live Preview */}
+      <div className="space-y-4">
+        <div className="card-static">
+          <h3 className="section-header flex items-center gap-2">
+            <Eye size={14} className="text-gold" /> Live Preview
+          </h3>
+          <p className="text-[9px] text-muted mb-3">How your branding will appear</p>
+
+          {/* Sidebar preview */}
+          <div className="rounded-xl border border-border overflow-hidden bg-surface-light">
+            <div className="p-3 border-b border-border flex items-center gap-2" style={{ background: "var(--color-surface)" }}>
+              {whiteLabel.logo_url ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={whiteLabel.logo_url} alt="" className="w-6 h-6 rounded object-contain" />
+              ) : (
+                <div className="w-6 h-6 rounded bg-gold/10 flex items-center justify-center">
+                  <Palette size={10} style={{ color: whiteLabel.primary_color || "#C9A84C" }} />
+                </div>
+              )}
+              <span className="text-xs font-bold truncate" style={{ color: "var(--color-foreground)" }}>
+                {whiteLabel.company_name || "ShortStack"}
+              </span>
+            </div>
+            <div className="p-2 space-y-0.5">
+              {["Dashboard", "Analytics", "CRM", "Clients"].map((item, i) => (
+                <div key={item}
+                  className="px-2.5 py-1.5 rounded-lg text-[10px] flex items-center gap-2"
+                  style={i === 0 ? {
+                    color: whiteLabel.primary_color || "#C9A84C",
+                    background: `${whiteLabel.primary_color || "#C9A84C"}10`,
+                    fontWeight: 600,
+                  } : { color: "var(--color-muted)" }}
+                >
+                  <div className="w-3 h-3 rounded" style={i === 0 ? { background: `${whiteLabel.primary_color || "#C9A84C"}20` } : { background: "var(--color-border)" }} />
+                  {item}
+                </div>
+              ))}
+            </div>
+            {whiteLabel.show_powered_by && (
+              <div className="px-3 py-2 border-t border-border text-center">
+                <span className="text-[8px] text-muted">Powered by ShortStack</span>
+              </div>
+            )}
+          </div>
+
+          {/* Button preview */}
+          <div className="mt-4 space-y-2">
+            <p className="text-[9px] text-muted uppercase tracking-wider font-medium">Buttons</p>
+            <div className="flex gap-2">
+              <span className="text-[10px] font-semibold px-3 py-1.5 rounded-lg text-white inline-block" style={{ background: whiteLabel.primary_color || "#C9A84C" }}>
+                Primary
+              </span>
+              <span className="text-[10px] font-medium px-3 py-1.5 rounded-lg border inline-block" style={{ borderColor: `${whiteLabel.primary_color || "#C9A84C"}40`, color: whiteLabel.primary_color || "#C9A84C" }}>
+                Secondary
+              </span>
+            </div>
+          </div>
+
+          {/* Color swatch preview */}
+          <div className="mt-4 space-y-2">
+            <p className="text-[9px] text-muted uppercase tracking-wider font-medium">Accents</p>
+            <div className="flex gap-2 items-center">
+              <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.primary_color || "#C9A84C" }} />
+              <span className="text-[10px] font-mono" style={{ color: whiteLabel.primary_color || "#C9A84C" }}>{whiteLabel.primary_color || "#C9A84C"}</span>
+            </div>
+            <div className="flex gap-2 items-center">
+              <div className="w-4 h-4 rounded-full" style={{ background: whiteLabel.accent_color || "#B8942F" }} />
+              <span className="text-[10px] font-mono" style={{ color: whiteLabel.accent_color || "#B8942F" }}>{whiteLabel.accent_color || "#B8942F"}</span>
+            </div>
+          </div>
+
+          {/* Login preview */}
+          {whiteLabel.login_text && (
+            <div className="mt-4 space-y-2">
+              <p className="text-[9px] text-muted uppercase tracking-wider font-medium">Login Page</p>
+              <div className="p-3 rounded-lg border border-border bg-surface text-center">
+                {whiteLabel.logo_url && (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img src={whiteLabel.logo_url} alt="" className="w-8 h-8 rounded mx-auto mb-2 object-contain" />
+                )}
+                <p className="text-[10px] text-muted leading-relaxed">{whiteLabel.login_text}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

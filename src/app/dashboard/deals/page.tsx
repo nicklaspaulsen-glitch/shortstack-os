@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useManagedClient } from "@/lib/use-managed-client";
 import {
   DollarSign, Plus, TrendingUp, TrendingDown, Target,
   Clock, Award, FileText, Calculator, BarChart3,
   ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
-  Calendar, ArrowRight, Shield
+  Calendar, ArrowRight, Shield, Loader2
 } from "lucide-react";
 
 type MainTab = "pipeline" | "forecast" | "analysis" | "scoring" | "templates" | "commission";
@@ -13,47 +14,133 @@ type MainTab = "pipeline" | "forecast" | "analysis" | "scoring" | "templates" | 
 interface Deal {
   id: string;
   title: string;
-  company: string;
-  amount: number;
+  client_name: string;
+  value: number;
   stage: string;
   probability: number;
-  owner: string;
-  daysInStage: number;
-  source: string;
-  nextAction: string;
-  competitor: string;
-  closeDate: string;
+  expected_close_date: string | null;
+  contact_email: string | null;
+  contact_phone: string | null;
+  notes: string | null;
+  source: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 const STAGES = [
   { key: "prospect", label: "Prospect", color: "#3b82f6" },
   { key: "qualified", label: "Qualified", color: "#8b5cf6" },
-  { key: "proposal", label: "Proposal Sent", color: "#f59e0b" },
+  { key: "proposal_sent", label: "Proposal Sent", color: "#f59e0b" },
   { key: "negotiation", label: "Negotiation", color: "#f97316" },
   { key: "closed_won", label: "Closed Won", color: "#10b981" },
   { key: "closed_lost", label: "Closed Lost", color: "#ef4444" },
 ];
 
-const MOCK_DEALS: Deal[] = [];
-
 const formatCurrency = (n: number) => `$${n.toLocaleString()}`;
 
 export default function DealsPage() {
+  const { clientId: managedClientId } = useManagedClient();
   const [activeTab, setActiveTab] = useState<MainTab>("pipeline");
   const [expandedDeal, setExpandedDeal] = useState<string | null>(null);
   const [forecastPeriod, setForecastPeriod] = useState<"month" | "quarter">("month");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [dealForm, setDealForm] = useState({ title: "", company: "", amount: "", stage: "prospect", source: "cold_outreach" });
 
-  const openDeals = MOCK_DEALS.filter(d => !["closed_won", "closed_lost"].includes(d.stage));
-  const wonDeals = MOCK_DEALS.filter(d => d.stage === "closed_won");
-  const lostDeals = MOCK_DEALS.filter(d => d.stage === "closed_lost");
-  const totalPipeline = openDeals.reduce((s, d) => s + d.amount, 0);
-  const wonValue = wonDeals.reduce((s, d) => s + d.amount, 0);
-  const lostValue = lostDeals.reduce((s, d) => s + d.amount, 0);
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [draggedDealId, setDraggedDealId] = useState<string | null>(null);
+
+  // ── Fetch deals from API (scoped to managed client when selected) ──
+  const fetchDeals = useCallback(async () => {
+    try {
+      const params = new URLSearchParams();
+      if (managedClientId) params.set("client_id", managedClientId);
+      const url = `/api/deals${params.toString() ? `?${params}` : ""}`;
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const json = await res.json();
+      setDeals(json.deals ?? []);
+    } finally {
+      setLoading(false);
+    }
+  }, [managedClientId]);
+
+  useEffect(() => { fetchDeals(); }, [fetchDeals]);
+
+  // ── Create deal ──
+  const handleCreate = async () => {
+    if (!dealForm.title || !dealForm.company) return;
+    setCreating(true);
+    try {
+      const res = await fetch("/api/deals", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: dealForm.title,
+          client_name: dealForm.company,
+          value: parseFloat(dealForm.amount) || 0,
+          stage: dealForm.stage,
+          source: dealForm.source,
+        }),
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setDeals(prev => [json.deal, ...prev]);
+        setDealForm({ title: "", company: "", amount: "", stage: "prospect", source: "cold_outreach" });
+        setShowCreateModal(false);
+      }
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  // ── Update deal stage (drag-drop) ──
+  const handleStageChange = async (dealId: string, newStage: string) => {
+    // Optimistic update
+    setDeals(prev => prev.map(d => d.id === dealId ? { ...d, stage: newStage } : d));
+    const res = await fetch("/api/deals", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: dealId, stage: newStage }),
+    });
+    if (!res.ok) {
+      // Revert on failure
+      fetchDeals();
+    }
+  };
+
+  // ── Delete deal ──
+  const handleDelete = async (dealId: string) => {
+    setDeals(prev => prev.filter(d => d.id !== dealId));
+    const res = await fetch("/api/deals", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: dealId }),
+    });
+    if (!res.ok) fetchDeals();
+  };
+
+  // ── Drag handlers ──
+  const onDragStart = (dealId: string) => setDraggedDealId(dealId);
+  const onDragOver = (e: React.DragEvent) => e.preventDefault();
+  const onDrop = (stageKey: string) => {
+    if (draggedDealId) {
+      handleStageChange(draggedDealId, stageKey);
+      setDraggedDealId(null);
+    }
+  };
+
+  // ── Computed values ──
+  const openDeals = deals.filter(d => !["closed_won", "closed_lost"].includes(d.stage));
+  const wonDeals = deals.filter(d => d.stage === "closed_won");
+  const lostDeals = deals.filter(d => d.stage === "closed_lost");
+  const totalPipeline = openDeals.reduce((s, d) => s + Number(d.value), 0);
+  const wonValue = wonDeals.reduce((s, d) => s + Number(d.value), 0);
+  const lostValue = lostDeals.reduce((s, d) => s + Number(d.value), 0);
   const avgDealSize = openDeals.length > 0 ? Math.round(totalPipeline / openDeals.length) : 0;
   const winRate = wonDeals.length + lostDeals.length > 0 ? Math.round((wonDeals.length / (wonDeals.length + lostDeals.length)) * 100) : 0;
-  const weightedPipeline = openDeals.reduce((s, d) => s + (d.amount * d.probability / 100), 0);
+  const weightedPipeline = openDeals.reduce((s, d) => s + (Number(d.value) * d.probability / 100), 0);
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "pipeline", label: "Pipeline Board", icon: <BarChart3 size={14} /> },
@@ -120,7 +207,10 @@ export default function DealsPage() {
             <select value={dealForm.stage} onChange={e => setDealForm({...dealForm, stage: e.target.value})} className="input text-xs">
               {STAGES.filter(s => !s.key.startsWith("closed")).map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
             </select>
-            <button className="btn-primary text-xs">Create</button>
+            <button onClick={handleCreate} disabled={creating || !dealForm.title || !dealForm.company} className="btn-primary text-xs disabled:opacity-50 flex items-center justify-center gap-1">
+              {creating && <Loader2 size={12} className="animate-spin" />}
+              {creating ? "Creating..." : "Create"}
+            </button>
           </div>
         </div>
       )}
@@ -128,13 +218,21 @@ export default function DealsPage() {
       {/* ===== PIPELINE BOARD (Kanban) ===== */}
       {activeTab === "pipeline" && (
         <div className="space-y-4">
+          {loading && (
+            <div className="flex items-center justify-center py-12 gap-2 text-muted">
+              <Loader2 size={16} className="animate-spin" /> Loading deals...
+            </div>
+          )}
           {/* Kanban */}
+          {!loading && (
           <div className="flex gap-3 overflow-x-auto pb-4">
             {STAGES.map(stage => {
-              const stageDeals = MOCK_DEALS.filter(d => d.stage === stage.key);
-              const stageValue = stageDeals.reduce((s, d) => s + d.amount, 0);
+              const stageDeals = deals.filter(d => d.stage === stage.key);
+              const stageValue = stageDeals.reduce((s, d) => s + Number(d.value), 0);
               return (
-                <div key={stage.key} className="flex-shrink-0 w-[240px]">
+                <div key={stage.key} className="flex-shrink-0 w-[240px]"
+                  onDragOver={onDragOver}
+                  onDrop={() => onDrop(stage.key)}>
                   <div className="flex items-center justify-between mb-2 px-1">
                     <div className="flex items-center gap-1.5">
                       <div className="w-2.5 h-2.5 rounded-full" style={{ background: stage.color }} />
@@ -145,43 +243,56 @@ export default function DealsPage() {
                   <p className="text-[9px] text-muted mb-2 px-1">{formatCurrency(stageValue)}</p>
                   <div className="space-y-2 max-h-[500px] overflow-y-auto">
                     {stageDeals.length === 0 && (
-                      <div className="text-center py-8 border border-dashed rounded-lg" style={{ borderColor: `${stage.color}20` }}>
+                      <div className={`text-center py-8 border border-dashed rounded-lg transition-colors ${draggedDealId ? "border-gold/30 bg-gold/5" : ""}`} style={{ borderColor: draggedDealId ? undefined : `${stage.color}20` }}>
                         <p className="text-[9px] text-muted">Drop deals here</p>
                       </div>
                     )}
-                    {stageDeals.map(deal => (
+                    {stageDeals.map(deal => {
+                      const daysSinceUpdate = Math.floor((Date.now() - new Date(deal.updated_at).getTime()) / 86400000);
+                      return (
                       <div key={deal.id}
+                        draggable
+                        onDragStart={() => onDragStart(deal.id)}
                         onClick={() => setExpandedDeal(expandedDeal === deal.id ? null : deal.id)}
-                        className="p-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer">
+                        className="p-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-grab active:cursor-grabbing">
                         <p className="text-[11px] font-semibold truncate">{deal.title}</p>
-                        <p className="text-[9px] text-muted">{deal.company}</p>
-                        <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(deal.amount)}</p>
+                        <p className="text-[9px] text-muted">{deal.client_name}</p>
+                        <p className="text-sm font-bold mt-1" style={{ color: stage.color }}>{formatCurrency(Number(deal.value))}</p>
                         <div className="flex items-center justify-between mt-2">
-                          <span className="text-[8px] text-muted flex items-center gap-0.5"><Clock size={8} /> {deal.daysInStage}d</span>
+                          <span className="text-[8px] text-muted flex items-center gap-0.5"><Clock size={8} /> {daysSinceUpdate}d</span>
                           <span className="text-[8px] text-muted">{deal.probability}% prob</span>
                         </div>
                         {expandedDeal === deal.id && (
                           <div className="mt-2 pt-2 border-t border-border space-y-1.5">
-                            <p className="text-[9px]"><span className="text-muted">Source:</span> {deal.source}</p>
-                            <p className="text-[9px]"><span className="text-muted">Next:</span> {deal.nextAction}</p>
-                            <p className="text-[9px]"><span className="text-muted">Competitor:</span> {deal.competitor}</p>
-                            <p className="text-[9px]"><span className="text-muted">Close:</span> {deal.closeDate}</p>
-                            <div className="flex gap-1 pt-1">
+                            <p className="text-[9px]"><span className="text-muted">Source:</span> {deal.source || "N/A"}</p>
+                            <p className="text-[9px]"><span className="text-muted">Email:</span> {deal.contact_email || "N/A"}</p>
+                            <p className="text-[9px]"><span className="text-muted">Close:</span> {deal.expected_close_date || "N/A"}</p>
+                            {deal.notes && <p className="text-[9px]"><span className="text-muted">Notes:</span> {deal.notes}</p>}
+                            <div className="flex gap-1 pt-1 flex-wrap">
                               {STAGES.filter(s => s.key !== stage.key && s.key !== "closed_lost").slice(0, 3).map(s => (
-                                <button key={s.key} className="text-[7px] px-1.5 py-0.5 rounded" style={{ background: `${s.color}15`, color: s.color, border: `1px solid ${s.color}20` }}>
+                                <button key={s.key}
+                                  onClick={(e) => { e.stopPropagation(); handleStageChange(deal.id, s.key); }}
+                                  className="text-[7px] px-1.5 py-0.5 rounded" style={{ background: `${s.color}15`, color: s.color, border: `1px solid ${s.color}20` }}>
                                   {s.label.split(" ")[0]}
                                 </button>
                               ))}
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleDelete(deal.id); }}
+                                className="text-[7px] px-1.5 py-0.5 rounded bg-red-400/10 text-red-400 border border-red-400/20">
+                                Delete
+                              </button>
                             </div>
                           </div>
                         )}
                       </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );
             })}
           </div>
+          )}
 
           {/* Deal Velocity Tracker */}
           <div className="card">
@@ -321,8 +432,10 @@ export default function DealsPage() {
             {openDeals.length === 0 && (
               <div className="text-center py-8 text-muted text-xs">No open deals to score yet.</div>
             )}
-            {openDeals.sort((a, b) => b.probability - a.probability).map(deal => {
-              const score = Math.round(deal.probability * 0.4 + (deal.amount > 3000 ? 30 : 15) + (deal.daysInStage < 5 ? 20 : 5));
+            {[...openDeals].sort((a, b) => b.probability - a.probability).map(deal => {
+              const daysSinceUpdate = Math.floor((Date.now() - new Date(deal.updated_at).getTime()) / 86400000);
+              const amt = Number(deal.value);
+              const score = Math.round(deal.probability * 0.4 + (amt > 3000 ? 30 : 15) + (daysSinceUpdate < 5 ? 20 : 5));
               const scoreColor = score >= 70 ? "text-green-400" : score >= 40 ? "text-yellow-400" : "text-red-400";
               const scoreBg = score >= 70 ? "bg-green-400" : score >= 40 ? "bg-yellow-400" : "bg-red-400";
               return (
@@ -333,20 +446,20 @@ export default function DealsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-xs font-semibold truncate">{deal.title}</p>
-                      <span className="text-[9px] text-muted">({deal.company})</span>
+                      <span className="text-[9px] text-muted">({deal.client_name})</span>
                     </div>
                     <div className="w-full bg-surface-light rounded-full h-1.5 mt-1.5">
                       <div className={`${scoreBg} rounded-full h-1.5`} style={{ width: `${score}%` }} />
                     </div>
                     <div className="flex gap-4 mt-1.5 text-[9px] text-muted">
                       <span>Stage: {STAGES.find(s => s.key === deal.stage)?.label}</span>
-                      <span>{deal.daysInStage}d in stage</span>
+                      <span>{daysSinceUpdate}d in stage</span>
                       <span>{deal.probability}% probability</span>
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-bold text-gold">{formatCurrency(deal.amount)}</p>
-                    <p className="text-[9px] text-muted">Close: {deal.closeDate}</p>
+                    <p className="text-sm font-bold text-gold">{formatCurrency(amt)}</p>
+                    <p className="text-[9px] text-muted">Close: {deal.expected_close_date || "N/A"}</p>
                   </div>
                   <ChevronRight size={14} className="text-muted flex-shrink-0" />
                 </div>
@@ -473,16 +586,17 @@ export default function DealsPage() {
               <div className="grid grid-cols-5 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                 <span>Deal</span><span>Amount</span><span>Rate</span><span>Commission</span><span>Status</span>
               </div>
-              {MOCK_DEALS.filter(d => d.stage === "closed_won" || d.probability >= 50).length === 0 && (
+              {deals.filter(d => d.stage === "closed_won" || d.probability >= 50).length === 0 && (
                 <div className="text-center py-8 text-muted text-xs">No commission data yet.</div>
               )}
-              {MOCK_DEALS.filter(d => d.stage === "closed_won" || d.probability >= 50).map(deal => {
-                const rate = deal.amount >= 5000 ? 0.20 : deal.amount >= 3000 ? 0.15 : 0.10;
-                const commission = Math.round(deal.amount * rate);
+              {deals.filter(d => d.stage === "closed_won" || d.probability >= 50).map(deal => {
+                const amt = Number(deal.value);
+                const rate = amt >= 5000 ? 0.20 : amt >= 3000 ? 0.15 : 0.10;
+                const commission = Math.round(amt * rate);
                 return (
                   <div key={deal.id} className="grid grid-cols-5 text-[10px] py-2 px-2 rounded bg-surface-light items-center">
                     <span className="font-medium truncate">{deal.title}</span>
-                    <span>{formatCurrency(deal.amount)}</span>
+                    <span>{formatCurrency(amt)}</span>
                     <span className="text-gold">{(rate * 100).toFixed(0)}%</span>
                     <span className="font-bold text-green-400">{formatCurrency(commission)}</span>
                     <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${

@@ -12,6 +12,7 @@ import {
   ThumbsUp, ThumbsDown, Volume2, Palette
 } from "lucide-react";
 import toast from "react-hot-toast";
+import EmptyState from "@/components/empty-state";
 
 interface VoiceProfile {
   id: string;
@@ -43,48 +44,14 @@ const VOICE_PRESETS = [
   { key: "youthful", label: "Youthful", icon: <Sparkles size={14} />, sliders: { formalCasual: 85, seriousPlayful: 80, technicalSimple: 75, reservedEnthusiastic: 90, authorityFriendly: 70 } },
 ];
 
-const INITIAL_PROFILES: VoiceProfile[] = [
-  {
-    id: "1", clientName: "Meridian Health", active: true, preset: "professional",
-    toneSliders: { formalCasual: 25, seriousPlayful: 30, technicalSimple: 40, reservedEnthusiastic: 35, authorityFriendly: 30 },
-    samples: ["Our evidence-based approach ensures every patient receives personalized care tailored to their unique health journey.", "At Meridian Health, we believe in transparency, compassion, and clinical excellence."],
-    dos: ["Use empathetic language", "Reference evidence-based practices", "Include calls-to-action for appointments"],
-    donts: ["Use slang or overly casual phrasing", "Make medical claims without disclaimers", "Reference competitor clinics by name"],
-    approvedTerms: ["wellness journey", "evidence-based", "patient-centered", "holistic care"],
-    bannedWords: ["cheap", "deal", "discount", "guarantee cure"],
-    competitorNames: ["CareFirst", "HealthPlus Direct"],
-    guidelines: "",
-  },
-  {
-    id: "2", clientName: "Neon Skateshop", active: true, preset: "youthful",
-    toneSliders: { formalCasual: 85, seriousPlayful: 80, technicalSimple: 75, reservedEnthusiastic: 90, authorityFriendly: 70 },
-    samples: ["Send it! New decks just dropped and they are absolutely fire.", "Your local crew for everything skate. No posers, just pure shred."],
-    dos: ["Use skate culture lingo", "Keep it hype and energetic", "Speak like a friend, not a brand"],
-    donts: ["Sound corporate or stiff", "Use formal greetings", "Over-explain products"],
-    approvedTerms: ["shred", "stoked", "drop", "crew", "session"],
-    bannedWords: ["purchase", "utilize", "leverage", "synergy"],
-    competitorNames: ["BoardKings", "SkateZone"],
-    guidelines: "",
-  },
-  {
-    id: "3", clientName: "Ashford Legal", active: false, preset: "luxury",
-    toneSliders: { formalCasual: 15, seriousPlayful: 20, technicalSimple: 50, reservedEnthusiastic: 40, authorityFriendly: 25 },
-    samples: ["With decades of experience in complex litigation, Ashford Legal delivers results that protect what matters most."],
-    dos: ["Emphasize expertise and track record", "Use precise legal language where appropriate", "Maintain an authoritative tone"],
-    donts: ["Use humor or puns", "Promise specific outcomes", "Use informal abbreviations"],
-    approvedTerms: ["distinguished counsel", "strategic advocacy", "meticulous attention"],
-    bannedWords: ["cheap", "deal", "easy", "guaranteed"],
-    competitorNames: ["Sterling & Associates"],
-    guidelines: "",
-  },
-];
+const INITIAL_PROFILES: VoiceProfile[] = [];
 
 export default function BrandVoicePage() {
   useAuth();
   const supabase = createClient();
 
   const [profiles, setProfiles] = useState<VoiceProfile[]>(INITIAL_PROFILES);
-  const [selectedProfile, setSelectedProfile] = useState<string>("1");
+  const [selectedProfile, setSelectedProfile] = useState<string>("");
   const [tab, setTab] = useState<"editor" | "samples" | "vocabulary" | "checker">("editor");
   const [newSample, setNewSample] = useState("");
   const [newDo, setNewDo] = useState("");
@@ -288,6 +255,15 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
               className="input text-xs pl-8 w-full"
             />
           </div>
+          {filteredProfiles.length === 0 && profiles.length === 0 && (
+            <EmptyState
+              icon={<Mic size={24} />}
+              title="No brand voice profiles"
+              description="Create one from a website URL"
+              actionLabel="New Profile"
+              onAction={() => setShowNewProfile(true)}
+            />
+          )}
           <div className="space-y-2">
             {filteredProfiles.map(p => (
               <div

@@ -10,6 +10,16 @@
   box-sizing: border-box;
 }
 
+/* ═══════════ WHITE LABEL COLOR OVERRIDE ═══════════
+   When --wl-primary is set via JS (white-label-context), it overrides
+   --color-accent across the whole design system. The --wl-accent variable
+   provides a secondary accent for hover states.
+   These are injected dynamically by WhiteLabelProvider on mount. */
+:root {
+  --wl-primary: initial;
+  --wl-accent: initial;
+}
+
 html {
   background: var(--color-background, #06080c);
   min-height: 100vh;
@@ -461,6 +471,25 @@ body {
   --color-accent-rgb: 201 168 76;
   --color-text-rgb: 55 65 81;
   --color-muted-rgb: 107 114 128;
+}
+
+/* ═══════════ DARK MODE (data-attribute driven) ═══════════ */
+[data-theme="dark"] {
+  --color-background: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-surface-light: #1e1e1e;
+  --color-border: #2a2a2a;
+  --color-accent: #C9A84C;
+  --color-text: #e5e5e5;
+  --color-muted: #888888;
+  --color-foreground: #f0f0f0;
+  --color-background-rgb: 15 15 15;
+  --color-surface-rgb: 26 26 26;
+  --color-surface-light-rgb: 30 30 30;
+  --color-border-rgb: 42 42 42;
+  --color-accent-rgb: 201 168 76;
+  --color-text-rgb: 229 229 229;
+  --color-muted-rgb: 136 136 136;
 }
 
 /* Reduced motion */

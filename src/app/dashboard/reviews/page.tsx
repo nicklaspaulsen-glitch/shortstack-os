@@ -7,21 +7,13 @@ import {
   Copy, Award, Smile, Frown, Meh,
   Mail, Phone, AlertTriangle
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
 /* ------------------------------------------------------------------ */
 
-const MOCK_REVIEWS = [
-  { id: 1, name: "Sarah Johnson", rating: 5, text: "Absolutely fantastic service! The team went above and beyond to deliver our project on time. Highly recommend to anyone looking for quality work.", date: "2026-04-01", source: "Google", responded: true, sentiment: "positive" },
-  { id: 2, name: "Mike Peters", rating: 4, text: "Great experience overall. Communication was excellent and the results exceeded expectations. Only minor delays on the timeline.", date: "2026-03-28", source: "Google", responded: true, sentiment: "positive" },
-  { id: 3, name: "Emily Chen", rating: 5, text: "Best agency we have ever worked with. They truly understand our brand and deliver consistent results every month.", date: "2026-03-25", source: "Facebook", responded: false, sentiment: "positive" },
-  { id: 4, name: "David Brown", rating: 3, text: "Decent work but took longer than expected. The final product was good but the process could be smoother.", date: "2026-03-20", source: "Google", responded: false, sentiment: "neutral" },
-  { id: 5, name: "Lisa Martinez", rating: 5, text: "Incredible ROI on our ad campaigns. They really know what they are doing when it comes to digital marketing.", date: "2026-03-15", source: "Yelp", responded: true, sentiment: "positive" },
-  { id: 6, name: "James Wilson", rating: 4, text: "Professional team with great attention to detail. Would definitely use their services again for our next project.", date: "2026-03-10", source: "Google", responded: false, sentiment: "positive" },
-  { id: 7, name: "Anna Thompson", rating: 2, text: "Communication was lacking and we had to follow up multiple times to get updates. Results were okay but not what was promised.", date: "2026-03-05", source: "Google", responded: false, sentiment: "negative" },
-  { id: 8, name: "Robert Kim", rating: 5, text: "Switched from another agency and the difference is night and day. ShortStack actually delivers on their promises.", date: "2026-02-28", source: "Facebook", responded: true, sentiment: "positive" },
-];
+const MOCK_REVIEWS: { id: number; name: string; rating: number; text: string; date: string; source: string; responded: boolean; sentiment: string }[] = [];
 
 const RESPONSE_TEMPLATES = [
   { id: "rt1", name: "5-Star Thank You", text: "Thank you so much for the wonderful review, {name}! We're thrilled to hear about your positive experience. Your support means the world to us!" },
@@ -31,25 +23,11 @@ const RESPONSE_TEMPLATES = [
   { id: "rt5", name: "Follow-Up Request", text: "Thank you for choosing us, {name}! We'd love to hear more about your experience. If you have a moment, a review on Google would mean a lot to us." },
 ];
 
-const COMPETITOR_DATA = [
-  { name: "Your Business", rating: 4.6, reviews: 48, responseRate: 75 },
-  { name: "Competitor A", rating: 4.2, reviews: 156, responseRate: 45 },
-  { name: "Competitor B", rating: 4.8, reviews: 23, responseRate: 90 },
-  { name: "Competitor C", rating: 3.9, reviews: 89, responseRate: 30 },
-];
+const COMPETITOR_DATA: { name: string; rating: number; reviews: number; responseRate: number }[] = [];
 
-const REVIEW_CAMPAIGNS = [
-  { id: "rc1", name: "Post-Service Follow-up", sent: 45, received: 12, rate: "26.7%", active: true },
-  { id: "rc2", name: "Quarterly Check-in", sent: 30, received: 8, rate: "26.7%", active: true },
-  { id: "rc3", name: "Happy Customer Blast", sent: 20, received: 7, rate: "35.0%", active: false },
-];
+const REVIEW_CAMPAIGNS: { id: string; name: string; sent: number; received: number; rate: string; active: boolean }[] = [];
 
-const MONITORING_ALERTS = [
-  { id: "ma1", type: "new", message: "New 5-star review from Robert Kim on Facebook", time: "2h ago" },
-  { id: "ma2", type: "warning", message: "2-star review detected from Anna Thompson - needs response", time: "1d ago" },
-  { id: "ma3", type: "milestone", message: "You've reached 45+ reviews on Google!", time: "3d ago" },
-  { id: "ma4", type: "reminder", message: "3 reviews pending response (older than 48h)", time: "5d ago" },
-];
+const MONITORING_ALERTS: { id: string; type: string; message: string; time: string }[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
@@ -69,8 +47,8 @@ export default function ReviewsPage() {
   const [showQR, setShowQR] = useState(false);
   const [widgetStyle, setWidgetStyle] = useState<"badge" | "carousel" | "grid">("badge");
 
-  const avgRating = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
-  const responseRate = Math.round((reviews.filter(r => r.responded).length / reviews.length) * 100);
+  const avgRating = reviews.length ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1) : "0.0";
+  const responseRate = reviews.length ? Math.round((reviews.filter(r => r.responded).length / reviews.length) * 100) : 0;
   const sentimentPositive = reviews.filter(r => r.sentiment === "positive").length;
   const sentimentNeutral = reviews.filter(r => r.sentiment === "neutral").length;
   const sentimentNegative = reviews.filter(r => r.sentiment === "negative").length;
@@ -107,7 +85,7 @@ export default function ReviewsPage() {
   const ratingDistribution = [5, 4, 3, 2, 1].map(r => ({
     rating: r,
     count: reviews.filter(rev => rev.rating === r).length,
-    pct: Math.round((reviews.filter(rev => rev.rating === r).length / reviews.length) * 100),
+    pct: reviews.length ? Math.round((reviews.filter(rev => rev.rating === r).length / reviews.length) * 100) : 0,
   }));
 
   const tabs = [
@@ -247,6 +225,15 @@ export default function ReviewsPage() {
           </div>
 
           {/* Reviews list */}
+          {filteredReviews.length === 0 && (
+            <EmptyState
+              icon={<Star size={24} />}
+              title="No reviews yet"
+              description="Connect Google Business to start monitoring reviews"
+              actionLabel="Connect Google Business"
+              actionHref="/dashboard/google-business"
+            />
+          )}
           <div className="space-y-3">
             {filteredReviews.map(review => (
               <div key={review.id} className="card p-4">

@@ -205,25 +205,18 @@ export default function AnalyticsPage() {
 
   // --- Feature 2: Client Churn Risk ---
   const churnRiskClients = useMemo((): ChurnClient[] => {
-    // Simulated based on available data patterns
-    const risks: ChurnClient[] = [
-      { name: "Low-Activity Client A", risk: "high", score: 85, reason: "No engagement in 30 days", mrr: 1500 },
-      { name: "Declining Spend Client", risk: "high", score: 78, reason: "MRR decreased 40%", mrr: 800 },
-      { name: "Late Payment Client", risk: "medium", score: 55, reason: "2 overdue invoices", mrr: 2000 },
-      { name: "Contract Ending Soon", risk: "medium", score: 48, reason: "Contract expires in 15 days", mrr: 3500 },
-      { name: "Reduced Engagement", risk: "low", score: 25, reason: "Response time increased", mrr: 1200 },
-    ];
-    if (stats.activeClients > 0) return risks;
+    // TODO: Compute from real client activity data once available
     return [];
-  }, [stats.activeClients]);
+  }, []);
 
   // --- Feature 3: Platform ROI ---
   const platformROI = useMemo(() => [
-    { platform: "Meta", spend: 4200, revenue: 12800, roi: 205, leads: 45, cpl: 93 },
-    { platform: "TikTok", spend: 2800, revenue: 8400, roi: 200, leads: 62, cpl: 45 },
-    { platform: "Google", spend: 5500, revenue: 14200, roi: 158, leads: 38, cpl: 145 },
-    { platform: "LinkedIn", spend: 1800, revenue: 6200, roi: 244, leads: 12, cpl: 150 },
-    { platform: "Email", spend: 400, revenue: 5600, roi: 1300, leads: 28, cpl: 14 },
+    // TODO: Pull from real ad platform data once connected
+    { platform: "Meta", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
+    { platform: "TikTok", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
+    { platform: "Google", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
+    { platform: "LinkedIn", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
+    { platform: "Email", spend: 0, revenue: 0, roi: 0, leads: 0, cpl: 0 },
   ], []);
 
   // --- Feature 4: Content Heatmap ---
@@ -260,18 +253,15 @@ export default function AnalyticsPage() {
 
   // --- Feature 7: Team Leaderboard ---
   const teamMembers = useMemo((): TeamMember[] => [
-    { name: "Alex M.", leads: 48, deals: 5, revenue: 18500, calls: 22, score: 94 },
-    { name: "Jordan K.", leads: 42, deals: 4, revenue: 15200, calls: 19, score: 87 },
-    { name: "Sam R.", leads: 35, deals: 3, revenue: 12800, calls: 15, score: 78 },
-    { name: "Taylor P.", leads: 28, deals: 2, revenue: 8400, calls: 12, score: 65 },
-    { name: "Casey L.", leads: 22, deals: 2, revenue: 7200, calls: 10, score: 58 },
+    // TODO: Pull from real team/user activity data
   ], []);
 
   // --- Feature 8: Client Lifetime Value ---
   const clvData = useMemo(() => [
-    { name: "Enterprise", avgCLV: 72000, avgMonths: 24, count: 4 },
-    { name: "Growth", avgCLV: 36000, avgMonths: 18, count: 8 },
-    { name: "Starter", avgCLV: 12000, avgMonths: 12, count: 12 },
+    // TODO: Compute from real client billing history
+    { name: "Enterprise", avgCLV: 0, avgMonths: 0, count: 0 },
+    { name: "Growth", avgCLV: 0, avgMonths: 0, count: 0 },
+    { name: "Starter", avgCLV: 0, avgMonths: 0, count: 0 },
   ], []);
 
   // --- Feature 9: Engagement Benchmarks ---
@@ -285,12 +275,13 @@ export default function AnalyticsPage() {
 
   // --- Feature 10: Revenue by Service ---
   const revenueByService = useMemo(() => [
-    { service: "Social Media Mgmt", revenue: stats.totalMRR * 0.35, clients: 8 },
-    { service: "Paid Ads", revenue: stats.totalMRR * 0.25, clients: 6 },
-    { service: "Content Creation", revenue: stats.totalMRR * 0.2, clients: 10 },
-    { service: "Web Development", revenue: stats.totalMRR * 0.12, clients: 3 },
-    { service: "SEO", revenue: stats.totalMRR * 0.08, clients: 5 },
-  ], [stats.totalMRR]);
+    // TODO: Pull from real service/invoice categories
+    { service: "Social Media Mgmt", revenue: 0, clients: 0 },
+    { service: "Paid Ads", revenue: 0, clients: 0 },
+    { service: "Content Creation", revenue: 0, clients: 0 },
+    { service: "Web Development", revenue: 0, clients: 0 },
+    { service: "SEO", revenue: 0, clients: 0 },
+  ], []);
 
   // --- Feature 11: Campaign Attribution ---
   const campaignData = useMemo(() => [

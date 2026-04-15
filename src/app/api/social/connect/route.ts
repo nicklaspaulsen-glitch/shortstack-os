@@ -2,19 +2,130 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { verifyClientAccess } from "@/lib/verify-client-access";
 
-// Social Media Account Connection — Connect client social accounts to ShortStack OS
-// Stores account credentials so AI assistant can access and manage them
+/*
+ * Social Media Account Connection — Connect client social accounts via Zernio OAuth
+ *
+ * social_connections table schema:
+ *   id              (uuid, primary key)
+ *   user_id         (uuid, FK to auth.users)
+ *   platform        (text) -- instagram, facebook, tiktok, linkedin, twitter
+ *   platform_user_id (text)
+ *   username        (text)
+ *   access_token    (text, encrypted)
+ *   refresh_token   (text, nullable)
+ *   connected_at    (timestamptz)
+ *   expires_at      (timestamptz, nullable)
+ *   status          (text default 'active') -- active, expired, revoked
+ *
+ * NOTE: The app currently uses the social_accounts table with similar columns.
+ * The social_connections schema above is the canonical reference for new deployments.
+ */
+
+const ZERNIO_API_KEY = process.env.ZERNIO_API_KEY;
+
+// POST: Connect a social account (manual or initiate Zernio OAuth)
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { client_id, platform, account_name, account_id, access_token, refresh_token } = await request.json();
+  const body = await request.json();
+  const { client_id, platform, account_name, account_id, access_token, refresh_token, action } = body;
+
+  if (!client_id || !platform) {
+    return NextResponse.json({ error: "client_id and platform are required" }, { status: 400 });
+  }
 
   // Verify ownership of client_id
   const access = await verifyClientAccess(supabase, user.id, client_id);
   if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
+  // If action is "zernio_oauth", redirect to Zernio OAuth flow
+  if (action === "zernio_oauth") {
+    if (!ZERNIO_API_KEY) {
+      return NextResponse.json({
+        error: "Zernio API key not configured. Add ZERNIO_API_KEY to your environment variables.",
+        zernio_not_configured: true,
+      }, { status: 400 });
+    }
+
+    try {
+      const zernioRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/social/zernio`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id,
+          platform,
+          callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/social-manager?connected=${platform}`,
+        }),
+      });
+
+      // If the internal call fails, call Zernio directly
+      if (!zernioRes.ok) {
+        const zernioApiBase = "https://api.zernio.com/v1";
+
+        // Ensure Zernio profile exists
+        const { data: client } = await supabase
+          .from("clients")
+          .select("id, business_name, zernio_profile_id")
+          .eq("id", client_id)
+          .single();
+
+        let profileId = client?.zernio_profile_id;
+        if (!profileId) {
+          const profileRes = await fetch(`${zernioApiBase}/profiles`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${ZERNIO_API_KEY}`,
+            },
+            body: JSON.stringify({
+              name: client?.business_name || `Client ${client_id}`,
+              external_id: client_id,
+            }),
+          });
+          if (profileRes.ok) {
+            const profileData = await profileRes.json();
+            profileId = profileData.id;
+            await supabase.from("clients").update({ zernio_profile_id: profileId }).eq("id", client_id);
+          }
+        }
+
+        if (profileId) {
+          const connectRes = await fetch(`${zernioApiBase}/profiles/${profileId}/connect/${platform}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${ZERNIO_API_KEY}`,
+            },
+            body: JSON.stringify({
+              callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard/social-manager?connected=${platform}`,
+            }),
+          });
+
+          if (connectRes.ok) {
+            const connectData = await connectRes.json();
+            return NextResponse.json({
+              success: true,
+              oauth_url: connectData.oauth_url,
+              profile_id: profileId,
+            });
+          }
+        }
+
+        return NextResponse.json({ error: "Failed to initiate Zernio OAuth" }, { status: 500 });
+      }
+
+      const data = await zernioRes.json();
+      return NextResponse.json(data);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      console.error("Zernio OAuth initiation error:", message);
+      return NextResponse.json({ error: message }, { status: 500 });
+    }
+  }
+
+  // Standard manual connection flow
   // Check if already connected
   const { data: existing } = await supabase
     .from("social_accounts")
@@ -31,7 +142,7 @@ export async function POST(request: NextRequest) {
       refresh_token: refresh_token || null,
       is_active: true,
       token_expires_at: access_token ? new Date(Date.now() + 60 * 86400000).toISOString() : null,
-      metadata: { connected_at: new Date().toISOString(), connected_by: user.id },
+      metadata: { connected_at: new Date().toISOString(), connected_by: user.id, source: "manual" },
     }).eq("id", existing.id);
   } else {
     // Create new connection
@@ -41,7 +152,7 @@ export async function POST(request: NextRequest) {
       refresh_token: refresh_token || null,
       is_active: true,
       token_expires_at: access_token ? new Date(Date.now() + 60 * 86400000).toISOString() : null,
-      metadata: { connected_at: new Date().toISOString(), connected_by: user.id },
+      metadata: { connected_at: new Date().toISOString(), connected_by: user.id, source: "manual" },
     });
   }
 
@@ -66,13 +177,14 @@ export async function POST(request: NextRequest) {
   return NextResponse.json({ success: true, platform, account_name });
 }
 
-// Get all connected accounts for a client
+// GET: All connected accounts for a client, with Zernio status enrichment
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const clientId = request.nextUrl.searchParams.get("client_id");
+  const includeZernioStatus = request.nextUrl.searchParams.get("zernio") === "true";
 
   // If no client_id, get current user's client
   let id = clientId;
@@ -81,25 +193,89 @@ export async function GET(request: NextRequest) {
     id = client?.id;
   }
 
-  if (!id) return NextResponse.json({ accounts: [] });
+  if (!id) return NextResponse.json({ accounts: [], zernio_configured: !!ZERNIO_API_KEY });
 
   const { data } = await supabase
     .from("social_accounts")
-    .select("id, platform, account_name, account_id, is_active, created_at, metadata")
+    .select("id, platform, account_name, account_id, is_active, created_at, token_expires_at, metadata")
     .eq("client_id", id)
-    .not("platform", "in", "(ai_bot_config,white_label_config)")
+    .not("platform", "in", "(ai_bot_config,white_label_config,zernio)")
     .order("platform");
 
-  return NextResponse.json({ accounts: data || [] });
+  // Enrich with status based on token expiry
+  const accounts = (data || []).map(account => {
+    let status: "active" | "expired" | "revoked" = "active";
+    if (!account.is_active) {
+      status = "revoked";
+    } else if (account.token_expires_at && new Date(account.token_expires_at) < new Date()) {
+      status = "expired";
+    }
+    return { ...account, status };
+  });
+
+  // Optionally sync with Zernio to get fresh status
+  let zernioAccounts: Array<{ platform: string; status: string; name?: string; username?: string; id?: string }> = [];
+  if (includeZernioStatus && ZERNIO_API_KEY) {
+    try {
+      const { data: client } = await supabase
+        .from("clients")
+        .select("zernio_profile_id")
+        .eq("id", id)
+        .single();
+
+      if (client?.zernio_profile_id) {
+        const zRes = await fetch(`https://api.zernio.com/v1/profiles/${client.zernio_profile_id}/accounts`, {
+          headers: { Authorization: `Bearer ${ZERNIO_API_KEY}` },
+        });
+        if (zRes.ok) {
+          const zData = await zRes.json();
+          zernioAccounts = zData.accounts || [];
+        }
+      }
+    } catch {
+      // Zernio sync is best-effort
+    }
+  }
+
+  return NextResponse.json({
+    accounts,
+    zernio_accounts: zernioAccounts,
+    zernio_configured: !!ZERNIO_API_KEY,
+  });
 }
 
-// Disconnect an account
+// DELETE: Disconnect an account (local + Zernio)
 export async function DELETE(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { account_id } = await request.json();
-  await supabase.from("social_accounts").update({ is_active: false }).eq("id", account_id);
+  const { account_id, client_id, zernio_account_id } = await request.json();
+
+  // Deactivate locally
+  if (account_id) {
+    await supabase.from("social_accounts").update({ is_active: false }).eq("id", account_id);
+  }
+
+  // Also disconnect on Zernio if we have the info
+  if (ZERNIO_API_KEY && client_id && zernio_account_id) {
+    try {
+      const { data: client } = await supabase
+        .from("clients")
+        .select("zernio_profile_id")
+        .eq("id", client_id)
+        .single();
+
+      if (client?.zernio_profile_id) {
+        await fetch(`https://api.zernio.com/v1/profiles/${client.zernio_profile_id}/accounts/${zernio_account_id}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${ZERNIO_API_KEY}` },
+        });
+      }
+    } catch {
+      // Best-effort Zernio disconnect
+    }
+  }
+
   return NextResponse.json({ success: true });
 }

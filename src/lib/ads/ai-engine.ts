@@ -120,8 +120,11 @@ Respond ONLY with valid JSON matching this schema:
 }
 
 // ---------------------------------------------------------------------------
-// 2. generateAdCopy -- AI Copy Generator
+// 2. generateAdCopy -- AI Copy Generator (5 variations via Anthropic API)
 // ---------------------------------------------------------------------------
+
+const AD_ANGLES = ["BENEFIT", "URGENCY", "SOCIAL_PROOF", "QUESTION", "STORY"] as const;
+type AdAngle = (typeof AD_ANGLES)[number];
 
 export async function generateAdCopy(config: {
   platform: string;
@@ -139,6 +142,7 @@ export async function generateAdCopy(config: {
     cta: string;
     hook_type: string;
     estimated_performance: string;
+    image_concept: string;
   }>;
   image_suggestions: Array<{ concept: string; style: string }>;
   a_b_test_plan: string;
@@ -146,94 +150,173 @@ export async function generateAdCopy(config: {
 }> {
   const platformLimits: Record<string, string> = {
     meta_ads:
-      "Primary text: max 125 chars. Headline: max 40 chars. Keep punchy and benefit-driven.",
+      "Primary text: max 125 chars. Headline: max 40 chars. Description: max 30 chars. Keep punchy and benefit-driven. Use emojis sparingly for scroll-stopping power.",
     google_ads:
-      "Headlines: max 30 chars each. Descriptions: max 90 chars each. Use keywords naturally.",
+      "Headlines: max 30 chars each. Descriptions: max 90 chars each. Use keywords naturally. No excessive punctuation or ALL CAPS.",
     tiktok_ads:
-      "Short punchy hooks under 10 words. Trend-aware language. Conversational and authentic tone.",
+      "Short punchy hooks under 10 words. Trend-aware language. Conversational and authentic tone. Gen-Z friendly but match target demo.",
   };
 
-  const prompt = `You are an elite performance marketing copywriter specializing in paid ads.
+  const platformName =
+    config.platform === "meta_ads"
+      ? "Meta (Facebook/Instagram)"
+      : config.platform === "google_ads"
+        ? "Google Ads (Search/Display)"
+        : config.platform === "tiktok_ads"
+          ? "TikTok Ads"
+          : config.platform;
 
-Generate 5 ad copy variations for the following brief, each with a different hook type.
+  const systemPrompt = `You are an elite performance marketing copywriter who has managed $50M+ in ad spend across Meta, Google, and TikTok. You write conversion-focused ad copy that stops the scroll, hooks the reader, and drives action. Every variation you produce is ready to deploy.
 
-BRIEF:
-- Platform: ${config.platform}
-- Client: ${config.clientName ?? "N/A"} | Industry: ${config.industry ?? "N/A"}
-- Objective: ${config.objective}
-- Target audience: ${config.targetAudience}
-- Offer: ${config.offer}
-- Tone: ${config.tone}
+CRITICAL: Return ONLY raw JSON. No markdown, no code fences, no explanation outside the JSON.`;
 
-PLATFORM CONSTRAINTS:
+  const prompt = `Generate 5 high-converting ad copy variations for ${platformName}. Each variation MUST use a different angle/style as specified below.
+
+=== CREATIVE BRIEF ===
+Platform: ${platformName}
+Client: ${config.clientName ?? "General business"}
+Industry: ${config.industry ?? "General"}
+Campaign objective: ${config.objective}
+Target audience: ${config.targetAudience}
+Offer / hook: ${config.offer}
+Desired tone: ${config.tone}
+
+=== PLATFORM CONSTRAINTS ===
 ${platformLimits[config.platform] ?? "Follow standard ad copy best practices."}
 
-HOOK TYPES (one per variation):
-1. Question -- open with a compelling question
-2. Statistic -- lead with a number or data point
-3. Fear/Urgency -- create urgency or highlight a pain point
-4. Benefit -- lead with the primary benefit
-5. Social proof -- reference results, reviews, or popularity
+=== REQUIRED ANGLES (one per variation, in this order) ===
+1. BENEFIT — Lead with the #1 outcome the audience wants. Focus on transformation and results.
+2. URGENCY — Create time pressure or scarcity. Use deadlines, limited availability, or fear of missing out.
+3. SOCIAL_PROOF — Reference real-world results, testimonials, popularity, or "join X others who..." framing.
+4. QUESTION — Open with a provocative or relatable question that the audience can't ignore.
+5. STORY — Use a mini-narrative or "before/after" arc. Paint a vivid picture in 2-3 sentences.
 
-Also provide image/creative suggestions and an A/B test plan.
+=== REQUIREMENTS FOR EACH VARIATION ===
+- headline: Scroll-stopping headline tailored to the platform
+- primary_text: The main ad body copy (compelling, concise, drives action)
+- description: Supporting description / link description
+- cta: Specific call-to-action button text (e.g. "Get My Free Quote", "Start Now", "Book Today")
+- hook_type: The angle used (BENEFIT, URGENCY, SOCIAL_PROOF, QUESTION, or STORY)
+- estimated_performance: Rate as "high", "medium", or "low" with a brief reason why
+- image_concept: A specific visual concept suggestion that pairs with this copy variation
 
-Respond ONLY with valid JSON matching this schema:
+=== A/B TEST PLAN ===
+Based on the 5 variations, provide a detailed A/B testing recommendation:
+- Which 2 variations to test first and why
+- What metric to optimize for given the "${config.objective}" objective
+- Recommended budget split and test duration
+- What to test next based on the winner
+
+=== IMAGE SUGGESTIONS ===
+Provide 3 image/creative concepts that work across the variations, each with a visual concept and style (photography, illustration, ugc, or motion).
+
+=== PLATFORM TIPS ===
+Provide 3-5 actionable platform-specific optimization tips for ${platformName} relevant to ${config.objective} campaigns.
+
+Respond with valid JSON matching this exact schema:
 {
   "variations": [
     {
-      "headline": "<headline text>",
-      "primary_text": "<primary ad text>",
-      "description": "<description line>",
-      "cta": "<call to action>",
-      "hook_type": "question | statistic | fear_urgency | benefit | social_proof",
-      "estimated_performance": "<high | medium | low with brief reason>"
+      "headline": "string",
+      "primary_text": "string",
+      "description": "string",
+      "cta": "string",
+      "hook_type": "BENEFIT | URGENCY | SOCIAL_PROOF | QUESTION | STORY",
+      "estimated_performance": "string",
+      "image_concept": "string"
     }
   ],
   "image_suggestions": [
-    { "concept": "<visual concept>", "style": "<photography | illustration | ugc | motion>" }
+    { "concept": "string", "style": "photography | illustration | ugc | motion" }
   ],
-  "a_b_test_plan": "<how to test these variations>",
-  "platform_tips": "<platform-specific optimization tips>"
+  "a_b_test_plan": "string",
+  "platform_tips": "string"
 }`;
 
+  const fallbackVariations: Array<{
+    headline: string;
+    primary_text: string;
+    description: string;
+    cta: string;
+    hook_type: string;
+    estimated_performance: string;
+    image_concept: string;
+  }> = AD_ANGLES.map((angle: AdAngle) => {
+    const templates: Record<AdAngle, { headline: string; primary_text: string; cta: string }> = {
+      BENEFIT: {
+        headline: `Transform Your Results with ${config.offer}`,
+        primary_text: `${config.targetAudience} are discovering how ${config.offer} can change everything. The results speak for themselves.`,
+        cta: "Get Started Today",
+      },
+      URGENCY: {
+        headline: `Limited Time: ${config.offer}`,
+        primary_text: `Don't miss out — ${config.offer} won't last forever. ${config.targetAudience}, now is the time to act.`,
+        cta: "Claim Now",
+      },
+      SOCIAL_PROOF: {
+        headline: `Join Thousands Who Chose ${config.offer}`,
+        primary_text: `${config.targetAudience} just like you have already made the switch. See why ${config.offer} is the top choice.`,
+        cta: "See Results",
+      },
+      QUESTION: {
+        headline: `Still Struggling Without ${config.offer}?`,
+        primary_text: `What if there was a better way? ${config.targetAudience} are asking the same question — and finding answers with ${config.offer}.`,
+        cta: "Find Out How",
+      },
+      STORY: {
+        headline: `From Frustrated to Thriving with ${config.offer}`,
+        primary_text: `They were stuck. Then they discovered ${config.offer}. Now ${config.targetAudience} everywhere are seeing the same transformation.`,
+        cta: "Start Your Story",
+      },
+    };
+    const t = templates[angle];
+    return {
+      headline: t.headline,
+      primary_text: t.primary_text,
+      description: `${config.objective} for ${config.targetAudience}.`,
+      cta: t.cta,
+      hook_type: angle,
+      estimated_performance: "medium — template fallback, customize for better results",
+      image_concept: "Hero image featuring the target audience experiencing the core benefit",
+    };
+  });
+
   const fallbackResult = {
-    variations: [
-      {
-        headline: `${config.offer} -- ${config.industry ?? "Your Business"}`,
-        primary_text: `Discover how ${config.targetAudience} are achieving results with ${config.offer}. Get started today.`,
-        description: `${config.objective} for ${config.targetAudience}.`,
-        cta: "Learn More",
-        hook_type: "benefit",
-        estimated_performance: "medium -- generic fallback copy",
-      },
-    ],
+    variations: fallbackVariations,
     image_suggestions: [
-      {
-        concept: "Product/service hero shot with benefit overlay",
-        style: "photography",
-      },
+      { concept: "Hero shot of target audience experiencing the core benefit", style: "photography" as const },
+      { concept: "Before/after split showing transformation", style: "illustration" as const },
+      { concept: "Authentic UGC-style testimonial visual", style: "ugc" as const },
     ],
     a_b_test_plan:
-      "AI generation unavailable. Create manual variations testing different hooks and CTAs.",
+      "AI generation unavailable. Recommended manual test: Run BENEFIT vs URGENCY variations first with a 50/50 budget split for 7 days, then test the winner against SOCIAL_PROOF.",
     platform_tips:
-      "Follow platform character limits and test creative formats native to the platform.",
+      "Follow platform character limits and test creative formats native to the platform. Start with a small daily budget and scale winners.",
   };
 
   try {
     const response = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 2000,
+      max_tokens: 4000,
+      system: systemPrompt,
       messages: [{ role: "user", content: prompt }],
     });
 
-    const text =
+    const rawText =
       response.content[0].type === "text" ? response.content[0].text : "";
-    const parsed = JSON.parse(text);
+
+    // Strip markdown code fences if the model wraps the response
+    const cleaned = rawText.replace(/^```(?:json)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+    const parsed = JSON.parse(cleaned);
+
+    // Validate we got 5 variations
+    const variations = Array.isArray(parsed.variations) ? parsed.variations : [];
+    if (variations.length < 5) {
+      console.warn(`[generateAdCopy] Expected 5 variations, got ${variations.length}`);
+    }
 
     return {
-      variations: Array.isArray(parsed.variations)
-        ? parsed.variations
-        : fallbackResult.variations,
+      variations: variations.length > 0 ? variations : fallbackResult.variations,
       image_suggestions: Array.isArray(parsed.image_suggestions)
         ? parsed.image_suggestions
         : fallbackResult.image_suggestions,
@@ -242,7 +325,8 @@ Respond ONLY with valid JSON matching this schema:
       platform_tips:
         parsed.platform_tips ?? fallbackResult.platform_tips,
     };
-  } catch {
+  } catch (err) {
+    console.error("[generateAdCopy] Anthropic API error, using fallback:", err);
     return fallbackResult;
   }
 }

@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Calendar, Clock, Users, Link2, Copy, Globe,
   Plus, Settings, Mail, Shuffle, BarChart3, Shield,
-  X, Check, ExternalLink, Edit3, AlertCircle
+  X, Check, ExternalLink, Edit3, AlertCircle, Loader2
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type ScheduleTab = "booking_pages" | "availability" | "analytics" | "settings";
 
@@ -13,43 +14,32 @@ interface MeetingType {
   id: string;
   name: string;
   duration: number;
-  color: string;
-  description: string;
+  description: string | null;
+  location_type: string;
+  color: string | null;
+  price: number | null;
   active: boolean;
-  bufferBefore: number;
-  bufferAfter: number;
-  maxPerDay: number;
-  link: string;
-  questions: { id: string; text: string; required: boolean }[];
+  buffer_time: number;
+  max_bookings_per_day: number | null;
+  available_days: string[];
+  available_hours_start: string;
+  available_hours_end: string;
+  created_at: string;
 }
 
-interface BookingData {
+interface Booking {
   id: string;
-  name: string;
-  email: string;
-  meetingType: string;
+  meeting_type_id: string;
+  guest_name: string;
+  guest_email: string;
+  guest_phone: string | null;
   date: string;
   time: string;
-  status: "confirmed" | "pending" | "cancelled" | "rescheduled";
-  notes: string;
-  timezone: string;
+  status: "confirmed" | "cancelled" | "completed" | "no_show";
+  notes: string | null;
+  created_at: string;
+  meeting_types: { name: string; duration: number; color: string | null } | null;
 }
-
-const MOCK_MEETING_TYPES: MeetingType[] = [
-  { id: "1", name: "Discovery Call", duration: 30, color: "#10b981", description: "Initial consultation for prospective clients", active: true, bufferBefore: 5, bufferAfter: 10, maxPerDay: 6, link: "https://cal.shortstack.io/nicklas/discovery", questions: [{ id: "q1", text: "What is your business?", required: true }, { id: "q2", text: "What are your goals?", required: false }] },
-  { id: "2", name: "Strategy Session", duration: 60, color: "#3b82f6", description: "Deep dive into marketing strategy", active: true, bufferBefore: 10, bufferAfter: 15, maxPerDay: 3, link: "https://cal.shortstack.io/nicklas/strategy", questions: [{ id: "q3", text: "Current monthly revenue?", required: true }] },
-  { id: "3", name: "Quick Check-in", duration: 15, color: "#f59e0b", description: "Fast sync with existing clients", active: true, bufferBefore: 0, bufferAfter: 5, maxPerDay: 10, link: "https://cal.shortstack.io/nicklas/checkin", questions: [] },
-  { id: "4", name: "Content Review", duration: 45, color: "#8b5cf6", description: "Review content calendar and assets", active: true, bufferBefore: 5, bufferAfter: 10, maxPerDay: 4, link: "https://cal.shortstack.io/nicklas/content-review", questions: [{ id: "q4", text: "Which platforms?", required: true }] },
-  { id: "5", name: "Onboarding Session", duration: 60, color: "#ec4899", description: "Welcome session for new clients", active: false, bufferBefore: 15, bufferAfter: 15, maxPerDay: 2, link: "https://cal.shortstack.io/nicklas/onboarding", questions: [{ id: "q5", text: "Login credentials ready?", required: true }] },
-];
-
-const MOCK_BOOKINGS: BookingData[] = [
-  { id: "b1", name: "Dr. Smith", email: "smith@dental.com", meetingType: "Discovery Call", date: "2026-04-14", time: "09:00", status: "confirmed", notes: "Dentist in Portland", timezone: "PST" },
-  { id: "b2", name: "Lisa Wong", email: "lisa@luxesalon.com", meetingType: "Content Review", date: "2026-04-14", time: "11:00", status: "confirmed", notes: "Monthly review", timezone: "EST" },
-  { id: "b3", name: "Mark Johnson", email: "mark@fitpro.com", meetingType: "Strategy Session", date: "2026-04-15", time: "14:00", status: "pending", notes: "Wants to scale ads", timezone: "CST" },
-  { id: "b4", name: "Anna Davis", email: "anna@greeneats.com", meetingType: "Quick Check-in", date: "2026-04-15", time: "16:00", status: "rescheduled", notes: "Moved from Monday", timezone: "EST" },
-  { id: "b5", name: "Tom Baker", email: "tom@metrorealty.com", meetingType: "Onboarding Session", date: "2026-04-16", time: "10:00", status: "confirmed", notes: "New client onboarding", timezone: "EST" },
-];
 
 const TIME_SLOTS = [
   "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
@@ -63,17 +53,32 @@ const STATUS_COLORS: Record<string, string> = {
   confirmed: "bg-emerald-400/10 text-emerald-400",
   pending: "bg-yellow-400/10 text-yellow-400",
   cancelled: "bg-red-400/10 text-red-400",
-  rescheduled: "bg-blue-400/10 text-blue-400",
+  completed: "bg-blue-400/10 text-blue-400",
+  no_show: "bg-orange-400/10 text-orange-400",
 };
+
+const LOCATION_OPTIONS = [
+  { value: "zoom", label: "Zoom" },
+  { value: "google_meet", label: "Google Meet" },
+  { value: "phone", label: "Phone Call" },
+  { value: "in_person", label: "In Person" },
+];
+
+const COLOR_OPTIONS = [
+  "#C9A84C", "#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ef4444", "#ec4899", "#06b6d4",
+];
 
 export default function SchedulingPage() {
   const [tab, setTab] = useState<ScheduleTab>("booking_pages");
-  const [meetingTypes, setMeetingTypes] = useState(MOCK_MEETING_TYPES);
-  const [bookings] = useState(MOCK_BOOKINGS);
+  const [meetingTypes, setMeetingTypes] = useState<MeetingType[]>([]);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
   const [editingType, setEditingType] = useState<string | null>(null);
   const [showLinkGen, setShowLinkGen] = useState(false);
   const [selectedLink, setSelectedLink] = useState("");
   const [showEmailPreview, setShowEmailPreview] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [creating, setCreating] = useState(false);
   const [availability, setAvailability] = useState<Record<string, { enabled: boolean; start: string; end: string }>>(
     Object.fromEntries(DAYS.map(d => [d, { enabled: d !== "Saturday" && d !== "Sunday", start: "09:00", end: "17:00" }]))
   );
@@ -82,15 +87,123 @@ export default function SchedulingPage() {
   const [reschedulePolicy, setReschedulePolicy] = useState("24h");
   const [cancelPolicy, setCancelPolicy] = useState("24h");
 
+  // Create form state
+  const [newMeeting, setNewMeeting] = useState({
+    name: "",
+    duration: 30,
+    description: "",
+    location_type: "zoom",
+    color: "#C9A84C",
+    buffer_time: 0,
+    max_bookings_per_day: "",
+  });
+
+  // ── Fetch meeting types ──
+  const fetchMeetingTypes = useCallback(async () => {
+    try {
+      const res = await fetch("/api/scheduling");
+      if (!res.ok) return;
+      const json = await res.json();
+      setMeetingTypes(json.meeting_types ?? []);
+    } catch {
+      // silent
+    }
+  }, []);
+
+  // ── Fetch bookings ──
+  const fetchBookings = useCallback(async () => {
+    try {
+      const res = await fetch("/api/scheduling/bookings");
+      if (!res.ok) return;
+      const json = await res.json();
+      setBookings(json.bookings ?? []);
+    } catch {
+      // silent
+    }
+  }, []);
+
+  useEffect(() => {
+    Promise.all([fetchMeetingTypes(), fetchBookings()]).finally(() => setLoading(false));
+  }, [fetchMeetingTypes, fetchBookings]);
+
+  // ── Create meeting type ──
+  const handleCreate = async () => {
+    if (!newMeeting.name) return;
+    setCreating(true);
+    try {
+      const res = await fetch("/api/scheduling", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newMeeting.name,
+          duration: newMeeting.duration,
+          description: newMeeting.description || null,
+          location_type: newMeeting.location_type,
+          color: newMeeting.color,
+          buffer_time: newMeeting.buffer_time,
+          max_bookings_per_day: newMeeting.max_bookings_per_day ? parseInt(newMeeting.max_bookings_per_day) : null,
+        }),
+      });
+      if (res.ok) {
+        setShowCreateModal(false);
+        setNewMeeting({ name: "", duration: 30, description: "", location_type: "zoom", color: "#C9A84C", buffer_time: 0, max_bookings_per_day: "" });
+        fetchMeetingTypes();
+      }
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  // ── Toggle meeting type active/inactive ──
+  const toggleMeetingType = async (id: string) => {
+    const mt = meetingTypes.find(m => m.id === id);
+    if (!mt) return;
+    // Optimistic update
+    setMeetingTypes(prev => prev.map(m => m.id === id ? { ...m, active: !m.active } : m));
+    const res = await fetch("/api/scheduling", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, active: !mt.active }),
+    });
+    if (!res.ok) {
+      // Revert on failure
+      setMeetingTypes(prev => prev.map(m => m.id === id ? { ...m, active: mt.active } : m));
+    }
+  };
+
+  // ── Delete meeting type ──
+  const deleteMeetingType = async (id: string) => {
+    setMeetingTypes(prev => prev.filter(m => m.id !== id));
+    const res = await fetch("/api/scheduling", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (!res.ok) {
+      fetchMeetingTypes(); // Refetch on failure
+    }
+  };
+
+  // ── Update booking status ──
+  const updateBookingStatus = async (id: string, status: string) => {
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: status as Booking["status"] } : b));
+    const res = await fetch("/api/scheduling/bookings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, status }),
+    });
+    if (!res.ok) {
+      fetchBookings();
+    }
+  };
+
+  const bookingLink = (mtId: string) => `${typeof window !== "undefined" ? window.location.origin : ""}/book/${mtId}`;
+
   const totalBookings = bookings.length;
   const confirmedBookings = bookings.filter(b => b.status === "confirmed").length;
   const conversionRate = totalBookings > 0 ? Math.round((confirmedBookings / totalBookings) * 100) : 0;
 
   const copyLink = (url: string) => { navigator.clipboard.writeText(url); };
-
-  const toggleMeetingType = (id: string) => {
-    setMeetingTypes(prev => prev.map(mt => mt.id === id ? { ...mt, active: !mt.active } : mt));
-  };
 
   const TABS: { id: ScheduleTab; label: string; icon: React.ReactNode }[] = [
     { id: "booking_pages", label: "Booking Pages", icon: <Calendar size={13} /> },
@@ -98,6 +211,14 @@ export default function SchedulingPage() {
     { id: "analytics", label: "Analytics", icon: <BarChart3 size={13} /> },
     { id: "settings", label: "Settings", icon: <Settings size={13} /> },
   ];
+
+  if (loading) {
+    return (
+      <div className="fade-in flex items-center justify-center h-64">
+        <Loader2 size={24} className="animate-spin text-gold" />
+      </div>
+    );
+  }
 
   return (
     <div className="fade-in space-y-5">
@@ -116,7 +237,7 @@ export default function SchedulingPage() {
           <button onClick={() => setShowLinkGen(true)} className="btn-secondary text-xs flex items-center gap-1.5">
             <Link2 size={12} /> Get Booking Link
           </button>
-          <button className="btn-primary text-xs flex items-center gap-1.5">
+          <button onClick={() => setShowCreateModal(true)} className="btn-primary text-xs flex items-center gap-1.5">
             <Plus size={12} /> New Meeting Type
           </button>
         </div>
@@ -158,112 +279,166 @@ export default function SchedulingPage() {
       {tab === "booking_pages" && (
         <div className="space-y-4">
           {/* Meeting Types */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {meetingTypes.map(mt => (
-              <div key={mt.id} className={`card p-4 ${!mt.active ? "opacity-50" : ""}`}>
-                <div className="flex items-start gap-3">
-                  <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color, minHeight: 40 }} />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-xs font-bold">{mt.name}</p>
-                      <div className="flex items-center gap-1.5">
-                        <button onClick={() => toggleMeetingType(mt.id)}
-                          className={`text-[9px] px-2 py-0.5 rounded-full ${mt.active ? "bg-emerald-400/10 text-emerald-400" : "bg-red-400/10 text-red-400"}`}>
-                          {mt.active ? "Active" : "Inactive"}
-                        </button>
-                        <button onClick={() => setEditingType(editingType === mt.id ? null : mt.id)} className="btn-ghost p-1">
-                          <Edit3 size={10} className="text-muted" />
-                        </button>
+          {meetingTypes.length === 0 ? (
+            <EmptyState
+              icon={<Calendar size={24} />}
+              title="No meeting types"
+              description="Create a booking link to get started"
+              actionLabel="Create Meeting Type"
+              onAction={() => setShowCreateModal(true)}
+            />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {meetingTypes.map(mt => (
+                <div key={mt.id} className={`card p-4 ${!mt.active ? "opacity-50" : ""}`}>
+                  <div className="flex items-start gap-3">
+                    <div className="w-3 h-full rounded-full shrink-0 mt-1" style={{ background: mt.color || "#C9A84C", minHeight: 40 }} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-xs font-bold">{mt.name}</p>
+                        <div className="flex items-center gap-1.5">
+                          <button onClick={() => toggleMeetingType(mt.id)}
+                            className={`text-[9px] px-2 py-0.5 rounded-full ${mt.active ? "bg-emerald-400/10 text-emerald-400" : "bg-red-400/10 text-red-400"}`}>
+                            {mt.active ? "Active" : "Inactive"}
+                          </button>
+                          <button onClick={() => setEditingType(editingType === mt.id ? null : mt.id)} className="btn-ghost p-1">
+                            <Edit3 size={10} className="text-muted" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <p className="text-[10px] text-muted mb-2">{mt.description}</p>
-                    <div className="flex items-center gap-3 text-[10px] text-muted mb-2">
-                      <span className="flex items-center gap-1"><Clock size={9} /> {mt.duration} min</span>
-                      <span className="flex items-center gap-1"><Shield size={9} /> {mt.bufferBefore}m before / {mt.bufferAfter}m after</span>
-                      <span className="flex items-center gap-1"><Users size={9} /> Max {mt.maxPerDay}/day</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => copyLink(mt.link)} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                        <Copy size={10} /> Copy Link
-                      </button>
-                      <a href={mt.link} target="_blank" rel="noopener" className="btn-ghost text-[10px] px-2 py-1 flex items-center gap-1 text-muted hover:text-foreground">
-                        <ExternalLink size={10} /> Preview
-                      </a>
-                    </div>
+                      {mt.description && <p className="text-[10px] text-muted mb-2">{mt.description}</p>}
+                      <div className="flex items-center gap-3 text-[10px] text-muted mb-2">
+                        <span className="flex items-center gap-1"><Clock size={9} /> {mt.duration} min</span>
+                        <span className="flex items-center gap-1"><Shield size={9} /> {mt.buffer_time}m buffer</span>
+                        {mt.max_bookings_per_day && (
+                          <span className="flex items-center gap-1"><Users size={9} /> Max {mt.max_bookings_per_day}/day</span>
+                        )}
+                        <span className="text-[9px] capitalize">{mt.location_type.replace("_", " ")}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => copyLink(bookingLink(mt.id))} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
+                          <Copy size={10} /> Copy Link
+                        </button>
+                        <a href={bookingLink(mt.id)} target="_blank" rel="noopener" className="btn-ghost text-[10px] px-2 py-1 flex items-center gap-1 text-muted hover:text-foreground">
+                          <ExternalLink size={10} /> Preview
+                        </a>
+                      </div>
 
-                    {/* Edit Expanded */}
-                    {editingType === mt.id && (
-                      <div className="mt-3 pt-3 border-t border-border space-y-3">
-                        {/* Custom Questions */}
-                        <div>
-                          <p className="text-[10px] text-muted uppercase tracking-wider font-semibold mb-1.5">Custom Questions</p>
-                          {mt.questions.length === 0 ? (
-                            <p className="text-[10px] text-muted/50">No custom questions</p>
-                          ) : (
-                            <div className="space-y-1">
-                              {mt.questions.map(q => (
-                                <div key={q.id} className="flex items-center gap-2 text-[10px] p-1.5 rounded bg-surface-light">
-                                  <span className="flex-1">{q.text}</span>
-                                  <span className={`text-[8px] px-1.5 py-0.5 rounded ${q.required ? "bg-gold/10 text-gold" : "text-muted"}`}>
-                                    {q.required ? "Required" : "Optional"}
-                                  </span>
-                                </div>
-                              ))}
+                      {/* Edit Expanded */}
+                      {editingType === mt.id && (
+                        <div className="mt-3 pt-3 border-t border-border space-y-3">
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <label className="block text-[9px] text-muted mb-1">Buffer Time</label>
+                              <select className="input w-full text-[10px]" defaultValue={mt.buffer_time}
+                                onChange={async (e) => {
+                                  const buffer_time = parseInt(e.target.value);
+                                  await fetch("/api/scheduling", {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ id: mt.id, buffer_time }),
+                                  });
+                                  setMeetingTypes(prev => prev.map(m => m.id === mt.id ? { ...m, buffer_time } : m));
+                                }}>
+                                <option value={0}>None</option>
+                                <option value={5}>5 min</option>
+                                <option value={10}>10 min</option>
+                                <option value={15}>15 min</option>
+                                <option value={30}>30 min</option>
+                              </select>
                             </div>
-                          )}
+                            <div>
+                              <label className="block text-[9px] text-muted mb-1">Duration</label>
+                              <select className="input w-full text-[10px]" defaultValue={mt.duration}
+                                onChange={async (e) => {
+                                  const duration = parseInt(e.target.value);
+                                  await fetch("/api/scheduling", {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ id: mt.id, duration }),
+                                  });
+                                  setMeetingTypes(prev => prev.map(m => m.id === mt.id ? { ...m, duration } : m));
+                                }}>
+                                <option value={15}>15 min</option>
+                                <option value={30}>30 min</option>
+                                <option value={45}>45 min</option>
+                                <option value={60}>60 min</option>
+                                <option value={90}>90 min</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-[9px] text-muted mb-1">Max/Day</label>
+                              <input type="number" className="input w-full text-[10px]" defaultValue={mt.max_bookings_per_day ?? ""}
+                                placeholder="No limit"
+                                onBlur={async (e) => {
+                                  const val = e.target.value ? parseInt(e.target.value) : null;
+                                  await fetch("/api/scheduling", {
+                                    method: "PATCH",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ id: mt.id, max_bookings_per_day: val }),
+                                  });
+                                  setMeetingTypes(prev => prev.map(m => m.id === mt.id ? { ...m, max_bookings_per_day: val } : m));
+                                }} />
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button onClick={() => deleteMeetingType(mt.id)}
+                              className="text-[10px] px-2 py-1 rounded bg-red-400/10 text-red-400 hover:bg-red-400/20 transition-colors">
+                              Delete Meeting Type
+                            </button>
+                          </div>
                         </div>
-                        {/* Buffer Settings */}
-                        <div className="grid grid-cols-3 gap-2">
-                          <div>
-                            <label className="block text-[9px] text-muted mb-1">Buffer Before</label>
-                            <select className="input w-full text-[10px]" defaultValue={mt.bufferBefore}>
-                              <option value={0}>None</option>
-                              <option value={5}>5 min</option>
-                              <option value={10}>10 min</option>
-                              <option value={15}>15 min</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-[9px] text-muted mb-1">Buffer After</label>
-                            <select className="input w-full text-[10px]" defaultValue={mt.bufferAfter}>
-                              <option value={0}>None</option>
-                              <option value={5}>5 min</option>
-                              <option value={10}>10 min</option>
-                              <option value={15}>15 min</option>
-                            </select>
-                          </div>
-                          <div>
-                            <label className="block text-[9px] text-muted mb-1">Max/Day</label>
-                            <input type="number" className="input w-full text-[10px]" defaultValue={mt.maxPerDay} />
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* Recent Bookings */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Calendar size={13} className="text-gold" /> Recent Bookings</h2>
-            <div className="space-y-2">
-              {bookings.map(b => (
-                <div key={b.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
-                  <div className="text-center shrink-0 w-12">
-                    <p className="text-[9px] text-muted">{new Date(b.date).toLocaleDateString("en-US", { month: "short" })}</p>
-                    <p className="text-lg font-bold leading-none">{new Date(b.date).getDate()}</p>
+            {bookings.length === 0 ? (
+              <div className="py-6 text-center">
+                <Users size={24} className="mx-auto text-muted/30 mb-2" />
+                <p className="text-xs text-muted">No bookings yet. Share your booking links to get started.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {bookings.map(b => (
+                  <div key={b.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
+                    <div className="text-center shrink-0 w-12">
+                      <p className="text-[9px] text-muted">{new Date(b.date).toLocaleDateString("en-US", { month: "short" })}</p>
+                      <p className="text-lg font-bold leading-none">{new Date(b.date).getDate()}</p>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold">{b.guest_name}</p>
+                      <p className="text-[10px] text-muted">
+                        {b.meeting_types?.name ?? "Meeting"} at {b.time}
+                      </p>
+                      <p className="text-[9px] text-muted/70">{b.guest_email}</p>
+                      {b.notes && <p className="text-[9px] text-muted/50 mt-0.5">{b.notes}</p>}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {b.status === "confirmed" && (
+                        <button onClick={() => updateBookingStatus(b.id, "cancelled")}
+                          className="text-[9px] px-2 py-0.5 rounded-full bg-red-400/10 text-red-400 hover:bg-red-400/20">
+                          Cancel
+                        </button>
+                      )}
+                      {b.status === "confirmed" && (
+                        <button onClick={() => updateBookingStatus(b.id, "completed")}
+                          className="text-[9px] px-2 py-0.5 rounded-full bg-blue-400/10 text-blue-400 hover:bg-blue-400/20">
+                          Complete
+                        </button>
+                      )}
+                      <span className={`text-[9px] px-2 py-0.5 rounded-full ${STATUS_COLORS[b.status] ?? "text-muted"}`}>{b.status}</span>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold">{b.name}</p>
-                    <p className="text-[10px] text-muted">{b.meetingType} at {b.time} ({b.timezone})</p>
-                    {b.notes && <p className="text-[9px] text-muted/50 mt-0.5">{b.notes}</p>}
-                  </div>
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${STATUS_COLORS[b.status]}`}>{b.status}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Confirmation Email Preview */}
@@ -399,73 +574,87 @@ export default function SchedulingPage() {
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">Show Rate</p>
-              <p className="text-2xl font-bold text-emerald-400">87%</p>
+              <p className="text-2xl font-bold text-emerald-400">
+                {totalBookings > 0 ? Math.round((bookings.filter(b => b.status === "completed").length / totalBookings) * 100) : 0}%
+              </p>
             </div>
             <div className="card p-3 text-center">
-              <p className="text-[10px] text-muted">Avg Booking Time</p>
-              <p className="text-2xl font-bold text-blue-400">2.3d</p>
+              <p className="text-[10px] text-muted">Confirmed</p>
+              <p className="text-2xl font-bold text-blue-400">{confirmedBookings}</p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">Cancellation Rate</p>
-              <p className="text-2xl font-bold text-red-400">8%</p>
+              <p className="text-2xl font-bold text-red-400">
+                {totalBookings > 0 ? Math.round((bookings.filter(b => b.status === "cancelled").length / totalBookings) * 100) : 0}%
+              </p>
             </div>
           </div>
 
           {/* Bookings by Type Chart */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Bookings by Meeting Type</h2>
-            <div className="space-y-2">
-              {meetingTypes.map(mt => {
-                const count = bookings.filter(b => b.meetingType === mt.name).length;
-                const pct = totalBookings > 0 ? (count / totalBookings) * 100 : 0;
-                return (
-                  <div key={mt.id} className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full shrink-0" style={{ background: mt.color }} />
-                    <span className="text-xs w-32 truncate">{mt.name}</span>
-                    <div className="flex-1 h-2 rounded-full bg-surface-light overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: mt.color }} />
+            {meetingTypes.length === 0 ? (
+              <p className="text-xs text-muted text-center py-4">Create meeting types to see analytics.</p>
+            ) : (
+              <div className="space-y-2">
+                {meetingTypes.map(mt => {
+                  const count = bookings.filter(b => b.meeting_type_id === mt.id).length;
+                  const pct = totalBookings > 0 ? (count / totalBookings) * 100 : 0;
+                  return (
+                    <div key={mt.id} className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full shrink-0" style={{ background: mt.color || "#C9A84C" }} />
+                      <span className="text-xs w-32 truncate">{mt.name}</span>
+                      <div className="flex-1 h-2 rounded-full bg-surface-light overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: mt.color || "#C9A84C" }} />
+                      </div>
+                      <span className="text-xs font-bold w-8 text-right">{count}</span>
                     </div>
-                    <span className="text-xs font-bold w-8 text-right">{count}</span>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Popular Times */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-blue-400" /> Popular Booking Times</h2>
-            <div className="grid grid-cols-5 gap-2">
-              {[
-                { time: "9:00 AM", pct: 85 }, { time: "10:00 AM", pct: 95 },
-                { time: "11:00 AM", pct: 70 }, { time: "2:00 PM", pct: 90 },
-                { time: "3:00 PM", pct: 60 },
-              ].map(slot => (
-                <div key={slot.time} className="text-center">
-                  <div className="h-20 rounded-lg bg-surface-light flex items-end justify-center overflow-hidden mb-1">
-                    <div className="w-full rounded-t-lg bg-gold/20" style={{ height: `${slot.pct}%` }} />
-                  </div>
-                  <p className="text-[9px] text-muted">{slot.time}</p>
-                  <p className="text-[10px] font-bold">{slot.pct}%</p>
-                </div>
-              ))}
-            </div>
+            {bookings.length === 0 ? (
+              <p className="text-xs text-muted text-center py-4">Booking data will appear here once you have bookings.</p>
+            ) : (
+              <div className="grid grid-cols-5 gap-2">
+                {(() => {
+                  const timeCounts: Record<string, number> = {};
+                  bookings.forEach(b => { timeCounts[b.time] = (timeCounts[b.time] || 0) + 1; });
+                  const sorted = Object.entries(timeCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+                  const max = sorted[0]?.[1] || 1;
+                  return sorted.map(([time, count]) => (
+                    <div key={time} className="text-center">
+                      <div className="h-20 rounded-lg bg-surface-light flex items-end justify-center overflow-hidden mb-1">
+                        <div className="w-full rounded-t-lg bg-gold/20" style={{ height: `${(count / max) * 100}%` }} />
+                      </div>
+                      <p className="text-[9px] text-muted">{time}</p>
+                      <p className="text-[10px] font-bold">{count}</p>
+                    </div>
+                  ));
+                })()}
+              </div>
+            )}
           </div>
 
-          {/* Timezone Distribution */}
+          {/* Status Distribution */}
           <div className="card">
-            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-purple-400" /> Bookings by Timezone</h2>
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { tz: "EST", count: 12, pct: 48 },
-                { tz: "CST", count: 7, pct: 28 },
-                { tz: "PST", count: 6, pct: 24 },
-              ].map(t => (
-                <div key={t.tz} className="p-3 rounded-lg bg-surface-light text-center border border-border">
-                  <p className="text-lg font-bold">{t.count}</p>
-                  <p className="text-[10px] text-muted">{t.tz} ({t.pct}%)</p>
-                </div>
-              ))}
+            <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-purple-400" /> Bookings by Status</h2>
+            <div className="grid grid-cols-4 gap-3">
+              {(["confirmed", "completed", "cancelled", "no_show"] as const).map(status => {
+                const count = bookings.filter(b => b.status === status).length;
+                const pct = totalBookings > 0 ? Math.round((count / totalBookings) * 100) : 0;
+                return (
+                  <div key={status} className="p-3 rounded-lg bg-surface-light text-center border border-border">
+                    <p className="text-lg font-bold">{count}</p>
+                    <p className="text-[10px] text-muted capitalize">{status.replace("_", " ")} ({pct}%)</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -549,26 +738,118 @@ export default function SchedulingPage() {
               <h3 className="text-sm font-bold flex items-center gap-2"><Link2 size={14} className="text-gold" /> Booking Link Generator</h3>
               <button onClick={() => setShowLinkGen(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
             </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Select Meeting Type</label>
-              <select value={selectedLink} onChange={e => setSelectedLink(e.target.value)} className="input w-full text-xs">
-                <option value="">Choose...</option>
-                {meetingTypes.filter(m => m.active).map(mt => (
-                  <option key={mt.id} value={mt.link}>{mt.name} ({mt.duration} min)</option>
-                ))}
-              </select>
+            {meetingTypes.filter(m => m.active).length === 0 ? (
+              <p className="text-xs text-muted text-center py-4">No active meeting types. Create one first.</p>
+            ) : (
+              <>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Select Meeting Type</label>
+                  <select value={selectedLink} onChange={e => setSelectedLink(e.target.value)} className="input w-full text-xs">
+                    <option value="">Choose...</option>
+                    {meetingTypes.filter(m => m.active).map(mt => (
+                      <option key={mt.id} value={bookingLink(mt.id)}>{mt.name} ({mt.duration} min)</option>
+                    ))}
+                  </select>
+                </div>
+                {selectedLink && (
+                  <div>
+                    <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Your Link</label>
+                    <div className="flex gap-2">
+                      <code className="flex-1 text-[10px] p-2.5 rounded-lg bg-surface-light border border-border truncate">{selectedLink}</code>
+                      <button onClick={() => copyLink(selectedLink)} className="btn-primary text-xs px-3">
+                        <Copy size={12} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Create Meeting Type Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowCreateModal(false)}>
+          <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Meeting Type</h3>
+              <button onClick={() => setShowCreateModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
             </div>
-            {selectedLink && (
+
+            <div className="space-y-3">
               <div>
-                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Your Link</label>
-                <div className="flex gap-2">
-                  <code className="flex-1 text-[10px] p-2.5 rounded-lg bg-surface-light border border-border truncate">{selectedLink}</code>
-                  <button onClick={() => copyLink(selectedLink)} className="btn-primary text-xs px-3">
-                    <Copy size={12} />
-                  </button>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Name *</label>
+                <input type="text" className="input w-full text-xs" placeholder="e.g. Discovery Call"
+                  value={newMeeting.name} onChange={e => setNewMeeting(prev => ({ ...prev, name: e.target.value }))} />
+              </div>
+
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Description</label>
+                <textarea className="input w-full text-xs" rows={2} placeholder="Brief description of this meeting type..."
+                  value={newMeeting.description} onChange={e => setNewMeeting(prev => ({ ...prev, description: e.target.value }))} />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Duration</label>
+                  <select className="input w-full text-xs" value={newMeeting.duration}
+                    onChange={e => setNewMeeting(prev => ({ ...prev, duration: parseInt(e.target.value) }))}>
+                    <option value={15}>15 minutes</option>
+                    <option value={30}>30 minutes</option>
+                    <option value={45}>45 minutes</option>
+                    <option value={60}>60 minutes</option>
+                    <option value={90}>90 minutes</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Location</label>
+                  <select className="input w-full text-xs" value={newMeeting.location_type}
+                    onChange={e => setNewMeeting(prev => ({ ...prev, location_type: e.target.value }))}>
+                    {LOCATION_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                  </select>
                 </div>
               </div>
-            )}
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Buffer Time</label>
+                  <select className="input w-full text-xs" value={newMeeting.buffer_time}
+                    onChange={e => setNewMeeting(prev => ({ ...prev, buffer_time: parseInt(e.target.value) }))}>
+                    <option value={0}>No buffer</option>
+                    <option value={5}>5 minutes</option>
+                    <option value={10}>10 minutes</option>
+                    <option value={15}>15 minutes</option>
+                    <option value={30}>30 minutes</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Max/Day</label>
+                  <input type="number" className="input w-full text-xs" placeholder="No limit"
+                    value={newMeeting.max_bookings_per_day}
+                    onChange={e => setNewMeeting(prev => ({ ...prev, max_bookings_per_day: e.target.value }))} />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Color</label>
+                <div className="flex gap-2">
+                  {COLOR_OPTIONS.map(c => (
+                    <button key={c} onClick={() => setNewMeeting(prev => ({ ...prev, color: c }))}
+                      className={`w-6 h-6 rounded-full border-2 transition-all ${newMeeting.color === c ? "border-foreground scale-110" : "border-transparent"}`}
+                      style={{ background: c }} />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={() => setShowCreateModal(false)} className="btn-secondary text-xs">Cancel</button>
+              <button onClick={handleCreate} disabled={!newMeeting.name || creating} className="btn-primary text-xs flex items-center gap-1.5">
+                {creating ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
+                {creating ? "Creating..." : "Create"}
+              </button>
+            </div>
           </div>
         </div>
       )}

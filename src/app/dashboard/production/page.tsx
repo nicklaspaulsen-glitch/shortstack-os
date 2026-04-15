@@ -7,6 +7,7 @@ import {
   Calendar, Eye, Plus, X,
   Flag
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type ProductionTab = "pipeline" | "calendar" | "standup" | "approvals";
 type KanbanStatus = "backlog" | "in_progress" | "review" | "approved" | "delivered";
@@ -42,16 +43,7 @@ const STATUS_CONFIG: Record<KanbanStatus, { label: string; color: string }> = {
   delivered: { label: "Delivered", color: "text-gold" },
 };
 
-const MOCK_ITEMS: ProductionItem[] = [
-  { id: "p1", title: "Instagram Reels x3", client: "Bright Dental", type: "Short Form", status: "in_progress", priority: "high", assignee: "James", dueDate: "2026-04-16", estimatedHours: 6, actualHours: 4, checklist: [{ task: "Edit footage", done: true }, { task: "Add captions", done: true }, { task: "Color grade", done: false }, { task: "Add music", done: false }], reviewNotes: "" },
-  { id: "p2", title: "YouTube Video - Dental Tips", client: "Bright Dental", type: "Long Form", status: "review", priority: "medium", assignee: "James", dueDate: "2026-04-17", estimatedHours: 8, actualHours: 7, checklist: [{ task: "Rough cut", done: true }, { task: "Sound mix", done: true }, { task: "Thumbnail", done: true }, { task: "SEO tags", done: false }], reviewNotes: "Great work, just fix the intro transition" },
-  { id: "p3", title: "TikTok Content x5", client: "FitPro Gym", type: "Short Form", status: "backlog", priority: "medium", assignee: "Sarah", dueDate: "2026-04-18", estimatedHours: 5, actualHours: 0, checklist: [{ task: "Script approval", done: true }, { task: "Record footage", done: false }, { task: "Edit", done: false }, { task: "Post", done: false }], reviewNotes: "" },
-  { id: "p4", title: "Facebook Ad Creative", client: "Metro Realty", type: "Ad Creative", status: "approved", priority: "urgent", assignee: "Maria", dueDate: "2026-04-15", estimatedHours: 3, actualHours: 2.5, checklist: [{ task: "Design variants", done: true }, { task: "Write copy", done: true }, { task: "A/B versions", done: true }, { task: "Client approval", done: true }], reviewNotes: "Approved - launch ASAP" },
-  { id: "p5", title: "Monthly Blog Posts x4", client: "Green Eats", type: "Blog", status: "in_progress", priority: "low", assignee: "Sarah", dueDate: "2026-04-20", estimatedHours: 8, actualHours: 3, checklist: [{ task: "Research topics", done: true }, { task: "Write drafts", done: true }, { task: "SEO optimization", done: false }, { task: "Add images", done: false }], reviewNotes: "" },
-  { id: "p6", title: "Google Ads Landing Page", client: "Luxe Salon", type: "Web", status: "review", priority: "high", assignee: "Alex", dueDate: "2026-04-16", estimatedHours: 10, actualHours: 9, checklist: [{ task: "Design mockup", done: true }, { task: "Build page", done: true }, { task: "Mobile optimize", done: true }, { task: "Add tracking", done: false }], reviewNotes: "Needs CTA color change" },
-  { id: "p7", title: "Podcast Episode Edit", client: "FitPro Gym", type: "Podcast", status: "delivered", priority: "low", assignee: "James", dueDate: "2026-04-12", estimatedHours: 4, actualHours: 3.5, checklist: [{ task: "Audio cleanup", done: true }, { task: "Intro/Outro", done: true }, { task: "Show notes", done: true }, { task: "Upload", done: true }], reviewNotes: "Published to Spotify" },
-  { id: "p8", title: "Email Campaign Design", client: "Metro Realty", type: "Email", status: "backlog", priority: "medium", assignee: "Maria", dueDate: "2026-04-22", estimatedHours: 4, actualHours: 0, checklist: [{ task: "Template design", done: false }, { task: "Write copy", done: false }, { task: "Build in Mailchimp", done: false }], reviewNotes: "" },
-];
+const MOCK_ITEMS: ProductionItem[] = [];
 
 export default function ProductionPage() {
   const [tab, setTab] = useState<ProductionTab>("pipeline");
@@ -167,7 +159,16 @@ export default function ProductionPage() {
       </div>
 
       {/* Pipeline (Kanban) */}
-      {tab === "pipeline" && (
+      {tab === "pipeline" && items.length === 0 && (
+        <EmptyState
+          icon={<Film size={24} />}
+          title="No production items"
+          description="Create your first content task"
+          actionLabel="New Request"
+          onAction={() => setShowSubmit(true)}
+        />
+      )}
+      {tab === "pipeline" && items.length > 0 && (
         <div className="grid grid-cols-5 gap-3 overflow-x-auto">
           {(["backlog", "in_progress", "review", "approved", "delivered"] as KanbanStatus[]).map(status => (
             <div key={status}

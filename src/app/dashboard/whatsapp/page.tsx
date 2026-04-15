@@ -32,66 +32,31 @@ interface WTemplate {
   body: string;
 }
 
-const MOCK_MESSAGES: WMessage[] = [
-  { id: "wm1", to: "+1 555-0123", from: "+1 555-9999", body: "Hi! Thanks for your interest in our services. How can we help?", status: "delivered", direction: "outbound", date_sent: "2026-04-14T10:00:00Z" },
-  { id: "wm2", to: "+1 555-9999", from: "+1 555-0123", body: "I saw your ad about social media management. What are your packages?", status: "read", direction: "inbound", date_sent: "2026-04-14T10:15:00Z" },
-  { id: "wm3", to: "+1 555-0123", from: "+1 555-9999", body: "Great question! We have Starter ($1,200), Growth ($2,500), and Scale ($4,000). Each includes content, strategy, and analytics.", status: "delivered", direction: "outbound", date_sent: "2026-04-14T10:20:00Z" },
-  { id: "wm4", to: "+1 555-0456", from: "+1 555-9999", body: "Monthly report for March is ready! Check your email for the full breakdown.", status: "delivered", direction: "outbound", date_sent: "2026-04-13T14:00:00Z" },
-  { id: "wm5", to: "+1 555-9999", from: "+1 555-0456", body: "Got it, thanks! Numbers look great this month.", status: "read", direction: "inbound", date_sent: "2026-04-13T15:30:00Z" },
-  { id: "wm6", to: "+1 555-0789", from: "+1 555-9999", body: "Reminder: Your strategy call is tomorrow at 2pm. See you then!", status: "delivered", direction: "outbound", date_sent: "2026-04-12T09:00:00Z" },
-  { id: "wm7", to: "+1 555-9999", from: "+1 555-0789", body: "Perfect, I'll be there. Can we also discuss adding paid ads?", status: "read", direction: "inbound", date_sent: "2026-04-12T11:00:00Z" },
-  { id: "wm8", to: "+1 555-1234", from: "+1 555-9999", body: "Welcome aboard! We're excited to start working on your marketing strategy.", status: "sent", direction: "outbound", date_sent: "2026-04-11T16:00:00Z" },
-];
+const MOCK_MESSAGES: WMessage[] = [];
 
-const MOCK_TEMPLATES: WTemplate[] = [
-  { id: "t1", name: "welcome_message", status: "APPROVED", category: "MARKETING", language: "en", body: "Welcome to {{1}}! We're thrilled to have you. Your onboarding starts next week." },
-  { id: "t2", name: "appointment_reminder", status: "APPROVED", category: "UTILITY", language: "en", body: "Reminder: Your {{1}} appointment is scheduled for {{2}} at {{3}}." },
-  { id: "t3", name: "monthly_report", status: "APPROVED", category: "MARKETING", language: "en", body: "Your monthly marketing report for {{1}} is ready! Key highlights: {{2}}" },
-  { id: "t4", name: "review_request", status: "APPROVED", category: "MARKETING", language: "en", body: "Hi {{1}}! We'd love to hear about your experience. Leave us a review: {{2}}" },
-  { id: "t5", name: "payment_reminder", status: "PENDING", category: "UTILITY", language: "en", body: "Hi {{1}}, your invoice of ${{2}} is due on {{3}}. Please make payment at your earliest convenience." },
-  { id: "t6", name: "follow_up", status: "APPROVED", category: "MARKETING", language: "en", body: "Hey {{1}}! Just checking in on our conversation. Any questions about the {{2}} package?" },
-];
+const MOCK_TEMPLATES: WTemplate[] = [];
 
 const CONTACT_LABELS = [
-  { label: "Active Client", count: 12, color: "bg-green-400" },
-  { label: "Prospect", count: 8, color: "bg-blue-400" },
-  { label: "Hot Lead", count: 5, color: "bg-red-400" },
-  { label: "VIP", count: 3, color: "bg-gold" },
-  { label: "Inactive", count: 7, color: "bg-gray-400" },
+  { label: "Active Client", count: 0, color: "bg-green-400" },
+  { label: "Prospect", count: 0, color: "bg-blue-400" },
+  { label: "Hot Lead", count: 0, color: "bg-red-400" },
+  { label: "VIP", count: 0, color: "bg-gold" },
+  { label: "Inactive", count: 0, color: "bg-gray-400" },
 ];
 
-const BROADCAST_LISTS = [
-  { id: "bl1", name: "All Active Clients", contacts: 12, lastSent: "2026-04-10" },
-  { id: "bl2", name: "Growth Package", contacts: 5, lastSent: "2026-04-08" },
-  { id: "bl3", name: "New Leads This Month", contacts: 8, lastSent: "Never" },
-  { id: "bl4", name: "VIP Clients", contacts: 3, lastSent: "2026-04-01" },
-];
+const BROADCAST_LISTS: { id: string; name: string; contacts: number; lastSent: string }[] = [];
 
-const AUTO_RESPONDER_RULES = [
-  { id: "ar1", trigger: "After hours message", response: "Thanks for reaching out! Our office hours are 9am-6pm ET. We'll get back to you first thing!", enabled: true },
-  { id: "ar2", trigger: "Keyword: pricing", response: "Great question! Here's a link to our pricing page: [link]", enabled: true },
-  { id: "ar3", trigger: "Keyword: appointment", response: "I'd love to set that up! Here's our booking link: [calendar_link]", enabled: false },
-  { id: "ar4", trigger: "New contact message", response: "Hi! Thanks for messaging us. A team member will be with you shortly.", enabled: true },
-];
+const AUTO_RESPONDER_RULES: { id: string; trigger: string; response: string; enabled: boolean }[] = [];
 
-const SCHEDULED_MESSAGES = [
-  { id: "sm1", to: "All Active Clients", message: "Happy Monday! Here's your weekly marketing tip...", scheduledAt: "2026-04-15T09:00:00Z", status: "scheduled" },
-  { id: "sm2", to: "+1 555-0123", message: "Reminder: Content review call tomorrow at 11am", scheduledAt: "2026-04-15T14:00:00Z", status: "scheduled" },
-  { id: "sm3", to: "Growth Package", message: "New feature alert! Check out our AI Video Generator...", scheduledAt: "2026-04-16T10:00:00Z", status: "draft" },
-];
+const SCHEDULED_MESSAGES: { id: string; to: string; message: string; scheduledAt: string; status: string }[] = [];
 
 const CHAT_ANALYTICS = {
-  totalSent: 456, totalReceived: 234, responseRate: "51.3%",
-  avgResponseTime: "12 min", readRate: "89%", deliveryRate: "97.2%",
-  byDay: [32, 45, 38, 52, 41, 48, 55],
+  totalSent: 0, totalReceived: 0, responseRate: "0%",
+  avgResponseTime: "--", readRate: "0%", deliveryRate: "0%",
+  byDay: [0, 0, 0, 0, 0, 0, 0],
 };
 
-const QUICK_REPLIES = [
-  { id: "qr1", label: "Book a Call", text: "Book a strategy call with us: [calendar_link]" },
-  { id: "qr2", label: "Send Pricing", text: "Here are our current packages and pricing: [pricing_link]" },
-  { id: "qr3", label: "Confirm Receipt", text: "Got it! We'll get back to you within the hour." },
-  { id: "qr4", label: "Thank You", text: "Thank you for your message! Is there anything else we can help with?" },
-];
+const QUICK_REPLIES: { id: string; label: string; text: string }[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */

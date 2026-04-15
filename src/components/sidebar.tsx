@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
 import {
   Zap,
@@ -120,6 +120,7 @@ const navItems: NavItem[] = [
 export default function Sidebar() {
   const pathname = usePathname() || "";
   const { profile, signOut } = useAuth();
+  const { config: wl } = useWhiteLabel();
   const [collapsed, setCollapsed] = useState(false);
 
   // Default to empty string when profile hasn't loaded yet — this hides all
@@ -182,16 +183,18 @@ export default function Sidebar() {
         borderRight: "1px solid var(--color-border, #E8E5E0)",
       }}
     >
-      {/* Logo — compact and clean */}
+      {/* Logo — uses white label config when available */}
       <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-3 h-12 shrink-0`}>
         {!collapsed ? (
           <Link href="/dashboard" className="flex items-center gap-2">
-            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={24} height={24} />
-            <span className="text-foreground font-bold text-[13px] tracking-tight">ShortStack</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={wl.logo_url || "/icons/shortstack-logo.png"} alt={wl.company_name || "ShortStack"} width={24} height={24} className="rounded object-contain" />
+            <span className="text-foreground font-bold text-[13px] tracking-tight">{wl.company_name || "ShortStack"}</span>
           </Link>
         ) : (
           <Link href="/dashboard">
-            <Image src="/icons/shortstack-logo.png" alt="SS" width={22} height={22} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={wl.logo_url || "/icons/shortstack-logo.png"} alt={wl.company_name || "SS"} width={22} height={22} className="rounded object-contain" />
           </Link>
         )}
         {!collapsed && (
@@ -341,6 +344,12 @@ export default function Sidebar() {
           <LogOut size={14} />
           {!collapsed && <span>Sign Out</span>}
         </button>
+        {/* White label: Powered by footer */}
+        {wl.show_powered_by && !collapsed && (wl.company_name && wl.company_name !== "ShortStack") && (
+          <div className="text-center pt-1">
+            <span className="text-[8px] text-muted">Powered by ShortStack</span>
+          </div>
+        )}
       </div>
     </aside>
   );

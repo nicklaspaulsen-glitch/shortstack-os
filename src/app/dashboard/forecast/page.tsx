@@ -7,6 +7,7 @@ import {
   Layers, PieChart, Clock, Users,
   Zap, Star, Shield
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type ForecastTab = "overview" | "scenarios" | "renewals" | "services";
 
@@ -20,16 +21,7 @@ interface ClientRevenue {
   months: number;
 }
 
-const MOCK_CLIENTS: ClientRevenue[] = [
-  { name: "Bright Dental", mrr: 2497, health: 92, renewalDate: "2026-05-01", upsellPotential: "Video Production", service: "Growth", months: 8 },
-  { name: "Luxe Salon", mrr: 4997, health: 85, renewalDate: "2026-06-15", upsellPotential: "AI Receptionist", service: "Enterprise", months: 12 },
-  { name: "FitPro Gym", mrr: 2497, health: 78, renewalDate: "2026-04-28", upsellPotential: "TikTok Ads", service: "Growth", months: 6 },
-  { name: "Metro Realty", mrr: 997, health: 65, renewalDate: "2026-05-10", upsellPotential: "Content Upgrade", service: "Starter", months: 3 },
-  { name: "Green Eats", mrr: 4997, health: 95, renewalDate: "2026-07-01", upsellPotential: "Podcast Production", service: "Enterprise", months: 14 },
-  { name: "Peak Fitness", mrr: 2497, health: 35, renewalDate: "2026-04-20", upsellPotential: "None - At Risk", service: "Growth", months: 4 },
-  { name: "Valley Dental", mrr: 997, health: 88, renewalDate: "2026-08-01", upsellPotential: "SEO Package", service: "Starter", months: 2 },
-  { name: "Bloom Florist", mrr: 2497, health: 45, renewalDate: "2026-05-15", upsellPotential: "None - At Risk", service: "Growth", months: 5 },
-];
+const MOCK_CLIENTS: ClientRevenue[] = [];
 
 function fmtCurrency(n: number) {
   return "$" + n.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
@@ -43,9 +35,9 @@ export default function ForecastPage() {
   const currentMRR = MOCK_CLIENTS.reduce((s, c) => s + c.mrr, 0);
   const arr = currentMRR * 12;
   const clientCount = MOCK_CLIENTS.length;
-  const avgMRR = Math.round(currentMRR / clientCount);
+  const avgMRR = clientCount ? Math.round(currentMRR / clientCount) : 0;
   const churnRisk = MOCK_CLIENTS.filter(c => c.health < 50).length;
-  const avgHealth = Math.round(MOCK_CLIENTS.reduce((s, c) => s + c.health, 0) / clientCount);
+  const avgHealth = clientCount ? Math.round(MOCK_CLIENTS.reduce((s, c) => s + c.health, 0) / clientCount) : 0;
 
   // Growth rates for scenarios
   const growthRates = { best: 0.12, expected: 0.07, worst: -0.02 };
@@ -154,6 +146,16 @@ export default function ForecastPage() {
           </button>
         ))}
       </div>
+
+      {MOCK_CLIENTS.length === 0 && (
+        <EmptyState
+          icon={<TrendingUp size={24} />}
+          title="No client data yet"
+          description="Add clients to see revenue forecasts"
+          actionLabel="Add Clients"
+          actionHref="/dashboard/clients"
+        />
+      )}
 
       {/* Overview Tab */}
       {tab === "overview" && (

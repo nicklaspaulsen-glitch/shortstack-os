@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
+import { WhiteLabelProvider } from "@/lib/white-label-context";
 import { Toaster } from "react-hot-toast";
 import PWARegister from "@/components/pwa-register";
 import ElectronBannerCleanup from "@/components/electron-banner-cleanup";
@@ -47,9 +48,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("ss-theme")||"nordic";var l=(t==="nordic"||t==="light");document.documentElement.setAttribute("data-theme",l?"light":"dark");if(!l){document.documentElement.style.backgroundColor="#0f0f0f";}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="antialiased bg-background min-h-screen">
         <AuthProvider>
+          <WhiteLabelProvider>
           <ThemeProvider>
           <SFXProvider>
           {children}
@@ -69,6 +78,7 @@ export default function RootLayout({
               },
             }}
           />
+          </WhiteLabelProvider>
         </AuthProvider>
       </body>
     </html>

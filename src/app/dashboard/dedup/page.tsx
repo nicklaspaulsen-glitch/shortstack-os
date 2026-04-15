@@ -36,11 +36,7 @@ const MOCK_DUPLICATES: DuplicateGroup[] = [];
 
 const MOCK_HISTORY: ScanHistory[] = [];
 
-const MOCK_RULES: PreventionRule[] = [
-  { id: "pr1", field: "email", action: "block", active: true },
-  { id: "pr2", field: "phone", action: "warn", active: true },
-  { id: "pr3", field: "name", action: "warn", active: false },
-];
+const MOCK_RULES: PreventionRule[] = [];
 
 export default function DedupPage() {
   const [tab, setTab] = useState<DedupTab>("scan");

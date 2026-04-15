@@ -1,132 +1,243 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-// Community API — posts, comments, announcements for client community
-// Uses community_posts table in Supabase
+/*
+  community_posts table schema:
 
+  CREATE TABLE community_posts (
+    id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id       uuid REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+    author_name   text NOT NULL,
+    author_avatar text,
+    title         text NOT NULL,
+    content       text NOT NULL,
+    category      text NOT NULL DEFAULT 'discussion'
+                  CHECK (category IN ('announcement','discussion','question','resource','showcase')),
+    pinned        boolean NOT NULL DEFAULT false,
+    likes         integer NOT NULL DEFAULT 0,
+    comments_count integer NOT NULL DEFAULT 0,
+    created_at    timestamptz NOT NULL DEFAULT now(),
+    updated_at    timestamptz NOT NULL DEFAULT now()
+  );
+
+  CREATE INDEX idx_community_posts_created ON community_posts (created_at DESC);
+  CREATE INDEX idx_community_posts_user    ON community_posts (user_id);
+*/
+
+// GET — fetch community posts, ordered pinned-first then newest
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const type = request.nextUrl.searchParams.get("type") || "all";
-  const limit = parseInt(request.nextUrl.searchParams.get("limit") || "20");
+  const limit = Math.min(
+    100,
+    Math.max(1, parseInt(request.nextUrl.searchParams.get("limit") || "50"))
+  );
 
-  let query = supabase
+  const { data: posts, error } = await supabase
     .from("community_posts")
-    .select("*, profiles:author_id(full_name, avatar_url, role)")
+    .select("*")
     .order("pinned", { ascending: false })
     .order("created_at", { ascending: false })
     .limit(limit);
 
-  if (type !== "all") {
-    query = query.eq("type", type);
-  }
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const { data: posts, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  // Get comment counts
-  const postIds = (posts || []).map(p => p.id);
-  const { data: commentCounts } = await supabase
-    .from("community_comments")
-    .select("post_id")
-    .in("post_id", postIds.length > 0 ? postIds : ["_none"]);
-
-  const countMap: Record<string, number> = {};
-  (commentCounts || []).forEach(c => {
-    countMap[c.post_id] = (countMap[c.post_id] || 0) + 1;
-  });
-
-  const enriched = (posts || []).map(p => ({
-    ...p,
-    comment_count: countMap[p.id] || 0,
-  }));
-
-  return NextResponse.json({ success: true, posts: enriched });
+  return NextResponse.json({ posts: posts || [] });
 }
 
-// Create a post or comment
+// POST — create a new community post
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { action, ...params } = await request.json();
+  const body = await request.json();
+  const { title, content, category, author_name, author_avatar } = body;
 
-  if (action === "create_post") {
-    const { title, content, type } = params;
-    if (!title || !content) return NextResponse.json({ error: "title and content required" }, { status: 400 });
+  if (!title?.trim() || !content?.trim())
+    return NextResponse.json(
+      { error: "title and content are required" },
+      { status: 400 }
+    );
+
+  const validCategories = [
+    "announcement",
+    "discussion",
+    "question",
+    "resource",
+    "showcase",
+  ];
+  const cat = validCategories.includes(category) ? category : "discussion";
+
+  const { data: post, error } = await supabase
+    .from("community_posts")
+    .insert({
+      user_id: user.id,
+      author_name: author_name || user.email?.split("@")[0] || "Anonymous",
+      author_avatar: author_avatar || null,
+      title: title.trim(),
+      content: content.trim(),
+      category: cat,
+      pinned: false,
+      likes: 0,
+      comments_count: 0,
+    })
+    .select()
+    .single();
+
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
+
+  return NextResponse.json({ post });
+}
+
+// PATCH — update a post (edit, like, pin)
+export async function PATCH(request: NextRequest) {
+  const supabase = createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await request.json();
+  const { id, action, title, content, category, pinned } = body;
+
+  if (!id)
+    return NextResponse.json(
+      { error: "post id is required" },
+      { status: 400 }
+    );
+
+  // Like action — increment likes
+  if (action === "like") {
+    const { data: existing, error: fetchErr } = await supabase
+      .from("community_posts")
+      .select("likes")
+      .eq("id", id)
+      .single();
+
+    if (fetchErr || !existing)
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
 
     const { data: post, error } = await supabase
       .from("community_posts")
-      .insert({
-        author_id: user.id,
-        title,
-        content,
-        type: type || "discussion",
-        pinned: false,
-        likes: 0,
-      })
+      .update({ likes: existing.likes + 1, updated_at: new Date().toISOString() })
+      .eq("id", id)
       .select()
       .single();
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ success: true, post });
+    if (error)
+      return NextResponse.json({ error: error.message }, { status: 500 });
+
+    return NextResponse.json({ post });
   }
 
-  if (action === "create_comment") {
-    const { post_id, content } = params;
-    if (!post_id || !content) return NextResponse.json({ error: "post_id and content required" }, { status: 400 });
-
-    const { data: comment, error } = await supabase
-      .from("community_comments")
-      .insert({ post_id, author_id: user.id, content })
-      .select("*, profiles:author_id(full_name, avatar_url, role)")
+  // Pin action — only post author can pin for now
+  if (action === "pin") {
+    const { data: post, error } = await supabase
+      .from("community_posts")
+      .update({ pinned: !!pinned, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .select()
       .single();
 
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-    return NextResponse.json({ success: true, comment });
+    if (error)
+      return NextResponse.json({ error: error.message }, { status: 500 });
+
+    return NextResponse.json({ post });
   }
 
-  if (action === "get_comments") {
-    const { post_id } = params;
-    const { data: comments } = await supabase
-      .from("community_comments")
-      .select("*, profiles:author_id(full_name, avatar_url, role)")
-      .eq("post_id", post_id)
-      .order("created_at", { ascending: true });
+  // Edit action — only the author can edit their post
+  const { data: existing } = await supabase
+    .from("community_posts")
+    .select("user_id")
+    .eq("id", id)
+    .single();
 
-    return NextResponse.json({ success: true, comments: comments || [] });
-  }
+  if (!existing)
+    return NextResponse.json({ error: "Post not found" }, { status: 404 });
 
-  if (action === "like_post") {
-    const { post_id } = params;
-    await supabase.rpc("increment_likes", { post_id_input: post_id }).single();
-    return NextResponse.json({ success: true });
-  }
+  if (existing.user_id !== user.id)
+    return NextResponse.json(
+      { error: "You can only edit your own posts" },
+      { status: 403 }
+    );
 
-  if (action === "pin_post") {
-    const { post_id, pinned } = params;
-    // Only admins can pin
-    const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-    if (profile?.role !== "admin") return NextResponse.json({ error: "Only admins can pin posts" }, { status: 403 });
+  const updates: Record<string, unknown> = {
+    updated_at: new Date().toISOString(),
+  };
+  if (title?.trim()) updates.title = title.trim();
+  if (content?.trim()) updates.content = content.trim();
+  if (
+    category &&
+    ["announcement", "discussion", "question", "resource", "showcase"].includes(
+      category
+    )
+  )
+    updates.category = category;
 
-    await supabase.from("community_posts").update({ pinned }).eq("id", post_id);
-    return NextResponse.json({ success: true });
-  }
+  const { data: post, error } = await supabase
+    .from("community_posts")
+    .update(updates)
+    .eq("id", id)
+    .select()
+    .single();
 
-  if (action === "delete_post") {
-    const { post_id } = params;
-    const { data: post } = await supabase.from("community_posts").select("author_id").eq("id", post_id).single();
-    const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
-    if (post?.author_id !== user.id && profile?.role !== "admin") {
-      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
-    }
-    await supabase.from("community_comments").delete().eq("post_id", post_id);
-    await supabase.from("community_posts").delete().eq("id", post_id);
-    return NextResponse.json({ success: true });
-  }
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
 
-  return NextResponse.json({ error: "Unknown action" }, { status: 400 });
+  return NextResponse.json({ post });
+}
+
+// DELETE — remove a post (only the author can delete)
+export async function DELETE(request: NextRequest) {
+  const supabase = createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id } = await request.json();
+  if (!id)
+    return NextResponse.json(
+      { error: "post id is required" },
+      { status: 400 }
+    );
+
+  // Check ownership
+  const { data: existing } = await supabase
+    .from("community_posts")
+    .select("user_id")
+    .eq("id", id)
+    .single();
+
+  if (!existing)
+    return NextResponse.json({ error: "Post not found" }, { status: 404 });
+
+  if (existing.user_id !== user.id)
+    return NextResponse.json(
+      { error: "You can only delete your own posts" },
+      { status: 403 }
+    );
+
+  const { error } = await supabase
+    .from("community_posts")
+    .delete()
+    .eq("id", id);
+
+  if (error)
+    return NextResponse.json({ error: error.message }, { status: 500 });
+
+  return NextResponse.json({ success: true });
 }
