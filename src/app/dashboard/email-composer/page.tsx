@@ -5,29 +5,13 @@ import {
   Mail, Send, Sparkles, Bold, Italic, Link2, List,
   Image as ImageIcon, Save, Monitor, Smartphone, Code,
   Clock, Eye, AlertTriangle, CheckCircle, Copy, Type,
-  Paperclip, Palette, Hash, AtSign, MousePointerClick,
-  X, Plus, Calendar, Phone
+  Paperclip, Palette, Hash, MousePointerClick,
+  X, Plus, Calendar
 } from "lucide-react";
 
 type MainTab = "compose" | "templates" | "preview" | "spam-check" | "scheduler" | "signatures";
 
-const TEMPLATE_GALLERY = [
-  { id: "1", name: "Cold Intro", category: "Outreach", subject: "Quick question about {business}", preview: "Hey! I came across your business..." },
-  { id: "2", name: "Follow Up #1", category: "Outreach", subject: "Following up", preview: "Just bumping this to the top..." },
-  { id: "3", name: "Follow Up #2", category: "Outreach", subject: "Last try", preview: "I know you're busy so I'll keep..." },
-  { id: "4", name: "Breakup Email", category: "Outreach", subject: "Closing your file", preview: "Since I haven't heard back..." },
-  { id: "5", name: "Case Study", category: "Value", subject: "How we helped a {industry} grow 3x", preview: "I wanted to share a quick story..." },
-  { id: "6", name: "Free Audit", category: "Value", subject: "Free marketing audit for {business}", preview: "I put together a free audit..." },
-  { id: "7", name: "Video Loom", category: "Value", subject: "Made you a quick video, {name}", preview: "I recorded a short video showing..." },
-  { id: "8", name: "Proposal Send", category: "Sales", subject: "Your proposal is ready", preview: "Great chatting today! Here's the..." },
-  { id: "9", name: "Welcome", category: "Onboarding", subject: "Welcome to ShortStack!", preview: "Welcome aboard! We're thrilled..." },
-  { id: "10", name: "Monthly Report", category: "Client", subject: "Your monthly report is ready", preview: "Here's your monthly marketing..." },
-  { id: "11", name: "Invoice", category: "Billing", subject: "Invoice #{number} due", preview: "This is a friendly reminder that..." },
-  { id: "12", name: "Referral Ask", category: "Retention", subject: "Quick favor, {name}?", preview: "Love working with {business}..." },
-  { id: "13", name: "Review Request", category: "Retention", subject: "Would you leave us a review?", preview: "Your opinion means the world..." },
-  { id: "14", name: "Contract Renewal", category: "Sales", subject: "Time to renew - {business}", preview: "Your current contract is set to..." },
-  { id: "15", name: "Holiday Promo", category: "Promo", subject: "Special holiday offer for {business}", preview: "As a valued client, we wanted..." },
-];
+const TEMPLATE_GALLERY: { id: string; name: string; category: string; subject: string; preview: string }[] = [];
 
 const VARIABLES = [
   { tag: "{first_name}", label: "First Name", example: "John" },
@@ -40,20 +24,11 @@ const VARIABLES = [
   { tag: "{link}", label: "Custom Link", example: "https://..." },
   { tag: "{amount}", label: "Amount", example: "$2,497" },
   { tag: "{date}", label: "Date", example: "April 14, 2026" },
-  { tag: "{sender_name}", label: "Sender Name", example: "Nicklas" },
+  { tag: "{sender_name}", label: "Sender Name", example: "Your Name" },
   { tag: "{calendar_link}", label: "Calendar", example: "https://cal.com/..." },
 ];
 
-const SUBJECT_IDEAS = [
-  "Quick question about {business_name}",
-  "I noticed something about {business_name}",
-  "How we helped a {industry} grow 3x",
-  "{first_name}, quick thought for {business_name}",
-  "Free audit for {business_name} - no strings",
-  "Made you a quick video, {first_name}",
-  "3 things holding {business_name} back",
-  "{first_name}, are you still looking for more clients?",
-];
+const SUBJECT_IDEAS: string[] = [];
 
 export default function EmailComposerPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("compose");
@@ -69,9 +44,9 @@ export default function EmailComposerPage() {
   const [email, setEmail] = useState({
     to: "",
     subject: "",
-    body: "Hey {first_name},\n\nI came across {business_name} and love what you're doing in {industry}. We help businesses like yours get 2-3x more clients through digital marketing.\n\nWould you be open to a quick 15-minute call this week?\n\nBest,\nNicklas",
-    fromName: "Nicklas at ShortStack",
-    replyTo: "nicklas@shortstackhq.com",
+    body: "",
+    fromName: "",
+    replyTo: "",
   });
 
   const wordCount = email.body.split(/\s+/).filter(Boolean).length;
@@ -167,6 +142,9 @@ export default function EmailComposerPage() {
             {showSubjectAI && (
               <div className="card border-gold/10 p-3 space-y-1.5">
                 <p className="text-[10px] font-semibold text-gold mb-2">AI Subject Line Suggestions</p>
+                {SUBJECT_IDEAS.length === 0 && (
+                  <p className="text-[9px] text-muted text-center py-2">No AI suggestions yet. Suggestions will appear here.</p>
+                )}
                 {SUBJECT_IDEAS.map((idea, i) => (
                   <button key={i} onClick={() => { setEmail({ ...email, subject: idea }); setShowSubjectAI(false); }}
                     className="block w-full text-left text-[10px] p-2 rounded hover:bg-gold/5 transition-all text-muted hover:text-foreground">
@@ -311,8 +289,11 @@ export default function EmailComposerPage() {
             <div className="card">
               <h3 className="text-[10px] font-semibold mb-2 uppercase tracking-wider text-muted">Quick Templates</h3>
               <div className="space-y-1">
+                {TEMPLATE_GALLERY.length === 0 && (
+                  <p className="text-[9px] text-muted text-center py-3">No templates yet.</p>
+                )}
                 {TEMPLATE_GALLERY.slice(0, 6).map(t => (
-                  <button key={t.id} onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview + "\n\nBest,\nNicklas" }))}
+                  <button key={t.id} onClick={() => setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview }))}
                     className="w-full text-left p-2 rounded-lg text-[10px] transition-all hover:bg-white/[0.03] border border-border">
                     <p className="font-semibold">{t.name}</p>
                     <p className="text-muted truncate">{t.subject}</p>
@@ -336,8 +317,11 @@ export default function EmailComposerPage() {
             ))}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-2">
+            {filteredTemplates.length === 0 && (
+              <div className="col-span-5 text-center py-12 text-muted text-xs">No templates yet.</div>
+            )}
             {filteredTemplates.map(t => (
-              <button key={t.id} onClick={() => { setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview + "\n\nBest,\nNicklas" })); setActiveTab("compose"); }}
+              <button key={t.id} onClick={() => { setEmail(prev => ({ ...prev, subject: t.subject, body: t.preview })); setActiveTab("compose"); }}
                 className="text-left p-3 rounded-xl bg-surface-light border border-border hover:border-gold/10 transition-all">
                 <p className="text-[10px] font-semibold">{t.name}</p>
                 <p className="text-[9px] text-gold mt-0.5">{t.category}</p>
@@ -469,23 +453,7 @@ export default function EmailComposerPage() {
               <h3 className="text-sm font-semibold mb-3">Optimal Send Times</h3>
               <p className="text-[10px] text-muted mb-3">Based on your audience engagement data</p>
               <div className="space-y-2">
-                {[
-                  { day: "Tuesday", time: "10:00 AM", score: 92 },
-                  { day: "Wednesday", time: "9:30 AM", score: 88 },
-                  { day: "Thursday", time: "2:00 PM", score: 84 },
-                  { day: "Monday", time: "11:00 AM", score: 78 },
-                  { day: "Friday", time: "10:00 AM", score: 65 },
-                ].map((slot, i) => (
-                  <div key={i} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
-                    <span className="font-medium">{slot.day} at {slot.time}</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-20 bg-surface rounded-full h-1.5">
-                        <div className="bg-gold rounded-full h-1.5" style={{ width: `${slot.score}%` }} />
-                      </div>
-                      <span className="text-gold font-bold">{slot.score}%</span>
-                    </div>
-                  </div>
-                ))}
+                <p className="text-center text-[10px] text-muted py-4">No engagement data yet. Send times will be suggested once you have audience data.</p>
               </div>
             </div>
           </div>
@@ -501,26 +469,20 @@ export default function EmailComposerPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="card space-y-3">
               <h4 className="text-xs font-semibold">Edit Signature</h4>
-              <input className="input w-full text-xs" placeholder="Full Name" defaultValue="Nicklas" />
-              <input className="input w-full text-xs" placeholder="Title" defaultValue="Founder, ShortStack" />
-              <input className="input w-full text-xs" placeholder="Phone" defaultValue="+1 (555) 123-4567" />
-              <input className="input w-full text-xs" placeholder="Email" defaultValue="nicklas@shortstackhq.com" />
-              <input className="input w-full text-xs" placeholder="Website" defaultValue="https://shortstackhq.com" />
-              <input className="input w-full text-xs" placeholder="Calendar link" defaultValue="https://cal.com/nicklas" />
+              <input className="input w-full text-xs" placeholder="Full Name" defaultValue="" />
+              <input className="input w-full text-xs" placeholder="Title" defaultValue="" />
+              <input className="input w-full text-xs" placeholder="Phone" defaultValue="" />
+              <input className="input w-full text-xs" placeholder="Email" defaultValue="" />
+              <input className="input w-full text-xs" placeholder="Website" defaultValue="" />
+              <input className="input w-full text-xs" placeholder="Calendar link" defaultValue="" />
               <button className="btn-primary w-full text-xs">Save Signature</button>
             </div>
             <div className="card">
               <h4 className="text-xs font-semibold mb-3">Preview</h4>
               <div className="p-4 rounded-lg bg-[#1a1c23]">
                 <div className="border-t-2 border-amber-500 pt-3">
-                  <p className="text-sm font-bold text-gray-900">Nicklas</p>
-                  <p className="text-[10px] text-gray-500">Founder, ShortStack</p>
-                  <div className="mt-2 space-y-0.5">
-                    <p className="text-[10px] text-gray-600 flex items-center gap-1"><Phone size={9} /> +1 (555) 123-4567</p>
-                    <p className="text-[10px] text-gray-600 flex items-center gap-1"><Mail size={9} /> nicklas@shortstackhq.com</p>
-                    <p className="text-[10px] text-amber-600 flex items-center gap-1"><AtSign size={9} /> shortstackhq.com</p>
-                  </div>
-                  <p className="text-[9px] text-amber-600 mt-2 font-medium">Book a call: cal.com/nicklas</p>
+                  <p className="text-sm font-bold text-gray-500 italic">No signature configured</p>
+                  <p className="text-[10px] text-gray-500">Fill in the fields to preview your signature</p>
                 </div>
               </div>
             </div>

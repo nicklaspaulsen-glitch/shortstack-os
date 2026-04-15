@@ -26,18 +26,7 @@ interface Template {
 
 const CATEGORIES = ["All", "Welcome", "Follow-up", "Re-engagement", "Invoice", "Report", "Promotion", "Onboarding", "Sales", "Retention"];
 
-const TEMPLATES: Template[] = [
-  { id: 1, name: "Welcome Email", subject: "Welcome to {{company}} - Let's Get Started!", category: "Welcome", body: "Hi {{client_name}},\n\nWelcome aboard! We're thrilled to have you as a new client at {{company}}.\n\nHere's what happens next:\n1. Your dedicated account manager will reach out within 24 hours\n2. We'll schedule a kickoff call to align on goals\n3. You'll receive access to your client portal\n\nBest regards,\n{{sender_name}}", opens: 72, clicks: 34, replies: 18, version: 3, lastEdited: "Apr 12", shared: true },
-  { id: 2, name: "Invoice Reminder", subject: "Friendly Reminder: Invoice #{{invoice_number}} Due Soon", category: "Invoice", body: "Hi {{client_name}},\n\nThis is a friendly reminder that Invoice #{{invoice_number}} for {{amount_usd}} is due on {{due_date}}.\n\nYou can view and pay your invoice here: {{invoice_link}}\n\nThank you,\n{{sender_name}}", opens: 85, clicks: 45, replies: 8, version: 2, lastEdited: "Apr 10", shared: false },
-  { id: 3, name: "Content Approval Request", subject: "Content Ready for Your Review - {{project_name}}", category: "Follow-up", body: "Hi {{client_name}},\n\nGreat news! The content for {{project_name}} is ready for your review.\n\nPlease take a look and let us know:\n- Any changes or revisions needed\n- Approval to publish/proceed\n\nBest,\n{{sender_name}}", opens: 68, clicks: 52, replies: 42, version: 4, lastEdited: "Apr 8", shared: true },
-  { id: 4, name: "Weekly Performance Report", subject: "Your Weekly Performance Report - {{date_range}}", category: "Report", body: "Hi {{client_name}},\n\nHere's your weekly performance summary for {{date_range}}:\n\nKey Metrics:\n- Website Traffic: {{traffic}}\n- Leads Generated: {{leads}}\n- Conversion Rate: {{conversion_rate}}\n\nBest,\n{{sender_name}}", opens: 91, clicks: 38, replies: 12, version: 6, lastEdited: "Apr 14", shared: true },
-  { id: 5, name: "Promotional Offer", subject: "Exclusive Offer: {{offer_title}} - Limited Time!", category: "Promotion", body: "Hi {{client_name}},\n\nAs a valued client, we wanted to give you first access to our latest offer:\n\n{{offer_title}}\n{{offer_description}}\n\nSpecial pricing: {{offer_price}}\nOffer expires: {{expiry_date}}\n\nBest,\n{{sender_name}}", opens: 58, clicks: 28, replies: 15, version: 2, lastEdited: "Mar 25", shared: false },
-  { id: 6, name: "Follow-up After Call", subject: "Great Talking Today - Next Steps", category: "Follow-up", body: "Hi {{client_name}},\n\nThank you for taking the time to chat today!\n\nKey Takeaways:\n{{takeaways}}\n\nAction Items:\n{{action_items}}\n\nNext Meeting: {{next_meeting}}\n\nBest,\n{{sender_name}}", opens: 78, clicks: 22, replies: 45, version: 3, lastEdited: "Apr 5", shared: true },
-  { id: 7, name: "Review Request", subject: "We'd Love Your Feedback, {{client_name}}!", category: "Retention", body: "Hi {{client_name}},\n\nWe hope you're enjoying the results!\n\nWould you mind taking 2 minutes to leave us a review?\n\nLeave a review here: {{review_link}}\n\nThank you!\n{{sender_name}}", opens: 62, clicks: 31, replies: 9, version: 1, lastEdited: "Apr 1", shared: false },
-  { id: 8, name: "Contract Renewal", subject: "Your Contract Renewal - {{company}} Partnership", category: "Sales", body: "Hi {{client_name}},\n\nYour current contract is set to expire on {{expiry_date}}.\n\nOver the past {{contract_period}}, here's what we've achieved:\n{{achievements}}\n\nBook a time: {{booking_link}}\n\nBest,\n{{sender_name}}", opens: 82, clicks: 44, replies: 38, version: 2, lastEdited: "Apr 3", shared: true },
-  { id: 9, name: "Re-engagement", subject: "We Miss You, {{client_name}}!", category: "Re-engagement", body: "Hi {{client_name}},\n\nIt's been a while! We've made some exciting updates since we last connected.\n\nHere's what's new:\n{{updates}}\n\nWant to reconnect? Book a quick call: {{booking_link}}\n\nBest,\n{{sender_name}}", opens: 45, clicks: 18, replies: 8, version: 1, lastEdited: "Mar 20", shared: false },
-  { id: 10, name: "Onboarding Checklist", subject: "Your Onboarding Checklist - {{company}}", category: "Onboarding", body: "Hi {{client_name}},\n\nTo get started, we need a few things:\n\n1. Brand assets (logo, fonts, colors)\n2. Social media access\n3. Website access\n4. Ad account access\n\nUpload in your portal: {{portal_link}}\n\nBest,\n{{sender_name}}", opens: 88, clicks: 56, replies: 32, version: 5, lastEdited: "Apr 11", shared: true },
-];
+const TEMPLATES: Template[] = [];
 
 const MERGE_TAGS = [
   { tag: "{{client_name}}", desc: "Client's name" },
@@ -105,7 +94,7 @@ export default function EmailTemplatesPage() {
           <h1 className="page-header mb-0 flex items-center gap-2">
             <Mail size={18} className="text-gold" /> Email Templates
           </h1>
-          <p className="text-xs text-muted">{TEMPLATES.length} templates with performance tracking and AI generation</p>
+          <p className="text-xs text-muted">{TEMPLATES.length === 0 ? "No templates yet" : `${TEMPLATES.length} templates`} | Performance tracking and AI generation</p>
         </div>
         <button className="btn-primary text-xs flex items-center gap-1.5"><Plus size={12} /> New Template</button>
       </div>
@@ -146,6 +135,9 @@ export default function EmailTemplatesPage() {
 
           {/* Template Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {filtered.length === 0 && (
+              <div className="col-span-4 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New Template&quot; to get started.</div>
+            )}
             {filtered.map(template => (
               <div key={template.id} onClick={() => openTemplate(template)}
                 className="p-4 rounded-xl bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer group">
@@ -249,10 +241,10 @@ export default function EmailTemplatesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-4 gap-3">
             {[
-              { label: "Avg Open Rate", value: `${Math.round(TEMPLATES.reduce((s, t) => s + t.opens, 0) / TEMPLATES.length)}%`, icon: <Eye size={12} />, color: "text-blue-400" },
-              { label: "Avg Click Rate", value: `${Math.round(TEMPLATES.reduce((s, t) => s + t.clicks, 0) / TEMPLATES.length)}%`, icon: <TrendingUp size={12} />, color: "text-green-400" },
-              { label: "Avg Reply Rate", value: `${Math.round(TEMPLATES.reduce((s, t) => s + t.replies, 0) / TEMPLATES.length)}%`, icon: <Mail size={12} />, color: "text-purple-400" },
-              { label: "Top Performer", value: TEMPLATES.sort((a, b) => b.replies - a.replies)[0].name, icon: <Star size={12} />, color: "text-gold" },
+              { label: "Avg Open Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.opens, 0) / TEMPLATES.length)}%` : "0%", icon: <Eye size={12} />, color: "text-blue-400" },
+              { label: "Avg Click Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.clicks, 0) / TEMPLATES.length)}%` : "0%", icon: <TrendingUp size={12} />, color: "text-green-400" },
+              { label: "Avg Reply Rate", value: TEMPLATES.length > 0 ? `${Math.round(TEMPLATES.reduce((s, t) => s + t.replies, 0) / TEMPLATES.length)}%` : "0%", icon: <Mail size={12} />, color: "text-purple-400" },
+              { label: "Top Performer", value: TEMPLATES.length > 0 ? [...TEMPLATES].sort((a, b) => b.replies - a.replies)[0].name : "N/A", icon: <Star size={12} />, color: "text-gold" },
             ].map((stat, i) => (
               <div key={i} className="card text-center p-3">
                 <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
@@ -264,7 +256,10 @@ export default function EmailTemplatesPage() {
           <div className="card">
             <h3 className="text-sm font-semibold mb-3">Template Performance Ranking</h3>
             <div className="space-y-2">
-              {TEMPLATES.sort((a, b) => b.replies - a.replies).map((t, i) => (
+              {TEMPLATES.length === 0 && (
+                <p className="text-center text-[10px] text-muted py-6">No templates yet. Performance data will appear here once templates are created and used.</p>
+              )}
+              {[...TEMPLATES].sort((a, b) => b.replies - a.replies).map((t, i) => (
                 <div key={t.id} className="flex items-center gap-3 p-2.5 rounded bg-surface-light">
                   <span className="text-[9px] text-muted font-bold w-6 text-center">#{i + 1}</span>
                   <div className="flex-1 min-w-0">
@@ -290,6 +285,9 @@ export default function EmailTemplatesPage() {
             <GitBranch size={14} className="text-gold" /> Template Version History
           </h3>
           <div className="space-y-3">
+            {TEMPLATES.filter(t => t.version > 1).length === 0 && (
+              <p className="text-center text-[10px] text-muted py-6">No version history yet. Versions will appear here as templates are edited.</p>
+            )}
             {TEMPLATES.filter(t => t.version > 1).map(t => (
               <div key={t.id} className="card p-4">
                 <div className="flex items-center justify-between mb-3">
@@ -379,6 +377,9 @@ export default function EmailTemplatesPage() {
               <Share2 size={14} className="text-gold" /> Template Sharing
             </h3>
             <div className="space-y-1.5">
+              {TEMPLATES.length === 0 && (
+                <p className="text-center text-[10px] text-muted py-4">No templates to share yet.</p>
+              )}
               {TEMPLATES.map(t => (
                 <div key={t.id} className="flex items-center justify-between p-2 rounded bg-surface-light text-[10px]">
                   <span className="font-medium">{t.name}</span>

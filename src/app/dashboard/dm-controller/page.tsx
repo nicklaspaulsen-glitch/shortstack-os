@@ -19,28 +19,7 @@ const PLATFORMS = [
   { id: "tiktok", name: "TikTok", icon: Music, color: "text-white", bg: "bg-white/5 border-white/15" },
 ];
 
-const DM_TEMPLATES = [
-  { id: 1, name: "Friendly Intro", message: "Hey! I came across {business_name} and love what you guys are doing. We help {industry} businesses get more clients through social media. Would you be open to a quick chat?", category: "intro" },
-  { id: 2, name: "Value First", message: "Hey {name}! I noticed a few things on your page that could easily double your reach. We specialize in {industry} marketing. Mind if I share a couple quick ideas?", category: "intro" },
-  { id: 3, name: "Social Proof", message: "Hey! We just helped another {industry} business go from 500 to 5000 followers in 30 days. Saw {business_name} and thought we could do the same. Interested?", category: "intro" },
-  { id: 4, name: "Direct Pitch", message: "Hey {name}! We run an agency that helps {industry} businesses fill their calendar with new clients every month. Can I send you a quick case study?", category: "intro" },
-  { id: 5, name: "Loom Offer", message: "Hey! I just recorded a quick 2-min video breaking down how {business_name} could get more clients from social media. Want me to send it over?", category: "intro" },
-  { id: 6, name: "Compliment First", message: "Love your recent post about {topic}! Your content is really engaging. Have you thought about scaling it with a content strategy?", category: "intro" },
-  { id: 7, name: "ROI Hook", message: "Quick question: Would an extra 20-30 clients per month make a difference for {business_name}? We've been helping {industry} businesses hit those numbers.", category: "intro" },
-  { id: 8, name: "Mutual Connection", message: "Hey {name}! I was chatting with {mutual_connection} and they mentioned you might be looking for marketing help. I'd love to connect!", category: "warm" },
-  { id: 9, name: "Follow-Up #1", message: "Hey {name}, just following up on my last message. I know you're busy - would a quick 10-min call work better? I promise it'll be worth your time.", category: "followup" },
-  { id: 10, name: "Follow-Up #2", message: "Hi {name}! One more try - I put together a free audit of your social presence. Want me to send it over? No strings attached.", category: "followup" },
-  { id: 11, name: "Follow-Up #3", message: "Last message, I promise! We just published a case study that's super relevant to {industry}. Thought you might find value in it.", category: "followup" },
-  { id: 12, name: "Re-Engage", message: "Hey {name}! It's been a while. We just launched some new packages that might be a better fit for {business_name}. Worth a chat?", category: "followup" },
-  { id: 13, name: "Event Invite", message: "Hey! We're hosting a free webinar on '{topic}' next week. Thought it'd be perfect for {business_name}. Want me to save you a spot?", category: "special" },
-  { id: 14, name: "Holiday Special", message: "Happy {holiday}! We're running a limited-time offer on our marketing packages. Thought of {business_name}. Interested?", category: "special" },
-  { id: 15, name: "Partnership", message: "Hey {name}! I've been following {business_name} and think there could be a great partnership opportunity. Can we chat?", category: "special" },
-  { id: 16, name: "Content Collab", message: "Love your content! We're looking for business owners to feature in our series. Would {business_name} be interested?", category: "special" },
-  { id: 17, name: "Question Hook", message: "Quick question: If you could change ONE thing about your marketing right now, what would it be?", category: "engagement" },
-  { id: 18, name: "Poll DM", message: "We're doing a quick survey - what's your biggest challenge: getting leads, closing deals, or retaining clients?", category: "engagement" },
-  { id: 19, name: "Urgency", message: "Hey {name}! We only take on 3 new {industry} clients per month and have 1 spot left. If you're interested, now's the time!", category: "closing" },
-  { id: 20, name: "Testimonial Share", message: "Hey! One of our {industry} clients just left this review: '{testimonial}'. We'd love to get similar results for {business_name}.", category: "closing" },
-];
+const DM_TEMPLATES: { id: number; name: string; message: string; category: string }[] = [];
 
 const NICHES = [
   "Dentist", "Lawyer", "Gym", "Plumber", "Electrician", "Roofer",
@@ -53,54 +32,22 @@ const SERVICES = [
   "Content Creation", "Branding", "Email Marketing", "AI Receptionist",
 ];
 
-const AUTO_REPLY_RULES = [
-  { id: "ar1", trigger: "price", response: "Great question! Our packages start at $1,200/mo. Want me to send details?", enabled: true },
-  { id: "ar2", trigger: "interested", response: "Awesome! Let me grab a time for us to chat: [calendar_link]", enabled: true },
-  { id: "ar3", trigger: "not interested", response: "No worries at all! If things change, we're always here. Best of luck!", enabled: true },
-  { id: "ar4", trigger: "yes", response: "Perfect! Here's my calendar link to book a quick call: [calendar_link]", enabled: false },
-];
+const AUTO_REPLY_RULES: { id: string; trigger: string; response: string; enabled: boolean }[] = [];
 
-const KEYWORD_TRIGGERS = [
-  { keyword: "pricing", action: "Send pricing template", active: true },
-  { keyword: "schedule", action: "Send calendar link", active: true },
-  { keyword: "not interested", action: "Move to nurture sequence", active: true },
-  { keyword: "unsubscribe", action: "Add to blacklist", active: false },
-  { keyword: "referral", action: "Send referral program info", active: false },
-];
+const KEYWORD_TRIGGERS: { keyword: string; action: string; active: boolean }[] = [];
 
-const BLACKLIST = [
-  { name: "Spam Account 1", platform: "instagram", reason: "Reported our messages", date: "2026-04-01" },
-  { name: "competitor_agency", platform: "linkedin", reason: "Competitor", date: "2026-03-28" },
-  { name: "BotFarm LLC", platform: "facebook", reason: "Fake account", date: "2026-03-15" },
-];
+const BLACKLIST: { name: string; platform: string; reason: string; date: string }[] = [];
 
-const FOLLOWUP_SEQUENCES = [
-  { id: "fs1", name: "Standard 3-Touch", steps: ["Day 0: Initial DM", "Day 3: Follow-up #1", "Day 7: Follow-up #2"], active: true },
-  { id: "fs2", name: "Aggressive 5-Touch", steps: ["Day 0: Initial DM", "Day 2: Follow-up #1", "Day 4: Follow-up #2", "Day 7: Value offer", "Day 14: Last try"], active: false },
-  { id: "fs3", name: "Soft Touch", steps: ["Day 0: Initial DM", "Day 7: Content share", "Day 21: Re-engage"], active: false },
-];
+const FOLLOWUP_SEQUENCES: { id: string; name: string; steps: string[]; active: boolean }[] = [];
 
-const AB_TESTS = [
-  { id: "ab1", name: "Intro Style", variantA: "Friendly Intro", variantB: "Value First", sent: 200, replyA: 12, replyB: 18, winner: "B" },
-  { id: "ab2", name: "CTA Type", variantA: "Call booking", variantB: "Case study offer", sent: 150, replyA: 15, replyB: 11, winner: "A" },
-  { id: "ab3", name: "Message Length", variantA: "Short (< 30 words)", variantB: "Long (50+ words)", sent: 180, replyA: 20, replyB: 14, winner: "A" },
-];
+const AB_TESTS: { id: string; name: string; variantA: string; variantB: string; sent: number; replyA: number; replyB: number; winner: string }[] = [];
 
 const DM_ANALYTICS = {
-  totalSent: 1245, responseRate: 8.4, conversionRate: 2.1, avgResponseTime: "4.2h",
-  byPlatform: [
-    { platform: "Instagram", sent: 520, responses: 52, rate: 10.0 },
-    { platform: "Facebook", sent: 380, responses: 27, rate: 7.1 },
-    { platform: "LinkedIn", sent: 220, responses: 22, rate: 10.0 },
-    { platform: "TikTok", sent: 125, responses: 4, rate: 3.2 },
-  ],
+  totalSent: 0, responseRate: 0, conversionRate: 0, avgResponseTime: "\u2014",
+  byPlatform: [] as { platform: string; sent: number; responses: number; rate: number }[],
 };
 
-const COMPLIANCE_WARNINGS = [
-  { id: "cw1", type: "warning", message: "Instagram daily DM limit approaching (18/20)", platform: "Instagram" },
-  { id: "cw2", type: "info", message: "LinkedIn connection request limit resets in 6 hours", platform: "LinkedIn" },
-  { id: "cw3", type: "success", message: "All platforms within safe sending limits", platform: "All" },
-];
+const COMPLIANCE_WARNINGS: { id: string; type: string; message: string; platform: string }[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
@@ -161,7 +108,7 @@ export default function DMControllerPage() {
 
   const tabs = [
     { id: "setup" as const, label: "Setup", icon: Settings },
-    { id: "templates" as const, label: "Templates (20)", icon: Copy },
+    { id: "templates" as const, label: `Templates (${DM_TEMPLATES.length})`, icon: Copy },
     { id: "automation" as const, label: "Automation", icon: Zap },
     { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
     { id: "blacklist" as const, label: "Blacklist", icon: Ban },
@@ -187,7 +134,11 @@ export default function DMControllerPage() {
 
       {/* Compliance Warnings */}
       <div className="flex gap-2 overflow-x-auto pb-1">
-        {COMPLIANCE_WARNINGS.map(cw => (
+        {COMPLIANCE_WARNINGS.length === 0 ? (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[10px] whitespace-nowrap shrink-0 bg-white/[0.02] border-border text-muted">
+            <CheckCircle size={10} /> No compliance warnings
+          </div>
+        ) : COMPLIANCE_WARNINGS.map(cw => (
           <div key={cw.id} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border text-[10px] whitespace-nowrap shrink-0 ${
             cw.type === "warning" ? "bg-yellow-400/5 border-yellow-400/15 text-yellow-400" :
             cw.type === "success" ? "bg-green-400/5 border-green-400/15 text-green-400" :
@@ -320,12 +271,12 @@ export default function DMControllerPage() {
                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 ${running ? "bg-green-400/10 animate-pulse" : "bg-gold/10"}`}>
                   {running ? <Clock size={28} className="text-green-400 animate-spin" /> : <Send size={28} className="text-gold" />}
                 </div>
-                <h3 className="text-sm font-bold mb-1">{running ? "Sending DMs..." : "Ready to Launch"}</h3>
+                <h3 className="text-sm font-bold mb-1">{running ? "Sending DMs..." : totalDMs === 0 ? "No Leads Selected" : "Ready to Launch"}</h3>
                 <div className="space-y-1 text-[10px] text-muted mb-4">
                   <p>Platforms: {config.platforms.length}</p>
                   <p>DMs per platform: {config.dmsPerPlatform}</p>
                   <p>Total DMs: {totalDMs}</p>
-                  <p>Est. time: ~{estimatedTime} min</p>
+                  <p>Est. time: {totalDMs === 0 ? "\u2014" : `~${estimatedTime} min`}</p>
                 </div>
                 {running && (
                   <div className="w-full bg-white/5 rounded-full h-2 mb-3 overflow-hidden">
@@ -366,18 +317,25 @@ export default function DMControllerPage() {
                 }`}>{f === "all" ? `All (${DM_TEMPLATES.length})` : f}</button>
             ))}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            {DM_TEMPLATES.filter(t => templateFilter === "all" || t.category === templateFilter).map(t => (
-              <div key={t.id} className="card p-3 cursor-pointer hover:border-gold/20 transition-all"
-                onClick={() => setConfig({ ...config, customMessage: t.message })}>
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-xs font-semibold">{t.name}</p>
-                  <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{t.category}</span>
+          {DM_TEMPLATES.length === 0 ? (
+            <div className="card p-8 text-center">
+              <Copy size={24} className="mx-auto text-muted mb-2" />
+              <p className="text-xs text-muted">No templates yet. Add templates to get started.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {DM_TEMPLATES.filter(t => templateFilter === "all" || t.category === templateFilter).map(t => (
+                <div key={t.id} className="card p-3 cursor-pointer hover:border-gold/20 transition-all"
+                  onClick={() => setConfig({ ...config, customMessage: t.message })}>
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-xs font-semibold">{t.name}</p>
+                    <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">{t.category}</span>
+                  </div>
+                  <p className="text-[10px] text-muted line-clamp-2">{t.message}</p>
                 </div>
-                <p className="text-[10px] text-muted line-clamp-2">{t.message}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -387,97 +345,113 @@ export default function DMControllerPage() {
           {/* Auto-Reply Rules */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Zap size={12} className="text-gold" /> Auto-Reply Rules</h3>
-            <div className="space-y-2">
-              {AUTO_REPLY_RULES.map(rule => (
-                <div key={rule.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
-                  <div className={`w-2 h-2 rounded-full ${rule.enabled ? "bg-green-400" : "bg-white/20"}`} />
-                  <div className="flex-1">
-                    <p className="text-xs"><span className="text-gold font-mono">&quot;{rule.trigger}&quot;</span> <ArrowRight size={10} className="inline text-muted mx-1" /></p>
-                    <p className="text-[10px] text-muted">{rule.response}</p>
+            {AUTO_REPLY_RULES.length === 0 ? (
+              <p className="text-[10px] text-muted py-4 text-center">No auto-reply rules configured.</p>
+            ) : (
+              <div className="space-y-2">
+                {AUTO_REPLY_RULES.map(rule => (
+                  <div key={rule.id} className="flex items-center gap-3 p-3 rounded-lg border border-border">
+                    <div className={`w-2 h-2 rounded-full ${rule.enabled ? "bg-green-400" : "bg-white/20"}`} />
+                    <div className="flex-1">
+                      <p className="text-xs"><span className="text-gold font-mono">&quot;{rule.trigger}&quot;</span> <ArrowRight size={10} className="inline text-muted mx-1" /></p>
+                      <p className="text-[10px] text-muted">{rule.response}</p>
+                    </div>
+                    <span className={`text-[9px] px-2 py-0.5 rounded ${rule.enabled ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"}`}>
+                      {rule.enabled ? "Active" : "Disabled"}
+                    </span>
                   </div>
-                  <span className={`text-[9px] px-2 py-0.5 rounded ${rule.enabled ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"}`}>
-                    {rule.enabled ? "Active" : "Disabled"}
-                  </span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Keyword Triggers */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Target size={12} className="text-gold" /> Keyword Triggers</h3>
-            <div className="space-y-2">
-              {KEYWORD_TRIGGERS.map((kt, i) => (
-                <div key={i} className="flex items-center justify-between p-2 rounded-lg border border-border">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono bg-gold/10 text-gold px-2 py-0.5 rounded">{kt.keyword}</span>
-                    <ArrowRight size={10} className="text-muted" />
-                    <span className="text-[10px] text-muted">{kt.action}</span>
+            {KEYWORD_TRIGGERS.length === 0 ? (
+              <p className="text-[10px] text-muted py-4 text-center">No keyword triggers configured.</p>
+            ) : (
+              <div className="space-y-2">
+                {KEYWORD_TRIGGERS.map((kt, i) => (
+                  <div key={i} className="flex items-center justify-between p-2 rounded-lg border border-border">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono bg-gold/10 text-gold px-2 py-0.5 rounded">{kt.keyword}</span>
+                      <ArrowRight size={10} className="text-muted" />
+                      <span className="text-[10px] text-muted">{kt.action}</span>
+                    </div>
+                    <div className={`w-2 h-2 rounded-full ${kt.active ? "bg-green-400" : "bg-white/20"}`} />
                   </div>
-                  <div className={`w-2 h-2 rounded-full ${kt.active ? "bg-green-400" : "bg-white/20"}`} />
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Follow-Up Sequences */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><GitBranch size={12} className="text-gold" /> Follow-Up Sequences</h3>
-            <div className="space-y-2">
-              {FOLLOWUP_SEQUENCES.map(seq => (
-                <div key={seq.id} className={`p-3 rounded-lg border transition-all cursor-pointer ${
-                  selectedSequence === seq.id ? "border-gold/30 bg-gold/[0.03]" : "border-border"
-                }`} onClick={() => setSelectedSequence(seq.id)}>
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs font-semibold">{seq.name}</p>
-                    <span className={`text-[9px] px-2 py-0.5 rounded ${seq.active ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"}`}>
-                      {seq.active ? "Active" : "Inactive"}
-                    </span>
-                  </div>
-                  {selectedSequence === seq.id && (
-                    <div className="space-y-1">
-                      {seq.steps.map((step, i) => (
-                        <div key={i} className="flex items-center gap-2 text-[10px] text-muted">
-                          <div className="w-4 h-4 rounded-full bg-gold/10 text-gold text-[8px] flex items-center justify-center font-bold">{i + 1}</div>
-                          {step}
-                        </div>
-                      ))}
+            {FOLLOWUP_SEQUENCES.length === 0 ? (
+              <p className="text-[10px] text-muted py-4 text-center">No follow-up sequences configured.</p>
+            ) : (
+              <div className="space-y-2">
+                {FOLLOWUP_SEQUENCES.map(seq => (
+                  <div key={seq.id} className={`p-3 rounded-lg border transition-all cursor-pointer ${
+                    selectedSequence === seq.id ? "border-gold/30 bg-gold/[0.03]" : "border-border"
+                  }`} onClick={() => setSelectedSequence(seq.id)}>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-semibold">{seq.name}</p>
+                      <span className={`text-[9px] px-2 py-0.5 rounded ${seq.active ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"}`}>
+                        {seq.active ? "Active" : "Inactive"}
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                    {selectedSequence === seq.id && (
+                      <div className="space-y-1">
+                        {seq.steps.map((step, i) => (
+                          <div key={i} className="flex items-center gap-2 text-[10px] text-muted">
+                            <div className="w-4 h-4 rounded-full bg-gold/10 text-gold text-[8px] flex items-center justify-center font-bold">{i + 1}</div>
+                            {step}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* A/B Testing */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Filter size={12} className="text-gold" /> A/B Message Testing</h3>
-            <div className="space-y-2">
-              {AB_TESTS.map(test => (
-                <div key={test.id} className="p-3 rounded-lg border border-border">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs font-semibold">{test.name}</p>
-                    <span className="text-[9px] text-muted">{test.sent} sent</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className={`p-2 rounded-lg border ${test.winner === "A" ? "border-green-400/20 bg-green-400/5" : "border-border"}`}>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-medium">A: {test.variantA}</span>
-                        {test.winner === "A" && <CheckCircle size={10} className="text-green-400" />}
-                      </div>
-                      <p className="text-xs font-mono mt-1">{test.replyA} replies ({((test.replyA / (test.sent / 2)) * 100).toFixed(1)}%)</p>
+            {AB_TESTS.length === 0 ? (
+              <p className="text-[10px] text-muted py-4 text-center">No A/B tests configured.</p>
+            ) : (
+              <div className="space-y-2">
+                {AB_TESTS.map(test => (
+                  <div key={test.id} className="p-3 rounded-lg border border-border">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs font-semibold">{test.name}</p>
+                      <span className="text-[9px] text-muted">{test.sent} sent</span>
                     </div>
-                    <div className={`p-2 rounded-lg border ${test.winner === "B" ? "border-green-400/20 bg-green-400/5" : "border-border"}`}>
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-medium">B: {test.variantB}</span>
-                        {test.winner === "B" && <CheckCircle size={10} className="text-green-400" />}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className={`p-2 rounded-lg border ${test.winner === "A" ? "border-green-400/20 bg-green-400/5" : "border-border"}`}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-medium">A: {test.variantA}</span>
+                          {test.winner === "A" && <CheckCircle size={10} className="text-green-400" />}
+                        </div>
+                        <p className="text-xs font-mono mt-1">{test.replyA} replies ({((test.replyA / (test.sent / 2)) * 100).toFixed(1)}%)</p>
                       </div>
-                      <p className="text-xs font-mono mt-1">{test.replyB} replies ({((test.replyB / (test.sent / 2)) * 100).toFixed(1)}%)</p>
+                      <div className={`p-2 rounded-lg border ${test.winner === "B" ? "border-green-400/20 bg-green-400/5" : "border-border"}`}>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-medium">B: {test.variantB}</span>
+                          {test.winner === "B" && <CheckCircle size={10} className="text-green-400" />}
+                        </div>
+                        <p className="text-xs font-mono mt-1">{test.replyB} replies ({((test.replyB / (test.sent / 2)) * 100).toFixed(1)}%)</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -506,19 +480,23 @@ export default function DMControllerPage() {
 
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><TrendingUp size={12} className="text-gold" /> Performance by Platform</h3>
-            <div className="space-y-3">
-              {DM_ANALYTICS.byPlatform.map(p => (
-                <div key={p.platform}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-medium">{p.platform}</span>
-                    <span className="text-xs text-muted">{p.sent} sent &middot; {p.responses} replies ({p.rate}%)</span>
+            {DM_ANALYTICS.byPlatform.length === 0 ? (
+              <p className="text-[10px] text-muted py-4 text-center">No platform data yet. Run a DM campaign to see analytics.</p>
+            ) : (
+              <div className="space-y-3">
+                {DM_ANALYTICS.byPlatform.map(p => (
+                  <div key={p.platform}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium">{p.platform}</span>
+                      <span className="text-xs text-muted">{p.sent} sent &middot; {p.responses} replies ({p.rate}%)</span>
+                    </div>
+                    <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
+                      <div className="h-full rounded-full bg-gold/40" style={{ width: `${p.rate * 10}%` }} />
+                    </div>
                   </div>
-                  <div className="w-full bg-white/5 rounded-full h-2 overflow-hidden">
-                    <div className="h-full rounded-full bg-gold/40" style={{ width: `${p.rate * 10}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -531,23 +509,27 @@ export default function DMControllerPage() {
               <h3 className="text-xs font-semibold flex items-center gap-2"><Ban size={12} className="text-red-400" /> Blacklist Management</h3>
               <button className="px-3 py-1.5 rounded-lg bg-gold text-black text-[10px] font-semibold flex items-center gap-1"><Plus size={10} /> Add Entry</button>
             </div>
-            <div className="space-y-2">
-              {BLACKLIST.map((b, i) => (
-                <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border">
-                  <div className="flex items-center gap-3">
-                    <Ban size={14} className="text-red-400" />
-                    <div>
-                      <p className="text-xs font-medium">{b.name}</p>
-                      <p className="text-[10px] text-muted">{b.platform} &middot; {b.reason}</p>
+            {BLACKLIST.length === 0 ? (
+              <p className="text-[10px] text-muted py-4 text-center">No blacklisted accounts.</p>
+            ) : (
+              <div className="space-y-2">
+                {BLACKLIST.map((b, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 rounded-lg border border-border">
+                    <div className="flex items-center gap-3">
+                      <Ban size={14} className="text-red-400" />
+                      <div>
+                        <p className="text-xs font-medium">{b.name}</p>
+                        <p className="text-[10px] text-muted">{b.platform} &middot; {b.reason}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] text-muted">{b.date}</span>
+                      <button className="text-muted hover:text-red-400"><Trash2 size={12} /></button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-muted">{b.date}</span>
-                    <button className="text-muted hover:text-red-400"><Trash2 size={12} /></button>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

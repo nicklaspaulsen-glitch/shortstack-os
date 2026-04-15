@@ -1,6 +1,30 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
+// Get fresh profile data (cache-busted)
+export async function GET() {
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const service = createServiceClient();
+  const { data: profile, error } = await service
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (error || !profile) {
+    return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ profile }, {
+    headers: { "Cache-Control": "no-store, no-cache, must-revalidate" },
+  });
+}
+
 // Update profile fields (nickname, etc.)
 export async function PATCH(req: Request) {
   const supabase = createServerSupabase();

@@ -44,8 +44,8 @@ export default function ClientSwitcher() {
       if (data.success) {
         setClients(data.clients);
       }
-    } catch {
-      // silent fail
+    } catch (err) {
+      console.error("[ClientSwitcher] Failed to fetch clients:", err);
     }
     setLoading(false);
   }

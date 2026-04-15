@@ -63,8 +63,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return false;
   };
 
+  // refreshProfile bypasses cache by fetching from the server API directly
   const refreshProfile = async () => {
-    if (user) await fetchProfile(user.id);
+    if (!user) return;
+    try {
+      const res = await fetch(`/api/profile?t=${Date.now()}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.profile) {
+          setProfile(data.profile);
+          localStorage.setItem("ss_profile", JSON.stringify(data.profile));
+          profileFetchedRef.current = true;
+          return;
+        }
+      }
+    } catch {}
+    // Fallback to supabase client
+    await fetchProfile(user.id);
   };
 
   useEffect(() => {

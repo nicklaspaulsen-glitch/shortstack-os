@@ -20,20 +20,7 @@ interface SMSTemplate {
   replies: number;
 }
 
-const DEFAULT_TEMPLATES: SMSTemplate[] = [
-  { id: "1", name: "Cold Intro", body: "Hey {name}! I came across {business_name} and love what you're doing. We help {industry} businesses get more clients through social media. Mind if I send over a quick case study?", category: "Outreach", sends: 234, delivered: 228, replies: 18 },
-  { id: "2", name: "Follow Up #1", body: "Hey {name}! Just following up on my last message. We recently helped a {industry} business get 30+ new clients in 30 days. Would love to share how. Quick chat this week?", category: "Follow Up", sends: 189, delivered: 185, replies: 14 },
-  { id: "3", name: "Follow Up #2", body: "Hey {name}, last one from me! I put together a free marketing audit for {business_name} - no strings attached. Want me to send it over?", category: "Follow Up", sends: 156, delivered: 152, replies: 22 },
-  { id: "4", name: "Appointment Reminder", body: "Hey {name}! Just a reminder about our call tomorrow at {time}. Looking forward to chatting about {business_name}! Here's the link: {link}", category: "Scheduling", sends: 89, delivered: 89, replies: 67 },
-  { id: "5", name: "No Show Follow Up", body: "Hey {name}, looks like we missed each other today. No worries! Would you like to reschedule? I have openings this week.", category: "Scheduling", sends: 45, delivered: 44, replies: 28 },
-  { id: "6", name: "Post-Call Thank You", body: "Hey {name}! Great chatting today. As discussed, I'll send over the proposal for {business_name} by end of day. Excited to get started!", category: "Sales", sends: 67, delivered: 67, replies: 52 },
-  { id: "7", name: "Invoice Reminder", body: "Hey {name}, friendly reminder that your invoice of ${amount} is due on {due_date}. You can pay here: {link}. Thanks!", category: "Billing", sends: 112, delivered: 110, replies: 45 },
-  { id: "8", name: "Content Approval", body: "Hey {name}! Your content for this week is ready for review. Check it out in your portal: {link}. Let me know if you'd like any changes!", category: "Client", sends: 78, delivered: 78, replies: 61 },
-  { id: "9", name: "Review Request", body: "Hey {name}! Working with {business_name} has been awesome. Would you mind leaving us a quick Google review? It really helps! {link}", category: "Reviews", sends: 134, delivered: 131, replies: 42 },
-  { id: "10", name: "Referral Ask", body: "Hey {name}! So glad the results have been great for {business_name}. Know anyone else who could use similar results? I'd love an intro!", category: "Referral", sends: 56, delivered: 55, replies: 18 },
-  { id: "11", name: "Holiday Greeting", body: "Happy holidays {name}! Wishing you and the {business_name} team an amazing season. Excited for what we'll accomplish together in the new year!", category: "Seasonal", sends: 201, delivered: 198, replies: 89 },
-  { id: "12", name: "Re-engagement", body: "Hey {name}! It's been a while since we connected. Just wanted to check in - are you still looking to grow {business_name}? We have some new strategies that are working great!", category: "Re-engagement", sends: 167, delivered: 162, replies: 12 },
-];
+const DEFAULT_TEMPLATES: SMSTemplate[] = [];
 
 const EMOJI_CATEGORIES = [
   { name: "Smileys", emojis: ["😀", "😊", "🤝", "👋", "🎉", "🔥", "💪", "✅"] },
@@ -196,6 +183,9 @@ export default function SMSTemplatesPage() {
 
           {/* Template Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {filtered.length === 0 && (
+              <div className="col-span-2 text-center py-12 text-muted text-xs">No templates yet. Click &quot;New&quot; to create your first SMS template.</div>
+            )}
             {filtered.map(template => (
               <div key={template.id} className="p-4 rounded-xl bg-surface-light border border-border group transition-all hover:border-gold/10">
                 <div className="flex items-start justify-between mb-2">
@@ -289,6 +279,9 @@ export default function SMSTemplatesPage() {
           <div className="card">
             <h4 className="text-xs font-semibold mb-2">Select Template to Preview</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+              {templates.length === 0 && (
+                <p className="col-span-4 text-center text-[10px] text-muted py-4">No templates yet.</p>
+              )}
               {templates.slice(0, 8).map(t => (
                 <button key={t.id} onClick={() => setPreviewTemplate(t)}
                   className={`text-left p-2 rounded-lg text-[9px] border transition-all ${
@@ -390,6 +383,9 @@ export default function SMSTemplatesPage() {
           <div className="card">
             <h3 className="text-sm font-semibold mb-3">Delivery Rate by Template</h3>
             <div className="space-y-2">
+              {templates.filter(t => t.sends > 0).length === 0 && (
+                <p className="text-center text-[10px] text-muted py-6">No delivery data yet. Analytics will appear once templates are sent.</p>
+              )}
               {templates.filter(t => t.sends > 0).sort((a, b) => (b.delivered / b.sends) - (a.delivered / a.sends)).map(t => {
                 const rate = ((t.delivered / t.sends) * 100).toFixed(1);
                 return (
@@ -431,19 +427,9 @@ export default function SMSTemplatesPage() {
               <div className="grid grid-cols-4 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                 <span>Short Link</span><span>Original URL</span><span className="text-center">Clicks</span><span className="text-center">Created</span>
               </div>
-              {[
-                { short: "srtst.ck/abc123", long: "https://shortstackhq.com/case-study/dental", clicks: 47, date: "Apr 12" },
-                { short: "srtst.ck/def456", long: "https://cal.com/nicklas/discovery", clicks: 89, date: "Apr 10" },
-                { short: "srtst.ck/ghi789", long: "https://shortstackhq.com/portal/login", clicks: 156, date: "Apr 8" },
-                { short: "srtst.ck/jkl012", long: "https://g.page/r/review-link", clicks: 31, date: "Apr 5" },
-              ].map((link, i) => (
-                <div key={i} className="grid grid-cols-4 items-center text-[10px] py-2 px-2 rounded bg-surface-light">
-                  <span className="font-mono text-gold">{link.short}</span>
-                  <span className="text-muted truncate">{link.long}</span>
-                  <span className="text-center font-bold">{link.clicks}</span>
-                  <span className="text-center text-muted">{link.date}</span>
-                </div>
-              ))}
+              {([] as { short: string; long: string; clicks: number; date: string }[]).length === 0 ? (
+                <div className="text-center py-6 text-[10px] text-muted col-span-4">No short links yet. Paste a URL above to create one.</div>
+              ) : null}
             </div>
           </div>
         </div>
@@ -477,22 +463,7 @@ export default function SMSTemplatesPage() {
             <div className="card">
               <h3 className="text-sm font-semibold mb-3">Scheduled Messages</h3>
               <div className="space-y-2">
-                {[
-                  { template: "Follow Up #1", scheduled: "Apr 15, 10:00 AM", recipients: 45, status: "pending" },
-                  { template: "Appointment Reminder", scheduled: "Apr 15, 2:00 PM", recipients: 12, status: "pending" },
-                  { template: "Invoice Reminder", scheduled: "Apr 16, 9:00 AM", recipients: 8, status: "pending" },
-                ].map((msg, i) => (
-                  <div key={i} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
-                    <div>
-                      <p className="font-semibold">{msg.template}</p>
-                      <p className="text-[9px] text-muted">{msg.scheduled} | {msg.recipients} recipients</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] px-1.5 py-0.5 rounded bg-yellow-400/10 text-yellow-400">{msg.status}</span>
-                      <button className="text-[9px] text-red-400 hover:text-red-300">Cancel</button>
-                    </div>
-                  </div>
-                ))}
+                <div className="text-center py-6 text-[10px] text-muted">No scheduled messages yet. Use the form to schedule one.</div>
               </div>
             </div>
           </div>
