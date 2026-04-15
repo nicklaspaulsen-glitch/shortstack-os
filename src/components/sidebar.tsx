@@ -39,6 +39,7 @@ import {
   FolderOpen,
   Target,
   Receipt,
+  Palette,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -75,6 +76,7 @@ const navItems: NavItem[] = [
   { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"] },
   { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: <ImageIcon size={16} />, roles: ["admin", "team_member"] },
   { label: "Brand Voice", href: "/dashboard/brand-voice", icon: <BookOpen size={16} />, roles: ["admin", "team_member"] },
+  { label: "Brand Kit", href: "/dashboard/brand-kit", icon: <Palette size={16} />, roles: ["admin", "team_member"] },
   { label: "Content Library", href: "/dashboard/content-library", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"] },
   { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
 
