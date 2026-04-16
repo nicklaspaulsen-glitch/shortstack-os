@@ -423,10 +423,10 @@ export default function Sidebar() {
           <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-gold/[0.07] border border-gold/15">
             <Puzzle size={13} className="shrink-0 text-gold" />
             <a
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/downloads/shortstack-extension.zip"
+              download
               className="flex items-center gap-1 text-[11px] text-gold/90 hover:text-gold font-medium truncate transition-colors"
+              title="Download Chrome Extension (.zip) — unzip and load in chrome://extensions"
             >
               <span>Chrome Extension</span>
               <ExternalLink size={10} className="shrink-0 opacity-60" />
