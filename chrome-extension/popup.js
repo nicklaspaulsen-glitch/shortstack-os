@@ -1,0 +1,358 @@
+/* ShortStack OS — Popup Controller */
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+/* ── Default suggestion cards ── */
+const DEFAULT_SUGGESTIONS = [
+  { icon: "\ud83d\udcca", title: "Analyze Competitors", desc: "Run competitor analysis on current site", prompt: "Analyze the competitors of the website I'm currently viewing. What are their strengths and weaknesses?" },
+  { icon: "\u270d\ufe0f", title: "Write Content", desc: "Generate posts, blogs, emails", prompt: "Generate social media posts, blog ideas, and email copy based on the content of this page." },
+  { icon: "\ud83c\udfaf", title: "Find Leads", desc: "Extract business contacts", prompt: "Extract any business contacts, emails, or lead information from this page." },
+  { icon: "\ud83d\udcf1", title: "Manage Ads", desc: "View and optimize campaigns", prompt: "Help me plan and optimize ad campaigns related to the content on this page." },
+  { icon: "\ud83d\udd0d", title: "SEO Audit", desc: "Check SEO health of page", prompt: "Perform an SEO audit of this page. Check title tags, meta descriptions, headings, and content quality." },
+  { icon: "\ud83d\udcc8", title: "Page Insights", desc: "Analytics and performance", prompt: "Give me insights and analysis about this page — content quality, audience, and key takeaways." },
+];
+
+/* ── URL-adaptive suggestions ── */
+const URL_OVERRIDES = [
+  {
+    test: (url) => /google\.com\/maps|maps\.google/.test(url),
+    cards: [
+      { icon: "\ud83c\udfea", title: "Extract Businesses", desc: "Pull business listings from map", prompt: "Extract all business names, addresses, phone numbers, and ratings visible on this Google Maps page." },
+      { icon: "\ud83d\udcde", title: "Get Contacts", desc: "Find phone numbers & emails", prompt: "Find all contact information (phone, email, website) for businesses shown on this map page." },
+      { icon: "\u2b50", title: "Analyze Reviews", desc: "Summarize review sentiment", prompt: "Analyze the reviews and ratings for businesses on this page. Summarize sentiment and key themes." },
+      { icon: "\ud83d\udccd", title: "Local SEO Tips", desc: "Improve local search ranking", prompt: "Give me local SEO tips for a business in this area based on what I see on this map page." },
+      { icon: "\ud83d\udcca", title: "Competitor Map", desc: "Compare nearby competitors", prompt: "Compare the businesses visible on this map. Who are the top competitors and why?" },
+      { icon: "\ud83d\udce5", title: "Export Leads", desc: "Save businesses as leads", prompt: "Help me save all the businesses shown on this map page as leads in my CRM." },
+    ],
+  },
+  {
+    test: (url) => /facebook\.com|instagram\.com|twitter\.com|x\.com|linkedin\.com|tiktok\.com/.test(url),
+    cards: [
+      { icon: "\ud83d\udc64", title: "Analyze Profile", desc: "Review social media presence", prompt: "Analyze this social media profile. What's their posting strategy, engagement rate, and audience?" },
+      { icon: "\ud83d\udcdd", title: "Draft Response", desc: "Write a reply or comment", prompt: "Draft a professional and engaging reply to the content on this social media page." },
+      { icon: "\ud83d\udcc8", title: "Growth Tips", desc: "Improve social strategy", prompt: "Based on this social media profile, suggest growth strategies and content improvements." },
+      { icon: "\ud83c\udfaf", title: "Ad Targeting", desc: "Find target audience", prompt: "Based on this social profile's audience, suggest ad targeting parameters and campaign ideas." },
+      { icon: "\ud83d\udd17", title: "Find Leads", desc: "Extract contacts from profile", prompt: "Extract any business contact information or lead data from this social media page." },
+      { icon: "\u270d\ufe0f", title: "Content Ideas", desc: "Generate post ideas", prompt: "Generate 5 content ideas inspired by this social media page that would engage a similar audience." },
+    ],
+  },
+  {
+    test: (url) => /yelp\.com/.test(url),
+    cards: [
+      { icon: "\u2b50", title: "Review Analysis", desc: "Summarize customer reviews", prompt: "Analyze all the reviews on this Yelp page. What are the key themes, complaints, and praises?" },
+      { icon: "\ud83c\udfea", title: "Business Intel", desc: "Extract business details", prompt: "Extract all business information from this Yelp page — name, address, phone, hours, category." },
+      { icon: "\ud83d\udcca", title: "Competitor Compare", desc: "Compare with similar businesses", prompt: "Compare this Yelp business with its competitors. What makes it stand out or fall behind?" },
+      { icon: "\ud83d\udcde", title: "Get Contacts", desc: "Pull contact info", prompt: "Extract contact information and business details from this Yelp listing." },
+      { icon: "\ud83d\udcdd", title: "Write Review Reply", desc: "Draft owner responses", prompt: "Draft professional owner responses to the recent reviews on this Yelp page." },
+      { icon: "\ud83d\udcc8", title: "Improvement Tips", desc: "Boost Yelp presence", prompt: "Based on this Yelp listing, suggest improvements to boost ratings and attract more customers." },
+    ],
+  },
+];
+
+/* ── Chat State ── */
+let chatHistory = [];
+let currentTabUrl = "";
+let isSending = false;
+
+/* ── Init ── */
+document.addEventListener("DOMContentLoaded", async () => {
+  const auth = await msg("checkAuth");
+  if (auth?.data?.connected) {
+    showMain();
+  } else {
+    showAuth();
+  }
+  loadActivity();
+  await initChat();
+  await initSuggestions();
+});
+
+/* ── View Switching ── */
+function showMain() {
+  $("#authGate").classList.add("hidden");
+  $("#mainContent").classList.remove("hidden");
+  $("#settingsPanel").classList.add("hidden");
+  $("#statusDot").className = "ss-status connected";
+  $("#statusDot").title = "Connected";
+}
+function showAuth() {
+  $("#authGate").classList.remove("hidden");
+  $("#mainContent").classList.add("hidden");
+  $("#settingsPanel").classList.add("hidden");
+  $("#statusDot").className = "ss-status disconnected";
+  $("#statusDot").title = "Not connected";
+}
+function showSettings() {
+  $("#authGate").classList.add("hidden");
+  $("#mainContent").classList.add("hidden");
+  $("#settingsPanel").classList.remove("hidden");
+  chrome.storage.sync.get(["apiKey", "baseUrl"], (d) => {
+    $("#cfgApiKey").value = d.apiKey || "";
+    $("#cfgBaseUrl").value = d.baseUrl || "http://localhost:3000";
+  });
+}
+
+/* ── Settings ── */
+$("#openSettings").addEventListener("click", showSettings);
+$("#settingsToggle").addEventListener("click", showSettings);
+$("#settingsCancel").addEventListener("click", async () => {
+  const auth = await msg("checkAuth");
+  auth?.data?.connected ? showMain() : showAuth();
+});
+$("#settingsSave").addEventListener("click", () => {
+  const apiKey = $("#cfgApiKey").value.trim();
+  const baseUrl = $("#cfgBaseUrl").value.trim() || "http://localhost:3000";
+  chrome.storage.sync.set({ apiKey, baseUrl }, () => {
+    apiKey ? showMain() : showAuth();
+  });
+});
+
+/* ── Chat ── */
+async function initChat() {
+  // Get current tab URL
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    currentTabUrl = tab?.url || "";
+  } catch (_) {}
+
+  // Load stored chat history
+  const stored = await chrome.storage.local.get("chatHistory");
+  chatHistory = (stored.chatHistory || []).slice(-50);
+  renderChatHistory();
+
+  // Input handlers
+  const input = $("#chatInput");
+  const sendBtn = $("#chatSend");
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+  sendBtn.addEventListener("click", sendChatMessage);
+}
+
+async function sendChatMessage() {
+  const input = $("#chatInput");
+  const text = input.value.trim();
+  if (!text || isSending) return;
+
+  isSending = true;
+  input.value = "";
+  $("#chatSend").disabled = true;
+
+  // Hide placeholder
+  const placeholder = $("#chatPlaceholder");
+  if (placeholder) placeholder.remove();
+
+  // Add user message
+  appendMessage("user", text);
+  chatHistory.push({ role: "user", content: text, ts: Date.now() });
+
+  // Show typing indicator
+  const typing = showTypingIndicator();
+
+  try {
+    const res = await msg("chatWithAI", { message: text, url: currentTabUrl, pageContext: document.title });
+    typing.remove();
+
+    const aiText = res?.data?.response || res?.data?.message || "Sorry, I couldn't process that request.";
+    appendMessage("ai", aiText);
+    chatHistory.push({ role: "ai", content: aiText, ts: Date.now() });
+  } catch (e) {
+    typing.remove();
+    const errText = "Something went wrong. Please check your connection and try again.";
+    appendMessage("ai", errText);
+    chatHistory.push({ role: "ai", content: errText, ts: Date.now() });
+  }
+
+  // Persist (keep last 50)
+  await chrome.storage.local.set({ chatHistory: chatHistory.slice(-50) });
+
+  isSending = false;
+  $("#chatSend").disabled = false;
+  input.focus();
+}
+
+function appendMessage(role, text) {
+  const container = $("#chatMessages");
+  const div = document.createElement("div");
+  div.className = `ss-chat-msg ${role}`;
+  div.textContent = text;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function renderChatHistory() {
+  if (chatHistory.length === 0) return;
+
+  // Hide placeholder
+  const placeholder = $("#chatPlaceholder");
+  if (placeholder) placeholder.remove();
+
+  chatHistory.forEach((m) => {
+    appendMessage(m.role, m.content);
+  });
+}
+
+function showTypingIndicator() {
+  const container = $("#chatMessages");
+  const div = document.createElement("div");
+  div.className = "ss-chat-typing";
+  div.innerHTML = "<span></span><span></span><span></span>";
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+/* ── Smart Suggestions ── */
+async function initSuggestions() {
+  let url = currentTabUrl;
+  if (!url) {
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      url = tab?.url || "";
+    } catch (_) {}
+  }
+
+  // Find URL-specific override or use defaults
+  const override = URL_OVERRIDES.find((o) => o.test(url));
+  const cards = override ? override.cards : DEFAULT_SUGGESTIONS;
+
+  const grid = $("#suggestionsGrid");
+  grid.innerHTML = "";
+
+  cards.forEach((card) => {
+    const el = document.createElement("div");
+    el.className = "ss-suggest-card";
+    el.innerHTML = `
+      <span class="ss-suggest-icon">${card.icon}</span>
+      <span class="ss-suggest-title">${esc(card.title)}</span>
+      <span class="ss-suggest-desc">${esc(card.desc)}</span>
+    `;
+    el.addEventListener("click", () => {
+      // Pre-fill the chat input and send
+      const input = $("#chatInput");
+      input.value = card.prompt;
+      sendChatMessage();
+    });
+    grid.appendChild(el);
+  });
+}
+
+/* ── Quick Actions ── */
+const FORMS = {
+  addLead: {
+    title: "Add Lead",
+    fields: [
+      { name: "name", label: "Business Name", type: "text" },
+      { name: "email", label: "Email", type: "email" },
+      { name: "phone", label: "Phone", type: "tel" },
+    ],
+    submit: async (d, tab) => msg("addLead", { ...d, source: tab.url }, "Added lead"),
+  },
+  createPost: {
+    title: "Create Post",
+    fields: [{ name: "content", label: "Post Content", type: "textarea" }],
+    submit: async (d, tab) => msg("createPost", { ...d, sourceUrl: tab.url }, "Created post draft"),
+  },
+  summarize: {
+    title: "Summarize Page",
+    fields: [],
+    submit: async (_d, tab) => msg("summarize", { url: tab.url }, "Summarized page"),
+  },
+  saveNote: {
+    title: "Save to Notion",
+    fields: [{ name: "content", label: "Content / Selection", type: "textarea" }],
+    submit: async (d, tab) => msg("saveNote", { ...d, url: tab.url }, "Saved to Notion"),
+  },
+  trackCompetitor: {
+    title: "Track Competitor",
+    fields: [{ name: "notes", label: "Notes (optional)", type: "text" }],
+    submit: async (d, tab) => msg("trackCompetitor", { url: tab.url, ...d }, "Tracking competitor"),
+  },
+  quickNote: {
+    title: "Quick Note",
+    fields: [{ name: "content", label: "Note", type: "textarea" }],
+    submit: async (d, tab) => msg("saveNote", { ...d, url: tab.url, type: "quick" }, "Note saved"),
+  },
+};
+
+$$(".ss-action").forEach((btn) => {
+  btn.addEventListener("click", async () => {
+    const key = btn.dataset.action;
+    const cfg = FORMS[key];
+    if (!cfg) return;
+
+    if (cfg.fields.length === 0) {
+      btn.textContent = "...";
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      await cfg.submit({}, tab);
+      btn.innerHTML = `<span class="ss-icon">&#10003;</span>Done`;
+      setTimeout(() => location.reload(), 800);
+      return;
+    }
+
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    openForm(cfg, tab);
+  });
+});
+
+function openForm(cfg, tab) {
+  $("#formTitle").textContent = cfg.title;
+  const body = $("#formBody");
+  body.innerHTML = "";
+  cfg.fields.forEach((f) => {
+    const lbl = document.createElement("label");
+    lbl.textContent = f.label;
+    const el = document.createElement(f.type === "textarea" ? "textarea" : "input");
+    el.type = f.type === "textarea" ? undefined : f.type;
+    el.name = f.name;
+    el.placeholder = f.label;
+    lbl.appendChild(el);
+    body.appendChild(lbl);
+  });
+  $("#inlineForm").classList.remove("hidden");
+  $("#formCancel").onclick = () => $("#inlineForm").classList.add("hidden");
+  $("#formSubmit").onclick = async () => {
+    const data = {};
+    body.querySelectorAll("input, textarea").forEach((el) => (data[el.name] = el.value));
+    $("#formSubmit").textContent = "Saving...";
+    await cfg.submit(data, tab);
+    $("#inlineForm").classList.add("hidden");
+    $("#formSubmit").textContent = "Save";
+    loadActivity();
+  };
+}
+
+/* ── Activity ── */
+async function loadActivity() {
+  const res = await msg("getActivity");
+  const list = $("#activityList");
+  const items = res?.data || [];
+  if (!items.length) {
+    list.innerHTML = '<li class="empty">No recent activity</li>';
+    return;
+  }
+  list.innerHTML = items
+    .map((a) => `<li><span class="act-label">${esc(a.action)} — ${esc(a.detail || "")}</span><span class="act-time">${timeAgo(a.ts)}</span></li>`)
+    .join("");
+}
+
+/* ── Helpers ── */
+function msg(action, data, label) {
+  return chrome.runtime.sendMessage({ action, data, label });
+}
+function esc(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+function timeAgo(ts) {
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60) return "just now";
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
+  return `${Math.floor(s / 86400)}d ago`;
+}

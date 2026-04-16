@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=380">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="ss-header">
+    <div class="ss-logo">Short<span>Stack</span> OS</div>
+    <div class="ss-status" id="statusDot" title="Checking..."></div>
+  </header>
+
+  <!-- Auth gate -->
+  <div id="authGate" class="ss-auth hidden">
+    <p>Connect your ShortStack instance to get started.</p>
+    <button id="openSettings" class="ss-btn-gold">Connect to ShortStack</button>
+  </div>
+
+  <!-- Main content -->
+  <div id="mainContent" class="hidden">
+
+    <!-- Chat Interface -->
+    <section class="ss-chat" id="chatSection">
+      <div class="ss-chat-messages" id="chatMessages">
+        <div class="ss-chat-placeholder" id="chatPlaceholder">
+          <span class="ss-chat-placeholder-icon">&#128172;</span>
+          <p>Ask me anything about this page...</p>
+        </div>
+      </div>
+      <div class="ss-chat-input-row">
+        <input type="text" id="chatInput" placeholder="Ask ShortStack AI..." autocomplete="off">
+        <button class="ss-chat-send" id="chatSend" title="Send">&#9654;</button>
+      </div>
+    </section>
+
+    <!-- Smart Suggestion Cards -->
+    <section class="ss-suggestions" id="suggestionsSection">
+      <div class="ss-suggestions-title">What can I help with?</div>
+      <div class="ss-suggestions-grid" id="suggestionsGrid"></div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="ss-section">
+      <h3 class="ss-section-title">Quick Actions</h3>
+      <div class="ss-grid">
+        <button class="ss-action" data-action="addLead">
+          <span class="ss-icon">+</span>Add Lead
+        </button>
+        <button class="ss-action" data-action="createPost">
+          <span class="ss-icon">&#9998;</span>Create Post
+        </button>
+        <button class="ss-action" data-action="summarize">
+          <span class="ss-icon">&#9883;</span>Summarize
+        </button>
+        <button class="ss-action" data-action="saveNote">
+          <span class="ss-icon">&#128196;</span>Save to Notion
+        </button>
+        <button class="ss-action" data-action="trackCompetitor">
+          <span class="ss-icon">&#128269;</span>Track Competitor
+        </button>
+        <button class="ss-action" data-action="quickNote">
+          <span class="ss-icon">&#128221;</span>Quick Note
+        </button>
+      </div>
+    </section>
+
+    <!-- Inline Form (hidden by default) -->
+    <section id="inlineForm" class="ss-section hidden">
+      <h3 class="ss-section-title" id="formTitle">Add Lead</h3>
+      <div id="formBody"></div>
+      <div class="ss-form-actions">
+        <button id="formSubmit" class="ss-btn-gold">Save</button>
+        <button id="formCancel" class="ss-btn-ghost">Cancel</button>
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="ss-section">
+      <h3 class="ss-section-title">Recent Activity</h3>
+      <ul id="activityList" class="ss-activity"></ul>
+    </section>
+  </div>
+
+  <!-- Settings panel -->
+  <div id="settingsPanel" class="ss-settings hidden">
+    <h3 class="ss-section-title">Settings</h3>
+    <label>API Key<input id="cfgApiKey" type="password" placeholder="ss_key_..."></label>
+    <label>Instance URL<input id="cfgBaseUrl" type="url" placeholder="http://localhost:3000"></label>
+    <div class="ss-form-actions">
+      <button id="settingsSave" class="ss-btn-gold">Save</button>
+      <button id="settingsCancel" class="ss-btn-ghost">Back</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="ss-footer">
+    <button id="settingsToggle" class="ss-link">Settings</button>
+  </footer>
+
+  <script src="api.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

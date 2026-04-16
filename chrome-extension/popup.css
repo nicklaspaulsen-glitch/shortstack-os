@@ -1,0 +1,368 @@
+/* ShortStack OS — Popup Styles */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 380px;
+  height: 600px;
+  overflow-y: auto;
+  background: #0a0a0f;
+  color: #e2e2e8;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+}
+
+/* ── Chat Interface ── */
+.ss-chat {
+  display: flex;
+  flex-direction: column;
+  height: 340px;
+  border-bottom: 1px solid #1a1a24;
+}
+
+.ss-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ss-chat-messages::-webkit-scrollbar { width: 4px; }
+.ss-chat-messages::-webkit-scrollbar-track { background: transparent; }
+.ss-chat-messages::-webkit-scrollbar-thumb { background: #2a2a36; border-radius: 4px; }
+
+.ss-chat-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 8px;
+  color: #444;
+  text-align: center;
+  padding: 0 24px;
+}
+.ss-chat-placeholder .ss-chat-placeholder-icon {
+  font-size: 28px;
+  opacity: 0.5;
+}
+.ss-chat-placeholder p {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.ss-chat-msg {
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  animation: fadeIn 0.2s ease;
+  word-wrap: break-word;
+}
+.ss-chat-msg.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #3d3118, #2a2210);
+  border: 1px solid #5a4520;
+  color: #e8d9a8;
+  border-bottom-right-radius: 4px;
+}
+.ss-chat-msg.ai {
+  align-self: flex-start;
+  background: #141420;
+  border: 1px solid #1e1e2e;
+  color: #d0d0dc;
+  border-bottom-left-radius: 4px;
+}
+
+.ss-chat-typing {
+  align-self: flex-start;
+  padding: 8px 16px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.ss-chat-typing span {
+  width: 6px;
+  height: 6px;
+  background: #555;
+  border-radius: 50%;
+  animation: typingBounce 1.2s infinite;
+}
+.ss-chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+.ss-chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.ss-chat-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid #1a1a24;
+  background: #0c0c14;
+}
+.ss-chat-input-row input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 20px;
+  color: #e2e2e8;
+  font-size: 12.5px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.ss-chat-input-row input:focus { border-color: #C9A84C; }
+.ss-chat-input-row input::placeholder { color: #444; }
+
+.ss-chat-send {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #C9A84C, #b8943e);
+  color: #0a0a0f;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+.ss-chat-send:hover { opacity: 0.85; transform: scale(1.05); }
+.ss-chat-send:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+/* ── Smart Suggestion Cards ── */
+.ss-suggestions {
+  padding: 10px 16px 6px;
+}
+.ss-suggestions-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #555;
+  margin-bottom: 8px;
+}
+.ss-suggestions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+.ss-suggest-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 4px 8px;
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.ss-suggest-card:hover {
+  border-color: #C9A84C;
+  background: #16161f;
+  transform: translateY(-1px);
+}
+.ss-suggest-card .ss-suggest-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+.ss-suggest-card .ss-suggest-title {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #ccc;
+  white-space: nowrap;
+}
+.ss-suggest-card:hover .ss-suggest-title { color: #C9A84C; }
+.ss-suggest-card .ss-suggest-desc {
+  font-size: 9px;
+  color: #555;
+  line-height: 1.3;
+  padding: 0 2px;
+}
+
+.hidden { display: none !important; }
+
+/* Header */
+.ss-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid #1a1a24;
+}
+.ss-logo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #C9A84C;
+  letter-spacing: 0.5px;
+}
+.ss-logo span { color: #fff; }
+.ss-status {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #555;
+  transition: background 0.3s;
+}
+.ss-status.connected { background: #34d399; box-shadow: 0 0 6px #34d39966; }
+.ss-status.disconnected { background: #ef4444; box-shadow: 0 0 6px #ef444466; }
+
+/* Auth gate */
+.ss-auth {
+  text-align: center;
+  padding: 40px 24px;
+}
+.ss-auth p { color: #888; margin-bottom: 16px; line-height: 1.5; }
+
+/* Sections */
+.ss-section { padding: 12px 16px; }
+.ss-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Quick Actions Grid */
+.ss-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+.ss-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 6px;
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 10px;
+  color: #ccc;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ss-action:hover {
+  border-color: #C9A84C;
+  color: #C9A84C;
+  background: #16161f;
+  transform: translateY(-1px);
+}
+.ss-action .ss-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Buttons */
+.ss-btn-gold {
+  background: linear-gradient(135deg, #C9A84C, #b8943e);
+  color: #0a0a0f;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.ss-btn-gold:hover { opacity: 0.85; }
+.ss-btn-ghost {
+  background: transparent;
+  color: #888;
+  border: 1px solid #2a2a36;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.ss-btn-ghost:hover { border-color: #555; }
+
+/* Inline form */
+#inlineForm label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  color: #888;
+}
+#inlineForm input, #inlineForm textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 6px;
+  color: #e2e2e8;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#inlineForm input:focus, #inlineForm textarea:focus { border-color: #C9A84C; }
+#inlineForm textarea { resize: vertical; min-height: 60px; }
+.ss-form-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+/* Activity list */
+.ss-activity { list-style: none; }
+.ss-activity li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #1a1a24;
+  font-size: 12px;
+}
+.ss-activity li:last-child { border-bottom: none; }
+.ss-activity .act-label { color: #ccc; }
+.ss-activity .act-time { color: #555; font-size: 11px; }
+.ss-activity .empty { color: #444; text-align: center; padding: 12px 0; }
+
+/* Settings */
+.ss-settings { padding: 16px; }
+.ss-settings label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #888;
+}
+.ss-settings input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  background: #12121a;
+  border: 1px solid #1e1e2a;
+  border-radius: 6px;
+  color: #e2e2e8;
+  font-size: 13px;
+  outline: none;
+}
+.ss-settings input:focus { border-color: #C9A84C; }
+
+/* Footer */
+.ss-footer {
+  padding: 10px 16px;
+  border-top: 1px solid #1a1a24;
+  text-align: center;
+}
+.ss-link {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.ss-link:hover { color: #C9A84C; }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.ss-section { animation: fadeIn 0.25s ease; }
