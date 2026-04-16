@@ -242,7 +242,7 @@ export default function Notifications() {
             {/* Footer — View all link */}
             <div className="px-4 py-2 border-t border-border/20">
               <Link
-                href="/dashboard"
+                href="/dashboard/notifications"
                 onClick={() => setOpen(false)}
                 className="block text-center text-[10px] text-gold hover:text-gold-light font-medium transition-colors"
               >

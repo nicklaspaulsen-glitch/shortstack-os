@@ -7,7 +7,7 @@ import {
   Rocket, ChevronDown, ChevronUp, Crown,
   Image, Type, Layers, Globe, Mail, Phone,
   Building2, Target, Users, Plus, X,
-  CheckCircle2, Layout, Zap, BookOpen,
+  CheckCircle2, Layout, Zap, BookOpen, Loader2,
 } from "lucide-react";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 
@@ -149,6 +149,8 @@ export default function OnboardPage() {
   const [wizardComplete, setWizardComplete] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [launching, setLaunching] = useState(false);
+  const [launchError, setLaunchError] = useState("");
 
   // Quick-add form state
   const [quickForm, setQuickForm] = useState({
@@ -222,6 +224,42 @@ export default function OnboardPage() {
   const uploadedAssets = assets.filter(a => a.uploaded).length;
   const categories = ["All", ...Array.from(new Set(services.map(s => s.category)))];
   const filteredServices = serviceFilter === "All" ? services : services.filter(s => s.category === serviceFilter);
+
+  async function launchClient() {
+    setLaunching(true);
+    setLaunchError("");
+    try {
+      const res = await fetch("/api/clients/onboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          business_name: form.business_name,
+          contact_name: form.contact_name,
+          email: form.email,
+          phone: form.phone,
+          website: form.website,
+          industry: form.industry,
+          package_tier: form.package_tier,
+          mrr: 0,
+          services: selectedServices.map(s => s.name),
+          create_portal: portalEnabled,
+          password: null, // Portal will use magic link
+          create_invoice: autoInvoice,
+          notes: form.notes,
+          setup_zernio: false,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setWizardComplete(true);
+      } else {
+        setLaunchError(data.error || "Failed to create client");
+      }
+    } catch {
+      setLaunchError("Network error — please try again");
+    }
+    setLaunching(false);
+  }
 
   const canProceed = (): boolean => {
     if (step === 1) return form.business_name.trim().length > 0 && form.email.trim().length > 0;
@@ -1005,10 +1043,16 @@ export default function OnboardPage() {
                   Save & Continue <ArrowRight size={14} />
                 </button>
               ) : (
-                <button onClick={() => setWizardComplete(true)}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-gold text-black rounded-lg text-sm font-bold hover:bg-gold/90 transition-all">
-                  <Rocket size={14} /> Launch Client
-                </button>
+                <div className="flex flex-col items-end gap-1">
+                  <button onClick={launchClient} disabled={launching}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-gold text-black rounded-lg text-sm font-bold hover:bg-gold/90 transition-all disabled:opacity-50">
+                    {launching ? <Loader2 size={14} className="animate-spin" /> : <Rocket size={14} />}
+                    {launching ? "Launching..." : "Launch Client"}
+                  </button>
+                  {launchError && (
+                    <p className="text-xs text-red-400 text-center mt-2">{launchError}</p>
+                  )}
+                </div>
               )}
             </div>
           </div>

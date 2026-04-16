@@ -8,7 +8,7 @@ import { createServiceClient } from "@/lib/supabase/server";
  */
 export async function POST(request: NextRequest) {
   try {
-    const { enabled, time, platforms, niches, locations, max_results, filters } =
+    const { enabled, time, days, platforms, niches, locations, max_results, filters } =
       await request.json();
 
     const supabase = createServiceClient();
@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
     const config = {
       enabled: !!enabled,
       time: time || "09:00",
+      days: days || ["mon", "tue", "wed", "thu", "fri"],
       platforms: platforms || ["google_maps"],
       niches: niches || [],
       locations: locations || [],
@@ -113,6 +114,7 @@ export async function GET() {
       config: {
         enabled: false,
         time: "09:00",
+        days: ["mon", "tue", "wed", "thu", "fri"],
         platforms: ["google_maps"],
         niches: [],
         locations: [],

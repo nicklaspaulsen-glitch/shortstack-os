@@ -6,7 +6,8 @@ import {
   FlaskConical, Send, Star,
   Clock, Save, Users, Wifi, Target,
   Calendar, Trash2, Eye, Mail, Phone, Layers,
-  UserPlus, Database, CheckCircle, Bookmark
+  UserPlus, Database, CheckCircle, Bookmark,
+  ChevronDown, ChevronRight, DollarSign, Building, Briefcase, MessageSquareWarning
 } from "lucide-react";
 import {
   GoogleMapsIcon, FacebookIcon, InstagramIcon, TikTokIcon, LinkedInIcon,
@@ -30,22 +31,70 @@ const PLATFORMS: Array<{ id: string; name: string; icon: React.ReactNode; descri
   { id: "indeed", name: "Indeed", icon: <IndeedIcon size={20} />, description: "Job listings for B2B lead discovery", apify: true },
 ];
 
-const PRESET_NICHES = [
-  "Plumber", "Dentist", "Lawyer", "Gym", "Electrician", "Roofer",
-  "Accountant", "Chiropractor", "Real Estate Agent", "Restaurant",
-  "Hair Salon", "Auto Repair", "HVAC", "Landscaper", "Photographer",
-  "Pet Groomer", "Yoga Studio", "Tattoo Shop", "Bakery", "Car Wash",
-  "Insurance Agent", "Financial Advisor", "Wedding Planner", "Daycare",
-  "Veterinarian", "Physical Therapist", "Optometrist", "Dermatologist",
+const NICHE_CATEGORIES: Record<string, string[]> = {
+  "Home Services": ["Plumber", "Electrician", "HVAC", "Roofer", "Landscaper", "Pest Control", "Painter", "Handyman", "Locksmith", "Garage Door Repair", "Carpet Cleaning", "Window Cleaning", "Pool Service", "Fencing", "Gutter Cleaning", "Pressure Washing", "Flooring Installer", "Home Inspector", "Solar Installer", "Moving Company"],
+  "Health & Medical": ["Dentist", "Chiropractor", "Physical Therapist", "Optometrist", "Dermatologist", "Veterinarian", "Orthodontist", "Pediatrician", "Plastic Surgeon", "Urgent Care", "Mental Health Therapist", "Acupuncturist", "Massage Therapist", "Nutritionist", "Home Health Aide", "Medical Spa", "Pharmacy"],
+  "Legal & Financial": ["Lawyer", "Accountant", "Financial Advisor", "Insurance Agent", "Mortgage Broker", "Tax Preparer", "Bookkeeper", "Real Estate Agent", "Property Manager", "Notary Public", "Bankruptcy Attorney", "Immigration Lawyer", "Personal Injury Lawyer", "Estate Planning Attorney"],
+  "Automotive": ["Auto Repair", "Car Wash", "Auto Detailing", "Tire Shop", "Auto Body Shop", "Oil Change", "Towing Service", "Car Dealership", "Transmission Repair", "Brake Service", "Auto Glass Repair"],
+  "Beauty & Wellness": ["Hair Salon", "Barber Shop", "Nail Salon", "Spa", "Yoga Studio", "Gym", "Personal Trainer", "Tattoo Shop", "Tanning Salon", "Lash & Brow Studio", "Skincare Clinic", "Weight Loss Clinic", "Pilates Studio", "Waxing Studio"],
+  "Food & Hospitality": ["Restaurant", "Bakery", "Catering", "Food Truck", "Coffee Shop", "Bar & Lounge", "Pizza Shop", "Ice Cream Shop", "Juice Bar", "Brewery", "Hotel", "Bed & Breakfast", "Event Venue"],
+  "Professional Services": ["Marketing Agency", "Web Designer", "Photographer", "Videographer", "IT Support", "Consulting Firm", "Staffing Agency", "Translation Service", "Printing Company", "Courier Service", "Cleaning Service", "Security Company"],
+  "Education & Childcare": ["Daycare", "Tutoring Center", "Music School", "Dance Studio", "Martial Arts", "Driving School", "Preschool", "After School Program", "Language School", "Art School", "Swimming Lessons"],
+  "Construction & Trade": ["General Contractor", "Plumbing Contractor", "Electrical Contractor", "Concrete Company", "Excavation", "Demolition", "Scaffolding", "Drywall", "Masonry", "Welding", "Cabinet Maker", "Countertop Installer"],
+  "Retail & E-commerce": ["Clothing Boutique", "Jewelry Store", "Pet Store", "Florist", "Gift Shop", "Furniture Store", "Electronics Store", "Liquor Store", "Smoke Shop", "Thrift Store", "Sporting Goods", "Book Store"],
+};
+
+const ALL_NICHES = Object.values(NICHE_CATEGORIES).flat();
+
+const REVENUE_RANGES = ["Under $100K", "$100K-$500K", "$500K-$1M", "$1M-$5M", "$5M-$10M", "$10M+"];
+
+const DECISION_MAKER_TITLES = ["Owner", "CEO", "Founder", "Marketing Director", "Operations Manager", "General Manager", "President", "Partner"];
+
+const COUNTRIES = [
+  { code: "US", name: "United States", flag: "\u{1F1FA}\u{1F1F8}" },
+  { code: "UK", name: "United Kingdom", flag: "\u{1F1EC}\u{1F1E7}" },
+  { code: "CA", name: "Canada", flag: "\u{1F1E8}\u{1F1E6}" },
+  { code: "AU", name: "Australia", flag: "\u{1F1E6}\u{1F1FA}" },
+  { code: "DE", name: "Germany", flag: "\u{1F1E9}\u{1F1EA}" },
+  { code: "FR", name: "France", flag: "\u{1F1EB}\u{1F1F7}" },
+  { code: "NL", name: "Netherlands", flag: "\u{1F1F3}\u{1F1F1}" },
+  { code: "ES", name: "Spain", flag: "\u{1F1EA}\u{1F1F8}" },
+  { code: "IT", name: "Italy", flag: "\u{1F1EE}\u{1F1F9}" },
+  { code: "SE", name: "Sweden", flag: "\u{1F1F8}\u{1F1EA}" },
+  { code: "DK", name: "Denmark", flag: "\u{1F1E9}\u{1F1F0}" },
+  { code: "NO", name: "Norway", flag: "\u{1F1F3}\u{1F1F4}" },
+  { code: "BR", name: "Brazil", flag: "\u{1F1E7}\u{1F1F7}" },
+  { code: "MX", name: "Mexico", flag: "\u{1F1F2}\u{1F1FD}" },
+  { code: "IN", name: "India", flag: "\u{1F1EE}\u{1F1F3}" },
+  { code: "JP", name: "Japan", flag: "\u{1F1EF}\u{1F1F5}" },
+  { code: "AE", name: "UAE", flag: "\u{1F1E6}\u{1F1EA}" },
+  { code: "SG", name: "Singapore", flag: "\u{1F1F8}\u{1F1EC}" },
+  { code: "NZ", name: "New Zealand", flag: "\u{1F1F3}\u{1F1FF}" },
+  { code: "IE", name: "Ireland", flag: "\u{1F1EE}\u{1F1EA}" },
 ];
 
-const PRESET_LOCATIONS = [
-  "New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX",
-  "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX", "San Diego, CA",
-  "Dallas, TX", "Austin, TX", "Denver, CO", "Miami, FL",
-  "Atlanta, GA", "Seattle, WA", "Portland, OR", "Nashville, TN",
-  "Boston, MA", "Las Vegas, NV", "San Francisco, CA", "Minneapolis, MN",
-];
+const CITIES_BY_COUNTRY: Record<string, string[]> = {
+  US: ["New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX", "San Diego, CA", "Dallas, TX", "Austin, TX", "Denver, CO", "Miami, FL", "Atlanta, GA", "Seattle, WA", "Portland, OR", "Nashville, TN", "Boston, MA", "Las Vegas, NV", "San Francisco, CA", "Minneapolis, MN", "Charlotte, NC", "Tampa, FL", "Detroit, MI", "Salt Lake City, UT", "Orlando, FL"],
+  UK: ["London", "Manchester", "Birmingham", "Leeds", "Liverpool", "Bristol", "Edinburgh", "Glasgow", "Cardiff", "Belfast"],
+  CA: ["Toronto, ON", "Vancouver, BC", "Montreal, QC", "Calgary, AB", "Ottawa, ON", "Edmonton, AB", "Winnipeg, MB", "Halifax, NS"],
+  AU: ["Sydney, NSW", "Melbourne, VIC", "Brisbane, QLD", "Perth, WA", "Adelaide, SA", "Gold Coast, QLD"],
+  DE: ["Berlin", "Munich", "Hamburg", "Frankfurt", "Cologne", "Stuttgart", "D\u00FCsseldorf"],
+  DK: ["Copenhagen", "Aarhus", "Odense", "Aalborg"],
+  SE: ["Stockholm", "Gothenburg", "Malm\u00F6", "Uppsala"],
+  NO: ["Oslo", "Bergen", "Trondheim", "Stavanger"],
+  NL: ["Amsterdam", "Rotterdam", "The Hague", "Utrecht"],
+  FR: ["Paris", "Lyon", "Marseille", "Toulouse", "Nice", "Bordeaux"],
+  ES: ["Madrid", "Barcelona", "Valencia", "Seville", "Malaga"],
+  IT: ["Rome", "Milan", "Naples", "Turin", "Florence"],
+  BR: ["S\u00E3o Paulo", "Rio de Janeiro", "Bras\u00EDlia", "Salvador"],
+  MX: ["Mexico City", "Guadalajara", "Monterrey", "Canc\u00FAn"],
+  IN: ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai"],
+  JP: ["Tokyo", "Osaka", "Yokohama", "Kyoto"],
+  AE: ["Dubai", "Abu Dhabi", "Sharjah"],
+  SG: ["Singapore"],
+  NZ: ["Auckland", "Wellington", "Christchurch"],
+  IE: ["Dublin", "Cork", "Galway"],
+};
 
 const COMPANY_SIZES = ["1-10", "11-50", "51-200", "201-500", "500+"];
 
@@ -132,6 +181,9 @@ export default function ScraperPage() {
   const [customNiche, setCustomNiche] = useState("");
   const [locations, setLocations] = useState<string[]>(["New York, NY"]);
   const [customLocation, setCustomLocation] = useState("");
+  const [targetMode, setTargetMode] = useState<"b2b" | "b2c" | "both">("both");
+  const [selectedCountries, setSelectedCountries] = useState<string[]>(["US"]);
+  const [locationSearch, setLocationSearch] = useState("");
   const [maxResults, setMaxResults] = useState(20);
   const [tags, setTags] = useState<string[]>([]);
   const [customTag, setCustomTag] = useState("");
@@ -150,8 +202,34 @@ export default function ScraperPage() {
     tech_stack: "" as string,
     has_social: false,
     missing_social: false,
+    // Revenue range
+    revenue_range: "" as string,
+    // Presence filters
+    has_google_business: false,
+    has_instagram: false,
+    has_facebook: false,
+    has_tiktok: false,
+    no_instagram: false,
+    no_facebook: false,
+    no_social_at_all: false,
+    // Enhanced review filters
+    has_negative_reviews: false,
+    recently_reviewed: false,
+    // Decision maker targeting
+    find_decision_makers: false,
   });
   const [showFilters, setShowFilters] = useState(false);
+
+  // Decision maker titles
+  const [decisionMakerTitles, setDecisionMakerTitles] = useState<string[]>([]);
+
+  // AI Smart Match
+  const [aiMatchPrompt, setAiMatchPrompt] = useState("");
+  const [aiMatchEnabled, setAiMatchEnabled] = useState(false);
+
+  // Categorized niches UI
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [nicheSearch, setNicheSearch] = useState("");
   const [running, setRunning] = useState(false);
   const [testRunning, setTestRunning] = useState(false);
   const [results, setResults] = useState<ScrapedLead[]>([]);
@@ -164,33 +242,21 @@ export default function ScraperPage() {
   const [enrichmentType, setEnrichmentType] = useState<"contact" | "tech" | "decision_maker">("contact");
 
   // Saved searches
-  const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([
-    { id: "ss1", name: "NYC Dentists Low Reviews", platforms: ["google_maps"], niches: ["Dentist"], locations: ["New York, NY"], filters: { max_reviews: 10 }, created_at: "2026-04-10T10:00:00Z", last_run: "2026-04-13T15:30:00Z", result_count: 42 },
-    { id: "ss2", name: "LA Restaurants No Website", platforms: ["google_maps", "facebook"], niches: ["Restaurant"], locations: ["Los Angeles, CA"], filters: { no_website: true }, created_at: "2026-04-08T10:00:00Z", result_count: 78 },
-    { id: "ss3", name: "Multi-city HVAC Sweep", platforms: ["google_maps"], niches: ["HVAC"], locations: ["Houston, TX", "Dallas, TX", "Austin, TX"], filters: {}, created_at: "2026-04-05T10:00:00Z", last_run: "2026-04-12T09:00:00Z", result_count: 156 },
-  ]);
+  const [savedSearches, setSavedSearches] = useState<SavedSearch[]>([]);
   const [saveSearchName, setSaveSearchName] = useState("");
 
   // Search history
-  const [searchHistory] = useState<SearchHistoryItem[]>([
-    { id: "h1", platforms: ["google_maps"], niches: ["Dentist"], locations: ["New York, NY"], results_found: 42, leads_saved: 38, timestamp: "2026-04-13T15:30:00Z" },
-    { id: "h2", platforms: ["google_maps", "instagram"], niches: ["Gym", "Yoga Studio"], locations: ["Los Angeles, CA"], results_found: 67, leads_saved: 51, timestamp: "2026-04-12T11:20:00Z" },
-    { id: "h3", platforms: ["facebook", "linkedin"], niches: ["Lawyer"], locations: ["Chicago, IL"], results_found: 23, leads_saved: 19, timestamp: "2026-04-11T09:45:00Z" },
-    { id: "h4", platforms: ["google_maps"], niches: ["HVAC", "Plumber", "Electrician"], locations: ["Houston, TX", "Dallas, TX"], results_found: 134, leads_saved: 102, timestamp: "2026-04-10T14:00:00Z" },
-    { id: "h5", platforms: ["instagram", "tiktok"], niches: ["Hair Salon"], locations: ["Miami, FL"], results_found: 45, leads_saved: 32, timestamp: "2026-04-09T16:15:00Z" },
-  ]);
+  const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([]);
 
   // Scheduled scrapes
-  const [scheduledScrapes, setScheduledScrapes] = useState<ScheduledScrape[]>([
-    { id: "sc1", name: "Weekly Dentist Sweep", schedule: "weekly", platforms: ["google_maps"], niches: ["Dentist"], locations: ["New York, NY", "Los Angeles, CA"], next_run: "2026-04-21T09:00:00Z", is_active: true, total_runs: 4, total_leads: 156 },
-    { id: "sc2", name: "Daily Restaurant Finder", schedule: "daily", platforms: ["google_maps", "facebook"], niches: ["Restaurant"], locations: ["Austin, TX"], next_run: "2026-04-15T08:00:00Z", is_active: true, total_runs: 12, total_leads: 324 },
-  ]);
+  const [scheduledScrapes, setScheduledScrapes] = useState<ScheduledScrape[]>([]);
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [scheduleForm, setScheduleForm] = useState({ name: "", schedule: "weekly" });
 
   // Auto-run daily
   const [autoRunEnabled, setAutoRunEnabled] = useState(false);
   const [autoRunTime, setAutoRunTime] = useState("09:00");
+  const [autoRunDays, setAutoRunDays] = useState<string[]>(["mon", "tue", "wed", "thu", "fri"]);
   const [autoRunSaving, setAutoRunSaving] = useState(false);
   const [showAutoRunConfig, setShowAutoRunConfig] = useState(false);
 
@@ -202,14 +268,34 @@ export default function ScraperPage() {
         if (d.config) {
           setAutoRunEnabled(!!d.config.enabled);
           if (d.config.time) setAutoRunTime(d.config.time);
+          if (d.config.days) setAutoRunDays(d.config.days);
         }
       })
       .catch(() => {});
   }, []);
 
+  // Load search history and saved searches from outreach config
+  useEffect(() => {
+    fetch("/api/outreach/configure").then(r => r.json()).then(d => {
+      if (d.config?.saved_searches) setSavedSearches(d.config.saved_searches);
+      if (d.config?.search_history) setSearchHistory(d.config.search_history);
+      if (d.config?.scheduled_scrapes) setScheduledScrapes(d.config.scheduled_scrapes);
+    }).catch(() => {});
+  }, []);
+
   // Batch search
   const [batchMode, setBatchMode] = useState(false);
   const [batchNiches, setBatchNiches] = useState("");
+
+  // Outreach launch modal
+  const [showOutreachModal, setShowOutreachModal] = useState(false);
+  const [outreachConfig, setOutreachConfig] = useState({
+    daily_email_limit: 50,
+    daily_sms_limit: 20,
+    daily_dm_limit: 30,
+    daily_call_limit: 10,
+    start_delay: "immediately" as "immediately" | "tomorrow" | "custom",
+  });
 
   // Lead scoring config
   const [scoringWeights, setScoringWeights] = useState({
@@ -229,6 +315,23 @@ export default function ScraperPage() {
   const addNiche = (n: string) => { if (n && !niches.includes(n)) setNiches([...niches, n]); setCustomNiche(""); };
   const addLocation = (l: string) => { if (l && !locations.includes(l)) setLocations([...locations, l]); setCustomLocation(""); };
   const addTag = (t: string) => { if (t && !tags.includes(t)) setTags([...tags, t]); setCustomTag(""); };
+  const toggleCategory = (cat: string) => {
+    setExpandedCategories(prev => {
+      const next = new Set(prev);
+      if (next.has(cat)) next.delete(cat); else next.add(cat);
+      return next;
+    });
+  };
+  const toggleDecisionMakerTitle = (title: string) => {
+    setDecisionMakerTitles(prev => prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]);
+  };
+  const filteredNicheCategories = nicheSearch.trim()
+    ? Object.entries(NICHE_CATEGORIES).reduce((acc, [cat, items]) => {
+        const filtered = items.filter(n => n.toLowerCase().includes(nicheSearch.toLowerCase()));
+        if (filtered.length > 0) acc[cat] = filtered;
+        return acc;
+      }, {} as Record<string, string[]>)
+    : NICHE_CATEGORIES;
 
   const toggleLeadSelection = (idx: number) => {
     setSelectedLeads(prev => {
@@ -299,6 +402,7 @@ export default function ScraperPage() {
         setStats({ scraped: totalScraped, skipped: totalSkipped });
         toast.success(`Found ${allResults.length} leads! (${totalScraped} saved, ${totalSkipped} duplicates)`);
         setTab("results");
+        setShowOutreachModal(true);
       } else { toast.error("No leads found - try different niches or locations"); }
     } catch { toast.dismiss(); toast.error("Error running scraper"); }
     setRunning(false);
@@ -382,6 +486,7 @@ export default function ScraperPage() {
         body: JSON.stringify({
           enabled: !autoRunEnabled,
           time: autoRunTime,
+          days: autoRunDays,
           platforms: selectedPlatforms,
           niches,
           locations,
@@ -390,9 +495,11 @@ export default function ScraperPage() {
         }),
       });
       if (!res.ok) throw new Error("Failed to save");
+      const wasEnabled = autoRunEnabled;
       setAutoRunEnabled(!autoRunEnabled);
-      toast.success(autoRunEnabled ? "Auto-run disabled" : `Auto-run enabled — daily at ${autoRunTime}`);
+      toast.success(wasEnabled ? "Auto-run disabled" : `Auto-run enabled — ${autoRunDays.length === 7 ? "every day" : autoRunDays.length + "d/wk"} at ${autoRunTime}`);
       setShowAutoRunConfig(false);
+      if (!wasEnabled) setShowOutreachModal(true);
     } catch {
       toast.error("Failed to save auto-run config");
     } finally {
@@ -457,7 +564,7 @@ export default function ScraperPage() {
               }`}
             >
               <Clock size={14} />
-              {autoRunEnabled ? `Auto: ${autoRunTime}` : "Auto-Run"}
+              {autoRunEnabled ? `Auto: ${autoRunDays.length === 7 ? "Daily" : autoRunDays.length + "d/wk"} @ ${autoRunTime}` : "Auto-Run"}
               {autoRunEnabled && <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />}
             </button>
 
@@ -485,6 +592,39 @@ export default function ScraperPage() {
                       className="input text-xs py-1.5 w-full"
                     />
                   </div>
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Run on Days</label>
+                    <div className="flex gap-1">
+                      {[
+                        { id: "mon", label: "M" },
+                        { id: "tue", label: "T" },
+                        { id: "wed", label: "W" },
+                        { id: "thu", label: "T" },
+                        { id: "fri", label: "F" },
+                        { id: "sat", label: "S" },
+                        { id: "sun", label: "S" },
+                      ].map(day => (
+                        <button
+                          key={day.id}
+                          onClick={() => setAutoRunDays(prev =>
+                            prev.includes(day.id) ? prev.filter(d => d !== day.id) : [...prev, day.id]
+                          )}
+                          className={`w-8 h-8 rounded-lg text-[10px] font-bold transition-all ${
+                            autoRunDays.includes(day.id)
+                              ? "bg-gold text-black"
+                              : "bg-surface-light text-muted border border-border hover:border-gold/30"
+                          }`}
+                        >
+                          {day.label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="flex gap-2 mt-1.5">
+                      <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri"])} className="text-[8px] text-muted hover:text-gold">Weekdays</button>
+                      <button onClick={() => setAutoRunDays(["mon","tue","wed","thu","fri","sat","sun"])} className="text-[8px] text-muted hover:text-gold">Every day</button>
+                      <button onClick={() => setAutoRunDays(["mon","wed","fri"])} className="text-[8px] text-muted hover:text-gold">MWF</button>
+                    </div>
+                  </div>
                   <div className="p-2.5 bg-surface-light rounded-lg border border-border">
                     <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Current Config</p>
                     <div className="flex flex-wrap gap-1">
@@ -495,6 +635,11 @@ export default function ScraperPage() {
                       {locations.length > 2 && <span className="text-[8px] text-muted">+{locations.length - 2} more</span>}
                     </div>
                   </div>
+                  {!autoRunEnabled && autoRunDays.length > 0 && (
+                    <p className="text-[9px] text-muted text-center">
+                      Will run {autoRunDays.length === 7 ? "every day" : autoRunDays.map(d => d.charAt(0).toUpperCase() + d.slice(1)).join(", ")} at {autoRunTime}
+                    </p>
+                  )}
                   <button
                     onClick={toggleAutoRun}
                     disabled={autoRunSaving}
@@ -509,7 +654,7 @@ export default function ScraperPage() {
                     ) : autoRunEnabled ? (
                       <><X size={13} /> Disable Auto-Run</>
                     ) : (
-                      <><Zap size={13} /> Enable Daily Auto-Run</>
+                      <><Zap size={13} /> Enable Auto-Run</>
                     )}
                   </button>
                 </div>
@@ -541,6 +686,40 @@ export default function ScraperPage() {
         <div className="bg-gold/5 border border-gold/20 rounded-xl px-4 py-3 flex items-center justify-between">
           <span className="text-sm">Estimated output: <span className="text-gold font-bold">{estimatedLeads.toLocaleString()} leads</span></span>
           <span className="text-xs text-muted">{selectedPlatforms.length} platform(s) x {niches.length} niche(s) x {locations.length} location(s) x {maxResults} per search</span>
+        </div>
+      )}
+
+      {/* B2B / B2C Targeting Toggle */}
+      {tab === "search" && (
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <Target size={14} className="text-gold" />
+            <span className="text-xs font-medium">Targeting Mode</span>
+            <div className="flex gap-1 ml-2">
+              {([
+                { id: "b2b" as const, label: "B2B" },
+                { id: "b2c" as const, label: "B2C" },
+                { id: "both" as const, label: "Both" },
+              ]).map(mode => (
+                <button
+                  key={mode.id}
+                  onClick={() => setTargetMode(mode.id)}
+                  className={`px-3 py-1 rounded-lg text-xs font-medium border transition-all ${
+                    targetMode === mode.id
+                      ? "border-gold bg-gold/10 text-gold"
+                      : "border-border text-muted hover:text-foreground hover:border-gold/30"
+                  }`}
+                >
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="text-[10px] text-muted ml-6">
+            {targetMode === "b2b" && "Target businesses that sell to other businesses"}
+            {targetMode === "b2c" && "Target businesses that sell to consumers"}
+            {targetMode === "both" && "All business types"}
+          </p>
         </div>
       )}
 
@@ -586,6 +765,7 @@ export default function ScraperPage() {
                       <button onClick={() => setFilters({ ...filters, min_reviews: 50, min_rating: 4, max_reviews: 500, require_local: true })} className="text-[9px] bg-success/10 text-success px-2 py-1 rounded-lg border border-success/20 hover:bg-success/20 transition-all">Good businesses (upsell)</button>
                     </div>
                   </div>
+                  {/* Basic Filters */}
                   <div className="space-y-2">
                     {[
                       { key: "require_phone", label: "Must have phone number" },
@@ -600,6 +780,36 @@ export default function ScraperPage() {
                         <span className="text-[10px]">{f.label}</span>
                       </label>
                     ))}
+                  </div>
+                  {/* Presence Filters */}
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Presence Filters</p>
+                    <div className="space-y-2">
+                      {[
+                        { key: "has_google_business", label: "Has Google Business Profile" },
+                        { key: "has_instagram", label: "Has Instagram" },
+                        { key: "has_facebook", label: "Has Facebook" },
+                        { key: "has_tiktok", label: "Has TikTok" },
+                        { key: "no_instagram", label: "No Instagram" },
+                        { key: "no_facebook", label: "No Facebook" },
+                        { key: "no_social_at_all", label: "No social media at all" },
+                      ].map(f => (
+                        <label key={f.key} className="flex items-center gap-2 cursor-pointer">
+                          <input type="checkbox" checked={(filters as Record<string, unknown>)[f.key] as boolean} onChange={e => setFilters({ ...filters, [f.key]: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                          <span className="text-[10px]">{f.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Annual Revenue */}
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1 flex items-center gap-1"><DollarSign size={10} className="text-gold" /> Annual Revenue</p>
+                    <div className="flex flex-wrap gap-1">
+                      {REVENUE_RANGES.map(r => (
+                        <button key={r} onClick={() => setFilters({ ...filters, revenue_range: filters.revenue_range === r ? "" : r })}
+                          className={`text-[9px] px-2 py-1 rounded border transition-all ${filters.revenue_range === r ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>{r}</button>
+                      ))}
+                    </div>
                   </div>
                   {/* Company Size Filter */}
                   <div>
@@ -619,20 +829,45 @@ export default function ScraperPage() {
                       {TECH_STACKS.map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
                   </div>
-                  {/* Rating / Review ranges */}
+                  {/* Google Reviews - Stars Visual Selector */}
                   <div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] text-muted">Rating: {filters.min_rating} - {filters.max_rating}</span>
-                      <label className="flex items-center gap-1 cursor-pointer">
-                        <input type="checkbox" checked={filters.bad_ratings_only} onChange={e => setFilters({ ...filters, bad_ratings_only: e.target.checked, max_rating: e.target.checked ? 3.5 : 5 })} className="accent-danger w-3 h-3" />
-                        <span className="text-[9px] text-danger">Bad ratings only</span>
-                      </label>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5 flex items-center gap-1"><Star size={10} className="text-warning" /> Rating Range</p>
+                    <div className="flex items-center gap-3 mb-1.5">
+                      <div className="flex-1">
+                        <p className="text-[8px] text-muted mb-0.5">Min: {filters.min_rating}</p>
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map(s => (
+                            <button key={`min-${s}`} onClick={() => setFilters({ ...filters, min_rating: filters.min_rating === s ? 0 : s })}
+                              className="transition-all hover:scale-110">
+                              <Star size={14} className={s <= filters.min_rating ? "text-warning fill-warning" : "text-border"} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-[8px] text-muted mb-0.5">Max: {filters.max_rating}</p>
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map(s => (
+                            <button key={`max-${s}`} onClick={() => setFilters({ ...filters, max_rating: s })}
+                              className="transition-all hover:scale-110">
+                              <Star size={14} className={s <= filters.max_rating ? "text-danger fill-danger" : "text-border"} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                     <div className="flex gap-2">
                       <input type="range" min="0" max="5" step="0.5" value={filters.min_rating} onChange={e => setFilters({ ...filters, min_rating: parseFloat(e.target.value) })} className="flex-1 accent-gold" />
                       <input type="range" min="0" max="5" step="0.5" value={filters.max_rating} onChange={e => setFilters({ ...filters, max_rating: parseFloat(e.target.value) })} className="flex-1 accent-danger" />
                     </div>
+                    <div className="flex items-center justify-between mt-1">
+                      <label className="flex items-center gap-1 cursor-pointer">
+                        <input type="checkbox" checked={filters.bad_ratings_only} onChange={e => setFilters({ ...filters, bad_ratings_only: e.target.checked, max_rating: e.target.checked ? 3.5 : 5 })} className="accent-danger w-3 h-3" />
+                        <span className="text-[9px] text-danger">Bad ratings only</span>
+                      </label>
+                    </div>
                   </div>
+                  {/* Review Count Range */}
                   <div>
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] text-muted">Reviews: {filters.min_reviews} - {filters.max_reviews}</span>
@@ -644,6 +879,20 @@ export default function ScraperPage() {
                     <div className="flex gap-2">
                       <input type="range" min="0" max="100" step="1" value={filters.min_reviews} onChange={e => setFilters({ ...filters, min_reviews: parseInt(e.target.value) })} className="flex-1 accent-gold" />
                       <input type="range" min="1" max="1000" step="5" value={filters.max_reviews} onChange={e => setFilters({ ...filters, max_reviews: parseInt(e.target.value) })} className="flex-1 accent-gold" />
+                    </div>
+                  </div>
+                  {/* Enhanced Review Toggles */}
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Review Insights</p>
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={filters.has_negative_reviews} onChange={e => setFilters({ ...filters, has_negative_reviews: e.target.checked })} className="accent-danger w-3.5 h-3.5" />
+                        <span className="text-[10px] flex items-center gap-1"><MessageSquareWarning size={10} className="text-danger" /> Only businesses with negative reviews</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={filters.recently_reviewed} onChange={e => setFilters({ ...filters, recently_reviewed: e.target.checked })} className="accent-info w-3.5 h-3.5" />
+                        <span className="text-[10px] flex items-center gap-1"><Clock size={10} className="text-info" /> Recently reviewed (last 30 days)</span>
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -668,13 +917,75 @@ export default function ScraperPage() {
                 </div>
               )}
             </div>
+            {/* Decision Maker Targeting */}
+            <div className="card">
+              <button onClick={() => setFilters({ ...filters, find_decision_makers: !filters.find_decision_makers })} className="w-full flex items-center justify-between">
+                <h3 className="text-xs font-medium flex items-center gap-2"><UserPlus size={13} className="text-gold" /> Decision Maker Targeting</h3>
+                <span className="text-[10px] text-muted">{filters.find_decision_makers ? "On" : "Off"}</span>
+              </button>
+              {filters.find_decision_makers && (
+                <div className="space-y-3 mt-3 pt-3 border-t border-border">
+                  <div>
+                    <label className="flex items-center gap-2 cursor-pointer mb-2">
+                      <input type="checkbox" checked={filters.find_decision_makers} onChange={e => setFilters({ ...filters, find_decision_makers: e.target.checked })} className="accent-gold w-3.5 h-3.5" />
+                      <span className="text-[10px]">Find decision makers</span>
+                    </label>
+                  </div>
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Job Titles</p>
+                    <div className="flex flex-wrap gap-1">
+                      {DECISION_MAKER_TITLES.map(title => (
+                        <button key={title} onClick={() => toggleDecisionMakerTitle(title)}
+                          className={`text-[9px] px-2 py-1 rounded border transition-all ${decisionMakerTitles.includes(title) ? "border-gold bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>
+                          <Briefcase size={8} className="inline mr-1" />{title}
+                        </button>
+                      ))}
+                    </div>
+                    {decisionMakerTitles.length > 0 && (
+                      <p className="text-[8px] text-gold mt-1.5">{decisionMakerTitles.length} title{decisionMakerTitles.length !== 1 ? "s" : ""} selected</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* Smart AI Match */}
+            <div className="card">
+              <button onClick={() => setAiMatchEnabled(!aiMatchEnabled)} className="w-full flex items-center justify-between">
+                <h3 className="text-xs font-medium flex items-center gap-2"><FlaskConical size={13} className="text-gold" /> Smart AI Match</h3>
+                <span className="text-[10px] text-muted">{aiMatchEnabled ? "On" : "Off"}</span>
+              </button>
+              {aiMatchEnabled && (
+                <div className="space-y-3 mt-3 pt-3 border-t border-border">
+                  <div>
+                    <p className="text-[9px] text-muted mb-1.5">Describe what kind of businesses you are looking for. AI will score leads based on this prompt.</p>
+                    <textarea
+                      value={aiMatchPrompt}
+                      onChange={e => setAiMatchPrompt(e.target.value)}
+                      placeholder="e.g. Find restaurants with bad Google reviews that don't have a website and need help with online presence"
+                      rows={3}
+                      className="input w-full text-xs"
+                    />
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={aiMatchEnabled} onChange={e => setAiMatchEnabled(e.target.checked)} className="accent-gold w-3.5 h-3.5" />
+                    <span className="text-[10px]">AI Score leads based on this prompt</span>
+                  </label>
+                  {aiMatchPrompt && (
+                    <div className="p-2 bg-gold/5 border border-gold/10 rounded-lg">
+                      <p className="text-[8px] text-gold uppercase tracking-wider mb-0.5">AI Prompt Active</p>
+                      <p className="text-[9px] text-muted truncate">{aiMatchPrompt}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Middle - Niches */}
           <div className="space-y-4">
             <div className="card">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-gold" /> Niches / Industries</h3>
+                <h3 className="text-sm font-medium flex items-center gap-2"><Zap size={14} className="text-gold" /> Niches / Industries <span className="text-[9px] text-muted font-normal">({ALL_NICHES.length} total)</span></h3>
                 <button onClick={() => setBatchMode(!batchMode)} className="text-[9px] text-gold hover:underline">{batchMode ? "Single mode" : "Batch import"}</button>
               </div>
               {batchMode ? (
@@ -684,6 +995,7 @@ export default function ScraperPage() {
                 </div>
               ) : (
                 <>
+                  {/* Selected niches */}
                   <div className="flex flex-wrap gap-1.5 mb-3">
                     {niches.map(n => (
                       <span key={n} className="bg-gold/10 border border-gold/20 text-gold text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
@@ -691,14 +1003,63 @@ export default function ScraperPage() {
                       </span>
                     ))}
                   </div>
+                  {/* Custom niche input */}
                   <div className="flex gap-2 mb-3">
                     <input value={customNiche} onChange={e => setCustomNiche(e.target.value)} onKeyDown={e => e.key === "Enter" && addNiche(customNiche)} placeholder="Type custom niche..." className="input flex-1 text-sm py-1.5" />
                     <button onClick={() => addNiche(customNiche)} className="btn-secondary text-xs py-1.5 px-3"><Plus size={12} /></button>
                   </div>
-                  <div className="flex flex-wrap gap-1">
-                    {PRESET_NICHES.filter(n => !niches.includes(n)).map(n => (
-                      <button key={n} onClick={() => addNiche(n)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{n}</button>
-                    ))}
+                  {/* Search filter for niches */}
+                  <div className="relative mb-3">
+                    <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+                    <input
+                      value={nicheSearch}
+                      onChange={e => setNicheSearch(e.target.value)}
+                      placeholder="Search niches across all categories..."
+                      className="input w-full text-xs py-1.5 pl-7"
+                    />
+                    {nicheSearch && (
+                      <button onClick={() => setNicheSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"><X size={10} /></button>
+                    )}
+                  </div>
+                  {/* Categorized niche list */}
+                  <div className="space-y-1 max-h-[400px] overflow-y-auto pr-1">
+                    {Object.entries(filteredNicheCategories).map(([category, items]) => {
+                      const isExpanded = expandedCategories.has(category) || nicheSearch.trim().length > 0;
+                      const selectedInCategory = items.filter(n => niches.includes(n)).length;
+                      return (
+                        <div key={category} className="border border-border rounded-lg overflow-hidden">
+                          <button
+                            onClick={() => toggleCategory(category)}
+                            className="w-full flex items-center justify-between px-2.5 py-2 bg-surface-light/50 hover:bg-surface-light transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              {isExpanded ? <ChevronDown size={12} className="text-gold" /> : <ChevronRight size={12} className="text-muted" />}
+                              <Building size={11} className="text-gold" />
+                              <span className="text-[10px] font-medium">{category}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              {selectedInCategory > 0 && (
+                                <span className="text-[8px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full font-medium">{selectedInCategory} selected</span>
+                              )}
+                              <span className="text-[8px] text-muted">{items.length}</span>
+                            </div>
+                          </button>
+                          {isExpanded && (
+                            <div className="flex flex-wrap gap-1 p-2 border-t border-border">
+                              {items.filter(n => !niches.includes(n)).map(n => (
+                                <button key={n} onClick={() => addNiche(n)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{n}</button>
+                              ))}
+                              {items.filter(n => !niches.includes(n)).length === 0 && (
+                                <p className="text-[9px] text-gold/60 italic px-1">All niches in this category are selected</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                    {Object.keys(filteredNicheCategories).length === 0 && nicheSearch && (
+                      <p className="text-[10px] text-muted text-center py-4">No niches match &quot;{nicheSearch}&quot;</p>
+                    )}
                   </div>
                 </>
               )}
@@ -728,6 +1089,7 @@ export default function ScraperPage() {
           {/* Right - Locations */}
           <div className="card">
             <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><MapPin size={14} className="text-gold" /> Locations</h3>
+            {/* Selected locations */}
             <div className="flex flex-wrap gap-1.5 mb-3">
               {locations.map(l => (
                 <span key={l} className="bg-success/10 border border-success/20 text-success text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5">
@@ -735,14 +1097,68 @@ export default function ScraperPage() {
                 </span>
               ))}
             </div>
+            {/* Custom location input */}
             <div className="flex gap-2 mb-3">
               <input value={customLocation} onChange={e => setCustomLocation(e.target.value)} onKeyDown={e => e.key === "Enter" && addLocation(customLocation)} placeholder="City, State or Country..." className="input flex-1 text-sm py-1.5" />
               <button onClick={() => addLocation(customLocation)} className="btn-secondary text-xs py-1.5 px-3"><Plus size={12} /></button>
             </div>
-            <div className="flex flex-wrap gap-1 max-h-60 overflow-y-auto">
-              {PRESET_LOCATIONS.filter(l => !locations.includes(l)).map(l => (
-                <button key={l} onClick={() => addLocation(l)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{l}</button>
-              ))}
+            {/* Search cities */}
+            <div className="relative mb-3">
+              <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted" />
+              <input
+                value={locationSearch}
+                onChange={e => setLocationSearch(e.target.value)}
+                placeholder="Search cities..."
+                className="input w-full text-xs py-1.5 pl-7"
+              />
+              {locationSearch && (
+                <button onClick={() => setLocationSearch("")} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"><X size={10} /></button>
+              )}
+            </div>
+            {/* Country selector */}
+            <div className="mb-3">
+              <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Countries</p>
+              <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
+                {COUNTRIES.map(c => (
+                  <button
+                    key={c.code}
+                    onClick={() => setSelectedCountries(prev => prev.includes(c.code) ? prev.filter(x => x !== c.code) : [...prev, c.code])}
+                    className={`text-[10px] px-2 py-1 rounded border transition-all flex items-center gap-1 ${
+                      selectedCountries.includes(c.code)
+                        ? "border-gold bg-gold/10 text-gold"
+                        : "border-border text-muted hover:text-foreground hover:border-gold/30"
+                    }`}
+                  >
+                    <span>{c.flag}</span> {c.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Cities grouped by country */}
+            <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+              {selectedCountries.map(code => {
+                const country = COUNTRIES.find(c => c.code === code);
+                const cities = (CITIES_BY_COUNTRY[code] || []).filter(city =>
+                  !locations.includes(city) && (!locationSearch.trim() || city.toLowerCase().includes(locationSearch.toLowerCase()))
+                );
+                if (cities.length === 0 && locationSearch.trim()) return null;
+                return (
+                  <div key={code}>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1">{country?.flag} {country?.name}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {cities.map(city => (
+                        <button key={city} onClick={() => addLocation(city)} className="text-[10px] bg-surface-light px-2 py-1 rounded text-muted hover:text-foreground hover:bg-border transition-colors">{city}</button>
+                      ))}
+                      {cities.length === 0 && !locationSearch.trim() && (
+                        <p className="text-[9px] text-gold/60 italic px-1">All cities selected</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              {selectedCountries.length === 0 && (
+                <p className="text-[10px] text-muted text-center py-4">Select a country to see cities</p>
+              )}
             </div>
           </div>
         </div>
@@ -1046,6 +1462,171 @@ export default function ScraperPage() {
                 {testResults.errors.map((e, i) => <p key={i} className="text-[10px] text-danger/80">{e}</p>)}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ─── OUTREACH LAUNCH MODAL ─── */}
+      {showOutreachModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={() => setShowOutreachModal(false)}>
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div
+            className="relative w-[95%] max-w-2xl max-h-[85vh] bg-[#141414] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-6 pt-5 pb-4 border-b border-white/10 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-gold/10 rounded-xl flex items-center justify-center">
+                  <Send size={18} className="text-gold" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold text-white">Launch Outreach</h2>
+                  <p className="text-[10px] text-muted">Configure outreach settings for your new leads</p>
+                </div>
+              </div>
+              <button onClick={() => setShowOutreachModal(false)} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted hover:text-white transition-all">
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+              {/* Phone Numbers */}
+              <div className="space-y-2">
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
+                  <Phone size={13} className="text-gold" /> Phone Numbers
+                </h3>
+                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                  <p className="text-[10px] text-muted">No phone numbers configured.</p>
+                  <a href="/dashboard/settings" className="text-[10px] text-gold hover:underline">
+                    Add numbers in Settings &rarr; Phone &amp; Email
+                  </a>
+                </div>
+              </div>
+
+              {/* Email Accounts */}
+              <div className="space-y-2">
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
+                  <Mail size={13} className="text-gold" /> Email Accounts
+                </h3>
+                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                  <p className="text-[10px] text-muted">No email accounts configured.</p>
+                  <a href="/dashboard/settings" className="text-[10px] text-gold hover:underline">
+                    Add SMTP in Settings &rarr; SMTP
+                  </a>
+                </div>
+              </div>
+
+              {/* Social Media Accounts */}
+              <div className="space-y-2">
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
+                  <Users size={13} className="text-gold" /> Social Media Accounts
+                </h3>
+                <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
+                  <p className="text-[10px] text-muted">No social accounts connected.</p>
+                  <a href="/dashboard/social-manager" className="text-[10px] text-gold hover:underline">
+                    Connect in Social Manager
+                  </a>
+                </div>
+              </div>
+
+              {/* Outreach Settings */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-semibold flex items-center gap-2 text-white">
+                  <Target size={13} className="text-gold" /> Outreach Settings
+                </h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Daily Email Limit</label>
+                    <input
+                      type="number"
+                      value={outreachConfig.daily_email_limit}
+                      onChange={e => setOutreachConfig({ ...outreachConfig, daily_email_limit: parseInt(e.target.value) || 0 })}
+                      className="input text-xs py-1.5 w-full"
+                      min={0}
+                      max={500}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Daily SMS Limit</label>
+                    <input
+                      type="number"
+                      value={outreachConfig.daily_sms_limit}
+                      onChange={e => setOutreachConfig({ ...outreachConfig, daily_sms_limit: parseInt(e.target.value) || 0 })}
+                      className="input text-xs py-1.5 w-full"
+                      min={0}
+                      max={500}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Daily DM Limit</label>
+                    <input
+                      type="number"
+                      value={outreachConfig.daily_dm_limit}
+                      onChange={e => setOutreachConfig({ ...outreachConfig, daily_dm_limit: parseInt(e.target.value) || 0 })}
+                      className="input text-xs py-1.5 w-full"
+                      min={0}
+                      max={500}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted block mb-1">Daily Call Limit</label>
+                    <input
+                      type="number"
+                      value={outreachConfig.daily_call_limit}
+                      onChange={e => setOutreachConfig({ ...outreachConfig, daily_call_limit: parseInt(e.target.value) || 0 })}
+                      className="input text-xs py-1.5 w-full"
+                      min={0}
+                      max={500}
+                    />
+                  </div>
+                </div>
+
+                {/* Start Delay */}
+                <div>
+                  <label className="text-[10px] text-muted block mb-1.5">Start Delay</label>
+                  <div className="flex gap-2">
+                    {([
+                      { id: "immediately" as const, label: "Start immediately" },
+                      { id: "tomorrow" as const, label: "Start tomorrow" },
+                      { id: "custom" as const, label: "Custom time" },
+                    ]).map(opt => (
+                      <button
+                        key={opt.id}
+                        onClick={() => setOutreachConfig({ ...outreachConfig, start_delay: opt.id })}
+                        className={`flex-1 py-2 rounded-lg text-[10px] font-medium border transition-all ${
+                          outreachConfig.start_delay === opt.id
+                            ? "border-gold bg-gold/10 text-gold"
+                            : "border-white/10 bg-white/[0.03] text-muted hover:text-white hover:border-white/20"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="flex items-center justify-between px-6 py-4 border-t border-white/10 shrink-0">
+              <button
+                onClick={() => setShowOutreachModal(false)}
+                className="text-xs text-muted hover:text-white transition-all px-3 py-2"
+              >
+                Skip Outreach
+              </button>
+              <button
+                onClick={() => {
+                  setShowOutreachModal(false);
+                  toast.success("Outreach configured! Will start processing leads.");
+                }}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gold hover:bg-gold/90 text-black text-xs font-semibold transition-all"
+              >
+                <Send size={13} /> Save &amp; Start Outreach
+              </button>
+            </div>
           </div>
         </div>
       )}

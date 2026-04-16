@@ -1,33 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Phone, Mail, Plus, Search, X, Check, Trash2,
   Globe, Shield, Copy, Settings, Send, AlertCircle,
-  RefreshCw,
-  Server
+  RefreshCw, Server, Activity, Zap, TrendingUp,
+  BarChart3, Users
 } from "lucide-react";
 import PageAI from "@/components/page-ai";
 
 /* ── Types ── */
 type MainTab = "phone" | "email";
 type NumberType = "local" | "toll-free" | "mobile";
-type PhoneStatus = "active" | "suspended";
-type EmailStatus = "verified" | "pending";
+type PhoneStatus = "active" | "suspended" | "warming";
+type EmailStatus = "verified" | "pending" | "warming";
 type SmtpOption = "shortstack" | "custom";
+type WarmupStage = "new" | "warming" | "ramping" | "full";
+type PhoneSource = "pool" | "client";
+type PurchaseTarget = "pool" | "client";
 
-interface PhoneNumber {
+interface PoolPhone {
   id: string;
   number: string;
+  label?: string;
   type: NumberType;
   status: PhoneStatus;
   capabilities: ("Voice" | "SMS" | "MMS")[];
   monthlyCost: number;
   purchasedDate: string;
   country: string;
+  source: PhoneSource;
+  assignedTo?: string;       // client name or undefined for pool
+  assignedClientId?: string;
+  dailyLimit: number;
+  sentToday: number;
+  warmupStage: WarmupStage;
 }
 
-interface EmailAddress {
+interface PoolEmail {
   id: string;
   email: string;
   displayName: string;
@@ -35,6 +45,10 @@ interface EmailAddress {
   provider: string;
   dailyLimit: number;
   sentToday: number;
+  warmupStage: WarmupStage;
+  smtpHost?: string;
+  smtpPort?: string;
+  smtpUser?: string;
 }
 
 interface Domain {
@@ -52,14 +66,15 @@ interface AvailableNumber {
   type: NumberType;
   monthlyCost: number;
   capabilities: ("Voice" | "SMS" | "MMS")[];
+  locality?: string;
+  region?: string;
 }
 
-/* ── Mock Data ── */
-const MOCK_PHONES: PhoneNumber[] = [];
-
-const MOCK_EMAILS: EmailAddress[] = [];
-
-const MOCK_DOMAINS: Domain[] = [];
+interface RotationStats {
+  rotationActive: boolean;
+  phones: { active: number; totalCapacity: number; usedToday: number };
+  emails: { active: number; totalCapacity: number; usedToday: number };
+}
 
 const COUNTRIES = [
   { code: "US", name: "United States", flag: "US" },
@@ -74,87 +89,350 @@ const NUMBER_TYPES: { value: NumberType; label: string; cost: number }[] = [
   { value: "mobile", label: "Mobile", cost: 1.50 },
 ];
 
-const MOCK_AVAILABLE: AvailableNumber[] = [];
+const WARMUP_BADGE: Record<WarmupStage, { label: string; class: string }> = {
+  new:     { label: "New",     class: "bg-red-500/10 text-red-400 border-red-500/20" },
+  warming: { label: "Warming", class: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" },
+  ramping: { label: "Ramping", class: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
+  full:    { label: "Full",    class: "bg-green-500/10 text-green-400 border-green-500/20" },
+};
 
 /* ── Component ── */
 export default function PhoneEmailPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("phone");
 
-  /* Phone state */
-  const [phones, setPhones] = useState<PhoneNumber[]>(MOCK_PHONES);
+  /* ── Pool / unified state ── */
+  const [poolPhones, setPoolPhones] = useState<PoolPhone[]>([]);
+  const [poolEmails, setPoolEmails] = useState<PoolEmail[]>([]);
+  const [rotationStats, setRotationStats] = useState<RotationStats | null>(null);
+
+  /* Phone buy modal state */
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [buyCountry, setBuyCountry] = useState("US");
   const [buyAreaCode, setBuyAreaCode] = useState("");
   const [buyType, setBuyType] = useState<NumberType>("local");
   const [searchResults, setSearchResults] = useState<AvailableNumber[]>([]);
   const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState("");
+  const [purchasing, setPurchasing] = useState(false);
+  const [purchaseError, setPurchaseError] = useState("");
+  const [purchaseTarget, setPurchaseTarget] = useState<PurchaseTarget>("pool");
+
+  /* Manual phone add modal */
+  const [showManualPhoneModal, setShowManualPhoneModal] = useState(false);
+  const [manualPhone, setManualPhone] = useState("");
+  const [manualLabel, setManualLabel] = useState("");
+  const [manualType, setManualType] = useState<NumberType>("local");
+  const [manualAdding, setManualAdding] = useState(false);
+
+  /* Client state for purchase assignment */
+  const [clients, setClients] = useState<{id: string; business_name: string; twilio_phone_number?: string}[]>([]);
+  const [selectedClientId, setSelectedClientId] = useState("");
+
+  /* Loading */
+  const [loading, setLoading] = useState(true);
 
   /* Email state */
-  const [emails, setEmails] = useState<EmailAddress[]>(MOCK_EMAILS);
-  const [domains, setDomains] = useState<Domain[]>(MOCK_DOMAINS);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newDisplayName, setNewDisplayName] = useState("");
   const [smtpOption, setSmtpOption] = useState<SmtpOption>("shortstack");
   const [customSmtp, setCustomSmtp] = useState({ host: "", port: "587", user: "", pass: "" });
+  const [emailAdding, setEmailAdding] = useState(false);
+
+  /* Domain state */
+  const [domains, setDomains] = useState<Domain[]>([]);
   const [showDomainModal, setShowDomainModal] = useState(false);
   const [newDomain, setNewDomain] = useState("");
 
-  /* ── Stats ── */
-  const totalNumbers = phones.length;
-  const monthlyCost = phones.reduce((s, p) => s + p.monthlyCost, 0);
-  const smsSentThisMonth = 0;
-  const callsThisMonth = 0;
+  /* ── Data Fetching ── */
+  const fetchPoolPhones = useCallback(async () => {
+    try {
+      const res = await fetch("/api/senders/phones");
+      const data = await res.json();
+      return (data.phones || []).map((p: any) => ({
+        id: p.id || `pool-${p.phone_number}`,
+        number: p.phone_number || p.number,
+        label: p.label,
+        type: (p.type || "local") as NumberType,
+        status: (p.status || "active") as PhoneStatus,
+        capabilities: p.capabilities || ["Voice", "SMS"],
+        monthlyCost: p.monthly_cost ?? 1.50,
+        purchasedDate: p.created_at ? new Date(p.created_at).toISOString().split("T")[0] : "",
+        country: p.country || "US",
+        source: "pool" as PhoneSource,
+        assignedTo: p.assigned_to_name || undefined,
+        assignedClientId: p.assigned_to_client_id || undefined,
+        dailyLimit: p.daily_limit ?? 100,
+        sentToday: p.sent_today ?? 0,
+        warmupStage: (p.warmup_stage || "new") as WarmupStage,
+      }));
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const fetchClientPhones = useCallback(async () => {
+    try {
+      const res = await fetch("/api/twilio/numbers");
+      const data = await res.json();
+      return (data.numbers || []).map((p: any) => ({
+        id: p.id || `twilio-${p.number}`,
+        number: p.number,
+        label: undefined,
+        type: (p.type || "local") as NumberType,
+        status: (p.status || "active") as PhoneStatus,
+        capabilities: p.capabilities || ["Voice", "SMS"],
+        monthlyCost: p.monthlyCost ?? 1.50,
+        purchasedDate: p.purchasedDate || "",
+        country: p.country || "US",
+        source: "client" as PhoneSource,
+        assignedTo: p.clientName || p.assigned_to || undefined,
+        assignedClientId: p.clientId || undefined,
+        dailyLimit: p.dailyLimit ?? p.daily_limit ?? 200,
+        sentToday: p.sentToday ?? p.sent_today ?? 0,
+        warmupStage: (p.warmupStage || p.warmup_stage || "full") as WarmupStage,
+      }));
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const fetchPoolEmails = useCallback(async () => {
+    try {
+      const res = await fetch("/api/senders/emails");
+      const data = await res.json();
+      return (data.emails || []).map((e: any) => ({
+        id: e.id || `email-${e.email}`,
+        email: e.email,
+        displayName: e.display_name || e.displayName || e.email.split("@")[0],
+        status: (e.status || "pending") as EmailStatus,
+        provider: e.provider || e.smtp_provider || "ShortStack SMTP",
+        dailyLimit: e.daily_limit ?? e.dailyLimit ?? 500,
+        sentToday: e.sent_today ?? e.sentToday ?? 0,
+        warmupStage: (e.warmup_stage || e.warmupStage || "new") as WarmupStage,
+        smtpHost: e.smtp_host,
+        smtpPort: e.smtp_port,
+        smtpUser: e.smtp_user,
+      }));
+    } catch {
+      return [];
+    }
+  }, []);
+
+  const fetchRotationStats = useCallback(async () => {
+    try {
+      const res = await fetch("/api/senders/stats");
+      const data = await res.json();
+      setRotationStats({
+        rotationActive: data.rotation_active ?? data.rotationActive ?? true,
+        phones: {
+          active: data.phones?.active ?? 0,
+          totalCapacity: data.phones?.total_capacity ?? data.phones?.totalCapacity ?? 0,
+          usedToday: data.phones?.used_today ?? data.phones?.usedToday ?? 0,
+        },
+        emails: {
+          active: data.emails?.active ?? 0,
+          totalCapacity: data.emails?.total_capacity ?? data.emails?.totalCapacity ?? 0,
+          usedToday: data.emails?.used_today ?? data.emails?.usedToday ?? 0,
+        },
+      });
+    } catch {
+      // Compute from local data as fallback
+      setRotationStats(null);
+    }
+  }, []);
+
+  const fetchClients = useCallback(async () => {
+    try {
+      const res = await fetch("/api/clients");
+      const data = await res.json();
+      setClients(data.clients || []);
+    } catch { /* ignore */ }
+  }, []);
+
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    const [pool, client, emails] = await Promise.all([
+      fetchPoolPhones(),
+      fetchClientPhones(),
+      fetchPoolEmails(),
+    ]);
+    // Merge phones, dedup by number
+    const seen = new Set<string>();
+    const merged: PoolPhone[] = [];
+    for (const p of [...pool, ...client]) {
+      const key = p.number.replace(/\D/g, "");
+      if (!seen.has(key)) { seen.add(key); merged.push(p); }
+    }
+    setPoolPhones(merged);
+    setPoolEmails(emails);
+    setLoading(false);
+  }, [fetchPoolPhones, fetchClientPhones, fetchPoolEmails]);
+
+  useEffect(() => {
+    loadAll();
+    fetchClients();
+    fetchRotationStats();
+  }, [loadAll, fetchClients, fetchRotationStats]);
+
+  /* ── Computed stats (fallback when API stats unavailable) ── */
+  const computedStats: RotationStats = rotationStats ?? {
+    rotationActive: poolPhones.length > 1 || poolEmails.length > 1,
+    phones: {
+      active: poolPhones.filter(p => p.status === "active" || p.status === "warming").length,
+      totalCapacity: poolPhones.reduce((s, p) => s + p.dailyLimit, 0),
+      usedToday: poolPhones.reduce((s, p) => s + p.sentToday, 0),
+    },
+    emails: {
+      active: poolEmails.filter(e => e.status === "verified" || e.status === "warming").length,
+      totalCapacity: poolEmails.reduce((s, e) => s + e.dailyLimit, 0),
+      usedToday: poolEmails.reduce((s, e) => s + e.sentToday, 0),
+    },
+  };
+
+  const totalPhoneCapacity = computedStats.phones.totalCapacity;
+  const totalEmailCapacity = computedStats.emails.totalCapacity;
+  const totalCapacity = totalPhoneCapacity + totalEmailCapacity;
+  const totalUsed = computedStats.phones.usedToday + computedStats.emails.usedToday;
+  const totalRemaining = totalCapacity - totalUsed;
 
   /* ── Handlers ── */
-  const searchNumbers = () => {
+  const searchNumbers = async () => {
     setSearching(true);
-    setTimeout(() => {
-      const filtered = MOCK_AVAILABLE.filter(n => n.type === buyType);
-      setSearchResults(filtered);
-      setSearching(false);
-    }, 800);
+    setSearchError("");
+    try {
+      const res = await fetch(`/api/twilio/provision?country=${buyCountry}&area_code=${buyAreaCode}`);
+      const data = await res.json();
+      if (data.error) { setSearchError(data.error); setSearchResults([]); setSearching(false); return; }
+      setSearchResults((data.numbers || []).map((n: any) => ({
+        number: n.phone,
+        type: buyType,
+        monthlyCost: NUMBER_TYPES.find(t => t.value === buyType)?.cost || 1.50,
+        capabilities: ["Voice", "SMS"] as ("Voice" | "SMS" | "MMS")[],
+        locality: n.locality,
+        region: n.region,
+      })));
+    } catch { setSearchError("Failed to search. Check Twilio configuration."); }
+    setSearching(false);
   };
 
-  const purchaseNumber = (num: AvailableNumber) => {
-    const newPhone: PhoneNumber = {
-      id: `p${Date.now()}`,
-      number: num.number,
-      type: num.type,
-      status: "active",
-      capabilities: num.capabilities,
-      monthlyCost: num.monthlyCost,
-      purchasedDate: new Date().toISOString().split("T")[0],
-      country: buyCountry,
-    };
-    setPhones(prev => [...prev, newPhone]);
-    setSearchResults(prev => prev.filter(n => n.number !== num.number));
+  const purchaseNumber = async (_num: AvailableNumber) => {
+    if (purchaseTarget === "client" && !selectedClientId) {
+      setPurchaseError("Select a client to assign this number to");
+      return;
+    }
+    setPurchasing(true);
+    setPurchaseError("");
+    try {
+      const res = await fetch("/api/twilio/provision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: purchaseTarget === "client" ? selectedClientId : undefined,
+          area_code: buyAreaCode,
+          country: buyCountry,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) { setPurchaseError(data.error); setPurchasing(false); return; }
+
+      // If adding to pool, also register with the senders API
+      if (purchaseTarget === "pool") {
+        try {
+          await fetch("/api/senders/phones", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              phone_number: data.phone || data.number || _num.number,
+              type: buyType,
+              label: `Pool - ${buyAreaCode || buyCountry}`,
+              country: buyCountry,
+            }),
+          });
+        } catch { /* pool registration best-effort */ }
+      }
+
+      // Refresh everything
+      await loadAll();
+      await fetchClients();
+      await fetchRotationStats();
+      setShowBuyModal(false);
+      setSearchResults([]);
+    } catch { setPurchaseError("Purchase failed. Try again."); }
+    setPurchasing(false);
   };
 
-  const releaseNumber = (id: string) => {
-    setPhones(prev => prev.filter(p => p.id !== id));
+  const addManualPhone = async () => {
+    if (!manualPhone.trim()) return;
+    setManualAdding(true);
+    try {
+      const res = await fetch("/api/senders/phones", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          phone_number: manualPhone,
+          type: manualType,
+          label: manualLabel || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) { setManualAdding(false); return; }
+      await loadAll();
+      await fetchRotationStats();
+      setManualPhone("");
+      setManualLabel("");
+      setManualType("local");
+      setShowManualPhoneModal(false);
+    } catch { /* ignore */ }
+    setManualAdding(false);
   };
 
-  const addEmail = () => {
+  const releaseNumber = async (phone: PoolPhone) => {
+    // Remove from pool API
+    try {
+      await fetch(`/api/senders/phones/${phone.id}`, { method: "DELETE" });
+    } catch { /* ignore */ }
+    setPoolPhones(prev => prev.filter(p => p.id !== phone.id));
+    fetchRotationStats();
+  };
+
+  const addEmail = async () => {
     if (!newEmail.trim()) return;
-    const entry: EmailAddress = {
-      id: `e${Date.now()}`,
-      email: newEmail,
-      displayName: newDisplayName || newEmail.split("@")[0],
-      status: "pending",
-      provider: smtpOption === "shortstack" ? "ShortStack SMTP" : "Custom SMTP",
-      dailyLimit: smtpOption === "shortstack" ? 500 : 1000,
-      sentToday: 0,
-    };
-    setEmails(prev => [...prev, entry]);
+    setEmailAdding(true);
+    try {
+      const res = await fetch("/api/senders/emails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: newEmail,
+          display_name: newDisplayName || newEmail.split("@")[0],
+          provider: smtpOption === "shortstack" ? "ShortStack SMTP" : "Custom SMTP",
+          daily_limit: smtpOption === "shortstack" ? 500 : 1000,
+          smtp_host: smtpOption === "custom" ? customSmtp.host : undefined,
+          smtp_port: smtpOption === "custom" ? customSmtp.port : undefined,
+          smtp_user: smtpOption === "custom" ? customSmtp.user : undefined,
+          smtp_pass: smtpOption === "custom" ? customSmtp.pass : undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!data.error) {
+        await loadAll();
+        await fetchRotationStats();
+      }
+    } catch { /* ignore */ }
     setNewEmail("");
     setNewDisplayName("");
     setCustomSmtp({ host: "", port: "587", user: "", pass: "" });
     setShowEmailModal(false);
+    setEmailAdding(false);
   };
 
-  const removeEmail = (id: string) => {
-    setEmails(prev => prev.filter(e => e.id !== id));
+  const removeEmail = async (email: PoolEmail) => {
+    try {
+      await fetch(`/api/senders/emails/${email.id}`, { method: "DELETE" });
+    } catch { /* ignore */ }
+    setPoolEmails(prev => prev.filter(e => e.id !== email.id));
+    fetchRotationStats();
   };
 
   const addDomain = () => {
@@ -177,11 +455,23 @@ export default function PhoneEmailPage() {
     setDomains(prev => prev.filter(d => d.id !== id));
   };
 
+  /* ── Helpers ── */
   const capBadgeColor = (cap: string) => {
     if (cap === "Voice") return "bg-purple-500/10 text-purple-400 border-purple-500/20";
     if (cap === "SMS") return "bg-blue-500/10 text-blue-400 border-blue-500/20";
     return "bg-green-500/10 text-green-400 border-green-500/20";
   };
+
+  const pct = (used: number, total: number) => total > 0 ? Math.min((used / total) * 100, 100) : 0;
+
+  const pctBarColor = (used: number, total: number) => {
+    const p = pct(used, total);
+    if (p > 85) return "bg-red-500";
+    if (p > 60) return "bg-yellow-500";
+    return "bg-gold";
+  };
+
+  const clientsWithoutPhone = clients.filter(c => !c.twilio_phone_number);
 
   return (
     <div className="fade-in space-y-5">
@@ -192,9 +482,90 @@ export default function PhoneEmailPage() {
             <Phone size={20} className="text-gold" />
           </div>
           <div>
-            <h1 className="text-lg font-bold">Phone & Email</h1>
-            <p className="text-xs text-muted">Purchase phone numbers and configure email sending addresses for outreach</p>
+            <h1 className="text-lg font-bold">Sender Management</h1>
+            <p className="text-xs text-muted">Manage your phone & email sender pool with smart rotation for outreach campaigns</p>
           </div>
+        </div>
+      </div>
+
+      {/* ════════════════════ ROTATION STATS CARD ════════════════════ */}
+      <div className="card p-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Activity size={14} className="text-gold" />
+            <span className="text-xs font-semibold">Smart Rotation</span>
+            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${
+              computedStats.rotationActive
+                ? "bg-green-500/10 text-green-400 border-green-500/20"
+                : "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+            }`}>
+              {computedStats.rotationActive ? "Active" : "Inactive"}
+            </span>
+          </div>
+          <button onClick={() => { loadAll(); fetchRotationStats(); }}
+            className="text-[10px] px-2 py-1 rounded-lg text-muted hover:text-foreground border border-border hover:border-gold/20 transition-all flex items-center gap-1">
+            <RefreshCw size={10} /> Refresh
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* Total pool capacity */}
+          <div className="p-3 rounded-lg bg-background border border-border">
+            <div className="flex items-center gap-1.5 mb-1">
+              <BarChart3 size={11} className="text-gold" />
+              <span className="text-[9px] text-muted uppercase tracking-wider">Total Capacity</span>
+            </div>
+            <p className="text-lg font-bold text-gold">{totalCapacity.toLocaleString()}</p>
+            <p className="text-[9px] text-muted">msgs/day across all senders</p>
+          </div>
+
+          {/* Used today */}
+          <div className="p-3 rounded-lg bg-background border border-border">
+            <div className="flex items-center gap-1.5 mb-1">
+              <TrendingUp size={11} className="text-cyan-400" />
+              <span className="text-[9px] text-muted uppercase tracking-wider">Used Today</span>
+            </div>
+            <p className="text-lg font-bold text-cyan-400">{totalUsed.toLocaleString()}</p>
+            <div className="mt-1 h-1.5 bg-border rounded-full overflow-hidden">
+              <div className={`h-full rounded-full transition-all ${pctBarColor(totalUsed, totalCapacity)}`}
+                style={{ width: `${pct(totalUsed, totalCapacity)}%` }} />
+            </div>
+          </div>
+
+          {/* Phone senders */}
+          <div className="p-3 rounded-lg bg-background border border-border">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Phone size={11} className="text-purple-400" />
+              <span className="text-[9px] text-muted uppercase tracking-wider">Phone Senders</span>
+            </div>
+            <p className="text-lg font-bold text-purple-400">{computedStats.phones.active}</p>
+            <p className="text-[9px] text-muted">
+              {computedStats.phones.usedToday.toLocaleString()} / {computedStats.phones.totalCapacity.toLocaleString()} used
+            </p>
+          </div>
+
+          {/* Email senders */}
+          <div className="p-3 rounded-lg bg-background border border-border">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Mail size={11} className="text-blue-400" />
+              <span className="text-[9px] text-muted uppercase tracking-wider">Email Senders</span>
+            </div>
+            <p className="text-lg font-bold text-blue-400">{computedStats.emails.active}</p>
+            <p className="text-[9px] text-muted">
+              {computedStats.emails.usedToday.toLocaleString()} / {computedStats.emails.totalCapacity.toLocaleString()} used
+            </p>
+          </div>
+        </div>
+
+        {/* Remaining capacity bar */}
+        <div className="flex items-center gap-3 text-[10px]">
+          <Zap size={11} className="text-gold shrink-0" />
+          <span className="text-muted shrink-0">Remaining today:</span>
+          <div className="flex-1 h-2 bg-border rounded-full overflow-hidden">
+            <div className="h-full bg-green-500/70 rounded-full transition-all"
+              style={{ width: `${pct(totalRemaining, totalCapacity)}%` }} />
+          </div>
+          <span className="font-semibold text-green-400 shrink-0">{totalRemaining.toLocaleString()}</span>
         </div>
       </div>
 
@@ -217,31 +588,22 @@ export default function PhoneEmailPage() {
       {/* ════════════════════ PHONE NUMBERS TAB ════════════════════ */}
       {activeTab === "phone" && (
         <div className="space-y-4">
-          {/* Stats Strip */}
-          <div className="grid grid-cols-4 gap-3">
-            {[
-              { label: "Total Numbers", value: totalNumbers, color: "text-gold" },
-              { label: "Monthly Cost", value: `$${monthlyCost.toFixed(2)}`, color: "text-cyan-400" },
-              { label: "SMS Sent This Month", value: smsSentThisMonth.toLocaleString(), color: "text-blue-400" },
-              { label: "Calls This Month", value: callsThisMonth.toLocaleString(), color: "text-purple-400" },
-            ].map((s, i) => (
-              <div key={i} className="card p-3 text-center">
-                <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
-                <p className={`text-lg font-bold mt-0.5 ${s.color}`}>{s.value}</p>
-              </div>
-            ))}
-          </div>
-
           {/* Section Header */}
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-sm font-semibold">Phone Numbers</h2>
-              <p className="text-[10px] text-muted">Purchase and manage phone numbers for calls and SMS</p>
+              <p className="text-[10px] text-muted">Pool &amp; client-assigned numbers for calls and SMS outreach</p>
             </div>
-            <button onClick={() => { setShowBuyModal(true); setSearchResults([]); }}
-              className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
-              <Plus size={12} /> Buy New Number
-            </button>
+            <div className="flex items-center gap-2">
+              <button onClick={() => { setShowManualPhoneModal(true); setManualPhone(""); setManualLabel(""); setManualType("local"); }}
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-background text-foreground border border-border hover:border-gold/20 transition-all flex items-center gap-1">
+                <Plus size={12} /> Add Existing Number
+              </button>
+              <button onClick={() => { setShowBuyModal(true); setSearchResults([]); setSearchError(""); setPurchaseError(""); setSelectedClientId(""); setPurchaseTarget("pool"); }}
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1">
+                <Plus size={12} /> Buy New Number
+              </button>
+            </div>
           </div>
 
           {/* Active Numbers Table */}
@@ -251,70 +613,116 @@ export default function PhoneEmailPage() {
                 <thead>
                   <tr className="border-b border-border text-muted text-left">
                     <th className="p-3 font-medium">Phone Number</th>
+                    <th className="p-3 font-medium">Assigned To</th>
                     <th className="p-3 font-medium">Type</th>
                     <th className="p-3 font-medium">Status</th>
+                    <th className="p-3 font-medium">Warmup</th>
+                    <th className="p-3 font-medium">Daily Limit</th>
+                    <th className="p-3 font-medium">Sent Today</th>
                     <th className="p-3 font-medium">Capabilities</th>
-                    <th className="p-3 font-medium">Monthly Cost</th>
-                    <th className="p-3 font-medium">Purchased</th>
                     <th className="p-3 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {phones.map(p => (
-                    <tr key={p.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
-                      <td className="p-3 font-mono font-medium text-foreground">{p.number}</td>
-                      <td className="p-3">
-                        <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-gold/10 text-gold border border-gold/20 capitalize">
-                          {p.type}
-                        </span>
-                      </td>
-                      <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
-                          p.status === "active"
-                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                            : "bg-red-500/10 text-red-400 border border-red-500/20"
-                        }`}>
-                          {p.status}
-                        </span>
-                      </td>
-                      <td className="p-3">
-                        <div className="flex gap-1">
-                          {p.capabilities.map(c => (
-                            <span key={c} className={`px-1.5 py-0.5 rounded text-[8px] font-medium border ${capBadgeColor(c)}`}>
-                              {c}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="p-3 text-muted">${p.monthlyCost.toFixed(2)}/mo</td>
-                      <td className="p-3 text-muted">{p.purchasedDate}</td>
-                      <td className="p-3 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <a href="/dashboard/voice-receptionist"
-                            className="px-2 py-1 rounded text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition-all flex items-center gap-1">
-                            <Settings size={10} /> Configure
-                          </a>
-                          <button onClick={() => releaseNumber(p.id)}
-                            className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
-                            <Trash2 size={10} /> Release
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {phones.length === 0 && (
+                  {loading ? (
                     <tr>
-                      <td colSpan={7} className="p-8 text-center text-muted text-xs">
-                        No phone numbers yet. Click &quot;Buy New Number&quot; to get started.
+                      <td colSpan={9} className="p-8 text-center">
+                        <div className="flex items-center justify-center gap-2 text-muted text-xs">
+                          <RefreshCw size={14} className="animate-spin" />
+                          Loading phone numbers...
+                        </div>
                       </td>
                     </tr>
+                  ) : (
+                    <>
+                      {poolPhones.map(p => (
+                        <tr key={p.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
+                          <td className="p-3">
+                            <div>
+                              <span className="font-mono font-medium text-foreground">{p.number}</span>
+                              {p.label && <span className="block text-[9px] text-muted mt-0.5">{p.label}</span>}
+                            </div>
+                          </td>
+                          <td className="p-3">
+                            {p.assignedTo ? (
+                              <span className="flex items-center gap-1 text-foreground">
+                                <Users size={10} className="text-muted" /> {p.assignedTo}
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                                Pool
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-3">
+                            <span className="px-2 py-0.5 rounded-full text-[9px] font-medium bg-gold/10 text-gold border border-gold/20 capitalize">
+                              {p.type}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
+                              p.status === "active"
+                                ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                                : p.status === "warming"
+                                ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                : "bg-red-500/10 text-red-400 border border-red-500/20"
+                            }`}>
+                              {p.status}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${WARMUP_BADGE[p.warmupStage].class}`}>
+                              {WARMUP_BADGE[p.warmupStage].label}
+                            </span>
+                          </td>
+                          <td className="p-3 text-muted">{p.dailyLimit.toLocaleString()}</td>
+                          <td className="p-3">
+                            <div className="flex items-center gap-2">
+                              <span className="text-foreground">{p.sentToday.toLocaleString()}</span>
+                              <div className="flex-1 max-w-[50px] h-1.5 bg-border rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full transition-all ${pctBarColor(p.sentToday, p.dailyLimit)}`}
+                                  style={{ width: `${pct(p.sentToday, p.dailyLimit)}%` }} />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-3">
+                            <div className="flex gap-1">
+                              {p.capabilities.map(c => (
+                                <span key={c} className={`px-1.5 py-0.5 rounded text-[8px] font-medium border ${capBadgeColor(c)}`}>
+                                  {c}
+                                </span>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="p-3 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <a href="/dashboard/voice-receptionist"
+                                className="px-2 py-1 rounded text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/20 hover:bg-purple-500/20 transition-all flex items-center gap-1">
+                                <Settings size={10} /> Configure
+                              </a>
+                              <button onClick={() => releaseNumber(p)}
+                                className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
+                                <Trash2 size={10} /> Release
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {poolPhones.length === 0 && (
+                        <tr>
+                          <td colSpan={9} className="p-8 text-center text-muted text-xs">
+                            No phone numbers yet. Click &quot;Buy New Number&quot; or &quot;Add Existing Number&quot; to get started.
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   )}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* Buy Number Modal */}
+          {/* ── Buy Number Modal ── */}
           {showBuyModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
               <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
@@ -372,12 +780,74 @@ export default function PhoneEmailPage() {
                   </div>
                 </div>
 
+                {/* Assignment Target: Pool vs Client */}
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Assign To</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button onClick={() => setPurchaseTarget("pool")}
+                      className={`p-3 rounded-lg border text-left transition-all ${
+                        purchaseTarget === "pool"
+                          ? "border-gold/30 bg-gold/10"
+                          : "border-border hover:border-border"
+                      }`}>
+                      <span className={`block text-[11px] font-medium ${purchaseTarget === "pool" ? "text-gold" : "text-foreground"}`}>
+                        Add to Pool
+                      </span>
+                      <span className="block text-[9px] text-muted mt-0.5">Smart rotation across campaigns</span>
+                    </button>
+                    <button onClick={() => setPurchaseTarget("client")}
+                      className={`p-3 rounded-lg border text-left transition-all ${
+                        purchaseTarget === "client"
+                          ? "border-gold/30 bg-gold/10"
+                          : "border-border hover:border-border"
+                      }`}>
+                      <span className={`block text-[11px] font-medium ${purchaseTarget === "client" ? "text-gold" : "text-foreground"}`}>
+                        Assign to Client
+                      </span>
+                      <span className="block text-[9px] text-muted mt-0.5">Dedicated number for one client</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Client Assignment (only when target=client) */}
+                {purchaseTarget === "client" && (
+                  <div>
+                    <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Select Client</label>
+                    {clientsWithoutPhone.length === 0 ? (
+                      <p className="text-[10px] text-yellow-400 p-2 bg-yellow-500/5 rounded-lg border border-yellow-500/20">
+                        No clients without a phone number. Add clients first or release existing numbers.
+                      </p>
+                    ) : (
+                      <select value={selectedClientId} onChange={e => setSelectedClientId(e.target.value)}
+                        className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all">
+                        <option value="">Select a client...</option>
+                        {clientsWithoutPhone.map(c => (
+                          <option key={c.id} value={c.id}>{c.business_name}</option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                )}
+
                 {/* Search Button */}
                 <button onClick={searchNumbers} disabled={searching}
                   className="w-full py-2.5 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                   {searching ? <RefreshCw size={12} className="animate-spin" /> : <Search size={12} />}
                   {searching ? "Searching..." : "Search Available Numbers"}
                 </button>
+
+                {/* Error Display */}
+                {searchError && (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
+                    <AlertCircle size={14} /> {searchError}
+                  </div>
+                )}
+
+                {purchaseError && (
+                  <div className="flex items-center gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-[11px]">
+                    <AlertCircle size={14} /> {purchaseError}
+                  </div>
+                )}
 
                 {/* Search Results */}
                 {searchResults.length > 0 && (
@@ -390,6 +860,7 @@ export default function PhoneEmailPage() {
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-[9px] text-muted capitalize">{num.type}</span>
                             <span className="text-[9px] text-muted">${num.monthlyCost.toFixed(2)}/mo</span>
+                            {num.locality && <span className="text-[9px] text-muted">{num.locality}, {num.region}</span>}
                             <div className="flex gap-1">
                               {num.capabilities.map(c => (
                                 <span key={c} className={`px-1 py-0 rounded text-[7px] font-medium border ${capBadgeColor(c)}`}>{c}</span>
@@ -398,13 +869,68 @@ export default function PhoneEmailPage() {
                           </div>
                         </div>
                         <button onClick={() => purchaseNumber(num)}
-                          className="px-3 py-1.5 rounded-lg bg-green-500/10 text-green-400 text-[10px] font-medium border border-green-500/20 hover:bg-green-500/20 transition-all">
-                          Purchase
+                          disabled={purchasing || (purchaseTarget === "client" && !selectedClientId)}
+                          className="px-3 py-1.5 rounded-lg bg-green-500/10 text-green-400 text-[10px] font-medium border border-green-500/20 hover:bg-green-500/20 transition-all disabled:opacity-50">
+                          {purchasing ? "Purchasing..." : purchaseTarget === "pool" ? "Add to Pool" : "Purchase"}
                         </button>
                       </div>
                     ))}
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* ── Manual Add Phone Modal ── */}
+          {showManualPhoneModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+              <div className="card w-full max-w-md p-5 space-y-4 mx-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold flex items-center gap-2">
+                    <Phone size={14} className="text-gold" /> Add Existing Number
+                  </h3>
+                  <button onClick={() => setShowManualPhoneModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                </div>
+
+                <p className="text-[10px] text-muted">
+                  Add a phone number already provisioned elsewhere (e.g., brought from another service) to the rotation pool.
+                </p>
+
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Phone Number</label>
+                  <input value={manualPhone} onChange={e => setManualPhone(e.target.value)}
+                    placeholder="+1 (555) 123-4567"
+                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Label (optional)</label>
+                  <input value={manualLabel} onChange={e => setManualLabel(e.target.value)}
+                    placeholder="e.g. Outreach Line 1, Sales Pool..."
+                    className="w-full px-3 py-2 rounded-lg bg-background border border-border text-xs focus:border-gold/50 focus:outline-none transition-all" />
+                </div>
+
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Number Type</label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {NUMBER_TYPES.map(t => (
+                      <button key={t.value} onClick={() => setManualType(t.value)}
+                        className={`p-2 rounded-lg border text-center transition-all text-[10px] font-medium ${
+                          manualType === t.value
+                            ? "border-gold/30 bg-gold/10 text-gold"
+                            : "border-border text-muted hover:text-foreground"
+                        }`}>
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button onClick={addManualPhone} disabled={!manualPhone.trim() || manualAdding}
+                  className="w-full py-2.5 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  {manualAdding ? <RefreshCw size={12} className="animate-spin" /> : <Plus size={12} />}
+                  {manualAdding ? "Adding..." : "Add to Pool"}
+                </button>
               </div>
             </div>
           )}
@@ -435,6 +961,7 @@ export default function PhoneEmailPage() {
                     <th className="p-3 font-medium">Email</th>
                     <th className="p-3 font-medium">Display Name</th>
                     <th className="p-3 font-medium">Status</th>
+                    <th className="p-3 font-medium">Warmup</th>
                     <th className="p-3 font-medium">Provider</th>
                     <th className="p-3 font-medium">Daily Limit</th>
                     <th className="p-3 font-medium">Sent Today</th>
@@ -442,53 +969,73 @@ export default function PhoneEmailPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {emails.map(e => (
-                    <tr key={e.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
-                      <td className="p-3 font-mono font-medium text-foreground">{e.email}</td>
-                      <td className="p-3 text-muted">{e.displayName}</td>
-                      <td className="p-3">
-                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
-                          e.status === "verified"
-                            ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                            : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
-                        }`}>
-                          {e.status === "verified" ? "Verified" : "Pending"}
-                        </span>
-                      </td>
-                      <td className="p-3">
-                        <span className="flex items-center gap-1 text-muted">
-                          <Server size={10} /> {e.provider}
-                        </span>
-                      </td>
-                      <td className="p-3 text-muted">{e.dailyLimit.toLocaleString()}</td>
-                      <td className="p-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-foreground">{e.sentToday.toLocaleString()}</span>
-                          <div className="flex-1 max-w-[60px] h-1.5 bg-border rounded-full overflow-hidden">
-                            <div className="h-full bg-gold rounded-full transition-all"
-                              style={{ width: `${Math.min((e.sentToday / e.dailyLimit) * 100, 100)}%` }} />
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-3 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <button className="px-2 py-1 rounded text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all flex items-center gap-1">
-                            <Send size={10} /> Send Test
-                          </button>
-                          <button onClick={() => removeEmail(e.id)}
-                            className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
-                            <Trash2 size={10} /> Remove
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {emails.length === 0 && (
+                  {loading ? (
                     <tr>
-                      <td colSpan={7} className="p-8 text-center text-muted text-xs">
-                        No email addresses configured. Click &quot;Add Email Address&quot; to get started.
+                      <td colSpan={8} className="p-8 text-center">
+                        <div className="flex items-center justify-center gap-2 text-muted text-xs">
+                          <RefreshCw size={14} className="animate-spin" />
+                          Loading email senders...
+                        </div>
                       </td>
                     </tr>
+                  ) : (
+                    <>
+                      {poolEmails.map(e => (
+                        <tr key={e.id} className="border-b border-border/50 hover:bg-card/50 transition-colors">
+                          <td className="p-3 font-mono font-medium text-foreground">{e.email}</td>
+                          <td className="p-3 text-muted">{e.displayName}</td>
+                          <td className="p-3">
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium ${
+                              e.status === "verified"
+                                ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                                : e.status === "warming"
+                                ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                                : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20"
+                            }`}>
+                              {e.status === "verified" ? "Verified" : e.status === "warming" ? "Warming" : "Pending"}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-medium border ${WARMUP_BADGE[e.warmupStage].class}`}>
+                              {WARMUP_BADGE[e.warmupStage].label}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <span className="flex items-center gap-1 text-muted">
+                              <Server size={10} /> {e.provider}
+                            </span>
+                          </td>
+                          <td className="p-3 text-muted">{e.dailyLimit.toLocaleString()}</td>
+                          <td className="p-3">
+                            <div className="flex items-center gap-2">
+                              <span className="text-foreground">{e.sentToday.toLocaleString()}</span>
+                              <div className="flex-1 max-w-[60px] h-1.5 bg-border rounded-full overflow-hidden">
+                                <div className={`h-full rounded-full transition-all ${pctBarColor(e.sentToday, e.dailyLimit)}`}
+                                  style={{ width: `${pct(e.sentToday, e.dailyLimit)}%` }} />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-3 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button className="px-2 py-1 rounded text-[9px] bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 transition-all flex items-center gap-1">
+                                <Send size={10} /> Send Test
+                              </button>
+                              <button onClick={() => removeEmail(e)}
+                                className="px-2 py-1 rounded text-[9px] bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all flex items-center gap-1">
+                                <Trash2 size={10} /> Remove
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {poolEmails.length === 0 && (
+                        <tr>
+                          <td colSpan={8} className="p-8 text-center text-muted text-xs">
+                            No email addresses configured. Click &quot;Add Email Address&quot; to get started.
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   )}
                 </tbody>
               </table>
@@ -567,7 +1114,7 @@ export default function PhoneEmailPage() {
             )}
           </div>
 
-          {/* Add Email Modal */}
+          {/* ── Add Email Modal ── */}
           {showEmailModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
               <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto">
@@ -656,9 +1203,10 @@ export default function PhoneEmailPage() {
                 )}
 
                 {/* Add Button */}
-                <button onClick={addEmail} disabled={!newEmail.trim()}
+                <button onClick={addEmail} disabled={!newEmail.trim() || emailAdding}
                   className="w-full py-2.5 rounded-lg bg-gold text-black text-xs font-semibold hover:bg-gold/90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-                  <Check size={12} /> Verify & Add
+                  {emailAdding ? <RefreshCw size={12} className="animate-spin" /> : <Check size={12} />}
+                  {emailAdding ? "Adding..." : "Verify & Add"}
                 </button>
               </div>
             </div>
@@ -693,8 +1241,8 @@ export default function PhoneEmailPage() {
         </div>
       )}
 
-      <PageAI pageName="Phone & Email" context="phone numbers, Twilio, SMS, voice calls, email sending, SMTP configuration, domain verification, SPF, DKIM, DMARC, outreach, campaigns"
-        suggestions={["Buy a local phone number", "Set up email sending", "Verify my domain DNS records", "What DKIM records do I need?"]} />
+      <PageAI pageName="Sender Management" context="phone numbers, Twilio, SMS, voice calls, email sending, SMTP configuration, domain verification, SPF, DKIM, DMARC, outreach, campaigns, sender rotation, warmup, daily limits, pool management"
+        suggestions={["Buy a local phone number", "Add an existing number to the pool", "Set up email sending", "How does smart rotation work?"]} />
     </div>
   );
 }

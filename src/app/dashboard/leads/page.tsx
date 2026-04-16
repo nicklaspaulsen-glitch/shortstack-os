@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, DragEvent, ChangeEvent, FormEvent } from "react";
 import {
   Zap, MessageSquare, Search, Phone, Mail, Star,
   TrendingUp, Users, Target, ArrowDownRight,
   CheckCircle, AlertTriangle, Tag, Upload, Download, Flame,
   Clock, UserPlus, BarChart3,
-  RefreshCw, Bell, Layers, GitBranch, Loader, ChevronLeft, ChevronRight as ChevronRightIcon
+  RefreshCw, Bell, Layers, GitBranch, Loader, ChevronLeft, ChevronRight as ChevronRightIcon,
+  X, FileSpreadsheet, Check
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 
@@ -32,6 +33,366 @@ interface Lead {
   category: string | null;
 }
 
+// ---- CSV helpers ----
+const CSV_COLUMNS = ["business_name","email","phone","industry","city","state","source","status","website"] as const;
+
+function parseCSV(text: string): Record<string, string>[] {
+  const lines = text.split(/\r?\n/).filter(l => l.trim());
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(",").map(h => h.trim().toLowerCase().replace(/[^a-z0-9_]/g, "_"));
+  return lines.slice(1).map(line => {
+    const values = line.split(",").map(v => v.trim().replace(/^["']|["']$/g, ""));
+    const row: Record<string, string> = {};
+    headers.forEach((h, i) => { row[h] = values[i] || ""; });
+    return row;
+  });
+}
+
+function buildExportCSV(leads: Lead[]): string {
+  const headers = ["Business Name","Email","Phone","Industry","City","State","Source","Status","Website","Score","Google Rating","Reviews"];
+  const escape = (v: string | number | null | undefined) => {
+    if (v == null) return "";
+    const s = String(v);
+    return s.includes(",") || s.includes('"') || s.includes("\n") ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const rows = leads.map(l => [
+    l.business_name, l.email, l.phone, l.industry, l.city, l.state,
+    l.source, l.status, l.website, l.lead_score, l.google_rating, l.review_count
+  ].map(escape).join(","));
+  return [headers.join(","), ...rows].join("\n");
+}
+
+function downloadCSV(csv: string, filename: string) {
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+const INDUSTRY_OPTIONS = [
+  "Dental","Chiropractic","Med Spa","Real Estate","HVAC","Plumbing",
+  "Roofing","Legal","Fitness","Restaurant","Salon","Auto Repair",
+  "Marketing","E-commerce","Construction","Insurance","Financial Services",
+  "Healthcare","Education","Technology","Other"
+];
+
+const SOURCE_OPTIONS = ["Manual","Referral","Website","Social Media","Cold Outreach","Google Maps","CSV Import"];
+const STATUS_OPTIONS = ["new","contacted","qualified","booked","converted","lost"];
+
+// ====================== IMPORT CSV MODAL ======================
+function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const [step, setStep] = useState<"upload" | "preview" | "importing" | "done">("upload");
+  const [rows, setRows] = useState<Record<string, string>[]>([]);
+  const [columnMap, setColumnMap] = useState<Record<string, string>>({});
+  const [dragOver, setDragOver] = useState(false);
+  const [result, setResult] = useState<{ imported: number; skipped: number } | null>(null);
+  const [error, setError] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  function handleFile(file: File) {
+    if (!file.name.endsWith(".csv")) { setError("Only .csv files are accepted"); return; }
+    setError("");
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      const parsed = parseCSV(text);
+      if (parsed.length === 0) { setError("CSV is empty or could not be parsed"); return; }
+      setRows(parsed);
+      // Auto-map columns
+      const csvHeaders = Object.keys(parsed[0]);
+      const map: Record<string, string> = {};
+      CSV_COLUMNS.forEach(col => {
+        const match = csvHeaders.find(h => h === col || h.replace(/\s+/g, "_") === col);
+        if (match) map[col] = match;
+      });
+      setColumnMap(map);
+      setStep("preview");
+    };
+    reader.readAsText(file);
+  }
+
+  function onDrop(e: DragEvent) {
+    e.preventDefault(); setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  }
+
+  function onFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) handleFile(file);
+  }
+
+  async function doImport() {
+    setStep("importing");
+    const mapped = rows.map(row => {
+      const obj: Record<string, string> = {};
+      CSV_COLUMNS.forEach(col => {
+        const csvCol = columnMap[col];
+        if (csvCol) obj[col] = row[csvCol] || "";
+      });
+      return obj;
+    });
+    try {
+      const res = await fetch("/api/leads/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ leads: mapped }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Import failed");
+      setResult({ imported: data.imported, skipped: data.skipped });
+      setStep("done");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Import failed");
+      setStep("preview");
+    }
+  }
+
+  const previewRows = rows.slice(0, 5);
+  const csvHeaders = rows.length > 0 ? Object.keys(rows[0]) : [];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
+      <div className="card w-full max-w-2xl p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold flex items-center gap-2"><Upload size={14} className="text-gold" /> Import CSV</h2>
+          <button onClick={onClose} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><X size={14} /></button>
+        </div>
+
+        {/* Upload step */}
+        {step === "upload" && (
+          <div
+            onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={onDrop}
+            onClick={() => fileRef.current?.click()}
+            className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-all ${
+              dragOver ? "border-gold bg-gold/5" : "border-border hover:border-gold/30"
+            }`}
+          >
+            <FileSpreadsheet size={32} className="mx-auto mb-3 text-muted" />
+            <p className="text-xs font-medium mb-1">Drag & drop a CSV file here</p>
+            <p className="text-[10px] text-muted">or click to browse</p>
+            <p className="text-[9px] text-muted mt-3">Expected columns: business_name, email, phone, industry, city, state, source, status, website</p>
+            <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={onFileChange} />
+          </div>
+        )}
+
+        {/* Preview step */}
+        {step === "preview" && (
+          <div className="space-y-4">
+            <p className="text-xs text-muted">{rows.length} rows found. Showing first {Math.min(5, rows.length)}:</p>
+
+            {/* Column mapping */}
+            <div className="space-y-2">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted">Column Mapping</p>
+              <div className="grid grid-cols-2 gap-2">
+                {CSV_COLUMNS.map(col => (
+                  <div key={col} className="flex items-center gap-2">
+                    <span className="text-[10px] w-28 text-muted">{col}</span>
+                    <select
+                      value={columnMap[col] || ""}
+                      onChange={e => setColumnMap(m => ({ ...m, [col]: e.target.value }))}
+                      className="input text-[10px] flex-1"
+                    >
+                      <option value="">-- skip --</option>
+                      {csvHeaders.map(h => <option key={h} value={h}>{h}</option>)}
+                    </select>
+                    {columnMap[col] && <Check size={10} className="text-green-400 shrink-0" />}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Preview table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-[9px]">
+                <thead>
+                  <tr className="border-b border-border">
+                    {csvHeaders.map(h => (
+                      <th key={h} className="text-left p-1.5 text-muted font-semibold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {previewRows.map((row, i) => (
+                    <tr key={i} className="border-b border-border/50">
+                      {csvHeaders.map(h => (
+                        <td key={h} className="p-1.5 max-w-[120px] truncate">{row[h]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="flex justify-end gap-2">
+              <button onClick={() => { setStep("upload"); setRows([]); }} className="btn-secondary text-xs">Back</button>
+              <button onClick={doImport} className="btn-primary text-xs flex items-center gap-1.5">
+                <Upload size={12} /> Import {rows.length} Leads
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Importing step */}
+        {step === "importing" && (
+          <div className="flex flex-col items-center justify-center py-10 gap-3">
+            <Loader size={24} className="animate-spin text-gold" />
+            <p className="text-xs text-muted">Importing {rows.length} leads...</p>
+          </div>
+        )}
+
+        {/* Done step */}
+        {step === "done" && result && (
+          <div className="text-center py-6 space-y-3">
+            <div className="w-12 h-12 rounded-full bg-green-400/10 flex items-center justify-center mx-auto">
+              <CheckCircle size={24} className="text-green-400" />
+            </div>
+            <p className="text-sm font-semibold">Import Complete</p>
+            <div className="flex justify-center gap-6 text-xs">
+              <div><span className="text-green-400 font-bold text-lg">{result.imported}</span><p className="text-muted text-[9px]">Imported</p></div>
+              <div><span className="text-yellow-400 font-bold text-lg">{result.skipped}</span><p className="text-muted text-[9px]">Skipped</p></div>
+            </div>
+            <button onClick={() => { onSuccess(); onClose(); }} className="btn-primary text-xs mt-2">Done</button>
+          </div>
+        )}
+
+        {error && <p className="text-red-400 text-[10px]">{error}</p>}
+      </div>
+    </div>
+  );
+}
+
+// ====================== ADD LEAD MODAL ======================
+function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const [form, setForm] = useState({
+    business_name: "", email: "", phone: "", industry: "", city: "", state: "",
+    source: "Manual", status: "new", website: "", notes: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  function set(field: string, value: string) { setForm(f => ({ ...f, [field]: value })); }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!form.business_name.trim()) { setError("Business name is required"); return; }
+    setSubmitting(true); setError("");
+    try {
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to add lead");
+      onSuccess();
+      onClose();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to add lead");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
+      <div className="card w-full max-w-lg p-5 space-y-4 mx-4 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-semibold flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Add Lead</h2>
+          <button onClick={onClose} className="p-1 rounded hover:bg-white/5 text-muted hover:text-foreground"><X size={14} /></button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {/* Business Name */}
+          <div>
+            <label className="text-[10px] text-muted block mb-1">Business Name <span className="text-red-400">*</span></label>
+            <input value={form.business_name} onChange={e => set("business_name", e.target.value)} className="input w-full text-xs" placeholder="Acme Corp" />
+          </div>
+
+          {/* Email + Phone row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-muted block mb-1">Email</label>
+              <input type="email" value={form.email} onChange={e => set("email", e.target.value)} className="input w-full text-xs" placeholder="hello@acme.com" />
+            </div>
+            <div>
+              <label className="text-[10px] text-muted block mb-1">Phone</label>
+              <input value={form.phone} onChange={e => set("phone", e.target.value)} className="input w-full text-xs" placeholder="+1 555 123 4567" />
+            </div>
+          </div>
+
+          {/* Industry dropdown */}
+          <div>
+            <label className="text-[10px] text-muted block mb-1">Industry</label>
+            <select value={form.industry} onChange={e => set("industry", e.target.value)} className="input w-full text-xs">
+              <option value="">Select industry...</option>
+              {INDUSTRY_OPTIONS.map(i => <option key={i} value={i}>{i}</option>)}
+            </select>
+          </div>
+
+          {/* City + State row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-muted block mb-1">City</label>
+              <input value={form.city} onChange={e => set("city", e.target.value)} className="input w-full text-xs" placeholder="Miami" />
+            </div>
+            <div>
+              <label className="text-[10px] text-muted block mb-1">State</label>
+              <input value={form.state} onChange={e => set("state", e.target.value)} className="input w-full text-xs" placeholder="FL" />
+            </div>
+          </div>
+
+          {/* Source + Status row */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-muted block mb-1">Source</label>
+              <select value={form.source} onChange={e => set("source", e.target.value)} className="input w-full text-xs">
+                {SOURCE_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted block mb-1">Status</label>
+              <select value={form.status} onChange={e => set("status", e.target.value)} className="input w-full text-xs">
+                {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Website */}
+          <div>
+            <label className="text-[10px] text-muted block mb-1">Website</label>
+            <input value={form.website} onChange={e => set("website", e.target.value)} className="input w-full text-xs" placeholder="https://acme.com" />
+          </div>
+
+          {/* Notes */}
+          <div>
+            <label className="text-[10px] text-muted block mb-1">Notes</label>
+            <textarea value={form.notes} onChange={e => set("notes", e.target.value)} className="input w-full text-xs resize-none" rows={3} placeholder="Any additional info..." />
+          </div>
+
+          {error && <p className="text-red-400 text-[10px]">{error}</p>}
+
+          <div className="flex justify-end gap-2 pt-1">
+            <button type="button" onClick={onClose} className="btn-secondary text-xs">Cancel</button>
+            <button type="submit" disabled={submitting} className="btn-primary text-xs flex items-center gap-1.5">
+              {submitting ? <Loader size={12} className="animate-spin" /> : <UserPlus size={12} />}
+              {submitting ? "Adding..." : "Add Lead"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ====================== MAIN PAGE ======================
 export default function LeadEnginePage() {
   const [activeTab, setActiveTab] = useState<MainTab>("leads");
   const [searchQuery, setSearchQuery] = useState("");
@@ -40,6 +401,11 @@ export default function LeadEnginePage() {
   const [tagInput, setTagInput] = useState("");
   const [hotAlerts, setHotAlerts] = useState(true);
   const [expandedLead, setExpandedLead] = useState<string | null>(null);
+
+  // Modal state
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [exporting, setExporting] = useState(false);
 
   // Real data state
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -77,6 +443,26 @@ export default function LeadEnginePage() {
     setPage(1);
   }, [searchQuery, statusFilter, industryFilter]);
 
+  // Export handler — fetches ALL leads, builds CSV, triggers download
+  async function handleExport() {
+    setExporting(true);
+    try {
+      const res = await fetch(`/api/leads?page=1&limit=10000&export=true`);
+      if (!res.ok) throw new Error("Failed to fetch leads for export");
+      const data = await res.json();
+      const allLeads: Lead[] = data.leads || [];
+      if (allLeads.length === 0) { alert("No leads to export."); return; }
+      const csv = buildExportCSV(allLeads);
+      const date = new Date().toISOString().split("T")[0];
+      downloadCSV(csv, `leads-export-${date}.csv`);
+    } catch (err) {
+      console.error("Export failed:", err);
+      alert("Export failed. Check console for details.");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   const industries = Array.from(new Set(leads.map(l => l.industry).filter(Boolean))) as string[];
   const totalLeads = totalCount;
   const hotLeads = leads.filter(l => (l.lead_score ?? 0) >= 80).length;
@@ -97,6 +483,10 @@ export default function LeadEnginePage() {
 
   return (
     <div className="fade-in space-y-6">
+      {/* Modals */}
+      {showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}
+      {showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -109,9 +499,12 @@ export default function LeadEnginePage() {
           <p className="text-muted text-sm">Automated lead scoring, routing, enrichment & nurture</p>
         </div>
         <div className="flex gap-2">
-          <button className="btn-secondary text-xs flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
-          <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
-          <button className="btn-primary text-xs flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
+          <button onClick={() => setShowImportModal(true)} className="btn-secondary text-xs flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
+          <button onClick={handleExport} disabled={exporting} className="btn-secondary text-xs flex items-center gap-1.5">
+            {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+            {exporting ? "Exporting..." : "Export"}
+          </button>
+          <button onClick={() => setShowAddModal(true)} className="btn-primary text-xs flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
         </div>
       </div>
 

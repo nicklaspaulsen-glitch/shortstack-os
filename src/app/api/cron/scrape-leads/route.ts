@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
   const errors: string[] = [];
 
   // ── Check auto-run config (user-configured daily schedule) ──
-  let autoRunConfig: { enabled?: boolean; platforms?: string[]; niches?: string[]; locations?: string[]; max_results?: number; filters?: Record<string, unknown> } | null = null;
+  let autoRunConfig: { enabled?: boolean; days?: string[]; platforms?: string[]; niches?: string[]; locations?: string[]; max_results?: number; filters?: Record<string, unknown> } | null = null;
   try {
     // Check system_config first
     const { data: configRow } = await supabase
@@ -41,6 +41,19 @@ export async function GET(request: NextRequest) {
         autoRunConfig = shRow.metadata;
       }
     } catch {}
+  }
+
+  // Check if today is a scheduled day
+  if (autoRunConfig?.days && Array.isArray(autoRunConfig.days)) {
+    const dayMap = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    const today = dayMap[new Date().getDay()];
+    if (!autoRunConfig.days.includes(today)) {
+      return NextResponse.json({
+        success: true,
+        message: `Skipped — ${today} is not a scheduled day`,
+        scheduled_days: autoRunConfig.days,
+      });
+    }
   }
 
   // Load agent settings from DB

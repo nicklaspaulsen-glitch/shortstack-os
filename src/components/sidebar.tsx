@@ -18,6 +18,7 @@ import {
   ChevronRight,
   Megaphone,
   Settings,
+  Bell,
   BarChart3,
   CreditCard,
   MessageSquare,
@@ -70,7 +71,6 @@ import {
   Store,
   Inbox,
   Puzzle,
-  ExternalLink,
   X,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
@@ -88,11 +88,11 @@ interface NavItem {
 const navItems: NavItem[] = [
   // ── Core ──
   { label: "Inbox", href: "/dashboard/inbox", icon: <Inbox size={16} />, roles: ["admin", "team_member"] },
+  { label: "Generations", href: "/dashboard/generations", icon: <Sparkles size={16} />, roles: ["admin", "team_member"] },
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={16} />, roles: ["admin", "team_member"] },
   { label: "Community", href: "/dashboard/community", icon: <Users size={16} />, roles: ["admin", "team_member", "client"] },
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Reports", href: "/dashboard/reports", icon: <FileText size={16} />, roles: ["admin"] },
-  { label: "Dashboards", href: "/dashboard/custom-dashboard", icon: <LayoutGrid size={16} />, roles: ["admin"] },
 
   // ── Sales (full revenue pipeline) ──
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"], section: "Sales", sub: "Leads & Outreach" },
@@ -153,6 +153,7 @@ const navItems: NavItem[] = [
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Invoices", href: "/dashboard/invoices", icon: <Receipt size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "Usage & Tokens", href: "/dashboard/usage", icon: <Zap size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Phone & Email", href: "/dashboard/phone-email", icon: <Phone size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Client Health", href: "/dashboard/client-health", icon: <Heart size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin"], sub: "Support" },
@@ -172,6 +173,7 @@ const navItems: NavItem[] = [
   { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <Bot size={16} />, roles: ["admin"] },
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessagesSquare size={16} />, roles: ["admin"] },
   { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Send size={16} />, roles: ["admin"] },
+  { label: "Notifications", href: "/dashboard/notifications", icon: <Bell size={16} />, roles: ["admin", "team_member"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── Client Portal ──
@@ -422,15 +424,13 @@ export default function Sidebar() {
         <div className="mx-2 mb-1">
           <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-gold/[0.07] border border-gold/15">
             <Puzzle size={13} className="shrink-0 text-gold" />
-            <a
-              href="/downloads/shortstack-extension.zip"
-              download
-              className="flex items-center gap-1 text-[11px] text-gold/90 hover:text-gold font-medium truncate transition-colors"
-              title="Download Chrome Extension (.zip) — unzip and load in chrome://extensions"
-            >
-              <span>Chrome Extension</span>
-              <ExternalLink size={10} className="shrink-0 opacity-60" />
+            <a href="/downloads/shortstack-extension.zip" download
+              className="text-[11px] text-gold/90 hover:text-gold font-medium transition-colors"
+              title="Download → Unzip → chrome://extensions → Load unpacked">
+              Install Extension
             </a>
+            <span className="text-muted/30">|</span>
+            <ExtInstallTooltip />
             <button
               onClick={() => { setExtDismissed(true); localStorage.setItem("sidebar_ext_dismissed", "1"); }}
               className="ml-auto shrink-0 p-0.5 rounded text-muted hover:text-foreground transition-colors"
@@ -579,6 +579,38 @@ export default function Sidebar() {
         )}
       </div>
     </aside>
+  );
+}
+
+/* ─── Extension Install Tooltip ───────────────────────────────────── */
+function ExtInstallTooltip() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className="text-[10px] text-muted hover:text-gold transition-colors"
+        title="How to install the Chrome extension"
+      >
+        How to install
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute left-0 top-full mt-2 z-50 w-56 bg-surface border border-border rounded-xl shadow-elevated p-3">
+            <p className="text-[11px] font-semibold text-foreground mb-1.5">Install Steps</p>
+            <ol className="text-[10px] text-muted space-y-1 list-decimal list-inside leading-relaxed">
+              <li>Download the .zip file</li>
+              <li>Unzip to a folder</li>
+              <li>Open <span className="font-mono text-[9px] text-gold/80">chrome://extensions</span> in your browser</li>
+              <li>Enable Developer mode</li>
+              <li>Click &quot;Load unpacked&quot; and select the folder</li>
+              <li>Pin the extension to your toolbar</li>
+            </ol>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 

@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import {
+  getNextPhoneNumber,
+  getNextEmailSender,
+  recordPhoneSend,
+  recordEmailSend,
+} from "@/lib/services/sender-rotation";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -28,19 +34,54 @@ export async function POST(request: NextRequest) {
 
   for (const lead of leads) {
     try {
-      if (action === "email" && lead.email && ghlKey) {
-        // Create/update contact in GHL with email tag
-        await fetch("https://services.leadconnectorhq.com/contacts/", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-          body: JSON.stringify({
-            locationId, name: lead.business_name,
-            email: lead.email, tags: ["bulk-email", `tier-${tier}`],
-            source: "ShortStack OS",
-          }),
-        });
-        processed++;
-      } else if (action === "sms" && lead.phone && twilioSid && twilioToken && twilioFrom) {
+      if (action === "email" && lead.email) {
+        // Try rotation pool sender first, fall back to GHL
+        let emailHandled = false;
+        const emailSender = await getNextEmailSender(serviceSupabase);
+        if (emailSender) {
+          try {
+            const { sendEmail } = await import("@/lib/email");
+            const emailOk = await sendEmail({
+              to: lead.email,
+              subject: `Quick question about ${lead.business_name}`,
+              html: `Hi, I came across ${lead.business_name} and wanted to reach out. We help ${lead.industry || "local"} businesses grow their client base. Would you be open to a quick chat?`,
+            });
+            if (emailOk) {
+              await recordEmailSend(serviceSupabase, emailSender.id);
+              emailHandled = true;
+              processed++;
+            }
+          } catch {
+            emailHandled = false;
+          }
+        }
+
+        // Fallback to GHL if pool send failed or no pool senders
+        if (!emailHandled && ghlKey) {
+          await fetch("https://services.leadconnectorhq.com/contacts/", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
+            body: JSON.stringify({
+              locationId, name: lead.business_name,
+              email: lead.email, tags: ["bulk-email", `tier-${tier}`],
+              source: "ShortStack OS",
+            }),
+          });
+          processed++;
+        }
+      } else if (action === "sms" && lead.phone && twilioSid && twilioToken) {
+        // Resolve sender: rotation pool → env default
+        let smsFrom = "";
+        let smsPoolSender: { id: string } | null = null;
+        const poolPhone = await getNextPhoneNumber(serviceSupabase);
+        if (poolPhone) {
+          smsFrom = poolPhone.phone_number;
+          smsPoolSender = poolPhone;
+        } else if (twilioFrom) {
+          smsFrom = twilioFrom;
+        }
+        if (!smsFrom) continue;
+
         // Send SMS via Twilio
         const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
         const message = `Hi, I came across ${lead.business_name} and wanted to reach out. We help ${lead.industry || "local"} businesses grow their client base. Would you be open to a quick chat?`;
@@ -49,10 +90,13 @@ export async function POST(request: NextRequest) {
           {
             method: "POST",
             headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({ To: lead.phone, From: twilioFrom, Body: message }),
+            body: new URLSearchParams({ To: lead.phone, From: smsFrom, Body: message }),
           }
         );
-        if (smsRes.ok) processed++;
+        if (smsRes.ok) {
+          processed++;
+          if (smsPoolSender) await recordPhoneSend(serviceSupabase, smsPoolSender.id);
+        }
       } else if (action === "call" && lead.phone && ghlKey) {
         await fetch("https://services.leadconnectorhq.com/contacts/", {
           method: "POST",

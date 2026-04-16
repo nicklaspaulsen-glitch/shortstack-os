@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getNextPhoneNumber, recordPhoneSend } from "@/lib/services/sender-rotation";
 
 // Send SMS to leads using Twilio
 // Supports AI personalization via Anthropic Claude
@@ -30,6 +31,17 @@ export async function POST(request: NextRequest) {
       .single();
     if (clientRow?.twilio_phone_number) resolvedFrom = clientRow.twilio_phone_number;
   }
+
+  // Try rotation pool before falling back to system default
+  let usedPoolSender: { id: string } | null = null;
+  if (!resolvedFrom) {
+    const poolSender = await getNextPhoneNumber(serviceSupabase);
+    if (poolSender) {
+      resolvedFrom = poolSender.phone_number;
+      usedPoolSender = poolSender;
+    }
+  }
+
   if (!resolvedFrom) resolvedFrom = process.env.TWILIO_DEFAULT_NUMBER || "";
 
   // Get leads with phone numbers
@@ -101,6 +113,10 @@ export async function POST(request: NextRequest) {
 
       if (smsRes.ok) {
         sent++;
+        // Record rotation pool usage for daily limit tracking
+        if (usedPoolSender) {
+          await recordPhoneSend(serviceSupabase, usedPoolSender.id);
+        }
         await serviceSupabase.from("outreach_log").insert({
           lead_id: lead.id,
           platform: "sms",

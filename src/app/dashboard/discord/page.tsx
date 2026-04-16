@@ -5,7 +5,7 @@ import {
   Hash, Users, MessageSquare, Volume2, Server, Shield,
   Zap, Terminal, BarChart3, UserCheck, Globe,
   Calendar, Code, Link, Megaphone, Trash2, Plus, Check,
-  Copy, Star, TrendingUp, AlertTriangle, Edit3,
+  Copy, TrendingUp, AlertTriangle, Edit3,
   Search, Send, Smile
 } from "lucide-react";
 
@@ -706,42 +706,9 @@ export default function DiscordPage() {
           {/* Member Insights */}
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Users size={14} className="text-gold" /> Member Insights</h3>
-            <div className="grid grid-cols-3 gap-3 mb-4">
-              {[
-                { label: "Active (7d)", value: 28, total: 47, color: "bg-green-400" },
-                { label: "Lurkers", value: 12, total: 47, color: "bg-yellow-400" },
-                { label: "Inactive (30d+)", value: 7, total: 47, color: "bg-red-400" },
-              ].map(seg => (
-                <div key={seg.label} className="text-center p-3 rounded-lg bg-surface-light border border-border">
-                  <p className="text-lg font-bold font-mono">{seg.value}</p>
-                  <p className="text-[10px] text-muted">{seg.label}</p>
-                  <div className="w-full h-1.5 bg-surface rounded-full mt-2 overflow-hidden">
-                    <div className={`h-full rounded-full ${seg.color}`} style={{ width: `${(seg.value / seg.total) * 100}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Top contributors */}
-            <p className="text-[10px] text-muted font-semibold uppercase mb-2">Top Contributors (7 days)</p>
-            <div className="space-y-1.5">
-              {[
-                { name: "Alex M.", messages: 187, reactions: 45, rank: 1 },
-                { name: "Sarah K.", messages: 142, reactions: 38, rank: 2 },
-                { name: "Dev_Bot", messages: 98, reactions: 0, rank: 3 },
-                { name: "Jordan P.", messages: 76, reactions: 22, rank: 4 },
-                { name: "Client_Acme", messages: 54, reactions: 12, rank: 5 },
-              ].filter(m => !searchMembers || m.name.toLowerCase().includes(searchMembers.toLowerCase())).map(member => (
-                <div key={member.name} className="flex items-center justify-between p-2 rounded-lg bg-surface-light text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-bold w-5 text-center ${member.rank <= 3 ? "text-gold" : "text-muted"}`}>#{member.rank}</span>
-                    <span className="font-medium">{member.name}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-[10px] text-muted">
-                    <span className="flex items-center gap-1"><MessageSquare size={10} /> {member.messages}</span>
-                    <span className="flex items-center gap-1"><Star size={10} /> {member.reactions}</span>
-                  </div>
-                </div>
-              ))}
+            <div className="p-6 text-center text-muted text-xs">
+              <Users size={24} className="mx-auto mb-2 opacity-40" />
+              <p>No member data yet. Connect your Discord server to track activity and contributions.</p>
             </div>
           </div>
           {/* Engagement trends */}
@@ -749,15 +716,14 @@ export default function DiscordPage() {
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><TrendingUp size={14} className="text-green-400" /> Engagement Trends</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                { label: "Avg Messages/Day", value: "315", trend: "+12%" },
-                { label: "Avg Active/Day", value: "24", trend: "+8%" },
-                { label: "Retention (30d)", value: "87%", trend: "+3%" },
-                { label: "Avg Session", value: "22m", trend: "-2%" },
+                { label: "Avg Messages/Day", value: "0" },
+                { label: "Avg Active/Day", value: "0" },
+                { label: "Retention (30d)", value: "--" },
+                { label: "Avg Session", value: "--" },
               ].map(stat => (
                 <div key={stat.label} className="text-center p-3 rounded-lg bg-surface-light border border-border">
                   <p className="text-lg font-bold font-mono">{stat.value}</p>
                   <p className="text-[10px] text-muted">{stat.label}</p>
-                  <p className={`text-[10px] font-medium ${stat.trend.startsWith("+") ? "text-green-400" : "text-red-400"}`}>{stat.trend}</p>
                 </div>
               ))}
             </div>

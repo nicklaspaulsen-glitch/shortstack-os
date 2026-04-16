@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/lib/auth-context";
 import { useAppStore } from "@/lib/store";
@@ -19,6 +20,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+const ClientOnboardingWizard = dynamic(() => import("@/components/client-onboarding-wizard"), { ssr: false });
+const AutopilotDashboard = dynamic(() => import("@/components/autopilot-dashboard"), { ssr: false });
+
 export default function ClientPortalPage() {
   const { profile } = useAuth();
   const { impersonatedClient, isImpersonating } = useAppStore();
@@ -27,8 +31,8 @@ export default function ClientPortalPage() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [content, setContent] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
-  const [aiPlan, setAiPlan] = useState("");
-  const [generatingPlan, setGeneratingPlan] = useState(false);
+  const [aiPlan] = useState("");
+  const [generatingPlan] = useState(false);
   const [loading, setLoading] = useState(true);
   const [leadCount, setLeadCount] = useState(0);
   const [outreachStats, setOutreachStats] = useState({ sent: 0, replied: 0 });
@@ -102,8 +106,6 @@ export default function ClientPortalPage() {
   // Onboarding flow
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [botName, setBotName] = useState("Trinity");
-  const [onboardingStep, setOnboardingStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!client) return;
@@ -125,117 +127,42 @@ export default function ClientPortalPage() {
   const totalPaid = invoices.filter(i => i.status === "paid").reduce((sum, i) => sum + i.amount, 0);
   const publishedContent = content.filter(c => c.status === "published").length;
 
-  const onboardingQuestions = [
-    { key: "biggest_challenge", q: "What is your biggest challenge right now with getting new customers?", placeholder: "e.g., We struggle to get found online, our social media isn't growing..." },
-    { key: "goals_3mo", q: "What would success look like for you in the next 3 months?", placeholder: "e.g., 20 new clients, 5x more website traffic, fully booked schedule..." },
-    { key: "has_socials", q: "Do you have social media accounts set up? Which ones?", placeholder: "e.g., Instagram @mybusiness, Facebook page, no TikTok yet..." },
-    { key: "has_website", q: "Do you have a website? If yes, what is the URL?", placeholder: "e.g., www.mybusiness.com or No, I need one built..." },
-    { key: "target_customer", q: "Describe your ideal customer in one sentence.", placeholder: "e.g., Homeowners aged 30-50 in Miami who need kitchen renovation..." },
-    { key: "budget", q: "What is your monthly marketing budget range?", placeholder: "e.g., $500-$1000, $1000-$2500, not sure yet..." },
-    { key: "competitors", q: "Who are your top 2-3 competitors?", placeholder: "e.g., ABC Dental, Bright Smile Clinic, Miami Family Dentistry..." },
-    { key: "past_marketing", q: "What marketing have you tried before?", placeholder: "e.g., Tried Facebook ads but didn't get results, word of mouth works well..." },
-    { key: "bot_name", q: "Last one -- what would you like to name your AI assistant?", placeholder: "e.g., Trinity, Max, Nova, Spark, Alex..." },
-  ];
-
-  async function finishOnboarding() {
-    const name = answers.bot_name || "Trinity";
-    setBotName(name);
-    setGeneratingPlan(true);
-
-    // Save bot config
-    if (client) {
-      fetch("/api/bot/customize", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ client_id: client.id, bot_name: name, bot_personality: "helpful and knowledgeable about their business" }),
-      }).catch(() => {});
-
-      // Save onboarding answers to client metadata
-      await supabase.from("clients").update({
-        metadata: {
-          ...((client as unknown as Record<string, unknown>).metadata as Record<string, unknown> || {}),
-          biggest_challenge: answers.biggest_challenge,
-          goals: answers.goals_3mo,
-          has_socials: answers.has_socials,
-          has_website: answers.has_website,
-          target_customer: answers.target_customer,
-          budget: answers.budget,
-          competitors: answers.competitors,
-          past_marketing: answers.past_marketing,
-          onboarded_at: new Date().toISOString(),
-        },
-      }).eq("id", client.id);
-
-      // AI Chief generates a custom plan
-      try {
-        const res = await fetch("/api/agents/chief", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: `A new client just onboarded. Create a custom 30-day marketing plan for them. Here is their info:
-Business: ${client.business_name} (${client.industry})
-Challenge: ${answers.biggest_challenge || "not specified"}
-Goals: ${answers.goals_3mo || "grow their business"}
-Social media: ${answers.has_socials || "unknown"}
-Website: ${answers.has_website || "unknown"}
-Target customer: ${answers.target_customer || "local customers"}
-Budget: ${answers.budget || "not specified"}
-Competitors: ${answers.competitors || "unknown"}
-Past marketing: ${answers.past_marketing || "unknown"}
-
-Create a specific 30-day plan with weekly milestones. Even if they gave minimal info, still create a plan based on their industry. Be specific and actionable. No markdown.`,
-          }),
-        });
-        const data = await res.json();
-        if (data.reply) setAiPlan(data.reply);
-      } catch {}
-    }
-
-    setGeneratingPlan(false);
-    localStorage.setItem(`onboarding_done_${client?.id}`, "true");
-    localStorage.setItem(`bot_name_${client?.id}`, name);
-    setShowOnboarding(false);
-  }
-
   if (showOnboarding && client) {
-    const q = onboardingQuestions[onboardingStep];
     return (
-      <div className="fade-in max-w-xl mx-auto py-8 space-y-5">
-        <div className="text-center mb-6">
-          <div className="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-gold/20">
-            <Bot size={24} className="text-gold" />
-          </div>
-          <h1 className="text-lg font-bold tracking-tight">Welcome to ShortStack</h1>
-          <p className="text-xs text-muted mt-1">Help our AI understand your business</p>
-        </div>
-        <div className="flex gap-1 mb-3">
-          {onboardingQuestions.map((_, i) => (
-            <div key={i} className={`flex-1 h-1 rounded-full transition-all ${i <= onboardingStep ? "bg-gold" : "bg-surface-light"}`} />
-          ))}
-        </div>
-        <div className="card">
-          <p className="text-[10px] text-gold font-medium uppercase tracking-wider mb-1">Question {onboardingStep + 1} of {onboardingQuestions.length}</p>
-          <p className="text-sm font-medium mb-3">{q.q}</p>
-          {q.key === "bot_name" ? (
-            <input value={answers[q.key] || ""} onChange={e => setAnswers({ ...answers, [q.key]: e.target.value })}
-              placeholder={q.placeholder} className="input w-full" autoFocus />
-          ) : (
-            <textarea value={answers[q.key] || ""} onChange={e => setAnswers({ ...answers, [q.key]: e.target.value })}
-              placeholder={q.placeholder} className="input w-full h-24" autoFocus />
-          )}
-        </div>
-        <div className="flex justify-between">
-          <button onClick={() => setOnboardingStep(Math.max(0, onboardingStep - 1))} disabled={onboardingStep === 0}
-            className="btn-secondary text-xs disabled:opacity-30">Back</button>
-          {onboardingStep < onboardingQuestions.length - 1 ? (
-            <button onClick={() => setOnboardingStep(onboardingStep + 1)} className="btn-primary text-xs">Next</button>
-          ) : (
-            <button onClick={finishOnboarding} className="btn-primary text-xs">Get Started</button>
-          )}
-        </div>
-        <button onClick={() => { setShowOnboarding(false); localStorage.setItem(`onboarding_done_${client?.id}`, "true"); }}
-          className="text-[10px] text-muted hover:text-foreground block mx-auto">Skip for now</button>
-      </div>
+      <ClientOnboardingWizard
+        clientId={client.id}
+        clientName={client.business_name}
+        industry={client.industry || ""}
+        onComplete={async (data) => {
+          // Save onboarding data to client metadata
+          await supabase.from("clients").update({
+            metadata: {
+              ...((client as any).metadata || {}),
+              ...data,
+              onboarded_at: new Date().toISOString(),
+            },
+          }).eq("id", client.id);
+
+          // Launch AI auto-pilot if enabled
+          if (data.ai_autopilot_enabled) {
+            try {
+              await fetch("/api/autopilot/launch", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  client_id: client.id,
+                  onboarding_data: data,
+                }),
+              });
+            } catch {}
+          }
+
+          localStorage.setItem(`onboarding_done_${client.id}`, "true");
+          setShowOnboarding(false);
+          // Refresh portal data
+          fetchPortalData();
+        }}
+      />
     );
   }
 
@@ -259,6 +186,9 @@ Create a specific 30-day plan with weekly milestones. Even if they gave minimal 
           </div>
         </div>
       </div>
+
+      {/* AI Auto-Pilot Status */}
+      {client && <AutopilotDashboard clientId={client.id} />}
 
       {/* Stats */}
       <div className="grid grid-cols-3 md:grid-cols-6 gap-2.5">
@@ -585,6 +515,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
         </div>
         <h1 className="text-lg font-bold tracking-tight">Welcome to ShortStack</h1>
         <p className="text-xs text-muted mt-1">Let&apos;s set up your account — takes less than 2 minutes</p>
+        <p className="text-[10px] text-gold mt-1">Complete your detailed onboarding after account creation</p>
       </div>
 
       {/* Progress */}

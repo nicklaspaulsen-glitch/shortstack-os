@@ -11,15 +11,26 @@ import {
   Calendar, ArrowDown, ArrowUp, Check,
   Loader, AlertCircle, BookOpen,
   SlidersHorizontal, Tag, Megaphone,
-  Reply, Forward, Trash2, Send
+  Reply, Forward, Trash2, Send,
+  Zap, Play, Clock, Target
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 
 /* ── Types ── */
 type InboxCategory = "all" | "scripts" | "emails" | "outreach" | "contracts" | "ideas" | "reports" | "briefings" | "exports";
+type InboxView = "inbox" | "auto-runs";
 type SortField = "date" | "title" | "type";
 type SortDir = "asc" | "desc";
+
+interface AutoRunEntry {
+  id: string;
+  type: "scraper" | "outreach" | "email" | "automation";
+  description: string;
+  status: "running" | "completed" | "failed" | "queued";
+  timestamp: string;
+  results_summary: string;
+}
 
 interface InboxItem {
   id: string;
@@ -95,6 +106,11 @@ export default function InboxPage() {
   const [overlayItem, setOverlayItem] = useState<InboxItem | null>(null);
   const [showReply, setShowReply] = useState(false);
   const [replyText, setReplyText] = useState("");
+
+  /* Auto-Runs view */
+  const [view, setView] = useState<InboxView>("inbox");
+  const [autoRuns, setAutoRuns] = useState<AutoRunEntry[]>([]);
+  const [autoRunsLoading, setAutoRunsLoading] = useState(false);
 
   /* ── Fetch all content from various tables ── */
   const fetchInbox = useCallback(async () => {
@@ -266,6 +282,42 @@ export default function InboxPage() {
   }, [supabase]);
 
   useEffect(() => { fetchInbox(); }, [fetchInbox]);
+
+  /* ── Fetch auto-run entries from trinity_log ── */
+  const fetchAutoRuns = useCallback(async () => {
+    setAutoRunsLoading(true);
+    try {
+      const { data: logs } = await supabase
+        .from("trinity_log")
+        .select("*")
+        .or("action_type.ilike.auto%,action_type.ilike.scraper%,action_type.ilike.outreach%,action_type.eq.email_campaign,action_type.eq.sms_campaign")
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (logs && logs.length > 0) {
+        setAutoRuns(logs.map((l: Record<string, unknown>) => ({
+          id: String(l.id),
+          type: (String(l.action_type || "").includes("scraper") ? "scraper"
+            : String(l.action_type || "").includes("outreach") ? "outreach"
+            : String(l.action_type || "").includes("email") ? "email"
+            : "automation") as AutoRunEntry["type"],
+          description: String(l.description || l.action_type || "Automated action"),
+          status: (String(l.status || "completed")) as AutoRunEntry["status"],
+          timestamp: String(l.completed_at || l.created_at || new Date().toISOString()),
+          results_summary: l.result && typeof l.result === "object"
+            ? Object.entries(l.result as Record<string, unknown>).slice(0, 3).map(([k, v]) => `${k}: ${v}`).join(", ")
+            : String(l.description || "Completed"),
+        })));
+      } else {
+        setAutoRuns([]);
+      }
+    } catch {
+      setAutoRuns([]);
+    }
+    setAutoRunsLoading(false);
+  }, [supabase]);
+
+  useEffect(() => { if (view === "auto-runs") fetchAutoRuns(); }, [view, fetchAutoRuns]);
 
   /* ── Escape key to close overlay ── */
   useEffect(() => {
@@ -440,16 +492,34 @@ export default function InboxPage() {
             <p className="text-xs text-muted">All your generated content, scripts, files & exports in one place</p>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={fetchInbox} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted hover:text-white transition-all" title="Refresh">
-              <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
+            {/* View Toggle */}
+            <div className="flex items-center gap-0.5 bg-white/5 rounded-lg p-0.5">
+              <button
+                onClick={() => setView("inbox")}
+                className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-gold/20 text-gold" : "text-muted hover:text-white"}`}
+              >
+                <Inbox size={11} /> Inbox
+              </button>
+              <button
+                onClick={() => setView("auto-runs")}
+                className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-gold/20 text-gold" : "text-muted hover:text-white"}`}
+              >
+                <Zap size={11} /> Auto-Runs
+              </button>
+            </div>
+            <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted hover:text-white transition-all" title="Refresh">
+              <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} />
             </button>
-            <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs transition-all ${showArchived ? "bg-gold/20 text-gold" : "bg-white/5 text-muted hover:text-white"}`}>
-              <Archive size={12} className="inline mr-1" /> {showArchived ? "Viewing Archive" : "Archive"}
-            </button>
+            {view === "inbox" && (
+              <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs transition-all ${showArchived ? "bg-gold/20 text-gold" : "bg-white/5 text-muted hover:text-white"}`}>
+                <Archive size={12} className="inline mr-1" /> {showArchived ? "Viewing Archive" : "Archive"}
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Stats */}
+        {/* Stats — inbox view only */}
+        {view === "inbox" && (
         <div className="grid grid-cols-4 gap-3">
           {[
             { label: "Total", value: stats.total, icon: <Inbox size={14} />, color: "text-gold" },
@@ -466,8 +536,10 @@ export default function InboxPage() {
             </div>
           ))}
         </div>
+        )}
 
-        {/* Search & Filters */}
+        {/* Search & Filters — inbox view only */}
+        {view === "inbox" && (<>
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
@@ -538,9 +610,11 @@ export default function InboxPage() {
             </div>
           </div>
         )}
+        </>)}
       </div>
 
-      {/* Main Content */}
+      {/* Main Content — inbox view */}
+      {view === "inbox" && (
       <div className="flex-1 flex overflow-hidden px-4 md:px-6 pb-4 md:pb-6 gap-4">
         {/* Left: Category Sidebar */}
         <div className="w-48 shrink-0 space-y-1 overflow-y-auto pr-1 hidden md:block">
@@ -778,6 +852,77 @@ export default function InboxPage() {
           </div>
         )}
       </div>
+      )}
+
+      {/* ── Auto-Runs View ── */}
+      {view === "auto-runs" && (
+        <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-4 md:pb-6">
+          {autoRunsLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader size={20} className="animate-spin text-gold" />
+            </div>
+          ) : autoRuns.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <Zap size={36} className="text-muted/30 mb-3" />
+              <p className="text-sm text-muted font-medium">No automated runs yet</p>
+              <p className="text-[10px] text-muted mt-1">Configure auto-run in Lead Finder to see activity here.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {autoRuns.map(run => {
+                const iconMap: Record<string, React.ReactNode> = {
+                  scraper: <Search size={14} className="text-gold" />,
+                  outreach: <Send size={14} className="text-emerald-400" />,
+                  email: <Mail size={14} className="text-purple-400" />,
+                  automation: <Zap size={14} className="text-cyan-400" />,
+                };
+                const statusColors: Record<string, string> = {
+                  running: "bg-blue-500/15 text-blue-400",
+                  completed: "bg-emerald-500/15 text-emerald-400",
+                  failed: "bg-red-500/15 text-red-400",
+                  queued: "bg-amber-500/15 text-amber-400",
+                };
+                const timeDiff = Date.now() - new Date(run.timestamp).getTime();
+                const mins = Math.floor(timeDiff / 60000);
+                const timeStr = mins < 1 ? "just now" : mins < 60 ? `${mins}m ago` : mins < 1440 ? `${Math.floor(mins / 60)}h ago` : `${Math.floor(mins / 1440)}d ago`;
+
+                return (
+                  <div key={run.id} className="flex items-start gap-3 px-4 py-3 rounded-lg bg-white/[0.02] border border-white/5 hover:border-white/10 transition-all">
+                    {/* Icon */}
+                    <div className="mt-0.5 w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                      {iconMap[run.type] || <Zap size={14} className="text-muted" />}
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="text-xs font-medium text-white truncate">{run.description}</span>
+                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-medium capitalize ${statusColors[run.status] || "bg-white/10 text-muted"}`}>
+                          {run.status === "running" && <Play size={8} className="mr-0.5" />}
+                          {run.status}
+                        </span>
+                      </div>
+                      <p className="text-[10px] text-muted truncate">{run.results_summary}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[9px] text-muted/60 capitalize flex items-center gap-1">
+                          <Target size={8} /> {run.type}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Timestamp */}
+                    <div className="shrink-0 text-right">
+                      <p className="text-[10px] text-muted flex items-center gap-1">
+                        <Clock size={9} /> {timeStr}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Full-screen Overlay Modal ── */}
       {overlayItem && (

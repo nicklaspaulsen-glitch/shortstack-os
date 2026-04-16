@@ -71,21 +71,46 @@ export async function POST(request: NextRequest) {
       }
 
       const query = `${niche} in ${location}`;
-      const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Goog-Api-Key": apiKey,
-          "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri",
-        },
-        body: JSON.stringify({ textQuery: query, maxResultCount: maxResults }),
-      });
-      const searchData = await searchRes.json();
+      let pageToken: string | undefined;
+      let pageAttempts = 0;
+      const MAX_PAGES = 5;
+      // Track seen place IDs across pages to avoid re-processing
+      const seenPlaceIds = new Set<string>();
 
-      if (!searchData.places) {
-        errors.push(searchData.error?.message || "No results found");
-      } else {
+      while (totalFound < maxResults && pageAttempts < MAX_PAGES) {
+        pageAttempts++;
+
+        const requestBody: Record<string, unknown> = {
+          textQuery: query,
+          // Over-request up to the API max of 20 to compensate for dedup/filter losses
+          maxResultCount: Math.min(20, maxResults * 2),
+        };
+        if (pageToken) requestBody.pageToken = pageToken;
+
+        const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Goog-Api-Key": apiKey,
+            "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri",
+          },
+          body: JSON.stringify(requestBody),
+        });
+        const searchData = await searchRes.json();
+
+        if (!searchData.places || searchData.places.length === 0) {
+          if (pageAttempts === 1) errors.push(searchData.error?.message || "No results found");
+          break;
+        }
+
         for (const place of searchData.places) {
+          if (totalFound >= maxResults) break;
+
+          // Skip already-seen places (across pages)
+          const placeId: string = place.id || "";
+          if (placeId && seenPlaceIds.has(placeId)) continue;
+          if (placeId) seenPlaceIds.add(placeId);
+
           const d = {
             name: place.displayName?.text || "",
             phone: place.nationalPhoneNumber || null,
@@ -159,8 +184,16 @@ export async function POST(request: NextRequest) {
           if (!insertError) totalFound++;
           else totalSkipped++;
 
+          // Rate limit between each place
           await new Promise(r => setTimeout(r, 150));
         }
+
+        // Check for next page token; break if none available
+        pageToken = searchData.nextPageToken as string | undefined;
+        if (!pageToken) break;
+
+        // Rate limit between page fetches
+        await new Promise(r => setTimeout(r, 300));
       }
     }
 

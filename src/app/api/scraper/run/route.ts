@@ -84,114 +84,150 @@ export async function POST(request: NextRequest) {
             if (!apiKey) { errors.push("Google Places API key not configured"); continue; }
 
             const query = `${niche} in ${location}`;
+            const targetPerCombo = max_results_per_search;
+            let insertedForCombo = 0;
+            let pageToken: string | undefined;
+            let pageAttempts = 0;
+            const MAX_PAGES = 5;
+            // Track seen place IDs across pages to avoid re-processing
+            const seenPlaceIds = new Set<string>();
 
-            // Use Places API (New) — the legacy API is deprecated
-            const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-Goog-Api-Key": apiKey,
-                "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri",
-              },
-              body: JSON.stringify({ textQuery: query, maxResultCount: max_results_per_search }),
-            });
-            const searchData = await searchRes.json();
+            while (insertedForCombo < targetPerCombo && pageAttempts < MAX_PAGES) {
+              pageAttempts++;
 
-            if (!searchData.places) { errors.push(`Google: ${searchData.error?.message || "No results"}`); continue; }
-
-            for (const place of searchData.places) {
-              const d = {
-                name: place.displayName?.text || "",
-                formatted_phone_number: place.nationalPhoneNumber || null,
-                formatted_address: place.formattedAddress || "",
-                website: place.websiteUri || null,
-                rating: place.rating || null,
-                user_ratings_total: place.userRatingCount || 0,
-                url: place.googleMapsUri || null,
+              const requestBody: Record<string, unknown> = {
+                textQuery: query,
+                // Over-request up to the API max of 20 to compensate for dedup/filter losses
+                maxResultCount: Math.min(20, targetPerCombo * 2),
               };
+              if (pageToken) requestBody.pageToken = pageToken;
 
-              // Apply filters
-              if (filters.min_rating && d.rating && d.rating < filters.min_rating) continue;
-              if (filters.max_reviews && d.user_ratings_total > filters.max_reviews) continue;
-              if (filters.min_reviews && d.user_ratings_total < filters.min_reviews) continue;
-              if (filters.require_phone && !d.formatted_phone_number) continue;
-              if (filters.require_website && !d.website) continue;
+              // Use Places API (New) — the legacy API is deprecated
+              const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-Goog-Api-Key": apiKey,
+                  "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri",
+                },
+                body: JSON.stringify(requestBody),
+              });
+              const searchData = await searchRes.json();
 
-              // Deduplicate
-              const { data: existing } = await supabase
-                .from("leads")
-                .select("id")
-                .eq("business_name", d.name || place.name)
-                .limit(1);
-
-              if (existing && existing.length > 0) { totalSkipped++; continue; }
-
-              // Scrape email from website
-              let email = null;
-              if (d.website) {
-                try {
-                  const siteRes = await fetch(d.website, {
-                    headers: { "User-Agent": "Mozilla/5.0" },
-                    signal: AbortSignal.timeout(5000),
-                  });
-                  const html = await siteRes.text();
-                  const emailMatch = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-                  if (emailMatch) email = emailMatch[0];
-                } catch {}
+              if (!searchData.places || searchData.places.length === 0) {
+                if (pageAttempts === 1) errors.push(`Google: ${searchData.error?.message || "No results"}`);
+                break;
               }
 
-              const addressParts = (d.formatted_address || "").split(",").map((s: string) => s.trim());
+              for (const place of searchData.places) {
+                if (insertedForCombo >= targetPerCombo) break;
 
-              const leadData = {
-                business_name: d.name || place.name,
-                phone: d.formatted_phone_number || null,
-                email,
-                website: d.website || null,
-                address: d.formatted_address || null,
-                city: addressParts[1] || null,
-                state: addressParts[2]?.split(" ")[0] || null,
-                country: addressParts[addressParts.length - 1] || "US",
-                google_rating: d.rating || null,
-                review_count: d.user_ratings_total || 0,
-                industry: niche,
-                category: tags.join(", ") || niche,
-                source: platform,
-                source_url: d.url || null,
-                status: "new" as const,
-                ghl_sync_status: "pending",
-              };
+                // Skip already-seen places (across pages)
+                const placeId: string = place.id || "";
+                if (placeId && seenPlaceIds.has(placeId)) continue;
+                if (placeId) seenPlaceIds.add(placeId);
 
-              const lead_score = scoreLeadQuality({
-                phone: leadData.phone,
-                email: leadData.email,
-                website: leadData.website,
-                google_rating: leadData.google_rating,
-                review_count: leadData.review_count,
-                source: leadData.source,
-              });
+                const d = {
+                  name: place.displayName?.text || "",
+                  formatted_phone_number: place.nationalPhoneNumber || null,
+                  formatted_address: place.formattedAddress || "",
+                  website: place.websiteUri || null,
+                  rating: place.rating || null,
+                  user_ratings_total: place.userRatingCount || 0,
+                  url: place.googleMapsUri || null,
+                };
 
-              const { error: insertError } = await supabase.from("leads").insert({ ...leadData, lead_score });
-              if (!insertError) {
-                totalScraped++;
-                results.push({
-                  business_name: leadData.business_name,
+                // Apply filters
+                if (filters.min_rating && d.rating && d.rating < filters.min_rating) continue;
+                if (filters.max_reviews && d.user_ratings_total > filters.max_reviews) continue;
+                if (filters.min_reviews && d.user_ratings_total < filters.min_reviews) continue;
+                if (filters.require_phone && !d.formatted_phone_number) continue;
+                if (filters.require_website && !d.website) continue;
+
+                // Deduplicate by name in DB (also using place ID via seenPlaceIds above)
+                const { data: existing } = await supabase
+                  .from("leads")
+                  .select("id")
+                  .eq("business_name", d.name || place.name)
+                  .limit(1);
+
+                if (existing && existing.length > 0) { totalSkipped++; continue; }
+
+                // Scrape email from website
+                let email = null;
+                if (d.website) {
+                  try {
+                    const siteRes = await fetch(d.website, {
+                      headers: { "User-Agent": "Mozilla/5.0" },
+                      signal: AbortSignal.timeout(5000),
+                    });
+                    const html = await siteRes.text();
+                    const emailMatch = html.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+                    if (emailMatch) email = emailMatch[0];
+                  } catch {}
+                }
+
+                const addressParts = (d.formatted_address || "").split(",").map((s: string) => s.trim());
+
+                const leadData = {
+                  business_name: d.name || place.name,
+                  phone: d.formatted_phone_number || null,
+                  email,
+                  website: d.website || null,
+                  address: d.formatted_address || null,
+                  city: addressParts[1] || null,
+                  state: addressParts[2]?.split(" ")[0] || null,
+                  country: addressParts[addressParts.length - 1] || "US",
+                  google_rating: d.rating || null,
+                  review_count: d.user_ratings_total || 0,
+                  industry: niche,
+                  category: tags.join(", ") || niche,
+                  source: platform,
+                  source_url: d.url || null,
+                  status: "new" as const,
+                  ghl_sync_status: "pending",
+                };
+
+                const lead_score = scoreLeadQuality({
                   phone: leadData.phone,
                   email: leadData.email,
                   website: leadData.website,
-                  address: leadData.address,
                   google_rating: leadData.google_rating,
                   review_count: leadData.review_count,
-                  industry: leadData.industry,
                   source: leadData.source,
-                  status: "new",
-                  lead_score,
                 });
-              } else {
-                totalSkipped++;
+
+                const { error: insertError } = await supabase.from("leads").insert({ ...leadData, lead_score });
+                if (!insertError) {
+                  totalScraped++;
+                  insertedForCombo++;
+                  results.push({
+                    business_name: leadData.business_name,
+                    phone: leadData.phone,
+                    email: leadData.email,
+                    website: leadData.website,
+                    address: leadData.address,
+                    google_rating: leadData.google_rating,
+                    review_count: leadData.review_count,
+                    industry: leadData.industry,
+                    source: leadData.source,
+                    status: "new",
+                    lead_score,
+                  });
+                } else {
+                  totalSkipped++;
+                }
+
+                // Rate limit between each place
+                await new Promise(r => setTimeout(r, 200));
               }
 
-              // Rate limit
-              await new Promise(r => setTimeout(r, 200));
+              // Check for next page token; break if none available
+              pageToken = searchData.nextPageToken as string | undefined;
+              if (!pageToken) break;
+
+              // Rate limit between page fetches
+              await new Promise(r => setTimeout(r, 300));
             }
           }
 

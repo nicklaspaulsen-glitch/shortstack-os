@@ -8,7 +8,9 @@ import {
   MessageSquare, RefreshCw, LayoutList, LayoutGrid,
   Check, Loader2, PhoneCall, X, Plus, PhoneForwarded,
   Globe, Shield, Wifi, Copy, ExternalLink, Clock, User,
-  Bot, ArrowRight, Hash, Smartphone
+  Bot, ArrowRight, Hash, Smartphone, Radar, MapPin, Building2, Sliders,
+  AlertTriangle, Activity, Star,
+  CalendarRange, Tag, BookCheck
 } from "lucide-react";
 import {
   FacebookIcon, InstagramIcon, LinkedInIcon, TikTokIcon,
@@ -92,13 +94,33 @@ const STATUS_STYLE: Record<string, string> = {
   replied: "bg-green-400/10 text-green-400",
   completed: "bg-green-400/10 text-green-400",
   interested: "bg-green-400/10 text-green-400",
+  booked: "bg-emerald-400/10 text-emerald-400",
   failed: "bg-red-400/10 text-red-400",
   bounced: "bg-red-400/10 text-red-400",
   not_interested: "bg-orange-400/10 text-orange-400",
   pending: "bg-yellow-400/10 text-yellow-400",
+  maybe_later: "bg-amber-400/10 text-amber-400",
   no_answer: "bg-gray-400/10 text-gray-400",
   voicemail: "bg-purple-400/10 text-purple-400",
 };
+
+// Sentiment dot color based on status
+function getSentimentColor(status: string): string {
+  if (["replied", "interested", "completed", "booked"].includes(status)) return "bg-green-400";
+  if (["sent", "delivered", "pending"].includes(status)) return "bg-blue-400";
+  if (["failed", "bounced", "not_interested"].includes(status)) return "bg-red-400";
+  if (["no_answer", "voicemail", "maybe_later"].includes(status)) return "bg-amber-400";
+  return "bg-gray-400";
+}
+
+// Outcome tag config
+const OUTCOME_TAGS = [
+  { status: "booked",         emoji: "🟢", label: "Booked"         },
+  { status: "interested",     emoji: "🔵", label: "Interested"     },
+  { status: "maybe_later",    emoji: "🟡", label: "Maybe Later"    },
+  { status: "not_interested", emoji: "🔴", label: "Not Interested" },
+  { status: "no_answer",      emoji: "⚫", label: "No Response"    },
+];
 
 const DM_PLATFORMS = [
   { id: "instagram", label: "Instagram", icon: <InstagramIcon size={14} /> },
@@ -112,6 +134,12 @@ function formatDuration(secs: number): string {
   const m = Math.floor(secs / 60);
   const s = secs % 60;
   return s > 0 ? `${m}m ${s}s` : `${m}m`;
+}
+
+function formatTimestamp(secs: number): string {
+  const m = Math.floor(secs / 60);
+  const s = Math.floor(secs % 60);
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
 export default function OutreachLogsPage() {
@@ -132,6 +160,8 @@ export default function OutreachLogsPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [typeFilter, setTypeFilter] = useState("all");
   const [viewMode, setViewMode] = useState<ViewMode>("compact");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   // Selection & bulk actions
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -142,6 +172,7 @@ export default function OutreachLogsPage() {
   const [detailEntry, setDetailEntry] = useState<OutreachEntry | null>(null);
   const [conversationDetail, setConversationDetail] = useState<ConversationDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [threadEntries, setThreadEntries] = useState<OutreachEntry[]>([]);
 
   // Provisioning
   const [provNumbers, setProvNumbers] = useState<ProvisionedNumber[]>([]);
@@ -164,8 +195,33 @@ export default function OutreachLogsPage() {
     followup_day_7: true,
     exclude_contacted: true,
     pause_on_reply: true,
+    // Scraping
+    scrape_platforms: ["google_maps"] as string[],
+    scrape_niches: ["dentist"] as string[],
+    scrape_locations: ["Miami, FL"] as string[],
+    scrape_volume: 20,
+    scrape_filters: { min_rating: 0, max_reviews: 500, require_phone: false, require_website: false },
+    // Channel limits
+    email_daily_limit: 100,
+    sms_daily_limit: 50,
+    calls_daily_limit: 20,
+    dm_daily_limits: { instagram: 20, facebook: 20, linkedin: 20, tiktok: 20 },
+    // Schedule
+    timezone: "America/New_York",
   });
   const [configSaving, setConfigSaving] = useState(false);
+  const [scraperRunning, setScraperRunning] = useState(false);
+  const [scraperResult, setScraperResult] = useState<{ leads_found: number; duplicates_skipped: number } | null>(null);
+  const [spamGuardEnabled, setSpamGuardEnabled] = useState(false);
+  const [senderStats, setSenderStats] = useState<{ bounce_rate?: number; warmup_stage?: string; health?: string; total_senders?: number } | null>(null);
+  const [autoRunConfig, setAutoRunConfig] = useState<{
+    enabled: boolean; time: string; days: string[];
+    platforms: string[]; niches: string[]; locations: string[];
+    max_results: number;
+  } | null>(null);
+  // Tag input helpers
+  const [nicheInput, setNicheInput] = useState("");
+  const [locationInput, setLocationInput] = useState("");
 
   /* ── Data fetching ── */
   const fetchEntries = useCallback(async () => {
@@ -179,6 +235,8 @@ export default function OutreachLogsPage() {
         type: typeFilter,
         search,
       });
+      if (dateFrom) params.set("dateFrom", dateFrom);
+      if (dateTo) params.set("dateTo", dateTo);
       const res = await fetch(`/api/outreach/entries?${params}`);
       if (res.ok) {
         const data = await res.json();
@@ -189,7 +247,7 @@ export default function OutreachLogsPage() {
       }
     } catch { /* ignore */ }
     setLoading(false);
-  }, [page, pageSize, platformFilter, statusFilter, typeFilter, search]);
+  }, [page, pageSize, platformFilter, statusFilter, typeFilter, search, dateFrom, dateTo]);
 
   useEffect(() => { fetchEntries(); }, [fetchEntries]);
 
@@ -199,6 +257,21 @@ export default function OutreachLogsPage() {
       if (d.config) setConfig(prev => ({ ...prev, ...d.config }));
     }).catch(() => {});
   }, []);
+
+  // Load spam guard + sender stats when config tab opens
+  useEffect(() => {
+    if (tab === "config") {
+      fetch("/api/settings/spam-guard").then(r => r.json()).then(d => {
+        setSpamGuardEnabled(d.enabled ?? false);
+      }).catch(() => {});
+      fetch("/api/senders/stats").then(r => r.json()).then(d => {
+        setSenderStats(d);
+      }).catch(() => {});
+      fetch("/api/scraper/auto-run").then(r => r.json()).then(d => {
+        if (d && typeof d.enabled === "boolean") setAutoRunConfig(d);
+      }).catch(() => {});
+    }
+  }, [tab]);
 
   // Load clients for provisioning
   useEffect(() => {
@@ -214,6 +287,7 @@ export default function OutreachLogsPage() {
   async function openDetail(entry: OutreachEntry) {
     setDetailEntry(entry);
     setConversationDetail(null);
+    setThreadEntries([]);
 
     if (entry.platform === "call") {
       // Extract conversation ID from message_text like "[ElevenAgent Call] conv:abc123"
@@ -235,6 +309,35 @@ export default function OutreachLogsPage() {
         } catch { /* ignore */ }
         setDetailLoading(false);
       }
+    }
+
+    // Fetch email thread for email entries
+    if (entry.platform === "email" && entry.recipient_handle) {
+      try {
+        const threadRes = await fetch(
+          `/api/outreach/entries?search=${encodeURIComponent(entry.recipient_handle)}&platform=email&pageSize=10`
+        );
+        if (threadRes.ok) {
+          const threadData = await threadRes.json();
+          setThreadEntries((threadData.entries || []).filter((e: OutreachEntry) => e.id !== entry.id));
+        }
+      } catch { /* ignore */ }
+    }
+  }
+
+  /* ── Outcome tagging ── */
+  async function updateEntryStatus(entryId: string, newStatus: string) {
+    try {
+      await fetch("/api/outreach/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "mark_status", entry_ids: [entryId], status: newStatus }),
+      });
+      setEntries(prev => prev.map(e => e.id === entryId ? { ...e, status: newStatus } : e));
+      setDetailEntry(prev => prev && prev.id === entryId ? { ...prev, status: newStatus } : prev);
+      toast.success(`Marked as ${newStatus.replace(/_/g, " ")}`);
+    } catch {
+      toast.error("Failed to update status");
     }
   }
 
@@ -347,6 +450,56 @@ export default function OutreachLogsPage() {
     setConfigSaving(false);
   }
 
+  async function runScraper() {
+    setScraperRunning(true);
+    setScraperResult(null);
+    try {
+      const res = await fetch("/api/scraper/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          platforms: config.scrape_platforms,
+          niches: config.scrape_niches,
+          locations: config.scrape_locations,
+          volume: config.scrape_volume,
+          filters: config.scrape_filters,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setScraperResult({ leads_found: data.leads_found ?? 0, duplicates_skipped: data.duplicates_skipped ?? 0 });
+        toast.success(`Scraper done — ${data.leads_found ?? 0} leads found`);
+      } else {
+        toast.error(data.error || "Scraper failed");
+      }
+    } catch {
+      toast.error("Failed to run scraper");
+    }
+    setScraperRunning(false);
+  }
+
+  function addTag(field: "scrape_niches" | "scrape_locations", value: string) {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    setConfig(c => ({
+      ...c,
+      [field]: c[field].includes(trimmed) ? c[field] : [...c[field], trimmed],
+    }));
+  }
+
+  function removeTag(field: "scrape_niches" | "scrape_locations", value: string) {
+    setConfig(c => ({ ...c, [field]: c[field].filter((v: string) => v !== value) }));
+  }
+
+  function toggleScrapePlatform(id: string) {
+    setConfig(c => ({
+      ...c,
+      scrape_platforms: c.scrape_platforms.includes(id)
+        ? c.scrape_platforms.filter(p => p !== id)
+        : [...c.scrape_platforms, id],
+    }));
+  }
+
   function exportCSV() {
     const csv = "Business,Platform,Handle,Status,Message,Date\n" +
       entries.map(e => `"${e.business_name}","${e.platform}","${e.recipient_handle}","${e.status}","${(e.message_text || "").replace(/"/g, '""').substring(0, 200)}","${e.created_at}"`).join("\n");
@@ -362,6 +515,9 @@ export default function OutreachLogsPage() {
 
   /* ── Render ── */
   const replyRate = stats.total > 0 ? ((stats.replied / stats.total) * 100).toFixed(1) : "0";
+  const bookedCount = entries.filter(e => e.status === "booked").length;
+  // Use a broader booked estimate from stats when possible
+  const bookRate = stats.total > 0 ? ((bookedCount / stats.total) * 100).toFixed(1) : "0";
 
   return (
     <div className="fade-in space-y-4">
@@ -384,13 +540,14 @@ export default function OutreachLogsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-9 gap-2">
         {[
           { label: "Total", value: stats.total, color: "text-gold", icon: <Send size={12} /> },
           { label: "Sent", value: stats.sent, color: "text-blue-400", icon: <CheckCircle size={12} /> },
           { label: "Replied", value: stats.replied, color: "text-green-400", icon: <ThumbsUp size={12} /> },
           { label: "Failed", value: stats.failed, color: "text-red-400", icon: <XCircle size={12} /> },
           { label: "Reply Rate", value: `${replyRate}%`, color: "text-green-400", icon: <BarChart3 size={12} /> },
+          { label: "Book Rate", value: `${bookRate}%`, color: "text-emerald-400", icon: <BookCheck size={12} /> },
           { label: "Emails", value: stats.byPlatform?.email || 0, color: "text-gold", icon: <Mail size={12} /> },
           { label: "SMS", value: stats.byPlatform?.sms || 0, color: "text-emerald-400", icon: <Phone size={12} /> },
           { label: "Calls", value: stats.byPlatform?.call || 0, color: "text-blue-400", icon: <PhoneCall size={12} /> },
@@ -472,6 +629,37 @@ export default function OutreachLogsPage() {
                 <option value={25}>25/page</option>
                 <option value={50}>50/page</option>
               </select>
+            </div>
+
+            {/* Date range filter */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-1.5 text-[10px] text-muted">
+                <CalendarRange size={13} className="text-gold" />
+                <span>Date range:</span>
+              </div>
+              <input
+                type="date"
+                value={dateFrom}
+                onChange={e => { setDateFrom(e.target.value); setPage(1); }}
+                className="input text-xs py-1.5 w-auto"
+                placeholder="From"
+              />
+              <span className="text-[10px] text-muted">→</span>
+              <input
+                type="date"
+                value={dateTo}
+                onChange={e => { setDateTo(e.target.value); setPage(1); }}
+                className="input text-xs py-1.5 w-auto"
+                placeholder="To"
+              />
+              {(dateFrom || dateTo) && (
+                <button
+                  onClick={() => { setDateFrom(""); setDateTo(""); setPage(1); }}
+                  className="text-[10px] px-2 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-muted flex items-center gap-1"
+                >
+                  <X size={9} /> Clear
+                </button>
+              )}
             </div>
 
             {/* Bulk action bar */}
@@ -567,7 +755,12 @@ export default function OutreachLogsPage() {
                             }`}>{isSelected && <Check size={10} className="text-black" />}</button>
                           </td>
                           <td className="p-2.5">{PLATFORM_ICON[entry.platform] || <Mail size={13} className="text-muted" />}</td>
-                          <td className="p-2.5 font-medium max-w-[140px] truncate">{entry.business_name || "—"}</td>
+                          <td className="p-2.5 font-medium max-w-[140px] truncate">
+                            <span className="flex items-center gap-1.5">
+                              <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
+                              {entry.business_name || "—"}
+                            </span>
+                          </td>
                           <td className="p-2.5 text-muted font-mono text-[10px] max-w-[120px] truncate">{entry.recipient_handle || "—"}</td>
                           <td className="p-2.5 text-muted max-w-[220px] truncate">
                             {entry.platform === "call" ? (
@@ -622,6 +815,7 @@ export default function OutreachLogsPage() {
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
+                            <span className={`w-2 h-2 rounded-full flex-shrink-0 ${getSentimentColor(entry.status)}`} />
                             <p className="text-xs font-medium truncate">{entry.business_name || "Unknown"}</p>
                             <span className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted capitalize">{entry.platform}</span>
                             {entry.reply_text && <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400">replied</span>}
@@ -701,13 +895,36 @@ export default function OutreachLogsPage() {
 
                 {/* Meta */}
                 <div className="flex flex-wrap gap-2">
-                  <span className={`text-[9px] px-2 py-0.5 rounded-full ${STATUS_STYLE[detailEntry.status] || "bg-white/5 text-muted"}`}>
-                    {detailEntry.status}
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 ${getSentimentColor(detailEntry.status).replace("bg-", "bg-").replace("-400", "-400/20")} border border-${getSentimentColor(detailEntry.status).replace("bg-", "").replace("-400", "-400/30")}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${getSentimentColor(detailEntry.status)}`} />
+                    <span className={STATUS_STYLE[detailEntry.status]?.split(" ")[1] || "text-muted"}>{detailEntry.status}</span>
                   </span>
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted capitalize">{detailEntry.platform}</span>
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted">
                     {new Date(detailEntry.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
                   </span>
+                </div>
+
+                {/* Outcome tags */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-1 text-[9px] text-muted">
+                    <Tag size={9} /> <span>Mark outcome:</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {OUTCOME_TAGS.map(tag => (
+                      <button
+                        key={tag.status}
+                        onClick={() => updateEntryStatus(detailEntry.id, tag.status)}
+                        className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${
+                          detailEntry.status === tag.status
+                            ? "bg-gold/10 border-gold/30 text-gold font-medium"
+                            : "bg-white/5 border-white/[0.06] text-muted hover:border-white/20 hover:text-foreground"
+                        }`}
+                      >
+                        <span>{tag.emoji}</span> {tag.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Quick actions */}
@@ -768,25 +985,63 @@ export default function OutreachLogsPage() {
                           </div>
                         )}
 
-                        {/* Transcript chat bubbles */}
-                        <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                          {conversationDetail.transcript.map((line, i) => (
-                            <div key={i} className={`flex ${line.role === "agent" ? "justify-start" : "justify-end"}`}>
-                              <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
-                                line.role === "agent"
-                                  ? "bg-gold/10 border border-gold/10 rounded-tl-sm"
-                                  : "bg-blue-500/10 border border-blue-500/10 rounded-tr-sm"
-                              }`}>
-                                <div className="flex items-center gap-1 mb-0.5">
-                                  {line.role === "agent" ? <Bot size={8} className="text-gold" /> : <User size={8} className="text-blue-400" />}
-                                  <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-gold" : "text-blue-400"}`}>
-                                    {line.role === "agent" ? "AI Agent" : "Customer"}
-                                  </span>
+                        {/* Speaking time breakdown */}
+                        {conversationDetail.transcript.length > 0 && (() => {
+                          const agentLines = conversationDetail.transcript.filter(l => l.role === "agent");
+                          const customerLines = conversationDetail.transcript.filter(l => l.role === "customer");
+                          const agentPct = conversationDetail.transcript.length > 0
+                            ? Math.round((agentLines.length / conversationDetail.transcript.filter(l => l.role !== "system").length) * 100)
+                            : 0;
+                          return (
+                            <div className="bg-surface-light rounded-lg p-2.5 space-y-1.5">
+                              <p className="text-[8px] text-muted uppercase tracking-wider">Speaking Time</p>
+                              <div className="flex items-center gap-2">
+                                <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                  <div className="h-full bg-gold rounded-full" style={{ width: `${agentPct}%` }} />
                                 </div>
-                                <p className="text-[10px] leading-relaxed">{line.message}</p>
+                                <span className="text-[8px] text-gold">{agentPct}% AI</span>
+                              </div>
+                              <div className="flex justify-between text-[8px] text-muted">
+                                <span><Bot size={7} className="inline mr-0.5 text-gold" /> Agent: {agentLines.length} turns</span>
+                                <span><User size={7} className="inline mr-0.5 text-blue-400" /> Customer: {customerLines.length} turns</span>
                               </div>
                             </div>
-                          ))}
+                          );
+                        })()}
+
+                        {/* Transcript chat bubbles */}
+                        <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                          {conversationDetail.transcript.map((line, i) => {
+                            if (line.role === "system") {
+                              return (
+                                <div key={i} className="text-center">
+                                  <span className="text-[8px] text-muted italic px-2 py-0.5 rounded bg-white/5">
+                                    {line.timestamp !== undefined ? `[${formatTimestamp(line.timestamp)}] ` : ""}{line.message}
+                                  </span>
+                                </div>
+                              );
+                            }
+                            return (
+                              <div key={i} className={`flex ${line.role === "agent" ? "justify-start" : "justify-end"}`}>
+                                <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
+                                  line.role === "agent"
+                                    ? "bg-gold/10 border border-gold/10 rounded-tl-sm"
+                                    : "bg-blue-500/10 border border-blue-500/10 rounded-tr-sm"
+                                }`}>
+                                  <div className="flex items-center gap-1 mb-0.5">
+                                    {line.role === "agent" ? <Bot size={8} className="text-gold" /> : <User size={8} className="text-blue-400" />}
+                                    <span className={`text-[8px] font-medium ${line.role === "agent" ? "text-gold" : "text-blue-400"}`}>
+                                      {line.role === "agent" ? "AI Agent" : "Customer"}
+                                    </span>
+                                    {line.timestamp !== undefined && (
+                                      <span className="ml-auto text-[7px] text-muted font-mono">{formatTimestamp(line.timestamp)}</span>
+                                    )}
+                                  </div>
+                                  <p className="text-[10px] leading-relaxed">{line.message}</p>
+                                </div>
+                              </div>
+                            );
+                          })}
                           {conversationDetail.transcript.length === 0 && (
                             <p className="text-[10px] text-muted text-center py-4">No transcript available</p>
                           )}
@@ -839,6 +1094,45 @@ export default function OutreachLogsPage() {
                         </div>
                         <div className="bg-green-400/[0.03] border border-green-400/10 rounded-lg p-3">
                           <p className="text-[10px] whitespace-pre-wrap leading-relaxed">{detailEntry.reply_text}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Thread history */}
+                    {threadEntries.length > 0 && (
+                      <div className="space-y-2 border-t border-border pt-3">
+                        <div className="flex items-center gap-1.5 text-[9px] text-muted">
+                          <MessageSquare size={9} /> <span className="uppercase tracking-wider">Thread History ({threadEntries.length})</span>
+                        </div>
+                        <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                          {[...threadEntries]
+                            .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+                            .map(te => (
+                              <div key={te.id} className="bg-surface-light border border-border rounded-lg p-2.5 space-y-1.5">
+                                <div className="flex items-center justify-between text-[8px] text-muted">
+                                  <span className="flex items-center gap-1">
+                                    <ArrowRight size={8} className="text-gold" />
+                                    <span className="font-medium text-gold">Sent</span>
+                                  </span>
+                                  <span className={`px-1.5 py-0.5 rounded-full ${STATUS_STYLE[te.status] || "bg-white/5 text-muted"}`}>{te.status}</span>
+                                  <span>{new Date(te.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                                </div>
+                                {te.message_text?.startsWith("Subject:") && (
+                                  <p className="text-[9px] font-semibold text-muted">{te.message_text.split("\n")[0]}</p>
+                                )}
+                                <p className="text-[9px] text-muted line-clamp-2">
+                                  {te.message_text?.startsWith("Subject:")
+                                    ? te.message_text.split("\n").slice(2).join(" ").substring(0, 150)
+                                    : te.message_text?.substring(0, 150)}
+                                </p>
+                                {te.reply_text && (
+                                  <div className="bg-green-400/[0.03] border border-green-400/10 rounded p-1.5">
+                                    <p className="text-[8px] font-medium text-green-400 mb-0.5">Reply</p>
+                                    <p className="text-[9px] text-muted line-clamp-2">{te.reply_text.substring(0, 120)}</p>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
                         </div>
                       </div>
                     )}
@@ -1198,91 +1492,571 @@ export default function OutreachLogsPage() {
 
       {/* ══════════ CONFIG TAB ══════════ */}
       {tab === "config" && (
-        <div className="space-y-4 max-w-2xl">
-          <div className="card space-y-4">
-            <h3 className="text-sm font-semibold flex items-center gap-2"><Settings size={14} /> Outreach Configuration</h3>
+        <div className="space-y-5">
 
+          {/* ── Section 1: Lead Scraping ── */}
+          <div className="card space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <Radar size={14} className="text-gold" /> Lead Scraping Configuration
+              </h3>
+              <div className="flex items-center gap-2">
+                {scraperResult && (
+                  <span className="text-[10px] px-2 py-1 rounded-lg bg-green-400/10 text-green-400 border border-green-400/20 flex items-center gap-1">
+                    <CheckCircle size={10} /> {scraperResult.leads_found} found · {scraperResult.duplicates_skipped} skipped
+                  </span>
+                )}
+                <button onClick={runScraper} disabled={scraperRunning}
+                  className="btn-primary text-xs flex items-center gap-1.5 px-4">
+                  {scraperRunning ? <Loader2 size={12} className="animate-spin" /> : <Radar size={12} />}
+                  {scraperRunning ? "Running…" : "Run Scraper Now"}
+                </button>
+              </div>
+            </div>
+
+            {/* Platforms to scrape */}
             <div>
-              <p className="text-xs font-medium mb-2">Platform Daily Limits</p>
-              <div className="grid grid-cols-2 gap-3">
-                {(["instagram", "linkedin", "facebook", "tiktok"] as const).map(p => {
-                  const plat = config.platforms[p] || { enabled: true, daily_limit: 20 };
+              <p className="text-[10px] text-muted mb-2 uppercase tracking-wider">Platforms to scrape from</p>
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { id: "google_maps", label: "Google Maps", icon: <MapPin size={12} className="text-blue-400" /> },
+                  { id: "facebook", label: "Facebook", icon: <FacebookIcon size={12} /> },
+                  { id: "yelp", label: "Yelp", icon: <Star size={12} className="text-red-400" /> },
+                ].map(pl => {
+                  const active = config.scrape_platforms.includes(pl.id);
                   return (
-                    <div key={p} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light">
-                      <button onClick={() => setConfig(c => ({
-                        ...c,
-                        platforms: { ...c.platforms, [p]: { ...plat, enabled: !plat.enabled } }
-                      }))} className={`w-8 h-4.5 rounded-full p-0.5 transition-colors ${plat.enabled ? "bg-gold" : "bg-white/10"}`}>
-                        <div className={`w-3.5 h-3.5 rounded-full bg-zinc-200 shadow-sm transition-transform ${plat.enabled ? "translate-x-3.5" : "translate-x-0"}`} />
-                      </button>
-                      <span className="flex items-center gap-1.5 text-xs capitalize flex-1">
-                        {PLATFORM_ICON[p]} {p}
-                      </span>
-                      <input type="number" value={plat.daily_limit} min={0} max={200}
-                        onChange={e => setConfig(c => ({
-                          ...c,
-                          platforms: { ...c.platforms, [p]: { ...plat, daily_limit: Number(e.target.value) } }
-                        }))}
-                        className="input w-16 text-xs text-center py-1" />
-                      <span className="text-[9px] text-muted">/day</span>
-                    </div>
+                    <button key={pl.id} onClick={() => toggleScrapePlatform(pl.id)}
+                      className={`flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all ${
+                        active ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-white/[0.06] hover:border-white/10"
+                      }`}>
+                      {pl.icon} {pl.label}
+                      {active && <Check size={10} className="ml-0.5" />}
+                    </button>
                   );
                 })}
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <label className="text-xs flex-1">Total daily target</label>
-              <input type="number" value={config.total_daily_target} min={0} max={500}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Niches */}
+              <div>
+                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Niches / Industries</p>
+                <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border">
+                  {config.scrape_niches.map((n: string) => (
+                    <span key={n} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-gold/10 text-gold border border-gold/20">
+                      {n}
+                      <button onClick={() => removeTag("scrape_niches", n)} className="hover:text-white transition-colors ml-0.5">
+                        <X size={9} />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <input value={nicheInput} onChange={e => setNicheInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_niches", nicheInput); setNicheInput(""); } }}
+                  placeholder="Type a niche and press Enter…"
+                  className="input w-full text-xs py-1.5" />
+                <div className="flex flex-wrap gap-1 mt-1.5">
+                  {["Dentist","Med Spa","Plumber","HVAC","Roofing","Real Estate","Restaurant","Gym/Fitness","Salon/Barber","Auto Repair","Chiropractor","Lawyer","Accountant","Landscaping","Cleaning Services","Photography","Pet Services","Home Services"].filter((p: string) => !config.scrape_niches.includes(p)).slice(0, 10).map((preset: string) => (
+                    <button key={preset} onClick={() => addTag("scrape_niches", preset)}
+                      className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-muted hover:bg-white/10 hover:text-foreground transition-colors">
+                      + {preset}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Locations */}
+              <div>
+                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Locations</p>
+                <div className="flex flex-wrap gap-1.5 mb-2 min-h-[36px] p-2 rounded-lg bg-surface-light border border-border">
+                  {config.scrape_locations.map((loc: string) => (
+                    <span key={loc} className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-md bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                      <MapPin size={8} /> {loc}
+                      <button onClick={() => removeTag("scrape_locations", loc)} className="hover:text-white transition-colors ml-0.5">
+                        <X size={9} />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <input value={locationInput} onChange={e => setLocationInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_locations", locationInput); setLocationInput(""); } }}
+                  placeholder="e.g. Miami, FL — press Enter…"
+                  className="input w-full text-xs py-1.5" />
+              </div>
+            </div>
+
+            {/* Volume + Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Volume per search</p>
+                <div className="flex items-center gap-3">
+                  <input type="range" min={5} max={50} step={5} value={config.scrape_volume}
+                    onChange={e => setConfig(c => ({ ...c, scrape_volume: Number(e.target.value) }))}
+                    className="flex-1 accent-yellow-400" />
+                  <span className="text-xs font-bold w-8 text-center text-gold">{config.scrape_volume}</span>
+                  <span className="text-[9px] text-muted">leads</span>
+                </div>
+                <p className="text-[9px] text-muted mt-1">Max 50 per niche/location combo</p>
+              </div>
+
+              <div>
+                <p className="text-[10px] text-muted mb-1.5 uppercase tracking-wider">Filters</p>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted flex-1">Min Google rating</span>
+                    <input type="number" min={0} max={5} step={0.5} value={config.scrape_filters.min_rating}
+                      onChange={e => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, min_rating: Number(e.target.value) } }))}
+                      className="input w-16 text-xs text-center py-1" />
+                    <Star size={10} className="text-yellow-400" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted flex-1">Max reviews</span>
+                    <input type="number" min={0} max={10000} step={50} value={config.scrape_filters.max_reviews}
+                      onChange={e => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, max_reviews: Number(e.target.value) } }))}
+                      className="input w-20 text-xs text-center py-1" />
+                  </div>
+                  {([
+                    { key: "require_phone" as const, label: "Require phone number" },
+                    { key: "require_website" as const, label: "Require website" },
+                  ] as { key: "require_phone" | "require_website"; label: string }[]).map(f => (
+                    <div key={f.key} className="flex items-center gap-2">
+                      <button onClick={() => setConfig(c => ({ ...c, scrape_filters: { ...c.scrape_filters, [f.key]: !c.scrape_filters[f.key] } }))}
+                        className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${config.scrape_filters[f.key] ? "bg-gold" : "bg-white/10"}`}>
+                        <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${config.scrape_filters[f.key] ? "translate-x-3" : "translate-x-0"}`} />
+                      </button>
+                      <span className="text-[10px] text-muted">{f.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Section 2: Daily Outreach Targets ── */}
+          <div className="card space-y-4">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Sliders size={14} className="text-gold" /> Daily Outreach Targets
+            </h3>
+
+            {/* Spam guard banner */}
+            <div className={`flex items-center gap-3 p-2.5 rounded-lg border ${spamGuardEnabled ? "bg-green-400/[0.04] border-green-400/20" : "bg-orange-400/[0.04] border-orange-400/20"}`}>
+              <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
+              <div className="flex-1">
+                <p className="text-[10px] font-medium">Spam Guard is {spamGuardEnabled ? "ON" : "OFF"}</p>
+                <p className="text-[9px] text-muted">{spamGuardEnabled ? "Hard caps are enforced — effective limits shown below" : "Limits will not be capped — enable in Settings for protection"}</p>
+              </div>
+              <a href="/dashboard/settings" className="text-[9px] text-gold hover:underline flex items-center gap-0.5">
+                <ExternalLink size={9} /> Settings
+              </a>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {([
+                { key: "email_daily_limit" as const, label: "Email", icon: <Mail size={12} className="text-gold" />, max: 500, cap: 500 },
+                { key: "sms_daily_limit" as const, label: "SMS", icon: <Phone size={12} className="text-green-400" />, max: 300, cap: 300 },
+                { key: "calls_daily_limit" as const, label: "AI Calls", icon: <PhoneCall size={12} className="text-emerald-400" />, max: 100, cap: 100 },
+              ] as { key: "email_daily_limit" | "sms_daily_limit" | "calls_daily_limit"; label: string; icon: React.ReactNode; max: number; cap: number }[]).map(ch => {
+                const val = config[ch.key] as number;
+                const effective = spamGuardEnabled ? Math.min(val, ch.cap) : val;
+                return (
+                  <div key={ch.key} className="p-3 rounded-xl bg-surface-light border border-border space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-1.5 text-xs font-medium">{ch.icon} {ch.label}</span>
+                      <div className="flex items-center gap-1.5">
+                        <input type="number" min={0} max={ch.max} value={val}
+                          onChange={e => setConfig(c => ({ ...c, [ch.key]: Number(e.target.value) }))}
+                          className="input w-16 text-xs text-center py-1" />
+                        <span className="text-[9px] text-muted">/day</span>
+                      </div>
+                    </div>
+                    <input type="range" min={0} max={ch.max} value={val}
+                      onChange={e => setConfig(c => ({ ...c, [ch.key]: Number(e.target.value) }))}
+                      className="w-full accent-yellow-400" />
+                    {spamGuardEnabled && effective < val && (
+                      <p className="text-[9px] text-orange-400 flex items-center gap-1">
+                        <AlertTriangle size={9} /> Capped at {effective}/day by spam guard
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* DM per platform */}
+              <div className="p-3 rounded-xl bg-surface-light border border-border space-y-2 md:col-span-2">
+                <p className="text-[10px] text-muted uppercase tracking-wider mb-2">DM Limits per Platform</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {(["instagram", "linkedin", "facebook", "tiktok"] as const).map(p => {
+                    const plat = config.platforms[p] || { enabled: true, daily_limit: 20 };
+                    const dmVal = config.dm_daily_limits[p];
+                    return (
+                      <div key={p} className="flex items-center gap-2 py-1">
+                        <button onClick={() => setConfig(c => ({
+                          ...c,
+                          platforms: { ...c.platforms, [p]: { ...plat, enabled: !plat.enabled } }
+                        }))} className={`w-7 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${plat.enabled ? "bg-gold" : "bg-white/10"}`}>
+                          <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${plat.enabled ? "translate-x-3" : "translate-x-0"}`} />
+                        </button>
+                        <span className="flex items-center gap-1 text-[10px] flex-1 capitalize">{PLATFORM_ICON[p]} {p}</span>
+                        <input type="number" min={0} max={50} value={dmVal}
+                          onChange={e => setConfig(c => ({ ...c, dm_daily_limits: { ...c.dm_daily_limits, [p]: Number(e.target.value) } }))}
+                          className="input w-14 text-xs text-center py-1" />
+                        <span className="text-[9px] text-muted">/day</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 pt-1 border-t border-border">
+              <span className="text-xs text-muted flex-1">Total daily target (all channels combined)</span>
+              <input type="number" value={config.total_daily_target} min={0} max={1000}
                 onChange={e => setConfig(c => ({ ...c, total_daily_target: Number(e.target.value) }))}
                 className="input w-20 text-xs text-center py-1.5" />
+              <span className="text-[9px] text-muted">/day</span>
+            </div>
+          </div>
+
+          {/* ── Section 3: Schedule & Automation ── */}
+          <div className="card space-y-4">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Calendar size={14} className="text-gold" /> Schedule & Automation
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-[10px] text-muted mb-1.5 block uppercase tracking-wider">Daily start time</label>
+                <input type="time" value={config.schedule_time}
+                  onChange={e => setConfig(c => ({ ...c, schedule_time: e.target.value }))}
+                  className="input w-full text-xs py-1.5" />
+              </div>
+              <div>
+                <label className="text-[10px] text-muted mb-1.5 block uppercase tracking-wider">Timezone</label>
+                <select value={config.timezone} onChange={e => setConfig(c => ({ ...c, timezone: e.target.value }))}
+                  className="input w-full text-xs py-1.5">
+                  <option value="America/New_York">Eastern (ET)</option>
+                  <option value="America/Chicago">Central (CT)</option>
+                  <option value="America/Denver">Mountain (MT)</option>
+                  <option value="America/Los_Angeles">Pacific (PT)</option>
+                  <option value="America/Anchorage">Alaska (AKT)</option>
+                  <option value="Pacific/Honolulu">Hawaii (HT)</option>
+                  <option value="Europe/London">London (GMT)</option>
+                  <option value="Europe/Paris">Central Europe (CET)</option>
+                </select>
+              </div>
             </div>
 
             <div>
-              <p className="text-xs font-medium mb-1.5">Message Style</p>
-              <div className="flex gap-2">
-                {["friendly", "professional", "bold"].map(style => (
-                  <button key={style} onClick={() => setConfig(c => ({ ...c, message_style: style }))}
-                    className={`text-xs px-3 py-1.5 rounded-lg capitalize border ${
-                      config.message_style === style ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-white/[0.06]"
-                    }`}>{style}</button>
+              <p className="text-[10px] text-muted mb-2 uppercase tracking-wider">Message Style</p>
+              <div className="flex gap-2 flex-wrap">
+                {[
+                  { val: "professional", label: "Professional", desc: "Formal, business-focused" },
+                  { val: "friendly", label: "Friendly", desc: "Warm, approachable" },
+                  { val: "professional and friendly", label: "Balanced", desc: "Pro + friendly" },
+                  { val: "bold", label: "Bold", desc: "Direct, punchy" },
+                ].map(s => (
+                  <button key={s.val} onClick={() => setConfig(c => ({ ...c, message_style: s.val }))}
+                    className={`text-left px-3 py-2 rounded-lg border transition-all ${
+                      config.message_style === s.val ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-white/[0.06] hover:border-white/10"
+                    }`}>
+                    <p className="text-xs font-medium">{s.label}</p>
+                    <p className="text-[9px] opacity-70">{s.desc}</p>
+                  </button>
                 ))}
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              <label className="text-xs flex-1">Schedule time (daily cron)</label>
-              <input type="time" value={config.schedule_time}
-                onChange={e => setConfig(c => ({ ...c, schedule_time: e.target.value }))}
-                className="input w-28 text-xs py-1.5" />
-            </div>
-
-            <div className="space-y-2.5">
+            <div className="space-y-1.5">
+              <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Automation Rules</p>
               {[
-                { key: "auto_followup", label: "Auto follow-ups" },
-                { key: "followup_day_3", label: "Day 3 follow-up" },
-                { key: "followup_day_7", label: "Day 7 follow-up" },
-                { key: "exclude_contacted", label: "Exclude already contacted" },
-                { key: "pause_on_reply", label: "Pause sequence on reply" },
+                { key: "auto_followup", label: "Auto follow-up sequence", desc: "Automatically send follow-ups on schedule" },
+                { key: "followup_day_3", label: "Day 3 follow-up", desc: "Send a follow-up 3 days after initial message" },
+                { key: "followup_day_7", label: "Day 7 follow-up", desc: "Send a follow-up 7 days after initial message" },
+                { key: "exclude_contacted", label: "Exclude already contacted", desc: "Skip leads you have reached out to before" },
+                { key: "pause_on_reply", label: "Pause sequence on reply", desc: "Stop automated follow-ups when prospect replies" },
               ].map(item => (
-                <div key={item.key} className="flex items-center gap-3">
-                  <button onClick={() => setConfig(c => ({ ...c, [item.key]: !c[item.key as keyof typeof c] }))}
-                    className={`w-8 h-4.5 rounded-full p-0.5 transition-colors ${
+                <div key={item.key} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light hover:bg-white/[0.02] transition-colors">
+                  <button onClick={() => setConfig(c => ({ ...c, [item.key]: !(c[item.key as keyof typeof c]) }))}
+                    className={`w-8 h-4 rounded-full p-0.5 transition-colors flex-shrink-0 ${
                       config[item.key as keyof typeof config] ? "bg-gold" : "bg-white/10"
                     }`}>
-                    <div className={`w-3.5 h-3.5 rounded-full bg-zinc-200 shadow-sm transition-transform ${
-                      config[item.key as keyof typeof config] ? "translate-x-3.5" : "translate-x-0"
+                    <div className={`w-3 h-3 rounded-full bg-zinc-200 shadow-sm transition-transform ${
+                      config[item.key as keyof typeof config] ? "translate-x-4" : "translate-x-0"
                     }`} />
                   </button>
-                  <span className="text-xs">{item.label}</span>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium">{item.label}</p>
+                    <p className="text-[9px] text-muted">{item.desc}</p>
+                  </div>
+                  <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                    config[item.key as keyof typeof config] ? "bg-green-400/10 text-green-400" : "bg-white/5 text-muted"
+                  }`}>{config[item.key as keyof typeof config] ? "On" : "Off"}</span>
                 </div>
               ))}
             </div>
+          </div>
 
+          {/* ── Section 4: Compliance & Safety ── */}
+          <div className="card space-y-4">
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Shield size={14} className="text-gold" /> Compliance & Safety
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {/* Spam guard card */}
+              <div className={`p-3 rounded-xl border ${spamGuardEnabled ? "bg-green-400/[0.04] border-green-400/20" : "bg-orange-400/[0.04] border-orange-400/20"}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${spamGuardEnabled ? "bg-green-400/10" : "bg-orange-400/10"}`}>
+                    <Shield size={13} className={spamGuardEnabled ? "text-green-400" : "text-orange-400"} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold">Spam Guard</p>
+                    <p className="text-[9px] text-muted">Rate-limit protection</p>
+                  </div>
+                  <span className={`text-[9px] px-2 py-0.5 rounded-full font-medium ${spamGuardEnabled ? "bg-green-400/10 text-green-400" : "bg-orange-400/10 text-orange-400"}`}>
+                    {spamGuardEnabled ? "Active" : "Disabled"}
+                  </span>
+                </div>
+                <p className="text-[9px] text-muted mb-2">Controls maximum daily send limits to protect sender reputation.</p>
+                <a href="/dashboard/settings" className="inline-flex items-center gap-1 text-[9px] text-gold hover:underline">
+                  <ExternalLink size={9} /> Configure in Settings
+                </a>
+              </div>
+
+              {/* Sender pool health */}
+              <div className="p-3 rounded-xl bg-surface-light border border-border">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-7 h-7 rounded-lg bg-blue-400/10 flex items-center justify-center">
+                    <Activity size={13} className="text-blue-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-semibold">Sender Pool</p>
+                    <p className="text-[9px] text-muted">Email & SMS health</p>
+                  </div>
+                  {senderStats?.health && (
+                    <span className={`text-[9px] px-2 py-0.5 rounded-full capitalize ${
+                      senderStats.health === "good" ? "bg-green-400/10 text-green-400" :
+                      senderStats.health === "warning" ? "bg-orange-400/10 text-orange-400" :
+                      "bg-red-400/10 text-red-400"
+                    }`}>{senderStats.health}</span>
+                  )}
+                </div>
+                <div className="space-y-1.5">
+                  {senderStats ? (
+                    <>
+                      {senderStats.total_senders !== undefined && (
+                        <div className="flex justify-between text-[10px]">
+                          <span className="text-muted">Active senders</span>
+                          <span className="font-medium">{senderStats.total_senders}</span>
+                        </div>
+                      )}
+                      {senderStats.bounce_rate !== undefined && (
+                        <div className="flex justify-between text-[10px]">
+                          <span className="text-muted">Bounce rate</span>
+                          <span className={`font-medium ${(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}`}>
+                            {(senderStats.bounce_rate ?? 0).toFixed(1)}%
+                          </span>
+                        </div>
+                      )}
+                      {senderStats.warmup_stage && (
+                        <div className="flex justify-between text-[10px]">
+                          <span className="text-muted">Warmup stage</span>
+                          <span className="px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-400 text-[9px] capitalize">{senderStats.warmup_stage}</span>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-[9px] text-muted py-2">
+                      <Loader2 size={9} className="animate-spin" /> Loading sender stats…
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Bounce rate health bar */}
+            {senderStats?.bounce_rate !== undefined && (
+              <div>
+                <div className="flex justify-between text-[10px] mb-1">
+                  <span className="text-muted">Bounce rate health</span>
+                  <span className={(senderStats.bounce_rate ?? 0) > 5 ? "text-orange-400" : "text-green-400"}>
+                    {(senderStats.bounce_rate ?? 0).toFixed(1)}% — {(senderStats.bounce_rate ?? 0) < 2 ? "Excellent" : (senderStats.bounce_rate ?? 0) < 5 ? "Good" : (senderStats.bounce_rate ?? 0) < 10 ? "Warning" : "Critical"}
+                  </span>
+                </div>
+                <div className="w-full bg-surface-light rounded-full h-2">
+                  <div className={`h-2 rounded-full transition-all ${
+                    (senderStats.bounce_rate ?? 0) < 2 ? "bg-green-400" :
+                    (senderStats.bounce_rate ?? 0) < 5 ? "bg-yellow-400" :
+                    (senderStats.bounce_rate ?? 0) < 10 ? "bg-orange-400" : "bg-red-400"
+                  }`} style={{ width: `${Math.min((senderStats.bounce_rate ?? 0) * 5, 100)}%` }} />
+                </div>
+                <div className="flex justify-between text-[8px] text-muted mt-0.5">
+                  <span>0% — ideal</span>
+                  <span>5% — warning</span>
+                  <span>10%+ — critical</span>
+                </div>
+              </div>
+            )}
+
+            {!senderStats && (
+              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <Building2 size={12} className="text-muted" />
+                <p className="text-[10px] text-muted">Sender stats will appear here once the API is connected.</p>
+              </div>
+            )}
+          </div>
+
+          {/* Scheduled Runs */}
+          <div className="card p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <CalendarRange size={14} className="text-gold" />
+              <h3 className="text-xs font-semibold">Scheduled Runs</h3>
+            </div>
+
+            {autoRunConfig ? (
+              <>
+                {/* Status row */}
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className={`text-[9px] font-medium px-2 py-0.5 rounded-full ${
+                    autoRunConfig.enabled
+                      ? "bg-green-400/10 text-green-400"
+                      : "bg-red-400/10 text-red-400"
+                  }`}>
+                    {autoRunConfig.enabled ? "Enabled" : "Disabled"}
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px] text-muted">
+                    <Clock size={10} /> {autoRunConfig.time}
+                  </span>
+                  <span className="flex items-center gap-1 text-[10px] text-muted">
+                    {autoRunConfig.days.map(d => d.charAt(0).toUpperCase() + d.slice(1, 3)).join(", ")}
+                  </span>
+                </div>
+
+                {/* Mini calendar */}
+                {(() => {
+                  const DAY_MAP: Record<number, string> = { 0: "sun", 1: "mon", 2: "tue", 3: "wed", 4: "thu", 5: "fri", 6: "sat" };
+                  const today = new Date();
+                  const year = today.getFullYear();
+                  const month = today.getMonth();
+                  const firstDay = new Date(year, month, 1);
+                  const daysInMonth = new Date(year, month + 1, 0).getDate();
+                  // Monday-based offset: 0=Mon ... 6=Sun
+                  const startOffset = (firstDay.getDay() + 6) % 7;
+                  const todayDate = today.getDate();
+
+                  const isScheduled = (day: number) => {
+                    const d = new Date(year, month, day);
+                    return autoRunConfig.enabled && autoRunConfig.days.includes(DAY_MAP[d.getDay()]);
+                  };
+
+                  const isPast = (day: number) => {
+                    const d = new Date(year, month, day);
+                    d.setHours(23, 59, 59);
+                    return d < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                  };
+
+                  // Next run calculation
+                  let nextRunDate: Date | null = null;
+                  if (autoRunConfig.enabled) {
+                    const check = new Date(today);
+                    for (let i = 0; i < 60; i++) {
+                      check.setDate(check.getDate() + (i === 0 ? 0 : 1));
+                      if (i === 0) {
+                        // Today: only count if the scheduled time hasn't passed
+                        const [hh, mm] = autoRunConfig.time.split(":").map(Number);
+                        if (today.getHours() > hh || (today.getHours() === hh && today.getMinutes() >= mm)) {
+                          continue;
+                        }
+                      }
+                      if (autoRunConfig.days.includes(DAY_MAP[check.getDay()])) {
+                        nextRunDate = new Date(check);
+                        break;
+                      }
+                    }
+                  }
+
+                  // Remaining runs this month
+                  let runsRemaining = 0;
+                  for (let d = todayDate; d <= daysInMonth; d++) {
+                    if (isScheduled(d) && !isPast(d)) runsRemaining++;
+                  }
+
+                  const dayLabels = ["M", "T", "W", "T", "F", "S", "S"];
+                  const cells: (number | null)[] = [];
+                  for (let i = 0; i < startOffset; i++) cells.push(null);
+                  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+                  while (cells.length % 7 !== 0) cells.push(null);
+
+                  const weekdayFmt = new Intl.DateTimeFormat("en-US", { weekday: "short" });
+                  const monthFmt = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
+
+                  return (
+                    <div className="space-y-2">
+                      <p className="text-[10px] text-muted font-medium">{monthFmt.format(firstDay)}</p>
+                      <div className="rounded-lg border border-border bg-surface-light p-2">
+                        {/* Day name headers */}
+                        <div className="grid grid-cols-7 gap-0.5 mb-1">
+                          {dayLabels.map((l, i) => (
+                            <div key={i} className="text-center text-[8px] text-muted font-medium py-0.5">
+                              {l}
+                            </div>
+                          ))}
+                        </div>
+                        {/* Day cells */}
+                        <div className="grid grid-cols-7 gap-0.5">
+                          {cells.map((day, i) => (
+                            <div key={i} className={`relative flex flex-col items-center justify-center h-6 rounded text-[9px]
+                              ${!day ? "" : ""}
+                              ${day && isPast(day) ? "text-white/20" : "text-white/70"}
+                              ${day === todayDate ? "ring-1 ring-gold/60 bg-gold/10 font-bold text-gold" : ""}
+                            `}>
+                              {day && <span>{day}</span>}
+                              {day && isScheduled(day) && !isPast(day) && (
+                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-gold" />
+                              )}
+                              {day && isScheduled(day) && isPast(day) && (
+                                <span className="absolute bottom-0.5 w-1 h-1 rounded-full bg-white/10" />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Summary row */}
+                      <div className="flex items-center justify-between text-[10px]">
+                        <span className="text-muted">
+                          {nextRunDate ? (
+                            <>Next run: <span className="text-gold font-medium">
+                              {weekdayFmt.format(nextRunDate)}, {nextRunDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })} at {autoRunConfig.time}
+                            </span></>
+                          ) : (
+                            <span className="text-muted">No upcoming runs</span>
+                          )}
+                        </span>
+                        <span className="text-muted">{runsRemaining} run{runsRemaining !== 1 ? "s" : ""} remaining this month</span>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </>
+            ) : (
+              <div className="flex items-center gap-2 p-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04]">
+                <Radar size={12} className="text-muted animate-pulse" />
+                <p className="text-[10px] text-muted">Loading auto-run schedule...</p>
+              </div>
+            )}
+          </div>
+
+          {/* Save footer */}
+          <div className="flex items-center justify-between p-4 rounded-xl bg-surface-light border border-border">
+            <div>
+              <p className="text-xs font-medium">Save all configuration</p>
+              <p className="text-[9px] text-muted">Changes apply to the next scheduled outreach run</p>
+            </div>
             <button onClick={saveConfig} disabled={configSaving}
-              className="btn-primary text-xs flex items-center gap-1.5">
+              className="btn-primary text-xs flex items-center gap-1.5 px-5">
               {configSaving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
-              Save Configuration
+              {configSaving ? "Saving…" : "Save Configuration"}
             </button>
           </div>
         </div>

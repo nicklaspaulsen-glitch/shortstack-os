@@ -14,6 +14,8 @@ export async function GET(request: NextRequest) {
   const status = url.searchParams.get("status") || "all";
   const type = url.searchParams.get("type") || "all";
   const search = url.searchParams.get("search") || "";
+  const dateFrom = url.searchParams.get("dateFrom") || "";
+  const dateTo = url.searchParams.get("dateTo") || "";
 
   const serviceSupabase = createServiceClient();
   const offset = (page - 1) * pageSize;
@@ -34,6 +36,12 @@ export async function GET(request: NextRequest) {
   }
   if (search) {
     query = query.or(`business_name.ilike.%${search}%,recipient_handle.ilike.%${search}%,message_text.ilike.%${search}%`);
+  }
+  if (dateFrom) query = query.gte("created_at", dateFrom);
+  if (dateTo) {
+    // Include the full end day by appending T23:59:59 if only a date was given
+    const endDate = dateTo.length === 10 ? `${dateTo}T23:59:59` : dateTo;
+    query = query.lte("created_at", endDate);
   }
 
   const { data: entries, count, error } = await query
@@ -71,7 +79,8 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { action, entry_ids, lead_ids } = await request.json();
+  const body = await request.json();
+  const { action, entry_ids, lead_ids, status: bodyStatus } = body;
   if (!action) return NextResponse.json({ error: "Missing action" }, { status: 400 });
 
   const serviceSupabase = createServiceClient();
@@ -86,8 +95,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (action === "mark_status" && entry_ids?.length) {
-    const { status: newStatus } = await request.json();
-    await serviceSupabase.from("outreach_log").update({ status: newStatus }).in("id", entry_ids.slice(0, 100));
+    await serviceSupabase.from("outreach_log").update({ status: bodyStatus }).in("id", entry_ids.slice(0, 100));
     return NextResponse.json({ success: true });
   }
 

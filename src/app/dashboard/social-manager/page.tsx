@@ -9,7 +9,7 @@ import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import { formatDate, formatRelativeTime } from "@/lib/utils";
 import {
-  Bot, Play, Pause, Calendar, Camera, Music,
+  Bot, Play, Pause, Calendar, Camera,
   MessageSquare, Sparkles, Send, Clock, CheckCircle,
   Loader, Settings, ArrowRight, Globe, Film,
   Briefcase, Lightbulb, Video, LayoutGrid, FileText as FileTextIcon,
@@ -26,6 +26,9 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
+import {
+  InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon, XTwitterIcon,
+} from "@/components/ui/platform-icons";
 
 const SUPPORTED_PLATFORMS = [
   { key: "instagram", label: "Instagram", color: "text-pink-400", bg: "bg-pink-500/10", border: "border-pink-500/20", description: "Connect your Instagram Business or Creator account" },
@@ -36,12 +39,11 @@ const SUPPORTED_PLATFORMS = [
 ] as const;
 
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
-  instagram: <Camera size={14} className="text-pink-400" />,
-  facebook: <MessageSquare size={14} className="text-blue-400" />,
-  tiktok: <Music size={14} className="text-white" />,
-  linkedin: <Briefcase size={14} className="text-blue-400" />,
-  twitter: <AtSign size={14} className="text-zinc-300" />,
-  youtube: <Film size={14} className="text-red-400" />,
+  instagram: <InstagramIcon size={16} />,
+  facebook: <FacebookIcon size={16} />,
+  tiktok: <TikTokIcon size={16} />,
+  linkedin: <LinkedInIcon size={16} />,
+  twitter: <XTwitterIcon size={16} />,
 };
 
 interface SocialAccount {

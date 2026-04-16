@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink, Key, Shield, Mail, Download, Upload, Trash2, AlertTriangle, Eye, Lock, Database, RotateCcw, CheckCircle2, Loader2, Server, ChevronDown, ChevronUp, Send, ToggleLeft, ToggleRight, Cloud, XCircle } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink, Key, Shield, Mail, Download, Upload, Trash2, AlertTriangle, Eye, Lock, Database, RotateCcw, CheckCircle2, Loader2, Server, ChevronDown, ChevronUp, Send, ToggleLeft, ToggleRight, Cloud, XCircle, Plus } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import toast from "react-hot-toast";
 import { applyTheme } from "@/components/theme-provider";
@@ -114,12 +114,62 @@ export default function SettingsPage() {
   const [disconnectingSocial, setDisconnectingSocial] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState(false);
 
+  // Spam Guard
+  const [spamGuardEnabled, setSpamGuardEnabled] = useState(true);
+
+  // Payment method
+  const [paymentMethod, setPaymentMethod] = useState<{
+    brand: string; last4: string; exp_month: number; exp_year: number;
+  } | null>(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
+
   // Danger zone
   const [deleteConfirm, setDeleteConfirm] = useState("");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); fetchSocialAccounts(); }, []);
   useEffect(() => { if (profile?.nickname) setNickname(profile.nickname); }, [profile]);
+
+  // Fetch spam guard setting on mount
+  useEffect(() => {
+    fetch("/api/settings/spam-guard")
+      .then(r => r.json())
+      .then(d => setSpamGuardEnabled(d.enabled !== false))
+      .catch(() => {});
+  }, []);
+
+  // Fetch payment method when billing tab opens
+  useEffect(() => {
+    if (tab !== "billing") return;
+    setPaymentLoading(true);
+    fetch("/api/billing/payment-method")
+      .then(r => r.json())
+      .then(d => { if (d.payment_method) setPaymentMethod(d.payment_method); })
+      .catch(() => {})
+      .finally(() => setPaymentLoading(false));
+  }, [tab]);
+
+  async function openBillingPortal() {
+    setPortalLoading(true);
+    try {
+      const res = await fetch("/api/billing/portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ self: true }),
+      });
+      const data = await res.json();
+      if (data.portal_url) {
+        window.open(data.portal_url, "_blank");
+      } else {
+        toast.error(data.error || "Could not open billing portal");
+      }
+    } catch {
+      toast.error("Failed to open billing portal");
+    } finally {
+      setPortalLoading(false);
+    }
+  }
 
   // Fetch white-label config when the tab opens
   useEffect(() => {
@@ -1235,6 +1285,66 @@ export default function SettingsPage() {
       {tab === "automation" && (
         <div className="space-y-4">
           <div className="card">
+            <h3 className="section-header flex items-center gap-2">
+              <Shield size={16} className="text-gold" /> Sender Spam Protection
+            </h3>
+            <p className="text-xs text-muted mb-4">
+              Enforces industry-standard sending limits to prevent your phone numbers and emails from being flagged as spam.
+              Includes hourly rate caps, warmup enforcement, minimum delays between sends, and auto-pause on high bounce/complaint rates.
+            </p>
+            <div className="flex items-center justify-between py-3 border-b border-border0">
+              <div>
+                <p className="text-sm font-medium">Spam Guard</p>
+                <p className="text-xs text-muted">Hard caps on daily/hourly sends per sender warmup stage</p>
+              </div>
+              <button
+                onClick={async () => {
+                  const next = !spamGuardEnabled;
+                  setSpamGuardEnabled(next);
+                  try {
+                    await fetch("/api/settings/spam-guard", {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ enabled: next }),
+                    });
+                    toast.success(next ? "Spam protection enabled" : "Spam protection disabled — send at your own risk");
+                  } catch { toast.error("Failed to save"); }
+                }}
+                className="flex items-center gap-2"
+              >
+                {spamGuardEnabled
+                  ? <ToggleRight size={28} className="text-green-400" />
+                  : <ToggleLeft size={28} className="text-muted" />
+                }
+              </button>
+            </div>
+            {!spamGuardEnabled && (
+              <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                <AlertTriangle size={14} />
+                <span>Spam protection is OFF. Your senders may get flagged by carriers and ISPs. Only disable this if you know what you&apos;re doing.</span>
+              </div>
+            )}
+            <div className="mt-4 space-y-2">
+              <p className="text-[10px] text-muted uppercase font-semibold tracking-wider">When enabled, enforces:</p>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                {[
+                  { label: "New sender (0-3 days)", email: "20/day, 5/hr", phone: "25/day, 5/hr" },
+                  { label: "Warming (3-7 days)", email: "50/day, 10/hr", phone: "75/day, 15/hr" },
+                  { label: "Ramping (7-14 days)", email: "150/day, 25/hr", phone: "150/day, 30/hr" },
+                  { label: "Full (14+ days)", email: "500/day, 75/hr", phone: "300/day, 50/hr" },
+                ].map((tier, i) => (
+                  <div key={i} className="p-2 rounded-lg bg-surface-light border border-border text-[10px]">
+                    <p className="font-medium text-foreground">{tier.label}</p>
+                    <p className="text-muted">Email: {tier.email}</p>
+                    <p className="text-muted">Phone: {tier.phone}</p>
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] text-muted mt-2">Plus: bounce rate auto-pause (&gt;5%), complaint auto-pause (&gt;0.1%), minimum delay between sends</p>
+            </div>
+          </div>
+
+          <div className="card">
             <h3 className="section-header">Scheduled Jobs</h3>
             <div className="space-y-3">
               {[
@@ -1353,11 +1463,46 @@ export default function SettingsPage() {
           </div>
           <div className="card">
             <h3 className="section-header">Payment Method</h3>
-            <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
-              <CreditCard size={20} className="text-gold" />
-              <div><p className="text-sm font-medium">Visa ending in 4242</p><p className="text-xs text-muted">Expires 12/2027</p></div>
-              <button className="ml-auto text-xs text-gold hover:underline">Update</button>
-            </div>
+            {paymentLoading ? (
+              <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border animate-pulse">
+                <div className="w-5 h-5 bg-white/10 rounded" />
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-3 w-32 bg-white/10 rounded" />
+                  <div className="h-2 w-20 bg-white/10 rounded" />
+                </div>
+              </div>
+            ) : paymentMethod ? (
+              <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
+                <CreditCard size={20} className="text-gold" />
+                <div>
+                  <p className="text-sm font-medium capitalize">{paymentMethod.brand} ending in {paymentMethod.last4}</p>
+                  <p className="text-xs text-muted">Expires {String(paymentMethod.exp_month).padStart(2, "0")}/{paymentMethod.exp_year}</p>
+                </div>
+                <button
+                  onClick={openBillingPortal}
+                  disabled={portalLoading}
+                  className="ml-auto text-xs text-gold hover:underline flex items-center gap-1 disabled:opacity-50"
+                >
+                  {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <ExternalLink size={10} />}
+                  Update
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between p-3 bg-surface-light/50 rounded-lg border border-border">
+                <div className="flex items-center gap-3">
+                  <CreditCard size={20} className="text-muted" />
+                  <p className="text-sm text-muted">No payment method on file</p>
+                </div>
+                <button
+                  onClick={openBillingPortal}
+                  disabled={portalLoading}
+                  className="text-xs bg-gold/10 text-gold border border-gold/20 px-3 py-1.5 rounded-lg hover:bg-gold/20 transition flex items-center gap-1 disabled:opacity-50"
+                >
+                  {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
+                  Add Payment Method
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

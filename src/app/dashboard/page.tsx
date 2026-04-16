@@ -58,6 +58,7 @@ export default function DashboardPage() {
   const [commandInput, setCommandInput] = useState("");
   const [commandLoading, setCommandLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [autopilotClients, setAutopilotClients] = useState<Array<{ client_name: string; tasks_done: number; last_run: string }>>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -97,6 +98,15 @@ export default function DashboardPage() {
     } finally {
       setDashboardLoading(false);
     }
+
+    // Fetch recent autopilot activity (non-blocking)
+    try {
+      const apRes = await fetch("/api/autopilot/recent");
+      if (apRes.ok) {
+        const apData = await apRes.json();
+        setAutopilotClients(apData.clients || []);
+      }
+    } catch {}
   }
 
   if (profile?.role === "client") {
@@ -268,6 +278,37 @@ export default function DashboardPage() {
           ))}
         </div>
       </div>
+
+      {/* ─── AI Auto-Pilot Active Clients ────────────────────────── */}
+      {autopilotClients.length > 0 && (
+        <div className="card border-gold/10 bg-gold/[0.02]">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center">
+                <Bot size={16} className="text-gold" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold">AI Auto-Pilot Active</h3>
+                <p className="text-[10px] text-muted">{autopilotClients.length} client{autopilotClients.length !== 1 ? "s" : ""} with AI-generated content</p>
+              </div>
+            </div>
+            <Link href="/dashboard/generations" className="text-[10px] text-gold hover:underline flex items-center gap-1">
+              View All <ChevronRight size={10} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+            {autopilotClients.slice(0, 3).map((ac, i) => (
+              <div key={i} className="p-2.5 rounded-lg bg-surface-light border border-border flex items-center gap-2">
+                <Sparkles size={12} className="text-gold shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-medium truncate">{ac.client_name}</p>
+                  <p className="text-[9px] text-muted">{ac.tasks_done} items generated</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ─── Pipeline + Outreach ───────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">

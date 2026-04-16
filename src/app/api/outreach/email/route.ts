@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
+import { allocateEmailSenders, recordEmailSend, getMinDelay, type EmailSender } from "@/lib/services/sender-rotation";
+import nodemailer from "nodemailer";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
-// TODO: Add rate limiting in production — both for API calls and email sending limits
+// Rate limiting enforced by sender-rotation (hourly caps, min delays, bounce tracking)
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -40,6 +42,17 @@ export async function POST(request: NextRequest) {
   let sent = 0;
   let failed = 0;
   const results: Array<{ business: string; email: string; status: string }> = [];
+
+  // ── Sender rotation: allocate pool senders across all leads ──
+  const senderAllocations = await allocateEmailSenders(serviceSupabase, leads.length);
+  // Flatten allocations into a queue: [sender, sender, sender, ...]
+  const senderQueue: EmailSender[] = [];
+  for (const alloc of senderAllocations) {
+    for (let i = 0; i < alloc.count; i++) {
+      senderQueue.push(alloc.sender);
+    }
+  }
+  let senderIdx = 0;
 
   for (const lead of leads) {
     if (!lead.email) continue;
@@ -79,18 +92,52 @@ export async function POST(request: NextRequest) {
       body = `Hi ${lead.owner_name || "there"},\n\nI came across ${lead.business_name} and noticed you're doing great work in the ${lead.industry || "local business"} space.\n\nAt ShortStack, we help businesses like yours get more clients through digital marketing — social media, ads, SEO, and content.\n\nWould you be open to a quick 15-minute call to see if we can help? No pressure at all.\n\nBest,\n${from_name || "The ShortStack Team"}`;
     }
 
-    // Send via SendGrid (primary) or GHL (fallback)
+    // Send via pool sender (rotation) → SendGrid (default) → GHL (fallback)
     let didSend = false;
     const htmlBody = body.replace(/\n/g, "<br>");
+    const currentSender = senderIdx < senderQueue.length ? senderQueue[senderIdx] : null;
+    senderIdx++;
 
-    // Try SendGrid first
-    try {
-      didSend = await sendEmail({ to: lead.email, subject, html: htmlBody });
-    } catch {
-      didSend = false;
+    // Try pool sender first (custom SMTP or SendGrid identity)
+    if (currentSender) {
+      try {
+        if (currentSender.smtp_provider === "custom" && currentSender.smtp_host && currentSender.smtp_user) {
+          // Send via custom SMTP
+          const transport = nodemailer.createTransport({
+            host: currentSender.smtp_host,
+            port: Number(currentSender.smtp_port) || 587,
+            secure: Number(currentSender.smtp_port) === 465,
+            auth: { user: currentSender.smtp_user, pass: process.env.SMTP_POOL_PASSWORD || "" },
+          });
+          await transport.sendMail({
+            from: `${currentSender.display_name || "ShortStack"} <${currentSender.email}>`,
+            to: lead.email,
+            subject,
+            html: htmlBody,
+          });
+          didSend = true;
+        } else {
+          // SendGrid identity — use existing sendEmail but we still track via rotation
+          didSend = await sendEmail({ to: lead.email, subject, html: htmlBody });
+        }
+        if (didSend) {
+          await recordEmailSend(serviceSupabase, currentSender.id);
+        }
+      } catch {
+        didSend = false;
+      }
     }
 
-    // Fallback to GHL if SendGrid fails
+    // Fallback: default SendGrid if no pool sender or pool send failed
+    if (!didSend && !currentSender) {
+      try {
+        didSend = await sendEmail({ to: lead.email, subject, html: htmlBody });
+      } catch {
+        didSend = false;
+      }
+    }
+
+    // Fallback to GHL if everything else fails
     if (!didSend && ghlKey) {
       try {
         const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
@@ -151,7 +198,10 @@ export async function POST(request: NextRequest) {
       await serviceSupabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new", "called"]);
     }
 
-    await new Promise(r => setTimeout(r, 300));
+    // Respect minimum delay between sends (spam protection)
+    const senderStage = currentSender?.warmup_stage ?? 3;
+    const minDelay = getMinDelay(senderStage, "email");
+    await new Promise(r => setTimeout(r, Math.max(minDelay * 1000, 300)));
   }
 
   // Notify
