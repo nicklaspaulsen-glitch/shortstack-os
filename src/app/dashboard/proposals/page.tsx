@@ -8,6 +8,7 @@ import {
   X, ChevronRight, Trash2,
   FileCheck, Calendar, PenTool, Star
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -242,6 +243,15 @@ export default function ProposalsPage() {
 
           {/* Proposal cards */}
           <div className="space-y-2">
+            {filtered.length === 0 && (
+              <EmptyState
+                icon={<FileText size={24} />}
+                title="No Proposals Yet"
+                description="Create professional proposals with AI-generated content, e-signatures, and real-time tracking to close deals faster."
+                actionLabel="Create Proposal"
+                onAction={() => setActiveTab("builder")}
+              />
+            )}
             {filtered.map(p => {
               const cfg = STATUS_CONFIG[p.status];
               return (

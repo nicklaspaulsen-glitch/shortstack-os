@@ -7,6 +7,7 @@ import {
   BarChart3, Globe, Copy, ChevronRight,
   X, Search, Zap, ArrowRight
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type MainTab = "all" | "builder" | "recurring" | "reminders" | "templates" | "aging" | "revenue";
 
@@ -127,10 +128,13 @@ export default function InvoicesPage() {
 
           <div className="space-y-2">
             {filtered.length === 0 ? (
-              <div className="card text-center py-12">
-                <CreditCard size={24} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-xs text-muted">No invoices found</p>
-              </div>
+              <EmptyState
+                icon={<CreditCard size={24} />}
+                title="No Invoices Yet"
+                description="Create your first invoice to start tracking payments, set up recurring billing, and get paid faster."
+                actionLabel="Create Invoice"
+                onAction={() => setActiveTab("builder")}
+              />
             ) : (
               filtered.map(inv => {
                 const isOverdue = (inv.status === "sent" && inv.dueDate < today) || inv.status === "overdue";

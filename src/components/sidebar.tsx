@@ -69,6 +69,9 @@ import {
   FileBarChart2,
   Store,
   Inbox,
+  Puzzle,
+  ExternalLink,
+  X,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -221,6 +224,12 @@ export default function Sidebar() {
   );
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+  // Chrome Extension banner dismiss state
+  const [extDismissed, setExtDismissed] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try { return localStorage.getItem("sidebar_ext_dismissed") === "1"; } catch { return false; }
+  });
 
   // Group nav items by section for collapsible sidebar
   const groups: { section: string | null; items: NavItem[] }[] = [];
@@ -407,6 +416,31 @@ export default function Sidebar() {
 
       {/* Admin Profile Switcher */}
       {!collapsed && <AdminProfileSwitcher />}
+
+      {/* Chrome Extension banner — admin only, dismissible */}
+      {!collapsed && userRole === "admin" && !extDismissed && (
+        <div className="mx-2 mb-1">
+          <div className="flex items-center gap-1.5 h-[34px] px-2.5 rounded-lg bg-gold/[0.07] border border-gold/15">
+            <Puzzle size={13} className="shrink-0 text-gold" />
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-[11px] text-gold/90 hover:text-gold font-medium truncate transition-colors"
+            >
+              <span>Chrome Extension</span>
+              <ExternalLink size={10} className="shrink-0 opacity-60" />
+            </a>
+            <button
+              onClick={() => { setExtDismissed(true); localStorage.setItem("sidebar_ext_dismissed", "1"); }}
+              className="ml-auto shrink-0 p-0.5 rounded text-muted hover:text-foreground transition-colors"
+              aria-label="Dismiss"
+            >
+              <X size={12} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Navigation — collapsible sections with smart sub-groups */}
       <nav className="flex-1 px-1.5 py-1 overflow-y-auto scrollbar-none">

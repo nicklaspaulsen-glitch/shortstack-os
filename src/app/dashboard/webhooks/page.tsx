@@ -7,6 +7,7 @@ import {
   Key, Filter, ArrowRight, Shield,
   Send, FileText
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 interface WebhookConfig {
   id: string;
@@ -190,11 +191,13 @@ export default function WebhooksPage() {
           )}
 
           {webhooks.length === 0 && !showCreate ? (
-            <div className="card text-center py-12">
-              <Webhook size={24} className="mx-auto mb-2 text-muted/30" />
-              <p className="text-xs text-muted mb-2">No outbound webhooks configured</p>
-              <button onClick={() => setShowCreate(true)} className="btn-primary text-xs">Create Your First Webhook</button>
-            </div>
+            <EmptyState
+              icon={<Webhook size={24} />}
+              title="No Webhooks Yet"
+              description="Connect ShortStack to Zapier, Make, Slack, or any external tool by creating outbound webhooks that fire on key events."
+              actionLabel="Create Webhook"
+              onAction={() => setShowCreate(true)}
+            />
           ) : (
             <div className="space-y-2">
               {webhooks.map(wh => (

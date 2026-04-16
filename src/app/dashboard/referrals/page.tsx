@@ -6,6 +6,7 @@ import {
   CheckCircle, UserPlus, TrendingUp, Award, Mail, BarChart3,
   ExternalLink, Globe, Calculator, Star, Send
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -203,7 +204,13 @@ export default function ReferralsPage() {
           <div className="card p-4">
             <h2 className="text-xs font-semibold mb-3 flex items-center gap-1.5"><TrendingUp size={12} /> Referral History</h2>
             {referrals.length === 0 ? (
-              <div className="text-center py-8"><TrendingUp size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No referrals yet. Share your link to get started!</p></div>
+              <EmptyState
+                icon={<Gift size={24} />}
+                title="No Referrals Yet"
+                description="Share your unique referral link with business owners and earn commission on every client that signs up."
+                actionLabel="Set Up Referral Program"
+                onAction={() => setActiveTab("invite")}
+              />
             ) : (
               <div className="space-y-1.5">
                 {referrals.map(r => (

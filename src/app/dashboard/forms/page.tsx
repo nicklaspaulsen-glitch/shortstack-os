@@ -7,6 +7,7 @@ import {
   Settings, BarChart3, Code, Shield, Link2, Download,
   ChevronUp, ChevronDown, Palette, Globe, Zap
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type FormTab = "builder" | "templates" | "submissions" | "analytics" | "settings";
 
@@ -293,11 +294,13 @@ export default function FormsPage() {
               </div>
             </div>
           )}
-          <div className="card text-center py-8">
-            <FileText size={24} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-xs text-muted mb-3">Start with a template or create from scratch</p>
-            <button onClick={() => setTab("templates")} className="btn-primary text-xs">Browse Templates</button>
-          </div>
+          <EmptyState
+            icon={<FileText size={24} />}
+            title="No Forms Yet"
+            description="Build lead capture forms with drag-and-drop fields, embed them on any website, and funnel submissions straight into your CRM."
+            actionLabel="Create Form"
+            onAction={() => setTab("templates")}
+          />
         </div>
       )}
 
@@ -487,7 +490,13 @@ export default function FormsPage() {
             <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export CSV</button>
           </div>
           {MOCK_SUBMISSIONS.length === 0 ? (
-            <div className="card text-center py-12"><MessageSquare size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No submissions yet</p></div>
+            <EmptyState
+              icon={<MessageSquare size={24} />}
+              title="No Submissions Yet"
+              description="Once you publish a form and share it, submissions will appear here. Create a form to get started."
+              actionLabel="Create Form"
+              onAction={() => setTab("templates")}
+            />
           ) : (
             <div className="space-y-2">
               {MOCK_SUBMISSIONS.map(sub => (

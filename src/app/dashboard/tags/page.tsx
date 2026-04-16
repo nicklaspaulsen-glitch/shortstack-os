@@ -6,6 +6,7 @@ import {
   BarChart3, Merge, Download, Upload,
   Zap, X, Edit3, FolderTree, Clock, Filter
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type TagTab = "manager" | "rules" | "analytics" | "hierarchy";
 
@@ -198,6 +199,15 @@ export default function TagsPage() {
           </div>
 
           {/* Tag grid */}
+          {filtered.length === 0 && tags.length === 0 && (
+            <EmptyState
+              icon={<Tag size={24} />}
+              title="No Tags Yet"
+              description="Tags help you organize leads, clients, and deals. Create your first tag above to start categorizing your contacts."
+              actionLabel="Create Tag"
+              onAction={() => document.querySelector<HTMLInputElement>('input[placeholder="New tag name..."]')?.focus()}
+            />
+          )}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {filtered.map(tag => (
               <div key={tag.id} className={`flex items-center justify-between p-3 rounded-xl group transition-all bg-surface-light border ${selectedTags.includes(tag.id) ? "border-gold" : "border-border"}`}>

@@ -7,6 +7,7 @@ import {
   ChevronDown, ChevronRight, Send,
   BarChart3
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type Priority = "urgent" | "high" | "medium" | "low";
 type Status = "open" | "in_progress" | "resolved" | "closed";
@@ -244,10 +245,13 @@ export default function TicketsPage() {
 
           {/* Ticket List */}
           {filtered.length === 0 && (
-            <div className="card text-center py-8">
-              <Ticket size={20} className="mx-auto mb-2 text-muted/30" />
-              <p className="text-xs text-muted">No tickets yet</p>
-            </div>
+            <EmptyState
+              icon={<Ticket size={24} />}
+              title="No Tickets Yet"
+              description="Create your first support ticket to track client issues, assign team members, and measure resolution times."
+              actionLabel="Create Ticket"
+              onAction={() => setTab("Create")}
+            />
           )}
           {filtered.map(ticket => (
             <div key={ticket.id} className={`rounded-xl border transition-all ${ticket.priority === "urgent" ? "border-red-500/15" : "border-border"} bg-surface-light`}>

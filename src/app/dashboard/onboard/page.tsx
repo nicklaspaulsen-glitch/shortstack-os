@@ -9,6 +9,7 @@ import {
   Building2, Target, Users, Plus, X,
   CheckCircle2, Layout, Zap, BookOpen,
 } from "lucide-react";
+import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 
 /* ================================================================== */
 /*  Types                                                              */
@@ -93,11 +94,26 @@ const SERVICE_OPTIONS: ServiceOption[] = [
   { id: "s15", name: "Community Management", category: "Content", description: "Engage and grow online communities", included: false },
 ];
 
-const PACKAGES = [
-  { name: "Starter", price: "$997", color: "#60a5fa", features: ["1 platform", "10 posts/mo", "Basic ads", "Monthly report"] },
-  { name: "Growth", price: "$2,497", color: "#c8a855", features: ["3 platforms", "30 posts/mo", "Advanced ads", "Weekly reports", "SEO", "Email marketing"] },
-  { name: "Enterprise", price: "$4,997", color: "#a78bfa", features: ["All platforms", "Unlimited content", "Full ad management", "Daily reports", "AI systems", "Dedicated team"] },
-];
+/** Feature descriptions for each plan tier (excluding Founder) */
+const PLAN_FEATURES: Record<string, string[]> = {
+  Starter:   ["Up to 5 clients", "1 team member", "250K AI tokens", "Basic tools"],
+  Growth:    ["Up to 15 clients", "3 team members", "1M AI tokens", "AI agents & workflows", "Design & video studio"],
+  Pro:       ["Up to 50 clients", "10 team members", "5M AI tokens", "API access", "All creative tools"],
+  Business:  ["Up to 150 clients", "25 team members", "20M AI tokens", "White label", "Custom AI", "Dedicated support"],
+  Unlimited: ["Unlimited clients", "Unlimited team", "Unlimited tokens", "Everything included", "Priority SLA"],
+};
+
+const PACKAGES = (Object.keys(PLAN_TIERS) as PlanTier[])
+  .filter((key) => key !== "Founder")
+  .map((key) => {
+    const tier = PLAN_TIERS[key];
+    return {
+      name: key,
+      price: `$${tier.price_monthly.toLocaleString()}`,
+      color: tier.color,
+      features: PLAN_FEATURES[key] ?? [],
+    };
+  });
 
 const ONBOARD_TEMPLATES: OnboardTemplate[] = [
   { id: "t1", name: "Agency Standard", description: "Full-service agency onboarding with all steps included", steps: 6, industry: "General", popular: true },
@@ -128,10 +144,23 @@ const STEP_META = [
 /* ================================================================== */
 
 export default function OnboardPage() {
+  const [mode, setMode] = useState<"full" | "quick">("full");
   const [step, setStep] = useState(0);
   const [wizardComplete, setWizardComplete] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+
+  // Quick-add form state
+  const [quickForm, setQuickForm] = useState({
+    business_name: "",
+    contact_name: "",
+    email: "",
+    phone: "",
+    package_tier: "Growth",
+  });
+  const [quickSubmitted, setQuickSubmitted] = useState(false);
+  const updateQuick = (key: string, value: string) =>
+    setQuickForm(prev => ({ ...prev, [key]: value }));
 
   // Form state
   const [form, setForm] = useState({
@@ -160,9 +189,7 @@ export default function OnboardPage() {
   const [serviceFilter, setServiceFilter] = useState("All");
 
   // Access state
-  const [accessUsers, setAccessUsers] = useState<AccessUser[]>([
-    { email: "sarah@agency.com", role: "admin", status: "active" },
-  ]);
+  const [accessUsers, setAccessUsers] = useState<AccessUser[]>([]);
   const [newEmail, setNewEmail] = useState("");
   const [newRole, setNewRole] = useState<AccessUser["role"]>("editor");
   const [portalEnabled, setPortalEnabled] = useState(true);
@@ -230,8 +257,140 @@ export default function OnboardPage() {
         </div>
       </div>
 
+      {/* Mode Toggle: Full Wizard vs Quick Add */}
+      <div className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.03] border border-[var(--color-border)] w-fit">
+        <button
+          onClick={() => setMode("full")}
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+            mode === "full" ? "bg-gold text-black" : "text-muted hover:text-foreground"
+          }`}>
+          Full Wizard
+        </button>
+        <button
+          onClick={() => setMode("quick")}
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all ${
+            mode === "quick" ? "bg-gold text-black" : "text-muted hover:text-foreground"
+          }`}>
+          Quick Add
+        </button>
+      </div>
+
+      {/* ── Quick Add Mode ─────────────────────────────────── */}
+      {mode === "quick" && (
+        quickSubmitted ? (
+          <div className="rounded-2xl border border-gold/30 bg-[var(--color-surface)] p-10 text-center space-y-5">
+            <div className="w-20 h-20 mx-auto bg-gold/10 rounded-full flex items-center justify-center">
+              <CheckCircle2 size={40} className="text-gold" />
+            </div>
+            <h2 className="text-2xl font-bold text-gold">Client Created!</h2>
+            <p className="text-sm text-muted max-w-lg mx-auto">
+              <span className="font-semibold text-foreground">{quickForm.business_name}</span> has been added on the{" "}
+              <span className="text-gold font-semibold">{quickForm.package_tier}</span> plan.
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <button
+                onClick={() => {
+                  setQuickSubmitted(false);
+                  setQuickForm({ business_name: "", contact_name: "", email: "", phone: "", package_tier: "Growth" });
+                }}
+                className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-muted hover:text-foreground transition-colors">
+                Add Another
+              </button>
+              <button className="px-5 py-2.5 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 flex items-center gap-1.5">
+                <Eye size={14} /> View Client Profile
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 space-y-5">
+            <div>
+              <h2 className="text-lg font-bold flex items-center gap-2">
+                <Zap size={18} className="text-gold" /> Quick Add Client
+              </h2>
+              <p className="text-xs text-muted mt-0.5">
+                Rapidly add a client without the full onboarding wizard
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Business Name */}
+              <div>
+                <label className="block text-[10px] text-muted mb-1 font-medium">Business Name *</label>
+                <div className="relative">
+                  <Building2 size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <input value={quickForm.business_name} onChange={e => updateQuick("business_name", e.target.value)}
+                    placeholder="Acme Corp"
+                    className="w-full pl-8 pr-3 py-2.5 bg-white/[0.03] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-gold transition-colors" />
+                </div>
+              </div>
+
+              {/* Contact Name */}
+              <div>
+                <label className="block text-[10px] text-muted mb-1 font-medium">Contact Name *</label>
+                <div className="relative">
+                  <Users size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <input value={quickForm.contact_name} onChange={e => updateQuick("contact_name", e.target.value)}
+                    placeholder="John Smith"
+                    className="w-full pl-8 pr-3 py-2.5 bg-white/[0.03] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-gold transition-colors" />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-[10px] text-muted mb-1 font-medium">Email *</label>
+                <div className="relative">
+                  <Mail size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <input value={quickForm.email} onChange={e => updateQuick("email", e.target.value)}
+                    placeholder="john@acme.com" type="email"
+                    className="w-full pl-8 pr-3 py-2.5 bg-white/[0.03] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-gold transition-colors" />
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="block text-[10px] text-muted mb-1 font-medium">Phone</label>
+                <div className="relative">
+                  <Phone size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/40" />
+                  <input value={quickForm.phone} onChange={e => updateQuick("phone", e.target.value)}
+                    placeholder="+1 (555) 123-4567"
+                    className="w-full pl-8 pr-3 py-2.5 bg-white/[0.03] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-gold transition-colors" />
+                </div>
+              </div>
+
+              {/* Package Dropdown */}
+              <div className="md:col-span-2">
+                <label className="block text-[10px] text-muted mb-1 font-medium">Package</label>
+                <select value={quickForm.package_tier} onChange={e => updateQuick("package_tier", e.target.value)}
+                  className="w-full px-3 py-2.5 bg-white/[0.03] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-gold transition-colors">
+                  {PACKAGES.map(pkg => (
+                    <option key={pkg.name} value={pkg.name}>{pkg.name} ({pkg.price}/mo)</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button onClick={() => setMode("full")}
+                className="px-4 py-2.5 border border-[var(--color-border)] rounded-lg text-sm text-muted hover:text-foreground transition-colors">
+                Switch to Full Wizard
+              </button>
+              <button
+                onClick={() => {
+                  if (quickForm.business_name.trim() && quickForm.contact_name.trim() && quickForm.email.trim()) {
+                    setQuickSubmitted(true);
+                  }
+                }}
+                disabled={!quickForm.business_name.trim() || !quickForm.contact_name.trim() || !quickForm.email.trim()}
+                className="flex items-center gap-2 px-6 py-2.5 bg-gold text-black rounded-lg text-sm font-bold hover:bg-gold/90 disabled:opacity-40 transition-all">
+                <UserPlus size={14} /> Create Client
+              </button>
+            </div>
+          </div>
+        )
+      )}
+
       {/* Template Gallery */}
-      {showTemplates && (
+      {mode === "full" && showTemplates && (
         <div className="rounded-2xl border border-border bg-[var(--color-surface)] p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -264,8 +423,9 @@ export default function OnboardPage() {
         </div>
       )}
 
-      {/* Wizard Complete State */}
-      {wizardComplete ? (
+      {/* ── Full Wizard Mode ────────────────────────────── */}
+      {mode === "full" && (
+      wizardComplete ? (
         <div className="rounded-2xl border border-gold/30 bg-[var(--color-surface)] p-10 text-center space-y-5">
           <div className="w-20 h-20 mx-auto bg-gold/10 rounded-full flex items-center justify-center">
             <CheckCircle2 size={40} className="text-gold" />
@@ -374,7 +534,7 @@ export default function OnboardPage() {
                 {/* Select package to start */}
                 <div>
                   <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Crown size={14} className="text-gold" /> Choose a Package</p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
                     {PACKAGES.map(pkg => (
                       <button key={pkg.name}
                         onClick={() => updateForm("package_tier", pkg.name)}
@@ -853,6 +1013,7 @@ export default function OnboardPage() {
             </div>
           </div>
         </>
+      )
       )}
     </div>
   );

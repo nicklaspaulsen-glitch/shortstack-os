@@ -8,6 +8,7 @@ import {
   Clock, UserPlus, BarChart3,
   RefreshCw, Bell, Layers, GitBranch
 } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
 
@@ -154,7 +155,13 @@ export default function LeadEnginePage() {
               <span className="text-center">Actions</span>
             </div>
             {filteredLeads.length === 0 && (
-              <div className="text-center py-12 text-muted text-xs">No leads yet. Add or import leads to get started.</div>
+              <EmptyState
+                icon={<Users size={24} />}
+                title="No Leads Yet"
+                description="Start building your pipeline by scraping leads from Google Maps, importing a CSV, or adding them manually."
+                actionLabel="Start Finding Leads"
+                actionHref="/dashboard/scraper"
+              />
             )}
             {filteredLeads.map(lead => (
               <div key={lead.id}>
