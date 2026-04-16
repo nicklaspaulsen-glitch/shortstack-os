@@ -29,32 +29,7 @@ interface Workspace {
   created: string;
 }
 
-const MOCK_WORKSPACES: Workspace[] = [
-  {
-    id: "ws-1", name: "Main Agency", logo: "MA", color: "#C9A84C",
-    status: "active", members: 8, clients: 24, lastActive: "2 min ago",
-    storage: 45, storageLimit: 100, apiCalls: 12400, apiLimit: 50000,
-    teamLimit: 15, plan: "Enterprise", monthlyRevenue: 48500, created: "Jan 2025"
-  },
-  {
-    id: "ws-2", name: "White Label - FitBrands", logo: "FB", color: "#3b82f6",
-    status: "active", members: 3, clients: 12, lastActive: "1 hour ago",
-    storage: 18, storageLimit: 50, apiCalls: 5200, apiLimit: 25000,
-    teamLimit: 10, plan: "Pro", monthlyRevenue: 18200, created: "Mar 2025"
-  },
-  {
-    id: "ws-3", name: "Sub-Agency: Dental", logo: "DA", color: "#10b981",
-    status: "active", members: 2, clients: 8, lastActive: "3 hours ago",
-    storage: 8, storageLimit: 25, apiCalls: 1800, apiLimit: 10000,
-    teamLimit: 5, plan: "Starter", monthlyRevenue: 9600, created: "Jun 2025"
-  },
-  {
-    id: "ws-4", name: "Archived - Test Env", logo: "TE", color: "#6b7280",
-    status: "archived", members: 0, clients: 0, lastActive: "30 days ago",
-    storage: 2, storageLimit: 10, apiCalls: 0, apiLimit: 5000,
-    teamLimit: 3, plan: "Free", monthlyRevenue: 0, created: "Dec 2024"
-  },
-];
+const MOCK_WORKSPACES: Workspace[] = [];
 
 const STATUS_STYLES: Record<string, string> = {
   active: "bg-emerald-500/10 text-emerald-400",
@@ -64,7 +39,7 @@ const STATUS_STYLES: Record<string, string> = {
 
 export default function WorkspacesPage() {
   const [workspaces] = useState<Workspace[]>(MOCK_WORKSPACES);
-  const [activeWorkspace, setActiveWorkspace] = useState<string>("ws-1");
+  const [activeWorkspace, setActiveWorkspace] = useState<string>("");
   const [showCreate, setShowCreate] = useState(false);
   const [showTransfer, setShowTransfer] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -236,7 +211,7 @@ export default function WorkspacesPage() {
                     </div>
                     <div className="card p-3 text-center">
                       <Zap size={14} className="text-gold mx-auto mb-1" />
-                      <p className="text-lg font-bold text-gold">{((current.apiCalls / current.apiLimit) * 100).toFixed(0)}%</p>
+                      <p className="text-lg font-bold text-gold">{current.apiLimit > 0 ? ((current.apiCalls / current.apiLimit) * 100).toFixed(0) : 0}%</p>
                       <p className="text-[9px] text-muted">API Usage</p>
                     </div>
                   </div>
@@ -245,18 +220,14 @@ export default function WorkspacesPage() {
                   <div className="card">
                     <h3 className="section-header flex items-center gap-2"><Activity size={13} className="text-gold" /> Recent Activity</h3>
                     <div className="space-y-2">
-                      {[
-                        { action: "New client onboarded: Apex Fitness", time: "10 min ago", icon: <Users size={10} /> },
-                        { action: "Invoice #1042 sent to CloudNine Media", time: "1 hour ago", icon: <CreditCard size={10} /> },
-                        { action: "Team member Sarah joined workspace", time: "3 hours ago", icon: <Plus size={10} /> },
-                        { action: "API integration configured for Zapier", time: "Yesterday", icon: <Zap size={10} /> },
-                      ].map((item, i) => (
+                      {([] as { action: string; time: string; icon: React.ReactNode }[]).map((item, i) => (
                         <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface-light transition-colors">
                           <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center text-gold shrink-0">{item.icon}</div>
                           <p className="text-[11px] flex-1">{item.action}</p>
                           <span className="text-[9px] text-muted shrink-0">{item.time}</span>
                         </div>
                       ))}
+                      {true && <p className="text-xs text-muted text-center py-4">No recent activity</p>}
                     </div>
                   </div>
                 </div>
@@ -305,22 +276,18 @@ export default function WorkspacesPage() {
                   <div className="card">
                     <h3 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Usage Breakdown</h3>
                     <div className="space-y-2">
-                      {[
-                        { label: "AI Content Generation", used: 3200, limit: 10000, color: "bg-gold" },
-                        { label: "Email Sends", used: 1800, limit: 5000, color: "bg-blue-400" },
-                        { label: "Social Posts", used: 450, limit: 1000, color: "bg-purple-400" },
-                        { label: "Report Exports", used: 28, limit: 100, color: "bg-emerald-400" },
-                      ].map((item, i) => (
+                      {([] as { label: string; used: number; limit: number; color: string }[]).map((item, i) => (
                         <div key={i} className="p-2.5 rounded-lg bg-surface-light border border-border">
                           <div className="flex items-center justify-between mb-1.5">
                             <span className="text-[10px] font-medium">{item.label}</span>
                             <span className="text-[9px] text-muted">{item.used.toLocaleString()} / {item.limit.toLocaleString()}</span>
                           </div>
                           <div className="h-1.5 rounded-full bg-surface overflow-hidden">
-                            <div className={`h-full rounded-full ${item.color}`} style={{ width: `${(item.used / item.limit) * 100}%` }} />
+                            <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.limit > 0 ? (item.used / item.limit) * 100 : 0}%` }} />
                           </div>
                         </div>
                       ))}
+                      <p className="text-xs text-muted text-center py-4">No usage data available</p>
                     </div>
                   </div>
                 </div>
@@ -415,10 +382,6 @@ export default function WorkspacesPage() {
                         <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Client to Transfer</label>
                         <select value={transferClient.client} onChange={e => setTransferClient({ ...transferClient, client: e.target.value })} className="input w-full text-xs">
                           <option value="">Select client...</option>
-                          <option value="apex">Apex Fitness</option>
-                          <option value="cloud">CloudNine Media</option>
-                          <option value="bright">BrightSmile Dental</option>
-                          <option value="urban">Urban Eats Co</option>
                         </select>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
@@ -456,10 +419,7 @@ export default function WorkspacesPage() {
                   <div className="card">
                     <h3 className="section-header flex items-center gap-2"><Clock size={13} className="text-muted" /> Transfer History</h3>
                     <div className="space-y-2">
-                      {[
-                        { client: "Peak Performance Gym", from: "Main Agency", to: "FitBrands", date: "Apr 10, 2026", status: "completed" },
-                        { client: "Smile Studio", from: "Main Agency", to: "Sub-Agency: Dental", date: "Mar 28, 2026", status: "completed" },
-                      ].map((item, i) => (
+                      {([] as { client: string; from: string; to: string; date: string; status: string }[]).map((item, i) => (
                         <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
                           <ArrowRightLeft size={11} className="text-gold shrink-0" />
                           <div className="flex-1 min-w-0">
@@ -470,6 +430,7 @@ export default function WorkspacesPage() {
                           <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">{item.status}</span>
                         </div>
                       ))}
+                      <p className="text-xs text-muted text-center py-4">No transfer history</p>
                     </div>
                   </div>
                 </div>

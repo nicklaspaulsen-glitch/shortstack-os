@@ -213,12 +213,7 @@ export default function ScriptLabPage() {
 
   // Approval flow state
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [approvalScripts] = useState([
-    { id: "1", title: "Product Launch Reel", client: "Acme Corp", status: "pending" as const, submitted: "2026-04-12" },
-    { id: "2", title: "Testimonial Story", client: "Peak Fitness", status: "approved" as const, submitted: "2026-04-10" },
-    { id: "3", title: "Industry Tips Thread", client: "Summit SaaS", status: "revision" as const, submitted: "2026-04-11", feedback: "Make the hook more attention-grabbing" },
-    { id: "4", title: "Behind-the-Scenes Vlog", client: "Cedar Works", status: "pending" as const, submitted: "2026-04-13" },
-  ]);
+  const [approvalScripts] = useState<{ id: string; title: string; client: string; status: "pending" | "approved" | "revision"; submitted: string; feedback?: string }[]>([]);
 
   // Multi-platform formatter
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -1211,7 +1206,12 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             <div className="card p-3"><p className="text-[10px] text-muted uppercase tracking-wider">Revisions</p><p className="text-lg font-bold text-red-400">{approvalScripts.filter(s => s.status === "revision").length}</p></div>
           </div>
           <div className="space-y-2">
-            {approvalScripts.map(s => (
+            {approvalScripts.length === 0 ? (
+              <div className="card text-center py-12">
+                <CheckCircle size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No scripts submitted for approval yet</p>
+              </div>
+            ) : approvalScripts.map(s => (
               <div key={s.id} className="card p-4">
                 <div className="flex items-start justify-between mb-2">
                   <div><h3 className="text-xs font-semibold">{s.title}</h3><p className="text-[9px] text-muted">{s.client} | Submitted: {s.submitted}</p></div>

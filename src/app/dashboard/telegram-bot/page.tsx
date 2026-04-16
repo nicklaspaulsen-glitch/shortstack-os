@@ -69,124 +69,15 @@ const DEFAULT_COMMANDS: BotCommand[] = [
   { id: "cmd-7", command: "/help", description: "List available commands", responseType: "text", content: "Here are the commands I support:\n\n/start - Welcome message\n/status - Check project status\n/report - Request latest report\n/book - Book a meeting\n/support - Open support ticket\n/leads - View lead count\n/help - Show this message", enabled: true, isDefault: true },
 ];
 
-const MOCK_CONVERSATIONS: Conversation[] = [
-  {
-    id: "conv-1", userId: "u1", userName: "Sarah Mitchell", avatar: "SM",
-    lastMessage: "Thanks for the update!", timestamp: "2 min ago", unreadCount: 0,
-    messages: [
-      { id: "m1", sender: "user", text: "/start", timestamp: "10:22 AM" },
-      { id: "m2", sender: "bot", text: "Welcome, Sarah! I'm your ShortStack assistant. How can I help you today?", timestamp: "10:22 AM" },
-      { id: "m3", sender: "user", text: "What's the status on my campaign?", timestamp: "10:23 AM" },
-      { id: "m4", sender: "bot", text: "Your Instagram campaign 'Spring Launch' is performing well:\n\n- Reach: 12,400 (up 23%)\n- Engagement rate: 4.8%\n- Leads generated: 34\n- Budget spent: $180 of $500\n\nWould you like me to generate a detailed report?", timestamp: "10:23 AM" },
-      { id: "m5", sender: "user", text: "Thanks for the update!", timestamp: "10:24 AM" },
-    ],
-  },
-  {
-    id: "conv-2", userId: "u2", userName: "Marcus Johnson", avatar: "MJ",
-    lastMessage: "Can I reschedule to Thursday?", timestamp: "15 min ago", unreadCount: 2,
-    messages: [
-      { id: "m1", sender: "user", text: "/book", timestamp: "9:50 AM" },
-      { id: "m2", sender: "bot", text: "Sure! Here are my available slots this week:\n\nMon 10am-12pm\nTue 2pm-4pm\nWed 10am-1pm\nThu 3pm-5pm\n\nReply with your preferred time.", timestamp: "9:50 AM" },
-      { id: "m3", sender: "user", text: "Tuesday 2pm works", timestamp: "9:51 AM" },
-      { id: "m4", sender: "bot", text: "Done! You're booked for Tuesday at 2:00 PM. I've sent a calendar invite to your email. See you then!", timestamp: "9:51 AM" },
-      { id: "m5", sender: "user", text: "Actually wait", timestamp: "10:05 AM" },
-      { id: "m6", sender: "user", text: "Can I reschedule to Thursday?", timestamp: "10:05 AM" },
-    ],
-  },
-  {
-    id: "conv-3", userId: "u3", userName: "Elena Rodriguez", avatar: "ER",
-    lastMessage: "Perfect, I'll review the mockups tonight", timestamp: "1 hr ago", unreadCount: 0,
-    messages: [
-      { id: "m1", sender: "user", text: "Hey, any update on the website redesign?", timestamp: "9:10 AM" },
-      { id: "m2", sender: "bot", text: "Hi Elena! The website redesign is progressing nicely:\n\n- Homepage mockup: Complete\n- About page: In review\n- Service pages: 3 of 5 done\n- Mobile responsive: In progress\n\nYour designer uploaded new mockups yesterday. Want me to send them?", timestamp: "9:10 AM" },
-      { id: "m3", sender: "user", text: "Yes please!", timestamp: "9:12 AM" },
-      { id: "m4", sender: "bot", text: "Sent! Check your email for the mockup files. The team recommends reviewing the color palette on the service pages.", timestamp: "9:12 AM" },
-      { id: "m5", sender: "user", text: "Perfect, I'll review the mockups tonight", timestamp: "9:15 AM" },
-    ],
-  },
-  {
-    id: "conv-4", userId: "u4", userName: "James Park", avatar: "JP",
-    lastMessage: "How many leads this month?", timestamp: "2 hr ago", unreadCount: 1,
-    messages: [
-      { id: "m1", sender: "user", text: "/leads", timestamp: "8:30 AM" },
-      { id: "m2", sender: "bot", text: "Here's your lead summary for April:\n\nTotal leads: 147\nNew this week: 23\nContacted: 89\nBooked calls: 18\nConverted: 12\n\nConversion rate: 8.2% (up from 6.5% last month)", timestamp: "8:30 AM" },
-      { id: "m3", sender: "user", text: "How many leads this month?", timestamp: "8:32 AM" },
-    ],
-  },
-  {
-    id: "conv-5", userId: "u5", userName: "Aisha Khan", avatar: "AK",
-    lastMessage: "Can you create a support ticket for the billing issue?", timestamp: "3 hr ago", unreadCount: 1,
-    messages: [
-      { id: "m1", sender: "user", text: "/support", timestamp: "7:45 AM" },
-      { id: "m2", sender: "bot", text: "I'm here to help! Please describe your issue and I'll create a support ticket for you.", timestamp: "7:45 AM" },
-      { id: "m3", sender: "user", text: "Can you create a support ticket for the billing issue?", timestamp: "7:47 AM" },
-    ],
-  },
-  {
-    id: "conv-6", userId: "u6", userName: "David Chen", avatar: "DC",
-    lastMessage: "Looks great, approve it", timestamp: "5 hr ago", unreadCount: 0,
-    messages: [
-      { id: "m1", sender: "user", text: "/report", timestamp: "5:15 AM" },
-      { id: "m2", sender: "bot", text: "Generating your weekly performance report... This will take a moment.", timestamp: "5:15 AM" },
-      { id: "m3", sender: "bot", text: "Your Weekly Report is ready:\n\nSocial Media:\n- Total reach: 45,200\n- Engagement: 2,890 interactions\n- Best post: Instagram carousel (+340%)\n\nAds:\n- Spend: $1,240\n- ROAS: 3.8x\n- Leads: 67\n\nWant me to email the full PDF?", timestamp: "5:16 AM" },
-      { id: "m4", sender: "user", text: "Looks great, approve it", timestamp: "5:20 AM" },
-    ],
-  },
-  {
-    id: "conv-7", userId: "u7", userName: "Lisa Thompson", avatar: "LT",
-    lastMessage: "What hashtags should I use for my bakery posts?", timestamp: "8 hr ago", unreadCount: 0,
-    messages: [
-      { id: "m1", sender: "user", text: "What hashtags should I use for my bakery posts?", timestamp: "Yesterday" },
-      { id: "m2", sender: "bot", text: "Great question! Here are targeted hashtags for your bakery:\n\nHigh reach:\n#bakery #freshbaked #homemade #bakerylove #pastry\n\nNiche:\n#artisanbread #sourdoughlife #cakesofinstagram #bakerylife #handcraftedbakes\n\nLocal:\n#austinbakery #atxfood #austineats #localbakery\n\nI recommend using 15-20 per post, mixing all three categories.", timestamp: "Yesterday" },
-    ],
-  },
-  {
-    id: "conv-8", userId: "u8", userName: "Ryan Foster", avatar: "RF",
-    lastMessage: "Send me the analytics for last week", timestamp: "1 day ago", unreadCount: 0,
-    messages: [
-      { id: "m1", sender: "user", text: "/start", timestamp: "2 days ago" },
-      { id: "m2", sender: "bot", text: "Hey Ryan! Welcome back. Your project dashboard has 3 new updates since your last visit. Would you like a summary?", timestamp: "2 days ago" },
-      { id: "m3", sender: "user", text: "Yes", timestamp: "2 days ago" },
-      { id: "m4", sender: "bot", text: "Here's what's new:\n\n1. Your Google Ads campaign hit 500 clicks\n2. New blog post published: 'Top 10 Marketing Tips'\n3. Social media scheduler has 8 posts queued for this week\n\nEverything is running smoothly!", timestamp: "2 days ago" },
-      { id: "m5", sender: "user", text: "Send me the analytics for last week", timestamp: "1 day ago" },
-    ],
-  },
-];
+const MOCK_CONVERSATIONS: Conversation[] = [];
 
-const MOCK_BROADCASTS: Broadcast[] = [
-  { id: "bc-1", message: "New feature alert: We've launched automated reporting. Check your dashboard!", sentAt: "Apr 14, 2026", recipients: 342, openRate: 78, status: "sent" },
-  { id: "bc-2", message: "Reminder: Monthly strategy call this Friday at 2 PM. Reply /book to confirm.", sentAt: "Apr 10, 2026", recipients: 342, openRate: 65, status: "sent" },
-  { id: "bc-3", message: "Happy Easter! Enjoy 20% off our premium plan this week only.", sentAt: "Apr 5, 2026", recipients: 298, openRate: 82, status: "sent" },
-  { id: "bc-4", message: "Your Q1 results are in. Use /report to see the full breakdown.", sentAt: "Apr 1, 2026", recipients: 312, openRate: 71, status: "sent" },
-];
+const MOCK_BROADCASTS: Broadcast[] = [];
 
-const ANALYTICS_DAILY = [
-  { day: "Mon", count: 124 },
-  { day: "Tue", count: 198 },
-  { day: "Wed", count: 156 },
-  { day: "Thu", count: 245 },
-  { day: "Fri", count: 189 },
-  { day: "Sat", count: 87 },
-  { day: "Sun", count: 62 },
-];
+const ANALYTICS_DAILY: { day: string; count: number }[] = [];
 
-const TOP_COMMANDS = [
-  { command: "/start", count: 342, pct: 100 },
-  { command: "/status", count: 218, pct: 64 },
-  { command: "/report", count: 156, pct: 46 },
-  { command: "/book", count: 134, pct: 39 },
-  { command: "/help", count: 98, pct: 29 },
-  { command: "/support", count: 67, pct: 20 },
-  { command: "/leads", count: 45, pct: 13 },
-];
+const TOP_COMMANDS: { command: string; count: number; pct: number }[] = [];
 
-const PEAK_HOURS = [
-  { hour: "6am", pct: 8 }, { hour: "7am", pct: 15 }, { hour: "8am", pct: 35 },
-  { hour: "9am", pct: 65 }, { hour: "10am", pct: 82 }, { hour: "11am", pct: 70 },
-  { hour: "12pm", pct: 55 }, { hour: "1pm", pct: 48 }, { hour: "2pm", pct: 72 },
-  { hour: "3pm", pct: 88 }, { hour: "4pm", pct: 95 }, { hour: "5pm", pct: 78 },
-  { hour: "6pm", pct: 45 }, { hour: "7pm", pct: 30 }, { hour: "8pm", pct: 18 },
-];
+const PEAK_HOURS: { hour: string; pct: number }[] = [];
 
 const PERSONALITY_PRESETS: Record<string, { label: string; prompt: string; welcome: string }> = {
   professional: {
@@ -368,7 +259,7 @@ export default function TelegramBotPage() {
     setSendingBroadcast(false);
     setBroadcastMessage("");
     setBroadcastSchedule("");
-    toast.success("Broadcast sent to 342 subscribers");
+    toast.success("Broadcast sent to subscribers");
   }
 
   async function handleSaveToken() {
@@ -381,7 +272,7 @@ export default function TelegramBotPage() {
     c.lastMessage.toLowerCase().includes(convoSearch.toLowerCase())
   );
 
-  const maxDaily = Math.max(...ANALYTICS_DAILY.map(d => d.count));
+  const maxDaily = ANALYTICS_DAILY.length > 0 ? Math.max(...ANALYTICS_DAILY.map(d => d.count)) : 1;
 
   // ─── Tab navigation ────────────────────────────────────────────────────
 
@@ -557,15 +448,15 @@ export default function TelegramBotPage() {
               <div className="space-y-3 mt-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted flex items-center gap-2"><Users size={14} /> Total Users</span>
-                  <span className="text-sm font-bold text-foreground">342</span>
+                  <span className="text-sm font-bold text-foreground">0</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted flex items-center gap-2"><MessageCircle size={14} /> Messages Today</span>
-                  <span className="text-sm font-bold text-foreground">89</span>
+                  <span className="text-sm font-bold text-foreground">0</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted flex items-center gap-2"><Zap size={14} /> Commands Used</span>
-                  <span className="text-sm font-bold text-foreground">1,060</span>
+                  <span className="text-sm font-bold text-foreground">0</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-muted flex items-center gap-2"><Clock size={14} /> Avg Response</span>
@@ -986,10 +877,10 @@ export default function TelegramBotPage() {
           {/* Stat Cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { label: "Total Users", value: "342", icon: <Users size={18} />, change: "+12 this week", color: "text-[#0088cc]" },
-              { label: "Active Today", value: "47", icon: <Activity size={18} />, change: "13.7% of total", color: "text-emerald-400" },
-              { label: "Messages Sent", value: "1,247", icon: <MessageSquare size={18} />, change: "+89 today", color: "text-gold" },
-              { label: "Avg Response", value: "0.8s", icon: <Clock size={18} />, change: "Under 1s target", color: "text-purple-400" },
+              { label: "Total Users", value: "0", icon: <Users size={18} />, change: "--", color: "text-[#0088cc]" },
+              { label: "Active Today", value: "0", icon: <Activity size={18} />, change: "--", color: "text-emerald-400" },
+              { label: "Messages Sent", value: "0", icon: <MessageSquare size={18} />, change: "--", color: "text-gold" },
+              { label: "Avg Response", value: "--", icon: <Clock size={18} />, change: "--", color: "text-purple-400" },
             ].map(stat => (
               <div key={stat.label} className="card">
                 <div className="flex items-center justify-between mb-2">
@@ -1070,7 +961,7 @@ export default function TelegramBotPage() {
                       <ThumbsUp size={20} className="text-emerald-400" />
                     </div>
                     <div>
-                      <p className="text-xl font-bold text-foreground">89%</p>
+                      <p className="text-xl font-bold text-foreground">0%</p>
                       <p className="text-xs text-muted">Positive</p>
                     </div>
                   </div>
@@ -1079,17 +970,17 @@ export default function TelegramBotPage() {
                       <ThumbsDown size={20} className="text-red-400" />
                     </div>
                     <div>
-                      <p className="text-xl font-bold text-foreground">11%</p>
+                      <p className="text-xl font-bold text-foreground">0%</p>
                       <p className="text-xs text-muted">Negative</p>
                     </div>
                   </div>
                 </div>
                 <div className="w-full h-3 bg-surface-light rounded-full overflow-hidden mt-4">
-                  <div className="h-full bg-emerald-400/40 rounded-full" style={{ width: "89%" }}>
-                    <div className="h-full bg-emerald-400 rounded-full" style={{ width: "70%" }} />
+                  <div className="h-full bg-emerald-400/40 rounded-full" style={{ width: "0%" }}>
+                    <div className="h-full bg-emerald-400 rounded-full" style={{ width: "0%" }} />
                   </div>
                 </div>
-                <p className="text-xs text-muted mt-2">Based on 456 feedback responses</p>
+                <p className="text-xs text-muted mt-2">Based on 0 feedback responses</p>
               </div>
 
               <div className="card">
@@ -1112,7 +1003,7 @@ export default function TelegramBotPage() {
                   <span className="text-[9px] text-muted">12pm</span>
                   <span className="text-[9px] text-muted">8pm</span>
                 </div>
-                <p className="text-xs text-muted mt-2">Peak: <span className="text-gold font-medium">3-5 PM</span></p>
+                <p className="text-xs text-muted mt-2">Peak: <span className="text-gold font-medium">--</span></p>
               </div>
             </div>
           </div>
@@ -1150,7 +1041,7 @@ export default function TelegramBotPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted flex items-center gap-1">
-                    <Users size={12} /> Will be sent to <span className="text-foreground font-medium">342 subscribers</span>
+                    <Users size={12} /> Will be sent to <span className="text-foreground font-medium">0 subscribers</span>
                   </span>
                   <button
                     onClick={handleSendBroadcast}
@@ -1327,7 +1218,7 @@ export default function TelegramBotPage() {
       {/* PageAI Assistant */}
       <PageAI
         pageName="Telegram Bot"
-        context={`Bot: @shortstack_bot. ${isConnected ? "Connected" : "Disconnected"}. ${commands.filter(c => c.enabled).length} active commands. ${conversations.length} active conversations. 342 total subscribers. Personality: ${PERSONALITY_PRESETS[personality].label}.`}
+        context={`Bot: @shortstack_bot. ${isConnected ? "Connected" : "Disconnected"}. ${commands.filter(c => c.enabled).length} active commands. ${conversations.length} active conversations. Personality: ${PERSONALITY_PRESETS[personality].label}.`}
         suggestions={[
           "Help me write a custom bot command for invoicing",
           "Draft a broadcast message announcing our new service",

@@ -48,60 +48,14 @@ interface PermissionRow {
   viewer: boolean;
 }
 
-const MOCK_MEMBERS: TeamMember[] = [
-  {
-    id: "tm-1", name: "Alex Rivera", email: "alex@shortstack.dev", role: "owner",
-    avatar: "AR", status: "online", lastActive: "Now", clients: 24, hoursThisWeek: 42,
-    tasksCompleted: 18, tasksAssigned: 22, joinDate: "Jan 2025",
-    recentActions: [
-      { action: "Updated billing", resource: "Workspace Settings", time: "5 min ago" },
-      { action: "Approved content", resource: "FitBrand Social Post", time: "1 hour ago" },
-      { action: "Invited member", resource: "Team", time: "3 hours ago" },
-    ]
-  },
-  {
-    id: "tm-2", name: "Sarah Chen", email: "sarah@shortstack.dev", role: "admin",
-    avatar: "SC", status: "online", lastActive: "2 min ago", clients: 12, hoursThisWeek: 38,
-    tasksCompleted: 24, tasksAssigned: 28, joinDate: "Feb 2025",
-    recentActions: [
-      { action: "Created report", resource: "Monthly Analytics", time: "30 min ago" },
-      { action: "Assigned client", resource: "Peak Gym to Mike", time: "2 hours ago" },
-    ]
-  },
-  {
-    id: "tm-3", name: "Mike Johnson", email: "mike@shortstack.dev", role: "manager",
-    avatar: "MJ", status: "away", lastActive: "15 min ago", clients: 8, hoursThisWeek: 35,
-    tasksCompleted: 14, tasksAssigned: 20, joinDate: "Mar 2025",
-    recentActions: [
-      { action: "Published content", resource: "BrightSmile Blog", time: "1 hour ago" },
-      { action: "Sent report", resource: "Weekly Client Report", time: "Yesterday" },
-    ]
-  },
-  {
-    id: "tm-4", name: "Lisa Park", email: "lisa@shortstack.dev", role: "creator",
-    avatar: "LP", status: "online", lastActive: "5 min ago", clients: 6, hoursThisWeek: 44,
-    tasksCompleted: 31, tasksAssigned: 35, joinDate: "Apr 2025",
-    recentActions: [
-      { action: "Created carousel", resource: "UrbanEats Instagram", time: "20 min ago" },
-      { action: "Edited video", resource: "FitBrand Reel #12", time: "2 hours ago" },
-    ]
-  },
-  {
-    id: "tm-5", name: "Tom Bradley", email: "tom@shortstack.dev", role: "viewer",
-    avatar: "TB", status: "offline", lastActive: "2 days ago", clients: 0, hoursThisWeek: 5,
-    tasksCompleted: 0, tasksAssigned: 0, joinDate: "Apr 2026",
-    recentActions: [
-      { action: "Viewed dashboard", resource: "Analytics", time: "2 days ago" },
-    ]
-  },
-];
+const MOCK_MEMBERS: TeamMember[] = [];
 
 const ROLE_DEFINITIONS: RoleDefinition[] = [
-  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#C9A84C", memberCount: 1 },
-  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#3b82f6", memberCount: 1 },
-  { id: "manager", label: "Manager", description: "Client management, reports, content creation and approval", color: "#8b5cf6", memberCount: 2 },
-  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#10b981", memberCount: 3 },
-  { id: "viewer", label: "Viewer", description: "Read-only access to dashboards and reports", color: "#6b7280", memberCount: 1 },
+  { id: "owner", label: "Owner", description: "Full access to everything including billing and workspace deletion", color: "#C9A84C", memberCount: 0 },
+  { id: "admin", label: "Admin", description: "Everything except billing management and workspace deletion", color: "#3b82f6", memberCount: 0 },
+  { id: "manager", label: "Manager", description: "Client management, reports, content creation and approval", color: "#8b5cf6", memberCount: 0 },
+  { id: "creator", label: "Creator", description: "Content creation only - no client or financial access", color: "#10b981", memberCount: 0 },
+  { id: "viewer", label: "Viewer", description: "Read-only access to dashboards and reports", color: "#6b7280", memberCount: 0 },
 ];
 
 const PERMISSIONS: PermissionRow[] = [

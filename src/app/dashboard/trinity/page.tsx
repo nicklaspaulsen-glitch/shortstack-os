@@ -45,10 +45,7 @@ export default function TrinityPage() {
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
-  const [agentWeights, setAgentWeights] = useState<Record<string, number>>({
-    "Lead Finder": 80, "Outreach Bot": 70, "Content Engine": 90, "Invoice Agent": 60,
-    "Retention Agent": 50, "SEO Agent": 75, "Analytics": 85, "Competitor Spy": 65,
-  });
+  const [agentWeights, setAgentWeights] = useState<Record<string, number>>({});
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
@@ -176,13 +173,13 @@ export default function TrinityPage() {
             <h3 className="text-xs font-bold mb-3">Response Time Comparison (ms)</h3>
             <div className="flex items-end gap-2 h-28">
               {[
-                { name: "Claude", ms: 340, color: "bg-gold/60" },
-                { name: "GPT-4o", ms: 520, color: "bg-blue-400/60" },
-                { name: "Gemini", ms: 410, color: "bg-purple-400/60" },
+                { name: "Claude", ms: 0, color: "bg-gold/60" },
+                { name: "GPT-4o", ms: 0, color: "bg-blue-400/60" },
+                { name: "Gemini", ms: 0, color: "bg-purple-400/60" },
               ].map(m => (
                 <div key={m.name} className="flex-1 flex flex-col items-center gap-1">
                   <span className="text-[9px] font-mono">{m.ms}ms</span>
-                  <div className={`w-full rounded-t ${m.color}`} style={{ height: `${(m.ms / 600) * 100}%` }} />
+                  <div className={`w-full rounded-t ${m.color}`} style={{ height: `${m.ms > 0 ? (m.ms / 600) * 100 : 0}%` }} />
                   <span className="text-[8px] text-muted">{m.name}</span>
                 </div>
               ))}
@@ -266,10 +263,10 @@ export default function TrinityPage() {
       {tab === "Cost" && (
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Today</p><p className="text-xl font-bold text-gold">$4.82</p></div>
-            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">This Week</p><p className="text-xl font-bold text-foreground">$28.45</p></div>
-            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">This Month</p><p className="text-xl font-bold text-foreground">$142.80</p></div>
-            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Per Task Avg</p><p className="text-xl font-bold text-foreground">$0.12</p></div>
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Today</p><p className="text-xl font-bold text-gold">$0.00</p></div>
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">This Week</p><p className="text-xl font-bold text-foreground">$0.00</p></div>
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">This Month</p><p className="text-xl font-bold text-foreground">$0.00</p></div>
+            <div className="card p-3 text-center"><p className="text-[9px] text-muted uppercase">Per Task Avg</p><p className="text-xl font-bold text-foreground">$0.00</p></div>
           </div>
           <div className="card">
             <h3 className="text-xs font-bold mb-3">Cost by Agent</h3>
@@ -350,19 +347,19 @@ export default function TrinityPage() {
             <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><BarChart3 size={14} className="text-gold" /> Trinity Analytics</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-gold">1,247</p>
+                <p className="text-xl font-bold text-gold">0</p>
                 <p className="text-[9px] text-muted">Tasks This Month</p>
               </div>
               <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-emerald-400">96.2%</p>
+                <p className="text-xl font-bold text-emerald-400">0%</p>
                 <p className="text-[9px] text-muted">Success Rate</p>
               </div>
               <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-blue-400">3.4s</p>
+                <p className="text-xl font-bold text-blue-400">0s</p>
                 <p className="text-[9px] text-muted">Avg Response</p>
               </div>
               <div className="bg-surface-light rounded-xl p-3 text-center">
-                <p className="text-xl font-bold text-foreground">$142</p>
+                <p className="text-xl font-bold text-foreground">$0</p>
                 <p className="text-[9px] text-muted">Monthly Cost</p>
               </div>
             </div>
@@ -371,6 +368,9 @@ export default function TrinityPage() {
             <h3 className="text-xs font-bold mb-3">Agent Weighting Controls</h3>
             <p className="text-[10px] text-muted mb-3">Adjust priority weighting for each agent in the Trinity orchestration layer.</p>
             <div className="space-y-2">
+              {Object.keys(agentWeights).length === 0 && (
+                <p className="text-xs text-muted text-center py-4">No agents configured yet.</p>
+              )}
               {Object.entries(agentWeights).map(([name, weight]) => (
                 <div key={name} className="flex items-center gap-3">
                   <span className="text-[10px] w-28 shrink-0">{name}</span>

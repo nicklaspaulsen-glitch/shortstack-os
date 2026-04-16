@@ -6,8 +6,8 @@ import {
   Megaphone, HelpCircle, Sparkles, BookOpen, ChevronDown,
   Search, Calendar, Award, Bell, Shield, Vote,
   TrendingUp, Clock, Hash, Loader2, Trash2,
-  Flame, Trophy, Star, Target, Zap, ThumbsUp,
-  FileText, ExternalLink, Link2, Gift,
+  Flame, Trophy, Star, Target, Zap,
+  ExternalLink, Link2, Gift,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -60,82 +60,21 @@ const TYPE_CONFIG: Record<string, { bg: string; icon: typeof MessageSquare }> = 
   showcase: { bg: "bg-purple-400/10 text-purple-400 border-purple-400/20", icon: Sparkles },
 };
 
-const MEMBERS: { name: string; role: string; level: string; badge: string; posts: number; joined: string; online: boolean; points: number; streak: number; bio: string }[] = [
-  { name: "Alex Rivera", role: "Agency Owner", level: "Legend", badge: "gold", posts: 142, joined: "Jan 2025", online: true, points: 8420, streak: 34, bio: "Scaling agencies with ShortStack since day one." },
-  { name: "Sarah Chen", role: "Content Strategist", level: "Expert", badge: "gold", posts: 98, joined: "Feb 2025", online: true, points: 6150, streak: 21, bio: "Helping brands tell better stories through content." },
-  { name: "Marcus Johnson", role: "Freelancer", level: "Pro", badge: "silver", posts: 67, joined: "Mar 2025", online: false, points: 3890, streak: 12, bio: "Freelance marketer and automation enthusiast." },
-  { name: "Emily Watts", role: "Marketing Director", level: "Pro", badge: "silver", posts: 54, joined: "Mar 2025", online: true, points: 3210, streak: 8, bio: "Running marketing ops for a SaaS startup." },
-  { name: "Jordan Kim", role: "Developer", level: "Rising Star", badge: "bronze", posts: 41, joined: "Apr 2025", online: false, points: 2440, streak: 15, bio: "Building integrations and custom workflows." },
-  { name: "Priya Patel", role: "Social Media Manager", level: "Rising Star", badge: "bronze", posts: 38, joined: "May 2025", online: true, points: 2100, streak: 6, bio: "Social media is my playground." },
-  { name: "Tom Bradley", role: "Agency Owner", level: "Contributor", badge: "bronze", posts: 23, joined: "Jun 2025", online: false, points: 1350, streak: 3, bio: "New to ShortStack, loving it so far." },
-  { name: "Nina Okoro", role: "Designer", level: "Contributor", badge: "bronze", posts: 19, joined: "Jul 2025", online: true, points: 980, streak: 5, bio: "Making things look good and work better." },
-];
+const MEMBERS: { name: string; role: string; level: string; badge: string; posts: number; joined: string; online: boolean; points: number; streak: number; bio: string }[] = [];
 
-const EVENTS: { id: string; title: string; date: string; type: string; attendees: number }[] = [
-  { id: "ev1", title: "ShortStack Live: Q2 Roadmap Reveal", date: "Apr 22, 2026 - 2:00 PM EST", type: "webinar", attendees: 84 },
-  { id: "ev2", title: "Community AMA with the Founders", date: "Apr 25, 2026 - 12:00 PM EST", type: "ama", attendees: 56 },
-  { id: "ev3", title: "Workflow Automation Workshop", date: "Apr 30, 2026 - 3:00 PM EST", type: "workshop", attendees: 42 },
-  { id: "ev4", title: "Agency Growth Mastermind", date: "May 5, 2026 - 1:00 PM EST", type: "mastermind", attendees: 28 },
-];
+const EVENTS: { id: string; title: string; date: string; type: string; attendees: number }[] = [];
 
-const POLLS: { id: string; question: string; options: { label: string; votes: number }[]; totalVotes: number; endsIn: string }[] = [
-  { id: "poll1", question: "Which feature should we prioritize next?", options: [{ label: "AI Video Captions", votes: 45 }, { label: "Advanced Analytics Dashboard", votes: 38 }, { label: "Team Collaboration Tools", votes: 29 }, { label: "Custom API Webhooks", votes: 18 }], totalVotes: 130, endsIn: "3 days" },
-  { id: "poll2", question: "What time works best for weekly community calls?", options: [{ label: "Tuesday 12 PM EST", votes: 22 }, { label: "Wednesday 2 PM EST", votes: 31 }, { label: "Thursday 4 PM EST", votes: 19 }], totalVotes: 72, endsIn: "5 days" },
-];
+const POLLS: { id: string; question: string; options: { label: string; votes: number }[]; totalVotes: number; endsIn: string }[] = [];
 
-const RESOURCES: { title: string; type: string; downloads: number; icon: typeof Calendar; url?: string }[] = [
-  { title: "ShortStack Quick-Start Guide", type: "PDF Guide", downloads: 324, icon: FileText },
-  { title: "Content Calendar Template", type: "Spreadsheet", downloads: 218, icon: Calendar },
-  { title: "Workflow Builder Cheat Sheet", type: "PDF Guide", downloads: 189, icon: FileText },
-  { title: "Brand Voice Setup Walkthrough", type: "Video", downloads: 156, icon: BookOpen },
-  { title: "Client Onboarding Checklist", type: "Template", downloads: 142, icon: FileText },
-  { title: "Social Media Posting Schedule", type: "Spreadsheet", downloads: 137, icon: Calendar },
-  { title: "API Integration Examples", type: "Code Repo", downloads: 98, icon: Link2 },
-  { title: "Community Best Practices", type: "PDF Guide", downloads: 86, icon: FileText },
-];
+const RESOURCES: { title: string; type: string; downloads: number; icon: typeof Calendar; url?: string }[] = [];
 
-const TRENDING: { topic: string; posts: number; trend: string }[] = [
-  { topic: "workflow-automation", posts: 24, trend: "+12%" },
-  { topic: "ai-content", posts: 19, trend: "+8%" },
-  { topic: "client-management", posts: 16, trend: "+15%" },
-  { topic: "analytics-tips", posts: 11, trend: "+5%" },
-  { topic: "brand-voice", posts: 9, trend: "+22%" },
-];
+const TRENDING: { topic: string; posts: number; trend: string }[] = [];
 
-const LEADERBOARD: { name: string; points: number; posts: number; helpful: number; streak: number; avatar: string }[] = [
-  { name: "Alex Rivera", points: 8420, posts: 142, helpful: 89, streak: 34, avatar: "A" },
-  { name: "Sarah Chen", points: 6150, posts: 98, helpful: 64, streak: 21, avatar: "S" },
-  { name: "Marcus Johnson", points: 3890, posts: 67, helpful: 41, streak: 12, avatar: "M" },
-  { name: "Emily Watts", points: 3210, posts: 54, helpful: 32, streak: 8, avatar: "E" },
-  { name: "Jordan Kim", points: 2440, posts: 41, helpful: 27, streak: 15, avatar: "J" },
-  { name: "Priya Patel", points: 2100, posts: 38, helpful: 18, streak: 6, avatar: "P" },
-  { name: "Tom Bradley", points: 1350, posts: 23, helpful: 11, streak: 3, avatar: "T" },
-  { name: "Nina Okoro", points: 980, posts: 19, helpful: 8, streak: 5, avatar: "N" },
-];
+const LEADERBOARD: { name: string; points: number; posts: number; helpful: number; streak: number; avatar: string }[] = [];
 
-const ACTIVITY_FEED: ActivityItem[] = [
-  { id: "a1", type: "post", user: "Alex Rivera", avatar: "A", action: "posted", target: "How I 3x'd client retention with automated workflows", time: "2026-04-16T09:30:00Z" },
-  { id: "a2", type: "achievement", user: "Sarah Chen", avatar: "S", action: "earned the", target: "30-Day Streak badge", time: "2026-04-16T08:45:00Z" },
-  { id: "a3", type: "comment", user: "Marcus Johnson", avatar: "M", action: "replied to", target: "Best practices for brand voice setup", time: "2026-04-16T08:12:00Z" },
-  { id: "a4", type: "like", user: "Emily Watts", avatar: "E", action: "liked", target: "Content calendar template for agencies", time: "2026-04-16T07:50:00Z" },
-  { id: "a5", type: "join", user: "Tom Bradley", avatar: "T", action: "joined the community", time: "2026-04-16T07:30:00Z" },
-  { id: "a6", type: "post", user: "Jordan Kim", avatar: "J", action: "shared a showcase:", target: "My custom API integration setup", time: "2026-04-16T06:15:00Z" },
-  { id: "a7", type: "comment", user: "Priya Patel", avatar: "P", action: "answered a question in", target: "How to set up scheduled posts?", time: "2026-04-15T22:00:00Z" },
-  { id: "a8", type: "achievement", user: "Alex Rivera", avatar: "A", action: "reached", target: "8,000 community points", time: "2026-04-15T20:30:00Z" },
-  { id: "a9", type: "like", user: "Nina Okoro", avatar: "N", action: "liked", target: "ShortStack Quick-Start Guide", time: "2026-04-15T19:00:00Z" },
-  { id: "a10", type: "post", user: "Sarah Chen", avatar: "S", action: "posted", target: "5 content strategies that actually work in 2026", time: "2026-04-15T17:30:00Z" },
-];
+const ACTIVITY_FEED: ActivityItem[] = [];
 
-const BADGES: Badge[] = [
-  { id: "b1", label: "Early Adopter", icon: Zap, color: "text-blue-400", description: "Joined the community in the first 90 days", earned: true },
-  { id: "b2", label: "Streak Master", icon: Flame, color: "text-orange-400", description: "Maintained a 30-day activity streak", earned: true },
-  { id: "b3", label: "Top Contributor", icon: Trophy, color: "text-gold", description: "Reached the top 3 on the leaderboard", earned: true },
-  { id: "b4", label: "Helpful Hand", icon: ThumbsUp, color: "text-green-400", description: "Received 50+ helpful votes on answers", earned: true },
-  { id: "b5", label: "Community Star", icon: Star, color: "text-purple-400", description: "100+ posts in the community", earned: false },
-  { id: "b6", label: "Trailblazer", icon: Target, color: "text-red-400", description: "First to post in 3 different categories", earned: true },
-  { id: "b7", label: "Knowledge Sharer", icon: BookOpen, color: "text-cyan-400", description: "Shared 10+ resources with the community", earned: false },
-  { id: "b8", label: "Event Regular", icon: Calendar, color: "text-pink-400", description: "Attended 5+ community events", earned: false },
-];
+const BADGES: Badge[] = [];
 
 const DISCUSSION_CATEGORIES = [
   { id: "general", label: "General", icon: MessageSquare, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", description: "Open discussion about anything ShortStack", threads: 48 },
@@ -144,19 +83,19 @@ const DISCUSSION_CATEGORIES = [
   { id: "showcase", label: "Show & Tell", icon: Gift, color: "text-gold", bg: "bg-gold/10 border-gold/20", description: "Show off what you've built", threads: 19 },
 ];
 
-/* Current user gamification stats (mock) */
+/* Current user gamification stats */
 const MY_STATS = {
   name: "You",
-  points: 1240,
-  streak: 7,
-  rank: 12,
-  postsThisWeek: 3,
-  badgesEarned: 4,
-  totalBadges: 8,
-  level: "Rising Star",
-  nextLevel: "Pro",
-  xpToNext: 760,
-  xpCurrent: 1240,
+  points: 0,
+  streak: 0,
+  rank: 0,
+  postsThisWeek: 0,
+  badgesEarned: 0,
+  totalBadges: 0,
+  level: "New Member",
+  nextLevel: "Rising Star",
+  xpToNext: 2000,
+  xpCurrent: 0,
   xpNeeded: 2000,
 };
 
@@ -489,7 +428,7 @@ export default function CommunityPage() {
           <p className="text-[10px] text-muted">Online Now</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono">{posts.length || 47}</p>
+          <p className="text-lg font-bold font-mono">{posts.length}</p>
           <p className="text-[10px] text-muted">Posts This Week</p>
         </div>
         <div className="card p-3 text-center">
@@ -566,15 +505,19 @@ export default function CommunityPage() {
               {/* Trending Topics */}
               <div className="card p-3">
                 <h3 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><TrendingUp size={10} className="text-gold" /> Trending</h3>
-                <div className="flex gap-2 overflow-x-auto">
-                  {TRENDING.map(t => (
-                    <div key={t.topic} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border text-[9px] whitespace-nowrap shrink-0 hover:border-gold/20 transition-colors cursor-pointer">
-                      <Hash size={8} className="text-gold" />
-                      <span>{t.topic}</span>
-                      <span className="text-green-400 font-mono">{t.trend}</span>
-                    </div>
-                  ))}
-                </div>
+                {TRENDING.length === 0 ? (
+                  <p className="text-[9px] text-muted text-center py-2">No trending topics yet</p>
+                ) : (
+                  <div className="flex gap-2 overflow-x-auto">
+                    {TRENDING.map(t => (
+                      <div key={t.topic} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border text-[9px] whitespace-nowrap shrink-0 hover:border-gold/20 transition-colors cursor-pointer">
+                        <Hash size={8} className="text-gold" />
+                        <span>{t.topic}</span>
+                        <span className="text-green-400 font-mono">{t.trend}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* New Post Form */}
@@ -691,27 +634,31 @@ export default function CommunityPage() {
                 <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
                   <Zap size={10} className="text-gold" /> Recent Activity
                 </h3>
-                <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
-                  {ACTIVITY_FEED.map(item => {
-                    const AIcon = activityIcon(item.type);
-                    const aColor = activityColor(item.type);
-                    return (
-                      <div key={item.id} className="flex items-start gap-2">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 bg-white/5 ${aColor}`}>
-                          <AIcon size={9} />
+                {ACTIVITY_FEED.length === 0 ? (
+                  <p className="text-[9px] text-muted text-center py-4">No recent activity</p>
+                ) : (
+                  <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+                    {ACTIVITY_FEED.map(item => {
+                      const AIcon = activityIcon(item.type);
+                      const aColor = activityColor(item.type);
+                      return (
+                        <div key={item.id} className="flex items-start gap-2">
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 bg-white/5 ${aColor}`}>
+                            <AIcon size={9} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[10px] leading-relaxed">
+                              <span className="font-semibold">{item.user}</span>{" "}
+                              <span className="text-muted">{item.action}</span>{" "}
+                              {item.target && <span className="font-medium">{item.target}</span>}
+                            </p>
+                            <p className="text-[9px] text-muted">{timeAgo(item.time)}</p>
+                          </div>
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-[10px] leading-relaxed">
-                            <span className="font-semibold">{item.user}</span>{" "}
-                            <span className="text-muted">{item.action}</span>{" "}
-                            {item.target && <span className="font-medium">{item.target}</span>}
-                          </p>
-                          <p className="text-[9px] text-muted">{timeAgo(item.time)}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Mini Leaderboard */}
@@ -719,18 +666,22 @@ export default function CommunityPage() {
                 <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
                   <Trophy size={10} className="text-gold" /> Top Contributors
                 </h3>
-                <div className="space-y-2">
-                  {LEADERBOARD.slice(0, 5).map((m, i) => (
-                    <div key={m.name} className="flex items-center gap-2">
-                      <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
-                        i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-white/5 text-muted"
-                      }`}>{i + 1}</span>
-                      <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold shrink-0">{m.avatar}</div>
-                      <span className="text-[10px] font-medium flex-1 truncate">{m.name}</span>
-                      <span className="text-[9px] font-mono text-gold">{m.points.toLocaleString()}</span>
-                    </div>
-                  ))}
-                </div>
+                {LEADERBOARD.length === 0 ? (
+                  <p className="text-[9px] text-muted text-center py-4">No contributors yet</p>
+                ) : (
+                  <div className="space-y-2">
+                    {LEADERBOARD.slice(0, 5).map((m, i) => (
+                      <div key={m.name} className="flex items-center gap-2">
+                        <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                          i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-white/5 text-muted"
+                        }`}>{i + 1}</span>
+                        <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold shrink-0">{m.avatar}</div>
+                        <span className="text-[10px] font-medium flex-1 truncate">{m.name}</span>
+                        <span className="text-[9px] font-mono text-gold">{m.points.toLocaleString()}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 <button onClick={() => setActiveTab("members")} className="w-full text-center text-[9px] text-gold mt-3 hover:underline">
                   View full leaderboard
                 </button>
@@ -741,25 +692,29 @@ export default function CommunityPage() {
                 <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
                   <Award size={10} className="text-gold" /> Your Badges
                 </h3>
-                <div className="grid grid-cols-4 gap-2">
-                  {BADGES.slice(0, 8).map(badge => {
-                    const BIcon = badge.icon;
-                    return (
-                      <div key={badge.id} className={`relative group flex flex-col items-center p-2 rounded-lg border transition-all ${
-                        badge.earned ? "border-border hover:border-gold/20" : "border-border/50 opacity-30"
-                      }`}>
-                        <BIcon size={14} className={badge.earned ? badge.color : "text-muted"} />
-                        <p className="text-[7px] text-center mt-1 font-medium leading-tight">{badge.label}</p>
-                        {/* Tooltip */}
-                        <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-10">
-                          <div className="bg-black border border-border rounded-lg px-2 py-1 text-[8px] whitespace-nowrap shadow-lg">
-                            {badge.description}
+                {BADGES.length === 0 ? (
+                  <p className="text-[9px] text-muted text-center py-4">No badges available yet</p>
+                ) : (
+                  <div className="grid grid-cols-4 gap-2">
+                    {BADGES.slice(0, 8).map(badge => {
+                      const BIcon = badge.icon;
+                      return (
+                        <div key={badge.id} className={`relative group flex flex-col items-center p-2 rounded-lg border transition-all ${
+                          badge.earned ? "border-border hover:border-gold/20" : "border-border/50 opacity-30"
+                        }`}>
+                          <BIcon size={14} className={badge.earned ? badge.color : "text-muted"} />
+                          <p className="text-[7px] text-center mt-1 font-medium leading-tight">{badge.label}</p>
+                          {/* Tooltip */}
+                          <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-10">
+                            <div className="bg-black border border-border rounded-lg px-2 py-1 text-[8px] whitespace-nowrap shadow-lg">
+                              {badge.description}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -772,6 +727,9 @@ export default function CommunityPage() {
           {/* Full Leaderboard */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Award size={12} className="text-gold" /> Activity Leaderboard</h3>
+            {LEADERBOARD.length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">No leaderboard data yet. Start participating to earn points!</p>
+            ) : (
             <div className="space-y-2">
               {LEADERBOARD.map((m, i) => (
                 <div key={m.name} className={`flex items-center gap-3 p-2.5 rounded-lg border transition-all ${
@@ -792,11 +750,15 @@ export default function CommunityPage() {
                 </div>
               ))}
             </div>
+            )}
           </div>
 
           {/* Member Directory with Rich Cards */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Users size={12} className="text-gold" /> Member Directory</h3>
+            {MEMBERS.length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">No community members yet</p>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {MEMBERS.map(m => (
                 <div key={m.name}
@@ -854,11 +816,15 @@ export default function CommunityPage() {
                 </div>
               ))}
             </div>
+            )}
           </div>
 
           {/* Achievement Badges Gallery */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Trophy size={12} className="text-gold" /> Achievement Badges</h3>
+            {BADGES.length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">No badges available yet</p>
+            ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {BADGES.map(badge => {
                 const BIcon = badge.icon;
@@ -879,6 +845,7 @@ export default function CommunityPage() {
                 );
               })}
             </div>
+            )}
           </div>
         </div>
       )}
@@ -888,22 +855,26 @@ export default function CommunityPage() {
         <div className="space-y-4">
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-gold" /> Upcoming Events</h3>
-            <div className="space-y-2">
-              {EVENTS.map(ev => (
-                <div key={ev.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-semibold">{ev.title}</p>
-                      <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5"><Clock size={8} /> {ev.date}</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[9px] text-muted flex items-center gap-1"><Users size={8} /> {ev.attendees}</span>
-                      <button className="px-2 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold">RSVP</button>
+            {EVENTS.length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">No upcoming events. Check back later!</p>
+            ) : (
+              <div className="space-y-2">
+                {EVENTS.map(ev => (
+                  <div key={ev.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold">{ev.title}</p>
+                        <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5"><Clock size={8} /> {ev.date}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] text-muted flex items-center gap-1"><Users size={8} /> {ev.attendees}</span>
+                        <button className="px-2 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold">RSVP</button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -915,6 +886,9 @@ export default function CommunityPage() {
           <div className="card p-4 border-gold/10">
             <h3 className="text-xs font-semibold mb-1 flex items-center gap-2"><Pin size={12} className="text-gold" /> Pinned Resources</h3>
             <p className="text-[10px] text-muted mb-3">Essential guides and templates to get started</p>
+            {RESOURCES.length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">No resources shared yet</p>
+            ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {RESOURCES.slice(0, 4).map(r => (
                 <div key={r.title} className="p-3 rounded-lg border border-gold/10 bg-gold/[0.02] hover:border-gold/20 transition-all">
@@ -931,9 +905,11 @@ export default function CommunityPage() {
                 </div>
               ))}
             </div>
+            )}
           </div>
 
           {/* Full Library */}
+          {RESOURCES.length > 0 && (
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BookOpen size={12} className="text-gold" /> Resource Library</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -951,6 +927,7 @@ export default function CommunityPage() {
               ))}
             </div>
           </div>
+          )}
 
           {/* Helpful Links */}
           <div className="card p-4">
@@ -978,7 +955,12 @@ export default function CommunityPage() {
       {/* ---- TAB: Polls ---- */}
       {activeTab === "polls" && (
         <div className="space-y-4">
-          {POLLS.map(poll => (
+          {POLLS.length === 0 ? (
+            <div className="card text-center py-12">
+              <Vote size={24} className="mx-auto mb-2 text-muted/30" />
+              <p className="text-xs text-muted">No active polls right now</p>
+            </div>
+          ) : POLLS.map(poll => (
             <div key={poll.id} className="card p-4">
               <h3 className="text-xs font-semibold mb-1">{poll.question}</h3>
               <p className="text-[9px] text-muted mb-3">{poll.totalVotes} votes &middot; Ends in {poll.endsIn}</p>

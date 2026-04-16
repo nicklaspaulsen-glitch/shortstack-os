@@ -46,15 +46,7 @@ interface ProposalSection {
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
 /* ------------------------------------------------------------------ */
-const MOCK_PROPOSALS: Proposal[] = [
-  { id: "p1", client: "Bright Smile Dental", projectTitle: "Full Digital Marketing Package", date: "2026-04-10", status: "accepted", amount: 8500, views: 12, lastViewed: "2026-04-12", signedDate: "2026-04-13" },
-  { id: "p2", client: "Summit HVAC", projectTitle: "SEO & Paid Ads Campaign", date: "2026-04-08", status: "viewed", amount: 4200, views: 5, lastViewed: "2026-04-14", signedDate: null },
-  { id: "p3", client: "Legal Edge Partners", projectTitle: "Content Marketing Strategy", date: "2026-04-05", status: "sent", amount: 6800, views: 0, lastViewed: null, signedDate: null },
-  { id: "p4", client: "FreshBite Restaurant", projectTitle: "Social Media Management", date: "2026-04-02", status: "declined", amount: 3200, views: 8, lastViewed: "2026-04-06", signedDate: null },
-  { id: "p5", client: "GreenScape Landscaping", projectTitle: "Website Redesign + SEO", date: "2026-03-28", status: "draft", amount: 12000, views: 0, lastViewed: null, signedDate: null },
-  { id: "p6", client: "TechStart Labs", projectTitle: "Brand Identity & Funnels", date: "2026-04-12", status: "sent", amount: 9500, views: 2, lastViewed: "2026-04-14", signedDate: null },
-  { id: "p7", client: "Peak Performance Gym", projectTitle: "Lead Generation System", date: "2026-04-01", status: "accepted", amount: 5600, views: 14, lastViewed: "2026-04-09", signedDate: "2026-04-10" },
-];
+const MOCK_PROPOSALS: Proposal[] = [];
 
 const STATUS_CONFIG: Record<ProposalStatus, { label: string; color: string; bg: string }> = {
   draft: { label: "Draft", color: "text-muted", bg: "bg-white/5" },
@@ -95,11 +87,7 @@ export default function ProposalsPage() {
   const [builderProject, setBuilderProject] = useState("");
   const [builderDate, setBuilderDate] = useState("2026-04-15");
   const [sections, setSections] = useState<ProposalSection[]>(DEFAULT_SECTIONS);
-  const [lineItems, setLineItems] = useState<LineItem[]>([
-    { id: "li1", service: "Website Design & Development", hours: 40, rate: 150 },
-    { id: "li2", service: "SEO Setup & Optimization", hours: 20, rate: 125 },
-    { id: "li3", service: "Content Creation (10 posts)", hours: 15, rate: 100 },
-  ]);
+  const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [aiGenerating, setAiGenerating] = useState<string | null>(null);
   const [aiBrief, setAiBrief] = useState("");
 
@@ -748,7 +736,7 @@ export default function ProposalsPage() {
             </h3>
             <div className="space-y-2">
               {[...proposals].sort((a, b) => b.amount - a.amount).slice(0, 5).map((p, i) => {
-                const maxAmt = Math.max(...proposals.map(pr => pr.amount));
+                const maxAmt = Math.max(...proposals.map(pr => pr.amount), 1);
                 const cfg = STATUS_CONFIG[p.status];
                 return (
                   <div key={p.id} className="flex items-center gap-3">

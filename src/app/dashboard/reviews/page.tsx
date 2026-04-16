@@ -425,11 +425,12 @@ export default function ReviewsPage() {
             <h3 className="text-xs font-semibold mb-3">Reviews Over Time</h3>
             <div className="flex items-end gap-1 h-24">
               {["Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr"].map((m, i) => {
-                const count = [3, 5, 4, 7, 6, 8, 5][i];
+                const count = [0, 0, 0, 0, 0, 0, 0][i];
+                const maxCount = Math.max(...[0, 0, 0, 0, 0, 0, 0], 1);
                 return (
                   <div key={m} className="flex-1 flex flex-col items-center gap-1">
                     <span className="text-[8px] text-muted">{count}</span>
-                    <div className="w-full rounded-t bg-gold/30" style={{ height: `${(count / 8) * 100}%` }} />
+                    <div className="w-full rounded-t bg-gold/30" style={{ height: `${(count / maxCount) * 100}%` }} />
                     <span className="text-[8px] text-muted">{m}</span>
                   </div>
                 );

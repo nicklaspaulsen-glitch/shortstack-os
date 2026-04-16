@@ -155,18 +155,7 @@ ${competitor.swot.opportunities.map(o => `- ${o}`).join("\n")}
 
   const ALL_PLATFORMS = ["Instagram", "Facebook", "TikTok", "LinkedIn", "YouTube", "Twitter"];
 
-  const contentGapTopics = [
-    { topic: "AI Marketing Tools", us: false, competitors: ["BrightMedia Agency", "Apex Digital Partners"] },
-    { topic: "Short-form Video Strategy", us: true, competitors: ["Vortex Creative"] },
-    { topic: "Email Automation", us: false, competitors: ["Apex Digital Partners"] },
-    { topic: "Influencer Partnerships", us: false, competitors: ["Vortex Creative"] },
-    { topic: "Case Study Breakdowns", us: true, competitors: ["BrightMedia Agency", "Apex Digital Partners"] },
-    { topic: "Industry Benchmarks", us: false, competitors: ["Apex Digital Partners"] },
-    { topic: "Behind the Scenes Content", us: true, competitors: ["Vortex Creative"] },
-    { topic: "Client Testimonial Videos", us: false, competitors: ["BrightMedia Agency"] },
-    { topic: "Weekly Tips Series", us: false, competitors: ["Vortex Creative", "Apex Digital Partners"] },
-    { topic: "Podcast / Audio Content", us: false, competitors: [] },
-  ];
+  const contentGapTopics: Array<{ topic: string; us: boolean; competitors: string[] }> = [];
 
   const TABS = [
     { key: "overview" as const, label: "Overview", icon: <Target size={14} /> },
@@ -233,7 +222,7 @@ ${competitor.swot.opportunities.map(o => `- ${o}`).join("\n")}
             <div className="p-2 rounded-lg bg-green-500/10"><TrendingUp size={16} className="text-green-400" /></div>
             <div>
               <p className="text-[10px] text-muted uppercase tracking-wider">Avg Engagement</p>
-              <p className="text-xl font-bold">{(competitors.reduce((s, c) => s + c.engagementRate, 0) / competitors.length).toFixed(1)}%</p>
+              <p className="text-xl font-bold">{(competitors.length > 0 ? competitors.reduce((s, c) => s + c.engagementRate, 0) / competitors.length : 0).toFixed(1)}%</p>
             </div>
           </div>
         </div>
@@ -519,7 +508,7 @@ ${competitor.swot.opportunities.map(o => `- ${o}`).join("\n")}
                       <span className="text-[10px] text-muted ml-1">Topics competitors cover that we do not</span>
                     </div>
                     <div className="space-y-2">
-                      {contentGapTopics.map((gap, i) => (
+                      {contentGapTopics.length > 0 ? contentGapTopics.map((gap, i) => (
                         <div key={i} className={`flex items-center gap-3 p-2 rounded ${gap.us ? "bg-green-500/5" : "bg-red-500/5"}`}>
                           <div className="w-5">
                             {gap.us
@@ -545,7 +534,9 @@ ${competitor.swot.opportunities.map(o => `- ${o}`).join("\n")}
                             </span>
                           )}
                         </div>
-                      ))}
+                      )) : (
+                        <p className="text-xs text-muted text-center py-4">No content gap data yet. Add competitors to discover topic gaps.</p>
+                      )}
                     </div>
                   </div>
 

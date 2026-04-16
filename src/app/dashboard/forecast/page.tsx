@@ -33,45 +33,13 @@ interface PipelineDeal {
   expectedClose: string;
 }
 
-const MOCK_CLIENTS: ClientRevenue[] = [
-  { name: "Bright Smile Dental", mrr: 4200, health: 92, renewalDate: "2026-06-15", service: "Full Stack Marketing", months: 8, trend: "up" },
-  { name: "Summit HVAC", mrr: 2800, health: 78, renewalDate: "2026-05-20", service: "SEO & Ads", months: 5, trend: "up" },
-  { name: "Legal Edge Partners", mrr: 5500, health: 85, renewalDate: "2026-07-01", service: "Enterprise", months: 12, trend: "flat" },
-  { name: "FreshBite Restaurant", mrr: 1800, health: 45, renewalDate: "2026-04-30", service: "Social Media", months: 3, trend: "down" },
-  { name: "GreenScape Landscaping", mrr: 2200, health: 68, renewalDate: "2026-05-10", service: "SEO & Content", months: 6, trend: "flat" },
-  { name: "TechStart Labs", mrr: 6200, health: 95, renewalDate: "2026-09-01", service: "Enterprise", months: 14, trend: "up" },
-  { name: "Peak Performance Gym", mrr: 3100, health: 38, renewalDate: "2026-04-25", service: "Ads & Funnels", months: 4, trend: "down" },
-  { name: "Metro Realty Group", mrr: 4800, health: 72, renewalDate: "2026-06-01", service: "Full Stack Marketing", months: 10, trend: "up" },
-  { name: "Coastal Pet Care", mrr: 1500, health: 55, renewalDate: "2026-05-15", service: "Social Media", months: 2, trend: "down" },
-  { name: "Apex Consulting", mrr: 3600, health: 88, renewalDate: "2026-08-01", service: "SEO & Ads", months: 9, trend: "up" },
-];
+const MOCK_CLIENTS: ClientRevenue[] = [];
 
-const PIPELINE_DEALS: PipelineDeal[] = [
-  { id: "d1", name: "Website + SEO Package", client: "Nova Fitness", value: 4500, stage: "Negotiation", probability: 75, expectedClose: "2026-04-22" },
-  { id: "d2", name: "Full Marketing Retainer", client: "Riverstone Dental", value: 8200, stage: "Proposal Sent", probability: 50, expectedClose: "2026-05-01" },
-  { id: "d3", name: "Paid Ads Management", client: "Urban Brew Coffee", value: 2800, stage: "Qualified", probability: 30, expectedClose: "2026-05-15" },
-  { id: "d4", name: "Enterprise Package", client: "Meridian Law Group", value: 12000, stage: "Negotiation", probability: 60, expectedClose: "2026-04-28" },
-  { id: "d5", name: "Social Media Bundle", client: "Bloom Florist", value: 1800, stage: "Prospect", probability: 15, expectedClose: "2026-06-01" },
-  { id: "d6", name: "Brand + Web Redesign", client: "Alpine Adventures", value: 9500, stage: "Proposal Sent", probability: 45, expectedClose: "2026-05-10" },
-];
+const PIPELINE_DEALS: PipelineDeal[] = [];
 
-const SERVICE_BREAKDOWN = [
-  { service: "Enterprise", revenue: 11700, clients: 2, color: "#C9A84C", growth: 8 },
-  { service: "Full Stack Marketing", revenue: 9000, clients: 2, color: "#3b82f6", growth: 12 },
-  { service: "SEO & Ads", revenue: 6400, clients: 2, color: "#8b5cf6", growth: 5 },
-  { service: "Social Media", revenue: 3300, clients: 2, color: "#10b981", growth: -3 },
-  { service: "SEO & Content", revenue: 2200, clients: 1, color: "#f59e0b", growth: 2 },
-  { service: "Ads & Funnels", revenue: 3100, clients: 1, color: "#ef4444", growth: -8 },
-];
+const SERVICE_BREAKDOWN: { service: string; revenue: number; clients: number; color: string; growth: number }[] = [];
 
-const HISTORICAL_MONTHS = [
-  { month: "Nov '25", revenue: 24200 },
-  { month: "Dec '25", revenue: 26800 },
-  { month: "Jan '26", revenue: 28500 },
-  { month: "Feb '26", revenue: 30100 },
-  { month: "Mar '26", revenue: 33400 },
-  { month: "Apr '26", revenue: 35700 },
-];
+const HISTORICAL_MONTHS: { month: string; revenue: number }[] = [];
 
 const fmtCurrency = (n: number) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
@@ -87,9 +55,9 @@ export default function ForecastPage() {
   const currentMRR = MOCK_CLIENTS.reduce((s, c) => s + c.mrr, 0);
   const arr = currentMRR * 12;
   const clientCount = MOCK_CLIENTS.length;
-  const avgMRR = Math.round(currentMRR / clientCount);
+  const avgMRR = clientCount > 0 ? Math.round(currentMRR / clientCount) : 0;
   const churnRisk = MOCK_CLIENTS.filter(c => c.health < 50).length;
-  const avgHealth = Math.round(MOCK_CLIENTS.reduce((s, c) => s + c.health, 0) / clientCount);
+  const avgHealth = clientCount > 0 ? Math.round(MOCK_CLIENTS.reduce((s, c) => s + c.health, 0) / clientCount) : 0;
 
   // Growth / churn rates per scenario
   const growthRates = { best: 0.10, expected: 0.06, worst: -0.02 };
@@ -120,14 +88,7 @@ export default function ForecastPage() {
   const maxRev = Math.max(...allRevValues, 1);
 
   // Monthly comparison data
-  const comparisonMonths = [
-    { month: "Jan", thisYear: 28500, lastYear: 18200 },
-    { month: "Feb", thisYear: 30100, lastYear: 19800 },
-    { month: "Mar", thisYear: 33400, lastYear: 22100 },
-    { month: "Apr", thisYear: 35700, lastYear: 24600 },
-    { month: "May", thisYear: projection[0]?.revenue || 0, lastYear: 26300 },
-    { month: "Jun", thisYear: projection[1]?.revenue || 0, lastYear: 27800 },
-  ];
+  const comparisonMonths: { month: string; thisYear: number; lastYear: number }[] = [];
 
   const TABS: { id: ForecastTab; label: string; icon: React.ReactNode }[] = [
     { id: "overview", label: "Overview", icon: <TrendingUp size={13} /> },
@@ -207,21 +168,21 @@ export default function ForecastPage() {
               <p className="text-[10px] text-muted">3 Month MRR</p>
               <p className="text-lg font-bold text-gold mt-1">{fmtCurrency(projected3)}/mo</p>
               <p className="text-[9px] text-emerald-400 flex items-center justify-center gap-0.5 mt-0.5">
-                <ArrowUpRight size={9} /> +{Math.round(((projected3 - currentMRR) / currentMRR) * 100)}%
+                <ArrowUpRight size={9} /> +{currentMRR > 0 ? Math.round(((projected3 - currentMRR) / currentMRR) * 100) : 0}%
               </p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">6 Month MRR</p>
               <p className="text-lg font-bold text-gold mt-1">{fmtCurrency(projected6)}/mo</p>
               <p className="text-[9px] text-emerald-400 flex items-center justify-center gap-0.5 mt-0.5">
-                <ArrowUpRight size={9} /> +{Math.round(((projected6 - currentMRR) / currentMRR) * 100)}%
+                <ArrowUpRight size={9} /> +{currentMRR > 0 ? Math.round(((projected6 - currentMRR) / currentMRR) * 100) : 0}%
               </p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">12 Month MRR</p>
               <p className="text-lg font-bold text-gold mt-1">{fmtCurrency(projected12)}/mo</p>
               <p className="text-[9px] text-emerald-400 flex items-center justify-center gap-0.5 mt-0.5">
-                <ArrowUpRight size={9} /> +{Math.round(((projected12 - currentMRR) / currentMRR) * 100)}%
+                <ArrowUpRight size={9} /> +{currentMRR > 0 ? Math.round(((projected12 - currentMRR) / currentMRR) * 100) : 0}%
               </p>
             </div>
           </div>
@@ -331,7 +292,7 @@ export default function ForecastPage() {
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">Avg Deal Size</p>
-              <p className="text-xl font-bold text-purple-400">{fmtCurrency(Math.round(pipelineTotal / PIPELINE_DEALS.length))}</p>
+              <p className="text-xl font-bold text-purple-400">{fmtCurrency(PIPELINE_DEALS.length > 0 ? Math.round(pipelineTotal / PIPELINE_DEALS.length) : 0)}</p>
               <p className="text-[9px] text-muted">per deal</p>
             </div>
           </div>
@@ -707,6 +668,7 @@ export default function ForecastPage() {
                     );
                   })}
                 </tbody>
+                {comparisonMonths.length > 0 && (
                 <tfoot>
                   <tr className="border-t border-border font-bold text-xs">
                     <td className="py-3">Average</td>
@@ -722,6 +684,7 @@ export default function ForecastPage() {
                     </td>
                   </tr>
                 </tfoot>
+                )}
               </table>
             </div>
           </div>

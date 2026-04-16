@@ -80,38 +80,7 @@ const ACTIONS = [
   { id: "add_tag", label: "Add Tag", icon: "Tag", description: "Add a tag to the contact" },
 ];
 
-const MOCK_AUTOMATIONS: Automation[] = [
-  {
-    id: "a1", name: "Welcome New Client", description: "Send welcome email and create onboarding tasks when a new client is added",
-    enabled: true, trigger: "New Client", triggerIcon: "Users",
-    conditions: [], actions: ["Send Email", "Create Task"],
-    runs: 47, successRate: 100, lastRun: "2 hours ago",
-  },
-  {
-    id: "a2", name: "Follow Up Cold Lead", description: "Wait 3 days then send a follow-up email to new leads",
-    enabled: true, trigger: "New Lead", triggerIcon: "UserPlus",
-    conditions: ["Wait 3 days"], actions: ["Send Email"],
-    runs: 234, successRate: 96.2, lastRun: "35 min ago",
-  },
-  {
-    id: "a3", name: "Win Notification", description: "Notify Slack and create invoice when a deal is won",
-    enabled: true, trigger: "Deal Won", triggerIcon: "DollarSign",
-    conditions: [], actions: ["Send Slack Notification", "Create Task"],
-    runs: 18, successRate: 100, lastRun: "1 day ago",
-  },
-  {
-    id: "a4", name: "Review Request", description: "Wait 7 days after project completion, then request a review",
-    enabled: false, trigger: "Deal Won", triggerIcon: "DollarSign",
-    conditions: ["Wait 7 days"], actions: ["Send Email"],
-    runs: 12, successRate: 91.7, lastRun: "5 days ago",
-  },
-  {
-    id: "a5", name: "Overdue Invoice Escalation", description: "Alert team when an invoice is overdue, then send reminder to client",
-    enabled: true, trigger: "Invoice Overdue", triggerIcon: "Clock",
-    conditions: ["If value > $500"], actions: ["Send Slack Notification", "Send Email", "Assign Team Member"],
-    runs: 9, successRate: 100, lastRun: "3 days ago",
-  },
-];
+const MOCK_AUTOMATIONS: Automation[] = [];
 
 const TEMPLATES = [
   {
@@ -156,18 +125,7 @@ const TEMPLATES = [
   },
 ];
 
-const MOCK_LOGS: LogEntry[] = [
-  { id: "l1", automationName: "Follow Up Cold Lead", triggerEvent: "New lead: Sarah's Bakery", status: "success", contact: "Sarah Mitchell", timestamp: "2026-04-15T09:45:00Z", duration: "0.3s", stepsRun: 3 },
-  { id: "l2", automationName: "Welcome New Client", triggerEvent: "Client onboarded: Peak Fitness", status: "success", contact: "Mike Torres", timestamp: "2026-04-15T08:30:00Z", duration: "0.8s", stepsRun: 2 },
-  { id: "l3", automationName: "Win Notification", triggerEvent: "Deal won: Website Redesign $4,500", status: "success", contact: "Elite Auto Detailing", timestamp: "2026-04-14T16:20:00Z", duration: "0.5s", stepsRun: 2 },
-  { id: "l4", automationName: "Follow Up Cold Lead", triggerEvent: "New lead: Metro Legal Group", status: "success", contact: "David Chen", timestamp: "2026-04-14T14:15:00Z", duration: "0.2s", stepsRun: 3 },
-  { id: "l5", automationName: "Overdue Invoice Escalation", triggerEvent: "Invoice #1042 overdue ($850)", status: "success", contact: "Bright Smiles Dental", timestamp: "2026-04-14T10:00:00Z", duration: "1.1s", stepsRun: 3 },
-  { id: "l6", automationName: "Follow Up Cold Lead", triggerEvent: "New lead: Fresh Flowers LLC", status: "failed", contact: "Amy Lin", timestamp: "2026-04-13T22:00:00Z", duration: "0.1s", stepsRun: 1 },
-  { id: "l7", automationName: "Welcome New Client", triggerEvent: "Client onboarded: Golden Spa", status: "success", contact: "Rosa Vega", timestamp: "2026-04-13T11:30:00Z", duration: "0.6s", stepsRun: 2 },
-  { id: "l8", automationName: "Review Request", triggerEvent: "Deal completed: SEO Package", status: "skipped", contact: "Tech Startup Inc", timestamp: "2026-04-12T17:45:00Z", duration: "0.0s", stepsRun: 0 },
-  { id: "l9", automationName: "Overdue Invoice Escalation", triggerEvent: "Invoice #1038 overdue ($320)", status: "skipped", contact: "Budget Print Co", timestamp: "2026-04-12T10:00:00Z", duration: "0.0s", stepsRun: 0 },
-  { id: "l10", automationName: "Win Notification", triggerEvent: "Deal won: Monthly Retainer $2,000", status: "success", contact: "Sunrise Yoga", timestamp: "2026-04-11T15:00:00Z", duration: "0.4s", stepsRun: 2 },
-];
+const MOCK_LOGS: LogEntry[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Icon resolver                                                      */

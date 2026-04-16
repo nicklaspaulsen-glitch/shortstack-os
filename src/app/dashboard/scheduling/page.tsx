@@ -87,57 +87,21 @@ const COLOR_OPTIONS = [
 /* ------------------------------------------------------------------ */
 /*  AI Mock Data                                                       */
 /* ------------------------------------------------------------------ */
-const AI_SUGGESTED_TIMES = [
-  { time: "10:00 AM", day: "Tuesday", score: 96, reason: "Highest booking acceptance rate" },
-  { time: "2:00 PM", day: "Wednesday", score: 91, reason: "Client engagement peaks after lunch" },
-  { time: "11:00 AM", day: "Thursday", score: 88, reason: "Low conflict probability" },
-  { time: "9:30 AM", day: "Monday", score: 85, reason: "First meetings show higher attendance" },
-  { time: "3:00 PM", day: "Friday", score: 78, reason: "Good for wrap-up meetings" },
-];
+const AI_SUGGESTED_TIMES: { time: string; day: string; score: number; reason: string }[] = [];
 
-const CONFLICT_ALERTS = [
-  { id: "c1", type: "overlap", title: "Potential Overlap", description: "Discovery Call (2:00 PM) and Review Meeting (2:30 PM) on Apr 18 have only 30min gap with no buffer", severity: "warning" },
-  { id: "c2", type: "back_to_back", title: "Back-to-Back Meetings", description: "3 meetings from 10:00 AM to 12:30 PM on Apr 17 with no breaks", severity: "warning" },
-  { id: "c3", type: "timezone", title: "Late Meeting for Client", description: "Call with Sunrise Yoga (PST) at 5:00 PM your time is 8:00 PM their time", severity: "info" },
-];
+const CONFLICT_ALERTS: { id: string; type: string; title: string; description: string; severity: string }[] = [];
 
-const MOCK_PREP_CARDS: PrepCard[] = [
-  {
-    id: "p1", guestName: "Sarah Mitchell", meetingType: "Discovery Call", date: "Apr 16, 2026", time: "10:00 AM",
-    clientSince: "New Lead", lastMeeting: "None", dealValue: "$2,500/mo",
-    notes: ["Interested in social media management", "Currently spending $800/mo on ads with poor ROI", "Referred by Mike Torres"],
-    talking_points: ["Ask about current marketing pain points", "Present social media case studies", "Discuss package options for her budget"],
-    sentiment: "positive",
-  },
-  {
-    id: "p2", guestName: "David Chen", meetingType: "Monthly Review", date: "Apr 17, 2026", time: "2:00 PM",
-    clientSince: "Oct 2025", lastMeeting: "Mar 15, 2026", dealValue: "$3,200/mo",
-    notes: ["Growth package client", "Website traffic up 23% last month", "Wants to discuss TikTok strategy"],
-    talking_points: ["Review March performance metrics", "Present TikTok content plan", "Discuss potential upsell to Pro package"],
-    sentiment: "positive",
-  },
-  {
-    id: "p3", guestName: "Rosa Vega", meetingType: "Retention Call", date: "Apr 18, 2026", time: "11:00 AM",
-    clientSince: "Jan 2026", lastMeeting: "Feb 28, 2026", dealValue: "$1,500/mo",
-    notes: ["Expressed concern about ROI last month", "Competitor offered lower pricing", "Has not opened last 2 reports"],
-    talking_points: ["Address ROI concerns with latest data", "Present competitive analysis", "Offer loyalty discount if needed"],
-    sentiment: "at_risk",
-  },
-];
+const MOCK_PREP_CARDS: PrepCard[] = [];
 
 const HEATMAP_DATA: Record<string, Record<string, number>> = {
-  "Mon": { "09": 3, "10": 8, "11": 6, "12": 2, "13": 4, "14": 7, "15": 5, "16": 3 },
-  "Tue": { "09": 5, "10": 10, "11": 8, "12": 3, "13": 6, "14": 9, "15": 7, "16": 4 },
-  "Wed": { "09": 4, "10": 7, "11": 9, "12": 2, "13": 5, "14": 8, "15": 6, "16": 3 },
-  "Thu": { "09": 6, "10": 9, "11": 7, "12": 3, "13": 5, "14": 6, "15": 4, "16": 2 },
-  "Fri": { "09": 2, "10": 5, "11": 4, "12": 1, "13": 3, "14": 4, "15": 6, "16": 5 },
+  "Mon": { "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0 },
+  "Tue": { "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0 },
+  "Wed": { "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0 },
+  "Thu": { "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0 },
+  "Fri": { "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0 },
 };
 
-const TEAM_MEMBERS = [
-  { id: "m1", name: "Nicklas", role: "Owner", bookingsThisWeek: 12, color: "#C9A84C" },
-  { id: "m2", name: "Sarah", role: "Account Manager", bookingsThisWeek: 8, color: "#3b82f6" },
-  { id: "m3", name: "Maria", role: "Strategist", bookingsThisWeek: 6, color: "#10b981" },
-];
+const TEAM_MEMBERS: { id: string; name: string; role: string; bookingsThisWeek: number; color: string }[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -628,11 +592,7 @@ export default function SchedulingPage() {
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Globe size={13} className="text-gold" /> Calendar Integration</h2>
             <div className="space-y-2">
-              {[
-                { name: "Google Calendar", connected: true, icon: "G" },
-                { name: "Outlook Calendar", connected: false, icon: "O" },
-                { name: "Apple Calendar", connected: false, icon: "A" },
-              ].map(cal => (
+              {([] as { name: string; connected: boolean; icon: string }[]).map(cal => (
                 <div key={cal.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${cal.connected ? "bg-emerald-400/10 text-emerald-400" : "bg-surface text-muted"}`}>
                     {cal.icon}
@@ -646,6 +606,7 @@ export default function SchedulingPage() {
                   </button>
                 </div>
               ))}
+              <p className="text-xs text-muted text-center py-4">No calendars connected</p>
             </div>
           </div>
         </div>
@@ -661,6 +622,9 @@ export default function SchedulingPage() {
             </h3>
             <p className="text-[10px] text-muted mb-3">Based on your past 90 days of booking patterns and client preferences</p>
             <div className="space-y-2">
+              {AI_SUGGESTED_TIMES.length === 0 && (
+                <p className="text-xs text-muted text-center py-4">No AI suggestions available yet. Book some meetings to get insights.</p>
+              )}
               {AI_SUGGESTED_TIMES.map((slot, i) => (
                 <div key={i} className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-gold/20 transition-all">
                   <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center shrink-0">
@@ -764,11 +728,7 @@ export default function SchedulingPage() {
               <span className="text-xs text-emerald-400">Your timezone: {detectedTimezone}</span>
             </div>
             <div className="space-y-1.5">
-              {[
-                { name: "Sarah Mitchell", tz: "America/New_York (EDT)", offset: "+1h from you" },
-                { name: "David Chen", tz: "America/Los_Angeles (PDT)", offset: "-2h from you" },
-                { name: "Rosa Vega", tz: "America/Chicago (CDT)", offset: "Same as you" },
-              ].map((client, i) => (
+              {([] as { name: string; tz: string; offset: string }[]).map((client, i) => (
                 <div key={i} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border text-xs">
                   <Globe size={12} className="text-blue-400 shrink-0" />
                   <span className="font-medium w-28">{client.name}</span>
@@ -776,6 +736,7 @@ export default function SchedulingPage() {
                   <span className="text-[10px] text-gold">{client.offset}</span>
                 </div>
               ))}
+              <p className="text-xs text-muted text-center py-2">No client timezone data available</p>
             </div>
           </div>
 
@@ -786,6 +747,9 @@ export default function SchedulingPage() {
             </h3>
             <p className="text-[10px] text-muted mb-3">AI-generated prep briefs for your upcoming meetings</p>
             <div className="space-y-3">
+              {MOCK_PREP_CARDS.length === 0 && (
+                <p className="text-xs text-muted text-center py-4">No upcoming meetings to prep for.</p>
+              )}
               {MOCK_PREP_CARDS.map(prep => (
                 <div key={prep.id} className={`rounded-2xl border overflow-hidden transition-all ${
                   prep.sentiment === "at_risk" ? "border-red-500/20" : "border-border hover:border-gold/20"

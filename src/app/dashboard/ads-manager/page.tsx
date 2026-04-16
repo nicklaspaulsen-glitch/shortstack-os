@@ -127,15 +127,7 @@ const DEFAULT_RULES: AutopilotRule[] = [
 // ---------------------------------------------------------------------------
 // Mock daily chart data
 // ---------------------------------------------------------------------------
-const DAILY_DATA = Array.from({ length: 14 }, (_, i) => {
-  const d = new Date();
-  d.setDate(d.getDate() - 13 + i);
-  return {
-    date: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-    spend: 400 + Math.round(Math.random() * 200),
-    conversions: 18 + Math.round(Math.random() * 15),
-  };
-});
+const DAILY_DATA: { date: string; spend: number; conversions: number }[] = [];
 
 // ---------------------------------------------------------------------------
 // Component
@@ -357,8 +349,8 @@ export default function AdsManagerPage() {
   }, [campaigns]);
 
   // Max spend for chart scaling
-  const maxSpend = Math.max(...DAILY_DATA.map(d => d.spend));
-  const maxConv = Math.max(...DAILY_DATA.map(d => d.conversions));
+  const maxSpend = Math.max(...DAILY_DATA.map(d => d.spend), 1);
+  const maxConv = Math.max(...DAILY_DATA.map(d => d.conversions), 1);
 
   // ---------------------------------------------------------------------------
   // Loading state

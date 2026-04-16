@@ -415,9 +415,10 @@ export default function GoogleBusinessPage() {
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Globe size={12} className="text-[#4285F4]" /> Service Area</h3>
             <div className="flex flex-wrap gap-1.5">
-              {["Miami, FL", "Fort Lauderdale, FL", "Tampa, FL", "Orlando, FL", "Palm Beach, FL"].map(a => (
+              {([] as string[]).map(a => (
                 <span key={a} className="text-[10px] px-2.5 py-1 rounded-lg border border-[#4285F4]/20 bg-[#4285F4]/5 text-[#4285F4]">{a}</span>
               ))}
+              <p className="text-xs text-muted py-2">No service areas configured</p>
             </div>
           </div>
 
@@ -441,17 +442,13 @@ export default function GoogleBusinessPage() {
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Clock size={12} className="text-[#4285F4]" /> Recent Listing Updates</h3>
             <div className="space-y-1.5 text-[10px]">
-              {[
-                { update: "Business hours updated", date: "Apr 10, 2026" },
-                { update: "New photo uploaded", date: "Apr 8, 2026" },
-                { update: "Service description updated", date: "Apr 5, 2026" },
-                { update: "Holiday hours set for Memorial Day", date: "Apr 1, 2026" },
-              ].map((u, i) => (
+              {([] as { update: string; date: string }[]).map((u, i) => (
                 <div key={i} className="flex items-center justify-between p-2 rounded-lg border border-border">
                   <span className="text-muted">{u.update}</span>
                   <span className="text-muted">{u.date}</span>
                 </div>
               ))}
+              <p className="text-xs text-muted text-center py-4">No recent updates</p>
             </div>
           </div>
         </div>

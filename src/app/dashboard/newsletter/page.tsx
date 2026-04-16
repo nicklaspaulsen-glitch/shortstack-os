@@ -65,20 +65,9 @@ function defaultBlock(type: ContentBlock["type"]): ContentBlock {
 }
 
 /* ─────────── mock data ─────────── */
-const RECIPIENT_LISTS = [
-  { id: "all_subscribers", label: "All Subscribers", count: 1247, color: "text-blue-400" },
-  { id: "active_clients", label: "Active Clients", count: 89, color: "text-green-400" },
-  { id: "leads", label: "Leads", count: 342, color: "text-yellow-400" },
-  { id: "custom_segment", label: "Custom Segment", count: 156, color: "text-purple-400" },
-];
+const RECIPIENT_LISTS: { id: string; label: string; count: number; color: string }[] = [];
 
-const PAST_NEWSLETTERS: PastNewsletter[] = [
-  { id: "1", subject: "April Agency Update - New Services & Case Studies", sentAt: "2026-04-10", recipients: 1182, opens: 437, clicks: 89, bounces: 12, openRate: "37.0%", clickRate: "7.5%" },
-  { id: "2", subject: "How We Grew a Dental Practice 340% in 6 Months", sentAt: "2026-04-03", recipients: 1156, opens: 521, clicks: 142, bounces: 8, openRate: "45.1%", clickRate: "12.3%" },
-  { id: "3", subject: "Your Weekly Marketing Digest - Week 14", sentAt: "2026-03-27", recipients: 1134, opens: 389, clicks: 67, bounces: 15, openRate: "34.3%", clickRate: "5.9%" },
-  { id: "4", subject: "Join Us: Digital Marketing Masterclass (Free)", sentAt: "2026-03-20", recipients: 1098, opens: 602, clicks: 234, bounces: 11, openRate: "54.8%", clickRate: "21.3%" },
-  { id: "5", subject: "Case Study: $2.4M Revenue from Email Alone", sentAt: "2026-03-13", recipients: 1067, opens: 478, clicks: 156, bounces: 9, openRate: "44.8%", clickRate: "14.6%" },
-];
+const PAST_NEWSLETTERS: PastNewsletter[] = [];
 
 function makeTemplateBlocks(preset: string): ContentBlock[] {
   const header = defaultBlock("header");
@@ -905,13 +894,13 @@ export default function NewsletterPage() {
             </div>
             <div className="card text-center">
               <p className="text-2xl font-bold text-green-400">
-                {(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.openRate), 0) / PAST_NEWSLETTERS.length).toFixed(1)}%
+                {(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.openRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%
               </p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-1">Avg Open Rate</p>
             </div>
             <div className="card text-center">
               <p className="text-2xl font-bold text-blue-400">
-                {(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.clickRate), 0) / PAST_NEWSLETTERS.length).toFixed(1)}%
+                {(PAST_NEWSLETTERS.reduce((s, n) => s + parseFloat(n.clickRate), 0) / Math.max(PAST_NEWSLETTERS.length, 1)).toFixed(1)}%
               </p>
               <p className="text-[9px] text-muted uppercase tracking-wider mt-1">Avg Click Rate</p>
             </div>
@@ -963,6 +952,7 @@ export default function NewsletterPage() {
           </div>
 
           {/* Best performing highlight */}
+          {PAST_NEWSLETTERS.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div className="card">
               <h3 className="text-xs font-semibold mb-2 flex items-center gap-1.5">
@@ -1001,6 +991,7 @@ export default function NewsletterPage() {
               })()}
             </div>
           </div>
+          )}
         </div>
       )}
     </div>

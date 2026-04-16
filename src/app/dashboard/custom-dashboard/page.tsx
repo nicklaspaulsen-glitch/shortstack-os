@@ -7,7 +7,7 @@ import {
   BarChart3, LineChart as LineChartIcon, PieChart as PieChartIcon,
   Table, Activity, Users, DollarSign, TrendingUp,
   Maximize2, Crown,
-  Zap, FileText, ArrowUpRight, ArrowDownRight
+  Zap, FileText
 } from "lucide-react";
 
 type WidgetType = "kpi" | "bar" | "line" | "pie" | "table" | "activity" | "clients" | "revenue";
@@ -119,31 +119,11 @@ const SAVED_DASHBOARDS: DashboardLayout[] = [
 
 /* ── Mock widget rendering ── */
 function WidgetKPI({ title }: { title: string }) {
-  const values: Record<string, { value: string; trend: string; up: boolean }> = {
-    "Monthly Revenue": { value: "$48,500", trend: "+12.4%", up: true },
-    "Active Clients": { value: "24", trend: "+3", up: true },
-    "New Leads": { value: "142", trend: "+22%", up: true },
-    "Tasks Completed": { value: "87", trend: "-5%", up: false },
-    "Growth Rate": { value: "18.2%", trend: "+2.1%", up: true },
-    "Team Efficiency": { value: "94%", trend: "+1%", up: true },
-    "Deals This Month": { value: "18", trend: "+6", up: true },
-    "Pipeline Value": { value: "$124K", trend: "+$18K", up: true },
-    "Conversion Rate": { value: "32%", trend: "+4%", up: true },
-    "Content Published": { value: "48", trend: "+12", up: true },
-    "Engagement Rate": { value: "5.2%", trend: "+0.8%", up: true },
-    "Client Health Score": { value: "8.4", trend: "+0.2", up: true },
-    "Churn Risk": { value: "2", trend: "-1", up: true },
-    "NPS Score": { value: "72", trend: "+5", up: true },
-  };
-  const data = values[title] || { value: "0", trend: "0%", up: true };
   return (
     <div className="flex flex-col justify-between h-full">
       <p className="text-[10px] text-muted uppercase tracking-wider truncate">{title}</p>
-      <p className="text-2xl font-bold mt-1">{data.value}</p>
-      <div className={`flex items-center gap-1 mt-1 text-[10px] font-medium ${data.up ? "text-emerald-400" : "text-red-400"}`}>
-        {data.up ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
-        {data.trend}
-      </div>
+      <p className="text-2xl font-bold mt-1">--</p>
+      <p className="text-[9px] text-muted mt-1">No data yet</p>
     </div>
   );
 }
@@ -215,17 +195,14 @@ function WidgetPieChart() {
 }
 
 function WidgetTable() {
-  const rows = [
-    { name: "Apex Fitness", mrr: "$2,400", health: "92%" },
-    { name: "CloudNine Media", mrr: "$1,800", health: "88%" },
-    { name: "BrightSmile", mrr: "$1,500", health: "95%" },
-    { name: "Urban Eats", mrr: "$1,200", health: "78%" },
-  ];
+  const rows: { name: string; mrr: string; health: string }[] = [];
   return (
     <table className="w-full text-[10px]">
       <thead><tr className="border-b border-border"><th className="text-left py-1 text-muted font-semibold">Client</th><th className="text-right py-1 text-muted font-semibold">MRR</th><th className="text-right py-1 text-muted font-semibold">Health</th></tr></thead>
       <tbody>
-        {rows.map((r, i) => (
+        {rows.length === 0 ? (
+          <tr><td colSpan={3} className="py-4 text-center text-muted">No client data yet</td></tr>
+        ) : rows.map((r, i) => (
           <tr key={i} className="border-b border-border/30"><td className="py-1.5 font-medium">{r.name}</td><td className="py-1.5 text-right text-emerald-400">{r.mrr}</td><td className="py-1.5 text-right">{r.health}</td></tr>
         ))}
       </tbody>
@@ -234,15 +211,12 @@ function WidgetTable() {
 }
 
 function WidgetActivityFeed() {
-  const items = [
-    { text: "New lead: Peak Performance Gym", time: "2m" },
-    { text: "Invoice #1042 paid", time: "15m" },
-    { text: "Content approved for FitBrand", time: "1h" },
-    { text: "Deal closed: $2,400/mo", time: "2h" },
-  ];
+  const items: { text: string; time: string }[] = [];
   return (
     <div className="space-y-1.5">
-      {items.map((item, i) => (
+      {items.length === 0 ? (
+        <p className="text-[9px] text-muted text-center py-4">No recent activity</p>
+      ) : items.map((item, i) => (
         <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-surface-light">
           <Activity size={9} className="text-gold shrink-0" />
           <span className="text-[9px] flex-1 truncate">{item.text}</span>
@@ -254,14 +228,12 @@ function WidgetActivityFeed() {
 }
 
 function WidgetClientList() {
-  const clients = [
-    { name: "Apex Fitness", status: "active", avatar: "AF" },
-    { name: "CloudNine", status: "active", avatar: "CN" },
-    { name: "BrightSmile", status: "active", avatar: "BS" },
-  ];
+  const clients: { name: string; status: string; avatar: string }[] = [];
   return (
     <div className="space-y-1.5">
-      {clients.map((c, i) => (
+      {clients.length === 0 ? (
+        <p className="text-[9px] text-muted text-center py-4">No clients yet</p>
+      ) : clients.map((c, i) => (
         <div key={i} className="flex items-center gap-2 p-1.5 rounded bg-surface-light">
           <div className="w-6 h-6 rounded-lg bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold">{c.avatar}</div>
           <span className="text-[10px] font-medium flex-1">{c.name}</span>
@@ -276,11 +248,9 @@ function WidgetRevenue() {
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <p className="text-[10px] text-muted uppercase tracking-wider">Total Revenue</p>
-      <p className="text-3xl font-bold text-emerald-400 mt-1">$48,500</p>
+      <p className="text-3xl font-bold text-emerald-400 mt-1">--</p>
       <p className="text-[10px] text-muted mt-0.5">this month</p>
-      <div className="flex items-center gap-1 mt-1 text-[10px] text-emerald-400 font-medium">
-        <ArrowUpRight size={10} /> +12.4% vs last month
-      </div>
+      <p className="text-[9px] text-muted mt-1">Connect data source to track</p>
     </div>
   );
 }

@@ -200,16 +200,7 @@ export default function FinancialsPage() {
   // Invoice aging mock data
   // ---------------------------------------------------------------------------
 
-  const [invoices] = useState([
-    { id: "INV-001", client: "Acme Corp", amount: 2497, due: "2026-04-01", status: "overdue" as const },
-    { id: "INV-002", client: "Bolt Media", amount: 997, due: "2026-04-10", status: "due_soon" as const },
-    { id: "INV-003", client: "Zenith Labs", amount: 4997, due: "2026-04-20", status: "pending" as const },
-    { id: "INV-004", client: "Nova Digital", amount: 997, due: "2026-04-25", status: "pending" as const },
-    { id: "INV-005", client: "Peak Fitness", amount: 497, due: "2026-03-15", status: "overdue" as const },
-    { id: "INV-006", client: "River Agency", amount: 2497, due: "2026-04-30", status: "pending" as const },
-    { id: "INV-007", client: "Summit SaaS", amount: 9997, due: "2026-03-28", status: "paid" as const },
-    { id: "INV-008", client: "Cedar Works", amount: 497, due: "2026-04-05", status: "paid" as const },
-  ]);
+  const [invoices] = useState<{ id: string; client: string; amount: number; due: string; status: "overdue" | "due_soon" | "pending" | "paid" }[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const invoiceTotals = useMemo(() => {
@@ -254,12 +245,7 @@ export default function FinancialsPage() {
   // ---------------------------------------------------------------------------
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [paymentMethods] = useState([
-    { method: "Credit Card", count: 42, pct: 58 },
-    { method: "ACH / Bank Transfer", count: 18, pct: 25 },
-    { method: "Wire Transfer", count: 8, pct: 11 },
-    { method: "PayPal", count: 4, pct: 6 },
-  ]);
+  const [paymentMethods] = useState<{ method: string; count: number; pct: number }[]>([]);
 
   // ---------------------------------------------------------------------------
   // Financial forecasting
@@ -649,6 +635,9 @@ export default function FinancialsPage() {
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
               <CreditCard size={13} className="text-gold" /> Payment Method Distribution
             </p>
+            {paymentMethods.length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">Connect Stripe to see payment method data</p>
+            ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
               {paymentMethods.map(pm => (
                 <div key={pm.method} className="bg-surface-light border border-border rounded-lg p-3">
@@ -663,6 +652,7 @@ export default function FinancialsPage() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         </>
       )}
@@ -916,6 +906,12 @@ export default function FinancialsPage() {
             <p className="section-header text-[10px] uppercase tracking-wider text-muted">
               All Invoices ({invoices.length})
             </p>
+            {invoices.length === 0 ? (
+              <div className="card text-center py-12">
+                <FileText size={24} className="mx-auto mb-2 text-muted/30" />
+                <p className="text-xs text-muted">No invoices yet. Connect Stripe or create invoices to track here.</p>
+              </div>
+            ) : (
             <div className="space-y-1.5">
               <div className="grid grid-cols-12 gap-2 px-4 py-2 text-[10px] text-muted uppercase tracking-wider font-semibold">
                 <div className="col-span-2">Invoice</div>
@@ -943,6 +939,7 @@ export default function FinancialsPage() {
                 </div>
               ))}
             </div>
+            )}
           </div>
 
           {/* Quick Actions */}

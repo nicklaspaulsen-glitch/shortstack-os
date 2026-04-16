@@ -86,24 +86,12 @@ export default function ElevenAgentsPage() {
   const [abTestName, setAbTestName] = useState("");
   const [abScriptA, setAbScriptA] = useState("");
   const [abScriptB, setAbScriptB] = useState("");
-  const [abTests, setAbTests] = useState([
-    { id: "ab1", name: "Intro Hook Test", scriptA: "Direct value prop", scriptB: "Question-based hook", callsA: 50, callsB: 50, convA: 22, convB: 31, status: "running" as const },
-    { id: "ab2", name: "CTA Comparison", scriptA: "Book a demo", scriptB: "Free consultation", callsA: 75, callsB: 75, convA: 28, convB: 35, status: "completed" as const },
-  ]);
-  const [scheduledCalls, setScheduledCalls] = useState([
-    { id: "sc1", list: "Acme Dental List", agent: "ShortStack Cold Caller", time: "Tomorrow 9:00 AM", count: 25, status: "scheduled" as const },
-    { id: "sc2", list: "Warm Leads Q1", agent: "Appointment Setter", time: "Tomorrow 2:00 PM", count: 15, status: "scheduled" as const },
-    { id: "sc3", list: "Miami Lawyers", agent: "ShortStack Cold Caller", time: "Thu 10:00 AM", count: 30, status: "scheduled" as const },
-  ]);
+  const [abTests, setAbTests] = useState<{ id: string; name: string; scriptA: string; scriptB: string; callsA: number; callsB: number; convA: number; convB: number; status: "running" | "completed" }[]>([]);
+  const [scheduledCalls, setScheduledCalls] = useState<{ id: string; list: string; agent: string; time: string; count: number; status: "scheduled" }[]>([]);
   const [complianceEnabled, setComplianceEnabled] = useState(true);
   const [recordingNotice, setRecordingNotice] = useState(true);
   const [dncCheck, setDncCheck] = useState(true);
-  const [transferRules, setTransferRules] = useState([
-    { id: "tr1", trigger: "Lead says 'speak to a person'", action: "Transfer to live agent", number: "+1 (305) 555-1000", active: true },
-    { id: "tr2", trigger: "Call sentiment turns very negative", action: "Graceful exit + flag for review", number: "", active: true },
-    { id: "tr3", trigger: "Lead asks about pricing", action: "Transfer to sales team", number: "+1 (305) 555-2000", active: true },
-    { id: "tr4", trigger: "Lead wants to book appointment", action: "Transfer to scheduling", number: "+1 (305) 555-3000", active: false },
-  ]);
+  const [transferRules, setTransferRules] = useState<{ id: string; trigger: string; action: string; number: string; active: boolean }[]>([]);
 
   // ── Live API State ──
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -672,7 +660,7 @@ export default function ElevenAgentsPage() {
                   <p className={`text-2xl font-bold ${s.color}`}>{s.count}</p>
                   <p className="text-[10px] text-muted mt-1">{s.label} calls</p>
                   <div className="w-full bg-surface-light rounded-full h-2 mt-2">
-                    <div className={`h-2 rounded-full ${s.color.replace("text-", "bg-")}`} style={{ width: `${(s.count / MOCK_CALLS.length) * 100}%` }} />
+                    <div className={`h-2 rounded-full ${s.color.replace("text-", "bg-")}`} style={{ width: `${MOCK_CALLS.length > 0 ? (s.count / MOCK_CALLS.length) * 100 : 0}%` }} />
                   </div>
                 </div>
               ))}
@@ -893,7 +881,7 @@ export default function ElevenAgentsPage() {
                         <div className={`h-2.5 rounded-full ${
                           outcome === "qualified" ? "bg-green-400" : outcome === "callback" ? "bg-blue-400" :
                           outcome === "not_interested" ? "bg-red-400" : outcome === "voicemail" ? "bg-yellow-400" : "bg-gray-400"
-                        }`} style={{ width: `${(count / MOCK_CALLS.length) * 100}%` }} />
+                        }`} style={{ width: `${MOCK_CALLS.length > 0 ? (count / MOCK_CALLS.length) * 100 : 0}%` }} />
                       </div>
                       <span className="w-8 text-right font-mono">{count}</span>
                     </div>

@@ -177,7 +177,7 @@ export default function VoiceReceptionistPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("calls");
   const [isActive, setIsActive] = useState(true);
   const [copied, setCopied] = useState(false);
-  const phoneNumber = "+1 (305) 555-7890";
+  const phoneNumber = "";
 
   // Call log state
   const [calls] = useState<CallRecord[]>(MOCK_CALLS);
@@ -971,13 +971,13 @@ export default function VoiceReceptionistPage() {
             </h2>
             <div className="flex items-end gap-1 mt-4 h-24">
               {[
-                { range: "0-20", count: 2 },
-                { range: "21-40", count: 4 },
-                { range: "41-60", count: 2 },
-                { range: "61-80", count: 3 },
-                { range: "81-100", count: 7 },
+                { range: "0-20", count: 0 },
+                { range: "21-40", count: 0 },
+                { range: "41-60", count: 0 },
+                { range: "61-80", count: 0 },
+                { range: "81-100", count: 0 },
               ].map(bucket => {
-                const maxCount = 7;
+                const maxCount = Math.max(...[0, 0, 0, 0, 0], 1);
                 const h = (bucket.count / maxCount) * 100;
                 return (
                   <div key={bucket.range} className="flex-1 flex flex-col items-center gap-1">
@@ -1000,10 +1000,10 @@ export default function VoiceReceptionistPage() {
           {/* Booking Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Total Bookings", value: "7", icon: CalendarCheck, color: "text-gold" },
+              { label: "Total Bookings", value: "0", icon: CalendarCheck, color: "text-gold" },
               { label: "Booking Rate", value: `${bookingRate}%`, icon: TrendingUp, color: "text-emerald-400" },
-              { label: "SMS Confirmations", value: "7/7", icon: MessageSquare, color: "text-blue-400" },
-              { label: "No-Shows", value: "1", icon: AlertCircle, color: "text-red-400" },
+              { label: "SMS Confirmations", value: "0", icon: MessageSquare, color: "text-blue-400" },
+              { label: "No-Shows", value: "0", icon: AlertCircle, color: "text-red-400" },
             ].map(s => (
               <div key={s.label} className="card p-3">
                 <div className="flex items-center justify-between mb-1">
@@ -1122,13 +1122,7 @@ export default function VoiceReceptionistPage() {
               <RefreshCw size={13} className="text-gold" /> Webhook Activity
             </h2>
             <div className="space-y-1.5 mt-2">
-              {[
-                { time: "Today 2:32 PM", event: "appointment.booked", status: "success", detail: "Dr. James Rivera - Strategy Call" },
-                { time: "Today 10:22 AM", event: "appointment.booked", status: "success", detail: "David Martinez - Strategy Call" },
-                { time: "Yesterday 4:55 PM", event: "appointment.booked", status: "success", detail: "Jennifer Walsh - Strategy Call" },
-                { time: "Yesterday 11:15 AM", event: "appointment.booked", status: "success", detail: "Carlos Vega - Strategy Call" },
-                { time: "Apr 13 2:10 PM", event: "appointment.booked", status: "success", detail: "Emily Nguyen - Strategy Call" },
-              ].map((log, i) => (
+              {([] as { time: string; event: string; status: string; detail: string }[]).map((log, i) => (
                 <div key={i} className="flex items-center gap-3 text-[11px] py-1.5 border-b border-border/30 last:border-0">
                   <span className="text-muted text-[10px] w-32 shrink-0">{log.time}</span>
                   <code className="text-[10px] bg-surface px-1.5 py-0.5 rounded text-gold font-mono">{log.event}</code>

@@ -103,32 +103,15 @@ const TEMPLATES = [
   { id: "event", name: "Event", desc: "Countdown + speakers + schedule + tickets", icon: CalendarDays, color: "#ec4899", gradient: "from-pink-500 to-rose-500" },
 ];
 
-const MOCK_PAGES: GeneratedPage[] = [
-  { id: "p1", name: "TechFlow SaaS Launch", template: "SaaS Landing", created: "2026-04-14", status: "Published", views: 3842, conversions: 247, url: "techflow.shortstack.app" },
-  { id: "p2", name: "Stellar Agency", template: "Agency Portfolio", created: "2026-04-12", status: "Published", views: 2156, conversions: 89, url: "stellar.shortstack.app" },
-  { id: "p3", name: "Sakura Kitchen", template: "Restaurant", created: "2026-04-10", status: "Draft", views: 0, conversions: 0 },
-  { id: "p4", name: "PrimeHomes Realty", template: "Real Estate", created: "2026-04-08", status: "Published", views: 5621, conversions: 312, url: "primehomes.shortstack.app" },
-  { id: "p5", name: "Iron Forge Gym", template: "Fitness Studio", created: "2026-04-06", status: "Archived", views: 1847, conversions: 76 },
-  { id: "p6", name: "UrbanThread Store", template: "E-commerce", created: "2026-04-04", status: "Published", views: 8934, conversions: 567, url: "urbanthread.shortstack.app" },
-  { id: "p7", name: "Summit Consulting", template: "Consultant", created: "2026-04-01", status: "Draft", views: 0, conversions: 0 },
-  { id: "p8", name: "DevConf 2026", template: "Event", created: "2026-03-28", status: "Published", views: 12450, conversions: 1823, url: "devconf.shortstack.app" },
-];
+const MOCK_PAGES: GeneratedPage[] = [];
 
-const MOCK_DEPLOYMENTS: Deployment[] = [
-  { id: "d1", timestamp: "2026-04-14 14:32", status: "Success", url: "techflow.shortstack.app", commit: "a3f8c21" },
-  { id: "d2", timestamp: "2026-04-12 09:15", status: "Success", url: "stellar.shortstack.app", commit: "b7e4d09" },
-  { id: "d3", timestamp: "2026-04-10 16:48", status: "Failed", url: "sakura.shortstack.app", commit: "c1a2f33" },
-  { id: "d4", timestamp: "2026-04-08 11:22", status: "Success", url: "primehomes.shortstack.app", commit: "d9f6e78" },
-];
+const MOCK_DEPLOYMENTS: Deployment[] = [];
 
 const MOCK_ANALYTICS = {
-  views: 24850, uniqueVisitors: 18420, bounceRate: 34.2, avgTime: "2m 48s",
-  conversionRate: 6.8, formSubmissions: 1291,
-  sources: [
-    { name: "Direct", pct: 38 }, { name: "Google", pct: 27 },
-    { name: "Social", pct: 21 }, { name: "Referral", pct: 14 },
-  ],
-  dailyViews: [3200, 3850, 4100, 3600, 4500, 3900, 4200],
+  views: 0, uniqueVisitors: 0, bounceRate: 0, avgTime: "0m 0s",
+  conversionRate: 0, formSubmissions: 0,
+  sources: [] as { name: string; pct: number }[],
+  dailyViews: [] as number[],
 };
 
 function defaultContent(): LandingPageContent {
@@ -1108,8 +1091,10 @@ export default function LandingPagesPage() {
                 Views (Last 7 Days)
               </h3>
               <div className="flex items-end gap-2 h-40">
-                {MOCK_ANALYTICS.dailyViews.map((v, i) => {
-                  const max = Math.max(...MOCK_ANALYTICS.dailyViews);
+                {MOCK_ANALYTICS.dailyViews.length === 0 ? (
+                  <div className="flex-1 flex items-center justify-center text-xs text-muted">No data yet</div>
+                ) : MOCK_ANALYTICS.dailyViews.map((v, i) => {
+                  const max = Math.max(...MOCK_ANALYTICS.dailyViews, 1);
                   const h = (v / max) * 100;
                   const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
                   return (
@@ -1124,6 +1109,7 @@ export default function LandingPagesPage() {
                 })}
               </div>
               {/* Simple line overlay */}
+              {MOCK_ANALYTICS.dailyViews.length > 0 && (
               <div className="relative h-1">
                 <svg viewBox="0 0 700 100" className="absolute -top-40 left-0 w-full h-40 pointer-events-none" preserveAspectRatio="none">
                   <polyline
@@ -1132,20 +1118,21 @@ export default function LandingPagesPage() {
                     strokeWidth="2"
                     strokeLinejoin="round"
                     points={MOCK_ANALYTICS.dailyViews.map((v, i) => {
-                      const max = Math.max(...MOCK_ANALYTICS.dailyViews);
-                      const x = (i / 6) * 680 + 10;
+                      const max = Math.max(...MOCK_ANALYTICS.dailyViews, 1);
+                      const x = (i / (MOCK_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                       const y = 95 - (v / max) * 90;
                       return `${x},${y}`;
                     }).join(" ")}
                   />
                   {MOCK_ANALYTICS.dailyViews.map((v, i) => {
-                    const max = Math.max(...MOCK_ANALYTICS.dailyViews);
-                    const x = (i / 6) * 680 + 10;
+                    const max = Math.max(...MOCK_ANALYTICS.dailyViews, 1);
+                    const x = (i / (MOCK_ANALYTICS.dailyViews.length - 1 || 1)) * 680 + 10;
                     const y = 95 - (v / max) * 90;
                     return <circle key={i} cx={x} cy={y} r="3" fill="#C9A84C" />;
                   })}
                 </svg>
               </div>
+              )}
             </div>
 
             {/* Traffic Sources */}

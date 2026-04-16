@@ -4,7 +4,7 @@ import { useState } from "react";
 import {
   Calculator, Copy, TrendingUp, DollarSign, Clock,
   BarChart3, Users, Target, ArrowUpRight, Share2,
-  FileText, Star, Layers, Zap
+  FileText, Layers, Zap
 } from "lucide-react";
 
 type ROITab = "calculator" | "tracking" | "benchmarks" | "reports";
@@ -504,17 +504,9 @@ Break-even: ${breakEvenMonths} month${breakEvenMonths !== 1 ? "s" : ""}`;
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Users size={13} className="text-blue-400" /> Client-Specific ROI</h2>
             <div className="space-y-2">
-              {["Bright Dental", "Luxe Salon", "FitPro Gym", "Metro Realty"].map(client => {
-                const clientROI = Math.floor(Math.random() * 300) + 100;
-                return (
-                  <div key={client} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
-                    <Star size={12} className="text-gold shrink-0" />
-                    <span className="text-xs font-medium flex-1">{client}</span>
-                    <span className={`text-xs font-bold ${clientROI > 200 ? "text-emerald-400" : "text-gold"}`}>{clientROI}% ROI</span>
-                    <button className="btn-ghost text-[9px] flex items-center gap-1"><Share2 size={9} /> Share</button>
-                  </div>
-                );
-              })}
+              {([] as string[]).length === 0 && (
+                <p className="text-xs text-muted py-4 text-center">No client data available yet.</p>
+              )}
             </div>
           </div>
         </div>

@@ -81,15 +81,7 @@ const REPORT_TYPES: { id: ReportType; label: string; description: string; icon: 
   { id: "revenue", label: "Revenue Summary", description: "MRR, churn, LTV, revenue by channel", icon: PieChart },
 ];
 
-const MOCK_CLIENTS: MockClient[] = [
-  { id: "c1", business_name: "Pinnacle Fitness Co." },
-  { id: "c2", business_name: "Bloom & Barley Restaurant" },
-  { id: "c3", business_name: "NovaTech Solutions" },
-  { id: "c4", business_name: "Urban Edge Real Estate" },
-  { id: "c5", business_name: "GreenLeaf Wellness" },
-  { id: "c6", business_name: "BrightPath Education" },
-  { id: "c7", business_name: "TrueNorth Financial" },
-];
+const MOCK_CLIENTS: MockClient[] = [];
 
 const DEFAULT_SECTIONS: ReportSection[] = [
   { id: "cover", label: "Cover Page", enabled: true, order: 0 },
@@ -110,32 +102,9 @@ const TEMPLATES: Template[] = [
   { id: "t6", name: "Quarterly Review", description: "In-depth quarterly analysis with QoQ comparisons and strategic outlook.", color: "#f59e0b", accentColor: "#451a03", sectionsIncluded: 7, sections: ["cover", "executive_summary", "key_metrics", "charts", "campaign_table", "ai_insights", "recommendations"], type: "monthly" },
 ];
 
-const MOCK_SCHEDULED: ScheduledReport[] = [
-  { id: "s1", client: "Pinnacle Fitness Co.", reportType: "monthly", frequency: "monthly", nextSend: "2026-05-01", status: "active", recipients: ["jake@pinnacle.com"], includeAI: true },
-  { id: "s2", client: "Bloom & Barley Restaurant", reportType: "social_media", frequency: "weekly", nextSend: "2026-04-20", status: "active", recipients: ["lisa@bloom.com", "mark@bloom.com"], includeAI: true },
-  { id: "s3", client: "NovaTech Solutions", reportType: "ad_spend", frequency: "monthly", nextSend: "2026-05-01", status: "active", recipients: ["cto@novatech.io"], includeAI: false },
-  { id: "s4", client: "Urban Edge Real Estate", reportType: "lead_gen", frequency: "weekly", nextSend: "2026-04-21", status: "paused", recipients: ["sam@urbanedge.com"], includeAI: true },
-  { id: "s5", client: "GreenLeaf Wellness", reportType: "seo", frequency: "monthly", nextSend: "2026-05-01", status: "active", recipients: ["info@greenleaf.co"], includeAI: true },
-  { id: "s6", client: "BrightPath Education", reportType: "revenue", frequency: "quarterly", nextSend: "2026-07-01", status: "active", recipients: ["director@brightpath.edu"], includeAI: false },
-  { id: "s7", client: "TrueNorth Financial", reportType: "monthly", frequency: "monthly", nextSend: "2026-05-01", status: "active", recipients: ["reports@truenorth.com", "cfo@truenorth.com"], includeAI: true },
-];
+const MOCK_SCHEDULED: ScheduledReport[] = [];
 
-const MOCK_HISTORY: HistoryReport[] = [
-  { id: "h1", date: "2026-04-14", client: "Pinnacle Fitness Co.", type: "monthly", pages: 8, size: "2.4 MB", status: "sent" },
-  { id: "h2", date: "2026-04-14", client: "Bloom & Barley Restaurant", type: "social_media", pages: 5, size: "1.8 MB", status: "sent" },
-  { id: "h3", date: "2026-04-13", client: "NovaTech Solutions", type: "ad_spend", pages: 6, size: "2.1 MB", status: "sent" },
-  { id: "h4", date: "2026-04-13", client: "Urban Edge Real Estate", type: "lead_gen", pages: 4, size: "1.2 MB", status: "draft" },
-  { id: "h5", date: "2026-04-10", client: "GreenLeaf Wellness", type: "seo", pages: 7, size: "2.6 MB", status: "sent" },
-  { id: "h6", date: "2026-04-07", client: "BrightPath Education", type: "revenue", pages: 5, size: "1.5 MB", status: "failed" },
-  { id: "h7", date: "2026-04-01", client: "TrueNorth Financial", type: "monthly", pages: 9, size: "3.1 MB", status: "sent" },
-  { id: "h8", date: "2026-04-01", client: "Pinnacle Fitness Co.", type: "ad_spend", pages: 6, size: "2.0 MB", status: "sent" },
-  { id: "h9", date: "2026-03-31", client: "Bloom & Barley Restaurant", type: "monthly", pages: 7, size: "2.3 MB", status: "sent" },
-  { id: "h10", date: "2026-03-28", client: "NovaTech Solutions", type: "lead_gen", pages: 4, size: "1.1 MB", status: "draft" },
-  { id: "h11", date: "2026-03-25", client: "GreenLeaf Wellness", type: "social_media", pages: 5, size: "1.7 MB", status: "sent" },
-  { id: "h12", date: "2026-03-20", client: "Urban Edge Real Estate", type: "monthly", pages: 8, size: "2.5 MB", status: "sent" },
-  { id: "h13", date: "2026-03-15", client: "TrueNorth Financial", type: "revenue", pages: 6, size: "1.9 MB", status: "sent" },
-  { id: "h14", date: "2026-03-01", client: "BrightPath Education", type: "monthly", pages: 7, size: "2.2 MB", status: "sent" },
-];
+const MOCK_HISTORY: HistoryReport[] = [];
 
 const REPORT_LABELS: Record<ReportType, string> = {
   monthly: "Monthly Performance",
@@ -151,31 +120,19 @@ const REPORT_LABELS: Record<ReportType, string> = {
    ══════════════════════════════════════════════════════════════════ */
 
 const MOCK_METRICS = {
-  leads: { value: 247, change: 18.3, label: "New Leads" },
-  revenue: { value: 34500, change: 12.7, label: "Revenue" },
-  engagement: { value: 8.4, change: 2.1, label: "Engagement Rate" },
-  conversions: { value: 64, change: -3.2, label: "Conversions" },
-  traffic: { value: 12840, change: 24.5, label: "Website Traffic" },
-  roas: { value: 4.2, change: 0.8, label: "ROAS" },
+  leads: { value: 0, change: 0, label: "New Leads" },
+  revenue: { value: 0, change: 0, label: "Revenue" },
+  engagement: { value: 0, change: 0, label: "Engagement Rate" },
+  conversions: { value: 0, change: 0, label: "Conversions" },
+  traffic: { value: 0, change: 0, label: "Website Traffic" },
+  roas: { value: 0, change: 0, label: "ROAS" },
 };
 
-const MOCK_CAMPAIGNS = [
-  { name: "Spring Sale — Meta Ads", spend: 2400, impressions: 89000, clicks: 3200, conversions: 42, roas: 5.8 },
-  { name: "Google Search — Brand", spend: 1800, impressions: 45000, clicks: 4100, conversions: 38, roas: 7.1 },
-  { name: "Instagram Reels Push", spend: 950, impressions: 134000, clicks: 2800, conversions: 18, roas: 3.2 },
-  { name: "Email Retargeting", spend: 320, impressions: 12000, clicks: 1400, conversions: 24, roas: 11.4 },
-  { name: "LinkedIn Thought Lead", spend: 1200, impressions: 28000, clicks: 890, conversions: 8, roas: 2.1 },
-];
+const MOCK_CAMPAIGNS: { name: string; spend: number; impressions: number; clicks: number; conversions: number; roas: number }[] = [];
 
-const MOCK_BAR_DATA = [
-  { label: "Jan", value: 65 }, { label: "Feb", value: 72 }, { label: "Mar", value: 88 },
-  { label: "Apr", value: 95 }, { label: "May", value: 78 }, { label: "Jun", value: 103 },
-];
+const MOCK_BAR_DATA: { label: string; value: number }[] = [];
 
-const MOCK_LINE_DATA = [
-  { label: "W1", value: 32 }, { label: "W2", value: 45 }, { label: "W3", value: 41 },
-  { label: "W4", value: 58 }, { label: "W5", value: 52 }, { label: "W6", value: 67 },
-];
+const MOCK_LINE_DATA: { label: string; value: number }[] = [];
 
 /* ══════════════════════════════════════════════════════════════════
    COMPONENT
@@ -356,7 +313,8 @@ export default function ReportGeneratorPage() {
   /* ── Preview: CSS-only charts ────────────────────────────────── */
 
   function BarChartCSS() {
-    const maxVal = Math.max(...MOCK_BAR_DATA.map(d => d.value));
+    if (MOCK_BAR_DATA.length === 0) return <p className="text-xs text-gray-400 text-center py-8">No data</p>;
+    const maxVal = Math.max(...MOCK_BAR_DATA.map(d => d.value), 1);
     return (
       <div className="flex items-end gap-2 h-32 w-full">
         {MOCK_BAR_DATA.map((d) => (
@@ -373,9 +331,11 @@ export default function ReportGeneratorPage() {
   }
 
   function LineChartCSS() {
-    const maxVal = Math.max(...MOCK_LINE_DATA.map(d => d.value));
+    if (MOCK_LINE_DATA.length === 0) return <p className="text-xs text-gray-400 text-center py-8">No data</p>;
+    const maxVal = Math.max(...MOCK_LINE_DATA.map(d => d.value), 1);
+    const divisor = MOCK_LINE_DATA.length > 1 ? MOCK_LINE_DATA.length - 1 : 1;
     const points = MOCK_LINE_DATA.map((d, i) => ({
-      x: (i / (MOCK_LINE_DATA.length - 1)) * 100,
+      x: (i / divisor) * 100,
       y: 100 - (d.value / maxVal) * 100,
     }));
     const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`).join(" ");

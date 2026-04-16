@@ -50,7 +50,7 @@ const AGENTS: ServiceAgent[] = [
     id: "short-form", name: "Short-Form Content", tagline: "Reels, TikToks & Shorts", icon: <Camera size={20} />,
     color: "text-pink-400", bgClass: "border-pink-400/15 bg-pink-500/5", description: "AI agent for scroll-stopping short-form video scripts, hooks, captions, and posting schedules.",
     capabilities: ["Viral hooks", "Captions + hashtags", "30-day calendars", "Repurposing", "A/B hooks", "Platform-specific"],
-    status: "active", usageToday: 34, avgLatency: 1200, costPerUse: 0.08, successRate: 98, version: "2.4.0",
+    status: "active", usageToday: 0, avgLatency: 0, costPerUse: 0.08, successRate: 0, version: "2.4.0",
     actions: [
       { label: "Generate 10 hooks", prompt: "Generate 10 viral short-form video hooks for a {industry} business." },
       { label: "Write a script", prompt: "Write a 30-second short-form video script for {topic}." },
@@ -61,7 +61,7 @@ const AGENTS: ServiceAgent[] = [
     id: "long-form", name: "Long-Form Content", tagline: "Full video production", icon: <Film size={20} />,
     color: "text-red-400", bgClass: "border-red-400/15 bg-red-500/5", description: "Full-length video scripting, YouTube SEO, production planning, and repurposing.",
     capabilities: ["Full scripts", "YouTube SEO", "Thumbnails", "Repurpose clips", "Shot lists", "Podcast outlines"],
-    status: "active", usageToday: 12, avgLatency: 3400, costPerUse: 0.15, successRate: 96, version: "2.3.0",
+    status: "active", usageToday: 0, avgLatency: 0, costPerUse: 0.15, successRate: 0, version: "2.3.0",
     actions: [
       { label: "YouTube script", prompt: "Write a 10-minute YouTube video script about {topic}." },
       { label: "SEO optimize", prompt: "Generate YouTube SEO title, description, and 30 tags for {topic}." },
@@ -72,7 +72,7 @@ const AGENTS: ServiceAgent[] = [
     id: "paid-ads", name: "Paid Ads", tagline: "Meta, Google & TikTok ads", icon: <Megaphone size={20} />,
     color: "text-blue-400", bgClass: "border-blue-400/15 bg-blue-500/5", description: "Designs ad campaigns, writes copy, creates targeting strategies, and optimizes for ROAS.",
     capabilities: ["Ad copy", "Audience targeting", "Funnel mapping", "A/B variations", "Budget allocation", "ROAS optimization"],
-    status: "idle", usageToday: 8, avgLatency: 2100, costPerUse: 0.12, successRate: 92, version: "2.4.0",
+    status: "idle", usageToday: 0, avgLatency: 0, costPerUse: 0.12, successRate: 0, version: "2.4.0",
     actions: [
       { label: "Meta ad copy", prompt: "Write 5 Meta ad copy variations for {business} promoting {offer}." },
       { label: "Campaign strategy", prompt: "Design a full-funnel ad campaign for a {industry} business." },
@@ -83,7 +83,7 @@ const AGENTS: ServiceAgent[] = [
     id: "seo", name: "SEO & Content", tagline: "Organic traffic & rankings", icon: <Search size={20} />,
     color: "text-emerald-400", bgClass: "border-emerald-400/15 bg-emerald-500/5", description: "Technical SEO audits, keyword research, blog content, and local SEO optimization.",
     capabilities: ["Keyword research", "Blog articles", "Technical audit", "Local SEO", "GBP optimization", "Gap analysis"],
-    status: "active", usageToday: 18, avgLatency: 1800, costPerUse: 0.10, successRate: 94, version: "2.2.0",
+    status: "active", usageToday: 0, avgLatency: 0, costPerUse: 0.10, successRate: 0, version: "2.2.0",
     actions: [
       { label: "Keyword research", prompt: "Find 20 keywords for a {industry} business in {location}." },
       { label: "Blog article", prompt: "Write a 1500-word SEO blog about '{topic}'." },
@@ -94,7 +94,7 @@ const AGENTS: ServiceAgent[] = [
     id: "web-design", name: "Web Design", tagline: "Websites & funnels", icon: <Globe size={20} />,
     color: "text-cyan-400", bgClass: "border-cyan-400/15 bg-cyan-500/5", description: "Website layouts, conversion copy, funnel architectures, and landing page content.",
     capabilities: ["Website copy", "Landing pages", "Funnel design", "CRO", "CTA optimization", "Wireframes"],
-    status: "idle", usageToday: 5, avgLatency: 2800, costPerUse: 0.14, successRate: 97, version: "2.3.0",
+    status: "idle", usageToday: 0, avgLatency: 0, costPerUse: 0.14, successRate: 0, version: "2.3.0",
     actions: [
       { label: "Website copy", prompt: "Write all website copy for a {industry} homepage." },
       { label: "Landing page", prompt: "Write a high-converting landing page for {offer}." },
@@ -105,7 +105,7 @@ const AGENTS: ServiceAgent[] = [
     id: "receptionist", name: "AI Receptionist", tagline: "24/7 call handling", icon: <Phone size={20} />,
     color: "text-amber-400", bgClass: "border-amber-400/15 bg-amber-500/5", description: "Phone/text agent: answers calls, qualifies leads, books appointments 24/7.",
     capabilities: ["24/7 answering", "Lead qualification", "Appointment booking", "FAQ handling", "SMS follow-ups", "Voicemail drops"],
-    status: "active", usageToday: 42, avgLatency: 450, costPerUse: 0.03, successRate: 93, version: "2.4.1",
+    status: "active", usageToday: 0, avgLatency: 0, costPerUse: 0.03, successRate: 0, version: "2.4.1",
     actions: [
       { label: "Call script", prompt: "Write an AI receptionist call script for a {industry} business." },
       { label: "SMS sequences", prompt: "Create a 5-message SMS follow-up sequence for leads." },
@@ -116,7 +116,7 @@ const AGENTS: ServiceAgent[] = [
     id: "automation", name: "Automation", tagline: "Workflows & integrations", icon: <Zap size={20} />,
     color: "text-gold", bgClass: "border-gold/15 bg-gold/5", description: "Custom automation workflows connecting CRM, email, social media, and tools.",
     capabilities: ["CRM automation", "Email drips", "Lead scoring", "Task automation", "Cross-platform", "Trigger actions"],
-    status: "active", usageToday: 67, avgLatency: 200, costPerUse: 0.02, successRate: 99, version: "2.4.0",
+    status: "active", usageToday: 0, avgLatency: 0, costPerUse: 0.02, successRate: 0, version: "2.4.0",
     actions: [
       { label: "Onboarding flow", prompt: "Design a client onboarding automation for {business}." },
       { label: "Lead nurture", prompt: "Create a 14-day lead nurture email sequence." },
@@ -127,7 +127,7 @@ const AGENTS: ServiceAgent[] = [
     id: "branding", name: "Branding", tagline: "Identity & style guides", icon: <PenTool size={20} />,
     color: "text-purple-400", bgClass: "border-purple-400/15 bg-purple-500/5", description: "Brand strategy, visual identity, messaging frameworks, and creative direction.",
     capabilities: ["Voice guides", "Messaging", "Brand story", "Positioning", "Color/style", "Taglines"],
-    status: "idle", usageToday: 3, avgLatency: 2400, costPerUse: 0.11, successRate: 100, version: "2.1.0",
+    status: "idle", usageToday: 0, avgLatency: 0, costPerUse: 0.11, successRate: 0, version: "2.1.0",
     actions: [
       { label: "Brand voice", prompt: "Create a brand voice guide for {business} in {industry}." },
       { label: "Taglines", prompt: "Generate 20 tagline options for {business}." },
@@ -138,7 +138,7 @@ const AGENTS: ServiceAgent[] = [
     id: "cold-outreach", name: "Cold Outreach", tagline: "DM lead generation", icon: <Send size={20} />,
     color: "text-green-400", bgClass: "border-green-400/15 bg-green-500/5", description: "Personalized cold DM sequences for Instagram, LinkedIn, and Facebook at scale.",
     capabilities: ["DM scripts", "Follow-up sequences", "Industry templates", "A/B messaging", "Reply handling", "DM qualification"],
-    status: "active", usageToday: 89, avgLatency: 520, costPerUse: 0.04, successRate: 91, version: "2.4.0",
+    status: "active", usageToday: 0, avgLatency: 0, costPerUse: 0.04, successRate: 0, version: "2.4.0",
     actions: [
       { label: "DM sequence", prompt: "Write a 4-message cold DM sequence for {industry} owners on IG." },
       { label: "LinkedIn outreach", prompt: "Write 5 LinkedIn outreach messages targeting {industry}." },
@@ -395,7 +395,7 @@ export default function ServicesPage() {
                   <span className={`${a.color} w-5`}>{a.icon}</span>
                   <span className="w-32 font-medium">{a.name}</span>
                   <div className="flex-1 bg-surface-light rounded-full h-3">
-                    <div className="bg-gold rounded-full h-3 transition-all flex items-center justify-end pr-1" style={{ width: `${(a.usageToday / Math.max(...AGENTS.map(x => x.usageToday))) * 100}%` }}>
+                    <div className="bg-gold rounded-full h-3 transition-all flex items-center justify-end pr-1" style={{ width: `${(a.usageToday / Math.max(...AGENTS.map(x => x.usageToday), 1)) * 100}%` }}>
                       <span className="text-[7px] font-bold text-black">{a.usageToday}</span>
                     </div>
                   </div>
@@ -633,13 +633,7 @@ export default function ServicesPage() {
         <div className="card p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><GitBranch size={14} className="text-gold" /> Agent Dependency Graph</h2>
           <div className="space-y-2">
-            {[
-              { agent: "Content", depends: ["SEO & Content", "Branding"], provides: ["Cold Outreach", "Paid Ads"] },
-              { agent: "Cold Outreach", depends: ["Content", "Lead Engine"], provides: ["Scheduler", "Proposal"] },
-              { agent: "Automation", depends: ["All Agents"], provides: ["All Agents"] },
-              { agent: "Paid Ads", depends: ["Content", "Analytics"], provides: ["Lead Engine"] },
-              { agent: "Web Design", depends: ["Branding", "SEO & Content"], provides: ["Content"] },
-            ].map((dep, i) => (
+            {([] as { agent: string; depends: string[]; provides: string[] }[]).map((dep, i) => (
               <div key={i} className="p-3 rounded-lg border border-border">
                 <p className="text-xs font-semibold mb-2">{dep.agent}</p>
                 <div className="grid grid-cols-2 gap-3 text-[10px]">

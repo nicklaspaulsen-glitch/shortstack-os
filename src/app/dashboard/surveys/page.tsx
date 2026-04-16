@@ -92,38 +92,13 @@ const TEMPLATES: { name: string; desc: string; questions: SurveyQuestion[] }[] =
   ]},
 ];
 
-const MOCK_SURVEYS: Survey[] = [
-  { id: "s1", name: "Q1 2026 NPS", questions: [], active: true, responses: 24, responseRate: 72, createdAt: "2026-01-15" },
-  { id: "s2", name: "Post-Onboarding CSAT", questions: [], active: true, responses: 18, responseRate: 85, createdAt: "2026-02-01" },
-  { id: "s3", name: "Website Redesign Feedback", questions: [], active: false, responses: 12, responseRate: 60, createdAt: "2026-03-10" },
-];
+const MOCK_SURVEYS: Survey[] = [];
 
-const MOCK_RESPONSES: FeedbackResponse[] = [
-  { id: "r1", surveyId: "s1", client: "Meridian Health", avatar: "MH", npsScore: 10, comment: "Absolutely love working with your team. The content quality has been outstanding and our social media growth has exceeded expectations.", submittedAt: "2026-04-12", segment: "Promoter", followUp: null },
-  { id: "r2", surveyId: "s1", client: "Peak Performance Gym", avatar: "PP", npsScore: 9, comment: "Great results on our ad campaigns. The ROI tracking dashboard is very helpful.", submittedAt: "2026-04-11", segment: "Promoter", followUp: null },
-  { id: "r3", surveyId: "s1", client: "Bloom Dental", avatar: "BD", npsScore: 8, comment: "Good work overall. Would like slightly faster turnaround on content revisions.", submittedAt: "2026-04-10", segment: "Passive", followUp: null },
-  { id: "r4", surveyId: "s1", client: "Urban Eats Kitchen", avatar: "UE", npsScore: 7, comment: "Service is decent but communication could be more proactive. Sometimes wait too long for updates.", submittedAt: "2026-04-09", segment: "Passive", followUp: null },
-  { id: "r5", surveyId: "s1", client: "Swift Auto Repair", avatar: "SA", npsScore: 5, comment: "Not seeing enough leads from the ads. Expected better results after 3 months.", submittedAt: "2026-04-08", segment: "Detractor", followUp: "Schedule improvement call" },
-  { id: "r6", surveyId: "s2", client: "Sunset Realty", avatar: "SR", npsScore: 9, comment: "Onboarding was seamless. The team was very thorough in understanding our brand.", submittedAt: "2026-04-07", segment: "Promoter", followUp: null },
-  { id: "r7", surveyId: "s1", client: "TechFlow SaaS", avatar: "TF", npsScore: 10, comment: "Best agency we have ever worked with. Highly responsive and data-driven.", submittedAt: "2026-04-06", segment: "Promoter", followUp: null },
-  { id: "r8", surveyId: "s1", client: "Green Garden Landscaping", avatar: "GG", npsScore: 4, comment: "The social posts don't match our brand voice. Need more revisions.", submittedAt: "2026-04-05", segment: "Detractor", followUp: "Brand voice alignment meeting" },
-  { id: "r9", surveyId: "s2", client: "Luxe Salon & Spa", avatar: "LS", npsScore: 8, comment: "Happy with the service. Wish there were more video options.", submittedAt: "2026-04-04", segment: "Passive", followUp: null },
-  { id: "r10", surveyId: "s1", client: "Harbor Legal Group", avatar: "HL", npsScore: 3, comment: "Missed several deadlines this month. Communication was poor.", submittedAt: "2026-04-03", segment: "Detractor", followUp: "Escalate to account manager" },
-];
+const MOCK_RESPONSES: FeedbackResponse[] = [];
 
-const FOLLOW_UP_ACTIONS: FollowUpAction[] = [
-  { id: "f1", client: "Swift Auto Repair", score: 5, action: "Schedule improvement call to discuss lead gen strategy", status: "pending", priority: "high" },
-  { id: "f2", client: "Green Garden Landscaping", score: 4, action: "Set up brand voice alignment meeting with content team", status: "in_progress", priority: "high" },
-  { id: "f3", client: "Harbor Legal Group", score: 3, action: "Escalate to account manager - missed deadlines review", status: "pending", priority: "high" },
-  { id: "f4", client: "Urban Eats Kitchen", score: 7, action: "Improve communication cadence - send weekly status updates", status: "in_progress", priority: "medium" },
-  { id: "f5", client: "Bloom Dental", score: 8, action: "Reduce content revision turnaround from 48h to 24h", status: "done", priority: "low" },
-];
+const FOLLOW_UP_ACTIONS: FollowUpAction[] = [];
 
-const NPS_TREND = [
-  { month: "Nov", score: 38 }, { month: "Dec", score: 42 },
-  { month: "Jan", score: 45 }, { month: "Feb", score: 48 },
-  { month: "Mar", score: 44 }, { month: "Apr", score: 52 },
-];
+const NPS_TREND: { month: string; score: number }[] = [];
 
 /* ================================================================== */
 /*  Component                                                          */
@@ -165,8 +140,8 @@ export default function SurveysPage() {
     .filter(r => segmentFilter === "All" || r.segment === segmentFilter)
     .filter(r => responseSearch === "" || r.client.toLowerCase().includes(responseSearch.toLowerCase()));
 
-  const maxTrend = Math.max(...NPS_TREND.map(t => t.score));
-  const minTrend = Math.min(...NPS_TREND.map(t => t.score));
+  const maxTrend = NPS_TREND.length > 0 ? Math.max(...NPS_TREND.map(t => t.score)) : 0;
+  const minTrend = NPS_TREND.length > 0 ? Math.min(...NPS_TREND.map(t => t.score)) : 0;
 
   const toggleSurvey = (id: string) =>
     setSurveys(prev => prev.map(s => s.id === id ? { ...s, active: !s.active } : s));
@@ -712,6 +687,7 @@ export default function SurveysPage() {
             </div>
 
             {/* Trend summary */}
+            {NPS_TREND.length > 0 && (
             <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[var(--color-border)]">
               <div className="flex items-center gap-1.5">
                 <TrendingUp size={12} className="text-emerald-400" />
@@ -727,6 +703,7 @@ export default function SurveysPage() {
                 <span className="text-xs font-bold text-emerald-400">60</span>
               </div>
             </div>
+            )}
           </div>
 
           {/* Response Rate Trend */}

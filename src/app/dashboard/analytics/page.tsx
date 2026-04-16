@@ -129,7 +129,7 @@ export default function AnalyticsPage() {
     setStats({
       totalLeads: totalLeads || 0, leadsThisMonth: leadsThisMonth || 0, leadsLastMonth: leadsLastMonth || 0,
       totalClients: totalClients || 0, activeClients: activeClients || 0,
-      totalMRR, lastMonthMRR: totalMRR * 0.9,
+      totalMRR, lastMonthMRR: 0,
       totalDeals: totalDeals || 0, dealValue,
       dmsSent: dmsSent || 0, replies: replies || 0, callsBooked: callsBooked || 0,
       contentPublished: contentPublished || 0,
@@ -167,13 +167,8 @@ export default function AnalyticsPage() {
     });
     setOutreachByDay(Object.entries(outMap).map(([date, v]) => ({ date, ...v })));
 
-    // Revenue mock data (would come from invoices in production)
-    setRevenueByMonth([
-      { month: "Jan", mrr: totalMRR * 0.6, deals: dealValue * 0.3 },
-      { month: "Feb", mrr: totalMRR * 0.7, deals: dealValue * 0.4 },
-      { month: "Mar", mrr: totalMRR * 0.85, deals: dealValue * 0.6 },
-      { month: "Apr", mrr: totalMRR, deals: dealValue * 0.8 },
-    ]);
+    // Revenue data (populated from real invoices when available)
+    setRevenueByMonth([]);
   }
 
   const leadGrowth = stats.leadsLastMonth > 0
@@ -226,7 +221,7 @@ export default function AnalyticsPage() {
     return days.map(day => {
       const row: Record<string, string | number> = { day };
       hours.forEach(hour => {
-        row[hour] = Math.floor(Math.random() * 100);
+        row[hour] = 0;
       });
       return row;
     });
@@ -234,11 +229,11 @@ export default function AnalyticsPage() {
 
   // --- Feature 5: Funnel Data ---
   const funnelData = useMemo(() => [
-    { name: "Leads", value: stats.totalLeads || 250, fill: "#C9A84C" },
-    { name: "Contacted", value: stats.dmsSent || 180, fill: "#38bdf8" },
-    { name: "Calls Booked", value: stats.callsBooked || 45, fill: "#8b5cf6" },
-    { name: "Proposals", value: Math.round((stats.callsBooked || 45) * 0.6), fill: "#f59e0b" },
-    { name: "Closed Won", value: stats.totalDeals || 12, fill: "#10b981" },
+    { name: "Leads", value: stats.totalLeads || 0, fill: "#C9A84C" },
+    { name: "Contacted", value: stats.dmsSent || 0, fill: "#38bdf8" },
+    { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#8b5cf6" },
+    { name: "Proposals", value: Math.round((stats.callsBooked || 0) * 0.6), fill: "#f59e0b" },
+    { name: "Closed Won", value: stats.totalDeals || 0, fill: "#10b981" },
   ], [stats]);
 
   // --- Feature 6: Goal Tracker ---
@@ -266,11 +261,11 @@ export default function AnalyticsPage() {
 
   // --- Feature 9: Engagement Benchmarks ---
   const benchmarks = useMemo(() => [
-    { metric: "Reply Rate", yours: replyRate || 7.2, industry: 5.0, max: 20 },
-    { metric: "Call Book Rate", yours: stats.callsBooked > 0 ? Math.round((stats.callsBooked / (stats.dmsSent || 1)) * 100) : 4.5, industry: 3.2, max: 15 },
-    { metric: "Close Rate", yours: stats.totalDeals > 0 ? Math.round((stats.totalDeals / (stats.callsBooked || 1)) * 100) : 28, industry: 22, max: 50 },
-    { metric: "Content Engagement", yours: 4.8, industry: 3.2, max: 10 },
-    { metric: "Client Retention", yours: 92, industry: 85, max: 100 },
+    { metric: "Reply Rate", yours: replyRate || 0, industry: 5.0, max: 20 },
+    { metric: "Call Book Rate", yours: stats.callsBooked > 0 ? Math.round((stats.callsBooked / (stats.dmsSent || 1)) * 100) : 0, industry: 3.2, max: 15 },
+    { metric: "Close Rate", yours: stats.totalDeals > 0 ? Math.round((stats.totalDeals / (stats.callsBooked || 1)) * 100) : 0, industry: 22, max: 50 },
+    { metric: "Content Engagement", yours: 0, industry: 3.2, max: 10 },
+    { metric: "Client Retention", yours: 0, industry: 85, max: 100 },
   ], [replyRate, stats]);
 
   // --- Feature 10: Revenue by Service ---
@@ -284,13 +279,7 @@ export default function AnalyticsPage() {
   ], []);
 
   // --- Feature 11: Campaign Attribution ---
-  const campaignData = useMemo(() => [
-    { campaign: "Q1 Meta Retarget", conversions: 18, spend: 2400, revenue: 9200, roas: 3.83 },
-    { campaign: "TikTok UGC Push", conversions: 24, spend: 1800, revenue: 7800, roas: 4.33 },
-    { campaign: "Google Search Brand", conversions: 12, spend: 3200, revenue: 8400, roas: 2.63 },
-    { campaign: "LinkedIn DMs", conversions: 8, spend: 600, revenue: 5200, roas: 8.67 },
-    { campaign: "Email Nurture", conversions: 15, spend: 200, revenue: 6800, roas: 34.0 },
-  ], []);
+  const campaignData = useMemo((): Array<{ campaign: string; conversions: number; spend: number; revenue: number; roas: number }> => [], []);
 
   // --- Feature 12: Monthly Comparison ---
   const monthlyComparison = useMemo(() => {
@@ -715,7 +704,7 @@ export default function AnalyticsPage() {
             <Target size={14} className="text-info" /> Campaign Attribution
           </h2>
           <div className="space-y-2 mt-3">
-            {campaignData.map((c, i) => (
+            {campaignData.length > 0 ? campaignData.map((c, i) => (
               <div key={c.campaign} className="flex items-center gap-3 p-2 rounded-lg bg-surface-light hover:bg-surface-light/80 transition-colors">
                 <div className="w-5 h-5 rounded flex items-center justify-center text-[9px] font-bold"
                   style={{ background: CHART_COLORS[i % CHART_COLORS.length] + "22", color: CHART_COLORS[i % CHART_COLORS.length] }}>
@@ -730,7 +719,9 @@ export default function AnalyticsPage() {
                   <p className="text-[9px] text-muted">{formatCurrency(c.revenue)} rev</p>
                 </div>
               </div>
-            ))}
+            )) : (
+              <p className="text-xs text-muted text-center py-4">No campaign data yet. Attribution data will appear once campaigns are tracked.</p>
+            )}
           </div>
         </div>
       </div>

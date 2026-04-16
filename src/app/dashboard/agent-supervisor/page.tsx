@@ -78,14 +78,7 @@ const MOCK_SPAWNED: SpawnedAgent[] = [];
 
 const MOCK_TEMPLATES: AgentTemplate[] = [];
 
-const MOCK_COMMS = [
-  { from: "Trinity", to: "Lead Engine", message: "Start Miami dentist scrape batch", time: "3m ago", type: "command" },
-  { from: "Lead Engine", to: "Trinity", message: "Batch complete: 42 leads, 38 qualified", time: "3m ago", type: "response" },
-  { from: "Trinity", to: "Outreach", message: "Process 38 qualified leads for DM sequence", time: "2m ago", type: "command" },
-  { from: "Outreach", to: "Trinity", message: "15 emails sent, 23 queued for tomorrow", time: "1m ago", type: "response" },
-  { from: "Reviews", to: "Trinity", message: "ERROR: Google API rate limit hit, retrying in 5m", time: "15m ago", type: "error" },
-  { from: "Trinity", to: "Reviews", message: "Acknowledged. Switching to backup API key", time: "15m ago", type: "command" },
-];
+const MOCK_COMMS: { from: string; to: string; message: string; time: string; type: string }[] = [];
 
 const TABS = ["Dashboard", "Agents", "Chains", "Timeline", "Spawned", "Marketplace", "Orchestration", "Costs", "Performance", "Failures", "Comms", "Builder"] as const;
 type Tab = typeof TABS[number];
@@ -98,13 +91,7 @@ export default function AgentSupervisorPage() {
   const [expandedAgent, setExpandedAgent] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [spawnTask, setSpawnTask] = useState("");
-  const [priorityQueue, setPriorityQueue] = useState([
-    { id: "pq1", task: "Scrape 100 leads - Austin plumbers", agent: "Lead Engine", priority: "high", status: "running", eta: "3m" },
-    { id: "pq2", task: "Generate proposals for 5 warm leads", agent: "Proposal", priority: "high", status: "queued", eta: "10m" },
-    { id: "pq3", task: "Weekly content calendar - all clients", agent: "Content", priority: "medium", status: "queued", eta: "25m" },
-    { id: "pq4", task: "Competitor pricing update", agent: "Competitor", priority: "low", status: "queued", eta: "1h" },
-    { id: "pq5", task: "Monthly analytics report", agent: "Analytics", priority: "medium", status: "queued", eta: "45m" },
-  ]);
+  const [priorityQueue, setPriorityQueue] = useState<{ id: string; task: string; agent: string; priority: string; status: string; eta: string }[]>([]);
   const [builderName, setBuilderName] = useState("");
   const [builderRole, setBuilderRole] = useState("");
   const [builderTrigger, setBuilderTrigger] = useState("");

@@ -58,43 +58,13 @@ interface MonthlyPayout {
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
 /* ------------------------------------------------------------------ */
-const COMMISSION_RULES: CommissionRule[] = [
-  { id: "r1", name: "New Deal Commission", type: "new_deal", percentage: 10, flatBonus: 200, minDealSize: 1000, active: true },
-  { id: "r2", name: "Renewal Commission", type: "renewal", percentage: 5, flatBonus: 0, minDealSize: 0, active: true },
-  { id: "r3", name: "Upsell Commission", type: "upsell", percentage: 8, flatBonus: 100, minDealSize: 500, active: true },
-  { id: "r4", name: "Referral Bonus", type: "referral", percentage: 15, flatBonus: 500, minDealSize: 0, active: true },
-  { id: "r5", name: "Enterprise Bonus", type: "new_deal", percentage: 12, flatBonus: 500, minDealSize: 5000, active: false },
-];
+const COMMISSION_RULES: CommissionRule[] = [];
 
-const SALES_TEAM: SalesPerson[] = [
-  { id: "sp1", name: "Marcus Johnson", initials: "MJ", color: "#C9A84C", totalEarned: 18450, dealsClosed: 14, thisMonth: 4200 },
-  { id: "sp2", name: "Sarah Chen", initials: "SC", color: "#3b82f6", totalEarned: 15800, dealsClosed: 11, thisMonth: 3800 },
-  { id: "sp3", name: "James Rodriguez", initials: "JR", color: "#8b5cf6", totalEarned: 12600, dealsClosed: 9, thisMonth: 2100 },
-  { id: "sp4", name: "Emma Williams", initials: "EW", color: "#10b981", totalEarned: 9200, dealsClosed: 7, thisMonth: 1950 },
-  { id: "sp5", name: "David Kim", initials: "DK", color: "#f59e0b", totalEarned: 7400, dealsClosed: 5, thisMonth: 1200 },
-];
+const SALES_TEAM: SalesPerson[] = [];
 
-const COMMISSION_DEALS: CommissionDeal[] = [
-  { id: "cd1", dealName: "Full Marketing Package", client: "Bright Smile Dental", dealValue: 8500, commissionRate: 10, commissionAmount: 1050, salesPerson: "Marcus Johnson", closedDate: "2026-04-12", status: "approved", type: "new_deal" },
-  { id: "cd2", dealName: "SEO Retainer Renewal", client: "Summit HVAC", dealValue: 4200, commissionRate: 5, commissionAmount: 210, salesPerson: "Sarah Chen", closedDate: "2026-04-10", status: "paid", type: "renewal" },
-  { id: "cd3", dealName: "Enterprise Package", client: "TechStart Labs", dealValue: 12000, commissionRate: 12, commissionAmount: 1940, salesPerson: "Marcus Johnson", closedDate: "2026-04-08", status: "paid", type: "new_deal" },
-  { id: "cd4", dealName: "Ads Upsell", client: "Metro Realty Group", dealValue: 2800, commissionRate: 8, commissionAmount: 324, salesPerson: "James Rodriguez", closedDate: "2026-04-07", status: "approved", type: "upsell" },
-  { id: "cd5", dealName: "Social Media Bundle", client: "FreshBite Restaurant", dealValue: 3200, commissionRate: 10, commissionAmount: 520, salesPerson: "Emma Williams", closedDate: "2026-04-05", status: "pending", type: "new_deal" },
-  { id: "cd6", dealName: "Referral - Brand Redesign", client: "Alpine Adventures", dealValue: 9500, commissionRate: 15, commissionAmount: 1925, salesPerson: "Sarah Chen", closedDate: "2026-04-03", status: "paid", type: "referral" },
-  { id: "cd7", dealName: "Content Marketing", client: "Legal Edge Partners", dealValue: 6800, commissionRate: 10, commissionAmount: 880, salesPerson: "David Kim", closedDate: "2026-04-01", status: "approved", type: "new_deal" },
-  { id: "cd8", dealName: "SEO + Ads Renewal", client: "Apex Consulting", dealValue: 3600, commissionRate: 5, commissionAmount: 180, salesPerson: "James Rodriguez", closedDate: "2026-03-28", status: "paid", type: "renewal" },
-  { id: "cd9", dealName: "Web Redesign", client: "GreenScape Landscaping", dealValue: 5500, commissionRate: 10, commissionAmount: 750, salesPerson: "Emma Williams", closedDate: "2026-03-25", status: "paid", type: "new_deal" },
-  { id: "cd10", dealName: "Ads Management", client: "Peak Performance Gym", dealValue: 2200, commissionRate: 10, commissionAmount: 420, salesPerson: "David Kim", closedDate: "2026-03-20", status: "paid", type: "new_deal" },
-];
+const COMMISSION_DEALS: CommissionDeal[] = [];
 
-const MONTHLY_PAYOUTS: MonthlyPayout[] = [
-  { month: "Apr 2026", totalPaid: 7199, dealsCount: 10, topEarner: "Marcus Johnson", topEarnerAmount: 2990 },
-  { month: "Mar 2026", totalPaid: 5820, dealsCount: 8, topEarner: "Sarah Chen", topEarnerAmount: 2140 },
-  { month: "Feb 2026", totalPaid: 4950, dealsCount: 7, topEarner: "Marcus Johnson", topEarnerAmount: 1860 },
-  { month: "Jan 2026", totalPaid: 6100, dealsCount: 9, topEarner: "James Rodriguez", topEarnerAmount: 2200 },
-  { month: "Dec 2025", totalPaid: 8200, dealsCount: 12, topEarner: "Marcus Johnson", topEarnerAmount: 3100 },
-  { month: "Nov 2025", totalPaid: 4300, dealsCount: 6, topEarner: "Sarah Chen", topEarnerAmount: 1500 },
-];
+const MONTHLY_PAYOUTS: MonthlyPayout[] = [];
 
 const TYPE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   new_deal: { label: "New Deal", color: "text-green-400", bg: "bg-green-400/10" },
@@ -161,7 +131,7 @@ export default function CommissionTrackerPage() {
     setShowAddRule(false);
   };
 
-  const maxPayoutMonth = Math.max(...MONTHLY_PAYOUTS.map(p => p.totalPaid), 1);
+  const maxPayoutMonth = MONTHLY_PAYOUTS.length > 0 ? Math.max(...MONTHLY_PAYOUTS.map(p => p.totalPaid)) : 1;
 
   const TABS: { key: ActiveTab; label: string; icon: React.ReactNode }[] = [
     { key: "overview", label: "Overview", icon: <BarChart3 size={14} /> },
@@ -441,7 +411,7 @@ export default function CommissionTrackerPage() {
             </h3>
             <div className="space-y-2">
               {[...SALES_TEAM].sort((a, b) => b.totalEarned - a.totalEarned).map((person, i) => {
-                const maxEarned = Math.max(...SALES_TEAM.map(p => p.totalEarned));
+                const maxEarned = Math.max(...SALES_TEAM.map(p => p.totalEarned), 1);
                 return (
                   <div key={person.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                     <span className={`text-sm font-bold w-6 text-center ${
@@ -480,7 +450,7 @@ export default function CommissionTrackerPage() {
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">Avg Per Person</p>
-              <p className="text-xl font-bold text-blue-400">{fmtCurrency(Math.round(SALES_TEAM.reduce((s, p) => s + p.totalEarned, 0) / SALES_TEAM.length))}</p>
+              <p className="text-xl font-bold text-blue-400">{fmtCurrency(SALES_TEAM.length > 0 ? Math.round(SALES_TEAM.reduce((s, p) => s + p.totalEarned, 0) / SALES_TEAM.length) : 0)}</p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">Total Deals Closed</p>
@@ -595,11 +565,11 @@ export default function CommissionTrackerPage() {
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">Avg Monthly Payout</p>
-              <p className="text-xl font-bold text-blue-400">{fmtCurrency(Math.round(MONTHLY_PAYOUTS.reduce((s, p) => s + p.totalPaid, 0) / MONTHLY_PAYOUTS.length))}</p>
+              <p className="text-xl font-bold text-blue-400">{fmtCurrency(MONTHLY_PAYOUTS.length > 0 ? Math.round(MONTHLY_PAYOUTS.reduce((s, p) => s + p.totalPaid, 0) / MONTHLY_PAYOUTS.length) : 0)}</p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[10px] text-muted">Avg Deals/Month</p>
-              <p className="text-xl font-bold text-purple-400">{Math.round(MONTHLY_PAYOUTS.reduce((s, p) => s + p.dealsCount, 0) / MONTHLY_PAYOUTS.length)}</p>
+              <p className="text-xl font-bold text-purple-400">{MONTHLY_PAYOUTS.length > 0 ? Math.round(MONTHLY_PAYOUTS.reduce((s, p) => s + p.dealsCount, 0) / MONTHLY_PAYOUTS.length) : 0}</p>
             </div>
           </div>
         </div>

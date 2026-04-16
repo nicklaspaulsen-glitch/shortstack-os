@@ -302,8 +302,6 @@ export default function InvoicesPage() {
                 <p className="text-[9px] text-muted mb-3">Generate invoice from an accepted proposal</p>
                 <select className="input w-full text-xs mb-2">
                   <option value="">Select proposal...</option>
-                  <option value="1">Bright Smile Dental - $2,497/mo</option>
-                  <option value="2">Peak Fitness Gym - $4,997/mo</option>
                 </select>
                 <button className="btn-gold w-full text-xs flex items-center justify-center gap-1.5 bg-gold/10 text-gold border border-gold/20 rounded-lg py-1.5 hover:bg-gold/20 transition-all">
                   <ArrowRight size={12} /> Create from Proposal

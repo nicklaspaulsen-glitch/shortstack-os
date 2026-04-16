@@ -25,23 +25,9 @@ interface LeadSource {
 
 const MOCK_SOURCES: LeadSource[] = [];
 
-const UTM_DATA = [
-  { source: "google", medium: "cpc", campaign: "dental-leads-miami", leads: 82, converted: 14 },
-  { source: "facebook", medium: "social", campaign: "retarget-spring-2026", leads: 45, converted: 6 },
-  { source: "instagram", medium: "social", campaign: "dm-outreach-q2", leads: 38, converted: 5 },
-  { source: "email", medium: "newsletter", campaign: "april-promo", leads: 24, converted: 8 },
-  { source: "linkedin", medium: "social", campaign: "b2b-outreach", leads: 18, converted: 3 },
-  { source: "tiktok", medium: "social", campaign: "viral-hooks", leads: 12, converted: 1 },
-];
+const UTM_DATA: { source: string; medium: string; campaign: string; leads: number; converted: number }[] = [];
 
-const DECAY_DATA = [
-  { month: "Nov", value: 100 },
-  { month: "Dec", value: 92 },
-  { month: "Jan", value: 85 },
-  { month: "Feb", value: 78 },
-  { month: "Mar", value: 88 },
-  { month: "Apr", value: 95 },
-];
+const DECAY_DATA: { month: string; value: number }[] = [];
 
 const TABS = ["Overview", "Attribution", "ROI", "UTM Tracker", "Trending", "Decay Analysis", "Custom Sources"] as const;
 type Tab = typeof TABS[number];
@@ -237,18 +223,18 @@ export default function LeadSourcesPage() {
           <div className="grid grid-cols-3 gap-3">
             <div className="card p-3 text-center border-emerald-500/10">
               <p className="text-[9px] text-muted uppercase">Best ROI</p>
-              <p className="text-sm font-bold text-emerald-400">Paid Ads</p>
-              <p className="text-[10px] text-emerald-400">410% ROI</p>
+              <p className="text-sm font-bold text-emerald-400">--</p>
+              <p className="text-[10px] text-emerald-400">0% ROI</p>
             </div>
             <div className="card p-3 text-center border-gold/10">
               <p className="text-[9px] text-muted uppercase">Lowest CPL</p>
-              <p className="text-sm font-bold text-gold">Google Maps</p>
+              <p className="text-sm font-bold text-gold">--</p>
               <p className="text-[10px] text-gold">$0.00</p>
             </div>
             <div className="card p-3 text-center border-blue-500/10">
               <p className="text-[9px] text-muted uppercase">Best Quality</p>
-              <p className="text-sm font-bold text-blue-400">Referral</p>
-              <p className="text-[10px] text-blue-400">95/100</p>
+              <p className="text-sm font-bold text-blue-400">--</p>
+              <p className="text-[10px] text-blue-400">0/100</p>
             </div>
           </div>
         </div>

@@ -55,22 +55,11 @@ interface AvailableNumber {
 }
 
 /* ── Mock Data ── */
-const MOCK_PHONES: PhoneNumber[] = [
-  { id: "p1", number: "+1 (555) 234-5678", type: "local", status: "active", capabilities: ["Voice", "SMS", "MMS"], monthlyCost: 1.50, purchasedDate: "2026-03-10", country: "US" },
-  { id: "p2", number: "+1 (800) 555-0199", type: "toll-free", status: "active", capabilities: ["Voice", "SMS"], monthlyCost: 2.00, purchasedDate: "2026-02-22", country: "US" },
-  { id: "p3", number: "+1 (415) 555-7890", type: "local", status: "suspended", capabilities: ["Voice", "SMS", "MMS"], monthlyCost: 1.50, purchasedDate: "2026-01-15", country: "US" },
-];
+const MOCK_PHONES: PhoneNumber[] = [];
 
-const MOCK_EMAILS: EmailAddress[] = [
-  { id: "e1", email: "outreach@acmecorp.com", displayName: "Acme Outreach", status: "verified", provider: "ShortStack SMTP", dailyLimit: 500, sentToday: 142 },
-  { id: "e2", email: "sales@acmecorp.com", displayName: "Acme Sales", status: "verified", provider: "Custom SMTP", dailyLimit: 1000, sentToday: 387 },
-  { id: "e3", email: "hello@newbrand.io", displayName: "New Brand", status: "pending", provider: "ShortStack SMTP", dailyLimit: 500, sentToday: 0 },
-];
+const MOCK_EMAILS: EmailAddress[] = [];
 
-const MOCK_DOMAINS: Domain[] = [
-  { id: "d1", domain: "acmecorp.com", verified: true, spf: true, dkim: true, dmarc: true, addedDate: "2026-01-05" },
-  { id: "d2", domain: "newbrand.io", verified: false, spf: true, dkim: false, dmarc: false, addedDate: "2026-04-10" },
-];
+const MOCK_DOMAINS: Domain[] = [];
 
 const COUNTRIES = [
   { code: "US", name: "United States", flag: "US" },
@@ -85,13 +74,7 @@ const NUMBER_TYPES: { value: NumberType; label: string; cost: number }[] = [
   { value: "mobile", label: "Mobile", cost: 1.50 },
 ];
 
-const MOCK_AVAILABLE: AvailableNumber[] = [
-  { number: "+1 (555) 301-4422", type: "local", monthlyCost: 1.50, capabilities: ["Voice", "SMS", "MMS"] },
-  { number: "+1 (555) 301-4455", type: "local", monthlyCost: 1.50, capabilities: ["Voice", "SMS", "MMS"] },
-  { number: "+1 (555) 301-4489", type: "local", monthlyCost: 1.50, capabilities: ["Voice", "SMS"] },
-  { number: "+1 (800) 555-2200", type: "toll-free", monthlyCost: 2.00, capabilities: ["Voice", "SMS"] },
-  { number: "+1 (888) 555-3311", type: "toll-free", monthlyCost: 2.00, capabilities: ["Voice", "SMS", "MMS"] },
-];
+const MOCK_AVAILABLE: AvailableNumber[] = [];
 
 /* ── Component ── */
 export default function PhoneEmailPage() {
@@ -120,8 +103,8 @@ export default function PhoneEmailPage() {
   /* ── Stats ── */
   const totalNumbers = phones.length;
   const monthlyCost = phones.reduce((s, p) => s + p.monthlyCost, 0);
-  const smsSentThisMonth = 1247;
-  const callsThisMonth = 389;
+  const smsSentThisMonth = 0;
+  const callsThisMonth = 0;
 
   /* ── Handlers ── */
   const searchNumbers = () => {

@@ -13,61 +13,27 @@ import {
 /* ------------------------------------------------------------------ */
 
 const BRIEFING_DATA = {
-  summary: "Good morning! Today is looking productive. You have 3 client calls scheduled, 2 proposals awaiting approval, and your lead pipeline grew by 12% this week. Revenue is tracking 8% above forecast. Key priority: Follow up with Metro Legal Group - their health score dropped below 50.",
-  leads: { scraped_since: 34, total: 1245, qualified: 12, conversion: "3.4%" },
-  outreach: { sent_since: 87, replies: 14, booked_calls: 3, reply_rate: "16.1%" },
-  team: { active_members: 5, messages: 42, tasks_completed: 18, tasks_pending: 7 },
-  clients: { updates: 8, deliverables_pending: 4, approvals_needed: 2, at_risk: 1 },
-  trinity: { actions_since: 156, top_action: "Content scheduling", errors: 0 },
-  system: { issues: 1, uptime: "99.8%", details: ["WhatsApp API rate limit warning"] },
-  revenue: { new_deals: 2, mrr_change: 1200, total_mrr: 19200, forecast: 21000 },
+  summary: "",
+  leads: { scraped_since: 0, total: 0, qualified: 0, conversion: "0%" },
+  outreach: { sent_since: 0, replies: 0, booked_calls: 0, reply_rate: "0%" },
+  team: { active_members: 0, messages: 0, tasks_completed: 0, tasks_pending: 0 },
+  clients: { updates: 0, deliverables_pending: 0, approvals_needed: 0, at_risk: 0 },
+  trinity: { actions_since: 0, top_action: "", errors: 0 },
+  system: { issues: 0, uptime: "0%", details: [] as string[] },
+  revenue: { new_deals: 0, mrr_change: 0, total_mrr: 0, forecast: 0 },
 };
 
-const TODAYS_TASKS = [
-  { id: "t1", title: "Client call - Bright Smiles Dental", time: "10:00 AM", type: "call", done: false },
-  { id: "t2", title: "Review content calendar for Peak Fitness", time: "11:30 AM", type: "review", done: false },
-  { id: "t3", title: "Client call - Elite Auto Detailing", time: "1:00 PM", type: "call", done: false },
-  { id: "t4", title: "Send monthly report to Sunrise Bakery", time: "2:30 PM", type: "task", done: true },
-  { id: "t5", title: "Client call - Metro Legal Group (retention)", time: "3:30 PM", type: "call", done: false },
-  { id: "t6", title: "Approve ad creatives for 3 clients", time: "4:00 PM", type: "approval", done: false },
-  { id: "t7", title: "Team standup", time: "5:00 PM", type: "meeting", done: false },
-];
+const TODAYS_TASKS: { id: string; title: string; time: string; type: string; done: boolean }[] = [];
 
-const PENDING_APPROVALS = [
-  { id: "a1", client: "Peak Fitness Studio", item: "April content calendar (15 posts)", submitted: "2 days ago", priority: "high" },
-  { id: "a2", client: "Bright Smiles Dental", item: "Google Ads campaign changes", submitted: "1 day ago", priority: "medium" },
-  { id: "a3", client: "Elite Auto Detailing", item: "New website landing page", submitted: "3 hours ago", priority: "low" },
-];
+const PENDING_APPROVALS: { id: string; client: string; item: string; submitted: string; priority: string }[] = [];
 
-const CLIENT_UPDATES = [
-  { client: "Peak Fitness Studio", update: "New lead form submission from Google Ads", time: "1h ago", type: "lead" },
-  { client: "Bright Smiles Dental", update: "Content approved for next week", time: "2h ago", type: "approval" },
-  { client: "Metro Legal Group", update: "Health score dropped to 48 - needs attention", time: "3h ago", type: "alert" },
-  { client: "Sunrise Bakery", update: "Monthly report viewed and downloaded", time: "5h ago", type: "report" },
-  { client: "Elite Auto Detailing", update: "Booked a call for Thursday to discuss ads", time: "6h ago", type: "call" },
-];
+const CLIENT_UPDATES: { client: string; update: string; time: string; type: string }[] = [];
 
-const UPCOMING_MEETINGS = [
-  { title: "Bright Smiles Dental - Monthly Review", time: "10:00 AM", duration: "30 min", platform: "Zoom" },
-  { title: "Elite Auto Detailing - Upsell Discussion", time: "1:00 PM", duration: "20 min", platform: "Google Meet" },
-  { title: "Metro Legal Group - Retention Call", time: "3:30 PM", duration: "45 min", platform: "Zoom" },
-  { title: "Team Standup", time: "5:00 PM", duration: "15 min", platform: "Discord" },
-];
+const UPCOMING_MEETINGS: { title: string; time: string; duration: string; platform: string }[] = [];
 
-const CONTENT_SCHEDULE = [
-  { client: "Peak Fitness Studio", posts: 4, platforms: "IG, FB, TikTok", status: "scheduled" },
-  { client: "Bright Smiles Dental", posts: 3, platforms: "IG, FB", status: "pending approval" },
-  { client: "Elite Auto Detailing", posts: 5, platforms: "IG, FB, TikTok, YT", status: "scheduled" },
-  { client: "Sunrise Bakery", posts: 3, platforms: "IG, FB", status: "drafts ready" },
-];
+const CONTENT_SCHEDULE: { client: string; posts: number; platforms: string; status: string }[] = [];
 
-const AI_INSIGHTS = [
-  { insight: "Peak Fitness Studio engagement is 25% above average - consider featuring them as a case study", type: "opportunity" },
-  { insight: "Metro Legal Group has missed 2 scheduled calls this month - escalate retention outreach", type: "risk" },
-  { insight: "Your response time to leads has improved by 40% since last month", type: "positive" },
-  { insight: "Instagram Reels are generating 3x more engagement than static posts across all clients", type: "trend" },
-  { insight: "Consider increasing Google Ads budget for Elite Auto - ROAS is 5.8x", type: "opportunity" },
-];
+const AI_INSIGHTS: { insight: string; type: string }[] = [];
 
 const CUSTOM_SECTIONS = [
   { id: "cs1", name: "Lead Pipeline", enabled: true },
@@ -84,7 +50,7 @@ const CUSTOM_SECTIONS = [
 
 export default function BriefingPage() {
   const [activeTab, setActiveTab] = useState<"briefing" | "tasks" | "approvals" | "insights" | "settings">("briefing");
-  const [taskDone, setTaskDone] = useState<string[]>(["t4"]);
+  const [taskDone, setTaskDone] = useState<string[]>([]);
   const [generating, setGenerating] = useState(false);
   const [emailSchedule, setEmailSchedule] = useState("daily");
   const [emailTime, setEmailTime] = useState("08:00");
@@ -215,10 +181,10 @@ export default function BriefingPage() {
                 <div className="mt-2 pt-2 border-t border-border">
                   <div className="flex items-center justify-between text-[10px]">
                     <span className="text-muted">Progress to forecast</span>
-                    <span className="text-gold">{Math.round((data.revenue.total_mrr / data.revenue.forecast) * 100)}%</span>
+                    <span className="text-gold">{Math.round((data.revenue.total_mrr / Math.max(data.revenue.forecast, 1)) * 100)}%</span>
                   </div>
                   <div className="w-full bg-white/5 rounded-full h-1.5 mt-1 overflow-hidden">
-                    <div className="h-full rounded-full bg-gold/50" style={{ width: `${(data.revenue.total_mrr / data.revenue.forecast) * 100}%` }} />
+                    <div className="h-full rounded-full bg-gold/50" style={{ width: `${(data.revenue.total_mrr / Math.max(data.revenue.forecast, 1)) * 100}%` }} />
                   </div>
                 </div>
               </div>

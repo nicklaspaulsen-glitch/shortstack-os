@@ -45,28 +45,9 @@ const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; 
   config: { icon: <Settings size={11} />, label: "Config Change", color: "text-amber-400" },
 };
 
-const MOCK_ENTRIES: AuditEntry[] = [
-  { id: "a-1", timestamp: "2026-04-15 09:42:18", user: "Alex Rivera", userAvatar: "AR", action: "login", resource: "Dashboard", details: "Successful login via SSO", ip: "192.168.1.101", status: "success", sensitive: false },
-  { id: "a-2", timestamp: "2026-04-15 09:38:05", user: "Sarah Chen", userAvatar: "SC", action: "create", resource: "Client: Peak Gym", details: "New client created with starter plan", ip: "192.168.1.102", status: "success", sensitive: false },
-  { id: "a-3", timestamp: "2026-04-15 09:22:41", user: "Mike Johnson", userAvatar: "MJ", action: "update", resource: "Invoice #1042", details: "Changed amount from $1,800 to $2,400", ip: "192.168.1.103", status: "success", sensitive: true },
-  { id: "a-4", timestamp: "2026-04-15 08:55:12", user: "Lisa Park", userAvatar: "LP", action: "send", resource: "Email Campaign", details: "Sent 'April Newsletter' to 342 recipients", ip: "192.168.1.104", status: "success", sensitive: false },
-  { id: "a-5", timestamp: "2026-04-15 08:30:00", user: "Unknown", userAvatar: "??", action: "login", resource: "Dashboard", details: "Failed login attempt - wrong password (3 attempts)", ip: "45.33.128.91", status: "failed", sensitive: true },
-  { id: "a-6", timestamp: "2026-04-15 08:15:33", user: "Alex Rivera", userAvatar: "AR", action: "config", resource: "Workspace Settings", details: "Changed API rate limit from 10K to 50K", ip: "192.168.1.101", status: "success", sensitive: true },
-  { id: "a-7", timestamp: "2026-04-14 17:42:00", user: "Sarah Chen", userAvatar: "SC", action: "export", resource: "Client Report", details: "Exported Q1 analytics report (PDF, 24 pages)", ip: "192.168.1.102", status: "success", sensitive: false },
-  { id: "a-8", timestamp: "2026-04-14 16:20:11", user: "Alex Rivera", userAvatar: "AR", action: "delete", resource: "Client: Test Account", details: "Permanently deleted test client and all data", ip: "192.168.1.101", status: "success", sensitive: true },
-  { id: "a-9", timestamp: "2026-04-14 14:08:45", user: "Mike Johnson", userAvatar: "MJ", action: "create", resource: "Content: Blog Post", details: "Created 'SEO Tips for Local Businesses'", ip: "192.168.1.103", status: "success", sensitive: false },
-  { id: "a-10", timestamp: "2026-04-14 11:30:22", user: "Alex Rivera", userAvatar: "AR", action: "config", resource: "Team Permissions", details: "Changed Mike Johnson role from Creator to Manager", ip: "192.168.1.101", status: "success", sensitive: true },
-  { id: "a-11", timestamp: "2026-04-14 09:15:00", user: "Tom Bradley", userAvatar: "TB", action: "login", resource: "Dashboard", details: "First login after invite", ip: "10.0.0.55", status: "success", sensitive: false },
-  { id: "a-12", timestamp: "2026-04-13 18:00:00", user: "System", userAvatar: "SY", action: "export", resource: "Nightly Backup", details: "Automated database backup completed (2.4 GB)", ip: "127.0.0.1", status: "success", sensitive: false },
-];
+const MOCK_ENTRIES: AuditEntry[] = [];
 
-const MOCK_ALERTS: SecurityAlert[] = [
-  { id: "sa-1", type: "failed_login", severity: "high", message: "3 failed login attempts from IP 45.33.128.91", user: "Unknown", timestamp: "2026-04-15 08:30", resolved: false },
-  { id: "sa-2", type: "permission_change", severity: "medium", message: "Role changed for Mike Johnson: Creator to Manager", user: "Alex Rivera", timestamp: "2026-04-14 11:30", resolved: true },
-  { id: "sa-3", type: "data_export", severity: "low", message: "Large data export: Q1 analytics report (24 pages)", user: "Sarah Chen", timestamp: "2026-04-14 17:42", resolved: true },
-  { id: "sa-4", type: "suspicious_ip", severity: "critical", message: "Login attempt from flagged IP address (known VPN exit node)", user: "Unknown", timestamp: "2026-04-13 22:15", resolved: false },
-  { id: "sa-5", type: "api_key_used", severity: "medium", message: "API key 'prod-key-v2' used 4,200 times in 1 hour (unusual spike)", user: "System", timestamp: "2026-04-13 15:00", resolved: true },
-];
+const MOCK_ALERTS: SecurityAlert[] = [];
 
 const SEVERITY_STYLES: Record<string, string> = {
   critical: "bg-red-500/10 text-red-400 border-red-500/20",

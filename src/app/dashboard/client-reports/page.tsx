@@ -504,10 +504,10 @@ export default function ClientReportsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold">BS</div>
+                    <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center text-[9px] font-bold text-gold">CL</div>
                     <div>
-                      <p className="text-xs font-semibold">Bright Smiles Dental</p>
-                      <p className="text-[9px] text-muted">Growth Package -- $2,500/mo</p>
+                      <p className="text-xs font-semibold">[Client Name]</p>
+                      <p className="text-[9px] text-muted">[Package] -- [Price]/mo</p>
                     </div>
                   </div>
                 </div>

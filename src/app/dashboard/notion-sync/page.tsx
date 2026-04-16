@@ -12,76 +12,21 @@ import {
 const tabs = ["Workspaces", "Sync Map", "Status", "Field Map", "Conflicts", "History", "Schedule", "Templates", "Browser", "Selective", "Analytics", "Settings"] as const;
 type Tab = (typeof tabs)[number];
 
-const mockWorkspaces = [
-  { id: "ws1", name: "ShortStack Operations", icon: "SS", pages: 124, dbs: 8, lastSync: "2 min ago", status: "connected" },
-  { id: "ws2", name: "Client Portal", icon: "CP", pages: 67, dbs: 4, lastSync: "15 min ago", status: "connected" },
-  { id: "ws3", name: "Marketing Hub", icon: "MH", pages: 45, dbs: 3, lastSync: "1 hr ago", status: "warning" },
-];
+const mockWorkspaces: { id: string; name: string; icon: string; pages: number; dbs: number; lastSync: string; status: string }[] = [];
 
-const mockDatabases = [
-  { id: "db1", name: "Clients", notionId: "abc-123", fields: 12, records: 48, synced: true, direction: "bi-directional", lastSync: "2 min ago" },
-  { id: "db2", name: "Projects", notionId: "def-456", fields: 9, records: 32, synced: true, direction: "notion-to-app", lastSync: "5 min ago" },
-  { id: "db3", name: "Tasks", notionId: "ghi-789", fields: 14, records: 156, synced: true, direction: "app-to-notion", lastSync: "10 min ago" },
-  { id: "db4", name: "Content Calendar", notionId: "jkl-012", fields: 8, records: 87, synced: false, direction: "bi-directional", lastSync: "Never" },
-  { id: "db5", name: "Invoices", notionId: "mno-345", fields: 10, records: 23, synced: true, direction: "app-to-notion", lastSync: "30 min ago" },
-];
+const mockDatabases: { id: string; name: string; notionId: string; fields: number; records: number; synced: boolean; direction: string; lastSync: string }[] = [];
 
-const mockFieldMappings = [
-  { id: "f1", notionField: "Name", notionType: "Title", appField: "business_name", appType: "text", status: "mapped" },
-  { id: "f2", notionField: "Status", notionType: "Select", appField: "status", appType: "enum", status: "mapped" },
-  { id: "f3", notionField: "MRR", notionType: "Number", appField: "mrr", appType: "decimal", status: "mapped" },
-  { id: "f4", notionField: "Email", notionType: "Email", appField: "contact_email", appType: "text", status: "mapped" },
-  { id: "f5", notionField: "Start Date", notionType: "Date", appField: "created_at", appType: "timestamp", status: "mapped" },
-  { id: "f6", notionField: "Tags", notionType: "Multi-Select", appField: "tags", appType: "array", status: "warning" },
-  { id: "f7", notionField: "Notes", notionType: "Rich Text", appField: null, appType: null, status: "unmapped" },
-  { id: "f8", notionField: "Owner", notionType: "Person", appField: "assigned_to", appType: "text", status: "mapped" },
-];
+const mockFieldMappings: { id: string; notionField: string; notionType: string; appField: string | null; appType: string | null; status: string }[] = [];
 
-const mockConflicts = [
-  { id: "c1", record: "Acme Corp", field: "MRR", notionValue: "$4,500", appValue: "$4,200", detectedAt: "5 min ago", resolved: false },
-  { id: "c2", record: "Starter Co", field: "Status", notionValue: "Active", appValue: "Paused", detectedAt: "12 min ago", resolved: false },
-  { id: "c3", record: "BigBrand", field: "Email", notionValue: "new@big.com", appValue: "old@big.com", detectedAt: "1 hr ago", resolved: true },
-  { id: "c4", record: "TechFlow", field: "Tags", notionValue: "SaaS, Enterprise", appValue: "SaaS", detectedAt: "2 hrs ago", resolved: true },
-];
+const mockConflicts: { id: string; record: string; field: string; notionValue: string; appValue: string; detectedAt: string; resolved: boolean }[] = [];
 
-const mockHistory = [
-  { id: "h1", action: "Full Sync", database: "Clients", records: 48, direction: "bi-directional", duration: "3.2s", status: "success", time: "2 min ago" },
-  { id: "h2", action: "Incremental Sync", database: "Tasks", records: 12, direction: "app-to-notion", duration: "1.1s", status: "success", time: "10 min ago" },
-  { id: "h3", action: "Full Sync", database: "Projects", records: 32, direction: "notion-to-app", duration: "2.8s", status: "success", time: "15 min ago" },
-  { id: "h4", action: "Incremental Sync", database: "Clients", records: 3, direction: "bi-directional", duration: "0.4s", status: "success", time: "30 min ago" },
-  { id: "h5", action: "Full Sync", database: "Content Calendar", records: 87, direction: "bi-directional", duration: "5.1s", status: "failed", time: "1 hr ago" },
-  { id: "h6", action: "Field Remap", database: "Invoices", records: 23, direction: "app-to-notion", duration: "1.9s", status: "success", time: "2 hrs ago" },
-  { id: "h7", action: "Full Sync", database: "Tasks", records: 156, direction: "app-to-notion", duration: "8.4s", status: "success", time: "3 hrs ago" },
-];
+const mockHistory: { id: string; action: string; database: string; records: number; direction: string; duration: string; status: string; time: string }[] = [];
 
-const mockTemplates = [
-  { id: "t1", name: "Client Tracker", desc: "Full client CRM with status, MRR, health score fields", fields: 15, category: "CRM" },
-  { id: "t2", name: "Project Board", desc: "Kanban-style project tracking with sprints and assignees", fields: 12, category: "Project" },
-  { id: "t3", name: "Content Calendar", desc: "Social media and content planning with due dates", fields: 10, category: "Marketing" },
-  { id: "t4", name: "Invoice Registry", desc: "Track invoices, amounts, due dates, and payment status", fields: 8, category: "Finance" },
-  { id: "t5", name: "Meeting Notes", desc: "Structured meeting notes with action items and owners", fields: 7, category: "Operations" },
-  { id: "t6", name: "Lead Pipeline", desc: "Sales pipeline with stages, value, and probability", fields: 11, category: "CRM" },
-];
+const mockTemplates: { id: string; name: string; desc: string; fields: number; category: string }[] = [];
 
-const mockPages = [
-  { id: "p1", title: "Q2 Strategy Document", type: "page", parent: "Operations", lastEdited: "1 hr ago", icon: "doc" },
-  { id: "p2", title: "Client Onboarding Checklist", type: "page", parent: "Templates", lastEdited: "3 hrs ago", icon: "check" },
-  { id: "p3", title: "Weekly Standup Notes", type: "page", parent: "Meetings", lastEdited: "Today", icon: "doc" },
-  { id: "p4", title: "Product Roadmap", type: "database", parent: "Product", lastEdited: "Yesterday", icon: "db" },
-  { id: "p5", title: "Brand Guidelines", type: "page", parent: "Marketing", lastEdited: "2 days ago", icon: "doc" },
-  { id: "p6", title: "API Documentation", type: "page", parent: "Engineering", lastEdited: "3 days ago", icon: "doc" },
-  { id: "p7", title: "Revenue Dashboard", type: "database", parent: "Finance", lastEdited: "Today", icon: "db" },
-];
+const mockPages: { id: string; title: string; type: string; parent: string; lastEdited: string; icon: string }[] = [];
 
-const syncAnalytics = [
-  { day: "Mon", syncs: 24, records: 312, errors: 1 },
-  { day: "Tue", syncs: 31, records: 456, errors: 0 },
-  { day: "Wed", syncs: 28, records: 389, errors: 2 },
-  { day: "Thu", syncs: 35, records: 524, errors: 0 },
-  { day: "Fri", syncs: 22, records: 278, errors: 1 },
-  { day: "Sat", syncs: 8, records: 98, errors: 0 },
-  { day: "Sun", syncs: 6, records: 67, errors: 0 },
-];
+const syncAnalytics: { day: string; syncs: number; records: number; errors: number }[] = [];
 
 export default function NotionSyncPage() {
   const [activeTab, setActiveTab] = useState<Tab>("Workspaces");
@@ -92,7 +37,7 @@ export default function NotionSyncPage() {
   const [syncInterval, setSyncInterval] = useState("15");
   const [conflicts, setConflicts] = useState(mockConflicts);
   const [conflictStrategy, setConflictStrategy] = useState("ask");
-  const [selectiveItems, setSelectiveItems] = useState<Record<string, boolean>>({ db1: true, db2: true, db3: true, db4: false, db5: true });
+  const [selectiveItems, setSelectiveItems] = useState<Record<string, boolean>>({});
   const [expandedPage, setExpandedPage] = useState<string | null>(null);
   const [searchPages, setSearchPages] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -114,7 +59,7 @@ export default function NotionSyncPage() {
     setTimeout(() => setCopiedId(null), 2000);
   }
 
-  const maxRecords = Math.max(...syncAnalytics.map(d => d.records));
+  const maxRecords = Math.max(...syncAnalytics.map(d => d.records), 1);
 
   return (
     <div className="fade-in space-y-6 max-w-[1200px] mx-auto">
