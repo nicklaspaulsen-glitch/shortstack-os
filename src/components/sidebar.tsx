@@ -63,7 +63,6 @@ import {
   Layers,
   Award,
   Building2,
-  LayoutGrid,
   Headphones,
   LayoutTemplate,
   GitBranch,
