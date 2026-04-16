@@ -10,7 +10,8 @@ import {
   X, Archive, Pin, PinOff, RefreshCw,
   Calendar, ArrowDown, ArrowUp, Check,
   Loader, AlertCircle, BookOpen,
-  SlidersHorizontal, Tag, Megaphone
+  SlidersHorizontal, Tag, Megaphone,
+  Reply, Forward, Trash2, Send
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
@@ -91,6 +92,9 @@ export default function InboxPage() {
   const [filterPinned, setFilterPinned] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+  const [overlayItem, setOverlayItem] = useState<InboxItem | null>(null);
+  const [showReply, setShowReply] = useState(false);
+  const [replyText, setReplyText] = useState("");
 
   /* ── Fetch all content from various tables ── */
   const fetchInbox = useCallback(async () => {
@@ -263,6 +267,19 @@ export default function InboxPage() {
 
   useEffect(() => { fetchInbox(); }, [fetchInbox]);
 
+  /* ── Escape key to close overlay ── */
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && overlayItem) {
+        setOverlayItem(null);
+        setShowReply(false);
+        setReplyText("");
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [overlayItem]);
+
   /* ── Derived ── */
   const filtered = useMemo(() => {
     let result = items.filter(i => showArchived ? i.archived : !i.archived);
@@ -367,6 +384,15 @@ export default function InboxPage() {
   const openItem = (item: InboxItem) => {
     markRead(item.id);
     setSelectedItem(item);
+    setOverlayItem(item);
+    setShowReply(false);
+    setReplyText("");
+  };
+
+  const closeOverlay = () => {
+    setOverlayItem(null);
+    setShowReply(false);
+    setReplyText("");
   };
 
   const toggleSort = (field: SortField) => {
@@ -752,6 +778,156 @@ export default function InboxPage() {
           </div>
         )}
       </div>
+
+      {/* ── Full-screen Overlay Modal ── */}
+      {overlayItem && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          onClick={closeOverlay}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+
+          {/* Modal */}
+          <div
+            className="relative w-[90%] max-w-4xl h-[85vh] bg-[#141414] border border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            onClick={e => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-white/10 shrink-0">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getCategoryConfig(overlayItem.type).bg}`}>
+                    <span className={getCategoryConfig(overlayItem.type).color}>
+                      {getCategoryConfig(overlayItem.type).icon}
+                    </span>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-white/90">{overlayItem.source}</p>
+                    <p className="text-[10px] text-muted truncate">
+                      {getCategoryConfig(overlayItem.type).label} &middot; {new Date(overlayItem.date).toLocaleString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}
+                    </p>
+                  </div>
+                </div>
+                <h2 className="text-lg font-bold text-white leading-snug">{overlayItem.title}</h2>
+                <div className="flex items-center gap-2 mt-2">
+                  <StatusPill status={overlayItem.status} />
+                  {overlayItem.tags.map(t => (
+                    <span key={t} className="text-[9px] px-2 py-0.5 rounded-full bg-white/5 text-muted capitalize border border-white/10">{t}</span>
+                  ))}
+                </div>
+              </div>
+              <button
+                onClick={closeOverlay}
+                className="ml-4 p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted hover:text-white transition-all shrink-0"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body - scrollable */}
+            <div className="flex-1 overflow-y-auto px-6 py-5">
+              {/* Metadata cards */}
+              {Object.keys(overlayItem.metadata).filter(k => overlayItem.metadata[k]).length > 0 && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-5">
+                  {Object.entries(overlayItem.metadata)
+                    .filter(([, v]) => v && typeof v !== "object")
+                    .slice(0, 6)
+                    .map(([key, val]) => (
+                      <div key={key} className="px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/5">
+                        <p className="text-[9px] text-muted uppercase tracking-wider mb-0.5">{key.replace(/_/g, " ")}</p>
+                        <p className="text-xs text-white/80 truncate">{String(val)}</p>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {/* Full message body */}
+              <div className="text-sm text-white/70 whitespace-pre-wrap leading-relaxed bg-white/[0.02] rounded-xl p-5 border border-white/5 min-h-[200px]">
+                {overlayItem.content || <span className="text-muted italic">No content body available</span>}
+              </div>
+
+              {/* Inline Reply */}
+              {showReply && (
+                <div className="mt-4 space-y-3">
+                  <div className="border border-gold/20 rounded-xl overflow-hidden bg-white/[0.02]">
+                    <textarea
+                      value={replyText}
+                      onChange={e => setReplyText(e.target.value)}
+                      placeholder="Type your reply..."
+                      className="w-full bg-transparent text-sm text-white/80 placeholder-white/20 px-4 py-3 resize-none focus:outline-none min-h-[120px]"
+                      autoFocus
+                    />
+                    <div className="flex items-center justify-between px-4 py-2.5 border-t border-white/5">
+                      <button
+                        onClick={() => { setShowReply(false); setReplyText(""); }}
+                        className="text-[10px] text-muted hover:text-white transition-all"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (replyText.trim()) {
+                            toast.success("Reply sent");
+                            setShowReply(false);
+                            setReplyText("");
+                          }
+                        }}
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gold/90 hover:bg-gold text-black text-xs font-semibold transition-all"
+                      >
+                        <Send size={12} /> Send Reply
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal Footer - Action Buttons */}
+            <div className="flex items-center gap-2 px-6 py-4 border-t border-white/10 shrink-0">
+              <button
+                onClick={() => setShowReply(!showReply)}
+                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-medium transition-all ${
+                  showReply
+                    ? "bg-gold/20 text-gold border border-gold/30"
+                    : "bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20"
+                }`}
+              >
+                <Reply size={14} /> Reply
+              </button>
+              <button
+                onClick={() => {
+                  copyContent(overlayItem);
+                  toast.success("Content copied — ready to forward");
+                }}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-medium transition-all border border-white/10"
+              >
+                <Forward size={14} /> Forward
+              </button>
+              <div className="flex-1" />
+              <button
+                onClick={() => {
+                  archiveItem(overlayItem.id);
+                  closeOverlay();
+                }}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white text-xs font-medium transition-all border border-white/10"
+              >
+                <Archive size={14} /> Archive
+              </button>
+              <button
+                onClick={() => {
+                  archiveItem(overlayItem.id);
+                  closeOverlay();
+                  toast.success("Deleted");
+                }}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-all border border-red-500/20"
+              >
+                <Trash2 size={14} /> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <PageAI
         pageName="Inbox"

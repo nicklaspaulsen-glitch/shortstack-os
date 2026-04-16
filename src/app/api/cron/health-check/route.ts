@@ -269,10 +269,10 @@ export async function GET(_request: NextRequest) {
     if (existing) {
       await supabase.from("system_health").update(record).eq("id", existing.id);
 
-      // Alert on status transitions
+      // Alert on status transitions (only when status genuinely changes)
       if (existing.status === "healthy" && status === "down") {
         alerts.push(`🔴 ${hc.name} is DOWN: ${result.error}`);
-      } else if ((existing.status === "down" || existing.status === "degraded") && status === "healthy") {
+      } else if (existing.status !== "healthy" && status === "healthy") {
         alerts.push(`🟢 ${hc.name} is BACK UP! (${result.responseTime}ms)`);
       }
     } else {
