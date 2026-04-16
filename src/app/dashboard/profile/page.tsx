@@ -182,7 +182,7 @@ export default function ProfilePage() {
                 <AtSign size={12} />{form.username}
               </p>
             )}
-            <p className="text-xs text-muted mt-0.5 capitalize">{profile?.role?.replace("_", " ") || "Admin"} &middot; {form.email}</p>
+            <p className="text-xs text-muted mt-0.5 capitalize">{profile?.role === "admin" ? "Founder" : (profile?.role?.replace("_", " ") || "Admin")} &middot; {form.email}</p>
           </div>
         </div>
       </div>

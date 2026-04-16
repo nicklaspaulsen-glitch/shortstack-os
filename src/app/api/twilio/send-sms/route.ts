@@ -102,13 +102,14 @@ export async function POST(request: NextRequest) {
       if (smsRes.ok) {
         sent++;
         await serviceSupabase.from("outreach_log").insert({
+          lead_id: lead.id,
           platform: "sms",
           business_name: lead.business_name,
           recipient_handle: lead.phone,
           message_text: message,
           status: "sent",
           sent_at: new Date().toISOString(),
-          metadata: { lead_id: lead.id, direction: "outbound" },
+          metadata: { direction: "outbound" },
         });
         // Only advance status if lead hasn't already replied/booked
         await serviceSupabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new", "called"]);

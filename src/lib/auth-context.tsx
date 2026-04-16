@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Track whether the fresh profile has been fetched (vs stale cache)
   const profileFetchedRef = useRef(false);
 
-  const fetchProfile = async (userId: string): Promise<boolean> => {
+  const fetchProfile = async (userId: string, retryCount = 0): Promise<boolean> => {
     // Primary: fetch via server API (reliable — uses service client, bypasses RLS)
     try {
       const res = await fetch(`/api/profile?t=${Date.now()}`);
@@ -56,9 +56,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           profileFetchedRef.current = true;
           return true;
         }
+      } else {
+        console.warn("[auth] Server profile returned", res.status);
       }
-    } catch {
-      console.warn("[auth] Server profile fetch failed — trying client");
+    } catch (err) {
+      console.warn("[auth] Server profile fetch failed:", err);
     }
 
     // Fallback: client-side Supabase query
@@ -66,9 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
       if (error) {
         console.warn("[auth] Client profile fetch error:", error.message);
-        return false;
-      }
-      if (data) {
+      } else if (data) {
         setProfile(data);
         localStorage.setItem("ss_profile", JSON.stringify(data));
         profileFetchedRef.current = true;
@@ -77,6 +77,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.warn("[auth] Profile fetch exception:", err);
     }
+
+    // Retry once after a short delay (handles race conditions with session setup)
+    if (retryCount < 2) {
+      console.warn(`[auth] Profile fetch failed, retrying (${retryCount + 1}/2)...`);
+      await new Promise(r => setTimeout(r, 1000));
+      return fetchProfile(userId, retryCount + 1);
+    }
+
     return false;
   };
 
@@ -127,9 +135,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 setAccessToken(access_token);
               }
             }
+          } else {
+            console.warn("[auth] Session sync returned", res.status);
           }
-        } catch {
-          // Session sync failed — try local methods
+        } catch (err) {
+          console.warn("[auth] Session sync failed:", err);
         }
 
         // Step 2: Fallback to local getUser/getSession
@@ -140,13 +150,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           } catch {}
         }
         if (!validUser) {
-          const { data: { session } } = await supabase.auth.getSession();
-          validUser = session?.user ?? null;
+          try {
+            const { data: { session } } = await supabase.auth.getSession();
+            validUser = session?.user ?? null;
+            // If we got a session from getSession, also set the access token
+            if (session?.access_token && validUser) {
+              setAccessToken(session.access_token);
+            }
+          } catch {}
         }
 
         if (validUser && mounted) {
           setUser(validUser);
-          await fetchProfile(validUser.id);
+          const profileLoaded = await fetchProfile(validUser.id);
+          // If profile failed to load but we have a cached version, keep it
+          if (!profileLoaded && !profileFetchedRef.current) {
+            console.warn("[auth] Profile fetch failed — keeping cached profile if available");
+          }
         } else if (mounted) {
           setProfile(null);
           localStorage.removeItem("ss_profile");
@@ -155,9 +175,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (err) {
         console.warn("[auth] Init error:", err);
         if (mounted) {
-          // Clear stale state on error to prevent showing cached admin data
-          setProfile(null);
-          localStorage.removeItem("ss_profile");
+          // Don't clear cached profile on init error — keep showing nav items
+          // from the cached profile so the sidebar isn't empty. The profile
+          // will be refreshed on next successful load.
           setLoading(false);
         }
       }
@@ -165,11 +185,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     init();
 
-    // 3s safety timeout — prevents infinite loading if network is slow
-    const timeout = setTimeout(() => { if (mounted) setLoading(false); }, 3000);
+    // 6s safety timeout — prevents infinite loading if network is slow
+    // (extended from 3s to allow for profile retry logic)
+    const timeout = setTimeout(() => { if (mounted) setLoading(false); }, 6000);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: any, session: any) => {
         if (!mounted) return;
         const u = session?.user ?? null;
         setUser(u);

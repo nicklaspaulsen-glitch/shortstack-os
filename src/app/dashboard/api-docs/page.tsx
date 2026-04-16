@@ -4,7 +4,8 @@ import { useState } from "react";
 import {
   BookOpen, Code, Copy, Shield, ChevronDown, ChevronRight,
   Play, Terminal, Key, AlertTriangle, Download, Clock,
-  CheckCircle, Search, FileText, Zap, Globe, Lock
+  CheckCircle, Search, FileText, Zap, Globe, Lock,
+  Trash2, Eye, EyeOff, Activity, ToggleLeft, ToggleRight, RefreshCw
 } from "lucide-react";
 
 /* ── Types ── */
@@ -23,6 +24,55 @@ interface Category {
   icon: React.ReactNode;
   endpoints: Endpoint[];
 }
+
+interface ApiKey {
+  id: string;
+  name: string;
+  key: string;
+  permissions: "read" | "read-write" | "full";
+  created_at: string;
+  last_used: string | null;
+  is_active: boolean;
+}
+
+const PERMISSION_LABELS: Record<ApiKey["permissions"], { label: string; color: string; desc: string }> = {
+  "read": { label: "Read Only", color: "bg-blue-500/10 text-blue-400 border-blue-500/20", desc: "Can read data via GET endpoints" },
+  "read-write": { label: "Read & Write", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", desc: "Can read and create/update data" },
+  "full": { label: "Full Access", color: "bg-red-500/10 text-red-400 border-red-500/20", desc: "Complete access including delete operations" },
+};
+
+const RATE_LIMITS: Record<ApiKey["permissions"], string> = {
+  "read": "1,000 req/hr",
+  "read-write": "500 req/hr",
+  "full": "200 req/hr",
+};
+
+function maskKey(key: string): string {
+  if (key.length <= 8) return key;
+  const last4 = key.slice(-4);
+  const prefix = key.startsWith("sk_live_") ? "sk_live_" : key.startsWith("sk_test_") ? "sk_test_" : "sk_";
+  return `${prefix}...${last4}`;
+}
+
+function timeAgo(dateStr: string | null): string {
+  if (!dateStr) return "Never";
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return dateStr;
+}
+
+const INITIAL_API_KEYS: ApiKey[] = [
+  { id: "1", name: "Production", key: "sk_live_a1b2c3d4e5f6g7h8", permissions: "full", created_at: "2026-03-01", last_used: "2026-04-16T09:32:00Z", is_active: true },
+  { id: "2", name: "Development", key: "sk_test_x7y8z9w0v1u2q3r4", permissions: "read-write", created_at: "2026-02-15", last_used: "2026-04-15T14:10:00Z", is_active: true },
+  { id: "3", name: "Analytics Dashboard", key: "sk_live_m4n5o6p7q8r9s0t1", permissions: "read", created_at: "2026-03-20", last_used: "2026-04-14T22:05:00Z", is_active: true },
+  { id: "4", name: "Staging (old)", key: "sk_test_old12345j6k7l8m9", permissions: "read-write", created_at: "2025-12-01", last_used: "2026-01-10", is_active: false },
+  { id: "5", name: "CI/CD Pipeline", key: "sk_live_ci9d8c7b6a5z4y3x", permissions: "read-write", created_at: "2026-04-01", last_used: null, is_active: true },
+];
 
 /* ── Mock Data ── */
 const API_CATEGORIES: Category[] = [
@@ -127,14 +177,14 @@ export default function ApiDocsPage() {
     { key: "Content-Type", value: "application/json" },
   ]);
   const [codeExampleLang, setCodeExampleLang] = useState<"curl" | "js" | "python">("curl");
-  const [apiKeys, setApiKeys] = useState([
-    { id: "1", name: "Production", key: "sk_live_a1b2c3d4e5f6", created: "2026-03-01", lastUsed: "2026-04-14", status: "active" as const },
-    { id: "2", name: "Development", key: "sk_test_x7y8z9w0v1u2", created: "2026-02-15", lastUsed: "2026-04-12", status: "active" as const },
-    { id: "3", name: "Staging (old)", key: "sk_test_old123456", created: "2025-12-01", lastUsed: "2026-01-10", status: "revoked" as const },
-  ]);
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>(INITIAL_API_KEYS);
   const [showNewKey, setShowNewKey] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyPermission, setNewKeyPermission] = useState<ApiKey["permissions"]>("read");
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [revealedKeys, setRevealedKeys] = useState<Record<string, boolean>>({});
+  const [justCreatedKey, setJustCreatedKey] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   function toggleSection(name: string) {
     setExpandedSections(prev => ({ ...prev, [name]: !prev[name] }));
@@ -170,21 +220,43 @@ export default function ApiDocsPage() {
   function generateApiKey() {
     if (!newKeyName.trim()) return;
     const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-    const random = Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    const random = Array.from({ length: 16 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+    const newId = String(Date.now());
+    const fullKey = `sk_live_${random}`;
     setApiKeys(prev => [...prev, {
-      id: String(prev.length + 1),
+      id: newId,
       name: newKeyName,
-      key: `sk_live_${random}`,
-      created: new Date().toISOString().split("T")[0],
-      lastUsed: "Never",
-      status: "active" as const,
+      key: fullKey,
+      permissions: newKeyPermission,
+      created_at: new Date().toISOString().split("T")[0],
+      last_used: null,
+      is_active: true,
     }]);
+    setJustCreatedKey(fullKey);
+    setRevealedKeys(prev => ({ ...prev, [newId]: true }));
     setNewKeyName("");
+    setNewKeyPermission("read");
     setShowNewKey(false);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function revokeKey(id: string) {
-    setApiKeys(prev => prev.map(k => k.id === id ? { ...k, status: "revoked" as const } : k));
+    setApiKeys(prev => prev.map(k => k.id === id ? { ...k, is_active: false } : k));
+    setRevealedKeys(prev => { const n = { ...prev }; delete n[id]; return n; });
+  }
+
+  function deleteKey(id: string) {
+    setApiKeys(prev => prev.filter(k => k.id !== id));
+    setConfirmDeleteId(null);
+    setRevealedKeys(prev => { const n = { ...prev }; delete n[id]; return n; });
+  }
+
+  function toggleKeyActive(id: string) {
+    setApiKeys(prev => prev.map(k => k.id === id ? { ...k, is_active: !k.is_active } : k));
+  }
+
+  function toggleRevealKey(id: string) {
+    setRevealedKeys(prev => ({ ...prev, [id]: !prev[id] }));
   }
 
   const filteredCategories = searchQuery
@@ -742,63 +814,306 @@ const valid = signature === expected;`}</pre>
       {/* ═══ API KEYS TAB ═══ */}
       {activeTab === "API Keys" && (
         <div className="space-y-4">
+
+          {/* Just-created key banner */}
+          {justCreatedKey && (
+            <div className="card p-4 border-green-500/30 bg-green-500/5">
+              <div className="flex items-start gap-3">
+                <CheckCircle size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-green-400 mb-1">API key created successfully</p>
+                  <p className="text-[10px] text-muted mb-2">Copy your key now -- you will not be able to see it again after closing this banner.</p>
+                  <div className="flex items-center gap-2 bg-black/30 rounded-lg px-3 py-2 font-mono text-[11px] text-foreground">
+                    <span className="truncate flex-1">{justCreatedKey}</span>
+                    <button onClick={() => copyText(justCreatedKey, "new-key")}
+                      className="text-muted hover:text-gold transition-colors flex-shrink-0">
+                      {copiedKey === "new-key" ? <CheckCircle size={12} className="text-green-400" /> : <Copy size={12} />}
+                    </button>
+                  </div>
+                </div>
+                <button onClick={() => setJustCreatedKey(null)} className="text-muted hover:text-foreground text-xs flex-shrink-0">x</button>
+              </div>
+            </div>
+          )}
+
+          {/* Stats Row */}
+          <div className="grid grid-cols-4 gap-3">
+            {[
+              { label: "Total Keys", value: apiKeys.length, color: "text-gold", icon: <Key size={13} className="text-gold" /> },
+              { label: "Active", value: apiKeys.filter(k => k.is_active).length, color: "text-green-400", icon: <CheckCircle size={13} className="text-green-400" /> },
+              { label: "Revoked", value: apiKeys.filter(k => !k.is_active).length, color: "text-red-400", icon: <Shield size={13} className="text-red-400" /> },
+              { label: "Full Access", value: apiKeys.filter(k => k.permissions === "full" && k.is_active).length, color: "text-orange-400", icon: <AlertTriangle size={13} className="text-orange-400" /> },
+            ].map((s, i) => (
+              <div key={i} className="card p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  {s.icon}
+                  <p className="text-[9px] text-muted uppercase tracking-wider">{s.label}</p>
+                </div>
+                <p className={`text-lg font-bold ${s.color}`}>{s.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Key Management Card */}
           <div className="card p-4">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Key size={14} className="text-gold" />
-                <h2 className="text-sm font-semibold">API Key Management</h2>
+                <h2 className="text-sm font-semibold">Private API Keys</h2>
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-surface-light text-muted border border-border">{apiKeys.length} keys</span>
               </div>
               <button onClick={() => setShowNewKey(!showNewKey)}
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all">
-                + New Key
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold border border-gold/20 hover:bg-gold/20 transition-all flex items-center gap-1.5">
+                <Key size={10} />
+                Generate New Key
               </button>
             </div>
 
+            {/* Create New Key Form */}
             {showNewKey && (
-              <div className="p-3 rounded-lg border border-gold/20 bg-gold/5 mb-4 flex gap-2">
-                <input value={newKeyName} onChange={e => setNewKeyName(e.target.value)}
-                  className="input flex-1 text-xs py-1.5" placeholder="Key name (e.g. Production)" />
-                <button onClick={generateApiKey}
-                  className="text-[10px] px-3 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold/80 transition-all">
-                  Generate
-                </button>
+              <div className="p-4 rounded-lg border border-gold/20 bg-gold/5 mb-4 space-y-3">
+                <div className="flex items-center gap-2 text-xs font-medium text-gold">
+                  <Key size={12} />
+                  New API Key
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Key Name</label>
+                    <input
+                      value={newKeyName}
+                      onChange={e => setNewKeyName(e.target.value)}
+                      onKeyDown={e => e.key === "Enter" && generateApiKey()}
+                      className="input w-full text-xs py-1.5"
+                      placeholder="e.g. Production, CI/CD, Analytics"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Permissions</label>
+                    <div className="flex gap-1.5">
+                      {(["read", "read-write", "full"] as const).map(perm => (
+                        <button
+                          key={perm}
+                          onClick={() => setNewKeyPermission(perm)}
+                          className={`flex-1 text-[10px] px-2 py-1.5 rounded-lg border transition-all ${
+                            newKeyPermission === perm
+                              ? PERMISSION_LABELS[perm].color + " border font-medium"
+                              : "border-border text-muted hover:text-foreground hover:border-border"
+                          }`}
+                        >
+                          {PERMISSION_LABELS[perm].label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-1">
+                  <div className="flex items-center gap-1.5 text-[10px] text-muted">
+                    <Activity size={10} />
+                    Rate limit: <span className="text-foreground font-medium">{RATE_LIMITS[newKeyPermission]}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => { setShowNewKey(false); setNewKeyName(""); setNewKeyPermission("read"); }}
+                      className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all">
+                      Cancel
+                    </button>
+                    <button onClick={generateApiKey}
+                      disabled={!newKeyName.trim()}
+                      className="text-[10px] px-4 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold/80 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                      Generate Key
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
+            {/* Keys Table */}
             <div className="rounded-lg border border-border overflow-hidden">
-              <div className="grid grid-cols-6 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider">
-                <div>Name</div>
-                <div className="col-span-2">Key</div>
+              <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-border text-[9px] text-muted uppercase tracking-wider bg-surface-light/50">
+                <div className="col-span-2">Name</div>
+                <div className="col-span-3">Key</div>
+                <div className="col-span-2">Permissions</div>
+                <div>Rate Limit</div>
                 <div>Created</div>
                 <div>Last Used</div>
-                <div className="text-right">Actions</div>
+                <div className="col-span-2 text-right">Actions</div>
               </div>
+              {apiKeys.length === 0 && (
+                <div className="px-4 py-8 text-center text-muted text-xs">
+                  <Key size={20} className="mx-auto mb-2 opacity-30" />
+                  No API keys yet. Generate your first key above.
+                </div>
+              )}
               {apiKeys.map(k => (
-                <div key={k.id} className="grid grid-cols-6 gap-2 px-4 py-2.5 border-b border-border last:border-0 text-[11px] items-center">
-                  <div className="font-medium flex items-center gap-1.5">
-                    {k.name}
-                    <span className={`text-[8px] px-1 py-0.5 rounded ${k.status === "active" ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
-                      {k.status}
-                    </span>
+                <div key={k.id} className={`grid grid-cols-12 gap-2 px-4 py-3 border-b border-border last:border-0 text-[11px] items-center ${!k.is_active ? "opacity-50" : ""}`}>
+                  {/* Name + Status */}
+                  <div className="col-span-2 font-medium">
+                    <div className="flex items-center gap-1.5">
+                      <span className="truncate">{k.name}</span>
+                    </div>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className={`text-[8px] px-1.5 py-0.5 rounded font-medium ${k.is_active ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
+                        {k.is_active ? "Active" : "Revoked"}
+                      </span>
+                    </div>
                   </div>
-                  <div className="col-span-2 font-mono text-muted text-[10px]">
-                    {k.key.substring(0, 12)}{"..."}
-                    <button onClick={() => copyText(k.key, k.id)} className="ml-1.5 text-muted hover:text-gold transition-colors inline-flex">
+
+                  {/* Key (masked/revealed) */}
+                  <div className="col-span-3 font-mono text-[10px] flex items-center gap-1.5">
+                    <span className="text-muted truncate">
+                      {revealedKeys[k.id] ? k.key : maskKey(k.key)}
+                    </span>
+                    <button onClick={() => toggleRevealKey(k.id)} className="text-muted hover:text-foreground transition-colors flex-shrink-0" title={revealedKeys[k.id] ? "Hide" : "Reveal"}>
+                      {revealedKeys[k.id] ? <EyeOff size={10} /> : <Eye size={10} />}
+                    </button>
+                    <button onClick={() => copyText(k.key, k.id)} className="text-muted hover:text-gold transition-colors flex-shrink-0" title="Copy key">
                       {copiedKey === k.id ? <CheckCircle size={10} className="text-green-400" /> : <Copy size={10} />}
                     </button>
                   </div>
-                  <div className="text-muted text-[10px]">{k.created}</div>
-                  <div className="text-muted text-[10px]">{k.lastUsed}</div>
-                  <div className="text-right">
-                    {k.status === "active" && (
-                      <button onClick={() => revokeKey(k.id)}
-                        className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all">
-                        Revoke
-                      </button>
+
+                  {/* Permissions */}
+                  <div className="col-span-2">
+                    <span className={`text-[9px] px-2 py-0.5 rounded border font-medium ${PERMISSION_LABELS[k.permissions].color}`}>
+                      {PERMISSION_LABELS[k.permissions].label}
+                    </span>
+                  </div>
+
+                  {/* Rate Limit */}
+                  <div className="text-[10px] text-muted flex items-center gap-1">
+                    <Activity size={9} className="flex-shrink-0" />
+                    {RATE_LIMITS[k.permissions]}
+                  </div>
+
+                  {/* Created */}
+                  <div className="text-muted text-[10px]">{k.created_at}</div>
+
+                  {/* Last Used */}
+                  <div className="text-muted text-[10px] flex items-center gap-1">
+                    <Clock size={9} className="flex-shrink-0" />
+                    {timeAgo(k.last_used)}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="col-span-2 flex items-center justify-end gap-1.5">
+                    {k.is_active ? (
+                      <>
+                        <button onClick={() => toggleKeyActive(k.id)}
+                          className="text-[9px] px-2 py-1 rounded border border-orange-500/20 text-orange-400 hover:bg-orange-500/10 transition-all flex items-center gap-1" title="Revoke key">
+                          <ToggleRight size={9} />
+                          Revoke
+                        </button>
+                        {confirmDeleteId === k.id ? (
+                          <div className="flex items-center gap-1">
+                            <button onClick={() => deleteKey(k.id)}
+                              className="text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all font-medium">
+                              Confirm
+                            </button>
+                            <button onClick={() => setConfirmDeleteId(null)}
+                              className="text-[9px] px-1.5 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
+                              x
+                            </button>
+                          </div>
+                        ) : (
+                          <button onClick={() => setConfirmDeleteId(k.id)}
+                            className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
+                            <Trash2 size={9} />
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <button onClick={() => toggleKeyActive(k.id)}
+                          className="text-[9px] px-2 py-1 rounded border border-green-500/20 text-green-400 hover:bg-green-500/10 transition-all flex items-center gap-1" title="Reactivate key">
+                          <ToggleLeft size={9} />
+                          Activate
+                        </button>
+                        {confirmDeleteId === k.id ? (
+                          <div className="flex items-center gap-1">
+                            <button onClick={() => deleteKey(k.id)}
+                              className="text-[9px] px-2 py-1 rounded bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 transition-all font-medium">
+                              Confirm
+                            </button>
+                            <button onClick={() => setConfirmDeleteId(null)}
+                              className="text-[9px] px-1.5 py-1 rounded border border-border text-muted hover:text-foreground transition-all">
+                              x
+                            </button>
+                          </div>
+                        ) : (
+                          <button onClick={() => setConfirmDeleteId(k.id)}
+                            className="text-[9px] px-2 py-1 rounded border border-red-500/20 text-red-400 hover:bg-red-500/10 transition-all flex items-center gap-1" title="Delete key">
+                            <Trash2 size={9} />
+                          </button>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Security & Usage Info */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Security Best Practices */}
+            <div className="card p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Shield size={13} className="text-gold" />
+                <h3 className="text-xs font-semibold">Security Best Practices</h3>
+              </div>
+              <div className="space-y-2">
+                {[
+                  { icon: <Lock size={10} />, text: "Never expose API keys in client-side code or public repos" },
+                  { icon: <RefreshCw size={10} />, text: "Rotate keys regularly -- revoke and regenerate every 90 days" },
+                  { icon: <Shield size={10} />, text: "Use minimum required permissions (prefer read-only)" },
+                  { icon: <Eye size={10} />, text: "Monitor last-used timestamps for suspicious activity" },
+                  { icon: <AlertTriangle size={10} />, text: "Revoke keys immediately if you suspect a compromise" },
+                ].map((tip, i) => (
+                  <div key={i} className="flex items-start gap-2 text-[10px] text-muted">
+                    <span className="text-gold mt-0.5 flex-shrink-0">{tip.icon}</span>
+                    <span>{tip.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Rate Limits by Permission */}
+            <div className="card p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Activity size={13} className="text-gold" />
+                <h3 className="text-xs font-semibold">Rate Limits by Permission Level</h3>
+              </div>
+              <div className="space-y-2">
+                {(["read", "read-write", "full"] as const).map(perm => (
+                  <div key={perm} className="flex items-center justify-between p-2 rounded-lg bg-surface-light/50 border border-border">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[9px] px-2 py-0.5 rounded border font-medium ${PERMISSION_LABELS[perm].color}`}>
+                        {PERMISSION_LABELS[perm].label}
+                      </span>
+                      <span className="text-[10px] text-muted">{PERMISSION_LABELS[perm].desc}</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-foreground font-medium">{RATE_LIMITS[perm]}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-3 p-2 rounded-lg bg-yellow-500/5 border border-yellow-500/15">
+                <p className="text-[9px] text-yellow-400 flex items-center gap-1.5">
+                  <AlertTriangle size={10} className="flex-shrink-0" />
+                  Exceeding rate limits returns HTTP 429. Implement exponential backoff in your integration.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Start Code */}
+          <div className="card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <Terminal size={13} className="text-gold" />
+              <h3 className="text-xs font-semibold">Quick Start</h3>
+            </div>
+            <div className="bg-black/30 rounded-lg p-3 font-mono text-[10px] text-muted leading-relaxed overflow-x-auto">
+              <div className="text-green-400/60"># Authenticate with your API key</div>
+              <div><span className="text-cyan-400">curl</span> -X GET https://api.shortstack.os/v2/clients \</div>
+              <div className="pl-4">-H <span className="text-yellow-400">&quot;Authorization: Bearer sk_live_your_key_here&quot;</span> \</div>
+              <div className="pl-4">-H <span className="text-yellow-400">&quot;Content-Type: application/json&quot;</span></div>
             </div>
           </div>
         </div>

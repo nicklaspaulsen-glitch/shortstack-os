@@ -63,6 +63,12 @@ import {
   Award,
   Building2,
   LayoutGrid,
+  Headphones,
+  LayoutTemplate,
+  GitBranch,
+  FileBarChart2,
+  Store,
+  Inbox,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -77,6 +83,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   // ── Core ──
+  { label: "Inbox", href: "/dashboard/inbox", icon: <Inbox size={16} />, roles: ["admin", "team_member"] },
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={16} />, roles: ["admin", "team_member"] },
   { label: "Community", href: "/dashboard/community", icon: <Users size={16} />, roles: ["admin", "team_member", "client"] },
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
@@ -87,7 +94,9 @@ const navItems: NavItem[] = [
   { label: "CRM", href: "/dashboard/crm", icon: <Users size={16} />, roles: ["admin", "team_member"], section: "Sales" },
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"] },
   { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <Phone size={16} />, roles: ["admin"] },
+  { label: "Voice AI", href: "/dashboard/voice-receptionist", icon: <Headphones size={16} />, roles: ["admin"] },
   { label: "Outreach", href: "/dashboard/outreach-hub", icon: <Send size={16} />, roles: ["admin"] },
+  { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <ClipboardList size={16} />, roles: ["admin"] },
   { label: "Sequences", href: "/dashboard/sequences", icon: <ListOrdered size={16} />, roles: ["admin"] },
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileCheck size={16} />, roles: ["admin", "team_member"] },
   { label: "Deals", href: "/dashboard/deals", icon: <CreditCard size={16} />, roles: ["admin", "team_member"] },
@@ -117,6 +126,7 @@ const navItems: NavItem[] = [
   { label: "Forms", href: "/dashboard/forms", icon: <ClipboardCheck size={16} />, roles: ["admin", "team_member"] },
   { label: "Surveys", href: "/dashboard/surveys", icon: <ClipboardList size={16} />, roles: ["admin"] },
   { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"] },
+  { label: "Landing Pages", href: "/dashboard/landing-pages", icon: <LayoutTemplate size={16} />, roles: ["admin", "team_member"] },
 
   // ── Automate (AI & workflows) ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate" },
@@ -124,6 +134,7 @@ const navItems: NavItem[] = [
   { label: "AI Studio", href: "/dashboard/ai-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"] },
   { label: "Apps", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin", "team_member"] },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"] },
+  { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: <GitBranch size={16} />, roles: ["admin"] },
   { label: "Automations", href: "/dashboard/automations", icon: <RotateCcw size={16} />, roles: ["admin"] },
   { label: "WhatsApp", href: "/dashboard/whatsapp", icon: <MessageSquare size={16} />, roles: ["admin"] },
   { label: "Webhooks", href: "/dashboard/webhooks", icon: <Webhook size={16} />, roles: ["admin"] },
@@ -142,6 +153,8 @@ const navItems: NavItem[] = [
   { label: "ROI Calculator", href: "/dashboard/roi-calculator", icon: <Calculator size={16} />, roles: ["admin"] },
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"] },
+  { label: "Reports Gen", href: "/dashboard/report-generator", icon: <FileBarChart2 size={16} />, roles: ["admin"] },
+  { label: "Marketplace", href: "/dashboard/marketplace", icon: <Store size={16} />, roles: ["admin"] },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"] },
 
   // ── Connect (integrations) ──
@@ -149,7 +162,8 @@ const navItems: NavItem[] = [
   { label: "Discord", href: "/dashboard/discord", icon: <MessageSquare size={16} />, roles: ["admin"] },
   { label: "Notion", href: "/dashboard/notion-sync", icon: <FileText size={16} />, roles: ["admin"] },
   { label: "Socials", href: "/dashboard/integrations", icon: <Link2 size={16} />, roles: ["admin"] },
-  { label: "Competitors", href: "/dashboard/competitor-tracker", icon: <Target size={16} />, roles: ["admin"] },
+  { label: "Competitors", href: "/dashboard/competitive-monitor", icon: <Target size={16} />, roles: ["admin"] },
+  { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <Bot size={16} />, roles: ["admin"] },
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessagesSquare size={16} />, roles: ["admin"] },
   { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Send size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
@@ -170,14 +184,30 @@ const navItems: NavItem[] = [
 
 export default function Sidebar() {
   const pathname = usePathname() || "";
-  const { profile, signOut } = useAuth();
+  const { profile, signOut, loading: authLoading } = useAuth();
   const { config: wl } = useWhiteLabel();
   const [collapsed, setCollapsed] = useState(false);
 
-  // Default to empty string when profile hasn't loaded yet — this hides all
-  // nav items until we know the real role, preventing a client from briefly
-  // seeing admin navigation.
-  const userRole = profile?.role || "";
+  // Use profile role when available. If profile hasn't loaded yet but auth
+  // loading is complete (user is logged in, profile just failed to fetch),
+  // fall back to the cached role from localStorage, or default to "admin"
+  // to avoid showing an empty sidebar. The dashboard layout already blocks
+  // rendering until user exists, so we know we're authenticated here.
+  const userRole = profile?.role || (() => {
+    // If still loading auth, show nothing (prevents flash of admin nav for clients)
+    if (authLoading) return "";
+    // Auth done but profile null — try cached role
+    try {
+      const cached = typeof window !== "undefined" ? localStorage.getItem("ss_profile") : null;
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.role) return parsed.role;
+      }
+    } catch {}
+    // Ultimate fallback — admin (most users are admin, and the route guard in layout.tsx
+    // will redirect non-admin users anyway)
+    return "admin";
+  })();
   const filteredNav = navItems.filter(
     (item) => userRole && item.roles.includes(userRole)
   );
@@ -412,7 +442,7 @@ function RoleBadge({ role, planTier }: { role?: string; planTier?: string }) {
     const plan = getPlanConfig(planTier);
     return (
       <div className="flex items-center gap-1.5">
-        <span className="text-[9px] text-muted">Admin</span>
+        <span className="text-[9px] text-muted">Founder</span>
         {planTier && (
           <span
             className="text-[7px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"

@@ -14,7 +14,7 @@ import { formatDate, formatDateTime } from "@/lib/utils";
 import {
   Film, FileText, Inbox, Upload, User, Sparkles, Calendar,
   Check, Edit3, Clock, Send, Search, BarChart3, RefreshCw,
-  AlertTriangle, Zap, TrendingUp, Shield, Layers,
+  AlertTriangle, Zap, TrendingUp, Shield, Layers, Loader,
   ThumbsUp, GitBranch, Star, ChevronRight
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -44,6 +44,23 @@ export default function ContentPage() {
   const [seoKeyword, setSeoKeyword] = useState("");
   const [seoResults, setSeoResults] = useState<{ score: number; issues: string[]; suggestions: string[]; readability: string; wordCount: number; plagiarism: string } | null>(null);
   const [seoChecking, setSeoChecking] = useState(false);
+  const [enhancing, setEnhancing] = useState<string | null>(null);
+
+  const enhanceText = async (text: string, context: string, setter: (v: string) => void, key: string) => {
+    if (!text.trim()) return;
+    setEnhancing(key);
+    try {
+      const res = await fetch("/api/copywriter/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: text, context }),
+      });
+      const data = await res.json();
+      if (data.text) { setter(data.text); toast.success("Enhanced!"); }
+      else toast.error("AI enhancement failed");
+    } catch { toast.error("AI enhancement failed"); }
+    setEnhancing(null);
+  };
 
   // Content analytics
   const [contentAnalytics] = useState({
@@ -546,6 +563,14 @@ export default function ContentPage() {
                   <div>
                     <label className="text-[10px] text-muted uppercase tracking-wider">Content</label>
                     <textarea value={seoText} onChange={e => setSeoText(e.target.value)} placeholder="Paste your content here..." rows={8} className="input w-full text-sm mt-1" />
+                    <button
+                      onClick={() => enhanceText(seoText, `Improve this content for SEO.${seoKeyword ? ` Target keyword: "${seoKeyword}".` : ""} Make it more engaging, add relevant headers, improve readability, and naturally incorporate keywords. Keep the same topic and message.`, setSeoText, "seo")}
+                      disabled={!seoText.trim() || enhancing === "seo"}
+                      className="flex items-center gap-1 text-[10px] text-gold/70 hover:text-gold transition-colors disabled:opacity-40 mt-1"
+                    >
+                      {enhancing === "seo" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                      AI Enhance for SEO
+                    </button>
                   </div>
                   <button onClick={runSeoCheck} disabled={seoChecking} className="btn-primary flex items-center gap-2 disabled:opacity-50">
                     {seoChecking ? <><div className="w-3 h-3 border-2 border-black/20 border-t-black rounded-full animate-spin" /> Checking...</> : <><Search size={14} /> Run SEO Check</>}
@@ -662,6 +687,14 @@ export default function ContentPage() {
                 value={editingPublish.description || ""}
                 onChange={(e) => setEditingPublish({ ...editingPublish, description: e.target.value })}
               />
+              <button
+                onClick={() => enhanceText(editingPublish.description || "", `Improve this video description for social media. Make it engaging, include a call-to-action, and optimize for the platform. Title: "${editingPublish.video_title || ""}".`, (v) => setEditingPublish(prev => ({ ...prev, description: v })), "desc")}
+                disabled={!editingPublish.description?.trim() || enhancing === "desc"}
+                className="flex items-center gap-1 text-[10px] text-gold/70 hover:text-gold transition-colors disabled:opacity-40 mt-1"
+              >
+                {enhancing === "desc" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                AI Enhance
+              </button>
             </div>
             <div>
               <label className="block text-sm text-muted mb-1">Hashtags (comma separated)</label>
@@ -670,6 +703,14 @@ export default function ContentPage() {
                 value={editingPublish.hashtags?.join(", ") || ""}
                 onChange={(e) => setEditingPublish({ ...editingPublish, hashtags: e.target.value.split(",").map((h) => h.trim()) })}
               />
+              <button
+                onClick={() => enhanceText(editingPublish.hashtags?.join(", ") || "", `Generate optimized hashtags for this social media video. Title: "${editingPublish.video_title || ""}". Return as comma-separated hashtags. Mix trending, niche, and branded tags. 15-20 hashtags.`, (v) => setEditingPublish(prev => ({ ...prev, hashtags: v.split(",").map(h => h.trim()) })), "hash")}
+                disabled={!editingPublish.hashtags?.length || enhancing === "hash"}
+                className="flex items-center gap-1 text-[10px] text-gold/70 hover:text-gold transition-colors disabled:opacity-40 mt-1"
+              >
+                {enhancing === "hash" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                AI Enhance Hashtags
+              </button>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>

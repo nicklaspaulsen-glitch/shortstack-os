@@ -5,7 +5,7 @@ import {
   TrendingUp, TrendingDown, DollarSign, Target, AlertTriangle,
   BarChart3, Calendar, ArrowUpRight, ArrowDownRight,
   Layers, PieChart, Clock, Users, Zap, Star, Shield,
-  ChevronDown, Activity
+  Activity
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */

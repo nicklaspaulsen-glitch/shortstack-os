@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import {
-  Phone, PhoneCall, Plus, RefreshCw, Play, Pause,
+  Phone, PhoneCall, Plus, RefreshCw,
   Clock, Trash2, X, Loader2, Check,
   BarChart3, FileText, Mic, Users, AlertTriangle, Volume2,
   TrendingUp, Calendar, Shield, ArrowRight, Copy
@@ -65,6 +65,7 @@ const MOCK_CALLS: CallRecord[] = [];
 
 const MOCK_TRANSCRIPT: TranscriptEntry[] = [];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MOCK_VOICES: VoiceClone[] = [];
 
 const MOCK_SCRIPTS: ScriptTemplate[] = [];
@@ -80,6 +81,7 @@ export default function ElevenAgentsPage() {
   const [selectedCall, setSelectedCall] = useState<string | null>(null);
   const [callFilter, setCallFilter] = useState<string>("all");
   const [scriptFilter, setScriptFilter] = useState<string>("all");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
   const [abTestName, setAbTestName] = useState("");
   const [abScriptA, setAbScriptA] = useState("");

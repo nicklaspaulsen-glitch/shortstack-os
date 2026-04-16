@@ -13,6 +13,13 @@ let _accessToken: string | null = null;
 let _tokenClient: ReturnType<typeof createSupabaseJsClient> | null = null;
 let _lastToken: string | null = null;
 
+// TRUE SINGLETON for the cookie-based browser client.
+// This prevents "Multiple GoTrueClient instances" warnings and the
+// associated lock contention that causes "Lock not released within 5000ms"
+// errors — which was the root cause of the sidebar showing no nav items
+// (profile fetch failed because auth operations deadlocked on the lock).
+let _browserClient: ReturnType<typeof createBrowserClient> | null = null;
+
 export function setAccessToken(token: string | null) {
   _accessToken = token;
   // Invalidate cached client when token changes
@@ -27,6 +34,21 @@ export function getAccessToken(): string | null {
 }
 
 /**
+ * Get the singleton cookie-based browser client.
+ * Used for AUTH operations and as fallback for data queries.
+ * Always returns the exact same instance to avoid multiple GoTrueClient warnings.
+ */
+function getBrowserClient() {
+  if (!_browserClient) {
+    _browserClient = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+  }
+  return _browserClient;
+}
+
+/**
  * Create a Supabase client for browser use (data queries).
  *
  * - If an access token has been set (after auth-context syncs from server),
@@ -36,7 +58,7 @@ export function getAccessToken(): string | null {
  *   unnecessary re-renders.
  *
  * - If no token is set yet (initial page load, before auth syncs),
- *   falls back to the standard cookie-based browser client (singleton).
+ *   falls back to the singleton cookie-based browser client.
  */
 export function createClient() {
   if (_accessToken) {
@@ -60,21 +82,15 @@ export function createClient() {
     _lastToken = _accessToken;
     return _tokenClient;
   }
-  // Fallback: cookie-based browser client (singleton)
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  // Fallback: singleton cookie-based browser client
+  return getBrowserClient();
 }
 
 /**
  * Create the cookie-based browser client for AUTH operations only
- * (setSession, signOut, onAuthStateChange). Always returns the
- * cookie-based singleton regardless of token state.
+ * (setSession, signOut, onAuthStateChange). Returns the same singleton
+ * instance as createClient's fallback to avoid multiple GoTrueClient instances.
  */
 export function createAuthClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  return getBrowserClient();
 }

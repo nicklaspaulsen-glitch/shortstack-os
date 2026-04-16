@@ -79,7 +79,7 @@ export default function Notifications() {
           table: "notifications",
           filter: `user_id=eq.${profile.id}`,
         },
-        (payload) => {
+        (payload: any) => {
           setNotifications((prev) => [payload.new as Notification, ...prev]);
         }
       )

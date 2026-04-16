@@ -225,7 +225,7 @@ export default function ScriptLabPage() {
   const [formatPlatform, setFormatPlatform] = useState("tiktok");
 
   useEffect(() => {
-    supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }) => {
+    supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }: { data: { id: string; business_name: string; industry: string }[] | null }) => {
       setClients(data || []);
     });
     loadSavedScripts();
@@ -246,7 +246,7 @@ export default function ScriptLabPage() {
       .eq("action_type", "script_generated")
       .order("created_at", { ascending: false })
       .limit(20);
-    setSavedScripts((data || []).map(d => ({
+    setSavedScripts((data || []).map((d: any) => ({
       id: d.id as string,
       title: d.description as string,
       framework: (d.metadata as Record<string, string>)?.framework || "",

@@ -138,7 +138,7 @@ export default function WebsitesPage() {
   });
 
   useEffect(() => {
-    supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }) => {
+    supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }: { data: { id: string; business_name: string; industry: string }[] | null }) => {
       setClients(data || []);
     });
     fetchDemos();

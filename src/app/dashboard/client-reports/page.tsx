@@ -44,14 +44,7 @@ type Tab = "dashboard" | "builder" | "preview" | "history" | "branding";
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
 /* ------------------------------------------------------------------ */
-const CLIENTS = [
-  { id: "c1", name: "Bright Smiles Dental", tier: "Growth", mrr: 2500, avatar: "BS" },
-  { id: "c2", name: "Peak Fitness Studio", tier: "Pro", mrr: 3500, avatar: "PF" },
-  { id: "c3", name: "Elite Auto Detailing", tier: "Starter", mrr: 1200, avatar: "EA" },
-  { id: "c4", name: "Metro Legal Group", tier: "Growth", mrr: 2800, avatar: "ML" },
-  { id: "c5", name: "Sunrise Yoga Studio", tier: "Pro", mrr: 3200, avatar: "SY" },
-  { id: "c6", name: "Golden Spa & Wellness", tier: "Starter", mrr: 1500, avatar: "GS" },
-];
+const CLIENTS: { id: string; name: string; tier: string; mrr: number; avatar: string }[] = [];
 
 const REPORT_TEMPLATES = [
   { id: "executive", name: "Executive Summary", description: "High-level results for stakeholders and decision-makers", icon: Star, metrics: 4, pages: 2 },
@@ -86,23 +79,9 @@ const FREQUENCY_OPTIONS = [
   { id: "monthly", label: "Monthly" },
 ];
 
-const MOCK_SCHEDULES: ScheduledReport[] = [
-  { id: "s1", client: "Bright Smiles Dental", clientAvatar: "BS", template: "Executive Summary", frequency: "Monthly", deliveryDay: "1st", deliveryTime: "9:00 AM", nextSend: "May 1, 2026", recipients: ["sarah@brightsmiles.com"], enabled: true, lastSent: "Apr 1, 2026" },
-  { id: "s2", client: "Peak Fitness Studio", clientAvatar: "PF", template: "Detailed Analytics", frequency: "Bi-weekly", deliveryDay: "Monday", deliveryTime: "10:00 AM", nextSend: "Apr 28, 2026", recipients: ["mike@peakfit.com", "lisa@peakfit.com"], enabled: true, lastSent: "Apr 14, 2026" },
-  { id: "s3", client: "Elite Auto Detailing", clientAvatar: "EA", template: "Quick Stats", frequency: "Monthly", deliveryDay: "1st", deliveryTime: "9:00 AM", nextSend: "May 1, 2026", recipients: ["carlos@eliteauto.com"], enabled: false, lastSent: "Mar 1, 2026" },
-  { id: "s4", client: "Sunrise Yoga Studio", clientAvatar: "SY", template: "Social Media Report", frequency: "Weekly", deliveryDay: "Friday", deliveryTime: "2:00 PM", nextSend: "Apr 18, 2026", recipients: ["jen@sunriseyoga.com"], enabled: true, lastSent: "Apr 11, 2026" },
-];
+const MOCK_SCHEDULES: ScheduledReport[] = [];
 
-const MOCK_HISTORY: ReportHistory[] = [
-  { id: "h1", client: "Bright Smiles Dental", template: "Executive Summary", sentDate: "Apr 1, 2026", opened: true, openedDate: "Apr 1, 2026", clicked: true, downloaded: true, viewTime: "3m 24s" },
-  { id: "h2", client: "Peak Fitness Studio", template: "Detailed Analytics", sentDate: "Apr 14, 2026", opened: true, openedDate: "Apr 14, 2026", clicked: true, downloaded: true, viewTime: "4m 12s" },
-  { id: "h3", client: "Metro Legal Group", template: "Executive Summary", sentDate: "Apr 1, 2026", opened: true, openedDate: "Apr 3, 2026", clicked: false, downloaded: false, viewTime: "0m 45s" },
-  { id: "h4", client: "Sunrise Yoga Studio", template: "Social Media Report", sentDate: "Apr 11, 2026", opened: true, openedDate: "Apr 11, 2026", clicked: true, downloaded: true, viewTime: "5m 03s" },
-  { id: "h5", client: "Elite Auto Detailing", template: "Quick Stats", sentDate: "Mar 1, 2026", opened: false, openedDate: null, clicked: false, downloaded: false, viewTime: "0m 00s" },
-  { id: "h6", client: "Golden Spa & Wellness", template: "Executive Summary", sentDate: "Apr 1, 2026", opened: true, openedDate: "Apr 2, 2026", clicked: true, downloaded: false, viewTime: "2m 10s" },
-  { id: "h7", client: "Bright Smiles Dental", template: "Executive Summary", sentDate: "Mar 1, 2026", opened: true, openedDate: "Mar 1, 2026", clicked: true, downloaded: true, viewTime: "2m 55s" },
-  { id: "h8", client: "Peak Fitness Studio", template: "Detailed Analytics", sentDate: "Mar 31, 2026", opened: true, openedDate: "Apr 1, 2026", clicked: true, downloaded: true, viewTime: "3m 48s" },
-];
+const MOCK_HISTORY: ReportHistory[] = [];
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -157,8 +136,8 @@ export default function ClientReportsPage() {
 
   // Stats
   const totalSent = MOCK_HISTORY.length;
-  const openRate = Math.round((MOCK_HISTORY.filter(h => h.opened).length / totalSent) * 100);
-  const downloadRate = Math.round((MOCK_HISTORY.filter(h => h.downloaded).length / totalSent) * 100);
+  const openRate = totalSent > 0 ? Math.round((MOCK_HISTORY.filter(h => h.opened).length / totalSent) * 100) : 0;
+  const downloadRate = totalSent > 0 ? Math.round((MOCK_HISTORY.filter(h => h.downloaded).length / totalSent) * 100) : 0;
   const activeSchedules = schedules.filter(s => s.enabled).length;
 
   const TABS: { id: Tab; label: string; icon: React.ReactNode }[] = [

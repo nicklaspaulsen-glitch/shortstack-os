@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import {
-  Search, Send, Sparkles, Shield, Heart, CreditCard, Activity,
+  Shield, Activity,
   Save, RotateCcw, Zap, AlertTriangle,
-  CheckCircle, Play, BarChart3, Lock, Eye, Code,
+  CheckCircle, Play, BarChart3, Lock, Code,
   Gauge, Layers, DollarSign, TestTube, GitBranch
 } from "lucide-react";
 

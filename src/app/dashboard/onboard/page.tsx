@@ -4,10 +4,10 @@ import { useState } from "react";
 import {
   UserPlus, ArrowRight, ArrowLeft, Check, Sparkles,
   Upload, Palette, Briefcase, ShieldCheck, Eye,
-  Rocket, ChevronDown, ChevronUp, Star, Crown,
+  Rocket, ChevronDown, ChevronUp, Crown,
   Image, Type, Layers, Globe, Mail, Phone,
-  Building2, Target, Users, Plus, X, Copy,
-  CheckCircle2, FileText, Layout, Zap, BookOpen,
+  Building2, Target, Users, Plus, X,
+  CheckCircle2, Layout, Zap, BookOpen,
 } from "lucide-react";
 
 /* ================================================================== */

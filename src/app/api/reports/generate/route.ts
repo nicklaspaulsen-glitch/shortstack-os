@@ -1,10 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
+import Anthropic from "@anthropic-ai/sdk";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 export const maxDuration = 60;
 
-// On-demand AI report generation for a specific client
+/* ── Report type labels ──────────────────────────────────────── */
+
+const REPORT_TYPE_LABELS: Record<string, string> = {
+  weekly: "Weekly Performance",
+  monthly: "Monthly Performance",
+  ad_spend: "Ad Spend Analysis",
+  social_media: "Social Media Growth",
+  seo: "SEO Progress",
+  lead_gen: "Lead Generation",
+  revenue: "Revenue Summary",
+};
+
+/* ── Section-specific prompt fragments ───────────────────────── */
+
+function buildSectionInstructions(sections: string[], includeAI: boolean): string {
+  const sectionMap: Record<string, string> = {
+    cover: "", // No AI content needed for cover
+    executive_summary: "Executive Summary: Write a 2-3 sentence overview of the period's performance, highlighting the most significant wins and any concerns.",
+    key_metrics: "Key Metrics: Present the top 6 KPIs with values, percentage changes, and brief context for each number.",
+    charts: "Charts Data Summary: Describe trends in the data that would be visualized — monthly lead progression, traffic sources breakdown, and revenue trajectory.",
+    campaign_table: "Campaign Performance: Analyze each campaign's spend efficiency, ROAS, and conversion rates. Note the top performer and any underperformers.",
+    ai_insights: includeAI
+      ? "AI-Generated Insights: Provide 3-4 data-driven strategic insights. Identify hidden patterns, cross-channel opportunities, and actionable optimizations with estimated impact."
+      : "",
+    recommendations: "Next Steps & Recommendations: List 5 specific, prioritized action items with expected outcomes. Include timeline suggestions where relevant.",
+  };
+
+  const instructions = sections
+    .map(s => sectionMap[s])
+    .filter(Boolean)
+    .map((s, i) => `${i + 1}. ${s}`)
+    .join("\n");
+
+  return instructions || "Write a general performance summary.";
+}
+
+/* ── POST: Generate a report ─────────────────────────────────── */
+
 export async function POST(request: NextRequest) {
   // Auth check
   const authSupabase = createServerSupabase();
@@ -19,7 +57,28 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });
 
-  const { client_id, report_type = "weekly" } = await request.json();
+  let body: {
+    client_id?: string;
+    report_type?: string;
+    date_range?: string;
+    sections?: string[];
+    include_ai_insights?: boolean;
+  };
+
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+  }
+
+  const {
+    client_id,
+    report_type = "weekly",
+    date_range = "this_month",
+    sections = ["executive_summary", "key_metrics", "charts", "campaign_table", "ai_insights", "recommendations"],
+    include_ai_insights = true,
+  } = body;
+
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 
   // Fetch client
@@ -31,11 +90,22 @@ export async function POST(request: NextRequest) {
 
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 
-  // Fetch metrics based on report type
-  const days = report_type === "monthly" ? 30 : 7;
+  // Determine date boundaries from date_range
+  let days: number;
+  switch (date_range) {
+    case "last_month": days = 30; break;
+    case "last_quarter": days = 90; break;
+    case "this_month":
+    default: days = new Date().getDate(); break; // Days elapsed this month
+  }
+  // Fallback for legacy report_type values
+  if (report_type === "weekly") days = 7;
+  if (report_type === "monthly" && date_range === "this_month") days = 30;
+
   const since = new Date(Date.now() - days * 86400000).toISOString();
   const prevSince = new Date(Date.now() - days * 2 * 86400000).toISOString();
 
+  // Fetch metrics in parallel
   const [
     { count: leadsCount },
     { count: prevLeadsCount },
@@ -64,8 +134,11 @@ export async function POST(request: NextRequest) {
     ? (((leadsCount || 0) - (prevLeadsCount || 0)) / (prevLeadsCount || 1) * 100).toFixed(0)
     : "N/A";
 
-  const period = report_type === "monthly" ? "month" : "week";
-  const prompt = `You are an AI account manager for ShortStack, a digital marketing agency. Generate a professional ${period}ly performance report for our client.
+  // Build the prompt with requested sections
+  const typeLabel = REPORT_TYPE_LABELS[report_type] || "Performance";
+  const sectionInstructions = buildSectionInstructions(sections, include_ai_insights);
+
+  const prompt = `You are an AI account manager for ShortStack, a digital marketing agency. Generate a professional ${typeLabel} report for our client.
 
 CLIENT INFO:
 - Business: ${client.business_name}
@@ -76,8 +149,10 @@ CLIENT INFO:
 - Health Score: ${client.health_score}%
 - Services: ${client.services?.join(", ") || "Full service"}
 
-THIS ${period.toUpperCase()}'S METRICS:
-- New leads generated: ${leadsCount || 0} (${leadsTrend}% vs previous ${period})
+PERIOD: ${date_range === "last_quarter" ? "Last 90 days" : date_range === "last_month" ? "Last 30 days" : `Last ${days} days`}
+
+METRICS:
+- New leads generated: ${leadsCount || 0} (${leadsTrend}% vs previous period)
 - Outreach messages sent: ${outreachCount || 0}
 - Replies received: ${repliesCount || 0}
 - Deals closed: ${dealsWon.length} ($${dealsRevenue.toLocaleString()})
@@ -89,78 +164,87 @@ ${(aiActions || []).map(a => `- ${a.description}`).join("\n") || "- Routine main
 CONTENT ACTIVITY:
 ${(content || []).map(c => `- ${c.title} (${c.platform}) — ${c.status}`).join("\n") || "- No content tracked this period"}
 
-Write the report with these sections:
-1. Executive Summary (2-3 sentences)
-2. Key Metrics (formatted with numbers)
-3. Highlights & Wins
-4. Areas for Improvement
-5. Next Steps & Recommendations
+Write the report with ONLY the following sections:
+${sectionInstructions}
 
-Keep it professional, data-driven, and actionable. Under 400 words. Use plain text formatting with clear section headers.`;
+Format each section with a clear header line (## Section Name). Keep it professional, data-driven, and actionable. Under 600 words total. Use plain text formatting.`;
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
+  try {
+    const anthropic = new Anthropic({ apiKey });
+
+    const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 800,
+      max_tokens: 1200,
       messages: [{ role: "user", content: prompt }],
-    }),
-  });
+    });
 
-  const data = await res.json();
-  const reportText = data.content?.[0]?.text || "";
+    const reportText = response.content[0].type === "text" ? response.content[0].text : "";
 
-  if (!reportText) {
-    return NextResponse.json({ error: "Failed to generate report" }, { status: 500 });
-  }
+    if (!reportText) {
+      return NextResponse.json({ error: "Failed to generate report" }, { status: 500 });
+    }
 
-  // Save to trinity_log
-  await supabase.from("trinity_log").insert({
-    agent: "analytics",
-    action_type: "content",
-    description: `${report_type === "monthly" ? "Monthly" : "Weekly"} report generated for ${client.business_name}`,
-    client_id: client.id,
-    status: "completed",
-    result: {
-      type: `${report_type}_report`,
-      report: reportText,
-      metrics: {
-        leads: leadsCount || 0,
-        leads_trend: leadsTrend,
-        outreach: outreachCount || 0,
-        replies: repliesCount || 0,
-        deals_won: dealsWon.length,
-        deals_revenue: dealsRevenue,
-        invoices_paid: invoicesPaid.length,
-        invoice_total: invoiceTotal,
-      },
-    },
-  });
+    // Parse report text into sections
+    const reportSections: Record<string, string> = {};
+    const sectionRegex = /##\s+(.+?)(?:\n)([\s\S]*?)(?=##\s+|\s*$)/g;
+    let match;
+    while ((match = sectionRegex.exec(reportText)) !== null) {
+      const sectionName = match[1].trim().toLowerCase().replace(/[^a-z0-9]+/g, "_");
+      reportSections[sectionName] = match[2].trim();
+    }
 
-  return NextResponse.json({
-    success: true,
-    report: reportText,
-    client: client.business_name,
-    type: report_type,
-    metrics: {
+    // If no sections parsed, put everything in executive_summary
+    if (Object.keys(reportSections).length === 0) {
+      reportSections.executive_summary = reportText;
+    }
+
+    const metrics = {
       leads: leadsCount || 0,
       leads_trend: leadsTrend,
       outreach: outreachCount || 0,
       replies: repliesCount || 0,
       deals_won: dealsWon.length,
       deals_revenue: dealsRevenue,
+      invoices_paid: invoicesPaid.length,
+      invoice_total: invoiceTotal,
       health_score: client.health_score,
       mrr: client.mrr,
-    },
-  });
+    };
+
+    // Save to trinity_log
+    await supabase.from("trinity_log").insert({
+      agent: "analytics",
+      action_type: "content",
+      description: `${typeLabel} report generated for ${client.business_name}`,
+      client_id: client.id,
+      status: "completed",
+      result: {
+        type: `${report_type}_report`,
+        report: reportText,
+        sections: reportSections,
+        metrics,
+        requested_sections: sections,
+        include_ai_insights,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      report: reportText,
+      sections: reportSections,
+      client: client.business_name,
+      type: report_type,
+      metrics,
+    });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("Report generation error:", message);
+    return NextResponse.json({ error: "Failed to generate report", details: message }, { status: 500 });
+  }
 }
 
-// GET — fetch previously generated reports from trinity_log
+/* ── GET: Fetch previously generated reports ─────────────────── */
+
 export async function GET(request: NextRequest) {
   const supabase = createServiceClient();
   const url = new URL(request.url);
@@ -170,7 +254,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from("trinity_log")
     .select("id, description, client_id, created_at, result")
-    .in("result->>type", ["weekly_report", "monthly_report"])
+    .in("result->>type", ["weekly_report", "monthly_report", "ad_spend_report", "social_media_report", "seo_report", "lead_gen_report", "revenue_report"])
     .order("created_at", { ascending: false })
     .limit(limit);
 

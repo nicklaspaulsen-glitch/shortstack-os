@@ -80,6 +80,17 @@ const COLOR_THEMES = [
   { id: "black_white", name: "Black & White", colors: ["#000000", "#FFFFFF"] },
   { id: "teal_coral", name: "Teal & Coral", colors: ["#14B8A6", "#F87171"] },
   { id: "lime_dark", name: "Lime & Dark", colors: ["#84CC16", "#1C1917"] },
+  { id: "indigo_violet", name: "Indigo & Violet", colors: ["#6366F1", "#8B5CF6"] },
+  { id: "rose_amber", name: "Rose & Amber", colors: ["#F43F5E", "#F59E0B"] },
+  { id: "emerald_teal", name: "Emerald & Teal", colors: ["#10B981", "#14B8A6"] },
+  { id: "slate_sky", name: "Slate & Sky", colors: ["#334155", "#38BDF8"] },
+  { id: "fuchsia_cyan", name: "Fuchsia & Cyan", colors: ["#D946EF", "#06B6D4"] },
+  { id: "amber_brown", name: "Amber & Brown", colors: ["#F59E0B", "#78350F"] },
+  { id: "red_white", name: "Red & White", colors: ["#EF4444", "#FFFFFF"] },
+  { id: "forest_cream", name: "Forest & Cream", colors: ["#166534", "#FDF8E1"] },
+  { id: "charcoal_gold", name: "Charcoal & Gold", colors: ["#1F1F1F", "#D4AF37"] },
+  { id: "pastel_multi", name: "Pastel Multi", colors: ["#FDA4AF", "#A5B4FC", "#86EFAC", "#FDE68A"] },
+  { id: "neon_dark", name: "Neon & Dark", colors: ["#00FF87", "#0D0D0D"] },
 ];
 
 const MOODS = [
@@ -114,6 +125,24 @@ const TEMPLATE_GALLERY = [
   { id: "t20", name: "Minimalist Pro", category: "minimal", preview: "from-gray-100 to-white", layout: "Clean white, single element focus" },
   { id: "t21", name: "Neon Party", category: "party", preview: "from-fuchsia-500 to-cyan-400", layout: "Neon text, dark bg, glow effects" },
   { id: "t22", name: "Luxury Gold", category: "luxury", preview: "from-yellow-600 to-amber-900", layout: "Black bg, gold accents, elegant" },
+  { id: "t23", name: "YouTube Classic", category: "text-heavy", preview: "from-red-600 to-yellow-500", layout: "Big bold text top + face cutout + colorful bg" },
+  { id: "t24", name: "Before/After Arrow", category: "transformation", preview: "from-gray-500 to-emerald-500", layout: "Split screen with center arrow, before left, after right" },
+  { id: "t25", name: "Listicle Badge", category: "listicle", preview: "from-orange-500 to-amber-400", layout: "Large numbered circle badge + topic image grid" },
+  { id: "t26", name: "Reaction Burst", category: "reaction", preview: "from-fuchsia-600 to-rose-500", layout: "Enlarged surprised face + floating emoji overlays" },
+  { id: "t27", name: "Tutorial Steps", category: "howto", preview: "from-blue-500 to-cyan-500", layout: "Device mockup + numbered arrow pointers" },
+  { id: "t28", name: "VS Battle", category: "versus", preview: "from-red-600 to-blue-600", layout: "Two items, VS lightning badge center" },
+  { id: "t29", name: "Quote Gradient", category: "quote", preview: "from-indigo-600 to-violet-600", layout: "Centered quote text + author + gradient bg" },
+  { id: "t30", name: "Breaking News", category: "news", preview: "from-red-800 to-gray-900", layout: "Red banner + headline text + reporter face" },
+  { id: "t31", name: "Minimalist Pro", category: "minimal", preview: "from-white to-gray-100", layout: "Clean white bg, one bold text, tiny accent" },
+  { id: "t32", name: "Dark Luxury", category: "luxury", preview: "from-gray-900 to-black", layout: "Black bg, gold metallic text, subtle gradient glow" },
+  { id: "t33", name: "Tier List Grid", category: "listicle", preview: "from-emerald-400 to-red-500", layout: "Color-coded S/A/B/C tier rows with items" },
+  { id: "t34", name: "Unboxing Reveal", category: "mystery", preview: "from-purple-800 to-amber-400", layout: "Mystery box with golden reveal glow" },
+  { id: "t35", name: "Challenge Timer", category: "urgency", preview: "from-orange-500 to-red-600", layout: "Clock graphic + bold dare text + energy" },
+  { id: "t36", name: "Money Shot", category: "finance", preview: "from-green-600 to-emerald-400", layout: "Dollar signs + revenue number + growth chart" },
+  { id: "t37", name: "Exposed / Debunk", category: "news", preview: "from-red-900 to-gray-800", layout: "Red X marks, magnifying glass, dark theme" },
+  { id: "t38", name: "Collage Vlog", category: "reaction", preview: "from-amber-300 to-orange-300", layout: "Multi-photo collage, warm filter, casual text" },
+  { id: "t39", name: "Infographic Pin", category: "text-heavy", preview: "from-teal-400 to-blue-400", layout: "Tall numbered tips, icons, clean font" },
+  { id: "t40", name: "Event Promo", category: "text-heavy", preview: "from-blue-600 to-purple-600", layout: "Event date + details + gradient bg" },
 ];
 
 const BACKGROUND_SCENES = [
@@ -149,6 +178,16 @@ const BACKGROUND_SCENES = [
   { id: "bg30", name: "Cyberpunk Street", category: "sci-fi", emoji: "\u{1F916}" },
   { id: "bg31", name: "Coffee Shop", category: "interior", emoji: "\u2615" },
   { id: "bg32", name: "Sports Arena", category: "sports", emoji: "\u{1F3DF}\u{FE0F}" },
+  { id: "bg33", name: "Luxury Penthouse", category: "interior", emoji: "\u{1F3E0}" },
+  { id: "bg34", name: "Neon Studio", category: "studio", emoji: "\u{1F4A1}" },
+  { id: "bg35", name: "Volcano Eruption", category: "nature", emoji: "\u{1F30B}" },
+  { id: "bg36", name: "Northern Lights", category: "nature", emoji: "\u{1F30C}" },
+  { id: "bg37", name: "Retro Diner", category: "interior", emoji: "\u{1F354}" },
+  { id: "bg38", name: "Skatepark", category: "sports", emoji: "\u{1F6F9}" },
+  { id: "bg39", name: "Art Gallery", category: "interior", emoji: "\u{1F3A8}" },
+  { id: "bg40", name: "Haunted House", category: "fantasy", emoji: "\u{1F47B}" },
+  { id: "bg41", name: "Space Station", category: "sci-fi", emoji: "\u{1F6F8}" },
+  { id: "bg42", name: "Zen Garden", category: "nature", emoji: "\u{1F33F}" },
 ];
 
 const TEXT_EFFECT_PRESETS = [
@@ -168,6 +207,22 @@ const TEXT_EFFECT_PRESETS = [
   { id: "te14", name: "Matrix Green", style: "text-shadow: 0 0 10px #0f0, 0 0 20px #0f0", desc: "Green matrix glow" },
   { id: "te15", name: "Blood Red", style: "text-shadow: 0 2px 4px #900, 0 0 10px #600", desc: "Dark red horror" },
   { id: "te16", name: "Clean White", style: "text-shadow: none", desc: "No effects, clean" },
+  { id: "te17", name: "3D Shadow Deep", style: "text-shadow: 3px 3px 0 #111, 6px 6px 0 #222, 9px 9px 0 #333", desc: "Deep layered 3D shadow" },
+  { id: "te18", name: "Outline Bold White", style: "-webkit-text-stroke: 3px #fff; color: transparent", desc: "Thick white outline, hollow" },
+  { id: "te19", name: "Gradient Fill Warm", style: "background: linear-gradient(135deg, #f97316, #ef4444); -webkit-background-clip: text; -webkit-text-fill-color: transparent", desc: "Orange-red gradient text" },
+  { id: "te20", name: "Gradient Fill Cool", style: "background: linear-gradient(135deg, #06b6d4, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent", desc: "Cyan-purple gradient text" },
+  { id: "te21", name: "Neon Blue Glow", style: "text-shadow: 0 0 10px #00f, 0 0 20px #00f, 0 0 40px #00f, 0 0 80px #00f", desc: "Intense blue neon glow" },
+  { id: "te22", name: "Embossed Heavy", style: "text-shadow: -2px -2px 0 #555, 2px 2px 0 #fff", desc: "Deep emboss carved look" },
+  { id: "te23", name: "Drop Shadow Soft", style: "text-shadow: 4px 4px 12px rgba(0,0,0,0.5)", desc: "Soft diffused drop shadow" },
+  { id: "te24", name: "Retro Chromatic", style: "text-shadow: 3px 0 #f0f, -3px 0 #0ff, 0 3px #ff0", desc: "Retro RGB chromatic split" },
+  { id: "te25", name: "Metallic Silver", style: "text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 5px rgba(0,0,0,0.3)", desc: "Brushed metal silver look" },
+  { id: "te26", name: "Metallic Gold", style: "text-shadow: 0 1px 0 #c9a84c, 0 2px 0 #b8973f, 0 3px 0 #a78632, 0 4px 5px rgba(0,0,0,0.4)", desc: "Polished gold metal effect" },
+  { id: "te27", name: "Stamp / Press", style: "-webkit-text-stroke: 1px rgba(0,0,0,0.3); text-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.4)", desc: "Stamped pressed-in effect" },
+  { id: "te28", name: "Electric Zap", style: "text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #e6ff00, 0 0 40px #e6ff00", desc: "Electric yellow-white zap" },
+  { id: "te29", name: "Vintage Letterpress", style: "text-shadow: 1px 1px 0 #8B4513, -1px -1px 0 rgba(255,255,255,0.1)", desc: "Old letterpress print look" },
+  { id: "te30", name: "Double Stroke", style: "-webkit-text-stroke: 2px #000; text-shadow: 3px 3px 0 #fff, 6px 6px 0 #000", desc: "Double-layered stroke effect" },
+  { id: "te31", name: "Frosted Glass", style: "text-shadow: 0 0 10px rgba(255,255,255,0.5), 0 0 20px rgba(255,255,255,0.3)", desc: "Frosted glass diffusion" },
+  { id: "te32", name: "Horror Drip", style: "text-shadow: 0 4px 8px #600, 0 0 20px rgba(100,0,0,0.6); -webkit-text-stroke: 1px #300", desc: "Dark horror dripping blood" },
 ];
 
 const EMOJI_STICKERS = [
@@ -191,6 +246,16 @@ const EMOJI_STICKERS = [
   { id: "em18", emoji: "\u{1F622}", name: "Crying" },
   { id: "em19", emoji: "\u{1F4A1}", name: "Light Bulb" },
   { id: "em20", emoji: "\u{1F3C6}", name: "Trophy" },
+  { id: "em21", emoji: "\u{1F92F}", name: "Mind Blown" },
+  { id: "em22", emoji: "\u{1F440}", name: "Eyes" },
+  { id: "em23", emoji: "\u{1F4B8}", name: "Money Wings" },
+  { id: "em24", emoji: "\u{1F3AF}", name: "Direct Hit" },
+  { id: "em25", emoji: "\u{1F6D1}", name: "Stop Sign" },
+  { id: "em26", emoji: "\u{1F4AA}", name: "Flexed Bicep" },
+  { id: "em27", emoji: "\u{1F911}", name: "Money Face" },
+  { id: "em28", emoji: "\u{1F47D}", name: "Alien" },
+  { id: "em29", emoji: "\u{1F4E2}", name: "Megaphone" },
+  { id: "em30", emoji: "\u{1F389}", name: "Party Popper" },
 ];
 
 const TRENDING_STYLES_DATA = [
@@ -204,6 +269,12 @@ const TRENDING_STYLES_DATA = [
   { id: "tr8", name: "Celebrity Comparison", score: 81, trend: "stable", desc: "Side by side with famous person" },
   { id: "tr9", name: "AI Generated Art", score: 79, trend: "up", desc: "Surreal AI-generated scenes" },
   { id: "tr10", name: "Storytime Cozy", score: 76, trend: "down", desc: "Warm lighting, casual face, story vibe" },
+  { id: "tr11", name: "Tier List Ranking", score: 91, trend: "up", desc: "S/A/B/C/F tier rows with items ranked" },
+  { id: "tr12", name: "Quote Card Gradient", score: 84, trend: "up", desc: "Centered quote on colorful gradient bg" },
+  { id: "tr13", name: "Exposed / Debunk", score: 88, trend: "up", desc: "Red X marks, magnifying glass, dark theme" },
+  { id: "tr14", name: "Luxury Gold on Black", score: 82, trend: "stable", desc: "Premium black bg with gold metallic text" },
+  { id: "tr15", name: "Tutorial Arrow Pointers", score: 80, trend: "stable", desc: "Device mockup with numbered arrow annotations" },
+  { id: "tr16", name: "Unboxing Glow Reveal", score: 77, trend: "up", desc: "Mystery package with golden reveal glow" },
 ];
 
 const EXPORT_PRESET_DEFAULTS = [
@@ -212,6 +283,13 @@ const EXPORT_PRESET_DEFAULTS = [
   { id: "ep3", name: "TikTok Bold", config: { style: "bold_colorful", platform: "tiktok", colorTheme: "purple_pink", mood: "Exciting" } },
   { id: "ep4", name: "Tutorial Clean", config: { style: "tutorial_howto", platform: "youtube", colorTheme: "blue_white", mood: "Educational" } },
   { id: "ep5", name: "Podcast Dark", config: { style: "podcast_style", platform: "youtube", colorTheme: "cyan_dark", mood: "Calm" } },
+  { id: "ep6", name: "Gaming Neon", config: { style: "bold_colorful", platform: "youtube", colorTheme: "fuchsia_cyan", mood: "Exciting" } },
+  { id: "ep7", name: "Business Pro", config: { style: "minimal_clean", platform: "linkedin", colorTheme: "navy_gold", mood: "Elegant" } },
+  { id: "ep8", name: "Luxury Dark", config: { style: "luxury", platform: "youtube", colorTheme: "charcoal_gold", mood: "Luxurious" } },
+  { id: "ep9", name: "Fitness Energy", config: { style: "bold_colorful", platform: "instagram", colorTheme: "red_white", mood: "Exciting" } },
+  { id: "ep10", name: "Nature Calm", config: { style: "minimal_clean", platform: "instagram", colorTheme: "emerald_teal", mood: "Calm" } },
+  { id: "ep11", name: "News Urgent", config: { style: "youtube_classic", platform: "youtube", colorTheme: "red_black", mood: "Urgent" } },
+  { id: "ep12", name: "Pastel Aesthetic", config: { style: "minimal_clean", platform: "instagram", colorTheme: "pastel_multi", mood: "Playful" } },
 ];
 
 interface ThumbnailResult {
@@ -334,7 +412,7 @@ export default function ThumbnailGeneratorPage() {
       .order("created_at", { ascending: false })
       .limit(20);
     setHistory(
-      (data || []).map((d) => ({
+      (data || []).map((d: any) => ({
         id: d.id as string,
         description: d.description as string,
         created_at: d.created_at as string,
@@ -1061,8 +1139,8 @@ export default function ThumbnailGeneratorPage() {
                     </button>
                   ))}
                 </div>
-                <div className="max-h-32 overflow-y-auto space-y-1">
-                  {THUMBNAIL_PRESETS.slice(0, 8).map(preset => (
+                <div className="max-h-48 overflow-y-auto space-y-1">
+                  {THUMBNAIL_PRESETS.slice(0, 16).map(preset => (
                     <button
                       key={preset.id}
                       onClick={() => {
@@ -1165,7 +1243,7 @@ export default function ThumbnailGeneratorPage() {
             {/* ── Template Gallery ── */}
             <FeaturePanel id="templateGallery" icon={<LayoutGrid size={13} className="text-gold" />} title="Template Gallery" badge={`${TEMPLATE_GALLERY.length}`}>
               <div className="flex flex-wrap gap-1 mb-2">
-                {["all", "text-heavy", "versus", "listicle", "news", "howto", "reaction", "minimal", "luxury"].map((cat) => (
+                {["all", "text-heavy", "versus", "listicle", "news", "howto", "reaction", "transformation", "quote", "urgency", "finance", "mystery", "minimal", "luxury"].map((cat) => (
                   <button key={cat} onClick={() => setTemplateFilter(cat)}
                     className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${templateFilter === cat ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
                     {cat === "all" ? "All" : cat}

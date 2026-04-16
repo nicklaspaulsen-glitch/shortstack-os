@@ -220,14 +220,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 /* ─── Plan Badge (header) ───────────────────────────────────────── */
 function PlanBadge({ planTier }: { planTier?: string }) {
   const plan = getPlanConfig(planTier);
-  if (!planTier) {
-    return (
-      <Link href="/dashboard/pricing"
-        className="flex items-center gap-1 text-[10px] text-muted bg-surface-light hover:bg-surface-light/80 px-2 py-1 rounded-lg border border-border transition-colors">
-        <Crown size={10} /> Free
-      </Link>
-    );
-  }
   return (
     <Link href="/dashboard/settings"
       className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg transition-colors"

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import {
-  FileText, Sparkles, Building, Target, DollarSign,
-  Plus, Eye, Clock, CheckCircle, Download, Send, Users,
+  FileText, Sparkles, Building, DollarSign,
+  Plus, Eye, Clock, CheckCircle, Download, Send,
   Palette, BarChart3, Edit3, Copy, Layers, TrendingUp,
-  X, AlertTriangle, ChevronRight, Trash2, ArrowUpRight,
+  X, ChevronRight, Trash2,
   FileCheck, Calendar, PenTool, Star
 } from "lucide-react";
 

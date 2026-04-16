@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import {
-  DollarSign, TrendingUp, Users, Award, Plus, X, Calendar,
-  ChevronDown, Percent, CheckCircle, Clock, ArrowUpRight,
-  Star, Target, BarChart3, CreditCard, Zap, Edit3, Trash2,
+  DollarSign, Users, Award, Plus, X, Calendar,
+  Percent, CheckCircle, Clock, ArrowUpRight,
+  Star, Target, BarChart3, CreditCard, Zap, Trash2,
   Trophy
 } from "lucide-react";
 
@@ -413,6 +413,7 @@ export default function CommissionTrackerPage() {
           {/* Podium top 3 */}
           <div className="grid grid-cols-3 gap-3">
             {[...SALES_TEAM].sort((a, b) => b.totalEarned - a.totalEarned).slice(0, 3).map((person, i) => {
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               const heights = ["h-40", "h-32", "h-28"];
               const medals = ["text-gold", "text-blue-300", "text-orange-400"];
               const borders = ["border-gold/30", "border-blue-300/30", "border-orange-400/30"];

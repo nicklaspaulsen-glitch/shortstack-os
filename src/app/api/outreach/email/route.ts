@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
 // TODO: Add rate limiting in production — both for API calls and email sending limits
@@ -78,10 +79,20 @@ export async function POST(request: NextRequest) {
       body = `Hi ${lead.owner_name || "there"},\n\nI came across ${lead.business_name} and noticed you're doing great work in the ${lead.industry || "local business"} space.\n\nAt ShortStack, we help businesses like yours get more clients through digital marketing — social media, ads, SEO, and content.\n\nWould you be open to a quick 15-minute call to see if we can help? No pressure at all.\n\nBest,\n${from_name || "The ShortStack Team"}`;
     }
 
-    // Send via GHL if available
-    if (ghlKey) {
+    // Send via SendGrid (primary) or GHL (fallback)
+    let didSend = false;
+    const htmlBody = body.replace(/\n/g, "<br>");
+
+    // Try SendGrid first
+    try {
+      didSend = await sendEmail({ to: lead.email, subject, html: htmlBody });
+    } catch {
+      didSend = false;
+    }
+
+    // Fallback to GHL if SendGrid fails
+    if (!didSend && ghlKey) {
       try {
-        // Create contact in GHL first
         const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
           method: "POST",
           headers: {
@@ -101,46 +112,44 @@ export async function POST(request: NextRequest) {
         const contactId = contact.contact?.id;
 
         if (contactId) {
-          // Send email via GHL
-          await fetch("https://services.leadconnectorhq.com/conversations/messages", {
+          const emailRes = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
             method: "POST",
             headers: {
               Authorization: `Bearer ${ghlKey}`,
               "Content-Type": "application/json",
               Version: "2021-07-28",
             },
-            body: JSON.stringify({
-              type: "Email",
-              contactId,
-              subject,
-              html: body.replace(/\n/g, "<br>"),
-            }),
+            body: JSON.stringify({ type: "Email", contactId, subject, html: htmlBody }),
           });
+          didSend = emailRes.ok;
         }
-
-        sent++;
-        results.push({ business: lead.business_name, email: lead.email, status: "sent" });
-      } catch (err) {
-        failed++;
-        results.push({ business: lead.business_name, email: lead.email, status: `failed: ${err}` });
+      } catch {
+        didSend = false;
       }
-    } else {
-      // Log as pending (no email service configured)
-      results.push({ business: lead.business_name, email: lead.email, status: "pending (no email service)" });
     }
 
-    // Log outreach
+    if (didSend) {
+      sent++;
+      results.push({ business: lead.business_name, email: lead.email, status: "sent" });
+    } else {
+      failed++;
+      results.push({ business: lead.business_name, email: lead.email, status: "failed" });
+    }
+
+    // Log outreach with honest status
     await serviceSupabase.from("outreach_log").insert({
       lead_id: lead.id,
       platform: "email",
       business_name: lead.business_name,
       recipient_handle: lead.email,
       message_text: `Subject: ${subject}\n\n${body}`,
-      status: ghlKey ? "sent" : "pending",
+      status: didSend ? "sent" : "failed",
     });
 
-    // Update lead status
-    await serviceSupabase.from("leads").update({ status: "called" }).eq("id", lead.id);
+    // Update lead status (only advance forward, never overwrite replied/booked)
+    if (didSend) {
+      await serviceSupabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new", "called"]);
+    }
 
     await new Promise(r => setTimeout(r, 300));
   }

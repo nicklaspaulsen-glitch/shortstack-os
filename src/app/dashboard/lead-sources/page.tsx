@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 import {
-  MapPin, Globe, MessageSquare, Users, Phone, FileText,
   TrendingUp, TrendingDown, DollarSign, BarChart3, Plus,
   Search, Star,
-  Target, Activity
+  Activity
 } from "lucide-react";
 
 interface LeadSource {

@@ -67,6 +67,7 @@ export default function BrandVoicePage() {
   const [searchFilter, setSearchFilter] = useState("");
   const [showNewProfile, setShowNewProfile] = useState(false);
   const [newProfileName, setNewProfileName] = useState("");
+  const [enhancing, setEnhancing] = useState<string | null>(null);
 
   void supabase;
 
@@ -192,6 +193,22 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
     setNewProfileName("");
     setShowNewProfile(false);
     toast.success(`Created voice profile for "${newProfile.clientName}"`);
+  };
+
+  const enhanceText = async (text: string, context: string, setter: (v: string) => void, key: string) => {
+    if (!text.trim()) return;
+    setEnhancing(key);
+    try {
+      const res = await fetch("/api/copywriter/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: text, context }),
+      });
+      const data = await res.json();
+      if (data.text) { setter(data.text); toast.success("Enhanced!"); }
+      else toast.error("AI enhancement failed");
+    } catch { toast.error("AI enhancement failed"); }
+    setEnhancing(null);
   };
 
   const SLIDER_CONFIG = [
@@ -449,12 +466,22 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       ))}
                     </div>
                     <div className="flex gap-2">
-                      <textarea
-                        value={newSample}
-                        onChange={e => setNewSample(e.target.value)}
-                        placeholder="Paste a writing sample..."
-                        className="input text-xs flex-1 min-h-[60px] resize-none"
-                      />
+                      <div className="flex-1 space-y-1">
+                        <textarea
+                          value={newSample}
+                          onChange={e => setNewSample(e.target.value)}
+                          placeholder="Paste a writing sample..."
+                          className="input text-xs w-full min-h-[60px] resize-none"
+                        />
+                        <button
+                          onClick={() => enhanceText(newSample, `Polish this writing sample for the "${profile?.clientName}" brand voice profile. Keep the core message but improve clarity, tone, and impact.`, setNewSample, "sample")}
+                          disabled={!newSample.trim() || enhancing === "sample"}
+                          className="flex items-center gap-1 text-[10px] text-gold/70 hover:text-gold transition-colors disabled:opacity-40"
+                        >
+                          {enhancing === "sample" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                          AI Enhance
+                        </button>
+                      </div>
                       <button onClick={() => addItem("samples", newSample, setNewSample)} className="btn-primary text-xs self-end">
                         <Plus size={14} />
                       </button>
@@ -625,8 +652,16 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                       value={checkerText}
                       onChange={e => setCheckerText(e.target.value)}
                       placeholder="Paste content here to check voice consistency..."
-                      className="input text-xs w-full min-h-[100px] resize-none mb-3"
+                      className="input text-xs w-full min-h-[100px] resize-none mb-1"
                     />
+                    <button
+                      onClick={() => enhanceText(checkerText, `Rewrite this text to match the "${profile?.clientName}" brand voice. Tone: ${profile?.toneSliders.formalCasual && profile.toneSliders.formalCasual > 50 ? "casual" : "formal"}. ${profile?.dos.length ? `Do: ${profile.dos.join(", ")}` : ""} ${profile?.donts.length ? `Don't: ${profile.donts.join(", ")}` : ""}`, setCheckerText, "checker")}
+                      disabled={!checkerText.trim() || enhancing === "checker"}
+                      className="flex items-center gap-1 text-[10px] text-gold/70 hover:text-gold transition-colors disabled:opacity-40 mb-3"
+                    >
+                      {enhancing === "checker" ? <Loader size={10} className="animate-spin" /> : <Sparkles size={10} />}
+                      AI Rewrite to Match Voice
+                    </button>
                     <button
                       onClick={checkVoiceConsistency}
                       disabled={checking || !checkerText.trim()}

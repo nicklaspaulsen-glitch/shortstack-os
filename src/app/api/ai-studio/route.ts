@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
   const targetUrl = `${origin}${targetPath}`;
 
   // Strip 'tool' from the forwarded payload
-  const { tool: _tool, ...rest } = body;
+  const { tool: _tool, ...rest } = body; // eslint-disable-line @typescript-eslint/no-unused-vars
 
   try {
     const headers = new Headers();

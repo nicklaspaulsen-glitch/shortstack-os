@@ -69,8 +69,8 @@ export default function AnalyticsPage() {
       supabase.from("content_calendar").select("id, title, updated_at").gte("updated_at", fiveMinAgo).order("updated_at", { ascending: false }).limit(5),
     ]);
     const items: ActivityItem[] = [];
-    (newLeads || []).forEach(l => items.push({ id: `lead-${l.id}`, type: "lead", message: `New lead: ${l.business_name}`, time: l.scraped_at }));
-    (newContent || []).forEach(c => items.push({ id: `post-${c.id}`, type: "post", message: `Content updated: ${c.title}`, time: c.updated_at }));
+    (newLeads || []).forEach((l: Record<string, string>) => items.push({ id: `lead-${l.id}`, type: "lead", message: `New lead: ${l.business_name}`, time: l.scraped_at }));
+    (newContent || []).forEach((c: Record<string, string>) => items.push({ id: `post-${c.id}`, type: "post", message: `Content updated: ${c.title}`, time: c.updated_at }));
     items.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
     setActivityFeed(items.slice(0, 15));
   }
@@ -123,8 +123,8 @@ export default function AnalyticsPage() {
       supabase.from("outreach_log").select("sent_at, status, platform").gte("sent_at", rangeStart).order("sent_at"),
     ]);
 
-    const totalMRR = clients?.reduce((s, c) => s + (c.mrr || 0), 0) || 0;
-    const dealValue = deals?.reduce((s, d) => s + (d.amount || 0), 0) || 0;
+    const totalMRR = clients?.reduce((s: number, c: Record<string, number>) => s + (c.mrr || 0), 0) || 0;
+    const dealValue = deals?.reduce((s: number, d: Record<string, number>) => s + (d.amount || 0), 0) || 0;
 
     setStats({
       totalLeads: totalLeads || 0, leadsThisMonth: leadsThisMonth || 0, leadsLastMonth: leadsLastMonth || 0,

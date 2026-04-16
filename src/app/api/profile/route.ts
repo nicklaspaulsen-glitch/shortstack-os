@@ -10,6 +10,7 @@ export async function GET() {
   }
 
   const service = createServiceClient();
+  // eslint-disable-next-line prefer-const
   let { data: profile, error } = await service
     .from("profiles")
     .select("*")
@@ -37,6 +38,11 @@ export async function GET() {
     }
     profile = created;
     console.log("[profile] Auto-created profile for", user.email);
+  }
+
+  // Ensure plan_tier is set — column may not exist in DB yet
+  if (!profile.plan_tier) {
+    profile.plan_tier = profile.role === "admin" ? "Founder" : "Starter";
   }
 
   return NextResponse.json({ profile }, {

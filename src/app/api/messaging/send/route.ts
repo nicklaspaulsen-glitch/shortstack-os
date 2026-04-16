@@ -62,15 +62,17 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  const anySent = Object.values(results).some(v => v);
+
   // Log the message
   await supabase.from("trinity_log").insert({
     action_type: "sms_campaign",
-    description: `Message sent via ${channel}: ${message.substring(0, 50)}...`,
+    description: `Message ${anySent ? "sent" : "failed"} via ${channel || "unknown"}: ${(message || "").substring(0, 50)}...`,
     client_id: client_id || null,
-    status: Object.values(results).some(v => v) ? "completed" : "failed",
+    status: anySent ? "completed" : "failed",
     result: { channel, results },
     completed_at: new Date().toISOString(),
   });
 
-  return NextResponse.json({ success: true, results });
+  return NextResponse.json({ success: anySent, results, error: anySent ? undefined : "No message was sent — missing channel, contact ID, or service config" });
 }

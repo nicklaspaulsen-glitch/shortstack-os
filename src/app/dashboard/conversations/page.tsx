@@ -2,12 +2,12 @@
 
 import { useState, useRef } from "react";
 import {
-  MessageSquare, Send, Search, Phone, Mail, Sparkles, User,
+  MessageSquare, Send, Search, Phone, Mail, Sparkles,
   Tag, Flag, Clock, CheckCircle, AlertCircle, Users, Star,
   Smile, Frown, Meh, Archive, Pin, FileText,
-  Hash, AtSign, MessageCircle, Filter, Plus, X,
+  MessageCircle, X,
   Bold, Link2, Paperclip, Image, ChevronDown,
-  Ticket, UserPlus, MoreHorizontal, Globe, Zap,
+  Ticket, UserPlus, Globe, Zap,
 } from "lucide-react";
 
 /* ================================================================== */
@@ -277,7 +277,7 @@ export default function ConversationsPage() {
     setNewNote("");
   };
 
-  const useSuggestion = (text: string) => {
+  const applySuggestion = (text: string) => {
     setNewMessage(text);
     setActivePanel("chat");
   };
@@ -301,7 +301,7 @@ export default function ConversationsPage() {
       <div className="w-80 shrink-0 border-r border-[var(--color-border)] flex flex-col">
         {/* Header */}
         <div className="p-3 border-b border-[var(--color-border)]">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-1">
             <h1 className="text-sm font-bold flex items-center gap-2">
               <MessageSquare size={16} className="text-gold" /> Conversations
             </h1>
@@ -312,6 +312,7 @@ export default function ConversationsPage() {
               <span className="text-[9px] bg-gold/10 text-gold px-1.5 py-0.5 rounded-full">{openCount} open</span>
             </div>
           </div>
+          <p className="text-xs text-muted mb-1">Unified inbox for client chats, SMS, email, and social DMs</p>
 
           {/* Search */}
           <div className="relative mb-2">
@@ -579,7 +580,7 @@ export default function ConversationsPage() {
                   </div>
                   {(AI_SUGGESTIONS[selected.id] || []).length > 0 ? (
                     (AI_SUGGESTIONS[selected.id] || []).map((suggestion, i) => (
-                      <button key={i} onClick={() => useSuggestion(suggestion)}
+                      <button key={i} onClick={() => applySuggestion(suggestion)}
                         className="w-full text-left p-4 rounded-xl border border-[var(--color-border)] hover:border-gold/20 hover:bg-gold/[0.02] transition-all group">
                         <div className="flex items-start gap-3">
                           <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center shrink-0 mt-0.5">

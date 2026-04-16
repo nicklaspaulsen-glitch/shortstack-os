@@ -154,6 +154,21 @@ const COLOR_PALETTES = [
   { name: "Ocean", colors: ["#003545", "#006d77", "#83c5be", "#edf6f9", "#ffddd2"] },
   { name: "Sunset", colors: ["#2b1055", "#d63230", "#f5a623", "#f7dc6f", "#fed8b1"] },
   { name: "Minimal Dark", colors: ["#0a0a0a", "#1a1a1a", "#333333", "#ffffff", "#C9A84C"] },
+  { name: "Neon Pop", colors: ["#0D0D0D", "#FF00FF", "#00FF87", "#FFE600", "#00D4FF"] },
+  { name: "Pastel Dream", colors: ["#FDA4AF", "#A5B4FC", "#86EFAC", "#FDE68A", "#FBCFE8"] },
+  { name: "Earth Tones", colors: ["#78350F", "#92400E", "#B45309", "#D4A574", "#FDF8E1"] },
+  { name: "Coral Reef", colors: ["#FF6B6B", "#EE5A6F", "#F8B595", "#F5E6CC", "#355C7D"] },
+  { name: "Cyberpunk", colors: ["#0A0A1A", "#1A0533", "#FF2D95", "#00F0FF", "#FFE600"] },
+  { name: "Forest Moss", colors: ["#1B3A2D", "#2D5016", "#5B8C3E", "#A8C686", "#F0F5E8"] },
+  { name: "Royal Purple", colors: ["#1A0533", "#2D1B69", "#6D28D9", "#A78BFA", "#EDE9FE"] },
+  { name: "Warm Autumn", colors: ["#451A03", "#9A3412", "#EA580C", "#F97316", "#FED7AA"] },
+  { name: "Ice Blue", colors: ["#0C1929", "#1E3A5F", "#2563EB", "#60A5FA", "#DBEAFE"] },
+  { name: "Rose Gold", colors: ["#1A1A1A", "#4A2040", "#B76E79", "#E8C4B8", "#FFF5F5"] },
+  { name: "Monochrome Gray", colors: ["#111111", "#333333", "#666666", "#AAAAAA", "#F0F0F0"] },
+  { name: "Tropical Punch", colors: ["#FF6347", "#FF8C00", "#FFD700", "#00CED1", "#FF69B4"] },
+  { name: "Midnight Navy", colors: ["#0A0E27", "#1A1F4E", "#2B3494", "#4B6CB7", "#C9D6FF"] },
+  { name: "Vintage Cream", colors: ["#2C1810", "#5C3A21", "#8B6914", "#D4B896", "#FFF8DC"] },
+  { name: "Electric Gradient", colors: ["#667EEA", "#764BA2", "#F093FB", "#4FACFE", "#00F2FE"] },
 ];
 
 // ---------- Brand Kit Types ----------
@@ -526,7 +541,7 @@ export default function DesignStudioPage() {
   }
 
   useEffect(() => {
-    supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }) => {
+    supabase.from("clients").select("id, business_name, industry").eq("is_active", true).then(({ data }: { data: { id: string; business_name: string; industry: string }[] | null }) => {
       setClients(data || []);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -188,7 +188,7 @@ export default function SurveysPage() {
   const removeQuestion = (id: string) =>
     setBuilderQuestions(prev => prev.filter(q => q.id !== id));
 
-  const useTemplate = (idx: number) => {
+  const applyTemplate = (idx: number) => {
     setSelectedTemplate(idx);
     setBuilderName(TEMPLATES[idx].name);
     setBuilderQuestions(TEMPLATES[idx].questions);
@@ -562,7 +562,7 @@ export default function SurveysPage() {
                 <h3 className="text-xs font-bold mb-3 flex items-center gap-1.5"><FileText size={12} className="text-gold" /> Templates</h3>
                 <div className="space-y-2">
                   {TEMPLATES.map((tpl, i) => (
-                    <button key={i} onClick={() => useTemplate(i)}
+                    <button key={i} onClick={() => applyTemplate(i)}
                       className={`w-full text-left p-3 rounded-xl border transition-all ${
                         selectedTemplate === i ? "border-gold bg-gold/5" : "border-[var(--color-border)] hover:border-gold/30"
                       }`}>

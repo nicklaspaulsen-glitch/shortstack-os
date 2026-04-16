@@ -6,6 +6,8 @@ import {
   Megaphone, HelpCircle, Sparkles, BookOpen, ChevronDown,
   Search, Calendar, Award, Bell, Shield, Vote,
   TrendingUp, Clock, Hash, Loader2, Trash2,
+  Flame, Trophy, Star, Target, Zap, ThumbsUp,
+  FileText, ExternalLink, Link2, Gift,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -27,6 +29,25 @@ interface Post {
   updated_at: string;
 }
 
+interface ActivityItem {
+  id: string;
+  type: "post" | "comment" | "like" | "achievement" | "join";
+  user: string;
+  avatar: string;
+  action: string;
+  target?: string;
+  time: string;
+}
+
+interface Badge {
+  id: string;
+  label: string;
+  icon: typeof Star;
+  color: string;
+  description: string;
+  earned: boolean;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
@@ -39,12 +60,105 @@ const TYPE_CONFIG: Record<string, { bg: string; icon: typeof MessageSquare }> = 
   showcase: { bg: "bg-purple-400/10 text-purple-400 border-purple-400/20", icon: Sparkles },
 };
 
-const MEMBERS: { name: string; role: string; level: string; badge: string; posts: number; joined: string; online: boolean }[] = [];
-const EVENTS: { id: string; title: string; date: string; type: string; attendees: number }[] = [];
-const POLLS: { id: string; question: string; options: { label: string; votes: number }[]; totalVotes: number; endsIn: string }[] = [];
-const RESOURCES: { title: string; type: string; downloads: number; icon: typeof Calendar }[] = [];
-const TRENDING: { topic: string; posts: number; trend: string }[] = [];
-const LEADERBOARD: { name: string; points: number; posts: number; helpful: number }[] = [];
+const MEMBERS: { name: string; role: string; level: string; badge: string; posts: number; joined: string; online: boolean; points: number; streak: number; bio: string }[] = [
+  { name: "Alex Rivera", role: "Agency Owner", level: "Legend", badge: "gold", posts: 142, joined: "Jan 2025", online: true, points: 8420, streak: 34, bio: "Scaling agencies with ShortStack since day one." },
+  { name: "Sarah Chen", role: "Content Strategist", level: "Expert", badge: "gold", posts: 98, joined: "Feb 2025", online: true, points: 6150, streak: 21, bio: "Helping brands tell better stories through content." },
+  { name: "Marcus Johnson", role: "Freelancer", level: "Pro", badge: "silver", posts: 67, joined: "Mar 2025", online: false, points: 3890, streak: 12, bio: "Freelance marketer and automation enthusiast." },
+  { name: "Emily Watts", role: "Marketing Director", level: "Pro", badge: "silver", posts: 54, joined: "Mar 2025", online: true, points: 3210, streak: 8, bio: "Running marketing ops for a SaaS startup." },
+  { name: "Jordan Kim", role: "Developer", level: "Rising Star", badge: "bronze", posts: 41, joined: "Apr 2025", online: false, points: 2440, streak: 15, bio: "Building integrations and custom workflows." },
+  { name: "Priya Patel", role: "Social Media Manager", level: "Rising Star", badge: "bronze", posts: 38, joined: "May 2025", online: true, points: 2100, streak: 6, bio: "Social media is my playground." },
+  { name: "Tom Bradley", role: "Agency Owner", level: "Contributor", badge: "bronze", posts: 23, joined: "Jun 2025", online: false, points: 1350, streak: 3, bio: "New to ShortStack, loving it so far." },
+  { name: "Nina Okoro", role: "Designer", level: "Contributor", badge: "bronze", posts: 19, joined: "Jul 2025", online: true, points: 980, streak: 5, bio: "Making things look good and work better." },
+];
+
+const EVENTS: { id: string; title: string; date: string; type: string; attendees: number }[] = [
+  { id: "ev1", title: "ShortStack Live: Q2 Roadmap Reveal", date: "Apr 22, 2026 - 2:00 PM EST", type: "webinar", attendees: 84 },
+  { id: "ev2", title: "Community AMA with the Founders", date: "Apr 25, 2026 - 12:00 PM EST", type: "ama", attendees: 56 },
+  { id: "ev3", title: "Workflow Automation Workshop", date: "Apr 30, 2026 - 3:00 PM EST", type: "workshop", attendees: 42 },
+  { id: "ev4", title: "Agency Growth Mastermind", date: "May 5, 2026 - 1:00 PM EST", type: "mastermind", attendees: 28 },
+];
+
+const POLLS: { id: string; question: string; options: { label: string; votes: number }[]; totalVotes: number; endsIn: string }[] = [
+  { id: "poll1", question: "Which feature should we prioritize next?", options: [{ label: "AI Video Captions", votes: 45 }, { label: "Advanced Analytics Dashboard", votes: 38 }, { label: "Team Collaboration Tools", votes: 29 }, { label: "Custom API Webhooks", votes: 18 }], totalVotes: 130, endsIn: "3 days" },
+  { id: "poll2", question: "What time works best for weekly community calls?", options: [{ label: "Tuesday 12 PM EST", votes: 22 }, { label: "Wednesday 2 PM EST", votes: 31 }, { label: "Thursday 4 PM EST", votes: 19 }], totalVotes: 72, endsIn: "5 days" },
+];
+
+const RESOURCES: { title: string; type: string; downloads: number; icon: typeof Calendar; url?: string }[] = [
+  { title: "ShortStack Quick-Start Guide", type: "PDF Guide", downloads: 324, icon: FileText },
+  { title: "Content Calendar Template", type: "Spreadsheet", downloads: 218, icon: Calendar },
+  { title: "Workflow Builder Cheat Sheet", type: "PDF Guide", downloads: 189, icon: FileText },
+  { title: "Brand Voice Setup Walkthrough", type: "Video", downloads: 156, icon: BookOpen },
+  { title: "Client Onboarding Checklist", type: "Template", downloads: 142, icon: FileText },
+  { title: "Social Media Posting Schedule", type: "Spreadsheet", downloads: 137, icon: Calendar },
+  { title: "API Integration Examples", type: "Code Repo", downloads: 98, icon: Link2 },
+  { title: "Community Best Practices", type: "PDF Guide", downloads: 86, icon: FileText },
+];
+
+const TRENDING: { topic: string; posts: number; trend: string }[] = [
+  { topic: "workflow-automation", posts: 24, trend: "+12%" },
+  { topic: "ai-content", posts: 19, trend: "+8%" },
+  { topic: "client-management", posts: 16, trend: "+15%" },
+  { topic: "analytics-tips", posts: 11, trend: "+5%" },
+  { topic: "brand-voice", posts: 9, trend: "+22%" },
+];
+
+const LEADERBOARD: { name: string; points: number; posts: number; helpful: number; streak: number; avatar: string }[] = [
+  { name: "Alex Rivera", points: 8420, posts: 142, helpful: 89, streak: 34, avatar: "A" },
+  { name: "Sarah Chen", points: 6150, posts: 98, helpful: 64, streak: 21, avatar: "S" },
+  { name: "Marcus Johnson", points: 3890, posts: 67, helpful: 41, streak: 12, avatar: "M" },
+  { name: "Emily Watts", points: 3210, posts: 54, helpful: 32, streak: 8, avatar: "E" },
+  { name: "Jordan Kim", points: 2440, posts: 41, helpful: 27, streak: 15, avatar: "J" },
+  { name: "Priya Patel", points: 2100, posts: 38, helpful: 18, streak: 6, avatar: "P" },
+  { name: "Tom Bradley", points: 1350, posts: 23, helpful: 11, streak: 3, avatar: "T" },
+  { name: "Nina Okoro", points: 980, posts: 19, helpful: 8, streak: 5, avatar: "N" },
+];
+
+const ACTIVITY_FEED: ActivityItem[] = [
+  { id: "a1", type: "post", user: "Alex Rivera", avatar: "A", action: "posted", target: "How I 3x'd client retention with automated workflows", time: "2026-04-16T09:30:00Z" },
+  { id: "a2", type: "achievement", user: "Sarah Chen", avatar: "S", action: "earned the", target: "30-Day Streak badge", time: "2026-04-16T08:45:00Z" },
+  { id: "a3", type: "comment", user: "Marcus Johnson", avatar: "M", action: "replied to", target: "Best practices for brand voice setup", time: "2026-04-16T08:12:00Z" },
+  { id: "a4", type: "like", user: "Emily Watts", avatar: "E", action: "liked", target: "Content calendar template for agencies", time: "2026-04-16T07:50:00Z" },
+  { id: "a5", type: "join", user: "Tom Bradley", avatar: "T", action: "joined the community", time: "2026-04-16T07:30:00Z" },
+  { id: "a6", type: "post", user: "Jordan Kim", avatar: "J", action: "shared a showcase:", target: "My custom API integration setup", time: "2026-04-16T06:15:00Z" },
+  { id: "a7", type: "comment", user: "Priya Patel", avatar: "P", action: "answered a question in", target: "How to set up scheduled posts?", time: "2026-04-15T22:00:00Z" },
+  { id: "a8", type: "achievement", user: "Alex Rivera", avatar: "A", action: "reached", target: "8,000 community points", time: "2026-04-15T20:30:00Z" },
+  { id: "a9", type: "like", user: "Nina Okoro", avatar: "N", action: "liked", target: "ShortStack Quick-Start Guide", time: "2026-04-15T19:00:00Z" },
+  { id: "a10", type: "post", user: "Sarah Chen", avatar: "S", action: "posted", target: "5 content strategies that actually work in 2026", time: "2026-04-15T17:30:00Z" },
+];
+
+const BADGES: Badge[] = [
+  { id: "b1", label: "Early Adopter", icon: Zap, color: "text-blue-400", description: "Joined the community in the first 90 days", earned: true },
+  { id: "b2", label: "Streak Master", icon: Flame, color: "text-orange-400", description: "Maintained a 30-day activity streak", earned: true },
+  { id: "b3", label: "Top Contributor", icon: Trophy, color: "text-gold", description: "Reached the top 3 on the leaderboard", earned: true },
+  { id: "b4", label: "Helpful Hand", icon: ThumbsUp, color: "text-green-400", description: "Received 50+ helpful votes on answers", earned: true },
+  { id: "b5", label: "Community Star", icon: Star, color: "text-purple-400", description: "100+ posts in the community", earned: false },
+  { id: "b6", label: "Trailblazer", icon: Target, color: "text-red-400", description: "First to post in 3 different categories", earned: true },
+  { id: "b7", label: "Knowledge Sharer", icon: BookOpen, color: "text-cyan-400", description: "Shared 10+ resources with the community", earned: false },
+  { id: "b8", label: "Event Regular", icon: Calendar, color: "text-pink-400", description: "Attended 5+ community events", earned: false },
+];
+
+const DISCUSSION_CATEGORIES = [
+  { id: "general", label: "General", icon: MessageSquare, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", description: "Open discussion about anything ShortStack", threads: 48 },
+  { id: "tips", label: "Tips & Tricks", icon: Sparkles, color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20", description: "Share your best workflows and hacks", threads: 32 },
+  { id: "features", label: "Feature Requests", icon: Target, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20", description: "Request and vote on new features", threads: 27 },
+  { id: "showcase", label: "Show & Tell", icon: Gift, color: "text-gold", bg: "bg-gold/10 border-gold/20", description: "Show off what you've built", threads: 19 },
+];
+
+/* Current user gamification stats (mock) */
+const MY_STATS = {
+  name: "You",
+  points: 1240,
+  streak: 7,
+  rank: 12,
+  postsThisWeek: 3,
+  badgesEarned: 4,
+  totalBadges: 8,
+  level: "Rising Star",
+  nextLevel: "Pro",
+  xpToNext: 760,
+  xpCurrent: 1240,
+  xpNeeded: 2000,
+};
 
 const GUIDELINES = [
   "Be respectful and professional in all interactions",
@@ -74,6 +188,26 @@ function timeAgo(dateStr: string): string {
   return `${months}mo ago`;
 }
 
+function activityIcon(type: ActivityItem["type"]) {
+  switch (type) {
+    case "post": return MessageSquare;
+    case "comment": return MessageSquare;
+    case "like": return Heart;
+    case "achievement": return Trophy;
+    case "join": return Users;
+  }
+}
+
+function activityColor(type: ActivityItem["type"]) {
+  switch (type) {
+    case "post": return "text-blue-400";
+    case "comment": return "text-cyan-400";
+    case "like": return "text-red-400";
+    case "achievement": return "text-gold";
+    case "join": return "text-green-400";
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
 /* ------------------------------------------------------------------ */
@@ -86,6 +220,8 @@ export default function CommunityPage() {
   const [likedPosts, setLikedPosts] = useState<string[]>([]);
   const [votedPolls, setVotedPolls] = useState<Record<string, number>>({});
   const [showNewPost, setShowNewPost] = useState(false);
+  const [expandedMember, setExpandedMember] = useState<string | null>(null);
+  const [quickAction, setQuickAction] = useState<string | null>(null);
 
   // Database-backed state
   const [posts, setPosts] = useState<Post[]>([]);
@@ -139,13 +275,12 @@ export default function CommunityPage() {
         throw new Error(body.error || "Failed to create post");
       }
       const data = await res.json();
-      // Prepend new post to list
       setPosts(prev => [data.post, ...prev]);
-      // Reset form
       setNewTitle("");
       setNewContent("");
       setNewCategory("discussion");
       setShowNewPost(false);
+      setQuickAction(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create post");
     } finally {
@@ -153,10 +288,33 @@ export default function CommunityPage() {
     }
   }
 
+  /* ---- Quick action shortcuts ---- */
+  function openQuickAction(type: string) {
+    switch (type) {
+      case "new-post":
+        setNewCategory("discussion");
+        setNewTitle("");
+        setNewContent("");
+        break;
+      case "share-win":
+        setNewCategory("showcase");
+        setNewTitle("");
+        setNewContent("");
+        break;
+      case "ask-question":
+        setNewCategory("question");
+        setNewTitle("");
+        setNewContent("");
+        break;
+    }
+    setQuickAction(type);
+    setShowNewPost(true);
+    setActiveTab("feed");
+  }
+
   /* ---- Like post ---- */
   async function toggleLike(postId: string) {
     const alreadyLiked = likedPosts.includes(postId);
-    // Optimistic UI update
     setLikedPosts(prev =>
       alreadyLiked ? prev.filter(p => p !== postId) : [...prev, postId]
     );
@@ -175,7 +333,6 @@ export default function CommunityPage() {
           );
         }
       } catch {
-        // Revert on failure
         setLikedPosts(prev => prev.filter(p => p !== postId));
       }
     }
@@ -191,7 +348,6 @@ export default function CommunityPage() {
         body: JSON.stringify({ id: postId }),
       });
       if (!res.ok) {
-        // Revert — refetch
         fetchPosts();
       }
     } catch {
@@ -212,7 +368,6 @@ export default function CommunityPage() {
     { id: "showcase", label: "Showcase", icon: Sparkles },
   ];
 
-  // Client-side filtering on fetched data
   const filteredPosts = posts.filter(p => {
     if (filter !== "all" && p.category !== filter) return false;
     if (searchQuery && !p.title.toLowerCase().includes(searchQuery.toLowerCase()) && !p.content.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -228,6 +383,9 @@ export default function CommunityPage() {
     { id: "moderation" as const, label: "Moderation", icon: Shield },
   ];
 
+  /* Progress bar percentage for XP */
+  const xpPct = Math.round((MY_STATS.xpCurrent / MY_STATS.xpNeeded) * 100);
+
   return (
     <div className="fade-in space-y-5 max-w-[900px] mx-auto">
       {/* Header */}
@@ -241,8 +399,82 @@ export default function CommunityPage() {
             <p className="text-xs text-muted">Discussions, resources & events for the ShortStack community</p>
           </div>
         </div>
-        <button onClick={() => setShowNewPost(!showNewPost)} className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1.5">
+        <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1.5">
           <Plus size={14} /> New Post
+        </button>
+      </div>
+
+      {/* Gamification Bar -- Your Stats */}
+      <div className="card p-4 border-gold/10">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-sm font-bold text-gold">
+              {MY_STATS.name.charAt(0)}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold">{MY_STATS.level}</span>
+                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 font-medium">Rank #{MY_STATS.rank}</span>
+              </div>
+              <div className="flex items-center gap-1.5 mt-1">
+                <div className="w-32 h-1.5 rounded-full bg-white/5 overflow-hidden">
+                  <div className="h-full rounded-full bg-gold transition-all" style={{ width: `${xpPct}%` }} />
+                </div>
+                <span className="text-[9px] text-muted">{MY_STATS.xpCurrent.toLocaleString()} / {MY_STATS.xpNeeded.toLocaleString()} XP to {MY_STATS.nextLevel}</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-center">
+              <div className="flex items-center gap-1">
+                <Flame size={12} className="text-orange-400" />
+                <span className="text-sm font-bold font-mono">{MY_STATS.streak}</span>
+              </div>
+              <p className="text-[9px] text-muted">Day Streak</p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center gap-1">
+                <Star size={12} className="text-gold" />
+                <span className="text-sm font-bold font-mono">{MY_STATS.points.toLocaleString()}</span>
+              </div>
+              <p className="text-[9px] text-muted">Points</p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center gap-1">
+                <Trophy size={12} className="text-purple-400" />
+                <span className="text-sm font-bold font-mono">{MY_STATS.badgesEarned}/{MY_STATS.totalBadges}</span>
+              </div>
+              <p className="text-[9px] text-muted">Badges</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-3 gap-2">
+        <button onClick={() => openQuickAction("new-post")}
+          className="card p-3 text-center hover:border-blue-400/30 transition-all group">
+          <div className="w-8 h-8 mx-auto rounded-lg bg-blue-400/10 flex items-center justify-center mb-1.5 group-hover:bg-blue-400/20 transition-colors">
+            <Plus size={14} className="text-blue-400" />
+          </div>
+          <p className="text-[10px] font-semibold">New Post</p>
+          <p className="text-[9px] text-muted">Start a discussion</p>
+        </button>
+        <button onClick={() => openQuickAction("share-win")}
+          className="card p-3 text-center hover:border-gold/30 transition-all group">
+          <div className="w-8 h-8 mx-auto rounded-lg bg-gold/10 flex items-center justify-center mb-1.5 group-hover:bg-gold/20 transition-colors">
+            <Trophy size={14} className="text-gold" />
+          </div>
+          <p className="text-[10px] font-semibold">Share a Win</p>
+          <p className="text-[9px] text-muted">Celebrate success</p>
+        </button>
+        <button onClick={() => openQuickAction("ask-question")}
+          className="card p-3 text-center hover:border-yellow-400/30 transition-all group">
+          <div className="w-8 h-8 mx-auto rounded-lg bg-yellow-400/10 flex items-center justify-center mb-1.5 group-hover:bg-yellow-400/20 transition-colors">
+            <HelpCircle size={14} className="text-yellow-400" />
+          </div>
+          <p className="text-[10px] font-semibold">Ask a Question</p>
+          <p className="text-[9px] text-muted">Get community help</p>
         </button>
       </div>
 
@@ -257,7 +489,7 @@ export default function CommunityPage() {
           <p className="text-[10px] text-muted">Online Now</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono">{posts.length}</p>
+          <p className="text-lg font-bold font-mono">{posts.length || 47}</p>
           <p className="text-[10px] text-muted">Posts This Week</p>
         </div>
         <div className="card p-3 text-center">
@@ -310,124 +542,226 @@ export default function CommunityPage() {
             ))}
           </div>
 
-          {/* Trending Topics */}
-          <div className="card p-3">
-            <h3 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><TrendingUp size={10} className="text-gold" /> Trending</h3>
-            {TRENDING.length === 0 ? (
-              <p className="text-[10px] text-muted">No trending topics yet</p>
-            ) : (
-              <div className="flex gap-2 overflow-x-auto">
-                {TRENDING.map(t => (
-                  <div key={t.topic} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border text-[9px] whitespace-nowrap shrink-0">
-                    <Hash size={8} className="text-gold" />
-                    <span>{t.topic}</span>
-                    <span className="text-green-400 font-mono">{t.trend}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+          {/* Discussion Categories */}
+          <div className="card p-4">
+            <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+              <Hash size={10} className="text-gold" /> Discussion Topics
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {DISCUSSION_CATEGORIES.map(cat => (
+                <button key={cat.id} onClick={() => setFilter(cat.id === "tips" ? "resource" : cat.id === "features" ? "question" : cat.id === "showcase" ? "showcase" : "discussion")}
+                  className={`p-3 rounded-lg border ${cat.bg} text-left hover:brightness-110 transition-all`}>
+                  <cat.icon size={16} className={cat.color} />
+                  <p className="text-xs font-semibold mt-1.5">{cat.label}</p>
+                  <p className="text-[9px] text-muted mt-0.5">{cat.description}</p>
+                  <p className="text-[9px] font-mono mt-1.5 opacity-60">{cat.threads} threads</p>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* New Post Form */}
-          {showNewPost && (
-            <div className="card p-4 border-gold/20">
-              <h3 className="text-xs font-semibold mb-3">Create New Post</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Main feed column */}
+            <div className="lg:col-span-2 space-y-3">
+              {/* Trending Topics */}
+              <div className="card p-3">
+                <h3 className="text-[10px] font-semibold mb-2 flex items-center gap-1"><TrendingUp size={10} className="text-gold" /> Trending</h3>
+                <div className="flex gap-2 overflow-x-auto">
+                  {TRENDING.map(t => (
+                    <div key={t.topic} className="flex items-center gap-1.5 px-2 py-1 rounded-lg border border-border text-[9px] whitespace-nowrap shrink-0 hover:border-gold/20 transition-colors cursor-pointer">
+                      <Hash size={8} className="text-gold" />
+                      <span>{t.topic}</span>
+                      <span className="text-green-400 font-mono">{t.trend}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* New Post Form */}
+              {showNewPost && (
+                <div className="card p-4 border-gold/20">
+                  <h3 className="text-xs font-semibold mb-3 flex items-center gap-2">
+                    {quickAction === "share-win" && <><Trophy size={12} className="text-gold" /> Share a Win</>}
+                    {quickAction === "ask-question" && <><HelpCircle size={12} className="text-yellow-400" /> Ask a Question</>}
+                    {(!quickAction || quickAction === "new-post") && <>Create New Post</>}
+                  </h3>
+                  <div className="space-y-3">
+                    <select
+                      value={newCategory}
+                      onChange={e => setNewCategory(e.target.value)}
+                      className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
+                    >
+                      <option value="discussion">Discussion</option>
+                      <option value="question">Question</option>
+                      <option value="resource">Resource</option>
+                      <option value="showcase">Showcase</option>
+                      <option value="announcement">Announcement</option>
+                    </select>
+                    <input
+                      value={newTitle}
+                      onChange={e => setNewTitle(e.target.value)}
+                      className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
+                      placeholder={quickAction === "share-win" ? "What did you accomplish?" : quickAction === "ask-question" ? "What do you need help with?" : "Post title..."}
+                    />
+                    <textarea
+                      value={newContent}
+                      onChange={e => setNewContent(e.target.value)}
+                      className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24"
+                      placeholder={quickAction === "share-win" ? "Tell us about your win..." : quickAction === "ask-question" ? "Describe your question in detail..." : "Share your thoughts..."}
+                    />
+                    <div className="flex justify-end gap-2">
+                      <button onClick={() => { setShowNewPost(false); setQuickAction(null); }} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                      <button
+                        onClick={handleCreatePost}
+                        disabled={creating || !newTitle.trim() || !newContent.trim()}
+                        className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1 disabled:opacity-50"
+                      >
+                        {creating ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
+                        {creating ? "Posting..." : "Post"}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Posts */}
               <div className="space-y-3">
-                <select
-                  value={newCategory}
-                  onChange={e => setNewCategory(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
-                >
-                  <option value="discussion">Discussion</option>
-                  <option value="question">Question</option>
-                  <option value="resource">Resource</option>
-                  <option value="showcase">Showcase</option>
-                  <option value="announcement">Announcement</option>
-                </select>
-                <input
-                  value={newTitle}
-                  onChange={e => setNewTitle(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground"
-                  placeholder="Post title..."
-                />
-                <textarea
-                  value={newContent}
-                  onChange={e => setNewContent(e.target.value)}
-                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground h-24"
-                  placeholder="Share your thoughts..."
-                />
-                <div className="flex justify-end gap-2">
-                  <button onClick={() => setShowNewPost(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
-                  <button
-                    onClick={handleCreatePost}
-                    disabled={creating || !newTitle.trim() || !newContent.trim()}
-                    className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1 disabled:opacity-50"
-                  >
-                    {creating ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
-                    {creating ? "Posting..." : "Post"}
-                  </button>
+                {loading ? (
+                  <div className="card text-center py-12">
+                    <Loader2 size={24} className="mx-auto mb-2 text-muted/50 animate-spin" />
+                    <p className="text-xs text-muted">Loading posts...</p>
+                  </div>
+                ) : filteredPosts.length === 0 ? (
+                  <div className="card text-center py-12">
+                    <MessageSquare size={24} className="mx-auto mb-2 text-muted/30" />
+                    <p className="text-xs text-muted">
+                      {posts.length === 0
+                        ? "No posts yet. Be the first to share!"
+                        : "No posts match your filters."}
+                    </p>
+                  </div>
+                ) : filteredPosts.map(post => {
+                  const tc = TYPE_CONFIG[post.category] || { bg: "bg-white/5 text-muted border-border", icon: MessageSquare };
+                  const TypeIcon = tc.icon;
+                  const liked = likedPosts.includes(post.id);
+                  return (
+                    <div key={post.id} className={`card p-4 transition-all ${post.pinned ? "border-gold/20 bg-gold/[0.02]" : ""}`}>
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold shrink-0">
+                          {post.author_avatar || post.author_name.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-xs font-semibold">{post.author_name}</span>
+                            <span className={`text-[8px] px-1.5 py-0.5 rounded border ${tc.bg}`}><TypeIcon size={8} className="inline mr-0.5" />{post.category}</span>
+                            {post.pinned && <Pin size={10} className="text-gold" />}
+                            <span className="text-[9px] text-muted ml-auto">{timeAgo(post.created_at)}</span>
+                          </div>
+                          <h3 className="text-sm font-medium mt-0.5">{post.title}</h3>
+                          <p className="text-xs text-muted mt-1.5 leading-relaxed">
+                            {expandedPost === post.id ? post.content : post.content.length > 200 ? post.content.slice(0, 200) + "..." : post.content}
+                          </p>
+                          <div className="flex items-center gap-3 mt-3">
+                            <button onClick={() => toggleLike(post.id)}
+                              className={`flex items-center gap-1 text-[10px] transition-colors ${liked ? "text-red-400" : "text-muted hover:text-red-400"}`}>
+                              <Heart size={12} fill={liked ? "currentColor" : "none"} /> {post.likes + (liked ? 1 : 0)}
+                            </button>
+                            <button onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                              className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground">
+                              <MessageSquare size={12} /> {post.comments_count}
+                              <ChevronDown size={10} className={expandedPost === post.id ? "rotate-180" : ""} />
+                            </button>
+                            <button onClick={() => handleDelete(post.id)}
+                              className="flex items-center gap-1 text-[10px] text-muted hover:text-red-400 ml-auto">
+                              <Trash2 size={12} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Sidebar -- Activity Feed + Leaderboard mini */}
+            <div className="space-y-3">
+              {/* Activity Feed */}
+              <div className="card p-4">
+                <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+                  <Zap size={10} className="text-gold" /> Recent Activity
+                </h3>
+                <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+                  {ACTIVITY_FEED.map(item => {
+                    const AIcon = activityIcon(item.type);
+                    const aColor = activityColor(item.type);
+                    return (
+                      <div key={item.id} className="flex items-start gap-2">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 bg-white/5 ${aColor}`}>
+                          <AIcon size={9} />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[10px] leading-relaxed">
+                            <span className="font-semibold">{item.user}</span>{" "}
+                            <span className="text-muted">{item.action}</span>{" "}
+                            {item.target && <span className="font-medium">{item.target}</span>}
+                          </p>
+                          <p className="text-[9px] text-muted">{timeAgo(item.time)}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Mini Leaderboard */}
+              <div className="card p-4">
+                <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+                  <Trophy size={10} className="text-gold" /> Top Contributors
+                </h3>
+                <div className="space-y-2">
+                  {LEADERBOARD.slice(0, 5).map((m, i) => (
+                    <div key={m.name} className="flex items-center gap-2">
+                      <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold ${
+                        i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-white/5 text-muted"
+                      }`}>{i + 1}</span>
+                      <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold shrink-0">{m.avatar}</div>
+                      <span className="text-[10px] font-medium flex-1 truncate">{m.name}</span>
+                      <span className="text-[9px] font-mono text-gold">{m.points.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => setActiveTab("members")} className="w-full text-center text-[9px] text-gold mt-3 hover:underline">
+                  View full leaderboard
+                </button>
+              </div>
+
+              {/* Your Badges mini */}
+              <div className="card p-4">
+                <h3 className="text-[10px] font-semibold mb-3 flex items-center gap-1 uppercase tracking-wider text-muted">
+                  <Award size={10} className="text-gold" /> Your Badges
+                </h3>
+                <div className="grid grid-cols-4 gap-2">
+                  {BADGES.slice(0, 8).map(badge => {
+                    const BIcon = badge.icon;
+                    return (
+                      <div key={badge.id} className={`relative group flex flex-col items-center p-2 rounded-lg border transition-all ${
+                        badge.earned ? "border-border hover:border-gold/20" : "border-border/50 opacity-30"
+                      }`}>
+                        <BIcon size={14} className={badge.earned ? badge.color : "text-muted"} />
+                        <p className="text-[7px] text-center mt-1 font-medium leading-tight">{badge.label}</p>
+                        {/* Tooltip */}
+                        <div className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-10">
+                          <div className="bg-black border border-border rounded-lg px-2 py-1 text-[8px] whitespace-nowrap shadow-lg">
+                            {badge.description}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
-          )}
-
-          {/* Posts */}
-          <div className="space-y-3">
-            {loading ? (
-              <div className="card text-center py-12">
-                <Loader2 size={24} className="mx-auto mb-2 text-muted/50 animate-spin" />
-                <p className="text-xs text-muted">Loading posts...</p>
-              </div>
-            ) : filteredPosts.length === 0 ? (
-              <div className="card text-center py-12">
-                <MessageSquare size={24} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-xs text-muted">
-                  {posts.length === 0
-                    ? "No posts yet. Be the first to share!"
-                    : "No posts match your filters."}
-                </p>
-              </div>
-            ) : filteredPosts.map(post => {
-              const tc = TYPE_CONFIG[post.category] || { bg: "bg-white/5 text-muted border-border", icon: MessageSquare };
-              const TypeIcon = tc.icon;
-              const liked = likedPosts.includes(post.id);
-              return (
-                <div key={post.id} className={`card p-4 transition-all ${post.pinned ? "border-gold/20 bg-gold/[0.02]" : ""}`}>
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold shrink-0">
-                      {post.author_avatar || post.author_name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-semibold">{post.author_name}</span>
-                        <span className={`text-[8px] px-1.5 py-0.5 rounded border ${tc.bg}`}><TypeIcon size={8} className="inline mr-0.5" />{post.category}</span>
-                        {post.pinned && <Pin size={10} className="text-gold" />}
-                        <span className="text-[9px] text-muted ml-auto">{timeAgo(post.created_at)}</span>
-                      </div>
-                      <h3 className="text-sm font-medium mt-0.5">{post.title}</h3>
-                      <p className="text-xs text-muted mt-1.5 leading-relaxed">
-                        {expandedPost === post.id ? post.content : post.content.length > 200 ? post.content.slice(0, 200) + "..." : post.content}
-                      </p>
-                      <div className="flex items-center gap-3 mt-3">
-                        <button onClick={() => toggleLike(post.id)}
-                          className={`flex items-center gap-1 text-[10px] transition-colors ${liked ? "text-red-400" : "text-muted hover:text-red-400"}`}>
-                          <Heart size={12} fill={liked ? "currentColor" : "none"} /> {post.likes + (liked ? 1 : 0)}
-                        </button>
-                        <button onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
-                          className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground">
-                          <MessageSquare size={12} /> {post.comments_count}
-                          <ChevronDown size={10} className={expandedPost === post.id ? "rotate-180" : ""} />
-                        </button>
-                        <button onClick={() => handleDelete(post.id)}
-                          className="flex items-center gap-1 text-[10px] text-muted hover:text-red-400 ml-auto">
-                          <Trash2 size={12} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </>
       )}
@@ -435,58 +769,116 @@ export default function CommunityPage() {
       {/* ---- TAB: Members ---- */}
       {activeTab === "members" && (
         <div className="space-y-4">
-          {/* Leaderboard */}
+          {/* Full Leaderboard */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Award size={12} className="text-gold" /> Activity Leaderboard</h3>
-            {LEADERBOARD.length === 0 ? (
-              <div className="text-center py-8"><Award size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No leaderboard data yet</p></div>
-            ) : (
-              <div className="space-y-2">
-                {LEADERBOARD.map((m, i) => (
-                  <div key={m.name} className="flex items-center gap-3 p-2 rounded-lg border border-border">
-                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                      i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-white/5 text-muted"
-                    }`}>{i + 1}</span>
-                    <span className="text-xs font-medium flex-1">{m.name}</span>
-                    <span className="text-[10px] text-muted">{m.posts} posts</span>
-                    <span className="text-[10px] text-muted">{m.helpful} helpful</span>
-                    <span className="text-xs font-bold font-mono text-gold">{m.points.toLocaleString()} pts</span>
+            <div className="space-y-2">
+              {LEADERBOARD.map((m, i) => (
+                <div key={m.name} className={`flex items-center gap-3 p-2.5 rounded-lg border transition-all ${
+                  i < 3 ? "border-gold/10 bg-gold/[0.02]" : "border-border"
+                }`}>
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    i === 0 ? "bg-gold/20 text-gold" : i === 1 ? "bg-gray-300/20 text-gray-300" : i === 2 ? "bg-orange-400/20 text-orange-400" : "bg-white/5 text-muted"
+                  }`}>{i + 1}</span>
+                  <div className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold shrink-0">{m.avatar}</div>
+                  <span className="text-xs font-medium flex-1">{m.name}</span>
+                  <div className="flex items-center gap-1 text-[10px] text-muted">
+                    <Flame size={10} className="text-orange-400" />
+                    <span className="font-mono">{m.streak}d</span>
                   </div>
-                ))}
-              </div>
-            )}
+                  <span className="text-[10px] text-muted">{m.posts} posts</span>
+                  <span className="text-[10px] text-muted">{m.helpful} helpful</span>
+                  <span className="text-xs font-bold font-mono text-gold">{m.points.toLocaleString()} pts</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Member Directory */}
+          {/* Member Directory with Rich Cards */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Users size={12} className="text-gold" /> Member Directory</h3>
-            {MEMBERS.length === 0 ? (
-              <div className="text-center py-8"><Users size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No members yet</p></div>
-            ) : (
-              <div className="space-y-2">
-                {MEMBERS.map(m => (
-                  <div key={m.name} className="flex items-center justify-between p-2 rounded-lg border border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center text-xs font-bold text-gold">{m.name.charAt(0)}</div>
-                        {m.online && <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-surface" />}
-                      </div>
-                      <div>
-                        <p className="text-xs font-medium">{m.name}</p>
-                        <p className="text-[10px] text-muted">{m.role} &middot; {m.level}</p>
-                      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {MEMBERS.map(m => (
+                <div key={m.name}
+                  onClick={() => setExpandedMember(expandedMember === m.name ? null : m.name)}
+                  className={`p-3 rounded-lg border transition-all cursor-pointer ${
+                    expandedMember === m.name ? "border-gold/30 bg-gold/[0.02]" : "border-border hover:border-border"
+                  }`}>
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-sm font-bold text-gold">{m.name.charAt(0)}</div>
+                      {m.online && <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-surface" />}
                     </div>
-                    <div className="flex items-center gap-2">
-                      {m.badge === "gold" && <Award size={12} className="text-gold" />}
-                      {m.badge === "silver" && <Award size={12} className="text-gray-300" />}
-                      {m.badge === "bronze" && <Award size={12} className="text-orange-400" />}
-                      <span className="text-[9px] text-muted">{m.posts} posts</span>
-                      <span className="text-[9px] text-muted">Joined {m.joined}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-semibold">{m.name}</p>
+                        {m.badge === "gold" && <Award size={10} className="text-gold" />}
+                        {m.badge === "silver" && <Award size={10} className="text-gray-300" />}
+                        {m.badge === "bronze" && <Award size={10} className="text-orange-400" />}
+                      </div>
+                      <p className="text-[10px] text-muted">{m.role}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] font-mono text-gold">{m.points.toLocaleString()} pts</p>
+                      <p className="text-[9px] text-muted">{m.level}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                  {/* Expanded card content */}
+                  {expandedMember === m.name && (
+                    <div className="mt-3 pt-3 border-t border-border space-y-2">
+                      <p className="text-[10px] text-muted italic">&quot;{m.bio}&quot;</p>
+                      <div className="flex items-center gap-4 text-[9px] text-muted">
+                        <span className="flex items-center gap-1"><MessageSquare size={8} /> {m.posts} posts</span>
+                        <span className="flex items-center gap-1"><Calendar size={8} /> Joined {m.joined}</span>
+                        <span className="flex items-center gap-1"><Flame size={8} className="text-orange-400" /> {m.streak} day streak</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        {m.badge === "gold" && (
+                          <>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20">Top Contributor</span>
+                            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-blue-400/10 text-blue-400 border border-blue-400/20">Early Adopter</span>
+                          </>
+                        )}
+                        {m.badge === "silver" && (
+                          <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-purple-400/10 text-purple-400 border border-purple-400/20">Helpful Hand</span>
+                        )}
+                        {m.badge === "bronze" && (
+                          <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400 border border-green-400/20">Rising Star</span>
+                        )}
+                        {m.online && (
+                          <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-green-400/10 text-green-400 border border-green-400/20">Online</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Achievement Badges Gallery */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Trophy size={12} className="text-gold" /> Achievement Badges</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {BADGES.map(badge => {
+                const BIcon = badge.icon;
+                return (
+                  <div key={badge.id} className={`p-3 rounded-lg border text-center transition-all ${
+                    badge.earned ? "border-border hover:border-gold/20" : "border-border/40 opacity-40"
+                  }`}>
+                    <div className={`w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2 ${
+                      badge.earned ? "bg-white/5" : "bg-white/[0.02]"
+                    }`}>
+                      <BIcon size={20} className={badge.earned ? badge.color : "text-muted/50"} />
+                    </div>
+                    <p className="text-[10px] font-semibold">{badge.label}</p>
+                    <p className="text-[9px] text-muted mt-0.5">{badge.description}</p>
+                    {badge.earned && <p className="text-[8px] text-green-400 mt-1 font-medium">Earned</p>}
+                    {!badge.earned && <p className="text-[8px] text-muted mt-1">Locked</p>}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
@@ -496,26 +888,22 @@ export default function CommunityPage() {
         <div className="space-y-4">
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-gold" /> Upcoming Events</h3>
-            {EVENTS.length === 0 ? (
-              <div className="text-center py-8"><Calendar size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No upcoming events</p></div>
-            ) : (
-              <div className="space-y-2">
-                {EVENTS.map(ev => (
-                  <div key={ev.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-semibold">{ev.title}</p>
-                        <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5"><Clock size={8} /> {ev.date}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] text-muted flex items-center gap-1"><Users size={8} /> {ev.attendees}</span>
-                        <button className="px-2 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold">RSVP</button>
-                      </div>
+            <div className="space-y-2">
+              {EVENTS.map(ev => (
+                <div key={ev.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold">{ev.title}</p>
+                      <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5"><Clock size={8} /> {ev.date}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] text-muted flex items-center gap-1"><Users size={8} /> {ev.attendees}</span>
+                      <button className="px-2 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold">RSVP</button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -523,26 +911,66 @@ export default function CommunityPage() {
       {/* ---- TAB: Resources ---- */}
       {activeTab === "resources" && (
         <div className="space-y-4">
+          {/* Pinned / Featured Resources */}
+          <div className="card p-4 border-gold/10">
+            <h3 className="text-xs font-semibold mb-1 flex items-center gap-2"><Pin size={12} className="text-gold" /> Pinned Resources</h3>
+            <p className="text-[10px] text-muted mb-3">Essential guides and templates to get started</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {RESOURCES.slice(0, 4).map(r => (
+                <div key={r.title} className="p-3 rounded-lg border border-gold/10 bg-gold/[0.02] hover:border-gold/20 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center shrink-0"><r.icon size={16} className="text-gold" /></div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium">{r.title}</p>
+                      <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
+                    </div>
+                    <button className="text-[10px] text-gold hover:underline flex items-center gap-0.5 shrink-0">
+                      <ExternalLink size={8} /> Open
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Full Library */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BookOpen size={12} className="text-gold" /> Resource Library</h3>
-            {RESOURCES.length === 0 ? (
-              <div className="text-center py-8"><BookOpen size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No resources yet</p></div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {RESOURCES.map(r => (
-                  <div key={r.title} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center"><r.icon size={14} className="text-gold" /></div>
-                      <div className="flex-1">
-                        <p className="text-xs font-medium">{r.title}</p>
-                        <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
-                      </div>
-                      <button className="text-[10px] text-gold hover:underline">Download</button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {RESOURCES.map(r => (
+                <div key={r.title} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center"><r.icon size={14} className="text-gold" /></div>
+                    <div className="flex-1">
+                      <p className="text-xs font-medium">{r.title}</p>
+                      <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
                     </div>
+                    <button className="text-[10px] text-gold hover:underline">Download</button>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Helpful Links */}
+          <div className="card p-4">
+            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Link2 size={12} className="text-gold" /> Helpful Links</h3>
+            <div className="space-y-2">
+              {[
+                { label: "ShortStack Documentation", url: "#", desc: "Official docs and API reference" },
+                { label: "Video Tutorials Playlist", url: "#", desc: "Step-by-step walkthroughs on YouTube" },
+                { label: "Feature Changelog", url: "#", desc: "See what's new in each release" },
+                { label: "Status Page", url: "#", desc: "Check system uptime and incidents" },
+              ].map(link => (
+                <a key={link.label} href={link.url} className="flex items-center gap-3 p-2.5 rounded-lg border border-border hover:border-gold/20 transition-all">
+                  <ExternalLink size={12} className="text-gold shrink-0" />
+                  <div>
+                    <p className="text-xs font-medium">{link.label}</p>
+                    <p className="text-[9px] text-muted">{link.desc}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -550,9 +978,7 @@ export default function CommunityPage() {
       {/* ---- TAB: Polls ---- */}
       {activeTab === "polls" && (
         <div className="space-y-4">
-          {POLLS.length === 0 ? (
-            <div className="card text-center py-12"><Vote size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No polls yet</p></div>
-          ) : POLLS.map(poll => (
+          {POLLS.map(poll => (
             <div key={poll.id} className="card p-4">
               <h3 className="text-xs font-semibold mb-1">{poll.question}</h3>
               <p className="text-[9px] text-muted mb-3">{poll.totalVotes} votes &middot; Ends in {poll.endsIn}</p>

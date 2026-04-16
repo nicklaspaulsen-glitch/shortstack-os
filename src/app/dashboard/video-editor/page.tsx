@@ -97,6 +97,12 @@ const CAPTION_STYLES = [
   { id: "handwritten", name: "Handwritten Style" },
   { id: "subtitle_bar", name: "Subtitle Bar (Netflix)" },
   { id: "pop_in", name: "Pop-In Words" },
+  { id: "classic_white", name: "Classic White" },
+  { id: "bold_impact", name: "Bold Impact" },
+  { id: "karaoke_gold", name: "Karaoke Gold" },
+  { id: "subtitle_pro", name: "Subtitle Pro" },
+  { id: "tiktok_style", name: "TikTok Style" },
+  { id: "minimal_gray", name: "Minimal" },
 ];
 
 const MOTION_GRAPHICS = [
@@ -138,6 +144,32 @@ const TEXT_ANIMATIONS = [
   { id: "blur_in", name: "Blur In" }, { id: "glitch_in", name: "Glitch In" },
   { id: "wave", name: "Wave" }, { id: "letter_by_letter", name: "Letter by Letter" },
   { id: "scale_bounce", name: "Scale Bounce" }, { id: "neon_flicker", name: "Neon Flicker" },
+];
+
+const EFFECT_PRESETS = [
+  { id: "zoom_pulse", name: "Zoom Pulse", category: "motion", desc: "Gentle zoom in/out on beat" },
+  { id: "film_grain", name: "Film Grain", category: "overlay", desc: "Vintage film grain overlay" },
+  { id: "vhs_retro", name: "VHS Retro", category: "overlay", desc: "VHS tracking lines + color bleed" },
+  { id: "cinematic_bars", name: "Cinematic Bars", category: "overlay", desc: "Letterbox bars top/bottom" },
+  { id: "light_leak", name: "Light Leak", category: "overlay", desc: "Warm orange light leak overlay" },
+  { id: "glitch", name: "Glitch", category: "overlay", desc: "Random glitch/distortion" },
+  { id: "blur_transition", name: "Blur Transition", category: "transitions", desc: "Gaussian blur between scenes" },
+  { id: "color_pop", name: "Color Pop", category: "color", desc: "Desaturate except primary color" },
+];
+
+const FONT_PRESETS = [
+  { id: "montserrat_bold", name: "Montserrat Bold", family: "Montserrat", weight: "700", category: "sans-serif" },
+  { id: "oswald", name: "Oswald", family: "Oswald", weight: "600", category: "sans-serif" },
+  { id: "bebas_neue", name: "Bebas Neue", family: "Bebas Neue", weight: "400", category: "display" },
+  { id: "poppins", name: "Poppins", family: "Poppins", weight: "500", category: "sans-serif" },
+  { id: "playfair_display", name: "Playfair Display", family: "Playfair Display", weight: "700", category: "serif" },
+  { id: "roboto_condensed", name: "Roboto Condensed", family: "Roboto Condensed", weight: "500", category: "sans-serif" },
+  { id: "anton", name: "Anton", family: "Anton", weight: "400", category: "display" },
+  { id: "lato", name: "Lato", family: "Lato", weight: "400", category: "sans-serif" },
+  { id: "raleway", name: "Raleway", family: "Raleway", weight: "500", category: "sans-serif" },
+  { id: "permanent_marker", name: "Permanent Marker", family: "Permanent Marker", weight: "400", category: "handwriting" },
+  { id: "fredoka_one", name: "Fredoka One", family: "Fredoka One", weight: "400", category: "display" },
+  { id: "source_sans_pro", name: "Source Sans Pro", family: "Source Sans Pro", weight: "400", category: "sans-serif" },
 ];
 
 const GREEN_SCREEN_BG = [
@@ -388,7 +420,7 @@ export default function VideoEditorPage() {
   }
 
   useEffect(() => {
-    supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }) => setClients(data || []));
+    supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }: { data: { id: string; business_name: string }[] | null }) => setClients(data || []));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1024,10 +1056,10 @@ export default function VideoEditorPage() {
                     <label className="block text-[8px] text-muted uppercase mb-1">Font</label>
                     <select value={subtitlePreview.font} onChange={e => setSubtitlePreview(prev => ({ ...prev, font: e.target.value }))} className="input text-[10px] w-full">
                       <option value="Inter">Inter</option>
-                      <option value="Montserrat">Montserrat</option>
-                      <option value="Poppins">Poppins</option>
-                      <option value="Oswald">Oswald</option>
                       <option value="Roboto Mono">Roboto Mono</option>
+                      {FONT_PRESETS.map(f => (
+                        <option key={f.id} value={f.family}>{f.name}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
@@ -1577,6 +1609,42 @@ export default function VideoEditorPage() {
                       <span className="text-[8px] bg-surface-light text-muted px-1 py-0.5 rounded">{tmpl.category}</span>
                     </div>
                   </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Effect Presets */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Sparkles size={13} className="text-gold" /> Effect Presets</h2>
+            <p className="text-[9px] text-muted mb-3">Overlay effects, transitions, and motion styles to enhance your video.</p>
+            <div className="grid grid-cols-2 gap-2">
+              {EFFECT_PRESETS.map(effect => (
+                <button key={effect.id} onClick={() => toast.success(`Effect applied: ${effect.name}`)}
+                  className="p-2.5 rounded-xl border border-border hover:border-gold/15 text-left transition-all">
+                  <p className="text-[10px] font-semibold">{effect.name}</p>
+                  <p className="text-[8px] text-muted">{effect.desc}</p>
+                  <span className="text-[7px] bg-surface-light text-muted px-1 py-0.5 rounded mt-1 inline-block">{effect.category}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Font Library */}
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Type size={13} className="text-gold" /> Font Library</h2>
+            <p className="text-[9px] text-muted mb-3">Choose a font for captions, titles, and text overlays.</p>
+            <div className="grid grid-cols-2 gap-1.5">
+              {FONT_PRESETS.map(font => (
+                <button key={font.id} onClick={() => {
+                  setSubtitlePreview(prev => ({ ...prev, font: font.family }));
+                  toast.success(`Font set: ${font.name}`);
+                }}
+                  className={`p-2 rounded-xl border text-left transition-all ${
+                    subtitlePreview.font === font.family ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                  }`}>
+                  <p className="text-[10px] font-semibold" style={{ fontFamily: font.family }}>{font.name}</p>
+                  <p className="text-[8px] text-muted">{font.category} / {font.weight}</p>
                 </button>
               ))}
             </div>

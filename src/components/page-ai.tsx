@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Bot, Send, X, Sparkles, Loader, Copy, Minimize2 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -16,13 +16,73 @@ interface Message {
   content: string;
 }
 
-export default function PageAI({ pageName, context, suggestions, accentColor = "gold" }: PageAIProps) {
+export default function PageAI({ pageName, context, suggestions, accentColor: _accentColor = "gold" }: PageAIProps) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [thinking, setThinking] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Drag state
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const dragRef = useRef<{ startX: number; startY: number; origX: number; origY: number; moved: boolean } | null>(null);
+  const elRef = useRef<HTMLDivElement>(null);
+
+  // Initialize position to bottom-right on first render
+  useEffect(() => {
+    if (!pos) {
+      setPos({ x: window.innerWidth - 64, y: window.innerHeight - 120 });
+    }
+  }, [pos]);
+
+  // Keep in bounds on resize
+  useEffect(() => {
+    const onResize = () => {
+      setPos(prev => {
+        if (!prev) return prev;
+        return {
+          x: Math.min(prev.x, window.innerWidth - 48),
+          y: Math.min(prev.y, window.innerHeight - 48),
+        };
+      });
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    e.preventDefault();
+    const el = elRef.current;
+    if (!el) return;
+    el.setPointerCapture(e.pointerId);
+    dragRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: pos?.x ?? 0,
+      origY: pos?.y ?? 0,
+      moved: false,
+    };
+  }, [pos]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    const dx = e.clientX - dragRef.current.startX;
+    const dy = e.clientY - dragRef.current.startY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) dragRef.current.moved = true;
+    const newX = Math.max(0, Math.min(window.innerWidth - 48, dragRef.current.origX + dx));
+    const newY = Math.max(0, Math.min(window.innerHeight - 48, dragRef.current.origY + dy));
+    setPos({ x: newX, y: newY });
+  }, []);
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    const wasDrag = dragRef.current?.moved;
+    dragRef.current = null;
+    const el = elRef.current;
+    if (el) el.releasePointerCapture(e.pointerId);
+    // Only toggle open if it wasn't a drag
+    if (!wasDrag && !open) setOpen(true);
+  }, [open]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -53,33 +113,73 @@ export default function PageAI({ pageName, context, suggestions, accentColor = "
     setThinking(false);
   }
 
+  const bubbleStyle = pos ? { position: "fixed" as const, left: pos.x, top: pos.y, zIndex: 40 } : { position: "fixed" as const, bottom: 80, right: 24, zIndex: 40 };
+  const panelStyle = pos ? { position: "fixed" as const, left: Math.min(pos.x - 340, window.innerWidth - 400), top: Math.max(16, pos.y - 460), zIndex: 40 } : { position: "fixed" as const, bottom: 80, right: 24, zIndex: 40 };
+
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)}
-        className={`fixed bottom-20 right-6 z-40 w-12 h-12 rounded-full bg-${accentColor}/10 border border-${accentColor}/20 flex items-center justify-center text-${accentColor} hover:scale-110 hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] transition-all duration-300 group`}
-        style={{ background: "rgba(201,168,76,0.08)", borderColor: "rgba(201,168,76,0.2)" }}
+      <div
+        ref={elRef}
+        style={bubbleStyle}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        className="w-12 h-12 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing hover:scale-110 hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] transition-all duration-300 group touch-none select-none"
+        role="button"
+        aria-label={`Open ${pageName} AI`}
+        tabIndex={0}
       >
-        <Sparkles size={20} className="text-gold group-hover:animate-spin" />
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-gold rounded-full animate-pulse" />
-      </button>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.2)" }}>
+          <Sparkles size={20} className="text-gold group-hover:animate-spin pointer-events-none" />
+          <span className="absolute -top-1 -right-1 w-3 h-3 bg-gold rounded-full animate-pulse pointer-events-none" />
+        </div>
+      </div>
     );
   }
 
   if (minimized) {
     return (
-      <button onClick={() => setMinimized(false)}
-        className="fixed bottom-20 right-6 z-40 flex items-center gap-2 px-3 py-2 rounded-full bg-surface border border-gold/20 text-xs text-gold hover:bg-surface-light transition-all"
+      <div
+        ref={elRef}
+        style={bubbleStyle}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={(e) => { const wasDrag = dragRef.current?.moved; dragRef.current = null; elRef.current?.releasePointerCapture(e.pointerId); if (!wasDrag) setMinimized(false); }}
+        className="flex items-center gap-2 px-3 py-2 rounded-full bg-surface border border-gold/20 text-xs text-gold hover:bg-surface-light transition-all cursor-grab active:cursor-grabbing touch-none select-none"
       >
         <Bot size={14} /> {pageName} AI
         <span className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
-      </button>
+      </div>
     );
   }
 
   return (
-    <div className="fixed bottom-20 right-6 z-40 w-[380px] max-h-[500px] flex flex-col bg-surface border border-border/50 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-surface-light/30">
+    <div style={panelStyle} className="w-[380px] max-h-[500px] flex flex-col bg-surface border border-border/50 rounded-2xl shadow-2xl shadow-black/40 overflow-hidden fade-in">
+      {/* Header — draggable */}
+      <div
+        className="flex items-center justify-between px-4 py-3 border-b border-border/30 bg-surface-light/30 cursor-grab active:cursor-grabbing"
+        onMouseDown={(e) => {
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const origX = pos?.x ?? 0;
+          const origY = pos?.y ?? 0;
+          let moved = false;
+          const onMove = (ev: MouseEvent) => {
+            const dx = ev.clientX - startX;
+            const dy = ev.clientY - startY;
+            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+            if (moved) {
+              setPos({
+                x: Math.max(0, Math.min(window.innerWidth - 380, origX + dx)),
+                y: Math.max(0, Math.min(window.innerHeight - 100, origY + dy)),
+              });
+            }
+          };
+          const onUp = () => { document.removeEventListener("mousemove", onMove); document.removeEventListener("mouseup", onUp); };
+          document.addEventListener("mousemove", onMove);
+          document.addEventListener("mouseup", onUp);
+        }}
+      >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-gold/10 flex items-center justify-center">
             <Sparkles size={14} className="text-gold" />

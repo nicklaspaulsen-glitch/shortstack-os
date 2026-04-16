@@ -45,9 +45,9 @@ export default function AgentOffice() {
       .gte("created_at", today)
       .order("created_at", { ascending: false })
       .limit(50)
-      .then(({ data }) => {
+      .then(({ data }: { data: any[] | null }) => {
         const counts: Record<string, { count: number; last: string }> = {};
-        (data || []).forEach(l => {
+        (data || []).forEach((l: any) => {
           const aid = l.agent || "";
           if (!counts[aid]) counts[aid] = { count: 0, last: "" };
           counts[aid].count++;

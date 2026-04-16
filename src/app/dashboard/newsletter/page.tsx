@@ -4,10 +4,10 @@ import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import {
   Mail, Send, Sparkles, Eye, Monitor, Smartphone,
-  Plus, Trash2, GripVertical, Image as ImageIcon,
+  Trash2, GripVertical, Image as ImageIcon,
   Type, MousePointerClick, Link2, Clock, Calendar,
   BarChart3, Users, ChevronDown, ChevronUp,
-  Layout, Megaphone, BookOpen, PartyPopper,
+  Layout, Megaphone, BookOpen,
   Briefcase, Gift, Zap, Copy, Check, X,
   ArrowUp, ArrowDown, Loader2,
 } from "lucide-react";

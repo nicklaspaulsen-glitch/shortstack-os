@@ -23,7 +23,7 @@ export default function QuickAdd() {
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
 
   useEffect(() => {
-    supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }) => {
+    supabase.from("clients").select("id, business_name").eq("is_active", true).then(({ data }: { data: { id: string; business_name: string }[] | null }) => {
       setClients(data || []);
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
