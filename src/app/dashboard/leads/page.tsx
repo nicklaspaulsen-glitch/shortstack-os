@@ -1,63 +1,88 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Zap, MessageSquare, Search, Phone, Mail, Star,
   TrendingUp, Users, Target, ArrowDownRight,
   CheckCircle, AlertTriangle, Tag, Upload, Download, Flame,
   Clock, UserPlus, BarChart3,
-  RefreshCw, Bell, Layers, GitBranch
+  RefreshCw, Bell, Layers, GitBranch, Loader, ChevronLeft, ChevronRight as ChevronRightIcon
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
 
-interface MockLead {
+interface Lead {
   id: string;
   business_name: string;
-  phone: string;
-  email: string;
-  industry: string;
-  city: string;
-  source: string;
-  status: string;
-  score: number;
-  tags: string[];
-  lastActivity: string;
-  website: string;
-  rating: number;
-  reviews: number;
-  assigned: string;
-  engagements: number;
+  phone: string | null;
+  email: string | null;
+  industry: string | null;
+  city: string | null;
+  state: string | null;
+  source: string | null;
+  status: string | null;
+  lead_score: number | null;
+  website: string | null;
+  google_rating: number | null;
+  review_count: number | null;
+  address: string | null;
+  scraped_at: string | null;
+  source_url: string | null;
+  category: string | null;
 }
-
-const MOCK_LEADS: MockLead[] = [];
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const SOURCES = ["Google Maps", "Instagram DM", "Cold Call", "Website Form", "Facebook", "Referral", "TikTok", "LinkedIn", "Cold Email"];
 
 export default function LeadEnginePage() {
   const [activeTab, setActiveTab] = useState<MainTab>("leads");
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [industryFilter, setIndustryFilter] = useState("");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [selectedLead, setSelectedLead] = useState<string | null>(null);
   const [tagInput, setTagInput] = useState("");
   const [hotAlerts, setHotAlerts] = useState(true);
   const [expandedLead, setExpandedLead] = useState<string | null>(null);
 
-  const filteredLeads = MOCK_LEADS.filter(l =>
-    (!searchQuery || l.business_name.toLowerCase().includes(searchQuery.toLowerCase()) || l.email.toLowerCase().includes(searchQuery.toLowerCase())) &&
-    (!statusFilter || l.status === statusFilter) &&
-    (!industryFilter || l.industry === industryFilter)
-  );
+  // Real data state
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const LIMIT = 50;
 
-  const industries = Array.from(new Set(MOCK_LEADS.map(l => l.industry)));
-  const totalLeads = MOCK_LEADS.length;
-  const hotLeads = MOCK_LEADS.filter(l => l.score >= 80).length;
-  const qualifiedLeads = MOCK_LEADS.filter(l => l.status === "qualified" || l.status === "booked").length;
-  const convertedLeads = MOCK_LEADS.filter(l => l.status === "converted").length;
+  const fetchLeads = useCallback(async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({ page: page.toString(), limit: LIMIT.toString() });
+      if (searchQuery) params.set("search", searchQuery);
+      if (statusFilter) params.set("status", statusFilter);
+      if (industryFilter) params.set("industry", industryFilter);
+
+      const res = await fetch(`/api/leads?${params}`);
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+      setLeads(data.leads || []);
+      setTotalCount(data.total || 0);
+    } catch (err) {
+      console.error("Failed to fetch leads:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, searchQuery, statusFilter, industryFilter]);
+
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, statusFilter, industryFilter]);
+
+  const industries = Array.from(new Set(leads.map(l => l.industry).filter(Boolean))) as string[];
+  const totalLeads = totalCount;
+  const hotLeads = leads.filter(l => (l.lead_score ?? 0) >= 80).length;
+  const qualifiedLeads = leads.filter(l => l.status === "qualified" || l.status === "booked").length;
+  const convertedLeads = leads.filter(l => l.status === "converted").length;
+  const totalPages = Math.ceil(totalCount / LIMIT);
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "leads", label: "All Leads", icon: <Users size={14} /> },
@@ -97,7 +122,7 @@ export default function LeadEnginePage() {
           { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
           { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
           { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
-          { label: "Avg Score", value: totalLeads > 0 ? Math.round(MOCK_LEADS.reduce((s, l) => s + l.score, 0) / totalLeads) : 0, icon: <Target size={12} />, color: "text-blue-400" },
+          { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
           { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
         ].map((stat, i) => (
           <div key={i} className="card text-center p-3">
@@ -150,11 +175,15 @@ export default function LeadEnginePage() {
               <span className="text-center">Score</span>
               <span>Status</span>
               <span className="text-center">Rating</span>
-              <span>Tags</span>
-              <span>Activity</span>
+              <span className="col-span-2">Location</span>
               <span className="text-center">Actions</span>
             </div>
-            {filteredLeads.length === 0 && (
+            {loading && (
+              <div className="flex items-center justify-center py-12">
+                <Loader size={20} className="animate-spin text-gold" />
+              </div>
+            )}
+            {!loading && leads.length === 0 && (
               <EmptyState
                 icon={<Users size={24} />}
                 title="No Leads Yet"
@@ -163,40 +192,44 @@ export default function LeadEnginePage() {
                 actionHref="/dashboard/scraper"
               />
             )}
-            {filteredLeads.map(lead => (
+            {!loading && leads.map(lead => (
               <div key={lead.id}>
                 <div onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
                   className="grid grid-cols-12 items-center py-2.5 px-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer text-[10px]">
                   <div className="col-span-3">
                     <p className="text-xs font-semibold">{lead.business_name}</p>
-                    <p className="text-[9px] text-muted">{lead.industry} | {lead.city}</p>
+                    <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
                   </div>
                   <div className="col-span-2">
-                    <p className="text-muted flex items-center gap-1"><Mail size={9} /> {lead.email}</p>
-                    <p className="text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone}</p>
+                    <p className="text-muted flex items-center gap-1 truncate"><Mail size={9} /> {lead.email || "---"}</p>
+                    <p className="text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone || "---"}</p>
                   </div>
-                  <span className="text-muted">{lead.source}</span>
+                  <span className="text-muted">{lead.source || "---"}</span>
                   <div className="text-center">
-                    <span className={`font-bold ${lead.score >= 80 ? "text-green-400" : lead.score >= 50 ? "text-yellow-400" : "text-red-400"}`}>{lead.score}</span>
+                    <span className={`font-bold ${(lead.lead_score ?? 0) >= 80 ? "text-green-400" : (lead.lead_score ?? 0) >= 50 ? "text-yellow-400" : "text-red-400"}`}>{lead.lead_score ?? "—"}</span>
                   </div>
                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
                     lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
                     lead.status === "booked" ? "bg-green-400/10 text-green-400" :
                     lead.status === "qualified" ? "bg-blue-400/10 text-blue-400" :
-                    lead.status === "contacted" ? "bg-yellow-400/10 text-yellow-400" :
+                    lead.status === "contacted" || lead.status === "called" ? "bg-yellow-400/10 text-yellow-400" :
+                    lead.status === "replied" ? "bg-emerald-400/10 text-emerald-400" :
                     "bg-white/5 text-muted"
-                  }`}>{lead.status}</span>
+                  }`}>{lead.status || "new"}</span>
                   <div className="text-center flex items-center justify-center gap-0.5">
-                    <Star size={9} className="text-gold" />
-                    <span>{lead.rating}</span>
-                    <span className="text-muted">({lead.reviews})</span>
+                    {lead.google_rating ? (
+                      <>
+                        <Star size={9} className="text-gold" />
+                        <span>{lead.google_rating}</span>
+                        <span className="text-muted">({lead.review_count ?? 0})</span>
+                      </>
+                    ) : (
+                      <span className="text-muted">---</span>
+                    )}
                   </div>
-                  <div className="flex gap-0.5 flex-wrap">
-                    {lead.tags.slice(0, 2).map(tag => (
-                      <span key={tag} className="text-[8px] px-1 py-0.5 rounded bg-gold/10 text-gold">{tag}</span>
-                    ))}
+                  <div className="col-span-2 text-muted truncate">
+                    {[lead.city, lead.state].filter(Boolean).join(", ") || "---"}
                   </div>
-                  <span className="text-muted">{lead.lastActivity}</span>
                   <div className="flex items-center justify-center gap-1">
                     <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><Phone size={10} /></button>
                     <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><Mail size={10} /></button>
@@ -216,9 +249,9 @@ export default function LeadEnginePage() {
                           { item: "Has phone number", check: !!lead.phone },
                           { item: "Has email", check: !!lead.email },
                           { item: "Website found", check: !!lead.website },
-                          { item: "Rating 4.0+", check: lead.rating >= 4.0 },
-                          { item: "Engaged (opened/clicked)", check: lead.engagements >= 3 },
-                          { item: "Decision maker identified", check: lead.tags.includes("decision-maker") },
+                          { item: "Rating 4.0+", check: (lead.google_rating ?? 0) >= 4.0 },
+                          { item: "Has address", check: !!lead.address },
+                          { item: "Score 70+", check: (lead.lead_score ?? 0) >= 70 },
                         ].map((q, i) => (
                           <div key={i} className="flex items-center gap-1.5 text-[9px]">
                             {q.check ? <CheckCircle size={9} className="text-green-400" /> : <div className="w-2.5 h-2.5 rounded border border-muted" />}
@@ -232,6 +265,28 @@ export default function LeadEnginePage() {
               </div>
             ))}
           </div>
+
+          {/* Pagination */}
+          {!loading && totalPages > 1 && (
+            <div className="flex items-center justify-between pt-3">
+              <p className="text-[10px] text-muted">
+                Showing {((page - 1) * LIMIT) + 1}–{Math.min(page * LIMIT, totalCount)} of {totalCount.toLocaleString()} leads
+              </p>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}
+                  className="p-1.5 rounded-lg border border-border hover:border-gold/20 disabled:opacity-30 transition-all">
+                  <ChevronLeft size={14} />
+                </button>
+                <span className="text-xs font-mono text-muted">
+                  {page} / {totalPages}
+                </span>
+                <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page >= totalPages}
+                  className="p-1.5 rounded-lg border border-border hover:border-gold/20 disabled:opacity-30 transition-all">
+                  <ChevronRightIcon size={14} />
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Duplicate Detection */}
           <div className="card">
@@ -304,12 +359,12 @@ export default function LeadEnginePage() {
                   <Bell size={12} className="text-red-400" /> Hot Lead Alerts
                 </h4>
                 <div className="space-y-1.5">
-                  {MOCK_LEADS.filter(l => l.score >= 80).map(lead => (
+                  {leads.filter(l => (l.lead_score ?? 0) >= 80).map(lead => (
                     <div key={lead.id} className="flex items-center justify-between p-2 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
                       <div className="flex items-center gap-2">
                         <Flame size={10} className="text-red-400" />
                         <span className="font-semibold">{lead.business_name}</span>
-                        <span className="text-muted">Score: {lead.score}</span>
+                        <span className="text-muted">Score: {lead.lead_score}</span>
                       </div>
                       <button className="text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold">Contact Now</button>
                     </div>
@@ -402,26 +457,26 @@ export default function LeadEnginePage() {
             ))}
           </div>
           <div className="space-y-1.5">
-            {MOCK_LEADS.length === 0 && (
+            {leads.length === 0 && (
               <div className="text-center py-8 text-muted text-xs">No leads to enrich yet.</div>
             )}
-            {MOCK_LEADS.map(lead => (
+            {leads.map(lead => (
               <div key={lead.id} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border text-[10px]">
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                    lead.email !== "---" && lead.phone !== "---" ? "bg-green-400/10" : "bg-yellow-400/10"
+                    lead.email && lead.phone ? "bg-green-400/10" : "bg-yellow-400/10"
                   }`}>
-                    {lead.email !== "---" && lead.phone !== "---" ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-yellow-400" />}
+                    {lead.email && lead.phone ? <CheckCircle size={12} className="text-green-400" /> : <AlertTriangle size={12} className="text-yellow-400" />}
                   </div>
                   <div>
                     <p className="font-semibold">{lead.business_name}</p>
-                    <p className="text-[9px] text-muted">{lead.industry} | {lead.city}</p>
+                    <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex gap-2">
-                    <span className={lead.email !== "---" ? "text-green-400" : "text-red-400"}>{lead.email !== "---" ? "Email" : "No email"}</span>
-                    <span className={lead.phone !== "---" ? "text-green-400" : "text-red-400"}>{lead.phone !== "---" ? "Phone" : "No phone"}</span>
+                    <span className={lead.email ? "text-green-400" : "text-red-400"}>{lead.email ? "Email" : "No email"}</span>
+                    <span className={lead.phone ? "text-green-400" : "text-red-400"}>{lead.phone ? "Phone" : "No phone"}</span>
                     <span className={lead.website ? "text-green-400" : "text-red-400"}>{lead.website ? "Website" : "No site"}</span>
                   </div>
                   <button className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Enrich</button>
