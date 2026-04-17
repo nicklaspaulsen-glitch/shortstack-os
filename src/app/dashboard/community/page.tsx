@@ -174,6 +174,103 @@ export default function CommunityPage() {
   const [newContent, setNewContent] = useState("");
   const [newCategory, setNewCategory] = useState("discussion");
 
+  // Comments state (keyed by post id)
+  const [postComments, setPostComments] = useState<Record<string, Array<{ id: string; user_id: string; author_name: string; author_avatar: string | null; content: string; likes: number; created_at: string; parent_id: string | null; }>>>({});
+  const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [commentsLoading, setCommentsLoading] = useState<Record<string, boolean>>({});
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
+
+  /* ---- Fetch comments for a post ---- */
+  async function loadComments(postId: string) {
+    setCommentsLoading(prev => ({ ...prev, [postId]: true }));
+    try {
+      const res = await fetch(`/api/community/comments?post_id=${postId}`);
+      const data = await res.json();
+      setPostComments(prev => ({ ...prev, [postId]: data.comments || [] }));
+    } catch {
+      // silent
+    } finally {
+      setCommentsLoading(prev => ({ ...prev, [postId]: false }));
+    }
+  }
+
+  /* ---- Post a comment ---- */
+  async function postComment(postId: string, parentId?: string | null) {
+    const content = (commentInputs[postId] || "").trim();
+    if (!content) return;
+    try {
+      const res = await fetch("/api/community/comments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ post_id: postId, content, parent_id: parentId || null }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPostComments(prev => ({ ...prev, [postId]: [...(prev[postId] || []), data.comment] }));
+        setCommentInputs(prev => ({ ...prev, [postId]: "" }));
+        setReplyingTo(null);
+        setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments_count: (p.comments_count || 0) + 1 } : p));
+      }
+    } catch {
+      // silent
+    }
+  }
+
+  /* ---- Delete a comment ---- */
+  async function deleteComment(postId: string, commentId: string) {
+    await fetch(`/api/community/comments/${commentId}`, { method: "DELETE" });
+    setPostComments(prev => ({
+      ...prev,
+      [postId]: (prev[postId] || []).filter(c => c.id !== commentId),
+    }));
+    setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments_count: Math.max(0, (p.comments_count || 0) - 1) } : p));
+  }
+
+  /* ---- Toggle comment like ---- */
+  async function toggleCommentLike(postId: string, commentId: string) {
+    const res = await fetch(`/api/community/comments/${commentId}`, { method: "POST" });
+    const data = await res.json();
+    if (data.success) {
+      setPostComments(prev => ({
+        ...prev,
+        [postId]: (prev[postId] || []).map(c => c.id === commentId
+          ? { ...c, likes: Math.max(0, c.likes + (data.liked ? 1 : -1)) }
+          : c),
+      }));
+    }
+  }
+
+  /* ---- Toggle bookmark ---- */
+  async function toggleBookmark(postId: string) {
+    const res = await fetch("/api/community/bookmark", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ post_id: postId }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      setBookmarkedPosts(prev => {
+        const next = new Set(prev);
+        if (data.bookmarked) next.add(postId);
+        else next.delete(postId);
+        return next;
+      });
+    }
+  }
+
+  // Load bookmarks on mount
+  useEffect(() => {
+    fetch("/api/community/bookmark")
+      .then(r => r.json())
+      .then(d => {
+        if (Array.isArray(d.bookmarks)) {
+          setBookmarkedPosts(new Set(d.bookmarks.map((b: { post_id: string }) => b.post_id)));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   /* ---- Fetch posts ---- */
   const fetchPosts = useCallback(async () => {
     try {
@@ -606,16 +703,124 @@ export default function CommunityPage() {
                               className={`flex items-center gap-1 text-[10px] transition-colors ${liked ? "text-red-400" : "text-muted hover:text-red-400"}`}>
                               <Heart size={12} fill={liked ? "currentColor" : "none"} /> {post.likes + (liked ? 1 : 0)}
                             </button>
-                            <button onClick={() => setExpandedPost(expandedPost === post.id ? null : post.id)}
+                            <button onClick={() => {
+                              const isExpanded = expandedPost === post.id;
+                              setExpandedPost(isExpanded ? null : post.id);
+                              if (!isExpanded && !postComments[post.id]) loadComments(post.id);
+                            }}
                               className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground">
-                              <MessageSquare size={12} /> {post.comments_count}
+                              <MessageSquare size={12} /> {post.comments_count} {post.comments_count === 1 ? "comment" : "comments"}
                               <ChevronDown size={10} className={expandedPost === post.id ? "rotate-180" : ""} />
+                            </button>
+                            <button onClick={() => toggleBookmark(post.id)}
+                              className={`flex items-center gap-1 text-[10px] transition-colors ${bookmarkedPosts.has(post.id) ? "text-gold" : "text-muted hover:text-gold"}`}>
+                              <Pin size={12} fill={bookmarkedPosts.has(post.id) ? "currentColor" : "none"} />
+                            </button>
+                            <button onClick={() => {
+                              if (navigator.share) navigator.share({ title: post.title, text: post.content.slice(0, 100) });
+                              else { navigator.clipboard.writeText(`${window.location.origin}/dashboard/community#${post.id}`); }
+                            }}
+                              className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground">
+                              <ExternalLink size={12} />
                             </button>
                             <button onClick={() => handleDelete(post.id)}
                               className="flex items-center gap-1 text-[10px] text-muted hover:text-red-400 ml-auto">
                               <Trash2 size={12} />
                             </button>
                           </div>
+
+                          {/* Comments section — shown when expanded */}
+                          {expandedPost === post.id && (
+                            <div className="mt-4 pt-4 border-t border-border/50 space-y-3">
+                              {/* Comment input */}
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  value={commentInputs[post.id] || ""}
+                                  onChange={e => setCommentInputs(prev => ({ ...prev, [post.id]: e.target.value }))}
+                                  onKeyDown={e => e.key === "Enter" && postComment(post.id, replyingTo)}
+                                  placeholder={replyingTo ? "Write a reply..." : "Write a comment..."}
+                                  className="input flex-1 text-xs"
+                                />
+                                <button onClick={() => postComment(post.id, replyingTo)}
+                                  disabled={!(commentInputs[post.id] || "").trim()}
+                                  className="btn-primary text-xs px-3 flex items-center gap-1 disabled:opacity-40">
+                                  <Send size={10} /> Post
+                                </button>
+                              </div>
+                              {replyingTo && (
+                                <p className="text-[9px] text-muted">Replying to a comment — <button onClick={() => setReplyingTo(null)} className="text-gold hover:underline">cancel</button></p>
+                              )}
+
+                              {/* Comments list */}
+                              {commentsLoading[post.id] ? (
+                                <p className="text-[10px] text-muted text-center py-4">Loading comments...</p>
+                              ) : (postComments[post.id] || []).length === 0 ? (
+                                <p className="text-[10px] text-muted text-center py-4">Be the first to comment</p>
+                              ) : (
+                                <div className="space-y-2.5">
+                                  {(postComments[post.id] || []).filter(c => !c.parent_id).map(comment => {
+                                    const replies = (postComments[post.id] || []).filter(c => c.parent_id === comment.id);
+                                    return (
+                                      <div key={comment.id} className="space-y-2">
+                                        <div className="flex gap-2">
+                                          <div className="w-7 h-7 rounded-full bg-gold/15 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">
+                                            {(comment.author_name || "?").charAt(0).toUpperCase()}
+                                          </div>
+                                          <div className="flex-1 bg-surface-light/50 rounded-lg p-2.5">
+                                            <div className="flex items-center gap-2 mb-0.5">
+                                              <span className="text-[10px] font-semibold">{comment.author_name}</span>
+                                              <span className="text-[8px] text-muted">{timeAgo(comment.created_at)}</span>
+                                            </div>
+                                            <p className="text-[11px] leading-relaxed">{comment.content}</p>
+                                            <div className="flex items-center gap-3 mt-1.5">
+                                              <button onClick={() => toggleCommentLike(post.id, comment.id)}
+                                                className="flex items-center gap-1 text-[9px] text-muted hover:text-red-400">
+                                                <Heart size={9} /> {comment.likes}
+                                              </button>
+                                              <button onClick={() => setReplyingTo(comment.id)}
+                                                className="text-[9px] text-muted hover:text-foreground">
+                                                Reply
+                                              </button>
+                                              <button onClick={() => deleteComment(post.id, comment.id)}
+                                                className="text-[9px] text-muted hover:text-red-400 ml-auto">
+                                                <Trash2 size={9} />
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        {/* Nested replies */}
+                                        {replies.map(reply => (
+                                          <div key={reply.id} className="flex gap-2 ml-9">
+                                            <div className="w-6 h-6 rounded-full bg-blue-400/15 flex items-center justify-center text-[9px] font-bold text-blue-400 shrink-0">
+                                              {(reply.author_name || "?").charAt(0).toUpperCase()}
+                                            </div>
+                                            <div className="flex-1 bg-surface-light/30 rounded-lg p-2">
+                                              <div className="flex items-center gap-2 mb-0.5">
+                                                <span className="text-[10px] font-semibold">{reply.author_name}</span>
+                                                <span className="text-[8px] text-muted">{timeAgo(reply.created_at)}</span>
+                                              </div>
+                                              <p className="text-[11px] leading-relaxed">{reply.content}</p>
+                                              <div className="flex items-center gap-3 mt-1">
+                                                <button onClick={() => toggleCommentLike(post.id, reply.id)}
+                                                  className="flex items-center gap-1 text-[9px] text-muted hover:text-red-400">
+                                                  <Heart size={9} /> {reply.likes}
+                                                </button>
+                                                <button onClick={() => deleteComment(post.id, reply.id)}
+                                                  className="text-[9px] text-muted hover:text-red-400 ml-auto">
+                                                  <Trash2 size={9} />
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

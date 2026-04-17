@@ -3217,8 +3217,8 @@ export default function ThumbnailGeneratorPage() {
               {referenceImages.length < 3 && (
                 <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border/50 hover:border-gold/30 rounded-xl py-3 cursor-pointer transition-colors">
                   <Upload size={14} className="text-muted" />
-                  <span className="text-[10px] text-muted">Click or drag files here ({3 - referenceImages.length} remaining)</span>
-                  <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => {
+                  <span className="text-[10px] text-muted">PNG, JPG, WEBP · {3 - referenceImages.length} remaining</span>
+                  <input type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp" multiple className="hidden" onChange={(e) => {
                     const files = Array.from(e.target.files || []);
                     const remaining = 3 - referenceImages.length;
                     files.slice(0, remaining).forEach(file => {

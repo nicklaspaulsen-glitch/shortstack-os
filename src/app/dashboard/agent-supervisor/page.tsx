@@ -11,6 +11,7 @@ import {
   Crown
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import AgentAvatar, { pickFaceFromId } from "@/components/dashboard/agent-avatar";
 
 /* ── Types ── */
 interface Agent {
@@ -208,29 +209,37 @@ export default function AgentSupervisorPage() {
           {/* Live Status Grid */}
           <div className="lg:col-span-2 card p-4">
             <h2 className="text-sm font-semibold mb-3 flex items-center gap-2"><Activity size={14} /> Live Agent Status</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {agents.slice(0, 8).map(a => (
-                <div key={a.id} className={`p-2.5 rounded-lg border transition-all ${
-                  a.status === "working" ? "border-green-500/20 bg-green-500/5" :
-                  a.status === "error" ? "border-red-500/20 bg-red-500/5" :
-                  a.status === "paused" ? "border-yellow-500/20 bg-yellow-500/5" :
-                  "border-border"
-                }`}>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <span className={`w-2 h-2 rounded-full ${
-                      a.status === "working" ? "bg-green-400 animate-pulse" :
-                      a.status === "error" ? "bg-red-400 animate-pulse" :
-                      a.status === "paused" ? "bg-yellow-400" : "bg-gray-400"
-                    }`} />
-                    <span className="text-[10px] font-semibold">{a.name}</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {agents.slice(0, 8).map(a => {
+                const mappedStatus: "idle" | "working" | "thinking" | "error" | "success" | "offline" =
+                  a.status === "working" ? "working" :
+                  a.status === "error" ? "error" :
+                  a.status === "paused" ? "offline" :
+                  "idle";
+                return (
+                  <div key={a.id} className={`p-3 rounded-xl border flex flex-col items-center gap-2 transition-all ${
+                    a.status === "working" ? "border-green-500/20 bg-green-500/5" :
+                    a.status === "error" ? "border-red-500/20 bg-red-500/5" :
+                    a.status === "paused" ? "border-yellow-500/20 bg-yellow-500/5" :
+                    "border-border"
+                  }`}>
+                    <AgentAvatar
+                      face={pickFaceFromId(a.id)}
+                      status={mappedStatus}
+                      size={72}
+                    />
+                    <div className="text-center">
+                      <p className="text-[11px] font-semibold">{a.name}</p>
+                      <p className="text-[9px] text-muted truncate max-w-[120px]">{a.lastAction}</p>
+                      <div className="flex items-center justify-center gap-2 mt-1 text-[8px] text-muted">
+                        <span>{a.actionsToday} actions</span>
+                        <span>•</span>
+                        <span>{a.successRate}%</span>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-[9px] text-muted truncate">{a.lastAction}</p>
-                  <div className="flex items-center justify-between mt-1 text-[8px] text-muted">
-                    <span>{a.actionsToday} actions</span>
-                    <span>{a.successRate}%</span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

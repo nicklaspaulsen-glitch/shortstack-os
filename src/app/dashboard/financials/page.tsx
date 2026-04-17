@@ -8,7 +8,7 @@ import Modal from "@/components/ui/modal";
 import {
   DollarSign, TrendingUp, Users, Minus, Plus, Pencil, Trash2,
   PiggyBank, BarChart3, Receipt, ArrowUpRight, ArrowDownRight,
-  FileText, Download,
+  FileText, Download, Package, X,
   RefreshCw, CheckCircle, Globe, AlertTriangle, Zap, Shield,
   Layers, CreditCard, Calendar, Clock, Target, Percent,
 } from "lucide-react";
@@ -103,7 +103,18 @@ export default function FinancialsPage() {
   const [loading, setLoading] = useState(true);
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<"overview" | "expenses" | "invoicing" | "forecasting" | "export">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "expenses" | "subscriptions" | "invoicing" | "forecasting" | "export">("overview");
+  const [subscriptions, setSubscriptions] = useState<Array<{
+    id: string; tool_name: string; category: string; cost_monthly: number;
+    cost_annual: number; billing_cycle: string; next_charge_date: string | null;
+    used_by: string; status: string; logo_url: string | null; notes: string | null;
+  }>>([]);
+  const [subsLoading, setSubsLoading] = useState(false);
+  const [showAddSub, setShowAddSub] = useState(false);
+  const [newSub, setNewSub] = useState({
+    tool_name: "", category: "Other", cost_monthly: 0, billing_cycle: "monthly",
+    next_charge_date: "", used_by: "me", notes: "",
+  });
 
   // Expense state
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -404,10 +415,56 @@ export default function FinancialsPage() {
   const TABS = [
     { id: "overview" as const, label: "Overview", icon: BarChart3 },
     { id: "expenses" as const, label: "Expenses", icon: Receipt },
+    { id: "subscriptions" as const, label: "Subscriptions", icon: Package },
     { id: "invoicing" as const, label: "Invoicing", icon: FileText },
     { id: "forecasting" as const, label: "Forecasting", icon: TrendingUp },
     { id: "export" as const, label: "Export", icon: Download },
   ];
+
+  // Fetch subscriptions when tab opens
+  useEffect(() => {
+    if (activeTab !== "subscriptions") return;
+    setSubsLoading(true);
+    fetch("/api/subscriptions")
+      .then(r => r.json())
+      .then(d => setSubscriptions(d.subscriptions || []))
+      .finally(() => setSubsLoading(false));
+  }, [activeTab]);
+
+  async function saveSubscription() {
+    if (!newSub.tool_name.trim()) return;
+    const res = await fetch("/api/subscriptions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newSub),
+    });
+    const d = await res.json();
+    if (d.success) {
+      setSubscriptions(prev => [d.subscription, ...prev]);
+      setNewSub({ tool_name: "", category: "Other", cost_monthly: 0, billing_cycle: "monthly", next_charge_date: "", used_by: "me", notes: "" });
+      setShowAddSub(false);
+      toast.success("Subscription added");
+    } else {
+      toast.error(d.error || "Failed to save");
+    }
+  }
+
+  async function deleteSubscription(id: string) {
+    if (!confirm("Delete this subscription?")) return;
+    await fetch(`/api/subscriptions/${id}`, { method: "DELETE" });
+    setSubscriptions(prev => prev.filter(s => s.id !== id));
+    toast.success("Deleted");
+  }
+
+  const totalMonthlySubs = subscriptions.reduce((s, sub) => s + (sub.cost_monthly || 0), 0);
+  const totalAnnualSubs = subscriptions.reduce((s, sub) => s + (sub.cost_annual || (sub.cost_monthly || 0) * 12), 0);
+  const activeSubs = subscriptions.filter(s => s.status === "active").length;
+  const upcomingRenewals = subscriptions.filter(s => {
+    if (!s.next_charge_date) return false;
+    const days = Math.ceil((new Date(s.next_charge_date).getTime() - Date.now()) / 86400000);
+    return days >= 0 && days <= 7;
+  }).length;
+  const mostExpensive = subscriptions.reduce((m, s) => s.cost_monthly > (m?.cost_monthly || 0) ? s : m, null as typeof subscriptions[number] | null);
 
   return (
     <div className="fade-in space-y-5">
@@ -831,6 +888,154 @@ export default function FinancialsPage() {
               </div>
             )}
           </div>
+        </>
+      )}
+
+      {/* ================================================================== */}
+      {/* SUBSCRIPTIONS TAB                                                   */}
+      {/* ================================================================== */}
+
+      {activeTab === "subscriptions" && (
+        <>
+          {/* Summary cards */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
+            <div className="card p-4">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Monthly Spend</p>
+              <p className="text-lg font-bold text-red-400">{formatCurrency(totalMonthlySubs)}</p>
+              <p className="text-[9px] text-muted">{activeSubs} active tools</p>
+            </div>
+            <div className="card p-4">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Annual Spend</p>
+              <p className="text-lg font-bold text-foreground">{formatCurrency(totalAnnualSubs)}</p>
+              <p className="text-[9px] text-muted">Projected</p>
+            </div>
+            <div className="card p-4">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Active</p>
+              <p className="text-lg font-bold text-emerald-400">{activeSubs}</p>
+              <p className="text-[9px] text-muted">of {subscriptions.length} total</p>
+            </div>
+            <div className="card p-4">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Renewals ≤7d</p>
+              <p className="text-lg font-bold text-amber-400">{upcomingRenewals}</p>
+              <p className="text-[9px] text-muted">Upcoming charges</p>
+            </div>
+            <div className="card p-4">
+              <p className="text-[10px] text-muted uppercase tracking-wider">Top Cost</p>
+              <p className="text-sm font-semibold text-gold truncate">{mostExpensive?.tool_name || "—"}</p>
+              <p className="text-[9px] text-muted">{mostExpensive ? formatCurrency(mostExpensive.cost_monthly) + "/mo" : "No data"}</p>
+            </div>
+          </div>
+
+          {/* Header + Add button */}
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-sm font-semibold text-foreground">Software & Subscriptions</h2>
+              <p className="text-[11px] text-muted">Track every tool you and your clients pay for.</p>
+            </div>
+            <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs flex items-center gap-1.5">
+              <Plus size={12} /> Add Subscription
+            </button>
+          </div>
+
+          {/* Subscriptions list */}
+          <div className="card p-0 overflow-hidden">
+            {subsLoading ? (
+              <div className="p-8 text-center text-xs text-muted">Loading...</div>
+            ) : subscriptions.length === 0 ? (
+              <div className="p-12 text-center">
+                <Package size={32} className="text-muted/30 mx-auto mb-3" />
+                <p className="text-sm font-medium text-foreground mb-1">No subscriptions tracked yet</p>
+                <p className="text-xs text-muted mb-4">Track your agency software spend to cut unused tools and optimize costs.</p>
+                <button onClick={() => setShowAddSub(true)} className="btn-primary text-xs">Add your first tool</button>
+              </div>
+            ) : (
+              <div className="divide-y divide-border">
+                <div className="grid grid-cols-12 px-4 py-2.5 bg-surface-light/40 text-[10px] uppercase tracking-wider text-muted font-semibold">
+                  <div className="col-span-4">Tool</div>
+                  <div className="col-span-2">Category</div>
+                  <div className="col-span-2 text-right">Cost</div>
+                  <div className="col-span-2">Renews</div>
+                  <div className="col-span-1">Used By</div>
+                  <div className="col-span-1 text-right">Actions</div>
+                </div>
+                {subscriptions.map(s => (
+                  <div key={s.id} className="grid grid-cols-12 px-4 py-3 items-center hover:bg-surface-light/30 transition-colors text-xs">
+                    <div className="col-span-4 flex items-center gap-2">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${s.status === "active" ? "bg-gold/10 text-gold" : "bg-surface-light text-muted"}`}>
+                        {s.tool_name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">{s.tool_name}</p>
+                        {s.notes && <p className="text-[9px] text-muted truncate max-w-[180px]">{s.notes}</p>}
+                      </div>
+                    </div>
+                    <div className="col-span-2 text-muted">{s.category}</div>
+                    <div className="col-span-2 text-right">
+                      <p className="font-semibold text-foreground">{formatCurrency(s.cost_monthly)}</p>
+                      <p className="text-[9px] text-muted">/{s.billing_cycle.slice(0,2)}</p>
+                    </div>
+                    <div className="col-span-2 text-muted">
+                      {s.next_charge_date ? new Date(s.next_charge_date).toLocaleDateString() : "—"}
+                    </div>
+                    <div className="col-span-1">
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border capitalize">
+                        {s.used_by}
+                      </span>
+                    </div>
+                    <div className="col-span-1 text-right">
+                      <button onClick={() => deleteSubscription(s.id)} className="text-red-400 hover:text-red-300 text-[10px]">Remove</button>
+                    </div>
+                  </div>
+                ))}
+                <div className="grid grid-cols-12 px-4 py-3 bg-surface-light/40 text-xs font-semibold">
+                  <div className="col-span-6 text-muted">Total Monthly</div>
+                  <div className="col-span-2 text-right text-red-400">{formatCurrency(totalMonthlySubs)}</div>
+                  <div className="col-span-4" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Add Subscription Modal */}
+          {showAddSub && (
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowAddSub(false)}>
+              <div className="card max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-semibold">Add Subscription</h3>
+                  <button onClick={() => setShowAddSub(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                </div>
+                <input list="saas-list" className="input w-full text-xs" placeholder="Tool name (e.g., Canva)" value={newSub.tool_name} onChange={e => setNewSub({...newSub, tool_name: e.target.value})} />
+                <datalist id="saas-list">
+                  {["Canva","Figma","Notion","Slack","Zoom","Google Workspace","Microsoft 365","Adobe Creative Cloud","Stripe","Shopify","Mailchimp","HubSpot","Calendly","Loom","Webflow","Vercel","Supabase","OpenAI","Anthropic Claude","Midjourney","Runway ML","ElevenLabs","Zapier","Airtable","Asana","Monday.com","ClickUp","Trello","Linear","GitHub","Semrush","Ahrefs","Hootsuite","Buffer","Later","ActiveCampaign","ConvertKit","Klaviyo","Intercom","Zendesk","Mixpanel","Amplitude","Hotjar","Typeform","Jotform","1Password","Dropbox"].map(n => <option key={n} value={n} />)}
+                </datalist>
+                <div className="grid grid-cols-2 gap-2">
+                  <select className="input text-xs" value={newSub.category} onChange={e => setNewSub({...newSub, category: e.target.value})}>
+                    {["Design","Marketing","CRM","Analytics","Communication","Productivity","Finance","AI Tools","Development","Hosting","Other"].map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                  <select className="input text-xs" value={newSub.billing_cycle} onChange={e => setNewSub({...newSub, billing_cycle: e.target.value})}>
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="annual">Annual</option>
+                    <option value="one_time">One-time</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input type="number" className="input text-xs" placeholder="Monthly cost" value={newSub.cost_monthly} onChange={e => setNewSub({...newSub, cost_monthly: parseFloat(e.target.value) || 0})} />
+                  <input type="date" className="input text-xs" value={newSub.next_charge_date} onChange={e => setNewSub({...newSub, next_charge_date: e.target.value})} />
+                </div>
+                <select className="input text-xs w-full" value={newSub.used_by} onChange={e => setNewSub({...newSub, used_by: e.target.value})}>
+                  <option value="me">Used by me</option>
+                  <option value="clients">Used by clients</option>
+                  <option value="both">Both</option>
+                </select>
+                <textarea className="input text-xs w-full" placeholder="Notes (optional)" value={newSub.notes} onChange={e => setNewSub({...newSub, notes: e.target.value})} rows={2} />
+                <div className="flex gap-2 pt-2">
+                  <button onClick={() => setShowAddSub(false)} className="btn-secondary text-xs flex-1">Cancel</button>
+                  <button onClick={saveSubscription} className="btn-primary text-xs flex-1">Save</button>
+                </div>
+              </div>
+            </div>
+          )}
         </>
       )}
 

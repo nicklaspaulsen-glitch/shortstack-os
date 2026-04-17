@@ -52,6 +52,7 @@ export default function WorkflowsPage() {
   const [workflows, setWorkflows] = useState<Array<{ id: string; workflow: Workflow; client_name?: string; created_at: string; status: string }>>([]);
   const [clients, setClients] = useState<Pick<Client, "id" | "business_name">[]>([]);
   const [showCreate, setShowCreate] = useState(false);
+  const [showAiGen, setShowAiGen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [selectedClient, setSelectedClient] = useState("");
   const [generating, setGenerating] = useState(false);
@@ -297,6 +298,9 @@ export default function WorkflowsPage() {
         gradient="sunset"
         actions={
           <>
+            <button onClick={() => setShowAiGen(true)} className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg transition-all flex items-center gap-1.5">
+              <Sparkles size={13} /> Generate with AI
+            </button>
             <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
               <Plus size={13} /> New
             </button>
@@ -308,6 +312,10 @@ export default function WorkflowsPage() {
           </>
         }
       />
+
+      {/* AI Generator Modal */}
+      <AiWorkflowGenModal open={showAiGen} onClose={() => setShowAiGen(false)} />
+
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
@@ -992,6 +1000,169 @@ export default function WorkflowsPage() {
           </div>
         </div>
       </Modal>
+    </div>
+  );
+}
+
+/* ───── AI Workflow Generator Modal ───── */
+function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [goal, setGoal] = useState("");
+  const [audience, setAudience] = useState("");
+  const [channels, setChannels] = useState<string[]>(["email"]);
+  const [tone, setTone] = useState("professional");
+  const [duration, setDuration] = useState("2 weeks");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ name: string; description: string; objective: string; estimated_duration_days: number; nodes: Array<{ id: string; type: string; subtype: string; label: string }>; tags: string[]; confidence: number } | null>(null);
+
+  if (!open) return null;
+
+  async function generate() {
+    if (!goal.trim()) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/workflows/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal, audience, channels, tone, duration_hint: duration }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setResult(data.workflow);
+      } else {
+        alert(data.error || "Generation failed");
+      }
+    } catch {
+      alert("Network error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function toggleChannel(ch: string) {
+    setChannels(prev => prev.includes(ch) ? prev.filter(c => c !== ch) : [...prev, ch]);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
+      <div className="card max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 space-y-4" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Sparkles size={16} className="text-gold" />
+            <h3 className="text-sm font-semibold">AI Workflow Generator</h3>
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold">Sonnet</span>
+          </div>
+          <button onClick={onClose} className="text-muted hover:text-foreground text-lg">×</button>
+        </div>
+
+        {!result ? (
+          <>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider">Goal</label>
+              <textarea
+                className="input w-full text-xs mt-1"
+                rows={3}
+                placeholder="e.g., Re-engage cold leads who haven't replied in 30 days and book a call"
+                value={goal}
+                onChange={e => setGoal(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[10px] text-muted uppercase tracking-wider">Audience</label>
+                <input className="input w-full text-xs mt-1" placeholder="e.g., SaaS founders" value={audience} onChange={e => setAudience(e.target.value)} />
+              </div>
+              <div>
+                <label className="text-[10px] text-muted uppercase tracking-wider">Tone</label>
+                <select className="input w-full text-xs mt-1" value={tone} onChange={e => setTone(e.target.value)}>
+                  <option value="professional">Professional</option>
+                  <option value="friendly">Friendly</option>
+                  <option value="urgent">Urgent</option>
+                  <option value="casual">Casual</option>
+                  <option value="persuasive">Persuasive</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Channels</label>
+              <div className="flex gap-2 flex-wrap">
+                {["email","sms","dm","call","webhook","ai_content"].map(ch => (
+                  <button key={ch} type="button" onClick={() => toggleChannel(ch)}
+                    className={`text-[10px] px-2.5 py-1 rounded-full border capitalize ${
+                      channels.includes(ch)
+                        ? "bg-gold/15 border-gold/30 text-gold"
+                        : "bg-surface-light border-border text-muted"
+                    }`}>
+                    {ch.replace("_", " ")}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider">Duration</label>
+              <select className="input w-full text-xs mt-1" value={duration} onChange={e => setDuration(e.target.value)}>
+                <option>3 days</option>
+                <option>1 week</option>
+                <option>2 weeks</option>
+                <option>1 month</option>
+                <option>3 months</option>
+              </select>
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={onClose} className="btn-secondary text-xs">Cancel</button>
+              <button onClick={generate} disabled={loading || !goal.trim()} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                {loading ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                {loading ? "Generating..." : "Generate Workflow"}
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="space-y-3">
+            <div className="bg-gold/5 border border-gold/20 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <h4 className="text-sm font-semibold">{result.name}</h4>
+                <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">
+                  {result.confidence}% confidence
+                </span>
+              </div>
+              <p className="text-[11px] text-muted">{result.description}</p>
+              <div className="flex items-center gap-3 mt-2 text-[10px] text-muted">
+                <span>📅 {result.estimated_duration_days} days</span>
+                <span>🔗 {result.nodes.length} nodes</span>
+                <span>🎯 {result.objective}</span>
+              </div>
+            </div>
+            <div className="space-y-1.5 max-h-[300px] overflow-y-auto">
+              {result.nodes.map((node, i) => (
+                <div key={node.id} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border">
+                  <span className="w-6 h-6 rounded-md bg-gold/15 text-gold text-[9px] font-bold flex items-center justify-center">{i + 1}</span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[9px] px-1.5 py-0.5 rounded-full uppercase tracking-wider ${
+                        node.type === "trigger" ? "bg-emerald-500/10 text-emerald-400" :
+                        node.type === "action" ? "bg-blue-500/10 text-blue-400" :
+                        node.type === "condition" ? "bg-purple-500/10 text-purple-400" :
+                        node.type === "wait" ? "bg-amber-500/10 text-amber-400" :
+                        "bg-surface-light text-muted"
+                      }`}>{node.type}</span>
+                      <span className="text-[10px] font-medium">{node.label}</span>
+                    </div>
+                    <p className="text-[9px] text-muted mt-0.5">{node.subtype}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {result.tags.map(tag => (
+                <span key={tag} className="text-[9px] px-2 py-0.5 rounded-full bg-surface-light border border-border text-muted">#{tag}</span>
+              ))}
+            </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <button onClick={() => setResult(null)} className="btn-secondary text-xs">Start Over</button>
+              <button onClick={onClose} className="btn-primary text-xs">Use This Workflow</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

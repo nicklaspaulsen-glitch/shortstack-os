@@ -5,7 +5,7 @@ import {
   Target, DollarSign, MousePointer, TrendingUp, Eye, BarChart3,
   Plus, Play, Pause, Copy, Sparkles, Bot, Zap,
   Settings2, Activity, Users, RefreshCw, CheckCircle2,
-  XCircle, ArrowUpRight, ArrowDownRight,
+  XCircle, ArrowUpRight,
   ToggleLeft, ToggleRight, AlertTriangle, Loader, Image as ImageIcon,
   Video, Type, Search, Wand2,
 } from "lucide-react";
@@ -426,12 +426,12 @@ export default function AdsManagerPage() {
           {/* Stat cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { label: "Ad Spend", value: fmtCurrency(overview.total_spend), icon: <DollarSign size={14} />, change: "+12% vs last month", up: true },
-              { label: "Impressions", value: fmt(overview.total_impressions), icon: <Eye size={14} />, change: "+8%", up: true },
-              { label: "Clicks", value: fmt(overview.total_clicks), icon: <MousePointer size={14} />, change: "+15%", up: true },
-              { label: "Conversions", value: fmt(overview.total_conversions), icon: <TrendingUp size={14} />, change: "+22%", up: true },
-              { label: "Avg ROAS", value: `${overview.avg_roas}x`, icon: <ArrowUpRight size={14} />, change: "+0.4x", up: true },
-              { label: "Avg CTR", value: fmtPct(overview.ctr), icon: <BarChart3 size={14} />, change: "+0.3%", up: true },
+              { label: "Ad Spend", value: fmtCurrency(overview.total_spend), icon: <DollarSign size={14} /> },
+              { label: "Impressions", value: fmt(overview.total_impressions), icon: <Eye size={14} /> },
+              { label: "Clicks", value: fmt(overview.total_clicks), icon: <MousePointer size={14} /> },
+              { label: "Conversions", value: fmt(overview.total_conversions), icon: <TrendingUp size={14} /> },
+              { label: "Avg ROAS", value: `${overview.avg_roas}x`, icon: <ArrowUpRight size={14} /> },
+              { label: "Avg CTR", value: fmtPct(overview.ctr), icon: <BarChart3 size={14} /> },
             ].map((s, i) => (
               <div key={i} className="bg-card border border-border rounded-xl p-4 hover:border-gold/30 transition">
                 <div className="flex items-center justify-between mb-2">
@@ -439,9 +439,8 @@ export default function AdsManagerPage() {
                   <span className="text-gold/60">{s.icon}</span>
                 </div>
                 <p className="text-xl font-bold text-foreground">{s.value}</p>
-                <p className={`text-[10px] mt-1 ${s.up ? "text-emerald-400" : "text-red-400"} flex items-center gap-0.5`}>
-                  {s.up ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
-                  {s.change}
+                <p className="text-[10px] mt-1 text-muted">
+                  {campaigns.length === 0 ? "No data yet" : "This period"}
                 </p>
               </div>
             ))}
@@ -528,7 +527,13 @@ export default function AdsManagerPage() {
             <div className="bg-card border border-border rounded-xl p-5">
               <h3 className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Top Performing Campaigns</h3>
               <div className="space-y-2">
-                {topCampaigns.map((c, i) => {
+                {topCampaigns.length === 0 ? (
+                  <div className="py-8 text-center">
+                    <Target size={24} className="text-muted/30 mx-auto mb-2" />
+                    <p className="text-xs text-muted">No campaigns yet</p>
+                    <p className="text-[10px] text-muted/70 mt-1">Connect an ad platform and launch a campaign to see performance here</p>
+                  </div>
+                ) : topCampaigns.map((c, i) => {
                   const p = getPlatform(c.platform);
                   return (
                     <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition">
@@ -556,7 +561,13 @@ export default function AdsManagerPage() {
                 <Sparkles size={12} className="text-gold" /> AI Recommendations
               </h3>
               <div className="space-y-2">
-                {recommendations.map((r, i) => (
+                {recommendations.length === 0 ? (
+                  <div className="py-8 text-center">
+                    <Sparkles size={24} className="text-muted/30 mx-auto mb-2" />
+                    <p className="text-xs text-muted">No recommendations yet</p>
+                    <p className="text-[10px] text-muted/70 mt-1">Once you have active campaigns, AI will suggest budget shifts and optimizations</p>
+                  </div>
+                ) : recommendations.map((r, i) => (
                   <div
                     key={i}
                     className={`p-3 rounded-lg border text-xs ${

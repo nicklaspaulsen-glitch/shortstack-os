@@ -4192,7 +4192,7 @@ export default function VideoEditorPage() {
                   <input
                     ref={voiceSampleInputRef}
                     type="file"
-                    accept="audio/*"
+                    accept="audio/mpeg,audio/wav,audio/mp4,audio/x-m4a,.mp3,.wav,.m4a,.ogg"
                     onChange={(e) => {
                       const f = e.target.files?.[0];
                       if (f) handleVoiceSampleUpload(f);
@@ -4323,7 +4323,7 @@ export default function VideoEditorPage() {
                   <input
                     ref={brollFileInputRef}
                     type="file"
-                    accept="video/*"
+                    accept="video/mp4,video/webm,video/quicktime,video/x-msvideo,.mp4,.webm,.mov,.avi,.mkv"
                     onChange={(e) => {
                       const f = e.target.files?.[0];
                       if (f) handleBrollUpload(f);
@@ -4627,7 +4627,7 @@ export default function VideoEditorPage() {
                     const input = document.createElement("input");
                     input.type = "file";
                     input.multiple = true;
-                    input.accept = "image/*,video/*,audio/*";
+                    input.accept = "image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime,audio/mpeg,audio/wav,.png,.jpg,.jpeg,.webp,.mp4,.webm,.mov,.mp3,.wav";
                     input.onchange = (ev) => {
                       const files = Array.from((ev.target as HTMLInputElement).files || []);
                       handleFileUpload(files);
@@ -4637,7 +4637,7 @@ export default function VideoEditorPage() {
                 >
                   <Upload size={16} className="mx-auto text-muted mb-1" />
                   <p className="text-[10px] text-muted">Drop files or click to upload (up to 5, max {maxRefLabel} each)</p>
-                  <p className="text-[8px] text-muted/60">Images, video clips, audio, logos</p>
+                  <p className="text-[8px] text-muted/60">PNG, JPG, WEBP, MP4, MOV, WEBM, MP3, WAV</p>
                 </div>
                 {referenceFiles.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
