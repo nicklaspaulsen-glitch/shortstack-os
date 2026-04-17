@@ -8,7 +8,7 @@ import {
   Copy, TrendingUp, AlertTriangle, Edit3,
   Search, Send, Smile
 } from "lucide-react";
-import { DiscordIcon } from "@/components/ui/platform-icons";
+import PageHero from "@/components/ui/page-hero";
 
 const tabs = ["Servers", "Commands", "Auto-Roles", "Welcome", "Moderation", "Analytics", "Events", "Embeds", "Webhooks", "Announcements", "Insights"] as const;
 type Tab = (typeof tabs)[number];
@@ -82,21 +82,17 @@ export default function DiscordPage() {
 
   return (
     <div className="fade-in space-y-6 max-w-[1200px] mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-            <DiscordIcon size={40} />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Discord</h1>
-            <p className="text-xs text-muted">Manage servers, bot commands, moderation, and community</p>
-          </div>
-        </div>
-        <select value={selectedServer} onChange={e => setSelectedServer(e.target.value)} className="text-xs border border-border rounded-lg px-3 py-1.5 bg-surface">
-          {mockServers.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-        </select>
-      </div>
+      <PageHero
+        icon={<MessageSquare size={28} />}
+        title="Discord"
+        subtitle="Servers, bot commands, moderation & community."
+        gradient="purple"
+        actions={
+          <select value={selectedServer} onChange={e => setSelectedServer(e.target.value)} className="text-xs border border-white/20 bg-white/10 text-white rounded-lg px-3 py-1.5">
+            {mockServers.map(s => <option key={s.id} value={s.id} className="bg-slate-800">{s.name}</option>)}
+          </select>
+        }
+      />
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

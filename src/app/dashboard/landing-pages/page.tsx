@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
+import PageHero from "@/components/ui/page-hero";
+import { LayoutTemplate } from "lucide-react";
 import PageAI from "@/components/page-ai";
 
 /* ══════════════════════════════════════════════════════════════════
@@ -755,21 +757,17 @@ export default function LandingPagesPage() {
 
   return (
     <div className="min-h-screen p-6 max-w-[1400px] mx-auto space-y-6">
-      {/* Header */}
-      <div className="page-header flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-            <Globe className="w-7 h-7 text-gold" />
-            AI Landing Page Generator
-          </h1>
-          <p className="text-muted text-sm mt-1">Create high-converting landing pages with AI-powered content generation</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => { setStep(1); setMainTab("create"); }} className="px-4 py-2 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 transition-colors flex items-center gap-2">
+      <PageHero
+        icon={<LayoutTemplate size={28} />}
+        title="AI Landing Page Generator"
+        subtitle="High-converting pages with AI-powered content."
+        gradient="green"
+        actions={
+          <button onClick={() => { setStep(1); setMainTab("create"); }} className="px-4 py-2 rounded-lg bg-white/15 border border-white/25 text-white text-sm font-semibold hover:bg-white/25 transition-colors flex items-center gap-2">
             <Plus className="w-4 h-4" /> New Page
           </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 border border-border">

@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
+import PageHero from "@/components/ui/page-hero";
+import { ListOrdered } from "lucide-react";
 
 type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "settings";
 
@@ -277,23 +279,22 @@ export default function SequencesPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Mail size={18} className="text-gold" /> Email Sequences
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Multi-channel drip campaigns with AI, conditions, and A/B testing</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowAiModal(true)} className="btn-secondary text-xs flex items-center gap-1.5">
-            <Sparkles size={12} /> Generate Sequence with AI
-          </button>
-          <button className="btn-primary text-xs flex items-center gap-1.5" onClick={() => setActiveSequence(null)}>
-            <Plus size={12} /> New Sequence
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<ListOrdered size={28} />}
+        title="Email Sequences"
+        subtitle="Multi-channel drip campaigns with AI & A/B testing."
+        gradient="purple"
+        actions={
+          <>
+            <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <Sparkles size={12} /> Generate with AI
+            </button>
+            <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5" onClick={() => setActiveSequence(null)}>
+              <Plus size={12} /> New Sequence
+            </button>
+          </>
+        }
+      />
 
       {/* AI Summary Card */}
       {aiSummary && (

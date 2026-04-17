@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
   Sparkles, Copy, ExternalLink, Image as ImageIcon, Award, Flag, Monitor,
-  Camera, MessageCircle, Play, Briefcase, Music, Wand2, Palette, Loader,
+  Camera, MessageCircle, Play, Briefcase, Music, Wand2, Palette, Loader, PenTool,
   Grid, Layers, Mail, FileText, Podcast, RotateCcw,
   Paintbrush, Maximize2, Eye, EyeOff, Scissors, ShoppingBag, QrCode,
   History, Pipette, Type, Repeat, SlidersHorizontal, Search, BarChart3,
@@ -20,6 +20,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PromptEnhancer from "@/components/prompt-enhancer";
+import PageHero from "@/components/ui/page-hero";
 
 interface GeneratedPrompt {
   id: string;
@@ -673,27 +674,24 @@ export default function DesignStudioPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Sparkles size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Design Studio</h1>
-            <p className="text-xs text-muted">AI-powered designs with industry styles, color palettes & batch generation</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[140px]">
-            <option value="">No client</option>
-            {clients.map(c => <option key={c.id} value={c.id}>{c.business_name} {c.industry ? `(${c.industry})` : ""}</option>)}
-          </select>
-          <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
-            className="btn-primary flex items-center gap-1.5 text-xs">
-            <ExternalLink size={12} /> Canva
-          </a>
-        </div>
-      </div>
+      <PageHero
+        icon={<PenTool size={28} />}
+        title="Design Studio"
+        subtitle="AI designs, palettes & batch generation."
+        gradient="ocean"
+        actions={
+          <>
+            <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="text-xs py-1.5 px-2 min-w-[140px] rounded-lg bg-white/10 border border-white/20 text-white">
+              <option value="" className="bg-slate-800">No client</option>
+              {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name} {c.industry ? `(${c.industry})` : ""}</option>)}
+            </select>
+            <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <ExternalLink size={12} /> Canva
+            </a>
+          </>
+        }
+      />
 
       {/* Tabs */}
       <div className="tab-group w-fit">

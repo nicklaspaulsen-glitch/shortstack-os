@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
 import Link from "next/link";
 import PageAI from "@/components/page-ai";
+import PageHero from "@/components/ui/page-hero";
 import {
   Zap,
   TrendingUp,
@@ -212,40 +213,28 @@ export default function UsagePage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto space-y-5">
-      {/* ── Header ── */}
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h1 className="text-xl font-semibold text-foreground flex items-center gap-2">
-            <Zap size={20} className="text-gold" />
-            Token Usage
-          </h1>
-          <p className="text-xs text-muted mt-0.5">
-            Monitor your AI token consumption and manage your balance
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* Plan badge */}
-          <div
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-medium"
-            style={{
-              borderColor: planConfig.color + "40",
-              color: planConfig.color,
-              background: planConfig.color + "10",
-            }}
-          >
-            <Shield size={12} />
-            {planConfig.badge_label} Plan
-          </div>
-          <button
-            onClick={fetchData}
-            disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border text-xs text-muted hover:text-foreground hover:bg-surface-light transition-all"
-          >
-            <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
-            Refresh
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<Zap size={28} />}
+        title="Token Usage"
+        subtitle="Monitor AI consumption & manage balance."
+        gradient="purple"
+        actions={
+          <>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/20 bg-white/15 text-white text-xs font-medium">
+              <Shield size={12} />
+              {planConfig.badge_label} Plan
+            </div>
+            <button
+              onClick={fetchData}
+              disabled={loading}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all"
+            >
+              <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
+              Refresh
+            </button>
+          </>
+        }
+      />
 
       {/* ── Stats Strip ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

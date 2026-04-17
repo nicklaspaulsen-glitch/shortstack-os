@@ -9,6 +9,7 @@ import {
   AlertTriangle, Zap, Star, Eye
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
+import PageHero from "@/components/ui/page-hero";
 
 type ScheduleTab = "booking_pages" | "availability" | "ai_smart" | "analytics" | "settings";
 
@@ -267,29 +268,25 @@ export default function SchedulingPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Calendar size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">AI Smart Scheduler</h1>
-            <p className="text-xs text-muted">Intelligent scheduling with AI-powered insights and conflict detection</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 text-[10px] bg-blue-400/[0.08] text-blue-400 px-2.5 py-1 rounded-md border border-blue-400/15">
-            <Globe size={10} /><span className="font-medium">{detectedTimezone.split(" ")[0].split("/")[1]}</span>
-          </div>
-          <button onClick={() => setShowLinkGen(true)} className="btn-secondary text-xs flex items-center gap-1.5">
-            <Link2 size={12} /> Get Booking Link
-          </button>
-          <button onClick={() => setShowCreateModal(true)} className="btn-primary text-xs flex items-center gap-1.5">
-            <Plus size={12} /> New Meeting Type
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<Calendar size={28} />}
+        title="AI Smart Scheduler"
+        subtitle="Intelligent scheduling with AI conflict detection."
+        gradient="blue"
+        actions={
+          <>
+            <div className="flex items-center gap-1.5 text-[10px] bg-white/10 text-white px-2.5 py-1 rounded-md border border-white/20">
+              <Globe size={10} /><span className="font-medium">{detectedTimezone.split(" ")[0].split("/")[1]}</span>
+            </div>
+            <button onClick={() => setShowLinkGen(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <Link2 size={12} /> Get Booking Link
+            </button>
+            <button onClick={() => setShowCreateModal(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <Plus size={12} /> New Meeting Type
+            </button>
+          </>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-5 gap-3">

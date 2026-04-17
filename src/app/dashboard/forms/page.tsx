@@ -10,6 +10,8 @@ import {
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
 import Modal from "@/components/ui/modal";
+import PageHero from "@/components/ui/page-hero";
+import { ClipboardCheck } from "lucide-react";
 
 type AiFormType = "contact" | "signup" | "survey" | "booking" | "application" | "feedback" | "quote" | "custom";
 
@@ -361,20 +363,22 @@ export default function FormsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2"><FileText size={18} className="text-gold" /> Form Builder</h1>
-          <p className="text-xs text-muted mt-0.5">Create lead capture forms, embed on websites, leads flow into CRM</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowAiModal(true)} className="btn-secondary text-xs flex items-center gap-1.5">
-            <Sparkles size={12} /> Describe your form
-          </button>
-          {activeForm && (
-            <button onClick={() => setActiveForm(null)} className="btn-secondary text-xs">All Forms</button>
-          )}
-        </div>
-      </div>
+      <PageHero
+        icon={<ClipboardCheck size={28} />}
+        title="Form Builder"
+        subtitle="Lead capture forms that flow into CRM."
+        gradient="blue"
+        actions={
+          <>
+            <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <Sparkles size={12} /> Describe your form
+            </button>
+            {activeForm && (
+              <button onClick={() => setActiveForm(null)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all">All Forms</button>
+            )}
+          </>
+        }
+      />
 
       {/* ===== AI FORM MODAL ===== */}
       <Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Describe the form you need" size="lg">

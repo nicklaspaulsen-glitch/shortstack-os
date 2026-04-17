@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
@@ -10,6 +10,7 @@ import { useAuth } from "@/lib/auth-context";
 import toast from "react-hot-toast";
 import { applyTheme } from "@/components/theme-provider";
 import { getPlanConfig } from "@/lib/plan-config";
+import PageHero from "@/components/ui/page-hero";
 
 type Tab = "general" | "agents" | "integrations" | "automation" | "notifications" | "billing" | "api_keys" | "white_label" | "smtp" | "security" | "data" | "danger";
 
@@ -442,15 +443,12 @@ export default function SettingsPage() {
 
   return (
     <div className="fade-in space-y-6">
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-          <Settings size={24} className="text-gold" />
-        </div>
-        <div>
-          <h1 className="page-header mb-0">Settings</h1>
-          <p className="text-muted text-sm">Configure AI agents, integrations, and automation</p>
-        </div>
-      </div>
+      <PageHero
+        icon={<Settings size={28} />}
+        title="Settings"
+        subtitle="Configure agents, integrations & automation."
+        gradient="blue"
+      />
 
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
         {tabs.map(t => (
@@ -1980,7 +1978,15 @@ function WhiteLabelTabContent({
 
             {/* Logo Upload */}
             <div>
-              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Logo URL</label>
+              <label className="block text-[10px] text-muted uppercase tracking-wider mb-1">Logo</label>
+
+              <LogoDropZone
+                logoUrl={whiteLabel.logo_url}
+                onUploaded={(url) => setWhiteLabel({ ...whiteLabel, logo_url: url })}
+                onRemove={() => setWhiteLabel({ ...whiteLabel, logo_url: "" })}
+              />
+
+              <label className="block text-[9px] text-muted uppercase tracking-wider mt-3 mb-1">Or paste a logo URL</label>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg border border-border bg-surface-light flex items-center justify-center overflow-hidden shrink-0">
                   {whiteLabel.logo_url ? (
@@ -1992,7 +1998,7 @@ function WhiteLabelTabContent({
                 </div>
                 <input value={whiteLabel.logo_url} onChange={e => setWhiteLabel({ ...whiteLabel, logo_url: e.target.value })} placeholder="https://yourdomain.com/logo.png" className="input flex-1 text-sm" />
               </div>
-              <p className="text-[9px] text-muted mt-1">Square image recommended (PNG/SVG, at least 128x128px)</p>
+              <p className="text-[9px] text-muted mt-1">Square image recommended (PNG/JPEG/SVG, at least 128x128px, max 2 MB)</p>
             </div>
 
             {/* Colors */}
@@ -2202,6 +2208,141 @@ function WhiteLabelTabContent({
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Logo Drop Zone for white-label upload ──────────────────────────── */
+const LOGO_ALLOWED_TYPES = ["image/png", "image/jpeg", "image/svg+xml"];
+const LOGO_MAX_BYTES = 2 * 1024 * 1024;
+
+function LogoDropZone({
+  logoUrl,
+  onUploaded,
+  onRemove,
+}: {
+  logoUrl: string;
+  onUploaded: (url: string) => void;
+  onRemove: () => void;
+}) {
+  const [dragOver, setDragOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [warn, setWarn] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  function validate(file: File): string | null {
+    if (!LOGO_ALLOWED_TYPES.includes(file.type)) {
+      return `Unsupported file type "${file.type || "unknown"}". Allowed: PNG, JPEG, SVG.`;
+    }
+    if (file.size > LOGO_MAX_BYTES) {
+      return `File too large (${(file.size / 1024 / 1024).toFixed(2)} MB). Max 2 MB.`;
+    }
+    if (file.size === 0) return "File is empty.";
+    return null;
+  }
+
+  async function upload(file: File) {
+    const v = validate(file);
+    if (v) {
+      setWarn(v);
+      toast.error(v);
+      return;
+    }
+    setWarn(null);
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("logo", file);
+      const res = await fetch("/api/white-label/logo-upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = data?.error || "Upload failed";
+        setWarn(msg);
+        toast.error(msg);
+      } else if (data.logo_url) {
+        onUploaded(data.logo_url);
+        toast.success("Logo uploaded");
+      } else {
+        toast.error("Upload returned no URL");
+      }
+    } catch {
+      toast.error("Upload network error");
+      setWarn("Network error during upload");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function onDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) void upload(file);
+  }
+
+  function onSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) void upload(file);
+    // Reset input value so re-uploading the same file works
+    if (inputRef.current) inputRef.current.value = "";
+  }
+
+  return (
+    <div className="space-y-2">
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={onDrop}
+        onClick={() => inputRef.current?.click()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") inputRef.current?.click(); }}
+        className={`relative flex items-center gap-4 p-4 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
+          dragOver
+            ? "border-gold bg-gold/[0.08]"
+            : "border-border hover:border-gold/40 bg-surface-light/40"
+        } ${uploading ? "opacity-60 pointer-events-none" : ""}`}
+      >
+        <div className="w-14 h-14 rounded-lg border border-border bg-surface flex items-center justify-center overflow-hidden shrink-0">
+          {logoUrl ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={logoUrl} alt="Logo preview" className="w-full h-full object-contain" />
+          ) : (
+            <Upload size={18} className="text-muted" />
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium">
+            {uploading ? "Uploading..." : logoUrl ? "Replace logo" : "Drop a logo here, or click to upload"}
+          </p>
+          <p className="text-[10px] text-muted mt-0.5">PNG, JPEG or SVG · max 2 MB</p>
+          {warn && (
+            <p className="text-[10px] text-danger mt-1 flex items-center gap-1">
+              <AlertTriangle size={10} /> {warn}
+            </p>
+          )}
+        </div>
+        {uploading && (
+          <Loader2 size={16} className="text-gold animate-spin shrink-0" />
+        )}
+        {logoUrl && !uploading && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setWarn(null); onRemove(); }}
+            className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-md border border-border hover:border-danger/40 hover:text-danger text-muted shrink-0"
+            title="Remove the current logo"
+          >
+            <Trash2 size={10} /> Remove logo
+          </button>
+        )}
+        <input
+          ref={inputRef}
+          type="file"
+          accept={LOGO_ALLOWED_TYPES.join(",")}
+          onChange={onSelect}
+          className="hidden"
+        />
       </div>
     </div>
   );

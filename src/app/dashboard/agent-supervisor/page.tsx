@@ -7,8 +7,10 @@ import {
   Eye, CreditCard, UserPlus, Globe, Megaphone, FileText,
   ChevronDown, ChevronRight, ArrowRight, Plus, Cpu, Trash2,
   AlertTriangle, Settings, Play, Pause, GitBranch, DollarSign,
-  TrendingUp, Layers, MessageSquare, History, Gauge
+  TrendingUp, Layers, MessageSquare, History, Gauge,
+  Crown
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 interface Agent {
@@ -158,22 +160,18 @@ export default function AgentSupervisorPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Bot size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Agent Supervisor</h1>
-            <p className="text-xs text-muted">{agents.length + spawned.length} agents &middot; {agentsWorking} active &middot; {agentsError > 0 ? <span className="text-red-400">{agentsError} errors</span> : <span className="text-green-400">no errors</span>}</p>
-          </div>
-        </div>
-        <button onClick={() => setAgents(prev => prev.map(a => ({ ...a, status: a.status === "error" ? "idle" : a.status })))}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gold/10 text-gold text-xs font-medium border border-gold/20 hover:bg-gold/20 transition-all">
-          <RefreshCw size={14} /> Health Check All
-        </button>
-      </div>
+      <PageHero
+        icon={<Crown size={28} />}
+        title="Agent Supervisor"
+        subtitle={`${agents.length + spawned.length} agents · ${agentsWorking} active · ${agentsError > 0 ? `${agentsError} errors` : "no errors"}`}
+        gradient="gold"
+        actions={
+          <button onClick={() => setAgents(prev => prev.map(a => ({ ...a, status: a.status === "error" ? "idle" : a.status })))}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-medium hover:bg-white/25 transition-all">
+            <RefreshCw size={14} /> Health Check All
+          </button>
+        }
+      />
 
       {/* Stats Strip */}
       <div className="grid grid-cols-6 gap-3">

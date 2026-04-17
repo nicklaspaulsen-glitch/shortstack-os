@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
+import PageHero from "@/components/ui/page-hero";
+import { BookOpen as BookOpenIcon } from "lucide-react";
 
 interface VoiceProfile {
   id: string;
@@ -228,17 +230,17 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
 
   return (
     <div className="fade-in space-y-6">
-      <div className="page-header">
-        <div>
-          <h1 className="text-lg font-bold flex items-center gap-2">
-            <Mic size={20} className="text-gold" /> Brand Voice Manager
-          </h1>
-          <p className="text-xs text-muted">Define, manage, and enforce brand voice profiles for every client</p>
-        </div>
-        <button onClick={() => setShowNewProfile(true)} className="btn-primary text-xs flex items-center gap-1">
-          <Plus size={14} /> New Profile
-        </button>
-      </div>
+      <PageHero
+        icon={<BookOpenIcon size={28} />}
+        title="Brand Voice Manager"
+        subtitle="Define & enforce brand voice for every client."
+        gradient="blue"
+        actions={
+          <button onClick={() => setShowNewProfile(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1">
+            <Plus size={14} /> New Profile
+          </button>
+        }
+      />
 
       {showNewProfile && (
         <div className="card border border-gold/20">

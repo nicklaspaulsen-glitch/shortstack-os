@@ -5,8 +5,10 @@ import {
   Activity, Search, Zap, Users, Mail, Globe, Bot,
   CreditCard, BarChart3, Shield, Download,
   AlertTriangle, Eye, Key,
-  Settings, ChevronRight
+  Settings, ChevronRight,
+  ClipboardList,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 type ActivityTab = "feed" | "heatmap" | "users" | "audit" | "security";
 
@@ -92,19 +94,21 @@ export default function ActivityLogPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2"><Activity size={18} className="text-gold" /> Activity Log</h1>
-          <p className="text-xs text-muted mt-0.5">{logs.length} events - everything that happened in your agency</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setIsLive(!isLive)} className={`flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg border ${isLive ? "border-emerald-400/20 text-emerald-400" : "border-border text-muted"}`}>
-            <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-400 animate-pulse" : "bg-muted"}`} />
-            {isLive ? "Live" : "Paused"}
-          </button>
-          <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export Log</button>
-        </div>
-      </div>
+      <PageHero
+        icon={<ClipboardList size={28} />}
+        title="Activity Log"
+        subtitle={`${logs.length} events across your agency.`}
+        gradient="purple"
+        actions={
+          <>
+            <button onClick={() => setIsLive(!isLive)} className={`flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-lg border ${isLive ? "border-white/30 bg-white/15 text-white" : "border-white/20 bg-white/10 text-white/70"}`}>
+              <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-300 animate-pulse" : "bg-white/40"}`} />
+              {isLive ? "Live" : "Paused"}
+            </button>
+            <button className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
+          </>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">

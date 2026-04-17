@@ -12,7 +12,9 @@ import {
   Layout, Image, Palette,
   Settings, Loader, ArrowRight,
   FileDown, Presentation,
+  FileBarChart2,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
 
 /* ══════════════════════════════════════════════════════════════════
@@ -399,39 +401,40 @@ export default function ReportGeneratorPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="page-header flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Report Generator</h1>
-          <p className="text-muted text-sm mt-1">Build, schedule, and send professional client reports</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="relative" ref={exportRef}>
-            <button onClick={() => setExportOpen(!exportOpen)} className="btn-secondary flex items-center gap-2">
-              <Download className="w-4 h-4" /> Export <ChevronDown className="w-3 h-3" />
+      <PageHero
+        icon={<FileBarChart2 size={28} />}
+        title="Report Generator"
+        subtitle="Build, schedule & send professional reports."
+        gradient="ocean"
+        actions={
+          <>
+            <div className="relative" ref={exportRef}>
+              <button onClick={() => setExportOpen(!exportOpen)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-2">
+                <Download className="w-4 h-4" /> Export <ChevronDown className="w-3 h-3" />
+              </button>
+              {exportOpen && (
+                <div className="absolute right-0 top-full mt-1 w-48 bg-surface border border-border rounded-lg shadow-xl z-50 py-1">
+                  <button onClick={() => handleExport("pdf")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
+                    <FileDown className="w-4 h-4 text-muted" /> PDF Download
+                  </button>
+                  <button onClick={() => handleExport("branded_pdf")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
+                    <Palette className="w-4 h-4 text-muted" /> Branded PDF
+                  </button>
+                  <button onClick={() => handleExport("slides")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
+                    <Presentation className="w-4 h-4 text-muted" /> Google Slides
+                  </button>
+                  <button onClick={() => handleExport("email")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-muted" /> Email Directly
+                  </button>
+                </div>
+              )}
+            </div>
+            <button onClick={() => setSendModal(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-2">
+              <Send className="w-4 h-4" /> Send to Client
             </button>
-            {exportOpen && (
-              <div className="absolute right-0 top-full mt-1 w-48 bg-surface border border-border rounded-lg shadow-xl z-50 py-1">
-                <button onClick={() => handleExport("pdf")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
-                  <FileDown className="w-4 h-4 text-muted" /> PDF Download
-                </button>
-                <button onClick={() => handleExport("branded_pdf")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
-                  <Palette className="w-4 h-4 text-muted" /> Branded PDF
-                </button>
-                <button onClick={() => handleExport("slides")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
-                  <Presentation className="w-4 h-4 text-muted" /> Google Slides
-                </button>
-                <button onClick={() => handleExport("email")} className="w-full px-4 py-2 text-left text-sm hover:bg-surface-light flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-muted" /> Email Directly
-                </button>
-              </div>
-            )}
-          </div>
-          <button onClick={() => setSendModal(true)} className="btn-primary flex items-center gap-2 bg-gold text-black hover:bg-gold/90">
-            <Send className="w-4 h-4" /> Send to Client
-          </button>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 border border-border">

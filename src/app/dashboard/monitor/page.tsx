@@ -5,8 +5,9 @@ import {
   Shield, CheckCircle, AlertTriangle, XCircle, RefreshCw, Wifi,
   Database, HardDrive,
   Zap, Bell, BarChart3,
-  FileText
+  FileText, Activity
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const INTEGRATIONS = [
@@ -65,17 +66,17 @@ export default function MonitorPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Shield size={18} className="text-gold" /> System Monitor
-          </h1>
-          <p className="text-muted text-xs mt-0.5">Real-time system health, API usage, costs & performance</p>
-        </div>
-        <button className="btn-secondary flex items-center gap-2 text-xs">
-          <RefreshCw size={14} /> Run Check
-        </button>
-      </div>
+      <PageHero
+        icon={<Activity size={28} />}
+        title="System Monitor"
+        subtitle="Real-time health, API usage & performance."
+        gradient="purple"
+        actions={
+          <button className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-2">
+            <RefreshCw size={14} /> Run Check
+          </button>
+        }
+      />
 
       {/* Top Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

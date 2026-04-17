@@ -7,6 +7,7 @@ import {
   AlertTriangle, BarChart3, GitBranch, Ban, Target,
   TrendingUp, Filter, Plus, Trash2, ArrowRight, ShieldAlert
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data & Constants                                              */
@@ -116,21 +117,20 @@ export default function DMControllerPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-bold flex items-center gap-2">
-            <Send size={18} className="text-gold" /> DM Controller
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Browser-based cold DMs with automation and analytics</p>
-        </div>
-        {running && (
-          <div className="flex items-center gap-1.5 text-[10px] bg-green-400/10 text-green-400 px-2.5 py-1 rounded-md border border-green-400/15 animate-pulse">
-            <Clock size={10} className="animate-spin" />
-            <span>Running... {completed}/{totalDMs}</span>
-          </div>
-        )}
-      </div>
+      <PageHero
+        icon={<Send size={28} />}
+        title="DM Controller"
+        subtitle="Browser-based cold DMs with automation."
+        gradient="gold"
+        actions={
+          running ? (
+            <div className="flex items-center gap-1.5 text-[10px] bg-white/15 border border-white/25 text-white px-2.5 py-1 rounded-md animate-pulse">
+              <Clock size={10} className="animate-spin" />
+              <span>Running... {completed}/{totalDMs}</span>
+            </div>
+          ) : null
+        }
+      />
 
       {/* Compliance Warnings */}
       <div className="flex gap-2 overflow-x-auto pb-1">

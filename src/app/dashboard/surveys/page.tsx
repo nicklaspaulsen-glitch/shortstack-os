@@ -7,7 +7,9 @@ import {
   ArrowRight, Mail, TrendingUp, AlertTriangle, Users,
   Sparkles, Filter, Copy, Globe, Zap, Eye,
   ChevronDown, ChevronUp, FileText, ListChecks,
+  ClipboardList,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ================================================================== */
 /*  Types                                                              */
@@ -192,27 +194,23 @@ export default function SurveysPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <BarChart3 size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">NPS & Client Feedback</h1>
-            <p className="text-xs text-muted">{allResponses.length} responses across {surveys.length} surveys</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowSend(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-[var(--color-border)] text-muted hover:text-foreground hover:border-gold/30 transition-all">
-            <Send size={12} /> Send Survey
-          </button>
-          <button onClick={() => navigator.clipboard.writeText("https://app.shortstack.os/survey/s1")}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-gold text-black font-semibold hover:bg-gold/90 transition-all">
-            <Copy size={12} /> Copy Link
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<ClipboardList size={28} />}
+        title="NPS & Client Feedback"
+        subtitle={`${allResponses.length} responses across ${surveys.length} surveys.`}
+        gradient="gold"
+        actions={
+          <>
+            <button onClick={() => setShowSend(true)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all">
+              <Send size={12} /> Send Survey
+            </button>
+            <button onClick={() => navigator.clipboard.writeText("https://app.shortstack.os/survey/s1")}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-white/15 border border-white/25 text-white font-semibold hover:bg-white/25 transition-all">
+              <Copy size={12} /> Copy Link
+            </button>
+          </>
+        }
+      />
 
       {/* NPS Score Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

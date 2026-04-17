@@ -6,8 +6,9 @@ import {
   DollarSign, Plus, TrendingUp, TrendingDown, Target,
   Clock, Award, FileText, Calculator, BarChart3,
   ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
-  Calendar, ArrowRight, Shield, Loader2
+  Calendar, ArrowRight, Shield, Loader2, CreditCard
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 type MainTab = "pipeline" | "forecast" | "analysis" | "scoring" | "templates" | "commission";
 
@@ -153,18 +154,17 @@ export default function DealsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <DollarSign size={18} className="text-gold" /> Deals Pipeline
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Track deals from prospect to closed with AI scoring</p>
-        </div>
-        <button onClick={() => setShowCreateModal(!showCreateModal)} className="btn-primary text-xs flex items-center gap-1.5">
-          <Plus size={12} /> New Deal
-        </button>
-      </div>
+      <PageHero
+        icon={<CreditCard size={28} />}
+        title="Deals Pipeline"
+        subtitle="Track deals from prospect to close with AI scoring."
+        gradient="green"
+        actions={
+          <button onClick={() => setShowCreateModal(!showCreateModal)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <Plus size={12} /> New Deal
+          </button>
+        }
+      />
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-6 gap-3">

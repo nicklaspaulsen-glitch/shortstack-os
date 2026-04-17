@@ -9,6 +9,8 @@ import {
   CheckCircle, Star, Zap, BookOpen, X
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
+import { Pen } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────────────
 type ContentType = "blog" | "landing" | "email" | "social" | "product" | "ad";
@@ -553,39 +555,36 @@ export default function CopywriterPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <PenTool size={20} className="text-gold" />
-            AI Copywriter
-          </h1>
-          <p className="text-xs text-muted mt-0.5">
-            Generate polished copy for blogs, landing pages, emails, social media, and more
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowTemplates(!showTemplates)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-surface-light border border-border text-foreground hover:bg-surface transition-all"
-          >
-            <Layers size={13} />
-            Templates
-          </button>
-          <button
-            onClick={() => setShowHistory(!showHistory)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-surface-light border border-border text-foreground hover:bg-surface transition-all"
-          >
-            <Clock size={13} />
-            History
-            {history.length > 0 && (
-              <span className="ml-1 text-[9px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full font-semibold">
-                {history.length}
-              </span>
-            )}
-          </button>
-        </div>
-      </div>
+      <PageHero
+        className="mb-6"
+        icon={<Pen size={28} />}
+        title="AI Copywriter"
+        subtitle="Polished copy for blogs, emails & social."
+        gradient="purple"
+        actions={
+          <>
+            <button
+              onClick={() => setShowTemplates(!showTemplates)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
+            >
+              <Layers size={13} />
+              Templates
+            </button>
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
+            >
+              <Clock size={13} />
+              History
+              {history.length > 0 && (
+                <span className="ml-1 text-[9px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-semibold">
+                  {history.length}
+                </span>
+              )}
+            </button>
+          </>
+        }
+      />
 
       {/* Template Gallery */}
       {showTemplates && (

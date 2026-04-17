@@ -8,7 +8,9 @@ import {
   MessageCircle, X,
   Bold, Link2, Paperclip, Image, ChevronDown,
   Ticket, UserPlus, Globe, Zap,
+  MessagesSquare,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ================================================================== */
 /*  Types                                                              */
@@ -191,7 +193,14 @@ export default function ConversationsPage() {
   const currentNotes = selectedId ? (notes[selectedId] || []) : [];
 
   return (
-    <div className="fade-in flex h-[calc(100vh-120px)] rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden">
+    <div className="fade-in space-y-4">
+      <PageHero
+        icon={<MessagesSquare size={28} />}
+        title="Conversations"
+        subtitle={`Unified inbox · ${openCount} open · ${totalUnread} unread`}
+        gradient="purple"
+      />
+    <div className="flex h-[calc(100vh-200px)] rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] overflow-hidden">
 
       {/* ── Left Sidebar: Conversation List ────────────────── */}
       <div className="w-80 shrink-0 border-r border-[var(--color-border)] flex flex-col">
@@ -691,6 +700,7 @@ export default function ConversationsPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

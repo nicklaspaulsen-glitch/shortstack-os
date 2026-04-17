@@ -8,6 +8,8 @@ import {
   Flag
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
+import PageHero from "@/components/ui/page-hero";
+import { Kanban } from "lucide-react";
 
 type ProductionTab = "pipeline" | "calendar" | "standup" | "approvals";
 type KanbanStatus = "backlog" | "in_progress" | "review" | "approved" | "delivered";
@@ -99,15 +101,17 @@ export default function ProductionPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2"><Film size={18} className="text-gold" /> Content Production</h1>
-          <p className="text-xs text-muted mt-0.5">Pipeline, assignments, reviews, and approvals</p>
-        </div>
-        <button onClick={() => setShowSubmit(true)} className="btn-primary text-xs flex items-center gap-1.5">
-          <Plus size={12} /> New Request
-        </button>
-      </div>
+      <PageHero
+        icon={<Kanban size={28} />}
+        title="Content Production"
+        subtitle="Pipeline, assignments, reviews & approvals."
+        gradient="blue"
+        actions={
+          <button onClick={() => setShowSubmit(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <Plus size={12} /> New Request
+          </button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">

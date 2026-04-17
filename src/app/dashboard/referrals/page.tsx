@@ -7,6 +7,7 @@ import {
   ExternalLink, Globe, Calculator, Star, Send
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -96,18 +97,17 @@ export default function ReferralsPage() {
 
   return (
     <div className="fade-in space-y-5 max-w-3xl">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-lg font-bold flex items-center gap-2">
-            <Gift size={18} className="text-gold" /> Referral Program
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Earn rewards for every client you refer</p>
-        </div>
-        <button onClick={() => setShowForm(true)} className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1.5">
-          <Plus size={12} /> Submit Referral
-        </button>
-      </div>
+      <PageHero
+        icon={<Gift size={28} />}
+        title="Referral Program"
+        subtitle="Earn rewards for every client you refer."
+        gradient="green"
+        actions={
+          <button onClick={() => setShowForm(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <Plus size={12} /> Submit Referral
+          </button>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto pb-1">

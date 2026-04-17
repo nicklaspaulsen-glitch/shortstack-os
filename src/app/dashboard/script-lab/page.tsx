@@ -13,6 +13,7 @@ import {
   ListChecks, Type, Volume2
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 
 const FRAMEWORKS = [
   { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll → tell story → make offer", color: "text-gold" },
@@ -506,28 +507,25 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Sparkles size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Script Lab</h1>
-            <p className="text-xs text-muted">AI script generator with viral research, proven frameworks & batch creation</p>
-          </div>
-        </div>
-        <select value={selectedClient} onChange={e => {
-          setSelectedClient(e.target.value);
-          const client = clients.find(c => c.id === e.target.value);
-          if (client?.industry) {
-            const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
-            if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
-          }
-        }} className="input text-xs py-1.5 min-w-[160px]">
-          <option value="">No client</option>
-          {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-        </select>
-      </div>
+      <PageHero
+        icon={<Sparkles size={28} />}
+        title="Script Lab"
+        subtitle="AI scripts with viral research & frameworks."
+        gradient="ocean"
+        actions={
+          <select value={selectedClient} onChange={e => {
+            setSelectedClient(e.target.value);
+            const client = clients.find(c => c.id === e.target.value);
+            if (client?.industry) {
+              const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
+              if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
+            }
+          }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-white/10 border border-white/20 text-white">
+            <option value="" className="bg-slate-800">No client</option>
+            {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name}</option>)}
+          </select>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">

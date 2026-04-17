@@ -13,9 +13,9 @@ import {
   Edit3, Save, X, AlertCircle, Link,
   Activity
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
-import { TelegramIcon } from "@/components/ui/platform-icons";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -291,27 +291,23 @@ export default function TelegramBotPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-              <TelegramIcon size={40} />
-            </div>
-            Telegram Bot
-          </h1>
-          <p className="text-muted text-sm mt-1">Manage your AI-powered Telegram bot for client communication</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${isConnected ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20"}`}>
-            {isConnected ? <Wifi size={12} /> : <WifiOff size={12} />}
-            {isConnected ? "Connected" : "Disconnected"}
-          </span>
-          <span className="text-xs text-muted bg-surface-light px-3 py-1.5 rounded-full border border-border">
-            @shortstack_bot
-          </span>
-        </div>
-      </div>
+      <PageHero
+        icon={<Bot size={28} />}
+        title="Telegram Bot"
+        subtitle="AI-powered Telegram bot for client comms."
+        gradient="blue"
+        actions={
+          <>
+            <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${isConnected ? "bg-emerald-500/30 text-white border border-emerald-300/40" : "bg-red-500/20 text-white border border-red-300/30"}`}>
+              {isConnected ? <Wifi size={12} /> : <WifiOff size={12} />}
+              {isConnected ? "Connected" : "Disconnected"}
+            </span>
+            <span className="text-xs text-white bg-white/10 border border-white/20 px-3 py-1.5 rounded-full">
+              @shortstack_bot
+            </span>
+          </>
+        }
+      />
 
       {/* Tab Bar */}
       <div className="flex gap-1 bg-surface-light border border-border rounded-xl p-1 overflow-x-auto">

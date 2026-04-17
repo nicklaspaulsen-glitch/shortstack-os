@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
+import PageHero from "@/components/ui/page-hero";
+import { Smartphone } from "lucide-react";
 
 type SmsIntent = "reminder" | "promo" | "confirmation" | "welcome" | "winback" | "abandon_cart" | "appointment" | "custom";
 
@@ -138,21 +140,22 @@ export default function SMSTemplatesPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <MessageSquare size={18} className="text-gold" /> SMS Templates
-          </h1>
-          <p className="text-xs text-muted mt-0.5">{templates.length} templates | Segment calculator, compliance checker, analytics</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowAiModal(true)} className="btn-secondary text-xs flex items-center gap-1.5">
-            <Sparkles size={12} /> Generate with AI
-          </button>
-          <button onClick={() => setShowAdd(true)} className="btn-primary text-xs flex items-center gap-1.5"><Plus size={12} /> New</button>
-        </div>
-      </div>
+      <PageHero
+        icon={<Smartphone size={28} />}
+        title="SMS Templates"
+        subtitle={`${templates.length} templates with compliance & analytics.`}
+        gradient="green"
+        actions={
+          <>
+            <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <Sparkles size={12} /> Generate with AI
+            </button>
+            <button onClick={() => setShowAdd(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <Plus size={12} /> New
+            </button>
+          </>
+        }
+      />
 
       {/* ===== AI SMS GENERATOR MODAL ===== */}
       <Modal isOpen={showAiModal} onClose={() => { setShowAiModal(false); setAiVariants([]); }} title="Generate SMS with AI" size="xl">

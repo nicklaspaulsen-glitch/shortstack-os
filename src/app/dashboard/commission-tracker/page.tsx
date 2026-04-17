@@ -7,6 +7,7 @@ import {
   Star, Target, BarChart3, CreditCard, Zap, Trash2,
   Trophy
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -143,18 +144,17 @@ export default function CommissionTrackerPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Award size={18} className="text-gold" /> Commission Tracker
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Track sales commissions, rules, and payouts</p>
-        </div>
-        <button onClick={() => { setShowAddRule(true); setActiveTab("rules"); }} className="btn-primary text-xs flex items-center gap-1.5">
-          <Plus size={12} /> Add Rule
-        </button>
-      </div>
+      <PageHero
+        icon={<Award size={28} />}
+        title="Commission Tracker"
+        subtitle="Track sales commissions, rules, and payouts."
+        gradient="green"
+        actions={
+          <button onClick={() => { setShowAddRule(true); setActiveTab("rules"); }} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <Plus size={12} /> Add Rule
+          </button>
+        }
+      />
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

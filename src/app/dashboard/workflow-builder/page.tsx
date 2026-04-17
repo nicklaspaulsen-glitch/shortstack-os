@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import PageHero from "@/components/ui/page-hero";
 
 /* ================================================================== */
 /*  NODE DEFINITIONS                                                   */
@@ -674,7 +675,15 @@ function WorkflowBuilderInner() {
   /* ================================================================ */
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] -mx-4 lg:-mx-6 -mt-4 lg:-mt-6">
+    <div className="flex flex-col">
+      <PageHero
+        className="mb-3"
+        icon={<GitBranch size={28} />}
+        title="Workflow Builder"
+        subtitle="Visual canvas for designing automations."
+        gradient="purple"
+      />
+    <div className="flex flex-col h-[calc(100vh-14rem)]">
       {/* ── Top Toolbar ── */}
       <div className="shrink-0 h-11 border-b border-border bg-surface flex items-center px-3 gap-2">
         <Zap size={16} className="text-gold" />
@@ -1047,6 +1056,7 @@ function WorkflowBuilderInner() {
           "How does the AI Call node work with ElevenAgents?",
         ]}
       />
+    </div>
     </div>
   );
 }

@@ -8,6 +8,8 @@ import {
   ArrowUpRight, ArrowDownRight, Target, Lightbulb, Calendar
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
+import PageHero from "@/components/ui/page-hero";
+import { Heart as HeartIcon } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -141,16 +143,12 @@ export default function ClientHealthPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-          <Heart size={20} className="text-gold" />
-        </div>
-        <div>
-          <h1 className="text-lg font-bold">Client Health Monitor</h1>
-          <p className="text-xs text-muted">Track client satisfaction, task progress, and account health</p>
-        </div>
-      </div>
+      <PageHero
+        icon={<HeartIcon size={28} />}
+        title="Client Health Monitor"
+        subtitle="Track satisfaction, task progress & health."
+        gradient="gold"
+      />
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">

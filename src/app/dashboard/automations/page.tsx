@@ -7,9 +7,11 @@ import {
   AlertTriangle, RefreshCw, Settings, Target,
   Mail, Phone, Tag, ChevronRight, Power,
   FileText, Inbox, Star, DollarSign, UserPlus,
-  MessageSquare, Layers, ArrowDown, Copy, X
+  MessageSquare, Layers, ArrowDown, Copy, X,
+  RotateCcw,
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -260,27 +262,23 @@ export default function AutomationsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Bot size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Smart Automations</h1>
-            <p className="text-xs text-muted">Build Zapier-style workflows with triggers, conditions, and actions</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 text-[10px] bg-emerald-400/[0.08] text-emerald-400 px-2.5 py-1 rounded-md border border-emerald-400/15">
-            <Power size={10} /><span className="font-medium">{activeCount} active</span>
-          </div>
-          <button onClick={() => { setFlowNodes([]); setBuilderName(""); setBuilderDescription(""); setTab("builder"); }}
-            className="btn-primary text-xs flex items-center gap-1.5">
-            <Plus size={12} /> New Automation
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<RotateCcw size={28} />}
+        title="Smart Automations"
+        subtitle="Zapier-style triggers, conditions & actions."
+        gradient="green"
+        actions={
+          <>
+            <div className="flex items-center gap-1.5 text-[10px] bg-white/15 text-white px-2.5 py-1 rounded-md border border-white/20">
+              <Power size={10} /><span className="font-medium">{activeCount} active</span>
+            </div>
+            <button onClick={() => { setFlowNodes([]); setBuilderName(""); setBuilderDescription(""); setTab("builder"); }}
+              className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <Plus size={12} /> New Automation
+            </button>
+          </>
+        }
+      />
 
       {/* Summary Stats */}
       <div className="grid grid-cols-4 gap-3">

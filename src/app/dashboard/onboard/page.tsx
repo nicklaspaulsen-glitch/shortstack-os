@@ -10,6 +10,7 @@ import {
   CheckCircle2, Layout, Zap, BookOpen, Loader2,
 } from "lucide-react";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
+import PageHero from "@/components/ui/page-hero";
 
 /* ================================================================== */
 /*  Types                                                              */
@@ -271,29 +272,25 @@ export default function OnboardPage() {
   // ── Render ──────────────────────────────────────────────
   return (
     <div className="fade-in space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <UserPlus size={22} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-foreground">Client Onboarding Wizard</h1>
-            <p className="text-xs text-muted">Step-by-step setup for new clients</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowTemplates(!showTemplates)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-border text-muted hover:text-foreground hover:border-gold/30 transition-all">
-            <Layout size={12} /> Templates
-          </button>
-          {selectedTemplate && (
-            <span className="text-[9px] px-2 py-0.5 bg-gold/10 text-gold rounded-full">
-              Using: {ONBOARD_TEMPLATES.find(t => t.id === selectedTemplate)?.name}
-            </span>
-          )}
-        </div>
-      </div>
+      <PageHero
+        icon={<Sparkles size={28} />}
+        title="Client Onboarding Wizard"
+        subtitle="Step-by-step setup for new clients."
+        gradient="gold"
+        actions={
+          <>
+            <button onClick={() => setShowTemplates(!showTemplates)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all">
+              <Layout size={12} /> Templates
+            </button>
+            {selectedTemplate && (
+              <span className="text-[9px] px-2 py-0.5 bg-white/15 border border-white/25 text-white rounded-full">
+                Using: {ONBOARD_TEMPLATES.find(t => t.id === selectedTemplate)?.name}
+              </span>
+            )}
+          </>
+        }
+      />
 
       {/* Mode Toggle: Full Wizard vs Quick Add */}
       <div className="flex items-center gap-1 p-1 rounded-xl bg-white/[0.03] border border-[var(--color-border)] w-fit">

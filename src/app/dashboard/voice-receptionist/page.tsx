@@ -13,6 +13,7 @@ import {
   Headphones, Shield, RefreshCw, ExternalLink
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
 
 /* ── Types ── */
@@ -326,43 +327,40 @@ export default function VoiceReceptionistPage() {
   /* ── Render ── */
   return (
     <div className="p-4 md:p-6 space-y-5 max-w-[1400px] mx-auto">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Headphones size={18} className="text-gold" /> AI Voice Receptionist
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Intelligent inbound call handling with lead qualification and appointment booking</p>
-        </div>
-        <div className="flex items-center gap-3">
-          {/* Phone number */}
-          <div className="flex items-center gap-2 bg-surface rounded-lg px-3 py-1.5 border border-border">
-            <Phone size={12} className="text-gold" />
-            <span className="text-xs font-mono">{phoneNumber}</span>
-            <button onClick={handleCopy} className="text-muted hover:text-gold transition-colors">
-              {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+      <PageHero
+        icon={<Headphones size={28} />}
+        title="AI Voice Receptionist"
+        subtitle="Inbound call handling with lead qualification."
+        gradient="blue"
+        actions={
+          <>
+            <div className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-3 py-1.5">
+              <Phone size={12} className="text-white" />
+              <span className="text-xs font-mono text-white">{phoneNumber}</span>
+              <button onClick={handleCopy} className="text-white/70 hover:text-white transition-colors">
+                {copied ? <Check size={12} className="text-emerald-300" /> : <Copy size={12} />}
+              </button>
+            </div>
+            <button
+              onClick={toggleActive}
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                isActive
+                  ? "bg-emerald-500/25 text-white border border-emerald-300/40 hover:bg-emerald-500/35"
+                  : "bg-red-500/20 text-white border border-red-300/30 hover:bg-red-500/30"
+              }`}
+            >
+              {isActive && (
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-300" />
+                </span>
+              )}
+              {!isActive && <span className="h-2 w-2 rounded-full bg-red-300" />}
+              {isActive ? "Active" : "Inactive"}
             </button>
-          </div>
-          {/* Active toggle */}
-          <button
-            onClick={toggleActive}
-            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              isActive
-                ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/25"
-                : "bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20"
-            }`}
-          >
-            {isActive && (
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-              </span>
-            )}
-            {!isActive && <span className="h-2 w-2 rounded-full bg-red-400" />}
-            {isActive ? "Active" : "Inactive"}
-          </button>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Stats Bar */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

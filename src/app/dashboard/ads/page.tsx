@@ -13,6 +13,9 @@ import {
   Sparkles, Target, Filter, ChevronDown,
   Copy, Wand2, Loader, Pause, Play,
   Megaphone, RefreshCw, Zap,
+} from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
+import {
   Image as ImageIcon, Type, Globe,
   Bot, CheckCircle2, XCircle, ArrowUpRight,
   Shield, Clock, Plug, BarChart3,
@@ -353,26 +356,22 @@ export default function AdsPage() {
 
   return (
     <div className="fade-in space-y-6 max-w-[1400px] mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Megaphone size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Ads Center</h1>
-            <p className="text-xs text-muted">Manage campaigns across Meta, Google & TikTok with AI optimization</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={fetchData} className="btn-ghost text-xs flex items-center gap-1.5">
-            <RefreshCw size={12} /> Sync
-          </button>
-          <button onClick={() => setShowAddCampaign(true)} className="btn-primary text-xs flex items-center gap-1.5">
-            <Plus size={12} /> New Campaign
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<Megaphone size={28} />}
+        title="Ads Center"
+        subtitle="Manage Meta, Google & TikTok campaigns with AI."
+        gradient="sunset"
+        actions={
+          <>
+            <button onClick={fetchData} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <RefreshCw size={12} /> Sync
+            </button>
+            <button onClick={() => setShowAddCampaign(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <Plus size={12} /> New Campaign
+            </button>
+          </>
+        }
+      />
 
       {/* Tabs + Filters */}
       <div className="flex items-center justify-between flex-wrap gap-3">

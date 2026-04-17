@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 
@@ -117,23 +118,20 @@ export default function GenerationsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-lg font-bold flex items-center gap-2">
-            <Sparkles size={20} className="text-gold" /> Generations
-          </h1>
-          <p className="text-xs text-muted mt-0.5">
-            Everything you&apos;ve created across ShortStack, organized by category
-          </p>
-        </div>
-        <button
-          onClick={fetchGenerations}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-muted hover:text-white transition-all"
-        >
-          <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
-        </button>
-      </div>
+      <PageHero
+        icon={<Sparkles size={28} />}
+        title="Generations"
+        subtitle="Everything you've created, organized by category."
+        gradient="sunset"
+        actions={
+          <button
+            onClick={fetchGenerations}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-medium hover:bg-white/25 transition-all"
+          >
+            <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
+          </button>
+        }
+      />
 
       {/* Stats Strip */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">

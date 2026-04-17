@@ -13,6 +13,7 @@ import {
   Clock, Tag, AlertCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
 
 // ── Types ──
@@ -196,45 +197,39 @@ export default function MarketplacePage() {
 
   return (
     <div className="space-y-6 pb-32">
-      {/* ── Header ── */}
-      <div className="page-header flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gold/10">
-            <Store size={22} className="text-gold" />
+      <PageHero
+        icon={<Store size={28} />}
+        title="Marketplace"
+        subtitle="Plugins to supercharge your workflow."
+        gradient="gold"
+        actions={
+          <div className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 p-1">
+            <button
+              onClick={() => setViewTab("browse")}
+              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
+                viewTab === "browse"
+                  ? "bg-white/20 text-white"
+                  : "text-white/70 hover:text-white"
+              }`}
+            >
+              Browse
+            </button>
+            <button
+              onClick={() => setViewTab("installed")}
+              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
+                viewTab === "installed"
+                  ? "bg-white/20 text-white"
+                  : "text-white/70 hover:text-white"
+              }`}
+            >
+              My Plugins
+              <span className="ml-1.5 rounded-full bg-white/20 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                {installedIds.size}
+              </span>
+            </button>
           </div>
-          <div>
-            <h1 className="text-2xl font-bold text-white">Marketplace</h1>
-            <p className="text-sm text-muted">Discover plugins to supercharge your workflow</p>
-          </div>
-        </div>
-
-        {/* Tab toggle */}
-        <div className="flex items-center gap-2 rounded-lg border border-border bg-surface p-1">
-          <button
-            onClick={() => setViewTab("browse")}
-            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
-              viewTab === "browse"
-                ? "bg-gold/10 text-gold"
-                : "text-muted hover:text-white"
-            }`}
-          >
-            Browse
-          </button>
-          <button
-            onClick={() => setViewTab("installed")}
-            className={`rounded-md px-4 py-1.5 text-sm font-medium transition-all ${
-              viewTab === "installed"
-                ? "bg-gold/10 text-gold"
-                : "text-muted hover:text-white"
-            }`}
-          >
-            My Plugins
-            <span className="ml-1.5 rounded-full bg-gold/20 px-1.5 py-0.5 text-[10px] font-bold text-gold">
-              {installedIds.size}
-            </span>
-          </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* ── Search + filters ── */}
       <div className="space-y-4">

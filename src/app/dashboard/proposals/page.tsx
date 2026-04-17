@@ -9,6 +9,9 @@ import {
   FileCheck, Calendar, PenTool, Star
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
+import PageHero from "@/components/ui/page-hero";
+import WebsiteScraper from "@/components/ui/website-scraper";
+import toast from "react-hot-toast";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -181,18 +184,17 @@ export default function ProposalsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <FileText size={18} className="text-gold" /> Proposals
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Build, send, track, and close proposals</p>
-        </div>
-        <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs flex items-center gap-1.5">
-          <Plus size={12} /> New Proposal
-        </button>
-      </div>
+      <PageHero
+        icon={<FileCheck size={28} />}
+        title="Proposals"
+        subtitle="Build, send, track, and close proposals."
+        gradient="gold"
+        actions={
+          <button onClick={() => setActiveTab("builder")} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <Plus size={12} /> New Proposal
+          </button>
+        }
+      />
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -326,6 +328,23 @@ export default function ProposalsPage() {
                 </div>
               </div>
             </div>
+
+            {/* Optional prospect website scrape — auto-fills client name + brief */}
+            <WebsiteScraper
+              ctaLabel="Use as proposal context"
+              onExtract={(r) => {
+                if (!builderClient && r.extracted.businessName) setBuilderClient(r.extracted.businessName);
+                const bits: string[] = [];
+                if (r.extracted.businessName) bits.push(`Client: ${r.extracted.businessName}`);
+                if (r.ai?.industry) bits.push(`Industry: ${r.ai.industry}`);
+                if (r.ai?.audience) bits.push(`Audience: ${r.ai.audience}`);
+                if (r.ai?.valueProposition) bits.push(`Value prop: ${r.ai.valueProposition}`);
+                if (r.ai?.services?.length) bits.push(`Services: ${r.ai.services.join(", ")}`);
+                if (r.extracted.address) bits.push(`Address: ${r.extracted.address}`);
+                setAiBrief(bits.join(" | "));
+                toast.success("Prospect data captured — reuse it via AI Generate");
+              }}
+            />
 
             {/* Sections with AI generate */}
             <div className="card space-y-3">

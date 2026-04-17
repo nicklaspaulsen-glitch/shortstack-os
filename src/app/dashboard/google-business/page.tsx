@@ -5,8 +5,10 @@ import {
   MapPin, Star, Send, RefreshCw, Reply, PenTool, Eye,
   BarChart3, Image, Clock, Calendar, Plus,
   TrendingUp, Globe, Settings, CheckCircle,
-  ArrowUpRight, Sparkles, MessageSquare, Tag
+  ArrowUpRight, Sparkles, MessageSquare, Tag,
+  Globe as GlobeIcon,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -94,27 +96,23 @@ export default function GoogleBusinessPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#4285F4]/10 rounded-xl flex items-center justify-center">
-            <MapPin size={20} className="text-[#4285F4]" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Google Business</h1>
-            <p className="text-xs text-muted">Manage listings, reviews, posts & local SEO</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <select value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)}
-            className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground min-w-[160px]">
-            {LOCATIONS.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
-          </select>
-          <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted flex items-center gap-1.5">
-            <RefreshCw size={12} /> Refresh
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<GlobeIcon size={28} />}
+        title="Google Business"
+        subtitle="Listings, reviews, posts & local SEO."
+        gradient="blue"
+        actions={
+          <>
+            <select value={selectedLocation} onChange={e => setSelectedLocation(e.target.value)}
+              className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-white min-w-[160px]">
+              {LOCATIONS.map(l => <option key={l.id} value={l.id} className="bg-slate-800">{l.name}</option>)}
+            </select>
+            <button className="px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white text-xs hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <RefreshCw size={12} /> Refresh
+            </button>
+          </>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">

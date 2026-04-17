@@ -8,7 +8,7 @@ import {
   BarChart3, Calendar,
   Play, Eye, Download, Plus, Zap
 } from "lucide-react";
-import { NotionIcon } from "@/components/ui/platform-icons";
+import PageHero from "@/components/ui/page-hero";
 
 const tabs = ["Workspaces", "Sync Map", "Status", "Field Map", "Conflicts", "History", "Schedule", "Templates", "Browser", "Selective", "Analytics", "Settings"] as const;
 type Tab = (typeof tabs)[number];
@@ -64,30 +64,26 @@ export default function NotionSyncPage() {
 
   return (
     <div className="fade-in space-y-6 max-w-[1200px] mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-            <NotionIcon size={40} />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Notion Sync</h1>
-            <p className="text-xs text-muted">Bi-directional sync between Notion workspaces and your app</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-muted">Auto-sync</span>
-            <div onClick={() => setAutoSync(!autoSync)}
-              className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${autoSync ? "bg-green-400" : "bg-gray-600"}`}>
-              <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${autoSync ? "translate-x-[18px]" : "translate-x-0.5"}`} />
+      <PageHero
+        icon={<FileText size={28} />}
+        title="Notion Sync"
+        subtitle="Bi-directional sync with Notion workspaces."
+        gradient="blue"
+        actions={
+          <>
+            <div className="flex items-center gap-1.5 text-xs">
+              <span className="text-white/80">Auto-sync</span>
+              <div onClick={() => setAutoSync(!autoSync)}
+                className={`w-9 h-5 rounded-full cursor-pointer transition-all flex items-center ${autoSync ? "bg-emerald-400" : "bg-white/20"}`}>
+                <div className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${autoSync ? "translate-x-[18px]" : "translate-x-0.5"}`} />
+              </div>
             </div>
-          </div>
-          <button className="text-xs bg-gold/10 text-gold px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 hover:bg-gold/20">
-            <RefreshCw size={12} /> Sync Now
-          </button>
-        </div>
-      </div>
+            <button className="text-xs bg-white/15 border border-white/25 text-white px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5 hover:bg-white/25 transition-all">
+              <RefreshCw size={12} /> Sync Now
+            </button>
+          </>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

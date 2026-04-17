@@ -16,6 +16,7 @@ import {
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import PageHero from "@/components/ui/page-hero";
+import WebsiteScraper from "@/components/ui/website-scraper";
 import toast from "react-hot-toast";
 
 /* ─── static data ─── */
@@ -1302,6 +1303,32 @@ export default function ScraperPage() {
             <div className="card text-center p-4"><p className="text-lg font-bold text-purple-400">{results.filter(r => r.decision_maker).length}</p><p className="text-[10px] text-muted">Decision Makers</p></div>
             <div className="card text-center p-4"><p className="text-lg font-bold text-success">{results.filter(r => (r.lead_score || 0) >= 70).length}</p><p className="text-[10px] text-muted">Hot Leads</p></div>
           </div>
+
+          {/* Single-URL website enrichment (optional) */}
+          <WebsiteScraper
+            ctaLabel="Add as lead"
+            onExtract={(r) => {
+              const lead: ScrapedLead = {
+                business_name: r.extracted.businessName || r.url,
+                phone: r.extracted.phones[0] || null,
+                email: r.extracted.emails[0] || null,
+                website: r.url,
+                address: r.extracted.address || null,
+                google_rating: null,
+                review_count: 0,
+                industry: r.ai?.industry || "",
+                source: "website_scrape",
+                status: "new",
+                instagram_url: r.extracted.socialLinks.find(s => s.platform === "instagram")?.url,
+                facebook_url: r.extracted.socialLinks.find(s => s.platform === "facebook")?.url,
+                tiktok_url: r.extracted.socialLinks.find(s => s.platform === "tiktok")?.url,
+                linkedin_url: r.extracted.socialLinks.find(s => s.platform === "linkedin")?.url,
+                tech_stack: r.extracted.techStack.join(", ") || undefined,
+              };
+              setResults(prev => [lead, ...prev]);
+              toast.success("Website added to results");
+            }}
+          />
         </div>
       )}
 

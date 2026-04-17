@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import {
   CalendlyIcon, WhatsAppIcon, NotionIcon, GoogleAdsIcon, GoogleMapsIcon
 } from "@/components/ui/platform-icons";
+import PageHero from "@/components/ui/page-hero";
 
 // Real brand logos as inline SVGs
 const FacebookLogo = () => (
@@ -322,33 +323,31 @@ function SocialAccountsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Link2 size={18} className="text-gold" /> Connected Accounts
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Connect social accounts via Zernio for unified AI-powered management</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* Client selector for admins */}
-          {profile?.role !== "client" && clients.length > 0 && (
-            <select value={clientId || ""} onChange={e => setClientId(e.target.value)}
-              className="input text-xs py-1.5 min-w-[160px]">
-              {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-            </select>
-          )}
-          <button onClick={() => syncZernioAccounts()} disabled={syncing}
-            className="flex items-center gap-1.5 text-[10px] bg-surface-light text-muted hover:text-foreground px-2.5 py-1 rounded-md border border-border hover:border-gold/20 transition-all disabled:opacity-50">
-            <RefreshCw size={10} className={syncing ? "animate-spin" : ""} />
-            <span className="font-medium">Sync</span>
-          </button>
-          <div className="flex items-center gap-1.5 text-[10px] bg-success/[0.08] text-success px-2.5 py-1 rounded-md border border-success/15">
-            <Check size={10} />
-            <span className="font-medium">{connectedIds.length} connected</span>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        icon={<Link2 size={28} />}
+        title="Connected Accounts"
+        subtitle="Unified social management via Zernio."
+        gradient="green"
+        actions={
+          <>
+            {profile?.role !== "client" && clients.length > 0 && (
+              <select value={clientId || ""} onChange={e => setClientId(e.target.value)}
+                className="rounded-lg border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-white min-w-[160px]">
+                {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name}</option>)}
+              </select>
+            )}
+            <button onClick={() => syncZernioAccounts()} disabled={syncing}
+              className="flex items-center gap-1.5 text-[10px] bg-white/10 border border-white/20 text-white px-2.5 py-1 rounded-md hover:bg-white/20 transition-all disabled:opacity-50">
+              <RefreshCw size={10} className={syncing ? "animate-spin" : ""} />
+              <span className="font-medium">Sync</span>
+            </button>
+            <div className="flex items-center gap-1.5 text-[10px] bg-white/15 border border-white/25 text-white px-2.5 py-1 rounded-md">
+              <Check size={10} />
+              <span className="font-medium">{connectedIds.length} connected</span>
+            </div>
+          </>
+        }
+      />
 
       {/* Connected accounts */}
       {accounts.filter(a => a.is_active).length > 0 && (

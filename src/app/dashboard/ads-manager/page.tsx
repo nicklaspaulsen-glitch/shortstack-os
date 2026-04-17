@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { MetaIcon, GoogleAdsIcon, TikTokIcon } from "@/components/ui/platform-icons";
+import PageHero from "@/components/ui/page-hero";
 
 function getAdBrandIcon(platformId: string, size = 20): React.ReactNode {
   if (platformId === "meta_ads") return <MetaIcon size={size} />;
@@ -387,24 +388,20 @@ export default function AdsManagerPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Target className="text-gold" size={24} />
-            Ads Manager
-          </h1>
-          <p className="text-muted text-sm mt-1">
-            AI-powered multi-platform advertising hub. Manage and optimize ads across Meta, Google, and TikTok via Zernio.
-          </p>
-        </div>
-        <button
-          onClick={() => fetchData()}
-          className="px-3 py-1.5 rounded-lg bg-card border border-border text-muted hover:text-foreground hover:border-gold/40 transition text-xs flex items-center gap-1.5"
-        >
-          <RefreshCw size={12} /> Refresh
-        </button>
-      </div>
+      <PageHero
+        icon={<Target size={28} />}
+        title="Ads Manager"
+        subtitle="AI multi-platform ads across Meta, Google & TikTok."
+        gradient="sunset"
+        actions={
+          <button
+            onClick={() => fetchData()}
+            className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-medium hover:bg-white/25 transition flex items-center gap-1.5"
+          >
+            <RefreshCw size={12} /> Refresh
+          </button>
+        }
+      />
 
       {/* Tab bar */}
       <div className="flex gap-1 bg-card border border-border rounded-xl p-1 overflow-x-auto">

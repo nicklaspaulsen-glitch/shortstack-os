@@ -5,12 +5,14 @@ import {
   Globe, Palette, Type, Image as ImageIcon, Sparkles,
   Loader, Search, Download, Copy, Check, ExternalLink,
   Megaphone, FileText, Film, Mail, MessageSquare,
-  Layout, Wand2, Eye, Share2, Zap,
+  Layout, Eye, Share2, Zap,
   ChevronRight, RefreshCw, Link2, Hash,
   ChevronDown, Braces, ClipboardList, FileCode
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import PageHero from "@/components/ui/page-hero";
+import WebsiteScraper from "@/components/ui/website-scraper";
 
 type MainTab = "extract" | "colors" | "typography" | "media" | "generate";
 
@@ -222,23 +224,18 @@ export default function BrandKitPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold flex items-center gap-2">
-            <Wand2 size={20} className="text-gold" /> Brand Kit
-          </h1>
-          <p className="text-xs text-muted mt-0.5">
-            Paste any website URL to extract brand colors, fonts, logos, and generate content
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          {brand && (
+      <PageHero
+        icon={<Palette size={28} />}
+        title="Brand Kit"
+        subtitle="Extract colors, fonts & logos from any URL."
+        gradient="purple"
+        actions={
+          brand ? (
             <>
               <div className="relative" ref={exportMenuRef}>
                 <button
                   onClick={() => setShowExportMenu((v) => !v)}
-                  className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5"
+                  className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"
                 >
                   <Download size={13} /> Export Kit <ChevronDown size={12} className={`transition-transform ${showExportMenu ? "rotate-180" : ""}`} />
                 </button>
@@ -278,13 +275,13 @@ export default function BrandKitPage() {
                   </div>
                 )}
               </div>
-              <button onClick={() => { setBrand(null); setUrl(""); setTab("extract"); }} className="btn-secondary text-xs flex items-center gap-1.5 px-3 py-1.5">
+              <button onClick={() => { setBrand(null); setUrl(""); setTab("extract"); }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
                 <RefreshCw size={13} /> New Scan
               </button>
             </>
-          )}
-        </div>
-      </div>
+          ) : null
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 border-b border-border/30 pb-px">
@@ -342,6 +339,30 @@ export default function BrandKitPage() {
               </button>
             </div>
           </div>
+
+          {/* Optional business + brand analyzer (AI-augmented website extraction) */}
+          <WebsiteScraper
+            ctaLabel="Pull brand colors + logo"
+            onExtract={(r) => {
+              if (!url && r.url) setUrl(r.url);
+              const colors = r.extracted.primaryColor ? [r.extracted.primaryColor] : [];
+              const socials = r.extracted.socialLinks.map((s) => ({ platform: s.platform, url: s.url }));
+              setBrand({
+                siteName: r.extracted.businessName || "Unknown Site",
+                description: r.extracted.description || "",
+                favicon: r.extracted.logo || "",
+                ogImage: r.extracted.ogImage || "",
+                colors,
+                fonts: [],
+                images: r.extracted.ogImage ? [r.extracted.ogImage] : [],
+                socialLinks: socials,
+                headings: r.extracted.keywords.slice(0, 8),
+                ctaTexts: r.ai?.services || [],
+              });
+              toast.success("Brand profile populated from website");
+              setTab("colors");
+            }}
+          />
 
           {/* How it works */}
           <div className="grid grid-cols-4 gap-4">

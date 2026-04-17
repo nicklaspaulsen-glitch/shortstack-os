@@ -13,6 +13,7 @@ import {
   PenTool, Gauge, BookOpen,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 
 const STYLES = [
   { id: "modern-dark", name: "Modern Dark", desc: "Dark bg, clean typography, gold accents", preview: "bg-gray-900" },
@@ -340,21 +341,18 @@ export default function WebsitesPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Globe size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Website Builder</h1>
-            <p className="text-xs text-muted">AI builds full websites — deploy as demo, go live with custom domain</p>
-          </div>
-        </div>
-        <select value={selectedClient} onChange={e => selectClient(e.target.value)} className="input text-xs py-1.5 min-w-[160px]">
-          <option value="">No client</option>
-          {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-        </select>
-      </div>
+      <PageHero
+        icon={<Globe size={28} />}
+        title="Website Builder"
+        subtitle="AI builds & deploys full websites with domains."
+        gradient="sunset"
+        actions={
+          <select value={selectedClient} onChange={e => selectClient(e.target.value)} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-white/10 border border-white/20 text-white">
+            <option value="" className="bg-slate-800">No client</option>
+            {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name}</option>)}
+          </select>
+        }
+      />
 
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
         {([

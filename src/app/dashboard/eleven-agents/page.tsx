@@ -7,6 +7,7 @@ import {
   BarChart3, FileText, Mic, Users, AlertTriangle, Volume2,
   TrendingUp, Calendar, Shield, ArrowRight, Copy
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 interface VoiceAgent {
@@ -262,22 +263,18 @@ export default function ElevenAgentsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center">
-            <PhoneCall size={20} className="text-purple-400" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">ElevenAgents</h1>
-            <p className="text-xs text-muted">AI voice agents for outbound cold calling &amp; inbound handling</p>
-          </div>
-        </div>
-        <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border text-xs text-muted hover:text-foreground transition-all disabled:opacity-50">
-          <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
-        </button>
-      </div>
+      <PageHero
+        icon={<Phone size={28} />}
+        title="ElevenAgents"
+        subtitle="AI voice agents for cold calls & inbound."
+        gradient="gold"
+        actions={
+          <button onClick={() => { loadAgents(); loadVoices(); }} disabled={apiLoading}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-medium hover:bg-white/25 transition-all disabled:opacity-50">
+            <RefreshCw size={12} className={apiLoading ? "animate-spin" : ""} /> {apiLoading ? "Loading..." : "Refresh"}
+          </button>
+        }
+      />
 
       {/* Stats Strip */}
       <div className="grid grid-cols-6 gap-3">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import WebsiteScraper from "@/components/ui/website-scraper";
 import {
   ArrowRight,
   ArrowLeft,
@@ -393,6 +394,29 @@ export default function ClientOnboardingWizard({
             <StepLabel>Step 2 of 10</StepLabel>
             <StepTitle>Tell us about your business</StepTitle>
             <StepSubtitle>The more we know, the better we can tailor your strategy.</StepSubtitle>
+
+            {/* Optional auto-fill from website */}
+            <div className="mb-6">
+              <WebsiteScraper
+                defaultUrl={data.website_url}
+                ctaLabel="Use this to pre-fill"
+                onExtract={(r) => {
+                  // Save the URL so step 7 picks it up later
+                  if (!data.website_url) set("website_url", r.url);
+                  // Try to map AI signals into form fields (without overwriting existing values)
+                  const sizeToTeam: Record<string, string> = {
+                    solo: "Just me", small: "2-5", medium: "16-50", enterprise: "50+",
+                  };
+                  if (r.ai?.estimatedSize && sizeToTeam[r.ai.estimatedSize] && !data.team_size) {
+                    set("team_size", sizeToTeam[r.ai.estimatedSize]);
+                  }
+                  // Use address as a hint for service area
+                  if (r.extracted.address && !data.service_area) {
+                    set("service_area", r.extracted.address);
+                  }
+                }}
+              />
+            </div>
 
             <div className="space-y-6">
               <div>

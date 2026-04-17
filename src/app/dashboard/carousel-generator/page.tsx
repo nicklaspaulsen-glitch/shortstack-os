@@ -8,6 +8,7 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -310,42 +311,33 @@ export default function CarouselGeneratorPage() {
 
   return (
     <div className="max-w-7xl mx-auto animate-fade-in">
-      {/* ─── Header ─── */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <Layers size={20} className="text-gold" />
-            Carousel Generator
-          </h1>
-          <p className="text-xs text-muted mt-0.5">
-            Create scroll-stopping Instagram & LinkedIn carousels with AI
-          </p>
-        </div>
-        {slides.length > 0 && (
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleCopyAll}
-              className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all"
-              style={{
-                borderColor: "var(--color-border)",
-                background: "var(--color-surface)",
-                color: "var(--color-foreground)",
-              }}
-            >
-              {copied ? <Check size={13} /> : <Copy size={13} />}
-              {copied ? "Copied!" : "Copy Text"}
-            </button>
-            <button
-              onClick={handleDownload}
-              className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition-all text-white"
-              style={{ background: "var(--color-accent)" }}
-            >
-              <Download size={13} />
-              Download All
-            </button>
-          </div>
-        )}
-      </div>
+      <PageHero
+        className="mb-6"
+        icon={<Layers size={28} />}
+        title="Carousel Generator"
+        subtitle="Create scroll-stopping Instagram & LinkedIn carousels."
+        gradient="gold"
+        actions={
+          slides.length > 0 ? (
+            <>
+              <button
+                onClick={handleCopyAll}
+                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
+              >
+                {copied ? <Check size={13} /> : <Copy size={13} />}
+                {copied ? "Copied!" : "Copy Text"}
+              </button>
+              <button
+                onClick={handleDownload}
+                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white hover:bg-white/25 transition-all"
+              >
+                <Download size={13} />
+                Download All
+              </button>
+            </>
+          ) : null
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* ═══════════════════════════════════════════

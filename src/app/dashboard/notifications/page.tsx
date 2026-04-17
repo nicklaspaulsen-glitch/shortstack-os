@@ -13,6 +13,7 @@ import {
   CheckCircle2, Eye, ExternalLink, Loader, RefreshCw,
   Info, XCircle, ChevronRight, Filter, Check,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 type NotifType = "all" | "lead" | "outreach" | "autopilot" | "system" | "alert";
@@ -294,47 +295,38 @@ export default function NotificationsPage() {
   /* ── Render ── */
   return (
     <div className="space-y-6">
-      {/* ─── Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
-              <Bell size={20} className="text-gold" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">Notifications</h1>
-              <p className="text-xs text-muted">
-                Stay informed about your automated tasks, leads, and system events
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {unreadCount > 0 && (
-            <span className="text-[10px] font-medium text-gold bg-gold/10 px-2.5 py-1 rounded-full">
-              {unreadCount} unread
-            </span>
-          )}
-          <button
-            onClick={() => fetchNotifications()}
-            className="p-2 rounded-xl text-muted hover:text-foreground hover:bg-surface-light transition-colors"
-            title="Refresh"
-          >
-            <RefreshCw size={14} />
-          </button>
-          {unreadCount > 0 && (
+      <PageHero
+        icon={<Bell size={28} />}
+        title="Notifications"
+        subtitle="Stay informed about tasks, leads & events."
+        gradient="sunset"
+        actions={
+          <>
+            {unreadCount > 0 && (
+              <span className="text-[10px] font-medium text-white bg-white/15 border border-white/25 px-2.5 py-1 rounded-full">
+                {unreadCount} unread
+              </span>
+            )}
             <button
-              onClick={markAllRead}
-              disabled={markingAll}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-gold bg-gold/10 hover:bg-gold/20 transition-colors disabled:opacity-50"
+              onClick={() => fetchNotifications()}
+              className="p-2 rounded-xl text-white bg-white/10 border border-white/20 hover:bg-white/20 transition-colors"
+              title="Refresh"
             >
-              {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
-              Mark All Read
+              <RefreshCw size={14} />
             </button>
-          )}
-        </div>
-      </div>
+            {unreadCount > 0 && (
+              <button
+                onClick={markAllRead}
+                disabled={markingAll}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-white bg-white/15 border border-white/25 hover:bg-white/25 transition-colors disabled:opacity-50"
+              >
+                {markingAll ? <Loader size={12} className="animate-spin" /> : <Check size={12} />}
+                Mark All Read
+              </button>
+            )}
+          </>
+        }
+      />
 
       {/* ─── Search + Filter Tabs ─── */}
       <div className="space-y-3">

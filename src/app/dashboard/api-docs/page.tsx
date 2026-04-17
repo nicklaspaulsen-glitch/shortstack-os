@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import {
-  BookOpen, Code, Copy, Shield, ChevronDown, ChevronRight,
+  Code, Copy, Shield, ChevronDown, ChevronRight,
   Play, Terminal, Key, AlertTriangle, Download, Clock,
   CheckCircle, Search, FileText, Zap, Globe, Lock,
   Trash2, Eye, EyeOff, Activity, ToggleLeft, ToggleRight, RefreshCw
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 interface Endpoint {
@@ -268,22 +269,18 @@ export default function ApiDocsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <BookOpen size={20} className="text-gold" />
+      <PageHero
+        icon={<FileText size={28} />}
+        title="API Documentation"
+        subtitle="Complete reference for ShortStack OS API."
+        gradient="blue"
+        actions={
+          <div className="flex items-center gap-2 text-[10px] text-white">
+            <span className="px-2 py-1 bg-white/10 rounded border border-white/20">v2.4.0</span>
+            <span>{totalEndpoints} endpoints</span>
           </div>
-          <div>
-            <h1 className="text-lg font-bold">API Documentation</h1>
-            <p className="text-xs text-muted">Complete reference for all ShortStack OS API endpoints</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 text-[10px] text-muted">
-          <span className="px-2 py-1 bg-surface-light rounded border border-border">v2.4.0</span>
-          <span>{totalEndpoints} endpoints</span>
-        </div>
-      </div>
+        }
+      />
 
       {/* Stats Strip */}
       <div className="grid grid-cols-5 gap-3">

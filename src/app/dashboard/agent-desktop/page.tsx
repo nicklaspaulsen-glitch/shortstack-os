@@ -9,9 +9,10 @@ import {
   Copy, Check, Shield,
   FolderOpen, Layers, FileText, Users, Star, MessageSquare,
   Globe, Layout, Sparkles, ArrowRight,
-  ChevronDown, ChevronUp, Info, Package
+  ChevronDown, ChevronUp, Info
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Download Section Feature Data ──────────────────────────── */
 
@@ -126,18 +127,17 @@ export default function AgentDesktopPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Package size={18} className="text-gold" /> Apps &amp; Downloads
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Desktop agent, Chrome extension, and agent monitoring dashboard</p>
-        </div>
-        <button onClick={() => setTab("Activity")} className="btn-secondary text-xs flex items-center gap-1.5">
-          <RefreshCw size={12} /> Agent Status
-        </button>
-      </div>
+      <PageHero
+        icon={<Monitor size={28} />}
+        title="Apps & Downloads"
+        subtitle="Desktop agent, Chrome extension & monitoring."
+        gradient="blue"
+        actions={
+          <button onClick={() => setTab("Activity")} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+            <RefreshCw size={12} /> Agent Status
+          </button>
+        }
+      />
 
       {/* Tab Navigation */}
       <div className="flex gap-1 overflow-x-auto pb-1">

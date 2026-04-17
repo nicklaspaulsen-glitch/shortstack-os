@@ -6,6 +6,7 @@ import {
   BarChart3, Users, Target, ArrowUpRight, Share2,
   FileText, Layers, Zap
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 type ROITab = "calculator" | "tracking" | "benchmarks" | "reports";
 
@@ -126,13 +127,15 @@ Break-even: ${breakEvenMonths} month${breakEvenMonths !== 1 ? "s" : ""}`;
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2"><Calculator size={18} className="text-gold" /> ROI Calculator</h1>
-          <p className="text-xs text-muted mt-0.5">Show prospects their potential ROI - paste into proposals</p>
-        </div>
-        <button onClick={copyResults} className="btn-primary text-xs flex items-center gap-1.5"><Copy size={12} /> Copy Report</button>
-      </div>
+      <PageHero
+        icon={<Calculator size={28} />}
+        title="ROI Calculator"
+        subtitle="Show prospects their potential ROI."
+        gradient="sunset"
+        actions={
+          <button onClick={copyResults} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5"><Copy size={12} /> Copy Report</button>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">

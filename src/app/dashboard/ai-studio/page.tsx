@@ -8,6 +8,7 @@ import {
   ArrowUpRight, FileAudio, Brain
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 
 // ── Types ────────────────────────────────────────────────────────
 interface JobResult {
@@ -41,21 +42,18 @@ export default function AIStudioPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
-            <Sparkles size={20} className="text-gold" />
-            AI Studio
-          </h1>
-          <p className="text-xs text-muted mt-0.5">GPU-powered AI tools — all running on your private RunPod cluster</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-muted bg-surface-light px-2 py-1 rounded-lg">
+      <PageHero
+        className="mb-6"
+        icon={<Sparkles size={28} />}
+        title="AI Studio"
+        subtitle="GPU-powered AI tools on your RunPod cluster."
+        gradient="ocean"
+        actions={
+          <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
             9 tools available
           </span>
-        </div>
-      </div>
+        }
+      />
 
       {/* Tool grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

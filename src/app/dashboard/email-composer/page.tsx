@@ -11,6 +11,7 @@ import {
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
+import PageHero from "@/components/ui/page-hero";
 
 interface SubjectVariant {
   subject: string;
@@ -229,29 +230,28 @@ export default function EmailComposerPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Mail size={18} className="text-gold" /> Email Composer
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Write, preview, test, and schedule emails</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="btn-secondary text-xs flex items-center gap-1.5" disabled={aiWriting}>
-            {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
-          </button>
-          <button onClick={handleAiImprove} className="btn-secondary text-xs flex items-center gap-1.5" disabled={aiImproving}>
-            {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
-          </button>
-          <button onClick={handleGenerateSubjectVariants} className="btn-secondary text-xs flex items-center gap-1.5" disabled={loadingVariants}>
-            {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
-          </button>
-          <button className="btn-primary text-xs flex items-center gap-1.5">
-            <Send size={12} /> Send
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<Mail size={28} />}
+        title="Email Composer"
+        subtitle="Write, preview, test, and schedule emails."
+        gradient="blue"
+        actions={
+          <>
+            <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiWriting}>
+              {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
+            </button>
+            <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiImproving}>
+              {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
+            </button>
+            <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
+              {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
+            </button>
+            <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <Send size={12} /> Send
+            </button>
+          </>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">

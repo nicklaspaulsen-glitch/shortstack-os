@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import Modal from "@/components/ui/modal";
 import StatusBadge from "@/components/ui/status-badge";
+import PageHero from "@/components/ui/page-hero";
 import { formatRelativeTime } from "@/lib/utils";
 import {
   Zap, Plus, Sparkles, Play, Trash2, Bot,
@@ -289,25 +290,24 @@ export default function WorkflowsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Zap size={18} className="text-gold" /> Workflows
-          </h1>
-          <p className="text-muted text-xs mt-0.5">AI agent automation — describe it, we build and run it</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowCreate(true)} className="btn-secondary text-xs flex items-center gap-1.5">
-            <Plus size={13} /> New
-          </button>
-          <button onClick={() => setTab("agent")} className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-all ${
-            tab === "agent" ? "bg-gold text-black" : "bg-surface-light text-muted hover:text-foreground border border-border"
-          }`}>
-            <Bot size={13} /> Agent Mode
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<Zap size={28} />}
+        title="Workflows"
+        subtitle="AI agent automation — describe & run."
+        gradient="sunset"
+        actions={
+          <>
+            <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <Plus size={13} /> New
+            </button>
+            <button onClick={() => setTab("agent")} className={`flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg font-medium transition-all ${
+              tab === "agent" ? "bg-white/25 text-white" : "bg-white/10 text-white/80 hover:text-white border border-white/20"
+            }`}>
+              <Bot size={13} /> Agent Mode
+            </button>
+          </>
+        }
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">

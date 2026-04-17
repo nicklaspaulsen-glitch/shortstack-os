@@ -9,6 +9,7 @@ import {
   Flame, Trophy, Star, Target, Zap,
   ExternalLink, Link2, Gift,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -327,21 +328,17 @@ export default function CommunityPage() {
 
   return (
     <div className="fade-in space-y-5 max-w-[900px] mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Users size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Community</h1>
-            <p className="text-xs text-muted">Discussions, resources & events for the ShortStack community</p>
-          </div>
-        </div>
-        <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold flex items-center gap-1.5">
-          <Plus size={14} /> New Post
-        </button>
-      </div>
+      <PageHero
+        icon={<Users size={28} />}
+        title="Community"
+        subtitle="Discussions, resources & events for ShortStack."
+        gradient="purple"
+        actions={
+          <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <Plus size={14} /> New Post
+          </button>
+        }
+      />
 
       {/* Gamification Bar -- Your Stats */}
       <div className="card p-4 border-gold/10">

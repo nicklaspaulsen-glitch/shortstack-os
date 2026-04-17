@@ -7,7 +7,7 @@ import {
   CheckCircle, Plus, Bot, BarChart3,
   Calendar, Zap, Search, Eye
 } from "lucide-react";
-import { WhatsAppIcon } from "@/components/ui/platform-icons";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -86,26 +86,22 @@ export default function WhatsAppPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
-            <WhatsAppIcon size={40} />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">WhatsApp Business</h1>
-            <p className="text-xs text-muted">Messages, templates, broadcasts & automation</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-lg bg-green-400/10 text-green-400 border border-green-400/15">
-            <CheckCircle size={10} /> API Connected
-          </span>
-          <button className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted flex items-center gap-1.5">
-            <RefreshCw size={12} /> Refresh
-          </button>
-        </div>
-      </div>
+      <PageHero
+        icon={<MessageSquare size={28} />}
+        title="WhatsApp Business"
+        subtitle="Messages, templates, broadcasts & automation."
+        gradient="green"
+        actions={
+          <>
+            <span className="text-[10px] flex items-center gap-1 px-2 py-1 rounded-lg bg-white/15 text-white border border-white/20">
+              <CheckCircle size={10} /> API Connected
+            </span>
+            <button className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <RefreshCw size={12} /> Refresh
+            </button>
+          </>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-3 md:grid-cols-6 gap-3">

@@ -4,10 +4,12 @@ import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import {
   Check, Zap, TrendingUp, Crown, Building2, Infinity,
-  Plus, ArrowRight, Sparkles, Globe, PenTool, Film, Bot, Phone,
+  Plus, ArrowRight, Globe, PenTool, Film, Bot, Phone,
   Shield, Code, Users, Headphones, Lock,
 } from "lucide-react";
 import { PLAN_TIERS, formatBytes } from "@/lib/plan-config";
+import PageHero from "@/components/ui/page-hero";
+import { CreditCard } from "lucide-react";
 
 interface Plan {
   key: string;
@@ -162,31 +164,27 @@ export default function PricingPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gold/10 text-gold text-xs font-medium">
-          <Sparkles size={12} />
-          Simple, transparent pricing
-        </div>
-        <h1 className="text-2xl font-bold text-foreground">Choose your plan</h1>
-        <p className="text-sm text-muted max-w-md mx-auto">
-          Everything you need to run your agency with AI. Scale up or down anytime.
-        </p>
-
-        {/* Billing toggle */}
-        <div className="flex items-center justify-center gap-3 pt-2">
-          <span className={`text-xs font-medium ${!annual ? "text-foreground" : "text-muted"}`}>Monthly</span>
-          <button
-            onClick={() => setAnnual(!annual)}
-            className={`relative w-11 h-6 rounded-full transition-colors ${annual ? "bg-gold" : "bg-border"}`}
-          >
-            <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${annual ? "left-6" : "left-1"}`} />
-          </button>
-          <span className={`text-xs font-medium ${annual ? "text-foreground" : "text-muted"}`}>
-            Annual <span className="text-gold text-[10px]">Save 20%</span>
-          </span>
-        </div>
-      </div>
+      <PageHero
+        icon={<CreditCard size={28} />}
+        title="Choose Your Plan"
+        subtitle="Simple, transparent pricing — scale anytime."
+        gradient="sunset"
+        eyebrow="Plans"
+        actions={
+          <div className="flex items-center justify-center gap-3">
+            <span className={`text-xs font-medium ${!annual ? "text-white" : "text-white/60"}`}>Monthly</span>
+            <button
+              onClick={() => setAnnual(!annual)}
+              className={`relative w-11 h-6 rounded-full transition-colors ${annual ? "bg-white/40" : "bg-white/15"}`}
+            >
+              <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${annual ? "left-6" : "left-1"}`} />
+            </button>
+            <span className={`text-xs font-medium ${annual ? "text-white" : "text-white/60"}`}>
+              Annual <span className="text-white/90 text-[10px]">Save 20%</span>
+            </span>
+          </div>
+        }
+      />
 
       {/* Plans grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">

@@ -16,6 +16,15 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import RecentGenerations from "@/components/dashboard/recent-generations";
+import JumpBackIn from "@/components/dashboard/jump-back-in";
+import TodaysPriority from "@/components/dashboard/todays-priority";
+import QuickCreateFab from "@/components/dashboard/quick-create-fab";
+import {
+  useFocusMode,
+  FocusModeToggle,
+  CommandPaletteHint,
+} from "@/components/dashboard/focus-mode-toggle";
 
 interface DashboardStats {
   leadsToday: number;
@@ -61,6 +70,7 @@ export default function DashboardPage() {
   const [commandLoading, setCommandLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(true);
   const [autopilotClients, setAutopilotClients] = useState<Array<{ client_name: string; tasks_done: number; last_run: string }>>([]);
+  const { focus, toggle: toggleFocus } = useFocusMode();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -172,28 +182,51 @@ export default function DashboardPage() {
         }
         gradient="gold"
         actions={
-          <form onSubmit={handleCommand} className="flex gap-2">
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
-              <input
-                type="text"
-                value={commandInput}
-                onChange={(e) => setCommandInput(e.target.value)}
-                placeholder="Ask Trinity anything..."
-                disabled={commandLoading}
-                className="pl-9 pr-4 py-2 text-xs w-64 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/50 focus:outline-none focus:border-white/30 focus:bg-white/15"
-              />
-            </div>
-            <button type="submit" disabled={!commandInput.trim() || commandLoading}
-              className="px-3 py-2 bg-white/20 text-white text-xs font-medium rounded-xl border border-white/20 hover:bg-white/30 transition-all disabled:opacity-30">
-              <Send size={12} />
+          <div className="flex items-center gap-2 flex-wrap justify-end">
+            <button
+              onClick={toggleFocus}
+              title={focus ? "Exit focus mode" : "Enter focus mode"}
+              className={`hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-medium transition-all ${
+                focus
+                  ? "bg-white/25 border-white/40 text-white shadow-[0_0_18px_-4px_rgba(255,255,255,0.55)]"
+                  : "bg-white/10 border-white/20 text-white/90 hover:bg-white/20"
+              }`}
+            >
+              <Sparkles size={12} />
+              {focus ? "Focus On" : "Focus"}
             </button>
-          </form>
+            <form onSubmit={handleCommand} className="flex gap-2">
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
+                <input
+                  type="text"
+                  value={commandInput}
+                  onChange={(e) => setCommandInput(e.target.value)}
+                  placeholder="Ask Trinity anything..."
+                  disabled={commandLoading}
+                  className="pl-9 pr-4 py-2 text-xs w-64 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/50 focus:outline-none focus:border-white/30 focus:bg-white/15"
+                />
+              </div>
+              <button type="submit" disabled={!commandInput.trim() || commandLoading}
+                className="px-3 py-2 bg-white/20 text-white text-xs font-medium rounded-xl border border-white/20 hover:bg-white/30 transition-all disabled:opacity-30">
+                <Send size={12} />
+              </button>
+            </form>
+          </div>
         }
       />
 
+      {/* ─── Command Palette Hint (above-the-fold helper) ──────── */}
+      <div className="flex items-center justify-between gap-2 -mt-2">
+        <CommandPaletteHint />
+        <FocusModeToggle focus={focus} onToggle={toggleFocus} />
+      </div>
+
+      {/* ─── Today's Priority (always visible — heart of focus mode) ─ */}
+      <TodaysPriority />
+
       {/* ─── Primary Metrics ──────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {!focus && <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <MetricCard
           label="Monthly Revenue"
           value={formatCurrency(stats.totalMRR)}
@@ -225,10 +258,10 @@ export default function DashboardPage() {
           trend={stats.dealsWon > 0 ? "up" : undefined}
           accent="purple"
         />
-      </div>
+      </div>}
 
       {/* ─── Quick Actions ────────────────────────────────────────── */}
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+      {!focus && <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
         {[
           { label: "Full Autopilot", icon: <Zap size={13} />, action: () => triggerQuickAction("full_autopilot"), accent: "text-gold" },
           { label: "New Client", icon: <Plus size={13} />, action: () => router.push("/dashboard/onboard"), accent: "text-success" },
@@ -245,10 +278,16 @@ export default function DashboardPage() {
             <span className="text-xs text-muted group-hover:text-foreground transition-colors font-medium">{qa.label}</span>
           </button>
         ))}
-      </div>
+      </div>}
+
+      {/* ─── Recent AI Generations (always shown) ─────────────────── */}
+      <RecentGenerations />
+
+      {/* ─── Jump Back In (always shown) ──────────────────────────── */}
+      <JumpBackIn />
 
       {/* ─── AI Studio Quick Access ──────────────────────────────── */}
-      <div className="card-static">
+      {!focus && <div className="card-static">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-sm font-semibold flex items-center gap-2">
             <Sparkles size={14} className="text-purple-400" /> AI Studio
@@ -277,10 +316,10 @@ export default function DashboardPage() {
             </Link>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* ─── AI Auto-Pilot Active Clients ────────────────────────── */}
-      {autopilotClients.length > 0 && (
+      {!focus && autopilotClients.length > 0 && (
         <div className="card border-gold/10 bg-gold/[0.02]">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -310,6 +349,7 @@ export default function DashboardPage() {
         </div>
       )}
 
+      {!focus && (<>
       {/* ─── Pipeline + Outreach ───────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
         {/* Lead Pipeline */}
@@ -664,6 +704,10 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      </>)}
+
+      {/* ─── Quick Create FAB (always shown) ──────────────────────── */}
+      <QuickCreateFab />
     </div>
   );
 }
@@ -710,10 +754,14 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
   const t = themes[accent] || themes.gold;
 
   // Pseudo sparkline — deterministic per label so it doesn't flip on re-render
+  // Clamped strictly inside the 100x30 viewBox with a 2px padding
   const seed = label.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  const points = Array.from({ length: 12 }).map((_, i) => {
-    const v = (Math.sin(seed * 0.13 + i * 0.9) + Math.cos(seed * 0.07 + i * 0.5)) * 10 + 20 + (trend === "up" ? i * 1.2 : trend === "down" ? -i * 1.2 : 0);
-    return `${i * 9},${30 - Math.max(-8, Math.min(18, v - 12))}`;
+  const N = 12;
+  const points = Array.from({ length: N }).map((_, i) => {
+    const raw = (Math.sin(seed * 0.13 + i * 0.9) + Math.cos(seed * 0.07 + i * 0.5)) * 6 + 15 + (trend === "up" ? i * 0.8 : trend === "down" ? -i * 0.8 : 0);
+    const x = (i * (100 / (N - 1))).toFixed(2);
+    const y = Math.max(2, Math.min(28, raw)).toFixed(2);
+    return `${x},${y}`;
   }).join(" ");
 
   return (
@@ -739,7 +787,7 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
       </div>
       <div className="relative flex items-end justify-between mt-1.5 gap-3">
         <p className="text-[10px] text-muted flex-1 truncate">{sub}</p>
-        <svg width="100" height="30" viewBox="0 0 100 30" className="shrink-0 opacity-60" aria-hidden>
+        <svg width="100" height="30" viewBox="0 0 100 30" preserveAspectRatio="none" className="shrink-0 opacity-60 max-w-[100px]" aria-hidden>
           <polyline
             points={points}
             fill="none"

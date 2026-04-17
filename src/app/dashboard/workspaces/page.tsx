@@ -7,6 +7,7 @@ import {
   Globe, Shield, CreditCard, BarChart3, Crown,
   ChevronRight, Activity, Trash2, Edit3, ExternalLink
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 type WorkspaceTab = "overview" | "settings" | "usage" | "transfer";
 
@@ -66,19 +67,18 @@ export default function WorkspacesPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Building2 size={18} className="text-gold" /> Workspaces
-            <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 uppercase tracking-wider">Enterprise</span>
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Manage multiple workspaces for clients and sub-agencies</p>
-        </div>
-        <button onClick={() => setShowCreate(true)} className="btn-primary text-xs flex items-center gap-1.5">
-          <Plus size={12} /> Create Workspace
-        </button>
-      </div>
+      <PageHero
+        icon={<Building2 size={28} />}
+        title="Workspaces"
+        subtitle="Manage workspaces for clients and sub-agencies."
+        gradient="sunset"
+        eyebrow="Enterprise"
+        actions={
+          <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+            <Plus size={12} /> Create Workspace
+          </button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">

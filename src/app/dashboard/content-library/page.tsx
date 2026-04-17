@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import PageHero from "@/components/ui/page-hero";
 
 // ── DB-aligned types ──
 
@@ -393,29 +394,29 @@ export default function ContentLibraryPage() {
 
   return (
     <div className="fade-in space-y-6">
-      <div className="page-header">
-        <div>
-          <h1 className="text-lg font-bold flex items-center gap-2">
-            <FolderOpen size={20} className="text-gold" /> Content Library
-          </h1>
-          <p className="text-xs text-muted">Centralized media library for all client assets</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowCollections(!showCollections)} className="btn-ghost text-xs flex items-center gap-1">
-            <Layers size={14} /> Collections
-          </button>
-          <label className="btn-primary text-xs flex items-center gap-1 cursor-pointer">
-            <Upload size={14} /> Upload
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className="hidden"
-              onChange={handleFileInput}
-            />
-          </label>
-        </div>
-      </div>
+      <PageHero
+        icon={<FolderOpen size={28} />}
+        title="Content Library"
+        subtitle="Centralized media library for client assets."
+        gradient="ocean"
+        actions={
+          <>
+            <button onClick={() => setShowCollections(!showCollections)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1">
+              <Layers size={14} /> Collections
+            </button>
+            <label className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1 cursor-pointer">
+              <Upload size={14} /> Upload
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                className="hidden"
+                onChange={handleFileInput}
+              />
+            </label>
+          </>
+        }
+      />
 
       {/* Upload Drop Zone */}
       <div

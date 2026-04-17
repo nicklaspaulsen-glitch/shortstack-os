@@ -8,6 +8,7 @@ import {
   BarChart3, Users
 } from "lucide-react";
 import PageAI from "@/components/page-ai";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 type MainTab = "phone" | "email";
@@ -475,18 +476,12 @@ export default function PhoneEmailPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Phone size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold">Sender Management</h1>
-            <p className="text-xs text-muted">Manage your phone & email sender pool with smart rotation for outreach campaigns</p>
-          </div>
-        </div>
-      </div>
+      <PageHero
+        icon={<Phone size={28} />}
+        title="Sender Management"
+        subtitle="Phone & email sender pool with smart rotation."
+        gradient="green"
+      />
 
       {/* ════════════════════ ROTATION STATS CARD ════════════════════ */}
       <div className="card p-4 space-y-3">

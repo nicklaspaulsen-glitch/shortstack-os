@@ -8,6 +8,7 @@ import {
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import { useAuth } from "@/lib/auth-context";
+import PageHero from "@/components/ui/page-hero";
 
 const ASPECT_RATIOS = [
   { id: "16:9", label: "16:9 Landscape", icon: <Monitor size={12} /> },
@@ -106,25 +107,17 @@ export default function AIVideoPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Film size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">AI Video Generation</h1>
-            <p className="text-xs text-muted">
-              Text-to-video powered by Higgsfield (open-source) on RunPod GPU
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[9px] text-muted bg-surface-light px-2 py-1 rounded-lg flex items-center gap-1">
-            <Zap size={9} className="text-gold" /> GPU Serverless
+      <PageHero
+        icon={<Film size={28} />}
+        title="AI Video Generation"
+        subtitle="Text-to-video powered by Higgsfield on RunPod GPU."
+        gradient="purple"
+        actions={
+          <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg flex items-center gap-1">
+            <Zap size={9} /> GPU Serverless
           </span>
-        </div>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-5">
         {/* Left — Controls */}

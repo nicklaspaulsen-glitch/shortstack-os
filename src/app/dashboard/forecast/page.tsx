@@ -7,6 +7,7 @@ import {
   Layers, PieChart, Clock, Users, Zap, Star, Shield,
   Activity
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ------------------------------------------------------------------ */
 /*  Types & Mock Data                                                   */
@@ -100,27 +101,24 @@ export default function ForecastPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <TrendingUp size={18} className="text-gold" /> Revenue Forecast
-          </h1>
-          <p className="text-xs text-muted mt-0.5">MRR/ARR projections, pipeline weighting, and scenario planning</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="flex gap-1 bg-surface rounded-lg p-0.5">
+      <PageHero
+        icon={<TrendingUp size={28} />}
+        title="Revenue Forecast"
+        subtitle="MRR/ARR projections, pipeline & scenario planning."
+        gradient="blue"
+        actions={
+          <div className="flex gap-1 bg-white/10 border border-white/20 rounded-lg p-0.5">
             {([3, 6, 12] as const).map(r => (
               <button key={r} onClick={() => setForecastRange(r)}
                 className={`px-2.5 py-1 text-[10px] rounded-md transition-all ${
-                  forecastRange === r ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
+                  forecastRange === r ? "bg-white/25 text-white font-medium" : "text-white/70 hover:text-white"
                 }`}>
                 {r}mo
               </button>
             ))}
           </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Key Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">

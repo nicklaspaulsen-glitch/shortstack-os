@@ -11,8 +11,10 @@ import {
   MessageSquare, Clock, Calendar,
   AlertTriangle,
   Send, Filter, Target, Lightbulb,
-  Flame, Radar, LayoutGrid, PieChart
+  Flame, LayoutGrid, PieChart,
+  Target as TargetIcon,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 
@@ -266,21 +268,17 @@ export default function CompetitiveMonitorPage() {
 
   return (
     <div className="space-y-6">
-      {/* ─── Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Radar className="w-7 h-7 text-gold" />
-            Competitive Monitor
-          </h1>
-          <p className="text-xs text-muted mt-1">Track competitor changes, pricing, features, and market moves in real-time</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-gold/10 text-gold rounded-lg hover:bg-gold/20 transition text-sm font-medium">
+      <PageHero
+        icon={<TargetIcon size={28} />}
+        title="Competitive Monitor"
+        subtitle="Track competitor changes, pricing & features."
+        gradient="sunset"
+        actions={
+          <button onClick={() => setShowAddForm(!showAddForm)} className="flex items-center gap-2 px-4 py-2 bg-white/15 border border-white/25 text-white rounded-lg hover:bg-white/25 transition text-sm font-medium">
             <Plus className="w-4 h-4" /> Add Competitor
           </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* ─── Stats Row ─── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

@@ -7,6 +7,7 @@ import {
   BarChart3, Code, Settings, Gauge, Layers,
   TrendingUp, DollarSign, TestTube, Calendar, GitBranch
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 interface ServiceAgent {
@@ -194,16 +195,12 @@ export default function ServicesPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-          <Sparkles size={20} className="text-gold" />
-        </div>
-        <div>
-          <h1 className="text-lg font-bold">AI Service Agents</h1>
-          <p className="text-xs text-muted">Each service has a dedicated AI agent &mdash; click to generate content, strategies & campaigns</p>
-        </div>
-      </div>
+      <PageHero
+        icon={<Sparkles size={28} />}
+        title="AI Service Agents"
+        subtitle="Dedicated AI agents per service for content & campaigns."
+        gradient="purple"
+      />
 
       {/* Stats Strip */}
       <div className="grid grid-cols-5 gap-3">

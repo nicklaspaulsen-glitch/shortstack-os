@@ -17,6 +17,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import PageHero from "@/components/ui/page-hero";
 
 /* ── Types ── */
 type InboxCategory = "all" | "scripts" | "emails" | "outreach" | "contracts" | "ideas" | "reports" | "briefings" | "exports";
@@ -485,39 +486,38 @@ export default function InboxPage() {
     <div className="fade-in h-[calc(100vh-4rem)] flex flex-col">
       {/* Header */}
       <div className="px-4 md:px-6 pt-4 md:pt-6 pb-3 space-y-4 shrink-0">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-bold flex items-center gap-2">
-              <Inbox size={20} className="text-gold" /> Inbox
-            </h1>
-            <p className="text-xs text-muted">All your generated content, scripts, files & exports in one place</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {/* View Toggle */}
-            <div className="flex items-center gap-0.5 bg-white/5 rounded-lg p-0.5">
-              <button
-                onClick={() => setView("inbox")}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-gold/20 text-gold" : "text-muted hover:text-white"}`}
-              >
-                <Inbox size={11} /> Inbox
+        <PageHero
+          icon={<Inbox size={28} />}
+          title="Inbox"
+          subtitle="All your generated content, scripts & exports."
+          gradient="blue"
+          actions={
+            <>
+              <div className="flex items-center gap-0.5 bg-white/10 rounded-lg p-0.5">
+                <button
+                  onClick={() => setView("inbox")}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "inbox" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
+                >
+                  <Inbox size={11} /> Inbox
+                </button>
+                <button
+                  onClick={() => setView("auto-runs")}
+                  className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-white/20 text-white" : "text-white/70 hover:text-white"}`}
+                >
+                  <Zap size={11} /> Auto-Runs
+                </button>
+              </div>
+              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all" title="Refresh">
+                <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} />
               </button>
-              <button
-                onClick={() => setView("auto-runs")}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded text-[10px] font-medium transition-all ${view === "auto-runs" ? "bg-gold/20 text-gold" : "text-muted hover:text-white"}`}
-              >
-                <Zap size={11} /> Auto-Runs
-              </button>
-            </div>
-            <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-muted hover:text-white transition-all" title="Refresh">
-              <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} />
-            </button>
-            {view === "inbox" && (
-              <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs transition-all ${showArchived ? "bg-gold/20 text-gold" : "bg-white/5 text-muted hover:text-white"}`}>
-                <Archive size={12} className="inline mr-1" /> {showArchived ? "Viewing Archive" : "Archive"}
-              </button>
-            )}
-          </div>
-        </div>
+              {view === "inbox" && (
+                <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-white transition-all ${showArchived ? "bg-white/25" : "bg-white/10 hover:bg-white/20"}`}>
+                  <Archive size={12} className="inline mr-1" /> {showArchived ? "Viewing Archive" : "Archive"}
+                </button>
+              )}
+            </>
+          }
+        />
 
         {/* Stats — inbox view only */}
         {view === "inbox" && (
