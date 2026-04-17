@@ -376,15 +376,10 @@ export default function DesignStudioPage() {
   const [qrIncludeLogo, setQrIncludeLogo] = useState(true);
 
   // Version History
-  const [versionHistory] = useState([
-    { id: "v5", label: "v5 - Final", date: "Apr 14, 2026 3:42 PM", changes: "Adjusted CTA color, fixed alignment" },
-    { id: "v4", label: "v4 - Review", date: "Apr 14, 2026 2:15 PM", changes: "Added social proof section" },
-    { id: "v3", label: "v3 - Revision", date: "Apr 14, 2026 11:30 AM", changes: "Changed headline font to Montserrat" },
-    { id: "v2", label: "v2 - Draft", date: "Apr 13, 2026 4:50 PM", changes: "Updated color palette to brand kit" },
-    { id: "v1", label: "v1 - Initial", date: "Apr 13, 2026 2:00 PM", changes: "Initial design generation" },
-  ]);
-  const [selectedVersion, setSelectedVersion] = useState("v5");
-  const [compareVersion, setCompareVersion] = useState("v4");
+  // TODO: fetch from API
+  const [versionHistory] = useState<Array<{ id: string; label: string; date: string; changes: string }>>([]);
+  const [selectedVersion, setSelectedVersion] = useState("");
+  const [compareVersion, setCompareVersion] = useState("");
 
   // Color Palette Extractor
   const [extractedColors, setExtractedColors] = useState<string[]>([]);
@@ -409,11 +404,7 @@ export default function DesignStudioPage() {
 
   // Infographic Builder
   const [infographicType, setInfographicType] = useState("stats");
-  const [infographicData, setInfographicData] = useState([
-    { label: "Revenue Growth", value: "47%" },
-    { label: "New Customers", value: "1,200+" },
-    { label: "Satisfaction", value: "98%" },
-  ]);
+  const [infographicData, setInfographicData] = useState<Array<{ label: string; value: string }>>([]);
 
   // Social Proof
   const [socialProofType, setSocialProofType] = useState("testimonial");

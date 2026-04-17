@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -13,7 +13,10 @@ import {
   SunMedium, MessageSquare, History, Speech, MonitorPlay,
   Gauge, TextCursorInput, Droplets, BarChart3, ListChecks,
   ImagePlus, Megaphone, Settings2,
-  Plus, Minus, Check, AlertCircle, Timer
+  Plus, Minus, Check, AlertCircle, Timer,
+  Captions, Wind, ArrowUpDown, Brain, Share2, Crop,
+  MousePointer2, Star, Smile, Flame, TrendingUp, Bot,
+  VolumeX, Waves, ChevronDown, ChevronRight
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
@@ -229,6 +232,157 @@ const EXPANDED_TEMPLATES = [
   { id: "t32", name: "Data / Stats Infographic", category: "educational", thumb: "chart", aspect: "1:1", duration: 30 },
 ];
 
+/* ─── NEW: Advanced Preset Libraries ──────────────────────────── */
+
+const ADVANCED_CAPTION_PRESETS = [
+  { id: "tiktok_bold", name: "TikTok Bold", desc: "Thick yellow stroke, centered", bg: "#000", color: "#FFD700", stroke: "#000", weight: 900, size: 72, position: "bottom" },
+  { id: "youtube_standard", name: "YouTube Standard", desc: "White on dark box", bg: "rgba(0,0,0,0.75)", color: "#fff", stroke: "transparent", weight: 500, size: 28, position: "bottom" },
+  { id: "podcast_minimal", name: "Podcast Minimal", desc: "Clean sans, no backdrop", bg: "transparent", color: "#fff", stroke: "transparent", weight: 400, size: 24, position: "bottom" },
+  { id: "mrbeast", name: "MrBeast Style", desc: "Huge yellow, word highlight", bg: "transparent", color: "#FFEB3B", stroke: "#000", weight: 900, size: 96, position: "center" },
+  { id: "karaoke", name: "Karaoke", desc: "Word-by-word color fill", bg: "transparent", color: "#fff", stroke: "#C9A84C", weight: 700, size: 48, position: "bottom" },
+  { id: "typewriter", name: "Typewriter", desc: "Letter-by-letter reveal", bg: "rgba(0,0,0,0.6)", color: "#00ff00", stroke: "transparent", weight: 400, size: 28, position: "bottom" },
+  { id: "popup", name: "Pop-up", desc: "Fade + scale words", bg: "transparent", color: "#fff", stroke: "#000", weight: 800, size: 56, position: "center" },
+  { id: "cinematic", name: "Cinematic", desc: "Italic lower-third", bg: "transparent", color: "#f5f5f5", stroke: "transparent", weight: 300, size: 22, position: "bottom" },
+  { id: "meme_impact", name: "Meme Impact", desc: "Impact, uppercase, stroke", bg: "transparent", color: "#fff", stroke: "#000", weight: 900, size: 64, position: "top" },
+  { id: "reel_trendy", name: "Reel Trendy", desc: "Bouncy colorful pop", bg: "transparent", color: "#FF3BFF", stroke: "#fff", weight: 800, size: 56, position: "center" },
+];
+
+const CAPTION_FONT_FAMILIES = [
+  "Inter", "Poppins", "Montserrat", "Roboto", "Bebas Neue",
+  "Oswald", "Anton", "Impact", "Playfair Display", "Lato",
+  "Open Sans", "Raleway", "Merriweather",
+];
+
+const TEXT_ANIMATION_PRESETS = [
+  { id: "none", name: "None", desc: "No animation" },
+  { id: "fade_in", name: "Fade In", desc: "Opacity 0 → 1" },
+  { id: "fade_out", name: "Fade Out", desc: "Opacity 1 → 0" },
+  { id: "slide_left", name: "Slide Left", desc: "Enter from left" },
+  { id: "slide_right", name: "Slide Right", desc: "Enter from right" },
+  { id: "slide_top", name: "Slide Top", desc: "Enter from top" },
+  { id: "slide_bottom", name: "Slide Bottom", desc: "Enter from bottom" },
+  { id: "scale_up", name: "Scale Up", desc: "Grow from small" },
+  { id: "scale_down", name: "Scale Down", desc: "Shrink from large" },
+  { id: "pop", name: "Pop", desc: "Quick pop entrance" },
+  { id: "typewriter", name: "Typewriter", desc: "Letter by letter" },
+  { id: "word_cascade", name: "Word Cascade", desc: "Each word staggered" },
+  { id: "blur_to_clear", name: "Blur to Clear", desc: "Blur 20 → 0" },
+  { id: "wave", name: "Wave", desc: "Undulating motion" },
+  { id: "bounce", name: "Bounce", desc: "Spring bounce in" },
+  { id: "shake", name: "Shake", desc: "Wiggle effect" },
+  { id: "glitch", name: "Glitch", desc: "Digital glitch enter" },
+  { id: "flip", name: "Flip", desc: "3D flip entrance" },
+];
+
+const ANIMATION_EASINGS = [
+  "linear", "ease-in", "ease-out", "ease-in-out", "bounce", "spring",
+];
+
+const MOTION_PRESETS = [
+  { id: "slow_zoom_in", name: "Slow Zoom In (Ken Burns)", desc: "Gentle zoom in over time" },
+  { id: "slow_zoom_out", name: "Slow Zoom Out", desc: "Gentle zoom out over time" },
+  { id: "punch_zoom", name: "Punch Zoom", desc: "Rapid zoom at a key moment" },
+  { id: "pan_left", name: "Pan Left", desc: "Smooth pan left" },
+  { id: "pan_right", name: "Pan Right", desc: "Smooth pan right" },
+  { id: "pan_up", name: "Pan Up", desc: "Smooth pan up" },
+  { id: "pan_down", name: "Pan Down", desc: "Smooth pan down" },
+  { id: "orbit", name: "Orbit", desc: "Orbit around subject" },
+  { id: "dolly", name: "Dolly", desc: "Linear dolly move" },
+  { id: "crash_zoom", name: "Crash Zoom", desc: "Fast snappy zoom" },
+  { id: "breathing", name: "Subtle Breathing", desc: "Gentle scale pulse" },
+];
+
+const TRANSITION_PRESETS = [
+  { id: "cut", name: "Cut", category: "basic", color: "#aaa" },
+  { id: "fade", name: "Fade", category: "basic", color: "#777" },
+  { id: "dissolve", name: "Dissolve", category: "basic", color: "#888" },
+  { id: "wipe_left", name: "Wipe Left", category: "wipe", color: "#e91e63" },
+  { id: "wipe_right", name: "Wipe Right", category: "wipe", color: "#e91e63" },
+  { id: "wipe_up", name: "Wipe Up", category: "wipe", color: "#e91e63" },
+  { id: "wipe_down", name: "Wipe Down", category: "wipe", color: "#e91e63" },
+  { id: "zoom_in", name: "Zoom In", category: "zoom", color: "#2196f3" },
+  { id: "zoom_out", name: "Zoom Out", category: "zoom", color: "#2196f3" },
+  { id: "spin", name: "Spin", category: "motion", color: "#9c27b0" },
+  { id: "flash", name: "Flash", category: "fx", color: "#fff" },
+  { id: "blur", name: "Blur", category: "fx", color: "#64b5f6" },
+  { id: "slide_left", name: "Slide Left", category: "slide", color: "#4caf50" },
+  { id: "slide_right", name: "Slide Right", category: "slide", color: "#4caf50" },
+  { id: "slide_up", name: "Slide Up", category: "slide", color: "#4caf50" },
+  { id: "slide_down", name: "Slide Down", category: "slide", color: "#4caf50" },
+  { id: "whip_left", name: "Whip Pan Left", category: "motion", color: "#ff9800" },
+  { id: "whip_right", name: "Whip Pan Right", category: "motion", color: "#ff9800" },
+  { id: "iris_in", name: "Iris In", category: "wipe", color: "#e91e63" },
+  { id: "iris_out", name: "Iris Out", category: "wipe", color: "#e91e63" },
+  { id: "clock_wipe", name: "Clock Wipe", category: "wipe", color: "#e91e63" },
+  { id: "cross_zoom", name: "Cross-Zoom", category: "zoom", color: "#2196f3" },
+  { id: "morph", name: "Morph", category: "fx", color: "#00bcd4" },
+  { id: "glitch", name: "Glitch", category: "fx", color: "#f44336" },
+  { id: "rgb_split", name: "RGB Split", category: "fx", color: "#ff00ff" },
+];
+
+const COLOR_LUT_PRESETS = [
+  { id: "cinematic", name: "Cinematic", desc: "Film-like contrast", preview: "linear-gradient(135deg, #1a2a3a, #2a1a0a)" },
+  { id: "film_look", name: "Film Look", desc: "35mm film emulation", preview: "linear-gradient(135deg, #3a2f1a, #5a4f2a)" },
+  { id: "vibrant", name: "Vibrant", desc: "Boost saturation", preview: "linear-gradient(135deg, #ff6b00, #ff00aa)" },
+  { id: "muted", name: "Muted", desc: "Desaturated tones", preview: "linear-gradient(135deg, #6a6a6a, #8a8a8a)" },
+  { id: "vintage", name: "Vintage", desc: "Faded retro look", preview: "linear-gradient(135deg, #b89068, #d4a574)" },
+  { id: "moody", name: "Moody", desc: "Dark cinematic", preview: "linear-gradient(135deg, #1a0a2a, #2a1a3a)" },
+  { id: "warm", name: "Warm", desc: "Golden hour tones", preview: "linear-gradient(135deg, #ff9500, #ffcc00)" },
+  { id: "cool", name: "Cool", desc: "Blue-biased", preview: "linear-gradient(135deg, #0066cc, #00aaff)" },
+  { id: "bw", name: "B&W", desc: "Black and white", preview: "linear-gradient(135deg, #000, #fff)" },
+  { id: "sepia", name: "Sepia", desc: "Classic sepia wash", preview: "linear-gradient(135deg, #704214, #c8985a)" },
+  { id: "teal_orange", name: "Teal & Orange", desc: "Blockbuster grade", preview: "linear-gradient(135deg, #008080, #ff8c00)" },
+  { id: "pastel", name: "Pastel", desc: "Soft pastel hues", preview: "linear-gradient(135deg, #ffb3ba, #bae1ff)" },
+  { id: "high_contrast", name: "High Contrast", desc: "Punchy blacks and whites", preview: "linear-gradient(135deg, #000, #fff 50%, #000)" },
+  { id: "log_rec709", name: "Log-to-Rec709", desc: "Log footage conversion", preview: "linear-gradient(135deg, #4a4a4a, #8a8a8a)" },
+];
+
+const MUSIC_GENRE_PRESETS = [
+  { id: "upbeat", name: "Upbeat", desc: "High-energy modern" },
+  { id: "chill", name: "Chill", desc: "Relaxed ambient vibes" },
+  { id: "cinematic", name: "Cinematic", desc: "Epic orchestral" },
+  { id: "hip_hop", name: "Hip Hop", desc: "Beats & bass" },
+  { id: "edm", name: "EDM", desc: "Electronic dance" },
+  { id: "lofi", name: "Lo-fi", desc: "Chill study beats" },
+  { id: "corporate", name: "Corporate", desc: "Clean professional" },
+  { id: "emotional", name: "Emotional", desc: "Heartfelt piano" },
+  { id: "trailer", name: "Trailer", desc: "Dramatic build" },
+  { id: "piano", name: "Piano", desc: "Solo piano" },
+  { id: "ambient", name: "Ambient", desc: "Atmospheric textures" },
+];
+
+const OVERLAY_STICKER_PRESETS = [
+  { id: "progress_top", name: "Progress Bar (Top)", desc: "Top progress indicator" },
+  { id: "progress_bottom", name: "Progress Bar (Bottom)", desc: "Bottom progress indicator" },
+  { id: "subscribe_btn", name: "Subscribe Button", desc: "Animated subscribe CTA" },
+  { id: "follow_cta", name: "Follow CTA", desc: "Follow button prompt" },
+  { id: "wait_for_it", name: "Wait For It...", desc: "Suspense label" },
+  { id: "countdown", name: "Countdown", desc: "3-2-1 timer overlay" },
+  { id: "arrow_pointer", name: "Arrow Pointer", desc: "Directional arrow" },
+  { id: "emoji_reaction", name: "Emoji Reaction", desc: "Reaction sticker burst" },
+  { id: "sound_wave", name: "Sound Wave Visualizer", desc: "Audio waveform" },
+];
+
+const PLATFORM_EXPORT_PRESETS = [
+  { id: "tiktok", name: "TikTok", aspect: "9:16", maxDur: 60, captions: true, desc: "Vertical 9:16, max 60s, baked captions" },
+  { id: "reels", name: "Instagram Reels", aspect: "9:16", maxDur: 90, captions: true, desc: "Vertical 9:16, max 90s" },
+  { id: "shorts", name: "YouTube Shorts", aspect: "9:16", maxDur: 60, captions: true, desc: "Vertical 9:16, max 60s" },
+  { id: "yt_long", name: "YouTube Long-form", aspect: "16:9", maxDur: 600, captions: false, desc: "16:9 4K, up to 10 min" },
+  { id: "linkedin", name: "LinkedIn", aspect: "1:1", maxDur: 600, captions: true, desc: "Square or 16:9, 10 min" },
+  { id: "twitter", name: "Twitter / X", aspect: "16:9", maxDur: 140, captions: true, desc: "16:9, max 2:20" },
+  { id: "facebook", name: "Facebook", aspect: "1:1", maxDur: 240, captions: true, desc: "1:1 square, max 4 min" },
+];
+
+const ASPECT_RATIO_PRESETS = [
+  { id: "9:16", name: "9:16", desc: "TikTok / Reels / Shorts", w: 16, h: 28 },
+  { id: "16:9", name: "16:9", desc: "YouTube / Web", w: 28, h: 16 },
+  { id: "1:1", name: "1:1", desc: "Instagram Feed", w: 20, h: 20 },
+  { id: "4:5", name: "4:5", desc: "Instagram Portrait", w: 20, h: 25 },
+  { id: "3:4", name: "3:4", desc: "Portrait", w: 18, h: 24 },
+  { id: "21:9", name: "21:9", desc: "Cinematic", w: 32, h: 14 },
+  { id: "custom", name: "Custom", desc: "Pick any ratio", w: 22, h: 22 },
+];
+
 interface StoryboardScene {
   scene_number: number;
   duration: string;
@@ -279,7 +433,7 @@ export default function VideoEditorPage() {
   });
 
   // --- New feature states ---
-  const [createSubTab, setCreateSubTab] = useState<"editor" | "scene-builder" | "ai-script" | "audio-mixer" | "advanced">("editor");
+  const [createSubTab, setCreateSubTab] = useState<"editor" | "scene-builder" | "ai-script" | "audio-mixer" | "advanced" | "smart">("editor");
   const [sceneBuilderScenes, setSceneBuilderScenes] = useState<Array<{ id: string; name: string; duration: number; description: string }>>([
     { id: "s1", name: "Hook / Intro", duration: 3, description: "Attention-grabbing opening" },
     { id: "s2", name: "Main Content", duration: 15, description: "Core message delivery" },
@@ -361,6 +515,209 @@ export default function VideoEditorPage() {
     { id: "h3", text: "I tested this for 30 days. Here's what happened.", style: "personal-story" },
   ]);
   const [selectedHook, setSelectedHook] = useState("");
+
+  // --- New upgrade: consolidated editor settings for new preset/toggle panels ---
+  type EditorSettings = {
+    captions: {
+      enabled: boolean;
+      autoGenerate: boolean;
+      preset: string;
+      fontFamily: string;
+      fontSize: number;
+      textColor: string;
+      strokeColor: string;
+      backdropColor: string;
+      strokeWidth: number;
+      position: "top" | "center" | "bottom" | "custom";
+      customY: number;
+      maxWordsPerLine: number;
+      emphasizeKeywords: boolean;
+      autoEmoji: boolean;
+    };
+    textAnimation: {
+      enabled: boolean;
+      preset: string;
+      duration: number;
+      easing: string;
+    };
+    motion: {
+      enabled: boolean;
+      autoZoomSpeakers: boolean;
+      preset: string;
+      intensity: number;
+      autoReframe: boolean;
+      motionBlur: boolean;
+    };
+    transitions: {
+      enabled: boolean;
+      preset: string;
+      duration: number;
+      autoBetweenCuts: boolean;
+    };
+    color: {
+      enabled: boolean;
+      lut: string;
+      brightness: number;
+      contrast: number;
+      saturation: number;
+      temperature: number;
+      tint: number;
+      highlights: number;
+      shadows: number;
+      autoColorMatch: boolean;
+      autoWhiteBalance: boolean;
+    };
+    audio: {
+      enabled: boolean;
+      autoDucking: boolean;
+      bgGenre: string;
+      volumeAutomation: boolean;
+      noiseRemoval: boolean;
+      voiceEnhance: boolean;
+      autoBeatSync: boolean;
+    };
+    smart: {
+      autoCutSilence: boolean;
+      silenceThreshold: number;
+      autoReframeRatio: "9:16" | "1:1" | "16:9" | "none";
+      removeFillerWords: boolean;
+      autoChapters: boolean;
+      smartPacing: boolean;
+      hookDetector: boolean;
+      viralMomentFinder: boolean;
+      autoBroll: boolean;
+      trendingAudioMatch: boolean;
+    };
+    aspect: {
+      preset: string;
+      customW: number;
+      customH: number;
+    };
+    overlays: {
+      enabled: boolean;
+      selected: string[];
+    };
+    platformExport: string;
+  };
+
+  const [editorSettings, setEditorSettings] = useState<EditorSettings>({
+    captions: {
+      enabled: false,
+      autoGenerate: true,
+      preset: "tiktok_bold",
+      fontFamily: "Inter",
+      fontSize: 48,
+      textColor: "#FFFFFF",
+      strokeColor: "#000000",
+      backdropColor: "transparent",
+      strokeWidth: 4,
+      position: "bottom",
+      customY: 80,
+      maxWordsPerLine: 4,
+      emphasizeKeywords: false,
+      autoEmoji: false,
+    },
+    textAnimation: {
+      enabled: false,
+      preset: "fade_in",
+      duration: 0.4,
+      easing: "ease-out",
+    },
+    motion: {
+      enabled: false,
+      autoZoomSpeakers: false,
+      preset: "slow_zoom_in",
+      intensity: 50,
+      autoReframe: false,
+      motionBlur: false,
+    },
+    transitions: {
+      enabled: false,
+      preset: "cut",
+      duration: 0.3,
+      autoBetweenCuts: false,
+    },
+    color: {
+      enabled: false,
+      lut: "cinematic",
+      brightness: 0,
+      contrast: 0,
+      saturation: 0,
+      temperature: 0,
+      tint: 0,
+      highlights: 0,
+      shadows: 0,
+      autoColorMatch: false,
+      autoWhiteBalance: false,
+    },
+    audio: {
+      enabled: false,
+      autoDucking: false,
+      bgGenre: "upbeat",
+      volumeAutomation: false,
+      noiseRemoval: false,
+      voiceEnhance: false,
+      autoBeatSync: false,
+    },
+    smart: {
+      autoCutSilence: false,
+      silenceThreshold: 1.5,
+      autoReframeRatio: "none",
+      removeFillerWords: false,
+      autoChapters: false,
+      smartPacing: false,
+      hookDetector: false,
+      viralMomentFinder: false,
+      autoBroll: false,
+      trendingAudioMatch: false,
+    },
+    aspect: {
+      preset: "9:16",
+      customW: 16,
+      customH: 9,
+    },
+    overlays: {
+      enabled: false,
+      selected: [],
+    },
+    platformExport: "",
+  });
+
+  // Collapsible panel open-state (each panel can be folded)
+  const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({
+    captions: true,
+    textAnimation: false,
+    motion: false,
+    transitions: false,
+    color: false,
+    audio: false,
+    smart: true,
+    aspect: false,
+    overlays: false,
+    platformExport: false,
+  });
+
+  const togglePanel = (id: string) =>
+    setOpenPanels(prev => ({ ...prev, [id]: !prev[id] }));
+
+  function applyPlatformExportPreset(presetId: string) {
+    const p = PLATFORM_EXPORT_PRESETS.find(x => x.id === presetId);
+    if (!p) return;
+    setEditorSettings(prev => ({
+      ...prev,
+      platformExport: presetId,
+      aspect: { ...prev.aspect, preset: p.aspect },
+      captions: { ...prev.captions, enabled: p.captions },
+    }));
+    setConfig(prev => ({
+      ...prev,
+      aspect_ratio: p.aspect,
+      duration: Math.min(prev.duration, p.maxDur),
+      target_platform: p.id === "reels" ? "instagram" : p.id === "shorts" ? "youtube" : p.id === "yt_long" ? "youtube" : p.id === "linkedin" ? "linkedin" : p.id === "twitter" ? "twitter" : p.id === "facebook" ? "facebook" : "tiktok",
+    }));
+    toast.success(`${p.name} preset applied`);
+  }
+
   function handleSceneDragStart(sceneId: string) {
     setDraggedScene(sceneId);
   }
@@ -487,6 +844,7 @@ export default function VideoEditorPage() {
           plan_only: mode === "plan" || mode === "storyboard",
           storyboard_mode: mode === "storyboard",
           reference_files: referenceFiles.map(f => ({ name: f.name, type: f.type, data: f.data })),
+          editor_settings: editorSettings,
         }),
       });
       clearInterval(progressInterval);
@@ -555,6 +913,7 @@ export default function VideoEditorPage() {
             { id: "ai-script", label: "AI Script-to-Video", icon: <FileText size={11} /> },
             { id: "audio-mixer", label: "Audio Mixer", icon: <Music size={11} /> },
             { id: "advanced", label: "Advanced", icon: <Settings2 size={11} /> },
+            { id: "smart", label: "Smart Presets", icon: <Brain size={11} /> },
           ] as const).map(st => (
             <button key={st.id} onClick={() => setCreateSubTab(st.id)}
               className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
@@ -1205,6 +1564,768 @@ export default function VideoEditorPage() {
                     <p className="text-[8px] opacity-70">{bg.desc}</p>
                   </button>
                 ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Smart Presets Sub-Tab — MASSIVE upgrade with captions, animations, motion, transitions, color, audio, smart features */}
+        {createSubTab === "smart" && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="lg:col-span-2 space-y-3">
+
+              {/* === Smart Features Panel (TOP) === */}
+              <CollapsiblePanel
+                id="smart"
+                icon={<Brain size={13} className="text-gold" />}
+                title="Smart Editing Features"
+                desc="AI-powered one-click editing shortcuts"
+                open={openPanels.smart}
+                onToggle={() => togglePanel("smart")}
+                badge={(
+                  [editorSettings.smart.autoCutSilence, editorSettings.smart.removeFillerWords, editorSettings.smart.autoChapters, editorSettings.smart.smartPacing, editorSettings.smart.hookDetector, editorSettings.smart.viralMomentFinder, editorSettings.smart.autoBroll, editorSettings.smart.trendingAudioMatch].filter(Boolean).length
+                ) + (editorSettings.smart.autoReframeRatio !== "none" ? 1 : 0)}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <ToggleRow
+                    label="Auto-cut silence"
+                    desc={`Remove pauses longer than ${editorSettings.smart.silenceThreshold}s`}
+                    icon={<VolumeX size={11} />}
+                    checked={editorSettings.smart.autoCutSilence}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoCutSilence: v } }))}
+                  />
+                  <ToggleRow
+                    label="Remove filler words"
+                    desc="Strip 'um', 'uh', 'like'"
+                    icon={<Wind size={11} />}
+                    checked={editorSettings.smart.removeFillerWords}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, removeFillerWords: v } }))}
+                  />
+                  <ToggleRow
+                    label="Auto chapters"
+                    desc="Detect scene changes → markers"
+                    icon={<ListChecks size={11} />}
+                    checked={editorSettings.smart.autoChapters}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoChapters: v } }))}
+                  />
+                  <ToggleRow
+                    label="Smart pacing"
+                    desc="Adjust speed to content density"
+                    icon={<Gauge size={11} />}
+                    checked={editorSettings.smart.smartPacing}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, smartPacing: v } }))}
+                  />
+                  <ToggleRow
+                    label="Hook detector"
+                    desc="AI finds best opening moment"
+                    icon={<Flame size={11} />}
+                    checked={editorSettings.smart.hookDetector}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, hookDetector: v } }))}
+                  />
+                  <ToggleRow
+                    label="Viral moment finder"
+                    desc="Top 15–60s clips identified"
+                    icon={<TrendingUp size={11} />}
+                    checked={editorSettings.smart.viralMomentFinder}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, viralMomentFinder: v } }))}
+                  />
+                  <ToggleRow
+                    label="Auto B-roll suggestions"
+                    desc="Cutaway stock footage ideas"
+                    icon={<ImagePlus size={11} />}
+                    checked={editorSettings.smart.autoBroll}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoBroll: v } }))}
+                  />
+                  <ToggleRow
+                    label="Trending audio match"
+                    desc="Suggest trending sounds"
+                    icon={<Waves size={11} />}
+                    checked={editorSettings.smart.trendingAudioMatch}
+                    onChange={(v) => setEditorSettings(p => ({ ...p, smart: { ...p.smart, trendingAudioMatch: v } }))}
+                  />
+                </div>
+
+                {editorSettings.smart.autoCutSilence && (
+                  <div className="mt-3 p-2 rounded-lg bg-surface-light">
+                    <label className="block text-[8px] text-muted uppercase mb-1">Silence threshold (sec)</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range" min={0.3} max={5} step={0.1}
+                        value={editorSettings.smart.silenceThreshold}
+                        onChange={e => setEditorSettings(p => ({ ...p, smart: { ...p.smart, silenceThreshold: parseFloat(e.target.value) } }))}
+                        className="flex-1 accent-gold h-1"
+                      />
+                      <span className="text-[9px] font-mono text-gold w-10 text-right">{editorSettings.smart.silenceThreshold}s</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-3 p-2 rounded-lg bg-surface-light">
+                  <label className="block text-[8px] text-muted uppercase mb-1">Auto-reframe</label>
+                  <div className="grid grid-cols-4 gap-1">
+                    {(["none", "9:16", "1:1", "16:9"] as const).map(r => (
+                      <button key={r} onClick={() => setEditorSettings(p => ({ ...p, smart: { ...p.smart, autoReframeRatio: r } }))}
+                        className={`text-[9px] py-1 rounded-lg border transition-all ${editorSettings.smart.autoReframeRatio === r ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted"}`}>
+                        {r === "none" ? "Off" : r}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </CollapsiblePanel>
+
+              {/* === Captions / Subtitles Panel === */}
+              <CollapsiblePanel
+                id="captions"
+                icon={<Captions size={13} className="text-gold" />}
+                title="Captions & Subtitles"
+                desc="Auto-generate and style captions from audio"
+                open={openPanels.captions}
+                onToggle={() => togglePanel("captions")}
+                enabledToggle={{
+                  value: editorSettings.captions.enabled,
+                  onChange: (v) => setEditorSettings(p => ({ ...p, captions: { ...p.captions, enabled: v } })),
+                }}
+              >
+                {editorSettings.captions.enabled && (
+                  <div className="space-y-3">
+                    <ToggleRow
+                      label="Auto-caption from audio"
+                      desc="Generate captions by transcription"
+                      icon={<Bot size={11} />}
+                      checked={editorSettings.captions.autoGenerate}
+                      onChange={(v) => setEditorSettings(p => ({ ...p, captions: { ...p.captions, autoGenerate: v } }))}
+                    />
+
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Caption Style Preset</label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {ADVANCED_CAPTION_PRESETS.map(preset => {
+                          const active = editorSettings.captions.preset === preset.id;
+                          return (
+                            <button
+                              key={preset.id}
+                              onClick={() => setEditorSettings(p => ({
+                                ...p,
+                                captions: {
+                                  ...p.captions,
+                                  preset: preset.id,
+                                  fontSize: preset.size,
+                                  textColor: preset.color,
+                                  strokeColor: preset.stroke === "transparent" ? "#000000" : preset.stroke,
+                                  backdropColor: preset.bg,
+                                  position: preset.position as "top" | "center" | "bottom",
+                                },
+                              }))}
+                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}
+                            >
+                              <div
+                                className="mb-1.5 rounded-md flex items-center justify-center h-8 relative overflow-hidden"
+                                style={{ background: "linear-gradient(135deg, #222 0%, #333 100%)" }}
+                              >
+                                <span
+                                  className="text-[9px] font-bold"
+                                  style={{
+                                    color: preset.color,
+                                    WebkitTextStroke: preset.stroke !== "transparent" ? `0.5px ${preset.stroke}` : undefined,
+                                    fontStyle: preset.id === "cinematic" ? "italic" : undefined,
+                                    textTransform: preset.id === "meme_impact" ? "uppercase" : undefined,
+                                    fontFamily: preset.id === "meme_impact" ? "Impact, sans-serif" : undefined,
+                                    backgroundColor: preset.bg !== "transparent" ? preset.bg : undefined,
+                                    padding: preset.bg !== "transparent" ? "1px 4px" : undefined,
+                                    borderRadius: preset.bg !== "transparent" ? 3 : 0,
+                                  }}
+                                >
+                                  Sample
+                                </span>
+                              </div>
+                              <p className="text-[10px] font-semibold">{preset.name}</p>
+                              <p className="text-[8px] text-muted">{preset.desc}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Font Family</label>
+                        <select
+                          value={editorSettings.captions.fontFamily}
+                          onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, fontFamily: e.target.value } }))}
+                          className="input text-[10px] w-full"
+                        >
+                          {CAPTION_FONT_FAMILIES.map(f => <option key={f} value={f}>{f}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Font Size ({editorSettings.captions.fontSize}px)</label>
+                        <input
+                          type="range" min={12} max={120} step={1}
+                          value={editorSettings.captions.fontSize}
+                          onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, fontSize: parseInt(e.target.value) } }))}
+                          className="w-full accent-gold h-1"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Text Color</label>
+                        <input type="color" value={editorSettings.captions.textColor}
+                          onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, textColor: e.target.value } }))}
+                          className="w-full h-7 rounded border border-border" />
+                      </div>
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Stroke Color</label>
+                        <input type="color" value={editorSettings.captions.strokeColor}
+                          onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, strokeColor: e.target.value } }))}
+                          className="w-full h-7 rounded border border-border" />
+                      </div>
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Backdrop</label>
+                        <input type="color" value={editorSettings.captions.backdropColor === "transparent" ? "#000000" : editorSettings.captions.backdropColor}
+                          onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, backdropColor: e.target.value } }))}
+                          className="w-full h-7 rounded border border-border" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Stroke Width ({editorSettings.captions.strokeWidth}px)</label>
+                        <input type="range" min={0} max={12} step={1}
+                          value={editorSettings.captions.strokeWidth}
+                          onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, strokeWidth: parseInt(e.target.value) } }))}
+                          className="w-full accent-gold h-1" />
+                      </div>
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Max Words Per Line</label>
+                        <input type="number" min={1} max={20}
+                          value={editorSettings.captions.maxWordsPerLine}
+                          onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, maxWordsPerLine: parseInt(e.target.value) || 4 } }))}
+                          className="input text-[10px] w-full" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Position</label>
+                      <div className="grid grid-cols-4 gap-1">
+                        {(["top", "center", "bottom", "custom"] as const).map(pos => (
+                          <button key={pos} onClick={() => setEditorSettings(p => ({ ...p, captions: { ...p.captions, position: pos } }))}
+                            className={`text-[9px] py-1.5 rounded-lg border capitalize transition-all ${editorSettings.captions.position === pos ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted"}`}>
+                            {pos}
+                          </button>
+                        ))}
+                      </div>
+                      {editorSettings.captions.position === "custom" && (
+                        <div className="mt-2">
+                          <label className="block text-[8px] text-muted uppercase mb-1">Custom Y ({editorSettings.captions.customY}%)</label>
+                          <input type="range" min={0} max={100}
+                            value={editorSettings.captions.customY}
+                            onChange={e => setEditorSettings(p => ({ ...p, captions: { ...p.captions, customY: parseInt(e.target.value) } }))}
+                            className="w-full accent-gold h-1" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <ToggleRow
+                        label="Emphasize keywords"
+                        desc="Highlight key words in gold"
+                        icon={<Star size={11} />}
+                        checked={editorSettings.captions.emphasizeKeywords}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, captions: { ...p.captions, emphasizeKeywords: v } }))}
+                      />
+                      <ToggleRow
+                        label="Auto-insert emojis"
+                        desc="Add contextual emojis"
+                        icon={<Smile size={11} />}
+                        checked={editorSettings.captions.autoEmoji}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, captions: { ...p.captions, autoEmoji: v } }))}
+                      />
+                    </div>
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Text Animation Panel === */}
+              <CollapsiblePanel
+                id="textAnimation"
+                icon={<TextCursorInput size={13} className="text-gold" />}
+                title="Text Animations"
+                desc="Entrance / exit animations for text layers"
+                open={openPanels.textAnimation}
+                onToggle={() => togglePanel("textAnimation")}
+                enabledToggle={{
+                  value: editorSettings.textAnimation.enabled,
+                  onChange: (v) => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, enabled: v } })),
+                }}
+              >
+                {editorSettings.textAnimation.enabled && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-1.5">
+                      {TEXT_ANIMATION_PRESETS.map(a => {
+                        const active = editorSettings.textAnimation.preset === a.id;
+                        return (
+                          <button
+                            key={a.id}
+                            onClick={() => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, preset: a.id } }))}
+                            className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted hover:border-gold/20"}`}
+                          >
+                            <p className="text-[9px] font-semibold leading-tight">{a.name}</p>
+                            <p className="text-[7px] opacity-70 leading-tight mt-0.5">{a.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Duration ({editorSettings.textAnimation.duration}s)</label>
+                        <input type="range" min={0.1} max={3} step={0.1}
+                          value={editorSettings.textAnimation.duration}
+                          onChange={e => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, duration: parseFloat(e.target.value) } }))}
+                          className="w-full accent-gold h-1" />
+                      </div>
+                      <div>
+                        <label className="block text-[8px] text-muted uppercase mb-1">Easing</label>
+                        <select
+                          value={editorSettings.textAnimation.easing}
+                          onChange={e => setEditorSettings(p => ({ ...p, textAnimation: { ...p.textAnimation, easing: e.target.value } }))}
+                          className="input text-[10px] w-full"
+                        >
+                          {ANIMATION_EASINGS.map(ease => <option key={ease} value={ease}>{ease}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Motion / Zoom Panel === */}
+              <CollapsiblePanel
+                id="motion"
+                icon={<Camera size={13} className="text-gold" />}
+                title="Motion & Zoom Presets"
+                desc="Camera movements and zoom effects"
+                open={openPanels.motion}
+                onToggle={() => togglePanel("motion")}
+                enabledToggle={{
+                  value: editorSettings.motion.enabled,
+                  onChange: (v) => setEditorSettings(p => ({ ...p, motion: { ...p.motion, enabled: v } })),
+                }}
+              >
+                {editorSettings.motion.enabled && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <ToggleRow
+                        label="Auto-zoom on speakers"
+                        desc="Zoom onto whoever's talking"
+                        icon={<MousePointer2 size={11} />}
+                        checked={editorSettings.motion.autoZoomSpeakers}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, motion: { ...p.motion, autoZoomSpeakers: v } }))}
+                      />
+                      <ToggleRow
+                        label="Auto-reframe (faces)"
+                        desc="Detect faces, auto-crop"
+                        icon={<Crop size={11} />}
+                        checked={editorSettings.motion.autoReframe}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, motion: { ...p.motion, autoReframe: v } }))}
+                      />
+                      <ToggleRow
+                        label="Motion blur"
+                        desc="Natural blur on movement"
+                        icon={<Wind size={11} />}
+                        checked={editorSettings.motion.motionBlur}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, motion: { ...p.motion, motionBlur: v } }))}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Motion Preset</label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {MOTION_PRESETS.map(m => {
+                          const active = editorSettings.motion.preset === m.id;
+                          return (
+                            <button key={m.id} onClick={() => setEditorSettings(p => ({ ...p, motion: { ...p.motion, preset: m.id } }))}
+                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                              <p className="text-[10px] font-semibold">{m.name}</p>
+                              <p className="text-[8px] text-muted">{m.desc}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Intensity ({editorSettings.motion.intensity}%)</label>
+                      <input type="range" min={0} max={100}
+                        value={editorSettings.motion.intensity}
+                        onChange={e => setEditorSettings(p => ({ ...p, motion: { ...p.motion, intensity: parseInt(e.target.value) } }))}
+                        className="w-full accent-gold h-1" />
+                    </div>
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Transitions Panel === */}
+              <CollapsiblePanel
+                id="transitions"
+                icon={<ArrowUpDown size={13} className="text-gold" />}
+                title="Transitions Library"
+                desc="25+ transitions between clips"
+                open={openPanels.transitions}
+                onToggle={() => togglePanel("transitions")}
+                enabledToggle={{
+                  value: editorSettings.transitions.enabled,
+                  onChange: (v) => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, enabled: v } })),
+                }}
+              >
+                {editorSettings.transitions.enabled && (
+                  <div className="space-y-3">
+                    <ToggleRow
+                      label="Auto transitions between cuts"
+                      desc="Apply chosen preset to every cut automatically"
+                      icon={<Sparkles size={11} />}
+                      checked={editorSettings.transitions.autoBetweenCuts}
+                      onChange={(v) => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, autoBetweenCuts: v } }))}
+                    />
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1.5">
+                      {TRANSITION_PRESETS.map(t => {
+                        const active = editorSettings.transitions.preset === t.id;
+                        return (
+                          <button key={t.id}
+                            onClick={() => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, preset: t.id } }))}
+                            className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-gold/40 bg-gold/10 text-gold" : "border-border text-muted hover:border-gold/20"}`}>
+                            <div
+                              className="mx-auto mb-1 rounded h-5 w-full"
+                              style={{ background: `linear-gradient(90deg, ${t.color}33, ${t.color}aa)` }}
+                            />
+                            <p className="text-[9px] font-semibold leading-tight">{t.name}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Duration ({editorSettings.transitions.duration}s)</label>
+                      <input type="range" min={0.1} max={2} step={0.1}
+                        value={editorSettings.transitions.duration}
+                        onChange={e => setEditorSettings(p => ({ ...p, transitions: { ...p.transitions, duration: parseFloat(e.target.value) } }))}
+                        className="w-full accent-gold h-1" />
+                    </div>
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Color Grading Panel === */}
+              <CollapsiblePanel
+                id="color"
+                icon={<Palette size={13} className="text-gold" />}
+                title="Color Grading"
+                desc="LUTs and manual color controls"
+                open={openPanels.color}
+                onToggle={() => togglePanel("color")}
+                enabledToggle={{
+                  value: editorSettings.color.enabled,
+                  onChange: (v) => setEditorSettings(p => ({ ...p, color: { ...p.color, enabled: v } })),
+                }}
+              >
+                {editorSettings.color.enabled && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <ToggleRow
+                        label="Auto color match"
+                        desc="Harmonize multiple clips"
+                        icon={<Palette size={11} />}
+                        checked={editorSettings.color.autoColorMatch}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, color: { ...p.color, autoColorMatch: v } }))}
+                      />
+                      <ToggleRow
+                        label="Auto white balance"
+                        desc="Balance color temperature"
+                        icon={<SunMedium size={11} />}
+                        checked={editorSettings.color.autoWhiteBalance}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, color: { ...p.color, autoWhiteBalance: v } }))}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">LUT Preset</label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                        {COLOR_LUT_PRESETS.map(lut => {
+                          const active = editorSettings.color.lut === lut.id;
+                          return (
+                            <button key={lut.id}
+                              onClick={() => setEditorSettings(p => ({ ...p, color: { ...p.color, lut: lut.id } }))}
+                              className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                              <div className="w-full h-6 rounded-md mb-1.5" style={{ background: lut.preview }} />
+                              <p className="text-[10px] font-semibold">{lut.name}</p>
+                              <p className="text-[8px] text-muted">{lut.desc}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                      {([
+                        { key: "brightness", label: "Brightness", min: -100, max: 100 },
+                        { key: "contrast", label: "Contrast", min: -100, max: 100 },
+                        { key: "saturation", label: "Saturation", min: -100, max: 100 },
+                        { key: "temperature", label: "Temperature", min: -100, max: 100 },
+                        { key: "tint", label: "Tint", min: -100, max: 100 },
+                        { key: "highlights", label: "Highlights", min: -100, max: 100 },
+                        { key: "shadows", label: "Shadows", min: -100, max: 100 },
+                      ] as const).map(s => (
+                        <div key={s.key}>
+                          <div className="flex justify-between">
+                            <label className="block text-[8px] text-muted uppercase mb-1">{s.label}</label>
+                            <span className="text-[8px] font-mono text-gold">{editorSettings.color[s.key]}</span>
+                          </div>
+                          <input type="range" min={s.min} max={s.max}
+                            value={editorSettings.color[s.key]}
+                            onChange={e => setEditorSettings(p => ({ ...p, color: { ...p.color, [s.key]: parseInt(e.target.value) } }))}
+                            className="w-full accent-gold h-1" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Audio / Music Panel === */}
+              <CollapsiblePanel
+                id="audio"
+                icon={<Music size={13} className="text-gold" />}
+                title="Audio & Music Enhancers"
+                desc="Music, ducking, noise removal, beat sync"
+                open={openPanels.audio}
+                onToggle={() => togglePanel("audio")}
+                enabledToggle={{
+                  value: editorSettings.audio.enabled,
+                  onChange: (v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, enabled: v } })),
+                }}
+              >
+                {editorSettings.audio.enabled && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <ToggleRow
+                        label="Auto-ducking"
+                        desc="Music ducks under voice"
+                        icon={<Volume2 size={11} />}
+                        checked={editorSettings.audio.autoDucking}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, autoDucking: v } }))}
+                      />
+                      <ToggleRow
+                        label="Volume automation"
+                        desc="Smooth volume curve"
+                        icon={<Sliders size={11} />}
+                        checked={editorSettings.audio.volumeAutomation}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, volumeAutomation: v } }))}
+                      />
+                      <ToggleRow
+                        label="Noise removal"
+                        desc="Remove hum / hiss"
+                        icon={<VolumeX size={11} />}
+                        checked={editorSettings.audio.noiseRemoval}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, noiseRemoval: v } }))}
+                      />
+                      <ToggleRow
+                        label="Voice enhance"
+                        desc="Boost clarity and presence"
+                        icon={<Mic size={11} />}
+                        checked={editorSettings.audio.voiceEnhance}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, voiceEnhance: v } }))}
+                      />
+                      <ToggleRow
+                        label="Auto-beat sync"
+                        desc="Cut on music beats"
+                        icon={<Waves size={11} />}
+                        checked={editorSettings.audio.autoBeatSync}
+                        onChange={(v) => setEditorSettings(p => ({ ...p, audio: { ...p.audio, autoBeatSync: v } }))}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Background Music Genre</label>
+                      <div className="grid grid-cols-3 md:grid-cols-4 gap-1.5">
+                        {MUSIC_GENRE_PRESETS.map(g => {
+                          const active = editorSettings.audio.bgGenre === g.id;
+                          return (
+                            <button key={g.id} onClick={() => setEditorSettings(p => ({ ...p, audio: { ...p.audio, bgGenre: g.id } }))}
+                              className={`p-1.5 rounded-lg border text-center transition-all ${active ? "border-gold/40 bg-gold/10 text-gold font-semibold" : "border-border text-muted hover:border-gold/20"}`}>
+                              <p className="text-[9px] font-semibold">{g.name}</p>
+                              <p className="text-[7px] opacity-70">{g.desc}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Aspect Ratio Panel === */}
+              <CollapsiblePanel
+                id="aspect"
+                icon={<Ratio size={13} className="text-gold" />}
+                title="Aspect Ratio Presets"
+                desc="Pick a canvas ratio"
+                open={openPanels.aspect}
+                onToggle={() => togglePanel("aspect")}
+              >
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-7 gap-1.5">
+                  {ASPECT_RATIO_PRESETS.map(ar => {
+                    const active = editorSettings.aspect.preset === ar.id;
+                    return (
+                      <button key={ar.id}
+                        onClick={() => {
+                          setEditorSettings(p => ({ ...p, aspect: { ...p.aspect, preset: ar.id } }));
+                          if (ar.id !== "custom") setConfig(prev => ({ ...prev, aspect_ratio: ar.id }));
+                        }}
+                        className={`p-2 rounded-xl border text-center transition-all ${active ? "border-gold/40 bg-gold/[0.06] text-gold" : "border-border text-muted hover:border-gold/20"}`}>
+                        <div className="mx-auto mb-1 border border-current rounded" style={{ width: ar.w, height: ar.h }} />
+                        <p className="text-[9px] font-semibold">{ar.name}</p>
+                        <p className="text-[7px] opacity-70 leading-tight">{ar.desc}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+                {editorSettings.aspect.preset === "custom" && (
+                  <div className="grid grid-cols-2 gap-2 mt-3">
+                    <div>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Custom W</label>
+                      <input type="number" min={1} value={editorSettings.aspect.customW}
+                        onChange={e => setEditorSettings(p => ({ ...p, aspect: { ...p.aspect, customW: parseInt(e.target.value) || 16 } }))}
+                        className="input text-[10px] w-full" />
+                    </div>
+                    <div>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Custom H</label>
+                      <input type="number" min={1} value={editorSettings.aspect.customH}
+                        onChange={e => setEditorSettings(p => ({ ...p, aspect: { ...p.aspect, customH: parseInt(e.target.value) || 9 } }))}
+                        className="input text-[10px] w-full" />
+                    </div>
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Overlays / Stickers Panel === */}
+              <CollapsiblePanel
+                id="overlays"
+                icon={<Star size={13} className="text-gold" />}
+                title="Overlays & Stickers"
+                desc="Progress bars, CTAs, arrows, emojis"
+                open={openPanels.overlays}
+                onToggle={() => togglePanel("overlays")}
+                enabledToggle={{
+                  value: editorSettings.overlays.enabled,
+                  onChange: (v) => setEditorSettings(p => ({ ...p, overlays: { ...p.overlays, enabled: v } })),
+                }}
+              >
+                {editorSettings.overlays.enabled && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {OVERLAY_STICKER_PRESETS.map(ov => {
+                      const active = editorSettings.overlays.selected.includes(ov.id);
+                      return (
+                        <button key={ov.id}
+                          onClick={() => setEditorSettings(p => ({
+                            ...p,
+                            overlays: {
+                              ...p.overlays,
+                              selected: active
+                                ? p.overlays.selected.filter(id => id !== ov.id)
+                                : [...p.overlays.selected, ov.id],
+                            },
+                          }))}
+                          className={`p-2 rounded-xl border text-left transition-all relative ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                          {active && (
+                            <div className="absolute top-1 right-1 w-3.5 h-3.5 bg-gold rounded-full flex items-center justify-center">
+                              <Check size={7} className="text-white" />
+                            </div>
+                          )}
+                          <p className="text-[10px] font-semibold">{ov.name}</p>
+                          <p className="text-[8px] text-muted">{ov.desc}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </CollapsiblePanel>
+
+              {/* === Platform-Optimized Export Presets === */}
+              <CollapsiblePanel
+                id="platformExport"
+                icon={<Share2 size={13} className="text-gold" />}
+                title="Platform Export Presets"
+                desc="One-click platform optimization"
+                open={openPanels.platformExport}
+                onToggle={() => togglePanel("platformExport")}
+              >
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {PLATFORM_EXPORT_PRESETS.map(p => {
+                    const active = editorSettings.platformExport === p.id;
+                    return (
+                      <button key={p.id} onClick={() => applyPlatformExportPreset(p.id)}
+                        className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                        <p className="text-[10px] font-semibold">{p.name}</p>
+                        <p className="text-[8px] text-muted">{p.desc}</p>
+                        <div className="flex gap-1 mt-1">
+                          <span className="text-[7px] px-1 py-0.5 rounded bg-gold/10 text-gold">{p.aspect}</span>
+                          <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{p.maxDur}s max</span>
+                          {p.captions && <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">CC baked</span>}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </CollapsiblePanel>
+
+            </div>
+
+            {/* Sidebar — active-config summary */}
+            <div className="space-y-3">
+              <div className="card border-gold/10">
+                <h3 className="section-header flex items-center gap-2"><ListChecks size={12} className="text-gold" /> Active Config Summary</h3>
+                <div className="space-y-1.5 text-[9px]">
+                  <SummaryRow label="Captions" on={editorSettings.captions.enabled} value={editorSettings.captions.enabled ? ADVANCED_CAPTION_PRESETS.find(x => x.id === editorSettings.captions.preset)?.name : "off"} />
+                  <SummaryRow label="Text Anim" on={editorSettings.textAnimation.enabled} value={editorSettings.textAnimation.enabled ? editorSettings.textAnimation.preset : "off"} />
+                  <SummaryRow label="Motion" on={editorSettings.motion.enabled} value={editorSettings.motion.enabled ? editorSettings.motion.preset : "off"} />
+                  <SummaryRow label="Transitions" on={editorSettings.transitions.enabled} value={editorSettings.transitions.enabled ? editorSettings.transitions.preset : "off"} />
+                  <SummaryRow label="Color" on={editorSettings.color.enabled} value={editorSettings.color.enabled ? editorSettings.color.lut : "off"} />
+                  <SummaryRow label="Audio" on={editorSettings.audio.enabled} value={editorSettings.audio.enabled ? editorSettings.audio.bgGenre : "off"} />
+                  <SummaryRow label="Aspect" on={true} value={editorSettings.aspect.preset === "custom" ? `${editorSettings.aspect.customW}:${editorSettings.aspect.customH}` : editorSettings.aspect.preset} />
+                  <SummaryRow label="Overlays" on={editorSettings.overlays.enabled && editorSettings.overlays.selected.length > 0} value={editorSettings.overlays.selected.length > 0 ? `${editorSettings.overlays.selected.length} selected` : "off"} />
+                  <SummaryRow label="Platform" on={!!editorSettings.platformExport} value={editorSettings.platformExport || "none"} />
+                </div>
+              </div>
+
+              <div className="card">
+                <h3 className="section-header flex items-center gap-2"><Sparkles size={12} className="text-gold" /> Smart Flags</h3>
+                <div className="space-y-1 text-[9px]">
+                  {[
+                    ["Cut silence", editorSettings.smart.autoCutSilence],
+                    ["Filler word removal", editorSettings.smart.removeFillerWords],
+                    ["Auto chapters", editorSettings.smart.autoChapters],
+                    ["Smart pacing", editorSettings.smart.smartPacing],
+                    ["Hook detector", editorSettings.smart.hookDetector],
+                    ["Viral finder", editorSettings.smart.viralMomentFinder],
+                    ["Auto B-roll", editorSettings.smart.autoBroll],
+                    ["Trending audio", editorSettings.smart.trendingAudioMatch],
+                  ].map(([label, on], i) => (
+                    <div key={i} className="flex justify-between">
+                      <span className="text-muted">{label as string}</span>
+                      <span className={on ? "text-gold font-mono" : "text-muted/50 font-mono"}>{on ? "on" : "-"}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card border-gold/10">
+                <h3 className="section-header flex items-center gap-2"><AlertCircle size={12} className="text-gold" /> Tips</h3>
+                <ul className="text-[9px] text-muted space-y-1 list-disc pl-3.5">
+                  <li>Every panel is optional — toggle only what you need.</li>
+                  <li>Platform presets auto-set aspect, duration, and captions.</li>
+                  <li>All settings pass through to the render backend on generate.</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -1958,6 +3079,106 @@ export default function VideoEditorPage() {
           toast.success(`Preset loaded: ${preset.name}`);
         }} />
       )}
+    </div>
+  );
+}
+
+/* ─── Helper components for Smart Presets sub-tab ───────────── */
+
+function CollapsiblePanel({
+  id, icon, title, desc, open, onToggle, children,
+  enabledToggle, badge,
+}: {
+  id: string;
+  icon: ReactNode;
+  title: string;
+  desc?: string;
+  open: boolean;
+  onToggle: () => void;
+  children: ReactNode;
+  enabledToggle?: { value: boolean; onChange: (v: boolean) => void };
+  badge?: number;
+}) {
+  return (
+    <div className="card">
+      <button
+        onClick={onToggle}
+        className="w-full flex items-center justify-between gap-2 text-left"
+        aria-expanded={open}
+        aria-controls={`panel-${id}`}
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          {icon}
+          <div className="min-w-0">
+            <h2 className="section-header mb-0 flex items-center gap-2">
+              {title}
+              {typeof badge === "number" && badge > 0 && (
+                <span className="text-[8px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full font-mono">{badge}</span>
+              )}
+            </h2>
+            {desc && <p className="text-[9px] text-muted mt-0.5">{desc}</p>}
+          </div>
+        </div>
+        <div className="flex items-center gap-3 flex-shrink-0">
+          {enabledToggle && (
+            <label
+              className="flex items-center gap-1.5 text-[9px] text-muted cursor-pointer"
+              onClick={e => e.stopPropagation()}
+            >
+              <input
+                type="checkbox"
+                checked={enabledToggle.value}
+                onChange={e => enabledToggle.onChange(e.target.checked)}
+                className="rounded border-border text-gold focus:ring-gold/30"
+              />
+              {enabledToggle.value ? "Enabled" : "Off"}
+            </label>
+          )}
+          {open ? <ChevronDown size={14} className="text-muted" /> : <ChevronRight size={14} className="text-muted" />}
+        </div>
+      </button>
+      {open && (
+        <div id={`panel-${id}`} className="mt-3 pt-3 border-t border-border">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ToggleRow({
+  label, desc, icon, checked, onChange,
+}: {
+  label: string;
+  desc?: string;
+  icon?: ReactNode;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <label className={`flex items-start gap-2 p-2 rounded-lg border transition-all cursor-pointer ${checked ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"}`}>
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={e => onChange(e.target.checked)}
+        className="mt-0.5 rounded border-border text-gold focus:ring-gold/30 flex-shrink-0"
+      />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5">
+          {icon && <span className={checked ? "text-gold" : "text-muted"}>{icon}</span>}
+          <p className="text-[10px] font-semibold leading-tight">{label}</p>
+        </div>
+        {desc && <p className="text-[8px] text-muted mt-0.5 leading-tight">{desc}</p>}
+      </div>
+    </label>
+  );
+}
+
+function SummaryRow({ label, on, value }: { label: string; on: boolean; value?: string }) {
+  return (
+    <div className="flex justify-between items-center">
+      <span className="text-muted">{label}</span>
+      <span className={`font-mono ${on ? "text-gold" : "text-muted/50"}`}>{value || (on ? "on" : "off")}</span>
     </div>
   );
 }

@@ -66,13 +66,8 @@ function timeAgo(dateStr: string | null): string {
   return dateStr;
 }
 
-const INITIAL_API_KEYS: ApiKey[] = [
-  { id: "1", name: "Production", key: "sk_live_a1b2c3d4e5f6g7h8", permissions: "full", created_at: "2026-03-01", last_used: "2026-04-16T09:32:00Z", is_active: true },
-  { id: "2", name: "Development", key: "sk_test_x7y8z9w0v1u2q3r4", permissions: "read-write", created_at: "2026-02-15", last_used: "2026-04-15T14:10:00Z", is_active: true },
-  { id: "3", name: "Analytics Dashboard", key: "sk_live_m4n5o6p7q8r9s0t1", permissions: "read", created_at: "2026-03-20", last_used: "2026-04-14T22:05:00Z", is_active: true },
-  { id: "4", name: "Staging (old)", key: "sk_test_old12345j6k7l8m9", permissions: "read-write", created_at: "2025-12-01", last_used: "2026-01-10", is_active: false },
-  { id: "5", name: "CI/CD Pipeline", key: "sk_live_ci9d8c7b6a5z4y3x", permissions: "read-write", created_at: "2026-04-01", last_used: null, is_active: true },
-];
+// TODO: fetch from API
+const INITIAL_API_KEYS: ApiKey[] = [];
 
 /* ── Mock Data ── */
 const API_CATEGORIES: Category[] = [

@@ -4,27 +4,25 @@ import { useState, useCallback, useEffect } from "react";
 import {
   PhoneCall, Mail, MessageSquare, Send, Settings,
   Sparkles, Loader2, Copy, Check, Save,
-  User, ChevronDown, ChevronUp, Plus, Trash2, X,
+  ChevronDown, ChevronUp, Plus, Trash2, X,
   Globe, Smartphone, Clock, Target, Zap,
   ToggleLeft, ToggleRight, Hash, AlertCircle, Eye,
-  Play, Pause, BarChart3, Search, Upload, Users,
-  Building2, MapPin, Star, Filter,
-  TrendingUp, Megaphone, ListChecks,
+  Play, Pause, BarChart3, Star,
+  Megaphone, ListChecks,
   UtensilsCrossed, Heart, Home, Scale, Car, Wrench,
   Dumbbell, Scissors, HardHat, Shield, Calculator,
   Monitor, Briefcase, Factory, ShoppingCart, Package,
   GraduationCap, Store, Layers,
-  CircleDot, Activity, FileText, Bookmark, BookmarkCheck
+  CircleDot, Activity, FileText
 } from "lucide-react";
 import {
   InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon,
-  GoogleMapsIcon, YelpIcon,
 } from "@/components/ui/platform-icons";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 
 /* ── Types ── */
-type MainTab = "campaigns" | "leads" | "sequences" | "templates" | "analytics" | "settings";
+type MainTab = "campaigns" | "sequences" | "templates" | "analytics" | "settings";
 type TemplateSubTab = "calls" | "sms" | "email" | "dms";
 type TargetMode = "b2b" | "b2c";
 type CampaignStatus = "active" | "paused" | "completed";
@@ -66,13 +64,6 @@ interface OutreachSequence {
   description: string;
   targetMode: TargetMode | "both";
   steps: SequenceStep[];
-}
-
-interface SavedAudience {
-  id: string;
-  name: string;
-  mode: TargetMode;
-  config: Record<string, unknown>;
 }
 
 /* ── AI Enhance Button Component ── */
@@ -376,22 +367,6 @@ const B2B_INDUSTRIES = [
   { id: "retail", label: "Retail Stores", icon: Store },
 ];
 
-const B2C_INTERESTS = [
-  { id: "health", label: "Health & Fitness" },
-  { id: "fashion", label: "Fashion & Style" },
-  { id: "technology", label: "Technology" },
-  { id: "home", label: "Home & Garden" },
-  { id: "food", label: "Food & Cooking" },
-  { id: "travel", label: "Travel" },
-  { id: "finance", label: "Finance" },
-  { id: "parenting", label: "Parenting" },
-  { id: "pets", label: "Pets" },
-  { id: "sports", label: "Sports" },
-  { id: "beauty", label: "Beauty & Skincare" },
-  { id: "gaming", label: "Gaming" },
-  { id: "education", label: "Education" },
-];
-
 /* ── Campaign Presets ── */
 const CAMPAIGN_PRESETS = [
   { name: "Local Restaurant Blitz", description: "High-volume outreach to restaurants needing digital presence", targetMode: "b2b" as TargetMode, industries: ["restaurants"], channels: { email: true, sms: true, calls: true, dms: false }, dailyTargets: { email: 30, sms: 20, calls: 15, dms: 0 } },
@@ -514,29 +489,6 @@ export default function OutreachHubPage() {
     sequenceId: "seq-gentle",
   });
 
-  /* ── Lead Finder State ── */
-  const [leadMode, setLeadMode] = useState<TargetMode>("b2b");
-  const [selectedIndustries, setSelectedIndustries] = useState<string[]>([]);
-  const [companySize, setCompanySize] = useState<string>("");
-  const [revenueRange, setRevenueRange] = useState<string>("");
-  const [leadCity, setLeadCity] = useState("");
-  const [leadState, setLeadState] = useState("");
-  const [leadRadius, setLeadRadius] = useState(25);
-  const [decisionMakers, setDecisionMakers] = useState<string[]>([]);
-  const [leadSources, setLeadSources] = useState<string[]>([]);
-  const [minRating, setMinRating] = useState(3);
-  const [hasWebsite, setHasWebsite] = useState(false);
-  const [hasPhone, setHasPhone] = useState(false);
-  const [hasEmail, setHasEmail] = useState(false);
-  // B2C fields
-  const [ageRange, setAgeRange] = useState<[number, number]>([18, 65]);
-  const [gender, setGender] = useState<"all" | "male" | "female">("all");
-  const [incomeRange, setIncomeRange] = useState<string>("");
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const [b2cSources, setB2cSources] = useState<string[]>([]);
-  const [platformFocus, setPlatformFocus] = useState<string[]>([]);
-  const [savedAudiences, setSavedAudiences] = useState<SavedAudience[]>([]);
-
   /* ── Sequence State ── */
   const [sequences, setSequences] = useState<OutreachSequence[]>(DEFAULT_SEQUENCES);
   const [activeSequence, setActiveSequence] = useState<string>("seq-gentle");
@@ -625,7 +577,6 @@ export default function OutreachHubPage() {
         if (config.daily_limits) setDailyLimits(prev => ({ ...prev, ...config.daily_limits }));
         if (config.compliance) setCompliance(prev => ({ ...prev, ...config.compliance }));
         if (config.sequences?.length) setSequences(config.sequences);
-        if (config.saved_audiences?.length) setSavedAudiences(config.saved_audiences);
       } catch {
         // Silently fail — use defaults
       } finally {
@@ -704,22 +655,6 @@ export default function OutreachHubPage() {
     toast.success("Campaign deleted");
   }
 
-  /* ── Audience Save ── */
-  function saveAudience() {
-    const name = prompt("Audience segment name:");
-    if (!name) return;
-    const audience: SavedAudience = {
-      id: `aud-${Date.now()}`,
-      name,
-      mode: leadMode,
-      config: leadMode === "b2b"
-        ? { selectedIndustries, companySize, revenueRange, leadCity, leadState, leadRadius, decisionMakers, leadSources, minRating, hasWebsite, hasPhone, hasEmail }
-        : { ageRange, gender, incomeRange, selectedInterests, leadCity, leadState, leadRadius, b2cSources, platformFocus },
-    };
-    setSavedAudiences(prev => [...prev, audience]);
-    toast.success("Audience saved");
-  }
-
   /* ── Custom Sequence ── */
   function addCustomStep() {
     setCustomSteps(prev => [...prev, {
@@ -777,7 +712,6 @@ export default function OutreachHubPage() {
           daily_limits: dailyLimits,
           compliance,
           sequences,
-          saved_audiences: savedAudiences,
         }),
       });
       toast.success("All settings saved");
@@ -788,7 +722,6 @@ export default function OutreachHubPage() {
   /* ── Tab definitions ── */
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "campaigns", label: "Campaigns", icon: <Megaphone size={14} /> },
-    { key: "leads", label: "Lead Finder", icon: <Search size={14} /> },
     { key: "sequences", label: "Sequences", icon: <ListChecks size={14} /> },
     { key: "templates", label: "Templates", icon: <FileText size={14} /> },
     { key: "analytics", label: "Analytics", icon: <BarChart3 size={14} /> },
@@ -1071,389 +1004,7 @@ export default function OutreachHubPage() {
       )}
 
       {/* ════════════════════════════════════════════════════════════ */}
-      {/*  TAB 2: LEAD FINDER                                        */}
-      {/* ════════════════════════════════════════════════════════════ */}
-      {tab === "leads" && (
-        <div className="space-y-4">
-          {/* B2B / B2C toggle */}
-          <div className="flex items-center gap-4">
-            <h2 className="text-sm font-semibold flex items-center gap-2">
-              <Search size={14} className="text-gold" /> Lead Finder
-            </h2>
-            <div className="flex gap-1 bg-surface rounded-lg p-0.5">
-              {(["b2b", "b2c"] as TargetMode[]).map(m => (
-                <button key={m} onClick={() => setLeadMode(m)}
-                  className={`px-4 py-1.5 rounded-md text-xs font-medium transition-all ${
-                    leadMode === m ? "bg-gold text-black" : "text-muted hover:text-foreground"
-                  }`}>{m.toUpperCase()}</button>
-              ))}
-            </div>
-          </div>
-
-          {/* ── B2B Mode ── */}
-          {leadMode === "b2b" && (
-            <div className="space-y-4">
-              {/* Industry Grid */}
-              <div className="card space-y-3">
-                <h3 className="text-xs font-semibold flex items-center gap-2"><Building2 size={12} className="text-gold" /> Industry / Niche</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                  {B2B_INDUSTRIES.map(ind => {
-                    const Icon = ind.icon;
-                    const selected = selectedIndustries.includes(ind.id);
-                    return (
-                      <button key={ind.id} onClick={() => setSelectedIndustries(prev => toggleArray(prev, ind.id))}
-                        className={`flex items-center gap-2 p-2.5 rounded-xl border transition-all ${
-                          selected ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-border/30 hover:border-border"
-                        }`}>
-                        <Icon size={14} />
-                        <span className="text-[10px]">{ind.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Company Size */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Users size={12} className="text-muted" /> Company Size</h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    {["1-10", "11-50", "51-200", "201-500", "500+"].map(s => (
-                      <button key={s} onClick={() => setCompanySize(companySize === s ? "" : s)}
-                        className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
-                          companySize === s ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-border/30 hover:border-border"
-                        }`}>{s} employees</button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Revenue Range */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><TrendingUp size={12} className="text-muted" /> Revenue Range</h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    {["Under $100K", "$100K-$500K", "$500K-$1M", "$1M-$5M", "$5M-$10M", "$10M+"].map(r => (
-                      <button key={r} onClick={() => setRevenueRange(revenueRange === r ? "" : r)}
-                        className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
-                          revenueRange === r ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-border/30 hover:border-border"
-                        }`}>{r}</button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Location */}
-              <div className="card space-y-3">
-                <h3 className="text-xs font-semibold flex items-center gap-2"><MapPin size={12} className="text-gold" /> Location</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">City</label>
-                    <input value={leadCity} onChange={e => setLeadCity(e.target.value)}
-                      placeholder="e.g., Miami" className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">State</label>
-                    <select value={leadState} onChange={e => setLeadState(e.target.value)} className="input w-full text-xs">
-                      <option value="">Any State</option>
-                      {["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"].map(s => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Radius: {leadRadius} mi</label>
-                    <input type="range" min={5} max={100} step={5} value={leadRadius}
-                      onChange={e => setLeadRadius(Number(e.target.value))}
-                      className="w-full accent-gold" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Decision Makers */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Target size={12} className="text-muted" /> Decision Maker Targeting</h3>
-                  <div className="space-y-1.5">
-                    {["Owner", "CEO", "Marketing Director", "Operations Manager", "VP Sales"].map(role => (
-                      <label key={role} className="flex items-center gap-2 cursor-pointer group">
-                        <input type="checkbox" checked={decisionMakers.includes(role)}
-                          onChange={() => setDecisionMakers(prev => toggleArray(prev, role))}
-                          className="accent-gold rounded" />
-                        <span className="text-[11px] text-muted group-hover:text-foreground">{role}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Lead Sources */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Globe size={12} className="text-muted" /> Lead Sources</h3>
-                  <div className="space-y-1.5">
-                    {[
-                      { id: "google_maps", label: "Google Maps", icon: <GoogleMapsIcon size={14} /> },
-                      { id: "linkedin", label: "LinkedIn", icon: <LinkedInIcon size={14} /> },
-                      { id: "yelp", label: "Yelp", icon: <YelpIcon size={14} /> },
-                      { id: "directories", label: "Business Directories", icon: <Globe size={14} /> },
-                      { id: "website_visitors", label: "Website Visitors", icon: <Monitor size={14} /> },
-                    ].map(src => (
-                      <label key={src.id} className="flex items-center gap-2 cursor-pointer group">
-                        <input type="checkbox" checked={leadSources.includes(src.id)}
-                          onChange={() => setLeadSources(prev => toggleArray(prev, src.id))}
-                          className="accent-gold rounded" />
-                        <span className="flex items-center gap-1.5 text-[11px] text-muted group-hover:text-foreground">
-                          {src.icon} {src.label}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Filters */}
-              <div className="card space-y-3">
-                <h3 className="text-xs font-semibold flex items-center gap-2"><Filter size={12} className="text-gold" /> Filters</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Min Google Rating: {minRating} stars</label>
-                    <input type="range" min={1} max={5} step={0.5} value={minRating}
-                      onChange={e => setMinRating(Number(e.target.value))}
-                      className="w-full accent-gold" />
-                    <div className="flex justify-between text-[8px] text-muted">
-                      <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="flex items-center justify-between cursor-pointer">
-                      <span className="text-xs">Has Website</span>
-                      <button onClick={() => setHasWebsite(!hasWebsite)} className={hasWebsite ? "text-gold" : "text-muted"}>
-                        {hasWebsite ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                      </button>
-                    </label>
-                    <label className="flex items-center justify-between cursor-pointer">
-                      <span className="text-xs">Has Phone</span>
-                      <button onClick={() => setHasPhone(!hasPhone)} className={hasPhone ? "text-gold" : "text-muted"}>
-                        {hasPhone ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                      </button>
-                    </label>
-                    <label className="flex items-center justify-between cursor-pointer">
-                      <span className="text-xs">Has Email</span>
-                      <button onClick={() => setHasEmail(!hasEmail)} className={hasEmail ? "text-gold" : "text-muted"}>
-                        {hasEmail ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                      </button>
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* Find Leads + Import */}
-              <div className="flex items-center gap-3">
-                <button onClick={() => toast.success("Lead search started — results will appear in your leads list")}
-                  className="btn-primary text-xs flex items-center gap-1.5">
-                  <Search size={12} /> Find Leads
-                </button>
-                <div className="flex items-center gap-2 text-[10px] text-muted">
-                  <span>Estimated:</span>
-                  <span className="text-gold font-semibold">
-                    {selectedIndustries.length > 0 ? `~${selectedIndustries.length * 150} leads` : "Select industries"}
-                  </span>
-                </div>
-                <div className="ml-auto flex gap-2">
-                  <button onClick={() => toast("CSV upload coming soon")}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border/50 text-muted hover:text-foreground flex items-center gap-1">
-                    <Upload size={10} /> Import CSV
-                  </button>
-                  <button onClick={saveAudience}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-gold/20 text-gold hover:bg-gold/10 flex items-center gap-1">
-                    <Bookmark size={10} /> Save Audience
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── B2C Mode ── */}
-          {leadMode === "b2c" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Age Range */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Users size={12} className="text-gold" /> Age Range</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-[10px] text-muted">
-                      <span>{ageRange[0]} years</span><span>{ageRange[1]}+ years</span>
-                    </div>
-                    <div className="flex gap-3 items-center">
-                      <input type="range" min={18} max={65} value={ageRange[0]}
-                        onChange={e => setAgeRange([Math.min(Number(e.target.value), ageRange[1]), ageRange[1]])}
-                        className="flex-1 accent-gold" />
-                      <input type="range" min={18} max={65} value={ageRange[1]}
-                        onChange={e => setAgeRange([ageRange[0], Math.max(Number(e.target.value), ageRange[0])])}
-                        className="flex-1 accent-gold" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Gender */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><User size={12} className="text-muted" /> Gender</h3>
-                  <div className="flex gap-2">
-                    {(["all", "male", "female"] as const).map(g => (
-                      <button key={g} onClick={() => setGender(g)}
-                        className={`flex-1 py-2 rounded-lg text-xs font-medium border capitalize transition-all ${
-                          gender === g ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-border/50"
-                        }`}>{g}</button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Income */}
-              <div className="card space-y-3">
-                <h3 className="text-xs font-semibold flex items-center gap-2"><TrendingUp size={12} className="text-muted" /> Income Bracket</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {["Under $30K", "$30K-$50K", "$50K-$75K", "$75K-$100K", "$100K+"].map(r => (
-                    <button key={r} onClick={() => setIncomeRange(incomeRange === r ? "" : r)}
-                      className={`text-[10px] px-3 py-1.5 rounded-lg border transition-all ${
-                        incomeRange === r ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-border/30 hover:border-border"
-                      }`}>{r}</button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Interest Grid */}
-              <div className="card space-y-3">
-                <h3 className="text-xs font-semibold flex items-center gap-2"><Heart size={12} className="text-gold" /> Interest Categories</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                  {B2C_INTERESTS.map(int => {
-                    const selected = selectedInterests.includes(int.id);
-                    return (
-                      <button key={int.id} onClick={() => setSelectedInterests(prev => toggleArray(prev, int.id))}
-                        className={`p-2.5 rounded-xl border text-[10px] transition-all ${
-                          selected ? "bg-gold/10 text-gold border-gold/20" : "text-muted border-border/30 hover:border-border"
-                        }`}>{int.label}</button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Location (same as B2B) */}
-              <div className="card space-y-3">
-                <h3 className="text-xs font-semibold flex items-center gap-2"><MapPin size={12} className="text-gold" /> Location</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">City</label>
-                    <input value={leadCity} onChange={e => setLeadCity(e.target.value)}
-                      placeholder="e.g., Miami" className="input w-full text-xs" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">State</label>
-                    <select value={leadState} onChange={e => setLeadState(e.target.value)} className="input w-full text-xs">
-                      <option value="">Any State</option>
-                      {["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"].map(s => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-[10px] text-muted block mb-1">Radius: {leadRadius} mi</label>
-                    <input type="range" min={5} max={100} step={5} value={leadRadius}
-                      onChange={e => setLeadRadius(Number(e.target.value))}
-                      className="w-full accent-gold" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* B2C Sources */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Globe size={12} className="text-muted" /> Lead Sources</h3>
-                  <div className="space-y-1.5">
-                    {["Social Media Profiles", "Online Communities", "Event Attendees", "Newsletter Subscribers"].map(src => (
-                      <label key={src} className="flex items-center gap-2 cursor-pointer group">
-                        <input type="checkbox" checked={b2cSources.includes(src)}
-                          onChange={() => setB2cSources(prev => toggleArray(prev, src))}
-                          className="accent-gold rounded" />
-                        <span className="text-[11px] text-muted group-hover:text-foreground">{src}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Platform Focus */}
-                <div className="card space-y-3">
-                  <h3 className="text-xs font-semibold flex items-center gap-2"><Smartphone size={12} className="text-muted" /> Platform Focus</h3>
-                  <div className="space-y-1.5">
-                    {[
-                      { id: "instagram", label: "Instagram", icon: <InstagramIcon size={14} /> },
-                      { id: "facebook", label: "Facebook", icon: <FacebookIcon size={14} /> },
-                      { id: "tiktok", label: "TikTok", icon: <TikTokIcon size={14} /> },
-                      { id: "linkedin", label: "LinkedIn", icon: <LinkedInIcon size={14} /> },
-                    ].map(p => (
-                      <label key={p.id} className="flex items-center gap-2 cursor-pointer group">
-                        <input type="checkbox" checked={platformFocus.includes(p.id)}
-                          onChange={() => setPlatformFocus(prev => toggleArray(prev, p.id))}
-                          className="accent-gold rounded" />
-                        <span className="flex items-center gap-1.5 text-[11px] text-muted group-hover:text-foreground">
-                          {p.icon} {p.label}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Find Leads + actions */}
-              <div className="flex items-center gap-3">
-                <button onClick={() => toast.success("Lead search started — results will appear in your leads list")}
-                  className="btn-primary text-xs flex items-center gap-1.5">
-                  <Search size={12} /> Find Leads
-                </button>
-                <div className="flex items-center gap-2 text-[10px] text-muted">
-                  <span>Estimated:</span>
-                  <span className="text-gold font-semibold">
-                    {selectedInterests.length > 0 ? `~${selectedInterests.length * 200} leads` : "Select interests"}
-                  </span>
-                </div>
-                <div className="ml-auto flex gap-2">
-                  <button onClick={() => toast("CSV upload coming soon")}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-border/50 text-muted hover:text-foreground flex items-center gap-1">
-                    <Upload size={10} /> Import CSV
-                  </button>
-                  <button onClick={saveAudience}
-                    className="text-[10px] px-3 py-1.5 rounded-lg border border-gold/20 text-gold hover:bg-gold/10 flex items-center gap-1">
-                    <Bookmark size={10} /> Save Audience
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── Saved Audience Segments ── */}
-          <div className="card space-y-3">
-            <h3 className="text-xs font-semibold flex items-center gap-2">
-              <BookmarkCheck size={12} className="text-gold" /> Saved Audience Segments
-            </h3>
-            {savedAudiences.length === 0 ? (
-              <p className="text-[10px] text-muted py-4 text-center">No saved audiences yet. Configure your targeting above and click &quot;Save Audience&quot; to save a segment.</p>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {savedAudiences.map(aud => (
-                  <div key={aud.id} className="p-2.5 rounded-xl border border-border/50 hover:border-gold/20 transition-all cursor-pointer group">
-                    <div className="flex items-center justify-between">
-                      <p className="text-[10px] font-semibold group-hover:text-gold">{aud.name}</p>
-                      <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted">{aud.mode.toUpperCase()}</span>
-                    </div>
-                    <button onClick={() => { setSavedAudiences(prev => prev.filter(a => a.id !== aud.id)); toast.success("Deleted"); }}
-                      className="text-[9px] text-muted hover:text-red-400 mt-1">Remove</button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ════════════════════════════════════════════════════════════ */}
-      {/*  TAB 3: SEQUENCES                                          */}
+      {/*  TAB 2: SEQUENCES                                          */}
       {/* ════════════════════════════════════════════════════════════ */}
       {tab === "sequences" && (
         <div className="space-y-4">
@@ -1598,7 +1149,7 @@ export default function OutreachHubPage() {
       )}
 
       {/* ════════════════════════════════════════════════════════════ */}
-      {/*  TAB 4: TEMPLATES                                          */}
+      {/*  TAB 3: TEMPLATES                                          */}
       {/* ════════════════════════════════════════════════════════════ */}
       {tab === "templates" && (
         <div className="space-y-4">
@@ -1968,7 +1519,7 @@ export default function OutreachHubPage() {
       )}
 
       {/* ════════════════════════════════════════════════════════════ */}
-      {/*  TAB 5: ANALYTICS                                          */}
+      {/*  TAB 4: ANALYTICS                                          */}
       {/* ════════════════════════════════════════════════════════════ */}
       {tab === "analytics" && (
         <div className="space-y-4">
@@ -2085,7 +1636,7 @@ export default function OutreachHubPage() {
       )}
 
       {/* ════════════════════════════════════════════════════════════ */}
-      {/*  TAB 6: SETTINGS                                           */}
+      {/*  TAB 5: SETTINGS                                           */}
       {/* ════════════════════════════════════════════════════════════ */}
       {tab === "settings" && (
         <div className="max-w-2xl space-y-4">

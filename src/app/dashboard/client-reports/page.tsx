@@ -517,10 +517,10 @@ export default function ClientReportsPage() {
                   <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-3">Key Performance Indicators</h3>
                   <div className="grid grid-cols-4 gap-3 mb-6">
                     {[
-                      { label: "Total Leads", value: "47", change: "+23%", up: true },
-                      { label: "Website Traffic", value: "3,240", change: "+15%", up: true },
-                      { label: "Engagement Rate", value: "12.4%", change: "+2.1%", up: true },
-                      { label: "Revenue Attributed", value: "$8,500", change: "+18%", up: true },
+                      { label: "Total Leads", value: "--", change: "--", up: true },
+                      { label: "Website Traffic", value: "--", change: "--", up: true },
+                      { label: "Engagement Rate", value: "--", change: "--", up: true },
+                      { label: "Revenue Attributed", value: "--", change: "--", up: true },
                     ].map((kpi, i) => (
                       <div key={i} className="p-3 rounded-xl border border-border">
                         <p className="text-[9px] text-muted mb-1">{kpi.label}</p>
@@ -551,8 +551,7 @@ export default function ClientReportsPage() {
                       <span className="text-[10px] font-semibold text-gold uppercase tracking-wider">AI-Generated Insights</span>
                     </div>
                     <div className="space-y-2 text-xs text-muted leading-relaxed">
-                      <p>Your lead generation saw a strong 23% increase this month, primarily driven by the optimized Instagram Reels campaign which accounted for 60% of new followers.</p>
-                      <p>Google Ads CPC decreased by $0.42, improving ROAS to 4.2x. Email marketing continues to outperform with a 34% open rate (industry average: 21%).</p>
+                      <p>[AI-generated insights based on this month&apos;s performance data will appear here.]</p>
                     </div>
                   </div>
 
@@ -564,10 +563,7 @@ export default function ClientReportsPage() {
                     </div>
                     <div className="space-y-1.5">
                       {[
-                        "Launch TikTok content series to capture younger demographic",
-                        "A/B test new landing page design to improve conversion rate",
-                        "Increase Google Ads budget by 15% based on strong ROAS",
-                        "Begin local SEO optimization push for map pack rankings",
+                        "[AI-generated recommendations will be listed here based on report data.]",
                       ].map((rec, i) => (
                         <div key={i} className="flex items-start gap-2 text-xs text-muted">
                           <CheckCircle size={10} className="text-blue-400 mt-0.5 shrink-0" />

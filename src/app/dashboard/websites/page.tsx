@@ -66,47 +66,34 @@ export default function WebsitesPage() {
   const [demos, setDemos] = useState<Array<{ id: string; business_name: string; url: string; status: string; created_at: string; client_id: string | null }>>([]);
 
   // Page manager state
+  // TODO: fetch from API
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [pages] = useState([
-    { id: "1", name: "Home", slug: "/", status: "published" as const, lastEdited: "2026-04-12" },
-    { id: "2", name: "About", slug: "/about", status: "published" as const, lastEdited: "2026-04-10" },
-    { id: "3", name: "Services", slug: "/services", status: "draft" as const, lastEdited: "2026-04-13" },
-    { id: "4", name: "Contact", slug: "/contact", status: "published" as const, lastEdited: "2026-04-08" },
-    { id: "5", name: "Blog", slug: "/blog", status: "published" as const, lastEdited: "2026-04-14" },
-    { id: "6", name: "Pricing", slug: "/pricing", status: "draft" as const, lastEdited: "2026-04-11" },
-  ]);
+  const [pages] = useState<Array<{ id: string; name: string; slug: string; status: "published" | "draft"; lastEdited: string }>>([]);
 
   // Domain manager state
+  // TODO: fetch from API
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [domains] = useState([
-    { domain: "clientsite.vercel.app", type: "vercel" as const, ssl: true, primary: true },
-    { domain: "www.clientbusiness.com", type: "custom" as const, ssl: true, primary: false },
-  ]);
+  const [domains] = useState<Array<{ domain: string; type: "vercel" | "custom"; ssl: boolean; primary: boolean }>>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [newDomain, setNewDomain] = useState("");
 
   // Analytics state
+  // TODO: fetch from API
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [siteAnalytics] = useState({
-    visitors: 1247, pageViews: 3891, bounceRate: 42.3, avgDuration: "2m 14s",
-    speedScore: 92, mobileScore: 88, seoScore: 85, accessibilityScore: 94,
-    topPages: [
-      { page: "/", views: 1420 },
-      { page: "/services", views: 892 },
-      { page: "/about", views: 645 },
-      { page: "/contact", views: 534 },
-      { page: "/blog", views: 400 },
-    ],
+  const [siteAnalytics] = useState<{
+    visitors: number; pageViews: number; bounceRate: number; avgDuration: string;
+    speedScore: number; mobileScore: number; seoScore: number; accessibilityScore: number;
+    topPages: Array<{ page: string; views: number }>;
+  }>({
+    visitors: 0, pageViews: 0, bounceRate: 0, avgDuration: "0s",
+    speedScore: 0, mobileScore: 0, seoScore: 0, accessibilityScore: 0,
+    topPages: [],
   });
 
   // Blog manager state
+  // TODO: fetch from API
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [blogPosts] = useState([
-    { id: "1", title: "5 Tips for Growing Your Business Online", status: "published" as const, date: "2026-04-10", views: 342 },
-    { id: "2", title: "Why Every Local Business Needs a Website", status: "published" as const, date: "2026-04-07", views: 218 },
-    { id: "3", title: "How AI is Changing Web Design", status: "draft" as const, date: "2026-04-13", views: 0 },
-    { id: "4", title: "SEO Best Practices for 2026", status: "scheduled" as const, date: "2026-04-18", views: 0 },
-  ]);
+  const [blogPosts] = useState<Array<{ id: string; title: string; status: "published" | "draft" | "scheduled"; date: string; views: number }>>([]);
 
   // Form embed state
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

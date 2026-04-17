@@ -69,38 +69,29 @@ const INITIAL_TEMPLATES: InvoiceTemplate[] = [
   {
     id: "1", name: "Agency Standard", style: "modern", isDefault: true,
     logoUrl: "", primaryColor: "#D4AF37", accentColor: "#1a1a2e", fontFamily: "Inter",
-    lineItems: [
-      { id: "1", description: "Monthly Retainer", quantity: 1, rate: 2500 },
-      { id: "2", description: "Ad Spend Management", quantity: 1, rate: 1500 },
-      { id: "3", description: "Content Package (10 posts)", quantity: 1, rate: 1200 },
-    ],
+    lineItems: [],
     paymentTerms: "Net 30", taxRate: 0, taxIncluded: false,
     notes: "Thank you for your business! Payment is due within 30 days.",
     terms: "Late payments are subject to a 1.5% monthly fee. All work remains property of provider until paid in full.",
-    companyName: "ShortStack Agency", companyAddress: "123 Agency Blvd, Suite 100", companyEmail: "billing@shortstackagency.com", companyPhone: "(555) 123-4567",
+    companyName: "", companyAddress: "", companyEmail: "", companyPhone: "",
   },
   {
     id: "2", name: "Minimal Invoice", style: "minimal", isDefault: false,
     logoUrl: "", primaryColor: "#333333", accentColor: "#f5f5f5", fontFamily: "Helvetica",
-    lineItems: [
-      { id: "1", description: "Consulting Services", quantity: 8, rate: 150 },
-    ],
-    paymentTerms: "Due on Receipt", taxRate: 8.25, taxIncluded: false,
+    lineItems: [],
+    paymentTerms: "Due on Receipt", taxRate: 0, taxIncluded: false,
     notes: "Payment due upon receipt. Thank you!",
     terms: "Standard terms apply.",
-    companyName: "ShortStack Agency", companyAddress: "123 Agency Blvd", companyEmail: "billing@shortstackagency.com", companyPhone: "(555) 123-4567",
+    companyName: "", companyAddress: "", companyEmail: "", companyPhone: "",
   },
   {
     id: "3", name: "Corporate Pro", style: "corporate", isDefault: false,
     logoUrl: "", primaryColor: "#2980b9", accentColor: "#ecf0f1", fontFamily: "Georgia",
-    lineItems: [
-      { id: "1", description: "Monthly Retainer", quantity: 1, rate: 5000 },
-      { id: "2", description: "Social Media Management", quantity: 1, rate: 1800 },
-    ],
-    paymentTerms: "Net 45", taxRate: 10, taxIncluded: true,
+    lineItems: [],
+    paymentTerms: "Net 45", taxRate: 0, taxIncluded: true,
     notes: "All prices include applicable taxes.",
     terms: "Payment terms as agreed in master service agreement.",
-    companyName: "ShortStack Agency", companyAddress: "123 Agency Blvd, Suite 100", companyEmail: "billing@shortstackagency.com", companyPhone: "(555) 123-4567",
+    companyName: "", companyAddress: "", companyEmail: "", companyPhone: "",
   },
 ];
 

@@ -71,10 +71,8 @@ export default function SettingsPage() {
   const supabase = createClient();
 
   // API Keys
-  const [apiKeys, setApiKeys] = useState([
-    { id: "ak1", name: "Production Key", key: "ss_live_••••••••••••abcd", created: "2026-03-15", last_used: "2026-04-14", status: "active" },
-    { id: "ak2", name: "Development Key", key: "ss_test_••••••••••••efgh", created: "2026-04-01", last_used: "2026-04-13", status: "active" },
-  ]);
+  // TODO: fetch from API
+  const [apiKeys, setApiKeys] = useState<Array<{ id: string; name: string; key: string; created: string; last_used: string; status: string }>>([]);
   const [newKeyName, setNewKeyName] = useState("");
 
   // White-label
@@ -96,10 +94,8 @@ export default function SettingsPage() {
 
   // Security
   const [twoFA, setTwoFA] = useState(false);
-  const [sessions] = useState([
-    { device: "Chrome on Windows", ip: "192.168.1.1", last_active: "2026-04-14T10:30:00Z", current: true },
-    { device: "Safari on iPhone", ip: "192.168.1.5", last_active: "2026-04-13T22:00:00Z", current: false },
-  ]);
+  // TODO: fetch from API
+  const [sessions] = useState<Array<{ device: string; ip: string; last_active: string; current: boolean }>>([]);
 
   // Timezone
   const [timezone, setTimezone] = useState("Europe/Copenhagen");
@@ -1514,7 +1510,12 @@ export default function SettingsPage() {
             <h3 className="section-header">API Keys</h3>
             <p className="text-xs text-muted mb-4">Manage your API keys for external integrations. Keep these secret.</p>
             <div className="space-y-2 mb-4">
-              {apiKeys.map(k => (
+              {apiKeys.length === 0 ? (
+                <div className="text-center py-8 text-muted">
+                  <Key size={24} className="mx-auto mb-2 opacity-40" />
+                  <p className="text-sm">No API keys yet</p>
+                </div>
+              ) : apiKeys.map(k => (
                 <div key={k.id} className="flex items-center justify-between p-3 border border-border rounded-lg">
                   <div>
                     <p className="text-sm font-medium">{k.name}</p>
@@ -1777,7 +1778,12 @@ export default function SettingsPage() {
           <div className="card">
             <h3 className="section-header">Active Sessions</h3>
             <div className="space-y-2">
-              {sessions.map((s, i) => (
+              {sessions.length === 0 ? (
+                <div className="text-center py-8 text-muted">
+                  <Shield size={24} className="mx-auto mb-2 opacity-40" />
+                  <p className="text-sm">No active sessions yet</p>
+                </div>
+              ) : sessions.map((s, i) => (
                 <div key={i} className="flex items-center justify-between p-3 border border-border rounded-lg">
                   <div><p className="text-sm font-medium">{s.device} {s.current && <span className="text-[9px] bg-success/10 text-success px-1.5 py-0.5 rounded-full ml-1">Current</span>}</p><p className="text-xs text-muted">IP: {s.ip} | Last active: {new Date(s.last_active).toLocaleString()}</p></div>
                   {!s.current && <button className="text-xs text-danger hover:underline">Revoke</button>}

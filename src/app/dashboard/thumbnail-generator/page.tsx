@@ -12,6 +12,8 @@ import {
   History, Shuffle, ShieldCheck, Fingerprint, TrendingUp,
   SlidersHorizontal, Save, BrainCircuit, Eye,
   ArrowRight, AlertTriangle, CheckCircle2, XCircle, Cpu,
+  Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight,
+  Droplet, Wand, Scissors, Smartphone, FileImage, ShoppingBag,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
@@ -98,6 +100,224 @@ const MOODS = [
   "Educational", "Luxurious", "Scary", "Exciting",
   "Mysterious", "Urgent", "Calm", "Controversial",
   "Nostalgic", "Futuristic", "Playful", "Elegant",
+];
+
+/* ──────────────────── MEGA STYLE PRESET GALLERY ──────────────────── */
+
+const STYLE_PRESET_GALLERY = [
+  { id: "mrbeast", name: "MrBeast", desc: "Huge face, yellow text, red accent", gradient: "from-red-600 via-yellow-500 to-red-500", config: { font: "impact", bgColor: "#FFE500", textColor: "#FF0000", accentColor: "#FFFFFF", textCase: "uppercase", textStroke: true, strokeWidth: 3, strokeColor: "#000000", shadow: true, mood: "Shocking" } },
+  { id: "yt-clickbait", name: "YouTube Clickbait", desc: "Shocked face, red arrows, bright outline", gradient: "from-yellow-400 via-red-500 to-red-700", config: { font: "impact", bgColor: "#FEF08A", textColor: "#DC2626", accentColor: "#FBBF24", textCase: "uppercase", textStroke: true, strokeWidth: 4, strokeColor: "#000000", shadow: true, mood: "Shocking" } },
+  { id: "educational", name: "Educational", desc: "Clean, split-screen, diagrams", gradient: "from-blue-400 to-cyan-500", config: { font: "inter", bgColor: "#EFF6FF", textColor: "#1E3A8A", accentColor: "#3B82F6", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Educational" } },
+  { id: "minimal-podcast", name: "Minimal Podcast", desc: "Dark bg, centered title, small host photo", gradient: "from-slate-800 to-slate-950", config: { font: "poppins", bgColor: "#0F172A", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Calm" } },
+  { id: "news-breaking", name: "News / Breaking", desc: "Red banner, urgent text", gradient: "from-red-700 to-red-900", config: { font: "oswald", bgColor: "#7F1D1D", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "uppercase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Urgent" } },
+  { id: "gaming", name: "Gaming", desc: "Character cutout, explosion FX, neon", gradient: "from-purple-700 via-fuchsia-600 to-cyan-500", config: { font: "bangers", bgColor: "#1E1B4B", textColor: "#E6FF00", accentColor: "#FF00FF", textCase: "uppercase", textStroke: true, strokeWidth: 2, strokeColor: "#000000", shadow: true, mood: "Exciting" } },
+  { id: "tech-review", name: "Tech Review", desc: "Product hero shot, spec bullets", gradient: "from-cyan-500 to-blue-900", config: { font: "montserrat", bgColor: "#0C4A6E", textColor: "#FFFFFF", accentColor: "#06B6D4", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Futuristic" } },
+  { id: "vlog", name: "Vlog", desc: "Lifestyle photo, handwritten text", gradient: "from-amber-200 to-orange-300", config: { font: "permanent-marker", bgColor: "#FEF3C7", textColor: "#7C2D12", accentColor: "#F97316", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Playful" } },
+  { id: "tutorial", name: "Tutorial", desc: "Step numbers, arrow pointers", gradient: "from-blue-500 to-cyan-400", config: { font: "roboto", bgColor: "#DBEAFE", textColor: "#1E40AF", accentColor: "#F59E0B", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Educational" } },
+  { id: "before-after", name: "Before / After", desc: "Split with divider", gradient: "from-slate-600 via-white to-emerald-500", config: { font: "bebas", bgColor: "#F3F4F6", textColor: "#111827", accentColor: "#10B981", textCase: "uppercase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Dramatic" } },
+  { id: "top10", name: "Top 10 / Ranking", desc: "Big number, list preview", gradient: "from-amber-400 via-orange-500 to-red-500", config: { font: "anton", bgColor: "#1C1917", textColor: "#FBBF24", accentColor: "#DC2626", textCase: "uppercase", textStroke: true, strokeWidth: 2, strokeColor: "#000000", shadow: true, mood: "Exciting" } },
+  { id: "interview", name: "Interview / Podcast Guest", desc: "Two faces, name plate", gradient: "from-indigo-600 to-violet-700", config: { font: "playfair", bgColor: "#312E81", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Elegant" } },
+  { id: "finance", name: "Finance / Money", desc: "Dollar signs, charts, green accent", gradient: "from-emerald-500 via-green-500 to-green-700", config: { font: "montserrat", bgColor: "#064E3B", textColor: "#FFFFFF", accentColor: "#10B981", textCase: "uppercase", textStroke: true, strokeWidth: 2, strokeColor: "#065F46", shadow: true, mood: "Dramatic" } },
+  { id: "fitness", name: "Fitness / Transformation", desc: "Bold, physique contrast", gradient: "from-red-600 via-orange-600 to-yellow-500", config: { font: "archivo-black", bgColor: "#7F1D1D", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "uppercase", textStroke: true, strokeWidth: 3, strokeColor: "#000000", shadow: true, mood: "Exciting" } },
+  { id: "luxury", name: "Luxury / Lifestyle", desc: "Gold, black, serif fonts", gradient: "from-yellow-600 via-amber-800 to-black", config: { font: "playfair", bgColor: "#000000", textColor: "#D4AF37", accentColor: "#FFFFFF", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Luxurious" } },
+  { id: "course", name: "Course / Education", desc: "Textbook feel, clean", gradient: "from-teal-400 to-emerald-600", config: { font: "merriweather", bgColor: "#F0FDFA", textColor: "#134E4A", accentColor: "#0D9488", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Educational" } },
+  { id: "movie-trailer", name: "Movie Trailer", desc: "Cinematic, letterbox, dramatic title", gradient: "from-black via-red-900 to-black", config: { font: "teko", bgColor: "#000000", textColor: "#FFFFFF", accentColor: "#DC2626", textCase: "uppercase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Dramatic" } },
+  { id: "pastel-aesthetic", name: "Pastel Aesthetic", desc: "Soft pastels, cute vibes", gradient: "from-pink-200 via-purple-200 to-blue-200", config: { font: "raleway", bgColor: "#FCE7F3", textColor: "#831843", accentColor: "#DB2777", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Playful" } },
+];
+
+const FONT_LIBRARY = [
+  { id: "inter", name: "Inter", category: "sans-serif", stack: "'Inter', sans-serif", vibe: "Modern / Clean" },
+  { id: "poppins", name: "Poppins", category: "sans-serif", stack: "'Poppins', sans-serif", vibe: "Friendly / Rounded" },
+  { id: "montserrat", name: "Montserrat", category: "sans-serif", stack: "'Montserrat', sans-serif", vibe: "Geometric / Bold" },
+  { id: "roboto", name: "Roboto", category: "sans-serif", stack: "'Roboto', sans-serif", vibe: "Neutral / Tech" },
+  { id: "bebas", name: "Bebas Neue", category: "display", stack: "'Bebas Neue', sans-serif", vibe: "Tall / Bold" },
+  { id: "oswald", name: "Oswald", category: "display", stack: "'Oswald', sans-serif", vibe: "Condensed / Strong" },
+  { id: "anton", name: "Anton", category: "display", stack: "'Anton', sans-serif", vibe: "Extra Bold / Headline" },
+  { id: "impact", name: "Impact", category: "display", stack: "'Impact', sans-serif", vibe: "Classic Clickbait" },
+  { id: "playfair", name: "Playfair Display", category: "serif", stack: "'Playfair Display', serif", vibe: "Elegant / Luxury" },
+  { id: "lato", name: "Lato", category: "sans-serif", stack: "'Lato', sans-serif", vibe: "Warm / Readable" },
+  { id: "raleway", name: "Raleway", category: "sans-serif", stack: "'Raleway', sans-serif", vibe: "Thin / Stylish" },
+  { id: "merriweather", name: "Merriweather", category: "serif", stack: "'Merriweather', serif", vibe: "Editorial / Readable" },
+  { id: "archivo-black", name: "Archivo Black", category: "display", stack: "'Archivo Black', sans-serif", vibe: "Heavy / Modern" },
+  { id: "bangers", name: "Bangers", category: "display", stack: "'Bangers', cursive", vibe: "Comic / Fun" },
+  { id: "staatliches", name: "Staatliches", category: "display", stack: "'Staatliches', sans-serif", vibe: "Poster / Condensed" },
+  { id: "teko", name: "Teko", category: "display", stack: "'Teko', sans-serif", vibe: "Sports / Narrow" },
+  { id: "league-gothic", name: "League Gothic", category: "display", stack: "'League Gothic', sans-serif", vibe: "Vintage Poster" },
+  { id: "permanent-marker", name: "Permanent Marker", category: "handwritten", stack: "'Permanent Marker', cursive", vibe: "Handwritten / Casual" },
+  { id: "fjalla", name: "Fjalla One", category: "display", stack: "'Fjalla One', sans-serif", vibe: "Utility / Bold" },
+  { id: "bungee", name: "Bungee", category: "display", stack: "'Bungee', cursive", vibe: "3D / Street" },
+];
+
+const GRADIENT_PRESETS = [
+  { id: "sunset", name: "Sunset", gradient: "from-orange-400 via-pink-500 to-purple-600" },
+  { id: "ocean", name: "Ocean", gradient: "from-cyan-400 to-blue-700" },
+  { id: "neon", name: "Neon", gradient: "from-fuchsia-500 to-cyan-400" },
+  { id: "purple-haze", name: "Purple Haze", gradient: "from-purple-500 via-violet-600 to-indigo-700" },
+  { id: "money-green", name: "Money Green", gradient: "from-emerald-400 via-green-500 to-green-700" },
+  { id: "fire", name: "Fire", gradient: "from-yellow-400 via-orange-500 to-red-600" },
+  { id: "ice", name: "Ice", gradient: "from-sky-200 via-cyan-300 to-blue-400" },
+  { id: "midnight", name: "Midnight", gradient: "from-gray-900 via-slate-800 to-gray-900" },
+  { id: "rose-gold", name: "Rose Gold", gradient: "from-pink-300 via-rose-400 to-amber-500" },
+  { id: "cyberpunk", name: "Cyberpunk", gradient: "from-fuchsia-600 via-purple-700 to-cyan-500" },
+  { id: "pastel-dream", name: "Pastel Dream", gradient: "from-pink-200 via-purple-200 to-blue-200" },
+  { id: "dark-academia", name: "Dark Academia", gradient: "from-stone-800 via-amber-900 to-stone-900" },
+  { id: "mint-fresh", name: "Mint Fresh", gradient: "from-emerald-200 to-teal-400" },
+  { id: "aurora", name: "Aurora", gradient: "from-green-400 via-cyan-500 to-purple-600" },
+  { id: "lavender", name: "Lavender", gradient: "from-violet-300 to-purple-500" },
+  { id: "coral-reef", name: "Coral Reef", gradient: "from-orange-300 via-pink-400 to-red-500" },
+  { id: "emerald-city", name: "Emerald City", gradient: "from-emerald-600 to-teal-800" },
+  { id: "galaxy", name: "Galaxy", gradient: "from-indigo-900 via-purple-900 to-pink-900" },
+  { id: "vaporwave", name: "Vaporwave", gradient: "from-pink-400 via-fuchsia-500 to-cyan-400" },
+  { id: "autumn-gr", name: "Autumn", gradient: "from-amber-500 via-orange-600 to-red-700" },
+];
+
+const PATTERN_LIBRARY = [
+  { id: "none", name: "None", preview: "bg-transparent" },
+  { id: "grid", name: "Grid", preview: "bg-gradient-to-br from-gray-200 to-gray-300" },
+  { id: "dots", name: "Dots", preview: "bg-gradient-to-br from-gray-100 to-gray-200" },
+  { id: "lines-diag", name: "Diagonal Lines", preview: "bg-gradient-to-br from-slate-200 to-slate-300" },
+  { id: "lines-h", name: "Horizontal Lines", preview: "bg-gradient-to-br from-zinc-200 to-zinc-300" },
+  { id: "grunge", name: "Grunge", preview: "bg-gradient-to-br from-stone-400 to-stone-600" },
+  { id: "paper", name: "Paper Texture", preview: "bg-gradient-to-br from-amber-50 to-amber-100" },
+  { id: "noise", name: "Noise", preview: "bg-gradient-to-br from-neutral-300 to-neutral-400" },
+];
+
+const COLOR_PALETTES = [
+  { id: "mrbeast-ry", name: "MrBeast Red & Yellow", colors: ["#DC2626", "#FBBF24", "#FFFFFF", "#000000"] },
+  { id: "clean-wb", name: "Clean White & Black", colors: ["#FFFFFF", "#000000", "#E5E7EB", "#111827"] },
+  { id: "finance-gg", name: "Finance Green & Gold", colors: ["#10B981", "#D4AF37", "#064E3B", "#FFFFFF"] },
+  { id: "gaming-pn", name: "Gaming Purple & Neon", colors: ["#7C3AED", "#E6FF00", "#1E1B4B", "#FF00FF"] },
+  { id: "cinematic-ot", name: "Cinematic Orange & Teal", colors: ["#EA580C", "#0D9488", "#1C1917", "#F5F5F4"] },
+  { id: "luxury-gb", name: "Luxury Gold & Black", colors: ["#D4AF37", "#000000", "#78350F", "#FFFFFF"] },
+  { id: "tech-bw", name: "Tech Blue & White", colors: ["#3B82F6", "#FFFFFF", "#1E3A8A", "#DBEAFE"] },
+  { id: "warm-earth", name: "Warm Earth", colors: ["#92400E", "#D97706", "#FEF3C7", "#78350F"] },
+  { id: "pastel-dream-p", name: "Pastel Dream", colors: ["#FBCFE8", "#E9D5FF", "#BFDBFE", "#A7F3D0"] },
+  { id: "monochrome", name: "Monochrome", colors: ["#1F2937", "#4B5563", "#9CA3AF", "#E5E7EB"] },
+  { id: "hc-bw", name: "High Contrast B&W", colors: ["#000000", "#FFFFFF", "#000000", "#FFFFFF"] },
+  { id: "autumn-p", name: "Autumn", colors: ["#B91C1C", "#EA580C", "#F59E0B", "#78350F"] },
+  { id: "sunset-p", name: "Sunset", colors: ["#FB923C", "#EC4899", "#9333EA", "#FEF3C7"] },
+  { id: "ocean-p", name: "Ocean", colors: ["#0EA5E9", "#0284C7", "#1E40AF", "#F0F9FF"] },
+  { id: "neon-cyber", name: "Neon Cyberpunk", colors: ["#E6FF00", "#FF00FF", "#00FFFF", "#0D0D0D"] },
+  { id: "forest-p", name: "Forest", colors: ["#14532D", "#166534", "#22C55E", "#F0FDF4"] },
+];
+
+const GRAPHIC_ELEMENTS = [
+  { id: "arr1", category: "arrows", name: "Straight Arrow", emoji: "\u27A1\uFE0F" },
+  { id: "arr2", category: "arrows", name: "Curved Arrow", emoji: "\u21AA\uFE0F" },
+  { id: "arr3", category: "arrows", name: "Down Arrow", emoji: "\u2B07\uFE0F" },
+  { id: "arr4", category: "arrows", name: "Up Arrow", emoji: "\u2B06\uFE0F" },
+  { id: "arr5", category: "arrows", name: "Left Arrow", emoji: "\u2B05\uFE0F" },
+  { id: "arr6", category: "arrows", name: "Red Thick Arrow", emoji: "\u{1F53B}" },
+  { id: "arr7", category: "arrows", name: "Double Arrow", emoji: "\u2194\uFE0F" },
+  { id: "arr8", category: "arrows", name: "Rotate Right", emoji: "\u{1F504}" },
+  { id: "arr9", category: "arrows", name: "Next", emoji: "\u23ED\uFE0F" },
+  { id: "arr10", category: "arrows", name: "Prev", emoji: "\u23EE\uFE0F" },
+  { id: "arr11", category: "arrows", name: "Up-Right", emoji: "\u2197\uFE0F" },
+  { id: "arr12", category: "arrows", name: "Down-Right", emoji: "\u2198\uFE0F" },
+  { id: "arr13", category: "arrows", name: "Soon", emoji: "\u{1F51C}" },
+  { id: "arr14", category: "arrows", name: "Back", emoji: "\u{1F519}" },
+  { id: "arr15", category: "arrows", name: "Top", emoji: "\u{1F51D}" },
+  { id: "cir1", category: "circles", name: "Red Circle", emoji: "\u{1F534}" },
+  { id: "cir2", category: "circles", name: "Target", emoji: "\u{1F3AF}" },
+  { id: "cir3", category: "circles", name: "Record", emoji: "\u23FA\uFE0F" },
+  { id: "cir4", category: "circles", name: "Green Circle", emoji: "\u{1F7E2}" },
+  { id: "cir5", category: "circles", name: "Yellow Circle", emoji: "\u{1F7E1}" },
+  { id: "bst1", category: "bursts", name: "Star", emoji: "\u2B50" },
+  { id: "bst2", category: "bursts", name: "Sparkles", emoji: "\u2728" },
+  { id: "bst3", category: "bursts", name: "Collision", emoji: "\u{1F4A5}" },
+  { id: "bst4", category: "bursts", name: "Dizzy", emoji: "\u{1F4AB}" },
+  { id: "bst5", category: "bursts", name: "Glowing Star", emoji: "\u{1F31F}" },
+  { id: "shk1", category: "shock", name: "Screaming", emoji: "\u{1F631}" },
+  { id: "shk2", category: "shock", name: "Fire", emoji: "\u{1F525}" },
+  { id: "shk3", category: "shock", name: "Money Bag", emoji: "\u{1F4B0}" },
+  { id: "shk4", category: "shock", name: "Lightning", emoji: "\u26A1" },
+  { id: "shk5", category: "shock", name: "Target", emoji: "\u{1F3AF}" },
+  { id: "shk6", category: "shock", name: "Exploding Head", emoji: "\u{1F92F}" },
+  { id: "chk1", category: "marks", name: "Red X", emoji: "\u274C" },
+  { id: "chk2", category: "marks", name: "Green Check", emoji: "\u2705" },
+  { id: "chk3", category: "marks", name: "Cross Mark", emoji: "\u274E" },
+  { id: "chk4", category: "marks", name: "Warning", emoji: "\u26A0\uFE0F" },
+  { id: "mny1", category: "money", name: "Dollar", emoji: "\u{1F4B5}" },
+  { id: "mny2", category: "money", name: "Money With Wings", emoji: "\u{1F4B8}" },
+  { id: "mny3", category: "money", name: "Gem", emoji: "\u{1F48E}" },
+  { id: "mny4", category: "money", name: "Coin", emoji: "\u{1FA99}" },
+  { id: "mny5", category: "money", name: "Credit Card", emoji: "\u{1F4B3}" },
+  { id: "spc1", category: "speech", name: "Speech Balloon", emoji: "\u{1F4AC}" },
+  { id: "spc2", category: "speech", name: "Thought Bubble", emoji: "\u{1F4AD}" },
+  { id: "spc3", category: "speech", name: "Right Anger", emoji: "\u{1F5EF}\uFE0F" },
+  { id: "bdg1", category: "badges", name: "New", emoji: "\u{1F195}" },
+  { id: "bdg2", category: "badges", name: "Free", emoji: "\u{1F193}" },
+  { id: "bdg3", category: "badges", name: "Hot", emoji: "\u{1F525}" },
+  { id: "bdg4", category: "badges", name: "Top", emoji: "\u{1F51D}" },
+  { id: "bdg5", category: "badges", name: "100", emoji: "\u{1F4AF}" },
+  { id: "tmr1", category: "timers", name: "Clock", emoji: "\u23F0" },
+  { id: "tmr2", category: "timers", name: "Hourglass", emoji: "\u23F3" },
+  { id: "tmr3", category: "timers", name: "Stopwatch", emoji: "\u23F1\uFE0F" },
+  { id: "rtg1", category: "ratings", name: "Trophy", emoji: "\u{1F3C6}" },
+  { id: "rtg2", category: "ratings", name: "Medal", emoji: "\u{1F947}" },
+  { id: "rtg3", category: "ratings", name: "Thumbs Up", emoji: "\u{1F44D}" },
+  { id: "rtg4", category: "ratings", name: "Thumbs Down", emoji: "\u{1F44E}" },
+  { id: "cmp1", category: "compare", name: "VS Symbol", emoji: "\u{1F19A}" },
+  { id: "cmp2", category: "compare", name: "Balance Scale", emoji: "\u2696\uFE0F" },
+];
+
+const GRAPHIC_CATEGORIES = [
+  { id: "all", name: "All" },
+  { id: "arrows", name: "Arrows" },
+  { id: "circles", name: "Highlights" },
+  { id: "bursts", name: "Bursts" },
+  { id: "shock", name: "Shock" },
+  { id: "marks", name: "Marks" },
+  { id: "money", name: "Money" },
+  { id: "speech", name: "Speech" },
+  { id: "badges", name: "Badges" },
+  { id: "timers", name: "Timers" },
+  { id: "ratings", name: "Ratings" },
+  { id: "compare", name: "Compare" },
+];
+
+const LAYOUT_TEMPLATES = [
+  { id: "center-face-right", name: "Centered Title, Face Right", desc: "Bold title center-left, subject portrait on the right" },
+  { id: "split-50-50", name: "Split Screen 50/50", desc: "Two equal halves, comparison or before/after" },
+  { id: "face-left-title-right", name: "Face Left, Title Right", desc: "Mirror layout: subject on left, headline on right" },
+  { id: "bottom-banner", name: "Bottom Banner", desc: "Full image with text banner pinned along bottom" },
+  { id: "top-banner", name: "Top Banner", desc: "Headline bar on top, content below" },
+  { id: "diagonal-split", name: "Diagonal Split", desc: "Angled divider cutting through the thumbnail" },
+  { id: "three-column", name: "Three Column", desc: "Equal thirds, great for top-3 or trio lineups" },
+  { id: "full-bleed-floating", name: "Full-bleed Face + Floating Title", desc: "Massive face fills frame, title floats as overlay" },
+  { id: "corner-badge-centered", name: "Corner Badge + Centered Title", desc: "Accent badge in corner, title dominates center" },
+  { id: "letterbox-cinematic", name: "Letterbox Cinematic", desc: "Black bars top/bottom, movie-trailer feel" },
+];
+
+const PLATFORM_SIZE_PRESETS = [
+  { id: "yt-standard", name: "YouTube Standard", width: 1280, height: 720 },
+  { id: "yt-shorts", name: "YouTube Shorts", width: 1080, height: 1920 },
+  { id: "tiktok", name: "TikTok", width: 1080, height: 1920 },
+  { id: "ig-feed", name: "Instagram Feed", width: 1080, height: 1080 },
+  { id: "ig-story", name: "Instagram Story", width: 1080, height: 1920 },
+  { id: "twitter", name: "Twitter / X", width: 1600, height: 900 },
+  { id: "linkedin", name: "LinkedIn", width: 1200, height: 627 },
+  { id: "podcast", name: "Podcast Cover", width: 3000, height: 3000 },
+  { id: "custom", name: "Custom", width: 1280, height: 720 },
+];
+
+const EXPORT_FORMATS = [
+  { id: "png", name: "PNG", desc: "Lossless, supports transparency" },
+  { id: "jpg", name: "JPG", desc: "Smaller file, universal" },
+  { id: "webp", name: "WebP", desc: "Modern, smallest file" },
+];
+
+const SIDEBAR_CATEGORIES = [
+  { id: "style", name: "Style Presets" },
+  { id: "text", name: "Text & Typography" },
+  { id: "face", name: "Face & Subject" },
+  { id: "background", name: "Background" },
+  { id: "elements", name: "Elements" },
+  { id: "colors", name: "Colors" },
+  { id: "smart", name: "Smart / AI" },
+  { id: "size", name: "Platform Size" },
+  { id: "layout", name: "Layout" },
+  { id: "export", name: "Export" },
 ];
 
 /* ──────────────────── NEW FEATURE DATA ──────────────────── */
@@ -344,7 +564,7 @@ export default function ThumbnailGeneratorPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // New feature state
-  const [activeFeatureTab, setActiveFeatureTab] = useState<"generate" | "history" | "tools">("generate");
+  const [activeFeatureTab, setActiveFeatureTab] = useState<"generate" | "history" | "tools" | "studio">("generate");
   const [expandedPanels, setExpandedPanels] = useState<Record<string, boolean>>({});
   // Split Test
   const [, setSplitTestMode] = useState(false);
@@ -391,8 +611,224 @@ export default function ThumbnailGeneratorPage() {
   const [aiBgGenerating, setAiBgGenerating] = useState(false);
   const [aiBgResult, setAiBgResult] = useState<string | null>(null);
 
+  // ── MEGA Thumbnail Config (unified state object) ──
+  const [thumbnailConfig, setThumbnailConfig] = useState({
+    // Style Preset
+    stylePreset: null as string | null,
+    // Typography
+    typography: {
+      enabled: false,
+      fontId: "inter",
+      weight: 700,
+      italic: false,
+      underline: false,
+      strikethrough: false,
+      textCase: "uppercase" as "uppercase" | "lowercase" | "titlecase" | "astyped",
+      shadowEnabled: false,
+      shadowX: 2,
+      shadowY: 2,
+      shadowBlur: 4,
+      shadowColor: "#000000",
+      strokeEnabled: false,
+      strokeWidth: 2,
+      strokeColor: "#000000",
+      gradientEnabled: false,
+      gradientFrom: "#F59E0B",
+      gradientTo: "#DC2626",
+      letterSpacing: 0,
+      lineHeight: 1.1,
+      highlightWords: "",
+      highlightColor: "#FBBF24",
+      curvedEnabled: false,
+      curveIntensity: 30,
+      threeDEnabled: false,
+      threeDDepth: 4,
+      threeDPerspective: 30,
+    },
+    // Face / Subject
+    face: {
+      autoCutoutEnabled: false,
+      enhanceEnabled: false,
+      eyePopEnabled: false,
+      position: "right" as "left" | "center" | "right",
+      expressionSwapEnabled: false,
+      targetExpression: "shocked" as "shocked" | "happy" | "angry",
+      glowEnabled: false,
+      layout: 1 as 1 | 2 | 3,
+    },
+    // Background
+    background: {
+      mode: "solid" as "solid" | "gradient" | "pattern" | "image" | "ai",
+      solidColor: "#0F172A",
+      gradientId: "sunset",
+      patternId: "none",
+      blurEnabled: false,
+      blurAmount: 8,
+      brightness: 100,
+      aiPrompt: "",
+    },
+    // Elements
+    elements: {
+      active: [] as { id: string; category: string; emoji: string; name: string }[],
+    },
+    // Colors
+    colors: {
+      paletteId: null as string | null,
+    },
+    // Smart AI
+    smart: {
+      abVariantEnabled: false,
+      titleOptimizerEnabled: false,
+      ctrPredictorEnabled: false,
+      nicheOptimizerEnabled: false,
+      niche: "",
+      faceDetectionEnabled: false,
+      autoCropEnabled: false,
+      readabilityCheckEnabled: false,
+      trendingSuggesterEnabled: false,
+    },
+    // Size
+    size: {
+      platformPresetId: "yt-standard",
+      width: 1280,
+      height: 720,
+    },
+    // Layout
+    layout: {
+      templateId: null as string | null,
+    },
+    // Export
+    export: {
+      format: "png" as "png" | "jpg" | "webp",
+      quality: 92,
+      generateVariants: false,
+      batchAllPlatforms: false,
+    },
+  });
+
+  type ThumbnailConfig = typeof thumbnailConfig;
+  function patchConfig<K extends keyof ThumbnailConfig>(key: K, patch: Partial<ThumbnailConfig[K]>) {
+    setThumbnailConfig((prev) => ({ ...prev, [key]: { ...(prev[key] as object), ...patch } as ThumbnailConfig[K] }));
+  }
+
+  // Active sidebar category
+  const [activeCategory, setActiveCategory] = useState<string>("style");
+
   function togglePanel(key: string) {
     setExpandedPanels((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function applyStylePreset(presetId: string) {
+    const preset = STYLE_PRESET_GALLERY.find((p) => p.id === presetId);
+    if (!preset) return;
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      stylePreset: presetId,
+      typography: {
+        ...prev.typography,
+        enabled: true,
+        fontId: preset.config.font,
+        textCase: (preset.config.textCase as "uppercase" | "lowercase" | "titlecase" | "astyped") || prev.typography.textCase,
+        strokeEnabled: preset.config.textStroke,
+        strokeWidth: preset.config.strokeWidth || prev.typography.strokeWidth,
+        strokeColor: preset.config.strokeColor || prev.typography.strokeColor,
+        shadowEnabled: preset.config.shadow,
+      },
+      background: {
+        ...prev.background,
+        solidColor: preset.config.bgColor || prev.background.solidColor,
+      },
+    }));
+    setMood(preset.config.mood || mood);
+    toast.success(`Preset: ${preset.name}`);
+    // TODO: AI integration — pass preset hints to /api/thumbnail/generate
+  }
+
+  function applyColorPalette(paletteId: string) {
+    patchConfig("colors", { paletteId });
+    toast.success(`Palette: ${COLOR_PALETTES.find((p) => p.id === paletteId)?.name}`);
+    // TODO: AI integration — apply palette colors to canvas
+  }
+
+  function toggleGraphicElement(el: typeof GRAPHIC_ELEMENTS[0]) {
+    setThumbnailConfig((prev) => {
+      const exists = prev.elements.active.some((a) => a.id === el.id);
+      return {
+        ...prev,
+        elements: {
+          active: exists
+            ? prev.elements.active.filter((a) => a.id !== el.id)
+            : [...prev.elements.active, { id: el.id, category: el.category, emoji: el.emoji, name: el.name }],
+        },
+      };
+    });
+  }
+
+  // Graphic element category filter
+  const [graphicFilter, setGraphicFilter] = useState("all");
+  // Font category filter
+  const [fontFilter, setFontFilter] = useState("all");
+
+  // Smart AI handlers (UI-only, TODOs for integration)
+  async function runAbVariantGenerator() {
+    if (!prompt.trim()) { toast.error("Enter a prompt first"); return; }
+    toast.loading("Generating 3 A/B variants...");
+    await new Promise((r) => setTimeout(r, 1500));
+    toast.dismiss();
+    toast.success("3 variants generated — showing in results (TODO: AI)");
+    // TODO: AI integration — call variant generator endpoint
+  }
+  async function runTitleOptimizer() {
+    if (!textOverlay.trim()) { toast.error("Enter a title first"); return; }
+    toast.loading("Optimizing title for CTR...");
+    await new Promise((r) => setTimeout(r, 1200));
+    toast.dismiss();
+    toast.success("Optimized title suggestions ready (TODO: AI)");
+    // TODO: AI integration — call title rewrite endpoint
+  }
+  async function runNicheOptimizer() {
+    if (!thumbnailConfig.smart.niche.trim()) { toast.error("Enter a niche first"); return; }
+    toast.loading(`Tuning for "${thumbnailConfig.smart.niche}" niche...`);
+    await new Promise((r) => setTimeout(r, 1200));
+    toast.dismiss();
+    toast.success("Niche-tuned settings applied (TODO: AI)");
+    // TODO: AI integration — call niche optimizer
+  }
+  async function runFaceDetection() {
+    toast.loading("Detecting faces in reference images...");
+    await new Promise((r) => setTimeout(r, 1000));
+    toast.dismiss();
+    toast.success("Face position auto-set (TODO: AI)");
+    // TODO: AI integration — call face detection model
+  }
+  async function runAutoCrop() {
+    toast.loading("Auto-cropping for all platforms...");
+    await new Promise((r) => setTimeout(r, 1200));
+    toast.dismiss();
+    toast.success("Platform crops ready (TODO: AI)");
+    // TODO: AI integration — call auto-crop for every platform preset
+  }
+  async function runReadabilityChecker() {
+    toast.loading("Checking text readability...");
+    await new Promise((r) => setTimeout(r, 900));
+    toast.dismiss();
+    if (textOverlay.length > 50) toast.error("Text too long — may be hard to read at small sizes");
+    else toast.success("Text passes readability checks");
+    // TODO: AI integration — contrast + size analysis
+  }
+  async function runTrendingSuggester() {
+    toast.loading("Finding trending styles in your niche...");
+    await new Promise((r) => setTimeout(r, 1100));
+    toast.dismiss();
+    toast.success("Trending picks ready — see Smart panel (TODO: AI)");
+    // TODO: AI integration — fetch trending styles per niche
+  }
+  async function exportBatchForAllPlatforms() {
+    toast.loading(`Exporting for ${PLATFORM_SIZE_PRESETS.length - 1} platforms...`);
+    await new Promise((r) => setTimeout(r, 1400));
+    toast.dismiss();
+    toast.success("Batch export ready (TODO: integration)");
+    // TODO: integration — render canvas at each platform size and bundle as zip
   }
 
   const currentPlatform = PLATFORM_SIZES.find((p) => p.id === platform) || PLATFORM_SIZES[0];
@@ -829,13 +1265,13 @@ export default function ThumbnailGeneratorPage() {
 
       {/* ─── Tabs ─── */}
       <div className="tab-group w-fit">
-        {(["generate", "tools", "history"] as const).map((t) => (
+        {(["generate", "studio", "tools", "history"] as const).map((t) => (
           <button
             key={t}
             onClick={() => { setTab(t as "generate" | "history"); setActiveFeatureTab(t); }}
             className={activeFeatureTab === t ? "tab-item-active" : "tab-item-inactive"}
           >
-            {t === "generate" ? "Generator" : t === "tools" ? "AI Tools" : `History (${history.length})`}
+            {t === "generate" ? "Generator" : t === "studio" ? "Studio" : t === "tools" ? "AI Tools" : `History (${history.length})`}
           </button>
         ))}
       </div>
@@ -1783,6 +2219,688 @@ export default function ThumbnailGeneratorPage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Studio Tab (New Mega Feature Set) ─── */}
+      {activeFeatureTab === "studio" && (
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+          {/* LEFT: Category Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="card sticky top-4">
+              <h2 className="section-header flex items-center gap-2">
+                <LayoutGrid size={13} className="text-gold" /> Studio
+              </h2>
+              <p className="text-[9px] text-muted mb-3">Choose a category. All features are optional.</p>
+              <div className="space-y-0.5">
+                {SIDEBAR_CATEGORIES.map((cat) => {
+                  const iconMap: Record<string, React.ReactNode> = {
+                    style: <Layers size={12} />,
+                    text: <Type size={12} />,
+                    face: <User size={12} />,
+                    background: <Mountain size={12} />,
+                    elements: <Sticker size={12} />,
+                    colors: <Palette size={12} />,
+                    smart: <BrainCircuit size={12} />,
+                    size: <Smartphone size={12} />,
+                    layout: <LayoutGrid size={12} />,
+                    export: <Download size={12} />,
+                  };
+                  return (
+                    <button
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left transition-all ${activeCategory === cat.id ? "bg-gold/[0.08] text-gold border border-gold/20" : "border border-transparent text-muted hover:text-foreground hover:bg-surface-light"}`}
+                    >
+                      <span>{iconMap[cat.id]}</span>
+                      <span className="text-[10px] font-medium">{cat.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT: Active Category Panel */}
+          <div className="lg:col-span-4 space-y-4">
+            {/* ── STYLE PRESETS ── */}
+            {activeCategory === "style" && (
+              <div className="card">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="section-header mb-0 flex items-center gap-2">
+                    <Layers size={13} className="text-gold" /> Style Preset Gallery
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{STYLE_PRESET_GALLERY.length}</span>
+                  </h2>
+                  {thumbnailConfig.stylePreset && (
+                    <button onClick={() => setThumbnailConfig((p) => ({ ...p, stylePreset: null }))}
+                      className="text-[9px] px-2 py-0.5 rounded border border-border text-muted hover:text-foreground hover:border-gold/20">
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <p className="text-[9px] text-muted mb-3">Click a preset to apply its font, colors, layout, and accent styles.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+                  {STYLE_PRESET_GALLERY.map((preset) => {
+                    const active = thumbnailConfig.stylePreset === preset.id;
+                    return (
+                      <button
+                        key={preset.id}
+                        onClick={() => applyStylePreset(preset.id)}
+                        className={`rounded-xl overflow-hidden border-2 transition-all text-left ${active ? "border-gold" : "border-border hover:border-gold/30"}`}
+                      >
+                        <div className={`aspect-video bg-gradient-to-br ${preset.gradient} flex items-center justify-center p-2 relative`}>
+                          <span className="text-white font-black text-sm drop-shadow-lg" style={{ WebkitTextStroke: preset.config.textStroke ? "1px #000" : "0" }}>
+                            {preset.name.split(" ")[0].toUpperCase()}
+                          </span>
+                          {active && (
+                            <div className="absolute top-1 right-1 bg-gold text-black rounded-full p-0.5">
+                              <Check size={8} />
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-2 bg-surface-light">
+                          <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{preset.name}</p>
+                          <p className="text-[8px] text-muted truncate">{preset.desc}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ── TEXT / TYPOGRAPHY ── */}
+            {activeCategory === "text" && (
+              <div className="space-y-3">
+                <div className="card">
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="section-header mb-0 flex items-center gap-2">
+                      <Type size={13} className="text-gold" /> Typography System
+                    </h2>
+                    <label className="flex items-center gap-1.5 text-[10px] text-muted">
+                      <input type="checkbox" checked={thumbnailConfig.typography.enabled} onChange={(e) => patchConfig("typography", { enabled: e.target.checked })} className="accent-gold" />
+                      Enable
+                    </label>
+                  </div>
+                  <p className="text-[9px] text-muted mb-2">Control fonts, styles, cases, shadow, stroke, gradient, spacing, and effects.</p>
+                </div>
+
+                {thumbnailConfig.typography.enabled && (
+                  <>
+                    {/* Font Library */}
+                    <div className="card">
+                      <h3 className="section-header flex items-center gap-2">
+                        <Type size={12} className="text-gold" /> Font Library ({FONT_LIBRARY.length})
+                      </h3>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {["all", "sans-serif", "display", "serif", "handwritten"].map((cat) => (
+                          <button key={cat} onClick={() => setFontFilter(cat)}
+                            className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${fontFilter === cat ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
+                            {cat === "all" ? "All" : cat}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 max-h-56 overflow-y-auto">
+                        {FONT_LIBRARY.filter((f) => fontFilter === "all" || f.category === fontFilter).map((f) => {
+                          const active = thumbnailConfig.typography.fontId === f.id;
+                          return (
+                            <button key={f.id} onClick={() => patchConfig("typography", { fontId: f.id })}
+                              className={`p-2 rounded-xl border transition-all text-left ${active ? "border-gold/40 bg-gold/[0.07]" : "border-border hover:border-gold/15"}`}>
+                              <p className={`text-xs font-bold ${active ? "text-gold" : ""}`} style={{ fontFamily: f.stack }}>{f.name}</p>
+                              <p className="text-[7px] text-muted">{f.vibe}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Weight + Style + Case */}
+                    <div className="card">
+                      <h3 className="section-header flex items-center gap-2"><Bold size={12} className="text-gold" /> Weight / Style / Case</h3>
+                      <div className="space-y-2">
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider">Font Weight: {thumbnailConfig.typography.weight}</label>
+                          <input type="range" min={100} max={900} step={100} value={thumbnailConfig.typography.weight} onChange={(e) => patchConfig("typography", { weight: Number(e.target.value) })} className="w-full accent-gold" />
+                        </div>
+                        <div className="flex gap-1.5">
+                          <button onClick={() => patchConfig("typography", { italic: !thumbnailConfig.typography.italic })} className={`flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${thumbnailConfig.typography.italic ? "border-gold/30 bg-gold/[0.08] text-gold" : "border-border text-muted hover:text-foreground"}`}>
+                            <Italic size={11} /> Italic
+                          </button>
+                          <button onClick={() => patchConfig("typography", { underline: !thumbnailConfig.typography.underline })} className={`flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${thumbnailConfig.typography.underline ? "border-gold/30 bg-gold/[0.08] text-gold" : "border-border text-muted hover:text-foreground"}`}>
+                            <Underline size={11} /> Underline
+                          </button>
+                          <button onClick={() => patchConfig("typography", { strikethrough: !thumbnailConfig.typography.strikethrough })} className={`flex items-center gap-1 text-[10px] px-2.5 py-1.5 rounded-lg border transition-all ${thumbnailConfig.typography.strikethrough ? "border-gold/30 bg-gold/[0.08] text-gold" : "border-border text-muted hover:text-foreground"}`}>
+                            <span className="line-through">S</span> Strike
+                          </button>
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Text Case</label>
+                          <div className="grid grid-cols-4 gap-1">
+                            {(["uppercase", "lowercase", "titlecase", "astyped"] as const).map((c) => (
+                              <button key={c} onClick={() => patchConfig("typography", { textCase: c })} className={`text-[9px] px-2 py-1.5 rounded-lg border transition-all ${thumbnailConfig.typography.textCase === c ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
+                                {c === "uppercase" ? "UPPER" : c === "lowercase" ? "lower" : c === "titlecase" ? "Title" : "As-Typed"}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Shadow + Stroke + Gradient */}
+                    <div className="card">
+                      <h3 className="section-header flex items-center gap-2"><Droplet size={12} className="text-gold" /> Shadow / Stroke / Gradient</h3>
+                      <div className="space-y-3">
+                        {/* Shadow */}
+                        <div>
+                          <label className="flex items-center gap-2 mb-1.5">
+                            <input type="checkbox" checked={thumbnailConfig.typography.shadowEnabled} onChange={(e) => patchConfig("typography", { shadowEnabled: e.target.checked })} className="accent-gold" />
+                            <span className="text-[10px] font-semibold">Text Shadow</span>
+                          </label>
+                          {thumbnailConfig.typography.shadowEnabled && (
+                            <div className="grid grid-cols-4 gap-1.5 pl-5">
+                              <div><label className="text-[8px] text-muted">X: {thumbnailConfig.typography.shadowX}</label><input type="range" min={-20} max={20} value={thumbnailConfig.typography.shadowX} onChange={(e) => patchConfig("typography", { shadowX: Number(e.target.value) })} className="w-full accent-gold" /></div>
+                              <div><label className="text-[8px] text-muted">Y: {thumbnailConfig.typography.shadowY}</label><input type="range" min={-20} max={20} value={thumbnailConfig.typography.shadowY} onChange={(e) => patchConfig("typography", { shadowY: Number(e.target.value) })} className="w-full accent-gold" /></div>
+                              <div><label className="text-[8px] text-muted">Blur: {thumbnailConfig.typography.shadowBlur}</label><input type="range" min={0} max={40} value={thumbnailConfig.typography.shadowBlur} onChange={(e) => patchConfig("typography", { shadowBlur: Number(e.target.value) })} className="w-full accent-gold" /></div>
+                              <div><label className="text-[8px] text-muted">Color</label><input type="color" value={thumbnailConfig.typography.shadowColor} onChange={(e) => patchConfig("typography", { shadowColor: e.target.value })} className="w-full h-6 rounded" /></div>
+                            </div>
+                          )}
+                        </div>
+                        {/* Stroke */}
+                        <div>
+                          <label className="flex items-center gap-2 mb-1.5">
+                            <input type="checkbox" checked={thumbnailConfig.typography.strokeEnabled} onChange={(e) => patchConfig("typography", { strokeEnabled: e.target.checked })} className="accent-gold" />
+                            <span className="text-[10px] font-semibold">Text Stroke / Outline</span>
+                          </label>
+                          {thumbnailConfig.typography.strokeEnabled && (
+                            <div className="grid grid-cols-2 gap-1.5 pl-5">
+                              <div><label className="text-[8px] text-muted">Width: {thumbnailConfig.typography.strokeWidth}px</label><input type="range" min={1} max={10} value={thumbnailConfig.typography.strokeWidth} onChange={(e) => patchConfig("typography", { strokeWidth: Number(e.target.value) })} className="w-full accent-gold" /></div>
+                              <div><label className="text-[8px] text-muted">Color</label><input type="color" value={thumbnailConfig.typography.strokeColor} onChange={(e) => patchConfig("typography", { strokeColor: e.target.value })} className="w-full h-6 rounded" /></div>
+                            </div>
+                          )}
+                        </div>
+                        {/* Gradient */}
+                        <div>
+                          <label className="flex items-center gap-2 mb-1.5">
+                            <input type="checkbox" checked={thumbnailConfig.typography.gradientEnabled} onChange={(e) => patchConfig("typography", { gradientEnabled: e.target.checked })} className="accent-gold" />
+                            <span className="text-[10px] font-semibold">Text Gradient</span>
+                          </label>
+                          {thumbnailConfig.typography.gradientEnabled && (
+                            <div className="grid grid-cols-2 gap-1.5 pl-5">
+                              <div><label className="text-[8px] text-muted">From</label><input type="color" value={thumbnailConfig.typography.gradientFrom} onChange={(e) => patchConfig("typography", { gradientFrom: e.target.value })} className="w-full h-6 rounded" /></div>
+                              <div><label className="text-[8px] text-muted">To</label><input type="color" value={thumbnailConfig.typography.gradientTo} onChange={(e) => patchConfig("typography", { gradientTo: e.target.value })} className="w-full h-6 rounded" /></div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Spacing + Highlight + Curved + 3D */}
+                    <div className="card">
+                      <h3 className="section-header flex items-center gap-2"><Wand2 size={12} className="text-gold" /> Spacing / Effects</h3>
+                      <div className="space-y-2">
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider">Letter Spacing: {thumbnailConfig.typography.letterSpacing}px</label>
+                          <input type="range" min={-5} max={20} value={thumbnailConfig.typography.letterSpacing} onChange={(e) => patchConfig("typography", { letterSpacing: Number(e.target.value) })} className="w-full accent-gold" />
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider">Line Height: {thumbnailConfig.typography.lineHeight.toFixed(2)}</label>
+                          <input type="range" min={0.8} max={2} step={0.05} value={thumbnailConfig.typography.lineHeight} onChange={(e) => patchConfig("typography", { lineHeight: Number(e.target.value) })} className="w-full accent-gold" />
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Highlight Words (comma-separated)</label>
+                          <div className="flex gap-1.5">
+                            <input value={thumbnailConfig.typography.highlightWords} onChange={(e) => patchConfig("typography", { highlightWords: e.target.value })} className="input flex-1 text-[10px]" placeholder="e.g., FREE, NOW, $" />
+                            <input type="color" value={thumbnailConfig.typography.highlightColor} onChange={(e) => patchConfig("typography", { highlightColor: e.target.value })} className="w-10 h-7 rounded" />
+                          </div>
+                        </div>
+                        <div className="flex gap-1.5 pt-1">
+                          <label className="flex items-center gap-1 text-[10px] text-muted">
+                            <input type="checkbox" checked={thumbnailConfig.typography.curvedEnabled} onChange={(e) => patchConfig("typography", { curvedEnabled: e.target.checked })} className="accent-gold" />
+                            Curved Text
+                          </label>
+                          {thumbnailConfig.typography.curvedEnabled && (
+                            <input type="range" min={0} max={100} value={thumbnailConfig.typography.curveIntensity} onChange={(e) => patchConfig("typography", { curveIntensity: Number(e.target.value) })} className="flex-1 accent-gold" />
+                          )}
+                        </div>
+                        <div className="flex gap-1.5 pt-1">
+                          <label className="flex items-center gap-1 text-[10px] text-muted">
+                            <input type="checkbox" checked={thumbnailConfig.typography.threeDEnabled} onChange={(e) => patchConfig("typography", { threeDEnabled: e.target.checked })} className="accent-gold" />
+                            3D Text
+                          </label>
+                          {thumbnailConfig.typography.threeDEnabled && (
+                            <>
+                              <div className="flex-1"><label className="text-[8px] text-muted">Depth: {thumbnailConfig.typography.threeDDepth}</label><input type="range" min={0} max={20} value={thumbnailConfig.typography.threeDDepth} onChange={(e) => patchConfig("typography", { threeDDepth: Number(e.target.value) })} className="w-full accent-gold" /></div>
+                              <div className="flex-1"><label className="text-[8px] text-muted">Persp: {thumbnailConfig.typography.threeDPerspective}</label><input type="range" min={0} max={60} value={thumbnailConfig.typography.threeDPerspective} onChange={(e) => patchConfig("typography", { threeDPerspective: Number(e.target.value) })} className="w-full accent-gold" /></div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* ── FACE / SUBJECT ── */}
+            {activeCategory === "face" && (
+              <div className="card">
+                <h2 className="section-header flex items-center gap-2">
+                  <User size={13} className="text-gold" /> Face / Subject (Smart AI)
+                </h2>
+                <p className="text-[9px] text-muted mb-3">AI features to enhance and position your subject. All toggleable.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {[
+                    { key: "autoCutoutEnabled", label: "Auto Face Cutout", desc: "Remove background from subject photo", icon: <Scissors size={11} /> },
+                    { key: "enhanceEnabled", label: "Face Enhancement", desc: "Brighten + sharpen face", icon: <Sparkles size={11} /> },
+                    { key: "eyePopEnabled", label: "Eye Pop", desc: "Enhance eyes for attention", icon: <Eye size={11} /> },
+                    { key: "glowEnabled", label: "Hair / Outline Glow", desc: "Subtle edge glow on subject", icon: <Wand size={11} /> },
+                    { key: "expressionSwapEnabled", label: "Expression Swap (AI)", desc: "Change expression via AI", icon: <Smile size={11} /> },
+                  ].map((f) => {
+                    const active = thumbnailConfig.face[f.key as keyof typeof thumbnailConfig.face] as boolean;
+                    return (
+                      <label key={f.key} className={`flex items-start gap-2 p-2.5 rounded-xl border transition-all cursor-pointer ${active ? "border-gold/40 bg-gold/[0.05]" : "border-border hover:border-gold/15"}`}>
+                        <input type="checkbox" checked={active} onChange={(e) => patchConfig("face", { [f.key]: e.target.checked } as Partial<typeof thumbnailConfig.face>)} className="accent-gold mt-0.5" />
+                        <div>
+                          <p className="text-[10px] font-semibold flex items-center gap-1">{f.icon} {f.label}</p>
+                          <p className="text-[8px] text-muted">{f.desc}</p>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+
+                {thumbnailConfig.face.expressionSwapEnabled && (
+                  <div className="mt-3 pt-3 border-t border-border/50">
+                    <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Target Expression (TODO: AI)</label>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {(["shocked", "happy", "angry"] as const).map((exp) => (
+                        <button key={exp} onClick={() => patchConfig("face", { targetExpression: exp })}
+                          className={`text-[10px] px-2 py-1.5 rounded-lg border transition-all capitalize ${thumbnailConfig.face.targetExpression === exp ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
+                          {exp}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Face Position</label>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {(["left", "center", "right"] as const).map((pos) => (
+                      <button key={pos} onClick={() => patchConfig("face", { position: pos })}
+                        className={`text-[10px] px-2 py-1.5 rounded-lg border transition-all capitalize ${thumbnailConfig.face.position === pos ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
+                        {pos === "left" ? <AlignLeft size={11} className="inline mr-1" /> : pos === "center" ? <AlignCenter size={11} className="inline mr-1" /> : <AlignRight size={11} className="inline mr-1" />}
+                        {pos}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Multi-Face Layout</label>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {([1, 2, 3] as const).map((n) => (
+                      <button key={n} onClick={() => patchConfig("face", { layout: n })}
+                        className={`text-[10px] px-2 py-1.5 rounded-lg border transition-all ${thumbnailConfig.face.layout === n ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
+                        {n} face{n > 1 ? "s" : ""}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── BACKGROUND ── */}
+            {activeCategory === "background" && (
+              <div className="space-y-3">
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2"><Mountain size={13} className="text-gold" /> Background Mode</h2>
+                  <div className="grid grid-cols-5 gap-1.5 mb-3">
+                    {(["solid", "gradient", "pattern", "image", "ai"] as const).map((m) => (
+                      <button key={m} onClick={() => patchConfig("background", { mode: m })}
+                        className={`text-[10px] px-2 py-1.5 rounded-lg border transition-all capitalize ${thumbnailConfig.background.mode === m ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
+                        {m}
+                      </button>
+                    ))}
+                  </div>
+
+                  {thumbnailConfig.background.mode === "solid" && (
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Solid Color</label>
+                      <div className="flex gap-2">
+                        <input type="color" value={thumbnailConfig.background.solidColor} onChange={(e) => patchConfig("background", { solidColor: e.target.value })} className="w-20 h-10 rounded" />
+                        <input type="text" value={thumbnailConfig.background.solidColor} onChange={(e) => patchConfig("background", { solidColor: e.target.value })} className="input flex-1 text-xs font-mono" />
+                      </div>
+                    </div>
+                  )}
+
+                  {thumbnailConfig.background.mode === "gradient" && (
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Gradient Presets ({GRADIENT_PRESETS.length})</label>
+                      <div className="grid grid-cols-4 md:grid-cols-5 gap-1.5 max-h-56 overflow-y-auto">
+                        {GRADIENT_PRESETS.map((g) => {
+                          const active = thumbnailConfig.background.gradientId === g.id;
+                          return (
+                            <button key={g.id} onClick={() => patchConfig("background", { gradientId: g.id })}
+                              className={`rounded-lg overflow-hidden border-2 transition-all ${active ? "border-gold" : "border-border hover:border-gold/30"}`}>
+                              <div className={`aspect-video bg-gradient-to-br ${g.gradient}`} />
+                              <p className={`text-[8px] py-0.5 ${active ? "text-gold font-semibold" : "text-muted"}`}>{g.name}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {thumbnailConfig.background.mode === "pattern" && (
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Pattern Library</label>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {PATTERN_LIBRARY.map((p) => {
+                          const active = thumbnailConfig.background.patternId === p.id;
+                          return (
+                            <button key={p.id} onClick={() => patchConfig("background", { patternId: p.id })}
+                              className={`rounded-lg overflow-hidden border-2 transition-all ${active ? "border-gold" : "border-border hover:border-gold/30"}`}>
+                              <div className={`aspect-video ${p.preview}`} />
+                              <p className={`text-[8px] py-0.5 ${active ? "text-gold font-semibold" : "text-muted"}`}>{p.name}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {thumbnailConfig.background.mode === "image" && (
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 text-[10px]">
+                        <input type="checkbox" checked={thumbnailConfig.background.blurEnabled} onChange={(e) => patchConfig("background", { blurEnabled: e.target.checked })} className="accent-gold" />
+                        Blur Background
+                      </label>
+                      {thumbnailConfig.background.blurEnabled && (
+                        <div>
+                          <label className="text-[8px] text-muted">Blur Amount: {thumbnailConfig.background.blurAmount}px</label>
+                          <input type="range" min={0} max={30} value={thumbnailConfig.background.blurAmount} onChange={(e) => patchConfig("background", { blurAmount: Number(e.target.value) })} className="w-full accent-gold" />
+                        </div>
+                      )}
+                      <div>
+                        <label className="text-[9px] text-muted uppercase tracking-wider">Brightness: {thumbnailConfig.background.brightness}%</label>
+                        <input type="range" min={20} max={180} value={thumbnailConfig.background.brightness} onChange={(e) => patchConfig("background", { brightness: Number(e.target.value) })} className="w-full accent-gold" />
+                      </div>
+                    </div>
+                  )}
+
+                  {thumbnailConfig.background.mode === "ai" && (
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">AI-Generated Background Prompt (TODO: AI)</label>
+                      <textarea value={thumbnailConfig.background.aiPrompt} onChange={(e) => patchConfig("background", { aiPrompt: e.target.value })}
+                        className="input w-full text-[10px] resize-none" rows={3} placeholder='e.g., "A futuristic neon cityscape at night"' />
+                      <button onClick={() => { setAiBgPrompt(thumbnailConfig.background.aiPrompt); generateAIBackground(); }}
+                        className="btn-primary w-full text-xs flex items-center justify-center gap-2 mt-2">
+                        <BrainCircuit size={14} /> Generate AI Background
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ── ELEMENTS ── */}
+            {activeCategory === "elements" && (
+              <div className="card">
+                <div className="flex items-center justify-between mb-2">
+                  <h2 className="section-header mb-0 flex items-center gap-2">
+                    <Sticker size={13} className="text-gold" /> Graphic Elements Library
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{GRAPHIC_ELEMENTS.length}</span>
+                  </h2>
+                  {thumbnailConfig.elements.active.length > 0 && (
+                    <span className="text-[9px] text-gold">{thumbnailConfig.elements.active.length} placed</span>
+                  )}
+                </div>
+                <p className="text-[9px] text-muted mb-2">Click any element to add it to the canvas. Each is placeable and resizable.</p>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {GRAPHIC_CATEGORIES.map((cat) => (
+                    <button key={cat.id} onClick={() => setGraphicFilter(cat.id)}
+                      className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${graphicFilter === cat.id ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}>
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-6 md:grid-cols-8 xl:grid-cols-10 gap-1.5 max-h-80 overflow-y-auto">
+                  {GRAPHIC_ELEMENTS.filter((el) => graphicFilter === "all" || el.category === graphicFilter).map((el) => {
+                    const active = thumbnailConfig.elements.active.some((a) => a.id === el.id);
+                    return (
+                      <button key={el.id} onClick={() => toggleGraphicElement(el)}
+                        className={`flex flex-col items-center gap-0.5 p-1.5 rounded-xl border transition-all ${active ? "border-gold/40 bg-gold/[0.07]" : "border-border hover:border-gold/15"}`}>
+                        <span className="text-xl leading-none">{el.emoji}</span>
+                        <span className="text-[6px] text-muted text-center leading-tight">{el.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {thumbnailConfig.elements.active.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-border/50">
+                    <p className="text-[9px] text-muted font-semibold mb-1">Placed on Canvas</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {thumbnailConfig.elements.active.map((el) => (
+                        <button key={el.id} onClick={() => toggleGraphicElement(el as typeof GRAPHIC_ELEMENTS[0])}
+                          className="flex items-center gap-1 px-2 py-1 rounded-lg bg-surface-light border border-border hover:border-danger/30 hover:bg-danger/5">
+                          <span>{el.emoji}</span>
+                          <span className="text-[8px] text-muted">{el.name}</span>
+                          <X size={8} className="text-muted" />
+                        </button>
+                      ))}
+                      <button onClick={() => patchConfig("elements", { active: [] })}
+                        className="text-[8px] px-2 py-1 rounded-lg border border-danger/30 text-danger hover:bg-danger/10">
+                        Clear All
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── COLORS ── */}
+            {activeCategory === "colors" && (
+              <div className="card">
+                <h2 className="section-header flex items-center gap-2">
+                  <Palette size={13} className="text-gold" /> Color Schemes / Palettes
+                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{COLOR_PALETTES.length}</span>
+                </h2>
+                <p className="text-[9px] text-muted mb-3">Click a palette to swap text/accent colors across the canvas.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+                  {COLOR_PALETTES.map((pal) => {
+                    const active = thumbnailConfig.colors.paletteId === pal.id;
+                    return (
+                      <button key={pal.id} onClick={() => applyColorPalette(pal.id)}
+                        className={`p-2 rounded-xl border-2 transition-all ${active ? "border-gold" : "border-border hover:border-gold/30"}`}>
+                        <div className="flex gap-0.5 mb-1.5">
+                          {pal.colors.map((c, i) => (
+                            <div key={i} className="flex-1 aspect-square rounded" style={{ backgroundColor: c }} />
+                          ))}
+                        </div>
+                        <p className={`text-[9px] font-semibold text-left ${active ? "text-gold" : ""}`}>{pal.name}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ── SMART / AI ── */}
+            {activeCategory === "smart" && (
+              <div className="space-y-3">
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2"><BrainCircuit size={13} className="text-gold" /> Smart AI Features</h2>
+                  <p className="text-[9px] text-muted mb-3">All features optional. Toggle what you need — UI included, AI integration TODO.</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {[
+                      { key: "abVariantEnabled", label: "A/B Variant Generator", desc: "Generate 3 variants with different layouts", icon: <FlaskConical size={11} />, handler: runAbVariantGenerator },
+                      { key: "titleOptimizerEnabled", label: "Title Optimizer", desc: "AI rewrites title for higher CTR", icon: <Wand2 size={11} />, handler: runTitleOptimizer },
+                      { key: "ctrPredictorEnabled", label: "CTR Predictor", desc: "AI scores likely click-through rate", icon: <Target size={11} />, handler: runCTRPredictor },
+                      { key: "nicheOptimizerEnabled", label: "Niche Optimizer", desc: "Tune thumbnail for specific niche", icon: <ShoppingBag size={11} />, handler: runNicheOptimizer },
+                      { key: "faceDetectionEnabled", label: "Face Detection", desc: "Auto-position face from reference", icon: <Eye size={11} />, handler: runFaceDetection },
+                      { key: "autoCropEnabled", label: "Auto-Crop for Platform", desc: "Render for YouTube / TikTok / IG", icon: <Smartphone size={11} />, handler: runAutoCrop },
+                      { key: "readabilityCheckEnabled", label: "Text Readability Checker", desc: "Warn if text too small / low contrast", icon: <ShieldCheck size={11} />, handler: runReadabilityChecker },
+                      { key: "trendingSuggesterEnabled", label: "Trending Style Suggester", desc: "Shows what's working in your niche", icon: <TrendingUp size={11} />, handler: runTrendingSuggester },
+                    ].map((feat) => {
+                      const active = thumbnailConfig.smart[feat.key as keyof typeof thumbnailConfig.smart] as boolean;
+                      return (
+                        <div key={feat.key} className={`p-2.5 rounded-xl border transition-all ${active ? "border-gold/40 bg-gold/[0.05]" : "border-border"}`}>
+                          <label className="flex items-start gap-2 cursor-pointer mb-1.5">
+                            <input type="checkbox" checked={active} onChange={(e) => patchConfig("smart", { [feat.key]: e.target.checked } as Partial<typeof thumbnailConfig.smart>)} className="accent-gold mt-0.5" />
+                            <div className="flex-1">
+                              <p className="text-[10px] font-semibold flex items-center gap-1">{feat.icon} {feat.label}</p>
+                              <p className="text-[8px] text-muted">{feat.desc}</p>
+                            </div>
+                          </label>
+                          {active && (
+                            <button onClick={feat.handler}
+                              className="w-full text-[9px] px-2 py-1 rounded border border-gold/30 bg-gold/[0.08] text-gold hover:bg-gold/20 transition-all">
+                              Run
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {thumbnailConfig.smart.nicheOptimizerEnabled && (
+                  <div className="card">
+                    <h3 className="section-header flex items-center gap-2"><ShoppingBag size={12} className="text-gold" /> Niche Optimizer Input</h3>
+                    <input value={thumbnailConfig.smart.niche} onChange={(e) => patchConfig("smart", { niche: e.target.value })}
+                      className="input w-full text-xs" placeholder="e.g., finance, gaming, fitness, tech reviews" />
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {["Finance", "Gaming", "Fitness", "Tech", "Education", "Travel", "Food", "Beauty", "Music", "Comedy"].map((n) => (
+                        <button key={n} onClick={() => patchConfig("smart", { niche: n })}
+                          className="text-[9px] px-2 py-0.5 rounded-full border border-border text-muted hover:text-foreground hover:border-gold/20">
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="card">
+                  <h3 className="section-header flex items-center gap-2"><Search size={12} className="text-gold" /> Competitor Thumbnail Analyzer</h3>
+                  <p className="text-[9px] text-muted mb-2">Paste a YouTube URL to analyze style (TODO: AI integration).</p>
+                  <div className="flex gap-1.5">
+                    <input value={competitorUrl} onChange={(e) => setCompetitorUrl(e.target.value)} className="input flex-1 text-[10px]" placeholder="https://youtube.com/watch?v=..." />
+                    <button onClick={analyzeCompetitor} disabled={competitorAnalyzing} className="btn-primary text-[10px] px-3 disabled:opacity-40">
+                      {competitorAnalyzing ? <Loader size={12} className="animate-spin" /> : <Search size={12} />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── PLATFORM SIZE ── */}
+            {activeCategory === "size" && (
+              <div className="card">
+                <h2 className="section-header flex items-center gap-2"><Smartphone size={13} className="text-gold" /> Platform Size Presets</h2>
+                <p className="text-[9px] text-muted mb-3">Pick the right dimensions for where your thumbnail will live.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {PLATFORM_SIZE_PRESETS.map((p) => {
+                    const active = thumbnailConfig.size.platformPresetId === p.id;
+                    const ratio = p.width / p.height;
+                    return (
+                      <button key={p.id} onClick={() => {
+                        patchConfig("size", { platformPresetId: p.id, width: p.width, height: p.height });
+                        if (p.id !== "custom") setPlatform(p.id === "yt-standard" ? "youtube" : p.id);
+                      }}
+                        className={`p-2.5 rounded-xl border-2 transition-all text-left ${active ? "border-gold bg-gold/[0.05]" : "border-border hover:border-gold/30"}`}>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className={`bg-gradient-to-br from-gold/30 to-gold/10 rounded ${ratio > 1.3 ? "w-8 h-5" : ratio < 0.8 ? "w-4 h-7" : "w-6 h-6"}`} />
+                          <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{p.name}</p>
+                        </div>
+                        <p className="text-[8px] text-muted font-mono">{p.width} x {p.height}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+                {thumbnailConfig.size.platformPresetId === "custom" && (
+                  <div className="grid grid-cols-2 gap-2 mt-3">
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Width</label>
+                      <input type="number" value={thumbnailConfig.size.width} onChange={(e) => patchConfig("size", { width: Number(e.target.value) })} className="input w-full text-xs" min={100} max={4096} />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Height</label>
+                      <input type="number" value={thumbnailConfig.size.height} onChange={(e) => patchConfig("size", { height: Number(e.target.value) })} className="input w-full text-xs" min={100} max={4096} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── LAYOUT ── */}
+            {activeCategory === "layout" && (
+              <div className="card">
+                <h2 className="section-header flex items-center gap-2">
+                  <LayoutGrid size={13} className="text-gold" /> Layout Templates
+                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{LAYOUT_TEMPLATES.length}</span>
+                </h2>
+                <p className="text-[9px] text-muted mb-3">Composition presets — pick how text and subject arrange on the canvas.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2">
+                  {LAYOUT_TEMPLATES.map((lt) => {
+                    const active = thumbnailConfig.layout.templateId === lt.id;
+                    return (
+                      <button key={lt.id} onClick={() => patchConfig("layout", { templateId: lt.id })}
+                        className={`p-2 rounded-xl border-2 transition-all text-left ${active ? "border-gold bg-gold/[0.05]" : "border-border hover:border-gold/30"}`}>
+                        <div className="aspect-video rounded-lg bg-gradient-to-br from-gold/10 to-gold/5 mb-1.5 flex items-center justify-center">
+                          <LayoutGrid size={14} className="text-gold/40" />
+                        </div>
+                        <p className={`text-[9px] font-semibold ${active ? "text-gold" : ""}`}>{lt.name}</p>
+                        <p className="text-[7px] text-muted leading-tight">{lt.desc}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ── EXPORT ── */}
+            {activeCategory === "export" && (
+              <div className="space-y-3">
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2"><Download size={13} className="text-gold" /> Export Options</h2>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Format</label>
+                      <div className="grid grid-cols-3 gap-1.5">
+                        {EXPORT_FORMATS.map((f) => (
+                          <button key={f.id} onClick={() => patchConfig("export", { format: f.id as "png" | "jpg" | "webp" })}
+                            className={`p-2 rounded-xl border transition-all text-left ${thumbnailConfig.export.format === f.id ? "border-gold/30 bg-gold/[0.08]" : "border-border hover:border-gold/15"}`}>
+                            <p className={`text-[10px] font-semibold ${thumbnailConfig.export.format === f.id ? "text-gold" : ""}`}>{f.name}</p>
+                            <p className="text-[7px] text-muted">{f.desc}</p>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted uppercase tracking-wider">Quality: {thumbnailConfig.export.quality}%</label>
+                      <input type="range" min={40} max={100} value={thumbnailConfig.export.quality} onChange={(e) => patchConfig("export", { quality: Number(e.target.value) })} className="w-full accent-gold" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="flex items-center gap-2 text-[10px]">
+                        <input type="checkbox" checked={thumbnailConfig.export.generateVariants} onChange={(e) => patchConfig("export", { generateVariants: e.target.checked })} className="accent-gold" />
+                        <Shuffle size={11} /> Generate 4 Variants
+                      </label>
+                      <label className="flex items-center gap-2 text-[10px]">
+                        <input type="checkbox" checked={thumbnailConfig.export.batchAllPlatforms} onChange={(e) => patchConfig("export", { batchAllPlatforms: e.target.checked })} className="accent-gold" />
+                        <FileImage size={11} /> Batch Export for All Platforms
+                      </label>
+                    </div>
+                    <button onClick={() => { if (thumbnailConfig.export.batchAllPlatforms) exportBatchForAllPlatforms(); else if (thumbnailConfig.export.generateVariants) generateQuickVariations(); else toast.success(`Ready to export as ${thumbnailConfig.export.format.toUpperCase()} @ ${thumbnailConfig.export.quality}%`); }}
+                      className="btn-primary w-full text-xs flex items-center justify-center gap-2">
+                      <Download size={14} /> Apply Export Settings
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -111,9 +111,9 @@ export default function CalendarPage() {
     return monday;
   });
   const [newEvent, setNewEvent] = useState({
-    title: "", client: "Bright Dental", date: "2026-04-14", time: "10:00",
+    title: "", client: "", date: "", time: "10:00",
     duration: 30, type: "video" as CalEvent["type"], category: "meeting" as EventCategory,
-    recurring: false, teamMember: "Nicklas",
+    recurring: false, teamMember: "",
   });
 
   const fetchEvents = useCallback(async () => {
