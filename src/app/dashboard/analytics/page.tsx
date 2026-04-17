@@ -13,6 +13,7 @@ import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from "recharts";
+import PageHero from "@/components/ui/page-hero";
 
 const CHART_COLORS = ["#C9A84C", "#38bdf8", "#10b981", "#f43f5e", "#f59e0b", "#8b5cf6"];
 
@@ -330,14 +331,15 @@ export default function AnalyticsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header + Date Range Picker + Export */}
-      <div className="flex items-start justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <BarChart3 size={18} className="text-gold" /> Analytics
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Performance metrics across leads, revenue, outreach, and content</p>
-        </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<BarChart3 size={22} />}
+        title="Analytics"
+        subtitle="Performance metrics across leads, revenue, outreach, and content."
+        gradient="blue"
+      />
+      {/* Date Range Picker + Export */}
+      <div className="flex items-start justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Feature 14: Custom Date Range Picker */}
           <div className="flex items-center gap-1 bg-surface rounded-lg p-0.5">

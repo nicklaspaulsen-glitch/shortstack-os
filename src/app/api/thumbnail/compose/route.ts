@@ -3,6 +3,51 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import sharp from "sharp";
 import crypto from "crypto";
+import fs from "fs";
+import path from "path";
+
+/* ──────────────────── Font embedding ──────────────────── */
+// Fonts live in public/fonts/. We read them once at module load, base64-encode,
+// and inject as @font-face in every SVG so librsvg (used by sharp) renders
+// custom fonts correctly on Vercel (where we can't install system fonts).
+const FONT_FILES: Record<string, string> = {
+  Impact: "Impact.ttf",
+  "Bebas Neue": "BebasNeue-Bold.ttf",
+  Anton: "Anton-Regular.ttf",
+  Oswald: "Oswald-Bold.ttf",
+  Poppins: "Poppins-Black.ttf",
+  "Poppins Bold": "Poppins-Bold.ttf",
+  Montserrat: "Montserrat-Bold.ttf",
+  Inter: "Inter-Bold.ttf",
+  Roboto: "Roboto-Black.ttf",
+  Bangers: "Bangers-Regular.ttf",
+  "Permanent Marker": "PermanentMarker-Regular.ttf",
+  Staatliches: "Staatliches-Regular.ttf",
+  "Playfair Display": "PlayfairDisplay-Black.ttf",
+  "Archivo Black": "ArchivoBlack-Regular.ttf",
+};
+
+let cachedFontFaceCss: string | null = null;
+function getFontFaceCss(): string {
+  if (cachedFontFaceCss !== null) return cachedFontFaceCss;
+  const fontsDir = path.join(process.cwd(), "public", "fonts");
+  const faces: string[] = [];
+  for (const [family, filename] of Object.entries(FONT_FILES)) {
+    try {
+      const filePath = path.join(fontsDir, filename);
+      if (!fs.existsSync(filePath)) continue;
+      const buf = fs.readFileSync(filePath);
+      const b64 = buf.toString("base64");
+      faces.push(
+        `@font-face{font-family:"${family}";src:url(data:font/ttf;base64,${b64}) format("truetype");font-display:block;}`
+      );
+    } catch {
+      // skip missing fonts silently
+    }
+  }
+  cachedFontFaceCss = faces.join("");
+  return cachedFontFaceCss;
+}
 
 /* ──────────────────── Types (mirror src/app/dashboard/thumbnail-generator/page.tsx) ──────────────────── */
 
@@ -90,6 +135,11 @@ const FONT_ID_TO_FAMILY: Record<string, string> = {
   montserrat: "Montserrat, 'Helvetica Neue', Arial, sans-serif",
   oswald: "Oswald, Impact, sans-serif",
   bangers: "Bangers, Impact, sans-serif",
+  roboto: "Roboto, 'Helvetica Neue', Arial, sans-serif",
+  staatliches: "Staatliches, Impact, sans-serif",
+  permanent_marker: "'Permanent Marker', cursive",
+  playfair: "'Playfair Display', Georgia, serif",
+  archivo_black: "'Archivo Black', Impact, sans-serif",
 };
 
 function resolveFontFamily(config: ThumbnailConfigInput): string {
@@ -205,8 +255,10 @@ function buildTextSvg(config: ThumbnailConfigInput, width: number, height: numbe
   const paintOrder = strokeEnabled ? 'paint-order="stroke fill"' : "";
   const filterAttr = shadowEnabled ? 'filter="url(#titleShadow)"' : "";
 
+  const fontFaceCss = getFontFaceCss();
   const defs = `
     <defs>
+      ${fontFaceCss ? `<style type="text/css"><![CDATA[${fontFaceCss}]]></style>` : ""}
       ${
         gradientEnabled
           ? `<linearGradient id="titleGradient" x1="0" y1="0" x2="1" y2="1">

@@ -7,7 +7,9 @@ import {
   Copy, Award, Smile, Frown, Meh,
   Mail, Phone, AlertTriangle
 } from "lucide-react";
-import EmptyState from "@/components/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
+import PageHero from "@/components/ui/page-hero";
+import Link from "next/link";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -99,11 +101,13 @@ export default function ReviewsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div>
-        <h1 className="text-lg font-bold flex items-center gap-2"><Star size={18} className="text-gold" /> Review Management</h1>
-        <p className="text-xs text-muted">Monitor, respond to, and collect reviews across platforms</p>
-      </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<Star size={22} />}
+        title="Review Management"
+        subtitle="Monitor, respond to, and collect reviews across platforms."
+        gradient="gold"
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -227,11 +231,14 @@ export default function ReviewsPage() {
           {/* Reviews list */}
           {filteredReviews.length === 0 && (
             <EmptyState
-              icon={<Star size={24} />}
+              type="no-reviews"
               title="No reviews yet"
-              description="Connect Google Business to start monitoring reviews"
-              actionLabel="Connect Google Business"
-              actionHref="/dashboard/google-business"
+              description="Connect Google Business to start monitoring reviews across platforms."
+              action={
+                <Link href="/dashboard/google-business" className="btn-primary text-xs inline-flex items-center gap-1.5">
+                  Connect Google Business
+                </Link>
+              }
             />
           )}
           <div className="space-y-3">

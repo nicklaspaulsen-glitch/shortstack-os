@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
 import Modal from "@/components/ui/modal";
+import PageHero from "@/components/ui/page-hero";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
 
@@ -1929,16 +1930,13 @@ export default function VideoEditorPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Film size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Video Editor</h1>
-            <p className="text-xs text-muted">AI storyboards, video plans & GPU rendering via Remotion & Mochi</p>
-          </div>
-        </div>
+      <PageHero
+        icon={<Film size={22} />}
+        title="AI Video Editor"
+        subtitle="AI storyboards, video plans & GPU rendering via Remotion & Mochi."
+        gradient="sunset"
+      />
+      <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setAiGenOpen(true)}

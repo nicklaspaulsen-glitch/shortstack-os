@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
 import Modal from "@/components/ui/modal";
+import PageHero from "@/components/ui/page-hero";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 
 /* ──────────────────── AI API TYPES ──────────────────── */
@@ -2377,28 +2378,23 @@ export default function ThumbnailGeneratorPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* ─── Header ─── */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <ImageIcon size={20} className="text-gold" />
+      {/* ─── Hero Header ─── */}
+      <PageHero
+        icon={<ImageIcon size={22} />}
+        title="Thumbnail Studio"
+        subtitle="AI-powered thumbnail creation with styles, faces & text overlays."
+        gradient="ocean"
+        actions={
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-white/70 uppercase tracking-wider font-medium">
+              {displayWidth} x {displayHeight}
+            </span>
+            <div className="w-8 h-5 rounded border border-white/20 bg-white/10 flex items-center justify-center">
+              <RectangleHorizontal size={12} className="text-white/80" />
+            </div>
           </div>
-          <div>
-            <h1 className="page-header mb-0">Thumbnail Generator</h1>
-            <p className="text-xs text-muted">
-              AI-powered thumbnail creation with styles, faces & text overlays
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[9px] text-muted uppercase tracking-wider">
-            {displayWidth} x {displayHeight}
-          </span>
-          <div className="w-8 h-5 rounded border border-border bg-surface-light flex items-center justify-center">
-            <RectangleHorizontal size={12} className="text-muted" />
-          </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* ─── Tabs ─── */}
       <div className="tab-group w-fit">

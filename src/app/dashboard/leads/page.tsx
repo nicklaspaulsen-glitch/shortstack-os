@@ -9,7 +9,8 @@ import {
   RefreshCw, Bell, Layers, GitBranch, Loader, ChevronLeft, ChevronRight as ChevronRightIcon,
   X, FileSpreadsheet, Check
 } from "lucide-react";
-import EmptyState from "@/components/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
+import Link from "next/link";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
 
@@ -578,11 +579,14 @@ export default function LeadEnginePage() {
             )}
             {!loading && leads.length === 0 && (
               <EmptyState
-                icon={<Users size={24} />}
+                type="no-leads"
                 title="No Leads Yet"
                 description="Start building your pipeline by scraping leads from Google Maps, importing a CSV, or adding them manually."
-                actionLabel="Start Finding Leads"
-                actionHref="/dashboard/scraper"
+                action={
+                  <Link href="/dashboard/scraper" className="btn-primary text-xs inline-flex items-center gap-1.5">
+                    Start Finding Leads
+                  </Link>
+                }
               />
             )}
             {!loading && leads.map(lead => (

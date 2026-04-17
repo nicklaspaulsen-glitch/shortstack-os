@@ -17,6 +17,8 @@ import {
   XTwitterIcon,
 } from "@/components/ui/platform-icons";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 /* ── Types ── */
 interface OutreachEntry {
@@ -521,14 +523,14 @@ export default function OutreachLogsPage() {
 
   return (
     <div className="fade-in space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Send size={18} className="text-gold" /> Outreach Logs
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Full communication history — calls, emails, SMS, DMs with transcripts & details</p>
-        </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<Send size={22} />}
+        title="Outreach Logs"
+        subtitle="Full communication history — calls, emails, SMS, DMs with transcripts & details."
+        gradient="blue"
+      />
+      <div className="flex items-center justify-end">
         <div className="flex gap-2">
           <button onClick={() => fetchEntries()} className="btn-secondary text-xs flex items-center gap-1.5">
             <RefreshCw size={12} className={loading ? "animate-spin" : ""} /> Refresh
@@ -711,11 +713,11 @@ export default function OutreachLogsPage() {
                 <span className="ml-2 text-xs text-muted">Loading outreach data...</span>
               </div>
             ) : entries.length === 0 ? (
-              <div className="text-center py-16">
-                <Send size={28} className="mx-auto text-muted mb-2" />
-                <p className="text-sm text-muted">No outreach entries found</p>
-                <p className="text-[10px] text-muted mt-1">Send emails, SMS, or calls from the CRM to see them here</p>
-              </div>
+              <EmptyState
+                type="no-campaigns"
+                title="No outreach entries found"
+                description="Send emails, SMS, or calls from the CRM to see them here."
+              />
             ) : viewMode === "compact" ? (
               /* ── Compact table view ── */
               <div className="card overflow-hidden p-0">

@@ -292,6 +292,49 @@ body {
     color: var(--color-muted, #9CA3AF);
   }
 
+  /* ═══════════ CARD ACCENT + SHIMMER ═══════════ */
+  /* Subtle colored accent bar on the left + hover shimmer. Works on .card / .card-static. */
+  .card-accent {
+    position: relative;
+    overflow: hidden;
+  }
+  .card-accent::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10%;
+    bottom: 10%;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--card-accent-color, var(--color-accent, #C9A84C));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--card-accent-color, var(--color-accent, #C9A84C)) 40%, transparent);
+    opacity: 0.9;
+  }
+  .card-accent::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 35%,
+      color-mix(in srgb, var(--card-accent-color, var(--color-accent, #C9A84C)) 15%, transparent) 50%,
+      transparent 65%
+    );
+    transform: translateX(-100%);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+  .card-accent:hover::after {
+    transform: translateX(100%);
+  }
+  /* Preset accent colors — override --card-accent-color or stack classes */
+  .card-accent-gold   { --card-accent-color: #C9A84C; }
+  .card-accent-blue   { --card-accent-color: #3B82F6; }
+  .card-accent-green  { --card-accent-color: #10B981; }
+  .card-accent-purple { --card-accent-color: #A855F7; }
+  .card-accent-warning{ --card-accent-color: #F59E0B; }
+  .card-accent-danger { --card-accent-color: #EF4444; }
+
   /* ═══════════ TABLES ═══════════ */
   .table-container {
     @apply overflow-x-auto rounded-xl;

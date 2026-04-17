@@ -7,7 +7,8 @@ import {
   BarChart3, Globe, Copy, ChevronRight,
   X, Search, Zap, ArrowRight
 } from "lucide-react";
-import EmptyState from "@/components/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
+import PageHero from "@/components/ui/page-hero";
 
 type MainTab = "all" | "builder" | "recurring" | "reminders" | "templates" | "aging" | "revenue";
 
@@ -68,18 +69,19 @@ export default function InvoicesPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <CreditCard size={18} className="text-gold" /> Invoices
-          </h1>
-          <p className="text-xs text-muted mt-0.5">{MOCK_INVOICES.length} invoices | Track payments, reminders, recurring billing</p>
-        </div>
-        <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs flex items-center gap-1.5">
-          <Plus size={12} /> New Invoice
-        </button>
-      </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<CreditCard size={22} />}
+        title="Invoices"
+        subtitle={`${MOCK_INVOICES.length} invoices — track payments, reminders, and recurring billing.`}
+        gradient="green"
+        actions={
+          <button onClick={() => setActiveTab("builder")}
+            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all">
+            <Plus size={12} /> New Invoice
+          </button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -129,11 +131,14 @@ export default function InvoicesPage() {
           <div className="space-y-2">
             {filtered.length === 0 ? (
               <EmptyState
-                icon={<CreditCard size={24} />}
+                type="no-invoices"
                 title="No Invoices Yet"
                 description="Create your first invoice to start tracking payments, set up recurring billing, and get paid faster."
-                actionLabel="Create Invoice"
-                onAction={() => setActiveTab("builder")}
+                action={
+                  <button onClick={() => setActiveTab("builder")} className="btn-primary text-xs">
+                    Create Invoice
+                  </button>
+                }
               />
             ) : (
               filtered.map(inv => {

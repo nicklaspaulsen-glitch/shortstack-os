@@ -18,6 +18,7 @@ import {
   Bell, PhoneCall, MessageCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
 import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/ui/platform-icons";
 
@@ -614,6 +615,12 @@ export default function CRMPage() {
 
   return (
     <div className="fade-in space-y-3">
+      <PageHero
+        icon={<Users size={22} />}
+        title="CRM"
+        subtitle="Track leads, manage contacts, and close deals with AI assistance."
+        gradient="blue"
+      />
       {/* ── Stats Dashboard ── */}
       <div className="card p-0 overflow-hidden">
         <button onClick={() => setStatsCollapsed(!statsCollapsed)}
@@ -672,12 +679,6 @@ export default function CRMPage() {
       {/* ── Header Row ── */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2 flex-wrap">
-          <div>
-            <h1 className="text-sm font-bold flex items-center gap-2">
-              <Users size={16} className="text-gold" /> CRM
-            </h1>
-            <p className="text-xs text-muted">Track leads, manage contacts, and close deals with AI assistance</p>
-          </div>
           {hasActiveFilters && (
             <span className="text-[8px] px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 flex items-center gap-1">
               <Filter size={8} /> Filtered

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 /* ── Types ── */
 type InboxCategory = "all" | "scripts" | "emails" | "outreach" | "contracts" | "ideas" | "reports" | "briefings" | "exports";
@@ -677,15 +678,11 @@ export default function InboxPage() {
                 <Loader size={20} className="animate-spin text-gold" />
               </div>
             ) : filtered.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <Inbox size={32} className="text-muted mb-3" />
-                <p className="text-sm text-muted">
-                  {search ? "No items match your search" : showArchived ? "No archived items" : "Your inbox is empty"}
-                </p>
-                <p className="text-[10px] text-muted mt-1">
-                  {search ? "Try different keywords" : "Generated content will appear here"}
-                </p>
-              </div>
+              <EmptyState
+                type="no-messages"
+                title={search ? "No items match your search" : showArchived ? "No archived items" : "Your inbox is empty"}
+                description={search ? "Try different keywords." : "Generated content will appear here."}
+              />
             ) : (
               filtered.map(item => {
                 const cat = getCategoryConfig(item.type);

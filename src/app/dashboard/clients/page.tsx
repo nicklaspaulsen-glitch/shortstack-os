@@ -18,6 +18,8 @@ import {
   Clock, CheckCircle, XCircle, StickyNote, Columns
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 // --- Types for new features ---
 type ClientTag = { label: string; color: string };
@@ -401,15 +403,18 @@ export default function ClientsPage() {
 
   return (
     <div className="fade-in space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0">Client Portal</h1>
-          <p className="text-muted text-sm">Manage clients, contracts, and invoices</p>
-        </div>
-        <button onClick={() => setShowAddModal(true)} className="btn-primary flex items-center gap-2">
-          <Plus size={16} /> Add Client
-        </button>
-      </div>
+      <PageHero
+        icon={<Users size={22} />}
+        title="Client Portal"
+        subtitle="Manage clients, contracts, and invoices."
+        gradient="gold"
+        actions={
+          <button onClick={() => setShowAddModal(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white text-sm font-medium hover:bg-white/25 transition-all">
+            <Plus size={16} /> Add Client
+          </button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -593,8 +598,9 @@ export default function ClientsPage() {
             const nextAction = getNextAction(c);
             const tags = clientTags[c.id] || [];
 
+            const accentClass = c.health_score > 75 ? "card-accent-green" : c.health_score > 50 ? "card-accent-warning" : "card-accent-danger";
             return (
-              <div key={c.id} className="card p-4 hover:border-gold/30 transition-all cursor-pointer group relative"
+              <div key={c.id} className={`card card-accent ${accentClass} p-4 hover:border-gold/30 transition-all cursor-pointer group relative`}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}>
@@ -708,7 +714,18 @@ export default function ClientsPage() {
             );
           })}
           {filteredClients.length === 0 && (
-            <div className="col-span-full card p-8 text-center text-muted text-sm">No clients match your filters.</div>
+            <div className="col-span-full card">
+              <EmptyState
+                type="no-clients"
+                title={clients.length === 0 ? "No clients yet" : "No clients match your filters"}
+                description={clients.length === 0 ? "Add your first client to start tracking contracts, invoices, and health scores." : "Try adjusting filters or clearing your search."}
+                action={clients.length === 0 ? (
+                  <button onClick={() => setShowAddModal(true)} className="btn-primary text-xs flex items-center gap-1.5">
+                    <Plus size={12} /> Add Client
+                  </button>
+                ) : undefined}
+              />
+            </div>
           )}
         </div>
       )}

@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import PageHero from "@/components/ui/page-hero";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 interface DashboardStats {
   leadsToday: number;
@@ -158,39 +160,37 @@ export default function DashboardPage() {
 
   return (
     <div className="fade-in space-y-5 max-w-[1400px] mx-auto">
-      {/* ─── Header + Command Bar ─────────────────────────────────── */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            {getGreeting()}, <span className="text-gold">{profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0]}</span>
-          </h1>
-          <p className="text-sm text-muted mt-1">
-            {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
-            {stats.systemIssues === 0 ? (
-              <span className="ml-3 text-success text-xs font-medium">All systems operational</span>
-            ) : (
-              <span className="ml-3 text-danger text-xs font-medium">{stats.systemIssues} system issue{stats.systemIssues > 1 ? "s" : ""}</span>
-            )}
-          </p>
-        </div>
-        <form onSubmit={handleCommand} className="flex gap-2">
-          <div className="relative">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-            <input
-              type="text"
-              value={commandInput}
-              onChange={(e) => setCommandInput(e.target.value)}
-              placeholder="Ask Trinity anything..."
-              disabled={commandLoading}
-              className="input pl-9 pr-4 py-2 text-xs w-64"
-            />
-          </div>
-          <button type="submit" disabled={!commandInput.trim() || commandLoading}
-            className="px-3 py-2 bg-gold/10 text-gold text-xs font-medium rounded-xl border border-gold/15 hover:bg-gold/20 transition-all disabled:opacity-30">
-            <Send size={12} />
-          </button>
-        </form>
-      </div>
+      {/* ─── Hero + Command Bar ─────────────────────────────────── */}
+      <PageHero
+        icon={<Sparkles size={22} />}
+        eyebrow={new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+        title={`${getGreeting()}, ${profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0] || ""}`}
+        subtitle={
+          stats.systemIssues === 0
+            ? "All systems operational — your AI is running smoothly."
+            : `${stats.systemIssues} system issue${stats.systemIssues > 1 ? "s" : ""} needs attention.`
+        }
+        gradient="gold"
+        actions={
+          <form onSubmit={handleCommand} className="flex gap-2">
+            <div className="relative">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
+              <input
+                type="text"
+                value={commandInput}
+                onChange={(e) => setCommandInput(e.target.value)}
+                placeholder="Ask Trinity anything..."
+                disabled={commandLoading}
+                className="pl-9 pr-4 py-2 text-xs w-64 rounded-xl bg-white/10 border border-white/15 text-white placeholder:text-white/50 focus:outline-none focus:border-white/30 focus:bg-white/15"
+              />
+            </div>
+            <button type="submit" disabled={!commandInput.trim() || commandLoading}
+              className="px-3 py-2 bg-white/20 text-white text-xs font-medium rounded-xl border border-white/20 hover:bg-white/30 transition-all disabled:opacity-30">
+              <Send size={12} />
+            </button>
+          </form>
+        }
+      />
 
       {/* ─── Primary Metrics ──────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -324,11 +324,13 @@ export default function DashboardPage() {
           </div>
 
           {pipelineTotal === 0 ? (
-            <div className="text-center py-8">
-              <Target size={24} className="text-muted/30 mx-auto mb-2" />
-              <p className="text-xs text-muted">No leads in pipeline yet</p>
-              <Link href="/dashboard/scraper" className="text-[10px] text-gold hover:underline mt-1 inline-block">Find leads</Link>
-            </div>
+            <EmptyState
+              type="no-leads"
+              size={140}
+              title="No leads in pipeline yet"
+              description="Start prospecting to fill your funnel."
+              action={<Link href="/dashboard/scraper" className="text-[10px] text-gold hover:underline">Find leads</Link>}
+            />
           ) : (
             <>
               {/* Horizontal funnel bars */}
@@ -490,11 +492,13 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-1 max-h-64 overflow-y-auto">
             {topClients.length === 0 ? (
-              <div className="text-center py-8">
-                <Users size={24} className="text-muted/30 mx-auto mb-2" />
-                <p className="text-xs text-muted">No clients yet</p>
-                <Link href="/dashboard/onboard" className="text-[10px] text-gold hover:underline mt-1 inline-block">Onboard your first client</Link>
-              </div>
+              <EmptyState
+                type="no-clients"
+                size={140}
+                title="No clients yet"
+                description="Onboard your first client to start tracking MRR and health."
+                action={<Link href="/dashboard/onboard" className="text-[10px] text-gold hover:underline">Onboard your first client</Link>}
+              />
             ) : (
               topClients.map((c) => (
                 <Link key={c.id} href={`/dashboard/clients/${c.id}`}
@@ -538,11 +542,13 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-1 max-h-64 overflow-y-auto">
             {recentLeads.length === 0 ? (
-              <div className="text-center py-8">
-                <Search size={24} className="text-muted/30 mx-auto mb-2" />
-                <p className="text-xs text-muted">No leads yet</p>
-                <Link href="/dashboard/scraper" className="text-[10px] text-gold hover:underline mt-1 inline-block">Find leads</Link>
-              </div>
+              <EmptyState
+                type="no-leads"
+                size={140}
+                title="No leads yet"
+                description="Start your first scrape to find prospects."
+                action={<Link href="/dashboard/scraper" className="text-[10px] text-gold hover:underline">Find leads</Link>}
+              />
             ) : (
               recentLeads.map((lead, i) => (
                 <div key={i} className="flex items-center justify-between py-2.5 border-b border-border last:border-0">
@@ -703,15 +709,27 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
   };
   const t = themes[accent] || themes.gold;
 
+  // Pseudo sparkline — deterministic per label so it doesn't flip on re-render
+  const seed = label.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+  const points = Array.from({ length: 12 }).map((_, i) => {
+    const v = (Math.sin(seed * 0.13 + i * 0.9) + Math.cos(seed * 0.07 + i * 0.5)) * 10 + 20 + (trend === "up" ? i * 1.2 : trend === "down" ? -i * 1.2 : 0);
+    return `${i * 9},${30 - Math.max(-8, Math.min(18, v - 12))}`;
+  }).join(" ");
+
   return (
-    <div className={`relative rounded-2xl border ${t.border} ${t.bg} ${t.glow} p-4 transition-all duration-250 hover:-translate-y-0.5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_2px_4px_rgba(0,0,0,0.15),0_8px_20px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_2px_4px_rgba(0,0,0,0.15),0_14px_32px_-8px_rgba(0,0,0,0.5)]`}>
-      <div className="flex items-center justify-between mb-3">
+    <div className={`relative rounded-2xl border ${t.border} ${t.bg} ${t.glow} p-4 transition-all duration-250 hover:-translate-y-0.5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_2px_4px_rgba(0,0,0,0.15),0_8px_20px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_2px_4px_rgba(0,0,0,0.15),0_14px_32px_-8px_rgba(0,0,0,0.5)] overflow-hidden`}>
+      {/* Decorative blob */}
+      <div
+        className={`pointer-events-none absolute -bottom-8 -right-8 w-24 h-24 rounded-full ${t.iconBg} blur-xl`}
+        aria-hidden
+      />
+      <div className="relative flex items-center justify-between mb-3">
         <span className="text-[11px] text-muted font-medium uppercase tracking-wider">{label}</span>
         <div className={`w-9 h-9 rounded-xl ${t.iconBg} ${t.iconShadow} flex items-center justify-center ${t.text}`}>
           {icon}
         </div>
       </div>
-      <div className="flex items-end gap-2">
+      <div className="relative flex items-end gap-2">
         <span className="text-2xl font-bold font-mono tracking-tight text-foreground">{value}</span>
         {trend && (
           <span className={`mb-0.5 ${trend === "up" ? "text-success" : "text-danger"}`}>
@@ -719,7 +737,20 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
           </span>
         )}
       </div>
-      <p className="text-[10px] text-muted mt-1.5">{sub}</p>
+      <div className="relative flex items-end justify-between mt-1.5 gap-3">
+        <p className="text-[10px] text-muted flex-1 truncate">{sub}</p>
+        <svg width="100" height="30" viewBox="0 0 100 30" className="shrink-0 opacity-60" aria-hidden>
+          <polyline
+            points={points}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={t.text}
+          />
+        </svg>
+      </div>
     </div>
   );
 }

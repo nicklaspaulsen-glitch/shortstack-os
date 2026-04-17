@@ -26,6 +26,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
+import PageHero from "@/components/ui/page-hero";
 import {
   InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon, XTwitterIcon,
   ThreadsIcon, PinterestIcon, YouTubeShortsIcon,
@@ -391,17 +392,14 @@ export default function SocialManagerPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Bot size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Social Manager</h1>
-            <p className="text-xs text-muted">Autonomous AI that creates, schedules & publishes content</p>
-          </div>
-        </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<Bot size={22} />}
+        title="Social Manager"
+        subtitle="Autonomous AI that creates, schedules & publishes content."
+        gradient="purple"
+      />
+      <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2">
           {/* Client selector */}
           <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)}

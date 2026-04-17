@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/platform-icons";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
+import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 
 /* ─── static data ─── */
@@ -543,15 +544,14 @@ export default function ScraperPage() {
 
   return (
     <div className="fade-in space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-3">
-            <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center"><Search size={24} className="text-gold" /></div>
-            Lead Finder
-          </h1>
-          <p className="text-muted text-sm mt-1">Find leads from any platform, any niche, any location</p>
-        </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<Search size={22} />}
+        title="Lead Finder"
+        subtitle="Find leads from any platform, any niche, any location."
+        gradient="gold"
+      />
+      <div className="flex items-center justify-end">
         <div className="flex items-center gap-2">
           {/* Auto-Run Daily Button */}
           <div className="relative">

@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { StripeIcon, PayPalIcon, SquareIcon } from "@/components/ui/platform-icons";
+import PageHero from "@/components/ui/page-hero";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -409,16 +411,14 @@ export default function FinancialsPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <PiggyBank size={18} className="text-gold" /> Financials
-          </h1>
-          <p className="text-xs text-muted mt-0.5">
-            Revenue, expenses, invoicing, and financial planning
-          </p>
-        </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<PiggyBank size={22} />}
+        title="Financials"
+        subtitle="Revenue, expenses, invoicing, and financial planning."
+        gradient="green"
+      />
+      <div className="flex items-center justify-end">
         <div className="flex gap-2">
           {!stripeSynced ? (
             <button onClick={() => toast("Connect Stripe in Settings > Integrations")} className="btn-secondary text-xs flex items-center gap-1.5">
@@ -908,9 +908,12 @@ export default function FinancialsPage() {
               All Invoices ({invoices.length})
             </p>
             {invoices.length === 0 ? (
-              <div className="card text-center py-12">
-                <FileText size={24} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-xs text-muted">No invoices yet. Connect Stripe or create invoices to track here.</p>
+              <div className="card">
+                <EmptyState
+                  type="no-invoices"
+                  title="No invoices yet"
+                  description="Connect Stripe or create invoices to track billing here."
+                />
               </div>
             ) : (
             <div className="space-y-1.5">

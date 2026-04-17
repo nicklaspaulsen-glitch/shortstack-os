@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/platform-icons";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import PageHero from "@/components/ui/page-hero";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 /* ── Types ── */
 type MainTab = "campaigns" | "sequences" | "templates" | "analytics" | "settings";
@@ -730,20 +732,20 @@ export default function OutreachHubPage() {
 
   return (
     <div className="fade-in space-y-4">
-      {/* ── Header ── */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Send size={18} className="text-gold" /> Outreach Hub
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Build targeted outreach campaigns across email, SMS, calls &amp; DMs — target B2B or B2C leads by industry, niche, and location</p>
-        </div>
-        <button onClick={handleSave} disabled={saving}
-          className="btn-primary text-xs flex items-center gap-1.5">
-          {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
-          Save All
-        </button>
-      </div>
+      {/* ── Hero Header ── */}
+      <PageHero
+        icon={<Send size={22} />}
+        title="Outreach Hub"
+        subtitle="Build targeted outreach campaigns across email, SMS, calls & DMs — target B2B or B2C leads by industry, niche, and location."
+        gradient="blue"
+        actions={
+          <button onClick={handleSave} disabled={saving}
+            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all disabled:opacity-40">
+            {saving ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+            Save All
+          </button>
+        }
+      />
 
       {/* ── Tabs ── */}
       <div className="flex gap-1 bg-surface rounded-xl p-1 overflow-x-auto">
@@ -910,16 +912,18 @@ export default function OutreachHubPage() {
 
           {/* ── Campaign List ── */}
           {campaigns.length === 0 && !showCampaignBuilder && (
-            <div className="card flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center mb-4">
-                <Megaphone size={28} className="text-gold" />
-              </div>
-              <h3 className="text-sm font-semibold mb-1">No campaigns yet</h3>
-              <p className="text-[11px] text-muted max-w-sm mb-4">Create your first outreach campaign to start reaching leads across email, SMS, calls, and social DMs.</p>
-              <button onClick={() => setShowCampaignBuilder(true)}
-                className="btn-primary text-xs flex items-center gap-1.5">
-                <Plus size={12} /> Create Your First Campaign
-              </button>
+            <div className="card">
+              <EmptyState
+                type="no-campaigns"
+                title="No campaigns yet"
+                description="Create your first outreach campaign to start reaching leads across email, SMS, calls, and social DMs."
+                action={
+                  <button onClick={() => setShowCampaignBuilder(true)}
+                    className="btn-primary text-xs flex items-center gap-1.5">
+                    <Plus size={12} /> Create Your First Campaign
+                  </button>
+                }
+              />
             </div>
           )}
 

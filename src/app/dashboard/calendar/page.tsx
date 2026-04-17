@@ -7,6 +7,8 @@ import {
   Users, Download,
   Repeat, Eye, Star, AlertCircle, Loader2
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 type ViewMode = "month" | "week" | "day";
 type EventCategory = "meeting" | "deadline" | "content" | "call";
@@ -237,14 +239,14 @@ export default function CalendarPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Calendar size={18} className="text-gold" /> Calendar
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Book appointments, manage calls, track meetings</p>
-        </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<Calendar size={22} />}
+        title="Calendar"
+        subtitle="Book appointments, manage calls, and track meetings."
+        gradient="gold"
+      />
+      <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <button onClick={() => setShowFilters(!showFilters)} className="btn-secondary text-xs flex items-center gap-1.5">
             <Filter size={12} /> Filters
@@ -502,7 +504,12 @@ export default function CalendarPage() {
             <div className="card">
               <h2 className="section-header flex items-center gap-2"><Clock size={13} className="text-gold" /> Today&apos;s Schedule</h2>
               {todaysEvents.length === 0 ? (
-                <p className="text-xs text-muted text-center py-8">No events today</p>
+                <EmptyState
+                  type="no-calendar"
+                  size={140}
+                  title="No events today"
+                  description="Your schedule is clear — enjoy the quiet."
+                />
               ) : (
                 <div className="space-y-2">
                   {todaysEvents.map(evt => (

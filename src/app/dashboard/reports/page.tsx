@@ -9,6 +9,8 @@ import {
   ChevronDown, ChevronUp, Copy, Check, Calendar,
   Download, Mail, ClipboardCopy, Share2,
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 interface Client {
   id: string;
@@ -373,21 +375,19 @@ export default function ReportsPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 fade-in">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
-            <FileText size={20} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-foreground">AI Client Reports</h1>
-            <p className="text-xs text-muted">Generate AI-powered performance reports for your clients</p>
-          </div>
-        </div>
-        <button onClick={fetchData} className="btn-secondary text-xs flex items-center gap-1.5">
-          <RefreshCw size={12} /> Refresh
-        </button>
-      </div>
+      {/* Hero Header */}
+      <PageHero
+        icon={<FileText size={22} />}
+        title="AI Client Reports"
+        subtitle="Generate AI-powered performance reports for your clients."
+        gradient="purple"
+        actions={
+          <button onClick={fetchData}
+            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all">
+            <RefreshCw size={12} /> Refresh
+          </button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-3">
@@ -627,11 +627,11 @@ export default function ReportsPage() {
                 <Loader size={16} className="animate-spin text-muted" />
               </div>
             ) : reports.length === 0 ? (
-              <div className="text-center py-12">
-                <FileText size={24} className="text-muted/30 mx-auto mb-2" />
-                <p className="text-xs text-muted">No reports generated yet</p>
-                <p className="text-[10px] text-muted/60 mt-1">Select a client and generate your first report</p>
-              </div>
+              <EmptyState
+                type="no-analytics"
+                title="No reports generated yet"
+                description="Select a client and generate your first AI-powered report."
+              />
             ) : (
               <div className="space-y-2">
                 {reports.map(report => (

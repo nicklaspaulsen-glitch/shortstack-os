@@ -9,7 +9,7 @@ import {
   CheckSquare, Square, FolderPlus, ArrowUpDown, Loader
 } from "lucide-react";
 import toast from "react-hot-toast";
-import EmptyState from "@/components/empty-state";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 // ── DB-aligned types ──
 
@@ -576,28 +576,17 @@ export default function ContentLibraryPage() {
         </div>
       )}
 
-      {/* Empty state */}
+      {/* Empty State */}
       {filteredAssets.length === 0 && !uploading && (
-        <div className="card text-center py-12">
-          <FolderOpen size={32} className="mx-auto mb-3 text-muted" />
-          <p className="text-sm font-medium mb-1">
-            {assets.length === 0 ? "No assets yet" : "No matching assets"}
-          </p>
-          <p className="text-xs text-muted">
-            {assets.length === 0
+        <div className="card">
+          <EmptyState
+            type={assets.length === 0 ? "no-files" : "no-content"}
+            title={assets.length === 0 ? "No assets yet" : "No matching assets"}
+            description={assets.length === 0
               ? "Upload files using the drop zone above or the Upload button."
               : "Try adjusting your filters or search query."}
-          </p>
+          />
         </div>
-      )}
-
-      {/* Empty State */}
-      {filteredAssets.length === 0 && (
-        <EmptyState
-          icon={<FolderOpen size={24} />}
-          title="No assets yet"
-          description="Upload your first file to get started"
-        />
       )}
 
       {/* Asset Grid */}
