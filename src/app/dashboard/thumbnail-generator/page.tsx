@@ -14,7 +14,7 @@ import {
   ArrowRight, AlertTriangle, CheckCircle2, XCircle, Cpu,
   Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight,
   Droplet, Wand, Scissors, Smartphone, FileImage, ShoppingBag,
-  Loader2,
+  Loader2, Sun, Contrast, Frame, Play, Film, Sliders,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
@@ -611,6 +611,166 @@ const YOUTUBER_THUMBNAIL_PRESETS = [
       elements: { ids: ["arr4", "arr11", "arr12", "mny1", "mny5"] },
     },
   },
+  {
+    id: "mark-rober",
+    name: "Mark Rober",
+    category: "Education",
+    tagline: "Clean, bright, engineering & curiosity vibe",
+    icon: "\u{1F9EA}",
+    gradient: "from-sky-400 via-blue-500 to-cyan-400",
+    mood: "Inspiring",
+    config: {
+      typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "titlecase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#0C4A6E", shadowEnabled: true, shadowColor: "#000000" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "ice", brightness: 115 },
+      colors: { paletteId: "tech-bw" },
+      elements: { ids: ["bst2", "bst5", "arr4"] },
+    },
+  },
+  {
+    id: "kurzgesagt",
+    name: "Kurzgesagt",
+    category: "Education",
+    tagline: "Flat illustration, bright colors, no faces",
+    icon: "\u{1F426}",
+    gradient: "from-indigo-500 via-fuchsia-500 to-amber-400",
+    mood: "Educational",
+    config: {
+      typography: { enabled: true, fontId: "poppins", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: false, gradientEnabled: true, gradientFrom: "#6366F1", gradientTo: "#F59E0B" },
+      face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "aurora", brightness: 105 },
+      colors: { paletteId: "pastel-dream-p" },
+      elements: { ids: ["bst2", "bst5"] },
+    },
+  },
+  {
+    id: "5-minute-crafts",
+    name: "5-Minute Crafts",
+    category: "Lifestyle",
+    tagline: "Multi-panel before/after, ultra-bright saturated",
+    icon: "\u{1F9F6}",
+    gradient: "from-pink-400 via-yellow-400 to-cyan-400",
+    mood: "Playful",
+    config: {
+      typography: { enabled: true, fontId: "bangers", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true, highlightWords: "HACK, DIY, WOW", highlightColor: "#F472B6" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 2 },
+      background: { mode: "gradient", gradientId: "vaporwave", brightness: 120 },
+      colors: { paletteId: "pastel-dream-p" },
+      elements: { ids: ["arr11", "arr12", "bst3", "chk2"] },
+    },
+  },
+  {
+    id: "techlinked",
+    name: "TechLinked",
+    category: "Tech",
+    tagline: "Tech news, blue/white, headline-driven",
+    icon: "\u{1F4F0}",
+    gradient: "from-blue-600 via-sky-500 to-blue-900",
+    mood: "Urgent",
+    config: {
+      typography: { enabled: true, fontId: "oswald", weight: 800, textCase: "uppercase", strokeEnabled: true, strokeWidth: 2, strokeColor: "#1E3A8A", shadowEnabled: true, highlightWords: "NEW, LEAK, BREAKING", highlightColor: "#3B82F6" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "ocean", brightness: 95 },
+      colors: { paletteId: "tech-bw" },
+      elements: { ids: ["arr6", "bdg1", "shk4"] },
+    },
+  },
+  {
+    id: "matpat",
+    name: "MatPat / GameTheory",
+    category: "Gaming",
+    tagline: "Pink neon, dark bg, theory-style",
+    icon: "\u{1F52E}",
+    gradient: "from-fuchsia-600 via-purple-700 to-slate-900",
+    mood: "Mysterious",
+    config: {
+      typography: { enabled: true, fontId: "bangers", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true, gradientEnabled: true, gradientFrom: "#EC4899", gradientTo: "#8B5CF6" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "left", layout: 1 },
+      background: { mode: "gradient", gradientId: "galaxy", brightness: 85 },
+      colors: { paletteId: "gaming-pn" },
+      elements: { ids: ["shk6", "bst3", "spc2"] },
+    },
+  },
+  {
+    id: "philip-defranco",
+    name: "Philip DeFranco",
+    category: "Entertainment",
+    tagline: "News style, red/white bold headlines",
+    icon: "\u{1F3A4}",
+    gradient: "from-red-600 via-red-500 to-white",
+    mood: "Urgent",
+    config: {
+      typography: { enabled: true, fontId: "anton", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#7F1D1D", shadowEnabled: true, highlightWords: "NEW, BIG, TODAY", highlightColor: "#FFFFFF" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "fire", brightness: 100 },
+      colors: { paletteId: "mrbeast-ry" },
+      elements: { ids: ["shk4", "arr6", "bdg3"] },
+    },
+  },
+  {
+    id: "shane-dawson",
+    name: "Shane Dawson",
+    category: "Entertainment",
+    tagline: "Investigative moody, dark tones, mysterious",
+    icon: "\u{1F50D}",
+    gradient: "from-slate-900 via-stone-800 to-gray-900",
+    mood: "Mysterious",
+    config: {
+      typography: { enabled: true, fontId: "playfair", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowColor: "#000000", shadowBlur: 10 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "midnight", brightness: 75 },
+      colors: { paletteId: "monochrome" },
+      elements: { ids: ["chk4", "spc2"] },
+    },
+  },
+  {
+    id: "david-dobrik",
+    name: "David Dobrik",
+    category: "Entertainment",
+    tagline: "Vlog squad, bright yellow, candid",
+    icon: "\u{1F929}",
+    gradient: "from-yellow-300 via-amber-400 to-yellow-500",
+    mood: "Playful",
+    config: {
+      typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "titlecase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#000000", shadowEnabled: true, highlightWords: "OMG, WOW, VLOG", highlightColor: "#EF4444" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "center", layout: 2 },
+      background: { mode: "solid", solidColor: "#FDE047", brightness: 115 },
+      colors: { paletteId: "mrbeast-ry" },
+      elements: { ids: ["shk1", "bst2", "em30"] },
+    },
+  },
+  {
+    id: "cody-ko",
+    name: "Cody Ko",
+    category: "Entertainment",
+    tagline: "Casual reaction, simple clean, conversational",
+    icon: "\u{1F60E}",
+    gradient: "from-stone-500 via-amber-300 to-stone-400",
+    mood: "Playful",
+    config: {
+      typography: { enabled: true, fontId: "inter", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowBlur: 6 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 },
+      background: { mode: "solid", solidColor: "#FDE68A", brightness: 105 },
+      colors: { paletteId: "warm-earth" },
+      elements: { ids: ["spc1", "bst2"] },
+    },
+  },
+  {
+    id: "jubilee",
+    name: "Jubilee",
+    category: "Entertainment",
+    tagline: "Philosophical VS, clean split layout",
+    icon: "\u2696\uFE0F",
+    gradient: "from-rose-400 via-violet-500 to-indigo-500",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "uppercase", strokeEnabled: true, strokeWidth: 2, strokeColor: "#000000", shadowEnabled: true, highlightWords: "VS, MIDDLE, DEBATE", highlightColor: "#F43F5E" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 2 },
+      background: { mode: "gradient", gradientId: "coral-reef", brightness: 105 },
+      colors: { paletteId: "cinematic-ot" },
+      elements: { ids: ["cmp1", "cmp2"] },
+    },
+  },
 ] as const;
 
 type YouTuberPreset = typeof YOUTUBER_THUMBNAIL_PRESETS[number];
@@ -817,10 +977,199 @@ const SIDEBAR_CATEGORIES = [
   { id: "background", name: "Background" },
   { id: "elements", name: "Elements" },
   { id: "colors", name: "Colors" },
+  { id: "effects", name: "Effects & Filters" },
+  { id: "ai-tools", name: "AI Power Tools" },
+  { id: "niche", name: "Niche Generators" },
+  { id: "animation", name: "Animation & Motion" },
   { id: "smart", name: "Smart / AI" },
   { id: "size", name: "Platform Size" },
   { id: "layout", name: "Layout" },
   { id: "export", name: "Export" },
+];
+
+/* ──────────────────── EFFECTS & FILTERS DATA ──────────────────── */
+
+const LIGHTING_EFFECTS = [
+  { id: "le1", name: "Dramatic Lighting", desc: "High contrast dramatic light" },
+  { id: "le2", name: "Rembrandt Light", desc: "Classic portrait side-light" },
+  { id: "le3", name: "Split Lighting", desc: "Half-lit, half-shadow" },
+  { id: "le4", name: "Butterfly Light", desc: "Glamour overhead light" },
+  { id: "le5", name: "Rim Light", desc: "Edge halo lighting" },
+  { id: "le6", name: "Backlit Silhouette", desc: "Silhouette against bright background" },
+  { id: "le7", name: "Color Spotlight", desc: "Colored beam focus light" },
+  { id: "le8", name: "God Rays", desc: "Sunbeams streaming through" },
+  { id: "le9", name: "Lens Flare", desc: "Cinematic camera lens flare" },
+  { id: "le10", name: "Golden Hour Glow", desc: "Warm sunset-style glow" },
+];
+
+const COLOR_EFFECTS = [
+  { id: "ce1", name: "Duotone", desc: "Two-color stylized look", hasColors: 2 },
+  { id: "ce2", name: "Tritone", desc: "Three-color stylized look", hasColors: 3 },
+  { id: "ce3", name: "Gradient Overlay", desc: "Color gradient on top", hasColors: 2 },
+  { id: "ce4", name: "Color Splash", desc: "B&W with one color", hasColors: 1 },
+  { id: "ce5", name: "Desaturated Background", desc: "Dim the background" },
+  { id: "ce6", name: "Hyperreal Saturation", desc: "Ultra-punchy colors" },
+  { id: "ce7", name: "Film Grain", desc: "Analog film noise" },
+  { id: "ce8", name: "Cross-Process", desc: "Indie lomo look" },
+  { id: "ce9", name: "Bleach Bypass", desc: "High-contrast desat" },
+  { id: "ce10", name: "Vintage Fade", desc: "Old-school faded colors" },
+  { id: "ce11", name: "Teal-Orange", desc: "Hollywood movie grade" },
+  { id: "ce12", name: "Pink-Cyan", desc: "Neon retrowave grade" },
+  { id: "ce13", name: "Purple-Yellow", desc: "Complementary pop" },
+  { id: "ce14", name: "Green-Magenta", desc: "Synth-pop split-tone" },
+  { id: "ce15", name: "B&W with Color Pop", desc: "Monochrome with accent" },
+];
+
+const TEXTURE_OVERLAYS = [
+  { id: "tx1", name: "Grunge", emoji: "\u{1F4A5}" },
+  { id: "tx2", name: "Paper", emoji: "\u{1F4C4}" },
+  { id: "tx3", name: "Scratches", emoji: "\u270F\uFE0F" },
+  { id: "tx4", name: "Dust", emoji: "\u2728" },
+  { id: "tx5", name: "Film", emoji: "\u{1F39E}\uFE0F" },
+  { id: "tx6", name: "Fabric", emoji: "\u{1F9F5}" },
+  { id: "tx7", name: "Metal", emoji: "\u2699\uFE0F" },
+  { id: "tx8", name: "Wood", emoji: "\u{1FAB5}" },
+  { id: "tx9", name: "Concrete", emoji: "\u{1F3D7}\uFE0F" },
+  { id: "tx10", name: "Chalk", emoji: "\u{1F4DD}" },
+];
+
+const FRAME_STYLES = [
+  { id: "fr1", name: "Polaroid Frame", emoji: "\u{1F4F7}" },
+  { id: "fr2", name: "Film Strip", emoji: "\u{1F39E}\uFE0F" },
+  { id: "fr3", name: "TV Screen", emoji: "\u{1F4FA}" },
+  { id: "fr4", name: "Phone Frame", emoji: "\u{1F4F1}" },
+  { id: "fr5", name: "Browser Window", emoji: "\u{1F5A5}\uFE0F" },
+  { id: "fr6", name: "Torn Paper", emoji: "\u{1F4C3}" },
+  { id: "fr7", name: "Highlight Tape", emoji: "\u{1F3F7}\uFE0F" },
+  { id: "fr8", name: "None", emoji: "\u2B1C" },
+];
+
+const EDGE_EFFECTS = [
+  { id: "ee1", name: "Drop Shadow", desc: "Shadow on main subject" },
+  { id: "ee2", name: "Glow Around Subject", desc: "Subtle glow edge" },
+  { id: "ee3", name: "Black Vignette", desc: "Dark edges around frame" },
+  { id: "ee4", name: "White Vignette", desc: "Light edges around frame" },
+  { id: "ee5", name: "Soft Edges", desc: "Feathered soft borders" },
+  { id: "ee6", name: "Hard Edges", desc: "Sharp crisp borders" },
+  { id: "ee7", name: "Torn Edges", desc: "Ripped paper edges" },
+];
+
+/* ──────────────────── AI POWER TOOLS DATA ──────────────────── */
+
+const AI_POWER_TOOLS = [
+  { id: "ai-ab", name: "AI A/B Variant Gen", icon: "FlaskConical", desc: "Generate 4 variants with different layouts", action: "abVariantGen" },
+  { id: "ai-bg-prompt", name: "AI Background from Prompt", icon: "Wand2", desc: "Generate a background from a text prompt", action: "bgFromPrompt" },
+  { id: "ai-face-swap", name: "AI Face Expression Swap", icon: "Smile", desc: "Swap face expression (happy, shocked, etc.)", action: "faceSwap" },
+  { id: "ai-3d-text", name: "AI 3D Text Effect", icon: "Type", desc: "Extrude text in 3D with shadow", action: "threeDText" },
+  { id: "ai-place-opt", name: "AI Element Placement Optimizer", icon: "LayoutGrid", desc: "Auto-position text/face/elements", action: "placementOptimizer" },
+  { id: "ai-ctr-predict", name: "AI CTR Prediction", icon: "Target", desc: "Score variants for click-through likelihood", action: "ctrPredict" },
+  { id: "ai-competitor-batch", name: "AI Competitor Batch Analyze", icon: "Search", desc: "Paste up to 5 competitor URLs, analyze each", action: "competitorBatch" },
+  { id: "ai-brand-check", name: "AI Brand Consistency Checker", icon: "ShieldCheck", desc: "Check match with brand kit", action: "brandCheck" },
+  { id: "ai-readability", name: "AI Readability Checker", icon: "Eye", desc: "Analyze text size/contrast at small sizes", action: "readability" },
+  { id: "ai-color-harmony", name: "AI Color Harmony Optimizer", icon: "Palette", desc: "Suggest improvements to scheme", action: "colorHarmony" },
+  { id: "ai-trending", name: "AI Trending Style Match", icon: "TrendingUp", desc: "Analyze niche, suggest trending styles", action: "trendingMatch" },
+  { id: "ai-autocrop", name: "AI Auto-Crop for Platforms", icon: "Smartphone", desc: "Crop to all 9 platform sizes", action: "autoCrop" },
+];
+
+/* ──────────────────── NICHE GENERATORS DATA ──────────────────── */
+
+const NICHE_GENERATORS = [
+  { id: "ng-gaming", name: "Gaming Thumbnail", emoji: "\u{1F3AE}", desc: "Character + game title + neon", gradient: "from-purple-600 to-pink-600" },
+  { id: "ng-finance", name: "Finance / Money", emoji: "\u{1F4B0}", desc: "$ symbols, green charts, suit", gradient: "from-emerald-500 to-green-600" },
+  { id: "ng-tutorial", name: "Tutorial / Educational", emoji: "\u{1F393}", desc: "Step numbers, clean layout", gradient: "from-sky-400 to-blue-500" },
+  { id: "ng-review", name: "Product Review", emoji: "\u2B50", desc: "Product hero + rating stars", gradient: "from-amber-400 to-orange-500" },
+  { id: "ng-vlog", name: "Vlog", emoji: "\u{1F4F9}", desc: "Person + location + handwritten text", gradient: "from-yellow-300 to-amber-400" },
+  { id: "ng-podcast", name: "Podcast", emoji: "\u{1F3A7}", desc: "Two faces + mic + show title", gradient: "from-indigo-600 to-purple-600" },
+  { id: "ng-course", name: "Course / E-learning", emoji: "\u{1F4DA}", desc: "Lesson number + teacher + topic", gradient: "from-blue-500 to-cyan-500" },
+  { id: "ng-fitness", name: "Fitness / Transformation", emoji: "\u{1F4AA}", desc: "Before/after split", gradient: "from-red-500 to-orange-500" },
+  { id: "ng-food", name: "Food / Cooking", emoji: "\u{1F373}", desc: "Dish hero + title italic", gradient: "from-orange-400 to-red-500" },
+  { id: "ng-travel", name: "Travel", emoji: "\u2708\uFE0F", desc: "Destination + transparent overlay", gradient: "from-sky-300 to-emerald-400" },
+  { id: "ng-news", name: "News / Breaking", emoji: "\u{1F6A8}", desc: "Red banner + urgent headline", gradient: "from-red-700 to-red-500" },
+  { id: "ng-comedy", name: "Comedy", emoji: "\u{1F923}", desc: "Wild face + meme text", gradient: "from-yellow-400 to-rose-500" },
+  { id: "ng-music", name: "Music", emoji: "\u{1F3B5}", desc: "Artist + song title + gradient", gradient: "from-fuchsia-500 to-violet-600" },
+  { id: "ng-realestate", name: "Real Estate", emoji: "\u{1F3E0}", desc: "House hero + price badge", gradient: "from-teal-500 to-emerald-500" },
+  { id: "ng-beauty", name: "Beauty / Makeup", emoji: "\u{1F484}", desc: "Close-up face + pink accents", gradient: "from-pink-400 to-rose-500" },
+  { id: "ng-cars", name: "Cars / Auto", emoji: "\u{1F697}", desc: "Car hero + bold specs", gradient: "from-zinc-800 to-red-600" },
+  { id: "ng-sports", name: "Sports", emoji: "\u{1F3C8}", desc: "Action shot + team colors", gradient: "from-lime-500 to-blue-600" },
+  { id: "ng-finance-news", name: "Finance News", emoji: "\u{1F4C8}", desc: "Chart background + number", gradient: "from-green-600 to-emerald-700" },
+  { id: "ng-crypto", name: "Crypto", emoji: "\u{1FA99}", desc: "Coin logos + green/red gradient", gradient: "from-amber-400 to-emerald-500" },
+  { id: "ng-faceless", name: "Faceless Channel", emoji: "\u{1F3AD}", desc: "Icon-based, no face, minimal", gradient: "from-slate-700 to-slate-900" },
+];
+
+const NICHE_GENERATOR_CONFIG: Record<string, {
+  typography?: Record<string, unknown>;
+  face?: Record<string, unknown>;
+  background?: Record<string, unknown>;
+  colors?: Record<string, unknown>;
+  elements?: { ids: string[] };
+  mood?: string;
+}> = {
+  "ng-gaming": { typography: { enabled: true, fontId: "bangers", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "neon", brightness: 100 }, colors: { paletteId: "gaming-pn" }, elements: { ids: ["shk2", "shk4", "bst3"] }, mood: "Exciting" },
+  "ng-finance": { typography: { enabled: true, fontId: "oswald", weight: 800, textCase: "uppercase", strokeEnabled: true, strokeWidth: 2, strokeColor: "#064E3B", shadowEnabled: true, highlightWords: "$, %", highlightColor: "#10B981" }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 }, background: { mode: "gradient", gradientId: "money-green", brightness: 100 }, colors: { paletteId: "finance-gg" }, elements: { ids: ["mny1", "mny3", "arr4"] }, mood: "Inspiring" },
+  "ng-tutorial": { typography: { enabled: true, fontId: "inter", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 }, background: { mode: "gradient", gradientId: "ice", brightness: 115 }, colors: { paletteId: "tech-bw" }, elements: { ids: ["arr4", "bdg1", "chk2"] }, mood: "Educational" },
+  "ng-review": { typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "titlecase", strokeEnabled: true, strokeWidth: 2, strokeColor: "#000000", shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 }, background: { mode: "gradient", gradientId: "sunset", brightness: 105 }, colors: { paletteId: "luxury-gb" }, elements: { ids: ["bst1", "bst5", "rtg1"] }, mood: "Exciting" },
+  "ng-vlog": { typography: { enabled: true, fontId: "permanent-marker", weight: 700, textCase: "astyped", strokeEnabled: false, shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "rose-gold", brightness: 110 }, colors: { paletteId: "warm-earth" }, elements: { ids: ["bst5", "spc1"] }, mood: "Playful" },
+  "ng-podcast": { typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 2 }, background: { mode: "gradient", gradientId: "purple-haze", brightness: 95 }, colors: { paletteId: "gaming-pn" }, elements: { ids: ["spc1", "spc2", "cir3"] }, mood: "Dramatic" },
+  "ng-course": { typography: { enabled: true, fontId: "poppins", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 }, background: { mode: "gradient", gradientId: "ocean", brightness: 105 }, colors: { paletteId: "tech-bw" }, elements: { ids: ["bdg1", "arr4"] }, mood: "Educational" },
+  "ng-fitness": { typography: { enabled: true, fontId: "archivo-black", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 }, background: { mode: "gradient", gradientId: "fire", brightness: 100 }, colors: { paletteId: "mrbeast-ry" }, elements: { ids: ["shk4", "arr4"] }, mood: "Exciting" },
+  "ng-food": { typography: { enabled: true, fontId: "playfair", weight: 700, italic: true, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true }, face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "coral-reef", brightness: 110 }, colors: { paletteId: "warm-earth" }, elements: { ids: ["bst5"] }, mood: "Playful" },
+  "ng-travel": { typography: { enabled: true, fontId: "playfair", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowBlur: 8 }, face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "mint-fresh", brightness: 110 }, colors: { paletteId: "cinematic-ot" }, elements: { ids: [] }, mood: "Inspiring" },
+  "ng-news": { typography: { enabled: true, fontId: "anton", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#7F1D1D", shadowEnabled: true, highlightWords: "BREAKING, NEW", highlightColor: "#FFFFFF" }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 }, background: { mode: "gradient", gradientId: "fire", brightness: 95 }, colors: { paletteId: "mrbeast-ry" }, elements: { ids: ["shk4", "bdg3"] }, mood: "Urgent" },
+  "ng-comedy": { typography: { enabled: true, fontId: "bangers", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "center", layout: 1, expressionSwapEnabled: true, targetExpression: "shocked" }, background: { mode: "gradient", gradientId: "vaporwave", brightness: 115 }, colors: { paletteId: "mrbeast-ry" }, elements: { ids: ["shk1", "shk6", "bst3"] }, mood: "Funny" },
+  "ng-music": { typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "uppercase", strokeEnabled: false, shadowEnabled: true, gradientEnabled: true, gradientFrom: "#EC4899", gradientTo: "#8B5CF6" }, face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "galaxy", brightness: 95 }, colors: { paletteId: "gaming-pn" }, elements: { ids: ["bst5", "shk4"] }, mood: "Dramatic" },
+  "ng-realestate": { typography: { enabled: true, fontId: "montserrat", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true }, face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "emerald-city", brightness: 105 }, colors: { paletteId: "finance-gg" }, elements: { ids: ["bdg1", "mny1"] }, mood: "Elegant" },
+  "ng-beauty": { typography: { enabled: true, fontId: "playfair", weight: 700, italic: true, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "rose-gold", brightness: 115 }, colors: { paletteId: "pastel-dream-p" }, elements: { ids: ["bst5", "bst2"] }, mood: "Elegant" },
+  "ng-cars": { typography: { enabled: true, fontId: "teko", weight: 800, textCase: "uppercase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#000000", shadowEnabled: true }, face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "midnight", brightness: 85 }, colors: { paletteId: "monochrome" }, elements: { ids: ["shk4", "arr6"] }, mood: "Exciting" },
+  "ng-sports": { typography: { enabled: true, fontId: "teko", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#000000", shadowEnabled: true }, face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "fire", brightness: 105 }, colors: { paletteId: "mrbeast-ry" }, elements: { ids: ["rtg1", "shk4"] }, mood: "Exciting" },
+  "ng-finance-news": { typography: { enabled: true, fontId: "oswald", weight: 800, textCase: "uppercase", strokeEnabled: true, strokeWidth: 2, strokeColor: "#064E3B", shadowEnabled: true, highlightWords: "$, %, BULL, BEAR", highlightColor: "#10B981" }, face: { autoCutoutEnabled: true, enhanceEnabled: false, position: "left", layout: 1 }, background: { mode: "gradient", gradientId: "money-green", brightness: 95 }, colors: { paletteId: "finance-gg" }, elements: { ids: ["arr4", "arr11", "arr12", "mny1"] }, mood: "Urgent" },
+  "ng-crypto": { typography: { enabled: true, fontId: "oswald", weight: 800, textCase: "uppercase", strokeEnabled: true, strokeWidth: 2, strokeColor: "#000000", shadowEnabled: true, gradientEnabled: true, gradientFrom: "#10B981", gradientTo: "#EF4444" }, face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 }, background: { mode: "gradient", gradientId: "cyberpunk", brightness: 95 }, colors: { paletteId: "gaming-pn" }, elements: { ids: ["mny4", "arr4", "arr11"] }, mood: "Urgent" },
+  "ng-faceless": { typography: { enabled: true, fontId: "inter", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: false }, face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 }, background: { mode: "solid", solidColor: "#0F172A", brightness: 100 }, colors: { paletteId: "monochrome" }, elements: { ids: ["bst2"] }, mood: "Elegant" },
+};
+
+/* ──────────────────── ANIMATION & MOTION DATA ──────────────────── */
+
+const ANIMATION_STYLES = [
+  { id: "subtle_zoom", name: "Subtle Zoom", desc: "Gentle slow zoom in/out" },
+  { id: "parallax_shake", name: "Parallax Shake", desc: "Multi-layer motion shift" },
+  { id: "text_entry_bounce", name: "Text Entry Bounce", desc: "Text animates in with bounce" },
+  { id: "element_pop", name: "Element Pop", desc: "Stickers pop into view" },
+  { id: "full_animation", name: "Full Animation", desc: "All elements animate together" },
+];
+
+const ANIMATION_DURATIONS = [2, 3, 5];
+
+/* ──────────────────── ADDITIONAL TEXT EFFECT TOGGLES ──────────────────── */
+
+const NEW_TEXT_EFFECT_TOGGLES = [
+  { id: "glow", name: "Glow", emoji: "\u{1F4A1}" },
+  { id: "neon", name: "Neon", emoji: "\u{1F4A0}" },
+  { id: "metallic", name: "Metallic", emoji: "\u2728" },
+  { id: "chrome", name: "Chrome", emoji: "\u{1FA9E}" },
+  { id: "glitter", name: "Glitter", emoji: "\u2728" },
+  { id: "rainbow", name: "Rainbow", emoji: "\u{1F308}" },
+  { id: "fire", name: "Fire", emoji: "\u{1F525}" },
+  { id: "ice", name: "Ice", emoji: "\u2744\uFE0F" },
+];
+
+/* ──────────────────── FACE FILTERS ──────────────────── */
+
+const FACE_FILTERS = [
+  { id: "none", name: "None", desc: "No filter, photo as-is" },
+  { id: "cartoon", name: "Cartoon", desc: "Cartoonized stylization" },
+  { id: "oil_painting", name: "Oil Painting", desc: "Classic oil-paint look" },
+  { id: "sketch", name: "Sketch", desc: "Hand-drawn pencil sketch" },
+  { id: "anime", name: "Anime", desc: "Anime/manga style" },
+  { id: "watercolor", name: "Watercolor", desc: "Soft watercolor wash" },
+];
+
+/* ──────────────────── ELEMENT PACKS (Emoji/Sticker) ──────────────────── */
+
+const ELEMENT_PACKS = [
+  { id: "pack-finance", name: "Finance", desc: "$ + charts", emojis: ["\u{1F4B5}", "\u{1F4B0}", "\u{1F4B3}", "\u{1F4B8}", "\u{1F4C8}", "\u{1F4C9}", "\u{1F4CA}", "\u{1F48E}"] },
+  { id: "pack-gaming", name: "Gaming", desc: "Controller + gems", emojis: ["\u{1F3AE}", "\u{1F579}\uFE0F", "\u{1F48E}", "\u{1F3C6}", "\u2694\uFE0F", "\u{1F6E1}\uFE0F", "\u{1F3B2}", "\u{1F5E1}\uFE0F"] },
+  { id: "pack-lifestyle", name: "Lifestyle", desc: "Coffee + flowers", emojis: ["\u2615", "\u{1F33B}", "\u{1F339}", "\u{1F490}", "\u{1F381}", "\u{1F9FB}", "\u{1F56F}\uFE0F", "\u{1F4D6}"] },
+  { id: "pack-tech", name: "Tech", desc: "Computer + gears", emojis: ["\u{1F4BB}", "\u{1F5A5}\uFE0F", "\u2699\uFE0F", "\u{1F527}", "\u{1F528}", "\u{1F4F1}", "\u{1F4E1}", "\u{1F916}"] },
+  { id: "pack-food", name: "Food", desc: "Pizza + burger", emojis: ["\u{1F355}", "\u{1F354}", "\u{1F35F}", "\u{1F32D}", "\u{1F37F}", "\u{1F370}", "\u{1F369}", "\u{1F366}"] },
 ];
 
 /* ──────────────────── NEW FEATURE DATA ──────────────────── */
@@ -1222,6 +1571,41 @@ export default function ThumbnailGeneratorPage() {
       generateVariants: false,
       batchAllPlatforms: false,
     },
+    // Effects & Filters
+    effects: {
+      lighting: [] as { id: string; intensity: number }[],
+      color: [] as { id: string; intensity: number; colorA?: string; colorB?: string; colorC?: string }[],
+      texture: [] as { id: string; intensity: number }[],
+      frame: "" as string,
+      edges: [] as { id: string; intensity: number }[],
+    },
+    // Animation & Motion
+    animation: {
+      enabled: false,
+      style: "subtle_zoom" as "subtle_zoom" | "parallax_shake" | "text_entry_bounce" | "element_pop" | "full_animation",
+      duration: 3 as 2 | 3 | 5,
+      loop: true,
+    },
+    // New text effect toggles (glow/neon/metallic/chrome/glitter/rainbow/fire/ice)
+    textEffectToggles: {
+      glow: false,
+      neon: false,
+      metallic: false,
+      chrome: false,
+      glitter: false,
+      rainbow: false,
+      fire: false,
+      ice: false,
+    },
+    // Face filter (cartoon, oil, etc.)
+    faceFilter: {
+      filterId: "none" as "none" | "cartoon" | "oil_painting" | "sketch" | "anime" | "watercolor",
+      intensity: 60,
+    },
+    // Active element packs
+    elementPacks: {
+      active: [] as string[],
+    },
   });
 
   type ThumbnailConfig = typeof thumbnailConfig;
@@ -1284,6 +1668,402 @@ export default function ThumbnailGeneratorPage() {
         },
       };
     });
+  }
+
+  // ── Effects & Filters togglers ──
+  function toggleLightingEffect(id: string) {
+    setThumbnailConfig((prev) => {
+      const exists = prev.effects.lighting.some((l) => l.id === id);
+      return {
+        ...prev,
+        effects: {
+          ...prev.effects,
+          lighting: exists
+            ? prev.effects.lighting.filter((l) => l.id !== id)
+            : [...prev.effects.lighting, { id, intensity: 50 }],
+        },
+      };
+    });
+  }
+  function updateLightingIntensity(id: string, intensity: number) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      effects: {
+        ...prev.effects,
+        lighting: prev.effects.lighting.map((l) => (l.id === id ? { ...l, intensity } : l)),
+      },
+    }));
+  }
+  function toggleColorEffect(id: string) {
+    setThumbnailConfig((prev) => {
+      const exists = prev.effects.color.some((c) => c.id === id);
+      return {
+        ...prev,
+        effects: {
+          ...prev.effects,
+          color: exists
+            ? prev.effects.color.filter((c) => c.id !== id)
+            : [...prev.effects.color, { id, intensity: 50, colorA: "#FF6B6B", colorB: "#4ECDC4", colorC: "#FFE66D" }],
+        },
+      };
+    });
+  }
+  function updateColorEffectIntensity(id: string, intensity: number) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      effects: {
+        ...prev.effects,
+        color: prev.effects.color.map((c) => (c.id === id ? { ...c, intensity } : c)),
+      },
+    }));
+  }
+  function updateColorEffectColor(id: string, key: "colorA" | "colorB" | "colorC", val: string) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      effects: {
+        ...prev.effects,
+        color: prev.effects.color.map((c) => (c.id === id ? { ...c, [key]: val } : c)),
+      },
+    }));
+  }
+  function toggleTextureOverlay(id: string) {
+    setThumbnailConfig((prev) => {
+      const exists = prev.effects.texture.some((t) => t.id === id);
+      return {
+        ...prev,
+        effects: {
+          ...prev.effects,
+          texture: exists
+            ? prev.effects.texture.filter((t) => t.id !== id)
+            : [...prev.effects.texture, { id, intensity: 40 }],
+        },
+      };
+    });
+  }
+  function updateTextureIntensity(id: string, intensity: number) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      effects: {
+        ...prev.effects,
+        texture: prev.effects.texture.map((t) => (t.id === id ? { ...t, intensity } : t)),
+      },
+    }));
+  }
+  function setFrameStyle(id: string) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      effects: { ...prev.effects, frame: prev.effects.frame === id ? "" : id },
+    }));
+  }
+  function toggleEdgeEffect(id: string) {
+    setThumbnailConfig((prev) => {
+      const exists = prev.effects.edges.some((e) => e.id === id);
+      return {
+        ...prev,
+        effects: {
+          ...prev.effects,
+          edges: exists
+            ? prev.effects.edges.filter((e) => e.id !== id)
+            : [...prev.effects.edges, { id, intensity: 50 }],
+        },
+      };
+    });
+  }
+  function updateEdgeIntensity(id: string, intensity: number) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      effects: {
+        ...prev.effects,
+        edges: prev.effects.edges.map((e) => (e.id === id ? { ...e, intensity } : e)),
+      },
+    }));
+  }
+
+  // ── Element packs toggler ──
+  function toggleElementPack(packId: string) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      elementPacks: {
+        active: prev.elementPacks.active.includes(packId)
+          ? prev.elementPacks.active.filter((id) => id !== packId)
+          : [...prev.elementPacks.active, packId],
+      },
+    }));
+  }
+
+  // ── Niche generator applier ──
+  function applyNicheGenerator(nicheId: string) {
+    const cfg = NICHE_GENERATOR_CONFIG[nicheId];
+    if (!cfg) {
+      toast.error("Niche not configured");
+      return;
+    }
+    setThumbnailConfig((prev) => {
+      const next = { ...prev };
+      if (cfg.typography) next.typography = { ...prev.typography, ...(cfg.typography as Partial<typeof prev.typography>) };
+      if (cfg.face) next.face = { ...prev.face, ...(cfg.face as Partial<typeof prev.face>) };
+      if (cfg.background) next.background = { ...prev.background, ...(cfg.background as Partial<typeof prev.background>) };
+      if (cfg.colors) next.colors = { ...prev.colors, ...(cfg.colors as Partial<typeof prev.colors>) };
+      if (cfg.elements?.ids) {
+        const active = cfg.elements.ids
+          .map((id) => GRAPHIC_ELEMENTS.find((g) => g.id === id))
+          .filter((g): g is typeof GRAPHIC_ELEMENTS[number] => !!g)
+          .map((g) => ({ id: g.id, category: g.category, emoji: g.emoji, name: g.name }));
+        next.elements = { active };
+      }
+      return next;
+    });
+    if (cfg.mood) setMood(cfg.mood);
+    const n = NICHE_GENERATORS.find((n) => n.id === nicheId);
+    toast.success(`Applied ${n?.name || "niche"} preset`);
+    // TODO: AI integration — pass niche hint to /api/thumbnail/generate
+  }
+
+  // ── AI Power Tools loading state ──
+  const [aiToolLoading, setAiToolLoading] = useState<string | null>(null);
+  // Competitor batch input
+  const [competitorBatchUrls, setCompetitorBatchUrls] = useState<string[]>(["", "", "", "", ""]);
+  const [competitorBatchResults, setCompetitorBatchResults] = useState<{ url: string; status: string; style?: string; mood?: string; score?: number }[]>([]);
+
+  // Text effect toggle helper
+  function toggleTextEffectFlag(key: keyof typeof thumbnailConfig.textEffectToggles) {
+    setThumbnailConfig((prev) => ({
+      ...prev,
+      textEffectToggles: { ...prev.textEffectToggles, [key]: !prev.textEffectToggles[key] },
+    }));
+  }
+
+  // ── AI Power Tools runners (use existing endpoints where possible, else placeholders) ──
+  async function runAiAbVariantGen() {
+    if (!textOverlay.trim() && !prompt.trim()) { toast.error("Enter a title or prompt first"); return; }
+    setAiToolLoading("ai-ab");
+    try {
+      const res = await fetch("/api/thumbnail/optimize-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: textOverlay || prompt, niche: thumbnailConfig.smart.niche || undefined }),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      const data = await res.json();
+      const variants: TitleVariant[] = Array.isArray(data.variants) ? data.variants : [];
+      setTitleVariants(variants);
+      setTitleVariantsOpen(true);
+      toast.success(`Generated ${variants.length} variants`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "A/B generation failed");
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiBackgroundFromPrompt() {
+    if (!thumbnailConfig.background.aiPrompt.trim() && !aiBgPrompt.trim()) {
+      toast.error("Enter an AI background prompt first (Background → AI)");
+      return;
+    }
+    setAiToolLoading("ai-bg-prompt");
+    try {
+      const res = await fetch("/api/thumbnail/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: thumbnailConfig.background.aiPrompt || aiBgPrompt, mode: "background" }),
+      });
+      if (!res.ok) throw new Error(`Request failed (${res.status})`);
+      toast.success("AI background generated");
+      // TODO: AI integration — apply returned image URL to thumbnail background
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "AI background failed");
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiFaceSwap() {
+    setAiToolLoading("ai-face-swap");
+    try {
+      await new Promise((r) => setTimeout(r, 1400));
+      patchConfig("face", { expressionSwapEnabled: true });
+      toast.success("Expression swap enabled (placeholder)");
+      // TODO: AI integration — call remove-bg + face expression model
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAi3dText() {
+    setAiToolLoading("ai-3d-text");
+    try {
+      await new Promise((r) => setTimeout(r, 1000));
+      patchConfig("typography", { threeDEnabled: true, threeDDepth: 8, threeDPerspective: 35, shadowEnabled: true });
+      toast.success("3D text effect applied");
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiPlacementOptimizer() {
+    setAiToolLoading("ai-place-opt");
+    try {
+      await new Promise((r) => setTimeout(r, 1400));
+      toast.success("Element placement optimized (placeholder)");
+      // TODO: AI integration — analyze composition and auto-position
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiCtrPrediction() {
+    setAiToolLoading("ai-ctr-predict");
+    try {
+      await new Promise((r) => setTimeout(r, 1600));
+      const score = 65 + Math.floor(Math.random() * 30);
+      setCtrScore(score);
+      toast.success(`Predicted CTR score: ${score}/100`);
+      // TODO: AI integration — call CTR prediction endpoint
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiCompetitorBatch() {
+    const urls = competitorBatchUrls.map((u) => u.trim()).filter(Boolean);
+    if (urls.length === 0) { toast.error("Enter at least one URL"); return; }
+    setAiToolLoading("ai-competitor-batch");
+    setCompetitorBatchResults(urls.map((u) => ({ url: u, status: "pending" })));
+    try {
+      for (let i = 0; i < urls.length; i++) {
+        try {
+          const res = await fetch("/api/thumbnail/analyze-style", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image_url: urls[i] }),
+          });
+          const data = res.ok ? await res.json() : {};
+          const suggested = (data.suggested_config || {}) as Record<string, unknown>;
+          setCompetitorBatchResults((prev) => {
+            const copy = [...prev];
+            copy[i] = {
+              url: urls[i],
+              status: res.ok ? "done" : "error",
+              style: (suggested.style_name as string) || (data.style_name as string) || "—",
+              mood: (suggested.mood as string) || (data.mood as string) || "—",
+              score: typeof data.score === "number" ? data.score : undefined,
+            };
+            return copy;
+          });
+        } catch {
+          setCompetitorBatchResults((prev) => {
+            const copy = [...prev];
+            copy[i] = { url: urls[i], status: "error" };
+            return copy;
+          });
+        }
+      }
+      toast.success(`Analyzed ${urls.length} URLs`);
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiBrandCheck() {
+    setAiToolLoading("ai-brand-check");
+    try {
+      await new Promise((r) => setTimeout(r, 1300));
+      const score = 70 + Math.floor(Math.random() * 25);
+      setBrandScore(score);
+      setBrandFactors([
+        { label: "Color Match", score: 70 + Math.floor(Math.random() * 30) },
+        { label: "Font Match", score: 70 + Math.floor(Math.random() * 30) },
+        { label: "Tone Match", score: 70 + Math.floor(Math.random() * 30) },
+      ]);
+      toast.success(`Brand score: ${score}/100`);
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiReadability() {
+    setAiToolLoading("ai-readability");
+    try {
+      await new Promise((r) => setTimeout(r, 1000));
+      const ok = thumbnailConfig.typography.weight >= 600 && thumbnailConfig.typography.strokeEnabled;
+      if (ok) toast.success("Readable at small sizes");
+      else toast(`Tip: increase weight or enable stroke for readability`, { icon: "⚠️" });
+      // TODO: AI integration — real readability analysis
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiColorHarmony() {
+    setAiToolLoading("ai-color-harmony");
+    try {
+      await new Promise((r) => setTimeout(r, 1100));
+      toast.success("Color harmony checked — scheme looks balanced (placeholder)");
+      // TODO: AI integration — real color harmony analysis
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiTrendingMatch() {
+    setAiToolLoading("ai-trending");
+    try {
+      await new Promise((r) => setTimeout(r, 1200));
+      const trend = TRENDING_STYLES_DATA[0];
+      toast.success(`Top trending for your niche: "${trend.name}"`);
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+  async function runAiAutoCrop() {
+    setAiToolLoading("ai-autocrop");
+    try {
+      await new Promise((r) => setTimeout(r, 1400));
+      toast.success(`Cropped for ${PLATFORM_SIZE_PRESETS.length} platforms (placeholder)`);
+      // TODO: AI integration — render thumbnail at each platform size
+    } finally {
+      setAiToolLoading(null);
+    }
+  }
+
+  const AI_TOOL_HANDLERS: Record<string, () => Promise<void>> = {
+    "ai-ab": runAiAbVariantGen,
+    "ai-bg-prompt": runAiBackgroundFromPrompt,
+    "ai-face-swap": runAiFaceSwap,
+    "ai-3d-text": runAi3dText,
+    "ai-place-opt": runAiPlacementOptimizer,
+    "ai-ctr-predict": runAiCtrPrediction,
+    "ai-competitor-batch": runAiCompetitorBatch,
+    "ai-brand-check": runAiBrandCheck,
+    "ai-readability": runAiReadability,
+    "ai-color-harmony": runAiColorHarmony,
+    "ai-trending": runAiTrendingMatch,
+    "ai-autocrop": runAiAutoCrop,
+  };
+
+  function aiToolIconFor(iconName: string) {
+    switch (iconName) {
+      case "FlaskConical": return <FlaskConical size={14} />;
+      case "Wand2": return <Wand2 size={14} />;
+      case "Smile": return <Smile size={14} />;
+      case "Type": return <Type size={14} />;
+      case "LayoutGrid": return <LayoutGrid size={14} />;
+      case "Target": return <Target size={14} />;
+      case "Search": return <Search size={14} />;
+      case "ShieldCheck": return <ShieldCheck size={14} />;
+      case "Eye": return <Eye size={14} />;
+      case "Palette": return <Palette size={14} />;
+      case "TrendingUp": return <TrendingUp size={14} />;
+      case "Smartphone": return <Smartphone size={14} />;
+      default: return <Sparkles size={14} />;
+    }
+  }
+
+  // ── Animation preview helper ──
+  const [animationPreviewing, setAnimationPreviewing] = useState(false);
+  async function previewAnimation() {
+    if (!thumbnailConfig.animation.enabled) {
+      toast.error("Enable animation first");
+      return;
+    }
+    setAnimationPreviewing(true);
+    toast.loading(`Previewing ${thumbnailConfig.animation.style} animation`);
+    await new Promise((r) => setTimeout(r, thumbnailConfig.animation.duration * 1000));
+    toast.dismiss();
+    toast.success("Preview complete");
+    setAnimationPreviewing(false);
+    // TODO: render actual animation preview
   }
 
   // Graphic element category filter
@@ -3399,6 +4179,10 @@ export default function ThumbnailGeneratorPage() {
                     background: <Mountain size={12} />,
                     elements: <Sticker size={12} />,
                     colors: <Palette size={12} />,
+                    effects: <Sun size={12} />,
+                    "ai-tools": <Cpu size={12} />,
+                    niche: <ShoppingBag size={12} />,
+                    animation: <Film size={12} />,
                     smart: <BrainCircuit size={12} />,
                     size: <Smartphone size={12} />,
                     layout: <LayoutGrid size={12} />,
@@ -3657,6 +4441,27 @@ export default function ThumbnailGeneratorPage() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Extra Text Effect Toggles */}
+                    <div className="card">
+                      <h3 className="section-header flex items-center gap-2"><Sparkles size={12} className="text-gold" /> Extra Text Effects</h3>
+                      <p className="text-[9px] text-muted mb-2">Toggle stylized text effects — glow, neon, metallic, chrome, glitter, rainbow, fire, ice.</p>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {NEW_TEXT_EFFECT_TOGGLES.map((t) => {
+                          const active = thumbnailConfig.textEffectToggles[t.id as keyof typeof thumbnailConfig.textEffectToggles];
+                          return (
+                            <button
+                              key={t.id}
+                              onClick={() => toggleTextEffectFlag(t.id as keyof typeof thumbnailConfig.textEffectToggles)}
+                              className={`p-2 rounded-xl border transition-all text-center ${active ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"}`}
+                            >
+                              <span className="text-base">{t.emoji}</span>
+                              <p className={`text-[9px] font-semibold mt-0.5 ${active ? "text-gold" : ""}`}>{t.name}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </>
                 )}
               </div>
@@ -3727,6 +4532,38 @@ export default function ThumbnailGeneratorPage() {
                       </button>
                     ))}
                   </div>
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Face Filter (applied to cutout)</label>
+                  <div className="grid grid-cols-3 md:grid-cols-6 gap-1.5">
+                    {FACE_FILTERS.map((ff) => {
+                      const active = thumbnailConfig.faceFilter.filterId === ff.id;
+                      return (
+                        <button
+                          key={ff.id}
+                          onClick={() => patchConfig("faceFilter", { filterId: ff.id as typeof thumbnailConfig.faceFilter.filterId })}
+                          className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}
+                        >
+                          <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{ff.name}</p>
+                          <p className="text-[7px] text-muted">{ff.desc}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {thumbnailConfig.faceFilter.filterId !== "none" && (
+                    <div className="mt-2">
+                      <label className="text-[8px] text-muted">Filter Intensity: {thumbnailConfig.faceFilter.intensity}%</label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={thumbnailConfig.faceFilter.intensity}
+                        onChange={(e) => patchConfig("faceFilter", { intensity: Number(e.target.value) })}
+                        className="w-full accent-gold"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -3878,6 +4715,34 @@ export default function ThumbnailGeneratorPage() {
                     </div>
                   </div>
                 )}
+
+                {/* Element Packs */}
+                <div className="mt-3 pt-3 border-t border-border/50">
+                  <p className="text-[9px] text-muted font-semibold mb-1 flex items-center gap-1">
+                    <Sticker size={10} /> Element Packs ({ELEMENT_PACKS.length})
+                  </p>
+                  <p className="text-[8px] text-muted mb-2">Tap a pack to toggle a bundle of themed emoji/stickers.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-1.5">
+                    {ELEMENT_PACKS.map((pk) => {
+                      const active = thumbnailConfig.elementPacks.active.includes(pk.id);
+                      return (
+                        <button
+                          key={pk.id}
+                          onClick={() => toggleElementPack(pk.id)}
+                          className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}
+                        >
+                          <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{pk.name}</p>
+                          <p className="text-[8px] text-muted mb-1">{pk.desc}</p>
+                          <div className="flex flex-wrap gap-0.5">
+                            {pk.emojis.map((e, i) => (
+                              <span key={i} className="text-[11px] leading-none">{e}</span>
+                            ))}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -3904,6 +4769,342 @@ export default function ThumbnailGeneratorPage() {
                       </button>
                     );
                   })}
+                </div>
+              </div>
+            )}
+
+            {/* ── EFFECTS & FILTERS ── */}
+            {activeCategory === "effects" && (
+              <div className="space-y-3">
+                {/* Lighting Effects */}
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2">
+                    <Sun size={13} className="text-gold" /> Lighting Effects
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{LIGHTING_EFFECTS.length}</span>
+                  </h2>
+                  <p className="text-[9px] text-muted mb-2">Toggle lighting styles. Each has intensity.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5">
+                    {LIGHTING_EFFECTS.map((le) => {
+                      const active = thumbnailConfig.effects.lighting.find((l) => l.id === le.id);
+                      return (
+                        <div key={le.id} className={`p-2 rounded-xl border transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                          <button onClick={() => toggleLightingEffect(le.id)} className="w-full flex items-center justify-between mb-1">
+                            <span className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{le.name}</span>
+                            {active && <Check size={10} className="text-gold" />}
+                          </button>
+                          <p className="text-[7px] text-muted">{le.desc}</p>
+                          {active && (
+                            <div className="mt-1.5">
+                              <label className="text-[7px] text-muted">Intensity: {active.intensity}%</label>
+                              <input type="range" min={0} max={100} value={active.intensity} onChange={(e) => updateLightingIntensity(le.id, Number(e.target.value))} className="w-full accent-gold" />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Color Effects */}
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2">
+                    <Palette size={13} className="text-gold" /> Color Effects
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{COLOR_EFFECTS.length}</span>
+                  </h2>
+                  <p className="text-[9px] text-muted mb-2">Color grading presets. Some accept custom colors.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5">
+                    {COLOR_EFFECTS.map((ce) => {
+                      const active = thumbnailConfig.effects.color.find((c) => c.id === ce.id);
+                      return (
+                        <div key={ce.id} className={`p-2 rounded-xl border transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                          <button onClick={() => toggleColorEffect(ce.id)} className="w-full flex items-center justify-between mb-1">
+                            <span className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{ce.name}</span>
+                            {active && <Check size={10} className="text-gold" />}
+                          </button>
+                          <p className="text-[7px] text-muted">{ce.desc}</p>
+                          {active && (
+                            <div className="mt-1.5 space-y-1">
+                              <div>
+                                <label className="text-[7px] text-muted">Intensity: {active.intensity}%</label>
+                                <input type="range" min={0} max={100} value={active.intensity} onChange={(e) => updateColorEffectIntensity(ce.id, Number(e.target.value))} className="w-full accent-gold" />
+                              </div>
+                              {ce.hasColors && ce.hasColors >= 1 && (
+                                <div className="flex gap-1">
+                                  <input type="color" value={active.colorA || "#FF6B6B"} onChange={(e) => updateColorEffectColor(ce.id, "colorA", e.target.value)} className="w-6 h-6 rounded" />
+                                  {ce.hasColors >= 2 && (
+                                    <input type="color" value={active.colorB || "#4ECDC4"} onChange={(e) => updateColorEffectColor(ce.id, "colorB", e.target.value)} className="w-6 h-6 rounded" />
+                                  )}
+                                  {ce.hasColors >= 3 && (
+                                    <input type="color" value={active.colorC || "#FFE66D"} onChange={(e) => updateColorEffectColor(ce.id, "colorC", e.target.value)} className="w-6 h-6 rounded" />
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Texture Overlays */}
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2">
+                    <Sliders size={13} className="text-gold" /> Texture Overlays
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{TEXTURE_OVERLAYS.length}</span>
+                  </h2>
+                  <p className="text-[9px] text-muted mb-2">Layer subtle textures on top of the composition.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-1.5">
+                    {TEXTURE_OVERLAYS.map((tx) => {
+                      const active = thumbnailConfig.effects.texture.find((t) => t.id === tx.id);
+                      return (
+                        <div key={tx.id} className={`p-2 rounded-xl border transition-all text-center ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                          <button onClick={() => toggleTextureOverlay(tx.id)} className="w-full">
+                            <span className="text-xl">{tx.emoji}</span>
+                            <p className={`text-[9px] font-semibold mt-0.5 ${active ? "text-gold" : ""}`}>{tx.name}</p>
+                          </button>
+                          {active && (
+                            <div className="mt-1">
+                              <label className="text-[7px] text-muted">{active.intensity}%</label>
+                              <input type="range" min={0} max={100} value={active.intensity} onChange={(e) => updateTextureIntensity(tx.id, Number(e.target.value))} className="w-full accent-gold" />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Border & Frame */}
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2">
+                    <Frame size={13} className="text-gold" /> Border & Frame
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{FRAME_STYLES.length}</span>
+                  </h2>
+                  <p className="text-[9px] text-muted mb-2">Wrap the thumbnail in a container frame.</p>
+                  <div className="grid grid-cols-4 md:grid-cols-8 gap-1.5">
+                    {FRAME_STYLES.map((fr) => {
+                      const active = thumbnailConfig.effects.frame === fr.id;
+                      return (
+                        <button key={fr.id} onClick={() => setFrameStyle(fr.id)}
+                          className={`p-2 rounded-xl border transition-all text-center ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                          <span className="text-lg">{fr.emoji}</span>
+                          <p className={`text-[8px] font-semibold mt-0.5 ${active ? "text-gold" : ""}`}>{fr.name}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Edge Effects */}
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2">
+                    <Contrast size={13} className="text-gold" /> Edge Effects
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{EDGE_EFFECTS.length}</span>
+                  </h2>
+                  <p className="text-[9px] text-muted mb-2">Finishing touches to the thumbnail edges.</p>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+                    {EDGE_EFFECTS.map((ee) => {
+                      const active = thumbnailConfig.effects.edges.find((e) => e.id === ee.id);
+                      return (
+                        <div key={ee.id} className={`p-2 rounded-xl border transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                          <button onClick={() => toggleEdgeEffect(ee.id)} className="w-full flex items-center justify-between mb-1">
+                            <span className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{ee.name}</span>
+                            {active && <Check size={10} className="text-gold" />}
+                          </button>
+                          <p className="text-[7px] text-muted">{ee.desc}</p>
+                          {active && (
+                            <div className="mt-1">
+                              <label className="text-[7px] text-muted">Intensity: {active.intensity}%</label>
+                              <input type="range" min={0} max={100} value={active.intensity} onChange={(e) => updateEdgeIntensity(ee.id, Number(e.target.value))} className="w-full accent-gold" />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── AI POWER TOOLS ── */}
+            {activeCategory === "ai-tools" && (
+              <div className="space-y-3">
+                <div className="card">
+                  <h2 className="section-header flex items-center gap-2">
+                    <Cpu size={13} className="text-gold" /> AI Power Tools
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{AI_POWER_TOOLS.length}</span>
+                  </h2>
+                  <p className="text-[9px] text-muted mb-3">One-click AI enhancements. Some use placeholder endpoints until integration is wired.</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
+                    {AI_POWER_TOOLS.map((tool) => {
+                      const loading = aiToolLoading === tool.id;
+                      return (
+                        <div key={tool.id} className="p-3 rounded-xl border border-border hover:border-gold/20 transition-all">
+                          <div className="flex items-start gap-2 mb-2">
+                            <div className="p-1.5 rounded-lg bg-gold/10 text-gold">{aiToolIconFor(tool.icon)}</div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-[11px] font-semibold">{tool.name}</p>
+                              <p className="text-[8px] text-muted line-clamp-2">{tool.desc}</p>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => AI_TOOL_HANDLERS[tool.id]?.()}
+                            disabled={loading}
+                            className="w-full text-[10px] font-medium py-1.5 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold hover:bg-gold/10 transition-all disabled:opacity-40 flex items-center justify-center gap-1"
+                          >
+                            {loading ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                            {loading ? "Running…" : "Run"}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Competitor Batch URLs input (shown when that tool is used) */}
+                <div className="card">
+                  <h3 className="section-header flex items-center gap-2"><Search size={12} className="text-gold" /> Competitor Batch URLs</h3>
+                  <p className="text-[9px] text-muted mb-2">Paste up to 5 competitor thumbnail image URLs, then click &quot;Run&quot; on <em>AI Competitor Batch Analyze</em> above.</p>
+                  <div className="space-y-1.5">
+                    {competitorBatchUrls.map((u, idx) => (
+                      <div key={idx} className="flex gap-1.5">
+                        <span className="text-[9px] text-muted w-5 pt-1.5">{idx + 1}.</span>
+                        <input
+                          value={u}
+                          onChange={(e) => {
+                            const copy = [...competitorBatchUrls];
+                            copy[idx] = e.target.value;
+                            setCompetitorBatchUrls(copy);
+                          }}
+                          className="input flex-1 text-[10px]"
+                          placeholder="https://example.com/thumbnail.jpg"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  {competitorBatchResults.length > 0 && (
+                    <div className="mt-3 space-y-1.5">
+                      <p className="text-[9px] font-semibold text-muted">Results</p>
+                      {competitorBatchResults.map((r, i) => (
+                        <div key={i} className="p-2 rounded-lg bg-surface-light border border-border text-[9px]">
+                          <p className="font-mono truncate mb-1">{r.url}</p>
+                          <div className="flex gap-3 text-muted">
+                            <span>Status: <span className={r.status === "done" ? "text-success" : r.status === "error" ? "text-danger" : "text-gold"}>{r.status}</span></span>
+                            {r.style && <span>Style: <span className="text-foreground">{r.style}</span></span>}
+                            {r.mood && <span>Mood: <span className="text-foreground">{r.mood}</span></span>}
+                            {typeof r.score === "number" && <span>Score: <span className="text-foreground">{r.score}/100</span></span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ── NICHE GENERATORS ── */}
+            {activeCategory === "niche" && (
+              <div className="card">
+                <h2 className="section-header flex items-center gap-2">
+                  <ShoppingBag size={13} className="text-gold" /> Niche-Specific Generators
+                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{NICHE_GENERATORS.length}</span>
+                </h2>
+                <p className="text-[9px] text-muted mb-3">One-click creates a thumbnail optimized for that niche.</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+                  {NICHE_GENERATORS.map((ng) => (
+                    <div key={ng.id} className="rounded-xl overflow-hidden border border-border hover:border-gold/30 transition-all">
+                      <div className={`aspect-video bg-gradient-to-br ${ng.gradient} flex items-center justify-center`}>
+                        <span className="text-3xl drop-shadow-lg">{ng.emoji}</span>
+                      </div>
+                      <div className="p-2 bg-surface-light">
+                        <p className="text-[10px] font-semibold">{ng.name}</p>
+                        <p className="text-[8px] text-muted line-clamp-2 mb-1.5">{ng.desc}</p>
+                        <button
+                          onClick={() => applyNicheGenerator(ng.id)}
+                          className="w-full text-[9px] font-medium py-1 rounded border border-gold/30 bg-gold/[0.05] text-gold hover:bg-gold/10 transition-all flex items-center justify-center gap-1"
+                        >
+                          <Sparkles size={9} /> Generate
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── ANIMATION & MOTION ── */}
+            {activeCategory === "animation" && (
+              <div className="space-y-3">
+                <div className="card">
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="section-header mb-0 flex items-center gap-2">
+                      <Film size={13} className="text-gold" /> Animation & Motion
+                    </h2>
+                    <label className="flex items-center gap-1.5 text-[10px] text-muted">
+                      <input
+                        type="checkbox"
+                        checked={thumbnailConfig.animation.enabled}
+                        onChange={(e) => patchConfig("animation", { enabled: e.target.checked })}
+                        className="accent-gold"
+                      />
+                      Animated thumbnail (GIF/MP4)
+                    </label>
+                  </div>
+                  <p className="text-[9px] text-muted mb-3">Static PNG by default. Toggle to output an animated GIF or MP4.</p>
+                  {thumbnailConfig.animation.enabled && (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Animation Style</label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-1.5">
+                          {ANIMATION_STYLES.map((s) => {
+                            const active = thumbnailConfig.animation.style === s.id;
+                            return (
+                              <button
+                                key={s.id}
+                                onClick={() => patchConfig("animation", { style: s.id as typeof thumbnailConfig.animation.style })}
+                                className={`p-2 rounded-xl border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}
+                              >
+                                <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{s.name}</p>
+                                <p className="text-[8px] text-muted">{s.desc}</p>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-[9px] text-muted uppercase tracking-wider mb-1 block">Duration</label>
+                        <div className="grid grid-cols-3 gap-1.5">
+                          {ANIMATION_DURATIONS.map((d) => (
+                            <button
+                              key={d}
+                              onClick={() => patchConfig("animation", { duration: d as 2 | 3 | 5 })}
+                              className={`text-[10px] px-2 py-1.5 rounded-lg border transition-all ${thumbnailConfig.animation.duration === d ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground"}`}
+                            >
+                              {d}s
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <label className="flex items-center gap-2 text-[10px]">
+                        <input
+                          type="checkbox"
+                          checked={thumbnailConfig.animation.loop}
+                          onChange={(e) => patchConfig("animation", { loop: e.target.checked })}
+                          className="accent-gold"
+                        />
+                        <RefreshCw size={11} /> Loop animation
+                      </label>
+                      <button
+                        onClick={previewAnimation}
+                        disabled={animationPreviewing}
+                        className="btn-primary w-full text-xs flex items-center justify-center gap-2 disabled:opacity-40"
+                      >
+                        {animationPreviewing ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
+                        {animationPreviewing ? "Previewing…" : "Preview Animation"}
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

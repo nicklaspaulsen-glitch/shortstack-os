@@ -6,9 +6,20 @@ import {
   Image as ImageIcon, Save, Monitor, Smartphone, Code,
   Clock, Eye, AlertTriangle, CheckCircle, Copy, Type,
   Paperclip, Palette, Hash, MousePointerClick,
-  X, Plus, Calendar
+  X, Plus, Calendar, Loader2, Wand2, TrendingUp
 } from "lucide-react";
+import toast from "react-hot-toast";
+import Modal from "@/components/ui/modal";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
+
+interface SubjectVariant {
+  subject: string;
+  predicted_open_rate: number;
+  reason: string;
+}
+
+type ComposeMode = "write" | "improve" | "shorten" | "lengthen" | "tone";
+type ComposeTone = "professional" | "friendly" | "casual" | "urgent" | "persuasive";
 
 type MainTab = "compose" | "templates" | "preview" | "spam-check" | "scheduler" | "signatures";
 
@@ -29,8 +40,6 @@ const VARIABLES = [
   { tag: "{calendar_link}", label: "Calendar", example: "https://cal.com/..." },
 ];
 
-const SUBJECT_IDEAS: string[] = [];
-
 export default function EmailComposerPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("compose");
   const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">("desktop");
@@ -50,6 +59,144 @@ export default function EmailComposerPage() {
     replyTo: "",
   });
   const [provider, setProvider] = useState<"gmail" | "outlook" | "smtp">("gmail");
+
+  /* ── AI state ── */
+  const [showAiWrite, setShowAiWrite] = useState(false);
+  const [aiWriting, setAiWriting] = useState(false);
+  const [aiImproving, setAiImproving] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [aiMode, setAiMode] = useState<ComposeMode>("write");
+  const [aiTone, setAiTone] = useState<ComposeTone>("professional");
+  const [aiAudience, setAiAudience] = useState("");
+  const [aiLength, setAiLength] = useState<"short" | "medium" | "long">("medium");
+
+  const [showSubjectVariants, setShowSubjectVariants] = useState(false);
+  const [loadingVariants, setLoadingVariants] = useState(false);
+  const [subjectVariants, setSubjectVariants] = useState<SubjectVariant[]>([]);
+  const [subjectIdeas, setSubjectIdeas] = useState<string[]>([]);
+
+  async function handleAiCompose(mode: ComposeMode) {
+    if (mode === "write" && !aiPrompt.trim()) {
+      toast.error("Describe what you want to write");
+      return;
+    }
+    if (mode !== "write" && !email.body.trim()) {
+      toast.error("Write or paste email content first");
+      return;
+    }
+    setAiWriting(true);
+    try {
+      const res = await fetch("/api/emails/compose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode,
+          prompt: aiPrompt.trim() || undefined,
+          existing_email: mode === "write" ? undefined : email.body,
+          tone: aiTone,
+          audience: aiAudience.trim() || undefined,
+          length: aiLength,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "AI write failed");
+        return;
+      }
+      setEmail(prev => ({ ...prev, subject: data.subject || prev.subject, body: data.body || prev.body }));
+      toast.success("Email generated");
+      setShowAiWrite(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "AI write failed");
+    } finally {
+      setAiWriting(false);
+    }
+  }
+
+  async function handleAiImprove() {
+    if (!email.body.trim()) {
+      toast.error("Write or paste email content first");
+      return;
+    }
+    setAiImproving(true);
+    try {
+      const res = await fetch("/api/emails/compose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "improve",
+          existing_email: email.body,
+          tone: aiTone,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "AI improve failed");
+        return;
+      }
+      setEmail(prev => ({ ...prev, subject: data.subject || prev.subject, body: data.body || prev.body }));
+      toast.success("Email improved");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "AI improve failed");
+    } finally {
+      setAiImproving(false);
+    }
+  }
+
+  async function handleSubjectIdeas() {
+    if (!email.body.trim()) {
+      toast.error("Write the email body first");
+      return;
+    }
+    setShowSubjectAI(true);
+    setLoadingVariants(true);
+    setSubjectIdeas([]);
+    try {
+      const res = await fetch("/api/emails/subject-variants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: email.body, audience: aiAudience.trim() || undefined, count: 5 }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Couldn't generate subjects");
+        return;
+      }
+      const variants: SubjectVariant[] = data.variants || [];
+      setSubjectIdeas(variants.map((v: SubjectVariant) => v.subject));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Subject ideas failed");
+    } finally {
+      setLoadingVariants(false);
+    }
+  }
+
+  async function handleGenerateSubjectVariants() {
+    if (!email.body.trim()) {
+      toast.error("Write the email body first");
+      return;
+    }
+    setShowSubjectVariants(true);
+    setLoadingVariants(true);
+    setSubjectVariants([]);
+    try {
+      const res = await fetch("/api/emails/subject-variants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: email.body, audience: aiAudience.trim() || undefined, count: 5 }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Couldn't generate subjects");
+        return;
+      }
+      setSubjectVariants(data.variants || []);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Subject variants failed");
+    } finally {
+      setLoadingVariants(false);
+    }
+  }
 
   const wordCount = email.body.split(/\s+/).filter(Boolean).length;
   const charCount = email.body.length;
@@ -91,8 +238,14 @@ export default function EmailComposerPage() {
           <p className="text-xs text-muted mt-0.5">Write, preview, test, and schedule emails</p>
         </div>
         <div className="flex gap-2">
-          <button className="btn-secondary text-xs flex items-center gap-1.5">
-            <Sparkles size={12} /> AI Write
+          <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="btn-secondary text-xs flex items-center gap-1.5" disabled={aiWriting}>
+            {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
+          </button>
+          <button onClick={handleAiImprove} className="btn-secondary text-xs flex items-center gap-1.5" disabled={aiImproving}>
+            {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
+          </button>
+          <button onClick={handleGenerateSubjectVariants} className="btn-secondary text-xs flex items-center gap-1.5" disabled={loadingVariants}>
+            {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
           </button>
           <button className="btn-primary text-xs flex items-center gap-1.5">
             <Send size={12} /> Send
@@ -154,18 +307,23 @@ export default function EmailComposerPage() {
             <div className="relative">
               <input value={email.subject} onChange={e => setEmail({ ...email, subject: e.target.value })}
                 className="input w-full text-sm font-medium pr-24" placeholder="Subject line..." />
-              <button onClick={() => setShowSubjectAI(!showSubjectAI)}
+              <button onClick={handleSubjectIdeas} disabled={loadingVariants}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1">
-                <Sparkles size={9} /> AI Ideas
+                {loadingVariants ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
               </button>
             </div>
             {showSubjectAI && (
               <div className="card border-gold/10 p-3 space-y-1.5">
                 <p className="text-[10px] font-semibold text-gold mb-2">AI Subject Line Suggestions</p>
-                {SUBJECT_IDEAS.length === 0 && (
-                  <p className="text-[9px] text-muted text-center py-2">No AI suggestions yet. Suggestions will appear here.</p>
+                {loadingVariants && (
+                  <div className="flex items-center gap-2 text-[9px] text-muted py-2">
+                    <Loader2 size={10} className="animate-spin" /> Generating...
+                  </div>
                 )}
-                {SUBJECT_IDEAS.map((idea, i) => (
+                {!loadingVariants && subjectIdeas.length === 0 && (
+                  <p className="text-[9px] text-muted text-center py-2">No AI suggestions yet. Write the email body first.</p>
+                )}
+                {subjectIdeas.map((idea, i) => (
                   <button key={i} onClick={() => { setEmail({ ...email, subject: idea }); setShowSubjectAI(false); }}
                     className="block w-full text-left text-[10px] p-2 rounded hover:bg-gold/5 transition-all text-muted hover:text-foreground">
                     {idea}
@@ -479,6 +637,71 @@ export default function EmailComposerPage() {
           </div>
         </div>
       )}
+
+      {/* ===== AI WRITE MODAL ===== */}
+      <Modal isOpen={showAiWrite} onClose={() => setShowAiWrite(false)} title="Write Email with AI" size="lg">
+        <div className="space-y-3">
+          <div>
+            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">What should this email be about?</label>
+            <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)} rows={4}
+              className="input w-full text-xs" placeholder="e.g. Follow up with a dental practice owner we called last week about a lead generation trial..." />
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
+              <select value={aiTone} onChange={e => setAiTone(e.target.value as ComposeTone)} className="input w-full text-xs">
+                <option value="professional">Professional</option>
+                <option value="friendly">Friendly</option>
+                <option value="casual">Casual</option>
+                <option value="urgent">Urgent</option>
+                <option value="persuasive">Persuasive</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Length</label>
+              <select value={aiLength} onChange={e => setAiLength(e.target.value as "short" | "medium" | "long")} className="input w-full text-xs">
+                <option value="short">Short</option>
+                <option value="medium">Medium</option>
+                <option value="long">Long</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience</label>
+              <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="e.g. SMB owners" />
+            </div>
+          </div>
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <button onClick={() => setShowAiWrite(false)} className="btn-ghost text-xs">Cancel</button>
+            <button onClick={() => handleAiCompose(aiMode)} disabled={aiWriting} className="btn-primary text-xs flex items-center gap-1.5">
+              {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} Generate
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* ===== SUBJECT VARIANTS MODAL ===== */}
+      <Modal isOpen={showSubjectVariants} onClose={() => setShowSubjectVariants(false)} title="Subject Line Variants (Ranked)" size="lg">
+        <div className="space-y-2">
+          {loadingVariants && (
+            <div className="flex items-center justify-center gap-2 text-xs text-muted py-8">
+              <Loader2 size={14} className="animate-spin" /> Scoring variants...
+            </div>
+          )}
+          {!loadingVariants && subjectVariants.length === 0 && (
+            <p className="text-xs text-muted text-center py-8">No variants yet.</p>
+          )}
+          {!loadingVariants && subjectVariants.map((v, i) => (
+            <button key={i} onClick={() => { setEmail({ ...email, subject: v.subject }); setShowSubjectVariants(false); toast.success("Subject applied"); }}
+              className="block w-full text-left p-3 rounded-lg bg-surface-light border border-border hover:border-gold/30 transition-all">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-sm font-semibold">{v.subject}</p>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 font-bold">{v.predicted_open_rate.toFixed(0)}% open</span>
+              </div>
+              <p className="text-[10px] text-muted">{v.reason}</p>
+            </button>
+          ))}
+        </div>
+      </Modal>
 
       {/* ===== SIGNATURE BUILDER ===== */}
       {activeTab === "signatures" && (

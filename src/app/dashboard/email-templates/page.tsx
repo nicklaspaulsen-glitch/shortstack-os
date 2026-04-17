@@ -5,8 +5,26 @@ import {
   Mail, Copy, Send, X, FileText, Tag, Sparkles,
   Search, Monitor, Smartphone, Eye, BarChart3,
   Plus, Star, GitBranch, Download, Upload,
-  TrendingUp, Edit3, Trash2, Moon
+  TrendingUp, Edit3, Trash2, Moon, Loader2
 } from "lucide-react";
+import toast from "react-hot-toast";
+import Modal from "@/components/ui/modal";
+
+type AiTemplateType =
+  | "welcome"
+  | "nurture"
+  | "promo"
+  | "winback"
+  | "onboarding"
+  | "broadcast"
+  | "transactional"
+  | "custom";
+
+interface AiVariant {
+  subject: string;
+  body: string;
+  angle: string;
+}
 
 type MainTab = "gallery" | "editor" | "performance" | "versions" | "ai-generate" | "import-export";
 
@@ -65,6 +83,79 @@ export default function EmailTemplatesPage() {
   const [previewMode, setPreviewMode] = useState<"desktop" | "mobile" | "dark">("desktop");
   const [aiPrompt, setAiPrompt] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "opens" | "replies">("name");
+
+  /* ── AI state ── */
+  const [aiTemplateType, setAiTemplateType] = useState<AiTemplateType>("welcome");
+  const [aiAudience, setAiAudience] = useState("");
+  const [aiBrandVoice, setAiBrandVoice] = useState("");
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiGenerated, setAiGenerated] = useState<{ name: string; subject: string; preheader: string; body: string; html_version?: string; merge_tags: string[] } | null>(null);
+  const [showVariantsModal, setShowVariantsModal] = useState(false);
+  const [variantsLoading, setVariantsLoading] = useState(false);
+  const [variants, setVariants] = useState<AiVariant[]>([]);
+
+  async function handleGenerateTemplate() {
+    if (!aiPrompt.trim() && aiTemplateType === "custom") {
+      toast.error("Describe the template you need");
+      return;
+    }
+    setAiGenerating(true);
+    setAiGenerated(null);
+    try {
+      const res = await fetch("/api/email-templates/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          template_type: aiTemplateType,
+          goal: aiPrompt.trim() || undefined,
+          audience: aiAudience.trim() || undefined,
+          brand_voice: aiBrandVoice.trim() || undefined,
+          include_merge_tags: true,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Template generation failed");
+        return;
+      }
+      setAiGenerated(data);
+      setEditedSubject(data.subject || "");
+      setEditedBody(data.body || "");
+      toast.success("Template generated");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Template generation failed");
+    } finally {
+      setAiGenerating(false);
+    }
+  }
+
+  async function handleGenerateVariants() {
+    const source = editedBody || aiGenerated?.body || selectedTemplate?.body;
+    if (!source) {
+      toast.error("Open or generate a template first");
+      return;
+    }
+    setShowVariantsModal(true);
+    setVariantsLoading(true);
+    setVariants([]);
+    try {
+      const res = await fetch("/api/email-templates/variants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ template_body: source, count: 3 }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Variants failed");
+        return;
+      }
+      setVariants(data.variants || []);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Variants failed");
+    } finally {
+      setVariantsLoading(false);
+    }
+  }
 
   const filtered = TEMPLATES
     .filter(t => (filterCategory === "All" || t.category === filterCategory) &&
@@ -319,26 +410,125 @@ export default function EmailTemplatesPage() {
       {/* ===== AI TEMPLATE GENERATOR ===== */}
       {activeTab === "ai-generate" && (
         <div className="space-y-4">
-          <div className="card border-gold/10 p-6 text-center">
-            <div className="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <Sparkles size={24} className="text-gold" />
+          <div className="card border-gold/10 p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
+                <Sparkles size={18} className="text-gold" />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold">AI Template Generator</h3>
+                <p className="text-[10px] text-muted">Describe the template you need and AI will create it.</p>
+              </div>
             </div>
-            <h3 className="text-sm font-semibold mb-1">AI Template Generator</h3>
-            <p className="text-[10px] text-muted mb-4">Describe the template you need and AI will create it</p>
-            <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
-              className="input w-full text-xs h-24 resize-none mb-3" placeholder="e.g. Write a follow-up email for a dental practice that didn't respond to our initial outreach. Include a case study mention and a clear CTA to book a call." />
-            <div className="flex gap-2 justify-center flex-wrap">
-              {["Follow-up", "Welcome", "Re-engagement", "Upsell", "Review request", "Holiday promo"].map(q => (
-                <button key={q} onClick={() => setAiPrompt(`Write a ${q.toLowerCase()} email template for a digital marketing agency. Professional but conversational tone.`)}
-                  className="text-[9px] px-2 py-1 rounded bg-white/5 text-muted border border-border hover:border-gold/20 hover:text-gold transition-all">{q}</button>
-              ))}
+
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Template Type</label>
+                <select value={aiTemplateType} onChange={e => setAiTemplateType(e.target.value as AiTemplateType)} className="input w-full text-xs">
+                  <option value="welcome">Welcome</option>
+                  <option value="nurture">Nurture</option>
+                  <option value="promo">Promo</option>
+                  <option value="winback">Winback</option>
+                  <option value="onboarding">Onboarding</option>
+                  <option value="broadcast">Broadcast</option>
+                  <option value="transactional">Transactional</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Goal / Description</label>
+                <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
+                  className="input w-full text-xs h-20 resize-none" placeholder="e.g. Re-engage dental practices that stopped opening our emails. Reference a case study, offer a free audit, book a call." />
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience</label>
+                  <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="Dental practice owners" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Brand Voice</label>
+                  <input value={aiBrandVoice} onChange={e => setAiBrandVoice(e.target.value)} className="input w-full text-xs" placeholder="Warm, direct, no-fluff" />
+                </div>
+              </div>
+
+              <div className="flex gap-2 justify-center flex-wrap">
+                {["Follow-up", "Welcome", "Re-engagement", "Upsell", "Review request", "Holiday promo"].map(q => (
+                  <button key={q} onClick={() => setAiPrompt(`Write a ${q.toLowerCase()} email template for a digital marketing agency. Professional but conversational tone.`)}
+                    className="text-[9px] px-2 py-1 rounded bg-white/5 text-muted border border-border hover:border-gold/20 hover:text-gold transition-all">{q}</button>
+                ))}
+              </div>
+
+              <button onClick={handleGenerateTemplate} disabled={aiGenerating} className="btn-primary text-xs flex items-center gap-1.5">
+                {aiGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                {aiGenerating ? "Generating..." : "Generate Template"}
+              </button>
             </div>
-            <button className="btn-primary text-xs mt-4 flex items-center gap-1.5 mx-auto">
-              <Sparkles size={12} /> Generate Template
-            </button>
           </div>
+
+          {aiGenerated && (
+            <div className="card">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h4 className="text-sm font-semibold">{aiGenerated.name}</h4>
+                  <p className="text-[10px] text-muted">{aiGenerated.merge_tags.length} merge tags</p>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={handleGenerateVariants} className="btn-secondary text-xs flex items-center gap-1.5">
+                    <GitBranch size={12} /> Generate A/B Variants
+                  </button>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Subject</label>
+                  <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)} className="input w-full text-xs" />
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Preheader</label>
+                  <p className="text-[10px] text-muted">{aiGenerated.preheader}</p>
+                </div>
+                <div>
+                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Body</label>
+                  <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs font-mono resize-none" />
+                </div>
+                {aiGenerated.merge_tags.length > 0 && (
+                  <div className="flex gap-1 flex-wrap">
+                    {aiGenerated.merge_tags.map(tag => (
+                      <span key={tag} className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-gold/10 text-gold">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
+
+      {/* A/B Variants Modal */}
+      <Modal isOpen={showVariantsModal} onClose={() => setShowVariantsModal(false)} title="A/B Variants" size="xl">
+        <div className="space-y-3">
+          {variantsLoading && (
+            <div className="flex items-center justify-center gap-2 text-xs text-muted py-8">
+              <Loader2 size={14} className="animate-spin" /> Generating variants...
+            </div>
+          )}
+          {!variantsLoading && variants.length === 0 && (
+            <p className="text-xs text-muted text-center py-8">No variants yet.</p>
+          )}
+          {!variantsLoading && variants.map((v, i) => (
+            <div key={i} className="card p-3 border-gold/10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-gold/10 text-gold font-semibold">{v.angle}</span>
+                <button onClick={() => { setEditedSubject(v.subject); setEditedBody(v.body); setShowVariantsModal(false); toast.success("Variant applied"); }} className="btn-primary text-[10px] py-1 px-2">Apply</button>
+              </div>
+              <p className="text-xs font-semibold mb-1">{v.subject}</p>
+              <p className="text-[10px] text-muted whitespace-pre-wrap">{v.body}</p>
+            </div>
+          ))}
+        </div>
+      </Modal>
 
       {/* ===== IMPORT/EXPORT ===== */}
       {activeTab === "import-export" && (
@@ -422,7 +612,7 @@ export default function EmailTemplatesPage() {
             </div>
             <div className="flex items-center gap-2 p-4 border-t border-border">
               <button className="btn-primary flex items-center gap-1.5 text-[10px]"><Copy size={12} /> Copy</button>
-              <button className="btn-secondary flex items-center gap-1.5 text-[10px]"><Sparkles size={12} /> Polish with AI</button>
+              <button onClick={handleGenerateVariants} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Sparkles size={12} /> A/B Variants</button>
               <button onClick={() => { setActiveTab("editor"); }} className="btn-secondary flex items-center gap-1.5 text-[10px]"><Edit3 size={12} /> Full Editor</button>
               <button onClick={() => setSelectedTemplate(null)} className="btn-primary flex items-center gap-1.5 text-[10px] ml-auto"><Send size={12} /> Use Template</button>
             </div>

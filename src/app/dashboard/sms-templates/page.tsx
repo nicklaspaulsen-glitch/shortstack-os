@@ -5,8 +5,20 @@ import {
   MessageSquare, Plus, Copy, Sparkles, Trash2, Edit3,
   Search, Shield, Link2, BarChart3, Clock, Send,
   AlertTriangle, CheckCircle, Smile, Calendar, Eye,
-  TrendingUp, Settings, X
+  TrendingUp, Settings, X, Loader2
 } from "lucide-react";
+import toast from "react-hot-toast";
+import Modal from "@/components/ui/modal";
+
+type SmsIntent = "reminder" | "promo" | "confirmation" | "welcome" | "winback" | "abandon_cart" | "appointment" | "custom";
+
+interface AiSmsVariant {
+  text: string;
+  char_count: number;
+  segments: number;
+  compliance_notes: string[];
+  tone: string;
+}
 
 type MainTab = "library" | "preview" | "compliance" | "analytics" | "links" | "schedule";
 
@@ -47,6 +59,58 @@ export default function SMSTemplatesPage() {
   const [optOutFooter, setOptOutFooter] = useState("Reply STOP to unsubscribe");
   const [shortLinkInput, setShortLinkInput] = useState("");
 
+  /* ── AI generator state ── */
+  const [showAiModal, setShowAiModal] = useState(false);
+  const [aiIntent, setAiIntent] = useState<SmsIntent>("promo");
+  const [aiGoal, setAiGoal] = useState("");
+  const [aiAudience, setAiAudience] = useState("");
+  const [aiTone, setAiTone] = useState("friendly");
+  const [aiIncludeLink, setAiIncludeLink] = useState(true);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiVariants, setAiVariants] = useState<AiSmsVariant[]>([]);
+
+  async function handleGenerateSms() {
+    setAiLoading(true);
+    setAiVariants([]);
+    try {
+      const res = await fetch("/api/sms-templates/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          intent: aiIntent,
+          goal: aiGoal.trim() || undefined,
+          audience: aiAudience.trim() || undefined,
+          include_link: aiIncludeLink,
+          tone: aiTone,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "SMS generation failed");
+        return;
+      }
+      setAiVariants(data.messages || []);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "SMS generation failed");
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
+  function saveAiVariant(v: AiSmsVariant) {
+    setTemplates(prev => [
+      ...prev,
+      {
+        id: `t_${Date.now()}`,
+        name: `AI ${aiIntent} (${v.tone})`,
+        body: v.text,
+        category: aiIntent.charAt(0).toUpperCase() + aiIntent.slice(1),
+        sends: 0, delivered: 0, replies: 0,
+      },
+    ]);
+    toast.success("Template saved");
+  }
+
   const categories = ["all", ...Array.from(new Set(templates.map(t => t.category)))];
   const filtered = templates
     .filter(t => (filter === "all" || t.category === filter) && (!search || t.name.toLowerCase().includes(search.toLowerCase()) || t.body.toLowerCase().includes(search.toLowerCase())));
@@ -83,10 +147,98 @@ export default function SMSTemplatesPage() {
           <p className="text-xs text-muted mt-0.5">{templates.length} templates | Segment calculator, compliance checker, analytics</p>
         </div>
         <div className="flex gap-2">
-          <button className="btn-secondary text-xs flex items-center gap-1.5"><Sparkles size={12} /> AI Generate</button>
+          <button onClick={() => setShowAiModal(true)} className="btn-secondary text-xs flex items-center gap-1.5">
+            <Sparkles size={12} /> Generate with AI
+          </button>
           <button onClick={() => setShowAdd(true)} className="btn-primary text-xs flex items-center gap-1.5"><Plus size={12} /> New</button>
         </div>
       </div>
+
+      {/* ===== AI SMS GENERATOR MODAL ===== */}
+      <Modal isOpen={showAiModal} onClose={() => { setShowAiModal(false); setAiVariants([]); }} title="Generate SMS with AI" size="xl">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Intent</label>
+              <select value={aiIntent} onChange={e => setAiIntent(e.target.value as SmsIntent)} className="input w-full text-xs">
+                <option value="reminder">Reminder</option>
+                <option value="promo">Promo</option>
+                <option value="confirmation">Confirmation</option>
+                <option value="welcome">Welcome</option>
+                <option value="winback">Winback</option>
+                <option value="abandon_cart">Abandon Cart</option>
+                <option value="appointment">Appointment</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
+              <select value={aiTone} onChange={e => setAiTone(e.target.value)} className="input w-full text-xs">
+                <option value="friendly">Friendly</option>
+                <option value="professional">Professional</option>
+                <option value="urgent">Urgent</option>
+                <option value="casual">Casual</option>
+                <option value="warm">Warm</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Goal</label>
+            <input value={aiGoal} onChange={e => setAiGoal(e.target.value)} className="input w-full text-xs" placeholder="e.g. Remind patient about tomorrow's appointment at 3pm" />
+          </div>
+          <div>
+            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience</label>
+            <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs" placeholder="e.g. Existing dental patients" />
+          </div>
+          <div className="flex items-center gap-2">
+            <input type="checkbox" id="ai-sms-link" checked={aiIncludeLink} onChange={e => setAiIncludeLink(e.target.checked)} className="accent-gold" />
+            <label htmlFor="ai-sms-link" className="text-xs text-muted">Include {"{link}"} placeholder</label>
+          </div>
+          <div className="flex items-center justify-end gap-2 pt-1">
+            <button onClick={() => { setShowAiModal(false); setAiVariants([]); }} className="btn-ghost text-xs">Close</button>
+            <button onClick={handleGenerateSms} disabled={aiLoading} className="btn-primary text-xs flex items-center gap-1.5">
+              {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} {aiLoading ? "Generating..." : "Generate 3 Variants"}
+            </button>
+          </div>
+
+          {aiVariants.length > 0 && (
+            <div className="space-y-2 pt-2 border-t border-border">
+              <p className="text-[10px] font-semibold text-gold uppercase tracking-wider">Variants</p>
+              {aiVariants.map((v, i) => (
+                <div key={i} className="p-3 rounded-lg bg-surface-light border border-border">
+                  <p className="text-xs leading-relaxed">{v.text}</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <div className="flex items-center gap-2 text-[9px]">
+                      <span className={`px-1.5 py-0.5 rounded ${v.char_count > 160 ? "bg-yellow-400/10 text-yellow-400" : "bg-green-400/10 text-green-400"}`}>
+                        {v.char_count}/160 chars
+                      </span>
+                      <span className="text-muted">{v.segments} segment{v.segments > 1 ? "s" : ""}</span>
+                      <span className="text-muted capitalize">{v.tone}</span>
+                    </div>
+                    <div className="flex gap-1">
+                      <button onClick={() => { navigator.clipboard.writeText(v.text); toast.success("Copied"); }} className="text-[9px] px-2 py-1 rounded bg-white/5 text-muted hover:text-gold">
+                        <Copy size={9} />
+                      </button>
+                      <button onClick={() => saveAiVariant(v)} className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1">
+                        <Plus size={9} /> Save
+                      </button>
+                    </div>
+                  </div>
+                  {v.compliance_notes.length > 0 && (
+                    <div className="mt-2 pt-2 border-t border-border flex gap-1 flex-wrap">
+                      {v.compliance_notes.map((note, ni) => (
+                        <span key={ni} className="text-[8px] px-1.5 py-0.5 rounded bg-blue-400/10 text-blue-300 flex items-center gap-0.5">
+                          <Shield size={8} /> {note}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </Modal>
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">

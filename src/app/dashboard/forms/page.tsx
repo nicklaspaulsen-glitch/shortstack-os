@@ -5,9 +5,30 @@ import {
   FileText, Plus, Copy, Trash2, Eye, Type, Mail, Phone,
   MessageSquare, List, Hash, Star, Upload, CheckSquare,
   Settings, BarChart3, Code, Shield, Link2, Download,
-  ChevronUp, ChevronDown, Palette, Globe, Zap
+  ChevronUp, ChevronDown, Palette, Globe, Zap, Sparkles, Loader2
 } from "lucide-react";
+import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
+import Modal from "@/components/ui/modal";
+
+type AiFormType = "contact" | "signup" | "survey" | "booking" | "application" | "feedback" | "quote" | "custom";
+
+interface AiFieldValidation {
+  pattern?: string;
+  min?: number;
+  max?: number;
+  custom_message?: string;
+}
+
+interface AiField {
+  id: string;
+  type: "text" | "email" | "phone" | "number" | "select" | "radio" | "checkbox" | "textarea" | "date" | "file";
+  label: string;
+  placeholder?: string;
+  required: boolean;
+  options?: string[];
+  validation?: AiFieldValidation;
+}
 
 type FormTab = "builder" | "templates" | "submissions" | "analytics" | "settings";
 
@@ -144,6 +165,121 @@ export default function FormsPage() {
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [ratingHover, setRatingHover] = useState(0);
 
+  /* ── AI generator state ── */
+  const [showAiModal, setShowAiModal] = useState(false);
+  const [aiDescription, setAiDescription] = useState("");
+  const [aiFormType, setAiFormType] = useState<AiFormType>("contact");
+  const [aiFieldCount, setAiFieldCount] = useState(5);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [regenFieldId, setRegenFieldId] = useState<string | null>(null);
+
+  function mapAiTypeToFormFieldType(t: AiField["type"]): FormField["type"] {
+    switch (t) {
+      case "text": return "text";
+      case "email": return "email";
+      case "phone": return "phone";
+      case "textarea": return "textarea";
+      case "select": return "select";
+      case "radio": return "select"; // fallback to select; radio not natively supported
+      case "checkbox": return "checkbox";
+      case "number": return "number";
+      case "file": return "file";
+      case "date": return "text"; // fallback; date not in current FieldType union
+      default: return "text";
+    }
+  }
+
+  async function handleAiGenerateForm() {
+    if (!aiDescription.trim()) { toast.error("Describe the form you need"); return; }
+    setAiLoading(true);
+    try {
+      const res = await fetch("/api/forms/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          description: aiDescription,
+          form_type: aiFormType,
+          fields_count: aiFieldCount,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Form generation failed");
+        return;
+      }
+
+      const aiFields: AiField[] = data.fields || [];
+      const mappedFields: FormField[] = aiFields.map((f, i) => ({
+        id: f.id || `f_${Date.now()}_${i}`,
+        type: mapAiTypeToFormFieldType(f.type),
+        label: f.label,
+        placeholder: f.placeholder || "",
+        required: Boolean(f.required),
+        options: f.type === "select" || f.type === "radio" ? (f.options || ["Option 1", "Option 2"]) : undefined,
+        condition: null,
+      }));
+
+      const newForm: LeadForm = {
+        id: `form_${Date.now()}`,
+        name: data.name || `AI ${aiFormType} form`,
+        fields: mappedFields,
+        submitText: data.submit_button_text || "Submit",
+        redirectUrl: "",
+        webhookUrl: "",
+        thankYouMessage: data.success_message || "Thanks! We'll be in touch soon.",
+        accentColor: "#C9A84C",
+        spamProtection: true,
+        views: 0, starts: 0, completions: 0,
+      };
+
+      setForms(prev => [...prev, newForm]);
+      setActiveForm(newForm);
+      setTab("builder");
+      setShowAiModal(false);
+      setAiDescription("");
+      toast.success(`Form generated with ${mappedFields.length} fields`);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Form generation failed");
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
+  async function handleRegenFieldValidation(fieldId: string) {
+    if (!activeForm) return;
+    const field = activeForm.fields.find(f => f.id === fieldId);
+    if (!field) return;
+    setRegenFieldId(fieldId);
+    try {
+      const res = await fetch("/api/forms/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          description: `Form focused on a single field: ${field.label} (${field.type}). Improve the label, placeholder, and validation copy. Keep only this one field.`,
+          form_type: "custom",
+          fields_count: 1,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Regeneration failed");
+        return;
+      }
+      const firstField: AiField | undefined = (data.fields as AiField[])?.[0];
+      if (!firstField) {
+        toast.error("No field returned");
+        return;
+      }
+      updateField(fieldId, "label", firstField.label);
+      updateField(fieldId, "placeholder", firstField.placeholder || "");
+      toast.success("Validation copy updated");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Regeneration failed");
+    } finally {
+      setRegenFieldId(null);
+    }
+  }
+
   function createFromTemplate(tpl: typeof TEMPLATES[0]) {
     const newForm: LeadForm = {
       id: `form_${Date.now()}`,
@@ -231,11 +367,53 @@ export default function FormsPage() {
           <p className="text-xs text-muted mt-0.5">Create lead capture forms, embed on websites, leads flow into CRM</p>
         </div>
         <div className="flex items-center gap-2">
+          <button onClick={() => setShowAiModal(true)} className="btn-secondary text-xs flex items-center gap-1.5">
+            <Sparkles size={12} /> Describe your form
+          </button>
           {activeForm && (
             <button onClick={() => setActiveForm(null)} className="btn-secondary text-xs">All Forms</button>
           )}
         </div>
       </div>
+
+      {/* ===== AI FORM MODAL ===== */}
+      <Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Describe the form you need" size="lg">
+        <div className="space-y-3">
+          <div>
+            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Natural-language description *</label>
+            <textarea value={aiDescription} onChange={e => setAiDescription(e.target.value)} rows={5} className="input w-full text-xs"
+              placeholder="e.g. A consultation booking form for a dental practice. Collect name, email, phone, insurance provider from a list, preferred day, and any specific concerns." />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Form Type</label>
+              <select value={aiFormType} onChange={e => setAiFormType(e.target.value as AiFormType)} className="input w-full text-xs">
+                <option value="contact">Contact</option>
+                <option value="signup">Signup</option>
+                <option value="survey">Survey</option>
+                <option value="booking">Booking</option>
+                <option value="application">Application</option>
+                <option value="feedback">Feedback</option>
+                <option value="quote">Quote</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Target fields</label>
+              <select value={aiFieldCount} onChange={e => setAiFieldCount(parseInt(e.target.value))} className="input w-full text-xs">
+                {[3, 4, 5, 6, 7, 8, 10, 12].map(n => <option key={n} value={n}>{n} fields</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center justify-end gap-2 pt-1">
+            <button onClick={() => setShowAiModal(false)} className="btn-ghost text-xs">Cancel</button>
+            <button onClick={handleAiGenerateForm} disabled={aiLoading} className="btn-primary text-xs flex items-center gap-1.5">
+              {aiLoading ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              {aiLoading ? "Generating..." : "Generate Form"}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-3">
@@ -334,6 +512,10 @@ export default function FormsPage() {
                       <button onClick={() => updateField(field.id, "required", !field.required)}
                         className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-gold/10 text-gold" : "text-muted"}`}>
                         {field.required ? "Required" : "Optional"}
+                      </button>
+                      <button onClick={() => handleRegenFieldValidation(field.id)} disabled={regenFieldId === field.id}
+                        className="text-muted hover:text-gold p-1" title="Regenerate label / placeholder">
+                        {regenFieldId === field.id ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       </button>
                       <button onClick={() => removeField(field.id)} className="text-muted hover:text-red-400 p-1"><Trash2 size={10} /></button>
                     </div>

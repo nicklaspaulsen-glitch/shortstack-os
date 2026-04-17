@@ -412,6 +412,150 @@ const PLATFORM_EXPORT_PRESETS = [
   { id: "linkedin", name: "LinkedIn", aspect: "1:1", maxDur: 600, captions: true, desc: "Square or 16:9, 10 min" },
   { id: "twitter", name: "Twitter / X", aspect: "16:9", maxDur: 140, captions: true, desc: "16:9, max 2:20" },
   { id: "facebook", name: "Facebook", aspect: "1:1", maxDur: 240, captions: true, desc: "1:1 square, max 4 min" },
+  { id: "vimeo", name: "Vimeo", aspect: "16:9", maxDur: 1800, captions: true, desc: "16:9 high quality, up to 30 min" },
+  { id: "twitch_clip", name: "Twitch Clip", aspect: "16:9", maxDur: 60, captions: false, desc: "16:9, clipped 60s moments" },
+  { id: "podcast_audio", name: "Podcast Audio-only", aspect: "1:1", maxDur: 7200, captions: false, desc: "Audio wave w/ thumbnail, up to 2h" },
+  { id: "snapchat", name: "Snapchat", aspect: "9:16", maxDur: 60, captions: true, desc: "Vertical 9:16, max 60s" },
+];
+
+/* ─── Effects Library (50+ VFX presets, 5 categories) ─── */
+const EFFECTS_LIBRARY: Array<{ id: string; name: string; category: string; preview: string; desc: string }> = [
+  // Light & Glow
+  { id: "lens_flare", name: "Lens Flare", category: "Light & Glow", preview: "bg-gradient-to-br from-yellow-300 via-orange-400 to-transparent", desc: "Anamorphic horizontal streak" },
+  { id: "god_rays", name: "God Rays", category: "Light & Glow", preview: "bg-gradient-to-b from-yellow-100 via-amber-300 to-transparent", desc: "Volumetric light shafts" },
+  { id: "light_leak", name: "Light Leak", category: "Light & Glow", preview: "bg-gradient-to-tr from-pink-300 via-orange-300 to-yellow-200", desc: "Retro film light bleed" },
+  { id: "glow_edges", name: "Glow Edges", category: "Light & Glow", preview: "bg-[radial-gradient(circle,rgba(255,255,255,0.8)_0%,rgba(0,0,0,0.9)_100%)]", desc: "Luminous edge halo" },
+  { id: "rim_light", name: "Rim Light", category: "Light & Glow", preview: "bg-gradient-to-r from-amber-400 via-black to-amber-400", desc: "Subject rim lighting" },
+  { id: "spotlight_vignette", name: "Spotlight Vignette", category: "Light & Glow", preview: "bg-[radial-gradient(circle,rgba(255,220,150,0.8)_0%,rgba(0,0,0,1)_80%)]", desc: "Soft spotlight falloff" },
+  { id: "radial_blur", name: "Radial Blur", category: "Light & Glow", preview: "bg-[conic-gradient(from_0deg,white,gray,white,gray)]", desc: "Center-radiating blur" },
+  { id: "bloom", name: "Bloom", category: "Light & Glow", preview: "bg-gradient-to-br from-white via-yellow-200 to-orange-200", desc: "Soft highlight bloom" },
+  { id: "fog", name: "Fog", category: "Light & Glow", preview: "bg-gradient-to-b from-gray-200 via-white to-gray-300", desc: "Atmospheric haze layer" },
+  { id: "dust_particles", name: "Dust Particles", category: "Light & Glow", preview: "bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-100", desc: "Floating sunlit dust" },
+
+  // Distortion
+  { id: "glitch", name: "Glitch", category: "Distortion", preview: "bg-gradient-to-r from-red-500 via-cyan-400 to-green-500", desc: "Digital signal glitch" },
+  { id: "rgb_split", name: "RGB Split", category: "Distortion", preview: "bg-gradient-to-r from-red-500 via-black to-blue-500", desc: "Channel-separated edges" },
+  { id: "chromatic_aberration", name: "Chromatic Aberration", category: "Distortion", preview: "bg-gradient-to-r from-rose-400 via-slate-800 to-cyan-400", desc: "Color-fringe lens effect" },
+  { id: "vhs", name: "VHS", category: "Distortion", preview: "bg-[repeating-linear-gradient(0deg,#222_0_2px,#555_2px_3px)]", desc: "Tracking lines + warble" },
+  { id: "film_grain", name: "Film Grain", category: "Distortion", preview: "bg-gradient-to-br from-neutral-800 via-neutral-700 to-neutral-900", desc: "Analog film texture" },
+  { id: "scan_lines", name: "Scan Lines", category: "Distortion", preview: "bg-[repeating-linear-gradient(0deg,#000_0_2px,#0f0_2px_4px)]", desc: "CRT horizontal scan" },
+  { id: "digital_noise", name: "Digital Noise", category: "Distortion", preview: "bg-gradient-to-br from-slate-700 via-slate-800 to-black", desc: "Static/noise overlay" },
+  { id: "pixelation", name: "Pixelation", category: "Distortion", preview: "bg-[conic-gradient(at_top_left,#f97316,#eab308,#22c55e,#06b6d4,#8b5cf6)]", desc: "Mosaic-style pixels" },
+  { id: "mosaic", name: "Mosaic", category: "Distortion", preview: "bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400", desc: "Tiled mosaic blur" },
+  { id: "kaleidoscope", name: "Kaleidoscope", category: "Distortion", preview: "bg-[conic-gradient(from_0deg,#ec4899,#8b5cf6,#06b6d4,#22c55e,#eab308,#ec4899)]", desc: "Mirrored pattern FX" },
+
+  // Color FX
+  { id: "duotone", name: "Duotone", category: "Color FX", preview: "bg-gradient-to-br from-fuchsia-600 to-cyan-400", desc: "Two-color pop art" },
+  { id: "tritone", name: "Tritone", category: "Color FX", preview: "bg-gradient-to-br from-yellow-400 via-rose-500 to-indigo-700", desc: "Three-color mapping" },
+  { id: "posterize", name: "Posterize", category: "Color FX", preview: "bg-gradient-to-r from-rose-400 via-amber-300 to-emerald-400", desc: "Flat color banding" },
+  { id: "invert", name: "Invert", category: "Color FX", preview: "bg-gradient-to-br from-white via-slate-400 to-black", desc: "Negative inversion" },
+  { id: "solarize", name: "Solarize", category: "Color FX", preview: "bg-gradient-to-br from-orange-400 via-yellow-200 to-blue-400", desc: "Partial tone inversion" },
+  { id: "sepia_blast", name: "Sepia Blast", category: "Color FX", preview: "bg-gradient-to-br from-amber-200 via-amber-600 to-amber-900", desc: "Vintage sepia boost" },
+  { id: "cyber_neon", name: "Cyber Neon", category: "Color FX", preview: "bg-gradient-to-br from-fuchsia-500 via-cyan-400 to-violet-600", desc: "Synthwave neon grade" },
+  { id: "infrared", name: "Infrared", category: "Color FX", preview: "bg-gradient-to-br from-pink-300 via-rose-400 to-red-500", desc: "Pink-shifted IR look" },
+  { id: "xray", name: "X-Ray", category: "Color FX", preview: "bg-gradient-to-br from-black via-blue-900 to-cyan-300", desc: "Negative blue glow" },
+  { id: "thermal", name: "Thermal", category: "Color FX", preview: "bg-gradient-to-br from-indigo-900 via-red-500 to-yellow-300", desc: "Heat-map thermal view" },
+
+  // Motion FX
+  { id: "motion_blur", name: "Motion Blur", category: "Motion FX", preview: "bg-gradient-to-r from-transparent via-white to-transparent", desc: "Smear along motion" },
+  { id: "speed_ramp", name: "Speed Ramp", category: "Motion FX", preview: "bg-gradient-to-r from-slate-500 via-sky-400 to-slate-800", desc: "Dynamic time-remap" },
+  { id: "freeze_frame", name: "Freeze Frame", category: "Motion FX", preview: "bg-gradient-to-br from-slate-700 to-slate-900", desc: "Pause on moment" },
+  { id: "time_warp", name: "Time Warp", category: "Motion FX", preview: "bg-[conic-gradient(from_90deg,#8b5cf6,#06b6d4,#8b5cf6)]", desc: "Warped time curve" },
+  { id: "reverse", name: "Reverse", category: "Motion FX", preview: "bg-gradient-to-l from-slate-800 via-sky-500 to-slate-800", desc: "Backward playback" },
+  { id: "slowmo_ramp", name: "Slow-mo Ramp", category: "Motion FX", preview: "bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-700", desc: "Ease into slow motion" },
+  { id: "ghosting", name: "Ghosting", category: "Motion FX", preview: "bg-gradient-to-br from-white/60 via-slate-400/50 to-black/70", desc: "Trailing ghost images" },
+  { id: "echo_trail", name: "Echo Trail", category: "Motion FX", preview: "bg-gradient-to-r from-pink-300/40 via-pink-400/60 to-pink-500", desc: "Fading echo copies" },
+  { id: "zoom_blur", name: "Zoom Blur", category: "Motion FX", preview: "bg-[radial-gradient(circle,transparent_20%,white_80%)]", desc: "Radial zoom smear" },
+  { id: "spin_blur", name: "Spin Blur", category: "Motion FX", preview: "bg-[conic-gradient(from_0deg,white,transparent,white)]", desc: "Rotational motion blur" },
+
+  // Atmospheric
+  { id: "rain_overlay", name: "Rain Overlay", category: "Atmospheric", preview: "bg-gradient-to-b from-slate-700 via-slate-600 to-slate-800", desc: "Animated rain drops" },
+  { id: "snow", name: "Snow", category: "Atmospheric", preview: "bg-gradient-to-br from-slate-100 via-white to-slate-200", desc: "Falling snowflakes" },
+  { id: "sparkles", name: "Sparkles", category: "Atmospheric", preview: "bg-gradient-to-br from-amber-300 via-yellow-200 to-rose-300", desc: "Shimmer glitter FX" },
+  { id: "confetti", name: "Confetti", category: "Atmospheric", preview: "bg-gradient-to-br from-rose-400 via-yellow-300 to-emerald-400", desc: "Celebration burst" },
+  { id: "embers", name: "Embers", category: "Atmospheric", preview: "bg-gradient-to-t from-orange-700 via-red-500 to-yellow-300", desc: "Glowing embers rise" },
+  { id: "bubbles", name: "Bubbles", category: "Atmospheric", preview: "bg-gradient-to-tr from-cyan-200 via-blue-300 to-indigo-400", desc: "Floating bubbles" },
+  { id: "clouds", name: "Clouds", category: "Atmospheric", preview: "bg-gradient-to-b from-sky-200 via-white to-slate-200", desc: "Drifting cloud layer" },
+  { id: "stars", name: "Stars", category: "Atmospheric", preview: "bg-gradient-to-br from-indigo-900 via-purple-900 to-black", desc: "Twinkling starfield" },
+  { id: "lightning", name: "Lightning", category: "Atmospheric", preview: "bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-950", desc: "Strike flashes" },
+  { id: "aurora", name: "Aurora", category: "Atmospheric", preview: "bg-gradient-to-br from-green-400 via-teal-400 to-purple-500", desc: "Northern lights wash" },
+];
+
+const EFFECT_CATEGORIES = ["Light & Glow", "Distortion", "Color FX", "Motion FX", "Atmospheric"];
+
+/* ─── AI Smart Tools (12 features) ─── */
+const AI_SMART_TOOLS: Array<{ id: string; name: string; desc: string; endpoint: string }> = [
+  { id: "auto-edit", name: "AI Auto-Edit", desc: "Analyzes script and auto-cuts, removes pauses/filler words", endpoint: "/api/ai/auto-edit" },
+  { id: "voice-clone", name: "AI Voice Clone", desc: "Upload 30s sample, clone voice for narration", endpoint: "/api/ai/voice-clone" },
+  { id: "translate-dub", name: "AI Translation + Dub", desc: "Translates captions to 10+ languages with voice dubbing", endpoint: "/api/ai/translate-dub" },
+  { id: "multi-caption", name: "AI Multi-Language Captions", desc: "Generate caption tracks in 12 languages", endpoint: "/api/ai/multi-caption" },
+  { id: "hook-tester", name: "AI Hook Tester", desc: "Generates 5 opening-30s variants and predicts retention", endpoint: "/api/ai/hook-tester" },
+  { id: "seo-title", name: "AI Title SEO Optimizer", desc: "Rewrites title for YouTube search + CTR", endpoint: "/api/ai/seo-title" },
+  { id: "description", name: "AI Description Generator", desc: "Full description with chapters + tags", endpoint: "/api/ai/description" },
+  { id: "thumbnail-extract", name: "AI Thumbnail from Video", desc: "Extract 10 best frames as thumbnail candidates", endpoint: "/api/ai/thumbnail-extract" },
+  { id: "end-screen", name: "AI End Screen Builder", desc: "Designs end screen with subscribe CTA + suggestions", endpoint: "/api/ai/end-screen" },
+  { id: "chapter-detect", name: "AI Chapter Detector", desc: "Auto-generates YouTube chapters from content", endpoint: "/api/ai/chapter-detect" },
+  { id: "viral-moments", name: "AI Viral Moment Finder", desc: "Identifies 15-60s shareable clips", endpoint: "/api/ai/viral-moments" },
+  { id: "trend-match", name: "AI Trend Match", desc: "Suggests trending topics matching user's niche", endpoint: "/api/ai/trend-match" },
+];
+
+/* ─── Voice Presets (20+ voices across styles/accents) ─── */
+const VOICE_PRESETS: Array<{ id: string; name: string; gender: string; style: string; accent: string }> = [
+  { id: "morgan_freeman", name: "Morgan Freeman Style", gender: "male", style: "cinematic", accent: "US" },
+  { id: "young_male_friendly", name: "Young Male Friendly", gender: "male", style: "friendly", accent: "US" },
+  { id: "news_anchor", name: "News Anchor", gender: "male", style: "professional", accent: "US" },
+  { id: "energetic_female", name: "Energetic Female", gender: "female", style: "upbeat", accent: "US" },
+  { id: "calm_narrator", name: "Calm Narrator", gender: "female", style: "calm", accent: "US" },
+  { id: "british_male", name: "British Male", gender: "male", style: "professional", accent: "UK" },
+  { id: "australian_female", name: "Australian Female", gender: "female", style: "friendly", accent: "AU" },
+  { id: "deep_cinematic", name: "Deep Cinematic", gender: "male", style: "cinematic", accent: "US" },
+  { id: "youthful_upbeat", name: "Youthful Upbeat", gender: "female", style: "upbeat", accent: "US" },
+  { id: "professional_corporate", name: "Professional Corporate", gender: "male", style: "professional", accent: "US" },
+  { id: "casual_podcast", name: "Casual Podcast", gender: "male", style: "casual", accent: "US" },
+  { id: "dramatic_trailer", name: "Dramatic Trailer", gender: "male", style: "cinematic", accent: "US" },
+  { id: "soft_spoken_female", name: "Soft-Spoken Female", gender: "female", style: "calm", accent: "US" },
+  { id: "charismatic_host", name: "Charismatic Host", gender: "male", style: "upbeat", accent: "US" },
+  { id: "documentary_female", name: "Documentary Female", gender: "female", style: "professional", accent: "UK" },
+  { id: "gentle_elder", name: "Gentle Elder", gender: "male", style: "calm", accent: "US" },
+  { id: "confident_coach", name: "Confident Coach", gender: "female", style: "upbeat", accent: "US" },
+  { id: "storybook_narrator", name: "Storybook Narrator", gender: "female", style: "cinematic", accent: "UK" },
+  { id: "southern_gentleman", name: "Southern Gentleman", gender: "male", style: "casual", accent: "US-South" },
+  { id: "irish_charm", name: "Irish Charm", gender: "male", style: "friendly", accent: "IE" },
+  { id: "tech_reviewer", name: "Tech Reviewer", gender: "male", style: "casual", accent: "US" },
+  { id: "warm_motherly", name: "Warm Motherly", gender: "female", style: "calm", accent: "US" },
+];
+
+/* ─── Stock B-Roll Categories ─── */
+const STOCK_CATEGORIES = [
+  { id: "nature", name: "Nature", icon: "🌿" },
+  { id: "city", name: "City", icon: "🏙️" },
+  { id: "tech", name: "Tech", icon: "💻" },
+  { id: "people", name: "People", icon: "👥" },
+  { id: "abstract", name: "Abstract", icon: "✨" },
+  { id: "money", name: "Money", icon: "💰" },
+  { id: "sports", name: "Sports", icon: "⚽" },
+  { id: "food", name: "Food", icon: "🍔" },
+  { id: "travel", name: "Travel", icon: "✈️" },
+  { id: "business", name: "Business", icon: "💼" },
+];
+
+/* ─── Export Formats & Quality Presets ─── */
+const EXPORT_FORMATS = [
+  { id: "prores", name: "ProRes", desc: "Apple ProRes 422 HQ — mastering" },
+  { id: "h264", name: "H.264", desc: "Universal codec, web-ready" },
+  { id: "h265", name: "H.265 / HEVC", desc: "Efficient 4K/8K compression" },
+  { id: "webm", name: "WebM", desc: "Open web format, VP9" },
+  { id: "av1", name: "AV1", desc: "Next-gen streaming codec" },
+  { id: "gif", name: "GIF", desc: "Animated GIF, looping" },
+  { id: "png_seq", name: "PNG Sequence", desc: "Frame-by-frame PNG export" },
+];
+
+const QUALITY_PRESETS = [
+  { id: "4k_master", name: "4K Master", desc: "3840x2160 mastering quality" },
+  { id: "1080p_yt", name: "1080p YouTube", desc: "1920x1080, YouTube optimized" },
+  { id: "720p_web", name: "720p Web", desc: "1280x720, web delivery" },
+  { id: "480p_social", name: "480p Social", desc: "854x480, compressed social" },
+  { id: "preview_low", name: "Preview Low", desc: "640x360, fast preview render" },
 ];
 
 const ASPECT_RATIO_PRESETS = [
@@ -838,6 +982,142 @@ const YOUTUBER_PRESETS = [
       aspect: { preset: "16:9", customW: 16, customH: 9 },
     },
   },
+  {
+    id: "kurzgesagt",
+    name: "Kurzgesagt",
+    tagline: "Animated science, bright colors, clean sans-serif captions",
+    preview: "bg-gradient-to-br from-sky-400 via-cyan-500 to-blue-600",
+    tags: ["Caption: Clean Sans", "Grade: Vibrant", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.5, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "breathing", intensity: 25, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "dissolve", duration: 0.35, autoBetweenCuts: true },
+      color: { enabled: true, lut: "vibrant", brightness: 5, contrast: 12, saturation: 22, temperature: 3, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 1.0, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: false, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "jenna_marbles",
+    name: "Jenna Marbles Style",
+    tagline: "Casual vlog, punchy edits, friendly caption",
+    preview: "bg-gradient-to-br from-pink-400 via-rose-500 to-fuchsia-500",
+    tags: ["Caption: Friendly", "Grade: Neutral", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Poppins", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "bounce" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "punch_zoom", intensity: 50, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "cut", duration: 0.15, autoBetweenCuts: true },
+      color: { enabled: true, lut: "neutral", brightness: 3, contrast: 8, saturation: 5, temperature: 2, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 0.6, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: false, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "smosh",
+    name: "Smosh",
+    tagline: "Comedy skit, bright colors, meme energy",
+    preview: "bg-gradient-to-br from-yellow-500 via-orange-500 to-red-500",
+    tags: ["Caption: Meme", "Grade: Vibrant", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 60, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "top" as const, customY: 20, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "crash_zoom", intensity: 70, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "flash", duration: 0.15, autoBetweenCuts: true },
+      color: { enabled: true, lut: "vibrant", brightness: 5, contrast: 15, saturation: 25, temperature: 5, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.5, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: false, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "h3h3",
+    name: "H3H3",
+    tagline: "Podcast casual, simple cuts, blue accent",
+    preview: "bg-gradient-to-br from-blue-500 via-sky-600 to-slate-700",
+    tags: ["Caption: Podcast", "Grade: Muted", "Music: Corporate"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 28, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
+      motion: { enabled: false, autoZoomSpeakers: true, preset: "breathing", intensity: 12, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "cut", duration: 0.1, autoBetweenCuts: false },
+      color: { enabled: true, lut: "cool", brightness: 0, contrast: 5, saturation: -2, temperature: -5, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: false, bgGenre: "corporate", volumeAutomation: false, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: false, silenceThreshold: 2.0, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: true, smartPacing: false, hookDetector: false, viralMomentFinder: true, autoBroll: false, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "shane_dawson",
+    name: "Shane Dawson",
+    tagline: "Investigative vlog, moody grade, dramatic music",
+    preview: "bg-gradient-to-br from-slate-900 via-purple-950 to-red-950",
+    tags: ["Caption: Cinematic", "Grade: Moody", "Music: Cinematic"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 28, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 0, position: "bottom" as const, customY: 86, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.7, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "slow_zoom_in", intensity: 35, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "fade", duration: 0.6, autoBetweenCuts: true },
+      color: { enabled: true, lut: "moody", brightness: -8, contrast: 18, saturation: -10, temperature: -8, tint: 0, highlights: -10, shadows: 12, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "cinematic", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: false, silenceThreshold: 1.8, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: true, smartPacing: false, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "mark_rober",
+    name: "Mark Rober",
+    tagline: "Science experiments, clean visuals, warm lighting",
+    preview: "bg-gradient-to-br from-orange-400 via-amber-500 to-red-500",
+    tags: ["Caption: Clean", "Grade: Warm", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 32, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 82, maxWordsPerLine: 6, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.35, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "slow_zoom_in", intensity: 30, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "fade", duration: 0.3, autoBetweenCuts: true },
+      color: { enabled: true, lut: "warm", brightness: 4, contrast: 10, saturation: 10, temperature: 8, tint: 0, highlights: 0, shadows: 3, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 0.8, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "michelle_khare",
+    name: "Michelle Khare",
+    tagline: "Challenges vlog, warm grade, upbeat music",
+    preview: "bg-gradient-to-br from-rose-400 via-orange-400 to-amber-500",
+    tags: ["Caption: Vlog", "Grade: Warm", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Montserrat", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.3, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "punch_zoom", intensity: 55, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "whip_right", duration: 0.25, autoBetweenCuts: true },
+      color: { enabled: true, lut: "warm", brightness: 4, contrast: 10, saturation: 12, temperature: 7, tint: 0, highlights: 0, shadows: 3, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.6, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "five_minute_crafts",
+    name: "5-Minute Crafts",
+    tagline: "Super fast cuts, bright colors, high contrast",
+    preview: "bg-gradient-to-br from-lime-400 via-yellow-500 to-orange-500",
+    tags: ["Caption: Bold", "Grade: Vibrant", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Bebas Neue", fontSize: 52, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "bottom" as const, customY: 78, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "pop", duration: 0.2, easing: "spring" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "crash_zoom", intensity: 75, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "flash", duration: 0.12, autoBetweenCuts: true },
+      color: { enabled: true, lut: "vibrant", brightness: 8, contrast: 18, saturation: 25, temperature: 5, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.3, autoReframeRatio: "9:16" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: true },
+      aspect: { preset: "9:16", customW: 9, customH: 16 },
+    },
+  },
 ];
 
 // Default editor settings snapshot — used by the "Custom" reset card
@@ -1067,6 +1347,37 @@ export default function VideoEditorPage() {
       selected: string[];
     };
     platformExport: string;
+    effects: {
+      active: string[];
+      intensity: Record<string, number>;
+    };
+    voice: {
+      enabled: boolean;
+      preset: string;
+      pitch: number;
+      speed: number;
+      emphasis: number;
+      pauseLength: number;
+      cloneSampleUrl: string;
+    };
+    broll: {
+      enabled: boolean;
+      aiMatch: boolean;
+      selectedClips: string[];
+      searchQuery: string;
+      activeCategory: string;
+    };
+    timeline: {
+      multiTrack: boolean;
+      keyframes: boolean;
+      sceneEditing: boolean;
+      audioDucking: number;
+      syncToBeat: boolean;
+    };
+    exportAdvanced: {
+      format: string;
+      quality: string;
+    };
   };
 
   const [editorSettings, setEditorSettings] = useState<EditorSettings>({
@@ -1150,6 +1461,37 @@ export default function VideoEditorPage() {
       selected: [],
     },
     platformExport: "",
+    effects: {
+      active: [],
+      intensity: {},
+    },
+    voice: {
+      enabled: false,
+      preset: "",
+      pitch: 0,
+      speed: 1.0,
+      emphasis: 50,
+      pauseLength: 50,
+      cloneSampleUrl: "",
+    },
+    broll: {
+      enabled: false,
+      aiMatch: false,
+      selectedClips: [],
+      searchQuery: "",
+      activeCategory: "nature",
+    },
+    timeline: {
+      multiTrack: false,
+      keyframes: false,
+      sceneEditing: false,
+      audioDucking: 40,
+      syncToBeat: false,
+    },
+    exportAdvanced: {
+      format: "h264",
+      quality: "1080p_yt",
+    },
   });
 
   // Collapsible panel open-state (each panel can be folded)
@@ -1165,7 +1507,27 @@ export default function VideoEditorPage() {
     aspect: false,
     overlays: false,
     platformExport: false,
+    // New panels
+    effects: false,
+    aiTools: false,
+    voice: false,
+    broll: false,
+    advancedTimeline: false,
   });
+
+  // Effect-category filter state for Effects Library panel
+  const [effectCategoryFilter, setEffectCategoryFilter] = useState<string>("All");
+
+  // AI tool loading state (per tool, to spin individual loaders)
+  const [aiToolLoading, setAiToolLoading] = useState<Record<string, boolean>>({});
+
+  // Voice preview state
+  const [voiceScriptPreview, setVoiceScriptPreview] = useState<string>("");
+  const [voicePreviewLoading, setVoicePreviewLoading] = useState<boolean>(false);
+  const voiceSampleInputRef = useRef<HTMLInputElement | null>(null);
+
+  // B-roll search state
+  const brollFileInputRef = useRef<HTMLInputElement | null>(null);
 
   // YouTuber-style preset selection state (for UI highlight only)
   const [selectedYouTuberPreset, setSelectedYouTuberPreset] = useState<string>("");
@@ -1304,6 +1666,185 @@ export default function VideoEditorPage() {
     if (!config.title) { toast.error("Enter a title first"); return; }
     setBatchQueue(prev => [...prev, { id: `bq${Date.now()}`, title: config.title, status: "queued", progress: 0 }]);
     toast.success("Added to render queue");
+  }
+
+  // ── Effects Library helpers ──
+  function toggleEffect(effectId: string) {
+    setEditorSettings(prev => {
+      const isActive = prev.effects.active.includes(effectId);
+      const nextActive = isActive
+        ? prev.effects.active.filter(id => id !== effectId)
+        : [...prev.effects.active, effectId];
+      // set default intensity to 50 when newly enabled
+      const nextIntensity = { ...prev.effects.intensity };
+      if (!isActive && nextIntensity[effectId] === undefined) {
+        nextIntensity[effectId] = 50;
+      }
+      return {
+        ...prev,
+        effects: {
+          active: nextActive,
+          intensity: nextIntensity,
+        },
+      };
+    });
+  }
+
+  function setEffectIntensity(effectId: string, value: number) {
+    setEditorSettings(prev => ({
+      ...prev,
+      effects: {
+        ...prev.effects,
+        intensity: { ...prev.effects.intensity, [effectId]: value },
+      },
+    }));
+  }
+
+  function clearAllEffects() {
+    setEditorSettings(prev => ({
+      ...prev,
+      effects: { active: [], intensity: {} },
+    }));
+    toast.success("Effects cleared");
+  }
+
+  // ── AI Smart Tools — invoke stub endpoint ──
+  async function invokeAiTool(tool: typeof AI_SMART_TOOLS[number]) {
+    setAiToolLoading(prev => ({ ...prev, [tool.id]: true }));
+    try {
+      const res = await fetch(tool.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: config.title,
+          script: config.script,
+          type: config.type,
+          style: config.style,
+        }),
+      });
+      if (!res.ok) {
+        // Backend stubbed for now — show a TODO-style toast
+        toast.success(`TODO: ${tool.name} backend pending (${res.status})`);
+      } else {
+        const data = await res.json().catch(() => ({}));
+        toast.success(data?.message || `${tool.name} complete`);
+      }
+    } catch {
+      toast.error(`TODO: ${tool.name} endpoint not yet wired`);
+    } finally {
+      setAiToolLoading(prev => ({ ...prev, [tool.id]: false }));
+    }
+  }
+
+  // ── Voice panel helpers ──
+  function selectVoicePreset(voiceId: string) {
+    setEditorSettings(prev => ({
+      ...prev,
+      voice: { ...prev.voice, enabled: true, preset: voiceId },
+    }));
+    toast.success(`Voice preset applied: ${VOICE_PRESETS.find(v => v.id === voiceId)?.name || voiceId}`);
+  }
+
+  function handleVoiceSampleUpload(file: File) {
+    if (!file.type.startsWith("audio/")) {
+      toast.error("Please upload an audio file");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setEditorSettings(prev => ({
+        ...prev,
+        voice: { ...prev.voice, cloneSampleUrl: base64 },
+      }));
+      toast.success("Voice sample uploaded — ready to clone");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function previewVoiceScript() {
+    if (!voiceScriptPreview.trim()) {
+      toast.error("Type some text to preview");
+      return;
+    }
+    if (!editorSettings.voice.preset) {
+      toast.error("Select a voice preset first");
+      return;
+    }
+    setVoicePreviewLoading(true);
+    try {
+      const res = await fetch("/api/ai/voice-clone", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: voiceScriptPreview,
+          voice: editorSettings.voice.preset,
+          pitch: editorSettings.voice.pitch,
+          speed: editorSettings.voice.speed,
+        }),
+      });
+      if (!res.ok) {
+        toast.success("TODO: Voice preview backend pending");
+      } else {
+        toast.success("Voice preview ready");
+      }
+    } catch {
+      toast.error("TODO: Voice preview endpoint not yet wired");
+    } finally {
+      setVoicePreviewLoading(false);
+    }
+  }
+
+  // ── B-Roll helpers ──
+  function toggleBrollClip(clipId: string) {
+    setEditorSettings(prev => ({
+      ...prev,
+      broll: {
+        ...prev.broll,
+        selectedClips: prev.broll.selectedClips.includes(clipId)
+          ? prev.broll.selectedClips.filter(id => id !== clipId)
+          : [...prev.broll.selectedClips, clipId],
+      },
+    }));
+  }
+
+  async function runAiBrollMatch() {
+    if (!config.script.trim()) {
+      toast.error("Add a script first for AI matching");
+      return;
+    }
+    try {
+      const res = await fetch("/api/ai/broll-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ script: config.script }),
+      });
+      if (!res.ok) {
+        toast.success("TODO: AI B-Roll match backend pending");
+      } else {
+        toast.success("AI B-roll suggestions generated");
+      }
+    } catch {
+      toast.error("TODO: AI B-roll endpoint not yet wired");
+    }
+  }
+
+  function handleBrollUpload(file: File) {
+    if (!file.type.startsWith("video/")) {
+      toast.error("Please upload a video file");
+      return;
+    }
+    const id = `custom-${Date.now()}`;
+    toggleBrollClip(id);
+    toast.success(`B-roll uploaded: ${file.name}`);
+  }
+
+  function openThumbnailEditor() {
+    // Navigate to thumbnail editor (best-effort, falls back to in-app route)
+    if (typeof window !== "undefined") {
+      window.open("/dashboard/thumbnail-editor", "_blank");
+    }
+    toast.success("Opening thumbnail editor...");
   }
 
   useEffect(() => {
@@ -3423,6 +3964,528 @@ export default function VideoEditorPage() {
                     );
                   })}
                 </div>
+
+                {/* Export formats + quality presets */}
+                <div className="mt-4 pt-3 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                      <Download size={11} className="text-gold" /> Export Formats
+                    </h4>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {EXPORT_FORMATS.map(fmt => {
+                        const active = editorSettings.exportAdvanced.format === fmt.id;
+                        return (
+                          <button key={fmt.id}
+                            onClick={() => setEditorSettings(prev => ({
+                              ...prev,
+                              exportAdvanced: { ...prev.exportAdvanced, format: fmt.id },
+                            }))}
+                            className={`p-2 rounded-lg border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                            <p className="text-[9px] font-semibold">{fmt.name}</p>
+                            <p className="text-[8px] text-muted mt-0.5 leading-tight">{fmt.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                      <Gauge size={11} className="text-gold" /> Quality Presets
+                    </h4>
+                    <div className="grid grid-cols-1 gap-1.5">
+                      {QUALITY_PRESETS.map(q => {
+                        const active = editorSettings.exportAdvanced.quality === q.id;
+                        return (
+                          <button key={q.id}
+                            onClick={() => setEditorSettings(prev => ({
+                              ...prev,
+                              exportAdvanced: { ...prev.exportAdvanced, quality: q.id },
+                            }))}
+                            className={`p-2 rounded-lg border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}>
+                            <p className="text-[9px] font-semibold">{q.name}</p>
+                            <p className="text-[8px] text-muted">{q.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-border">
+                  <button
+                    type="button"
+                    onClick={openThumbnailEditor}
+                    className="btn btn-sm w-full flex items-center justify-center gap-1.5"
+                  >
+                    <ImageIcon size={12} /> Extract Thumbnails from Current Video
+                  </button>
+                  <p className="text-[8px] text-muted mt-1 text-center">Opens thumbnail editor with auto-extracted frames</p>
+                </div>
+              </CollapsiblePanel>
+
+              {/* === Effects Library (50+ VFX presets) === */}
+              <CollapsiblePanel
+                id="effects"
+                icon={<Sparkles size={13} className="text-gold" />}
+                title="Effects Library"
+                desc={`${EFFECTS_LIBRARY.length} VFX presets across ${EFFECT_CATEGORIES.length} categories`}
+                open={openPanels.effects}
+                onToggle={() => togglePanel("effects")}
+                badge={editorSettings.effects.active.length}
+              >
+                <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+                  <div className="flex flex-wrap gap-1.5">
+                    {["All", ...EFFECT_CATEGORIES].map(cat => (
+                      <button
+                        key={cat}
+                        onClick={() => setEffectCategoryFilter(cat)}
+                        className={`text-[9px] px-2 py-1 rounded-lg border transition-all ${
+                          effectCategoryFilter === cat
+                            ? "bg-gold/10 text-gold border-gold/20 font-semibold"
+                            : "text-muted border-border hover:border-gold/15"
+                        }`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                  {editorSettings.effects.active.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={clearAllEffects}
+                      className="text-[9px] text-muted hover:text-gold flex items-center gap-1"
+                    >
+                      <X size={10} /> Clear ({editorSettings.effects.active.length})
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                  {EFFECTS_LIBRARY.filter(fx => effectCategoryFilter === "All" || fx.category === effectCategoryFilter).map(fx => {
+                    const active = editorSettings.effects.active.includes(fx.id);
+                    const intensity = editorSettings.effects.intensity[fx.id] ?? 50;
+                    return (
+                      <div
+                        key={fx.id}
+                        className={`relative rounded-lg border overflow-hidden transition-all ${active ? "border-gold ring-1 ring-gold/30" : "border-border hover:border-gold/20"}`}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => toggleEffect(fx.id)}
+                          className="block w-full text-left"
+                          aria-label={`Toggle ${fx.name}`}
+                        >
+                          <div className={`h-10 w-full ${fx.preview} relative animate-pulse`}>
+                            {active && (
+                              <div className="absolute top-0.5 right-0.5 bg-gold text-black rounded-full p-0.5">
+                                <Check size={8} />
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-1.5">
+                            <p className="text-[9px] font-semibold leading-tight">{fx.name}</p>
+                            <p className="text-[7px] text-muted mt-0.5 leading-tight line-clamp-1">{fx.desc}</p>
+                          </div>
+                        </button>
+                        {active && (
+                          <div className="px-1.5 pb-1.5">
+                            <label className="block text-[7px] text-muted mb-0.5">Intensity: {intensity}%</label>
+                            <input
+                              type="range"
+                              min={0}
+                              max={100}
+                              value={intensity}
+                              onChange={(e) => setEffectIntensity(fx.id, Number(e.target.value))}
+                              className="w-full accent-gold"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </CollapsiblePanel>
+
+              {/* === AI Smart Tools (12 features) === */}
+              <CollapsiblePanel
+                id="aiTools"
+                icon={<Bot size={13} className="text-gold" />}
+                title="AI Smart Tools"
+                desc={`${AI_SMART_TOOLS.length} AI-powered enhancements`}
+                open={openPanels.aiTools}
+                onToggle={() => togglePanel("aiTools")}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  {AI_SMART_TOOLS.map(tool => {
+                    const loading = !!aiToolLoading[tool.id];
+                    return (
+                      <div key={tool.id} className="card p-3 border hover:border-gold/30 transition-all">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <Wand2 size={12} className="text-gold flex-shrink-0" />
+                          <h4 className="text-[10px] font-semibold leading-tight">{tool.name}</h4>
+                        </div>
+                        <p className="text-[8px] text-muted leading-tight mb-2 line-clamp-2">{tool.desc}</p>
+                        <button
+                          type="button"
+                          onClick={() => invokeAiTool(tool)}
+                          disabled={loading}
+                          className="btn btn-sm w-full text-[9px] flex items-center justify-center gap-1 disabled:opacity-50"
+                        >
+                          {loading ? <Loader2 size={10} className="animate-spin" /> : <Play size={10} />}
+                          {loading ? "Running..." : "Run"}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-[8px] text-muted italic mt-2">
+                  Each tool calls a stub endpoint — backend will fill in responses as features ship.
+                </p>
+              </CollapsiblePanel>
+
+              {/* === Voice & Narration Panel === */}
+              <CollapsiblePanel
+                id="voice"
+                icon={<Mic size={13} className="text-gold" />}
+                title="Voice & Narration"
+                desc={`${VOICE_PRESETS.length} AI voices + cloning + tone controls`}
+                open={openPanels.voice}
+                onToggle={() => togglePanel("voice")}
+                enabledToggle={{
+                  value: editorSettings.voice.enabled,
+                  onChange: v => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, enabled: v } })),
+                }}
+              >
+                {/* Voice preset grid */}
+                <div className="mb-4">
+                  <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                    <Speech size={11} className="text-gold" /> Select a Voice Preset
+                  </h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5">
+                    {VOICE_PRESETS.map(v => {
+                      const active = editorSettings.voice.preset === v.id;
+                      return (
+                        <button
+                          key={v.id}
+                          type="button"
+                          onClick={() => selectVoicePreset(v.id)}
+                          className={`p-2 rounded-lg border text-left transition-all ${active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"}`}
+                        >
+                          <p className="text-[9px] font-semibold leading-tight">{v.name}</p>
+                          <div className="flex gap-0.5 mt-1 flex-wrap">
+                            <span className="text-[7px] px-1 py-0.5 rounded bg-gold/10 text-gold">{v.gender}</span>
+                            <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{v.style}</span>
+                            <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{v.accent}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Voice cloning */}
+                <div className="mb-4 p-3 rounded-lg border border-border">
+                  <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                    <Upload size={11} className="text-gold" /> Voice Cloning
+                  </h4>
+                  <p className="text-[9px] text-muted mb-2">Upload a 30-second voice sample to clone the voice</p>
+                  <input
+                    ref={voiceSampleInputRef}
+                    type="file"
+                    accept="audio/*"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleVoiceSampleUpload(f);
+                    }}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => voiceSampleInputRef.current?.click()}
+                    className="btn btn-sm w-full flex items-center justify-center gap-1.5"
+                  >
+                    <Upload size={11} /> {editorSettings.voice.cloneSampleUrl ? "Sample Uploaded — Replace" : "Upload Voice Sample"}
+                  </button>
+                </div>
+
+                {/* Tone controls */}
+                <div className="mb-4 p-3 rounded-lg border border-border">
+                  <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                    <Sliders size={11} className="text-gold" /> Tone Controls
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-[9px] text-muted block mb-1">Pitch: {editorSettings.voice.pitch > 0 ? "+" : ""}{editorSettings.voice.pitch}</label>
+                      <input
+                        type="range"
+                        min={-12}
+                        max={12}
+                        value={editorSettings.voice.pitch}
+                        onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, pitch: Number(e.target.value) } }))}
+                        className="w-full accent-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted block mb-1">Speed: {editorSettings.voice.speed.toFixed(2)}x</label>
+                      <input
+                        type="range"
+                        min={0.5}
+                        max={2.0}
+                        step={0.05}
+                        value={editorSettings.voice.speed}
+                        onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, speed: Number(e.target.value) } }))}
+                        className="w-full accent-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted block mb-1">Emphasis: {editorSettings.voice.emphasis}%</label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={editorSettings.voice.emphasis}
+                        onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, emphasis: Number(e.target.value) } }))}
+                        className="w-full accent-gold"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[9px] text-muted block mb-1">Pause Length: {editorSettings.voice.pauseLength}%</label>
+                      <input
+                        type="range"
+                        min={0}
+                        max={100}
+                        value={editorSettings.voice.pauseLength}
+                        onChange={(e) => setEditorSettings(prev => ({ ...prev, voice: { ...prev.voice, pauseLength: Number(e.target.value) } }))}
+                        className="w-full accent-gold"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Script-to-voice preview */}
+                <div className="p-3 rounded-lg border border-border">
+                  <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                    <MessageSquare size={11} className="text-gold" /> Script-to-Voice Preview
+                  </h4>
+                  <textarea
+                    value={voiceScriptPreview}
+                    onChange={(e) => setVoiceScriptPreview(e.target.value)}
+                    placeholder="Type text to preview in the selected voice..."
+                    rows={2}
+                    className="input w-full text-[10px] resize-none mb-2"
+                  />
+                  <button
+                    type="button"
+                    onClick={previewVoiceScript}
+                    disabled={voicePreviewLoading}
+                    className="btn btn-sm w-full flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  >
+                    {voicePreviewLoading ? <Loader2 size={11} className="animate-spin" /> : <Play size={11} />}
+                    {voicePreviewLoading ? "Generating..." : "Preview Voice"}
+                  </button>
+                </div>
+              </CollapsiblePanel>
+
+              {/* === B-Roll & Stock Footage === */}
+              <CollapsiblePanel
+                id="broll"
+                icon={<Film size={13} className="text-gold" />}
+                title="B-Roll & Stock"
+                desc="Search stock libraries + AI match + upload custom clips"
+                open={openPanels.broll}
+                onToggle={() => togglePanel("broll")}
+                enabledToggle={{
+                  value: editorSettings.broll.enabled,
+                  onChange: v => setEditorSettings(prev => ({ ...prev, broll: { ...prev.broll, enabled: v } })),
+                }}
+                badge={editorSettings.broll.selectedClips.length}
+              >
+                {/* Search bar */}
+                <div className="mb-3">
+                  <input
+                    type="text"
+                    placeholder="Search Pexels / Unsplash / Pixabay..."
+                    value={editorSettings.broll.searchQuery}
+                    onChange={(e) => setEditorSettings(prev => ({ ...prev, broll: { ...prev.broll, searchQuery: e.target.value } }))}
+                    className="input w-full text-[10px]"
+                  />
+                </div>
+
+                {/* AI match + Upload buttons */}
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  <button
+                    type="button"
+                    onClick={runAiBrollMatch}
+                    className="btn btn-sm flex items-center justify-center gap-1.5"
+                  >
+                    <Sparkles size={11} className="text-gold" /> AI B-Roll Match
+                  </button>
+                  <input
+                    ref={brollFileInputRef}
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) handleBrollUpload(f);
+                    }}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => brollFileInputRef.current?.click()}
+                    className="btn btn-sm flex items-center justify-center gap-1.5"
+                  >
+                    <Upload size={11} /> Upload Custom B-Roll
+                  </button>
+                </div>
+
+                {/* Stock library categories */}
+                <div className="mb-3">
+                  <h4 className="text-[10px] font-semibold mb-2">Stock Categories</h4>
+                  <div className="flex flex-wrap gap-1.5">
+                    {STOCK_CATEGORIES.map(cat => {
+                      const active = editorSettings.broll.activeCategory === cat.id;
+                      return (
+                        <button
+                          key={cat.id}
+                          onClick={() => setEditorSettings(prev => ({ ...prev, broll: { ...prev.broll, activeCategory: cat.id } }))}
+                          className={`text-[9px] px-2 py-1 rounded-lg border transition-all flex items-center gap-1 ${active ? "border-gold/40 bg-gold/[0.06] text-gold" : "border-border hover:border-gold/15 text-muted"}`}
+                        >
+                          <span>{cat.icon}</span> {cat.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Mock stock suggestions */}
+                <div>
+                  <h4 className="text-[10px] font-semibold mb-2">Suggestions — {STOCK_CATEGORIES.find(c => c.id === editorSettings.broll.activeCategory)?.name}</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                    {Array.from({ length: 8 }).map((_, i) => {
+                      const clipId = `${editorSettings.broll.activeCategory}-clip-${i}`;
+                      const selected = editorSettings.broll.selectedClips.includes(clipId);
+                      const sources = ["Pexels", "Unsplash", "Pixabay"];
+                      const source = sources[i % sources.length];
+                      const duration = 5 + (i * 3) % 20;
+                      return (
+                        <div
+                          key={clipId}
+                          className={`rounded-lg border overflow-hidden transition-all ${selected ? "border-gold ring-1 ring-gold/30" : "border-border hover:border-gold/20"}`}
+                        >
+                          <div className={`h-16 w-full bg-gradient-to-br ${i % 2 === 0 ? "from-slate-700 to-slate-900" : "from-sky-700 to-indigo-900"} relative flex items-center justify-center`}>
+                            <Film size={16} className="text-white/40" />
+                            <span className="absolute bottom-0.5 right-0.5 text-[7px] bg-black/60 text-white px-1 rounded">{duration}s</span>
+                          </div>
+                          <div className="p-1.5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{source}</span>
+                              <button
+                                type="button"
+                                onClick={() => toggleBrollClip(clipId)}
+                                className={`text-[8px] px-1.5 py-0.5 rounded ${selected ? "bg-gold text-black" : "bg-gold/10 text-gold hover:bg-gold/20"}`}
+                              >
+                                {selected ? "Added" : "+ Add"}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </CollapsiblePanel>
+
+              {/* === Advanced Timeline === */}
+              <CollapsiblePanel
+                id="advancedTimeline"
+                icon={<Layers size={13} className="text-gold" />}
+                title="Advanced Timeline"
+                desc="Multi-track preview, keyframes, beat sync, audio ducking"
+                open={openPanels.advancedTimeline}
+                onToggle={() => togglePanel("advancedTimeline")}
+              >
+                {/* Multi-track visual preview */}
+                <div className="mb-4">
+                  <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                    <Layers size={11} className="text-gold" /> Multi-Track Preview
+                  </h4>
+                  <div className="rounded-lg border border-border p-2 bg-surface/50 space-y-1">
+                    {[
+                      { name: "Video A", color: "bg-sky-500/40", segments: [15, 25, 30, 30] },
+                      { name: "Video B", color: "bg-purple-500/40", segments: [10, 20, 35, 35] },
+                      { name: "Captions", color: "bg-gold/40", segments: [20, 30, 25, 25] },
+                      { name: "Music", color: "bg-emerald-500/40", segments: [100] },
+                      { name: "SFX", color: "bg-rose-500/40", segments: [15, 25, 20, 40] },
+                    ].map((track, ti) => (
+                      <div key={ti} className="flex items-center gap-2">
+                        <span className="text-[8px] font-mono text-muted w-14 flex-shrink-0">{track.name}</span>
+                        <div className="flex-1 flex gap-0.5 h-4">
+                          {track.segments.map((w, si) => (
+                            <div key={si} className={`${track.color} rounded-sm`} style={{ width: `${w}%` }} />
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex items-center gap-2 pt-1 border-t border-border mt-1">
+                      <span className="text-[8px] font-mono text-muted w-14 flex-shrink-0">Timeline</span>
+                      <div className="flex-1 flex justify-between text-[7px] text-muted font-mono">
+                        <span>0:00</span><span>0:15</span><span>0:30</span><span>0:45</span><span>1:00</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Feature toggles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mb-4">
+                  <ToggleRow
+                    label="Keyframe animation"
+                    desc="Animate props over time with curves"
+                    icon={<TrendingUp size={10} />}
+                    checked={editorSettings.timeline.keyframes}
+                    onChange={v => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, keyframes: v } }))}
+                  />
+                  <ToggleRow
+                    label="Scene-by-scene editing"
+                    desc="Granular per-scene property overrides"
+                    icon={<Layers size={10} />}
+                    checked={editorSettings.timeline.sceneEditing}
+                    onChange={v => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, sceneEditing: v } }))}
+                  />
+                  <ToggleRow
+                    label="Multi-track layout"
+                    desc="Enable stacked tracks (video + audio + captions)"
+                    icon={<LayoutGrid size={10} />}
+                    checked={editorSettings.timeline.multiTrack}
+                    onChange={v => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, multiTrack: v } }))}
+                  />
+                  <ToggleRow
+                    label="Sync to beat"
+                    desc="Cut on detected music beats"
+                    icon={<Waves size={10} />}
+                    checked={editorSettings.timeline.syncToBeat}
+                    onChange={v => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, syncToBeat: v } }))}
+                  />
+                </div>
+
+                {/* Audio ducking customization */}
+                <div className="p-3 rounded-lg border border-border">
+                  <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
+                    <VolumeX size={11} className="text-gold" /> Audio Ducking
+                  </h4>
+                  <p className="text-[9px] text-muted mb-2">How much music volume ducks under voiceover (higher = quieter)</p>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={editorSettings.timeline.audioDucking}
+                      onChange={(e) => setEditorSettings(prev => ({ ...prev, timeline: { ...prev.timeline, audioDucking: Number(e.target.value) } }))}
+                      className="flex-1 accent-gold"
+                    />
+                    <span className="text-[10px] font-mono text-gold w-10 text-right">{editorSettings.timeline.audioDucking}%</span>
+                  </div>
+                </div>
               </CollapsiblePanel>
 
             </div>
@@ -3441,6 +4504,11 @@ export default function VideoEditorPage() {
                   <SummaryRow label="Aspect" on={true} value={editorSettings.aspect.preset === "custom" ? `${editorSettings.aspect.customW}:${editorSettings.aspect.customH}` : editorSettings.aspect.preset} />
                   <SummaryRow label="Overlays" on={editorSettings.overlays.enabled && editorSettings.overlays.selected.length > 0} value={editorSettings.overlays.selected.length > 0 ? `${editorSettings.overlays.selected.length} selected` : "off"} />
                   <SummaryRow label="Platform" on={!!editorSettings.platformExport} value={editorSettings.platformExport || "none"} />
+                  <SummaryRow label="Effects" on={editorSettings.effects.active.length > 0} value={editorSettings.effects.active.length > 0 ? `${editorSettings.effects.active.length} active` : "off"} />
+                  <SummaryRow label="Voice" on={editorSettings.voice.enabled && !!editorSettings.voice.preset} value={editorSettings.voice.preset ? VOICE_PRESETS.find(v => v.id === editorSettings.voice.preset)?.name : "off"} />
+                  <SummaryRow label="B-Roll" on={editorSettings.broll.enabled && editorSettings.broll.selectedClips.length > 0} value={editorSettings.broll.selectedClips.length > 0 ? `${editorSettings.broll.selectedClips.length} clips` : "off"} />
+                  <SummaryRow label="Timeline" on={editorSettings.timeline.keyframes || editorSettings.timeline.multiTrack || editorSettings.timeline.syncToBeat} value={[editorSettings.timeline.keyframes && "keyframes", editorSettings.timeline.multiTrack && "multi-track", editorSettings.timeline.syncToBeat && "beat sync"].filter(Boolean).join(", ") || "off"} />
+                  <SummaryRow label="Export" on={true} value={`${EXPORT_FORMATS.find(f => f.id === editorSettings.exportAdvanced.format)?.name || "H.264"} / ${QUALITY_PRESETS.find(q => q.id === editorSettings.exportAdvanced.quality)?.name || "1080p"}`} />
                 </div>
               </div>
 

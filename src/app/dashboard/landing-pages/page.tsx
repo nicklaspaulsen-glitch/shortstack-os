@@ -251,18 +251,85 @@ export default function LandingPagesPage() {
     }
     setGenerating(true);
     toast.loading("AI is generating your landing page...", { id: "gen" });
-    // Simulate generation with realistic delay, using default content
-    await new Promise(r => setTimeout(r, 2200));
-    const c = defaultContent();
-    c.hero.headline = bizInfo.tagline || `${bizInfo.name} \u2014 ${bizInfo.industry} Solutions`;
-    c.hero.subheadline = bizInfo.description || c.hero.subheadline;
-    c.hero.cta_text = bizInfo.ctaText || "Get Started";
-    c.hero.cta_url = bizInfo.ctaUrl || "#";
-    c.footer.copyright = `\u00a9 2026 ${bizInfo.name}. All rights reserved.`;
-    setContent(c);
-    setGenerating(false);
-    toast.success("Landing page generated!", { id: "gen" });
-    setStep(3);
+
+    try {
+      const res = await fetch("/api/landing-pages/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          business_type: bizInfo.industry,
+          product_or_service: bizInfo.description || bizInfo.tagline || bizInfo.name,
+          target_audience: bizInfo.targetAudience || "small business owners",
+          value_proposition: bizInfo.tagline || undefined,
+          template_style: selectedTemplate || "saas",
+          include_sections: ["features", "benefits", "testimonials", "faq", "pricing"],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Generation failed", { id: "gen" });
+        setGenerating(false);
+        return;
+      }
+
+      const c = defaultContent();
+      c.hero.headline = data.headline || bizInfo.tagline || `${bizInfo.name} — ${bizInfo.industry} Solutions`;
+      c.hero.subheadline = data.subheadline || bizInfo.description || c.hero.subheadline;
+      c.hero.cta_text = data.hero_cta || bizInfo.ctaText || "Get Started";
+      c.hero.cta_url = bizInfo.ctaUrl || "#";
+      c.footer.copyright = `\u00a9 2026 ${bizInfo.name}. All rights reserved.`;
+
+      // Map generated sections onto the editor shape
+      interface ApiSection { type: string; heading?: string; content: unknown }
+      const apiSections: ApiSection[] = Array.isArray(data.sections) ? data.sections : [];
+      for (const sec of apiSections) {
+        if (sec.type === "features" && Array.isArray(sec.content)) {
+          c.features = (sec.content as Array<{ name?: string; title?: string; description?: string; icon?: string }>).slice(0, 6).map(f => ({
+            icon: f.icon || "Zap",
+            title: f.name || f.title || "Feature",
+            description: f.description || "",
+          }));
+        }
+        if (sec.type === "testimonials" && Array.isArray(sec.content)) {
+          c.testimonials = (sec.content as Array<{ name?: string; company?: string; quote?: string; role?: string }>).slice(0, 6).map(t => ({
+            name: t.name || "",
+            company: t.company || "",
+            quote: t.quote || "",
+            role: t.role || "",
+          }));
+        }
+        if (sec.type === "faq" && Array.isArray(sec.content)) {
+          c.faq = (sec.content as Array<{ question?: string; answer?: string }>).slice(0, 8).map(f => ({
+            question: f.question || "",
+            answer: f.answer || "",
+          }));
+        }
+        if (sec.type === "pricing") {
+          const tiersRaw = Array.isArray(sec.content)
+            ? (sec.content as Array<{ name?: string; price?: string; period?: string; features?: string[]; highlighted?: boolean }>)
+            : Array.isArray((sec.content as { tiers?: unknown[] })?.tiers)
+              ? ((sec.content as { tiers: Array<{ name?: string; price?: string; period?: string; features?: string[]; highlighted?: boolean }> }).tiers)
+              : [];
+          if (tiersRaw.length > 0) {
+            c.pricing = tiersRaw.slice(0, 3).map((tier) => ({
+              name: tier.name || "Plan",
+              price: tier.price || "$0",
+              period: tier.period || "/month",
+              features: Array.isArray(tier.features) ? tier.features : [],
+              highlighted: Boolean(tier.highlighted),
+            }));
+          }
+        }
+      }
+
+      setContent(c);
+      setGenerating(false);
+      toast.success("Landing page generated!", { id: "gen" });
+      setStep(3);
+    } catch (err) {
+      setGenerating(false);
+      toast.error(err instanceof Error ? err.message : "Generation failed", { id: "gen" });
+    }
   };
 
   const handleTemplateSelect = (id: string) => {
@@ -273,9 +340,68 @@ export default function LandingPagesPage() {
   };
 
   const handleRegenSection = async (key: SectionKey) => {
+    const sectionMap: Partial<Record<SectionKey, "features" | "testimonials" | "faq" | "pricing" | "about">> = {
+      features: "features",
+      testimonials: "testimonials",
+      faq: "faq",
+      pricing: "pricing",
+    };
+    const apiSection = sectionMap[key];
+    if (!apiSection) {
+      toast.error(`No AI regeneration for ${key}`);
+      return;
+    }
     toast.loading(`Regenerating ${key}...`, { id: `regen-${key}` });
-    await new Promise(r => setTimeout(r, 1200));
-    toast.success(`${key} regenerated!`, { id: `regen-${key}` });
+    try {
+      const res = await fetch("/api/landing-pages/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          business_type: bizInfo.industry || "business",
+          product_or_service: bizInfo.description || bizInfo.tagline || bizInfo.name || "product",
+          target_audience: bizInfo.targetAudience || "customers",
+          value_proposition: bizInfo.tagline || undefined,
+          template_style: selectedTemplate || "saas",
+          regenerate_section: apiSection,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Regeneration failed", { id: `regen-${key}` });
+        return;
+      }
+      interface ApiSection { type: string; content: unknown }
+      const sec: ApiSection | undefined = (data.sections as ApiSection[])?.[0];
+      if (!sec) {
+        toast.error("No section returned", { id: `regen-${key}` });
+        return;
+      }
+      setContent(c => {
+        if (key === "features" && Array.isArray(sec.content)) {
+          return { ...c, features: (sec.content as Array<{ name?: string; title?: string; description?: string; icon?: string }>).slice(0, 6).map(f => ({ icon: f.icon || "Zap", title: f.name || f.title || "Feature", description: f.description || "" })) };
+        }
+        if (key === "testimonials" && Array.isArray(sec.content)) {
+          return { ...c, testimonials: (sec.content as Array<{ name?: string; company?: string; quote?: string; role?: string }>).slice(0, 6).map(t => ({ name: t.name || "", company: t.company || "", quote: t.quote || "", role: t.role || "" })) };
+        }
+        if (key === "faq" && Array.isArray(sec.content)) {
+          return { ...c, faq: (sec.content as Array<{ question?: string; answer?: string }>).slice(0, 8).map(f => ({ question: f.question || "", answer: f.answer || "" })) };
+        }
+        if (key === "pricing") {
+          const tiersRaw = Array.isArray(sec.content)
+            ? (sec.content as Array<{ name?: string; price?: string; period?: string; features?: string[]; highlighted?: boolean }>)
+            : Array.isArray((sec.content as { tiers?: unknown[] })?.tiers)
+              ? ((sec.content as { tiers: Array<{ name?: string; price?: string; period?: string; features?: string[]; highlighted?: boolean }> }).tiers)
+              : [];
+          if (tiersRaw.length > 0) {
+            return { ...c, pricing: tiersRaw.slice(0, 3).map(tier => ({ name: tier.name || "Plan", price: tier.price || "$0", period: tier.period || "/month", features: Array.isArray(tier.features) ? tier.features : [], highlighted: Boolean(tier.highlighted) })) };
+          }
+        }
+        return c;
+      });
+      toast.success(`${key} regenerated!`, { id: `regen-${key}` });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Regeneration failed", { id: `regen-${key}` });
+    }
   };
 
   const handleDeploy = async () => {

@@ -6,8 +6,10 @@ import {
   ArrowDown, Phone, MessageSquare, Share2, GitBranch,
   Copy, BarChart3, Users, Target, Settings, Zap,
   CheckCircle, XCircle, Eye,
-  ArrowRight
+  ArrowRight, Loader2
 } from "lucide-react";
+import toast from "react-hot-toast";
+import Modal from "@/components/ui/modal";
 
 type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "settings";
 
@@ -119,6 +121,96 @@ export default function SequencesPage() {
   const [templateFilter, setTemplateFilter] = useState("all");
   const [abEnabled, setAbEnabled] = useState(false);
 
+  /* ── AI generator state ── */
+  const [showAiModal, setShowAiModal] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [aiObjective, setAiObjective] = useState("");
+  const [aiAudience, setAiAudience] = useState("");
+  const [aiChannels, setAiChannels] = useState<{ email: boolean; sms: boolean; dm: boolean }>({ email: true, sms: false, dm: false });
+  const [aiLength, setAiLength] = useState(7);
+  const [aiTone, setAiTone] = useState("professional");
+  const [aiSummary, setAiSummary] = useState<{ name: string; description: string; step_count: number; channels: string[]; duration_days: number } | null>(null);
+
+  async function handleGenerateSequence() {
+    const selectedChannels: ("email" | "sms" | "dm")[] = [];
+    if (aiChannels.email) selectedChannels.push("email");
+    if (aiChannels.sms) selectedChannels.push("sms");
+    if (aiChannels.dm) selectedChannels.push("dm");
+
+    if (!aiObjective.trim()) { toast.error("Objective is required"); return; }
+    if (!aiAudience.trim()) { toast.error("Audience is required"); return; }
+    if (selectedChannels.length === 0) { toast.error("Pick at least one channel"); return; }
+
+    setAiGenerating(true);
+    try {
+      const res = await fetch("/api/sequences/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          objective: aiObjective,
+          audience: aiAudience,
+          channels: selectedChannels,
+          length_days: aiLength,
+          tone: aiTone,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Sequence generation failed");
+        return;
+      }
+
+      interface ApiStep {
+        step_number?: number;
+        delay_days?: number;
+        channel?: string;
+        subject?: string;
+        message?: string;
+        condition?: string;
+        goal?: string;
+      }
+      const steps: SequenceStep[] = (data.steps as ApiStep[]).map((s: ApiStep, i: number) => {
+        const channel = s.channel || "email";
+        const type: SequenceStep["type"] =
+          channel === "email" ? "email" :
+          channel === "sms" ? "sms" :
+          channel === "dm" ? "social" : "email";
+        return {
+          id: `ai_${Date.now()}_${i}`,
+          type,
+          subject: s.subject,
+          body: s.message || "",
+          delay_days: s.delay_days ?? 0,
+          channel: channel === "dm" ? "linkedin" : undefined,
+        };
+      });
+
+      const newSeq: Sequence = {
+        id: `seq_${Date.now()}`,
+        name: data.name || "AI Sequence",
+        steps,
+        active: false,
+        enrolled: 0, completed: 0, replied: 0,
+      };
+      setSequences(prev => [...prev, newSeq]);
+      setActiveSequence(newSeq);
+      setAiSummary({
+        name: newSeq.name,
+        description: data.description || "",
+        step_count: steps.length,
+        channels: selectedChannels,
+        duration_days: aiLength,
+      });
+      toast.success("Sequence generated");
+      setShowAiModal(false);
+      setActiveTab("builder");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sequence generation failed");
+    } finally {
+      setAiGenerating(false);
+    }
+  }
+
   function createFromTemplate(template: typeof TEMPLATE_LIBRARY[0]) {
     const seq: Sequence = {
       id: `seq_${Date.now()}`,
@@ -194,11 +286,87 @@ export default function SequencesPage() {
           <p className="text-xs text-muted mt-0.5">Multi-channel drip campaigns with AI, conditions, and A/B testing</p>
         </div>
         <div className="flex gap-2">
+          <button onClick={() => setShowAiModal(true)} className="btn-secondary text-xs flex items-center gap-1.5">
+            <Sparkles size={12} /> Generate Sequence with AI
+          </button>
           <button className="btn-primary text-xs flex items-center gap-1.5" onClick={() => setActiveSequence(null)}>
             <Plus size={12} /> New Sequence
           </button>
         </div>
       </div>
+
+      {/* AI Summary Card */}
+      {aiSummary && (
+        <div className="card border-gold/20 bg-gold/5 p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Sparkles size={16} className="text-gold" />
+              <div>
+                <p className="text-xs font-semibold">{aiSummary.name}</p>
+                <p className="text-[10px] text-muted">{aiSummary.description}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 text-[10px]">
+              <div className="text-center"><p className="font-bold text-gold">{aiSummary.step_count}</p><p className="text-muted">Steps</p></div>
+              <div className="text-center"><p className="font-bold text-gold">{aiSummary.channels.length}</p><p className="text-muted">Channels</p></div>
+              <div className="text-center"><p className="font-bold text-gold">{aiSummary.duration_days}d</p><p className="text-muted">Duration</p></div>
+              <button onClick={() => setAiSummary(null)} className="text-muted hover:text-foreground p-1"><XCircle size={12} /></button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI Generator Modal */}
+      <Modal isOpen={showAiModal} onClose={() => setShowAiModal(false)} title="Generate Sequence with AI" size="lg">
+        <div className="space-y-4">
+          <div>
+            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Objective / Goal *</label>
+            <textarea value={aiObjective} onChange={e => setAiObjective(e.target.value)} rows={3} className="input w-full text-xs"
+              placeholder="e.g. Book discovery calls with dental practice owners..." />
+          </div>
+          <div>
+            <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Audience *</label>
+            <input value={aiAudience} onChange={e => setAiAudience(e.target.value)} className="input w-full text-xs"
+              placeholder="e.g. Dental practice owners in the US, 50+ patients/month" />
+          </div>
+          <div>
+            <label className="text-[10px] text-muted uppercase tracking-wider block mb-2">Channels *</label>
+            <div className="flex gap-2">
+              {([{ key: "email", label: "Email" }, { key: "sms", label: "SMS" }, { key: "dm", label: "DM" }] as const).map(c => (
+                <label key={c.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light border border-border cursor-pointer hover:border-gold/20 transition-all">
+                  <input type="checkbox" checked={aiChannels[c.key]} onChange={() => setAiChannels(prev => ({ ...prev, [c.key]: !prev[c.key] }))} className="accent-gold" />
+                  <span className="text-xs">{c.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Length (days)</label>
+              <select value={aiLength} onChange={e => setAiLength(parseInt(e.target.value))} className="input w-full text-xs">
+                {[3, 5, 7, 10, 14].map(d => <option key={d} value={d}>{d} days</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Tone</label>
+              <select value={aiTone} onChange={e => setAiTone(e.target.value)} className="input w-full text-xs">
+                <option value="professional">Professional</option>
+                <option value="friendly">Friendly</option>
+                <option value="casual">Casual</option>
+                <option value="direct">Direct</option>
+                <option value="warm">Warm</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <button onClick={() => setShowAiModal(false)} className="btn-ghost text-xs">Cancel</button>
+            <button onClick={handleGenerateSequence} disabled={aiGenerating} className="btn-primary text-xs flex items-center gap-1.5">
+              {aiGenerating ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              {aiGenerating ? "Generating..." : "Generate"}
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
