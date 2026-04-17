@@ -342,7 +342,7 @@ export default function Sidebar() {
               : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
           }`}
         >
-          <span className={`shrink-0 transition-colors ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+          <span className={`shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
             {item.icon}
           </span>
           <span className="truncate">{item.label}</span>
@@ -368,7 +368,7 @@ export default function Sidebar() {
           }`}
           title={item.label}
         >
-          <span className={`shrink-0 transition-colors ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+          <span className={`shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
             {item.icon}
           </span>
           {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
@@ -386,7 +386,7 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-300 ${
+      className={`sidebar-fade-in fixed inset-y-0 left-0 z-40 flex flex-col transition-all duration-300 ${
         collapsed ? "w-[56px]" : "w-56"
       }`}
       style={{
@@ -394,6 +394,8 @@ export default function Sidebar() {
         borderRight: "1px solid var(--color-border, #E8E5E0)",
       }}
     >
+      {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
+      <span className="sidebar-led-strip" aria-hidden />
       {/* Logo — uses white label config when available */}
       <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-3 h-12 shrink-0`}>
         {!collapsed ? (

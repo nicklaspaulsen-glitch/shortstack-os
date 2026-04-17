@@ -734,6 +734,148 @@ body {
   100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
 }
 
+/* ═══════════ SIDEBAR LED STRIP EFFECT ═══════════ */
+/* A thin light traveling down the sidebar's left edge like an LED strip */
+@keyframes sidebarLedFlow {
+  0%   { top: -20%; opacity: 0; }
+  10%  { opacity: 1; }
+  45%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Periodic "pulse" that sweeps the whole strip */
+@keyframes sidebarLedPulse {
+  0%, 93%, 100% { opacity: 0.15; box-shadow: 0 0 4px var(--led-color, rgba(201, 168, 76, 0.6)); }
+  96% { opacity: 1; box-shadow: 0 0 16px var(--led-color, rgba(201, 168, 76, 0.9)), 0 0 32px var(--led-color, rgba(201, 168, 76, 0.4)); }
+}
+
+/* Breathing glow for active nav link */
+@keyframes navLinkGlow {
+  0%, 100% { box-shadow: 0 0 0 0 var(--led-color, rgba(201, 168, 76, 0)); }
+  50% { box-shadow: 0 0 12px -2px var(--led-color, rgba(201, 168, 76, 0.4)); }
+}
+
+@keyframes sidebarSlideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Random-shimmer effect on icons — feels alive */
+@keyframes iconShimmer {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.4) drop-shadow(0 0 4px var(--led-color, rgba(201, 168, 76, 0.5))); }
+}
+
+/* Sidebar fade-in container */
+.sidebar-fade-in {
+  animation: sidebarSlideIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* LED strip base — positioned on the sidebar's right edge */
+.sidebar-led-strip {
+  position: absolute;
+  top: 0; right: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--led-color, rgba(201, 168, 76, 0.12)) 30%,
+    var(--led-color, rgba(201, 168, 76, 0.18)) 50%,
+    var(--led-color, rgba(201, 168, 76, 0.12)) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  animation: sidebarLedPulse 8s ease-in-out infinite;
+}
+
+/* Moving bright dot inside the strip */
+.sidebar-led-strip::before {
+  content: "";
+  position: absolute;
+  right: -2px;
+  height: 50px;
+  width: 6px;
+  border-radius: 3px;
+  background: radial-gradient(
+    ellipse at center,
+    var(--led-color-bright, rgba(201, 168, 76, 1)) 0%,
+    var(--led-color, rgba(201, 168, 76, 0.5)) 40%,
+    transparent 80%
+  );
+  filter: blur(2px);
+  animation: sidebarLedFlow 6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+/* Secondary trailing dot */
+.sidebar-led-strip::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  height: 24px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--led-color, rgba(201, 168, 76, 0.8));
+  filter: blur(1px);
+  opacity: 0.6;
+  animation: sidebarLedFlow 6s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  animation-delay: -0.8s;
+}
+
+/* Theme-aware LED colors — derived from --color-accent-rgb (set per theme by applyTheme) */
+:root {
+  --led-color: rgb(var(--color-accent-rgb, 201 168 76) / 0.6);
+  --led-color-bright: rgb(var(--color-accent-rgb, 215 190 110));
+  --led-color-glow: rgb(var(--color-accent-rgb, 201 168 76) / 0.35);
+}
+
+/* Micro-interactions across UI */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease-out;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -8px var(--led-color, rgba(201, 168, 76, 0.25));
+}
+
+.hover-glow {
+  transition: box-shadow 0.25s ease-out;
+}
+.hover-glow:hover {
+  box-shadow: 0 0 12px -2px var(--led-color, rgba(201, 168, 76, 0.35));
+}
+
+/* Subtle icon breathing on idle nav items — one at a time */
+.nav-icon-alive {
+  animation: iconShimmer 6s ease-in-out infinite;
+  will-change: filter;
+}
+.nav-icon-alive:nth-child(3n)   { animation-delay: 1.2s; }
+.nav-icon-alive:nth-child(3n+1) { animation-delay: 2.4s; }
+.nav-icon-alive:nth-child(3n+2) { animation-delay: 3.6s; }
+
+/* Button ripple on click — uses LED color */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+.btn-ripple::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, var(--led-color, rgba(201, 168, 76, 0.35)) 0%, transparent 60%);
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  transition: opacity 0.4s, transform 0.4s;
+}
+.btn-ripple:active::after {
+  opacity: 0.8;
+  transform: scale(1);
+  transition: opacity 0s, transform 0s;
+}
+
 /* ═══════════ CSS VARIABLES ═══════════ */
 :root {
   --color-background: #FAFAF7;

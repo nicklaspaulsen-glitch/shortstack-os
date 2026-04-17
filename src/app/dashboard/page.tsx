@@ -20,6 +20,7 @@ import RecentGenerations from "@/components/dashboard/recent-generations";
 import JumpBackIn from "@/components/dashboard/jump-back-in";
 import TodaysPriority from "@/components/dashboard/todays-priority";
 import QuickCreateFab from "@/components/dashboard/quick-create-fab";
+import DowntimeBanner from "@/components/dashboard/downtime-banner";
 import {
   useFocusMode,
   FocusModeToggle,
@@ -215,6 +216,9 @@ export default function DashboardPage() {
           </div>
         }
       />
+
+      {/* ─── Service health banner — alerts when something is down ── */}
+      <DowntimeBanner />
 
       {/* ─── Command Palette Hint (above-the-fold helper) ──────── */}
       <div className="flex items-center justify-between gap-2 -mt-2">
