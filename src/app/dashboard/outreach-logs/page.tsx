@@ -9,7 +9,7 @@ import {
   Check, Loader2, PhoneCall, X, Plus, PhoneForwarded,
   Globe, Shield, Wifi, Copy, ExternalLink, Clock, User,
   Bot, ArrowRight, Hash, Smartphone, Radar, MapPin, Building2, Sliders,
-  AlertTriangle, Activity, Star,
+  AlertTriangle, Activity, Star, Sparkles,
   CalendarRange, Tag, BookCheck
 } from "lucide-react";
 import {
@@ -942,6 +942,9 @@ export default function OutreachLogsPage() {
                     </a>
                   )}
                 </div>
+
+                {/* ── AI ANALYSIS ── */}
+                <AiAnalysisPanel entry={detailEntry} />
 
                 {/* ── CALL TRANSCRIPT ── */}
                 {detailEntry.platform === "call" && (
@@ -2060,6 +2063,213 @@ export default function OutreachLogsPage() {
               {configSaving ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle size={12} />}
               {configSaving ? "Saving…" : "Save Configuration"}
             </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ────────── AI Analysis Panel (Outreach Detail) ────────── */
+
+interface AiAnalysis {
+  sentiment: "positive" | "neutral" | "negative" | "no_reply";
+  sentiment_score: number;
+  intent: string;
+  intent_confidence: number;
+  win_probability: number;
+  key_signals: string[];
+  objections: string[];
+  topics: string[];
+  recommended_action: string;
+  next_reply_draft: string;
+  summary: string;
+  urgency: "high" | "medium" | "low";
+}
+
+function AiAnalysisPanel({ entry }: { entry: OutreachEntry }) {
+  const cached = (entry.metadata as { ai_analysis?: AiAnalysis } | null)?.ai_analysis;
+  const [analysis, setAnalysis] = useState<AiAnalysis | null>(cached || null);
+  const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Reset when entry changes
+  useEffect(() => {
+    const fresh = (entry.metadata as { ai_analysis?: AiAnalysis } | null)?.ai_analysis;
+    setAnalysis(fresh || null);
+  }, [entry.id, entry.metadata]);
+
+  async function runAnalysis() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/outreach/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entry_id: entry.id }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setAnalysis(data.analysis);
+        toast.success("AI analysis complete");
+      } else {
+        toast.error(data.error || "Analysis failed");
+      }
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function copyReply() {
+    if (!analysis?.next_reply_draft) return;
+    navigator.clipboard.writeText(analysis.next_reply_draft);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+    toast.success("Reply copied");
+  }
+
+  if (!analysis) {
+    return (
+      <div className="rounded-lg border border-gold/20 bg-gold/[0.04] p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <Bot size={12} className="text-gold" />
+          <span className="text-[11px] font-semibold">AI Analysis</span>
+        </div>
+        <p className="text-[10px] text-muted mb-2">Get sentiment, win probability, objections, and a suggested reply.</p>
+        <button
+          onClick={runAnalysis}
+          disabled={loading}
+          className="w-full py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-[10px] font-semibold hover:shadow-lg hover:shadow-gold/30 disabled:opacity-50 flex items-center justify-center gap-1.5"
+        >
+          {loading ? <Loader2 size={10} className="animate-spin" /> : <Bot size={10} />}
+          {loading ? "Analyzing..." : "Analyze with AI"}
+        </button>
+      </div>
+    );
+  }
+
+  const sentimentColor =
+    analysis.sentiment === "positive" ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" :
+    analysis.sentiment === "negative" ? "text-red-400 bg-red-500/10 border-red-500/20" :
+    analysis.sentiment === "no_reply" ? "text-muted bg-white/5 border-white/10" :
+    "text-amber-400 bg-amber-500/10 border-amber-500/20";
+
+  const urgencyColor =
+    analysis.urgency === "high" ? "text-red-400 bg-red-500/10" :
+    analysis.urgency === "medium" ? "text-amber-400 bg-amber-500/10" :
+    "text-muted bg-white/5";
+
+  return (
+    <div className="rounded-lg border border-gold/20 bg-gradient-to-br from-gold/[0.06] to-transparent p-3 space-y-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Bot size={12} className="text-gold" />
+          <span className="text-[11px] font-semibold">AI Analysis</span>
+        </div>
+        <button onClick={runAnalysis} disabled={loading} className="text-[9px] text-muted hover:text-gold flex items-center gap-1">
+          <RefreshCw size={9} className={loading ? "animate-spin" : ""} /> Re-run
+        </button>
+      </div>
+
+      {/* Summary */}
+      <p className="text-[11px] leading-relaxed text-foreground italic">{analysis.summary}</p>
+
+      {/* Top stats */}
+      <div className="grid grid-cols-3 gap-2">
+        <div className="bg-surface-light/50 rounded-md px-2 py-1.5 text-center">
+          <p className="text-[8px] text-muted uppercase tracking-wider">Sentiment</p>
+          <span className={`inline-block mt-0.5 text-[9px] px-1.5 py-0.5 rounded-full border capitalize ${sentimentColor}`}>
+            {analysis.sentiment.replace("_", " ")}
+          </span>
+        </div>
+        <div className="bg-surface-light/50 rounded-md px-2 py-1.5 text-center">
+          <p className="text-[8px] text-muted uppercase tracking-wider">Win Prob.</p>
+          <p className={`text-sm font-bold ${
+            analysis.win_probability >= 60 ? "text-emerald-400" :
+            analysis.win_probability >= 30 ? "text-amber-400" : "text-red-400"
+          }`}>{analysis.win_probability}%</p>
+        </div>
+        <div className="bg-surface-light/50 rounded-md px-2 py-1.5 text-center">
+          <p className="text-[8px] text-muted uppercase tracking-wider">Urgency</p>
+          <span className={`inline-block mt-0.5 text-[9px] px-1.5 py-0.5 rounded-full capitalize font-medium ${urgencyColor}`}>
+            {analysis.urgency}
+          </span>
+        </div>
+      </div>
+
+      {/* Intent */}
+      <div>
+        <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Intent · {analysis.intent_confidence}% confidence</p>
+        <div className="text-[10px] font-medium capitalize text-foreground">{analysis.intent.replace(/_/g, " ")}</div>
+      </div>
+
+      {/* Recommended action */}
+      <div>
+        <p className="text-[9px] text-muted uppercase tracking-wider mb-1 flex items-center gap-1">
+          <ArrowRight size={9} /> Recommended Action
+        </p>
+        <div className="text-[10px] font-medium capitalize text-gold bg-gold/5 border border-gold/15 rounded px-2 py-1">
+          {analysis.recommended_action.replace(/_/g, " ")}
+        </div>
+      </div>
+
+      {/* Signals */}
+      {analysis.key_signals?.length > 0 && (
+        <div>
+          <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Key Signals</p>
+          <div className="flex flex-wrap gap-1">
+            {analysis.key_signals.slice(0, 5).map((s, i) => (
+              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Objections */}
+      {analysis.objections?.length > 0 && (
+        <div>
+          <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Objections</p>
+          <div className="flex flex-wrap gap-1">
+            {analysis.objections.slice(0, 5).map((s, i) => (
+              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded-full bg-red-500/10 text-red-400 border border-red-500/20">
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Topics */}
+      {analysis.topics?.length > 0 && (
+        <div>
+          <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Topics</p>
+          <div className="flex flex-wrap gap-1">
+            {analysis.topics.slice(0, 6).map((t, i) => (
+              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 text-muted">
+                #{t}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Suggested Reply */}
+      {analysis.next_reply_draft && (
+        <div>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-[9px] text-muted uppercase tracking-wider flex items-center gap-1">
+              <Sparkles size={9} className="text-gold" /> Suggested Reply
+            </p>
+            <button onClick={copyReply} className="text-[9px] text-gold hover:text-amber-400 flex items-center gap-1">
+              {copied ? <Check size={9} /> : <Copy size={9} />}
+              {copied ? "Copied" : "Copy"}
+            </button>
+          </div>
+          <div className="bg-surface-light/80 border border-gold/20 rounded px-2 py-1.5">
+            <p className="text-[10px] leading-relaxed whitespace-pre-wrap">{analysis.next_reply_draft}</p>
           </div>
         </div>
       )}

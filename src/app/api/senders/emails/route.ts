@@ -62,3 +62,53 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json(data);
 }
+
+// PATCH — Update an email sender (activate/deactivate, set primary, etc.)
+export async function PATCH(request: NextRequest) {
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const body = await request.json();
+  const { id, ...updates } = body;
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  // If setting is_primary=true, unset primary on all others first
+  if (updates.is_primary === true) {
+    await supabase
+      .from("email_senders")
+      .update({ is_primary: false })
+      .eq("user_id", user.id);
+  }
+
+  const { data, error } = await supabase
+    .from("email_senders")
+    .update(updates)
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select()
+    .single();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ success: true, sender: data });
+}
+
+// DELETE — Remove an email sender
+export async function DELETE(request: NextRequest) {
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
+
+  const { error } = await supabase
+    .from("email_senders")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ success: true });
+}

@@ -21,6 +21,7 @@ import JumpBackIn from "@/components/dashboard/jump-back-in";
 import TodaysPriority from "@/components/dashboard/todays-priority";
 import QuickCreateFab from "@/components/dashboard/quick-create-fab";
 import DowntimeBanner from "@/components/dashboard/downtime-banner";
+import OutreachAccounts from "@/components/dashboard/outreach-accounts";
 import {
   useFocusMode,
   FocusModeToggle,
@@ -286,6 +287,9 @@ export default function DashboardPage() {
 
       {/* ─── Recent AI Generations (always shown) ─────────────────── */}
       <RecentGenerations />
+
+      {/* ─── Outreach Accounts — quickly toggle which senders are active ─ */}
+      {!focus && <OutreachAccounts />}
 
       {/* ─── Jump Back In (always shown) ──────────────────────────── */}
       <JumpBackIn />
