@@ -16,13 +16,52 @@ import {
   Plus, Minus, Check, AlertCircle, Timer,
   Captions, Wind, ArrowUpDown, Brain, Share2, Crop,
   MousePointer2, Star, Smile, Flame, TrendingUp, Bot,
-  VolumeX, Waves, ChevronDown, ChevronRight
+  VolumeX, Waves, ChevronDown, ChevronRight,
+  Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
+import Modal from "@/components/ui/modal";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
+
+/* ──────────────────── AI API TYPES ──────────────────── */
+
+interface AiGeneratedScene {
+  time?: string;
+  title?: string;
+  description?: string;
+  duration?: number;
+}
+
+interface AiGeneratedCaption {
+  text: string;
+  start?: number;
+  end?: number;
+  emphasis?: boolean;
+}
+
+interface AiGeneratedShot {
+  scene?: string;
+  shot?: string;
+  camera?: string;
+  duration?: number;
+  broll?: string[];
+}
+
+interface AiProjectData {
+  project_id?: string;
+  script?: string;
+  hook?: string;
+  scenes?: AiGeneratedScene[];
+  captions?: AiGeneratedCaption[];
+  shotlist?: AiGeneratedShot[];
+  editor_settings?: Record<string, unknown>;
+  cta?: string;
+  captions_keywords?: string[];
+  total_duration?: number;
+}
 
 const VIDEO_TYPES = [
   { id: "reel", name: "Reel / TikTok", aspect: "9:16", duration: 30, icon: <Camera size={14} />, desc: "Vertical short-form" },
@@ -1137,6 +1176,21 @@ export default function VideoEditorPage() {
   const [walkthroughStatus, setWalkthroughStatus] = useState<WalkthroughStepStatus>("pending");
   const walkthroughCancelledRef = useRef(false);
 
+  // ── AI Project Generator state (Task 2A) ──
+  const [aiGenOpen, setAiGenOpen] = useState(false);
+  const [aiGenLoading, setAiGenLoading] = useState(false);
+  const [aiGenTopic, setAiGenTopic] = useState("");
+  const [aiGenDuration, setAiGenDuration] = useState(60);
+  const [aiGenStyle, setAiGenStyle] = useState<string>("");
+  const [aiGenAudience, setAiGenAudience] = useState("");
+  // Generated project data
+  const [aiProject, setAiProject] = useState<AiProjectData | null>(null);
+
+  // ── Reference video analyzer state (Task 2B) ──
+  const [refAnalyzing, setRefAnalyzing] = useState(false);
+  const [refAnalysis, setRefAnalysis] = useState<Record<string, unknown> | null>(null);
+  const [refAnalysisOpen, setRefAnalysisOpen] = useState(false);
+
   const togglePanel = (id: string) =>
     setOpenPanels(prev => ({ ...prev, [id]: !prev[id] }));
 
@@ -1300,8 +1354,8 @@ export default function VideoEditorPage() {
     {
       id: "analyze",
       title: "Analyzing Your Content",
-      description: "Understanding topic, goals, and target audience",
-      progressText: "Processing script and reference files",
+      description: "Claude generates the script + hook + scene breakdown",
+      progressText: "Calling /api/video/script-generate",
       preview: (
         <div className="space-y-1.5">
           <div className="text-[11px] text-muted">Detected</div>
@@ -1313,6 +1367,15 @@ export default function VideoEditorPage() {
             <div><span className="text-muted">Platform:</span> <span className="text-foreground">{config.target_platform}</span></div>
             <div><span className="text-muted">Ref files:</span> <span className="text-foreground">{referenceFiles.length}</span></div>
           </div>
+          {aiProject?.hook && (
+            <div className="pt-2 border-t border-border mt-2">
+              <div className="text-[9px] text-muted uppercase tracking-wider mb-0.5">Hook</div>
+              <div className="text-xs text-foreground italic">&ldquo;{aiProject.hook}&rdquo;</div>
+            </div>
+          )}
+          {Array.isArray(aiProject?.scenes) && (aiProject.scenes?.length ?? 0) > 0 && (
+            <div className="text-[10px] text-muted">Scenes: {aiProject.scenes?.length}</div>
+          )}
         </div>
       ),
     },
@@ -1362,8 +1425,8 @@ export default function VideoEditorPage() {
     {
       id: "captions",
       title: "Generating Captions",
-      description: "Creating captions in your chosen style",
-      progressText: "Transcribing and styling captions",
+      description: "Claude splits the script into timed captions",
+      progressText: "Calling /api/video/captions-generate",
       preview: (
         <div className="space-y-2">
           <div className="text-[10px] text-muted">Sample</div>
@@ -1378,11 +1441,21 @@ export default function VideoEditorPage() {
               fontWeight: 700,
             }}
           >
-            This is your caption style
+            {aiProject?.captions?.[0]?.text || "This is your caption style"}
           </div>
           <div className="text-[10px] text-muted">
             {editorSettings.captions.fontFamily} · {editorSettings.captions.fontSize}px · {editorSettings.captions.position}
           </div>
+          {Array.isArray(aiProject?.captions) && (aiProject.captions?.length ?? 0) > 0 && (
+            <div className="text-[10px] text-muted space-y-0.5 max-h-24 overflow-y-auto pt-1">
+              <div className="font-semibold text-foreground">Generated ({aiProject.captions?.length}):</div>
+              {aiProject.captions?.slice(0, 6).map((c, i) => (
+                <div key={i}>
+                  <span className={c.emphasis ? "font-bold text-gold" : ""}>{c.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ),
       editableSettings: [
@@ -1508,11 +1581,19 @@ export default function VideoEditorPage() {
     {
       id: "finalize",
       title: "Finalizing Video",
-      description: "Rendering and preparing for export",
-      progressText: "Encoding final video",
+      description: "Rendering the video via Remotion",
+      progressText: "Calling /api/video/render",
       preview: (
-        <div className="text-[11px] text-muted">
-          Packaging assets, encoding output, and preparing downloads.
+        <div className="text-[11px] space-y-2">
+          <div className="text-muted">
+            Packaging assets, encoding output, and preparing downloads.
+          </div>
+          {result?.url && (
+            <video src={result.url} controls className="w-full rounded-lg border border-border" />
+          )}
+          {result && !result.url && (result.plan || result.storyboard) && (
+            <div className="text-muted">Plan/storyboard ready — open the Storyboard tab.</div>
+          )}
         </div>
       ),
     },
@@ -1523,33 +1604,273 @@ export default function VideoEditorPage() {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
   }
 
-  // Runs the step-by-step walkthrough, then kicks off the real generate.
-  // TODO: replace with real AI pipeline progress events
-  async function runWalkthrough(doGenerate: () => Promise<void>) {
+  // ─── Task 2A: Generate full AI project (script + captions + shotlist) ───
+  async function runAiProjectGeneration() {
+    if (!aiGenTopic.trim()) { toast.error("Enter a topic first"); return; }
+    setAiGenLoading(true);
+    try {
+      const res = await fetch("/api/video/generate-project", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          topic: aiGenTopic,
+          duration_seconds: aiGenDuration,
+          style_preset: aiGenStyle || undefined,
+          target_audience: aiGenAudience || undefined,
+          niche: undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || `Request failed (${res.status})`);
+      }
+      const data = (await res.json()) as AiProjectData;
+      setAiProject(data);
+      applyAiProjectToEditor(data);
+      setAiGenOpen(false);
+      toast.success("Project generated — script, captions, and shotlist ready");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "AI generation failed");
+    } finally {
+      setAiGenLoading(false);
+    }
+  }
+
+  // Populate editor state with the AI-generated project
+  function applyAiProjectToEditor(data: AiProjectData) {
+    if (data.script) {
+      setConfig(prev => ({ ...prev, script: data.script as string }));
+    }
+    if (typeof data.total_duration === "number") {
+      setConfig(prev => ({ ...prev, duration: Math.round(data.total_duration as number) }));
+    }
+    if (data.editor_settings && typeof data.editor_settings === "object") {
+      setEditorSettings(prev => ({
+        ...prev,
+        ...(data.editor_settings as Partial<EditorSettings>),
+      }));
+    }
+    // Apply selected style preset (we do NOT have the full cfg here, but we can mark it)
+    if (aiGenStyle) setSelectedYouTuberPreset(aiGenStyle);
+    // Populate the AI script textarea if present
+    if (data.script) setAiScriptInput(data.script);
+    // Populate the scene builder from the AI scenes
+    if (Array.isArray(data.scenes) && data.scenes.length > 0) {
+      setSceneBuilderScenes(
+        data.scenes.map((s, i) => ({
+          id: `s${Date.now()}-${i}`,
+          name: s.title || `Scene ${i + 1}`,
+          duration: s.duration ?? 5,
+          description: s.description || "",
+        })),
+      );
+    }
+  }
+
+  // ─── Task 2B: Reference analyzer ───
+  // Analyze a reference file with /api/video/analyze-reference.
+  // Uses first frame as base64 if the file is an image, else sends URL if file is remote.
+  async function analyzeReferenceFile(idx: number) {
+    const f = referenceFiles[idx];
+    if (!f) { toast.error("No reference file at that slot"); return; }
+    setRefAnalyzing(true);
+    setRefAnalysis(null);
+    try {
+      const body: Record<string, unknown> = {};
+      if (f.type.startsWith("image/")) {
+        // Already base64 data URL — strip prefix
+        const base64 = (f.data || "").split(",")[1] || f.data;
+        body.frame_base64 = base64;
+      } else if (f.type.startsWith("video/")) {
+        // Send data URL as video_url (backend may need to handle data URLs)
+        body.video_url = f.data;
+      } else {
+        throw new Error("Reference must be an image or video file");
+      }
+      const res = await fetch("/api/video/analyze-reference", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || `Analysis failed (${res.status})`);
+      }
+      const data = await res.json();
+      const suggested = (data.suggested_editor_settings || data) as Record<string, unknown>;
+      setRefAnalysis(suggested);
+      setRefAnalysisOpen(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Analysis failed");
+    } finally {
+      setRefAnalyzing(false);
+    }
+  }
+
+  function applyAnalyzedReference() {
+    if (!refAnalysis) return;
+    setEditorSettings(prev => ({
+      ...prev,
+      ...(refAnalysis as Partial<EditorSettings>),
+    }));
+    setRefAnalysisOpen(false);
+    toast.success("Settings applied from reference");
+  }
+
+  // Helper used by walkthrough steps
+  async function runStep(index: number, task: () => Promise<void>): Promise<boolean> {
+    if (walkthroughCancelledRef.current) return false;
+    setWalkthroughStepIndex(index);
+    setWalkthroughStatus("in_progress");
+    try {
+      await task();
+    } catch (err) {
+      console.error("walkthrough step failed", index, err);
+    }
+    if (walkthroughCancelledRef.current) return false;
+    setWalkthroughStatus("completed");
+    await sleep(400);
+    return !walkthroughCancelledRef.current;
+  }
+
+  // Runs the walkthrough against the REAL AI pipeline.
+  // Steps:
+  //   1 Analyze    → /api/video/script-generate
+  //   2 Style      → apply preset (no API)
+  //   3 Captions   → /api/video/captions-generate
+  //   4 Motion     → preview of motion preset (no API)
+  //   5 Transitions→ preview of transitions preset (no API)
+  //   6 Color      → preview of color grading (no API)
+  //   7 Audio      → optionally /api/ai/music-gen
+  //   8 Finalize   → /api/video/render
+  async function runWalkthrough() {
     walkthroughCancelledRef.current = false;
     setWalkthroughOpen(true);
-    setWalkthroughStepIndex(0);
-    setWalkthroughStatus("in_progress");
+    setGenerating(true);
+    setResult(null);
 
-    for (let i = 0; i < walkthroughSteps.length; i++) {
-      if (walkthroughCancelledRef.current) return;
-      setWalkthroughStepIndex(i);
-      setWalkthroughStatus("in_progress");
-      // Simulated step duration — replace with real pipeline events later
-      await sleep(1500);
-      if (walkthroughCancelledRef.current) return;
-      setWalkthroughStatus("completed");
-    }
-    if (walkthroughCancelledRef.current) return;
-    // All steps complete: run the real generate
-    await doGenerate();
+    let script = config.script || "";
+    let captions: AiGeneratedCaption[] = [];
+
+    // Step 1 — Analyze: generate script via Claude
+    const ok1 = await runStep(0, async () => {
+      const res = await fetch("/api/video/script-generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          topic: config.title,
+          duration_seconds: config.duration,
+          style_preset: selectedYouTuberPreset || undefined,
+          call_to_action: config.cta_text || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error("Script generation failed");
+      const data = await res.json();
+      const scriptText = (data.script as string) || "";
+      if (scriptText) {
+        script = scriptText;
+        setConfig(prev => ({ ...prev, script: scriptText }));
+        setAiScriptInput(scriptText);
+      }
+      setAiProject({
+        hook: data.hook,
+        script: scriptText,
+        scenes: data.scenes,
+        captions_keywords: data.captions_keywords,
+        cta: data.cta,
+      });
+    });
+    if (!ok1) { setGenerating(false); return; }
+
+    // Step 2 — Style: apply preset (already applied via UI)
+    const ok2 = await runStep(1, async () => { await sleep(400); });
+    if (!ok2) { setGenerating(false); return; }
+
+    // Step 3 — Captions: generate from the script
+    const ok3 = await runStep(2, async () => {
+      if (!script) return;
+      const res = await fetch("/api/video/captions-generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: script,
+          max_words_per_caption: editorSettings.captions.maxWordsPerLine,
+          duration_seconds: config.duration,
+          emphasize_keywords: editorSettings.captions.emphasizeKeywords,
+        }),
+      });
+      if (!res.ok) throw new Error("Caption generation failed");
+      const data = await res.json();
+      captions = Array.isArray(data.captions) ? data.captions : [];
+      setAiProject(prev => ({ ...(prev || {}), captions }));
+    });
+    if (!ok3) { setGenerating(false); return; }
+
+    // Step 4 — Motion: apply motion presets from settings
+    const ok4 = await runStep(3, async () => { await sleep(300); });
+    if (!ok4) { setGenerating(false); return; }
+
+    // Step 5 — Transitions
+    const ok5 = await runStep(4, async () => { await sleep(300); });
+    if (!ok5) { setGenerating(false); return; }
+
+    // Step 6 — Color grading
+    const ok6 = await runStep(5, async () => { await sleep(300); });
+    if (!ok6) { setGenerating(false); return; }
+
+    // Step 7 — Audio (optional music gen)
+    const ok7 = await runStep(6, async () => {
+      // Fire-and-forget music gen; don't block on it
+      try {
+        await fetch("/api/ai/music-gen", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mood: editorSettings.audio.bgGenre, duration_seconds: config.duration }),
+        });
+      } catch { /* ignore */ }
+    });
+    if (!ok7) { setGenerating(false); return; }
+
+    // Step 8 — Finalize: render via existing endpoint
+    const ok8 = await runStep(7, async () => {
+      const res = await fetch("/api/video/render", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...config,
+          script,
+          music_mood: config.music_mood,
+          client_id: selectedClient || null,
+          plan_only: mode === "plan" || mode === "storyboard",
+          storyboard_mode: mode === "storyboard",
+          reference_files: referenceFiles.map(f => ({ name: f.name, type: f.type, data: f.data })),
+          editor_settings: editorSettings,
+          captions,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setResult(data);
+        if (data.url) {
+          toast.success("Video rendered — ready to download");
+        } else if (data.storyboard || data.plan) {
+          toast.success(mode === "storyboard" ? "Storyboard created!" : "Video plan generated!");
+          if (mode === "storyboard") setTab("storyboard");
+        }
+      } else {
+        toast.error(data.error || "Render failed");
+      }
+    });
+    if (!ok8) { setGenerating(false); return; }
+
+    setGenerating(false);
   }
 
   async function generateVideo() {
     if (!config.title) { toast.error("Enter a video title"); return; }
-    // If walkthrough enabled, show the walkthrough and run the real render after the final step.
+    // If walkthrough enabled, show the walkthrough and run the real AI pipeline step-by-step.
     if (walkthroughEnabled && !walkthroughOpen) {
-      await runWalkthrough(() => generateVideoReal());
+      await runWalkthrough();
       return;
     }
     await generateVideoReal();
@@ -1619,6 +1940,13 @@ export default function VideoEditorPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setAiGenOpen(true)}
+            className="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5"
+            title="Generate a full video project with AI — script, captions, shotlist, and editor settings"
+          >
+            <Sparkles size={14} /> Generate with AI
+          </button>
           <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[140px]">
             <option value="">No client</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
@@ -3265,9 +3593,29 @@ export default function VideoEditorPage() {
                         >
                           <X size={8} />
                         </button>
+                        {(f.type.startsWith("image/") || f.type.startsWith("video/")) && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); void analyzeReferenceFile(i); }}
+                            disabled={refAnalyzing}
+                            className="absolute -bottom-1 -right-1 px-1 py-0.5 rounded-full bg-gold text-black text-[7px] font-bold items-center justify-center hidden group-hover:flex disabled:opacity-40"
+                            title="Analyze this style with AI"
+                          >
+                            {refAnalyzing ? <Loader2 size={7} className="animate-spin" /> : "AI"}
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
+                )}
+                {referenceFiles.length > 0 && (
+                  <button
+                    onClick={() => analyzeReferenceFile(0)}
+                    disabled={refAnalyzing}
+                    className="mt-2 w-full text-[10px] py-1.5 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold hover:bg-gold/10 transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
+                  >
+                    {refAnalyzing ? <Loader2 size={11} className="animate-spin" /> : <Sparkles size={11} />}
+                    Analyze this style with AI
+                  </button>
                 )}
               </div>
 
@@ -3363,6 +3711,79 @@ export default function VideoEditorPage() {
                 )}
               </div>
             </div>
+
+            {/* ── AI-Generated Shot List / Script / Captions ── */}
+            {aiProject && (aiProject.shotlist || aiProject.scenes || aiProject.captions) && (
+              <div className="card space-y-3">
+                <h2 className="section-header flex items-center gap-2">
+                  <Bot size={13} className="text-gold" /> AI Project
+                  <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">Claude</span>
+                </h2>
+                {aiProject.hook && (
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Hook</p>
+                    <p className="text-xs text-foreground italic">&ldquo;{aiProject.hook}&rdquo;</p>
+                  </div>
+                )}
+                {aiProject.cta && (
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1">CTA</p>
+                    <p className="text-xs text-foreground">{aiProject.cta}</p>
+                  </div>
+                )}
+                {Array.isArray(aiProject.scenes) && aiProject.scenes.length > 0 && (
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Scenes ({aiProject.scenes.length})</p>
+                    <ol className="space-y-1 list-decimal list-inside">
+                      {aiProject.scenes.map((sc, i) => (
+                        <li key={i} className="text-[10px] text-foreground">
+                          <span className="font-semibold">{sc.title || sc.description?.slice(0, 50) || `Scene ${i + 1}`}</span>
+                          {sc.duration ? <span className="text-muted"> · {sc.duration}s</span> : null}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+                {Array.isArray(aiProject.shotlist) && aiProject.shotlist.length > 0 && (
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Shot List ({aiProject.shotlist.length})</p>
+                    <div className="space-y-1 max-h-48 overflow-y-auto">
+                      {aiProject.shotlist.map((s, i) => (
+                        <div key={i} className="p-2 rounded-lg border border-border text-[10px]">
+                          <div className="flex items-center justify-between mb-0.5">
+                            <span className="font-semibold text-foreground">Shot {i + 1}{s.scene ? ` · ${s.scene}` : ""}</span>
+                            {s.duration ? <span className="text-muted font-mono">{s.duration}s</span> : null}
+                          </div>
+                          {s.shot && <div className="text-muted">{s.shot}</div>}
+                          {s.camera && <div className="text-muted text-[9px]">Camera: {s.camera}</div>}
+                          {Array.isArray(s.broll) && s.broll.length > 0 && (
+                            <div className="text-muted text-[9px] mt-0.5">B-roll: {s.broll.join(", ")}</div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {Array.isArray(aiProject.captions) && aiProject.captions.length > 0 && (
+                  <div>
+                    <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Captions ({aiProject.captions.length})</p>
+                    <div className="space-y-1 max-h-32 overflow-y-auto">
+                      {aiProject.captions.slice(0, 12).map((c, i) => (
+                        <div key={i} className="text-[10px] text-foreground">
+                          <span className={c.emphasis ? "font-bold text-gold" : ""}>{c.text}</span>
+                          {typeof c.start === "number" && typeof c.end === "number" && (
+                            <span className="text-muted text-[9px] ml-1">({c.start.toFixed(1)}s – {c.end.toFixed(1)}s)</span>
+                          )}
+                        </div>
+                      ))}
+                      {aiProject.captions.length > 12 && (
+                        <div className="text-[9px] text-muted">… and {aiProject.captions.length - 12} more</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Mode toggle */}
             <div className="flex gap-2">
@@ -3908,6 +4329,121 @@ export default function VideoEditorPage() {
           toast.success(`Preset loaded: ${preset.name}`);
         }} />
       )}
+
+      {/* ─── AI Generate Modal ─── */}
+      <Modal
+        isOpen={aiGenOpen}
+        onClose={() => { if (!aiGenLoading) setAiGenOpen(false); }}
+        title="Generate Full Video Project with AI"
+        size="lg"
+      >
+        <div className="space-y-3">
+          <p className="text-[11px] text-muted">
+            Claude will generate a script, captions, shotlist, and matching editor settings.
+          </p>
+          <div>
+            <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Topic</label>
+            <input
+              value={aiGenTopic}
+              onChange={e => setAiGenTopic(e.target.value)}
+              className="input w-full text-xs"
+              placeholder="e.g., 5 dental marketing tips that actually work in 2026"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration</label>
+              <select
+                value={aiGenDuration}
+                onChange={e => setAiGenDuration(parseInt(e.target.value, 10))}
+                className="input w-full text-xs"
+              >
+                <option value={30}>30 seconds</option>
+                <option value={60}>60 seconds</option>
+                <option value={90}>90 seconds</option>
+                <option value={180}>3 minutes</option>
+                <option value={300}>5 minutes</option>
+                <option value={600}>10 minutes</option>
+                <option value={900}>15 minutes</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Style Preset</label>
+              <select
+                value={aiGenStyle}
+                onChange={e => setAiGenStyle(e.target.value)}
+                className="input w-full text-xs"
+              >
+                <option value="">Auto (no preset)</option>
+                {YOUTUBER_PRESETS.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div>
+            <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Target Audience (optional)</label>
+            <input
+              value={aiGenAudience}
+              onChange={e => setAiGenAudience(e.target.value)}
+              className="input w-full text-xs"
+              placeholder="e.g., dentists with private practices"
+            />
+          </div>
+          <div className="flex gap-2 pt-2">
+            <button
+              onClick={() => setAiGenOpen(false)}
+              disabled={aiGenLoading}
+              className="flex-1 text-xs py-2 rounded-xl border border-border text-muted hover:text-foreground disabled:opacity-40"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={runAiProjectGeneration}
+              disabled={aiGenLoading || !aiGenTopic.trim()}
+              className="flex-1 btn-primary text-xs py-2 flex items-center justify-center gap-1.5 disabled:opacity-40"
+            >
+              {aiGenLoading ? (
+                <><Loader2 size={12} className="animate-spin" /> Generating...</>
+              ) : (
+                <><Sparkles size={12} /> Generate Full Project</>
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* ─── Reference Analysis Modal ─── */}
+      <Modal
+        isOpen={refAnalysisOpen}
+        onClose={() => setRefAnalysisOpen(false)}
+        title="AI Reference Analysis"
+        size="lg"
+      >
+        <div className="space-y-3">
+          <p className="text-[11px] text-muted">
+            Suggested editor settings based on the reference you uploaded.
+          </p>
+          <pre className="text-[10px] bg-surface-light border border-border rounded-lg p-3 overflow-x-auto max-h-80">
+            {JSON.stringify(refAnalysis, null, 2)}
+          </pre>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setRefAnalysisOpen(false)}
+              className="flex-1 text-xs py-2 rounded-xl border border-border text-muted hover:text-foreground"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={applyAnalyzedReference}
+              disabled={!refAnalysis}
+              className="flex-1 btn-primary text-xs py-2 flex items-center justify-center gap-1.5 disabled:opacity-40"
+            >
+              <Check size={12} /> Apply Settings
+            </button>
+          </div>
+        </div>
+      </Modal>
 
       {/* Step-by-Step Creation Walkthrough */}
       <CreationWalkthrough

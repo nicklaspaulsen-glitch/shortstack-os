@@ -14,11 +14,29 @@ import {
   ArrowRight, AlertTriangle, CheckCircle2, XCircle, Cpu,
   Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight,
   Droplet, Wand, Scissors, Smartphone, FileImage, ShoppingBag,
+  Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
+import Modal from "@/components/ui/modal";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
+
+/* ──────────────────── AI API TYPES ──────────────────── */
+
+interface TitleVariant {
+  title: string;
+  score: number;
+  reason: string;
+}
+
+interface StyleAnalysisResult {
+  style_name?: string;
+  colors?: string[];
+  font?: string;
+  mood?: string;
+  suggested_config?: Record<string, unknown>;
+}
 
 /* ──────────────────── DATA ──────────────────── */
 
@@ -1075,6 +1093,14 @@ export default function ThumbnailGeneratorPage() {
   const [competitorUrl, setCompetitorUrl] = useState("");
   const [competitorAnalyzing, setCompetitorAnalyzing] = useState(false);
   const [competitorResults, setCompetitorResults] = useState<{ style: string; colors: string; text: string; face: string; score: number } | null>(null);
+  // Competitor Style Analyzer (Image URL → /api/thumbnail/analyze-style)
+  const [styleAnalyzeUrl, setStyleAnalyzeUrl] = useState("");
+  const [styleAnalyzing, setStyleAnalyzing] = useState(false);
+  const [styleAnalysis, setStyleAnalysis] = useState<StyleAnalysisResult | null>(null);
+  // AI Title Optimizer (/api/thumbnail/optimize-title)
+  const [titleOptimizing, setTitleOptimizing] = useState(false);
+  const [titleVariants, setTitleVariants] = useState<TitleVariant[]>([]);
+  const [titleVariantsOpen, setTitleVariantsOpen] = useState(false);
   // Quick Variations
   const [quickVarGenerating, setQuickVarGenerating] = useState(false);
   // Platform Compliance
@@ -1283,6 +1309,109 @@ export default function ThumbnailGeneratorPage() {
     toast.success("Optimized title suggestions ready (TODO: AI)");
     // TODO: AI integration — call title rewrite endpoint
   }
+
+  // ─── Real AI: Claude Title Optimizer ───
+  // Calls /api/thumbnail/optimize-title and shows a modal with variants.
+  async function optimizeTitleWithAI(): Promise<TitleVariant[] | null> {
+    if (!textOverlay.trim()) {
+      toast.error("Enter a title first");
+      return null;
+    }
+    setTitleOptimizing(true);
+    try {
+      const res = await fetch("/api/thumbnail/optimize-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: textOverlay,
+          niche: thumbnailConfig.smart.niche || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || `Request failed (${res.status})`);
+      }
+      const data = await res.json();
+      const variants: TitleVariant[] = Array.isArray(data.variants) ? data.variants : [];
+      setTitleVariants(variants);
+      setTitleVariantsOpen(true);
+      return variants;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Title optimization failed");
+      return null;
+    } finally {
+      setTitleOptimizing(false);
+    }
+  }
+
+  function applyTitleVariant(v: TitleVariant) {
+    setTextOverlay(v.title);
+    setTitleVariantsOpen(false);
+    toast.success("Title applied");
+  }
+
+  // ─── Real AI: Competitor Style Analyzer ───
+  // Calls /api/thumbnail/analyze-style with a reference image URL and
+  // applies the returned suggested_config to thumbnailConfig on confirm.
+  async function analyzeStyleFromImage() {
+    if (!styleAnalyzeUrl.trim()) {
+      toast.error("Paste an image URL first");
+      return;
+    }
+    setStyleAnalyzing(true);
+    setStyleAnalysis(null);
+    try {
+      const res = await fetch("/api/thumbnail/analyze-style", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          image_url: styleAnalyzeUrl,
+          niche: thumbnailConfig.smart.niche || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || `Request failed (${res.status})`);
+      }
+      const data = await res.json();
+      const suggested = (data.suggested_config || {}) as Record<string, unknown>;
+      const analysis: StyleAnalysisResult = {
+        style_name: (suggested.style_name as string) || (data.style_name as string),
+        colors: (suggested.colors as string[]) || (data.colors as string[]),
+        font: (suggested.font as string) || (data.font as string),
+        mood: (suggested.mood as string) || (data.mood as string),
+        suggested_config: suggested,
+      };
+      setStyleAnalysis(analysis);
+      toast.success("Style analyzed");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Analysis failed");
+    } finally {
+      setStyleAnalyzing(false);
+    }
+  }
+
+  function applySuggestedStyle() {
+    if (!styleAnalysis?.suggested_config) return;
+    const cfg = styleAnalysis.suggested_config as {
+      typography?: Partial<typeof thumbnailConfig.typography>;
+      face?: Partial<typeof thumbnailConfig.face>;
+      background?: Partial<typeof thumbnailConfig.background>;
+      colors?: Partial<typeof thumbnailConfig.colors>;
+      elements?: { ids?: readonly string[] };
+      mood?: string;
+    };
+    setThumbnailConfig((prev) => {
+      const next = { ...prev };
+      if (cfg.typography) next.typography = { ...prev.typography, ...cfg.typography };
+      if (cfg.face) next.face = { ...prev.face, ...cfg.face };
+      if (cfg.background) next.background = { ...prev.background, ...cfg.background };
+      if (cfg.colors) next.colors = { ...prev.colors, ...cfg.colors };
+      return next;
+    });
+    if (cfg.mood) setMood(cfg.mood);
+    toast.success("Style applied to your settings");
+  }
   async function runNicheOptimizer() {
     if (!thumbnailConfig.smart.niche.trim()) { toast.error("Enter a niche first"); return; }
     toast.loading(`Tuning for "${thumbnailConfig.smart.niche}" niche...`);
@@ -1414,7 +1543,7 @@ export default function ThumbnailGeneratorPage() {
       id: "analyze",
       title: "Analyzing Content",
       description: "Understanding your prompt and goals",
-      progressText: "Parsing prompt and references",
+      progressText: "Running Claude title optimizer",
       preview: (
         <div className="space-y-1.5 text-[11px]">
           <div><span className="text-muted">Prompt:</span> <span className="text-foreground">{prompt || "(none)"}</span></div>
@@ -1422,6 +1551,20 @@ export default function ThumbnailGeneratorPage() {
           <div><span className="text-muted">Size:</span> <span className="text-foreground">{displayWidth}x{displayHeight}</span></div>
           <div><span className="text-muted">Mood:</span> <span className="text-foreground">{mood}</span></div>
           <div><span className="text-muted">Reference images:</span> <span className="text-foreground">{referenceImages.length}</span></div>
+          {titleVariants.length > 0 && (
+            <div className="pt-2 mt-1 border-t border-border">
+              <div className="text-[10px] text-muted uppercase tracking-wider mb-1">Top Title Variant</div>
+              <div className="flex items-start justify-between gap-2">
+                <span className="text-foreground font-semibold text-xs leading-snug">
+                  {titleVariants[0].title}
+                </span>
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 flex-shrink-0">
+                  {titleVariants[0].score}/100
+                </span>
+              </div>
+              <div className="text-[9px] text-muted mt-1">{titleVariants[0].reason}</div>
+            </div>
+          )}
         </div>
       ),
     },
@@ -1471,8 +1614,8 @@ export default function ThumbnailGeneratorPage() {
     {
       id: "background",
       title: "Generating Background",
-      description: "Creating the base background image",
-      progressText: "Rendering background",
+      description: "FLUX is rendering base backgrounds on the GPU",
+      progressText: "Rendering backgrounds via FLUX",
       preview: (
         <div className="text-[11px] space-y-1">
           <div><span className="text-muted">Mode:</span> <span className="text-foreground">{thumbnailConfig.background.mode}</span></div>
@@ -1483,6 +1626,20 @@ export default function ThumbnailGeneratorPage() {
             ))}
             <span className="text-[10px] text-muted">{COLOR_THEMES.find(c => c.id === colorTheme)?.name}</span>
           </div>
+          {results.length > 0 && (
+            <div className="grid grid-cols-3 gap-1 mt-2">
+              {results.slice(0, 3).map((r, i) => (
+                <div key={i} className="aspect-video rounded bg-surface-light border border-border overflow-hidden flex items-center justify-center">
+                  {r.imageUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={r.imageUrl} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-[9px] text-muted">{r.status || "..."}</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ),
       editableSettings: [
@@ -1606,11 +1763,27 @@ export default function ThumbnailGeneratorPage() {
     {
       id: "polish",
       title: "Final Polish",
-      description: "Color grading and sharpening",
-      progressText: "Applying final touches",
+      description: "Composing final thumbnail with Claude",
+      progressText: "Running /api/thumbnail/compose",
       preview: (
-        <div className="text-[11px] text-muted">
-          Applying contrast, sharpen, and color harmony pass for maximum CTR.
+        <div className="text-[11px] space-y-2">
+          <div className="text-muted">
+            Compositing text, face, and effects over the background.
+          </div>
+          {results.some(r => r.imageUrl) && (
+            <div className="grid grid-cols-3 gap-1">
+              {results.slice(0, 3).map((r, i) => (
+                <div key={i} className="aspect-video rounded bg-surface-light border border-border overflow-hidden flex items-center justify-center">
+                  {r.imageUrl ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={r.imageUrl} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-[9px] text-muted">polishing</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ),
     },
@@ -1620,8 +1793,18 @@ export default function ThumbnailGeneratorPage() {
       description: "Your thumbnail is ready",
       progressText: "Packaging output",
       preview: (
-        <div className="text-[11px] text-muted">
-          Assets prepared for {platform} at {displayWidth}x{displayHeight}.
+        <div className="text-[11px] space-y-2">
+          <div className="text-muted">
+            Assets prepared for {platform} at {displayWidth}x{displayHeight}.
+          </div>
+          {results[0]?.imageUrl && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={results[0].imageUrl}
+              alt="Final thumbnail"
+              className="w-full rounded-lg border border-border"
+            />
+          )}
         </div>
       ),
     },
@@ -1631,44 +1814,64 @@ export default function ThumbnailGeneratorPage() {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
   }
 
-  // Runs the step-by-step walkthrough then kicks off the real generate.
-  // TODO: replace with real AI pipeline progress events
-  async function runWalkthrough(doGenerate: () => Promise<void>) {
+  // Advances the walkthrough by running a real async task for the given step.
+  // Returns true if task completed, false if cancelled.
+  async function runStep(index: number, task: () => Promise<void>): Promise<boolean> {
+    if (walkthroughCancelledRef.current) return false;
+    setWalkthroughStepIndex(index);
+    setWalkthroughStatus("in_progress");
+    try {
+      await task();
+    } catch (err) {
+      console.error("walkthrough step failed", index, err);
+    }
+    if (walkthroughCancelledRef.current) return false;
+    setWalkthroughStatus("completed");
+    // Small pause so the user sees the "completed" state before next step
+    await sleep(400);
+    return !walkthroughCancelledRef.current;
+  }
+
+  // Runs the walkthrough against the REAL AI pipeline.
+  // Maps backend steps → walkthrough steps:
+  //   1 Analyze   → /api/thumbnail/optimize-title (best-effort)
+  //   2 Style     → apply the current creator preset (no-op call)
+  //   3 Background→ /api/thumbnail/generate (FLUX) + poll
+  //   4 Face      → /api/ai/remove-bg (if face autoCutout)
+  //   5 Typography→ preview only
+  //   6 Elements  → preview only
+  //   7 Polish    → /api/thumbnail/compose for each background
+  //   8 Export    → finalize results
+  async function runWalkthrough() {
     walkthroughCancelledRef.current = false;
     setWalkthroughOpen(true);
-    setWalkthroughStepIndex(0);
-    setWalkthroughStatus("in_progress");
-    for (let i = 0; i < walkthroughSteps.length; i++) {
-      if (walkthroughCancelledRef.current) return;
-      setWalkthroughStepIndex(i);
-      setWalkthroughStatus("in_progress");
-      await sleep(1500);
-      if (walkthroughCancelledRef.current) return;
-      setWalkthroughStatus("completed");
-    }
-    if (walkthroughCancelledRef.current) return;
-    await doGenerate();
-  }
-
-  async function generate() {
-    if (!prompt.trim()) {
-      toast.error("Enter a description for your thumbnail");
-      return;
-    }
-    if (walkthroughEnabled && !walkthroughOpen) {
-      await runWalkthrough(() => generateReal());
-      return;
-    }
-    await generateReal();
-  }
-
-  async function generateReal() {
     setGenerating(true);
     setResults([]);
-    const toastId = toast.loading(
-      "Sending to GPU... this takes 15-30s per image"
-    );
-    try {
+
+    // Shared state between steps
+    let backgrounds: (string | null)[] = [];
+    let faceCutout: string | null = null;
+
+    // Step 1 — Analyze: optimize title if user has one
+    const ok1 = await runStep(0, async () => {
+      if (textOverlay.trim()) {
+        const variants = await optimizeTitleWithAI();
+        if (variants && variants[0]) {
+          // Show results in modal; don't auto-apply. Preview will display top pick.
+          toast.success(`Top title: "${variants[0].title.slice(0, 40)}${variants[0].title.length > 40 ? "…" : ""}"`);
+        }
+      }
+    });
+    if (!ok1) { setGenerating(false); return; }
+
+    // Step 2 — Style: already applied via preset; keep as visual confirmation
+    const ok2 = await runStep(1, async () => {
+      await sleep(400);
+    });
+    if (!ok2) { setGenerating(false); return; }
+
+    // Step 3 — Background: call FLUX + poll
+    const ok3 = await runStep(2, async () => {
       const res = await fetch("/api/thumbnail/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1687,45 +1890,232 @@ export default function ThumbnailGeneratorPage() {
         }),
       });
       const data = await res.json();
-      if (data.success) {
-        // Set initial results with IN_QUEUE status
-        setResults(data.thumbnails);
-        toast.loading("GPU is generating your images...", { id: toastId });
+      if (!data.success) throw new Error(data.error || "FLUX generation failed");
+      setResults(data.thumbnails);
+      const pollPromises = data.thumbnails.map(
+        (thumb: ThumbnailResult, i: number) =>
+          thumb.job_id ? pollJob(thumb.job_id, i) : Promise.resolve(null),
+      );
+      backgrounds = await Promise.all(pollPromises);
+    });
+    if (!ok3) { setGenerating(false); return; }
 
-        // Start polling all jobs in parallel
-        const pollPromises = data.thumbnails.map(
-          (thumb: ThumbnailResult, i: number) =>
-            thumb.job_id ? pollJob(thumb.job_id, i) : Promise.resolve(null)
-        );
-        const images = await Promise.all(pollPromises);
-        const completed = images.filter(Boolean).length;
+    // Step 4 — Face: cutout via remove-bg
+    const ok4 = await runStep(3, async () => {
+      faceCutout = await getFaceCutoutImage();
+    });
+    if (!ok4) { setGenerating(false); return; }
 
-        toast.dismiss(toastId);
-        if (completed > 0) {
-          toast.success(
-            `${completed} thumbnail${completed > 1 ? "s" : ""} generated!`
-          );
-          // Log to history
-          await supabase.from("trinity_log").insert({
-            action_type: "thumbnail_generated",
-            description: prompt.slice(0, 100),
-            status: "completed",
-            metadata: {
-              style,
-              platform,
-              colorTheme,
-              mood,
-              faces: selectedFaces,
-              count: variations,
-            },
-          });
-          loadHistory();
-        } else {
-          toast.error("Generation failed — GPU may be cold-starting, try again");
-        }
-      } else {
-        toast.error(data.error || "Generation failed", { id: toastId });
+    // Step 5 — Typography: preview only
+    const ok5 = await runStep(4, async () => { await sleep(300); });
+    if (!ok5) { setGenerating(false); return; }
+
+    // Step 6 — Elements: preview only
+    const ok6 = await runStep(5, async () => { await sleep(300); });
+    if (!ok6) { setGenerating(false); return; }
+
+    // Step 7 — Polish: compose with Claude for each background
+    const ok7 = await runStep(6, async () => {
+      const composePromises = backgrounds.map(async (bgUrl, i) => {
+        if (!bgUrl) return null;
+        const composed = await composeThumbnail(bgUrl, faceCutout);
+        const finalUrl = composed || bgUrl;
+        setResults((prev) => {
+          const updated = [...prev];
+          if (updated[i]) updated[i] = { ...updated[i], imageUrl: finalUrl };
+          return updated;
+        });
+        return finalUrl;
+      });
+      await Promise.all(composePromises);
+    });
+    if (!ok7) { setGenerating(false); return; }
+
+    // Step 8 — Export
+    const ok8 = await runStep(7, async () => {
+      await supabase.from("trinity_log").insert({
+        action_type: "thumbnail_generated",
+        description: prompt.slice(0, 100),
+        status: "completed",
+        metadata: {
+          style, platform, colorTheme, mood,
+          faces: selectedFaces, count: variations,
+          walkthrough: true,
+        },
+      });
+      loadHistory();
+    });
+    if (!ok8) { setGenerating(false); return; }
+
+    setGenerating(false);
+    toast.success("Thumbnail ready!");
+  }
+
+  async function generate() {
+    if (!prompt.trim()) {
+      toast.error("Enter a description for your thumbnail");
+      return;
+    }
+    if (walkthroughEnabled && !walkthroughOpen) {
+      await runWalkthrough();
+      return;
+    }
+    await generateReal();
+  }
+
+  // Helper: compose a single thumbnail using Claude-powered /api/thumbnail/compose.
+  // Returns a composite image URL or null on failure.
+  async function composeThumbnail(
+    backgroundImageUrl: string,
+    faceImageUrl?: string | null,
+  ): Promise<string | null> {
+    try {
+      const res = await fetch("/api/thumbnail/compose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          config: {
+            ...thumbnailConfig,
+            // convenience — compose endpoint may use these directly
+            textOverlay,
+            platform,
+            width: displayWidth,
+            height: displayHeight,
+            mood,
+            colorTheme,
+          },
+          background_image_url: backgroundImageUrl,
+          face_image_url: faceImageUrl || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || `compose failed (${res.status})`);
       }
+      const data = await res.json();
+      return (data.thumbnail_url as string) || (data.url as string) || null;
+    } catch (err) {
+      console.error("compose failed", err);
+      return null;
+    }
+  }
+
+  // Helper: remove background from a face image (for compose). Returns data URL or null.
+  async function getFaceCutoutImage(): Promise<string | null> {
+    // If the user has a reference image and face autoCutoutEnabled, strip its bg.
+    if (!thumbnailConfig.face.autoCutoutEnabled) return null;
+    const firstRef = referenceImages[0];
+    if (!firstRef) return null;
+    try {
+      const fd = new FormData();
+      fd.append("image_url", firstRef);
+      fd.append("model", "u2net");
+      fd.append("format", "png");
+      const res = await fetch("/api/ai/remove-bg", { method: "POST", body: fd });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data.success && data.image) {
+        // Coerce to data URL if the API returns base64
+        const s = data.image as string;
+        return s.startsWith("data:") ? s : `data:image/png;base64,${s}`;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function generateReal() {
+    setGenerating(true);
+    setResults([]);
+    const toastId = toast.loading(
+      "Generating backgrounds on GPU... 15-30s per image"
+    );
+    try {
+      // ── 1) Kick off FLUX background generation via existing endpoint ──
+      const res = await fetch("/api/thumbnail/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt,
+          faces: selectedFaces,
+          style,
+          platform,
+          width: displayWidth,
+          height: displayHeight,
+          textOverlay,
+          colorTheme,
+          mood,
+          variations,
+          reference_images: referenceImages,
+        }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        toast.error(data.error || "Generation failed", { id: toastId });
+        setGenerating(false);
+        return;
+      }
+
+      // Set initial results with IN_QUEUE status
+      setResults(data.thumbnails);
+      toast.loading("GPU is generating your backgrounds...", { id: toastId });
+
+      // ── 2) Poll for each job to complete — collect result image URLs ──
+      const pollPromises = data.thumbnails.map(
+        (thumb: ThumbnailResult, i: number) =>
+          thumb.job_id ? pollJob(thumb.job_id, i) : Promise.resolve(null)
+      );
+      const backgrounds: (string | null)[] = await Promise.all(pollPromises);
+      const completed = backgrounds.filter(Boolean).length;
+
+      if (completed === 0) {
+        toast.dismiss(toastId);
+        toast.error("Generation failed — GPU may be cold-starting, try again");
+        setGenerating(false);
+        return;
+      }
+
+      // ── 3) Build face cutout once (if enabled) and compose per background ──
+      toast.loading("Composing final thumbnails with Claude...", { id: toastId });
+      const faceCutout = await getFaceCutoutImage();
+
+      const composePromises = backgrounds.map(async (bgUrl, i) => {
+        if (!bgUrl) return null;
+        const composed = await composeThumbnail(bgUrl, faceCutout);
+        // Prefer the composed URL; fall back to raw FLUX bg
+        const finalUrl = composed || bgUrl;
+        setResults((prev) => {
+          const updated = [...prev];
+          if (updated[i]) {
+            updated[i] = { ...updated[i], imageUrl: finalUrl };
+          }
+          return updated;
+        });
+        return finalUrl;
+      });
+      await Promise.all(composePromises);
+
+      toast.dismiss(toastId);
+      toast.success(
+        `${completed} thumbnail${completed > 1 ? "s" : ""} generated!`
+      );
+
+      // Log to history
+      await supabase.from("trinity_log").insert({
+        action_type: "thumbnail_generated",
+        description: prompt.slice(0, 100),
+        status: "completed",
+        metadata: {
+          style,
+          platform,
+          colorTheme,
+          mood,
+          faces: selectedFaces,
+          count: variations,
+        },
+      });
+      loadHistory();
     } catch {
       toast.dismiss(toastId);
       toast.error("Error generating thumbnails");
@@ -2209,13 +2599,28 @@ export default function ThumbnailGeneratorPage() {
               <h2 className="section-header flex items-center gap-2">
                 <Type size={13} className="text-gold" /> Text Overlay
               </h2>
-              <input
-                value={textOverlay}
-                onChange={(e) => setTextOverlay(e.target.value)}
-                className="input w-full text-xs"
-                placeholder={"e.g., \"YOU WON'T BELIEVE THIS...\""}
-                maxLength={80}
-              />
+              <div className="flex gap-1.5">
+                <input
+                  value={textOverlay}
+                  onChange={(e) => setTextOverlay(e.target.value)}
+                  className="input flex-1 text-xs"
+                  placeholder={"e.g., \"YOU WON'T BELIEVE THIS...\""}
+                  maxLength={80}
+                />
+                <button
+                  onClick={() => { void optimizeTitleWithAI(); }}
+                  disabled={titleOptimizing || !textOverlay.trim()}
+                  title="Optimize title with AI — suggest 5 higher-CTR variants"
+                  className="btn-primary text-[10px] px-3 whitespace-nowrap flex items-center gap-1 disabled:opacity-40"
+                >
+                  {titleOptimizing ? (
+                    <Loader2 size={12} className="animate-spin" />
+                  ) : (
+                    <Sparkles size={12} />
+                  )}
+                  <span className="hidden sm:inline">Optimize with AI</span>
+                </button>
+              </div>
               <div className="flex justify-end mt-1">
                 <span className="text-[9px] text-muted">{textOverlay.length}/80</span>
               </div>
@@ -3692,13 +4097,79 @@ export default function ThumbnailGeneratorPage() {
             <h2 className="section-header flex items-center gap-2">
               <Search size={13} className="text-gold" /> Competitor Thumbnail Analyzer
             </h2>
-            <p className="text-[9px] text-muted mb-2">Paste a YouTube URL to analyze the thumbnail style, colors, and CTR potential.</p>
+            <p className="text-[9px] text-muted mb-2">Paste a YouTube URL (legacy) or a thumbnail image URL to analyze style with Claude.</p>
             <div className="flex gap-1.5">
-              <input value={competitorUrl} onChange={(e) => setCompetitorUrl(e.target.value)} className="input flex-1 text-[10px]" placeholder="https://youtube.com/watch?v=..." />
+              <input value={competitorUrl} onChange={(e) => setCompetitorUrl(e.target.value)} className="input flex-1 text-[10px]" placeholder="YouTube URL (legacy)" />
               <button onClick={analyzeCompetitor} disabled={competitorAnalyzing} className="btn-primary text-[10px] px-3 disabled:opacity-40">
                 {competitorAnalyzing ? <Loader size={12} className="animate-spin" /> : <Search size={12} />}
               </button>
             </div>
+
+            {/* AI Style Analyzer (new) */}
+            <div className="mt-3 pt-3 border-t border-border">
+              <p className="text-[10px] font-semibold text-foreground mb-1 flex items-center gap-1.5">
+                <Sparkles size={11} className="text-gold" /> AI Style Analyzer (Claude)
+              </p>
+              <p className="text-[9px] text-muted mb-2">Paste a thumbnail image URL — Claude will detect style, colors, font and mood.</p>
+              <div className="flex gap-1.5">
+                <input
+                  value={styleAnalyzeUrl}
+                  onChange={(e) => setStyleAnalyzeUrl(e.target.value)}
+                  className="input flex-1 text-[10px]"
+                  placeholder="https://example.com/thumbnail.jpg"
+                />
+                <button
+                  onClick={analyzeStyleFromImage}
+                  disabled={styleAnalyzing || !styleAnalyzeUrl.trim()}
+                  className="btn-primary text-[10px] px-3 disabled:opacity-40 flex items-center gap-1"
+                >
+                  {styleAnalyzing ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  Analyze
+                </button>
+              </div>
+              {styleAnalysis && (
+                <div className="mt-3 space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { label: "Style", value: styleAnalysis.style_name || "—" },
+                      { label: "Font", value: styleAnalysis.font || "—" },
+                      { label: "Mood", value: styleAnalysis.mood || "—" },
+                      {
+                        label: "Colors",
+                        value: (styleAnalysis.colors && styleAnalysis.colors.length
+                          ? styleAnalysis.colors.slice(0, 4).join(", ")
+                          : "—"),
+                      },
+                    ].map((item, i) => (
+                      <div key={i} className="p-2 rounded-lg bg-surface-light border border-border">
+                        <p className="text-[8px] text-muted uppercase tracking-wider">{item.label}</p>
+                        <p className="text-[10px] font-medium mt-0.5">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {styleAnalysis.colors && styleAnalysis.colors.length > 0 && (
+                    <div className="flex gap-1">
+                      {styleAnalysis.colors.slice(0, 6).map((col, ci) => (
+                        <span
+                          key={ci}
+                          className="w-5 h-5 rounded border border-border"
+                          style={{ background: col }}
+                          title={col}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  <button
+                    onClick={applySuggestedStyle}
+                    disabled={!styleAnalysis.suggested_config}
+                    className="w-full text-[10px] font-medium py-2 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold hover:bg-gold/10 transition-all flex items-center justify-center gap-1.5 disabled:opacity-40"
+                  >
+                    <ArrowRight size={12} /> Apply this style
+                  </button>
+                </div>
+              )}
+            </div>
+
             {competitorResults && (
               <div className="mt-3 space-y-2">
                 <div className="aspect-video rounded-xl bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center mb-2">
@@ -3923,6 +4394,56 @@ export default function ThumbnailGeneratorPage() {
           )}
         </div>
       )}
+
+      {/* ─── Title Variants Modal (Claude-powered) ─── */}
+      <Modal
+        isOpen={titleVariantsOpen}
+        onClose={() => setTitleVariantsOpen(false)}
+        title="AI Title Variants"
+        size="lg"
+      >
+        <div className="space-y-3">
+          <p className="text-[11px] text-muted">
+            Pick a variant to replace your current title. Scored by predicted CTR.
+          </p>
+          {titleVariants.length === 0 && (
+            <div className="text-[11px] text-muted py-6 text-center">
+              No variants yet.
+            </div>
+          )}
+          {titleVariants.map((v, i) => (
+            <button
+              key={i}
+              onClick={() => applyTitleVariant(v)}
+              className="w-full text-left p-3 rounded-xl border border-border hover:border-gold/40 hover:bg-gold/[0.03] transition-all"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-foreground leading-tight">
+                    {v.title}
+                  </p>
+                  {v.reason && (
+                    <p className="text-[10px] text-muted mt-1 leading-snug">
+                      {v.reason}
+                    </p>
+                  )}
+                </div>
+                <span
+                  className={`flex-shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    v.score >= 85
+                      ? "bg-success/10 text-success border-success/30"
+                      : v.score >= 70
+                      ? "bg-gold/10 text-gold border-gold/30"
+                      : "bg-surface-light text-muted border-border"
+                  }`}
+                >
+                  {v.score}/100
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </Modal>
 
       {/* Step-by-Step Creation Walkthrough */}
       <CreationWalkthrough
