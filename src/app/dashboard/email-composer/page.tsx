@@ -8,6 +8,7 @@ import {
   Paperclip, Palette, Hash, MousePointerClick,
   X, Plus, Calendar
 } from "lucide-react";
+import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
 
 type MainTab = "compose" | "templates" | "preview" | "spam-check" | "scheduler" | "signatures";
 
@@ -48,6 +49,7 @@ export default function EmailComposerPage() {
     fromName: "",
     replyTo: "",
   });
+  const [provider, setProvider] = useState<"gmail" | "outlook" | "smtp">("gmail");
 
   const wordCount = email.body.split(/\s+/).filter(Boolean).length;
   const charCount = email.body.length;
@@ -114,6 +116,24 @@ export default function EmailComposerPage() {
           <div className="lg:col-span-2 space-y-3">
             {/* Recipient + From */}
             <div className="card space-y-2">
+              {/* Email Provider Selector */}
+              <div>
+                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Send via</label>
+                <div className="flex gap-1.5">
+                  {([
+                    { id: "gmail" as const, label: "Gmail", icon: <GmailIcon size={14} /> },
+                    { id: "outlook" as const, label: "Outlook", icon: <OutlookIcon size={14} /> },
+                    { id: "smtp" as const, label: "SMTP", icon: <Mail size={12} /> },
+                  ]).map(p => (
+                    <button key={p.id} onClick={() => setProvider(p.id)}
+                      className={`flex-1 text-[10px] py-1.5 rounded-lg border capitalize transition-all flex items-center justify-center gap-1.5 ${
+                        provider === p.id ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
+                      }`}>
+                      {p.icon} {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">To</label>

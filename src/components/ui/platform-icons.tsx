@@ -144,9 +144,393 @@ export function XTwitterIcon({ size = 18, className }: IconProps) {
   );
 }
 
+/* ============================================================== */
+/*  Messaging / Chat Platforms                                     */
+/* ============================================================== */
+
+export function WhatsAppIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#25D366"/>
+      <path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7 0-.3-.2-1.3-.5-2.5-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.5.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.2-.7-1.7-1-2.3-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1.1 1-1.1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.4z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function DiscordIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#5865F2"/>
+      <path d="M18.3 6.5c-1.1-.5-2.3-.9-3.5-1.1-.2.3-.4.7-.5 1-1.3-.2-2.6-.2-3.9 0-.1-.3-.3-.7-.5-1-1.2.2-2.4.6-3.5 1.1-2.2 3.3-2.8 6.5-2.5 9.7 1.5 1.1 2.9 1.8 4.3 2.2.3-.5.6-1 .9-1.5-.5-.2-1-.4-1.5-.7.1-.1.2-.2.4-.3 2.9 1.3 6 1.3 8.8 0 .1.1.2.2.4.3-.5.3-1 .5-1.5.7.3.5.6 1 .9 1.5 1.4-.4 2.9-1.1 4.3-2.2.4-3.7-.6-6.9-2.5-9.7zM9.1 14.3c-.8 0-1.5-.8-1.5-1.7 0-.9.7-1.7 1.5-1.7.9 0 1.5.8 1.5 1.7.1.9-.6 1.7-1.5 1.7zm5.7 0c-.8 0-1.5-.8-1.5-1.7 0-.9.7-1.7 1.5-1.7.9 0 1.5.8 1.5 1.7 0 .9-.6 1.7-1.5 1.7z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function SlackIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#fff"/>
+      <path d="M8 13.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm.8 0a1.5 1.5 0 013 0v3.8a1.5 1.5 0 01-3 0v-3.8z" fill="#E01E5A"/>
+      <path d="M10.3 7.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm0 .8a1.5 1.5 0 010 3H6.5a1.5 1.5 0 010-3h3.8z" fill="#36C5F0"/>
+      <path d="M16 10.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm-.8 0a1.5 1.5 0 01-3 0V6.7a1.5 1.5 0 013 0v3.8z" fill="#2EB67D"/>
+      <path d="M13.7 16.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0-.8a1.5 1.5 0 010-3h3.8a1.5 1.5 0 010 3h-3.8z" fill="#ECB22E"/>
+    </svg>
+  );
+}
+
+export function TelegramIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#229ED9"/>
+      <path d="M18.5 6.5l-2.5 12c-.2.8-.7 1-1.4.6l-3.9-2.9-1.9 1.8c-.2.2-.4.4-.8.4l.3-4 7.3-6.6c.3-.3-.1-.4-.5-.2L6.1 11.3 2.2 10c-.8-.3-.9-.9.2-1.3l15-5.8c.7-.3 1.3.2 1.1 1.3z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function NotionIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#fff" stroke="#000" strokeWidth="0.5"/>
+      <path d="M7 6h3.5l5 7V6H18v12h-3L10 11v7H7V6z" fill="#000"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Email / Productivity                                           */
+/* ============================================================== */
+
+export function GmailIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#fff"/>
+      <path d="M3 7v10a1 1 0 001 1h2V10l6 4 6-4v8h2a1 1 0 001-1V7L12 12 3 7z" fill="#EA4335"/>
+      <path d="M3 7l9 5 9-5v-.5a1 1 0 00-1-1H4a1 1 0 00-1 1V7z" fill="#C5221F"/>
+      <path d="M6 18V10l6 4 6-4v8h-3v-5l-3 2-3-2v5H6z" fill="#fff"/>
+      <path d="M3 7l2 1.4V18H4a1 1 0 01-1-1V7z" fill="#4285F4"/>
+      <path d="M21 7l-2 1.4V18h1a1 1 0 001-1V7z" fill="#34A853"/>
+      <path d="M18 10l3-2v-1L18 9v1z" fill="#FBBC05"/>
+    </svg>
+  );
+}
+
+export function OutlookIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#0078D4"/>
+      <rect x="11" y="7" width="9" height="10" rx="1" fill="#fff"/>
+      <path d="M11 9l4.5 3L20 9" stroke="#0078D4" strokeWidth="1" fill="none"/>
+      <ellipse cx="7.5" cy="12" rx="3" ry="3.8" fill="#0078D4" stroke="#fff" strokeWidth="1.5"/>
+      <text x="5.5" y="14.5" fontFamily="Arial Black, sans-serif" fontSize="5" fontWeight="900" fill="#fff">O</text>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Payments / Commerce                                            */
+/* ============================================================== */
+
+export function StripeIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#635BFF"/>
+      <path d="M13.5 10c0-.6.5-.8 1.3-.8 1.1 0 2.6.4 3.7 1V6.5c-1.2-.5-2.5-.7-3.7-.7-3 0-5 1.6-5 4.2 0 4.1 5.7 3.5 5.7 5.3 0 .7-.6 1-1.5 1-1.2 0-2.8-.5-4-1.2v3.8c1.4.6 2.8.9 4 .9 3.1 0 5.2-1.5 5.2-4.2-.1-4.5-5.7-3.8-5.7-5.6z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function PayPalIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#fff"/>
+      <path d="M8.5 5h5.2c2.5 0 4.2 1.3 3.8 3.8-.4 2.7-2.5 4.1-5.1 4.1H11l-.6 4H8l.5-11.9z" fill="#003087"/>
+      <path d="M9.5 8.5h4.2c2.5 0 4 1.3 3.6 3.8-.4 2.7-2.4 4.1-5 4.1h-1.4l-.6 3.6H7.5l2-11.5z" fill="#009CDE"/>
+      <path d="M9.5 8.5h4.2c.5 0 .9 0 1.3.1-.4-1.2-1.5-2-3.3-2H8.5l-2 11.5h1.7l1.3-9.6z" fill="#012169"/>
+    </svg>
+  );
+}
+
+export function ShopifyIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#95BF47"/>
+      <path d="M15.5 7.5c0-.1-.1-.2-.2-.2-.1 0-1.8-.1-1.8-.1s-1.2-1.2-1.3-1.3c-.1-.1-.4-.1-.5 0l-.6.2c-.4-1.1-1.1-2.1-2.3-2.1H8.7C8.3 3.4 7.9 3.2 7.5 3.2 4.3 3.2 2.8 7.2 2.3 9.2L.6 9.7c-.5.2-.5.2-.6.7L-.5 20h13L15.5 7.5zM9.5 5.8v.1l-1.7.5c.3-1.3.9-1.9 1.5-2.1.2.4.3 1 .3 1.5h-.1zm-1.1-2.2c.1 0 .3 0 .4.1-.7.3-1.5 1.2-1.8 3l-1.4.4C5.9 5.6 7 3.6 8.4 3.6zm.7 9.1c-.2-.1-.5-.2-.8-.2-.6 0-.7.4-.7.5 0 .5 1.3.7 1.3 1.9 0 .9-.6 1.6-1.4 1.6-1 0-1.5-.6-1.5-.6l.3-.9s.5.4 1 .4c.3 0 .4-.2.4-.4 0-.6-1-.6-1-1.7 0-.9.6-1.7 1.9-1.7.5 0 .8.2.8.2l-.3.9z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function SquareIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <rect x="6" y="6" width="12" height="12" rx="1.5" stroke="#fff" strokeWidth="1.5" fill="none"/>
+      <rect x="10" y="10" width="4" height="4" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Marketing / Automation                                         */
+/* ============================================================== */
+
+export function ZapierIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#FF4A00"/>
+      <path d="M12 4l-2.5 7H13l-2.5 9L18 12h-4l3-8h-5z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function MailchimpIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#FFE01B"/>
+      <path d="M12 5c-3.9 0-7 2.4-7 5.5 0 1.8 1 3.3 2.6 4.3l-.4 2.2c-.1.4.3.7.7.5l2-.9c.7.2 1.4.3 2.1.3 3.9 0 7-2.4 7-5.5S15.9 5 12 5z" fill="#000"/>
+      <circle cx="10" cy="10" r="0.8" fill="#fff"/>
+      <circle cx="14" cy="10" r="0.8" fill="#fff"/>
+      <path d="M9.5 13c1 1 4 1 5 0" stroke="#fff" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+    </svg>
+  );
+}
+
+export function HubspotIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#FF7A59"/>
+      <path d="M16 10.5V8a2 2 0 10-1.5 0v2.5c-.9.3-1.7.9-2.2 1.8l-3-2.3c.1-.3.2-.6.2-.9a2.5 2.5 0 10-2.5 2.5c.5 0 1-.2 1.4-.5l3 2.3c-.3.6-.4 1.2-.4 1.9a4 4 0 104-4c-.3 0-.6 0-1 .1l-.1-.9zm-1 6.3a2.3 2.3 0 110-4.6 2.3 2.3 0 010 4.6z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function SalesforceIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#00A1E0"/>
+      <path d="M14.5 8.5c.6-.6 1.4-1 2.3-1 1.8 0 3.2 1.5 3.2 3.3 0 .4-.1.8-.2 1.2.4-.2.9-.3 1.4-.3.9 0 1.7.5 2.1 1.3-.5.8-1.3 1.3-2.2 1.3H5.5c-1.7 0-3-1.4-3-3.1 0-1.7 1.3-3.1 3-3.1.3 0 .6 0 .9.1.5-1.4 1.8-2.4 3.3-2.4 1.2 0 2.2.6 2.9 1.5.5-.5 1.2-.8 1.9-.8z" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Design / Creative                                              */
+/* ============================================================== */
+
+export function CanvaIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <defs>
+        <linearGradient id="canva_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#00C4CC"/>
+          <stop offset="100%" stopColor="#7D2AE7"/>
+        </linearGradient>
+      </defs>
+      <rect width="24" height="24" rx="5" fill="url(#canva_grad)"/>
+      <path d="M16 10c-.5-1.8-2.1-3-4-3-2.5 0-4.5 2.2-4.5 5s2 5 4.5 5c1.9 0 3.5-1.2 4-3h-2c-.4.6-1.1 1-2 1-1.4 0-2.5-1.3-2.5-3s1.1-3 2.5-3c.9 0 1.6.4 2 1h2z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function FigmaIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#fff"/>
+      <path d="M8.5 4h3.5v5H8.5a2.5 2.5 0 010-5z" fill="#F24E1E"/>
+      <path d="M12 4h3.5a2.5 2.5 0 010 5H12V4z" fill="#FF7262"/>
+      <path d="M12 9h3.5a2.5 2.5 0 010 5H12V9z" fill="#A259FF"/>
+      <path d="M8.5 9H12v5H8.5a2.5 2.5 0 010-5z" fill="#1ABCFE"/>
+      <path d="M8.5 14H12v2.5a2.5 2.5 0 11-2.5-2.5h-1z" fill="#0ACF83"/>
+    </svg>
+  );
+}
+
+export function ZoomIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#2D8CFF"/>
+      <path d="M4 9a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V9zm16 0l-3 2v2l3 2V9z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function CalendlyIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#006BFF"/>
+      <rect x="6" y="7" width="12" height="11" rx="1.5" fill="#fff"/>
+      <rect x="6" y="7" width="12" height="2.5" fill="#006BFF"/>
+      <circle cx="9" cy="5.5" r="1" fill="#fff"/>
+      <circle cx="15" cy="5.5" r="1" fill="#fff"/>
+      <rect x="8.5" y="11" width="2" height="2" rx="0.3" fill="#006BFF"/>
+      <rect x="11" y="11" width="2" height="2" rx="0.3" fill="#006BFF"/>
+      <rect x="13.5" y="11" width="2" height="2" rx="0.3" fill="#006BFF"/>
+      <rect x="8.5" y="14" width="2" height="2" rx="0.3" fill="#006BFF"/>
+      <rect x="11" y="14" width="2" height="2" rx="0.3" fill="#006BFF"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Social / Video Platforms                                       */
+/* ============================================================== */
+
+export function YouTubeShortsIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <rect x="8" y="3" width="8" height="18" rx="2" fill="#FF0000"/>
+      <path d="M10.5 9v6l5-3-5-3z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function PinterestIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#E60023"/>
+      <path d="M12 4a8 8 0 00-3 15.4c0-.6-.1-1.6 0-2.3l1-4.2s-.3-.5-.3-1.3c0-1.2.7-2.1 1.6-2.1.8 0 1.1.6 1.1 1.3 0 .8-.5 2-.8 3.1-.2.9.5 1.7 1.4 1.7 1.7 0 3-1.8 3-4.4 0-2.3-1.6-3.9-4-3.9-2.7 0-4.3 2-4.3 4.1 0 .8.3 1.7.7 2.2.1.1.1.1.1.2l-.3 1c0 .2-.1.2-.3.1-1.1-.5-1.8-2-1.8-3.3 0-2.7 2-5.2 5.6-5.2 2.9 0 5.2 2.1 5.2 4.9 0 2.9-1.8 5.3-4.4 5.3-.9 0-1.7-.4-2-1l-.6 2.2c-.2.8-.8 1.8-1.1 2.4A8 8 0 1012 4z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function SnapchatIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#FFFC00"/>
+      <path d="M12 5c-2.5 0-4.5 1.8-4.5 4.5 0 1 .1 1.9.1 2.3-.1.1-.4.2-.7.2-.3 0-.9-.1-1.1.4-.2.5.5.8.8.9.3.1.8.3.7.7-.3.9-1.5 2.1-2.3 2.4-.3.1-.5.3-.3.7.3.7 2.2.6 2.5 1 .1.2.1.5.4.6.4.2 1 0 1.8-.1.8-.1 1.7-.1 2.4.4.4.3.9.7 1.7.7s1.3-.4 1.7-.7c.7-.5 1.6-.5 2.4-.4.8.1 1.3.3 1.8.1.3-.1.3-.4.4-.6.3-.4 2.2-.3 2.5-1 .2-.4 0-.6-.3-.7-.8-.3-2-1.5-2.3-2.4-.1-.4.4-.6.7-.7.3-.1 1-.4.8-.9-.2-.5-.8-.4-1.1-.4-.3 0-.6-.1-.7-.2 0-.4.1-1.3.1-2.3C16.5 6.8 14.5 5 12 5z" fill="#000"/>
+    </svg>
+  );
+}
+
+export function RedditIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#FF4500"/>
+      <circle cx="12" cy="13" r="6" fill="#fff"/>
+      <circle cx="9.5" cy="12.5" r="1" fill="#FF4500"/>
+      <circle cx="14.5" cy="12.5" r="1" fill="#FF4500"/>
+      <path d="M9.5 15c1 .8 4 .8 5 0" stroke="#FF4500" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+      <circle cx="18" cy="10" r="1.5" fill="#FF4500"/>
+      <circle cx="17" cy="7" r="1" fill="#fff"/>
+      <path d="M17 8l1 2" stroke="#fff" strokeWidth="0.6"/>
+    </svg>
+  );
+}
+
+export function TwitchIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#9146FF"/>
+      <path d="M6 5l-1 3v10h3v3h3l3-3h3l4-4V5H6zm14 8l-3 3h-3l-3 3v-3H8V7h12v6zm-3-4h-1.5v4H17V9zm-4 0h-1.5v4H13V9z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function SpotifyIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#1DB954"/>
+      <circle cx="12" cy="12" r="7" fill="#1DB954" stroke="#000" strokeWidth="0.5"/>
+      <path d="M7.5 10c3-.8 6-.6 9 .5" stroke="#000" strokeWidth="1.2" strokeLinecap="round" fill="none"/>
+      <path d="M7.8 12.5c2.6-.7 5.2-.5 7.7.4" stroke="#000" strokeWidth="1" strokeLinecap="round" fill="none"/>
+      <path d="M8.2 15c2.2-.6 4.3-.4 6.3.3" stroke="#000" strokeWidth="0.9" strokeLinecap="round" fill="none"/>
+    </svg>
+  );
+}
+
+export function AppleMusicIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <defs>
+        <linearGradient id="am_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FC5C7D"/>
+          <stop offset="100%" stopColor="#FA2D48"/>
+        </linearGradient>
+      </defs>
+      <rect width="24" height="24" rx="5" fill="url(#am_grad)"/>
+      <path d="M15 6l-6 1.3v7.3c-.3-.1-.7-.2-1.1-.2-1.5 0-2.7.9-2.7 2s1.2 2 2.7 2 2.7-.9 2.7-2V9.4l4.4-1v4.8c-.3-.1-.7-.2-1.1-.2-1.5 0-2.7.9-2.7 2s1.2 2 2.7 2 2.7-.9 2.7-2V6h-1.6z" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Commerce / E-commerce                                          */
+/* ============================================================== */
+
+export function AmazonIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <text x="3.5" y="13" fontFamily="Arial, sans-serif" fontSize="7" fontWeight="700" fill="#fff">amazon</text>
+      <path d="M5 15c2 2 12 2 14 0" stroke="#FF9900" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+      <path d="M17 14.5l2 .5-.5 2" stroke="#FF9900" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+export function WooCommerceIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#7F54B3"/>
+      <path d="M4 9c0-.5.4-1 1-1h14c.6 0 1 .5 1 1v6c0 .6-.4 1-1 1h-7l-3 2 .5-2H5c-.6 0-1-.4-1-1V9z" fill="#fff"/>
+      <text x="6" y="14" fontFamily="Arial, sans-serif" fontSize="4.5" fontWeight="700" fill="#7F54B3">Woo</text>
+    </svg>
+  );
+}
+
+export function WordPressIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#21759B"/>
+      <circle cx="12" cy="12" r="7" fill="none" stroke="#fff" strokeWidth="1"/>
+      <path d="M6 10l3 8 2-5 2 5 3-8h-1.5l-1.5 4-1.5-4h-1l-1.5 4-1.5-4H6z" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Advertising Platforms                                          */
+/* ============================================================== */
+
+export function GoogleAdsIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#fff"/>
+      <path d="M10 4l-7 12 4 2 7-12-4-2z" fill="#FBBC05"/>
+      <path d="M14 4l7 12-4 2-7-12 4-2z" fill="#4285F4"/>
+      <circle cx="8" cy="18" r="3" fill="#34A853"/>
+    </svg>
+  );
+}
+
+export function MetaIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <defs>
+        <linearGradient id="meta_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0062E0"/>
+          <stop offset="100%" stopColor="#19AFFF"/>
+        </linearGradient>
+      </defs>
+      <rect width="24" height="24" rx="5" fill="url(#meta_grad)"/>
+      <path d="M6 14c0-3 1.5-6 4-6 1.5 0 2.5 1 3.5 2.5l1 1.5c1 1.5 2 2.5 3.5 2.5 1.5 0 2-1 2-2s-.5-2-2-2c-.8 0-1.3.3-2 1l-1.3 1.5-1-1.5C12.5 9.5 11 7.5 9 7.5c-3 0-5 3-5 6.5s2 6.5 5 6.5c1.5 0 2.5-.5 3.5-1.5l-1-1.5c-.5.5-1 1-2.5 1-1.7 0-3-1.5-3-2.5z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function ThreadsIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <path d="M16.5 11.2c-.1 0-.2-.1-.3-.1-.1-2.4-1.4-3.8-3.6-3.9h-.1c-1.3 0-2.4.6-3.1 1.6l1.2.8c.5-.8 1.3-.9 1.9-.9 1.5 0 2.1.8 2.1 2.2-.5-.1-1-.2-1.5-.2-1.4.1-3 .9-3.1 2.5 0 1.6 1.3 2.5 2.7 2.5 1.8 0 2.9-1.1 3.3-2.6.6.3 1 .7 1.2 1.2.4.9.4 2.3-.7 3.4-1 1-2.1 1.4-3.7 1.4-1.7 0-3-.5-3.9-1.6-.9-1-1.3-2.5-1.3-4.4s.4-3.4 1.3-4.4c.9-1 2.3-1.6 3.9-1.6 1.7 0 3 .6 3.9 1.7.5.6.9 1.3 1.1 2.2l1.5-.4c-.3-1.1-.8-2-1.5-2.7-1.2-1.3-2.9-2-5-2-2.1 0-3.8.7-5 2-1.1 1.3-1.7 3.1-1.7 5.2s.6 3.9 1.7 5.2c1.2 1.3 2.9 2 5 2 1.9 0 3.3-.5 4.5-1.4l.1-.1c1.5-1.5 1.5-3.6.9-5-.4-.8-1-1.4-1.8-1.9zm-3.7 3.4c-.8 0-1.5-.4-1.5-1.1 0-.7.9-1.2 1.9-1.2.5 0 .9.1 1.4.2-.2 1.3-.9 2.1-1.8 2.1z" fill="#fff"/>
+    </svg>
+  );
+}
+
 /** Utility: get platform icon by string ID */
 export function getPlatformIcon(platform: string, size = 18): React.ReactNode {
   const map: Record<string, React.ReactNode> = {
+    // Original
     google_maps: <GoogleMapsIcon size={size} />,
     google: <GoogleIcon size={size} />,
     facebook: <FacebookIcon size={size} />,
@@ -160,9 +544,48 @@ export function getPlatformIcon(platform: string, size = 18): React.ReactNode {
     yellow_pages: <YellowPagesIcon size={size} />,
     indeed: <IndeedIcon size={size} />,
     x_twitter: <XTwitterIcon size={size} />,
-    meta_ads: <FacebookIcon size={size} />,
+    meta_ads: <MetaIcon size={size} />,
     tiktok_ads: <TikTokIcon size={size} />,
-    google_ads: <GoogleIcon size={size} />,
+    // Messaging / Chat
+    whatsapp: <WhatsAppIcon size={size} />,
+    discord: <DiscordIcon size={size} />,
+    slack: <SlackIcon size={size} />,
+    telegram: <TelegramIcon size={size} />,
+    notion: <NotionIcon size={size} />,
+    // Email / Productivity
+    gmail: <GmailIcon size={size} />,
+    outlook: <OutlookIcon size={size} />,
+    // Payments / Commerce
+    stripe: <StripeIcon size={size} />,
+    paypal: <PayPalIcon size={size} />,
+    shopify: <ShopifyIcon size={size} />,
+    square: <SquareIcon size={size} />,
+    // Marketing / Automation
+    zapier: <ZapierIcon size={size} />,
+    mailchimp: <MailchimpIcon size={size} />,
+    hubspot: <HubspotIcon size={size} />,
+    salesforce: <SalesforceIcon size={size} />,
+    // Design / Creative
+    canva: <CanvaIcon size={size} />,
+    figma: <FigmaIcon size={size} />,
+    zoom: <ZoomIcon size={size} />,
+    calendly: <CalendlyIcon size={size} />,
+    // Social / Video
+    youtube_shorts: <YouTubeShortsIcon size={size} />,
+    pinterest: <PinterestIcon size={size} />,
+    snapchat: <SnapchatIcon size={size} />,
+    reddit: <RedditIcon size={size} />,
+    twitch: <TwitchIcon size={size} />,
+    spotify: <SpotifyIcon size={size} />,
+    apple_music: <AppleMusicIcon size={size} />,
+    // Commerce / E-commerce
+    amazon: <AmazonIcon size={size} />,
+    woocommerce: <WooCommerceIcon size={size} />,
+    wordpress: <WordPressIcon size={size} />,
+    // Advertising Platforms
+    google_ads: <GoogleAdsIcon size={size} />,
+    meta: <MetaIcon size={size} />,
+    threads: <ThreadsIcon size={size} />,
   };
   return map[platform.toLowerCase()] || <GoogleIcon size={size} />;
 }

@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import {
-  BookOpen, Database, FileText, Search, RefreshCw,
+  Database, FileText, Search, RefreshCw,
   Check, AlertTriangle, Clock, Settings,
   ArrowLeftRight, Filter, ChevronDown, ChevronRight, Copy,
   BarChart3, Calendar,
   Play, Eye, Download, Plus, Zap
 } from "lucide-react";
+import { NotionIcon } from "@/components/ui/platform-icons";
 
 const tabs = ["Workspaces", "Sync Map", "Status", "Field Map", "Conflicts", "History", "Schedule", "Templates", "Browser", "Selective", "Analytics", "Settings"] as const;
 type Tab = (typeof tabs)[number];
@@ -66,8 +67,8 @@ export default function NotionSyncPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-foreground/10 rounded-xl flex items-center justify-center">
-            <BookOpen size={20} className="text-foreground" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+            <NotionIcon size={40} />
           </div>
           <div>
             <h1 className="text-lg font-bold">Notion Sync</h1>

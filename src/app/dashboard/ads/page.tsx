@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import { MetaIcon, GoogleAdsIcon, TikTokIcon } from "@/components/ui/platform-icons";
 
 type Tab = "overview" | "campaigns" | "creatives" | "copy-lab" | "copilot";
 
@@ -28,6 +29,13 @@ const PLATFORM_META = { id: "meta_ads", label: "Meta Ads", color: "#1877F2", ico
 const PLATFORM_GOOGLE = { id: "google_ads", label: "Google Ads", color: "#34A853", icon: "G" };
 const PLATFORM_TIKTOK = { id: "tiktok_ads", label: "TikTok Ads", color: "#FF0050", icon: "T" };
 const PLATFORMS = [PLATFORM_META, PLATFORM_GOOGLE, PLATFORM_TIKTOK];
+
+function getBrandIcon(platformId: string, size = 20): React.ReactNode {
+  if (platformId === "meta_ads") return <MetaIcon size={size} />;
+  if (platformId === "google_ads") return <GoogleAdsIcon size={size} />;
+  if (platformId === "tiktok_ads") return <TikTokIcon size={size} />;
+  return <MetaIcon size={size} />;
+}
 
 function getPlatformInfo(id: string) {
   return PLATFORMS.find(p => p.id === id) || PLATFORM_META;
@@ -450,7 +458,7 @@ export default function AdsPage() {
                     return (
                       <div key={p.id} className="p-3 rounded-xl bg-surface-light border border-border">
                         <div className="flex items-center gap-3 mb-2">
-                          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: p.color }}>{p.icon}</div>
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">{getBrandIcon(p.id, 32)}</div>
                           <div className="flex-1">
                             <p className="text-xs font-semibold">{p.label}</p>
                             <p className="text-[9px] text-muted">{platCampaigns.length} campaign{platCampaigns.length !== 1 ? "s" : ""}</p>
@@ -674,9 +682,8 @@ export default function AdsPage() {
                     onClick={() => setExpandedCampaign(isExpanded ? null : campaign.id)}
                   >
                     {/* Platform Badge */}
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0"
-                      style={{ backgroundColor: platform.color }}>
-                      {platform.icon}
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
+                      {getBrandIcon(platform.id, 36)}
                     </div>
 
                     {/* Name + Client */}
@@ -844,9 +851,8 @@ export default function AdsPage() {
                         </div>
                       )}
                       <div className="absolute top-2 right-2">
-                        <div className="w-6 h-6 rounded-md flex items-center justify-center text-white text-[9px] font-bold"
-                          style={{ backgroundColor: platform.color }}>
-                          {platform.icon}
+                        <div className="w-6 h-6 rounded-md flex items-center justify-center overflow-hidden">
+                          {getBrandIcon(platform.id, 24)}
                         </div>
                       </div>
                     </div>

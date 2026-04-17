@@ -6,9 +6,12 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   Link2, Globe, Loader, Check, Unlink, LogIn, Shield, Clock, AlertCircle,
-  Calendar, MessageSquare, Mail, Phone, BookOpen, Megaphone, MapPin, ExternalLink, Zap, RefreshCw
+  MessageSquare, Mail, Phone, ExternalLink, Zap, RefreshCw
 } from "lucide-react";
 import toast from "react-hot-toast";
+import {
+  CalendlyIcon, WhatsAppIcon, NotionIcon, GoogleAdsIcon, GoogleMapsIcon
+} from "@/components/ui/platform-icons";
 
 // Real brand logos as inline SVGs
 const FacebookLogo = () => (
@@ -506,7 +509,7 @@ const BUSINESS_INTEGRATIONS = [
   {
     id: "google_ads",
     name: "Google Ads",
-    icon: <Megaphone size={16} />,
+    icon: <GoogleAdsIcon size={20} />,
     color: "text-[#4285F4]",
     bg: "from-[#4285F4]/10 to-[#34A853]/5 border-[#4285F4]/20",
     description: "Campaign management, performance data, bid optimization",
@@ -517,7 +520,7 @@ const BUSINESS_INTEGRATIONS = [
   {
     id: "google_business",
     name: "Google Business",
-    icon: <MapPin size={16} />,
+    icon: <GoogleMapsIcon size={20} />,
     color: "text-[#34A853]",
     bg: "from-[#34A853]/10 to-[#4285F4]/5 border-[#34A853]/20",
     description: "Review management, local posts, business insights",
@@ -528,7 +531,7 @@ const BUSINESS_INTEGRATIONS = [
   {
     id: "calendly",
     name: "Calendly",
-    icon: <Calendar size={16} />,
+    icon: <CalendlyIcon size={20} />,
     color: "text-[#006BFF]",
     bg: "from-[#006BFF]/10 to-[#006BFF]/5 border-[#006BFF]/20",
     description: "Scheduling, event types, booking management",
@@ -539,7 +542,7 @@ const BUSINESS_INTEGRATIONS = [
   {
     id: "whatsapp",
     name: "WhatsApp Business",
-    icon: <MessageSquare size={16} />,
+    icon: <WhatsAppIcon size={20} />,
     color: "text-[#25D366]",
     bg: "from-[#25D366]/10 to-[#25D366]/5 border-[#25D366]/20",
     description: "Send messages, templates, media to clients",
@@ -572,7 +575,7 @@ const BUSINESS_INTEGRATIONS = [
   {
     id: "notion",
     name: "Notion",
-    icon: <BookOpen size={16} />,
+    icon: <NotionIcon size={20} />,
     color: "text-foreground",
     bg: "from-white/5 to-white/[0.02] border-white/15",
     description: "Sync databases, create pages, manage tasks",

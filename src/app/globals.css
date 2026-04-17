@@ -57,12 +57,20 @@ body {
     @apply rounded-2xl p-5;
     background: var(--color-surface, #FFFFFF);
     border: 1px solid var(--color-border, #E8E5E0);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
-    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.02) inset,
+      0 1px 3px rgba(0,0,0,0.08),
+      0 2px 8px -2px rgba(0,0,0,0.25);
+    transition: box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.03);
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 70%, var(--color-accent, #C9A84C));
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 6px 20px -6px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(201, 168, 76, 0.06);
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 55%, var(--color-accent, #C9A84C));
     transform: translateY(-1px);
   }
 
@@ -70,8 +78,11 @@ body {
     @apply card cursor-pointer;
   }
   .card-hover:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 50%, var(--color-accent, #C9A84C));
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.05) inset,
+      0 10px 30px -8px rgba(0,0,0,0.55),
+      0 0 0 1px rgba(201, 168, 76, 0.1);
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 35%, var(--color-accent, #C9A84C));
     transform: translateY(-2px);
   }
 
@@ -79,63 +90,114 @@ body {
     @apply rounded-2xl p-5;
     background: linear-gradient(145deg, var(--color-surface, #FFFFFF) 0%, var(--color-background, #FAFAF7) 100%);
     border: 1px solid var(--color-border, #E8E5E0);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.03) inset,
+      0 2px 8px -2px rgba(0,0,0,0.3);
   }
 
   .card-static {
     @apply rounded-2xl p-5;
     background: var(--color-surface, #FFFFFF);
     border: 1px solid var(--color-border, #E8E5E0);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.02) inset,
+      0 1px 3px rgba(0,0,0,0.08),
+      0 2px 8px -2px rgba(0,0,0,0.25);
   }
 
   /* ═══════════ BUTTONS ═══════════ */
   .btn-primary {
     @apply font-semibold px-5 py-2.5 rounded-xl;
-    background: var(--color-accent, #C9A84C);
-    color: #FFFFFF;
-    box-shadow: 0 1px 3px rgba(201,168,76,0.2), 0 0 0 0 rgba(201,168,76,0);
-    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-accent, #C9A84C) 88%, #ffffff) 0%, var(--color-accent, #C9A84C) 100%);
+    color: #0a0a0a;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 2px 0 rgba(0,0,0,0.25),
+      0 4px 12px -2px color-mix(in srgb, var(--color-accent, #C9A84C) 35%, transparent),
+      0 1px 0 rgba(255,255,255,0.2) inset;
+    transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.15s;
   }
   .btn-primary:hover {
-    background: color-mix(in srgb, var(--color-accent, #C9A84C) 85%, white);
-    box-shadow: 0 4px 14px rgba(201,168,76,0.3), 0 0 0 0 rgba(201,168,76,0);
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-accent, #C9A84C) 78%, #ffffff) 0%, color-mix(in srgb, var(--color-accent, #C9A84C) 94%, #ffffff) 100%);
+    box-shadow:
+      0 2px 0 rgba(0,0,0,0.25),
+      0 6px 16px -2px color-mix(in srgb, var(--color-accent, #C9A84C) 45%, transparent),
+      0 1px 0 rgba(255,255,255,0.28) inset;
     transform: translateY(-1px);
   }
-  .btn-primary:active { transform: scale(0.97) translateY(0); }
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.3),
+      0 2px 6px -2px color-mix(in srgb, var(--color-accent, #C9A84C) 35%, transparent),
+      0 1px 0 rgba(255,255,255,0.12) inset;
+  }
 
   .btn-secondary {
     @apply font-medium px-5 py-2.5 rounded-xl;
     color: var(--color-text, #374151);
     background: var(--color-surface-light, #F5F3EE);
     border: 1px solid var(--color-border, #E8E5E0);
-    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 2px 0 rgba(0,0,0,0.18),
+      0 2px 8px -2px rgba(0,0,0,0.2);
+    transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.15s,
+                background 0.15s,
+                color 0.15s;
   }
   .btn-secondary:hover {
-    background: color-mix(in srgb, var(--color-surface-light, #EBE8E2) 80%, var(--color-accent, #C9A84C));
-    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 70%, var(--color-accent, #C9A84C));
+    background: color-mix(in srgb, var(--color-surface-light, #EBE8E2) 78%, var(--color-accent, #C9A84C));
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 55%, var(--color-accent, #C9A84C));
     color: var(--color-foreground, #1A1A2E);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 2px 0 rgba(0,0,0,0.2),
+      0 4px 14px -2px rgba(0,0,0,0.3);
     transform: translateY(-1px);
   }
-  .btn-secondary:active { transform: scale(0.97) translateY(0); }
+  .btn-secondary:active {
+    transform: translateY(0);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 1px 0 rgba(0,0,0,0.2),
+      0 2px 6px -2px rgba(0,0,0,0.2);
+  }
 
   .btn-danger {
     @apply font-medium px-4 py-2 rounded-xl;
     color: #EF4444;
-    background: rgba(239,68,68,0.06);
-    border: 1px solid rgba(239,68,68,0.12);
-    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 2px 8px -2px rgba(239,68,68,0.15);
+    transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.15s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.15s;
   }
-  .btn-danger:hover { background: rgba(239,68,68,0.12); transform: translateY(-1px); }
-  .btn-danger:active { transform: scale(0.97); }
+  .btn-danger:hover {
+    background: rgba(239,68,68,0.14);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 4px 14px -2px rgba(239,68,68,0.3);
+    transform: translateY(-1px);
+  }
+  .btn-danger:active { transform: translateY(0); }
 
   .btn-ghost {
     @apply font-medium px-3 py-1.5 rounded-lg;
     color: var(--color-muted, #6B7280);
-    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .btn-ghost:hover {
     color: var(--color-foreground, #1A1A2E);
     background: var(--color-surface-light, #F5F3EE);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset;
   }
 
   /* ═══════════ INPUTS ═══════════ */
@@ -144,23 +206,78 @@ body {
     color: var(--color-text, #374151);
     background: var(--color-surface-light, #F5F3EE);
     border: 1px solid var(--color-border, #E8E5E0);
-    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.15),
+      0 1px 0 rgba(255,255,255,0.03);
+    transition: box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.2s,
+                background 0.2s;
   }
   .input::placeholder { color: var(--color-muted, #9CA3AF); }
   .input:focus {
     @apply outline-none;
     border-color: var(--color-accent, #C9A84C);
     background: var(--color-surface, #FFFFFF);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent, #C9A84C) 12%, transparent);
+    box-shadow:
+      inset 0 1px 2px rgba(0,0,0,0.1),
+      0 0 0 3px color-mix(in srgb, var(--color-accent, #C9A84C) 20%, transparent),
+      0 0 18px -4px color-mix(in srgb, var(--color-accent, #C9A84C) 40%, transparent);
   }
 
   .badge {
     @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  /* ═══════════ CHIP / PILL ═══════════ */
+  .chip {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium;
+    background: var(--color-surface-light, #F5F3EE);
+    border: 1px solid var(--color-border, #E8E5E0);
+    color: var(--color-text, #374151);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 1px 3px -1px rgba(0,0,0,0.2);
+    transition: all 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .chip:hover {
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 55%, var(--color-accent, #C9A84C));
+    color: var(--color-foreground, #1A1A2E);
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
+    background: color-mix(in srgb, var(--color-accent, #C9A84C) 10%, transparent);
+    color: var(--color-accent, #C9A84C);
+    border: 1px solid color-mix(in srgb, var(--color-accent, #C9A84C) 18%, transparent);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 0 12px -4px color-mix(in srgb, var(--color-accent, #C9A84C) 30%, transparent);
   }
 
   /* ═══════════ STAT CARDS ═══════════ */
   .stat-card {
-    @apply card flex flex-col gap-1.5;
+    @apply rounded-2xl p-5 flex flex-col gap-1.5;
+    background: linear-gradient(160deg, var(--color-surface, #FFFFFF) 0%, color-mix(in srgb, var(--color-surface, #FFFFFF) 92%, var(--color-background, #FAFAF7)) 100%);
+    border: 1px solid var(--color-border, #E8E5E0);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 2px 4px rgba(0,0,0,0.15),
+      0 6px 18px -6px rgba(0,0,0,0.35);
+    transition: box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.25s,
+                transform 0.25s;
+  }
+  .stat-card:hover {
+    border-color: color-mix(in srgb, var(--color-border, #D4D0C8) 50%, var(--color-accent, #C9A84C));
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.06) inset,
+      0 2px 4px rgba(0,0,0,0.15),
+      0 12px 28px -8px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(201, 168, 76, 0.08);
+    transform: translateY(-2px);
   }
 
   .stat-value {
@@ -208,20 +325,39 @@ body {
   .sidebar-link {
     @apply flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-medium;
     color: var(--color-muted, #6B7280);
-    transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: background 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+                color 0.12s,
+                transform 0.12s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .sidebar-link:hover {
     background: var(--color-surface-light, #F5F3EE);
     color: var(--color-foreground, #1A1A2E);
     transform: translateX(2px);
+    box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset;
   }
 
   .sidebar-link-active {
-    @apply flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold;
+    @apply relative flex items-center gap-3 px-3.5 py-2 rounded-xl text-[13px] font-semibold;
     color: var(--color-accent, #C9A84C);
-    background: color-mix(in srgb, var(--color-accent, #C9A84C) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-accent, #C9A84C) 15%, transparent);
-    box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent, #C9A84C) 6%, transparent);
+    background: linear-gradient(90deg,
+      color-mix(in srgb, var(--color-accent, #C9A84C) 14%, transparent) 0%,
+      color-mix(in srgb, var(--color-accent, #C9A84C) 6%, transparent) 100%);
+    border: 1px solid color-mix(in srgb, var(--color-accent, #C9A84C) 22%, transparent);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 0 16px color-mix(in srgb, var(--color-accent, #C9A84C) 10%, transparent);
+  }
+  .sidebar-link-active::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    border-radius: 0 4px 4px 0;
+    background: var(--color-accent, #C9A84C);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-accent, #C9A84C) 60%, transparent);
   }
 
   /* ═══════════ SIDEBAR SECTION ANIMATIONS ═══════════ */
@@ -377,6 +513,75 @@ body {
   .link-accent:hover {
     color: color-mix(in srgb, var(--color-accent, #C9A84C) 80%, var(--color-foreground, #1A1A2E));
     gap: 6px;
+  }
+
+  /* ═══════════ ACCENT GLOWS ═══════════
+     Use as an additive class: <div className="card accent-glow-gold">
+     Adds a subtle radial colored glow behind the element. */
+  .accent-glow-gold,
+  .accent-glow-blue,
+  .accent-glow-green,
+  .accent-glow-red,
+  .accent-glow-purple {
+    position: relative;
+    isolation: isolate;
+  }
+  .accent-glow-gold::before,
+  .accent-glow-blue::before,
+  .accent-glow-green::before,
+  .accent-glow-red::before,
+  .accent-glow-purple::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .accent-glow-gold:hover::before,
+  .accent-glow-blue:hover::before,
+  .accent-glow-green:hover::before,
+  .accent-glow-red:hover::before,
+  .accent-glow-purple:hover::before {
+    opacity: 0.85;
+  }
+  .accent-glow-gold::before {
+    background: radial-gradient(circle at 30% 10%, rgba(201, 168, 76, 0.22) 0%, transparent 60%);
+  }
+  .accent-glow-blue::before {
+    background: radial-gradient(circle at 30% 10%, rgba(59, 130, 246, 0.2) 0%, transparent 60%);
+  }
+  .accent-glow-green::before {
+    background: radial-gradient(circle at 30% 10%, rgba(16, 185, 129, 0.2) 0%, transparent 60%);
+  }
+  .accent-glow-red::before {
+    background: radial-gradient(circle at 30% 10%, rgba(239, 68, 68, 0.2) 0%, transparent 60%);
+  }
+  .accent-glow-purple::before {
+    background: radial-gradient(circle at 30% 10%, rgba(168, 85, 247, 0.22) 0%, transparent 60%);
+  }
+
+  /* ═══════════ RICHER STATUS BADGES ═══════════
+     Status badges use these combined classes applied by getStatusBgColor.
+     We harmonize: saturated tint + soft colored glow. */
+  .badge.bg-success\/10,
+  .badge.bg-danger\/10,
+  .badge.bg-warning\/10,
+  .badge.bg-info\/10,
+  .badge.bg-muted\/10 {
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.04) inset,
+      0 1px 2px rgba(0,0,0,0.18),
+      0 0 10px -2px currentColor;
+  }
+
+  /* ═══════════ TOPBAR ═══════════ */
+  .topbar-shadow {
+    box-shadow:
+      0 1px 0 rgba(0,0,0,0.5),
+      0 2px 6px -2px rgba(0,0,0,0.3);
   }
 
   /* ═══════════ SMOOTH NATIVE FEEL ═══════════ */

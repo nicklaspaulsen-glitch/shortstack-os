@@ -334,19 +334,19 @@ export default function Sidebar() {
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`flex items-center gap-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-150 ${
+          className={`flex items-center gap-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
             indented ? "px-3.5" : "px-2.5"
           } ${
             isActive
-              ? "text-gold font-medium bg-gold/[0.06] border border-gold/10"
-              : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
+              ? "text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
+              : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
           }`}
         >
-          <span className={`shrink-0 transition-colors ${isActive ? "text-gold" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+          <span className={`shrink-0 transition-colors ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
             {item.icon}
           </span>
           <span className="truncate">{item.label}</span>
-          {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2.5px] h-4 rounded-r bg-gold" />}
+          {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
         </Link>
       </div>
     );
@@ -361,17 +361,17 @@ export default function Sidebar() {
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-150 ${
+          className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
             isActive
-              ? "text-gold font-medium bg-gold/[0.06] border border-gold/10"
-              : "text-muted hover:text-foreground hover:bg-surface-light border border-transparent"
+              ? "text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
+              : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
           }`}
           title={item.label}
         >
-          <span className={`shrink-0 transition-colors ${isActive ? "text-gold" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+          <span className={`shrink-0 transition-colors ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
             {item.icon}
           </span>
-          {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2.5px] h-4 rounded-r bg-gold" />}
+          {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
         </Link>
         {hoveredItem === item.href && (
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">

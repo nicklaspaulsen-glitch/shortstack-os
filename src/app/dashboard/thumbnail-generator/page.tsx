@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
+import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 
 /* ──────────────────── DATA ──────────────────── */
@@ -104,25 +105,508 @@ const MOODS = [
 
 /* ──────────────────── MEGA STYLE PRESET GALLERY ──────────────────── */
 
-const STYLE_PRESET_GALLERY = [
-  { id: "mrbeast", name: "MrBeast", desc: "Huge face, yellow text, red accent", gradient: "from-red-600 via-yellow-500 to-red-500", config: { font: "impact", bgColor: "#FFE500", textColor: "#FF0000", accentColor: "#FFFFFF", textCase: "uppercase", textStroke: true, strokeWidth: 3, strokeColor: "#000000", shadow: true, mood: "Shocking" } },
-  { id: "yt-clickbait", name: "YouTube Clickbait", desc: "Shocked face, red arrows, bright outline", gradient: "from-yellow-400 via-red-500 to-red-700", config: { font: "impact", bgColor: "#FEF08A", textColor: "#DC2626", accentColor: "#FBBF24", textCase: "uppercase", textStroke: true, strokeWidth: 4, strokeColor: "#000000", shadow: true, mood: "Shocking" } },
-  { id: "educational", name: "Educational", desc: "Clean, split-screen, diagrams", gradient: "from-blue-400 to-cyan-500", config: { font: "inter", bgColor: "#EFF6FF", textColor: "#1E3A8A", accentColor: "#3B82F6", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Educational" } },
-  { id: "minimal-podcast", name: "Minimal Podcast", desc: "Dark bg, centered title, small host photo", gradient: "from-slate-800 to-slate-950", config: { font: "poppins", bgColor: "#0F172A", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Calm" } },
-  { id: "news-breaking", name: "News / Breaking", desc: "Red banner, urgent text", gradient: "from-red-700 to-red-900", config: { font: "oswald", bgColor: "#7F1D1D", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "uppercase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Urgent" } },
-  { id: "gaming", name: "Gaming", desc: "Character cutout, explosion FX, neon", gradient: "from-purple-700 via-fuchsia-600 to-cyan-500", config: { font: "bangers", bgColor: "#1E1B4B", textColor: "#E6FF00", accentColor: "#FF00FF", textCase: "uppercase", textStroke: true, strokeWidth: 2, strokeColor: "#000000", shadow: true, mood: "Exciting" } },
-  { id: "tech-review", name: "Tech Review", desc: "Product hero shot, spec bullets", gradient: "from-cyan-500 to-blue-900", config: { font: "montserrat", bgColor: "#0C4A6E", textColor: "#FFFFFF", accentColor: "#06B6D4", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Futuristic" } },
-  { id: "vlog", name: "Vlog", desc: "Lifestyle photo, handwritten text", gradient: "from-amber-200 to-orange-300", config: { font: "permanent-marker", bgColor: "#FEF3C7", textColor: "#7C2D12", accentColor: "#F97316", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Playful" } },
-  { id: "tutorial", name: "Tutorial", desc: "Step numbers, arrow pointers", gradient: "from-blue-500 to-cyan-400", config: { font: "roboto", bgColor: "#DBEAFE", textColor: "#1E40AF", accentColor: "#F59E0B", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Educational" } },
-  { id: "before-after", name: "Before / After", desc: "Split with divider", gradient: "from-slate-600 via-white to-emerald-500", config: { font: "bebas", bgColor: "#F3F4F6", textColor: "#111827", accentColor: "#10B981", textCase: "uppercase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Dramatic" } },
-  { id: "top10", name: "Top 10 / Ranking", desc: "Big number, list preview", gradient: "from-amber-400 via-orange-500 to-red-500", config: { font: "anton", bgColor: "#1C1917", textColor: "#FBBF24", accentColor: "#DC2626", textCase: "uppercase", textStroke: true, strokeWidth: 2, strokeColor: "#000000", shadow: true, mood: "Exciting" } },
-  { id: "interview", name: "Interview / Podcast Guest", desc: "Two faces, name plate", gradient: "from-indigo-600 to-violet-700", config: { font: "playfair", bgColor: "#312E81", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Elegant" } },
-  { id: "finance", name: "Finance / Money", desc: "Dollar signs, charts, green accent", gradient: "from-emerald-500 via-green-500 to-green-700", config: { font: "montserrat", bgColor: "#064E3B", textColor: "#FFFFFF", accentColor: "#10B981", textCase: "uppercase", textStroke: true, strokeWidth: 2, strokeColor: "#065F46", shadow: true, mood: "Dramatic" } },
-  { id: "fitness", name: "Fitness / Transformation", desc: "Bold, physique contrast", gradient: "from-red-600 via-orange-600 to-yellow-500", config: { font: "archivo-black", bgColor: "#7F1D1D", textColor: "#FFFFFF", accentColor: "#FBBF24", textCase: "uppercase", textStroke: true, strokeWidth: 3, strokeColor: "#000000", shadow: true, mood: "Exciting" } },
-  { id: "luxury", name: "Luxury / Lifestyle", desc: "Gold, black, serif fonts", gradient: "from-yellow-600 via-amber-800 to-black", config: { font: "playfair", bgColor: "#000000", textColor: "#D4AF37", accentColor: "#FFFFFF", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Luxurious" } },
-  { id: "course", name: "Course / Education", desc: "Textbook feel, clean", gradient: "from-teal-400 to-emerald-600", config: { font: "merriweather", bgColor: "#F0FDFA", textColor: "#134E4A", accentColor: "#0D9488", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Educational" } },
-  { id: "movie-trailer", name: "Movie Trailer", desc: "Cinematic, letterbox, dramatic title", gradient: "from-black via-red-900 to-black", config: { font: "teko", bgColor: "#000000", textColor: "#FFFFFF", accentColor: "#DC2626", textCase: "uppercase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: true, mood: "Dramatic" } },
-  { id: "pastel-aesthetic", name: "Pastel Aesthetic", desc: "Soft pastels, cute vibes", gradient: "from-pink-200 via-purple-200 to-blue-200", config: { font: "raleway", bgColor: "#FCE7F3", textColor: "#831843", accentColor: "#DB2777", textCase: "titlecase", textStroke: false, strokeWidth: 0, strokeColor: "#000000", shadow: false, mood: "Playful" } },
+/**
+ * YOUTUBER_THUMBNAIL_PRESETS — signature-style presets modeled after popular creators.
+ * Each preset applies partial patches to sections of `thumbnailConfig` on click.
+ * Fields use existing config shapes so the canvas/render pipeline stays compatible.
+ */
+const YOUTUBER_THUMBNAIL_PRESETS = [
+  {
+    id: "mrbeast",
+    name: "MrBeast",
+    category: "Entertainment",
+    tagline: "Huge face, yellow Impact text, high contrast",
+    icon: "\u{1F3AF}",
+    gradient: "from-red-600 via-yellow-500 to-red-500",
+    mood: "Shocking",
+    config: {
+      typography: { enabled: true, fontId: "impact", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 6, strokeColor: "#000000", shadowEnabled: true, shadowX: 3, shadowY: 4, shadowBlur: 6, shadowColor: "#000000", gradientEnabled: false, letterSpacing: 1 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1, glowEnabled: true },
+      background: { mode: "gradient", gradientId: "fire", brightness: 110 },
+      colors: { paletteId: "mrbeast-ry" },
+      elements: { ids: ["shk2", "arr6", "bst3", "mny1"] },
+    },
+  },
+  {
+    id: "mrbeast-challenge",
+    name: "MrBeast Challenge",
+    category: "Entertainment",
+    tagline: "LAST TO... countdown, number emphasis, urgency red",
+    icon: "\u23F1\uFE0F",
+    gradient: "from-red-700 via-orange-500 to-yellow-400",
+    mood: "Urgent",
+    config: {
+      typography: { enabled: true, fontId: "anton", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 5, strokeColor: "#000000", shadowEnabled: true, highlightWords: "LAST, $, 24", highlightColor: "#FBBF24" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "left", layout: 1 },
+      background: { mode: "gradient", gradientId: "fire", brightness: 105 },
+      colors: { paletteId: "mrbeast-ry" },
+      elements: { ids: ["tmr1", "tmr3", "mny1", "shk4"] },
+    },
+  },
+  {
+    id: "pewdiepie",
+    name: "PewDiePie",
+    category: "Entertainment",
+    tagline: "Reaction face, bold red/white, meme energy",
+    icon: "\u{1F3AE}",
+    gradient: "from-red-500 via-rose-500 to-slate-900",
+    mood: "Playful",
+    config: {
+      typography: { enabled: true, fontId: "bangers", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "center", expressionSwapEnabled: true, targetExpression: "shocked" },
+      background: { mode: "gradient", gradientId: "coral-reef", brightness: 100 },
+      colors: { paletteId: "hc-bw" },
+      elements: { ids: ["shk1", "shk6", "bst2"] },
+    },
+  },
+  {
+    id: "mkbhd",
+    name: "MKBHD",
+    category: "Tech",
+    tagline: "Minimal product hero, clean sans, subtle tech accent",
+    icon: "\u{1F4F1}",
+    gradient: "from-zinc-900 via-red-900 to-zinc-900",
+    mood: "Futuristic",
+    config: {
+      typography: { enabled: true, fontId: "inter", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: false, letterSpacing: -1 },
+      face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 },
+      background: { mode: "solid", solidColor: "#0A0A0A", brightness: 100 },
+      colors: { paletteId: "monochrome" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "ali-abdaal",
+    name: "Ali Abdaal",
+    category: "Education",
+    tagline: "Friendly face, pastel bg, rounded font, educational",
+    icon: "\u{1F4DA}",
+    gradient: "from-sky-300 via-indigo-300 to-pink-300",
+    mood: "Educational",
+    config: {
+      typography: { enabled: true, fontId: "poppins", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowX: 0, shadowY: 2, shadowBlur: 6, shadowColor: "#00000030" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "pastel-dream", brightness: 105 },
+      colors: { paletteId: "pastel-dream-p" },
+      elements: { ids: ["bdg1", "rtg3"] },
+    },
+  },
+  {
+    id: "veritasium",
+    name: "Veritasium",
+    category: "Education",
+    tagline: "Curious face + science visual, clean title, emphasis word",
+    icon: "\u{1F52C}",
+    gradient: "from-blue-600 via-cyan-500 to-indigo-700",
+    mood: "Educational",
+    config: {
+      typography: { enabled: true, fontId: "montserrat", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: false, highlightWords: "WHY, HOW, TRUTH", highlightColor: "#FBBF24" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "left", layout: 1 },
+      background: { mode: "gradient", gradientId: "ocean", brightness: 100 },
+      colors: { paletteId: "tech-bw" },
+      elements: { ids: ["bst2", "bdg5"] },
+    },
+  },
+  {
+    id: "matt-davella",
+    name: "Matt D'Avella",
+    category: "Lifestyle",
+    tagline: "Minimal cinematic, small subject, muted grade",
+    icon: "\u{1F3AC}",
+    gradient: "from-stone-700 via-stone-500 to-stone-800",
+    mood: "Calm",
+    config: {
+      typography: { enabled: true, fontId: "inter", weight: 400, textCase: "titlecase", strokeEnabled: false, shadowEnabled: false, letterSpacing: 2 },
+      face: { autoCutoutEnabled: false, enhanceEnabled: false, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "midnight", brightness: 85 },
+      colors: { paletteId: "monochrome" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "peter-mckinnon",
+    name: "Peter McKinnon",
+    category: "Lifestyle",
+    tagline: "Cinematic portrait, orange/teal, serif italic",
+    icon: "\u{1F4F8}",
+    gradient: "from-orange-500 via-amber-600 to-teal-700",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "playfair", weight: 700, italic: true, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowX: 0, shadowY: 3, shadowBlur: 10, shadowColor: "#000000AA" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "coral-reef", brightness: 95 },
+      colors: { paletteId: "cinematic-ot" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "graham-stephan",
+    name: "Graham Stephan",
+    category: "Finance",
+    tagline: "Face + $ rain, green arrows, bold white sans",
+    icon: "\u{1F4B0}",
+    gradient: "from-emerald-500 via-green-500 to-amber-500",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "montserrat", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#064E3B", shadowEnabled: true, highlightWords: "$, MONEY, RICH", highlightColor: "#FBBF24" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "money-green", brightness: 105 },
+      colors: { paletteId: "finance-gg" },
+      elements: { ids: ["mny1", "mny2", "arr4", "arr11"] },
+    },
+  },
+  {
+    id: "joe-rogan",
+    name: "Joe Rogan / JRE",
+    category: "Podcast",
+    tagline: "Two faces, podcast mic, black/red, minimal text",
+    icon: "\u{1F399}\uFE0F",
+    gradient: "from-zinc-900 via-red-900 to-black",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "oswald", weight: 700, textCase: "uppercase", strokeEnabled: false, shadowEnabled: true, letterSpacing: 1 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 2 },
+      background: { mode: "solid", solidColor: "#0A0A0A", brightness: 90 },
+      colors: { paletteId: "hc-bw" },
+      elements: { ids: ["cir3"] },
+    },
+  },
+  {
+    id: "casey-neistat",
+    name: "Casey Neistat",
+    category: "Lifestyle",
+    tagline: "Vlog handheld, yellow/blue accents, handwritten",
+    icon: "\u{1F6F9}",
+    gradient: "from-yellow-400 via-amber-500 to-sky-500",
+    mood: "Playful",
+    config: {
+      typography: { enabled: true, fontId: "permanent-marker", weight: 700, textCase: "astyped", strokeEnabled: false, shadowEnabled: true, shadowX: 2, shadowY: 2, shadowBlur: 4, shadowColor: "#000000" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: false, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "autumn-gr", brightness: 105 },
+      colors: { paletteId: "warm-earth" },
+      elements: { ids: ["bdg2", "bdg3"] },
+    },
+  },
+  {
+    id: "ryan-trahan",
+    name: "Ryan Trahan",
+    category: "Entertainment",
+    tagline: "Travel adventure, bright colors, bold title",
+    icon: "\u{1F30D}",
+    gradient: "from-cyan-400 via-blue-500 to-green-500",
+    mood: "Exciting",
+    config: {
+      typography: { enabled: true, fontId: "archivo-black", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true, highlightWords: "DAY, $, USA", highlightColor: "#FBBF24" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "left", layout: 1 },
+      background: { mode: "gradient", gradientId: "ocean", brightness: 110 },
+      colors: { paletteId: "ocean-p" },
+      elements: { ids: ["mny1", "arr11", "bst5"] },
+    },
+  },
+  {
+    id: "dude-perfect",
+    name: "Dude Perfect",
+    category: "Entertainment",
+    tagline: "Sports action, blue/white, bold sports text",
+    icon: "\u{1F3C0}",
+    gradient: "from-blue-600 via-sky-400 to-white",
+    mood: "Exciting",
+    config: {
+      typography: { enabled: true, fontId: "teko", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#FFFFFF", shadowEnabled: true, shadowColor: "#1E3A8A" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: false, position: "center", layout: 3 },
+      background: { mode: "gradient", gradientId: "ice", brightness: 105 },
+      colors: { paletteId: "tech-bw" },
+      elements: { ids: ["rtg1", "shk4", "bst3"] },
+    },
+  },
+  {
+    id: "emma-chamberlain",
+    name: "Emma Chamberlain",
+    category: "Lifestyle",
+    tagline: "Candid vlog, vintage filter, casual handwritten",
+    icon: "\u2615",
+    gradient: "from-amber-200 via-rose-300 to-amber-400",
+    mood: "Playful",
+    config: {
+      typography: { enabled: true, fontId: "permanent-marker", weight: 400, textCase: "lowercase", strokeEnabled: false, shadowEnabled: false, letterSpacing: 0 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: false, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "rose-gold", brightness: 95 },
+      colors: { paletteId: "warm-earth" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "dream",
+    name: "Dream",
+    category: "Gaming",
+    tagline: "Minecraft green, bold white outline, cinematic",
+    icon: "\u{1F3AE}",
+    gradient: "from-lime-500 via-emerald-600 to-black",
+    mood: "Exciting",
+    config: {
+      typography: { enabled: true, fontId: "bangers", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 5, strokeColor: "#000000", shadowEnabled: true, shadowColor: "#10B981" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "emerald-city", brightness: 100 },
+      colors: { paletteId: "forest-p" },
+      elements: { ids: ["shk4", "bst3", "rtg1"] },
+    },
+  },
+  {
+    id: "linus-tech-tips",
+    name: "Linus Tech Tips",
+    category: "Tech",
+    tagline: "Tech product hero, LTT red accent, clean tech font",
+    icon: "\u{1F5A5}\uFE0F",
+    gradient: "from-red-600 via-zinc-800 to-red-700",
+    mood: "Futuristic",
+    config: {
+      typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "uppercase", strokeEnabled: false, shadowEnabled: true, highlightWords: "NEW, $, 2024", highlightColor: "#DC2626" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "left", layout: 1 },
+      background: { mode: "solid", solidColor: "#1A1A1A", brightness: 100 },
+      colors: { paletteId: "hc-bw" },
+      elements: { ids: ["arr11", "bdg3"] },
+    },
+  },
+  {
+    id: "corridor-crew",
+    name: "Corridor Crew",
+    category: "Entertainment",
+    tagline: "VFX dramatic, cinematic lighting, bold text",
+    icon: "\u{1F3A5}",
+    gradient: "from-purple-900 via-fuchsia-700 to-cyan-600",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "bebas", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 3, strokeColor: "#000000", shadowEnabled: true, gradientEnabled: true, gradientFrom: "#9333EA", gradientTo: "#06B6D4" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 2 },
+      background: { mode: "gradient", gradientId: "cyberpunk", brightness: 90 },
+      colors: { paletteId: "gaming-pn" },
+      elements: { ids: ["bst3", "shk4"] },
+    },
+  },
+  {
+    id: "sam-kolder",
+    name: "Sam Kolder",
+    category: "Lifestyle",
+    tagline: "Travel cinematic, symmetrical, subtle text, moody",
+    icon: "\u{1F3DE}\uFE0F",
+    gradient: "from-slate-700 via-amber-600 to-slate-800",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "raleway", weight: 300, textCase: "uppercase", strokeEnabled: false, shadowEnabled: false, letterSpacing: 8 },
+      face: { autoCutoutEnabled: false, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "dark-academia", brightness: 85 },
+      colors: { paletteId: "cinematic-ot" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "colin-samir",
+    name: "Colin and Samir",
+    category: "Podcast",
+    tagline: "Creator economy, clean podcast, neutral sans",
+    icon: "\u{1F399}\uFE0F",
+    gradient: "from-stone-600 via-amber-300 to-stone-700",
+    mood: "Calm",
+    config: {
+      typography: { enabled: true, fontId: "inter", weight: 700, textCase: "titlecase", strokeEnabled: false, shadowEnabled: false, letterSpacing: 0 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: false, position: "center", layout: 2 },
+      background: { mode: "solid", solidColor: "#FAF5EB", brightness: 100 },
+      colors: { paletteId: "warm-earth" },
+      elements: { ids: ["cir3"] },
+    },
+  },
+  {
+    id: "hamza-ahmed",
+    name: "Hamza Ahmed",
+    category: "Lifestyle",
+    tagline: "Self-improvement, B&W masculine, bold caps",
+    icon: "\u{1F4AA}",
+    gradient: "from-zinc-900 via-zinc-700 to-zinc-900",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "anton", weight: 900, textCase: "uppercase", strokeEnabled: false, shadowEnabled: true, shadowColor: "#00000080", letterSpacing: 1 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 },
+      background: { mode: "solid", solidColor: "#0A0A0A", brightness: 90 },
+      colors: { paletteId: "hc-bw" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "iman-gadzhi",
+    name: "Iman Gadzhi",
+    category: "Finance",
+    tagline: "Business luxury, black/gold, serif headline",
+    icon: "\u{1F4BC}",
+    gradient: "from-black via-amber-700 to-yellow-600",
+    mood: "Luxurious",
+    config: {
+      typography: { enabled: true, fontId: "playfair", weight: 700, italic: false, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowColor: "#D4AF37" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "dark-academia", brightness: 95 },
+      colors: { paletteId: "luxury-gb" },
+      elements: { ids: ["mny3", "mny1", "rtg1"] },
+    },
+  },
+  {
+    id: "gary-vee",
+    name: "Gary Vaynerchuk",
+    category: "Finance",
+    tagline: "Motivation, bold red/yellow, Impact caps",
+    icon: "\u{1F4E2}",
+    gradient: "from-red-600 via-yellow-500 to-red-700",
+    mood: "Urgent",
+    config: {
+      typography: { enabled: true, fontId: "impact", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true, highlightWords: "NOW, WORK, HUSTLE", highlightColor: "#FBBF24" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "fire", brightness: 105 },
+      colors: { paletteId: "mrbeast-ry" },
+      elements: { ids: ["shk4", "bst3"] },
+    },
+  },
+  {
+    id: "ryan-reynolds",
+    name: "Ryan Reynolds / Deadpool",
+    category: "Entertainment",
+    tagline: "Cinematic actor headshot, black/red movie poster",
+    icon: "\u{1F3AC}",
+    gradient: "from-red-700 via-black to-red-900",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "teko", weight: 700, textCase: "uppercase", strokeEnabled: false, shadowEnabled: true, shadowColor: "#DC2626", letterSpacing: 4 },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 1 },
+      background: { mode: "solid", solidColor: "#0A0A0A", brightness: 85 },
+      colors: { paletteId: "hc-bw" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "mkbhd-shorts",
+    name: "MKBHD Shorts",
+    category: "Tech",
+    tagline: "Vertical tech, clean product, bold sans",
+    icon: "\u{1F4F2}",
+    gradient: "from-red-500 via-zinc-800 to-zinc-900",
+    mood: "Futuristic",
+    config: {
+      typography: { enabled: true, fontId: "inter", weight: 900, textCase: "uppercase", strokeEnabled: false, shadowEnabled: false, letterSpacing: -1 },
+      face: { autoCutoutEnabled: false, position: "center", layout: 1 },
+      background: { mode: "solid", solidColor: "#0A0A0A", brightness: 100 },
+      colors: { paletteId: "tech-bw" },
+      elements: { ids: ["arr11"] },
+      size: { platformPresetId: "yt-shorts", width: 1080, height: 1920 },
+    },
+  },
+  {
+    id: "airrack",
+    name: "Airrack",
+    category: "Entertainment",
+    tagline: "High energy challenge, yellow/red, urgent caps",
+    icon: "\u26A1",
+    gradient: "from-yellow-400 via-red-500 to-black",
+    mood: "Shocking",
+    config: {
+      typography: { enabled: true, fontId: "impact", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 5, strokeColor: "#000000", shadowEnabled: true, highlightWords: "24, HOUR, LAST, $", highlightColor: "#FBBF24" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "fire", brightness: 110 },
+      colors: { paletteId: "mrbeast-ry" },
+      elements: { ids: ["tmr1", "shk4", "mny1", "bst3"] },
+    },
+  },
+  {
+    id: "binging-with-babish",
+    name: "Binging with Babish",
+    category: "Food",
+    tagline: "Top-down food shot, elegant italic, warm tones",
+    icon: "\u{1F35D}",
+    gradient: "from-amber-700 via-orange-500 to-red-600",
+    mood: "Elegant",
+    config: {
+      typography: { enabled: true, fontId: "playfair", weight: 700, italic: true, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowX: 0, shadowY: 2, shadowBlur: 8, shadowColor: "#00000080" },
+      face: { autoCutoutEnabled: false, position: "center", layout: 1 },
+      background: { mode: "gradient", gradientId: "autumn-gr", brightness: 95 },
+      colors: { paletteId: "warm-earth" },
+      elements: { ids: [] },
+    },
+  },
+  {
+    id: "beauty-guru",
+    name: "Beauty Guru",
+    category: "Lifestyle",
+    tagline: "Glam face, pink/gold, elegant font, sparkle",
+    icon: "\u{1F484}",
+    gradient: "from-pink-400 via-rose-400 to-amber-400",
+    mood: "Elegant",
+    config: {
+      typography: { enabled: true, fontId: "raleway", weight: 700, italic: true, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true, shadowColor: "#D4AF37", gradientEnabled: true, gradientFrom: "#EC4899", gradientTo: "#D4AF37" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "rose-gold", brightness: 105 },
+      colors: { paletteId: "pastel-dream-p" },
+      elements: { ids: ["bst2", "bst5", "mny3"] },
+    },
+  },
+  {
+    id: "chris-heria",
+    name: "Chris Heria / Fitness",
+    category: "Fitness",
+    tagline: "Transformation, bold red/black, Impact caps",
+    icon: "\u{1F3CB}\uFE0F",
+    gradient: "from-red-600 via-red-800 to-black",
+    mood: "Exciting",
+    config: {
+      typography: { enabled: true, fontId: "archivo-black", weight: 900, textCase: "uppercase", strokeEnabled: true, strokeWidth: 4, strokeColor: "#000000", shadowEnabled: true, shadowColor: "#DC2626", highlightWords: "SHREDDED, ABS, FAT", highlightColor: "#FBBF24" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, eyePopEnabled: true, position: "right", layout: 1 },
+      background: { mode: "gradient", gradientId: "autumn-gr", brightness: 95 },
+      colors: { paletteId: "autumn-p" },
+      elements: { ids: ["shk4", "arr4", "rtg1"] },
+    },
+  },
+  {
+    id: "podcast-clipper",
+    name: "Podcast Clipper",
+    category: "Podcast",
+    tagline: "Waveform, two faces, quote callout, centered",
+    icon: "\u{1F3A7}",
+    gradient: "from-indigo-700 via-purple-700 to-pink-600",
+    mood: "Dramatic",
+    config: {
+      typography: { enabled: true, fontId: "montserrat", weight: 800, textCase: "titlecase", strokeEnabled: false, shadowEnabled: true },
+      face: { autoCutoutEnabled: true, enhanceEnabled: true, position: "center", layout: 2 },
+      background: { mode: "gradient", gradientId: "purple-haze", brightness: 95 },
+      colors: { paletteId: "gaming-pn" },
+      elements: { ids: ["spc1", "spc2", "cir3"] },
+    },
+  },
+  {
+    id: "finance-news",
+    name: "Finance News",
+    category: "Finance",
+    tagline: "Stock chart bg, red/green arrows, number emphasis",
+    icon: "\u{1F4C8}",
+    gradient: "from-green-600 via-red-500 to-emerald-700",
+    mood: "Urgent",
+    config: {
+      typography: { enabled: true, fontId: "oswald", weight: 700, textCase: "uppercase", strokeEnabled: true, strokeWidth: 2, strokeColor: "#064E3B", shadowEnabled: true, highlightWords: "$, %, BULL, BEAR", highlightColor: "#10B981" },
+      face: { autoCutoutEnabled: true, enhanceEnabled: false, position: "left", layout: 1 },
+      background: { mode: "gradient", gradientId: "money-green", brightness: 100 },
+      colors: { paletteId: "finance-gg" },
+      elements: { ids: ["arr4", "arr11", "arr12", "mny1", "mny5"] },
+    },
+  },
+] as const;
+
+type YouTuberPreset = typeof YOUTUBER_THUMBNAIL_PRESETS[number];
+
+const YOUTUBER_PRESET_CATEGORIES = [
+  { id: "all", name: "All" },
+  { id: "Entertainment", name: "Entertainment" },
+  { id: "Gaming", name: "Gaming" },
+  { id: "Tech", name: "Tech" },
+  { id: "Finance", name: "Finance" },
+  { id: "Lifestyle", name: "Lifestyle" },
+  { id: "Fitness", name: "Fitness" },
+  { id: "Education", name: "Education" },
+  { id: "Podcast", name: "Podcast" },
+  { id: "Food", name: "Food" },
 ];
 
 const FONT_LIBRARY = [
@@ -611,6 +1095,13 @@ export default function ThumbnailGeneratorPage() {
   const [aiBgGenerating, setAiBgGenerating] = useState(false);
   const [aiBgResult, setAiBgResult] = useState<string | null>(null);
 
+  // Step-by-step creation walkthrough state
+  const [walkthroughEnabled, setWalkthroughEnabled] = useState(true);
+  const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+  const [walkthroughStepIndex, setWalkthroughStepIndex] = useState(0);
+  const [walkthroughStatus, setWalkthroughStatus] = useState<WalkthroughStepStatus>("pending");
+  const walkthroughCancelledRef = useRef(false);
+
   // ── MEGA Thumbnail Config (unified state object) ──
   const [thumbnailConfig, setThumbnailConfig] = useState({
     // Style Preset
@@ -718,29 +1209,33 @@ export default function ThumbnailGeneratorPage() {
     setExpandedPanels((prev) => ({ ...prev, [key]: !prev[key] }));
   }
 
-  function applyStylePreset(presetId: string) {
-    const preset = STYLE_PRESET_GALLERY.find((p) => p.id === presetId);
-    if (!preset) return;
-    setThumbnailConfig((prev) => ({
-      ...prev,
-      stylePreset: presetId,
-      typography: {
-        ...prev.typography,
-        enabled: true,
-        fontId: preset.config.font,
-        textCase: (preset.config.textCase as "uppercase" | "lowercase" | "titlecase" | "astyped") || prev.typography.textCase,
-        strokeEnabled: preset.config.textStroke,
-        strokeWidth: preset.config.strokeWidth || prev.typography.strokeWidth,
-        strokeColor: preset.config.strokeColor || prev.typography.strokeColor,
-        shadowEnabled: preset.config.shadow,
-      },
-      background: {
-        ...prev.background,
-        solidColor: preset.config.bgColor || prev.background.solidColor,
-      },
-    }));
-    setMood(preset.config.mood || mood);
-    toast.success(`Preset: ${preset.name}`);
+  function applyYouTuberPreset(preset: YouTuberPreset) {
+    const cfg = preset.config as {
+      typography?: Partial<typeof thumbnailConfig.typography>;
+      face?: Partial<typeof thumbnailConfig.face>;
+      background?: Partial<typeof thumbnailConfig.background>;
+      colors?: Partial<typeof thumbnailConfig.colors>;
+      elements?: { ids?: readonly string[] };
+      size?: Partial<typeof thumbnailConfig.size>;
+    };
+    setThumbnailConfig((prev) => {
+      const next = { ...prev, stylePreset: preset.id };
+      if (cfg.typography) next.typography = { ...prev.typography, ...cfg.typography };
+      if (cfg.face) next.face = { ...prev.face, ...cfg.face };
+      if (cfg.background) next.background = { ...prev.background, ...cfg.background };
+      if (cfg.colors) next.colors = { ...prev.colors, ...cfg.colors };
+      if (cfg.size) next.size = { ...prev.size, ...cfg.size };
+      if (cfg.elements?.ids) {
+        const active = cfg.elements.ids
+          .map((id) => GRAPHIC_ELEMENTS.find((g) => g.id === id))
+          .filter((g): g is typeof GRAPHIC_ELEMENTS[number] => !!g)
+          .map((g) => ({ id: g.id, category: g.category, emoji: g.emoji, name: g.name }));
+        next.elements = { active };
+      }
+      return next;
+    });
+    if (preset.mood) setMood(preset.mood);
+    toast.success(`Applied ${preset.name} style`);
     // TODO: AI integration — pass preset hints to /api/thumbnail/generate
   }
 
@@ -768,6 +1263,8 @@ export default function ThumbnailGeneratorPage() {
   const [graphicFilter, setGraphicFilter] = useState("all");
   // Font category filter
   const [fontFilter, setFontFilter] = useState("all");
+  // YouTuber preset category filter
+  const [youtuberPresetFilter, setYoutuberPresetFilter] = useState("all");
 
   // Smart AI handlers (UI-only, TODOs for integration)
   async function runAbVariantGenerator() {
@@ -911,11 +1408,261 @@ export default function ThumbnailGeneratorPage() {
     return null; // Timed out
   }
 
+  // Walkthrough step definitions for thumbnail generator
+  const walkthroughSteps: WalkthroughStep[] = [
+    {
+      id: "analyze",
+      title: "Analyzing Content",
+      description: "Understanding your prompt and goals",
+      progressText: "Parsing prompt and references",
+      preview: (
+        <div className="space-y-1.5 text-[11px]">
+          <div><span className="text-muted">Prompt:</span> <span className="text-foreground">{prompt || "(none)"}</span></div>
+          <div><span className="text-muted">Platform:</span> <span className="text-foreground">{platform}</span></div>
+          <div><span className="text-muted">Size:</span> <span className="text-foreground">{displayWidth}x{displayHeight}</span></div>
+          <div><span className="text-muted">Mood:</span> <span className="text-foreground">{mood}</span></div>
+          <div><span className="text-muted">Reference images:</span> <span className="text-foreground">{referenceImages.length}</span></div>
+        </div>
+      ),
+    },
+    {
+      id: "style",
+      title: "Selecting Style Preset",
+      description: "Applying the creator style that matches your niche",
+      progressText: "Matching a style preset",
+      preview: (() => {
+        const p = YOUTUBER_THUMBNAIL_PRESETS.find(x => x.id === thumbnailConfig.stylePreset);
+        return p ? (
+          <div className="flex items-center gap-3">
+            <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${p.gradient} flex items-center justify-center text-2xl`}>{p.icon}</div>
+            <div>
+              <div className="text-xs font-semibold">{p.name}</div>
+              <div className="text-[10px] text-muted mt-0.5">{p.tagline}</div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-[11px] text-muted">No creator preset selected — using style &quot;{style}&quot;.</div>
+        );
+      })(),
+      editableSettings: [
+        {
+          key: "stylePreset",
+          label: "Creator Preset",
+          type: "select",
+          value: thumbnailConfig.stylePreset ?? "",
+          options: [
+            { label: "Custom (no preset)", value: "" },
+            ...YOUTUBER_THUMBNAIL_PRESETS.map(p => ({ label: p.name, value: p.id })),
+          ],
+        },
+      ],
+      onSettingChange: (key, value) => {
+        if (key === "stylePreset") {
+          const v = String(value);
+          if (!v) {
+            setThumbnailConfig(prev => ({ ...prev, stylePreset: null }));
+          } else {
+            const p = YOUTUBER_THUMBNAIL_PRESETS.find(x => x.id === v);
+            if (p) applyYouTuberPreset(p);
+          }
+        }
+      },
+    },
+    {
+      id: "background",
+      title: "Generating Background",
+      description: "Creating the base background image",
+      progressText: "Rendering background",
+      preview: (
+        <div className="text-[11px] space-y-1">
+          <div><span className="text-muted">Mode:</span> <span className="text-foreground">{thumbnailConfig.background.mode}</span></div>
+          <div><span className="text-muted">Brightness:</span> <span className="text-foreground">{thumbnailConfig.background.brightness}%</span></div>
+          <div className="flex items-center gap-2 mt-2">
+            {(COLOR_THEMES.find(c => c.id === colorTheme)?.colors ?? []).slice(0, 4).map((col, i) => (
+              <span key={i} className="w-6 h-6 rounded-full border border-border" style={{ background: col }} />
+            ))}
+            <span className="text-[10px] text-muted">{COLOR_THEMES.find(c => c.id === colorTheme)?.name}</span>
+          </div>
+        </div>
+      ),
+      editableSettings: [
+        { key: "brightness", label: "Brightness", type: "slider", value: thumbnailConfig.background.brightness, min: 50, max: 150 },
+      ],
+      onSettingChange: (key, value) => {
+        setThumbnailConfig(prev => ({
+          ...prev,
+          background: { ...prev.background, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "face",
+      title: "Positioning Face/Subject",
+      description: "Cutting out and placing the main subject",
+      progressText: "Isolating subject",
+      preview: (
+        <div className="text-[11px] space-y-1">
+          <div><span className="text-muted">Position:</span> <span className="text-foreground">{thumbnailConfig.face.position}</span></div>
+          <div><span className="text-muted">Auto cutout:</span> <span className="text-foreground">{thumbnailConfig.face.autoCutoutEnabled ? "Yes" : "No"}</span></div>
+          <div><span className="text-muted">Enhance:</span> <span className="text-foreground">{thumbnailConfig.face.enhanceEnabled ? "Yes" : "No"}</span></div>
+          <div><span className="text-muted">Eye pop:</span> <span className="text-foreground">{thumbnailConfig.face.eyePopEnabled ? "Yes" : "No"}</span></div>
+        </div>
+      ),
+      editableSettings: [
+        {
+          key: "position",
+          label: "Position",
+          type: "select",
+          value: thumbnailConfig.face.position,
+          options: [
+            { label: "Left", value: "left" },
+            { label: "Center", value: "center" },
+            { label: "Right", value: "right" },
+          ],
+        },
+        { key: "autoCutoutEnabled", label: "Auto Cutout", type: "toggle", value: thumbnailConfig.face.autoCutoutEnabled },
+        { key: "enhanceEnabled", label: "Enhance", type: "toggle", value: thumbnailConfig.face.enhanceEnabled },
+        { key: "eyePopEnabled", label: "Eye Pop", type: "toggle", value: thumbnailConfig.face.eyePopEnabled },
+      ],
+      onSettingChange: (key, value) => {
+        setThumbnailConfig(prev => ({
+          ...prev,
+          face: { ...prev.face, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "typography",
+      title: "Adding Text & Typography",
+      description: "Designing headline text and styling",
+      progressText: "Rendering text overlays",
+      preview: (
+        <div className="space-y-2">
+          <div
+            className="rounded-lg p-4 text-center"
+            style={{
+              color: (COLOR_THEMES.find(c => c.id === colorTheme)?.colors ?? ["#FFD700"])[0],
+              fontWeight: thumbnailConfig.typography.weight,
+              letterSpacing: `${thumbnailConfig.typography.letterSpacing}px`,
+              textTransform: thumbnailConfig.typography.textCase === "uppercase" ? "uppercase" : thumbnailConfig.typography.textCase === "lowercase" ? "lowercase" : thumbnailConfig.typography.textCase === "titlecase" ? "capitalize" : "none",
+              WebkitTextStroke: thumbnailConfig.typography.strokeEnabled ? `${Math.min(thumbnailConfig.typography.strokeWidth, 3)}px ${thumbnailConfig.typography.strokeColor}` : undefined,
+              background: "rgba(0,0,0,0.4)",
+              fontSize: 28,
+            }}
+          >
+            {textOverlay || "YOUR HEADLINE"}
+          </div>
+          <div className="text-[10px] text-muted">
+            Weight: {thumbnailConfig.typography.weight} · Case: {thumbnailConfig.typography.textCase}
+          </div>
+        </div>
+      ),
+      editableSettings: [
+        { key: "weight", label: "Weight", type: "slider", value: thumbnailConfig.typography.weight, min: 100, max: 900, step: 100 },
+        {
+          key: "textCase",
+          label: "Text Case",
+          type: "select",
+          value: thumbnailConfig.typography.textCase,
+          options: [
+            { label: "UPPERCASE", value: "uppercase" },
+            { label: "lowercase", value: "lowercase" },
+            { label: "Title Case", value: "titlecase" },
+            { label: "As typed", value: "astyped" },
+          ],
+        },
+        { key: "strokeEnabled", label: "Stroke", type: "toggle", value: thumbnailConfig.typography.strokeEnabled },
+        { key: "strokeWidth", label: "Stroke Width", type: "slider", value: thumbnailConfig.typography.strokeWidth, min: 0, max: 12 },
+        { key: "strokeColor", label: "Stroke Color", type: "color", value: thumbnailConfig.typography.strokeColor },
+      ],
+      onSettingChange: (key, value) => {
+        setThumbnailConfig(prev => ({
+          ...prev,
+          typography: { ...prev.typography, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "elements",
+      title: "Adding Graphic Elements",
+      description: "Placing arrows, shapes, and stickers",
+      progressText: "Composing graphic elements",
+      preview: (
+        <div className="text-[11px] space-y-2">
+          <div><span className="text-muted">Active elements:</span> <span className="text-foreground">{thumbnailConfig.elements.active.length}</span></div>
+          <div className="flex flex-wrap gap-1">
+            {thumbnailConfig.elements.active.slice(0, 10).map(el => (
+              <span key={el.id} className="inline-flex items-center gap-1 text-[10px] bg-surface-light/60 border border-border rounded-full px-2 py-0.5">
+                <span>{el.emoji}</span> {el.name}
+              </span>
+            ))}
+            {thumbnailConfig.elements.active.length === 0 && (
+              <span className="text-[10px] text-muted">No elements added</span>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "polish",
+      title: "Final Polish",
+      description: "Color grading and sharpening",
+      progressText: "Applying final touches",
+      preview: (
+        <div className="text-[11px] text-muted">
+          Applying contrast, sharpen, and color harmony pass for maximum CTR.
+        </div>
+      ),
+    },
+    {
+      id: "export",
+      title: "Ready to Export",
+      description: "Your thumbnail is ready",
+      progressText: "Packaging output",
+      preview: (
+        <div className="text-[11px] text-muted">
+          Assets prepared for {platform} at {displayWidth}x{displayHeight}.
+        </div>
+      ),
+    },
+  ];
+
+  function sleep(ms: number) {
+    return new Promise<void>(resolve => setTimeout(resolve, ms));
+  }
+
+  // Runs the step-by-step walkthrough then kicks off the real generate.
+  // TODO: replace with real AI pipeline progress events
+  async function runWalkthrough(doGenerate: () => Promise<void>) {
+    walkthroughCancelledRef.current = false;
+    setWalkthroughOpen(true);
+    setWalkthroughStepIndex(0);
+    setWalkthroughStatus("in_progress");
+    for (let i = 0; i < walkthroughSteps.length; i++) {
+      if (walkthroughCancelledRef.current) return;
+      setWalkthroughStepIndex(i);
+      setWalkthroughStatus("in_progress");
+      await sleep(1500);
+      if (walkthroughCancelledRef.current) return;
+      setWalkthroughStatus("completed");
+    }
+    if (walkthroughCancelledRef.current) return;
+    await doGenerate();
+  }
+
   async function generate() {
     if (!prompt.trim()) {
       toast.error("Enter a description for your thumbnail");
       return;
     }
+    if (walkthroughEnabled && !walkthroughOpen) {
+      await runWalkthrough(() => generateReal());
+      return;
+    }
+    await generateReal();
+  }
+
+  async function generateReal() {
     setGenerating(true);
     setResults([]);
     const toastId = toast.loading(
@@ -1620,6 +2367,15 @@ export default function ThumbnailGeneratorPage() {
                   4x
                 </button>
               </div>
+              <label className="flex items-center gap-2 text-[10px] text-muted cursor-pointer select-none mt-2">
+                <input
+                  type="checkbox"
+                  checked={walkthroughEnabled}
+                  onChange={(e) => setWalkthroughEnabled(e.target.checked)}
+                  className="accent-gold"
+                />
+                Show step-by-step walkthrough when generating
+              </label>
             </div>
 
             {/* ── Split Test Generator ── */}
@@ -2269,8 +3025,8 @@ export default function ThumbnailGeneratorPage() {
               <div className="card">
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="section-header mb-0 flex items-center gap-2">
-                    <Layers size={13} className="text-gold" /> Style Preset Gallery
-                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{STYLE_PRESET_GALLERY.length}</span>
+                    <Layers size={13} className="text-gold" /> YouTuber Style Presets
+                    <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold font-medium">{YOUTUBER_THUMBNAIL_PRESETS.length}</span>
                   </h2>
                   {thumbnailConfig.stylePreset && (
                     <button onClick={() => setThumbnailConfig((p) => ({ ...p, stylePreset: null }))}
@@ -2279,33 +3035,56 @@ export default function ThumbnailGeneratorPage() {
                     </button>
                   )}
                 </div>
-                <p className="text-[9px] text-muted mb-3">Click a preset to apply its font, colors, layout, and accent styles.</p>
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
-                  {STYLE_PRESET_GALLERY.map((preset) => {
-                    const active = thumbnailConfig.stylePreset === preset.id;
+                <p className="text-[9px] text-muted mb-3">Click a creator to apply their signature font, colors, face layout, background, and accent elements.</p>
+                {/* Category filter */}
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {YOUTUBER_PRESET_CATEGORIES.map((cat) => {
+                    const count = cat.id === "all"
+                      ? YOUTUBER_THUMBNAIL_PRESETS.length
+                      : YOUTUBER_THUMBNAIL_PRESETS.filter((p) => p.category === cat.id).length;
+                    const active = youtuberPresetFilter === cat.id;
                     return (
                       <button
-                        key={preset.id}
-                        onClick={() => applyStylePreset(preset.id)}
-                        className={`rounded-xl overflow-hidden border-2 transition-all text-left ${active ? "border-gold" : "border-border hover:border-gold/30"}`}
+                        key={cat.id}
+                        onClick={() => setYoutuberPresetFilter(cat.id)}
+                        className={`text-[9px] px-2 py-1 rounded-lg border transition-all ${active ? "border-gold/40 bg-gold/[0.08] text-gold font-semibold" : "border-border text-muted hover:text-foreground hover:border-gold/20"}`}
                       >
-                        <div className={`aspect-video bg-gradient-to-br ${preset.gradient} flex items-center justify-center p-2 relative`}>
-                          <span className="text-white font-black text-sm drop-shadow-lg" style={{ WebkitTextStroke: preset.config.textStroke ? "1px #000" : "0" }}>
-                            {preset.name.split(" ")[0].toUpperCase()}
-                          </span>
-                          {active && (
-                            <div className="absolute top-1 right-1 bg-gold text-black rounded-full p-0.5">
-                              <Check size={8} />
-                            </div>
-                          )}
-                        </div>
-                        <div className="p-2 bg-surface-light">
-                          <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{preset.name}</p>
-                          <p className="text-[8px] text-muted truncate">{preset.desc}</p>
-                        </div>
+                        {cat.name}
+                        <span className="ml-1 opacity-60">{count}</span>
                       </button>
                     );
                   })}
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+                  {YOUTUBER_THUMBNAIL_PRESETS
+                    .filter((preset) => youtuberPresetFilter === "all" || preset.category === youtuberPresetFilter)
+                    .map((preset) => {
+                      const active = thumbnailConfig.stylePreset === preset.id;
+                      return (
+                        <button
+                          key={preset.id}
+                          onClick={() => applyYouTuberPreset(preset)}
+                          className={`rounded-xl overflow-hidden border-2 transition-all text-left hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold/10 ${active ? "border-gold" : "border-border hover:border-gold/30"}`}
+                        >
+                          <div className={`aspect-video bg-gradient-to-br ${preset.gradient} flex items-center justify-center p-2 relative`}>
+                            <span className="absolute top-1 left-1 text-base drop-shadow-lg" aria-hidden>{preset.icon}</span>
+                            <span className="text-white font-black text-sm drop-shadow-lg text-center leading-tight" style={{ WebkitTextStroke: "1px #000" }}>
+                              {preset.name.split(" ")[0].toUpperCase()}
+                            </span>
+                            <span className="absolute bottom-1 right-1 text-[7px] px-1 py-0.5 rounded bg-black/40 text-white font-medium">{preset.category}</span>
+                            {active && (
+                              <div className="absolute top-1 right-1 bg-gold text-black rounded-full p-0.5">
+                                <Check size={8} />
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-2 bg-surface-light">
+                            <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{preset.name}</p>
+                            <p className="text-[8px] text-muted line-clamp-2">{preset.tagline}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
                 </div>
               </div>
             )}
@@ -3144,6 +3923,60 @@ export default function ThumbnailGeneratorPage() {
           )}
         </div>
       )}
+
+      {/* Step-by-Step Creation Walkthrough */}
+      <CreationWalkthrough
+        open={walkthroughOpen}
+        title="Creating your thumbnail"
+        subtitle={prompt ? (prompt.length > 80 ? prompt.slice(0, 77) + "..." : prompt) : "Step-by-step AI walkthrough"}
+        steps={walkthroughSteps.map((s, i) => ({
+          ...s,
+          onApprove:
+            walkthroughStatus === "completed"
+              ? () => {
+                  if (i >= walkthroughSteps.length - 1) {
+                    setWalkthroughOpen(false);
+                  } else {
+                    setWalkthroughStepIndex(i + 1);
+                    setWalkthroughStatus("in_progress");
+                    // TODO: replace with real AI pipeline progress events
+                    setTimeout(() => setWalkthroughStatus("completed"), 1500);
+                  }
+                }
+              : undefined,
+          onSkip:
+            i < walkthroughSteps.length - 1
+              ? () => {
+                  setWalkthroughStepIndex(i + 1);
+                  setWalkthroughStatus("in_progress");
+                  setTimeout(() => setWalkthroughStatus("completed"), 1500);
+                }
+              : undefined,
+        }))}
+        currentStepIndex={walkthroughStepIndex}
+        stepStatus={walkthroughStatus}
+        onClose={() => setWalkthroughOpen(false)}
+        onCancel={() => {
+          walkthroughCancelledRef.current = true;
+          setWalkthroughOpen(false);
+          setGenerating(false);
+          toast("Generation cancelled");
+        }}
+        onJumpToStep={(i) => {
+          setWalkthroughStepIndex(i);
+          setWalkthroughStatus("completed");
+        }}
+        onFinish={() => setWalkthroughOpen(false)}
+        finalOutput={
+          results[0]?.imageUrl ? (
+            <img src={results[0].imageUrl} alt="Generated thumbnail" className="w-full rounded-xl border border-border" />
+          ) : (
+            <div className="text-[11px] text-muted">
+              Your thumbnail is ready. Use Save or Export to download.
+            </div>
+          )
+        }
+      />
     </div>
   );
 }

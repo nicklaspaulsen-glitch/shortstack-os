@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
+import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
 
@@ -383,6 +384,434 @@ const ASPECT_RATIO_PRESETS = [
   { id: "custom", name: "Custom", desc: "Pick any ratio", w: 22, h: 22 },
 ];
 
+/* ─── YouTuber Style Presets ─────────────────────────────────
+ * One-click full-config presets emulating popular creators' editing styles.
+ * Each preset applies a coordinated set of captions/motion/color/audio/smart
+ * settings. Config keys match the editorSettings state shape exactly.
+ */
+const YOUTUBER_PRESETS = [
+  {
+    id: "mrbeast",
+    name: "MrBeast",
+    tagline: "Huge yellow captions, punch zooms, high-energy",
+    preview: "bg-gradient-to-br from-red-600 via-yellow-500 to-red-500",
+    tags: ["Caption: Impact", "Grade: Vibrant", "Music: EDM"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 80, textColor: "#FFDD00", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 6, position: "bottom" as const, customY: 78, maxWordsPerLine: 3, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "punch_zoom", intensity: 80, autoReframe: true, motionBlur: true },
+      transitions: { enabled: true, preset: "flash", duration: 0.2, autoBetweenCuts: true },
+      color: { enabled: true, lut: "vibrant", brightness: 5, contrast: 15, saturation: 20, temperature: 5, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "edm", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.5, autoReframeRatio: "9:16" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: true },
+      aspect: { preset: "9:16", customW: 9, customH: 16 },
+    },
+  },
+  {
+    id: "pewdiepie",
+    name: "PewDiePie",
+    tagline: "Bold white captions, meme overlays, gaming energy",
+    preview: "bg-gradient-to-br from-red-500 via-pink-500 to-purple-600",
+    tags: ["Caption: Bold White", "Grade: Neutral", "Music: Hip-Hop"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Impact", fontSize: 64, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "top" as const, customY: 15, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "pop", duration: 0.25, easing: "bounce" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "crash_zoom", intensity: 70, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "cut", duration: 0.1, autoBetweenCuts: true },
+      color: { enabled: true, lut: "high_contrast", brightness: 0, contrast: 10, saturation: 5, temperature: 0, tint: 0, highlights: 0, shadows: 0, autoColorMatch: false, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "hip_hop", volumeAutomation: false, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 0.4, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: false, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "mkbhd",
+    name: "MKBHD",
+    tagline: "Clean minimalist, cinematic grade, smooth slow-mo",
+    preview: "bg-gradient-to-br from-slate-700 via-slate-900 to-red-900",
+    tags: ["Caption: Minimal", "Grade: Cinematic", "Music: Ambient Tech"],
+    config: {
+      captions: { enabled: false, autoGenerate: false, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 28, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.6, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "slow_zoom_in", intensity: 30, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "fade", duration: 0.5, autoBetweenCuts: true },
+      color: { enabled: true, lut: "cinematic", brightness: 0, contrast: 10, saturation: -5, temperature: -3, tint: 0, highlights: -5, shadows: 5, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "ambient", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: false, silenceThreshold: 1.5, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: false, hookDetector: false, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "ali_abdaal",
+    name: "Ali Abdaal",
+    tagline: "Friendly clean captions, gentle transitions, warm grade",
+    preview: "bg-gradient-to-br from-orange-300 via-amber-400 to-yellow-500",
+    tags: ["Caption: Clean Sans", "Grade: Warm", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Poppins", fontSize: 32, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.6)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 6, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "breathing", intensity: 25, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "dissolve", duration: 0.35, autoBetweenCuts: true },
+      color: { enabled: true, lut: "warm", brightness: 5, contrast: 5, saturation: 8, temperature: 10, tint: 2, highlights: 0, shadows: 3, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 1.0, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: false, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "veritasium",
+    name: "Veritasium",
+    tagline: "Educational with emphasis, motion graphics, clean grade",
+    preview: "bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-900",
+    tags: ["Caption: Emphasized", "Grade: Clean", "Music: Corporate"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Inter", fontSize: 34, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "rgba(0,0,0,0.5)", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "word_cascade", duration: 0.5, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "slow_zoom_in", intensity: 35, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "fade", duration: 0.4, autoBetweenCuts: true },
+      color: { enabled: true, lut: "muted", brightness: 0, contrast: 8, saturation: 0, temperature: 0, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "corporate", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 1.2, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: false, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "matt_davella",
+    name: "Matt D'Avella",
+    tagline: "Cinematic minimalism, letterbox, muted piano",
+    preview: "bg-gradient-to-br from-stone-700 via-stone-800 to-stone-900",
+    tags: ["Caption: None", "Grade: Muted", "Music: Piano"],
+    config: {
+      captions: { enabled: false, autoGenerate: false, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 22, textColor: "#f5f5f5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.8, easing: "ease-in-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "slow_zoom_in", intensity: 20, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "fade", duration: 0.7, autoBetweenCuts: true },
+      color: { enabled: true, lut: "muted", brightness: -3, contrast: 12, saturation: -15, temperature: -5, tint: 0, highlights: -8, shadows: 8, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "piano", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: false, silenceThreshold: 2.0, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: false, smartPacing: false, hookDetector: false, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "21:9", customW: 21, customH: 9 },
+    },
+  },
+  {
+    id: "peter_mckinnon",
+    name: "Peter McKinnon",
+    tagline: "Cinematic orange/teal, dramatic transitions, slow-mo",
+    preview: "bg-gradient-to-br from-orange-600 via-teal-700 to-slate-900",
+    tags: ["Caption: Cinematic", "Grade: Teal & Orange", "Music: Cinematic"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.6, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "dolly", intensity: 55, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "whip_right", duration: 0.3, autoBetweenCuts: true },
+      color: { enabled: true, lut: "teal_orange", brightness: 0, contrast: 15, saturation: 10, temperature: 0, tint: 0, highlights: -5, shadows: 5, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "cinematic", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 1.0, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "graham_stephan",
+    name: "Graham Stephan",
+    tagline: "Finance vibe, green/gold accents, casual captions",
+    preview: "bg-gradient-to-br from-green-600 via-emerald-700 to-yellow-600",
+    tags: ["Caption: Casual", "Grade: Warm", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Montserrat", fontSize: 36, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "rgba(0,0,0,0.55)", strokeWidth: 2, position: "bottom" as const, customY: 80, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.35, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "punch_zoom", intensity: 50, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "cut", duration: 0.15, autoBetweenCuts: true },
+      color: { enabled: true, lut: "warm", brightness: 3, contrast: 8, saturation: 8, temperature: 5, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 0.7, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "joe_rogan",
+    name: "Joe Rogan",
+    tagline: "Podcast style, minimal edits, center focus",
+    preview: "bg-gradient-to-br from-neutral-800 via-neutral-900 to-black",
+    tags: ["Caption: Podcast", "Grade: Muted", "Music: None"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.3, easing: "linear" },
+      motion: { enabled: false, autoZoomSpeakers: true, preset: "breathing", intensity: 10, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "cut", duration: 0.1, autoBetweenCuts: false },
+      color: { enabled: true, lut: "muted", brightness: 0, contrast: 5, saturation: -5, temperature: 0, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: false, bgGenre: "ambient", volumeAutomation: false, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: false, silenceThreshold: 2.5, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: true, smartPacing: false, hookDetector: false, viralMomentFinder: true, autoBroll: false, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "casey_neistat",
+    name: "Casey Neistat",
+    tagline: "Vlog energy, handheld feel, punchy text overlays",
+    preview: "bg-gradient-to-br from-yellow-500 via-red-500 to-orange-600",
+    tags: ["Caption: Bold", "Grade: High Contrast", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Bebas Neue", fontSize: 54, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "center" as const, customY: 50, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "slide_left", duration: 0.3, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "crash_zoom", intensity: 65, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "whip_left", duration: 0.25, autoBetweenCuts: true },
+      color: { enabled: true, lut: "high_contrast", brightness: 3, contrast: 18, saturation: 8, temperature: 3, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.6, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: false, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "ryan_trahan",
+    name: "Ryan Trahan",
+    tagline: "Adventure vlog, dynamic captions, warm grade",
+    preview: "bg-gradient-to-br from-amber-500 via-orange-600 to-rose-600",
+    tags: ["Caption: Dynamic", "Grade: Warm", "Music: Upbeat"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "reel_trendy", fontFamily: "Montserrat", fontSize: 48, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "center" as const, customY: 55, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "spring" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "punch_zoom", intensity: 60, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "whip_right", duration: 0.3, autoBetweenCuts: true },
+      color: { enabled: true, lut: "warm", brightness: 5, contrast: 10, saturation: 12, temperature: 8, tint: 0, highlights: 0, shadows: 3, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "upbeat", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.5, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "dude_perfect",
+    name: "Dude Perfect",
+    tagline: "Sports energy, high-impact transitions, slow-mo hits",
+    preview: "bg-gradient-to-br from-blue-600 via-cyan-500 to-red-500",
+    tags: ["Caption: Bold", "Grade: Vibrant", "Music: Epic"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "meme_impact", fontFamily: "Oswald", fontSize: 60, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "top" as const, customY: 18, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "scale_up", duration: 0.3, easing: "spring" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "crash_zoom", intensity: 85, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "flash", duration: 0.2, autoBetweenCuts: true },
+      color: { enabled: true, lut: "vibrant", brightness: 3, contrast: 12, saturation: 18, temperature: 3, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "trailer", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.6, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: false, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "emma_chamberlain",
+    name: "Emma Chamberlain",
+    tagline: "Relaxed vlog, hand-written text, vintage grade",
+    preview: "bg-gradient-to-br from-amber-200 via-orange-300 to-rose-400",
+    tags: ["Caption: Handwritten", "Grade: Vintage", "Music: Lo-Fi"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Merriweather", fontSize: 28, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 2, position: "bottom" as const, customY: 83, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "typewriter", duration: 0.5, easing: "linear" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "slow_zoom_in", intensity: 25, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "dissolve", duration: 0.4, autoBetweenCuts: true },
+      color: { enabled: true, lut: "vintage", brightness: -3, contrast: -5, saturation: -10, temperature: 5, tint: 3, highlights: -5, shadows: 5, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "lofi", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 1.0, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: false, smartPacing: false, hookDetector: false, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "dream",
+    name: "Dream / Minecraft",
+    tagline: "Gaming, red/green highlights, dramatic music swells",
+    preview: "bg-gradient-to-br from-green-500 via-lime-500 to-red-600",
+    tags: ["Caption: Gaming", "Grade: High Contrast", "Music: Trailer"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Impact", fontSize: 56, textColor: "#00FF66", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "top" as const, customY: 20, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "shake", duration: 0.25, easing: "bounce" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "crash_zoom", intensity: 75, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "flash", duration: 0.15, autoBetweenCuts: true },
+      color: { enabled: true, lut: "high_contrast", brightness: 3, contrast: 15, saturation: 15, temperature: 0, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "trailer", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.5, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: false, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "linus_tech_tips",
+    name: "Linus Tech Tips",
+    tagline: "Tech review, clean captions, blue/silver grade",
+    preview: "bg-gradient-to-br from-sky-500 via-slate-400 to-slate-700",
+    tags: ["Caption: Clean", "Grade: Cool", "Music: Corporate"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "youtube_standard", fontFamily: "Roboto", fontSize: 32, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.65)", strokeWidth: 0, position: "bottom" as const, customY: 82, maxWordsPerLine: 7, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "slide_left", duration: 0.35, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "slow_zoom_in", intensity: 35, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "wipe_left", duration: 0.3, autoBetweenCuts: true },
+      color: { enabled: true, lut: "cool", brightness: 0, contrast: 8, saturation: 0, temperature: -8, tint: -2, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "corporate", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 0.8, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "corridor_crew",
+    name: "Corridor Crew",
+    tagline: "VFX heavy, dramatic cuts, bass-heavy cinematic",
+    preview: "bg-gradient-to-br from-purple-700 via-fuchsia-600 to-slate-900",
+    tags: ["Caption: Cinematic", "Grade: Cinematic", "Music: Trailer"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 6, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "blur_to_clear", duration: 0.5, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "crash_zoom", intensity: 70, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "glitch", duration: 0.3, autoBetweenCuts: true },
+      color: { enabled: true, lut: "cinematic", brightness: -3, contrast: 15, saturation: 5, temperature: -3, tint: 0, highlights: -5, shadows: 5, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "trailer", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.7, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "sam_kolder",
+    name: "Sam Kolder",
+    tagline: "Cinematic travel, match cuts, epic moody grade",
+    preview: "bg-gradient-to-br from-teal-800 via-slate-900 to-amber-700",
+    tags: ["Caption: Cinematic", "Grade: Moody", "Music: Epic"],
+    config: {
+      captions: { enabled: false, autoGenerate: false, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#F5F5F5", strokeColor: "transparent", backdropColor: "transparent", strokeWidth: 0, position: "bottom" as const, customY: 88, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.7, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "dolly", intensity: 55, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "morph", duration: 0.4, autoBetweenCuts: true },
+      color: { enabled: true, lut: "moody", brightness: -5, contrast: 18, saturation: -3, temperature: -5, tint: 0, highlights: -8, shadows: 10, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "cinematic", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: false, silenceThreshold: 1.5, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "21:9", customW: 21, customH: 9 },
+    },
+  },
+  {
+    id: "colin_samir",
+    name: "Colin and Samir",
+    tagline: "Creator economy, podcast clean, neutral center",
+    preview: "bg-gradient-to-br from-zinc-600 via-zinc-700 to-zinc-900",
+    tags: ["Caption: Center", "Grade: Muted", "Music: Corporate"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "podcast_minimal", fontFamily: "Inter", fontSize: 30, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.4)", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 7, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.4, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "breathing", intensity: 15, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "fade", duration: 0.35, autoBetweenCuts: true },
+      color: { enabled: true, lut: "muted", brightness: 0, contrast: 5, saturation: -3, temperature: 0, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "corporate", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 1.2, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: true, smartPacing: false, hookDetector: false, viralMomentFinder: false, autoBroll: false, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "hamza_ahmed",
+    name: "Hamza Ahmed",
+    tagline: "Self-improvement, bold lower-third, motivational",
+    preview: "bg-gradient-to-br from-stone-800 via-amber-700 to-stone-900",
+    tags: ["Caption: Lower-Third", "Grade: Cinematic", "Music: Emotional"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Montserrat", fontSize: 44, textColor: "#FFD700", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 78, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.4, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "slow_zoom_in", intensity: 40, autoReframe: false, motionBlur: true },
+      transitions: { enabled: true, preset: "fade", duration: 0.4, autoBetweenCuts: true },
+      color: { enabled: true, lut: "cinematic", brightness: -2, contrast: 15, saturation: 5, temperature: -3, tint: 0, highlights: -5, shadows: 8, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "emotional", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.7, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "iman_gadzhi",
+    name: "Iman Gadzhi",
+    tagline: "Business/marketing, corporate grade, scroll-stop hooks",
+    preview: "bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800",
+    tags: ["Caption: Corporate", "Grade: Muted", "Music: Corporate"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Poppins", fontSize: 46, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "center" as const, customY: 60, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "scale_up", duration: 0.3, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "punch_zoom", intensity: 55, autoReframe: true, motionBlur: false },
+      transitions: { enabled: true, preset: "cut", duration: 0.15, autoBetweenCuts: true },
+      color: { enabled: true, lut: "muted", brightness: 0, contrast: 10, saturation: -3, temperature: -2, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "corporate", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 0.5, autoReframeRatio: "9:16" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "9:16", customW: 9, customH: 16 },
+    },
+  },
+  {
+    id: "pitch_meeting",
+    name: "Pitch Meeting",
+    tagline: "Comedy sketch, simple edits, center captions",
+    preview: "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500",
+    tags: ["Caption: Center", "Grade: Clean", "Music: Corporate"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "popup", fontFamily: "Oswald", fontSize: 40, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "center" as const, customY: 50, maxWordsPerLine: 5, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "pop", duration: 0.3, easing: "bounce" },
+      motion: { enabled: false, autoZoomSpeakers: false, preset: "breathing", intensity: 10, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "cut", duration: 0.1, autoBetweenCuts: true },
+      color: { enabled: true, lut: "muted", brightness: 0, contrast: 5, saturation: 0, temperature: 0, tint: 0, highlights: 0, shadows: 0, autoColorMatch: false, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "corporate", volumeAutomation: false, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: true, silenceThreshold: 0.8, autoReframeRatio: "none" as const, removeFillerWords: true, autoChapters: false, smartPacing: false, hookDetector: false, viralMomentFinder: false, autoBroll: false, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "babish",
+    name: "Binging with Babish",
+    tagline: "Cooking, overhead shots, calm jazzy warm",
+    preview: "bg-gradient-to-br from-amber-700 via-orange-600 to-rose-700",
+    tags: ["Caption: Calm", "Grade: Warm", "Music: Jazz"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "cinematic", fontFamily: "Playfair Display", fontSize: 26, textColor: "#FFFFFF", strokeColor: "transparent", backdropColor: "rgba(0,0,0,0.4)", strokeWidth: 0, position: "bottom" as const, customY: 85, maxWordsPerLine: 8, emphasizeKeywords: false, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "fade_in", duration: 0.5, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: false, preset: "slow_zoom_in", intensity: 20, autoReframe: false, motionBlur: false },
+      transitions: { enabled: true, preset: "dissolve", duration: 0.5, autoBetweenCuts: true },
+      color: { enabled: true, lut: "warm", brightness: 3, contrast: 8, saturation: 8, temperature: 8, tint: 0, highlights: 0, shadows: 3, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "lofi", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: false },
+      smart: { autoCutSilence: false, silenceThreshold: 1.5, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: true, smartPacing: false, hookDetector: false, viralMomentFinder: false, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+  {
+    id: "mkbhd_shorts",
+    name: "MKBHD Shorts",
+    tagline: "Tech shorts, vertical, tight captions, quick B-roll",
+    preview: "bg-gradient-to-br from-red-900 via-slate-800 to-slate-900",
+    tags: ["Caption: Clean Vertical", "Grade: Cinematic", "Music: Ambient"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Inter", fontSize: 44, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 3, position: "bottom" as const, customY: 75, maxWordsPerLine: 4, emphasizeKeywords: true, autoEmoji: false },
+      textAnimation: { enabled: true, preset: "slide_bottom", duration: 0.3, easing: "ease-out" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "punch_zoom", intensity: 45, autoReframe: true, motionBlur: true },
+      transitions: { enabled: true, preset: "cross_zoom", duration: 0.25, autoBetweenCuts: true },
+      color: { enabled: true, lut: "cinematic", brightness: 0, contrast: 12, saturation: -3, temperature: -3, tint: 0, highlights: -5, shadows: 5, autoColorMatch: true, autoWhiteBalance: true },
+      audio: { enabled: true, autoDucking: true, bgGenre: "ambient", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.5, autoReframeRatio: "9:16" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: false },
+      aspect: { preset: "9:16", customW: 9, customH: 16 },
+    },
+  },
+  {
+    id: "airrack",
+    name: "Airrack",
+    tagline: "High energy challenge, bold yellow, fast cuts",
+    preview: "bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500",
+    tags: ["Caption: Yellow Bold", "Grade: Vibrant", "Music: EDM"],
+    config: {
+      captions: { enabled: true, autoGenerate: true, preset: "mrbeast", fontFamily: "Impact", fontSize: 72, textColor: "#FFEB3B", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 5, position: "center" as const, customY: 55, maxWordsPerLine: 3, emphasizeKeywords: true, autoEmoji: true },
+      textAnimation: { enabled: true, preset: "bounce", duration: 0.3, easing: "spring" },
+      motion: { enabled: true, autoZoomSpeakers: true, preset: "punch_zoom", intensity: 75, autoReframe: true, motionBlur: true },
+      transitions: { enabled: true, preset: "whip_left", duration: 0.2, autoBetweenCuts: true },
+      color: { enabled: true, lut: "vibrant", brightness: 5, contrast: 15, saturation: 20, temperature: 5, tint: 0, highlights: 0, shadows: 0, autoColorMatch: true, autoWhiteBalance: false },
+      audio: { enabled: true, autoDucking: true, bgGenre: "edm", volumeAutomation: true, noiseRemoval: true, voiceEnhance: true, autoBeatSync: true },
+      smart: { autoCutSilence: true, silenceThreshold: 0.4, autoReframeRatio: "9:16" as const, removeFillerWords: true, autoChapters: false, smartPacing: true, hookDetector: true, viralMomentFinder: true, autoBroll: true, trendingAudioMatch: true },
+      aspect: { preset: "16:9", customW: 16, customH: 9 },
+    },
+  },
+];
+
+// Default editor settings snapshot — used by the "Custom" reset card
+const DEFAULT_EDITOR_SETTINGS_CONFIG = {
+  captions: { enabled: false, autoGenerate: true, preset: "tiktok_bold", fontFamily: "Inter", fontSize: 48, textColor: "#FFFFFF", strokeColor: "#000000", backdropColor: "transparent", strokeWidth: 4, position: "bottom" as const, customY: 80, maxWordsPerLine: 4, emphasizeKeywords: false, autoEmoji: false },
+  textAnimation: { enabled: false, preset: "fade_in", duration: 0.4, easing: "ease-out" },
+  motion: { enabled: false, autoZoomSpeakers: false, preset: "slow_zoom_in", intensity: 50, autoReframe: false, motionBlur: false },
+  transitions: { enabled: false, preset: "cut", duration: 0.3, autoBetweenCuts: false },
+  color: { enabled: false, lut: "cinematic", brightness: 0, contrast: 0, saturation: 0, temperature: 0, tint: 0, highlights: 0, shadows: 0, autoColorMatch: false, autoWhiteBalance: false },
+  audio: { enabled: false, autoDucking: false, bgGenre: "upbeat", volumeAutomation: false, noiseRemoval: false, voiceEnhance: false, autoBeatSync: false },
+  smart: { autoCutSilence: false, silenceThreshold: 1.5, autoReframeRatio: "none" as const, removeFillerWords: false, autoChapters: false, smartPacing: false, hookDetector: false, viralMomentFinder: false, autoBroll: false, trendingAudioMatch: false },
+  aspect: { preset: "9:16", customW: 16, customH: 9 },
+};
+
 interface StoryboardScene {
   scene_number: number;
   duration: string;
@@ -685,6 +1114,7 @@ export default function VideoEditorPage() {
 
   // Collapsible panel open-state (each panel can be folded)
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({
+    youtuberStyles: true,
     captions: true,
     textAnimation: false,
     motion: false,
@@ -697,8 +1127,53 @@ export default function VideoEditorPage() {
     platformExport: false,
   });
 
+  // YouTuber-style preset selection state (for UI highlight only)
+  const [selectedYouTuberPreset, setSelectedYouTuberPreset] = useState<string>("");
+
+  // Step-by-step creation walkthrough state
+  const [walkthroughEnabled, setWalkthroughEnabled] = useState(true);
+  const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+  const [walkthroughStepIndex, setWalkthroughStepIndex] = useState(0);
+  const [walkthroughStatus, setWalkthroughStatus] = useState<WalkthroughStepStatus>("pending");
+  const walkthroughCancelledRef = useRef(false);
+
   const togglePanel = (id: string) =>
     setOpenPanels(prev => ({ ...prev, [id]: !prev[id] }));
+
+  function applyYouTuberPreset(preset: typeof YOUTUBER_PRESETS[number]) {
+    const cfg = preset.config;
+    setEditorSettings(prev => ({
+      ...prev,
+      captions: { ...prev.captions, ...cfg.captions },
+      textAnimation: { ...prev.textAnimation, ...cfg.textAnimation },
+      motion: { ...prev.motion, ...cfg.motion },
+      transitions: { ...prev.transitions, ...cfg.transitions },
+      color: { ...prev.color, ...cfg.color },
+      audio: { ...prev.audio, ...cfg.audio },
+      smart: { ...prev.smart, ...cfg.smart },
+      aspect: { ...prev.aspect, ...cfg.aspect },
+    }));
+    setConfig(prev => ({ ...prev, aspect_ratio: cfg.aspect.preset }));
+    setSelectedYouTuberPreset(preset.id);
+    toast.success(`Applied ${preset.name} style preset`);
+  }
+
+  function resetYouTuberPreset() {
+    const d = DEFAULT_EDITOR_SETTINGS_CONFIG;
+    setEditorSettings(prev => ({
+      ...prev,
+      captions: { ...prev.captions, ...d.captions },
+      textAnimation: { ...prev.textAnimation, ...d.textAnimation },
+      motion: { ...prev.motion, ...d.motion },
+      transitions: { ...prev.transitions, ...d.transitions },
+      color: { ...prev.color, ...d.color },
+      audio: { ...prev.audio, ...d.audio },
+      smart: { ...prev.smart, ...d.smart },
+      aspect: { ...prev.aspect, ...d.aspect },
+    }));
+    setSelectedYouTuberPreset("");
+    toast.success("Reset to custom (defaults)");
+  }
 
   function applyPlatformExportPreset(presetId: string) {
     const p = PLATFORM_EXPORT_PRESETS.find(x => x.id === presetId);
@@ -820,8 +1295,267 @@ export default function VideoEditorPage() {
 
   const [renderProgress, setRenderProgress] = useState(0);
 
+  // Walkthrough step definitions (computed fresh per render from current settings)
+  const walkthroughSteps: WalkthroughStep[] = [
+    {
+      id: "analyze",
+      title: "Analyzing Your Content",
+      description: "Understanding topic, goals, and target audience",
+      progressText: "Processing script and reference files",
+      preview: (
+        <div className="space-y-1.5">
+          <div className="text-[11px] text-muted">Detected</div>
+          <div className="grid grid-cols-2 gap-2 text-[11px]">
+            <div><span className="text-muted">Title:</span> <span className="text-foreground">{config.title || "(none)"}</span></div>
+            <div><span className="text-muted">Type:</span> <span className="text-foreground">{config.type}</span></div>
+            <div><span className="text-muted">Aspect:</span> <span className="text-foreground">{config.aspect_ratio}</span></div>
+            <div><span className="text-muted">Duration:</span> <span className="text-foreground">{config.duration}s</span></div>
+            <div><span className="text-muted">Platform:</span> <span className="text-foreground">{config.target_platform}</span></div>
+            <div><span className="text-muted">Ref files:</span> <span className="text-foreground">{referenceFiles.length}</span></div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "style",
+      title: "Selecting Visual Style",
+      description: "Applying the style preset that matches your niche",
+      progressText: "Matching a creator preset",
+      preview: (() => {
+        const p = YOUTUBER_PRESETS.find(x => x.id === selectedYouTuberPreset);
+        return p ? (
+          <div className="flex items-center gap-3">
+            <div className={`w-14 h-14 rounded-xl ${p.preview}`} />
+            <div>
+              <div className="text-xs font-semibold">{p.name}</div>
+              <div className="text-[10px] text-muted mt-0.5">{p.tagline}</div>
+            </div>
+          </div>
+        ) : (
+          <div className="text-[11px] text-muted">No preset selected — using custom settings.</div>
+        );
+      })(),
+      editableSettings: [
+        {
+          key: "style",
+          label: "Style Preset",
+          type: "select",
+          value: selectedYouTuberPreset || "",
+          options: [
+            { label: "Custom (no preset)", value: "" },
+            ...YOUTUBER_PRESETS.map(p => ({ label: p.name, value: p.id })),
+          ],
+        },
+      ],
+      onSettingChange: (key, value) => {
+        if (key === "style") {
+          const v = String(value);
+          if (!v) {
+            resetYouTuberPreset();
+          } else {
+            const p = YOUTUBER_PRESETS.find(x => x.id === v);
+            if (p) applyYouTuberPreset(p);
+          }
+        }
+      },
+    },
+    {
+      id: "captions",
+      title: "Generating Captions",
+      description: "Creating captions in your chosen style",
+      progressText: "Transcribing and styling captions",
+      preview: (
+        <div className="space-y-2">
+          <div className="text-[10px] text-muted">Sample</div>
+          <div
+            className="rounded-lg p-4 text-center"
+            style={{
+              color: editorSettings.captions.textColor,
+              fontFamily: editorSettings.captions.fontFamily,
+              fontSize: Math.min(editorSettings.captions.fontSize, 36),
+              WebkitTextStroke: `${Math.min(editorSettings.captions.strokeWidth, 3)}px ${editorSettings.captions.strokeColor}`,
+              background: editorSettings.captions.backdropColor === "transparent" ? "rgba(0,0,0,0.4)" : editorSettings.captions.backdropColor,
+              fontWeight: 700,
+            }}
+          >
+            This is your caption style
+          </div>
+          <div className="text-[10px] text-muted">
+            {editorSettings.captions.fontFamily} · {editorSettings.captions.fontSize}px · {editorSettings.captions.position}
+          </div>
+        </div>
+      ),
+      editableSettings: [
+        { key: "fontSize", label: "Font Size", type: "slider", value: editorSettings.captions.fontSize, min: 20, max: 120 },
+        { key: "textColor", label: "Text Color", type: "color", value: editorSettings.captions.textColor },
+        { key: "strokeColor", label: "Stroke Color", type: "color", value: editorSettings.captions.strokeColor },
+        { key: "strokeWidth", label: "Stroke Width", type: "slider", value: editorSettings.captions.strokeWidth, min: 0, max: 12 },
+        {
+          key: "position",
+          label: "Position",
+          type: "select",
+          value: editorSettings.captions.position,
+          options: [
+            { label: "Top", value: "top" },
+            { label: "Center", value: "center" },
+            { label: "Bottom", value: "bottom" },
+          ],
+        },
+      ],
+      onSettingChange: (key, value) => {
+        setEditorSettings(prev => ({
+          ...prev,
+          captions: { ...prev.captions, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "motion",
+      title: "Adding Motion & Zoom",
+      description: "Applying motion presets to keep viewers engaged",
+      progressText: "Generating motion tracks",
+      preview: (
+        <div className="text-[11px] space-y-1">
+          <div><span className="text-muted">Preset:</span> <span className="text-foreground">{editorSettings.motion.preset}</span></div>
+          <div><span className="text-muted">Intensity:</span> <span className="text-foreground">{editorSettings.motion.intensity}%</span></div>
+          <div><span className="text-muted">Auto zoom on speakers:</span> <span className="text-foreground">{editorSettings.motion.autoZoomSpeakers ? "Yes" : "No"}</span></div>
+        </div>
+      ),
+      editableSettings: [
+        { key: "intensity", label: "Intensity", type: "slider", value: editorSettings.motion.intensity, min: 0, max: 100 },
+        { key: "autoZoomSpeakers", label: "Auto Zoom Speakers", type: "toggle", value: editorSettings.motion.autoZoomSpeakers },
+        { key: "motionBlur", label: "Motion Blur", type: "toggle", value: editorSettings.motion.motionBlur },
+      ],
+      onSettingChange: (key, value) => {
+        setEditorSettings(prev => ({
+          ...prev,
+          motion: { ...prev.motion, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "transitions",
+      title: "Adding Transitions",
+      description: "Smooth transitions between clips",
+      progressText: "Applying transition presets",
+      preview: (
+        <div className="text-[11px] space-y-1">
+          <div><span className="text-muted">Transition:</span> <span className="text-foreground">{editorSettings.transitions.preset}</span></div>
+          <div><span className="text-muted">Duration:</span> <span className="text-foreground">{editorSettings.transitions.duration}s</span></div>
+          <div><span className="text-muted">Auto between cuts:</span> <span className="text-foreground">{editorSettings.transitions.autoBetweenCuts ? "Yes" : "No"}</span></div>
+        </div>
+      ),
+      editableSettings: [
+        { key: "duration", label: "Duration (s)", type: "number", value: editorSettings.transitions.duration, min: 0.1, max: 2, step: 0.1 },
+        { key: "autoBetweenCuts", label: "Auto Between Cuts", type: "toggle", value: editorSettings.transitions.autoBetweenCuts },
+      ],
+      onSettingChange: (key, value) => {
+        setEditorSettings(prev => ({
+          ...prev,
+          transitions: { ...prev.transitions, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "color",
+      title: "Color Grading",
+      description: "Applying cinematic color grade",
+      progressText: "Applying LUT and color correction",
+      preview: (
+        <div className="text-[11px] space-y-1">
+          <div><span className="text-muted">LUT:</span> <span className="text-foreground">{editorSettings.color.lut}</span></div>
+          <div><span className="text-muted">Saturation:</span> <span className="text-foreground">{editorSettings.color.saturation}</span></div>
+          <div><span className="text-muted">Contrast:</span> <span className="text-foreground">{editorSettings.color.contrast}</span></div>
+        </div>
+      ),
+      editableSettings: [
+        { key: "saturation", label: "Saturation", type: "slider", value: editorSettings.color.saturation, min: -50, max: 50 },
+        { key: "contrast", label: "Contrast", type: "slider", value: editorSettings.color.contrast, min: -50, max: 50 },
+        { key: "brightness", label: "Brightness", type: "slider", value: editorSettings.color.brightness, min: -50, max: 50 },
+        { key: "temperature", label: "Temperature", type: "slider", value: editorSettings.color.temperature, min: -50, max: 50 },
+      ],
+      onSettingChange: (key, value) => {
+        setEditorSettings(prev => ({
+          ...prev,
+          color: { ...prev.color, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "audio",
+      title: "Audio Processing",
+      description: "Mixing music and cleaning audio",
+      progressText: "Mixing tracks",
+      preview: (
+        <div className="text-[11px] space-y-1">
+          <div><span className="text-muted">Music genre:</span> <span className="text-foreground">{editorSettings.audio.bgGenre}</span></div>
+          <div><span className="text-muted">Auto ducking:</span> <span className="text-foreground">{editorSettings.audio.autoDucking ? "Yes" : "No"}</span></div>
+          <div><span className="text-muted">Noise removal:</span> <span className="text-foreground">{editorSettings.audio.noiseRemoval ? "Yes" : "No"}</span></div>
+        </div>
+      ),
+      editableSettings: [
+        { key: "autoDucking", label: "Auto Ducking", type: "toggle", value: editorSettings.audio.autoDucking },
+        { key: "noiseRemoval", label: "Noise Removal", type: "toggle", value: editorSettings.audio.noiseRemoval },
+        { key: "voiceEnhance", label: "Voice Enhance", type: "toggle", value: editorSettings.audio.voiceEnhance },
+      ],
+      onSettingChange: (key, value) => {
+        setEditorSettings(prev => ({
+          ...prev,
+          audio: { ...prev.audio, [key]: value as never },
+        }));
+      },
+    },
+    {
+      id: "finalize",
+      title: "Finalizing Video",
+      description: "Rendering and preparing for export",
+      progressText: "Encoding final video",
+      preview: (
+        <div className="text-[11px] text-muted">
+          Packaging assets, encoding output, and preparing downloads.
+        </div>
+      ),
+    },
+  ];
+
+  // Sleep helper for walkthrough progression simulation
+  function sleep(ms: number) {
+    return new Promise<void>(resolve => setTimeout(resolve, ms));
+  }
+
+  // Runs the step-by-step walkthrough, then kicks off the real generate.
+  // TODO: replace with real AI pipeline progress events
+  async function runWalkthrough(doGenerate: () => Promise<void>) {
+    walkthroughCancelledRef.current = false;
+    setWalkthroughOpen(true);
+    setWalkthroughStepIndex(0);
+    setWalkthroughStatus("in_progress");
+
+    for (let i = 0; i < walkthroughSteps.length; i++) {
+      if (walkthroughCancelledRef.current) return;
+      setWalkthroughStepIndex(i);
+      setWalkthroughStatus("in_progress");
+      // Simulated step duration — replace with real pipeline events later
+      await sleep(1500);
+      if (walkthroughCancelledRef.current) return;
+      setWalkthroughStatus("completed");
+    }
+    if (walkthroughCancelledRef.current) return;
+    // All steps complete: run the real generate
+    await doGenerate();
+  }
+
   async function generateVideo() {
     if (!config.title) { toast.error("Enter a video title"); return; }
+    // If walkthrough enabled, show the walkthrough and run the real render after the final step.
+    if (walkthroughEnabled && !walkthroughOpen) {
+      await runWalkthrough(() => generateVideoReal());
+      return;
+    }
+    await generateVideoReal();
+  }
+
+  async function generateVideoReal() {
     setGenerating(true);
     setResult(null);
     setRenderProgress(0);
@@ -1573,6 +2307,92 @@ export default function VideoEditorPage() {
         {createSubTab === "smart" && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div className="lg:col-span-2 space-y-3">
+
+              {/* === YouTuber Styles Panel (FIRST) === */}
+              <CollapsiblePanel
+                id="youtuberStyles"
+                icon={<Star size={13} className="text-gold" />}
+                title="YouTuber Styles"
+                desc="One-click presets that emulate popular creators' editing styles"
+                open={openPanels.youtuberStyles}
+                onToggle={() => togglePanel("youtuberStyles")}
+                badge={selectedYouTuberPreset ? 1 : 0}
+              >
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <p className="text-[9px] text-muted">
+                    {YOUTUBER_PRESETS.length} creator presets — click any card to apply a full suite of caption, motion, color, audio, and smart settings
+                  </p>
+                  {selectedYouTuberPreset && (
+                    <span className="text-[9px] bg-gold/10 text-gold px-2 py-0.5 rounded-full font-mono border border-gold/20">
+                      {YOUTUBER_PRESETS.find(p => p.id === selectedYouTuberPreset)?.name} active
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {YOUTUBER_PRESETS.map(preset => {
+                    const active = selectedYouTuberPreset === preset.id;
+                    return (
+                      <div
+                        key={preset.id}
+                        className={`group relative rounded-lg border overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg ${active ? "border-gold ring-2 ring-gold/40" : "border-border hover:border-gold/30"}`}
+                        onClick={() => applyYouTuberPreset(preset)}
+                      >
+                        {/* Visual preview gradient */}
+                        <div className={`h-12 w-full ${preset.preview} relative`}>
+                          <div className="absolute inset-0 bg-black/10" />
+                          {active && (
+                            <div className="absolute top-1 right-1 bg-gold text-black rounded-full p-0.5">
+                              <Check size={10} />
+                            </div>
+                          )}
+                          {/* Preview button on hover (no-op placeholder) */}
+                          <button
+                            type="button"
+                            onClick={(e) => { e.stopPropagation(); }}
+                            className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity text-[8px] bg-black/60 text-white px-1.5 py-0.5 rounded border border-white/10"
+                          >
+                            <Eye size={8} className="inline-block mr-0.5" />
+                            Preview
+                          </button>
+                        </div>
+                        <div className="p-2">
+                          <h4 className="text-[10px] font-bold leading-tight">{preset.name}</h4>
+                          <p className="text-[8px] text-muted mt-0.5 leading-tight line-clamp-2">{preset.tagline}</p>
+                          <div className="flex flex-wrap gap-0.5 mt-1.5">
+                            {preset.tags.map((tag, i) => (
+                              <span key={i} className="text-[7px] bg-surface-light text-muted px-1 py-0.5 rounded font-mono">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Custom / Reset card */}
+                  <div
+                    className={`group relative rounded-lg border-2 border-dashed overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 ${selectedYouTuberPreset === "" ? "border-gold/60 bg-gold/[0.03]" : "border-border hover:border-gold/30"}`}
+                    onClick={resetYouTuberPreset}
+                  >
+                    <div className="h-12 w-full bg-gradient-to-br from-surface-light via-surface to-surface-light flex items-center justify-center">
+                      <Settings2 size={16} className="text-muted group-hover:text-gold transition-colors" />
+                    </div>
+                    <div className="p-2">
+                      <h4 className="text-[10px] font-bold leading-tight">Custom</h4>
+                      <p className="text-[8px] text-muted mt-0.5 leading-tight">Reset all settings to defaults and build your own look</p>
+                      <div className="flex flex-wrap gap-0.5 mt-1.5">
+                        <span className="text-[7px] bg-surface-light text-muted px-1 py-0.5 rounded font-mono">Reset</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="mt-3 text-[8px] text-muted italic">
+                  Tip: Applying a creator preset overwrites captions, motion, color, audio, transitions, smart flags, and aspect ratio in one click. Use the panels below to fine-tune further.
+                </p>
+              </CollapsiblePanel>
 
               {/* === Smart Features Panel (TOP) === */}
               <CollapsiblePanel
@@ -2576,6 +3396,15 @@ export default function VideoEditorPage() {
             <p className="text-[8px] text-muted text-center">
               {mode === "render" ? "Remotion + Higgsfield render an MP4 with animations, text, and transitions (~30-60s)" : mode === "storyboard" ? "AI creates scene-by-scene breakdown with visuals, transitions, and timing" : "AI creates a detailed shot list, timing, overlays, and music suggestions"}
             </p>
+            <label className="flex items-center justify-center gap-2 text-[10px] text-muted cursor-pointer select-none mt-1">
+              <input
+                type="checkbox"
+                checked={walkthroughEnabled}
+                onChange={(e) => setWalkthroughEnabled(e.target.checked)}
+                className="accent-gold"
+              />
+              Show step-by-step walkthrough when generating
+            </label>
           </div>
 
           {/* Preview / Result */}
@@ -3079,6 +3908,60 @@ export default function VideoEditorPage() {
           toast.success(`Preset loaded: ${preset.name}`);
         }} />
       )}
+
+      {/* Step-by-Step Creation Walkthrough */}
+      <CreationWalkthrough
+        open={walkthroughOpen}
+        title="Creating your video"
+        subtitle={config.title || "Step-by-step AI walkthrough"}
+        steps={walkthroughSteps.map((s, i) => ({
+          ...s,
+          onApprove:
+            walkthroughStatus === "completed"
+              ? () => {
+                  if (i >= walkthroughSteps.length - 1) {
+                    setWalkthroughOpen(false);
+                  } else {
+                    setWalkthroughStepIndex(i + 1);
+                    setWalkthroughStatus("in_progress");
+                    // TODO: replace with real AI pipeline progress events
+                    setTimeout(() => setWalkthroughStatus("completed"), 1500);
+                  }
+                }
+              : undefined,
+          onSkip:
+            i < walkthroughSteps.length - 1
+              ? () => {
+                  setWalkthroughStepIndex(i + 1);
+                  setWalkthroughStatus("in_progress");
+                  setTimeout(() => setWalkthroughStatus("completed"), 1500);
+                }
+              : undefined,
+        }))}
+        currentStepIndex={walkthroughStepIndex}
+        stepStatus={walkthroughStatus}
+        onClose={() => setWalkthroughOpen(false)}
+        onCancel={() => {
+          walkthroughCancelledRef.current = true;
+          setWalkthroughOpen(false);
+          setGenerating(false);
+          toast("Generation cancelled");
+        }}
+        onJumpToStep={(i) => {
+          setWalkthroughStepIndex(i);
+          setWalkthroughStatus("completed");
+        }}
+        onFinish={() => setWalkthroughOpen(false)}
+        finalOutput={
+          result?.url ? (
+            <video src={result.url} controls className="w-full rounded-xl" />
+          ) : (
+            <div className="text-[11px] text-muted">
+              Your video is ready. Use Save or Export to download.
+            </div>
+          )
+        }
+      />
     </div>
   );
 }

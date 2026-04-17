@@ -8,7 +8,7 @@ import {
   Search, ChevronDown, Mail, Phone, MessageSquare,
   Star, Download, LayoutGrid, LayoutList,
   CheckSquare, Square, Filter, ArrowUpDown, Clock,
-  Briefcase, Globe, Camera, Music, Send, Users, ChevronUp,
+  Globe, Camera, Send, Users, ChevronUp,
   X, RefreshCw, Upload, Trash2, Tag, AlertTriangle, Coins,
   Zap, TrendingUp, BarChart3, Target, Eye,
   EyeOff, Settings2, CalendarClock,
@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/ui/platform-icons";
 
 /* ═══════════════════════════════════════════════════════════════════
    TYPES
@@ -1253,9 +1254,9 @@ export default function CRMPage() {
                     <div className="flex items-center gap-2 text-[9px] text-muted">
                       {lead.email && <Mail size={9} />}
                       {lead.phone && <Phone size={9} />}
-                      {lead.instagram_url && <Camera size={9} className="text-pink-400" />}
-                      {lead.facebook_url && <Globe size={9} className="text-blue-400" />}
-                      {lead.linkedin_url && <Briefcase size={9} className="text-blue-400" />}
+                      {lead.instagram_url && <InstagramIcon size={10} />}
+                      {lead.facebook_url && <FacebookIcon size={10} />}
+                      {lead.linkedin_url && <LinkedInIcon size={10} />}
                       {lead.google_rating && <span className="flex items-center gap-0.5 text-amber-400"><Star size={8} className="fill-amber-400" /> {lead.google_rating}</span>}
                       <span className="ml-auto text-[8px]">{lead.outreach_log[0] ? formatShortDate(lead.outreach_log[0].sent_at) : "No outreach"}</span>
                     </div>
@@ -1401,10 +1402,10 @@ export default function CRMPage() {
                 {detailLead.phone && <p className="text-[10px] flex items-center gap-1.5"><Phone size={10} className="text-muted" /> {detailLead.phone}</p>}
                 {detailLead.website && <a href={detailLead.website} target="_blank" rel="noopener noreferrer" className="text-[10px] flex items-center gap-1.5 text-gold hover:underline"><Globe size={10} /> {detailLead.website}</a>}
                 <div className="flex items-center gap-2 pt-1">
-                  {detailLead.instagram_url && <a href={detailLead.instagram_url} target="_blank" rel="noopener noreferrer"><Camera size={14} className="text-pink-400 hover:scale-110 transition-transform" /></a>}
-                  {detailLead.facebook_url && <a href={detailLead.facebook_url} target="_blank" rel="noopener noreferrer"><Globe size={14} className="text-blue-400 hover:scale-110 transition-transform" /></a>}
-                  {detailLead.linkedin_url && <a href={detailLead.linkedin_url} target="_blank" rel="noopener noreferrer"><Briefcase size={14} className="text-blue-400 hover:scale-110 transition-transform" /></a>}
-                  {detailLead.tiktok_url && <a href={detailLead.tiktok_url} target="_blank" rel="noopener noreferrer"><Music size={14} className="text-foreground hover:scale-110 transition-transform" /></a>}
+                  {detailLead.instagram_url && <a href={detailLead.instagram_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><InstagramIcon size={16} /></a>}
+                  {detailLead.facebook_url && <a href={detailLead.facebook_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><FacebookIcon size={16} /></a>}
+                  {detailLead.linkedin_url && <a href={detailLead.linkedin_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><LinkedInIcon size={16} /></a>}
+                  {detailLead.tiktok_url && <a href={detailLead.tiktok_url} target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform inline-block"><TikTokIcon size={16} /></a>}
                 </div>
               </div>
               {/* Quick actions */}

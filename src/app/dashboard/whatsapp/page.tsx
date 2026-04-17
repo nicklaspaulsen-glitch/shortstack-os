@@ -7,6 +7,7 @@ import {
   CheckCircle, Plus, Bot, BarChart3,
   Calendar, Zap, Search, Eye
 } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/platform-icons";
 
 /* ------------------------------------------------------------------ */
 /*  Mock Data                                                          */
@@ -88,8 +89,8 @@ export default function WhatsAppPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#25D366]/10 rounded-xl flex items-center justify-center">
-            <MessageSquare size={20} className="text-[#25D366]" />
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+            <WhatsAppIcon size={40} />
           </div>
           <div>
             <h1 className="text-lg font-bold">WhatsApp Business</h1>

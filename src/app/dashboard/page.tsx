@@ -667,19 +667,47 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
   label: string; value: string; sub: string; icon: React.ReactNode;
   trend?: "up" | "down"; accent?: string;
 }) {
-  const themes: Record<string, { bg: string; text: string; border: string; iconBg: string }> = {
-    gold:    { bg: "bg-gold/[0.04]",        text: "text-gold",        border: "border-gold/10",        iconBg: "bg-gold/[0.08]" },
-    emerald: { bg: "bg-success/[0.04]",     text: "text-success",     border: "border-success/10",     iconBg: "bg-success/[0.08]" },
-    blue:    { bg: "bg-info/[0.04]",        text: "text-info",        border: "border-info/10",        iconBg: "bg-info/[0.08]" },
-    purple:  { bg: "bg-purple-500/[0.04]",  text: "text-purple-400",  border: "border-purple-500/10",  iconBg: "bg-purple-500/[0.08]" },
+  const themes: Record<string, { bg: string; text: string; border: string; iconBg: string; glow: string; iconShadow: string }> = {
+    gold: {
+      bg: "bg-gradient-to-br from-gold/[0.10] via-gold/[0.05] to-transparent",
+      text: "text-gold",
+      border: "border-gold/25",
+      iconBg: "bg-gold/15",
+      glow: "accent-glow-gold",
+      iconShadow: "shadow-[0_2px_8px_rgba(201,168,76,0.3),0_1px_0_rgba(255,255,255,0.08)_inset]",
+    },
+    emerald: {
+      bg: "bg-gradient-to-br from-success/[0.10] via-success/[0.05] to-transparent",
+      text: "text-success",
+      border: "border-success/25",
+      iconBg: "bg-success/15",
+      glow: "accent-glow-green",
+      iconShadow: "shadow-[0_2px_8px_rgba(16,185,129,0.3),0_1px_0_rgba(255,255,255,0.08)_inset]",
+    },
+    blue: {
+      bg: "bg-gradient-to-br from-info/[0.10] via-info/[0.05] to-transparent",
+      text: "text-info",
+      border: "border-info/25",
+      iconBg: "bg-info/15",
+      glow: "accent-glow-blue",
+      iconShadow: "shadow-[0_2px_8px_rgba(59,130,246,0.3),0_1px_0_rgba(255,255,255,0.08)_inset]",
+    },
+    purple: {
+      bg: "bg-gradient-to-br from-purple-500/[0.10] via-purple-500/[0.05] to-transparent",
+      text: "text-purple-400",
+      border: "border-purple-500/25",
+      iconBg: "bg-purple-500/15",
+      glow: "accent-glow-purple",
+      iconShadow: "shadow-[0_2px_8px_rgba(168,85,247,0.3),0_1px_0_rgba(255,255,255,0.08)_inset]",
+    },
   };
   const t = themes[accent] || themes.gold;
 
   return (
-    <div className={`rounded-2xl border ${t.border} ${t.bg} p-4 transition-all hover:shadow-lg hover:-translate-y-0.5`}>
+    <div className={`relative rounded-2xl border ${t.border} ${t.bg} ${t.glow} p-4 transition-all duration-250 hover:-translate-y-0.5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_2px_4px_rgba(0,0,0,0.15),0_8px_20px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_2px_4px_rgba(0,0,0,0.15),0_14px_32px_-8px_rgba(0,0,0,0.5)]`}>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-[11px] text-muted font-medium">{label}</span>
-        <div className={`w-8 h-8 rounded-xl ${t.iconBg} flex items-center justify-center ${t.text}`}>
+        <span className="text-[11px] text-muted font-medium uppercase tracking-wider">{label}</span>
+        <div className={`w-9 h-9 rounded-xl ${t.iconBg} ${t.iconShadow} flex items-center justify-center ${t.text}`}>
           {icon}
         </div>
       </div>

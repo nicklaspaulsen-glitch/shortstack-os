@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import { TelegramIcon } from "@/components/ui/platform-icons";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -294,8 +295,8 @@ export default function TelegramBotPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#0088cc]/10 flex items-center justify-center">
-              <Bot size={22} className="text-[#0088cc]" />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden">
+              <TelegramIcon size={40} />
             </div>
             Telegram Bot
           </h1>

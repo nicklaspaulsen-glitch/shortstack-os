@@ -28,6 +28,7 @@ import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
 import {
   InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon, XTwitterIcon,
+  ThreadsIcon, PinterestIcon, YouTubeShortsIcon,
 } from "@/components/ui/platform-icons";
 
 const SUPPORTED_PLATFORMS = [
@@ -36,6 +37,9 @@ const SUPPORTED_PLATFORMS = [
   { key: "tiktok", label: "TikTok", color: "text-white", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your TikTok account for video publishing" },
   { key: "linkedin", label: "LinkedIn", color: "text-blue-400", bg: "bg-blue-600/10", border: "border-blue-600/20", description: "Connect your LinkedIn profile or company page" },
   { key: "twitter", label: "Twitter / X", color: "text-zinc-300", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your X (Twitter) account" },
+  { key: "threads", label: "Threads", color: "text-foreground", bg: "bg-zinc-500/10", border: "border-zinc-500/20", description: "Connect your Threads account for text posts" },
+  { key: "pinterest", label: "Pinterest", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", description: "Connect Pinterest for pins and boards" },
+  { key: "youtube_shorts", label: "YouTube Shorts", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", description: "Connect for short-form vertical video" },
 ] as const;
 
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
@@ -44,6 +48,9 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   tiktok: <TikTokIcon size={16} />,
   linkedin: <LinkedInIcon size={16} />,
   twitter: <XTwitterIcon size={16} />,
+  threads: <ThreadsIcon size={16} />,
+  pinterest: <PinterestIcon size={16} />,
+  youtube_shorts: <YouTubeShortsIcon size={16} />,
 };
 
 interface SocialAccount {

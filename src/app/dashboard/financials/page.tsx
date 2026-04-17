@@ -13,6 +13,7 @@ import {
   Layers, CreditCard, Calendar, Clock, Target, Percent,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { StripeIcon, PayPalIcon, SquareIcon } from "@/components/ui/platform-icons";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -421,7 +422,7 @@ export default function FinancialsPage() {
         <div className="flex gap-2">
           {!stripeSynced ? (
             <button onClick={() => toast("Connect Stripe in Settings > Integrations")} className="btn-secondary text-xs flex items-center gap-1.5">
-              <RefreshCw size={12} /> Connect Stripe
+              <StripeIcon size={14} /> Connect Stripe
             </button>
           ) : (
             <span className="text-[10px] text-green-400 flex items-center gap-1">
@@ -1159,33 +1160,62 @@ export default function FinancialsPage() {
             ))}
           </div>
 
-          {/* Stripe Sync */}
+          {/* Payment Processors */}
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5">
-              <RefreshCw size={13} className="text-gold" /> Stripe Integration
+              <CreditCard size={13} className="text-gold" /> Payment Processors
             </p>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold flex items-center gap-2">
-                  {stripeSynced ? (
-                    <><CheckCircle size={14} className="text-green-400" /> Connected</>
-                  ) : (
-                    <><AlertTriangle size={14} className="text-yellow-400" /> Not Connected</>
-                  )}
-                </p>
-                <p className="text-[10px] text-muted mt-0.5">
-                  {stripeSynced
-                    ? `Last synced: ${lastSyncTime || "just now"}`
-                    : "Connect Stripe to auto-import revenue and invoice data"
-                  }
-                </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {/* Stripe */}
+              <div className="p-3 rounded-lg border border-border bg-surface-light">
+                <div className="flex items-center gap-2 mb-2">
+                  <StripeIcon size={22} />
+                  <div>
+                    <p className="text-xs font-semibold">Stripe</p>
+                    <p className="text-[9px] text-muted">
+                      {stripeSynced ? `Synced ${lastSyncTime || "just now"}` : "Not connected"}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
+                  className="w-full text-[10px] py-1.5 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center justify-center gap-1"
+                >
+                  <RefreshCw size={10} /> {stripeSynced ? "Sync Now" : "Connect"}
+                </button>
               </div>
-              <button
-                onClick={() => toast(stripeSynced ? "Syncing..." : "Configure Stripe in Settings > Integrations")}
-                className="btn-primary text-xs flex items-center gap-1.5"
-              >
-                <RefreshCw size={12} /> {stripeSynced ? "Sync Now" : "Connect Stripe"}
-              </button>
+              {/* PayPal */}
+              <div className="p-3 rounded-lg border border-border bg-surface-light">
+                <div className="flex items-center gap-2 mb-2">
+                  <PayPalIcon size={22} />
+                  <div>
+                    <p className="text-xs font-semibold">PayPal</p>
+                    <p className="text-[9px] text-muted">Not connected</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => toast("Configure PayPal in Settings > Integrations")}
+                  className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
+                >
+                  <Plus size={10} /> Connect
+                </button>
+              </div>
+              {/* Square */}
+              <div className="p-3 rounded-lg border border-border bg-surface-light">
+                <div className="flex items-center gap-2 mb-2">
+                  <SquareIcon size={22} />
+                  <div>
+                    <p className="text-xs font-semibold">Square</p>
+                    <p className="text-[9px] text-muted">Not connected</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => toast("Configure Square in Settings > Integrations")}
+                  className="w-full text-[10px] py-1.5 rounded border border-border text-muted hover:text-foreground hover:border-foreground/30 transition-all flex items-center justify-center gap-1"
+                >
+                  <Plus size={10} /> Connect
+                </button>
+              </div>
             </div>
           </div>
 

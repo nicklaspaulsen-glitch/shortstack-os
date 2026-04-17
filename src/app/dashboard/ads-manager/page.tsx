@@ -10,6 +10,14 @@ import {
   Video, Type, Search, Wand2,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MetaIcon, GoogleAdsIcon, TikTokIcon } from "@/components/ui/platform-icons";
+
+function getAdBrandIcon(platformId: string, size = 20): React.ReactNode {
+  if (platformId === "meta_ads") return <MetaIcon size={size} />;
+  if (platformId === "google_ads") return <GoogleAdsIcon size={size} />;
+  if (platformId === "tiktok_ads") return <TikTokIcon size={size} />;
+  return <MetaIcon size={size} />;
+}
 
 // ---------------------------------------------------------------------------
 // Page description (for sidebar / search / SEO)
@@ -454,11 +462,8 @@ export default function AdsManagerPage() {
                   <div key={p.id} className={`bg-gradient-to-br ${p.gradient} border border-white/[0.06] rounded-xl p-4`}>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <span
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white"
-                          style={{ backgroundColor: p.color }}
-                        >
-                          {p.icon}
+                        <span className="w-7 h-7 rounded-lg flex items-center justify-center overflow-hidden">
+                          {getAdBrandIcon(p.id, 28)}
                         </span>
                         <span className="text-sm font-medium text-foreground">{p.label}</span>
                       </div>
@@ -531,11 +536,8 @@ export default function AdsManagerPage() {
                   return (
                     <div key={c.id} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.02] hover:bg-white/[0.04] transition">
                       <span className="text-gold/50 text-sm font-bold w-5">#{i + 1}</span>
-                      <span
-                        className="w-6 h-6 rounded flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                        style={{ backgroundColor: p.color }}
-                      >
-                        {p.icon}
+                      <span className="w-6 h-6 rounded flex items-center justify-center shrink-0 overflow-hidden">
+                        {getAdBrandIcon(p.id, 24)}
                       </span>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-medium text-foreground truncate">{c.name}</p>
@@ -1022,11 +1024,8 @@ export default function AdsManagerPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {PLATFORMS.map(p => (
                 <div key={p.id} className="flex items-center gap-3 p-3 bg-white/[0.02] rounded-lg">
-                  <span
-                    className="w-7 h-7 rounded flex items-center justify-center text-[10px] font-bold text-white"
-                    style={{ backgroundColor: p.color }}
-                  >
-                    {p.icon}
+                  <span className="w-7 h-7 rounded flex items-center justify-center overflow-hidden">
+                    {getAdBrandIcon(p.id, 28)}
                   </span>
                   <div className="flex-1">
                     <p className="text-xs font-medium text-foreground">{p.label} Pixel</p>
@@ -1058,11 +1057,8 @@ export default function AdsManagerPage() {
                     }`}>
                       {aud.type}
                     </span>
-                    <span
-                      className="w-5 h-5 rounded flex items-center justify-center text-[8px] font-bold text-white"
-                      style={{ backgroundColor: p.color }}
-                    >
-                      {p.icon}
+                    <span className="w-5 h-5 rounded flex items-center justify-center overflow-hidden">
+                      {getAdBrandIcon(p.id, 20)}
                     </span>
                   </div>
                   <p className="text-sm font-medium text-foreground mb-1">{aud.name}</p>
@@ -1135,11 +1131,8 @@ export default function AdsManagerPage() {
                   autoOptimize[p.id] ? "bg-gold/5 border-gold/30" : "bg-white/[0.02] border-border"
                 }`}>
                   <div className="flex items-center gap-3">
-                    <span
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold text-white"
-                      style={{ backgroundColor: p.color }}
-                    >
-                      {p.icon}
+                    <span className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden">
+                      {getAdBrandIcon(p.id, 32)}
                     </span>
                     <div>
                       <p className="text-xs font-medium text-foreground">{p.label}</p>
