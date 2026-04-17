@@ -19,6 +19,7 @@ import {
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
+import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
@@ -1407,6 +1408,18 @@ export default function ThumbnailGeneratorPage() {
   const [colorTheme, setColorTheme] = useState("red_black");
   const [mood, setMood] = useState("Dramatic");
   const [variations, setVariations] = useState(1);
+
+  // Guided wizard state — shows step-by-step creation for newbies
+  const [wizardOpen, setWizardOpen] = useState(false);
+  useEffect(() => {
+    // Auto-show wizard on first visit (no stored preference)
+    try {
+      const seen = localStorage.getItem("ss-thumbnail-wizard-seen");
+      if (!seen) {
+        setWizardOpen(true);
+      }
+    } catch {}
+  }, []);
 
   // UI state
   const [, setTab] = useState<"generate" | "history">("generate");
@@ -3156,6 +3169,167 @@ export default function ThumbnailGeneratorPage() {
     );
   }
 
+  /* ─── Wizard steps for newbies ─── */
+  const thumbnailWizardSteps: WizardStep[] = [
+    {
+      id: "title",
+      title: "What's your video about?",
+      description: "Enter the title or main text that will appear on your thumbnail. Keep it punchy — 3-6 words work best.",
+      icon: <Type size={16} />,
+      field: { type: "text", key: "title", placeholder: "e.g., I Built This In 24 Hours" },
+      aiHelper: {
+        label: "Optimize my title with AI",
+        onClick: async (d) => {
+          const res = await fetch("/api/thumbnail/optimize-title", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: d.title, niche: d.niche }),
+          });
+          const data = await res.json();
+          if (data.variants?.[0]) return { title: data.variants[0].title };
+          return {};
+        },
+      },
+      preview: (d) => (
+        <div className="aspect-video rounded-lg bg-gradient-to-br from-red-500 to-amber-500 flex items-center justify-center p-4">
+          <span className="text-white font-black text-2xl text-center uppercase" style={{ textShadow: "2px 2px 0 #000, 4px 4px 8px rgba(0,0,0,0.4)" }}>
+            {(d.title as string) || "Your Title Here"}
+          </span>
+        </div>
+      ),
+    },
+    {
+      id: "platform",
+      title: "Where are you posting this?",
+      description: "We'll auto-size your thumbnail for the perfect platform fit.",
+      icon: <ImageIcon size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "platform",
+        options: [
+          { value: "youtube", label: "YouTube", description: "1280×720 horizontal", emoji: "▶️", preview: "bg-red-500/20" },
+          { value: "youtube_shorts", label: "YT Shorts", description: "1080×1920 vertical", emoji: "📱", preview: "bg-red-600/20" },
+          { value: "tiktok", label: "TikTok", description: "1080×1920 vertical", emoji: "🎵", preview: "bg-pink-500/20" },
+          { value: "instagram", label: "Instagram", description: "1080×1080 square", emoji: "📷", preview: "bg-gradient-to-br from-pink-500/30 to-purple-500/30" },
+          { value: "twitter", label: "X / Twitter", description: "1600×900 card", emoji: "𝕏", preview: "bg-zinc-700/30" },
+          { value: "linkedin", label: "LinkedIn", description: "1200×627 post", emoji: "💼", preview: "bg-blue-600/20" },
+        ],
+      },
+    },
+    {
+      id: "style",
+      title: "Pick a style",
+      description: "Every top YouTuber has a signature look. Click one to match that vibe.",
+      icon: <Palette size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "style",
+        options: YOUTUBER_THUMBNAIL_PRESETS.slice(0, 12).map(p => ({
+          value: p.id,
+          label: p.name,
+          description: p.tagline,
+          emoji: p.icon,
+          preview: `bg-gradient-to-br ${p.gradient}`,
+        })),
+      },
+      preview: (d) => {
+        const p = YOUTUBER_THUMBNAIL_PRESETS.find(x => x.id === d.style);
+        if (!p) return <p className="text-[10px] text-muted">Pick a style to preview</p>;
+        return (
+          <div className={`aspect-video rounded-lg bg-gradient-to-br ${p.gradient} flex items-center justify-center p-4`}>
+            <span className="text-white font-black text-xl text-center uppercase" style={{ textShadow: "2px 2px 0 #000" }}>
+              {(d.title as string) || "YOUR TITLE"}
+            </span>
+          </div>
+        );
+      },
+    },
+    {
+      id: "textEffect",
+      title: "Text effect",
+      description: "How should your title stand out? Stroke and shadow work great for most thumbnails.",
+      icon: <Wand2 size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "textEffect",
+        optional: true,
+        options: [
+          { value: "stroke", label: "Bold Outline", description: "Thick black stroke around letters (MrBeast style)", emoji: "✒️" },
+          { value: "shadow", label: "Drop Shadow", description: "Classic offset shadow for depth", emoji: "🌑" },
+          { value: "gradient", label: "Gradient Fill", description: "Colorful gradient letters", emoji: "🌈" },
+          { value: "glow", label: "Neon Glow", description: "Glowing edge effect", emoji: "💡" },
+          { value: "none", label: "Plain", description: "No effect, clean text", emoji: "📝" },
+        ],
+      },
+    },
+    {
+      id: "face",
+      title: "Add a face (optional)",
+      description: "Upload a headshot — we'll auto-remove the background and position it for maximum impact.",
+      icon: <ImageIcon size={16} />,
+      field: { type: "image-upload", key: "face", optional: true },
+    },
+    {
+      id: "colorScheme",
+      title: "Color scheme",
+      description: "Choose a mood — this drives background tones and accent colors.",
+      icon: <Palette size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "colorScheme",
+        options: [
+          { value: "red_black", label: "High Impact", description: "Red + black, dramatic", emoji: "🔥", preview: "bg-gradient-to-br from-red-600 to-black" },
+          { value: "blue_white", label: "Clean Tech", description: "Blue + white, MKBHD vibe", emoji: "💎", preview: "bg-gradient-to-br from-blue-500 to-cyan-300" },
+          { value: "green_gold", label: "Money", description: "Finance thumbnail", emoji: "💰", preview: "bg-gradient-to-br from-emerald-500 to-yellow-400" },
+          { value: "purple_pink", label: "Gaming", description: "Neon gaming energy", emoji: "🎮", preview: "bg-gradient-to-br from-purple-600 to-pink-500" },
+          { value: "orange_teal", label: "Cinematic", description: "Orange & teal grade", emoji: "🎬", preview: "bg-gradient-to-br from-orange-500 to-teal-500" },
+          { value: "bw", label: "Monochrome", description: "Black & white, moody", emoji: "🖤", preview: "bg-gradient-to-br from-zinc-900 to-zinc-400" },
+        ],
+      },
+    },
+    {
+      id: "mood",
+      title: "What's the mood?",
+      description: "This helps AI pick the right facial expression and composition.",
+      icon: <Sparkles size={16} />,
+      field: {
+        type: "chip-select",
+        key: "mood",
+        options: [
+          { value: "Dramatic", label: "Dramatic", emoji: "🎭" },
+          { value: "Shocking", label: "Shocking", emoji: "😱" },
+          { value: "Excited", label: "Excited", emoji: "🤩" },
+          { value: "Mysterious", label: "Mysterious", emoji: "🕵️" },
+          { value: "Funny", label: "Funny", emoji: "😂" },
+          { value: "Professional", label: "Professional", emoji: "👔" },
+          { value: "Inspirational", label: "Inspirational", emoji: "✨" },
+          { value: "Angry", label: "Angry", emoji: "😠" },
+        ],
+      },
+    },
+    {
+      id: "elements",
+      title: "Add extras (optional)",
+      description: "Arrows, stars, and emojis add energy. Skip to keep it clean.",
+      icon: <Zap size={16} />,
+      field: {
+        type: "chip-select",
+        key: "elements",
+        optional: true,
+        options: [
+          { value: "arrows", label: "Red Arrows", emoji: "➡️" },
+          { value: "stars", label: "Stars", emoji: "⭐" },
+          { value: "fire", label: "Fire", emoji: "🔥" },
+          { value: "money", label: "Money", emoji: "💰" },
+          { value: "emoji_shocked", label: "Shocked Face", emoji: "😱" },
+          { value: "check", label: "Checkmarks", emoji: "✅" },
+          { value: "x", label: "Red X", emoji: "❌" },
+          { value: "badges", label: "Badges", emoji: "🏅" },
+        ],
+      },
+    },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       {/* ─── Hero Header ─── */}
@@ -3166,6 +3340,12 @@ export default function ThumbnailGeneratorPage() {
         gradient="ocean"
         actions={
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setWizardOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all hover-lift"
+            >
+              <Sparkles size={12} /> Guided Mode
+            </button>
             <span className="text-[10px] text-white/70 uppercase tracking-wider font-medium">
               {displayWidth} x {displayHeight}
             </span>
@@ -3174,6 +3354,43 @@ export default function ThumbnailGeneratorPage() {
             </div>
           </div>
         }
+      />
+
+      {/* Step-by-Step Guided Creation Wizard */}
+      <CreationWizard
+        open={wizardOpen}
+        title="Create Your Thumbnail"
+        subtitle="We'll walk you through it — no experience needed"
+        icon={<ImageIcon size={18} />}
+        submitLabel="Generate Thumbnail"
+        initialData={{
+          title: textOverlay,
+          style: thumbnailConfig.stylePreset,
+          platform,
+        }}
+        steps={thumbnailWizardSteps}
+        onClose={() => {
+          setWizardOpen(false);
+          try { localStorage.setItem("ss-thumbnail-wizard-seen", "1"); } catch {}
+        }}
+        onComplete={async (data) => {
+          // Apply wizard choices to the editor
+          if (data.title) setTextOverlay(data.title as string);
+          if (data.style) {
+            const preset = YOUTUBER_THUMBNAIL_PRESETS.find(p => p.id === data.style);
+            if (preset) applyYouTuberPreset(preset);
+          }
+          if (data.platform) setPlatform(data.platform as string);
+          if (data.colorScheme) setColorTheme(data.colorScheme as string);
+          if (data.mood) setMood(data.mood as string);
+          if (data.textEffect === "stroke") patchConfig("typography", { strokeEnabled: true });
+          if (data.textEffect === "gradient") patchConfig("typography", { gradientEnabled: true });
+          if (data.textEffect === "shadow") patchConfig("typography", { shadowEnabled: true });
+
+          setWizardOpen(false);
+          try { localStorage.setItem("ss-thumbnail-wizard-seen", "1"); } catch {}
+          toast.success("Settings applied! Click Generate to create your thumbnail.");
+        }}
       />
 
       {/* ─── Tabs ─── */}

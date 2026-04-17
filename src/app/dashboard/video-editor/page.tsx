@@ -22,6 +22,7 @@ import {
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
+import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
@@ -1165,6 +1166,15 @@ export default function VideoEditorPage() {
   const [referenceFiles, setReferenceFiles] = useState<Array<{ name: string; type: string; preview: string; data: string }>>([]);
   const [tab, setTab] = useState<"create" | "storyboard" | "templates" | "assets" | "export">("create");
   const [mode, setMode] = useState<"render" | "plan" | "storyboard">("plan");
+
+  // Guided wizard state
+  const [videoWizardOpen, setVideoWizardOpen] = useState(false);
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem("ss-video-wizard-seen");
+      if (!seen) setVideoWizardOpen(true);
+    } catch {}
+  }, []);
   const [config, setConfig] = useState({
     type: "reel",
     title: "",
@@ -2469,6 +2479,140 @@ export default function VideoEditorPage() {
 
   const selectedType = VIDEO_TYPES.find(t => t.id === config.type) || VIDEO_TYPES[0];
 
+  /* ─── Wizard steps for newbies ─── */
+  const videoWizardSteps: WizardStep[] = [
+    {
+      id: "topic",
+      title: "What's your video about?",
+      description: "A quick description helps us generate the right script, captions, and visuals.",
+      icon: <Type size={16} />,
+      field: { type: "textarea", key: "topic", placeholder: "e.g., A 30-second reel about the top 3 productivity tips for founders" },
+    },
+    {
+      id: "platform",
+      title: "Where will this video live?",
+      description: "Different platforms need different aspect ratios and durations.",
+      icon: <Film size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "platform",
+        options: [
+          { value: "tiktok", label: "TikTok", description: "9:16, up to 60s", emoji: "🎵", preview: "bg-pink-500/20" },
+          { value: "instagram_reels", label: "Instagram Reels", description: "9:16, up to 90s", emoji: "📱", preview: "bg-gradient-to-br from-pink-500/30 to-purple-500/30" },
+          { value: "youtube_shorts", label: "YouTube Shorts", description: "9:16, up to 60s", emoji: "▶️", preview: "bg-red-600/20" },
+          { value: "youtube", label: "YouTube", description: "16:9, any length", emoji: "🎬", preview: "bg-red-500/20" },
+          { value: "linkedin", label: "LinkedIn", description: "1:1 or 16:9", emoji: "💼", preview: "bg-blue-600/20" },
+          { value: "twitter", label: "X / Twitter", description: "16:9, up to 2:20", emoji: "𝕏", preview: "bg-zinc-700/30" },
+        ],
+      },
+    },
+    {
+      id: "duration",
+      title: "How long should it be?",
+      description: "Shorter videos have higher completion rates. 15-30s is the sweet spot for social.",
+      icon: <Sparkles size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "duration",
+        options: [
+          { value: "15", label: "15 seconds", description: "Ultra-short hook", emoji: "⚡" },
+          { value: "30", label: "30 seconds", description: "Standard reel/short", emoji: "📱" },
+          { value: "60", label: "1 minute", description: "Detailed explainer", emoji: "🎯" },
+          { value: "90", label: "1.5 minutes", description: "Longer narrative", emoji: "📖" },
+          { value: "180", label: "3 minutes", description: "Deep dive", emoji: "🔍" },
+          { value: "600", label: "10 minutes", description: "Full YouTube video", emoji: "🎥" },
+        ],
+      },
+    },
+    {
+      id: "style",
+      title: "Pick a creator style",
+      description: "We'll match captions, pacing, music, and color grade to this creator's signature.",
+      icon: <Wand2 size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "style",
+        options: YOUTUBER_PRESETS.slice(0, 12).map(p => ({
+          value: p.id,
+          label: p.name,
+          description: p.tagline,
+          preview: p.preview,
+        })),
+      },
+    },
+    {
+      id: "captions",
+      title: "Caption style",
+      description: "Captions boost watch time by 40%. Pick the style that fits your content.",
+      icon: <Type size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "captionStyle",
+        options: [
+          { value: "word_highlight", label: "Word-by-Word", description: "Karaoke-style highlight (TikTok)", emoji: "🎤" },
+          { value: "meme_impact", label: "Meme Bold", description: "Impact font, yellow + black stroke", emoji: "💥" },
+          { value: "cinematic", label: "Cinematic", description: "Lower-third subtle subtitles", emoji: "🎬" },
+          { value: "podcast", label: "Podcast Clean", description: "Simple white on dark", emoji: "🎙️" },
+          { value: "bouncy", label: "Bouncy Reel", description: "Colorful, playful pop-ins", emoji: "🎈" },
+          { value: "none", label: "No Captions", description: "Skip captions entirely", emoji: "🚫" },
+        ],
+      },
+    },
+    {
+      id: "music",
+      title: "Music vibe",
+      description: "Background music dramatically affects how your video feels.",
+      icon: <Music size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "musicMood",
+        options: [
+          { value: "upbeat", label: "Upbeat", description: "High energy, fun", emoji: "⚡" },
+          { value: "cinematic", label: "Cinematic", description: "Epic, dramatic", emoji: "🎬" },
+          { value: "chill", label: "Chill", description: "Lo-fi, relaxed", emoji: "🎧" },
+          { value: "emotional", label: "Emotional", description: "Heartfelt, moving", emoji: "💖" },
+          { value: "hip_hop", label: "Hip Hop", description: "Trending, street", emoji: "🎤" },
+          { value: "corporate", label: "Corporate", description: "Clean, professional", emoji: "💼" },
+          { value: "edm", label: "EDM", description: "Electronic, intense", emoji: "🔊" },
+          { value: "none", label: "No Music", description: "Voice only", emoji: "🔇" },
+        ],
+      },
+    },
+    {
+      id: "effects",
+      title: "Visual effects (optional)",
+      description: "Add punch. Zoom-ins and transitions keep viewers watching.",
+      icon: <Zap size={16} />,
+      field: {
+        type: "chip-select",
+        key: "effects",
+        optional: true,
+        options: [
+          { value: "punch_zoom", label: "Punch Zoom", emoji: "🔍" },
+          { value: "motion_blur", label: "Motion Blur", emoji: "💨" },
+          { value: "flash_cuts", label: "Flash Cuts", emoji: "⚡" },
+          { value: "glitch", label: "Glitch", emoji: "📺" },
+          { value: "slow_mo", label: "Slow Motion", emoji: "🐢" },
+          { value: "speed_ramp", label: "Speed Ramp", emoji: "🚀" },
+          { value: "sparkles", label: "Sparkles", emoji: "✨" },
+          { value: "light_leak", label: "Light Leak", emoji: "💡" },
+        ],
+      },
+    },
+    {
+      id: "cta",
+      title: "Call to action",
+      description: "What should viewers do after watching? Leave blank to skip.",
+      icon: <Sparkles size={16} />,
+      field: {
+        type: "text",
+        key: "cta",
+        placeholder: "e.g., Follow for more tips • Visit the link in bio",
+        optional: true,
+      },
+    },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -2477,8 +2621,58 @@ export default function VideoEditorPage() {
         subtitle="AI storyboards, video plans & GPU rendering via Remotion & Mochi."
         gradient="sunset"
       />
+
+      {/* Step-by-Step Guided Creation Wizard */}
+      <CreationWizard
+        open={videoWizardOpen}
+        title="Create Your Video"
+        subtitle="Step-by-step — pick a style, captions, music. We handle the rest."
+        icon={<Film size={18} />}
+        submitLabel="Apply & Continue"
+        initialData={{
+          topic: config.title,
+          platform: config.target_platform,
+          duration: String(config.duration),
+          style: selectedYouTuberPreset,
+          captionStyle: config.caption_style,
+          musicMood: config.music_mood,
+        }}
+        steps={videoWizardSteps}
+        onClose={() => {
+          setVideoWizardOpen(false);
+          try { localStorage.setItem("ss-video-wizard-seen", "1"); } catch {}
+        }}
+        onComplete={async (data) => {
+          // Apply all wizard choices to the editor config
+          setConfig(prev => ({
+            ...prev,
+            title: (data.topic as string) || prev.title,
+            script: (data.topic as string) || prev.script,
+            target_platform: (data.platform as string) || prev.target_platform,
+            duration: data.duration ? parseInt(data.duration as string) : prev.duration,
+            caption_style: (data.captionStyle as string) || prev.caption_style,
+            music_mood: (data.musicMood as string) || prev.music_mood,
+            cta_text: (data.cta as string) || prev.cta_text,
+          }));
+          if (data.style) {
+            const preset = YOUTUBER_PRESETS.find(p => p.id === data.style);
+            if (preset) applyYouTuberPreset(preset);
+          }
+          setVideoWizardOpen(false);
+          try { localStorage.setItem("ss-video-wizard-seen", "1"); } catch {}
+          toast.success("Settings applied! Now click Generate to create your video.");
+        }}
+      />
+
       <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setVideoWizardOpen(true)}
+            className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold/20 to-amber-500/20 border border-gold/30 text-gold hover:from-gold/30 hover:to-amber-500/30 hover-lift flex items-center gap-1.5"
+            title="Step-by-step guided creation for beginners"
+          >
+            <Sparkles size={12} /> Guided Mode
+          </button>
           <button
             onClick={() => setAiGenOpen(true)}
             className="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5"
