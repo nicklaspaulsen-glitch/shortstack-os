@@ -756,7 +756,7 @@ export default function LandingPagesPage() {
      ══════════════════════════════════════════════════════════════════ */
 
   return (
-    <div className="min-h-screen p-6 max-w-[1400px] mx-auto space-y-6">
+    <div className="fade-in min-h-screen p-6 max-w-[1400px] mx-auto space-y-6">
       <PageHero
         icon={<LayoutTemplate size={28} />}
         title="AI Landing Page Generator"

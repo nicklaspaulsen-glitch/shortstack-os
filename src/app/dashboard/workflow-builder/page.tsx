@@ -675,7 +675,7 @@ function WorkflowBuilderInner() {
   /* ================================================================ */
 
   return (
-    <div className="flex flex-col">
+    <div className="fade-in flex flex-col">
       <PageHero
         className="mb-3"
         icon={<GitBranch size={28} />}

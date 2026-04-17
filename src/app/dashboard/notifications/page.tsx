@@ -294,7 +294,7 @@ export default function NotificationsPage() {
 
   /* ── Render ── */
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-6">
       <PageHero
         icon={<Bell size={28} />}
         title="Notifications"

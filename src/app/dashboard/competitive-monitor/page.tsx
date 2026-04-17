@@ -267,7 +267,7 @@ export default function CompetitiveMonitorPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="fade-in space-y-6">
       <PageHero
         icon={<TargetIcon size={28} />}
         title="Competitive Monitor"

@@ -212,7 +212,7 @@ export default function UsagePage() {
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-5">
+    <div className="fade-in p-6 max-w-5xl mx-auto space-y-5">
       <PageHero
         icon={<Zap size={28} />}
         title="Token Usage"

@@ -196,7 +196,7 @@ export default function MarketplacePage() {
   // ── Render ──
 
   return (
-    <div className="space-y-6 pb-32">
+    <div className="fade-in space-y-6 pb-32">
       <PageHero
         icon={<Store size={28} />}
         title="Marketplace"

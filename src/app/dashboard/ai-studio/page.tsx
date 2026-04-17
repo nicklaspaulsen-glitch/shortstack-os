@@ -41,7 +41,7 @@ export default function AIStudioPage() {
   const [history, setHistory] = useState<JobResult[]>([]);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="fade-in p-6 max-w-7xl mx-auto">
       <PageHero
         className="mb-6"
         icon={<Sparkles size={28} />}

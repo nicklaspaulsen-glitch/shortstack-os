@@ -163,7 +163,7 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="fade-in max-w-7xl mx-auto space-y-8">
       <PageHero
         icon={<CreditCard size={28} />}
         title="Choose Your Plan"

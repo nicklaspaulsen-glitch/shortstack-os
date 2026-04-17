@@ -326,7 +326,7 @@ export default function VoiceReceptionistPage() {
 
   /* ── Render ── */
   return (
-    <div className="p-4 md:p-6 space-y-5 max-w-[1400px] mx-auto">
+    <div className="fade-in p-4 md:p-6 space-y-5 max-w-[1400px] mx-auto">
       <PageHero
         icon={<Headphones size={28} />}
         title="AI Voice Receptionist"

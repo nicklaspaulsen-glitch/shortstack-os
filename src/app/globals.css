@@ -472,12 +472,17 @@ body {
     color: var(--color-text, #374151);
   }
 
-  /* ═══════════ ANIMATIONS ═══════════ */
-  .fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-  .slide-in { animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-  .slide-up { animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1); }
-  .scale-in { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-  .slide-right { animation: slideRight 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  /* ═══════════ ANIMATIONS — GPU accelerated for snappy page loads ═══════════ */
+  .fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: opacity, transform; }
+  .slide-in { animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: opacity, transform; }
+  .slide-up { animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: opacity, transform; }
+  .scale-in { animation: scaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: opacity, transform; }
+  .slide-right { animation: slideRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; will-change: opacity, transform; }
+
+  /* Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in, .slide-in, .slide-up, .scale-in, .slide-right { animation: none !important; }
+  }
   .breathe { animation: breathe 3s ease-in-out infinite; }
   .pulse-ring { animation: pulseRing 2s ease-out infinite; }
   .shimmer-bg { background: linear-gradient(90deg, transparent 33%, rgba(201,168,76,0.06) 50%, transparent 66%); background-size: 200% 100%; animation: shimmer 2.5s ease-in-out infinite; }
@@ -487,10 +492,10 @@ body {
   .stagger-3 { animation-delay: 0.18s; animation-fill-mode: backwards; }
   .stagger-4 { animation-delay: 0.24s; animation-fill-mode: backwards; }
 
-  .fade-in .card:nth-child(1) { animation: fadeSlideUp 0.5s 0.05s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
-  .fade-in .card:nth-child(2) { animation: fadeSlideUp 0.5s 0.12s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
-  .fade-in .card:nth-child(3) { animation: fadeSlideUp 0.5s 0.19s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
-  .fade-in .card:nth-child(4) { animation: fadeSlideUp 0.5s 0.26s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(1) { animation: fadeSlideUp 0.35s 0.04s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(2) { animation: fadeSlideUp 0.35s 0.08s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(3) { animation: fadeSlideUp 0.35s 0.12s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(4) { animation: fadeSlideUp 0.35s 0.16s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
 
   /* Status dots */
   .glow-dot {
