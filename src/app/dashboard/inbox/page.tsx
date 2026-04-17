@@ -483,9 +483,9 @@ export default function InboxPage() {
 
   /* ── Render ── */
   return (
-    <div className="fade-in h-[calc(100vh-4rem)] flex flex-col">
+    <div className="fade-in h-[calc(100vh-4rem)] flex flex-col max-w-[1400px] w-full mx-auto overflow-x-hidden">
       {/* Header */}
-      <div className="px-4 md:px-6 pt-4 md:pt-6 pb-3 space-y-4 shrink-0">
+      <div className="px-4 md:px-6 pt-4 md:pt-6 pb-3 space-y-4 shrink-0 min-w-0">
         <PageHero
           icon={<Inbox size={28} />}
           title="Inbox"

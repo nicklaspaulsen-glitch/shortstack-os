@@ -164,7 +164,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         )}
 
-        <main className="flex-1 lg:ml-56">
+        <main className="flex-1 lg:ml-56 min-w-0 overflow-x-hidden">
           {/* Header */}
           <div className="sticky top-0 z-30 border-b border-border electron-drag topbar-shadow"
             style={{ background: "color-mix(in srgb, var(--color-background) 85%, transparent)", backdropFilter: "blur(16px) saturate(1.2)" }}>
