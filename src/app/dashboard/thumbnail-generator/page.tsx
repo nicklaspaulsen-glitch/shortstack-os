@@ -17,6 +17,7 @@ import {
   Loader2, Sun, Contrast, Frame, Play, Film, Sliders,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { trackGeneration } from "@/lib/track-generation";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
@@ -2779,6 +2780,20 @@ export default function ThumbnailGeneratorPage() {
           walkthrough: true,
         },
       });
+      // Also log into the unified generations feed so the Generations page shows this thumbnail.
+      trackGeneration({
+        category: "thumbnail",
+        title: prompt.slice(0, 120) || "Thumbnail",
+        source_tool: "Thumbnail Studio",
+        content_preview: textOverlay ? textOverlay.slice(0, 200) : prompt.slice(0, 200),
+        metadata: {
+          style, platform, colorTheme, mood,
+          faces: selectedFaces, count: variations,
+          image_urls: imageUrls,
+          primary_image_url: imageUrls[0] || null,
+          walkthrough: true,
+        },
+      });
       loadHistory();
     });
     if (!ok8) { setGenerating(false); return; }
@@ -2949,6 +2964,20 @@ export default function ThumbnailGeneratorPage() {
           mood,
           faces: selectedFaces,
           count: variations,
+        },
+      });
+      // Unified generations feed
+      const imageUrls = backgrounds.filter(Boolean) as string[];
+      trackGeneration({
+        category: "thumbnail",
+        title: prompt.slice(0, 120) || "Thumbnail",
+        source_tool: "Thumbnail Studio",
+        content_preview: textOverlay ? textOverlay.slice(0, 200) : prompt.slice(0, 200),
+        metadata: {
+          style, platform, colorTheme, mood,
+          faces: selectedFaces, count: variations,
+          image_urls: imageUrls,
+          primary_image_url: imageUrls[0] || null,
         },
       });
       loadHistory();

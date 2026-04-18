@@ -13,6 +13,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { Menu, X, Crown } from "lucide-react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 // Lazy-load overlay/modal components — not needed on initial render
 const ClientChatWidget = dynamic(() => import("@/components/client-chat-widget"), { ssr: false });
@@ -96,6 +97,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.replace(getDefaultRoute(role));
     }
   }, [pathname, profile?.role, loading, router]);
+
+  // Dismiss any lingering toasts when the user navigates between pages.
+  // Prevents stale errors from one page (e.g. "Invalid time value" on Events)
+  // hanging around after they switch tabs (e.g. to Polls).
+  useEffect(() => {
+    toast.dismiss();
+  }, [pathname]);
 
   // Ctrl+scroll zoom — applies CSS transform instead of zoom to not break fixed positioning
   const handleWheel = useCallback((e: WheelEvent) => {

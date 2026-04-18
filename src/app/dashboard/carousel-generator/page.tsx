@@ -10,6 +10,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { trackGeneration } from "@/lib/track-generation";
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -470,6 +471,22 @@ export default function CarouselGeneratorPage() {
         const data = await res.json();
         if (data.slides && data.slides.length > 0) {
           setSlides(data.slides);
+          trackGeneration({
+            category: "social_post",
+            title: opts.topic.slice(0, 120),
+            source_tool: "Carousel Generator",
+            content_preview: (data.slides as Slide[])
+              .map((s) => `${s.headline} — ${s.body}`)
+              .join(" | ")
+              .slice(0, 200),
+            metadata: {
+              style: opts.style,
+              slideCount: data.slides.length,
+              slides: data.slides,
+              template: opts.template || undefined,
+              brandColors: opts.brandColors,
+            },
+          });
           toast.success(`${data.slides.length} slides generated!`);
           setGenerating(false);
           return;
@@ -483,6 +500,23 @@ export default function CarouselGeneratorPage() {
     await new Promise((r) => setTimeout(r, 1800));
     const mockSlides = generateMockSlides(opts.topic, opts.slideCount, opts.template || undefined);
     setSlides(mockSlides);
+    trackGeneration({
+      category: "social_post",
+      title: opts.topic.slice(0, 120),
+      source_tool: "Carousel Generator",
+      content_preview: mockSlides
+        .map((s) => `${s.headline} — ${s.body}`)
+        .join(" | ")
+        .slice(0, 200),
+      metadata: {
+        style: opts.style,
+        slideCount: mockSlides.length,
+        slides: mockSlides,
+        template: opts.template || undefined,
+        brandColors: opts.brandColors,
+        mock: true,
+      },
+    });
     toast.success(`${mockSlides.length} slides generated!`);
     setGenerating(false);
   }, []);

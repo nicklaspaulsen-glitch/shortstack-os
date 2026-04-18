@@ -13,6 +13,7 @@ import Modal from "@/components/ui/modal";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { trackGeneration } from "@/lib/track-generation";
 
 interface SubjectVariant {
   subject: string;
@@ -109,7 +110,24 @@ export default function EmailComposerPage() {
         toast.error(data.error || "AI write failed");
         return;
       }
-      setEmail(prev => ({ ...prev, subject: data.subject || prev.subject, body: data.body || prev.body }));
+      setEmail(prev => ({
+        ...prev,
+        // Only overwrite subject if the user hasn't typed one yet.
+        // Preserves user-entered subjects from being silently replaced by AI.
+        subject: prev.subject.trim() ? prev.subject : (data.subject || prev.subject),
+        body: data.body || prev.body,
+      }));
+      const finalSubject = email.subject.trim() || data.subject || "";
+      const finalBody = data.body || email.body;
+      if (finalBody) {
+        trackGeneration({
+          category: "email",
+          title: (finalSubject || aiPrompt.trim() || "Email draft").slice(0, 120),
+          source_tool: "Email Composer",
+          content_preview: String(finalBody).slice(0, 200),
+          metadata: { mode, tone: aiTone, length: aiLength, ai: true },
+        });
+      }
       toast.success("Email generated");
       setShowAiWrite(false);
     } catch (err) {
@@ -140,7 +158,22 @@ export default function EmailComposerPage() {
         toast.error(data.error || "AI improve failed");
         return;
       }
-      setEmail(prev => ({ ...prev, subject: data.subject || prev.subject, body: data.body || prev.body }));
+      setEmail(prev => ({
+        ...prev,
+        subject: prev.subject.trim() ? prev.subject : (data.subject || prev.subject),
+        body: data.body || prev.body,
+      }));
+      const finalSubject = email.subject.trim() || data.subject || "";
+      const finalBody = data.body || email.body;
+      if (finalBody) {
+        trackGeneration({
+          category: "email",
+          title: (finalSubject || "Improved email").slice(0, 120),
+          source_tool: "Email Composer",
+          content_preview: String(finalBody).slice(0, 200),
+          metadata: { mode: "improve", tone: aiTone, ai: true },
+        });
+      }
       toast.success("Email improved");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "AI improve failed");
@@ -472,6 +505,13 @@ export default function EmailComposerPage() {
         subject: finalSubject,
         body: finalBody,
       }));
+      trackGeneration({
+        category: "email",
+        title: finalSubject.slice(0, 120) || "Email draft",
+        source_tool: "Email Composer",
+        content_preview: finalBody.slice(0, 200),
+        metadata: { goal, audience: audienceVal || undefined, wizard: true },
+      });
       if (audienceVal) setAiAudience(audienceVal);
       setActiveTab("compose");
       setWizardOpen(false);

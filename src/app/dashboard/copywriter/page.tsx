@@ -12,6 +12,20 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { Pen } from "lucide-react";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { trackGeneration } from "@/lib/track-generation";
+
+// Map Copywriter's contentType to the unified generations category
+function copyTypeToCategory(t: ContentType): string {
+  switch (t) {
+    case "blog": return "ad_copy";
+    case "landing": return "landing_page";
+    case "email": return "email";
+    case "social": return "social_post";
+    case "product":
+    case "ad":
+    default: return "ad_copy";
+  }
+}
 
 // ── Types ──────────────────────────────────────────────────────────
 type ContentType = "blog" | "landing" | "email" | "social" | "product" | "ad";
@@ -479,6 +493,13 @@ export default function CopywriterPage() {
           timestamp: new Date(),
         };
         setHistory(prev => [item, ...prev].slice(0, 20));
+        trackGeneration({
+          category: copyTypeToCategory(contentType),
+          title: topic.slice(0, 120) || CONTENT_TYPES.find(t => t.id === contentType)?.label || "Content",
+          source_tool: "Copywriter",
+          content_preview: content.slice(0, 200),
+          metadata: { type: contentType, tone, wordCount: content.split(/\s+/).length },
+        });
         toast.success("Content generated!");
       } else {
         // Fallback to mock on API error
@@ -496,6 +517,13 @@ export default function CopywriterPage() {
           timestamp: new Date(),
         };
         setHistory(prev => [item, ...prev].slice(0, 20));
+        trackGeneration({
+          category: copyTypeToCategory(contentType),
+          title: topic.slice(0, 120) || CONTENT_TYPES.find(t => t.id === contentType)?.label || "Content",
+          source_tool: "Copywriter",
+          content_preview: mockContent.slice(0, 200),
+          metadata: { type: contentType, tone, wordCount: mockContent.split(/\s+/).length, mock: true },
+        });
         toast.success("Content generated!");
       }
     } catch {
@@ -514,6 +542,13 @@ export default function CopywriterPage() {
         timestamp: new Date(),
       };
       setHistory(prev => [item, ...prev].slice(0, 20));
+      trackGeneration({
+        category: copyTypeToCategory(contentType),
+        title: topic.slice(0, 120) || CONTENT_TYPES.find(t => t.id === contentType)?.label || "Content",
+        source_tool: "Copywriter",
+        content_preview: mockContent.slice(0, 200),
+        metadata: { type: contentType, tone, wordCount: mockContent.split(/\s+/).length, mock: true },
+      });
       toast.success("Content generated!");
     }
 
@@ -794,6 +829,13 @@ export default function CopywriterPage() {
           timestamp: new Date(),
         };
         setHistory(prev => [item, ...prev].slice(0, 20));
+        trackGeneration({
+          category: copyTypeToCategory(chosenType),
+          title: chosenTopic.slice(0, 120),
+          source_tool: "Copywriter",
+          content_preview: content.slice(0, 200),
+          metadata: { type: chosenType, tone: chosenTone, wordCount: content.split(/\s+/).length, wizard: true },
+        });
         toast.success("Content generated!");
       } else {
         await new Promise(r => setTimeout(r, 1200));
@@ -809,6 +851,13 @@ export default function CopywriterPage() {
           timestamp: new Date(),
         };
         setHistory(prev => [item, ...prev].slice(0, 20));
+        trackGeneration({
+          category: copyTypeToCategory(chosenType),
+          title: chosenTopic.slice(0, 120),
+          source_tool: "Copywriter",
+          content_preview: mockContent.slice(0, 200),
+          metadata: { type: chosenType, tone: chosenTone, wordCount: mockContent.split(/\s+/).length, wizard: true, mock: true },
+        });
         toast.success("Content generated!");
       }
     } catch {
@@ -825,6 +874,13 @@ export default function CopywriterPage() {
         timestamp: new Date(),
       };
       setHistory(prev => [item, ...prev].slice(0, 20));
+      trackGeneration({
+        category: copyTypeToCategory(chosenType),
+        title: chosenTopic.slice(0, 120),
+        source_tool: "Copywriter",
+        content_preview: mockContent.slice(0, 200),
+        metadata: { type: chosenType, tone: chosenTone, wordCount: mockContent.split(/\s+/).length, wizard: true, mock: true },
+      });
       toast.success("Content generated!");
     } finally {
       setGenerating(false);

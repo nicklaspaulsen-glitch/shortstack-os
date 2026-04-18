@@ -7,7 +7,7 @@ import {
   Sparkles, Bot, Film, Megaphone, Globe, Activity, Settings,
   Send, Star, Mail, Eye, PenTool, Target, Crown,
   Camera, Link2, Sun, Calendar, ImageIcon, Phone, Kanban,
-  Headphones, Palette, BookOpen, Inbox, MessageSquare
+  Headphones, Palette, BookOpen, Inbox, MessageSquare, GitBranch
 } from "lucide-react";
 
 interface CommandItem {
@@ -50,7 +50,8 @@ export default function CommandPalette() {
     { id: "content", label: "Content AI", icon: <Film size={14} />, action: () => nav("/dashboard/content"), category: "Navigate", keywords: "scripts generate" },
     { id: "ads", label: "Ads Manager", icon: <Megaphone size={14} />, action: () => nav("/dashboard/ads-manager"), category: "Navigate", keywords: "meta google tiktok campaigns oauth native ads" },
     { id: "automations", label: "Automations", icon: <Zap size={14} />, action: () => nav("/dashboard/automations"), category: "Navigate", keywords: "dm manychat templates" },
-    { id: "workflows", label: "Workflows", icon: <Zap size={14} />, action: () => nav("/dashboard/workflows"), category: "Navigate", keywords: "automation agent builder" },
+    { id: "workflows", label: "Workflows", icon: <Zap size={14} />, action: () => nav("/dashboard/workflows"), category: "Navigate", keywords: "automation agent builder flow workflow" },
+    { id: "flow-builder", label: "Flow Builder", icon: <GitBranch size={14} />, action: () => nav("/dashboard/workflow-builder"), category: "Navigate", keywords: "flow workflow visual builder automate drag drop node canvas" },
     { id: "trinity", label: "Trinity AI", icon: <Bot size={14} />, action: () => nav("/dashboard/trinity"), category: "Navigate", keywords: "assistant chat voice" },
     { id: "reviews", label: "Reviews", icon: <Star size={14} />, action: () => nav("/dashboard/reviews"), category: "Navigate", keywords: "google review respond" },
     { id: "templates", label: "Email Templates", icon: <Mail size={14} />, action: () => nav("/dashboard/email-templates"), category: "Navigate", keywords: "email template copy" },
