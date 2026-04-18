@@ -1733,14 +1733,15 @@ export default function VideoEditorPage() {
         }),
       });
       if (!res.ok) {
-        // Backend stubbed for now — show a TODO-style toast
-        toast.success(`TODO: ${tool.name} backend pending (${res.status})`);
+        // Backend stubbed for now — this is a real failure, not a success
+        toast.error(`${tool.name} backend pending (${res.status}) — endpoint not ready`);
       } else {
         const data = await res.json().catch(() => ({}));
         toast.success(data?.message || `${tool.name} complete`);
       }
-    } catch {
-      toast.error(`TODO: ${tool.name} endpoint not yet wired`);
+    } catch (err) {
+      console.error(`[video-editor] ${tool.name} error:`, err);
+      toast.error(`${tool.name} endpoint not yet wired`);
     } finally {
       setAiToolLoading(prev => ({ ...prev, [tool.id]: false }));
     }
@@ -1794,12 +1795,13 @@ export default function VideoEditorPage() {
         }),
       });
       if (!res.ok) {
-        toast.success("TODO: Voice preview backend pending");
+        toast.error("Voice preview backend pending — endpoint not ready");
       } else {
         toast.success("Voice preview ready");
       }
-    } catch {
-      toast.error("TODO: Voice preview endpoint not yet wired");
+    } catch (err) {
+      console.error("[video-editor] Voice preview error:", err);
+      toast.error("Voice preview endpoint not yet wired");
     } finally {
       setVoicePreviewLoading(false);
     }
@@ -1830,12 +1832,13 @@ export default function VideoEditorPage() {
         body: JSON.stringify({ script: config.script }),
       });
       if (!res.ok) {
-        toast.success("TODO: AI B-Roll match backend pending");
+        toast.error("AI B-Roll match backend pending — endpoint not ready");
       } else {
         toast.success("AI B-roll suggestions generated");
       }
-    } catch {
-      toast.error("TODO: AI B-roll endpoint not yet wired");
+    } catch (err) {
+      console.error("[video-editor] B-Roll match error:", err);
+      toast.error("AI B-roll endpoint not yet wired");
     }
   }
 
@@ -2674,7 +2677,11 @@ export default function VideoEditorPage() {
             <Sparkles size={12} /> Guided Mode
           </button>
           <button
-            onClick={() => setAiGenOpen(true)}
+            onClick={() => {
+              console.log("[video-editor] Generate with AI clicked, opening modal");
+              setAiGenOpen(true);
+            }}
+            type="button"
             className="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5"
             title="Generate a full video project with AI — script, captions, shotlist, and editor settings"
           >

@@ -32,8 +32,9 @@ const PROMPT_IDEAS = [
 interface GenerationResult {
   id: string;
   prompt: string;
-  status: "generating" | "completed" | "failed";
+  status: "generating" | "completed" | "failed" | "plan";
   url?: string;
+  plan?: string;
   aspect_ratio: string;
   created_at: string;
 }
@@ -98,17 +99,19 @@ export default function AIVideoPage() {
       setProgress(100);
 
       const data = await res.json();
+      console.log("[ai-video] /api/video/render response:", data);
       if (data.success && data.url) {
         setResults(prev => prev.map(r => r.id === id ? { ...r, status: "completed", url: data.url } : r));
         toast.success("Video generated!");
       } else if (data.plan) {
-        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "completed" } : r));
-        toast.success("Video plan created (GPU endpoint not configured yet)");
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "plan", plan: data.plan } : r));
+        toast.success("Video plan created (GPU endpoint not configured — showing scene plan)");
       } else {
         setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
         toast.error(data.error || "Generation failed");
       }
-    } catch {
+    } catch (err) {
+      console.error("[ai-video] generateVideo error:", err);
       clearInterval(progressInterval);
       setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
       toast.error("Connection error");
@@ -482,6 +485,11 @@ export default function AIVideoPage() {
                             <Play size={8} /> Ready
                           </span>
                         )}
+                        {result.status === "plan" && (
+                          <span className="text-[8px] text-gold flex items-center gap-1">
+                            <Sparkles size={8} /> Plan Ready
+                          </span>
+                        )}
                         {result.status === "failed" && (
                           <span className="text-[8px] text-danger">Failed</span>
                         )}
@@ -499,6 +507,16 @@ export default function AIVideoPage() {
                   {result.url && (
                     <div className="mt-3 rounded-xl overflow-hidden bg-black aspect-video">
                       <video src={result.url} controls className="w-full h-full object-contain" />
+                    </div>
+                  )}
+                  {result.plan && (
+                    <div className="mt-3 rounded-xl border border-gold/20 bg-gold/[0.03] p-3">
+                      <p className="text-[9px] text-gold uppercase tracking-wider mb-1.5 font-semibold">
+                        AI-Generated Video Plan
+                      </p>
+                      <pre className="text-[10px] text-foreground/90 whitespace-pre-wrap font-sans leading-relaxed">
+                        {result.plan}
+                      </pre>
                     </div>
                   )}
                 </div>
