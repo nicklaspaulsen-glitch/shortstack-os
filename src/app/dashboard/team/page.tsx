@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import {
   Users, CheckCircle,
   Clock,
   Shield, BarChart3, UserPlus, Mail,
   Activity, X, Search, Crown, Pencil,
-  Settings, Lock, Unlock,
+  Settings, Lock, Unlock, Trash2, Key, Eye, EyeOff,
   AlertTriangle,
   UsersRound,
 } from "lucide-react";
@@ -100,9 +101,110 @@ export default function TeamPage() {
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [inviteForm, setInviteForm] = useState({ name: "", email: "", role: "creator" as RoleId });
   const [customRoleName, setCustomRoleName] = useState("");
   const [customPermissions, setCustomPermissions] = useState<Record<string, boolean>>({});
+
+  // Real team members from DB
+  interface RealMember {
+    id: string; email: string; full_name: string; role: string; status: string;
+    can_manage_clients: boolean; can_manage_outreach: boolean; can_manage_content: boolean;
+    can_manage_ads: boolean; can_manage_team: boolean; can_view_financials: boolean;
+    client_access_mode: string; allowed_client_ids: string[];
+    last_active_at?: string; created_at: string; avatar_url?: string; job_title?: string;
+  }
+  const [realMembers, setRealMembers] = useState<RealMember[]>([]);
+  const [createForm, setCreateForm] = useState({
+    email: "", full_name: "", password: "", job_title: "", role: "member",
+    can_manage_clients: true, can_manage_outreach: true, can_manage_content: true,
+    can_manage_ads: false, can_manage_team: false, can_view_financials: false,
+    client_access_mode: "all" as "all" | "specific" | "none",
+  });
+  const [creating, setCreating] = useState(false);
+  const [editingMember, setEditingMember] = useState<RealMember | null>(null);
+
+  async function loadRealMembers() {
+    try {
+      const res = await fetch("/api/team");
+      if (res.ok) {
+        const d = await res.json();
+        setRealMembers(d.members || []);
+      }
+    } catch {}
+  }
+
+  useEffect(() => { loadRealMembers(); }, []);
+
+  async function createMember() {
+    if (!createForm.email || !createForm.password) {
+      toast.error("Email and password required");
+      return;
+    }
+    setCreating(true);
+    try {
+      const res = await fetch("/api/team", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...createForm,
+          permissions: {
+            can_manage_clients: createForm.can_manage_clients,
+            can_manage_outreach: createForm.can_manage_outreach,
+            can_manage_content: createForm.can_manage_content,
+            can_manage_ads: createForm.can_manage_ads,
+            can_manage_team: createForm.can_manage_team,
+            can_view_financials: createForm.can_view_financials,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`Team member created: ${createForm.email}`);
+        setCreateForm({
+          email: "", full_name: "", password: "", job_title: "", role: "member",
+          can_manage_clients: true, can_manage_outreach: true, can_manage_content: true,
+          can_manage_ads: false, can_manage_team: false, can_view_financials: false,
+          client_access_mode: "all",
+        });
+        setShowInvite(false);
+        loadRealMembers();
+      } else {
+        toast.error(data.error || "Failed to create member");
+      }
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  async function updateMember(id: string, updates: Record<string, unknown>) {
+    const res = await fetch(`/api/team/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    });
+    const data = await res.json();
+    if (data.success) {
+      toast.success("Member updated");
+      loadRealMembers();
+      return true;
+    }
+    toast.error(data.error || "Update failed");
+    return false;
+  }
+
+  async function removeMember(id: string, email: string) {
+    if (!confirm(`Remove ${email} from your team? They'll lose access immediately.`)) return;
+    const res = await fetch(`/api/team/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      toast.success("Member removed");
+      loadRealMembers();
+    } else {
+      toast.error("Failed to remove");
+    }
+  }
 
   const onlineCount = members.filter(m => m.status === "online").length;
   const totalTasks = members.reduce((s, m) => s + m.tasksAssigned, 0);
@@ -465,52 +567,161 @@ export default function TeamPage() {
         </div>
       )}
 
+      {/* ═══ REAL TEAM MEMBERS SECTION ═══ */}
+      {tab === "members" && realMembers.length > 0 && (
+        <div className="card mt-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="section-header flex items-center gap-2 mb-0">
+              <Users size={13} className="text-gold" /> Active Team Members
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-gold/10 text-gold">
+                {realMembers.filter(m => m.status === "active").length} active
+              </span>
+            </h2>
+          </div>
+          <div className="space-y-2">
+            {realMembers.map(m => (
+              <div key={m.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light/30 border border-border hover:border-gold/20 transition-all">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gold/30 to-amber-500/20 flex items-center justify-center text-gold text-xs font-bold shrink-0">
+                  {m.full_name?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() || m.email[0].toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-semibold truncate">{m.full_name || m.email}</p>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full capitalize ${
+                      m.role === "manager" ? "bg-purple-400/10 text-purple-400" :
+                      m.role === "viewer" ? "bg-gray-400/10 text-gray-400" :
+                      "bg-emerald-400/10 text-emerald-400"
+                    }`}>{m.role}</span>
+                    {m.job_title && <span className="text-[9px] text-muted">· {m.job_title}</span>}
+                  </div>
+                  <p className="text-[10px] text-muted">{m.email}</p>
+                  <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    {m.can_manage_clients && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Clients</span>}
+                    {m.can_manage_outreach && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Outreach</span>}
+                    {m.can_manage_content && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Content</span>}
+                    {m.can_manage_ads && <span className="text-[8px] px-1 py-0.5 rounded bg-white/5 text-muted">Ads</span>}
+                    {m.can_view_financials && <span className="text-[8px] px-1 py-0.5 rounded bg-amber-400/10 text-amber-400">Financials</span>}
+                    {m.client_access_mode === "specific" && (
+                      <span className="text-[8px] px-1 py-0.5 rounded bg-blue-400/10 text-blue-400">
+                        {m.allowed_client_ids.length} client{m.allowed_client_ids.length === 1 ? "" : "s"}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 shrink-0">
+                  <button onClick={() => setEditingMember(m)} className="p-1.5 rounded hover:bg-white/5 text-muted hover:text-foreground" title="Edit">
+                    <Pencil size={11} />
+                  </button>
+                  <button onClick={() => removeMember(m.id, m.email)} className="p-1.5 rounded hover:bg-red-500/10 text-muted hover:text-red-400" title="Remove">
+                    <Trash2 size={11} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ═══ INVITE MODAL ═══ */}
       {showInvite && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
-          <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
+          <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Invite Team Member</h3>
+              <h3 className="text-sm font-bold flex items-center gap-2"><UserPlus size={14} className="text-gold" /> Create Team Member</h3>
               <button onClick={() => setShowInvite(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
             </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Email Address</label>
-              <input type="email" value={inviteForm.email} onChange={e => setInviteForm({ ...inviteForm, email: e.target.value })}
-                className="input w-full text-xs" placeholder="colleague@company.com" />
+            <p className="text-[10px] text-muted -mt-1">A new account will be created. They&apos;ll log in with the email and password you set.</p>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Email *</label>
+                <input type="email" value={createForm.email} onChange={e => setCreateForm({ ...createForm, email: e.target.value })}
+                  className="input w-full text-xs" placeholder="member@yourco.com" />
+              </div>
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Full Name</label>
+                <input value={createForm.full_name} onChange={e => setCreateForm({ ...createForm, full_name: e.target.value })}
+                  className="input w-full text-xs" placeholder="Jane Smith" />
+              </div>
             </div>
-            <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Full Name</label>
-              <input value={inviteForm.name} onChange={e => setInviteForm({ ...inviteForm, name: e.target.value })}
-                className="input w-full text-xs" placeholder="John Smith" />
+
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Password *</label>
+                <input type="password" value={createForm.password} onChange={e => setCreateForm({ ...createForm, password: e.target.value })}
+                  className="input w-full text-xs" placeholder="Min 8 chars" />
+              </div>
+              <div>
+                <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Job Title</label>
+                <input value={createForm.job_title} onChange={e => setCreateForm({ ...createForm, job_title: e.target.value })}
+                  className="input w-full text-xs" placeholder="Account Manager" />
+              </div>
             </div>
+
             <div>
               <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Role</label>
-              <div className="space-y-1.5">
-                {ROLE_DEFINITIONS.filter(r => r.id !== "owner").map(role => (
-                  <button key={role.id} onClick={() => setInviteForm({ ...inviteForm, role: role.id })}
-                    className={`w-full p-2.5 rounded-lg border text-left transition-all ${
-                      inviteForm.role === role.id
-                        ? "border-gold/30 bg-gold/[0.03]"
-                        : "border-border hover:border-gold/10"
-                    }`}>
-                    <div className="flex items-center gap-2">
-                      <Shield size={12} style={{ color: role.color }} />
-                      <span className="text-xs font-semibold">{role.label}</span>
-                      {inviteForm.role === role.id && <CheckCircle size={10} className="text-gold ml-auto" />}
-                    </div>
-                    <p className="text-[9px] text-muted mt-0.5 ml-5">{role.description}</p>
-                  </button>
+              <div className="flex gap-1">
+                {(["member", "manager", "viewer"] as const).map(r => (
+                  <button key={r} onClick={() => setCreateForm({ ...createForm, role: r })}
+                    className={`flex-1 py-1.5 rounded-lg text-xs capitalize transition-all ${
+                      createForm.role === r ? "bg-gold/15 text-gold border border-gold/30" : "bg-surface-light text-muted border border-border"
+                    }`}>{r}</button>
                 ))}
               </div>
             </div>
+
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Permissions</label>
+              <div className="grid grid-cols-2 gap-1.5">
+                {([
+                  { key: "can_manage_clients", label: "Manage clients" },
+                  { key: "can_manage_outreach", label: "Run outreach" },
+                  { key: "can_manage_content", label: "Create content" },
+                  { key: "can_manage_ads", label: "Manage ads" },
+                  { key: "can_manage_team", label: "Invite team" },
+                  { key: "can_view_financials", label: "View financials" },
+                ] as const).map(p => (
+                  <label key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border cursor-pointer hover:border-gold/20">
+                    <input
+                      type="checkbox"
+                      checked={!!createForm[p.key as keyof typeof createForm]}
+                      onChange={e => setCreateForm({ ...createForm, [p.key]: e.target.checked })}
+                      className="accent-gold"
+                    />
+                    <span className="text-[10px]">{p.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-lg bg-amber-500/5 border border-amber-500/20 p-2.5 flex items-start gap-2">
+              <AlertTriangle size={11} className="text-amber-400 shrink-0 mt-0.5" />
+              <p className="text-[10px] text-muted">
+                Team members control <span className="text-amber-400 font-medium">your clients</span>. They cannot create their own agency accounts, manage billing, or see other agencies.
+              </p>
+            </div>
+
             <div className="flex justify-end gap-2 pt-1">
               <button onClick={() => setShowInvite(false)} className="btn-secondary text-xs">Cancel</button>
-              <button className="btn-primary text-xs flex items-center gap-1.5" onClick={() => setShowInvite(false)}>
-                <Mail size={12} /> Send Invite
+              <button onClick={createMember} disabled={creating || !createForm.email || !createForm.password}
+                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+                <UserPlus size={12} /> {creating ? "Creating..." : "Create Member"}
               </button>
             </div>
           </div>
         </div>
+      )}
+
+      {/* ═══ EDIT MEMBER MODAL ═══ */}
+      {editingMember && (
+        <EditMemberModal
+          member={editingMember}
+          onClose={() => setEditingMember(null)}
+          onSave={async (updates) => {
+            const ok = await updateMember(editingMember.id, updates);
+            if (ok) setEditingMember(null);
+          }}
+        />
       )}
 
       {/* ═══ CUSTOM ROLE BUILDER MODAL ═══ */}
@@ -555,6 +766,144 @@ export default function TeamPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ── Edit Team Member Modal ── */
+interface EditMemberProps {
+  member: {
+    id: string;
+    email: string;
+    full_name: string;
+    job_title?: string;
+    role: string;
+    can_manage_clients: boolean;
+    can_manage_outreach: boolean;
+    can_manage_content: boolean;
+    can_manage_ads: boolean;
+    can_manage_team: boolean;
+    can_view_financials: boolean;
+  };
+  onClose: () => void;
+  onSave: (updates: Record<string, unknown>) => Promise<void>;
+}
+
+function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
+  const [full_name, setFullName] = useState(member.full_name || "");
+  const [new_email, setNewEmail] = useState(member.email);
+  const [new_password, setNewPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [job_title, setJobTitle] = useState(member.job_title || "");
+  const [role, setRole] = useState(member.role);
+  const [perms, setPerms] = useState({
+    can_manage_clients: member.can_manage_clients,
+    can_manage_outreach: member.can_manage_outreach,
+    can_manage_content: member.can_manage_content,
+    can_manage_ads: member.can_manage_ads,
+    can_manage_team: member.can_manage_team,
+    can_view_financials: member.can_view_financials,
+  });
+  const [saving, setSaving] = useState(false);
+
+  async function handleSave() {
+    setSaving(true);
+    const updates: Record<string, unknown> = {
+      full_name, job_title, role, ...perms,
+    };
+    if (new_email !== member.email) updates.new_email = new_email;
+    if (new_password) updates.new_password = new_password;
+    await onSave(updates);
+    setSaving(false);
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold flex items-center gap-2"><Pencil size={14} className="text-gold" /> Edit Team Member</h3>
+          <button onClick={onClose} className="text-muted hover:text-foreground"><X size={16} /></button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Full Name</label>
+            <input value={full_name} onChange={e => setFullName(e.target.value)} className="input w-full text-xs" />
+          </div>
+          <div>
+            <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Job Title</label>
+            <input value={job_title} onChange={e => setJobTitle(e.target.value)} className="input w-full text-xs" />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold flex items-center gap-1">
+            <Mail size={9} /> Email (change requires re-login)
+          </label>
+          <input type="email" value={new_email} onChange={e => setNewEmail(e.target.value)} className="input w-full text-xs" />
+        </div>
+
+        <div>
+          <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold flex items-center gap-1">
+            <Key size={9} /> Reset Password <span className="text-muted normal-case">(optional — leave blank to keep)</span>
+          </label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={new_password}
+              onChange={e => setNewPassword(e.target.value)}
+              placeholder="Leave blank to keep current"
+              className="input w-full text-xs pr-8"
+            />
+            <button onClick={() => setShowPassword(s => !s)} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted hover:text-foreground">
+              {showPassword ? <EyeOff size={11} /> : <Eye size={11} />}
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Role</label>
+          <div className="flex gap-1">
+            {(["member", "manager", "viewer"] as const).map(r => (
+              <button key={r} onClick={() => setRole(r)}
+                className={`flex-1 py-1.5 rounded-lg text-xs capitalize transition-all ${
+                  role === r ? "bg-gold/15 text-gold border border-gold/30" : "bg-surface-light text-muted border border-border"
+                }`}>{r}</button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Permissions</label>
+          <div className="grid grid-cols-2 gap-1.5">
+            {([
+              { key: "can_manage_clients", label: "Manage clients" },
+              { key: "can_manage_outreach", label: "Run outreach" },
+              { key: "can_manage_content", label: "Create content" },
+              { key: "can_manage_ads", label: "Manage ads" },
+              { key: "can_manage_team", label: "Invite team" },
+              { key: "can_view_financials", label: "View financials" },
+            ] as const).map(p => (
+              <label key={p.key} className="flex items-center gap-2 p-2 rounded-lg bg-surface-light/50 border border-border cursor-pointer hover:border-gold/20">
+                <input
+                  type="checkbox"
+                  checked={perms[p.key as keyof typeof perms]}
+                  onChange={e => setPerms({ ...perms, [p.key]: e.target.checked })}
+                  className="accent-gold"
+                />
+                <span className="text-[10px]">{p.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex justify-end gap-2 pt-1">
+          <button onClick={onClose} className="btn-secondary text-xs">Cancel</button>
+          <button onClick={handleSave} disabled={saving} className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+            {saving ? "Saving..." : "Save Changes"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

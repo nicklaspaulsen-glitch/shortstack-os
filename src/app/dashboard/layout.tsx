@@ -21,6 +21,7 @@ const OnboardingTour = dynamic(() => import("@/components/onboarding-tour"), { s
 const CommandPalette = dynamic(() => import("@/components/command-palette"), { ssr: false });
 const KeyboardShortcuts = dynamic(() => import("@/components/keyboard-shortcuts"), { ssr: false });
 const QuickAdd = dynamic(() => import("@/components/quick-add"), { ssr: false });
+const ClientContextPill = dynamic(() => import("@/components/client-context-pill"), { ssr: false });
 
 // ── Role-based route access control ──
 // Complements the sidebar role filtering (which hides nav items) by
@@ -212,6 +213,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <CommandPalette />
         <KeyboardShortcuts />
         <QuickAdd />
+        <ClientContextPill />
       </div>
     </>
   );

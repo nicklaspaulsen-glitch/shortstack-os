@@ -84,6 +84,14 @@
     {
       "path": "/api/cron/budget-alert",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/cleanup-senders",
+      "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/cron/process-deletions",
+      "schedule": "0 2 * * *"
     }
   ]
 }
