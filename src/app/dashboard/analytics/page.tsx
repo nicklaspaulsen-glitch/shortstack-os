@@ -337,7 +337,7 @@ export default function AnalyticsPage() {
       <PageHero
         icon={<BarChart3 size={22} />}
         title="Analytics"
-        subtitle="Performance metrics across leads, revenue, outreach, and content."
+        subtitle="See what's working — leads, revenue, and content ROI at a glance."
         gradient="blue"
       />
       {/* Date Range Picker + Export */}

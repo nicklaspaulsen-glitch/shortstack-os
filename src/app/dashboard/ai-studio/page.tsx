@@ -71,7 +71,7 @@ export default function AIStudioPage() {
         className="mb-6"
         icon={<Sparkles size={28} />}
         title="AI Studio"
-        subtitle="GPU-powered AI tools on your RunPod cluster."
+        subtitle="Generate images, upscale photos, clone voices. All in one place."
         gradient="ocean"
         actions={
           <div className="flex items-center gap-2">

@@ -187,14 +187,12 @@ export default function VoiceReceptionistPage() {
   const [callSearch, setCallSearch] = useState("");
   const [playingRecording, setPlayingRecording] = useState<string | null>(null);
 
-  // Config state
-  const [greeting, setGreeting] = useState(
-    "Thank you for calling ShortStack Digital. My name is Ava, your virtual receptionist. How can I help you today?"
-  );
-  const [businessName, setBusinessName] = useState("ShortStack Digital");
-  const [services, setServices] = useState("Social Media Management, Website Design, SEO, Paid Advertising, Brand Identity");
-  const [pricing, setPricing] = useState("Starter: $497/mo, Growth: $997/mo, Scale: $1,997/mo");
-  const [hoursText, setHoursText] = useState("Mon-Fri 9AM-6PM, Sat-Sun Closed");
+  // Config state — empty defaults; user fills in their own business details
+  const [greeting, setGreeting] = useState("");
+  const [businessName, setBusinessName] = useState("");
+  const [services, setServices] = useState("");
+  const [pricing, setPricing] = useState("");
+  const [hoursText, setHoursText] = useState("");
   const [questions, setQuestions] = useState<QualificationQuestion[]>(DEFAULT_QUESTIONS);
   const [newQuestion, setNewQuestion] = useState("");
   const [routingRules, setRoutingRules] = useState<RoutingRule[]>(DEFAULT_ROUTING);
@@ -204,7 +202,7 @@ export default function VoiceReceptionistPage() {
   const [workingHours, setWorkingHours] = useState<WorkingHour[]>(DEFAULT_HOURS);
 
   // Booking state
-  const [calendlyUrl, setCalendlyUrl] = useState("https://calendly.com/shortstack-digital/strategy-call");
+  const [calendlyUrl, setCalendlyUrl] = useState("");
   const [confirmSms, setConfirmSms] = useState(true);
   const [autoLogBooking, setAutoLogBooking] = useState(true);
 

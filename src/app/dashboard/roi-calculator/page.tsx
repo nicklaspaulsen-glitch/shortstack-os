@@ -372,6 +372,9 @@ Break-even: ${breakEvenMonths} month${breakEvenMonths !== 1 ? "s" : ""}`;
         <div className="space-y-4">
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Target size={13} className="text-gold" /> Industry Benchmarks</h2>
+            <p className="text-[10px] text-muted mb-3 italic">
+              Industry averages compiled from aggregate agency reports. Your actual ROI may vary based on market, offer, and execution.
+            </p>
             <div className="flex gap-2 mb-3 flex-wrap">
               {BENCHMARKS.map(b => (
                 <button key={b.industry} onClick={() => setSelectedIndustry(b.industry)}

@@ -396,7 +396,7 @@ export default function SocialManagerPage() {
       <PageHero
         icon={<Bot size={22} />}
         title="Social Manager"
-        subtitle="Autonomous AI that creates, schedules & publishes content."
+        subtitle="Post everywhere at once. AI plans, writes, and schedules for you."
         gradient="purple"
       />
       <div className="flex items-center justify-end flex-wrap gap-3">

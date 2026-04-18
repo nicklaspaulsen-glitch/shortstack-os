@@ -454,7 +454,7 @@ export default function AdsManagerPage() {
       <PageHero
         icon={<Target size={28} />}
         title="Ads Manager"
-        subtitle="AI multi-platform ads across Meta, Google & TikTok."
+        subtitle="Launch Meta, Google & TikTok ads. AI writes the copy and tests creatives."
         gradient="sunset"
         actions={
           <button

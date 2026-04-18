@@ -130,7 +130,7 @@ export default function AgentDesktopPage() {
       <PageHero
         icon={<Monitor size={28} />}
         title="Apps & Downloads"
-        subtitle="Desktop agent, Chrome extension & monitoring."
+        subtitle="Automate repetitive work on your computer. Safe, watched, auditable."
         gradient="blue"
         actions={
           <button onClick={() => setTab("Activity")} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">

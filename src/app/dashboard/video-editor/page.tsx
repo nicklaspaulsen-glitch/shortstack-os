@@ -2618,7 +2618,7 @@ export default function VideoEditorPage() {
       <PageHero
         icon={<Film size={22} />}
         title="AI Video Editor"
-        subtitle="AI storyboards, video plans & GPU rendering via Remotion & Mochi."
+        subtitle="Script, style, caption. AI writes, GPU renders — you hit publish."
         gradient="sunset"
       />
 

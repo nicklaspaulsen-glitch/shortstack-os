@@ -837,7 +837,7 @@ export default function CopywriterPage() {
         className="mb-6"
         icon={<Pen size={28} />}
         title="AI Copywriter"
-        subtitle="Polished copy for blogs, emails & social."
+        subtitle="Blog posts, emails, social — copy that converts, in seconds."
         gradient="purple"
         actions={
           <>

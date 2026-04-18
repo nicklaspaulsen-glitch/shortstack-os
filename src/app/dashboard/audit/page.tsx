@@ -376,27 +376,46 @@ export default function AuditPage() {
             </div>
           </div>
 
-          {/* Security Overview */}
+          {/* Security Overview — computed from real entries */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Eye size={13} className="text-gold" /> Security Overview</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                <p className="text-[9px] text-muted uppercase">Failed Logins (7d)</p>
-                <p className="text-lg font-bold text-red-400">3</p>
-              </div>
-              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                <p className="text-[9px] text-muted uppercase">Config Changes (7d)</p>
-                <p className="text-lg font-bold text-amber-400">5</p>
-              </div>
-              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                <p className="text-[9px] text-muted uppercase">Data Exports (7d)</p>
-                <p className="text-lg font-bold text-purple-400">2</p>
-              </div>
-              <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
-                <p className="text-[9px] text-muted uppercase">Unique IPs (7d)</p>
-                <p className="text-lg font-bold text-blue-400">6</p>
-              </div>
-            </div>
+            {(() => {
+              const sevenDaysAgo = Date.now() - 7 * 86400000;
+              const recent = entries.filter(e => new Date(e.timestamp).getTime() >= sevenDaysAgo);
+              const failedLogins = recent.filter(e => e.action === "login" && e.status === "failed").length;
+              const configChanges = recent.filter(e => e.action === "config").length;
+              const dataExports = recent.filter(e => e.action === "export").length;
+              const uniqueIps = new Set(recent.map(e => e.ip).filter(Boolean)).size;
+              const isEmpty = recent.length === 0;
+              if (isEmpty) {
+                return (
+                  <div className="py-8 text-center text-xs text-muted">
+                    <Shield size={20} className="mx-auto mb-2 text-muted/40" />
+                    No security events recorded yet. Stats will populate as your team uses the platform.
+                  </div>
+                );
+              }
+              return (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                    <p className="text-[9px] text-muted uppercase">Failed Logins (7d)</p>
+                    <p className="text-lg font-bold text-red-400">{failedLogins}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                    <p className="text-[9px] text-muted uppercase">Config Changes (7d)</p>
+                    <p className="text-lg font-bold text-amber-400">{configChanges}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                    <p className="text-[9px] text-muted uppercase">Data Exports (7d)</p>
+                    <p className="text-lg font-bold text-purple-400">{dataExports}</p>
+                  </div>
+                  <div className="p-3 rounded-lg bg-surface-light border border-border text-center">
+                    <p className="text-[9px] text-muted uppercase">Unique IPs (7d)</p>
+                    <p className="text-lg font-bold text-blue-400">{uniqueIps}</p>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}

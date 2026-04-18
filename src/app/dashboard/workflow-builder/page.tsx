@@ -681,7 +681,7 @@ function WorkflowBuilderInner() {
         className="mb-3"
         icon={<GitBranch size={28} />}
         title="Workflow Builder"
-        subtitle="Visual canvas for designing automations."
+        subtitle="Build automations without code. Drag, drop, done."
         gradient="purple"
       />
     <div className="flex flex-col h-[calc(100vh-14rem)]">

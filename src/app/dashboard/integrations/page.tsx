@@ -326,7 +326,7 @@ function SocialAccountsPage() {
       <PageHero
         icon={<Link2 size={28} />}
         title="Connected Accounts"
-        subtitle="Unified social management via Zernio."
+        subtitle="Connect Meta, TikTok, LinkedIn, and more. One-click OAuth, always in sync."
         gradient="green"
         actions={
           <>

@@ -244,7 +244,7 @@ export default function CalendarPage() {
       <PageHero
         icon={<Calendar size={22} />}
         title="Calendar"
-        subtitle="Book appointments, manage calls, and track meetings."
+        subtitle="Schedule appointments, calls, and meetings. AI avoids conflicts automatically."
         gradient="gold"
       />
       <div className="flex items-center justify-end flex-wrap gap-3">

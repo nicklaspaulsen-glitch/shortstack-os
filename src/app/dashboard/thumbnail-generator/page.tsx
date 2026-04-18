@@ -3352,7 +3352,7 @@ export default function ThumbnailGeneratorPage() {
       <PageHero
         icon={<ImageIcon size={22} />}
         title="Thumbnail Studio"
-        subtitle="AI-powered thumbnail creation with styles, faces & text overlays."
+        subtitle="Thumbnails that get clicked. AI picks colors, fonts, and faces that pop."
         gradient="ocean"
         actions={
           <div className="flex items-center gap-2">
