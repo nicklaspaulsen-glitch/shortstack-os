@@ -1188,26 +1188,42 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Custom Domain */}
+          {/* Custom Domain — buy through us, zero manual DNS */}
           <div className="card">
             <h2 className="section-header flex items-center gap-2">
               <Globe size={14} className="text-gold" /> Custom Domain
             </h2>
-            <p className="text-[10px] text-muted mb-3">Connect your own domain to ShortStack OS instead of shortstack-os.vercel.app</p>
-            <div className="space-y-2 text-[11px]">
-              <div className="p-3 rounded-lg bg-surface-light border border-border">
-                <p className="font-semibold text-foreground mb-2">Setup Instructions:</p>
-                <ol className="space-y-1.5 text-muted list-decimal list-inside">
-                  <li>Go to <a href="https://vercel.com/growth-9598s-projects/shortstack-os/settings/domains" target="_blank" rel="noopener" className="text-gold hover:underline">Vercel Domain Settings</a></li>
-                  <li>Click &ldquo;Add Domain&rdquo; and enter your domain (e.g. app.shortstack.work)</li>
-                  <li>Go to your domain registrar (GoDaddy, Namecheap, Cloudflare)</li>
-                  <li>Add a CNAME record: <code className="bg-white/5 px-1.5 py-0.5 rounded font-mono text-[10px]">app</code> pointing to <code className="bg-white/5 px-1.5 py-0.5 rounded font-mono text-[10px]">cname.vercel-dns.com</code></li>
-                  <li>Wait 5-10 minutes for DNS to propagate</li>
-                  <li>SSL certificate auto-configures</li>
-                </ol>
+            <p className="text-[10px] text-muted mb-3">
+              Get a custom domain in one click. Pay monthly or yearly — we buy it,
+              set up DNS, and wire SSL automatically. Zero registrar logins.
+            </p>
+            <div className="rounded-lg bg-gradient-to-br from-gold/[0.06] to-transparent border border-gold/20 p-4">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gold/15 border border-gold/30 flex items-center justify-center shrink-0">
+                  <Globe size={18} className="text-gold" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-foreground mb-1">Buy a domain through ShortStack OS</p>
+                  <p className="text-[10px] text-muted mb-3">
+                    Search, purchase, and deploy in under 2 minutes. Includes SSL,
+                    DNS, and hosting. Cancel anytime.
+                  </p>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <a
+                      href="/dashboard/domains"
+                      className="text-[10px] px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-amber-400/30"
+                    >
+                      <Sparkles size={11} /> Buy a domain
+                    </a>
+                    <span className="text-[9px] text-muted">From ~$9/mo · 20% off yearly</span>
+                  </div>
+                </div>
               </div>
-              <p className="text-[9px] text-muted/50">Current URL: shortstack-os.vercel.app</p>
             </div>
+            <p className="text-[9px] text-muted/60 mt-2">
+              Already own a domain? You can also point an existing one in the{" "}
+              <a href="/dashboard/domains" className="text-gold hover:underline">Domains</a> tab.
+            </p>
           </div>
 
           {/* Data & Cleanup */}

@@ -449,6 +449,49 @@ export async function POST(request: NextRequest) {
             updated_at: new Date().toISOString(),
           }).eq("id", websiteId);
         }
+      } else if (type === "domain_purchase") {
+        // Client paid for a custom domain subscription. Auto-purchase the
+        // domain + attach to Vercel + set DNS so they never touch registrar UI.
+        const domain = session.metadata?.domain;
+        const projectId = session.metadata?.project_id;
+        const userId = session.metadata?.user_id;
+
+        if (domain && userId) {
+          // Update domain row status + link Stripe IDs
+          await supabase.from("website_domains").update({
+            status: "processing",
+            stripe_subscription_id: typeof session.subscription === "string" ? session.subscription : null,
+            stripe_checkout_session_id: session.id,
+            updated_at: new Date().toISOString(),
+          }).eq("profile_id", userId).eq("domain", domain);
+
+          // Fire the auto-configure endpoint — does GoDaddy purchase + Vercel
+          // attach + DNS config. Best-effort; status is tracked on the row.
+          const origin = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+          fetch(`${origin}/api/websites/domains/auto-configure`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              domain,
+              project_id: projectId || undefined,
+              user_id: userId,
+            }),
+          }).catch(() => {});
+
+          await supabase.from("trinity_log").insert({
+            action_type: "custom",
+            description: `Domain purchased: ${domain} ($${((session.amount_total || 0) / 100).toFixed(2)})`,
+            user_id: userId,
+            status: "completed",
+            result: {
+              type: "domain_purchase",
+              domain,
+              project_id: projectId,
+              session_id: session.id,
+              billing_cycle: session.metadata?.billing_cycle,
+            },
+          });
+        }
       }
       break;
     }

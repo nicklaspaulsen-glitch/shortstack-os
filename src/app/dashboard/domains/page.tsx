@@ -49,6 +49,8 @@ interface ProjectRef {
 
 const STATUS_BADGE: Record<string, string> = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
+  pending_payment: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+  processing: "bg-blue-500/10 text-blue-400 border-blue-500/30",
   purchased: "bg-blue-500/10 text-blue-400 border-blue-500/30",
   dns_configured: "bg-purple-500/10 text-purple-400 border-purple-500/30",
   active: "bg-green-500/10 text-green-400 border-green-500/30",
@@ -87,6 +89,24 @@ export default function DomainsPage() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
+  // Handle Stripe redirect after successful checkout
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const purchase = params.get("purchase");
+    const domain = params.get("domain");
+    if (purchase === "success" && domain) {
+      toast.success(`Payment confirmed! Setting up ${domain}...`, { duration: 6000 });
+      // Clean the URL
+      window.history.replaceState({}, "", "/dashboard/domains");
+      // Give the webhook a moment to process, then reload
+      setTimeout(() => loadData(), 3000);
+    } else if (purchase === "cancelled") {
+      toast("Purchase cancelled. No charge made.", { icon: "↩️" });
+      window.history.replaceState({}, "", "/dashboard/domains");
+    }
+  }, [loadData]);
+
   async function searchDomains() {
     if (!query.trim()) { toast.error("Enter a name to search"); return; }
     setSearching(true);
@@ -110,23 +130,63 @@ export default function DomainsPage() {
     setSearching(false);
   }
 
-  async function purchaseDomain(domain: string) {
-    if (!confirm(`Purchase ${domain}?`)) return;
+  async function purchaseDomain(
+    domain: string,
+    billingCycle: "monthly" | "yearly" = "monthly",
+    basePrice?: number,
+  ) {
+    const toastId = toast.loading("Creating secure checkout...");
     try {
-      const res = await fetch("/api/websites/domains/purchase", {
+      const res = await fetch("/api/websites/domains/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ domain }),
+        body: JSON.stringify({
+          domain,
+          billing_cycle: billingCycle,
+          base_price: basePrice,
+        }),
       });
       const data = await res.json();
-      if (data.success) {
-        toast.success(data.stub ? "Domain reserved (stub mode)" : `Domain ${domain} purchased!`);
-        await loadData();
+      toast.dismiss(toastId);
+      if (data.success && data.url) {
+        // Redirect to Stripe Checkout — on success, webhook fires GoDaddy
+        // purchase + Vercel attach + DNS config automatically.
+        window.location.href = data.url;
+      } else if (data.missing_env) {
+        toast.error(`Stripe not set up: missing ${data.missing_env.join(", ")}`);
       } else {
-        toast.error(data.error || "Purchase failed");
+        toast.error(data.error || "Checkout failed");
       }
     } catch {
-      toast.error("Purchase failed");
+      toast.dismiss(toastId);
+      toast.error("Checkout failed");
+    }
+  }
+
+  async function retryAutoConfigure(domain: WebsiteDomain) {
+    const toastId = toast.loading("Configuring domain...");
+    try {
+      const res = await fetch("/api/websites/domains/auto-configure", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          domain: domain.domain,
+          project_id: domain.website_id || undefined,
+          user_id: undefined, // service client path uses the row's profile_id
+        }),
+      });
+      const data = await res.json();
+      toast.dismiss(toastId);
+      if (data.success) {
+        toast.success("Domain configured + attached to Vercel");
+        await loadData();
+      } else {
+        const errorStep = data?.steps?.find((s: { status: string }) => s.status === "error");
+        toast.error(errorStep?.detail || data?.error || "Auto-configure failed");
+      }
+    } catch {
+      toast.dismiss(toastId);
+      toast.error("Auto-configure failed");
     }
   }
 
@@ -233,31 +293,49 @@ export default function DomainsPage() {
 
         {results.length > 0 && (
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
-            {results.map(r => (
-              <div key={r.domain} className="flex items-center justify-between p-3 rounded-xl border border-border bg-surface-light">
-                <div className="flex items-center gap-2 min-w-0">
-                  {r.available
-                    ? <CheckCircle size={14} className="text-success shrink-0" />
-                    : <XCircle size={14} className="text-muted shrink-0" />}
-                  <div className="min-w-0">
-                    <p className="text-xs font-semibold truncate">{r.domain}</p>
-                    <p className="text-[10px] text-muted">
+            {results.map(r => {
+              // Monthly = (base * 1.35 / 12) + $4 ops fee; yearly = 20% off monthly*12
+              const monthly = r.price ? Math.max(9, Math.round(r.price * 1.35 / 12 + 4)) : 9;
+              const yearly = Math.round(monthly * 12 * 0.8);
+              return (
+                <div key={r.domain} className="p-3 rounded-xl border border-border bg-surface-light">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2 min-w-0">
                       {r.available
-                        ? (r.price ? `${r.currency} $${r.price.toFixed(2)}/yr` : "Available")
-                        : "Taken"}
-                    </p>
+                        ? <CheckCircle size={14} className="text-success shrink-0" />
+                        : <XCircle size={14} className="text-muted shrink-0" />}
+                      <div className="min-w-0">
+                        <p className="text-xs font-semibold truncate">{r.domain}</p>
+                        <p className="text-[10px] text-muted">
+                          {r.available
+                            ? (r.price ? `${r.currency} $${r.price.toFixed(2)} wholesale/yr` : "Available")
+                            : "Taken"}
+                        </p>
+                      </div>
+                    </div>
                   </div>
+                  {r.available && (
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <button
+                        onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
+                        className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-gold/40 hover:bg-white/5 flex flex-col items-center"
+                      >
+                        <span className="font-bold">${monthly}/mo</span>
+                        <span className="text-[9px] text-muted">Monthly</span>
+                      </button>
+                      <button
+                        onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
+                        className="relative text-[10px] px-2 py-2 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-black font-bold flex flex-col items-center hover:shadow-lg hover:shadow-amber-400/30"
+                      >
+                        <span className="absolute -top-1.5 right-1 text-[8px] bg-emerald-500 text-white px-1 py-0.5 rounded-full font-bold">Save 20%</span>
+                        <span>${yearly}/yr</span>
+                        <span className="text-[9px] opacity-80">Yearly</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {r.available && (
-                  <button
-                    onClick={() => purchaseDomain(r.domain)}
-                    className="text-[10px] px-3 py-1.5 rounded-lg bg-gold/15 border border-gold/30 text-gold hover:bg-gold/25 flex items-center gap-1"
-                  >
-                    <Plus size={10} /> Buy
-                  </button>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -301,6 +379,14 @@ export default function DomainsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5">
+                    {(d.status === "processing" || d.status === "purchased" || d.status === "pending_payment") && (
+                      <button
+                        onClick={() => retryAutoConfigure(d)}
+                        className="text-[10px] px-2.5 py-1 rounded-lg bg-gold/15 border border-gold/30 text-gold hover:bg-gold/25 flex items-center gap-1"
+                      >
+                        <RefreshCw size={10} /> Finish setup
+                      </button>
+                    )}
                     <button onClick={() => openDns(d)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
                       <Edit3 size={10} /> DNS
                     </button>
