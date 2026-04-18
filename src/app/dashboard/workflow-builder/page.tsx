@@ -307,6 +307,80 @@ const TEMPLATES: Template[] = [
     ],
     edges: [mkEdge("t14_1","t14_2"), mkEdge("t14_2","t14_3"), mkEdge("t14_3","t14_4"), mkEdge("t14_4","t14_5")],
   },
+  {
+    id: "t15", name: "Cold Outreach (Email → SMS → DM)", description: "Multi-channel cold outreach: email first, SMS if no open after 3 days, DM via social if still no reply.",
+    nodeCount: 7,
+    nodes: [
+      mkNode("t15_1", "new_lead", 300, 0),
+      mkNode("t15_2", "send_email", 300, 140, { subject: "Quick question about {{company}}", body: "Hi {{first_name}}, saw you're in {{industry}} — can I share 1 idea?" }),
+      mkNode("t15_3", "wait_delay", 300, 280, { duration: "3", unit: "days" }),
+      mkNode("t15_4", "if_else", 300, 420, { field: "email.opened", operator: "equals", value: "false" }),
+      mkNode("t15_5", "send_sms", 300, 560, { message: "Hey {{first_name}}, sent you an email — quick thought for {{company}}. 30-sec read?" }),
+      mkNode("t15_6", "wait_delay", 300, 700, { duration: "2", unit: "days" }),
+      mkNode("t15_7", "add_to_sequence", 300, 840, { sequence_id: "LinkedIn DM" }),
+    ],
+    edges: [mkEdge("t15_1","t15_2"), mkEdge("t15_2","t15_3"), mkEdge("t15_3","t15_4"), mkEdge("t15_4","t15_5"), mkEdge("t15_5","t15_6"), mkEdge("t15_6","t15_7")],
+  },
+  {
+    id: "t16", name: "Abandoned Cart Recovery", description: "Cart abandoned? Wait 1hr, email, wait 24hr, discount offer, then SMS if still nothing.",
+    nodeCount: 6,
+    nodes: [
+      mkNode("t16_1", "webhook_received", 300, 0, { url: "https://shop/cart-abandoned" }),
+      mkNode("t16_2", "wait_delay", 300, 140, { duration: "1", unit: "hours" }),
+      mkNode("t16_3", "send_email", 300, 280, { subject: "You left something behind 👀", body: "Your cart is still waiting — complete checkout here." }),
+      mkNode("t16_4", "wait_delay", 300, 420, { duration: "24", unit: "hours" }),
+      mkNode("t16_5", "send_email", 300, 560, { subject: "Here's 10% off to close the deal", body: "Use code COMEBACK10 in the next 48 hours." }),
+      mkNode("t16_6", "send_sms", 300, 700, { message: "One more nudge — your 10% off expires tonight: {{checkout_url}}" }),
+    ],
+    edges: [mkEdge("t16_1","t16_2"), mkEdge("t16_2","t16_3"), mkEdge("t16_3","t16_4"), mkEdge("t16_4","t16_5"), mkEdge("t16_5","t16_6")],
+  },
+  {
+    id: "t17", name: "Birthday / Anniversary Touch", description: "On a customer's birthday or anniversary, send a personalized email with a gift code.",
+    nodeCount: 4,
+    nodes: [
+      mkNode("t17_1", "schedule", 300, 0, { cron: "0 9 * * *" }),
+      mkNode("t17_2", "status_equals", 300, 140, { status: "birthday_today" }),
+      mkNode("t17_3", "generate_content", 300, 280, { prompt: "Write a warm birthday message to {{first_name}} with a 15% gift code." }),
+      mkNode("t17_4", "send_email", 300, 420, { subject: "Happy birthday, {{first_name}} 🎉" }),
+    ],
+    edges: [mkEdge("t17_1","t17_2"), mkEdge("t17_2","t17_3"), mkEdge("t17_3","t17_4")],
+  },
+  {
+    id: "t18", name: "Negative Review Alert", description: "New review comes in — if rating ≤ 3, instantly alert team and log for response.",
+    nodeCount: 5,
+    nodes: [
+      mkNode("t18_1", "webhook_received", 300, 0, { url: "https://reviews/new" }),
+      mkNode("t18_2", "if_else", 300, 140, { field: "rating", operator: "lte", value: "3" }),
+      mkNode("t18_3", "post_slack", 300, 280, { channel: "#reviews-urgent", message: "🚨 {{rating}}-star review from {{reviewer_name}}: {{excerpt}}" }),
+      mkNode("t18_4", "create_task", 300, 420, { title: "Respond to negative review", assignee: "Support Lead", due_in: "4" }),
+      mkNode("t18_5", "log_event", 300, 560, { event_name: "negative_review_logged" }),
+    ],
+    edges: [mkEdge("t18_1","t18_2"), mkEdge("t18_2","t18_3"), mkEdge("t18_3","t18_4"), mkEdge("t18_4","t18_5")],
+  },
+  {
+    id: "t19", name: "Post-Purchase Upsell", description: "After a purchase, wait 7 days, send a cross-sell email, then a loyalty invite if they buy again.",
+    nodeCount: 5,
+    nodes: [
+      mkNode("t19_1", "webhook_received", 300, 0, { url: "https://shop/order-completed" }),
+      mkNode("t19_2", "wait_delay", 300, 140, { duration: "7", unit: "days" }),
+      mkNode("t19_3", "generate_content", 300, 280, { prompt: "Recommend a complementary product to what {{first_name}} just bought." }),
+      mkNode("t19_4", "send_email", 300, 420, { subject: "You might also love these picks" }),
+      mkNode("t19_5", "add_to_sequence", 300, 560, { sequence_id: "VIP Loyalty Program" }),
+    ],
+    edges: [mkEdge("t19_1","t19_2"), mkEdge("t19_2","t19_3"), mkEdge("t19_3","t19_4"), mkEdge("t19_4","t19_5")],
+  },
+  {
+    id: "t20", name: "Referral Reward Trigger", description: "When a customer refers a friend who converts, reward both with credit and thank-you emails.",
+    nodeCount: 5,
+    nodes: [
+      mkNode("t20_1", "webhook_received", 300, 0, { url: "https://referral/converted" }),
+      mkNode("t20_2", "send_email", 100, 140, { subject: "Your friend signed up — here's your reward 🎁", body: "Thank you for the referral — we've added $50 credit to your account." }),
+      mkNode("t20_3", "send_email", 500, 140, { subject: "Welcome! A friend vouched for you", body: "You've been invited by a valued customer — enjoy a 20% welcome discount." }),
+      mkNode("t20_4", "update_crm", 300, 280, { status: "referrer_rewarded" }),
+      mkNode("t20_5", "post_slack", 300, 420, { channel: "#growth", message: "New referral conversion — both parties rewarded." }),
+    ],
+    edges: [mkEdge("t20_1","t20_2"), mkEdge("t20_1","t20_3"), mkEdge("t20_2","t20_4"), mkEdge("t20_4","t20_5")],
+  },
 ];
 
 /* ================================================================== */
