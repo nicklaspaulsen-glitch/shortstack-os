@@ -2090,19 +2090,13 @@ export default function ThumbnailGeneratorPage() {
   // Smart AI handlers (UI-only, TODOs for integration)
   async function runAbVariantGenerator() {
     if (!prompt.trim()) { toast.error("Enter a prompt first"); return; }
-    toast.loading("Generating 3 A/B variants...");
-    await new Promise((r) => setTimeout(r, 1500));
     toast.dismiss();
-    toast.success("3 variants generated — showing in results (TODO: AI)");
-    // TODO: AI integration — call variant generator endpoint
+    toast("A/B variant generation coming soon — use the main Generate button for now", { icon: "ℹ️" });
   }
   async function runTitleOptimizer() {
     if (!textOverlay.trim()) { toast.error("Enter a title first"); return; }
-    toast.loading("Optimizing title for CTR...");
-    await new Promise((r) => setTimeout(r, 1200));
-    toast.dismiss();
-    toast.success("Optimized title suggestions ready (TODO: AI)");
-    // TODO: AI integration — call title rewrite endpoint
+    // Route through the real AI optimizer instead of a stub
+    await optimizeTitleWithAI();
   }
 
   // ─── Real AI: Claude Title Optimizer ───
@@ -2209,25 +2203,16 @@ export default function ThumbnailGeneratorPage() {
   }
   async function runNicheOptimizer() {
     if (!thumbnailConfig.smart.niche.trim()) { toast.error("Enter a niche first"); return; }
-    toast.loading(`Tuning for "${thumbnailConfig.smart.niche}" niche...`);
-    await new Promise((r) => setTimeout(r, 1200));
     toast.dismiss();
-    toast.success("Niche-tuned settings applied (TODO: AI)");
-    // TODO: AI integration — call niche optimizer
+    toast("Niche tuning is coming soon — your niche is saved and will be used on next generation", { icon: "ℹ️" });
   }
   async function runFaceDetection() {
-    toast.loading("Detecting faces in reference images...");
-    await new Promise((r) => setTimeout(r, 1000));
     toast.dismiss();
-    toast.success("Face position auto-set (TODO: AI)");
-    // TODO: AI integration — call face detection model
+    toast("Face auto-detection is coming soon — position the face manually for now", { icon: "ℹ️" });
   }
   async function runAutoCrop() {
-    toast.loading("Auto-cropping for all platforms...");
-    await new Promise((r) => setTimeout(r, 1200));
     toast.dismiss();
-    toast.success("Platform crops ready (TODO: AI)");
-    // TODO: AI integration — call auto-crop for every platform preset
+    toast("Auto-crop for all platforms is coming soon — select each platform separately for now", { icon: "ℹ️" });
   }
   async function runReadabilityChecker() {
     toast.loading("Checking text readability...");
@@ -2238,18 +2223,12 @@ export default function ThumbnailGeneratorPage() {
     // TODO: AI integration — contrast + size analysis
   }
   async function runTrendingSuggester() {
-    toast.loading("Finding trending styles in your niche...");
-    await new Promise((r) => setTimeout(r, 1100));
     toast.dismiss();
-    toast.success("Trending picks ready — see Smart panel (TODO: AI)");
-    // TODO: AI integration — fetch trending styles per niche
+    toast("Trending suggestions coming soon — use the Style panel presets for now", { icon: "ℹ️" });
   }
   async function exportBatchForAllPlatforms() {
-    toast.loading(`Exporting for ${PLATFORM_SIZE_PRESETS.length - 1} platforms...`);
-    await new Promise((r) => setTimeout(r, 1400));
     toast.dismiss();
-    toast.success("Batch export ready (TODO: integration)");
-    // TODO: integration — render canvas at each platform size and bundle as zip
+    toast("Batch export coming soon — export each platform individually for now", { icon: "ℹ️" });
   }
 
   const currentPlatform = PLATFORM_SIZES.find((p) => p.id === platform) || PLATFORM_SIZES[0];
