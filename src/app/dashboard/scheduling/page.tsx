@@ -10,6 +10,17 @@ import {
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
+import { ZoomIcon, CalendlyIcon, GoogleIcon } from "@/components/ui/platform-icons";
+
+/** Pick a small brand icon for a meeting location_type value. */
+function LocationIcon({ type, size = 10 }: { type: string; size?: number }) {
+  switch (type) {
+    case "zoom": return <ZoomIcon size={size} />;
+    case "google_meet": return <GoogleIcon size={size} />;
+    case "calendly": return <CalendlyIcon size={size} />;
+    default: return null;
+  }
+}
 
 type ScheduleTab = "booking_pages" | "availability" | "ai_smart" | "analytics" | "settings";
 
@@ -361,7 +372,10 @@ export default function SchedulingPage() {
                         {mt.max_bookings_per_day && (
                           <span className="flex items-center gap-1"><Users size={9} /> Max {mt.max_bookings_per_day}/day</span>
                         )}
-                        <span className="text-[9px] capitalize">{mt.location_type.replace("_", " ")}</span>
+                        <span className="flex items-center gap-1 text-[9px] capitalize">
+                          <LocationIcon type={mt.location_type} size={10} />
+                          {mt.location_type.replace("_", " ")}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <button onClick={() => copyLink(bookingLink(mt.id))} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">

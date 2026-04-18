@@ -1,6 +1,8 @@
 /* ShortStack OS — Background Service Worker */
 importScripts("api.js");
 
+const AUTH_PAGE = "https://app.shortstack.work/extension-auth";
+
 /* ── Context Menus ── */
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({ id: "ss-add-lead", title: "Add as Lead", contexts: ["selection"] });
@@ -13,7 +15,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const text = info.selectionText || "";
   try {
     if (info.menuItemId === "ss-add-lead") {
-      await addLead({ name: text, source: tab.url, detectedFrom: "context-menu" });
+      await addLead({ name: text, business_name: text, source: tab.url, detectedFrom: "context-menu" });
       notify("Lead Added", `"${text.slice(0, 40)}" saved as a new lead.`);
     } else if (info.menuItemId === "ss-create-post") {
       await createPost({ content: text, sourceUrl: tab.url });
@@ -28,7 +30,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 });
 
-/* ── Message Router ── */
+/* ── Internal Message Router ── */
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   (async () => {
     try {
@@ -42,9 +44,11 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         case "getActivity":  result = await getActivity(); break;
         case "chatWithAI":   result = await chatWithAI(msg.data.message, msg.data.url, msg.data.pageContext); break;
         case "checkAuth":    result = await checkAuth(); break;
+        case "startLogin":   result = await startLogin(); break;
+        case "logout":       result = await logout(); break;
         default: result = { error: "Unknown action" };
       }
-      if (msg.action !== "getActivity" && msg.action !== "checkAuth") {
+      if (!["getActivity", "checkAuth", "startLogin", "logout"].includes(msg.action)) {
         logActivity(msg.action, msg.label || "");
       }
       sendResponse({ ok: true, data: result });
@@ -55,6 +59,27 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   return true; // keep channel open for async
 });
 
+/* ── External Message Listener (for /extension-auth handshake) ── */
+chrome.runtime.onMessageExternal.addListener((msg, sender, sendResponse) => {
+  // Chrome validates sender.origin against externally_connectable in manifest,
+  // so we can trust this message comes from one of our own origins.
+  if (msg?.type !== "SHORTSTACK_AUTH_TOKEN" || !msg.payload?.access_token) {
+    sendResponse({ ok: false });
+    return;
+  }
+  const p = msg.payload;
+  chrome.storage.local.set(
+    {
+      ss_access_token: p.access_token,
+      ss_refresh_token: p.refresh_token || "",
+      ss_expires_at: p.expires_at || 0,
+      ss_user: p.user || null,
+    },
+    () => sendResponse({ ok: true }),
+  );
+  return true; // keep channel open for async storage call
+});
+
 /* ── Notifications ── */
 chrome.alarms.onAlarm.addListener(async (alarm) => {
   if (alarm.name !== "check-notifications") return;
@@ -63,7 +88,7 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     const count = res.unread || 0;
     chrome.action.setBadgeText({ text: count > 0 ? String(count) : "" });
     chrome.action.setBadgeBackgroundColor({ color: "#C9A84C" });
-  } catch (_) { /* silent */ }
+  } catch (_) { /* silent — likely not logged in */ }
 });
 
 function notify(title, message) {
@@ -83,6 +108,24 @@ async function getActivity() {
 }
 
 async function checkAuth() {
-  const { apiKey } = await getConfig();
-  return { connected: !!apiKey };
+  const { accessToken, apiKey, user } = await getConfig();
+  return { connected: !!(accessToken || apiKey), user };
+}
+
+async function startLogin() {
+  // Open the handshake page with our extension id so the page can
+  // postMessage the token back to us via chrome.runtime.sendMessage.
+  const url = `${AUTH_PAGE}?ext_id=${chrome.runtime.id}`;
+  chrome.tabs.create({ url });
+  return { ok: true };
+}
+
+async function logout() {
+  await chrome.storage.local.remove([
+    "ss_access_token",
+    "ss_refresh_token",
+    "ss_expires_at",
+    "ss_user",
+  ]);
+  return { ok: true };
 }

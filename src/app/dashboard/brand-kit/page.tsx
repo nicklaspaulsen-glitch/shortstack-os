@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
-  Globe, Palette, Type, Image as ImageIcon, Sparkles,
+  Globe, Palette, Type, Image as ImageIcon, Sparkles, Save,
   Loader, Search, Download, Copy, Check, ExternalLink,
   Megaphone, FileText, Film, Mail, MessageSquare,
   Layout, Eye, Share2, Zap,
@@ -13,6 +13,8 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
 import WebsiteScraper from "@/components/ui/website-scraper";
+import { useAutoSave } from "@/lib/use-auto-save";
+import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
 
 type MainTab = "extract" | "colors" | "typography" | "media" | "generate";
 
@@ -51,7 +53,40 @@ export default function BrandKitPage() {
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
+  const [savingManual, setSavingManual] = useState(false);
   const exportMenuRef = useRef<HTMLDivElement>(null);
+
+  // Restore previously extracted brand from localStorage on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const rawBrand = localStorage.getItem("ss_brand_kit_data");
+      if (rawBrand) {
+        const parsed = JSON.parse(rawBrand) as BrandData;
+        if (parsed && parsed.siteName !== undefined) {
+          setBrand(parsed);
+          if (parsed.colors?.length) setTab("colors");
+        }
+      }
+      const rawUrl = localStorage.getItem("ss_brand_kit_url");
+      if (rawUrl) setUrl(rawUrl);
+    } catch { /* ignore */ }
+  }, []);
+
+  // Auto-save brand kit state to localStorage
+  const saveBrandKit = useCallback(async (v: { url: string; brand: BrandData | null }) => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("ss_brand_kit_url", v.url);
+    if (v.brand) {
+      localStorage.setItem("ss_brand_kit_data", JSON.stringify(v.brand));
+    }
+  }, []);
+  const { status: autoSaveStatus, lastSavedAt: autoSaveAt, error: autoSaveError } = useAutoSave({
+    value: { url, brand },
+    save: saveBrandKit,
+    delay: 800,
+    skip: (v) => !v.url.trim() && !v.brand,
+  });
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -224,6 +259,7 @@ export default function BrandKitPage() {
 
   return (
     <div className="fade-in p-6 max-w-7xl mx-auto space-y-6">
+      <AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />
       <PageHero
         icon={<Palette size={28} />}
         title="Brand Kit"
@@ -275,13 +311,42 @@ export default function BrandKitPage() {
                   </div>
                 )}
               </div>
-              <button onClick={() => { setBrand(null); setUrl(""); setTab("extract"); }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <button onClick={() => { setBrand(null); setUrl(""); setTab("extract"); if (typeof window !== "undefined") { localStorage.removeItem("ss_brand_kit_data"); localStorage.removeItem("ss_brand_kit_url"); } }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
                 <RefreshCw size={13} /> New Scan
               </button>
             </>
           ) : null
         }
       />
+
+      {/* Auto-save footer */}
+      {(brand || url.trim()) && (
+        <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
+          <span className="flex items-center gap-1">
+            <Check size={10} className="text-emerald-400/60" />
+            Brand kit auto-saves locally as you extract
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-muted/50">or save manually</span>
+            <button
+              disabled={savingManual}
+              onClick={async () => {
+                setSavingManual(true);
+                try {
+                  await saveBrandKit({ url, brand });
+                  toast.success("Brand kit saved");
+                } catch {
+                  toast.error("Save failed");
+                }
+                setSavingManual(false);
+              }}
+              className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1"
+            >
+              <Save size={10} /> {savingManual ? "Saving..." : "Save"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 border-b border-border/30 pb-px">

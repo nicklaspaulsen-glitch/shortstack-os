@@ -9,6 +9,15 @@ import {
 } from "lucide-react";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
+import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
+
+/** Pick a brand icon based on a provider name. Falls back to a generic Server icon. */
+function ProviderIcon({ provider, size = 10 }: { provider: string; size?: number }) {
+  const p = (provider || "").toLowerCase();
+  if (p.includes("gmail") || p.includes("google")) return <GmailIcon size={size} />;
+  if (p.includes("outlook") || p.includes("office365") || p.includes("microsoft")) return <OutlookIcon size={size} />;
+  return <Server size={size} />;
+}
 
 /* ── Types ── */
 type MainTab = "phone" | "email";
@@ -997,7 +1006,7 @@ export default function PhoneEmailPage() {
                           </td>
                           <td className="p-3">
                             <span className="flex items-center gap-1 text-muted">
-                              <Server size={10} /> {e.provider}
+                              <ProviderIcon provider={e.provider} size={10} /> {e.provider}
                             </span>
                           </td>
                           <td className="p-3 text-muted">{e.dailyLimit.toLocaleString()}</td>

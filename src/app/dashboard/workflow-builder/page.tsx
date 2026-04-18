@@ -15,7 +15,7 @@ import {
   Search, Save, Play, Undo2, Redo2, LayoutGrid,
   Trash2, X, ChevronRight, ChevronDown, GripVertical,
   UserPlus, FileText, Webhook, Clock, Mail, CalendarCheck,
-  Phone, Bot, CheckSquare, Tag, BookOpen, MessageSquare,
+  Phone, Bot, CheckSquare, Tag,
   Globe, Sparkles, ListPlus, GitBranch, AtSign, Smartphone,
   Timer, Bell, Activity, Download, Zap, Copy, LayoutTemplate,
   Gauge, Link2, ArrowRight, Settings, Eye,
@@ -23,6 +23,7 @@ import {
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
+import { NotionIcon, SlackIcon } from "@/components/ui/platform-icons";
 
 /* ================================================================== */
 /*  NODE DEFINITIONS                                                   */
@@ -61,8 +62,8 @@ const NODE_DEFS: NodeDef[] = [
   { id: "ai_call",         label: "AI Call",           description: "Place an AI voice call via ElevenAgents",  icon: <Bot size={14} />,          category: "action" },
   { id: "create_task",     label: "Create Task",       description: "Create a task for the team",               icon: <CheckSquare size={14} />,  category: "action" },
   { id: "update_crm",      label: "Update CRM Status", description: "Change a lead or deal status",             icon: <Tag size={14} />,          category: "action" },
-  { id: "log_notion",      label: "Log to Notion",     description: "Create a page in your Notion database",    icon: <BookOpen size={14} />,     category: "action" },
-  { id: "post_slack",      label: "Post to Slack",     description: "Send a message to a Slack channel",        icon: <MessageSquare size={14} />,category: "action" },
+  { id: "log_notion",      label: "Log to Notion",     description: "Create a page in your Notion database",    icon: <NotionIcon size={14} />,   category: "action" },
+  { id: "post_slack",      label: "Post to Slack",     description: "Send a message to a Slack channel",        icon: <SlackIcon size={14} />,    category: "action" },
   { id: "send_webhook",    label: "Send Webhook",      description: "Send a POST request to any URL",           icon: <Globe size={14} />,        category: "action" },
   { id: "generate_content",label: "Generate Content",  description: "Generate text with Claude AI",             icon: <Sparkles size={14} />,     category: "action" },
   { id: "add_to_sequence", label: "Add to Sequence",   description: "Enroll contact in an outreach sequence",   icon: <ListPlus size={14} />,     category: "action" },

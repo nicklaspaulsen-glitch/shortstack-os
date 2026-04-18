@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { WORKFLOW_PRESETS, WORKFLOW_CATEGORIES, type WorkflowPreset } from "@/lib/workflow-presets";
 import toast from "react-hot-toast";
+import { TelegramIcon, SlackIcon } from "@/components/ui/platform-icons";
 
 interface WorkflowStep {
   id: string;
@@ -34,8 +35,8 @@ interface Workflow {
 }
 
 const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: string }> = {
-  send_telegram: { icon: <Send size={14} />, color: "text-blue-400", bg: "border-blue-400/20 bg-blue-400/5" },
-  send_slack_message: { icon: <MessageCircle size={14} />, color: "text-purple-400", bg: "border-purple-400/20 bg-purple-400/5" },
+  send_telegram: { icon: <TelegramIcon size={14} />, color: "text-blue-400", bg: "border-blue-400/20 bg-blue-400/5" },
+  send_slack_message: { icon: <SlackIcon size={14} />, color: "text-purple-400", bg: "border-purple-400/20 bg-purple-400/5" },
   send_email: { icon: <Mail size={14} />, color: "text-cyan-400", bg: "border-cyan-400/20 bg-cyan-400/5" },
   send_sms: { icon: <Phone size={14} />, color: "text-green-400", bg: "border-green-400/20 bg-green-400/5" },
   create_task: { icon: <FileText size={14} />, color: "text-gold", bg: "border-gold/20 bg-gold/5" },

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { requireExtensionUser } from "@/lib/extension/auth";
+import { checkRateLimit } from "@/lib/extension/rate-limit";
 
 const SYSTEM_PROMPT = `You are ShortStack AI assistant embedded in a Chrome extension. Help users with marketing, lead generation, content creation, SEO analysis, and competitor intelligence.
 
@@ -12,12 +14,29 @@ Guidelines:
 - Format responses clearly with bullet points when listing items
 - Keep responses under 300 words unless the user asks for detail`;
 
+// Rate limit: 30 messages per minute per user. Prevents abuse of the
+// Anthropic-proxying endpoint if an extension token is ever leaked.
+const CHAT_LIMIT_PER_MIN = 30;
+const CHAT_WINDOW_MS = 60_000;
+
 export async function POST(req: NextRequest) {
   try {
-    // Auth check
-    const auth = req.headers.get("authorization");
-    if (!auth?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // SECURITY: real Bearer token validation replaces the previous
+    // "starts with Bearer " check which never actually verified the token.
+    const auth = await requireExtensionUser(req);
+    if (auth.error) return auth.error;
+    const { user } = auth;
+
+    // Per-user rate limit — see comment above.
+    const rl = checkRateLimit(`chat:${user.id}`, CHAT_LIMIT_PER_MIN, CHAT_WINDOW_MS);
+    if (!rl.ok) {
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded. Try again in a minute.",
+          retryAfterSec: rl.retryAfterSec,
+        },
+        { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+      );
     }
 
     const body = await req.json();
@@ -55,12 +74,10 @@ export async function POST(req: NextRequest) {
         .map((block) => block.text)
         .join("\n") || "I could not generate a response.";
 
-    return NextResponse.json({ response: text });
-  } catch (e: any) {
-    console.error("[Extension Chat] Error:", e.message);
-    return NextResponse.json(
-      { error: e.message || "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ response: text, remaining: rl.remaining });
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Internal server error";
+    console.error("[Extension Chat] Error:", message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

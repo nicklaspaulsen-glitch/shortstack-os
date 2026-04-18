@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { Bot, Send, X, Sparkles, Loader, Copy, Minimize2 } from "lucide-react";
+import { Bot, Send, X, Sparkles, Copy, Minimize2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface PageAIProps {
@@ -14,6 +14,28 @@ interface PageAIProps {
 interface Message {
   role: "user" | "ai";
   content: string;
+  streaming?: boolean;
+  displayed?: string; // partial text shown during streaming
+}
+
+// Typing dots indicator — 3 dots that pulse with theme color
+function TypingDots() {
+  return (
+    <div className="flex items-center gap-1">
+      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse-dot" style={{ animationDelay: "0ms" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse-dot" style={{ animationDelay: "150ms" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse-dot" style={{ animationDelay: "300ms" }} />
+      <style jsx>{`
+        @keyframes pulse-dot {
+          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+          40% { opacity: 1; transform: scale(1.1); }
+        }
+        :global(.animate-pulse-dot) {
+          animation: pulse-dot 1.2s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
+  );
 }
 
 export default function PageAI({ pageName, context, suggestions, accentColor: _accentColor = "gold" }: PageAIProps) {
@@ -88,6 +110,24 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Character-by-character streaming effect for the latest AI message
+  const streamText = useCallback((full: string) => {
+    const chunkSize = 2; // characters per tick
+    const interval = 12; // ms per tick
+    let i = 0;
+    const timer = setInterval(() => {
+      i = Math.min(full.length, i + chunkSize);
+      setMessages(prev => {
+        const next = [...prev];
+        const lastIdx = next.length - 1;
+        if (lastIdx < 0 || next[lastIdx].role !== "ai") return prev;
+        next[lastIdx] = { ...next[lastIdx], displayed: full.slice(0, i), streaming: i < full.length };
+        return next;
+      });
+      if (i >= full.length) clearInterval(timer);
+    }, interval);
+  }, []);
+
   async function sendMessage(text?: string) {
     const msg = (text || input).trim();
     if (!msg || thinking) return;
@@ -106,9 +146,13 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         }),
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: "ai", content: data.reply || "No response." }]);
+      const reply = data.reply || "No response.";
+      // Append AI message with empty displayed, then stream it in
+      setMessages(prev => [...prev, { role: "ai", content: reply, streaming: true, displayed: "" }]);
+      // Slight delay before streaming kicks in so the typing indicator is briefly visible
+      setTimeout(() => streamText(reply), 80);
     } catch {
-      setMessages(prev => [...prev, { role: "ai", content: "Connection error. Try again." }]);
+      setMessages(prev => [...prev, { role: "ai", content: "Connection error. Try again.", displayed: "Connection error. Try again." }]);
     }
     setThinking(false);
   }
@@ -124,15 +168,102 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        className="w-12 h-12 rounded-full flex items-center justify-center cursor-grab active:cursor-grabbing hover:scale-110 hover:shadow-[0_0_20px_rgba(201,168,76,0.3)] transition-all duration-300 group touch-none select-none"
+        className="orb-launcher relative w-12 h-12 cursor-grab active:cursor-grabbing group touch-none select-none"
         role="button"
         aria-label={`Open ${pageName} AI`}
         tabIndex={0}
       >
-        <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(201,168,76,0.08)", border: "1px solid rgba(201,168,76,0.2)" }}>
-          <Sparkles size={20} className="text-gold group-hover:animate-spin pointer-events-none" />
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-gold rounded-full animate-pulse pointer-events-none" />
+        {/* Outer pulsing halo */}
+        <span className="orb-halo pointer-events-none" />
+        <span className="orb-halo orb-halo-delay pointer-events-none" />
+
+        {/* Floating sparkle particles */}
+        <span className="orb-sparkle orb-sparkle-1 pointer-events-none" />
+        <span className="orb-sparkle orb-sparkle-2 pointer-events-none" />
+        <span className="orb-sparkle orb-sparkle-3 pointer-events-none" />
+
+        {/* Main gold-to-amber orb */}
+        <div className="orb-body w-12 h-12 rounded-full flex items-center justify-center relative overflow-hidden">
+          <Sparkles size={18} className="text-white drop-shadow-[0_0_6px_rgba(255,220,130,0.9)] pointer-events-none relative z-10 group-hover:rotate-12 transition-transform" />
+          {/* Inner gloss highlight */}
+          <span className="absolute top-1 left-2 w-3 h-2 bg-white/40 rounded-full blur-sm pointer-events-none" />
         </div>
+
+        <style jsx>{`
+          .orb-launcher {
+            filter: drop-shadow(0 4px 18px rgba(201, 168, 76, 0.45));
+          }
+          .orb-body {
+            background: radial-gradient(circle at 35% 30%, #ffe28a 0%, #f5c03c 35%, #c9a84c 70%, #8c6d1a 100%);
+            border: 1px solid rgba(255, 220, 130, 0.6);
+            box-shadow:
+              inset 0 0 10px rgba(255, 240, 190, 0.4),
+              0 0 20px rgba(201, 168, 76, 0.5);
+            animation: orb-breathe 3.2s ease-in-out infinite;
+            transition: transform 0.3s ease;
+          }
+          .orb-launcher:hover .orb-body {
+            transform: rotate(8deg) scale(1.08);
+            box-shadow:
+              inset 0 0 14px rgba(255, 240, 190, 0.6),
+              0 0 32px rgba(255, 200, 90, 0.7);
+          }
+          @keyframes orb-breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+          }
+          .orb-halo {
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: radial-gradient(circle, rgba(201,168,76,0.5) 0%, transparent 70%);
+            animation: orb-halo-pulse 2.4s ease-out infinite;
+          }
+          .orb-halo-delay {
+            animation-delay: 1.2s;
+          }
+          @keyframes orb-halo-pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            100% { transform: scale(1.9); opacity: 0; }
+          }
+          .orb-sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 9999px;
+            background: #ffe9a3;
+            box-shadow: 0 0 6px #ffd86b;
+          }
+          .orb-sparkle-1 {
+            top: -4px;
+            left: 8px;
+            animation: orb-float-1 3.8s ease-in-out infinite;
+          }
+          .orb-sparkle-2 {
+            top: 10px;
+            right: -4px;
+            animation: orb-float-2 4.4s ease-in-out infinite;
+            animation-delay: 0.6s;
+          }
+          .orb-sparkle-3 {
+            bottom: -2px;
+            left: 22px;
+            animation: orb-float-3 3.2s ease-in-out infinite;
+            animation-delay: 1.2s;
+          }
+          @keyframes orb-float-1 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+            50% { transform: translate(-6px, -10px) scale(0.6); opacity: 0.3; }
+          }
+          @keyframes orb-float-2 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+            50% { transform: translate(8px, -6px) scale(0.5); opacity: 0.2; }
+          }
+          @keyframes orb-float-3 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+            50% { transform: translate(-4px, 10px) scale(0.6); opacity: 0.3; }
+          }
+        `}</style>
       </div>
     );
   }
@@ -218,29 +349,39 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
           </div>
         )}
 
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
-              msg.role === "user"
-                ? "bg-gold/10 border border-gold/15"
-                : "bg-surface-light/50 border border-border/20"
-            }`}>
-              <p className="text-[11px] whitespace-pre-wrap leading-relaxed">{msg.content}</p>
-              {msg.role === "ai" && (
-                <button onClick={() => { navigator.clipboard.writeText(msg.content); toast.success("Copied!"); }}
-                  className="mt-1 text-[8px] text-muted hover:text-foreground flex items-center gap-0.5">
-                  <Copy size={8} /> Copy
-                </button>
-              )}
+        {messages.map((msg, i) => {
+          const displayText = msg.role === "ai"
+            ? (msg.displayed !== undefined ? msg.displayed : msg.content)
+            : msg.content;
+          const isStreaming = msg.streaming && msg.role === "ai";
+          return (
+            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div className={`max-w-[85%] rounded-xl px-3 py-2 ${
+                msg.role === "user"
+                  ? "bg-gold/10 border border-gold/15"
+                  : "bg-surface-light/50 border border-border/20"
+              }`}>
+                <p className="text-[11px] whitespace-pre-wrap leading-relaxed">
+                  {displayText}
+                  {isStreaming && (
+                    <span className="stream-cursor inline-block align-middle ml-0.5 w-[2px] h-3 bg-gold" />
+                  )}
+                </p>
+                {msg.role === "ai" && !isStreaming && (
+                  <button onClick={() => { navigator.clipboard.writeText(msg.content); toast.success("Copied!"); }}
+                    className="mt-1 text-[8px] text-muted hover:text-foreground flex items-center gap-0.5">
+                    <Copy size={8} /> Copy
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {thinking && (
           <div className="flex justify-start">
-            <div className="bg-surface-light/50 border border-border/20 rounded-xl px-3 py-2 flex items-center gap-1.5">
-              <Loader size={10} className="animate-spin text-gold" />
-              <span className="text-[10px] text-muted">Thinking...</span>
+            <div className="bg-surface-light/50 border border-border/20 rounded-xl px-3 py-2.5 flex items-center gap-1.5">
+              <TypingDots />
             </div>
           </div>
         )}
@@ -259,6 +400,17 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
           <Send size={12} />
         </button>
       </form>
+
+      <style jsx>{`
+        .stream-cursor {
+          box-shadow: 0 0 6px rgba(201, 168, 76, 0.9), 0 0 10px rgba(255, 210, 100, 0.6);
+          animation: stream-blink 0.8s step-end infinite;
+        }
+        @keyframes stream-blink {
+          0%, 50% { opacity: 1; }
+          50.01%, 100% { opacity: 0.15; }
+        }
+      `}</style>
     </div>
   );
 }

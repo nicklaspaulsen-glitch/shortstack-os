@@ -1,9 +1,0 @@
-/* ShortStack OS — Content Script Styles */
-.ss-highlight {
-  animation: ss-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes ss-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.3); }
-  50% { box-shadow: 0 0 12px 4px rgba(201, 168, 76, 0.15); }
-}

@@ -4,11 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Calendar, Clock, Plus, Phone, Video, MapPin,
   ChevronLeft, ChevronRight, Check, X, Filter,
-  Users, Download,
+  Users,
   Repeat, Eye, Star, AlertCircle, Loader2
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
 
 type ViewMode = "month" | "week" | "day";
 type EventCategory = "meeting" | "deadline" | "content" | "call";
@@ -353,11 +354,11 @@ export default function CalendarPage() {
 
           {/* Export */}
           <div className="flex gap-2">
-            <button className="btn-secondary text-[10px] flex items-center gap-1">
-              <Download size={10} /> Export to Google
+            <button className="btn-secondary text-[10px] flex items-center gap-1.5">
+              <GoogleIcon size={12} /> Export to Google
             </button>
-            <button className="btn-secondary text-[10px] flex items-center gap-1">
-              <Download size={10} /> Export to Outlook
+            <button className="btn-secondary text-[10px] flex items-center gap-1.5">
+              <OutlookIcon size={12} /> Export to Outlook
             </button>
           </div>
         </div>

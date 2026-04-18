@@ -23,6 +23,7 @@ import QuickCreateFab from "@/components/dashboard/quick-create-fab";
 import DowntimeBanner from "@/components/dashboard/downtime-banner";
 import OutreachAccounts from "@/components/dashboard/outreach-accounts";
 import PersonalizedMetrics from "@/components/dashboard/personalized-metrics";
+import AiRecommender from "@/components/dashboard/ai-recommender";
 import {
   useFocusMode,
   FocusModeToggle,
@@ -221,6 +222,9 @@ export default function DashboardPage() {
 
       {/* ─── Service health banner — alerts when something is down ── */}
       <DowntimeBanner />
+
+      {/* ─── AI Recommender — the big "ready to let AI do your job?" button ─ */}
+      <AiRecommender />
 
       {/* ─── Command Palette Hint (above-the-fold helper) ──────── */}
       <div className="flex items-center justify-between gap-2 -mt-2">

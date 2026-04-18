@@ -9,6 +9,15 @@ import {
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
+import { ZapierIcon, SlackIcon } from "@/components/ui/platform-icons";
+
+/** Pick a brand icon from a template/integration name. */
+function TemplateBrandIcon({ name, size = 14 }: { name: string; size?: number }) {
+  const n = name.toLowerCase();
+  if (n.includes("zapier")) return <ZapierIcon size={size} />;
+  if (n.includes("slack")) return <SlackIcon size={size} />;
+  return <Webhook size={size} />;
+}
 
 interface WebhookConfig {
   id: string;
@@ -363,7 +372,10 @@ export default function WebhooksPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {TEMPLATES.map((t, i) => (
               <div key={i} className="card p-3 hover:border-gold/15 transition-all">
-                <p className="text-xs font-semibold mb-1">{t.name}</p>
+                <p className="text-xs font-semibold mb-1 flex items-center gap-1.5">
+                  <TemplateBrandIcon name={t.name} size={14} />
+                  {t.name}
+                </p>
                 <p className="text-[9px] text-muted font-mono mb-2">{t.url}</p>
                 <div className="flex flex-wrap gap-1 mb-2">
                   {t.events.map(e => <span key={e} className="text-[8px] px-1.5 py-0.5 rounded bg-gold/8 text-gold">{e}</span>)}

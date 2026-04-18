@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
 import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
@@ -11,6 +12,8 @@ import toast from "react-hot-toast";
 import { applyTheme } from "@/components/theme-provider";
 import { getPlanConfig } from "@/lib/plan-config";
 import PageHero from "@/components/ui/page-hero";
+import { useAutoSave } from "@/lib/use-auto-save";
+import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
 
 type Tab = "general" | "agents" | "integrations" | "automation" | "notifications" | "billing" | "api_keys" | "white_label" | "smtp" | "security" | "data" | "danger";
 
@@ -124,9 +127,44 @@ export default function SettingsPage() {
   // Danger zone
   const [deleteConfirm, setDeleteConfirm] = useState("");
 
+  // Auto-save state for profile (nickname + timezone + language)
+  // Timezone and language persist to localStorage (no API backing yet)
+  const autoSaveValue = useMemo(() => ({ nickname, timezone, language }), [nickname, timezone, language]);
+  const autoSave = useCallback(async (v: { nickname: string; timezone: string; language: string }) => {
+    // Persist local prefs
+    if (typeof window !== "undefined") {
+      safeSet("ss-timezone", v.timezone);
+      safeSet("ss-language", v.language);
+    }
+    // Only hit API for nickname when it changed vs profile
+    if (profile && v.nickname !== (profile.nickname || "")) {
+      const res = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nickname: v.nickname }),
+      });
+      if (!res.ok) throw new Error("Failed to save profile");
+      await refreshProfile();
+    }
+  }, [profile, refreshProfile]);
+  const { status: autoSaveStatus, lastSavedAt: autoSaveAt, error: autoSaveError } = useAutoSave({
+    value: autoSaveValue,
+    save: autoSave,
+    delay: 900,
+    skip: (v) => !profile || (v.nickname === (profile?.nickname || "") && v.timezone === (safeGet("ss-timezone") || "Europe/Copenhagen") && v.language === (safeGet("ss-language") || "en")),
+  });
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchData(); fetchSocialAccounts(); }, []);
   useEffect(() => { if (profile?.nickname) setNickname(profile.nickname); }, [profile]);
+
+  // Load persisted timezone/language on mount
+  useEffect(() => {
+    const tz = safeGet("ss-timezone");
+    const lang = safeGet("ss-language");
+    if (tz) setTimezone(tz);
+    if (lang) setLanguage(lang);
+  }, []);
 
   // Fetch spam guard setting on mount
   useEffect(() => {
@@ -443,6 +481,7 @@ export default function SettingsPage() {
 
   return (
     <div className="fade-in space-y-6">
+      <AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />
       <PageHero
         icon={<Settings size={28} />}
         title="Settings"
@@ -514,33 +553,39 @@ export default function SettingsPage() {
                     placeholder={profile?.full_name || "Your name"}
                     className="input w-full text-xs"
                   />
+                  <p className="text-[9px] text-muted/70 mt-1 flex items-center gap-1">
+                    <CheckCircle2 size={8} /> Auto-saves as you type
+                  </p>
                 </div>
-                <button
-                  disabled={savingProfile}
-                  onClick={async () => {
-                    if (!profile) return;
-                    setSavingProfile(true);
-                    try {
-                      const res = await fetch("/api/profile", {
-                        method: "PATCH",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ nickname }),
-                      });
-                      if (res.ok) {
-                        await refreshProfile();
-                        toast.success("Profile updated");
-                      } else {
-                        toast.error("Failed to save");
+                <div className="pt-2 border-t border-border/30 flex items-center gap-2">
+                  <span className="text-[9px] text-muted/60">or save manually</span>
+                  <button
+                    disabled={savingProfile}
+                    onClick={async () => {
+                      if (!profile) return;
+                      setSavingProfile(true);
+                      try {
+                        const res = await fetch("/api/profile", {
+                          method: "PATCH",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({ nickname }),
+                        });
+                        if (res.ok) {
+                          await refreshProfile();
+                          toast.success("Profile updated");
+                        } else {
+                          toast.error("Failed to save");
+                        }
+                      } catch {
+                        toast.error("Connection error");
                       }
-                    } catch {
-                      toast.error("Connection error");
-                    }
-                    setSavingProfile(false);
-                  }}
-                  className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1"
-                >
-                  <Save size={10} /> {savingProfile ? "Saving..." : "Save"}
-                </button>
+                      setSavingProfile(false);
+                    }}
+                    className="btn-secondary text-[10px] px-3 py-1 flex items-center gap-1"
+                  >
+                    <Save size={10} /> {savingProfile ? "Saving..." : "Save"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>

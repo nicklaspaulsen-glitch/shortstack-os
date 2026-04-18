@@ -13,6 +13,7 @@ import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
 import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
+import { TelegramIcon } from "@/components/ui/platform-icons";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -478,7 +479,7 @@ export default function TelegramBotPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       <PageHero
-        icon={<Bot size={28} />}
+        icon={<TelegramIcon size={28} />}
         title="Telegram Bot"
         subtitle="Manage what your bot sends you and when."
         gradient="blue"
@@ -542,7 +543,7 @@ export default function TelegramBotPage() {
           ) : routines.length === 0 ? (
             <div className="card">
               <EmptyState
-                icon={<Bot size={48} />}
+                icon={<TelegramIcon size={48} />}
                 title="No routines yet"
                 description="Set up your first routine so your bot can keep you posted on leads, revenue, or anything else that matters."
                 action={

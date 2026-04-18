@@ -14,8 +14,9 @@
 
   <!-- Auth gate -->
   <div id="authGate" class="ss-auth hidden">
-    <p>Connect your ShortStack instance to get started.</p>
-    <button id="openSettings" class="ss-btn-gold">Connect to ShortStack</button>
+    <p>Sign in to your ShortStack OS account to start saving leads, notes, and running AI actions from any webpage.</p>
+    <button id="loginBtn" class="ss-btn-gold">Log in with ShortStack</button>
+    <p class="ss-auth-secondary"><button id="openSettings" class="ss-link">Advanced: enter API key</button></p>
   </div>
 
   <!-- Main content -->
@@ -88,6 +89,18 @@
     <h3 class="ss-section-title">Settings</h3>
     <label>API Key<input id="cfgApiKey" type="password" placeholder="ss_key_..."></label>
     <label>Instance URL<input id="cfgBaseUrl" type="url" placeholder="http://localhost:3000"></label>
+
+    <div class="ss-setting-row">
+      <div class="ss-setting-info">
+        <span class="ss-setting-label">Automation Mode</span>
+        <span class="ss-setting-desc">Allow AI to control mouse & keyboard when no API alternative exists. Off by default for safety.</span>
+      </div>
+      <label class="ss-toggle">
+        <input type="checkbox" id="cfgAutomation">
+        <span class="ss-toggle-slider"></span>
+      </label>
+    </div>
+
     <div class="ss-form-actions">
       <button id="settingsSave" class="ss-btn-gold">Save</button>
       <button id="settingsCancel" class="ss-btn-ghost">Back</button>

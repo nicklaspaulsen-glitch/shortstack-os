@@ -1,24 +1,48 @@
-/* ShortStack OS — Shared API helper */
-const DEFAULT_BASE = "http://localhost:3000";
+/* ShortStack OS — Shared API helper
+ *
+ * Auth is handled via the /extension-auth handshake page (opened from the
+ * popup login button). The handshake sends us a Supabase access token
+ * which we store in chrome.storage.local (NOT sync — tokens must not
+ * propagate across devices).
+ *
+ * We keep a legacy `apiKey` code path so existing users aren't broken, but
+ * the new flow is handshake-based.
+ */
+const DEFAULT_BASE = "https://app.shortstack.work";
 
 async function getConfig() {
-  const data = await chrome.storage.sync.get(["apiKey", "baseUrl"]);
+  // Token from the login handshake lives in local; base URL may still be
+  // customized from settings (kept in sync).
+  const localData = await chrome.storage.local.get(["ss_access_token", "ss_refresh_token", "ss_user"]);
+  const syncData = await chrome.storage.sync.get(["apiKey", "baseUrl"]);
   return {
-    apiKey: data.apiKey || "",
-    baseUrl: (data.baseUrl || DEFAULT_BASE).replace(/\/+$/, ""),
+    accessToken: localData.ss_access_token || "",
+    refreshToken: localData.ss_refresh_token || "",
+    user: localData.ss_user || null,
+    // apiKey preserved for backward compat — falls through if no handshake token
+    apiKey: syncData.apiKey || "",
+    baseUrl: (syncData.baseUrl || DEFAULT_BASE).replace(/\/+$/, ""),
   };
 }
 
 async function apiCall(endpoint, method = "GET", body = null) {
-  const { apiKey, baseUrl } = await getConfig();
-  if (!apiKey) throw new Error("No API key configured");
+  const { accessToken, apiKey, baseUrl } = await getConfig();
+  const token = accessToken || apiKey;
+  if (!token) throw new Error("Not connected. Click 'Connect to ShortStack' in the popup.");
   const opts = {
     method,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
   };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(`${baseUrl}${endpoint}`, opts);
-  if (!res.ok) throw new Error(`API ${res.status}: ${res.statusText}`);
+  if (!res.ok) {
+    let errMsg = `API ${res.status}: ${res.statusText}`;
+    try {
+      const j = await res.json();
+      if (j?.error) errMsg = j.error;
+    } catch { /* body wasn't JSON */ }
+    throw new Error(errMsg);
+  }
   return res.json();
 }
 

@@ -20,6 +20,11 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const planParam = searchParams?.get("plan") ?? null; // e.g. "growth" from /login?plan=growth
   const billingParam = searchParams?.get("billing") ?? null; // "annual" or null
+  // Post-login redirect target. Used by the Chrome extension handshake
+  // (/login?redirect=/extension-auth?ext_id=...). Must be a relative path
+  // starting with "/" to prevent open redirects.
+  const redirectRaw = searchParams?.get("redirect") ?? null;
+  const redirectParam = redirectRaw && redirectRaw.startsWith("/") && !redirectRaw.startsWith("//") ? redirectRaw : null;
   const selectedPlan = planParam
     ? (planParam.charAt(0).toUpperCase() + planParam.slice(1).toLowerCase()) as PlanTier
     : null;
@@ -72,6 +77,13 @@ function LoginForm() {
           toast.error("Checkout setup failed — you can subscribe from Settings.");
         }
 
+        if (redirectParam) {
+          // Used by the extension handshake flow to bounce back to
+          // /extension-auth after login.
+          router.push(redirectParam);
+          router.refresh();
+          return;
+        }
         router.push("/dashboard");
         router.refresh();
       }

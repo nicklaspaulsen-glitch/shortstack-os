@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
+import { SlackIcon } from "@/components/ui/platform-icons";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -78,7 +79,7 @@ const ACTIONS = [
   { id: "create_task", label: "Create Task", icon: "FileText", description: "Create a task for your team" },
   { id: "assign_member", label: "Assign Team Member", icon: "UserPlus", description: "Assign to a team member" },
   { id: "update_deal", label: "Update Deal Stage", icon: "RefreshCw", description: "Move deal to another stage" },
-  { id: "slack_notify", label: "Send Slack Notification", icon: "MessageSquare", description: "Post to a Slack channel" },
+  { id: "slack_notify", label: "Send Slack Notification", icon: "Slack", description: "Post to a Slack channel" },
   { id: "add_tag", label: "Add Tag", icon: "Tag", description: "Add a tag to the contact" },
 ];
 
@@ -148,6 +149,7 @@ function IconFor({ name, size = 14, className = "" }: { name: string; size?: num
     Phone: <Phone size={size} className={className} />,
     RefreshCw: <RefreshCw size={size} className={className} />,
     MessageSquare: <MessageSquare size={size} className={className} />,
+    Slack: <SlackIcon size={size} className={className} />,
     Target: <Target size={size} className={className} />,
     Zap: <Zap size={size} className={className} />,
   };

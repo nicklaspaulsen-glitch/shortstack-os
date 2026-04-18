@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Mic, Sparkles, Plus, Trash2, Check, X, Copy,
+  Mic, Sparkles, Plus, Trash2, Check, X, Copy, Save,
   ToggleLeft, ToggleRight, Sliders, BookOpen,
   AlertCircle, CheckCircle, Type, Shield,
   ChevronDown, ChevronRight, Search, Wand2,
@@ -15,6 +15,8 @@ import toast from "react-hot-toast";
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
 import { BookOpen as BookOpenIcon } from "lucide-react";
+import { useAutoSave } from "@/lib/use-auto-save";
+import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
 
 interface VoiceProfile {
   id: string;
@@ -54,6 +56,7 @@ export default function BrandVoicePage() {
 
   const [profiles, setProfiles] = useState<VoiceProfile[]>(INITIAL_PROFILES);
   const [selectedProfile, setSelectedProfile] = useState<string>("");
+  const [savingManual, setSavingManual] = useState(false);
   const [tab, setTab] = useState<"editor" | "samples" | "vocabulary" | "checker">("editor");
   const [newSample, setNewSample] = useState("");
   const [newDo, setNewDo] = useState("");
@@ -72,6 +75,30 @@ export default function BrandVoicePage() {
   const [enhancing, setEnhancing] = useState<string | null>(null);
 
   void supabase;
+
+  // Load persisted profiles on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem("ss_brand_voice_profiles");
+      if (raw) {
+        const parsed = JSON.parse(raw) as VoiceProfile[];
+        if (Array.isArray(parsed) && parsed.length > 0) setProfiles(parsed);
+      }
+    } catch { /* ignore parse errors */ }
+  }, []);
+
+  // Auto-save profiles to localStorage
+  const saveProfiles = useCallback(async (v: VoiceProfile[]) => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("ss_brand_voice_profiles", JSON.stringify(v));
+  }, []);
+  const { status: autoSaveStatus, lastSavedAt: autoSaveAt, error: autoSaveError } = useAutoSave({
+    value: profiles,
+    save: saveProfiles,
+    delay: 800,
+    skip: (v) => v.length === 0,
+  });
 
   const profile = profiles.find(p => p.id === selectedProfile);
   const filteredProfiles = profiles.filter(p =>
@@ -230,6 +257,7 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
 
   return (
     <div className="fade-in space-y-6">
+      <AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />
       <PageHero
         icon={<BookOpenIcon size={28} />}
         title="Brand Voice Manager"
@@ -241,6 +269,35 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
           </button>
         }
       />
+
+      {/* Auto-save footer with manual fallback */}
+      {profiles.length > 0 && (
+        <div className="flex items-center justify-between text-[10px] text-muted/70 px-1">
+          <span className="flex items-center gap-1">
+            <CheckCircle size={10} className="text-emerald-400/60" />
+            Brand voice changes auto-save as you edit
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-muted/50">or save manually</span>
+            <button
+              disabled={savingManual}
+              onClick={async () => {
+                setSavingManual(true);
+                try {
+                  await saveProfiles(profiles);
+                  toast.success("Brand voice profiles saved");
+                } catch {
+                  toast.error("Save failed");
+                }
+                setSavingManual(false);
+              }}
+              className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1"
+            >
+              <Save size={10} /> {savingManual ? "Saving..." : "Save"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {showNewProfile && (
         <div className="card border border-gold/20">

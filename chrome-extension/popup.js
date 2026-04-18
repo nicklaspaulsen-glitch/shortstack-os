@@ -4,11 +4,11 @@ const $$ = (s) => document.querySelectorAll(s);
 
 /* ── Default suggestion cards ── */
 const DEFAULT_SUGGESTIONS = [
-  { icon: "\ud83d\udcca", title: "Analyze Competitors", desc: "Run competitor analysis on current site", prompt: "Analyze the competitors of the website I'm currently viewing. What are their strengths and weaknesses?" },
-  { icon: "\u270d\ufe0f", title: "Write Content", desc: "Generate posts, blogs, emails", prompt: "Generate social media posts, blog ideas, and email copy based on the content of this page." },
-  { icon: "\ud83c\udfaf", title: "Find Leads", desc: "Extract business contacts", prompt: "Extract any business contacts, emails, or lead information from this page." },
+  { icon: "\ud83d\udcca", title: "Analyze Competitors", desc: "Run competitor analysis on current site", featureKey: "competitor_full", prompt: "Analyze the competitors of the website I'm currently viewing." },
+  { icon: "\u270d\ufe0f", title: "Write Content", desc: "Generate posts, blogs, emails", featureKey: "content_social", prompt: "Generate social media posts based on this page." },
+  { icon: "\ud83c\udfaf", title: "Find Leads", desc: "Extract business contacts", featureKey: "extract_leads", prompt: "Extract any business contacts, emails, or lead information from this page." },
   { icon: "\ud83d\udcf1", title: "Manage Ads", desc: "View and optimize campaigns", prompt: "Help me plan and optimize ad campaigns related to the content on this page." },
-  { icon: "\ud83d\udd0d", title: "SEO Audit", desc: "Check SEO health of page", prompt: "Perform an SEO audit of this page. Check title tags, meta descriptions, headings, and content quality." },
+  { icon: "\ud83d\udd0d", title: "SEO Audit", desc: "Check SEO health of page", featureKey: "seo_audit", prompt: "Perform an SEO audit of this page." },
   { icon: "\ud83d\udcc8", title: "Page Insights", desc: "Analytics and performance", prompt: "Give me insights and analysis about this page — content quality, audience, and key takeaways." },
 ];
 
@@ -49,9 +49,38 @@ const URL_OVERRIDES = [
   },
 ];
 
+/* ── Feature Prompts (ported from legacy sidepanel extension) ──
+ * Rich, structured prompts for competitor / SEO / review / content tasks.
+ * Exposed via the suggestion cards (URL_OVERRIDES + defaults) and any
+ * future quick-feature buttons. Keep these in sync with suggestion cards. */
+const FEATURE_PROMPTS = {
+  competitor_full: `Analyze this website as a competitor. Provide:
+1. **Business Overview** — What they do, who they target
+2. **Strengths** — What they do well
+3. **Weaknesses** — Gaps, missing features, poor UX
+4. **Pricing Strategy** — If visible
+5. **Marketing Approach** — Tone, messaging, value props
+6. **Opportunities** — How to compete against them
+Rate overall threat level 1-10.`,
+  seo_audit: `Perform an SEO audit of this page. Score each 1-10:
+title tag, meta description, headings structure, content quality, internal links,
+image alt text, URL structure, mobile signals, page speed, schema markup.
+Give an overall score out of 100 and the top 3 quick wins.`,
+  content_social: `Create 3 social posts from this page's content:
+1. Instagram/TikTok — hook + value + CTA with hashtags
+2. LinkedIn — professional angle, 3-4 paragraphs
+3. Twitter/X — punchy, under 280 chars
+Make each platform-native, not a copy-paste.`,
+  review_respond: `Find customer reviews on this page. For each review:
+identify reviewer + rating, summarize feedback, write a warm 2-3 sentence response.`,
+  extract_leads: `Extract business lead info: name, industry, location, contact info,
+social media, services offered, and a Hot/Warm/Cold quality rating.`,
+};
+
 /* ── Chat State ── */
 let chatHistory = [];
 let currentTabUrl = "";
+let currentPageContext = null; // Populated from content-script EXTRACT_PAGE
 let isSending = false;
 
 /* ── Init ── */
@@ -86,13 +115,30 @@ function showSettings() {
   $("#authGate").classList.add("hidden");
   $("#mainContent").classList.add("hidden");
   $("#settingsPanel").classList.remove("hidden");
-  chrome.storage.sync.get(["apiKey", "baseUrl"], (d) => {
+  chrome.storage.sync.get(["apiKey", "baseUrl", "automationMode"], (d) => {
     $("#cfgApiKey").value = d.apiKey || "";
     $("#cfgBaseUrl").value = d.baseUrl || "http://localhost:3000";
+    $("#cfgAutomation").checked = d.automationMode || false;
   });
 }
 
-/* ── Settings ── */
+/* ── Auth / Settings ── */
+// Primary login flow: opens /extension-auth in a new tab. The page calls
+// back into the extension via externally_connectable with the tokens.
+$("#loginBtn").addEventListener("click", async () => {
+  await msg("startLogin");
+  // Poll for connection for ~20s. Cheaper than a storage listener and
+  // handles the case where the user closed the handshake tab early.
+  const startedAt = Date.now();
+  const poll = async () => {
+    if (Date.now() - startedAt > 20000) return;
+    const a = await msg("checkAuth");
+    if (a?.data?.connected) { showMain(); location.reload(); return; }
+    setTimeout(poll, 800);
+  };
+  poll();
+});
+
 $("#openSettings").addEventListener("click", showSettings);
 $("#settingsToggle").addEventListener("click", showSettings);
 $("#settingsCancel").addEventListener("click", async () => {
@@ -102,17 +148,38 @@ $("#settingsCancel").addEventListener("click", async () => {
 $("#settingsSave").addEventListener("click", () => {
   const apiKey = $("#cfgApiKey").value.trim();
   const baseUrl = $("#cfgBaseUrl").value.trim() || "http://localhost:3000";
-  chrome.storage.sync.set({ apiKey, baseUrl }, () => {
+  const automationMode = $("#cfgAutomation").checked;
+  chrome.storage.sync.set({ apiKey, baseUrl, automationMode }, () => {
     apiKey ? showMain() : showAuth();
   });
 });
 
+/* ── Automation Mode toggle warning ── */
+$("#cfgAutomation").addEventListener("change", (e) => {
+  if (e.target.checked) {
+    alert("Automation mode lets the AI interact with web pages directly. Use with caution.");
+  }
+});
+
 /* ── Chat ── */
 async function initChat() {
-  // Get current tab URL
+  // Get current tab URL + try to pull deep page context from content script
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     currentTabUrl = tab?.url || "";
+    if (tab?.id) {
+      // Ask the content script for the full extracted context. Silently
+      // tolerate chrome:// / extension gallery / PDF pages where content
+      // scripts cannot inject.
+      try {
+        currentPageContext = await new Promise((resolve) => {
+          chrome.tabs.sendMessage(tab.id, { type: "EXTRACT_PAGE" }, (res) => {
+            if (chrome.runtime.lastError || !res || res.error) resolve(null);
+            else resolve(res);
+          });
+        });
+      } catch (_) { currentPageContext = null; }
+    }
   } catch (_) {}
 
   // Load stored chat history
@@ -154,7 +221,10 @@ async function sendChatMessage() {
   const typing = showTypingIndicator();
 
   try {
-    const res = await msg("chatWithAI", { message: text, url: currentTabUrl, pageContext: document.title });
+    // Build a compact page-context blob from the deep extraction if we
+    // have it — otherwise fall back to the popup document's title.
+    const pageCtx = buildPageContextSummary();
+    const res = await msg("chatWithAI", { message: text, url: currentTabUrl, pageContext: pageCtx });
     typing.remove();
 
     const aiText = res?.data?.response || res?.data?.message || "Sorry, I couldn't process that request.";
@@ -196,6 +266,24 @@ function renderChatHistory() {
   });
 }
 
+function buildPageContextSummary() {
+  // Fall back to just the popup title (which is the extension title, not
+  // the tab's) if we never got a content-script context — still useful.
+  if (!currentPageContext) return document.title;
+  const p = currentPageContext;
+  const parts = [];
+  if (p.title) parts.push(`Title: ${p.title}`);
+  if (p.metaDescription) parts.push(`Description: ${p.metaDescription}`);
+  if (p.headings?.length) {
+    parts.push(`Headings: ${p.headings.slice(0, 6).map((h) => `${h.level}:${h.text}`).join(" | ")}`);
+  }
+  if (p.techStack?.length) parts.push(`Tech: ${p.techStack.slice(0, 6).join(", ")}`);
+  if (p.emails?.length) parts.push(`Emails: ${p.emails.slice(0, 3).join(", ")}`);
+  if (p.phones?.length) parts.push(`Phones: ${p.phones.slice(0, 3).join(", ")}`);
+  if (p.bodyText) parts.push(`Body excerpt: ${p.bodyText.slice(0, 1200)}`);
+  return parts.join(" | ").slice(0, 3500);
+}
+
 function showTypingIndicator() {
   const container = $("#chatMessages");
   const div = document.createElement("div");
@@ -232,9 +320,10 @@ async function initSuggestions() {
       <span class="ss-suggest-desc">${esc(card.desc)}</span>
     `;
     el.addEventListener("click", () => {
-      // Pre-fill the chat input and send
+      // Pre-fill the chat input and send. If a card declares a featureKey,
+      // use the richer FEATURE_PROMPTS template ported from legacy extension.
       const input = $("#chatInput");
-      input.value = card.prompt;
+      input.value = (card.featureKey && FEATURE_PROMPTS[card.featureKey]) || card.prompt;
       sendChatMessage();
     });
     grid.appendChild(el);

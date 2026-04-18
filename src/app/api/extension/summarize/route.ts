@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireExtensionUser } from "@/lib/extension/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const auth = req.headers.get("authorization");
-    if (!auth?.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // SECURITY: real token validation (previous build only checked the
+    // "Bearer " prefix and accepted anything).
+    const auth = await requireExtensionUser(req);
+    if (auth.error) return auth.error;
 
     const { url } = await req.json();
     if (!url) {
@@ -65,7 +66,8 @@ export async function POST(req: NextRequest) {
       aiData.content?.[0]?.text || "Could not generate summary.";
 
     return NextResponse.json({ ok: true, summary, url });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Lead scoring: rates 0-100 based on how likely a lead needs marketing help
 function scoreLeadQuality(lead: {
@@ -46,6 +47,9 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Effective agency owner (team members → parent agency)
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
 
   const config = await request.json();
   const {
@@ -144,10 +148,12 @@ export async function POST(request: NextRequest) {
                 if (filters.require_phone && !d.formatted_phone_number) continue;
                 if (filters.require_website && !d.website) continue;
 
-                // Deduplicate by name in DB (also using place ID via seenPlaceIds above)
+                // Deduplicate by name WITHIN THIS USER's leads only
+                // (global dedup was over-skipping when other agencies had the same lead)
                 const { data: existing } = await supabase
                   .from("leads")
                   .select("id")
+                  .eq("user_id", ownerId)
                   .eq("business_name", d.name || place.name)
                   .limit(1);
 
@@ -197,7 +203,7 @@ export async function POST(request: NextRequest) {
                   source: leadData.source,
                 });
 
-                const { error: insertError } = await supabase.from("leads").insert({ ...leadData, lead_score });
+                const { error: insertError } = await supabase.from("leads").insert({ ...leadData, lead_score, user_id: ownerId });
                 if (!insertError) {
                   totalScraped++;
                   insertedForCombo++;
@@ -278,7 +284,7 @@ export async function POST(request: NextRequest) {
                   source: fbLeadData.source,
                 });
 
-                const { error: insertError } = await supabase.from("leads").insert({ ...fbLeadData, lead_score: fb_lead_score });
+                const { error: insertError } = await supabase.from("leads").insert({ ...fbLeadData, lead_score: fb_lead_score, user_id: ownerId });
 
                 if (!insertError) {
                   totalScraped++;

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Simplified lead search for the client portal Lead Engine
 // Wraps the same Google Places + Facebook logic as /api/scraper/run
@@ -31,6 +32,8 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
 
   const body = await request.json();
   const {
@@ -180,7 +183,7 @@ export async function POST(request: NextRequest) {
             source: "google_maps",
           });
 
-          const { error: insertError } = await supabase.from("leads").insert({ ...leadData, lead_score });
+          const { error: insertError } = await supabase.from("leads").insert({ ...leadData, lead_score, user_id: ownerId });
           if (!insertError) totalFound++;
           else totalSkipped++;
 
@@ -245,7 +248,7 @@ export async function POST(request: NextRequest) {
             source: "facebook",
           });
 
-          const { error: insertError } = await supabase.from("leads").insert({ ...fbLeadData, lead_score: fb_score });
+          const { error: insertError } = await supabase.from("leads").insert({ ...fbLeadData, lead_score: fb_score, user_id: ownerId });
           if (!insertError) totalFound++;
           else totalSkipped++;
         }
