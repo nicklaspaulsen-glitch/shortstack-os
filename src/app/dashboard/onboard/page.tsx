@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   UserPlus, ArrowRight, ArrowLeft, Check, Sparkles,
   Upload, Palette, Briefcase, ShieldCheck, Eye,
@@ -8,9 +8,20 @@ import {
   Image, Type, Layers, Globe, Mail, Phone,
   Building2, Target, Users, Plus, X,
   CheckCircle2, Layout, Zap, BookOpen, Loader2,
+  Video, Home, GraduationCap, ShoppingBag,
 } from "lucide-react";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 import PageHero from "@/components/ui/page-hero";
+import SoloOnboardingWizard from "@/components/onboarding/solo-onboarding-wizard";
+import { USER_TYPES, UserType } from "@/lib/user-types";
+import toast from "react-hot-toast";
+
+/* ================================================================== */
+/*  Icon lookup for user-type cards                                    */
+/* ================================================================== */
+const USER_TYPE_ICONS: Record<string, React.ElementType> = {
+  Building2, Video, Home, GraduationCap, ShoppingBag, Rocket, Briefcase, Sparkles,
+};
 
 /* ================================================================== */
 /*  Types                                                              */
@@ -128,7 +139,7 @@ const ONBOARD_TEMPLATES: OnboardTemplate[] = [
 ];
 
 /* ================================================================== */
-/*  Wizard Step Labels                                                 */
+/*  Wizard Step Labels (Agency full wizard)                            */
 /* ================================================================== */
 
 const STEP_META = [
@@ -145,6 +156,10 @@ const STEP_META = [
 /* ================================================================== */
 
 export default function OnboardPage() {
+  // ── User-type gate (first screen) ──
+  const [userType, setUserType] = useState<UserType | null>(null);
+
+  // ── Legacy agency mode state ──
   const [mode, setMode] = useState<"full" | "quick">("full");
   const [step, setStep] = useState(0);
   const [wizardComplete, setWizardComplete] = useState(false);
@@ -201,6 +216,10 @@ export default function OnboardPage() {
 
   // FAQ state
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
+
+  // Solo wizard finish state
+  const [soloComplete, setSoloComplete] = useState(false);
+  const [soloSummary, setSoloSummary] = useState<{ name: string; label: string; count: number } | null>(null);
 
   // ── Helpers ─────────────────────────────────────────────
   const updateForm = (key: string, value: string) =>
@@ -269,7 +288,177 @@ export default function OnboardPage() {
 
   const progressPercent = Math.round(((step + 1) / STEP_META.length) * 100);
 
+  /* ═══════════════════════════════════════════════════════════════════
+     Solo wizard finish — persist user type + sidebar prefs + profile
+     ═══════════════════════════════════════════════════════════════════ */
+  async function persistSoloFinish(soloState: {
+    user_type: UserType | null;
+    business_name: string;
+    handle: string;
+    website_url: string;
+    niche: string;
+    pain_answers: Record<string, unknown>;
+    goal_answers: Record<string, unknown>;
+    enabled_sidebar: string[];
+  }) {
+    try {
+      // 1. Save user_type + onboarding_preferences to profile
+      await fetch("/api/user/sidebar-preferences", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          enabled_items: soloState.enabled_sidebar,
+          business_type: soloState.user_type,
+        }),
+      });
+
+      // 2. Persist user_type + onboarding_preferences via profile patch
+      await fetch("/api/user/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_type: soloState.user_type,
+          onboarding_preferences: {
+            business_name: soloState.business_name,
+            handle: soloState.handle,
+            website_url: soloState.website_url,
+            niche: soloState.niche,
+            pain_answers: soloState.pain_answers,
+            goal_answers: soloState.goal_answers,
+            completed_at: new Date().toISOString(),
+          },
+        }),
+      });
+
+      const typeLabel = USER_TYPES.find((u) => u.id === soloState.user_type)?.label || "creator";
+      setSoloSummary({
+        name: soloState.business_name || "your business",
+        label: typeLabel,
+        count: soloState.enabled_sidebar.length,
+      });
+      setSoloComplete(true);
+      toast.success("You're all set! Welcome to ShortStack.");
+    } catch (err) {
+      console.error("[onboard] persist failed:", err);
+      toast.error("Couldn't save your preferences — please try again.");
+    }
+  }
+
+  // ── Derived state ───────────────────────────────────────
+  const selectedTypeMeta = useMemo(
+    () => USER_TYPES.find((u) => u.id === userType) || null,
+    [userType]
+  );
+  const isAgencyPath = userType === "agency";
+
   // ── Render ──────────────────────────────────────────────
+
+  // Step 0: User type selector (shown first for everyone)
+  if (!userType) {
+    return (
+      <div className="fade-in space-y-6">
+        <PageHero
+          icon={<Sparkles size={28} />}
+          title="Welcome to ShortStack OS"
+          subtitle="Tell us who you are — we'll set up your workspace."
+          gradient="gold"
+        />
+        <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
+            <p className="text-sm text-muted">Pick one — you can change it later in Settings.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {USER_TYPES.map((t) => {
+              const Icon = USER_TYPE_ICONS[t.iconKey] || Sparkles;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setUserType(t.id)}
+                  className="relative text-left p-4 rounded-2xl border border-[var(--color-border)] bg-surface-light hover:border-gold/40 hover:-translate-y-0.5 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center mb-3">
+                    <Icon size={18} />
+                  </div>
+                  <p className="text-sm font-semibold text-foreground mb-0.5">{t.label}</p>
+                  <p className="text-[11px] text-muted leading-snug">{t.description}</p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Solo path: anything non-agency
+  if (!isAgencyPath) {
+    if (soloComplete && soloSummary) {
+      return (
+        <div className="fade-in space-y-6">
+          <PageHero
+            icon={<CheckCircle2 size={28} />}
+            title="You're all set!"
+            subtitle={`ShortStack has been personalized for your ${soloSummary.label} business.`}
+            gradient="gold"
+          />
+          <div className="rounded-2xl border border-gold/30 bg-[var(--color-surface)] p-10 text-center space-y-5">
+            <div className="w-20 h-20 mx-auto bg-gold/10 rounded-full flex items-center justify-center">
+              <CheckCircle2 size={40} className="text-gold" />
+            </div>
+            <h2 className="text-2xl font-bold text-gold">Welcome aboard!</h2>
+            <p className="text-sm text-muted max-w-lg mx-auto">
+              <span className="font-semibold text-foreground">{soloSummary.name}</span> is set up with{" "}
+              <span className="font-semibold text-foreground">{soloSummary.count}</span> sidebar tools tuned to your{" "}
+              <span className="font-semibold text-foreground">{soloSummary.label}</span> business.
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              <a
+                href="/dashboard"
+                className="px-5 py-2.5 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 inline-flex items-center gap-1.5"
+              >
+                <Rocket size={14} /> Go to Dashboard
+              </a>
+              <button
+                onClick={() => { setUserType(null); setSoloComplete(false); setSoloSummary(null); }}
+                className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-muted hover:text-foreground transition-colors"
+              >
+                Start Over
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="fade-in space-y-6">
+        <PageHero
+          icon={<Sparkles size={28} />}
+          title={`Let's set up your ${selectedTypeMeta?.label || "workspace"}`}
+          subtitle="A few quick questions and we'll personalize everything."
+          gradient="gold"
+          actions={
+            <button
+              onClick={() => setUserType(null)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
+            >
+              <ArrowLeft size={12} /> Change type
+            </button>
+          }
+        />
+        <SoloOnboardingWizard
+          initialUserType={userType}
+          onComplete={persistSoloFinish}
+          onCancel={() => setUserType(null)}
+        />
+      </div>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════════
+  // Agency path (preserved original behavior)
+  // ══════════════════════════════════════════════════════════════════
+
   return (
     <div className="fade-in space-y-6">
       <PageHero
@@ -279,6 +468,12 @@ export default function OnboardPage() {
         gradient="gold"
         actions={
           <>
+            <button
+              onClick={() => setUserType(null)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
+            >
+              <ArrowLeft size={12} /> Change type
+            </button>
             <button onClick={() => setShowTemplates(!showTemplates)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all">
               <Layout size={12} /> Templates

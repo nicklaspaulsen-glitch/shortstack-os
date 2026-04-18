@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // AI Lead Scoring — Ranks leads by conversion likelihood
 export async function POST(request: NextRequest) {
@@ -7,12 +8,15 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { lead_ids } = await request.json();
 
-  // Get leads to score
+  // Get leads to score — scoped to caller's owned leads only.
   const { data: leads } = lead_ids
-    ? await supabase.from("leads").select("*").in("id", lead_ids)
-    : await supabase.from("leads").select("*").eq("status", "new").limit(100);
+    ? await supabase.from("leads").select("*").eq("user_id", ownerId).in("id", lead_ids)
+    : await supabase.from("leads").select("*").eq("user_id", ownerId).eq("status", "new").limit(100);
 
   if (!leads || leads.length === 0) return NextResponse.json({ results: [] });
 

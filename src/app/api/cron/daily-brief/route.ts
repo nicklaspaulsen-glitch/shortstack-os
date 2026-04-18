@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
 import { runDailyColdCalls } from "@/lib/services/cold-calling";
 import { monitorClientFolders } from "@/lib/services/google-drive-monitor";
+import { anyRoutineActive } from "@/lib/telegram/should-send-routine";
 
 // Runs daily at 9am CET via Vercel Cron
 export const maxDuration = 60;
@@ -96,11 +97,14 @@ export async function GET(request: NextRequest) {
 
 ${totalReplied > 5 ? "🔥 Great day for replies!" : totalSent >= 60 ? "✅ Outreach on track" : "⚠️ Outreach below target"}`;
 
-  await sendTelegramMessage(chatId, brief);
+  const briefRoutineOn = await anyRoutineActive(supabase, "daily_brief");
+  if (briefRoutineOn) {
+    await sendTelegramMessage(chatId, brief);
+  }
 
   // Monitor Google Drive for new client footage
   const driveResults = await monitorClientFolders(supabase);
-  if (driveResults.filesFound > 0) {
+  if (driveResults.filesFound > 0 && briefRoutineOn) {
     await sendTelegramMessage(chatId, `📂 *Drive Monitor:* ${driveResults.filesFound} new files detected across client folders. ${driveResults.alertsSent} editor alerts sent.`);
   }
 

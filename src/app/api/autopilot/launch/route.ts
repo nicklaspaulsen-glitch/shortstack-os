@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 interface OnboardingData {
   business_type?: string;
@@ -92,6 +93,11 @@ export async function POST(request: NextRequest) {
   };
 
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  // Ownership check — autopilot mutates clients.metadata and writes content_calendar/trinity_log
+  // for this client_id, so caller must own it.
+  const ctx = await requireOwnedClient(supabase, user.id, client_id);
+  if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const serviceSupabase = createServiceClient();
 

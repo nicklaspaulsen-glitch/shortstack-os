@@ -97,14 +97,18 @@ export async function GET(request: NextRequest) {
     try {
       const chatId = process.env.TELEGRAM_CHAT_ID;
       if (chatId) {
-        const { sendTelegramMessage } = await import("@/lib/services/trinity");
-        await sendTelegramMessage(chatId,
-          `🧹 *Lead Cleanup Report*\n\n` +
-          `⏳ Marked no-response: ${markedNoResponse}\n` +
-          `📦 Archived: ${archived}\n` +
-          `🗑️ Deleted (90d+): ${deleted || 0}\n\n` +
-          `Keeps your pipeline clean and focused on active leads.`
-        );
+        const { anyRoutineActive } = await import("@/lib/telegram/should-send-routine");
+        const leadOn = await anyRoutineActive(supabase, "lead_finder_done");
+        if (leadOn) {
+          const { sendTelegramMessage } = await import("@/lib/services/trinity");
+          await sendTelegramMessage(chatId,
+            `🧹 *Lead Cleanup Report*\n\n` +
+            `⏳ Marked no-response: ${markedNoResponse}\n` +
+            `📦 Archived: ${archived}\n` +
+            `🗑️ Deleted (90d+): ${deleted || 0}\n\n` +
+            `Keeps your pipeline clean and focused on active leads.`
+          );
+        }
       }
     } catch {}
   }

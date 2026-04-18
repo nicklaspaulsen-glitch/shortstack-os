@@ -78,14 +78,18 @@ export async function GET(request: NextRequest) {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (chatId && botToken && chased > 0) {
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: `💰 Invoice Chase\n\nSent ${chased} payment reminders for overdue invoices.`,
-      }),
-    });
+    const { anyRoutineActive } = await import("@/lib/telegram/should-send-routine");
+    const chaseOn = await anyRoutineActive(supabase, "invoice_chase");
+    if (chaseOn) {
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: `💰 Invoice Chase\n\nSent ${chased} payment reminders for overdue invoices.`,
+        }),
+      });
+    }
   }
 
   return NextResponse.json({ success: true, chased, total: overdue.length });

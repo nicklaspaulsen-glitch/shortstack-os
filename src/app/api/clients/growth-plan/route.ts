@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // AI Growth Plan Generator — Creates a personalized 90-day growth plan for each client
 export async function POST(request: NextRequest) {
@@ -8,6 +9,10 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { client_id } = await request.json();
+
+  // Ownership check — caller must own this client.
+  const ctx = await requireOwnedClient(supabase, user.id, client_id);
+  if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { data: client } = await supabase.from("clients").select("*").eq("id", client_id).single();
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });

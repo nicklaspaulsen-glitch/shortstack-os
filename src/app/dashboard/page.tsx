@@ -22,6 +22,7 @@ import TodaysPriority from "@/components/dashboard/todays-priority";
 import QuickCreateFab from "@/components/dashboard/quick-create-fab";
 import DowntimeBanner from "@/components/dashboard/downtime-banner";
 import OutreachAccounts from "@/components/dashboard/outreach-accounts";
+import PersonalizedMetrics from "@/components/dashboard/personalized-metrics";
 import {
   useFocusMode,
   FocusModeToggle,
@@ -226,6 +227,9 @@ export default function DashboardPage() {
         <CommandPaletteHint />
         <FocusModeToggle focus={focus} onToggle={toggleFocus} />
       </div>
+
+      {/* ─── Personalized Metrics (hidden for agency users) ───────── */}
+      {!focus && <PersonalizedMetrics />}
 
       {/* ─── Today's Priority (always visible — heart of focus mode) ─ */}
       <TodaysPriority />

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { executePlatformAction } from "@/lib/ads/platforms";
 import type { AdAction } from "@/lib/types";
+import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // GET — Fetch ad actions with optional filters
 export async function GET(request: NextRequest) {
@@ -11,16 +12,38 @@ export async function GET(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const supabase = createServiceClient();
     const { searchParams } = request.nextUrl;
 
     const status = searchParams.get("status");
     const campaignId = searchParams.get("campaign_id");
     const clientId = searchParams.get("client_id");
 
+    // If a client_id is provided, verify caller owns that client.
+    if (clientId) {
+      const ctx = await requireOwnedClient(authSupabase, user.id, clientId);
+      if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    // Resolve effective owner and restrict ad_actions to caller-owned clients.
+    const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+    if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    const supabase = createServiceClient();
+
+    const { data: ownedClients } = await supabase
+      .from("clients")
+      .select("id")
+      .eq("profile_id", ownerId);
+    const ownedClientIds = (ownedClients || []).map((c) => c.id as string);
+
+    if (ownedClientIds.length === 0) {
+      return NextResponse.json({ actions: [] });
+    }
+
     let query = supabase
       .from("ad_actions")
       .select("*")
+      .in("client_id", ownedClientIds)
       .order("created_at", { ascending: false });
 
     if (status) {
@@ -84,6 +107,10 @@ export async function POST(request: NextRequest) {
     if (fetchError || !action) {
       return NextResponse.json({ error: "Action not found" }, { status: 404 });
     }
+
+    // Verify the action belongs to a client owned by the caller.
+    const ctx = await requireOwnedClient(authSupabase2, user2.id, action.client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     if (operation === "approve") {
       const { data: updated, error: updateError } = await supabase

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // White-Label Settings — Clients see their own branding
 export async function POST(request: NextRequest) {
@@ -8,6 +9,14 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { client_id, brand_name, primary_color, logo_url, tagline } = await request.json();
+
+  // Ownership check — caller must own the client whose branding they're overwriting.
+  if (client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  } else {
+    return NextResponse.json({ error: "client_id required" }, { status: 400 });
+  }
 
   const config = { brand_name, primary_color: primary_color || "#C9A84C", logo_url, tagline, updated_at: new Date().toISOString() };
 
@@ -42,6 +51,10 @@ export async function GET(request: NextRequest) {
     const { data } = await supabase.from("social_accounts").select("metadata").eq("client_id", client.id).eq("platform", "white_label_config").single();
     return NextResponse.json({ config: data?.metadata || null });
   }
+
+  // Ownership check on GET as well — callers shouldn't read another agency's branding.
+  const ctx = await requireOwnedClient(supabase, user.id, clientId);
+  if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { data } = await supabase.from("social_accounts").select("metadata").eq("client_id", clientId).eq("platform", "white_label_config").single();
   return NextResponse.json({ config: data?.metadata || null });

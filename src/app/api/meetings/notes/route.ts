@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // AI Meeting Notes Generator — Paste call transcript, get structured notes + action items
 export async function POST(request: NextRequest) {
@@ -8,6 +9,12 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { transcript, client_id, meeting_type } = await request.json();
+
+  // Ownership check — only verify if caller passed a client_id (tasks only created in that case).
+  if (client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   let clientName = "";
   if (client_id) {

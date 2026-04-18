@@ -424,7 +424,9 @@ export async function GET(request: NextRequest) {
   // ═══════════════════════════════════════
   // 6. TELEGRAM BRIEFING
   // ═══════════════════════════════════════
-  if (chatId) {
+  const { anyRoutineActive } = await import("@/lib/telegram/should-send-routine");
+  const outreachRoutineOn = await anyRoutineActive(supabase, "outreach_report");
+  if (chatId && outreachRoutineOn) {
     const { sendTelegramMessage } = await import("@/lib/services/trinity");
     const totalSent = emailsSent + smsSent + igDmsSent + fbDmsSent + callsQueued;
     const totalLimit = emailLimit + smsLimit + igDmLimit + fbDmLimit + callLimit;

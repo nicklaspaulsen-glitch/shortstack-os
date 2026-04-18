@@ -221,9 +221,46 @@ export default function Sidebar() {
     // will redirect non-admin users anyway)
     return "admin";
   })();
-  const filteredNav = navItems.filter(
-    (item) => userRole && item.roles.includes(userRole)
-  );
+  // ── User sidebar preferences (enabled_items) ────────────────────
+  // Load asynchronously; while loading or empty, we show the default nav.
+  const [enabledHrefs, setEnabledHrefs] = useState<string[] | null>(null);
+  const [customGroups, setCustomGroups] = useState<Array<{ id: string; label: string; items: string[] }>>([]);
+
+  useEffect(() => {
+    if (authLoading || !userRole) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/user/sidebar-preferences", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled) return;
+        const prefs = data?.preferences;
+        if (Array.isArray(prefs?.enabled_items) && prefs.enabled_items.length > 0) {
+          setEnabledHrefs(prefs.enabled_items as string[]);
+        } else {
+          setEnabledHrefs([]); // explicit "no overrides, show all defaults"
+        }
+        if (Array.isArray(prefs?.custom_groups)) {
+          setCustomGroups(prefs.custom_groups as Array<{ id: string; label: string; items: string[] }>);
+        }
+      } catch {
+        // Silent fail — default nav will continue to render.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoading, userRole]);
+
+  const filteredNav = navItems.filter((item) => {
+    if (!userRole || !item.roles.includes(userRole)) return false;
+    // Apply user-level enable list only for admin/team_member (client portal is untouched).
+    if ((userRole === "admin" || userRole === "team_member") && enabledHrefs && enabledHrefs.length > 0) {
+      return enabledHrefs.includes(item.href);
+    }
+    return true;
+  });
 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
@@ -523,6 +560,28 @@ export default function Sidebar() {
                   collapsed ? renderCollapsedLink(item) : renderNavLink(item)
                 )
               )}
+            </div>
+          );
+        })}
+
+        {/* User-defined custom groups (from sidebar preferences) */}
+        {!collapsed && customGroups.length > 0 && customGroups.map((cg) => {
+          // Only show items the user can see (role-aware) and that are enabled.
+          const items = navItems.filter((i) =>
+            cg.items.includes(i.href) &&
+            userRole && i.roles.includes(userRole) &&
+            (!enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href))
+          );
+          if (items.length === 0) return null;
+          return (
+            <div key={`custom-${cg.id}`}>
+              <div className="w-full flex items-center gap-2 px-2 pt-3 pb-1">
+                <span className="text-[8px] text-gold uppercase tracking-[0.2em] font-semibold">
+                  {cg.label}
+                </span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+              <div>{items.map((item) => renderNavLink(item))}</div>
             </div>
           );
         })}

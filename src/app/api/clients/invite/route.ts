@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -11,6 +12,12 @@ export async function POST(request: NextRequest) {
   if (profile?.role !== "admin") return NextResponse.json({ error: "Admin only" }, { status: 403 });
 
   const { email, full_name, password, client_id } = await request.json();
+
+  // Verify the target client belongs to this admin's agency before inviting a client user for it.
+  if (client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   // Create auth user with client role using Supabase Admin API
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;

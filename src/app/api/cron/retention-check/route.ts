@@ -82,19 +82,23 @@ export async function GET(request: NextRequest) {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (chatId && botToken && (alerts.length > 0 || (overdue || []).length > 0 || inactive > 0)) {
-    const msg = [
-      "🚨 Retention Check",
-      "",
-      alerts.length > 0 ? `Low health: ${alerts.join(", ")}` : null,
-      (overdue || []).length > 0 ? `Overdue invoices: ${(overdue || []).length}` : null,
-      inactive > 0 ? `Inactive clients (7d+): ${inactive}` : null,
-    ].filter(Boolean).join("\n");
+    const { anyRoutineActive } = await import("@/lib/telegram/should-send-routine");
+    const retentionOn = await anyRoutineActive(supabase, "retention_check");
+    if (retentionOn) {
+      const msg = [
+        "🚨 Retention Check",
+        "",
+        alerts.length > 0 ? `Low health: ${alerts.join(", ")}` : null,
+        (overdue || []).length > 0 ? `Overdue invoices: ${(overdue || []).length}` : null,
+        inactive > 0 ? `Inactive clients (7d+): ${inactive}` : null,
+      ].filter(Boolean).join("\n");
 
-    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ chat_id: chatId, text: msg }),
-    });
+      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: msg }),
+      });
+    }
   }
 
   return NextResponse.json({

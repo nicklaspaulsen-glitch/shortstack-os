@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function GET() {
   const supabase = createServerSupabase();
@@ -14,10 +15,29 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Resolve effective agency owner (team_members → parent agency)
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const today = new Date().toISOString().split("T")[0];
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
 
   try {
+    // outreach_log has no user_id column; scope it to leads/clients owned by the caller.
+    const serviceSupabase = createServiceClient();
+    const [{ data: ownedLeads }, { data: ownedClients }] = await Promise.all([
+      serviceSupabase.from("leads").select("id").eq("user_id", ownerId),
+      serviceSupabase.from("clients").select("id").eq("profile_id", ownerId),
+    ]);
+    const ownedLeadIds = (ownedLeads || []).map((l) => l.id as string);
+    const ownedClientIds = (ownedClients || []).map((c) => c.id as string);
+
+    // Build outreach ownership OR filter (falls back to empty-set filter if no owned rows).
+    const outreachOwnershipFilters: string[] = [];
+    if (ownedLeadIds.length > 0) outreachOwnershipFilters.push(`lead_id.in.(${ownedLeadIds.join(",")})`);
+    if (ownedClientIds.length > 0) outreachOwnershipFilters.push(`client_id.in.(${ownedClientIds.join(",")})`);
+    const outreachOrFilter = outreachOwnershipFilters.length > 0 ? outreachOwnershipFilters.join(",") : "id.eq.00000000-0000-0000-0000-000000000000";
+
     const [
       { count: leadsToday },
       { count: totalLeads },
@@ -42,28 +62,28 @@ export async function GET() {
       { count: pBooked },
       { count: pConverted },
     ] = await Promise.all([
-      supabase.from("leads").select("*", { count: "exact", head: true }).gte("scraped_at", today),
-      supabase.from("leads").select("*", { count: "exact", head: true }),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).gte("sent_at", today),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied").gte("sent_at", weekAgo),
-      supabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true),
-      supabase.from("clients").select("mrr").eq("is_active", true),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).gte("scraped_at", today),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).or(outreachOrFilter).gte("sent_at", today),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).or(outreachOrFilter).eq("status", "replied").gte("sent_at", weekAgo),
+      supabase.from("clients").select("*", { count: "exact", head: true }).eq("profile_id", ownerId).eq("is_active", true),
+      supabase.from("clients").select("mrr").eq("profile_id", ownerId).eq("is_active", true),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "booked"),
       supabase.from("system_health").select("*", { count: "exact", head: true }).eq("status", "down"),
-      supabase.from("trinity_log").select("*", { count: "exact", head: true }).gte("created_at", today),
-      supabase.from("leads").select("business_name, industry, source, scraped_at, lead_score").order("scraped_at", { ascending: false }).limit(6),
-      supabase.from("trinity_log").select("description, status, created_at, action_type").order("created_at", { ascending: false }).limit(8),
-      supabase.from("deals").select("*", { count: "exact", head: true }).eq("status", "won"),
-      supabase.from("deals").select("amount").eq("status", "won"),
-      supabase.from("clients").select("id, business_name, mrr, health_score, package_tier").eq("is_active", true).order("mrr", { ascending: false }).limit(5),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "email").gte("sent_at", today),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "sms").gte("sent_at", today),
-      supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("platform", "call").gte("sent_at", today),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "new"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "called"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "replied"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "booked"),
-      supabase.from("leads").select("*", { count: "exact", head: true }).in("status", ["converted", "closed_won"]),
+      supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).gte("created_at", today),
+      supabase.from("leads").select("business_name, industry, source, scraped_at, lead_score").eq("user_id", ownerId).order("scraped_at", { ascending: false }).limit(6),
+      supabase.from("trinity_log").select("description, status, created_at, action_type").eq("user_id", ownerId).order("created_at", { ascending: false }).limit(8),
+      supabase.from("deals").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "won"),
+      supabase.from("deals").select("amount").eq("user_id", ownerId).eq("status", "won"),
+      supabase.from("clients").select("id, business_name, mrr, health_score, package_tier").eq("profile_id", ownerId).eq("is_active", true).order("mrr", { ascending: false }).limit(5),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).or(outreachOrFilter).eq("platform", "email").gte("sent_at", today),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).or(outreachOrFilter).eq("platform", "sms").gte("sent_at", today),
+      supabase.from("outreach_log").select("*", { count: "exact", head: true }).or(outreachOrFilter).eq("platform", "call").gte("sent_at", today),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "new"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "called"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "replied"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "booked"),
+      supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).in("status", ["converted", "closed_won"]),
     ]);
 
     const totalMRR = clients?.reduce((sum: number, c: { mrr: number | null }) => sum + (c.mrr || 0), 0) || 0;
@@ -81,6 +101,7 @@ export async function GET() {
     const { data: agentLogs } = await supabase
       .from("trinity_log")
       .select("action_type, status, created_at")
+      .eq("user_id", ownerId)
       .gte("created_at", weekAgo)
       .order("created_at", { ascending: false })
       .limit(200);

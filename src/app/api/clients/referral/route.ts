@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // Client Referral System — Track referrals and generate referral program materials
 export async function POST(request: NextRequest) {
@@ -10,6 +11,10 @@ export async function POST(request: NextRequest) {
   const { action, client_id, referred_name, referred_email, referred_phone } = await request.json();
 
   if (action === "create_referral") {
+    // Ownership: the referring client_id must belong to the caller's agency.
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
     // Log a new referral
     const { data: client } = await supabase.from("clients").select("business_name, contact_name").eq("id", client_id).single();
 

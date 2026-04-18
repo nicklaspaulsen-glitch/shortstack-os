@@ -114,9 +114,35 @@ export default function InboxPage() {
   const [autoRuns, setAutoRuns] = useState<AutoRunEntry[]>([]);
   const [autoRunsLoading, setAutoRunsLoading] = useState(false);
 
+  /* ── Persist read state to localStorage ── */
+  function getReadIds(): Set<string> {
+    if (typeof window === "undefined") return new Set();
+    try {
+      const raw = localStorage.getItem("ss-inbox-read-ids");
+      return new Set(raw ? JSON.parse(raw) : []);
+    } catch { return new Set(); }
+  }
+  function addReadId(id: string) {
+    if (typeof window === "undefined") return;
+    try {
+      const current = getReadIds();
+      current.add(id);
+      localStorage.setItem("ss-inbox-read-ids", JSON.stringify(Array.from(current)));
+    } catch {}
+  }
+  function addReadIds(ids: string[]) {
+    if (typeof window === "undefined") return;
+    try {
+      const current = getReadIds();
+      ids.forEach(id => current.add(id));
+      localStorage.setItem("ss-inbox-read-ids", JSON.stringify(Array.from(current)));
+    } catch {}
+  }
+
   /* ── Fetch all content from various tables ── */
   const fetchInbox = useCallback(async () => {
     setLoading(true);
+    const readIds = getReadIds();
 
     const inboxItems: InboxItem[] = [];
 
@@ -279,7 +305,13 @@ export default function InboxPage() {
       });
     }
 
-    setItems(inboxItems);
+    // Apply persisted read status from localStorage
+    const withReadState = inboxItems.map(item => ({
+      ...item,
+      read: item.read || readIds.has(item.id),
+    }));
+
+    setItems(withReadState);
     setLoading(false);
   }, [supabase]);
 
@@ -378,7 +410,10 @@ export default function InboxPage() {
   /* ── Actions ── */
   const toggleStar = (id: string) => setItems(prev => prev.map(i => i.id === id ? { ...i, starred: !i.starred } : i));
   const togglePin = (id: string) => setItems(prev => prev.map(i => i.id === id ? { ...i, pinned: !i.pinned } : i));
-  const markRead = (id: string) => setItems(prev => prev.map(i => i.id === id ? { ...i, read: true } : i));
+  const markRead = (id: string) => {
+    addReadId(id);
+    setItems(prev => prev.map(i => i.id === id ? { ...i, read: true } : i));
+  };
   const archiveItem = (id: string) => {
     setItems(prev => prev.map(i => i.id === id ? { ...i, archived: true } : i));
     if (selectedItem?.id === id) setSelectedItem(null);
@@ -412,6 +447,7 @@ export default function InboxPage() {
   };
 
   const bulkMarkRead = () => {
+    addReadIds(Array.from(selectedIds));
     setItems(prev => prev.map(i => selectedIds.has(i.id) ? { ...i, read: true } : i));
     toast.success(`Marked ${selectedIds.size} as read`);
     setSelectedIds(new Set());
