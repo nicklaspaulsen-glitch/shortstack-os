@@ -63,7 +63,6 @@ export async function POST(request: NextRequest) {
           .eq("id", user_id)
           .single();
 
-        const [first, ...rest] = (profile?.full_name || "Client").split(" ");
         const purchaseRes = await fetch("https://api.godaddy.com/v1/domains/purchase", {
           method: "POST",
           headers: {
