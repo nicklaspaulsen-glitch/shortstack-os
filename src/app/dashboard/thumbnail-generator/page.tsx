@@ -2725,8 +2725,14 @@ export default function ThumbnailGeneratorPage() {
     });
     if (!ok7) { setGenerating(false); return; }
 
-    // Step 8 — Export
+    // Step 8 — Export: persist the actual image URLs so they render in
+    // History + can be re-opened later. Reads the latest results from state
+    // via the setter's return, then writes to trinity_log.
     const ok8 = await runStep(7, async () => {
+      const snapshot: ThumbnailResult[] = await new Promise((resolve) => {
+        setResults((prev) => { resolve(prev); return prev; });
+      });
+      const imageUrls = snapshot.map(r => r.imageUrl).filter(Boolean);
       await supabase.from("trinity_log").insert({
         action_type: "thumbnail_generated",
         description: prompt.slice(0, 100),
@@ -2734,6 +2740,8 @@ export default function ThumbnailGeneratorPage() {
         metadata: {
           style, platform, colorTheme, mood,
           faces: selectedFaces, count: variations,
+          image_urls: imageUrls,
+          primary_image_url: imageUrls[0] || null,
           walkthrough: true,
         },
       });

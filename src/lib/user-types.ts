@@ -93,7 +93,6 @@ export const SIDEBAR_CATEGORIES: {
   {
     category: "Create",
     items: [
-      { href: "/dashboard/ads", label: "Ads Copy Lab" },
       { href: "/dashboard/copywriter", label: "AI Copywriter" },
       { href: "/dashboard/script-lab", label: "Script Lab" },
       { href: "/dashboard/email-composer", label: "Email Composer" },
@@ -298,7 +297,6 @@ export const USER_TYPES: UserTypeMeta[] = [
       "/dashboard/analytics",
       "/dashboard/reports",
       "/dashboard/ads-manager",
-      "/dashboard/ads",
       "/dashboard/email-composer",
       "/dashboard/email-templates",
       "/dashboard/sms-templates",

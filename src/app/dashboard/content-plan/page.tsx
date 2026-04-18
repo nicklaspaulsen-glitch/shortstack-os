@@ -161,12 +161,20 @@ export default function ContentPlanPage() {
       if (statusFilter !== "all") params.set("status", statusFilter);
       if (platformFilter !== "all") params.set("platform", platformFilter);
       const res = await fetch(`/api/content-plan?${params.toString()}`);
-      if (!res.ok) throw new Error("Failed to load");
+      // 403 "Profile not found" and other non-ok responses are legit "empty state"
+      // situations for fresh accounts — treat them as empty, not errors. The
+      // empty-state UI already tells the user how to get started.
+      if (!res.ok) {
+        console.warn(`[content-plan] loadPosts: HTTP ${res.status}`);
+        setPosts([]);
+        return;
+      }
       const data = await res.json();
       setPosts(data.posts || []);
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Error";
-      toast.error(msg);
+      // Only genuine network/parse failures land here. Log for debugging but
+      // don't surface a toast — the empty state is a better UX.
+      console.warn("[content-plan] loadPosts failed:", e);
       setPosts([]);
     } finally {
       setLoading(false);

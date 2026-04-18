@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Globe, Search, Loader, CheckCircle, XCircle, ExternalLink,
   ShieldCheck, Plus, RefreshCw, Link2, Copy, Trash2,
-  AlertTriangle, Edit3,
+  AlertTriangle, Edit3, AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -34,10 +34,12 @@ interface DnsRecord {
 
 interface SearchResult {
   domain: string;
-  available: boolean;
+  // null = registry check failed (auth/creds issue). Unknown, not "taken".
+  available: boolean | null;
   price: number | null;
   currency: string;
   source: string;
+  error?: string;
 }
 
 interface ProjectRef {
@@ -121,6 +123,9 @@ export default function DomainsPage() {
       if (data.results) {
         setResults(data.results);
         if (data.stub) toast("Showing preview prices — GoDaddy credentials not set.", { icon: "ℹ️" });
+        // API-level error (e.g. GoDaddy credentials rejected). Warn the user
+        // once rather than letting every row mislead as "Taken".
+        if (data.error) toast.error(data.error, { duration: 8000 });
       } else {
         toast.error(data.error || "Search failed");
       }
@@ -301,20 +306,24 @@ export default function DomainsPage() {
                 <div key={r.domain} className="p-3 rounded-xl border border-border bg-surface-light">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      {r.available
+                      {r.available === true
                         ? <CheckCircle size={14} className="text-success shrink-0" />
-                        : <XCircle size={14} className="text-muted shrink-0" />}
+                        : r.available === false
+                          ? <XCircle size={14} className="text-muted shrink-0" />
+                          : <AlertCircle size={14} className="text-amber-400 shrink-0" />}
                       <div className="min-w-0">
                         <p className="text-xs font-semibold truncate">{r.domain}</p>
                         <p className="text-[10px] text-muted">
-                          {r.available
+                          {r.available === true
                             ? (r.price ? `${r.currency} $${r.price.toFixed(2)} wholesale/yr` : "Available")
-                            : "Taken"}
+                            : r.available === false
+                              ? "Taken"
+                              : (r.error ? `Unknown (${r.error.slice(0, 60)})` : "Unknown — check failed")}
                         </p>
                       </div>
                     </div>
                   </div>
-                  {r.available && (
+                  {r.available === true && (
                     <div className="grid grid-cols-2 gap-1.5">
                       <button
                         onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}

@@ -21,7 +21,6 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Megaphone,
   Settings,
   Bell,
   BarChart3,
@@ -118,8 +117,7 @@ const navItems: NavItem[] = [
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
 
   // ── Create (content production) ──
-  { label: "Ads Copy Lab", href: "/dashboard/ads", icon: <Megaphone size={16} />, roles: ["admin"], section: "Create", sub: "Writing" },
-  { label: "AI Copywriter", href: "/dashboard/copywriter", icon: <Pen size={16} />, roles: ["admin", "team_member"], sub: "Writing" },
+  { label: "AI Copywriter", href: "/dashboard/copywriter", icon: <Pen size={16} />, roles: ["admin", "team_member"], section: "Create", sub: "Writing" },
   { label: "Script Lab", href: "/dashboard/script-lab", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], sub: "Writing" },
   { label: "Email Composer", href: "/dashboard/email-composer", icon: <Mail size={16} />, roles: ["admin", "team_member"], sub: "Writing" },
   { label: "Email Templates", href: "/dashboard/email-templates", icon: <MailPlus size={16} />, roles: ["admin"], sub: "Writing" },

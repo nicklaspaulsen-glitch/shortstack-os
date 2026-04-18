@@ -6,7 +6,8 @@ import {
   Search, LayoutDashboard, BarChart3, Zap, Users, FileText,
   Sparkles, Bot, Film, Megaphone, Globe, Activity, Settings,
   Send, Star, Mail, Eye, PenTool, Target, Crown,
-  Camera, Link2, Sun, Calendar, ImageIcon
+  Camera, Link2, Sun, Calendar, ImageIcon, Phone, Kanban,
+  Headphones, Palette, BookOpen, Inbox, MessageSquare
 } from "lucide-react";
 
 interface CommandItem {
@@ -47,7 +48,7 @@ export default function CommandPalette() {
     { id: "thumbnails", label: "Thumbnail Generator", icon: <ImageIcon size={14} />, action: () => nav("/dashboard/thumbnail-generator"), category: "Navigate", keywords: "thumbnail pikzels youtube cover image ai" },
     { id: "production", label: "Production", icon: <Film size={14} />, action: () => nav("/dashboard/production"), category: "Navigate", keywords: "edit video footage editors" },
     { id: "content", label: "Content AI", icon: <Film size={14} />, action: () => nav("/dashboard/content"), category: "Navigate", keywords: "scripts generate" },
-    { id: "ads", label: "Ads Manager", icon: <Megaphone size={14} />, action: () => nav("/dashboard/ads"), category: "Navigate", keywords: "meta google tiktok campaigns" },
+    { id: "ads", label: "Ads Manager", icon: <Megaphone size={14} />, action: () => nav("/dashboard/ads-manager"), category: "Navigate", keywords: "meta google tiktok campaigns oauth native ads" },
     { id: "automations", label: "Automations", icon: <Zap size={14} />, action: () => nav("/dashboard/automations"), category: "Navigate", keywords: "dm manychat templates" },
     { id: "workflows", label: "Workflows", icon: <Zap size={14} />, action: () => nav("/dashboard/workflows"), category: "Navigate", keywords: "automation agent builder" },
     { id: "trinity", label: "Trinity AI", icon: <Bot size={14} />, action: () => nav("/dashboard/trinity"), category: "Navigate", keywords: "assistant chat voice" },
@@ -56,6 +57,19 @@ export default function CommandPalette() {
     { id: "spy", label: "Competitor Spy", icon: <Eye size={14} />, action: () => nav("/dashboard/competitor"), category: "Navigate", keywords: "analyze research competitor" },
     { id: "agenthq", label: "Agent HQ", icon: <Crown size={14} />, action: () => nav("/dashboard/agent-supervisor"), category: "Navigate", keywords: "supervisor nexus chief monitor" },
     { id: "socials", label: "Socials", icon: <Link2 size={14} />, action: () => nav("/dashboard/integrations"), category: "Navigate", keywords: "connect oauth instagram facebook" },
+    { id: "integrations", label: "Integrations", icon: <Link2 size={14} />, action: () => nav("/dashboard/integrations"), category: "Navigate", keywords: "integrations zernio connect oauth platforms apps" },
+    { id: "ai-studio", label: "AI Studio", icon: <Sparkles size={14} />, action: () => nav("/dashboard/ai-studio"), category: "Navigate", keywords: "ai studio image generate remove background upscale transcribe" },
+    { id: "domains", label: "Domains", icon: <Globe size={14} />, action: () => nav("/dashboard/domains"), category: "Navigate", keywords: "domain buy godaddy dns register purchase" },
+    { id: "ai-caller", label: "AI Caller", icon: <Phone size={14} />, action: () => nav("/dashboard/eleven-agents"), category: "Navigate", keywords: "eleven agents elevenlabs voice call ai caller" },
+    { id: "voice-ai", label: "Voice AI", icon: <Headphones size={14} />, action: () => nav("/dashboard/voice-receptionist"), category: "Navigate", keywords: "voice receptionist ai answer call" },
+    { id: "crm", label: "CRM", icon: <Users size={14} />, action: () => nav("/dashboard/crm"), category: "Navigate", keywords: "customers contacts leads pipeline" },
+    { id: "inbox", label: "Inbox", icon: <Inbox size={14} />, action: () => nav("/dashboard/inbox"), category: "Navigate", keywords: "messages unified inbox notifications" },
+    { id: "generations", label: "Generations", icon: <Sparkles size={14} />, action: () => nav("/dashboard/generations"), category: "Navigate", keywords: "ai history generations output" },
+    { id: "content-plan", label: "Content Plan", icon: <Calendar size={14} />, action: () => nav("/dashboard/content-plan"), category: "Navigate", keywords: "content calendar schedule posts plan social" },
+    { id: "brand-kit", label: "Brand Kit", icon: <Palette size={14} />, action: () => nav("/dashboard/brand-kit"), category: "Navigate", keywords: "brand kit logo colors fonts" },
+    { id: "brand-voice", label: "Brand Voice", icon: <BookOpen size={14} />, action: () => nav("/dashboard/brand-voice"), category: "Navigate", keywords: "brand voice tone writing style" },
+    { id: "workspaces", label: "Workspaces", icon: <Kanban size={14} />, action: () => nav("/dashboard/workspaces"), category: "Navigate", keywords: "workspaces teams multi-tenant" },
+    { id: "discord", label: "Discord", icon: <MessageSquare size={14} />, action: () => nav("/dashboard/discord"), category: "Navigate", keywords: "discord community chat server" },
     { id: "monitor", label: "System Monitor", icon: <Activity size={14} />, action: () => nav("/dashboard/monitor"), category: "Navigate", keywords: "health integrations status" },
     { id: "briefing", label: "Morning Briefing", icon: <Sun size={14} />, action: () => nav("/dashboard/briefing"), category: "Navigate", keywords: "daily report morning" },
     { id: "settings", label: "Settings", icon: <Settings size={14} />, action: () => nav("/dashboard/settings"), category: "Navigate", keywords: "theme zoom sound sfx" },

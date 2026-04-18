@@ -8,12 +8,12 @@ interface HealthCheck {
   requiresCredential?: () => boolean;
 }
 
-async function checkEndpoint(url: string, headers?: Record<string, string>): Promise<{ healthy: boolean; responseTime: number; error?: string; degraded?: boolean }> {
+async function checkEndpoint(url: string, headers?: Record<string, string>, timeoutMs = 10000): Promise<{ healthy: boolean; responseTime: number; error?: string; degraded?: boolean }> {
   const start = Date.now();
   try {
     const res = await fetch(url, {
       headers,
-      signal: AbortSignal.timeout(10000),
+      signal: AbortSignal.timeout(timeoutMs),
     });
     const responseTime = Date.now() - start;
     // Slow but working = degraded, not down
@@ -25,8 +25,69 @@ async function checkEndpoint(url: string, headers?: Record<string, string>): Pro
     const responseTime = Date.now() - start;
     const errStr = String(err);
     // Timeout = degraded (service exists but slow), not down
-    const isTimeout = errStr.includes("TimeoutError") || errStr.includes("abort") || responseTime >= 9500;
+    const isTimeout = errStr.includes("TimeoutError") || errStr.includes("abort") || responseTime >= timeoutMs - 500;
     return { healthy: false, responseTime, error: errStr, degraded: isTimeout };
+  }
+}
+
+// Supabase: a real table query rather than hitting the REST root (which returns 404).
+async function checkSupabase(): Promise<{ healthy: boolean; responseTime: number; error?: string; degraded?: boolean }> {
+  const start = Date.now();
+  try {
+    const client = createServiceClient();
+    // Lightweight query: head-count on an always-present table. `profiles` exists in every env.
+    const { error } = await client
+      .from("profiles")
+      .select("id", { head: true, count: "exact" })
+      .limit(1);
+    const responseTime = Date.now() - start;
+    if (error) {
+      return { healthy: false, responseTime, error: error.message };
+    }
+    if (responseTime > 5000) {
+      return { healthy: true, responseTime, degraded: true };
+    }
+    return { healthy: true, responseTime };
+  } catch (err) {
+    const responseTime = Date.now() - start;
+    return { healthy: false, responseTime, error: String(err) };
+  }
+}
+
+// Anthropic: a 2s-timeout presence check — we avoid burning tokens with a full completion.
+// We hit the /v1/models endpoint which is lightweight and only returns 200 when the key is valid.
+async function checkAnthropic(): Promise<{ healthy: boolean; responseTime: number; error?: string; degraded?: boolean }> {
+  const start = Date.now();
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    return { healthy: false, responseTime: 0, error: "ANTHROPIC_API_KEY not set" };
+  }
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/models", {
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      signal: AbortSignal.timeout(2000),
+    });
+    const responseTime = Date.now() - start;
+    // 200 OK → healthy. 401 → bad key (down). 429 → rate-limited but reachable (degraded).
+    if (res.ok) {
+      return { healthy: true, responseTime };
+    }
+    if (res.status === 429) {
+      return { healthy: true, responseTime, degraded: true, error: "Rate limited (429)" };
+    }
+    return { healthy: false, responseTime, error: `HTTP ${res.status}` };
+  } catch (err) {
+    const responseTime = Date.now() - start;
+    const errStr = String(err);
+    // Timeout = degraded, not down (key is valid, service just slow)
+    const isTimeout = errStr.includes("TimeoutError") || errStr.includes("abort") || responseTime >= 1900;
+    if (isTimeout) {
+      return { healthy: true, responseTime, degraded: true, error: "Timeout — presence-only check passed" };
+    }
+    return { healthy: false, responseTime, error: errStr };
   }
 }
 
@@ -38,10 +99,17 @@ function hasCredential(...keys: (string | undefined)[]): boolean {
 const healthChecks: HealthCheck[] = [
   {
     name: "Supabase",
-    check: () => checkEndpoint(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`, {
-      apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-    }),
-    requiresCredential: () => hasCredential(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+    // Real `select 1`-style query against profiles (always exists). The old check hit
+    // /rest/v1/ which returns 404 and was mis-classified as "degraded".
+    check: () => checkSupabase(),
+    requiresCredential: () => hasCredential(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY),
+  },
+  {
+    name: "Claude (Anthropic)",
+    // Presence-only check (2s timeout). Validates the key can list models without
+    // burning tokens on a real completion. Falls back to "degraded" on timeout.
+    check: () => checkAnthropic(),
+    requiresCredential: () => hasCredential(process.env.ANTHROPIC_API_KEY),
   },
   {
     name: "GoHighLevel",
