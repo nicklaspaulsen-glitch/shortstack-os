@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -23,9 +24,20 @@ export async function GET(request: NextRequest) {
   const search = rawSearch ? rawSearch.replace(/[%_\\]/g, "") : null;
   const today = searchParams.get("today");
 
+  // Resolve effective agency owner (team_members → parent agency)
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Profile not found" }, { status: 403 });
+
+  // If a client_id is provided, verify ownership
+  if (clientId) {
+    const ctx = await requireOwnedClient(supabase, user.id, clientId);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   let query = supabase
     .from("leads")
     .select("*", { count: "exact" })
+    .eq("user_id", ownerId)  // Scope all lead queries to the effective owner
     .order("scraped_at", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 
@@ -57,7 +69,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "business_name is required" }, { status: 400 });
   }
 
+  // Set owner so new leads are scoped to the caller's agency
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+
   const { data, error } = await supabase.from("leads").insert({
+    user_id: ownerId,
     business_name: business_name.trim(),
     email: email || null,
     phone: phone || null,

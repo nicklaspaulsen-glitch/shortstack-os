@@ -1431,12 +1431,40 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div className="card">
             <h3 className="section-header">Current Plan</h3>
-            <div className="flex items-center justify-between p-4 bg-gold/5 border border-gold/20 rounded-xl">
+            <div className="flex items-center justify-between p-4 bg-gold/5 border border-gold/20 rounded-xl flex-wrap gap-3">
               <div>
                 <p className="text-lg font-bold" style={{ color: getPlanConfig(profile?.plan_tier).color }}>{getPlanConfig(profile?.plan_tier).badge_label}</p>
                 <p className="text-xs text-muted">${getPlanConfig(profile?.plan_tier).price_monthly}/month</p>
               </div>
-              <button className="btn-primary text-xs">Upgrade Plan</button>
+              <div className="flex items-center gap-2">
+                <a href="/dashboard/pricing" className="btn-primary text-xs flex items-center gap-1">
+                  <Zap size={11} /> Change Plan
+                </a>
+                <button onClick={openBillingPortal} disabled={portalLoading} className="btn-secondary text-xs flex items-center gap-1">
+                  {portalLoading ? <Loader2 size={11} className="animate-spin" /> : <ExternalLink size={11} />}
+                  Manage in Stripe
+                </button>
+              </div>
+            </div>
+            <p className="text-[10px] text-muted mt-2 flex items-center gap-1">
+              <Shield size={9} /> Use &quot;Change Plan&quot; for upgrades/downgrades. &quot;Manage in Stripe&quot; to view invoices, update card, or cancel.
+            </p>
+          </div>
+
+          {/* Cancel Subscription — Danger Zone */}
+          <div className="card border-red-500/20 bg-red-500/[0.02]">
+            <div className="flex items-start gap-3">
+              <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-red-400">Cancel Subscription</h3>
+                <p className="text-[10px] text-muted mt-0.5">
+                  Stop billing at the end of the current period. You keep access until then.
+                </p>
+              </div>
+              <button onClick={openBillingPortal} disabled={portalLoading} className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 flex items-center gap-1.5">
+                {portalLoading ? <Loader2 size={11} className="animate-spin" /> : <XCircle size={11} />}
+                Cancel via Stripe
+              </button>
             </div>
           </div>
           <div className="card">

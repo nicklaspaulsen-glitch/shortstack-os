@@ -29,12 +29,12 @@ export async function GET(_request: NextRequest) {
     return NextResponse.json({ error: "Admin only" }, { status: 403 });
   }
 
-  // Get all clients with profile_id included
+  // Get only the caller's own clients (security: scope by profile_id)
   const { data: clients, error: clientsErr } = await supabase.from("clients").select(`
     id, profile_id, business_name, contact_name, email, phone, website, industry,
     package_tier, services, mrr, contract_status, health_score, is_active,
     created_at, onboarded_at
-  `).order("business_name");
+  `).eq("profile_id", user.id).order("business_name");
 
   if (clientsErr) {
     console.error("[switch-client] Clients query error:", clientsErr.message);

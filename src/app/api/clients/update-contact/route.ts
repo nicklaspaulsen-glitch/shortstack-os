@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { syncContactToGhl } from "@/lib/ghl/sync-contact";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 /**
  * POST — Update a client's contact info (email, phone, name)
@@ -18,6 +19,10 @@ export async function POST(req: NextRequest) {
   const { client_id, email, phone, first_name, last_name, sync_to_ghl = true } = body;
 
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  // Verify the caller owns this client
+  const ctx = await requireOwnedClient(supabase, user.id, client_id);
+  if (!ctx) return NextResponse.json({ error: "Forbidden — not your client" }, { status: 403 });
 
   const service = createServiceClient();
 

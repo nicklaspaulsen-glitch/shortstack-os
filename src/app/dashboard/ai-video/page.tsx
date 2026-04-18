@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Film, Sparkles, Loader, Play, Download,
-  Clock, Monitor, Zap, Layers, RefreshCw
+  Clock, Monitor, Zap, Layers, RefreshCw,
+  Wand2, Palette, Camera, Music, Type
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
+import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 
 const ASPECT_RATIOS = [
   { id: "16:9", label: "16:9 Landscape", icon: <Monitor size={12} /> },
@@ -45,6 +47,15 @@ export default function AIVideoPage() {
   const [generating, setGenerating] = useState(false);
   const [results, setResults] = useState<GenerationResult[]>([]);
   const [progress, setProgress] = useState(0);
+
+  // Guided wizard
+  const [wizardOpen, setWizardOpen] = useState(false);
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem("ss-aivideo-wizard-seen");
+      if (!seen) setWizardOpen(true);
+    } catch {}
+  }, []);
 
   async function generateVideo() {
     if (!prompt.trim()) { toast.error("Enter a video description"); return; }
@@ -105,6 +116,152 @@ export default function AIVideoPage() {
     setGenerating(false);
   }
 
+  const videoGenWizardSteps: WizardStep[] = [
+    {
+      id: "what",
+      title: "What do you want in your video?",
+      description: "Describe the scene. Be visual — mention subjects, environment, lighting, camera movement.",
+      icon: <Type size={16} />,
+      field: { type: "textarea", key: "prompt", placeholder: "e.g., A sleek red sports car driving through a neon-lit city at night, rain on the streets, cinematic camera" },
+    },
+    {
+      id: "style",
+      title: "Pick a visual style",
+      description: "This changes the entire look — camera, lighting, color grade.",
+      icon: <Palette size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "style",
+        options: [
+          { value: "cinematic", label: "Cinematic", description: "Film-like, dramatic lighting", emoji: "🎬", preview: "bg-gradient-to-br from-orange-500/40 to-teal-500/40" },
+          { value: "realistic", label: "Realistic", description: "Natural, documentary feel", emoji: "📷", preview: "bg-gradient-to-br from-stone-500/40 to-slate-500/40" },
+          { value: "animated", label: "Animated", description: "3D animation, Pixar-like", emoji: "🎨", preview: "bg-gradient-to-br from-pink-500/40 to-purple-500/40" },
+          { value: "anime", label: "Anime", description: "Japanese animation style", emoji: "🌸", preview: "bg-gradient-to-br from-rose-400/40 to-indigo-500/40" },
+          { value: "vintage", label: "Vintage", description: "Film grain, retro colors", emoji: "📼", preview: "bg-gradient-to-br from-amber-500/40 to-red-700/40" },
+          { value: "futuristic", label: "Futuristic", description: "Neon, cyberpunk", emoji: "🤖", preview: "bg-gradient-to-br from-cyan-500/40 to-purple-700/40" },
+          { value: "dreamy", label: "Dreamy", description: "Soft, ethereal", emoji: "☁️", preview: "bg-gradient-to-br from-pink-300/40 to-blue-300/40" },
+          { value: "dark", label: "Dark/Moody", description: "Low-key, dramatic", emoji: "🌑", preview: "bg-gradient-to-br from-slate-900 to-red-900/40" },
+        ],
+      },
+    },
+    {
+      id: "aspect",
+      title: "Aspect ratio",
+      description: "Match the platform where this will live.",
+      icon: <Monitor size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "aspectRatio",
+        options: [
+          { value: "9:16", label: "9:16 Vertical", description: "TikTok, Reels, Shorts", emoji: "📱" },
+          { value: "16:9", label: "16:9 Landscape", description: "YouTube, web", emoji: "🖥️" },
+          { value: "1:1", label: "1:1 Square", description: "Instagram feed", emoji: "⬜" },
+        ],
+      },
+    },
+    {
+      id: "camera",
+      title: "Camera movement",
+      description: "How should the camera move? Static works for most product shots.",
+      icon: <Camera size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "camera",
+        optional: true,
+        options: [
+          { value: "static", label: "Static", description: "Camera doesn't move", emoji: "📷" },
+          { value: "pan", label: "Pan", description: "Horizontal sweep", emoji: "↔️" },
+          { value: "zoom_in", label: "Zoom In", description: "Slowly approaches subject", emoji: "🔍" },
+          { value: "zoom_out", label: "Zoom Out", description: "Pulls back reveal", emoji: "🔭" },
+          { value: "orbit", label: "Orbit", description: "Circles around subject", emoji: "🌀" },
+          { value: "tracking", label: "Tracking", description: "Follows subject", emoji: "🏃" },
+          { value: "crane", label: "Crane Up", description: "Rises dramatically", emoji: "⬆️" },
+          { value: "dolly", label: "Dolly In", description: "Slow push forward", emoji: "🚄" },
+        ],
+      },
+    },
+    {
+      id: "mood",
+      title: "Mood & energy",
+      description: "Sets the emotional tone.",
+      icon: <Sparkles size={16} />,
+      field: {
+        type: "chip-select",
+        key: "mood",
+        optional: true,
+        options: [
+          { value: "epic", label: "Epic", emoji: "🎭" },
+          { value: "calm", label: "Calm", emoji: "🧘" },
+          { value: "energetic", label: "Energetic", emoji: "⚡" },
+          { value: "mysterious", label: "Mysterious", emoji: "🔮" },
+          { value: "warm", label: "Warm", emoji: "☀️" },
+          { value: "cold", label: "Cold", emoji: "❄️" },
+          { value: "happy", label: "Happy", emoji: "😊" },
+          { value: "melancholic", label: "Melancholic", emoji: "🌧️" },
+        ],
+      },
+    },
+    {
+      id: "duration",
+      title: "Duration",
+      description: "Higgsfield works best at 2-6 seconds. Longer clips cost more GPU time.",
+      icon: <Clock size={16} />,
+      field: {
+        type: "choice-cards",
+        key: "duration",
+        options: [
+          { value: "48", label: "2 seconds", description: "48 frames · Fast & cheap", emoji: "⚡" },
+          { value: "72", label: "3 seconds", description: "72 frames · Balanced", emoji: "🎯" },
+          { value: "120", label: "5 seconds", description: "120 frames · Standard", emoji: "⭐" },
+          { value: "144", label: "6 seconds", description: "144 frames · Max quality", emoji: "💎" },
+        ],
+      },
+    },
+    {
+      id: "enhancements",
+      title: "AI enhancements (optional)",
+      description: "Toggle extras that improve quality but add render time.",
+      icon: <Wand2 size={16} />,
+      field: {
+        type: "chip-select",
+        key: "enhancements",
+        optional: true,
+        options: [
+          { value: "upscale", label: "4K Upscale", emoji: "🔍" },
+          { value: "motion_smooth", label: "Motion Smoothing", emoji: "✨" },
+          { value: "face_enhance", label: "Face Enhance", emoji: "👤" },
+          { value: "color_grade", label: "Cinematic Grade", emoji: "🎨" },
+          { value: "denoise", label: "Denoise", emoji: "🧹" },
+          { value: "stabilize", label: "Stabilize", emoji: "📐" },
+        ],
+      },
+    },
+    {
+      id: "music",
+      title: "Background music (optional)",
+      description: "We'll match a royalty-free track to your mood.",
+      icon: <Music size={16} />,
+      field: {
+        type: "dropdown",
+        key: "music",
+        optional: true,
+        placeholder: "No music",
+        options: [
+          { value: "none", label: "No music" },
+          { value: "cinematic", label: "🎬 Cinematic orchestral" },
+          { value: "epic", label: "🥁 Epic trailer" },
+          { value: "upbeat", label: "⚡ Upbeat electronic" },
+          { value: "chill", label: "🎧 Chill lo-fi" },
+          { value: "ambient", label: "🌊 Ambient atmospheric" },
+          { value: "hip_hop", label: "🎤 Hip-hop beat" },
+          { value: "rock", label: "🎸 Rock" },
+          { value: "piano", label: "🎹 Solo piano" },
+          { value: "emotional", label: "💖 Emotional strings" },
+        ],
+      },
+    },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -113,10 +270,51 @@ export default function AIVideoPage() {
         subtitle="Text-to-video powered by Higgsfield on RunPod GPU."
         gradient="purple"
         actions={
-          <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg flex items-center gap-1">
-            <Zap size={9} /> GPU Serverless
-          </span>
+          <>
+            <button
+              onClick={() => setWizardOpen(true)}
+              className="text-[10px] px-3 py-1 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black font-semibold hover:shadow-lg hover:shadow-gold/30 flex items-center gap-1"
+            >
+              <Sparkles size={10} /> Guided Mode
+            </button>
+            <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg flex items-center gap-1">
+              <Zap size={9} /> GPU Serverless
+            </span>
+          </>
         }
+      />
+
+      {/* Step-by-step guided wizard */}
+      <CreationWizard
+        open={wizardOpen}
+        title="Create Your AI Video"
+        subtitle="Step-by-step — describe, pick style, hit generate."
+        icon={<Film size={18} />}
+        submitLabel="Apply & Generate"
+        initialData={{ prompt, style: "cinematic", aspectRatio, duration: String(numFrames) }}
+        steps={videoGenWizardSteps}
+        onClose={() => {
+          setWizardOpen(false);
+          try { localStorage.setItem("ss-aivideo-wizard-seen", "1"); } catch {}
+        }}
+        onComplete={async (data) => {
+          // Build an enhanced prompt from the selections
+          const parts: string[] = [];
+          if (data.prompt) parts.push(data.prompt as string);
+          if (data.style) parts.push(`${data.style} style`);
+          if (data.camera && data.camera !== "static") parts.push(`${(data.camera as string).replace("_", " ")} camera`);
+          if (Array.isArray(data.mood) && data.mood.length > 0) parts.push((data.mood as string[]).join(", ") + " mood");
+          if (Array.isArray(data.enhancements) && data.enhancements.length > 0) parts.push(`with ${(data.enhancements as string[]).join(", ")}`);
+
+          const finalPrompt = parts.join(", ");
+          setPrompt(finalPrompt);
+          if (data.aspectRatio) setAspectRatio(data.aspectRatio as string);
+          if (data.duration) setNumFrames(parseInt(data.duration as string));
+
+          setWizardOpen(false);
+          try { localStorage.setItem("ss-aivideo-wizard-seen", "1"); } catch {}
+          toast.success("Settings applied! Click Generate to create your video.");
+        }}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-5">

@@ -17,6 +17,8 @@ import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import PageHero from "@/components/ui/page-hero";
 import WebsiteScraper from "@/components/ui/website-scraper";
+import Modal from "@/components/ui/modal";
+import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
 import toast from "react-hot-toast";
 
 /* ─── static data ─── */
@@ -262,6 +264,16 @@ export default function ScraperPage() {
   const [autoRunSaving, setAutoRunSaving] = useState(false);
   const [showAutoRunConfig, setShowAutoRunConfig] = useState(false);
 
+  // Push-to-campaign modal state
+  const [pushToCampaignOpen, setPushToCampaignOpen] = useState(false);
+  const [pushCampaigns, setPushCampaigns] = useState<Array<{ id: string; name: string; targetMode?: string; status?: string }>>([]);
+  const [pushCampaignsLoading, setPushCampaignsLoading] = useState(false);
+  const [selectedPushCampaign, setSelectedPushCampaign] = useState<string>("");
+  const [pushSchedule, setPushSchedule] = useState<"once" | "daily" | "every_other_day" | "weekdays" | "custom">("daily");
+  const [pushStartAt, setPushStartAt] = useState<string>("");
+  const [pushSubmitting, setPushSubmitting] = useState(false);
+  const [pushTipDismissed, setPushTipDismissed] = useState(false);
+
   // Load auto-run config on mount
   useEffect(() => {
     fetch("/api/scraper/auto-run")
@@ -439,6 +451,67 @@ export default function ScraperPage() {
       toast.success(`Enriched ${selectedLeads.size} leads`);
       setEnriching(false);
     }, 1500);
+  }
+
+  async function openPushToCampaign() {
+    if (selectedLeads.size === 0 && results.length === 0) {
+      toast.error("No leads to push — run a scrape first");
+      return;
+    }
+    setPushToCampaignOpen(true);
+    setPushCampaignsLoading(true);
+    try {
+      const res = await fetch("/api/outreach/campaigns");
+      if (!res.ok) throw new Error("Failed to load campaigns");
+      const data = await res.json();
+      const list = Array.isArray(data.campaigns) ? data.campaigns : [];
+      setPushCampaigns(list);
+      if (list.length > 0 && !selectedPushCampaign) setSelectedPushCampaign(list[0].id);
+    } catch {
+      toast.error("Could not load campaigns");
+      setPushCampaigns([]);
+    } finally {
+      setPushCampaignsLoading(false);
+    }
+  }
+
+  async function submitPushToCampaign() {
+    if (!selectedPushCampaign) { toast.error("Pick a campaign"); return; }
+
+    // Leads that exist in the DB carry a string id; scraped-but-not-saved results
+    // carry a numeric row index. We only push leads that have a DB id.
+    const chosenRows = selectedLeads.size > 0
+      ? Array.from(selectedLeads).map(i => results[i]).filter(Boolean)
+      : results;
+    const leadIds = chosenRows
+      .map(r => (r as unknown as { id?: string }).id)
+      .filter((id): id is string => typeof id === "string" && id.length > 0);
+
+    if (leadIds.length === 0) {
+      toast.error("Selected leads must be saved before pushing — run Push to CRM first, or enable auto-save");
+      return;
+    }
+
+    setPushSubmitting(true);
+    try {
+      const res = await fetch(`/api/outreach/campaigns/${selectedPushCampaign}/assign-leads`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          lead_ids: leadIds,
+          schedule: pushSchedule,
+          start_at: pushStartAt || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Push failed");
+      toast.success(`Assigned ${data.assigned} lead${data.assigned === 1 ? "" : "s"} to campaign`);
+      setPushToCampaignOpen(false);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Push failed");
+    } finally {
+      setPushSubmitting(false);
+    }
   }
 
   function saveCurrentSearch() {
@@ -1168,6 +1241,31 @@ export default function ScraperPage() {
       {/* ─── RESULTS TAB ─── */}
       {tab === "results" && (
         <div className="space-y-4">
+          {/* Campaign-first workflow tip */}
+          {!pushTipDismissed && (
+            <div className="rounded-xl border border-blue-400/20 bg-blue-500/5 px-3.5 py-2.5 flex items-start gap-2.5">
+              <div className="w-6 h-6 rounded-lg bg-blue-500/15 border border-blue-400/25 flex items-center justify-center text-blue-300 flex-shrink-0 mt-0.5">
+                <Lightbulb size={12} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-semibold text-foreground">Tip: Leads found here can be pushed into an Outreach Campaign.</p>
+                <p className="text-[10px] text-muted">
+                  Create your campaign first in Outreach, then come back to find leads for it.
+                  {" "}
+                  <a href="/dashboard/outreach-hub" className="text-gold hover:underline inline-flex items-center gap-0.5">
+                    Go to Outreach <ChevronsRight size={10} />
+                  </a>
+                </p>
+              </div>
+              <button
+                onClick={() => setPushTipDismissed(true)}
+                className="text-muted hover:text-foreground flex-shrink-0"
+                aria-label="Dismiss tip"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          )}
           {results.length > 0 ? (
             <>
               <div className="flex items-center justify-between">
@@ -1178,6 +1276,7 @@ export default function ScraperPage() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <button onClick={selectAllLeads} className="btn-secondary text-[10px] py-1.5"><CheckCircle size={12} /> {selectedLeads.size === results.length ? "Deselect All" : "Select All"}</button>
+                  <button onClick={openPushToCampaign} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><Megaphone size={12} /> Push to campaign</button>
                   <button onClick={() => {
                     const csv = "Business,Phone,Email,Website,Address,Rating,Reviews,Industry,Source,Score,Tech Stack,Decision Maker\n" +
                       results.map(r => `"${r.business_name}","${r.phone || ""}","${r.email || ""}","${r.website || ""}","${r.address || ""}",${r.google_rating || ""},${r.review_count},"${r.industry}","${r.source}",${r.lead_score || ""},"${r.tech_stack || ""}","${r.decision_maker || ""}"`).join("\n");
@@ -1656,6 +1755,127 @@ export default function ScraperPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Push-to-campaign modal */}
+      {pushToCampaignOpen && (
+        <Modal
+          isOpen={true}
+          onClose={() => setPushToCampaignOpen(false)}
+          title="Push leads to a campaign"
+          size="md"
+        >
+          <div className="space-y-4">
+            <p className="text-[11px] text-muted">
+              Pick a campaign and schedule.
+              {selectedLeads.size > 0
+                ? ` ${selectedLeads.size} selected lead${selectedLeads.size === 1 ? "" : "s"} will be linked.`
+                : ` All ${results.length} result${results.length === 1 ? "" : "s"} will be linked.`}
+            </p>
+
+            <div>
+              <label className="text-[10px] text-muted block mb-1">Campaign</label>
+              {pushCampaignsLoading ? (
+                <div className="flex items-center gap-2 text-[11px] text-muted">
+                  <Loader2 size={12} className="animate-spin" /> Loading campaigns...
+                </div>
+              ) : pushCampaigns.length === 0 ? (
+                <div className="p-3 rounded-lg border border-border bg-surface-light text-[11px] text-muted">
+                  You don&apos;t have any campaigns yet.
+                  {" "}
+                  <a href="/dashboard/outreach-hub" className="text-gold hover:underline">Create one in Outreach</a>.
+                </div>
+              ) : (
+                <div className="space-y-1.5 max-h-48 overflow-y-auto">
+                  {pushCampaigns.map(c => (
+                    <label
+                      key={c.id}
+                      className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-all ${
+                        selectedPushCampaign === c.id
+                          ? "border-gold bg-gold/5"
+                          : "border-border hover:border-gold/30"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="push-campaign"
+                        value={c.id}
+                        checked={selectedPushCampaign === c.id}
+                        onChange={() => setSelectedPushCampaign(c.id)}
+                        className="accent-gold"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[11px] font-medium text-foreground truncate">{c.name}</p>
+                        {c.targetMode && (
+                          <p className="text-[9px] text-muted uppercase tracking-wide">{c.targetMode}</p>
+                        )}
+                      </div>
+                      {c.status && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-surface-light text-muted border border-border">
+                          {c.status}
+                        </span>
+                      )}
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="text-[10px] text-muted block mb-1">Schedule</label>
+              <div className="grid grid-cols-2 gap-2">
+                {([
+                  { id: "once" as const, label: "Once", desc: "Send once" },
+                  { id: "daily" as const, label: "Daily", desc: "Every day" },
+                  { id: "every_other_day" as const, label: "Every 2nd day", desc: "Every other day" },
+                  { id: "weekdays" as const, label: "Weekdays", desc: "Mon–Fri" },
+                  { id: "custom" as const, label: "Custom", desc: "Configure in campaign" },
+                ]).map(s => (
+                  <button
+                    key={s.id}
+                    onClick={() => setPushSchedule(s.id)}
+                    className={`p-2.5 rounded-lg border text-left transition-all ${
+                      pushSchedule === s.id
+                        ? "border-gold bg-gold/5"
+                        : "border-border hover:border-gold/30"
+                    }`}
+                  >
+                    <p className="text-[11px] font-medium text-foreground">{s.label}</p>
+                    <p className="text-[9px] text-muted">{s.desc}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-[10px] text-muted block mb-1">Start at (optional)</label>
+              <input
+                type="datetime-local"
+                value={pushStartAt}
+                onChange={e => setPushStartAt(e.target.value)}
+                className="input w-full text-xs"
+              />
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-border/50">
+              <button
+                onClick={() => setPushToCampaignOpen(false)}
+                className="btn-secondary text-xs"
+                disabled={pushSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={submitPushToCampaign}
+                disabled={pushSubmitting || !selectedPushCampaign}
+                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40"
+              >
+                {pushSubmitting ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                {pushSubmitting ? "Assigning..." : "Assign leads"}
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

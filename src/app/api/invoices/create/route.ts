@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // Create Stripe invoice for a client
 export async function POST(request: NextRequest) {
@@ -17,6 +18,10 @@ export async function POST(request: NextRequest) {
   if (due_days !== undefined && (isNaN(parseInt(due_days)) || parseInt(due_days) < 1 || parseInt(due_days) > 365)) {
     return NextResponse.json({ error: "due_days must be between 1 and 365" }, { status: 400 });
   }
+
+  // Verify ownership before touching Stripe
+  const ctx = await requireOwnedClient(supabase, user.id, client_id);
+  if (!ctx) return NextResponse.json({ error: "Forbidden — not your client" }, { status: 403 });
 
   const { data: client } = await supabase.from("clients").select("*").eq("id", client_id).single();
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });

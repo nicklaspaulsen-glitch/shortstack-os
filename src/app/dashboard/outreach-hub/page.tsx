@@ -8,7 +8,7 @@ import {
   Globe, Smartphone, Clock, Target, Zap,
   ToggleLeft, ToggleRight, Hash, AlertCircle, Eye,
   Play, Pause, BarChart3, Star,
-  Megaphone, ListChecks,
+  Megaphone, ListChecks, Users,
   UtensilsCrossed, Heart, Home, Scale, Car, Wrench,
   Dumbbell, Scissors, HardHat, Shield, Calculator,
   Monitor, Briefcase, Factory, ShoppingCart, Package,
@@ -479,6 +479,22 @@ export default function OutreachHubPage() {
   const [templateSubTab, setTemplateSubTab] = useState<TemplateSubTab>("calls");
   const [saving, setSaving] = useState(false);
 
+  /* ── Explainer collapse (persists per-browser) ── */
+  const [explainerOpen, setExplainerOpen] = useState<boolean>(true);
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("outreach_explainer_open");
+      if (stored === "0") setExplainerOpen(false);
+    } catch {}
+  }, []);
+  function toggleExplainer() {
+    setExplainerOpen(v => {
+      const next = !v;
+      try { localStorage.setItem("outreach_explainer_open", next ? "1" : "0"); } catch {}
+      return next;
+    });
+  }
+
   /* ── Campaign State ── */
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [showCampaignBuilder, setShowCampaignBuilder] = useState(false);
@@ -746,6 +762,110 @@ export default function OutreachHubPage() {
           </button>
         }
       />
+
+      {/* ── How Outreach Works (collapsible explainer) ── */}
+      <div className="card border-blue-400/20 bg-gradient-to-br from-blue-500/5 via-surface to-surface">
+        <button
+          onClick={toggleExplainer}
+          className="w-full flex items-center justify-between text-left"
+          aria-expanded={explainerOpen}
+        >
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-blue-500/15 border border-blue-400/25 flex items-center justify-center text-blue-300">
+              <Target size={14} />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">How Outreach Works</h3>
+              <p className="text-[10px] text-muted">Campaign-first workflow — from creation to replies, in 4 steps.</p>
+            </div>
+          </div>
+          {explainerOpen
+            ? <ChevronUp size={14} className="text-muted" />
+            : <ChevronDown size={14} className="text-muted" />}
+        </button>
+
+        {explainerOpen && (
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-3 relative">
+            {[
+              {
+                n: 1,
+                title: "Create a Campaign",
+                desc: "Define your goal, audience, channels, and script templates — right here.",
+                icon: <Megaphone size={14} />,
+                href: "#campaigns",
+                cta: "Show me",
+                ctaOnClick: () => setTab("campaigns"),
+                color: "text-blue-400 bg-blue-400/10 border-blue-400/25",
+              },
+              {
+                n: 2,
+                title: "Pick leads in Lead Finder",
+                desc: "Scrape prospects and assign them to this campaign in one click.",
+                icon: <Users size={14} />,
+                href: "/dashboard/scraper",
+                cta: "Open Lead Finder",
+                color: "text-emerald-400 bg-emerald-400/10 border-emerald-400/25",
+              },
+              {
+                n: 3,
+                title: "Schedule & launch",
+                desc: "Pick timing (once, daily, weekdays, every other day), assign a team member, go live.",
+                icon: <Clock size={14} />,
+                href: "#sequences",
+                cta: "Show me",
+                ctaOnClick: () => setTab("sequences"),
+                color: "text-amber-400 bg-amber-400/10 border-amber-400/25",
+              },
+              {
+                n: 4,
+                title: "Track in Outreach Logs",
+                desc: "See replies, AI analysis, and follow-ups — all in one place.",
+                icon: <BarChart3 size={14} />,
+                href: "/dashboard/outreach-logs",
+                cta: "Open Logs",
+                color: "text-purple-400 bg-purple-400/10 border-purple-400/25",
+              },
+            ].map((step, idx, arr) => (
+              <div key={step.n} className="relative">
+                <div className="p-3 rounded-xl border border-border bg-surface-light/50 h-full flex flex-col">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className={`w-7 h-7 rounded-full border flex items-center justify-center text-[11px] font-bold ${step.color}`}>
+                      {step.n}
+                    </div>
+                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${step.color}`}>
+                      {step.icon}
+                    </div>
+                  </div>
+                  <p className="text-[12px] font-semibold text-foreground mb-1">{step.title}</p>
+                  <p className="text-[10px] text-muted flex-1 leading-relaxed mb-2">{step.desc}</p>
+                  {step.ctaOnClick ? (
+                    <button
+                      type="button"
+                      onClick={step.ctaOnClick}
+                      className="text-[10px] text-gold hover:underline flex items-center gap-1 w-fit"
+                    >
+                      {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
+                    </button>
+                  ) : (
+                    <a
+                      href={step.href}
+                      className="text-[10px] text-gold hover:underline flex items-center gap-1 w-fit"
+                    >
+                      {step.cta} <ChevronDown size={10} className="rotate-[-90deg]" />
+                    </a>
+                  )}
+                </div>
+                {/* Arrow between steps (desktop) */}
+                {idx < arr.length - 1 && (
+                  <div className="hidden md:flex absolute top-1/2 -right-2 -translate-y-1/2 w-4 h-4 rounded-full bg-surface border border-border items-center justify-center z-10 text-muted">
+                    <ChevronDown size={10} className="rotate-[-90deg]" />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* ── Tabs ── */}
       <div className="flex gap-1 bg-surface rounded-xl p-1 overflow-x-auto">
