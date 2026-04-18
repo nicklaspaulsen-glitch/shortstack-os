@@ -7,7 +7,7 @@ import {
   Search, Calendar, Award, Bell, Shield, Vote,
   TrendingUp, Clock, Hash, Loader2, Trash2,
   Flame, Trophy, Star, Target, Zap,
-  ExternalLink, Link2, Gift,
+  ExternalLink, Link2, Gift, FileText, Video, MapPin, X,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
@@ -28,6 +28,51 @@ interface Post {
   comments_count: number;
   created_at: string;
   updated_at: string;
+}
+
+interface CommunityEvent {
+  id: string;
+  user_id: string | null;
+  title: string;
+  description: string | null;
+  date_time: string;
+  location: string | null;
+  attendees_count: number;
+  max_attendees: number | null;
+  category: string;
+  cover_url: string | null;
+  status: "upcoming" | "live" | "ended";
+  created_at: string;
+  my_rsvp: "going" | "maybe" | "not_going" | null;
+}
+
+interface PollOptionCount {
+  label: string;
+  votes: number;
+}
+
+interface CommunityPoll {
+  id: string;
+  user_id: string | null;
+  question: string;
+  options: string[];
+  ends_at: string | null;
+  total_votes: number;
+  created_at: string;
+  option_counts: PollOptionCount[];
+  my_vote: number | null;
+}
+
+interface CommunityResource {
+  id: string;
+  user_id: string | null;
+  title: string;
+  url: string;
+  type: "pdf" | "video" | "template" | "link";
+  description: string | null;
+  downloads: number;
+  pinned: boolean;
+  created_at: string;
 }
 
 interface ActivityItem {
@@ -62,12 +107,6 @@ const TYPE_CONFIG: Record<string, { bg: string; icon: typeof MessageSquare }> = 
 };
 
 const MEMBERS: { name: string; role: string; level: string; badge: string; posts: number; joined: string; online: boolean; points: number; streak: number; bio: string }[] = [];
-
-const EVENTS: { id: string; title: string; date: string; type: string; attendees: number }[] = [];
-
-const POLLS: { id: string; question: string; options: { label: string; votes: number }[]; totalVotes: number; endsIn: string }[] = [];
-
-const RESOURCES: { title: string; type: string; downloads: number; icon: typeof Calendar; url?: string }[] = [];
 
 const TRENDING: { topic: string; posts: number; trend: string }[] = [];
 
@@ -148,6 +187,43 @@ function activityColor(type: ActivityItem["type"]) {
   }
 }
 
+function resourceIcon(type: CommunityResource["type"]) {
+  switch (type) {
+    case "pdf": return FileText;
+    case "video": return Video;
+    case "template": return Gift;
+    case "link":
+    default: return Link2;
+  }
+}
+
+/* Format an absolute date_time like "Apr 22, 7:00 PM" */
+function formatEventDate(iso: string): string {
+  try {
+    return new Date(iso).toLocaleString(undefined, {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return iso;
+  }
+}
+
+/* Format remaining time until ISO date, e.g. "in 3d", "in 5h", "ended" */
+function timeUntil(iso: string | null): string {
+  if (!iso) return "no end date";
+  const ms = new Date(iso).getTime() - Date.now();
+  if (ms <= 0) return "ended";
+  const days = Math.floor(ms / 86400000);
+  if (days >= 1) return `${days}d left`;
+  const hours = Math.floor(ms / 3600000);
+  if (hours >= 1) return `${hours}h left`;
+  const minutes = Math.max(1, Math.floor(ms / 60000));
+  return `${minutes}m left`;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Page Component                                                     */
 /* ------------------------------------------------------------------ */
@@ -158,10 +234,44 @@ export default function CommunityPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedPost, setExpandedPost] = useState<string | null>(null);
   const [likedPosts, setLikedPosts] = useState<string[]>([]);
-  const [votedPolls, setVotedPolls] = useState<Record<string, number>>({});
   const [showNewPost, setShowNewPost] = useState(false);
   const [expandedMember, setExpandedMember] = useState<string | null>(null);
   const [quickAction, setQuickAction] = useState<string | null>(null);
+
+  // Events / Polls / Resources state — fetched from /api/community/{events,polls,resources}
+  const [events, setEvents] = useState<CommunityEvent[]>([]);
+  const [eventsLoading, setEventsLoading] = useState(false);
+  const [showNewEvent, setShowNewEvent] = useState(false);
+  const [creatingEvent, setCreatingEvent] = useState(false);
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    description: "",
+    date_time: "",
+    location: "",
+    max_attendees: "",
+    category: "general",
+  });
+
+  const [polls, setPolls] = useState<CommunityPoll[]>([]);
+  const [pollsLoading, setPollsLoading] = useState(false);
+  const [showNewPoll, setShowNewPoll] = useState(false);
+  const [creatingPoll, setCreatingPoll] = useState(false);
+  const [newPoll, setNewPoll] = useState<{ question: string; options: string[]; ends_at: string }>({
+    question: "",
+    options: ["", ""],
+    ends_at: "",
+  });
+
+  const [resources, setResources] = useState<CommunityResource[]>([]);
+  const [resourcesLoading, setResourcesLoading] = useState(false);
+  const [showNewResource, setShowNewResource] = useState(false);
+  const [creatingResource, setCreatingResource] = useState(false);
+  const [newResource, setNewResource] = useState<{ title: string; url: string; type: CommunityResource["type"]; description: string }>({
+    title: "",
+    url: "",
+    type: "link",
+    description: "",
+  });
 
   // Database-backed state
   const [posts, setPosts] = useState<Post[]>([]);
@@ -293,6 +403,206 @@ export default function CommunityPage() {
     fetchPosts();
   }, [fetchPosts]);
 
+  /* ---- Events: fetch / create / rsvp / delete ---- */
+  const fetchEvents = useCallback(async () => {
+    setEventsLoading(true);
+    try {
+      const res = await fetch("/api/community/events");
+      const data = await res.json();
+      setEvents(Array.isArray(data.events) ? data.events : []);
+    } catch {
+      // silent
+    } finally {
+      setEventsLoading(false);
+    }
+  }, []);
+
+  async function handleCreateEvent() {
+    if (!newEvent.title.trim() || !newEvent.date_time) return;
+    setCreatingEvent(true);
+    try {
+      const res = await fetch("/api/community/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newEvent.title,
+          description: newEvent.description || undefined,
+          date_time: new Date(newEvent.date_time).toISOString(),
+          location: newEvent.location || undefined,
+          max_attendees: newEvent.max_attendees ? Number(newEvent.max_attendees) : undefined,
+          category: newEvent.category,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to create event");
+      }
+      setShowNewEvent(false);
+      setNewEvent({ title: "", description: "", date_time: "", location: "", max_attendees: "", category: "general" });
+      await fetchEvents();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create event");
+    } finally {
+      setCreatingEvent(false);
+    }
+  }
+
+  async function handleRsvp(eventId: string, status: "going" | "maybe" | "not_going" = "going") {
+    try {
+      const res = await fetch(`/api/community/events/${eventId}/rsvp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rsvp_status: status }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to RSVP");
+      }
+      await fetchEvents();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to RSVP");
+    }
+  }
+
+  async function handleDeleteEvent(eventId: string) {
+    setEvents(prev => prev.filter(e => e.id !== eventId));
+    try {
+      const res = await fetch(`/api/community/events/${eventId}`, { method: "DELETE" });
+      if (!res.ok) await fetchEvents();
+    } catch {
+      await fetchEvents();
+    }
+  }
+
+  /* ---- Polls: fetch / create / vote ---- */
+  const fetchPolls = useCallback(async () => {
+    setPollsLoading(true);
+    try {
+      const res = await fetch("/api/community/polls");
+      const data = await res.json();
+      setPolls(Array.isArray(data.polls) ? data.polls : []);
+    } catch {
+      // silent
+    } finally {
+      setPollsLoading(false);
+    }
+  }, []);
+
+  async function handleCreatePoll() {
+    const cleanOpts = newPoll.options.map(o => o.trim()).filter(Boolean);
+    if (!newPoll.question.trim() || cleanOpts.length < 2) return;
+    setCreatingPoll(true);
+    try {
+      const res = await fetch("/api/community/polls", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: newPoll.question,
+          options: cleanOpts,
+          ends_at: newPoll.ends_at ? new Date(newPoll.ends_at).toISOString() : undefined,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to create poll");
+      }
+      setShowNewPoll(false);
+      setNewPoll({ question: "", options: ["", ""], ends_at: "" });
+      await fetchPolls();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create poll");
+    } finally {
+      setCreatingPoll(false);
+    }
+  }
+
+  async function handleVote(pollId: string, optionIndex: number) {
+    try {
+      const res = await fetch(`/api/community/polls/${pollId}/vote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ option_index: optionIndex }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to vote");
+      }
+      await fetchPolls();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to vote");
+    }
+  }
+
+  /* ---- Resources: fetch / create / download ---- */
+  const fetchResources = useCallback(async () => {
+    setResourcesLoading(true);
+    try {
+      const res = await fetch("/api/community/resources");
+      const data = await res.json();
+      setResources(Array.isArray(data.resources) ? data.resources : []);
+    } catch {
+      // silent
+    } finally {
+      setResourcesLoading(false);
+    }
+  }, []);
+
+  async function handleCreateResource() {
+    if (!newResource.title.trim() || !newResource.url.trim()) return;
+    setCreatingResource(true);
+    try {
+      const res = await fetch("/api/community/resources", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newResource.title,
+          url: newResource.url,
+          type: newResource.type,
+          description: newResource.description || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Failed to add resource");
+      }
+      setShowNewResource(false);
+      setNewResource({ title: "", url: "", type: "link", description: "" });
+      await fetchResources();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to add resource");
+    } finally {
+      setCreatingResource(false);
+    }
+  }
+
+  async function handleResourceOpen(resource: CommunityResource) {
+    // Open in a new tab and bump the counter (counter is best-effort).
+    if (typeof window !== "undefined") {
+      window.open(resource.url, "_blank", "noopener,noreferrer");
+    }
+    try {
+      const res = await fetch(`/api/community/resources/${resource.id}/download`, { method: "POST" });
+      if (res.ok) {
+        const data = await res.json();
+        setResources(prev => prev.map(r => r.id === resource.id ? { ...r, downloads: data.downloads ?? r.downloads + 1 } : r));
+      }
+    } catch {
+      // silent — the URL still opened
+    }
+  }
+
+  // Lazy-load each tab's data the first time it is opened
+  useEffect(() => {
+    if (activeTab === "events" && events.length === 0 && !eventsLoading) fetchEvents();
+    if (activeTab === "polls" && polls.length === 0 && !pollsLoading) fetchPolls();
+    if (activeTab === "resources" && resources.length === 0 && !resourcesLoading) fetchResources();
+  }, [activeTab, events.length, polls.length, resources.length, eventsLoading, pollsLoading, resourcesLoading, fetchEvents, fetchPolls, fetchResources]);
+
+  // Also fetch upcoming events on mount so the stats bar count is accurate
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
   /* ---- Create post ---- */
   async function handleCreatePost() {
     if (!newTitle.trim() || !newContent.trim()) return;
@@ -390,10 +700,6 @@ export default function CommunityPage() {
     } catch {
       fetchPosts();
     }
-  }
-
-  function votePoll(pollId: string, optionIdx: number) {
-    setVotedPolls(prev => ({ ...prev, [pollId]: optionIdx }));
   }
 
   const POST_TYPES = [
@@ -526,7 +832,7 @@ export default function CommunityPage() {
           <p className="text-[10px] text-muted">Posts This Week</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold font-mono text-gold">{EVENTS.length}</p>
+          <p className="text-lg font-bold font-mono text-gold">{events.length}</p>
           <p className="text-[10px] text-muted">Upcoming Events</p>
         </div>
       </div>
@@ -1056,25 +1362,132 @@ export default function CommunityPage() {
       {activeTab === "events" && (
         <div className="space-y-4">
           <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Calendar size={12} className="text-gold" /> Upcoming Events</h3>
-            {EVENTS.length === 0 ? (
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-semibold flex items-center gap-2"><Calendar size={12} className="text-gold" /> Upcoming Events</h3>
+              <button onClick={() => setShowNewEvent(s => !s)} className="px-2.5 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold flex items-center gap-1">
+                <Plus size={10} /> Create event
+              </button>
+            </div>
+
+            {showNewEvent && (
+              <div className="mb-4 p-3 rounded-lg border border-gold/20 space-y-2">
+                <input
+                  value={newEvent.title}
+                  onChange={e => setNewEvent(s => ({ ...s, title: e.target.value }))}
+                  placeholder="Event title"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                />
+                <textarea
+                  value={newEvent.description}
+                  onChange={e => setNewEvent(s => ({ ...s, description: e.target.value }))}
+                  placeholder="Description (optional)"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs h-16"
+                />
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    type="datetime-local"
+                    value={newEvent.date_time}
+                    onChange={e => setNewEvent(s => ({ ...s, date_time: e.target.value }))}
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                  />
+                  <input
+                    value={newEvent.location}
+                    onChange={e => setNewEvent(s => ({ ...s, location: e.target.value }))}
+                    placeholder="Location (or leave blank for virtual)"
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <input
+                    value={newEvent.category}
+                    onChange={e => setNewEvent(s => ({ ...s, category: e.target.value }))}
+                    placeholder="Category (e.g. workshop)"
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                  />
+                  <input
+                    type="number"
+                    min="1"
+                    value={newEvent.max_attendees}
+                    onChange={e => setNewEvent(s => ({ ...s, max_attendees: e.target.value }))}
+                    placeholder="Max attendees (optional)"
+                    className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                  />
+                </div>
+                <div className="flex justify-end gap-2 pt-1">
+                  <button onClick={() => setShowNewEvent(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                  <button
+                    onClick={handleCreateEvent}
+                    disabled={creatingEvent || !newEvent.title.trim() || !newEvent.date_time}
+                    className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
+                  >
+                    {creatingEvent ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
+                    {creatingEvent ? "Creating..." : "Create"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {eventsLoading ? (
+              <div className="text-center py-6"><Loader2 size={20} className="mx-auto animate-spin text-muted/50" /></div>
+            ) : events.length === 0 ? (
               <p className="text-xs text-muted text-center py-6">No upcoming events. Check back later!</p>
             ) : (
               <div className="space-y-2">
-                {EVENTS.map(ev => (
-                  <div key={ev.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-xs font-semibold">{ev.title}</p>
-                        <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5"><Clock size={8} /> {ev.date}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] text-muted flex items-center gap-1"><Users size={8} /> {ev.attendees}</span>
-                        <button className="px-2 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold">RSVP</button>
+                {events.map(ev => {
+                  const isFull = ev.max_attendees != null && ev.attendees_count >= ev.max_attendees && ev.my_rsvp !== "going";
+                  return (
+                    <div key={ev.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+                      <div className="flex items-start justify-between gap-3 flex-wrap">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-semibold">{ev.title}</p>
+                          <p className="text-[10px] text-muted flex items-center gap-1 mt-0.5">
+                            <Clock size={8} /> {formatEventDate(ev.date_time)}
+                            {ev.location && <><span className="mx-1">&middot;</span><MapPin size={8} /> {ev.location}</>}
+                            <span className="mx-1">&middot;</span>
+                            <span className="capitalize">{ev.category}</span>
+                          </p>
+                          {ev.description && (
+                            <p className="text-[10px] text-muted mt-1 leading-relaxed">{ev.description}</p>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="text-[9px] text-muted flex items-center gap-1">
+                            <Users size={8} /> {ev.attendees_count}{ev.max_attendees ? `/${ev.max_attendees}` : ""}
+                          </span>
+                          <button
+                            onClick={() => handleRsvp(ev.id, "going")}
+                            disabled={isFull}
+                            className={`px-2 py-1 rounded-lg text-[10px] font-semibold transition-colors ${
+                              ev.my_rsvp === "going"
+                                ? "bg-green-400 text-black"
+                                : isFull
+                                  ? "bg-white/5 text-muted cursor-not-allowed"
+                                  : "bg-gold text-black hover:brightness-110"
+                            }`}
+                          >
+                            {ev.my_rsvp === "going" ? "Going" : isFull ? "Full" : "RSVP"}
+                          </button>
+                          {ev.my_rsvp && ev.my_rsvp !== "going" && (
+                            <span className="text-[9px] text-muted capitalize">{ev.my_rsvp.replace("_", " ")}</span>
+                          )}
+                          <button
+                            onClick={() => handleRsvp(ev.id, "maybe")}
+                            className={`px-2 py-1 rounded-lg text-[10px] font-medium border ${
+                              ev.my_rsvp === "maybe" ? "border-yellow-400/40 bg-yellow-400/10 text-yellow-400" : "border-border text-muted hover:text-foreground"
+                            }`}
+                          >
+                            Maybe
+                          </button>
+                          {/* Creator delete */}
+                          <button onClick={() => handleDeleteEvent(ev.id)} title="Delete (creator only)"
+                            className="p-1 rounded-lg text-muted hover:text-red-400">
+                            <Trash2 size={10} />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
@@ -1084,51 +1497,111 @@ export default function CommunityPage() {
       {/* ---- TAB: Resources ---- */}
       {activeTab === "resources" && (
         <div className="space-y-4">
-          {/* Pinned / Featured Resources */}
+          {/* Add resource form */}
           <div className="card p-4 border-gold/10">
-            <h3 className="text-xs font-semibold mb-1 flex items-center gap-2"><Pin size={12} className="text-gold" /> Pinned Resources</h3>
-            <p className="text-[10px] text-muted mb-3">Essential guides and templates to get started</p>
-            {RESOURCES.length === 0 ? (
-              <p className="text-xs text-muted text-center py-6">No resources shared yet</p>
-            ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {RESOURCES.slice(0, 4).map(r => (
-                <div key={r.title} className="p-3 rounded-lg border border-gold/10 bg-gold/[0.02] hover:border-gold/20 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center shrink-0"><r.icon size={16} className="text-gold" /></div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium">{r.title}</p>
-                      <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
-                    </div>
-                    <button className="text-[10px] text-gold hover:underline flex items-center gap-0.5 shrink-0">
-                      <ExternalLink size={8} /> Open
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center justify-between mb-1">
+              <h3 className="text-xs font-semibold flex items-center gap-2"><Pin size={12} className="text-gold" /> Pinned Resources</h3>
+              <button onClick={() => setShowNewResource(s => !s)} className="px-2.5 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold flex items-center gap-1">
+                <Plus size={10} /> Add resource
+              </button>
             </div>
+            <p className="text-[10px] text-muted mb-3">Essential guides and templates to get started</p>
+
+            {showNewResource && (
+              <div className="mb-4 p-3 rounded-lg border border-gold/20 space-y-2">
+                <input
+                  value={newResource.title}
+                  onChange={e => setNewResource(s => ({ ...s, title: e.target.value }))}
+                  placeholder="Resource title"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                />
+                <input
+                  value={newResource.url}
+                  onChange={e => setNewResource(s => ({ ...s, url: e.target.value }))}
+                  placeholder="URL (https://...)"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                />
+                <select
+                  value={newResource.type}
+                  onChange={e => setNewResource(s => ({ ...s, type: e.target.value as CommunityResource["type"] }))}
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                >
+                  <option value="link">Link</option>
+                  <option value="pdf">PDF</option>
+                  <option value="video">Video</option>
+                  <option value="template">Template</option>
+                </select>
+                <textarea
+                  value={newResource.description}
+                  onChange={e => setNewResource(s => ({ ...s, description: e.target.value }))}
+                  placeholder="Description (optional)"
+                  className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs h-16"
+                />
+                <div className="flex justify-end gap-2 pt-1">
+                  <button onClick={() => setShowNewResource(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                  <button
+                    onClick={handleCreateResource}
+                    disabled={creatingResource || !newResource.title.trim() || !newResource.url.trim()}
+                    className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
+                  >
+                    {creatingResource ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
+                    {creatingResource ? "Adding..." : "Add"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {resourcesLoading ? (
+              <div className="text-center py-6"><Loader2 size={20} className="mx-auto animate-spin text-muted/50" /></div>
+            ) : resources.filter(r => r.pinned).length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">{resources.length === 0 ? "No resources shared yet" : "No pinned resources"}</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {resources.filter(r => r.pinned).slice(0, 4).map(r => {
+                  const RIcon = resourceIcon(r.type);
+                  return (
+                    <div key={r.id} className="p-3 rounded-lg border border-gold/10 bg-gold/[0.02] hover:border-gold/20 transition-all">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-lg bg-gold/10 flex items-center justify-center shrink-0"><RIcon size={16} className="text-gold" /></div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium truncate">{r.title}</p>
+                          <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
+                        </div>
+                        <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-gold hover:underline flex items-center gap-0.5 shrink-0">
+                          <ExternalLink size={8} /> Open
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
 
           {/* Full Library */}
-          {RESOURCES.length > 0 && (
-          <div className="card p-4">
-            <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BookOpen size={12} className="text-gold" /> Resource Library</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {RESOURCES.map(r => (
-                <div key={r.title} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center"><r.icon size={14} className="text-gold" /></div>
-                    <div className="flex-1">
-                      <p className="text-xs font-medium">{r.title}</p>
-                      <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads</p>
+          {resources.length > 0 && (
+            <div className="card p-4">
+              <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><BookOpen size={12} className="text-gold" /> Resource Library</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {resources.map(r => {
+                  const RIcon = resourceIcon(r.type);
+                  return (
+                    <div key={r.id} className="p-3 rounded-lg border border-border hover:border-gold/20 transition-all">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center"><RIcon size={14} className="text-gold" /></div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium truncate">{r.title}</p>
+                          <p className="text-[10px] text-muted">{r.type} &middot; {r.downloads} downloads{r.description ? ` · ${r.description}` : ""}</p>
+                        </div>
+                        <button onClick={() => handleResourceOpen(r)} className="text-[10px] text-gold hover:underline">
+                          {r.type === "pdf" || r.type === "template" ? "Download" : "Open"}
+                        </button>
+                      </div>
                     </div>
-                    <button className="text-[10px] text-gold hover:underline">Download</button>
-                  </div>
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
-          </div>
           )}
 
           {/* Helpful Links */}
@@ -1157,34 +1630,105 @@ export default function CommunityPage() {
       {/* ---- TAB: Polls ---- */}
       {activeTab === "polls" && (
         <div className="space-y-4">
-          {POLLS.length === 0 ? (
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-semibold flex items-center gap-2"><Vote size={12} className="text-gold" /> Active Polls</h3>
+            <button onClick={() => setShowNewPoll(s => !s)} className="px-2.5 py-1 rounded-lg bg-gold text-black text-[10px] font-semibold flex items-center gap-1">
+              <Plus size={10} /> Create poll
+            </button>
+          </div>
+
+          {showNewPoll && (
+            <div className="card p-4 border-gold/20 space-y-2">
+              <input
+                value={newPoll.question}
+                onChange={e => setNewPoll(s => ({ ...s, question: e.target.value }))}
+                placeholder="What do you want to ask?"
+                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+              />
+              <div className="space-y-1.5">
+                {newPoll.options.map((opt, i) => (
+                  <div key={i} className="flex gap-2">
+                    <input
+                      value={opt}
+                      onChange={e => setNewPoll(s => {
+                        const next = [...s.options];
+                        next[i] = e.target.value;
+                        return { ...s, options: next };
+                      })}
+                      placeholder={`Option ${i + 1}`}
+                      className="flex-1 rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                    />
+                    {newPoll.options.length > 2 && (
+                      <button onClick={() => setNewPoll(s => ({ ...s, options: s.options.filter((_, idx) => idx !== i) }))}
+                        className="px-2 rounded-lg text-muted hover:text-red-400">
+                        <X size={12} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button
+                  onClick={() => setNewPoll(s => ({ ...s, options: [...s.options, ""] }))}
+                  className="text-[10px] text-gold hover:underline"
+                >
+                  + Add option
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <label className="text-[10px] text-muted shrink-0">Ends at (optional):</label>
+                <input
+                  type="datetime-local"
+                  value={newPoll.ends_at}
+                  onChange={e => setNewPoll(s => ({ ...s, ends_at: e.target.value }))}
+                  className="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs"
+                />
+              </div>
+              <div className="flex justify-end gap-2 pt-1">
+                <button onClick={() => setShowNewPoll(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
+                <button
+                  onClick={handleCreatePoll}
+                  disabled={creatingPoll || !newPoll.question.trim() || newPoll.options.filter(o => o.trim()).length < 2}
+                  className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
+                >
+                  {creatingPoll ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
+                  {creatingPoll ? "Creating..." : "Create"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {pollsLoading ? (
+            <div className="card text-center py-12"><Loader2 size={24} className="mx-auto animate-spin text-muted/50" /></div>
+          ) : polls.length === 0 ? (
             <div className="card text-center py-12">
               <Vote size={24} className="mx-auto mb-2 text-muted/30" />
               <p className="text-xs text-muted">No active polls right now</p>
             </div>
-          ) : POLLS.map(poll => (
-            <div key={poll.id} className="card p-4">
-              <h3 className="text-xs font-semibold mb-1">{poll.question}</h3>
-              <p className="text-[9px] text-muted mb-3">{poll.totalVotes} votes &middot; Ends in {poll.endsIn}</p>
-              <div className="space-y-2">
-                {poll.options.map((opt, i) => {
-                  const pct = Math.round((opt.votes / poll.totalVotes) * 100);
-                  const voted = votedPolls[poll.id] === i;
-                  return (
-                    <button key={i} onClick={() => votePoll(poll.id, i)} className="w-full text-left">
-                      <div className={`relative p-2 rounded-lg border transition-all ${voted ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-border"}`}>
-                        <div className="absolute inset-0 rounded-lg bg-gold/10" style={{ width: `${pct}%` }} />
-                        <div className="relative flex items-center justify-between">
-                          <span className="text-xs">{opt.label}</span>
-                          <span className="text-xs font-mono text-muted">{pct}%</span>
+          ) : polls.map(poll => {
+            const total = poll.total_votes || 0;
+            return (
+              <div key={poll.id} className="card p-4">
+                <h3 className="text-xs font-semibold mb-1">{poll.question}</h3>
+                <p className="text-[9px] text-muted mb-3">{total} {total === 1 ? "vote" : "votes"} &middot; {timeUntil(poll.ends_at)}</p>
+                <div className="space-y-2">
+                  {poll.option_counts.map((opt, i) => {
+                    const pct = total > 0 ? Math.round((opt.votes / total) * 100) : 0;
+                    const voted = poll.my_vote === i;
+                    return (
+                      <button key={i} onClick={() => handleVote(poll.id, i)} className="w-full text-left">
+                        <div className={`relative p-2 rounded-lg border transition-all ${voted ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-border"}`}>
+                          <div className="absolute inset-0 rounded-lg bg-gold/10" style={{ width: `${pct}%` }} />
+                          <div className="relative flex items-center justify-between">
+                            <span className="text-xs">{opt.label}</span>
+                            <span className="text-xs font-mono text-muted">{pct}%</span>
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  );
-                })}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
