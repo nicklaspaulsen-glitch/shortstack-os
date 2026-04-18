@@ -124,7 +124,7 @@ export default function ForecastPage() {
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">
         {[
           { label: "Current MRR", value: fmtCurrency(currentMRR), sub: `${clientCount} clients`, icon: <DollarSign size={12} />, color: "text-gold", subColor: "text-muted" },
-          { label: "ARR", value: fmtCurrency(arr), sub: "+12% YoY", icon: <BarChart3 size={12} />, color: "text-blue-400", subColor: "text-emerald-400" },
+          { label: "ARR", value: fmtCurrency(arr), sub: "annualized", icon: <BarChart3 size={12} />, color: "text-blue-400", subColor: "text-muted" },
           { label: "Avg MRR/Client", value: fmtCurrency(avgMRR), sub: "per client", icon: <Target size={12} />, color: "text-purple-400", subColor: "text-muted" },
           { label: "Pipeline (Weighted)", value: fmtCurrency(Math.round(pipelineWeighted)), sub: `${PIPELINE_DEALS.length} deals`, icon: <Zap size={12} />, color: "text-emerald-400", subColor: "text-muted" },
           { label: "Health Score", value: `${avgHealth}%`, sub: `${churnRisk} at risk`, icon: <Star size={12} />, color: "text-gold", subColor: churnRisk > 0 ? "text-red-400" : "text-muted" },

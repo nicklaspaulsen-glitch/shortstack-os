@@ -61,7 +61,7 @@ export default function ActivityLogPage() {
     .filter(l => {
       if (dateFilter === "all") return true;
       const logDate = new Date(l.timestamp);
-      const today = new Date("2026-04-14");
+      const today = new Date();
       if (dateFilter === "today") return logDate.toDateString() === today.toDateString();
       if (dateFilter === "week") return (today.getTime() - logDate.getTime()) < 7 * 86400000;
       return true;
@@ -117,7 +117,7 @@ export default function ActivityLogPage() {
           <p className="text-[10px] text-muted">Total Events</p>
         </div>
         <div className="card p-3 text-center">
-          <p className="text-lg font-bold text-gold">{logs.filter(l => l.timestamp.startsWith("2026-04-14")).length}</p>
+          <p className="text-lg font-bold text-gold">{logs.filter(l => l.timestamp.startsWith(new Date().toISOString().slice(0, 10))).length}</p>
           <p className="text-[10px] text-muted">Today</p>
         </div>
         <div className="card p-3 text-center">

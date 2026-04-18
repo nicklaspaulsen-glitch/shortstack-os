@@ -78,12 +78,12 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
 
   switch (preset) {
     case "agency_update":
-      hero.content.headline = "April Agency Update";
+      hero.content.headline = "Monthly Agency Update";
       hero.content.subheadline = "New services, team wins, and what's coming next.";
       return [
         header, hero,
-        { ...defaultBlock("text"), content: { body: "Hi there,\n\nIt's been an incredible month at ShortStack. Here's what we've been up to and what's coming next for your brand." } },
-        { ...defaultBlock("text"), content: { body: "New Service: AI-Powered Ad Optimization\n\nWe've rolled out our new AI ad engine that automatically optimizes your campaigns for maximum ROAS." } },
+        { ...defaultBlock("text"), content: { body: "Hi there,\n\nHere's what we've been up to this month and what's coming next for your brand." } },
+        { ...defaultBlock("text"), content: { body: "Share your latest service launch or internal update here." } },
         { ...defaultBlock("button"), content: { label: "See What's New", url: "#", color: "#C9A84C" } },
         footer,
       ];
@@ -103,9 +103,9 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
       hero.content.subheadline = "Top stories and insights from this week.";
       return [
         header, hero,
-        { ...defaultBlock("text"), content: { body: "Top Story: Why short-form video is dominating Q2 2026\n\nThe latest data shows short-form video content generates 3x more engagement than static posts." } },
+        { ...defaultBlock("text"), content: { body: "Top Story: Add your featured story here." } },
         defaultBlock("divider"),
-        { ...defaultBlock("text"), content: { body: "Quick Wins This Week:\n- Updated your social posting schedule for optimal reach\n- A/B tested two landing page variants (winner: +23% conversion)\n- Launched retargeting campaign for abandoned carts" } },
+        { ...defaultBlock("text"), content: { body: "Quick Wins This Week:\n- List your top wins and takeaways for the week" } },
         { ...defaultBlock("button"), content: { label: "View Full Report", url: "#", color: "#C9A84C" } },
         footer,
       ];
@@ -114,9 +114,9 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
       hero.content.subheadline = "An exclusive event for our valued clients.";
       return [
         header, hero,
-        { ...defaultBlock("text"), content: { body: "Join us for an exclusive digital marketing masterclass.\n\nDate: April 25, 2026\nTime: 2:00 PM ET\nLocation: Virtual (Zoom)\n\nLearn the latest strategies for scaling your business through paid media and organic growth." } },
+        { ...defaultBlock("text"), content: { body: "Join us for an exclusive digital marketing masterclass.\n\nDate: [add date]\nTime: [add time]\nLocation: [add location or Zoom link]\n\nLearn the latest strategies for scaling your business through paid media and organic growth." } },
         { ...defaultBlock("button"), content: { label: "Reserve Your Spot", url: "#", color: "#3B82F6" } },
-        { ...defaultBlock("text"), content: { body: "Seats are limited to 50 attendees. Reserve yours today." } },
+        { ...defaultBlock("text"), content: { body: "Seats are limited. Reserve yours today." } },
         footer,
       ];
     case "case_study":
@@ -124,9 +124,9 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
       hero.content.subheadline = "How we drove real results for a real business.";
       return [
         header, hero,
-        { ...defaultBlock("text"), content: { body: "The Challenge:\nOur client, a growing dental practice, was struggling to fill their appointment book and had no online presence to speak of." } },
+        { ...defaultBlock("text"), content: { body: "The Challenge:\nDescribe the client's situation before working with you." } },
         defaultBlock("divider"),
-        { ...defaultBlock("text"), content: { body: "The Results:\n- 340% increase in new patient appointments\n- $2.4M in attributed revenue\n- 4.8-star average review rating\n- #1 Google Maps ranking in their area" } },
+        { ...defaultBlock("text"), content: { body: "The Results:\n- List the measurable outcomes you achieved\n- Add specific metrics here\n- Highlight the key wins" } },
         defaultBlock("image"),
         { ...defaultBlock("button"), content: { label: "Read Full Case Study", url: "#", color: "#C9A84C" } },
         footer,
@@ -147,7 +147,7 @@ function makeTemplateBlocks(preset: string): ContentBlock[] {
 }
 
 const TEMPLATES: NewsletterTemplate[] = [
-  { id: "agency_update",  name: "Agency Update",   icon: <Megaphone size={16} />, description: "Monthly update with wins, news, and upcoming plans",       subject: "April Agency Update - New Services & Wins", blocks: [] },
+  { id: "agency_update",  name: "Agency Update",   icon: <Megaphone size={16} />, description: "Monthly update with wins, news, and upcoming plans",       subject: "Monthly Agency Update", blocks: [] },
   { id: "product_launch",  name: "Product Launch",  icon: <Zap size={16} />,       description: "Announce a new product, feature, or service",              subject: "Introducing [Product Name] - Built For You", blocks: [] },
   { id: "weekly_digest",   name: "Weekly Digest",   icon: <BookOpen size={16} />,  description: "Curated weekly roundup of insights and quick wins",        subject: "Your Weekly Marketing Digest", blocks: [] },
   { id: "event_invite",    name: "Event Invite",    icon: <Calendar size={16} />,  description: "Invite subscribers to webinars, workshops, or events",     subject: "You're Invited: [Event Name]", blocks: [] },

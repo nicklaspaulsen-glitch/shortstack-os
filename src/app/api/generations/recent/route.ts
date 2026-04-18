@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 /**
  * GET /api/generations/recent — Recent AI generations across all tools.
@@ -12,6 +13,8 @@ export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
 
   const limit = Math.min(parseInt(request.nextUrl.searchParams.get("limit") || "8", 10), 24);
 
@@ -32,7 +35,7 @@ export async function GET(request: NextRequest) {
     const { data: gens } = await supabase
       .from("generations")
       .select("id, category, title, source_tool, content_preview, metadata, created_at")
-      .eq("user_id", user.id)
+      .eq("user_id", ownerId)
       .order("created_at", { ascending: false })
       .limit(limit);
 

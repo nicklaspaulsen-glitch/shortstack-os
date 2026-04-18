@@ -89,7 +89,7 @@ export default function ProposalsPage() {
   // Builder state
   const [builderClient, setBuilderClient] = useState("");
   const [builderProject, setBuilderProject] = useState("");
-  const [builderDate, setBuilderDate] = useState("2026-04-15");
+  const [builderDate, setBuilderDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [sections, setSections] = useState<ProposalSection[]>(DEFAULT_SECTIONS);
   const [lineItems, setLineItems] = useState<LineItem[]>([]);
   const [aiGenerating, setAiGenerating] = useState<string | null>(null);
@@ -689,23 +689,8 @@ export default function ProposalsPage() {
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <BarChart3 size={13} className="text-gold" /> Proposal Performance
               </h3>
-              <div className="space-y-3">
-                {[
-                  { label: "View-to-Accept Rate", value: "57%", bar: 57 },
-                  { label: "Avg Time to Decision", value: "3.8 days", bar: 48 },
-                  { label: "Most Viewed Section", value: "Pricing (94%)", bar: 94 },
-                  { label: "Avg Sections Read", value: "4.2 / 5", bar: 84 },
-                ].map((m, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between text-[10px] mb-1">
-                      <span>{m.label}</span>
-                      <span className="text-gold font-bold">{m.value}</span>
-                    </div>
-                    <div className="w-full bg-surface-light rounded-full h-1.5">
-                      <div className="bg-gold rounded-full h-1.5 transition-all" style={{ width: `${m.bar}%` }} />
-                    </div>
-                  </div>
-                ))}
+              <div className="text-center py-8 text-muted text-xs">
+                Performance metrics will appear once proposals have been viewed.
               </div>
             </div>
 
@@ -731,30 +716,13 @@ export default function ProposalsPage() {
             </div>
           </div>
 
-          {/* Monthly trend - CSS bar chart */}
+          {/* Monthly trend — placeholder until real per-month aggregates exist */}
           <div className="card">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <Calendar size={13} className="text-blue-400" /> Monthly Proposal Activity
             </h3>
-            <div className="flex items-end gap-2 h-32">
-              {[
-                { month: "Jan", sent: 3, won: 1 },
-                { month: "Feb", sent: 5, won: 3 },
-                { month: "Mar", sent: 4, won: 2 },
-                { month: "Apr", sent: 7, won: 2 },
-              ].map((m, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                  <div className="w-full flex gap-0.5 items-end justify-center" style={{ height: "100px" }}>
-                    <div className="w-1/3 rounded-t bg-blue-400/60" style={{ height: `${(m.sent / 7) * 100}%`, minHeight: 4 }} />
-                    <div className="w-1/3 rounded-t bg-green-400/60" style={{ height: `${(m.won / 7) * 100}%`, minHeight: 4 }} />
-                  </div>
-                  <span className="text-[8px] text-muted">{m.month}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center gap-4 mt-2">
-              <span className="text-[9px] flex items-center gap-1"><div className="w-3 h-2 rounded bg-blue-400/60" /> Sent</span>
-              <span className="text-[9px] flex items-center gap-1"><div className="w-3 h-2 rounded bg-green-400/60" /> Won</span>
+            <div className="text-center py-8 text-muted text-xs">
+              Monthly activity will appear once proposals are sent and tracked over time.
             </div>
           </div>
 

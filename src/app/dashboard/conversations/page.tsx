@@ -59,7 +59,8 @@ const AVAILABLE_TAGS = [
   "reporting", "onboarding", "billing", "support",
 ];
 
-const TEAM_MEMBERS = ["Sarah K.", "Alex M.", "Mike T.", "Unassigned"];
+// TODO: Pull from real team table once available
+const TEAM_MEMBERS = ["Unassigned"];
 
 /* ================================================================== */
 /*  Component                                                          */
@@ -87,7 +88,7 @@ export default function ConversationsPage() {
   function formatTime(date: string) {
     if (!date) return "";
     const d = new Date(date);
-    const now = new Date("2026-04-15T10:00:00");
+    const now = new Date();
     const diff = now.getTime() - d.getTime();
     if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
     if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;

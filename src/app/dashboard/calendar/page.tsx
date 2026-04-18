@@ -164,7 +164,7 @@ export default function CalendarPage() {
     setCurrentWeek(monday);
   };
 
-  const today = "2026-04-14";
+  const today = new Date().toISOString().slice(0, 10);
 
   const todaysEvents = filteredEvents.filter(e => e.date === today).sort((a, b) => a.time.localeCompare(b.time));
   const upcomingDeadlines = filteredEvents.filter(e => e.category === "deadline" && e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
@@ -211,7 +211,7 @@ export default function CalendarPage() {
         const saved = dbToCalEvent(json.event);
         setEvents(prev => [...prev, saved]);
         setShowCreate(false);
-        setNewEvent({ title: "", client: "Bright Dental", date: "2026-04-14", time: "10:00", duration: 30, type: "video", category: "meeting", recurring: false, teamMember: "Nicklas" });
+        setNewEvent({ title: "", client: "", date: new Date().toISOString().slice(0, 10), time: "10:00", duration: 30, type: "video", category: "meeting", recurring: false, teamMember: "" });
       } else {
         console.error("Failed to create event:", await res.text());
       }

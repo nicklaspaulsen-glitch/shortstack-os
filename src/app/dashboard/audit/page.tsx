@@ -80,8 +80,8 @@ export default function AuditPage() {
       const q = searchQuery.toLowerCase();
       return e.user.toLowerCase().includes(q) || e.details.toLowerCase().includes(q) || e.resource.toLowerCase().includes(q);
     }
-    if (dateFilter === "today") return e.timestamp.startsWith("2026-04-15");
-    if (dateFilter === "7d") return true; // mock: all within 7 days
+    if (dateFilter === "today") return e.timestamp.startsWith(new Date().toISOString().slice(0, 10));
+    if (dateFilter === "7d") return true;
     return true;
   });
 
@@ -469,11 +469,11 @@ export default function AuditPage() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">Start Date</label>
-                <input type="date" className="input w-full text-xs" defaultValue="2026-04-01" />
+                <input type="date" className="input w-full text-xs" />
               </div>
               <div>
                 <label className="text-[9px] text-muted uppercase mb-1 block font-semibold">End Date</label>
-                <input type="date" className="input w-full text-xs" defaultValue="2026-04-15" />
+                <input type="date" className="input w-full text-xs" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">

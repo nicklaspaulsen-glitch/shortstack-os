@@ -212,7 +212,7 @@ export default function VoiceReceptionistPage() {
   const [dragIdx, setDragIdx] = useState<number | null>(null);
 
   /* ── Derived Stats ── */
-  const todayCalls = calls.filter(c => c.time.startsWith("2026-04-15"));
+  const todayCalls = calls.filter(c => c.time.startsWith(new Date().toISOString().slice(0, 10)));
   const callsToday = todayCalls.length;
   const avgDuration = Math.round(calls.filter(c => c.duration > 0).reduce((a, c) => a + c.duration, 0) / Math.max(calls.filter(c => c.duration > 0).length, 1));
   const leadsToday = todayCalls.filter(c => c.outcome === "qualified").length;

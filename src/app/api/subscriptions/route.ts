@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function GET() {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { data, error } = await supabase
     .from("software_subscriptions")
     .select("*")
-    .eq("profile_id", user.id)
+    .eq("profile_id", ownerId)
     .order("cost_monthly", { ascending: false });
 
   if (error) return NextResponse.json({ subscriptions: [], error: error.message });
@@ -21,9 +24,11 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const body = await req.json();
   const row = {
-    profile_id: user.id,
+    profile_id: ownerId,
     tool_name: body.tool_name,
     category: body.category || "Other",
     cost_monthly: body.cost_monthly || 0,

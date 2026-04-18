@@ -11,6 +11,7 @@ import {
   Loader2, X, ChevronRight, FileText, Lightbulb, Star, Flag,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 import {
   InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon,
@@ -594,6 +595,16 @@ export default function DMControllerPage() {
       {activeTab === "setup" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-4">
+
+            {/* How DM Controller works — beginner-friendly flow */}
+            <HowItWorksFlow />
+
+            {/* Lead Source — where the DMs go */}
+            <LeadSourcePicker />
+
+            {/* Sender Accounts — which of YOUR accounts send the DMs */}
+            <SenderAccountPicker />
+
             {/* Platform Selector w/ real brand icons */}
             <div className="card p-4">
               <h2 className="text-xs font-semibold mb-2">Platforms</h2>
@@ -1799,4 +1810,247 @@ function LiveLabel({ kind }: { kind: LiveEvent["kind"] }) {
     skip:   "Skipped (blacklist)",
   };
   return <span className="text-muted">{map[kind]}</span>;
+}
+
+/* ================================================================== *
+ * HOW IT WORKS — visual flow explainer
+ * ================================================================== */
+function HowItWorksFlow() {
+  const [collapsed, setCollapsed] = useState(false);
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem("ss-dm-controller-flow-seen");
+      if (seen) setCollapsed(true);
+    } catch {}
+  }, []);
+  function dismiss() {
+    setCollapsed(true);
+    try { localStorage.setItem("ss-dm-controller-flow-seen", "1"); } catch {}
+  }
+  if (collapsed) {
+    return (
+      <button onClick={() => setCollapsed(false)} className="text-[10px] text-muted hover:text-gold flex items-center gap-1">
+        <span>💡</span> How does DM Controller work?
+      </button>
+    );
+  }
+  return (
+    <div className="card p-4 bg-gradient-to-br from-gold/[0.04] to-transparent border-gold/20">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-xs font-semibold flex items-center gap-1.5">
+          <span className="text-base">💡</span> How DM Controller works
+        </h3>
+        <button onClick={dismiss} className="text-[9px] text-muted hover:text-foreground">Got it · Hide</button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        {[
+          { n: 1, title: "Pick your lead source", desc: "Scraped leads from Lead Finder, a Campaign list, or CRM contacts", href: "/dashboard/scraper", link: "Lead Finder" },
+          { n: 2, title: "Pick sender accounts", desc: "Which of YOUR connected IG/FB/LI/TikTok accounts will send the DMs", href: "/dashboard/social-manager", link: "Connect accounts" },
+          { n: 3, title: "Pick platform", desc: "Instagram, Facebook, LinkedIn, or TikTok — rotates across your senders", href: null, link: null },
+          { n: 4, title: "Write & launch", desc: "AI-generated or custom message, schedule, monitor replies in Inbox tab", href: null, link: null },
+        ].map(step => (
+          <div key={step.n} className="bg-surface-light/50 rounded-xl p-3 border border-border relative">
+            <div className="absolute -top-2 -left-2 w-6 h-6 rounded-full bg-gold text-black text-[10px] font-bold flex items-center justify-center">
+              {step.n}
+            </div>
+            <h4 className="text-[11px] font-semibold mt-1">{step.title}</h4>
+            <p className="text-[9px] text-muted mt-1 leading-relaxed">{step.desc}</p>
+            {step.href && (
+              <Link href={step.href} className="text-[9px] text-gold hover:underline mt-1.5 inline-block">→ {step.link}</Link>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ================================================================== *
+ * LEAD SOURCE PICKER
+ * ================================================================== */
+function LeadSourcePicker() {
+  const [source, setSource] = useState<"scraped" | "campaign" | "crm" | "manual">("scraped");
+  const [campaigns, setCampaigns] = useState<Array<{ id: string; name: string; leads_count?: number }>>([]);
+  const [leadsCount, setLeadsCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch user's campaigns
+    fetch("/api/outreach/campaigns")
+      .then(r => r.ok ? r.json() : { campaigns: [] })
+      .then(d => setCampaigns(d.campaigns || []))
+      .catch(() => {});
+    // Fetch scraped leads count
+    fetch("/api/leads?limit=1")
+      .then(r => r.ok ? r.json() : { total: 0 })
+      .then(d => setLeadsCount(d.total || 0))
+      .catch(() => {});
+  }, []);
+
+  return (
+    <div className="card p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h2 className="text-xs font-semibold flex items-center gap-1.5">
+            <span className="w-5 h-5 rounded-full bg-gold text-black text-[9px] font-bold flex items-center justify-center">1</span>
+            Lead Source
+          </h2>
+          <p className="text-[10px] text-muted mt-0.5">Where do the DMs go? Choose who you&apos;re contacting.</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+        {[
+          { id: "scraped", label: "Scraped Leads", desc: `${leadsCount} in Lead Finder`, emoji: "🎯", href: "/dashboard/scraper" },
+          { id: "campaign", label: "Campaign List", desc: `${campaigns.length} campaigns`, emoji: "📣", href: "/dashboard/outreach-hub" },
+          { id: "crm", label: "CRM Contacts", desc: "Your client list", emoji: "👥", href: "/dashboard/crm" },
+          { id: "manual", label: "Paste Handles", desc: "Enter usernames manually", emoji: "✏️", href: null },
+        ].map(opt => {
+          const active = source === opt.id;
+          return (
+            <button
+              key={opt.id}
+              onClick={() => setSource(opt.id as "scraped" | "campaign" | "crm" | "manual")}
+              className={cn(
+                "text-left p-3 rounded-xl border transition-all",
+                active ? "bg-gold/10 border-gold/30" : "bg-surface-light/30 border-border hover:border-gold/20"
+              )}
+            >
+              <div className="flex items-center gap-1.5">
+                <span className="text-base">{opt.emoji}</span>
+                <p className="text-[11px] font-semibold">{opt.label}</p>
+              </div>
+              <p className="text-[9px] text-muted mt-1">{opt.desc}</p>
+              {active && opt.href && (
+                <Link href={opt.href} className="text-[9px] text-gold hover:underline mt-1 block">Open →</Link>
+              )}
+            </button>
+          );
+        })}
+      </div>
+      {/* Campaign dropdown if campaign selected */}
+      {source === "campaign" && (
+        <div className="mt-3 p-3 rounded-lg bg-surface-light/40 border border-border">
+          <p className="text-[10px] text-muted mb-1.5">Pick a campaign to load its leads:</p>
+          {campaigns.length === 0 ? (
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] text-muted">No campaigns yet.</p>
+              <Link href="/dashboard/outreach-hub" className="text-[10px] text-gold hover:underline">Create first →</Link>
+            </div>
+          ) : (
+            <select className="input text-xs w-full">
+              <option value="">Choose campaign...</option>
+              {campaigns.map(c => (
+                <option key={c.id} value={c.id}>{c.name} {c.leads_count !== undefined ? `(${c.leads_count} leads)` : ""}</option>
+              ))}
+            </select>
+          )}
+        </div>
+      )}
+      {source === "manual" && (
+        <div className="mt-3">
+          <textarea
+            placeholder="Paste usernames, one per line&#10;@username1&#10;@username2"
+            className="input text-xs w-full font-mono"
+            rows={4}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ================================================================== *
+ * SENDER ACCOUNT PICKER
+ * ================================================================== */
+function SenderAccountPicker() {
+  const [accounts, setAccounts] = useState<Array<{ id: string; platform: string; account_name: string; status?: string }>>([]);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/social/status")
+      .then(r => r.ok ? r.json() : { accounts: [] })
+      .then(d => {
+        const list = d.accounts || d.social_accounts || [];
+        setAccounts(list);
+        // Pre-select all active accounts
+        setSelected(new Set(list.filter((a: { status?: string }) => a.status === "active" || !a.status).map((a: { id: string }) => a.id)));
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  function toggle(id: string) {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  const platformGroups = accounts.reduce((acc, a) => {
+    const p = a.platform.toLowerCase();
+    if (!acc[p]) acc[p] = [];
+    acc[p].push(a);
+    return acc;
+  }, {} as Record<string, typeof accounts>);
+
+  return (
+    <div className="card p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <h2 className="text-xs font-semibold flex items-center gap-1.5">
+            <span className="w-5 h-5 rounded-full bg-gold text-black text-[9px] font-bold flex items-center justify-center">2</span>
+            Sender Accounts
+          </h2>
+          <p className="text-[10px] text-muted mt-0.5">Which of YOUR accounts will send the DMs? Rotates across selected to avoid spam flags.</p>
+        </div>
+        <Link href="/dashboard/social-manager" className="text-[10px] text-gold hover:underline flex items-center gap-1">
+          + Connect more
+        </Link>
+      </div>
+      {loading ? (
+        <p className="text-[10px] text-muted">Loading your connected accounts...</p>
+      ) : accounts.length === 0 ? (
+        <div className="text-center py-6 border border-dashed border-border rounded-lg">
+          <p className="text-xs text-muted mb-2">No accounts connected yet</p>
+          <Link href="/dashboard/social-manager" className="btn-primary text-xs inline-flex items-center gap-1">
+            Connect Instagram, Facebook, TikTok, LinkedIn →
+          </Link>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {Object.entries(platformGroups).map(([platform, accs]) => (
+            <div key={platform}>
+              <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5 capitalize">{platform} · {accs.length}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {accs.map(a => {
+                  const isSelected = selected.has(a.id);
+                  return (
+                    <button
+                      key={a.id}
+                      onClick={() => toggle(a.id)}
+                      className={cn(
+                        "text-[10px] px-2.5 py-1.5 rounded-full border flex items-center gap-1.5 transition-all",
+                        isSelected
+                          ? "bg-gold/15 border-gold/30 text-gold"
+                          : "bg-surface-light border-border text-muted hover:text-foreground"
+                      )}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                      {a.account_name}
+                      {isSelected && <span className="text-[8px]">✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+          <p className="text-[9px] text-muted mt-2">
+            {selected.size} of {accounts.length} active · DMs will rotate across these accounts
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }

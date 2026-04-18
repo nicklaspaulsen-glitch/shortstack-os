@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // GET — List all phone numbers for the user
 export async function GET(_request: NextRequest) {
@@ -7,10 +8,12 @@ export async function GET(_request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { data, error } = await supabase
     .from("phone_numbers")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .order("created_at", { ascending: false });
 
   if (error && error.message.includes("relation") && error.message.includes("does not exist")) {
@@ -28,6 +31,8 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { phone_number, label, type, twilio_sid, daily_limit, country } = await request.json();
 
   if (!phone_number) {
@@ -37,7 +42,7 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase
     .from("phone_numbers")
     .insert({
-      user_id: user.id,
+      user_id: ownerId,
       phone_number,
       label: label || null,
       type: type || null,
@@ -62,6 +67,8 @@ export async function PATCH(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const body = await request.json();
   const { id, ...updates } = body;
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
@@ -70,14 +77,14 @@ export async function PATCH(request: NextRequest) {
     await supabase
       .from("phone_senders")
       .update({ is_primary: false })
-      .eq("user_id", user.id);
+      .eq("user_id", ownerId);
   }
 
   const { data, error } = await supabase
     .from("phone_senders")
     .update(updates)
     .eq("id", id)
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .select()
     .single();
 
@@ -91,6 +98,8 @@ export async function DELETE(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
@@ -99,7 +108,7 @@ export async function DELETE(request: NextRequest) {
     .from("phone_senders")
     .delete()
     .eq("id", id)
-    .eq("user_id", user.id);
+    .eq("user_id", ownerId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ success: true });

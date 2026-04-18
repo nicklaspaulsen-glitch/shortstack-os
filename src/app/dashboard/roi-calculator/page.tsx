@@ -477,7 +477,9 @@ Break-even: ${breakEvenMonths} month${breakEvenMonths !== 1 ? "s" : ""}`;
               <div className="p-4 rounded-lg bg-surface-light border border-border">
                 <div className="text-center mb-4">
                   <p className="text-lg font-bold text-gold">ShortStack ROI Report</p>
-                  <p className="text-[10px] text-muted">Generated April 14, 2026</p>
+                  <p className="text-[10px] text-muted">
+                    Generated {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  </p>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <div className="text-center p-3 rounded-lg bg-surface">

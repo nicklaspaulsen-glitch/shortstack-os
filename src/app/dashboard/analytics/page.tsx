@@ -233,7 +233,8 @@ export default function AnalyticsPage() {
     { name: "Leads", value: stats.totalLeads || 0, fill: "#C9A84C" },
     { name: "Contacted", value: stats.dmsSent || 0, fill: "#38bdf8" },
     { name: "Calls Booked", value: stats.callsBooked || 0, fill: "#8b5cf6" },
-    { name: "Proposals", value: Math.round((stats.callsBooked || 0) * 0.6), fill: "#f59e0b" },
+    // TODO: Wire Proposals from real deals/proposals data once tracked
+    { name: "Proposals", value: 0, fill: "#f59e0b" },
     { name: "Closed Won", value: stats.totalDeals || 0, fill: "#10b981" },
   ], [stats]);
 
@@ -284,9 +285,10 @@ export default function AnalyticsPage() {
 
   // --- Feature 12: Monthly Comparison ---
   const monthlyComparison = useMemo(() => {
+    // TODO: Populate historical "last" and "threeAgo" buckets from real per-month aggregates
     const current = { leads: stats.leadsThisMonth, mrr: stats.totalMRR, deals: stats.totalDeals, replies: stats.replies };
-    const last = { leads: stats.leadsLastMonth, mrr: stats.lastMonthMRR, deals: Math.round(stats.totalDeals * 0.85), replies: Math.round(stats.replies * 0.9) };
-    const threeAgo = { leads: Math.round(stats.leadsLastMonth * 0.7), mrr: Math.round(stats.lastMonthMRR * 0.8), deals: Math.round(stats.totalDeals * 0.6), replies: Math.round(stats.replies * 0.65) };
+    const last = { leads: stats.leadsLastMonth, mrr: stats.lastMonthMRR, deals: 0, replies: 0 };
+    const threeAgo = { leads: 0, mrr: 0, deals: 0, replies: 0 };
     return { current, last, threeAgo };
   }, [stats]);
 

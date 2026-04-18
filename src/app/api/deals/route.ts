@@ -54,6 +54,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // GET — fetch deals for the authenticated user, optionally scoped to a client
 export async function GET(request: NextRequest) {
@@ -61,13 +62,15 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { searchParams } = new URL(request.url);
   const clientId = searchParams.get("client_id");
 
   let query = supabase
     .from("deals")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .order("created_at", { ascending: false });
 
   if (clientId) {
@@ -87,6 +90,8 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const body = await request.json();
   const { title, client_name, value, stage, probability, expected_close_date, contact_email, contact_phone, notes, source } = body;
 
@@ -97,7 +102,7 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase
     .from("deals")
     .insert({
-      user_id: user.id,
+      user_id: ownerId,
       title,
       client_name,
       value: value ?? 0,
@@ -122,6 +127,8 @@ export async function PATCH(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
 
   const body = await request.json();
   const { id, ...updates } = body;
@@ -150,7 +157,7 @@ export async function PATCH(request: NextRequest) {
     .from("deals")
     .update(safeUpdates)
     .eq("id", id)
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .select()
     .single();
 
@@ -165,6 +172,8 @@ export async function DELETE(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { id } = await request.json();
 
   if (!id) {
@@ -175,7 +184,7 @@ export async function DELETE(request: NextRequest) {
     .from("deals")
     .delete()
     .eq("id", id)
-    .eq("user_id", user.id);
+    .eq("user_id", ownerId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 

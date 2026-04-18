@@ -37,7 +37,8 @@ const CANNED_RESPONSES: { label: string; text: string }[] = [];
 const CATEGORIES = ["All", "Technical", "Content", "Billing", "Setup", "Lead Gen", "Design", "AI Agent"];
 const STATUSES: Status[] = ["open", "in_progress", "resolved", "closed"];
 const PRIORITIES: Priority[] = ["urgent", "high", "medium", "low"];
-const TEAM = ["Alex", "Maria", "Jordan", "Unassigned"];
+// TODO: Populate from real team table
+const TEAM = ["Unassigned"];
 const TABS = ["Board", "List", "Create", "Analytics", "Canned Responses"] as const;
 type Tab = typeof TABS[number];
 

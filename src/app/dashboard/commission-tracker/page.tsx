@@ -102,7 +102,8 @@ export default function CommissionTrackerPage() {
   const totalEarned = deals.reduce((s, d) => s + d.commissionAmount, 0);
   const totalPending = deals.filter(d => d.status === "pending").reduce((s, d) => s + d.commissionAmount, 0);
   const totalPaid = deals.filter(d => d.status === "paid").reduce((s, d) => s + d.commissionAmount, 0);
-  const thisMonth = deals.filter(d => d.closedDate.startsWith("2026-04")).reduce((s, d) => s + d.commissionAmount, 0);
+  const currentYearMonth = new Date().toISOString().slice(0, 7); // e.g., "2026-04"
+  const thisMonth = deals.filter(d => d.closedDate.startsWith(currentYearMonth)).reduce((s, d) => s + d.commissionAmount, 0);
 
   /* ------- Handlers ------- */
   const toggleRule = (id: string) => {
@@ -162,7 +163,7 @@ export default function CommissionTrackerPage() {
           { label: "Total Earned", value: fmtCurrency(totalEarned), icon: <DollarSign size={14} />, color: "text-gold", sub: `${deals.length} deals` },
           { label: "Pending", value: fmtCurrency(totalPending), icon: <Clock size={14} />, color: "text-yellow-400", sub: `${deals.filter(d => d.status === "pending").length} awaiting` },
           { label: "Paid Out", value: fmtCurrency(totalPaid), icon: <CheckCircle size={14} />, color: "text-green-400", sub: `${deals.filter(d => d.status === "paid").length} processed` },
-          { label: "This Month", value: fmtCurrency(thisMonth), icon: <Calendar size={14} />, color: "text-blue-400", sub: "April 2026" },
+          { label: "This Month", value: fmtCurrency(thisMonth), icon: <Calendar size={14} />, color: "text-blue-400", sub: new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" }) },
         ].map((card, i) => (
           <div key={i} className="card p-4">
             <div className="flex items-center gap-2 mb-2">

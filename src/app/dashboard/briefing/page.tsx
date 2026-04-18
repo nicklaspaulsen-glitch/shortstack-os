@@ -89,7 +89,9 @@ export default function BriefingPage() {
           </div>
           <div>
             <h1 className="text-lg font-bold">Morning Briefing</h1>
-            <p className="text-sm text-muted">Monday, April 14, 2026 &middot; Updated just now</p>
+            <p className="text-sm text-muted">
+              {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })} &middot; Updated just now
+            </p>
           </div>
         </div>
         <button onClick={refreshBriefing} disabled={generating} className="px-4 py-2 rounded-lg bg-gold text-black text-xs font-semibold disabled:opacity-50 flex items-center gap-2">

@@ -79,7 +79,7 @@ export default function ProductionPage() {
 
   const totalEstimated = items.reduce((s, i) => s + i.estimatedHours, 0);
   const totalActual = items.reduce((s, i) => s + i.actualHours, 0);
-  const overdue = items.filter(i => i.dueDate < "2026-04-14" && i.status !== "delivered").length;
+  const overdue = items.filter(i => i.dueDate < new Date().toISOString().slice(0, 10) && i.status !== "delivered").length;
   const inReview = items.filter(i => i.status === "review").length;
 
   // Bottleneck analysis
@@ -230,7 +230,7 @@ export default function ProductionPage() {
             <div className="space-y-2">
               {Array.from(new Set(items.map(i => i.dueDate))).sort().map(date => {
                 const dayItems = filtered.filter(i => i.dueDate === date);
-                const isOverdue = date < "2026-04-14";
+                const isOverdue = date < new Date().toISOString().slice(0, 10);
                 return (
                   <div key={date} className="p-3 rounded-lg bg-surface-light border border-border">
                     <div className="flex items-center gap-2 mb-2">
@@ -308,9 +308,9 @@ export default function ProductionPage() {
         <div className="space-y-4">
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><MessageSquare size={13} className="text-gold" /> Daily Standup Summary</h2>
-            <p className="text-[10px] text-muted mb-3">Tuesday, April 14, 2026</p>
+            <p className="text-[10px] text-muted mb-3">{new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
             <div className="space-y-3">
-              {["James", "Sarah", "Maria", "Alex"].map(name => {
+              {Array.from(new Set(items.map(i => i.assignee))).filter(Boolean).map(name => {
                 const memberItems = items.filter(i => i.assignee === name);
                 const inProg = memberItems.filter(i => i.status === "in_progress");
                 const review = memberItems.filter(i => i.status === "review");
@@ -466,7 +466,7 @@ export default function ProductionPage() {
             <div>
               <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Assign To</label>
               <select className="input w-full text-xs">
-                <option>James</option><option>Sarah</option><option>Maria</option><option>Alex</option>
+                <option>Unassigned</option>
               </select>
             </div>
             <div>

@@ -500,7 +500,9 @@ export default function ClientReportsPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-[10px] text-muted">Monthly Marketing Report</p>
-                      <p className="text-xs font-semibold">April 2026</p>
+                      <p className="text-xs font-semibold">
+                        {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -535,13 +537,8 @@ export default function ClientReportsPage() {
 
                   {/* Chart Placeholder */}
                   <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-3">Traffic & Leads Trend</h3>
-                  <div className="h-32 rounded-xl border border-border mb-6 flex items-end justify-between px-4 pb-3 gap-1">
-                    {[40, 55, 35, 60, 50, 70, 45, 80, 65, 90, 75, 95].map((h, i) => (
-                      <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                        <div className="w-full rounded-t-md" style={{ height: `${h}%`, background: `${brandColor}30` }} />
-                        <span className="text-[7px] text-muted">{["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i]}</span>
-                      </div>
-                    ))}
+                  <div className="h-32 rounded-xl border border-dashed border-border mb-6 flex items-center justify-center text-[10px] text-muted">
+                    Chart will render here once real monthly data is available
                   </div>
 
                   {/* AI Insights */}
@@ -577,7 +574,9 @@ export default function ClientReportsPage() {
                 {/* Report Footer */}
                 <div className="px-6 py-3 border-t border-border flex items-center justify-between">
                   <p className="text-[9px] text-muted" style={{ color: `${brandColor}80` }}>{agencyName} -- Confidential</p>
-                  <p className="text-[9px] text-muted">Generated April 15, 2026</p>
+                  <p className="text-[9px] text-muted">
+                    Generated {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                  </p>
                 </div>
               </div>
             </>
@@ -721,20 +720,22 @@ export default function ClientReportsPage() {
                   <p className="text-[9px] text-muted">{tagline}</p>
                 </div>
                 <div className="p-4">
-                  <p className="text-[10px] text-muted mb-2">April 2026 -- Monthly Report</p>
+                  <p className="text-[10px] text-muted mb-2">
+                    {new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })} -- Monthly Report
+                  </p>
                   <div className="grid grid-cols-2 gap-2 mb-3">
                     <div className="p-2 rounded-lg border border-border text-center">
-                      <p className="text-sm font-bold">47</p>
+                      <p className="text-sm font-bold">--</p>
                       <p className="text-[8px] text-muted">Leads</p>
                     </div>
                     <div className="p-2 rounded-lg border border-border text-center">
-                      <p className="text-sm font-bold">4.2x</p>
+                      <p className="text-sm font-bold">--</p>
                       <p className="text-[8px] text-muted">ROAS</p>
                     </div>
                   </div>
                   <div className="p-2 rounded-lg border border-border/50 bg-gold/[0.02]">
                     <p className="text-[8px] font-semibold mb-0.5" style={{ color: brandColor }}>AI Insight</p>
-                    <p className="text-[8px] text-muted">Lead generation increased 23% this month...</p>
+                    <p className="text-[8px] text-muted">Insights will appear once real performance data is available...</p>
                   </div>
                 </div>
                 <div className="px-4 py-2 border-t border-border">

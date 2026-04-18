@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 /*
   Notifications table schema:
@@ -61,6 +62,8 @@ export async function GET(request: NextRequest) {
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const includeLogs = request.nextUrl.searchParams.get("include_logs") !== "false";
 
   // Parallel fetch: user notifications + trinity_log + system_health alerts
@@ -68,7 +71,7 @@ export async function GET(request: NextRequest) {
     supabase
       .from("notifications")
       .select("*")
-      .eq("user_id", user.id)
+      .eq("user_id", ownerId)
       .order("created_at", { ascending: false })
       .limit(50),
     includeLogs
@@ -139,6 +142,8 @@ export async function PATCH(request: NextRequest) {
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const body = await request.json();
 
   if (body.all) {
@@ -146,7 +151,7 @@ export async function PATCH(request: NextRequest) {
     const { error } = await supabase
       .from("notifications")
       .update({ read: true })
-      .eq("user_id", user.id)
+      .eq("user_id", ownerId)
       .eq("read", false);
 
     if (error)
@@ -161,7 +166,7 @@ export async function PATCH(request: NextRequest) {
       .from("notifications")
       .update({ read: true })
       .eq("id", body.id)
-      .eq("user_id", user.id);
+      .eq("user_id", ownerId);
 
     if (error)
       return NextResponse.json({ error: error.message }, { status: 500 });

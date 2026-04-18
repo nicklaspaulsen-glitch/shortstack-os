@@ -31,11 +31,14 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
 
   const { searchParams } = new URL(request.url);
   const from = searchParams.get("from");
@@ -45,7 +48,7 @@ export async function GET(request: NextRequest) {
   let query = service
     .from("calendar_events")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .order("date", { ascending: true })
     .order("time", { ascending: true });
 
@@ -67,6 +70,8 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   try {
     const body = await request.json();
     const { title, client, team_member, date, time, duration, category, type, recurring } = body;
@@ -79,7 +84,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await service
       .from("calendar_events")
       .insert({
-        user_id: user.id,
+        user_id: ownerId,
         title,
         client: client || null,
         team_member: team_member || "",
@@ -109,6 +114,8 @@ export async function PATCH(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   try {
     const body = await request.json();
     const { id, ...fields } = body;
@@ -135,7 +142,7 @@ export async function PATCH(request: NextRequest) {
       .from("calendar_events")
       .update(updates)
       .eq("id", id)
-      .eq("user_id", user.id)
+      .eq("user_id", ownerId)
       .select("*")
       .single();
 
@@ -155,6 +162,8 @@ export async function DELETE(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
 
@@ -167,7 +176,7 @@ export async function DELETE(request: NextRequest) {
     .from("calendar_events")
     .delete()
     .eq("id", id)
-    .eq("user_id", user.id);
+    .eq("user_id", ownerId);
 
   if (error) {
     console.error("[calendar] DELETE error:", error);

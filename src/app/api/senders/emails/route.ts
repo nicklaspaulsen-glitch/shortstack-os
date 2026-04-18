@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // GET — List all email senders for the user
 export async function GET(_request: NextRequest) {
@@ -7,10 +8,12 @@ export async function GET(_request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const { data, error } = await supabase
     .from("email_senders")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .order("created_at", { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -23,6 +26,8 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
 
   const {
     email,
@@ -42,7 +47,7 @@ export async function POST(request: NextRequest) {
   const { data, error } = await supabase
     .from("email_senders")
     .insert({
-      user_id: user.id,
+      user_id: ownerId,
       email,
       display_name: display_name || null,
       label: label || null,

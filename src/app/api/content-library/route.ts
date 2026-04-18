@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 /*
   Table: content_assets
@@ -24,6 +25,8 @@ export async function GET(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const collectionId = req.nextUrl.searchParams.get("collection_id");
   const fileType = req.nextUrl.searchParams.get("file_type");
 
@@ -31,7 +34,7 @@ export async function GET(req: NextRequest) {
   let query = service
     .from("content_assets")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .order("created_at", { ascending: false });
 
   if (collectionId) query = query.eq("collection_id", collectionId);
@@ -49,6 +52,8 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
   if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -64,7 +69,7 @@ export async function POST(req: NextRequest) {
 
   // Upload to Supabase Storage
   const ext = file.name.split(".").pop() || "bin";
-  const storagePath = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const storagePath = `${ownerId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
   const service = createServiceClient();
   const arrayBuffer = await file.arrayBuffer();
@@ -95,7 +100,7 @@ export async function POST(req: NextRequest) {
   const { data, error: insertError } = await service
     .from("content_assets")
     .insert({
-      user_id: user.id,
+      user_id: ownerId,
       name: file.name,
       file_url: fileUrl,
       file_type: fileType,
@@ -128,6 +133,8 @@ export async function DELETE(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
   const service = createServiceClient();
 
   // Fetch the asset first to get storage path and collection
@@ -135,7 +142,7 @@ export async function DELETE(req: NextRequest) {
     .from("content_assets")
     .select("*")
     .eq("id", assetId)
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .single();
 
   if (!asset) return NextResponse.json({ error: "Asset not found" }, { status: 404 });
@@ -150,7 +157,7 @@ export async function DELETE(req: NextRequest) {
     .from("content_assets")
     .delete()
     .eq("id", assetId)
-    .eq("user_id", user.id);
+    .eq("user_id", ownerId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -167,6 +174,8 @@ export async function PATCH(req: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
 
   const body = await req.json();
   const { id, tags, collection_id, name } = body as {
@@ -192,7 +201,7 @@ export async function PATCH(req: NextRequest) {
     .from("content_assets")
     .update(updates)
     .eq("id", id)
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .select()
     .single();
 

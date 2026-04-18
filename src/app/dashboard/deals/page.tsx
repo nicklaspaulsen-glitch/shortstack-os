@@ -362,32 +362,8 @@ export default function DealsPage() {
           {/* Monthly breakdown */}
           <div className="card">
             <h4 className="text-xs font-semibold mb-3">Monthly Revenue Trend</h4>
-            <div className="flex items-end gap-3 h-40">
-              {[
-                { month: "Nov", actual: 0, forecast: 0 },
-                { month: "Dec", actual: 0, forecast: 0 },
-                { month: "Jan", actual: 0, forecast: 0 },
-                { month: "Feb", actual: 0, forecast: 0 },
-                { month: "Mar", actual: 0, forecast: 0 },
-                { month: "Apr", actual: wonValue, forecast: Math.round(weightedPipeline) },
-                { month: "May", actual: 0, forecast: Math.round(weightedPipeline * 1.15) },
-              ].map((m, i) => (
-                <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                  <div className="w-full flex flex-col gap-0.5">
-                    {m.forecast > 0 && (
-                      <div className="w-full bg-gold/20 rounded-t border border-dashed border-gold/30"
-                        style={{ height: `${(m.forecast / 25000) * 100}%`, minHeight: m.forecast > 0 ? 8 : 0 }} />
-                    )}
-                    <div className="w-full bg-gold rounded-t"
-                      style={{ height: `${(m.actual / 25000) * 100}%`, minHeight: m.actual > 0 ? 8 : 0 }} />
-                  </div>
-                  <span className="text-[8px] text-muted">{m.month}</span>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center gap-4 mt-3 text-[9px] text-muted">
-              <span className="flex items-center gap-1"><div className="w-2 h-2 bg-gold rounded" /> Actual</span>
-              <span className="flex items-center gap-1"><div className="w-2 h-2 bg-gold/20 border border-dashed border-gold/30 rounded" /> Forecast</span>
+            <div className="text-center py-8 text-muted text-xs">
+              Monthly revenue trend will appear once deals are closed.
             </div>
           </div>
         </div>
@@ -467,19 +443,20 @@ export default function DealsPage() {
             })}
           </div>
 
-          {/* Stage Automation */}
+          {/* Stage Automation — starter rule templates */}
           <div className="card">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
               <ArrowRight size={14} className="text-gold" /> Deal Stage Automation
             </h3>
+            <p className="text-[10px] text-muted mb-3">Starter rule templates. Automation not yet wired to real triggers.</p>
             <div className="space-y-2">
               {[
-                { trigger: "Score reaches 80+", action: "Auto-move to Proposal stage", active: true },
-                { trigger: "No activity for 7 days", action: "Send automated follow-up email", active: true },
-                { trigger: "Proposal viewed 3+ times", action: "Notify owner + move to Negotiation", active: false },
-                { trigger: "Deal value > $5,000", action: "Require manager approval before close", active: true },
+                { trigger: "Score reaches 80+", action: "Auto-move to Proposal stage" },
+                { trigger: "No activity for 7 days", action: "Send automated follow-up email" },
+                { trigger: "Proposal viewed 3+ times", action: "Notify owner + move to Negotiation" },
+                { trigger: "Deal value > $5,000", action: "Require manager approval before close" },
               ].map((rule, i) => (
-                <div key={i} className={`flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border ${!rule.active ? "opacity-50" : ""}`}>
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border opacity-60">
                   <div className="flex items-center gap-2">
                     <Zap size={12} className="text-gold" />
                     <div>
@@ -487,8 +464,8 @@ export default function DealsPage() {
                       <p className="text-[9px] text-muted">Then: {rule.action}</p>
                     </div>
                   </div>
-                  <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-gold" : "bg-surface"}`}>
-                    <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
+                  <div className="w-8 h-4 rounded-full bg-surface">
+                    <div className="w-3 h-3 bg-white rounded-full mt-0.5 ml-0.5" />
                   </div>
                 </div>
               ))}
@@ -508,17 +485,17 @@ export default function DealsPage() {
               </h3>
               <div className="space-y-2">
                 {[
-                  { name: "Standard Service Agreement", pages: 4, lastUsed: "Apr 10" },
-                  { name: "Monthly Retainer Contract", pages: 3, lastUsed: "Apr 8" },
-                  { name: "Project-Based Agreement", pages: 5, lastUsed: "Mar 25" },
-                  { name: "NDA / Confidentiality", pages: 2, lastUsed: "Mar 15" },
+                  { name: "Standard Service Agreement", pages: 4 },
+                  { name: "Monthly Retainer Contract", pages: 3 },
+                  { name: "Project-Based Agreement", pages: 5 },
+                  { name: "NDA / Confidentiality", pages: 2 },
                 ].map((t, i) => (
                   <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer">
                     <div className="flex items-center gap-2">
                       <FileText size={14} className="text-muted" />
                       <div>
                         <p className="text-xs font-medium">{t.name}</p>
-                        <p className="text-[9px] text-muted">{t.pages} pages | Last used: {t.lastUsed}</p>
+                        <p className="text-[9px] text-muted">{t.pages} pages</p>
                       </div>
                     </div>
                     <ChevronRight size={12} className="text-muted" />

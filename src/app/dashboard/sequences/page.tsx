@@ -36,8 +36,8 @@ interface Sequence {
   replied: number;
 }
 
-const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep[]; category: string; performance: string }[] = [
-  { name: "Cold Outreach (5 touches)", description: "Multi-channel cold outreach with email, SMS and social", category: "Outreach", performance: "6.8% reply rate",
+const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep[]; category: string }[] = [
+  { name: "Cold Outreach (5 touches)", description: "Multi-channel cold outreach with email, SMS and social", category: "Outreach",
     steps: [
       { id: "1", type: "email", subject: "Quick question about {business_name}", body: "Hey {name}, I came across {business_name}...", delay_days: 0 },
       { id: "2", type: "wait", body: "", delay_days: 3 },
@@ -45,25 +45,25 @@ const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep
       { id: "4", type: "wait", body: "", delay_days: 4 },
       { id: "5", type: "sms", body: "Hey {name}! Sent you a couple emails...", delay_days: 0 },
     ] },
-  { name: "Post-Call Follow Up", description: "Nurture after discovery call with proposal", category: "Sales", performance: "12.4% reply rate",
+  { name: "Post-Call Follow Up", description: "Nurture after discovery call with proposal", category: "Sales",
     steps: [
       { id: "1", type: "email", subject: "Great talking today!", body: "Hey {name}, Really enjoyed our call...", delay_days: 0 },
       { id: "2", type: "wait", body: "", delay_days: 2 },
       { id: "3", type: "email", subject: "Proposal ready", body: "Here's the proposal we discussed...", delay_days: 0 },
     ] },
-  { name: "Client Onboarding", description: "Welcome sequence for new clients", category: "Onboarding", performance: "32% completion",
+  { name: "Client Onboarding", description: "Welcome sequence for new clients", category: "Onboarding",
     steps: [
       { id: "1", type: "email", subject: "Welcome to ShortStack!", body: "Welcome aboard!", delay_days: 0 },
       { id: "2", type: "wait", body: "", delay_days: 1 },
       { id: "3", type: "email", subject: "Your onboarding checklist", body: "Here's what we need...", delay_days: 0 },
     ] },
-  { name: "Re-engagement", description: "Win back cold leads who went silent", category: "Nurture", performance: "4.2% reply rate",
+  { name: "Re-engagement", description: "Win back cold leads who went silent", category: "Nurture",
     steps: [
       { id: "1", type: "email", subject: "Been a while, {name}", body: "Hey {name}, it's been a while...", delay_days: 0 },
       { id: "2", type: "wait", body: "", delay_days: 5 },
       { id: "3", type: "sms", body: "Hey {name}! Quick check-in...", delay_days: 0 },
     ] },
-  { name: "Free Audit Offer", description: "Offer free marketing audit to prospects", category: "Outreach", performance: "8.1% reply rate",
+  { name: "Free Audit Offer", description: "Offer free marketing audit to prospects", category: "Outreach",
     steps: [
       { id: "1", type: "email", subject: "Free audit for {business_name}", body: "I put together a free audit...", delay_days: 0 },
       { id: "2", type: "wait", body: "", delay_days: 3 },
@@ -71,20 +71,20 @@ const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep
       { id: "4", type: "wait", body: "", delay_days: 4 },
       { id: "5", type: "call", body: "Follow up call about audit results", delay_days: 0 },
     ] },
-  { name: "Referral Ask", description: "Ask happy clients for referrals", category: "Retention", performance: "18% reply rate",
+  { name: "Referral Ask", description: "Ask happy clients for referrals", category: "Retention",
     steps: [
       { id: "1", type: "email", subject: "Quick favor, {name}?", body: "Love working with {business_name}...", delay_days: 0 },
       { id: "2", type: "wait", body: "", delay_days: 7 },
       { id: "3", type: "sms", body: "Hey {name}! Know anyone who needs marketing help?", delay_days: 0 },
     ] },
-  { name: "Event Follow Up", description: "Follow up with contacts met at events", category: "Networking", performance: "15% reply rate",
+  { name: "Event Follow Up", description: "Follow up with contacts met at events", category: "Networking",
     steps: [
       { id: "1", type: "email", subject: "Great meeting you!", body: "Hey {name}, loved chatting...", delay_days: 0 },
       { id: "2", type: "social", body: "Connect on LinkedIn", delay_days: 1, channel: "linkedin" },
       { id: "3", type: "wait", body: "", delay_days: 3 },
       { id: "4", type: "email", subject: "Following up from the event", body: "As I mentioned...", delay_days: 0 },
     ] },
-  { name: "Case Study Drip", description: "Send relevant case studies over time", category: "Nurture", performance: "5.6% reply rate",
+  { name: "Case Study Drip", description: "Send relevant case studies over time", category: "Nurture",
     steps: [
       { id: "1", type: "email", subject: "How we helped a {industry} business", body: "Check out this case study...", delay_days: 0 },
       { id: "2", type: "wait", body: "", delay_days: 7 },
@@ -114,11 +114,8 @@ const STEP_ICONS: Record<string, React.ReactNode> = {
 
 export default function SequencesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("builder");
-  const [sequences, setSequences] = useState<Sequence[]>([
-    { id: "1", name: "Cold Outreach (5 touches)", steps: TEMPLATE_LIBRARY[0].steps, active: true, enrolled: 234, completed: 89, replied: 16 },
-    { id: "2", name: "Post-Call Follow Up", steps: TEMPLATE_LIBRARY[1].steps, active: true, enrolled: 67, completed: 45, replied: 8 },
-    { id: "3", name: "Client Onboarding", steps: TEMPLATE_LIBRARY[2].steps, active: false, enrolled: 23, completed: 23, replied: 19 },
-  ]);
+  // TODO: Load actual user sequences from /api/sequences once available
+  const [sequences, setSequences] = useState<Sequence[]>([]);
   const [activeSequence, setActiveSequence] = useState<Sequence | null>(null);
   const [templateFilter, setTemplateFilter] = useState("all");
   const [abEnabled, setAbEnabled] = useState(false);
@@ -617,8 +614,7 @@ export default function SequencesPage() {
                     </div>
                   ))}
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[9px] text-green-400 flex items-center gap-1"><BarChart3 size={9} /> {t.performance}</span>
+                <div className="flex items-center justify-end">
                   <button onClick={() => { createFromTemplate(t); setActiveTab("builder"); }}
                     className="btn-primary text-[9px] px-2 py-1 flex items-center gap-1"><Plus size={9} /> Use Template</button>
                 </div>
@@ -637,7 +633,7 @@ export default function SequencesPage() {
               { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-gold" },
               { label: "Completed", value: sequences.reduce((s, seq) => s + seq.completed, 0), color: "text-green-400" },
               { label: "Replied", value: sequences.reduce((s, seq) => s + seq.replied, 0), color: "text-blue-400" },
-              { label: "Avg Reply Rate", value: `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%`, color: "text-purple-400" },
+              { label: "Avg Reply Rate", value: sequences.length > 0 ? `${(sequences.reduce((s, seq) => s + (seq.enrolled > 0 ? seq.replied / seq.enrolled : 0), 0) / sequences.length * 100).toFixed(1)}%` : "0%", color: "text-purple-400" },
               { label: "Active Sequences", value: sequences.filter(s => s.active).length, color: "text-gold" },
             ].map((stat, i) => (
               <div key={i} className="card text-center p-3">
