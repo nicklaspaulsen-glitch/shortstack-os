@@ -2609,7 +2609,7 @@ export default function ThumbnailGeneratorPage() {
   }
 
   // Advances the walkthrough by running a real async task for the given step.
-  // Returns true if task completed, false if cancelled.
+  // Returns true if task completed, false if cancelled or the task threw.
   async function runStep(index: number, task: () => Promise<void>): Promise<boolean> {
     if (walkthroughCancelledRef.current) return false;
     setWalkthroughStepIndex(index);
@@ -2618,6 +2618,12 @@ export default function ThumbnailGeneratorPage() {
       await task();
     } catch (err) {
       console.error("walkthrough step failed", index, err);
+      // Surface the error by entering the failed state and aborting the walkthrough.
+      // The caller checks the returned boolean and bails out so we don't pretend
+      // the remaining steps succeeded.
+      setWalkthroughStatus("failed");
+      walkthroughCancelledRef.current = true;
+      return false;
     }
     if (walkthroughCancelledRef.current) return false;
     setWalkthroughStatus("completed");
@@ -2683,8 +2689,26 @@ export default function ThumbnailGeneratorPage() {
           reference_images: referenceImages,
         }),
       });
+      // The endpoint returns HTTP 503 (or { missing_env: true }) when
+      // RUNPOD_FLUX_URL / RUNPOD_SDXL_URL aren't configured. Surface a clear
+      // error so the walkthrough aborts instead of silently marking the step
+      // complete with no thumbnails to show.
+      if (res.status === 503) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(
+          body?.error ||
+            "Image generation isn't configured — set RUNPOD_FLUX_URL in environment",
+        );
+      }
       const data = await res.json();
-      if (!data.success) throw new Error(data.error || "FLUX generation failed");
+      if (data?.missing_env) {
+        throw new Error(
+          "Image generation isn't configured — set RUNPOD_FLUX_URL in environment",
+        );
+      }
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || `FLUX generation failed (${res.status})`);
+      }
       setResults(data.thumbnails);
       const pollPromises = data.thumbnails.map(
         (thumb: ThumbnailResult, i: number) =>
@@ -2692,7 +2716,17 @@ export default function ThumbnailGeneratorPage() {
       );
       backgrounds = await Promise.all(pollPromises);
     });
-    if (!ok3) { setGenerating(false); return; }
+    if (!ok3) {
+      // Step 3 bubbled up an error (usually "FLUX not configured"). Stop the
+      // walkthrough immediately so the user sees what went wrong instead of
+      // the remaining fake-success steps.
+      walkthroughCancelledRef.current = true;
+      setGenerating(false);
+      toast.error(
+        "Image generation isn't configured — set RUNPOD_FLUX_URL in environment",
+      );
+      return;
+    }
 
     // Step 4 — Face: cutout via remove-bg
     const ok4 = await runStep(3, async () => {

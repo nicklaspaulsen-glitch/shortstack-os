@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useMemo, DragEvent } from "react";
+import { useState, useCallback, useRef, useMemo, useEffect, DragEvent } from "react";
 import { useAuth } from "@/lib/auth-context";
 import {
   ReactFlow, ReactFlowProvider, Background, Controls, MiniMap, Panel,
@@ -681,13 +681,56 @@ function WorkflowBuilderInner() {
     toast.success(`Loaded "${tpl.name}"`);
   }, [pushHistory, reactFlowInstance]);
 
-  // Save workflow
-  const saveWorkflow = useCallback(() => {
-    const payload = { name: workflowName, nodes, edges };
-    // In production this would go to Supabase
-    console.log("Saving workflow:", payload);
-    toast.success("Workflow saved");
+  const [saving, setSaving] = useState(false);
+
+  // Save workflow — POSTs to /api/workflows which upserts on (user_id, name).
+  const saveWorkflow = useCallback(async () => {
+    const name = workflowName.trim();
+    if (!name) {
+      toast.error("Give your workflow a name before saving");
+      return;
+    }
+    setSaving(true);
+    try {
+      const res = await fetch("/api/workflows", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, nodes, edges }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body?.error || `Save failed (${res.status})`);
+      }
+      toast.success("Workflow saved to your account");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to save workflow");
+    } finally {
+      setSaving(false);
+    }
   }, [workflowName, nodes, edges]);
+
+  // On mount, fetch the user's saved workflows and restore the most recent one.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/workflows");
+        if (!res.ok) return;
+        const body = await res.json();
+        const list: Array<{ name: string; nodes: Node[]; edges: Edge[] }> =
+          body?.workflows ?? [];
+        if (cancelled || list.length === 0) return;
+        const latest = list[0];
+        setWorkflowName(latest.name);
+        setNodes(latest.nodes ?? []);
+        setEdges(latest.edges ?? []);
+      } catch {
+        // Silent — user may be signed out or offline; they can still build new workflows.
+      }
+    })();
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Simulation
   const runSimulation = useCallback(async () => {
@@ -779,8 +822,13 @@ function WorkflowBuilderInner() {
 
         <div className="w-px h-5 bg-border mx-1" />
 
-        <button onClick={saveWorkflow} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-muted hover:text-foreground hover:bg-surface-light transition-colors" title="Save (Ctrl+S)">
-          <Save size={13} /> Save
+        <button
+          onClick={saveWorkflow}
+          disabled={saving}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-50"
+          title="Save (Ctrl+S)"
+        >
+          <Save size={13} /> {saving ? "Saving..." : "Save"}
         </button>
 
         {simulating ? (

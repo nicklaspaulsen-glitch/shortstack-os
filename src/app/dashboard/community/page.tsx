@@ -10,6 +10,7 @@ import {
   ExternalLink, Link2, Gift, FileText, Video, MapPin, X,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import toast from "react-hot-toast";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -243,10 +244,15 @@ export default function CommunityPage() {
   const [eventsLoading, setEventsLoading] = useState(false);
   const [showNewEvent, setShowNewEvent] = useState(false);
   const [creatingEvent, setCreatingEvent] = useState(false);
+  // event_date / event_time are kept as two separate fields because
+  // <input type="datetime-local"> is unusable on Windows with a Danish locale
+  // (shows "dd-mm-åååå --:--" and mangles typed values). At submit time we
+  // combine them into a single ISO string for the date_time payload field.
   const [newEvent, setNewEvent] = useState({
     title: "",
     description: "",
-    date_time: "",
+    event_date: "",
+    event_time: "",
     location: "",
     max_attendees: "",
     category: "general",
@@ -418,7 +424,19 @@ export default function CommunityPage() {
   }, []);
 
   async function handleCreateEvent() {
-    if (!newEvent.title.trim() || !newEvent.date_time) return;
+    if (!newEvent.title.trim()) return;
+    if (!newEvent.event_date) {
+      toast.error("Please pick a valid date");
+      return;
+    }
+    // Combine the two inputs. If time is empty, default to 09:00 local.
+    const combinedDate = new Date(
+      `${newEvent.event_date}T${newEvent.event_time || "09:00"}`,
+    );
+    if (Number.isNaN(combinedDate.getTime())) {
+      toast.error("Please pick a valid date");
+      return;
+    }
     setCreatingEvent(true);
     try {
       const res = await fetch("/api/community/events", {
@@ -427,7 +445,7 @@ export default function CommunityPage() {
         body: JSON.stringify({
           title: newEvent.title,
           description: newEvent.description || undefined,
-          date_time: new Date(newEvent.date_time).toISOString(),
+          date_time: combinedDate.toISOString(),
           location: newEvent.location || undefined,
           max_attendees: newEvent.max_attendees ? Number(newEvent.max_attendees) : undefined,
           category: newEvent.category,
@@ -438,7 +456,7 @@ export default function CommunityPage() {
         throw new Error(body.error || "Failed to create event");
       }
       setShowNewEvent(false);
-      setNewEvent({ title: "", description: "", date_time: "", location: "", max_attendees: "", category: "general" });
+      setNewEvent({ title: "", description: "", event_date: "", event_time: "", location: "", max_attendees: "", category: "general" });
       await fetchEvents();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create event");
@@ -1384,12 +1402,20 @@ export default function CommunityPage() {
                   className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-xs h-16"
                 />
                 <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="datetime-local"
-                    value={newEvent.date_time}
-                    onChange={e => setNewEvent(s => ({ ...s, date_time: e.target.value }))}
-                    className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
-                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="date"
+                      value={newEvent.event_date}
+                      onChange={e => setNewEvent(s => ({ ...s, event_date: e.target.value }))}
+                      className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                    />
+                    <input
+                      type="time"
+                      value={newEvent.event_time}
+                      onChange={e => setNewEvent(s => ({ ...s, event_time: e.target.value }))}
+                      className="rounded-lg border border-border bg-surface px-3 py-2 text-xs"
+                    />
+                  </div>
                   <input
                     value={newEvent.location}
                     onChange={e => setNewEvent(s => ({ ...s, location: e.target.value }))}
@@ -1417,7 +1443,7 @@ export default function CommunityPage() {
                   <button onClick={() => setShowNewEvent(false)} className="px-3 py-1.5 rounded-lg border border-border text-xs text-muted">Cancel</button>
                   <button
                     onClick={handleCreateEvent}
-                    disabled={creatingEvent || !newEvent.title.trim() || !newEvent.date_time}
+                    disabled={creatingEvent || !newEvent.title.trim() || !newEvent.event_date}
                     className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold disabled:opacity-50 flex items-center gap-1"
                   >
                     {creatingEvent ? <Loader2 size={10} className="animate-spin" /> : <Send size={10} />}
