@@ -6,11 +6,12 @@ import {
   ShoppingBag, Megaphone, Copy, BookmarkPlus, Loader, Clock,
   Wand2, ChevronRight, Trash2, RotateCcw, Sliders,
   Hash, Users, Target, Type, Layers,
-  CheckCircle, Star, Zap, BookOpen, X
+  CheckCircle, Star, Zap, BookOpen, X, Plus
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { Pen } from "lucide-react";
+import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 
 // ── Types ──────────────────────────────────────────────────────────
 type ContentType = "blog" | "landing" | "email" | "social" | "product" | "ad";
@@ -442,6 +443,9 @@ export default function CopywriterPage() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [savedItems, setSavedItems] = useState<Set<string>>(new Set());
 
+  // Creation wizard state
+  const [wizardOpen, setWizardOpen] = useState(false);
+
   // ── Generate content ─────────────────────────────────────────────
   const handleGenerate = useCallback(async () => {
     if (!topic.trim()) {
@@ -553,6 +557,280 @@ export default function CopywriterPage() {
 
   const activeType = CONTENT_TYPES.find(t => t.id === contentType)!;
 
+  // ── Wizard steps ─────────────────────────────────────────────────
+  const wizardSteps: WizardStep[] = [
+    {
+      id: "contentType",
+      title: "What are you creating?",
+      description: "Pick the content format that fits your goal.",
+      icon: <FileText size={16} />,
+      field: {
+        type: "chip-select",
+        key: "contentTypes",
+        options: [
+          { value: "blog", label: "Blog post" },
+          { value: "landing", label: "Landing page" },
+          { value: "email", label: "Email" },
+          { value: "social", label: "Social post" },
+          { value: "product", label: "Product description" },
+          { value: "ad", label: "Ad copy" },
+        ],
+      },
+    },
+    {
+      id: "topic",
+      title: "What's your topic or product?",
+      description: "One or two sentences is plenty — the more specific, the better.",
+      icon: <Sparkles size={16} />,
+      field: {
+        type: "text",
+        key: "topic",
+        placeholder: "e.g., How AI is changing small-business marketing in 2026",
+      },
+      aiHelper: {
+        label: "Suggest a trending topic in my niche",
+        onClick: async (d) => {
+          try {
+            // Try dedicated suggest endpoint first
+            const primary = await fetch("/api/copywriter/suggest-topic", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ contentTypes: d.contentTypes || [] }),
+            }).catch(() => null);
+            if (primary && primary.ok) {
+              const data = await primary.json();
+              const suggestion = (data?.topic as string | undefined) || (Array.isArray(data?.topics) ? data.topics[0] : undefined);
+              if (suggestion) {
+                toast.success("Topic suggested");
+                return { topic: suggestion };
+              }
+            }
+            // Fallback to enhance-prompt (Haiku/Sonnet)
+            const seed = Array.isArray(d.contentTypes) && d.contentTypes.length > 0
+              ? `a ${d.contentTypes.join(" & ")} on a trending marketing topic for 2026`
+              : "a trending marketing topic for 2026";
+            const res = await fetch("/api/ai/enhance-prompt", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: seed, type: "content" }),
+            });
+            if (!res.ok) {
+              toast.error("Couldn't generate a topic — try again");
+              return {};
+            }
+            const data = await res.json();
+            const enhanced = (data?.enhanced as string | undefined)?.trim();
+            if (!enhanced) {
+              toast.error("No topic returned");
+              return {};
+            }
+            toast.success("Topic suggested");
+            return { topic: enhanced };
+          } catch {
+            toast.error("Network error — topic unchanged");
+            return {};
+          }
+        },
+      },
+    },
+    {
+      id: "tone",
+      title: "Pick a tone",
+      description: "How should it sound when someone reads it?",
+      icon: <Sliders size={16} />,
+      field: {
+        type: "chip-select",
+        key: "tones",
+        options: [
+          { value: "professional", label: "Professional" },
+          { value: "casual", label: "Casual" },
+          { value: "witty", label: "Witty" },
+          { value: "urgent", label: "Urgent" },
+          { value: "educational", label: "Educational" },
+          { value: "inspiring", label: "Inspiring" },
+        ],
+      },
+    },
+    {
+      id: "keywords",
+      title: "Keywords (optional)",
+      description: "Give the AI a few target keywords to weave in naturally.",
+      icon: <Hash size={16} />,
+      field: {
+        type: "text",
+        key: "keywords",
+        placeholder: "growth, automation, ROI",
+        optional: true,
+      },
+      aiHelper: {
+        label: "Auto-generate keywords",
+        onClick: async (d) => {
+          if (!d.topic || !String(d.topic).trim()) {
+            toast.error("Pick a topic first");
+            return {};
+          }
+          try {
+            const primary = await fetch("/api/copywriter/generate-keywords", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ topic: d.topic }),
+            }).catch(() => null);
+            if (primary && primary.ok) {
+              const data = await primary.json();
+              const kws = Array.isArray(data?.keywords) ? data.keywords.join(", ") : data?.keywords;
+              if (kws) {
+                toast.success("Keywords generated");
+                return { keywords: kws };
+              }
+            }
+            // Fallback via enhance-prompt
+            const res = await fetch("/api/ai/enhance-prompt", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text: `Return a comma-separated list of 5-7 SEO keywords for: "${d.topic}". Keywords only, no prose.`,
+                type: "general",
+              }),
+            });
+            if (!res.ok) {
+              toast.error("Couldn't generate keywords");
+              return {};
+            }
+            const data = await res.json();
+            const enhanced = (data?.enhanced as string | undefined)?.trim();
+            if (!enhanced) {
+              toast.error("No keywords returned");
+              return {};
+            }
+            toast.success("Keywords generated");
+            return { keywords: enhanced };
+          } catch {
+            toast.error("Network error — keywords unchanged");
+            return {};
+          }
+        },
+      },
+    },
+    {
+      id: "length",
+      title: "How long?",
+      description: "Aim for short teasers, medium articles, or long-form deep dives.",
+      icon: <Target size={16} />,
+      field: {
+        type: "chip-select",
+        key: "lengths",
+        options: [
+          { value: "short", label: "Short (~200 words)" },
+          { value: "medium", label: "Medium (~500 words)" },
+          { value: "long", label: "Long (~1,200 words)" },
+        ],
+      },
+    },
+  ];
+
+  // ── Wizard complete → generate and populate canvas ───────────────
+  const handleWizardComplete = useCallback(async (data: Record<string, unknown>) => {
+    const contentTypes = Array.isArray(data.contentTypes) ? (data.contentTypes as string[]) : [];
+    const chosenType = (contentTypes[0] || "blog") as ContentType;
+    const chosenTopic = String(data.topic || "").trim();
+    const tones = Array.isArray(data.tones) ? (data.tones as string[]) : [];
+    const rawTone = (tones[0] || "professional") as string;
+    // Map wizard tones to page Tone type
+    const toneMap: Record<string, Tone> = {
+      professional: "professional",
+      casual: "casual",
+      witty: "witty",
+      urgent: "bold",
+      educational: "professional",
+      inspiring: "bold",
+    };
+    const chosenTone: Tone = toneMap[rawTone] || "professional";
+    const chosenKeywords = String(data.keywords || "").trim();
+    const lengths = Array.isArray(data.lengths) ? (data.lengths as string[]) : [];
+    const lengthKey = lengths[0] || "medium";
+    const wc = lengthKey === "short" ? 200 : lengthKey === "long" ? 1200 : 500;
+
+    if (!chosenTopic) {
+      toast.error("Topic is required");
+      return;
+    }
+
+    // Sync page state
+    setContentType(chosenType);
+    setTopic(chosenTopic);
+    setTone(chosenTone);
+    setKeywords(chosenKeywords);
+    setWordCount(wc);
+    setWizardOpen(false);
+
+    // Generate
+    setGenerating(true);
+    setOutput("");
+    try {
+      const res = await fetch("/api/copywriter/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: chosenType,
+          topic: chosenTopic,
+          tone: chosenTone,
+          audience,
+          keywords: chosenKeywords,
+          wordCount: wc,
+        }),
+      });
+
+      if (res.ok) {
+        const result = await res.json();
+        const content = result.content as string;
+        setOutput(content);
+        const item: HistoryItem = {
+          id: String(Date.now()),
+          type: chosenType,
+          topic: chosenTopic,
+          tone: chosenTone,
+          content,
+          wordCount: content.split(/\s+/).length,
+          timestamp: new Date(),
+        };
+        setHistory(prev => [item, ...prev].slice(0, 20));
+        toast.success("Content generated!");
+      } else {
+        await new Promise(r => setTimeout(r, 1200));
+        const mockContent = generateMockContent(chosenType, chosenTopic, chosenTone, audience, chosenKeywords, wc);
+        setOutput(mockContent);
+        const item: HistoryItem = {
+          id: String(Date.now()),
+          type: chosenType,
+          topic: chosenTopic,
+          tone: chosenTone,
+          content: mockContent,
+          wordCount: mockContent.split(/\s+/).length,
+          timestamp: new Date(),
+        };
+        setHistory(prev => [item, ...prev].slice(0, 20));
+        toast.success("Content generated!");
+      }
+    } catch {
+      await new Promise(r => setTimeout(r, 1200));
+      const mockContent = generateMockContent(chosenType, chosenTopic, chosenTone, audience, chosenKeywords, wc);
+      setOutput(mockContent);
+      const item: HistoryItem = {
+        id: String(Date.now()),
+        type: chosenType,
+        topic: chosenTopic,
+        tone: chosenTone,
+        content: mockContent,
+        wordCount: mockContent.split(/\s+/).length,
+        timestamp: new Date(),
+      };
+      setHistory(prev => [item, ...prev].slice(0, 20));
+      toast.success("Content generated!");
+    } finally {
+      setGenerating(false);
+    }
+  }, [audience]);
+
   return (
     <div className="p-6 max-w-7xl mx-auto fade-in">
       <PageHero
@@ -563,6 +841,26 @@ export default function CopywriterPage() {
         gradient="purple"
         actions={
           <>
+            <button
+              onClick={() => setWizardOpen(true)}
+              className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            >
+              <Sparkles size={13} className="animate-pulse" />
+              New with AI
+              <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
+            </button>
+            <button
+              onClick={() => {
+                setOutput("");
+                setTopic("");
+                setKeywords("");
+                toast.success("Blank canvas ready");
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-white/20 text-white hover:bg-white/10 transition-all"
+            >
+              <Plus size={13} />
+              Blank
+            </button>
             <button
               onClick={() => setShowTemplates(!showTemplates)}
               className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
@@ -584,6 +882,25 @@ export default function CopywriterPage() {
             </button>
           </>
         }
+      />
+
+      {/* Creation Wizard */}
+      <CreationWizard
+        open={wizardOpen}
+        title="Create with AI"
+        subtitle="5 quick steps — we handle the rest"
+        icon={<Wand2 size={18} />}
+        submitLabel="Generate Content"
+        steps={wizardSteps}
+        initialData={{
+          contentTypes: [contentType],
+          topic,
+          tones: [tone],
+          keywords,
+          lengths: [wordCount <= 300 ? "short" : wordCount >= 1000 ? "long" : "medium"],
+        }}
+        onClose={() => setWizardOpen(false)}
+        onComplete={handleWizardComplete}
       />
 
       {/* Template Gallery */}

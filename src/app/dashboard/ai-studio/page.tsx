@@ -5,11 +5,13 @@ import {
   Mic, ImagePlus, Scissors, Film, Music, Volume2, Layers, Sparkles,
   Upload, Download, Play, Loader, X,
   Wand2, Zap, Copy, Palette, AlertTriangle,
-  ArrowUpRight, FileAudio, Brain
+  ArrowUpRight, FileAudio, Brain,
+  Target, Edit3, Type as TypeIcon, Ratio
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import ImageWizard from "@/components/image-wizard";
+import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 
 // ── Types ────────────────────────────────────────────────────────
 interface JobResult {
@@ -43,6 +45,15 @@ export default function AIStudioPage() {
   const [wizardOpen, setWizardOpen] = useState(false);
   const [wizardImages, setWizardImages] = useState<{ url: string; width: number; height: number }[]>([]);
 
+  // CreationWizard (lean 5-step image flow) state
+  const [creationWizardOpen, setCreationWizardOpen] = useState(false);
+  const [imageGenInit, setImageGenInit] = useState<{
+    prompt?: string;
+    style?: string;
+    size?: string;
+    autoGenerateToken?: number;
+  }>({});
+
   // Auto-open the wizard on first visit (newbie-friendly default)
   useEffect(() => {
     try {
@@ -67,17 +78,44 @@ export default function AIStudioPage() {
             <button
               onClick={() => {
                 setActiveTool("image-gen");
+                setCreationWizardOpen(true);
+              }}
+              className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/20 hover:shadow-gold/40 hover-lift transition-all"
+            >
+              <Sparkles size={12} className="animate-pulse" />
+              + New with AI
+              <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
+                Recommended
+              </span>
+            </button>
+            <button
+              onClick={() => {
+                setActiveTool("image-gen");
                 setWizardOpen(true);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all hover-lift"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-semibold hover:bg-white/20 transition-all hover-lift"
             >
-              <Wand2 size={12} /> Generate with AI
+              <Wand2 size={12} /> Guided Mode
             </button>
             <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
               9 tools available
             </span>
           </div>
         }
+      />
+
+      <ImageCreationWizard
+        open={creationWizardOpen}
+        onClose={() => setCreationWizardOpen(false)}
+        onComplete={(data) => {
+          setActiveTool("image-gen");
+          setImageGenInit({
+            prompt: data.prompt,
+            style: data.style,
+            size: data.size,
+            autoGenerateToken: Date.now(),
+          });
+        }}
       />
 
       <ImageWizard
@@ -157,7 +195,7 @@ export default function AIStudioPage() {
       {/* Active tool panel */}
       <div className="bg-surface border border-border rounded-2xl p-5">
         {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
-        {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} />}
+        {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
         {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
         {activeTool === "remove-bg" && <RemoveBgTool processing={processing} setProcessing={setProcessing} />}
         {activeTool === "img-to-video" && <ImgToVideoTool processing={processing} setProcessing={setProcessing} />}
@@ -292,12 +330,45 @@ function TranscribeTool({ processing, setProcessing }: ToolProps) {
 }
 
 // ── IMAGE GEN TOOL ──────────────────────────────────────────────
-function ImageGenTool({ processing, setProcessing }: ToolProps) {
-  const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState("");
-  const [size, setSize] = useState("1024x1024");
+interface ImageGenInit {
+  prompt?: string;
+  style?: string;
+  size?: string;
+  autoGenerateToken?: number;
+}
+
+function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { initial?: ImageGenInit }) {
+  const [prompt, setPrompt] = useState(initial?.prompt || "");
+  const [style, setStyle] = useState(initial?.style || "");
+  const [size, setSize] = useState(initial?.size || "1024x1024");
   const [images, setImages] = useState<string[]>([]);
   const [setupRequired, setSetupRequired] = useState(false);
+  const lastAutoRef = useRef<number | undefined>(undefined);
+  // Ref so the auto-generate effect can call the latest generate handler
+  // with explicit overrides (avoids stale state after setState in same tick).
+  const runGenerateRef = useRef<((o?: { prompt?: string; style?: string; size?: string }) => void) | null>(null);
+
+  // Sync incoming initial from wizard — overwrite current values and auto-run
+  useEffect(() => {
+    if (!initial) return;
+    if (initial.prompt !== undefined) setPrompt(initial.prompt);
+    if (initial.style !== undefined) setStyle(initial.style);
+    if (initial.size !== undefined) setSize(initial.size);
+    if (
+      initial.autoGenerateToken &&
+      initial.autoGenerateToken !== lastAutoRef.current &&
+      initial.prompt?.trim()
+    ) {
+      lastAutoRef.current = initial.autoGenerateToken;
+      // Fire immediately with explicit overrides so we don't race the setState.
+      runGenerateRef.current?.({
+        prompt: initial.prompt,
+        style: initial.style,
+        size: initial.size,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initial?.prompt, initial?.style, initial?.size, initial?.autoGenerateToken]);
 
   const styles = [
     { value: "", label: "None" },
@@ -318,21 +389,24 @@ function ImageGenTool({ processing, setProcessing }: ToolProps) {
     { value: "768x1024", label: "3:4" },
   ];
 
-  const handleGenerate = async () => {
-    if (!prompt.trim()) return toast.error("Enter a prompt");
+  const runGenerate = async (override?: { prompt?: string; style?: string; size?: string }) => {
+    const usePrompt = override?.prompt ?? prompt;
+    const useStyle = override?.style ?? style;
+    const useSize = override?.size ?? size;
+    if (!usePrompt.trim()) return toast.error("Enter a prompt");
     setProcessing(true);
     setImages([]);
     setSetupRequired(false);
     try {
-      const [w, h] = size.split("x").map(Number);
+      const [w, h] = useSize.split("x").map(Number);
       const res = await fetch("/api/ai-studio/image-gen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt,
+          prompt: usePrompt,
           width: w,
           height: h,
-          style: style || undefined,
+          style: useStyle || undefined,
         }),
       });
       const data = await res.json();
@@ -350,6 +424,11 @@ function ImageGenTool({ processing, setProcessing }: ToolProps) {
     } catch { toast.error("Generation failed"); }
     setProcessing(false);
   };
+
+  const handleGenerate = () => runGenerate();
+
+  // Keep ref up to date so the auto-run effect can call the latest handler
+  runGenerateRef.current = runGenerate;
 
   return (
     <div>
@@ -1181,6 +1260,201 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+// ── IMAGE CREATION WIZARD (5-step lean flow) ─────────────────────
+interface ImageCreationWizardProps {
+  open: boolean;
+  onClose: () => void;
+  onComplete: (data: { prompt: string; style: string; size: string }) => void;
+}
+
+function ImageCreationWizard({ open, onClose, onComplete }: ImageCreationWizardProps) {
+  const steps: WizardStep[] = [
+    {
+      id: "useCase",
+      title: "What are you creating?",
+      description: "Pick the use case so we can tune the look and aspect ratio.",
+      icon: <Target size={16} />,
+      field: {
+        type: "chip-select",
+        key: "useCase",
+        options: [
+          { value: "profile", label: "Profile picture", emoji: "🪪" },
+          { value: "ad", label: "Ad creative", emoji: "📣" },
+          { value: "hero", label: "Hero image", emoji: "🖼️" },
+          { value: "carousel", label: "Carousel slide", emoji: "🗂️" },
+          { value: "thumbnail", label: "Thumbnail", emoji: "▶️" },
+          { value: "product", label: "Product shot", emoji: "📦" },
+          { value: "illustration", label: "Illustration", emoji: "🎨" },
+        ],
+      },
+    },
+    {
+      id: "subject",
+      title: "What's the subject?",
+      description: "Describe the main thing, person, or scene in the image.",
+      icon: <Edit3 size={16} />,
+      field: {
+        type: "text",
+        key: "subject",
+        placeholder: 'e.g. "a confident woman holding a latte in a sunlit café"',
+      },
+      aiHelper: {
+        label: "Help me describe a compelling subject",
+        onClick: async (data) => {
+          try {
+            const useCaseArr = Array.isArray(data.useCase) ? (data.useCase as string[]) : [];
+            const useCase = useCaseArr[0] || "hero image";
+            const res = await fetch("/api/ai/enhance-prompt", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text: `Suggest one compelling, visually specific subject description for a ${useCase} image. Return a single sentence under 25 words describing the subject and setting. No quotes, no intro.`,
+                type: "general",
+              }),
+            });
+            if (!res.ok) {
+              toast.error("Couldn't suggest a subject");
+              return {};
+            }
+            const json = await res.json();
+            const suggestion: string = (json.enhanced || "").replace(/^["']|["']$/g, "").trim();
+            if (!suggestion) {
+              toast.error("No suggestion — try again");
+              return {};
+            }
+            toast.success("Subject suggested!");
+            return { subject: suggestion };
+          } catch (err) {
+            console.error(err);
+            toast.error("Subject suggestion failed");
+            return {};
+          }
+        },
+      },
+    },
+    {
+      id: "style",
+      title: "Pick a visual style",
+      description: "Sets the overall rendering approach.",
+      icon: <Palette size={16} />,
+      field: {
+        type: "chip-select",
+        key: "style",
+        options: [
+          { value: "photorealistic", label: "Photorealistic", emoji: "📷" },
+          { value: "3d_render", label: "3D render", emoji: "🧊" },
+          { value: "illustration", label: "Illustration", emoji: "🖌️" },
+          { value: "cinematic", label: "Cinematic", emoji: "🎬" },
+          { value: "minimalist", label: "Minimalist", emoji: "⚪" },
+          { value: "artistic", label: "Artistic", emoji: "🎨" },
+          { value: "vaporwave", label: "Vaporwave", emoji: "🌴" },
+        ],
+      },
+    },
+    {
+      id: "ratio",
+      title: "Aspect ratio",
+      description: "Pick the dimensions — we'll pass them straight to FLUX.",
+      icon: <Ratio size={16} />,
+      field: {
+        type: "chip-select",
+        key: "ratio",
+        options: [
+          { value: "1024x1024", label: "1:1 square", emoji: "⬛" },
+          { value: "1024x1792", label: "9:16 portrait / story", emoji: "📱" },
+          { value: "1792x1024", label: "16:9 landscape / thumbnail", emoji: "📺" },
+          { value: "896x1120", label: "4:5 post", emoji: "📐" },
+        ],
+      },
+    },
+    {
+      id: "prompt",
+      title: "Final prompt",
+      description: "Edit the prompt or let Claude write a full FLUX-ready version.",
+      icon: <TypeIcon size={16} />,
+      field: {
+        type: "textarea",
+        key: "prompt",
+        placeholder: "Your final prompt — include details about lighting, mood, composition, etc.",
+      },
+      aiHelper: {
+        label: "Enhance my prompt with AI",
+        onClick: async (data) => {
+          try {
+            const subject = String(data.subject || "").trim();
+            const styleArr = Array.isArray(data.style) ? (data.style as string[]) : [];
+            const styleVal = styleArr[0] || "photorealistic";
+            const useCaseArr = Array.isArray(data.useCase) ? (data.useCase as string[]) : [];
+            const useCase = useCaseArr[0] || "hero image";
+            const currentPrompt = String(data.prompt || "").trim();
+
+            const base = currentPrompt || subject;
+            if (!base) {
+              toast.error("Add a subject on step 2 first");
+              return {};
+            }
+
+            const res = await fetch("/api/ai/enhance-prompt", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text: `Build a FLUX-ready image prompt for a ${useCase} in ${styleVal} style. Subject: "${base}". Return a single dense prompt (under 80 words) with lighting, composition, mood, and technical detail. Plain text, no quotes.`,
+                type: "design",
+              }),
+            });
+            if (!res.ok) {
+              toast.error("Couldn't enhance prompt — try again");
+              return {};
+            }
+            const json = await res.json();
+            const enhanced: string = (json.enhanced || "").replace(/^["']|["']$/g, "").trim();
+            if (!enhanced) {
+              toast.error("No enhanced prompt returned");
+              return {};
+            }
+            toast.success("Prompt enhanced!");
+            return { prompt: enhanced };
+          } catch (err) {
+            console.error(err);
+            toast.error("Prompt enhancement failed");
+            return {};
+          }
+        },
+      },
+    },
+  ];
+
+  async function handleComplete(data: Record<string, unknown>) {
+    const prompt = String(data.prompt || "").trim() || String(data.subject || "").trim();
+    const styleArr = Array.isArray(data.style) ? (data.style as string[]) : [];
+    const ratioArr = Array.isArray(data.ratio) ? (data.ratio as string[]) : [];
+
+    if (!prompt) {
+      toast.error("Prompt is required");
+      return;
+    }
+
+    const style = styleArr[0] || "";
+    const size = ratioArr[0] || "1024x1024";
+
+    onClose();
+    onComplete({ prompt, style, size });
+  }
+
+  return (
+    <CreationWizard
+      open={open}
+      title="Create Image"
+      subtitle="AI-guided 5-step flow — FLUX renders the final image."
+      icon={<Sparkles size={18} />}
+      submitLabel="Generate Image"
+      steps={steps}
+      onClose={onClose}
+      onComplete={handleComplete}
+    />
   );
 }
 

@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
+import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 
 interface SubjectVariant {
   subject: string;
@@ -75,6 +76,10 @@ export default function EmailComposerPage() {
   const [loadingVariants, setLoadingVariants] = useState(false);
   const [subjectVariants, setSubjectVariants] = useState<SubjectVariant[]>([]);
   const [subjectIdeas, setSubjectIdeas] = useState<string[]>([]);
+
+  /* ── Creation wizard ── */
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardSubmitting, setWizardSubmitting] = useState(false);
 
   async function handleAiCompose(mode: ComposeMode) {
     if (mode === "write" && !aiPrompt.trim()) {
@@ -219,6 +224,265 @@ export default function EmailComposerPage() {
     templateCategory === "all" || t.category === templateCategory
   );
 
+  /* ── Wizard steps ── */
+  const GOAL_AUDIENCE_HINTS: Record<string, string> = {
+    welcome: "New signups who created an account in the last 48 hours",
+    newsletter: "Engaged subscribers who open at least 1 in 3 emails",
+    launch: "Existing customers and warm leads interested in new releases",
+    "abandoned-cart": "Shoppers who added items to cart but didn't check out",
+    reengagement: "Users who haven't opened or logged in for 30+ days",
+    promotional: "Deal-hunters and price-sensitive buyers in your list",
+  };
+
+  const wizardSteps: WizardStep[] = [
+    {
+      id: "goal",
+      title: "What's the goal of this email?",
+      description: "Pick the template that best matches what you want to say.",
+      icon: <Mail size={16} />,
+      field: {
+        type: "chip-select",
+        key: "goals",
+        options: [
+          { value: "welcome", label: "Welcome" },
+          { value: "newsletter", label: "Newsletter" },
+          { value: "launch", label: "Product launch" },
+          { value: "abandoned-cart", label: "Abandoned cart" },
+          { value: "reengagement", label: "Re-engagement" },
+          { value: "promotional", label: "Promotional" },
+        ],
+      },
+    },
+    {
+      id: "audience",
+      title: "Who are you sending this to?",
+      description: "Describe your audience so the AI can write in a voice they'll relate to.",
+      icon: <Sparkles size={16} />,
+      field: {
+        type: "text",
+        key: "audience",
+        placeholder: "e.g., SaaS founders who signed up for a free trial",
+      },
+      aiHelper: {
+        label: "Suggest audience from my CRM",
+        onClick: async (d) => {
+          try {
+            // Try a CRM audiences endpoint if present
+            const res = await fetch("/api/crm/audiences", { method: "GET" }).catch(() => null);
+            if (res && res.ok) {
+              const data = await res.json();
+              const first = Array.isArray(data?.audiences) ? data.audiences[0] : data?.audience;
+              const val = typeof first === "string" ? first : first?.description || first?.name;
+              if (val) {
+                toast.success("Audience suggested from CRM");
+                return { audience: val };
+              }
+            }
+            // Fallback: heuristic based on selected goal
+            const goals = Array.isArray(d.goals) ? (d.goals as string[]) : [];
+            const goal = goals[0] || "newsletter";
+            const hint = GOAL_AUDIENCE_HINTS[goal];
+            if (hint) {
+              toast.success("Audience suggested");
+              return { audience: hint };
+            }
+            toast.error("No audience data available");
+            return {};
+          } catch {
+            toast.error("Couldn't load audience — unchanged");
+            return {};
+          }
+        },
+      },
+    },
+    {
+      id: "subject",
+      title: "Subject line",
+      description: "Hook them in the inbox — or let AI draft one for you.",
+      icon: <Type size={16} />,
+      field: {
+        type: "text",
+        key: "subject",
+        placeholder: "e.g., Your 14-day trial starts now",
+      },
+      aiHelper: {
+        label: "Generate subject line",
+        onClick: async (d) => {
+          try {
+            const goals = Array.isArray(d.goals) ? (d.goals as string[]) : [];
+            const goal = goals[0] || "newsletter";
+            const audience = typeof d.audience === "string" ? d.audience : "";
+            const bodyDirection = typeof d.bodyDirection === "string" ? d.bodyDirection : "";
+
+            // Prefer the subject-variants endpoint when we have body direction
+            if (bodyDirection.trim()) {
+              const res = await fetch("/api/emails/subject-variants", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ body: bodyDirection, audience: audience || undefined, count: 3 }),
+              });
+              if (res.ok) {
+                const data = await res.json();
+                const first: SubjectVariant | undefined = Array.isArray(data?.variants) ? data.variants[0] : undefined;
+                if (first?.subject) {
+                  toast.success("Subject generated");
+                  return { subject: first.subject };
+                }
+              }
+            }
+            // Fallback: use enhance-prompt
+            const seed = `Write a single compelling email subject line (under 55 characters) for a ${goal} email${audience ? ` targeting ${audience}` : ""}. Return ONLY the subject line, no quotes, no prefix.`;
+            const res = await fetch("/api/ai/enhance-prompt", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: seed, type: "content" }),
+            });
+            if (!res.ok) {
+              toast.error("Couldn't generate subject line");
+              return {};
+            }
+            const data = await res.json();
+            const subject = ((data?.enhanced as string | undefined) || "").split("\n")[0].trim().replace(/^["']|["']$/g, "");
+            if (!subject) {
+              toast.error("No subject returned");
+              return {};
+            }
+            toast.success("Subject generated");
+            return { subject };
+          } catch {
+            toast.error("Network error — subject unchanged");
+            return {};
+          }
+        },
+      },
+    },
+    {
+      id: "bodyDirection",
+      title: "What should the email say?",
+      description: "A few bullet points are fine — the AI will write the full email for you.",
+      icon: <Wand2 size={16} />,
+      field: {
+        type: "textarea",
+        key: "bodyDirection",
+        placeholder: "Key points to cover, the CTA, any must-include details...",
+      },
+      aiHelper: {
+        label: "Draft the body",
+        onClick: async (d) => {
+          const direction = typeof d.bodyDirection === "string" ? d.bodyDirection.trim() : "";
+          if (!direction) {
+            toast.error("Add a short direction first (one line is fine)");
+            return {};
+          }
+          try {
+            const goals = Array.isArray(d.goals) ? (d.goals as string[]) : [];
+            const goal = goals[0] || "newsletter";
+            const audience = typeof d.audience === "string" ? d.audience : "";
+            const prompt = `Write a ${goal} email. ${audience ? `Audience: ${audience}. ` : ""}Direction: ${direction}`;
+            const res = await fetch("/api/emails/compose", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                mode: "write",
+                prompt,
+                tone: "professional",
+                audience: audience || undefined,
+                length: "medium",
+              }),
+            });
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              toast.error(err?.error || "Couldn't draft the body");
+              return {};
+            }
+            const data = await res.json();
+            const body = (data?.body as string | undefined)?.trim();
+            const subject = (data?.subject as string | undefined)?.trim();
+            if (!body) {
+              toast.error("No body returned");
+              return {};
+            }
+            toast.success("Draft ready");
+            // Merge subject only if user hasn't already set one
+            const patch: Record<string, unknown> = { bodyDirection: body };
+            if (subject && !(d.subject && String(d.subject).trim())) {
+              patch.subject = subject;
+            }
+            return patch;
+          } catch {
+            toast.error("Network error — body unchanged");
+            return {};
+          }
+        },
+      },
+    },
+  ];
+
+  async function handleWizardComplete(data: Record<string, unknown>) {
+    const goals = Array.isArray(data.goals) ? (data.goals as string[]) : [];
+    const goal = goals[0] || "newsletter";
+    const audienceVal = typeof data.audience === "string" ? data.audience.trim() : "";
+    const subject = typeof data.subject === "string" ? data.subject.trim() : "";
+    const bodyDirection = typeof data.bodyDirection === "string" ? data.bodyDirection.trim() : "";
+
+    if (!bodyDirection) {
+      toast.error("Body direction or draft is required");
+      return;
+    }
+
+    setWizardSubmitting(true);
+    try {
+      // If the body direction already looks like a written email (has greeting, multiple lines),
+      // use it directly; otherwise, have the compose API generate the full email.
+      const looksLikeDraft = bodyDirection.length > 300 && /\n/.test(bodyDirection);
+
+      let finalSubject = subject;
+      let finalBody = bodyDirection;
+
+      if (!looksLikeDraft) {
+        const prompt = `Write a ${goal} email. ${audienceVal ? `Audience: ${audienceVal}. ` : ""}Direction: ${bodyDirection}`;
+        const res = await fetch("/api/emails/compose", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            mode: "write",
+            prompt,
+            tone: "professional",
+            audience: audienceVal || undefined,
+            length: "medium",
+          }),
+        });
+        if (res.ok) {
+          const out = await res.json();
+          if (out?.body) finalBody = out.body;
+          if (!finalSubject && out?.subject) finalSubject = out.subject;
+        } else {
+          const err = await res.json().catch(() => ({}));
+          toast.error(err?.error || "Couldn't generate email — using your direction as the body");
+        }
+      }
+
+      // If we still don't have a subject, quietly derive one
+      if (!finalSubject) {
+        finalSubject = bodyDirection.split("\n")[0].slice(0, 80);
+      }
+
+      setEmail(prev => ({
+        ...prev,
+        subject: finalSubject,
+        body: finalBody,
+      }));
+      if (audienceVal) setAiAudience(audienceVal);
+      setActiveTab("compose");
+      setWizardOpen(false);
+      toast.success("Email ready in the composer");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Wizard failed");
+    } finally {
+      setWizardSubmitting(false);
+    }
+  }
+
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "compose", label: "Compose", icon: <Mail size={14} /> },
     { key: "templates", label: "Templates", icon: <Copy size={14} /> },
@@ -237,6 +501,20 @@ export default function EmailComposerPage() {
         gradient="blue"
         actions={
           <>
+            <button
+              onClick={() => setWizardOpen(true)}
+              className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            >
+              <Sparkles size={12} className="animate-pulse" />
+              New with AI
+              <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
+            </button>
+            <button
+              onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
+              className="px-3 py-1.5 rounded-lg bg-transparent border border-white/20 text-white text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
+            >
+              <Plus size={12} /> Blank
+            </button>
             <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiWriting}>
               {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
             </button>
@@ -251,6 +529,24 @@ export default function EmailComposerPage() {
             </button>
           </>
         }
+      />
+
+      {/* Creation Wizard */}
+      <CreationWizard
+        open={wizardOpen}
+        title="Compose Email with AI"
+        subtitle="4 quick steps — AI handles subject + body"
+        icon={<Mail size={18} />}
+        submitLabel={wizardSubmitting ? "Generating..." : "Create Email"}
+        steps={wizardSteps}
+        initialData={{
+          goals: [] as string[],
+          audience: aiAudience,
+          subject: email.subject,
+          bodyDirection: email.body,
+        }}
+        onClose={() => setWizardOpen(false)}
+        onComplete={handleWizardComplete}
       />
 
       {/* Tabs */}

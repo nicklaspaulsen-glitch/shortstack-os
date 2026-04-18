@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -199,6 +200,216 @@ function generateMockSlides(topic: string, count: number, template?: string): Sl
 }
 
 /* ══════════════════════════════════════════════════════════════════
+   CAROUSEL WIZARD — 5-step guided creation flow
+   ══════════════════════════════════════════════════════════════════ */
+
+interface CarouselWizardProps {
+  open: boolean;
+  onClose: () => void;
+  onComplete: (data: {
+    topic: string;
+    slideCount: number;
+    style: CarouselStyle;
+    contentDirection?: string;
+  }) => Promise<void> | void;
+}
+
+function CarouselWizard({ open, onClose, onComplete }: CarouselWizardProps) {
+  const steps: WizardStep[] = [
+    {
+      id: "platform",
+      title: "Where is this carousel going?",
+      description: "Pick the platform so we can tune tone and length.",
+      icon: <LayoutGrid size={16} />,
+      field: {
+        type: "chip-select",
+        key: "platform",
+        options: [
+          { value: "instagram", label: "Instagram", emoji: "📸" },
+          { value: "linkedin", label: "LinkedIn", emoji: "💼" },
+          { value: "facebook", label: "Facebook", emoji: "👥" },
+          { value: "twitter", label: "Twitter (X)", emoji: "𝕏" },
+        ],
+      },
+    },
+    {
+      id: "topic",
+      title: "What's the topic or hook?",
+      description: "Describe what this carousel is about — be specific to get better slides.",
+      icon: <Lightbulb size={16} />,
+      field: {
+        type: "text",
+        key: "topic",
+        placeholder: 'e.g. "5 copywriting mistakes that kill conversions"',
+      },
+      aiHelper: {
+        label: "Suggest a viral carousel topic",
+        onClick: async (data) => {
+          try {
+            const platforms = Array.isArray(data.platform) ? (data.platform as string[]).join(", ") : "Instagram";
+            const res = await fetch("/api/ai/enhance-prompt", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text: `Suggest one viral, scroll-stopping carousel topic for ${platforms}. Return a single punchy topic idea (under 12 words) that a creator or marketer could use. No quotes, no explanation.`,
+                type: "content",
+              }),
+            });
+            if (!res.ok) {
+              toast.error("Couldn't suggest a topic — try again");
+              return {};
+            }
+            const json = await res.json();
+            const suggestion: string = (json.enhanced || "").replace(/^["']|["']$/g, "").trim();
+            if (!suggestion) {
+              toast.error("No suggestion — give it another try");
+              return {};
+            }
+            toast.success("Topic suggested!");
+            return { topic: suggestion };
+          } catch (err) {
+            console.error(err);
+            toast.error("Topic suggestion failed");
+            return {};
+          }
+        },
+      },
+    },
+    {
+      id: "slideCount",
+      title: "How many slides?",
+      description: "3-10 slides. 5-7 is usually the sweet spot for engagement.",
+      icon: <Layers size={16} />,
+      field: {
+        type: "number",
+        key: "slideCount",
+        min: 3,
+        max: 10,
+        step: 1,
+      },
+    },
+    {
+      id: "style",
+      title: "Pick a visual style",
+      description: "Sets the tone — we'll apply the look in the preview.",
+      icon: <Palette size={16} />,
+      field: {
+        type: "chip-select",
+        key: "style",
+        options: [
+          { value: "minimal", label: "Minimal", emoji: "⚪" },
+          { value: "bold", label: "Bold", emoji: "💥" },
+          { value: "corporate", label: "Corporate", emoji: "💼" },
+          { value: "playful", label: "Playful", emoji: "🎈" },
+          { value: "educational", label: "Educational", emoji: "📚" },
+        ],
+      },
+    },
+    {
+      id: "contentDirection",
+      title: "Any specific angle? (optional)",
+      description: "Tell the AI what angle to take, who it's for, or what to emphasize.",
+      icon: <MessageCircle size={16} />,
+      field: {
+        type: "textarea",
+        key: "contentDirection",
+        placeholder: "e.g. Target solo founders, use case studies, end with a strong CTA to DM for a template.",
+        optional: true,
+      },
+      aiHelper: {
+        label: "Auto-write slide content based on topic",
+        onClick: async (data) => {
+          try {
+            const topic = String(data.topic || "").trim();
+            if (!topic) {
+              toast.error("Add a topic on step 2 first");
+              return {};
+            }
+            const platforms = Array.isArray(data.platform) ? (data.platform as string[]).join(", ") : "Instagram";
+            const style = Array.isArray(data.style) ? (data.style as string[])[0] : "bold";
+            const count = Number(data.slideCount) || 5;
+            const res = await fetch("/api/ai/enhance-prompt", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text: `Outline a content direction for a ${count}-slide ${style} carousel on ${platforms} about: "${topic}". Keep it under 80 words. Describe angle, target audience, and what each slide section should cover. Plain text, no markdown, no numbered list — write it as a brief paragraph.`,
+                type: "content",
+              }),
+            });
+            if (!res.ok) {
+              toast.error("Couldn't draft direction — try again");
+              return {};
+            }
+            const json = await res.json();
+            const direction: string = (json.enhanced || "").trim();
+            if (!direction) {
+              toast.error("No content direction returned");
+              return {};
+            }
+            toast.success("Content direction drafted!");
+            return { contentDirection: direction };
+          } catch (err) {
+            console.error(err);
+            toast.error("Content direction failed");
+            return {};
+          }
+        },
+      },
+    },
+  ];
+
+  async function handleComplete(data: Record<string, unknown>) {
+    const platformArr = Array.isArray(data.platform) ? (data.platform as string[]) : [];
+    const topic = String(data.topic || "").trim();
+    const slideCount = Math.min(10, Math.max(3, Number(data.slideCount) || 5));
+    const styleArr = Array.isArray(data.style) ? (data.style as string[]) : [];
+    const rawStyle = styleArr[0] || "bold";
+    const contentDirection = String(data.contentDirection || "").trim();
+
+    if (!topic) {
+      toast.error("Topic is required");
+      return;
+    }
+    if (platformArr.length === 0) {
+      toast.error("Pick at least one platform");
+      return;
+    }
+
+    // Map wizard style values -> existing CarouselStyle union
+    const styleMap: Record<string, CarouselStyle> = {
+      minimal: "minimalist",
+      bold: "bold",
+      corporate: "corporate",
+      playful: "playful",
+      educational: "corporate",
+    };
+    const style: CarouselStyle = styleMap[rawStyle] || "bold";
+
+    onClose();
+    await onComplete({
+      topic,
+      slideCount,
+      style,
+      contentDirection: contentDirection || undefined,
+    });
+  }
+
+  return (
+    <CreationWizard
+      open={open}
+      title="Create Carousel"
+      subtitle="AI-guided flow — describe what you want, we'll write the slides."
+      icon={<Sparkles size={18} />}
+      submitLabel="Generate Carousel"
+      steps={steps}
+      initialData={{ slideCount: 5 }}
+      onClose={onClose}
+      onComplete={handleComplete}
+    />
+  );
+}
+
+/* ══════════════════════════════════════════════════════════════════
    MAIN PAGE COMPONENT
    ══════════════════════════════════════════════════════════════════ */
 
@@ -216,12 +427,22 @@ export default function CarouselGeneratorPage() {
   const [editingSlide, setEditingSlide] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Wizard state
+  const [wizardOpen, setWizardOpen] = useState(false);
+
   // Preview scroll ref
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  /* ── Generate carousel ── */
-  const handleGenerate = useCallback(async () => {
-    if (!topic.trim()) {
+  /* ── Generate carousel (runs with explicit args, not state) ── */
+  const runGenerate = useCallback(async (opts: {
+    topic: string;
+    slideCount: number;
+    style: CarouselStyle;
+    template?: string | null;
+    brandColors: BrandColors;
+    contentDirection?: string;
+  }) => {
+    if (!opts.topic.trim()) {
       toast.error("Enter a topic first");
       return;
     }
@@ -235,11 +456,13 @@ export default function CarouselGeneratorPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          topic,
-          slideCount,
-          style,
-          template: template || undefined,
-          brandColors,
+          topic: opts.contentDirection
+            ? `${opts.topic}\n\nContent direction: ${opts.contentDirection}`
+            : opts.topic,
+          slideCount: opts.slideCount,
+          style: opts.style,
+          template: opts.template || undefined,
+          brandColors: opts.brandColors,
         }),
       });
 
@@ -258,11 +481,16 @@ export default function CarouselGeneratorPage() {
 
     // Fallback: mock generation with realistic delay
     await new Promise((r) => setTimeout(r, 1800));
-    const mockSlides = generateMockSlides(topic, slideCount, template || undefined);
+    const mockSlides = generateMockSlides(opts.topic, opts.slideCount, opts.template || undefined);
     setSlides(mockSlides);
     toast.success(`${mockSlides.length} slides generated!`);
     setGenerating(false);
-  }, [topic, slideCount, style, template, brandColors]);
+  }, []);
+
+  /* ── Generate using current form state (existing button) ── */
+  const handleGenerate = useCallback(async () => {
+    await runGenerate({ topic, slideCount, style, template, brandColors });
+  }, [topic, slideCount, style, template, brandColors, runGenerate]);
 
   /* ── Inline edit ── */
   const updateSlide = useCallback((index: number, field: "headline" | "body", value: string) => {
@@ -311,6 +539,24 @@ export default function CarouselGeneratorPage() {
 
   return (
     <div className="max-w-7xl mx-auto animate-fade-in">
+      <CarouselWizard
+        open={wizardOpen}
+        onClose={() => setWizardOpen(false)}
+        onComplete={async (data) => {
+          setTopic(data.topic);
+          setSlideCount(data.slideCount);
+          setStyle(data.style);
+          await runGenerate({
+            topic: data.topic,
+            slideCount: data.slideCount,
+            style: data.style,
+            template,
+            brandColors,
+            contentDirection: data.contentDirection,
+          });
+        }}
+      />
+
       <PageHero
         className="mb-6"
         icon={<Layers size={28} />}
@@ -318,24 +564,36 @@ export default function CarouselGeneratorPage() {
         subtitle="Create scroll-stopping Instagram & LinkedIn carousels."
         gradient="gold"
         actions={
-          slides.length > 0 ? (
-            <>
-              <button
-                onClick={handleCopyAll}
-                className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
-              >
-                {copied ? <Check size={13} /> : <Copy size={13} />}
-                {copied ? "Copied!" : "Copy Text"}
-              </button>
-              <button
-                onClick={handleDownload}
-                className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white hover:bg-white/25 transition-all"
-              >
-                <Download size={13} />
-                Download All
-              </button>
-            </>
-          ) : null
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setWizardOpen(true)}
+              className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/20 hover:shadow-gold/40 hover-lift transition-all"
+            >
+              <Sparkles size={13} className="animate-pulse" />
+              + New with AI
+              <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
+                Recommended
+              </span>
+            </button>
+            {slides.length > 0 && (
+              <>
+                <button
+                  onClick={handleCopyAll}
+                  className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-all"
+                >
+                  {copied ? <Check size={13} /> : <Copy size={13} />}
+                  {copied ? "Copied!" : "Copy Text"}
+                </button>
+                <button
+                  onClick={handleDownload}
+                  className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white hover:bg-white/25 transition-all"
+                >
+                  <Download size={13} />
+                  Download All
+                </button>
+              </>
+            )}
+          </div>
         }
       />
 
