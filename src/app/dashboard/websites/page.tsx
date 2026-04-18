@@ -6,7 +6,9 @@ import {
   Palette, Layout, Trash2, Wand2, Briefcase, Users, Store,
   MonitorSmartphone, UtensilsCrossed, Home, Building2, Target,
   Camera, GraduationCap, Newspaper, RefreshCw, CheckCircle,
-  Zap, Link2, ShoppingBag, ShieldCheck, Megaphone,
+  Zap, Link2, ShoppingBag, ShieldCheck, Megaphone, Clock,
+  Crown, X, Share2, DollarSign, BarChart3, FlaskConical,
+  EyeOff, Check, Rocket, Calendar,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -31,6 +33,23 @@ interface WebsiteProject {
   wizard_answers: Record<string, unknown> | null;
   client_id: string | null;
   created_at: string;
+  demo_expires_at: string | null;
+  demo_deployed_at: string | null;
+  watermark_enabled: boolean | null;
+  pricing_tier: string | null;
+  monthly_price: number | null;
+  yearly_price: number | null;
+  pricing_breakdown: Array<{ item: string; price: number }> | null;
+  addons: string[] | null;
+}
+
+interface PriceQuote {
+  tier: "starter" | "pro" | "business" | "premium";
+  monthly_price: number;
+  yearly_price: number;
+  breakdown: Array<{ item: string; price: number }>;
+  addons_active: string[];
+  addons_available: Array<{ key: string; label: string; price: number }>;
 }
 
 const STATUS_BADGE: Record<string, string> = {
@@ -41,7 +60,47 @@ const STATUS_BADGE: Record<string, string> = {
   live: "bg-green-500/10 text-green-400 border-green-500/30",
   failed: "bg-red-500/10 text-red-400 border-red-500/30",
   archived: "bg-slate-500/10 text-slate-400 border-slate-500/30",
+  expired: "bg-orange-500/10 text-orange-400 border-orange-500/30",
 };
+
+const STATUS_LABEL: Record<string, string> = {
+  draft: "Draft",
+  generating: "Generating",
+  preview: "Demo",
+  deploying: "Deploying",
+  live: "Live",
+  failed: "Failed",
+  archived: "Archived",
+  expired: "Expired",
+};
+
+const TIER_COLOR: Record<string, string> = {
+  starter: "from-sky-500 to-cyan-500",
+  pro: "from-violet-500 to-fuchsia-500",
+  business: "from-amber-400 to-orange-500",
+  premium: "from-rose-500 to-purple-600",
+};
+
+const ALL_ADDONS = [
+  { key: "custom_domain", label: "Custom domain", price: 5, icon: <Link2 size={11} /> },
+  { key: "priority_support", label: "Priority support", price: 25, icon: <Crown size={11} /> },
+  { key: "advanced_analytics", label: "Advanced analytics", price: 10, icon: <BarChart3 size={11} /> },
+  { key: "ab_testing", label: "A/B testing", price: 15, icon: <FlaskConical size={11} /> },
+  { key: "white_label", label: "White-label (no watermark)", price: 20, icon: <EyeOff size={11} /> },
+];
+
+function daysUntil(iso: string | null): number | null {
+  if (!iso) return null;
+  const ms = new Date(iso).getTime() - Date.now();
+  return Math.max(0, Math.ceil(ms / 86_400_000));
+}
+
+function effectiveStatus(p: WebsiteProject): string {
+  if (p.status === "preview" && p.demo_expires_at && new Date(p.demo_expires_at).getTime() < Date.now()) {
+    return "expired";
+  }
+  return p.status;
+}
 
 export default function WebsitesPage() {
   useAuth();
@@ -57,6 +116,14 @@ export default function WebsitesPage() {
   const [regenerating, setRegenerating] = useState(false);
   const [deploying, setDeploying] = useState(false);
 
+  // Pricing modal
+  const [pricingFor, setPricingFor] = useState<WebsiteProject | null>(null);
+  const [quote, setQuote] = useState<PriceQuote | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
+  const [activeAddons, setActiveAddons] = useState<string[]>([]);
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const [subscribing, setSubscribing] = useState(false);
+
   const loadData = useCallback(async () => {
     setLoading(true);
     const [p, c] = await Promise.all([
@@ -70,7 +137,7 @@ export default function WebsitesPage() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  /* ───────────────────────────────────── Wizard steps ────────────────────────────────── */
+  /* ─────────────────────────────── Wizard steps ────────────────────────────── */
 
   async function aiSuggestValueProp(data: Record<string, unknown>): Promise<Partial<Record<string, unknown>>> {
     try {
@@ -297,13 +364,13 @@ export default function WebsitesPage() {
     {
       id: "domain_strategy",
       title: "Domain strategy",
-      description: "You can change this later. Free subdomain is fastest.",
+      description: "You can change this later. Free demo first, then upgrade.",
       icon: <Link2 size={16} />,
       field: {
         type: "choice-cards",
         key: "domain_strategy",
         options: [
-          { value: "subdomain", label: "Use a free subdomain", description: "my-site.shortstack.work", emoji: "🆓" },
+          { value: "subdomain", label: "Use a free subdomain", description: "demo-mysite.shortstack.work", emoji: "🆓" },
           { value: "buy-new", label: "Buy a new domain", description: "$12-35/yr via GoDaddy", emoji: "🌐" },
           { value: "connect-existing", label: "Connect existing domain", description: "You already own one", emoji: "🔗" },
         ],
@@ -311,7 +378,19 @@ export default function WebsitesPage() {
     },
   ];
 
-  /* ───────────────────────────────────── Generate & deploy ────────────────────────────────── */
+  /* ─────────────────────────── Generate, deploy, demo ───────────────────────── */
+
+  async function deployDemo(projectId: string): Promise<void> {
+    try {
+      const res = await fetch(`/api/websites/${projectId}/demo`, { method: "POST" });
+      const out = await res.json();
+      if (!out.success) {
+        toast.error(out.error || "Demo deployment failed");
+      }
+    } catch {
+      toast.error("Demo deployment failed");
+    }
+  }
 
   async function handleWizardComplete(data: Record<string, unknown>) {
     toast.loading("Claude is designing your site…", { id: "gen" });
@@ -323,18 +402,26 @@ export default function WebsitesPage() {
       });
       const out = await res.json();
       toast.dismiss("gen");
-      if (out.success) {
-        toast.success("Website generated!");
-        await loadData();
-        const { data: row } = await supabase
-          .from("website_projects")
-          .select("*")
-          .eq("id", out.project_id)
-          .single();
-        if (row) setActive(row as WebsiteProject);
-        setWizardOpen(false);
-      } else {
+      if (!out.success) {
         toast.error(out.error || "Generation failed");
+        return;
+      }
+
+      toast.success("Website generated! Deploying demo…");
+      // Auto-deploy to free demo subdomain
+      await deployDemo(out.project_id);
+      await loadData();
+      const { data: row } = await supabase
+        .from("website_projects")
+        .select("*")
+        .eq("id", out.project_id)
+        .single();
+      if (row) {
+        const wp = row as WebsiteProject;
+        setActive(wp);
+        setWizardOpen(false);
+        // Open pricing modal so the user can see the price + go live
+        openPricing(wp);
       }
     } catch {
       toast.dismiss("gen");
@@ -358,7 +445,8 @@ export default function WebsitesPage() {
       const out = await res.json();
       toast.dismiss("regen");
       if (out.success) {
-        toast.success("Regenerated!");
+        toast.success("Regenerated — redeploying demo…");
+        await deployDemo(project.id);
         const { data: row } = await supabase.from("website_projects").select("*").eq("id", project.id).single();
         if (row) setActive(row as WebsiteProject);
         loadData();
@@ -406,7 +494,111 @@ export default function WebsitesPage() {
     loadData();
   }
 
-  /* ───────────────────────────────────── Render ────────────────────────────────── */
+  async function shareDemo(p: WebsiteProject) {
+    const url = p.preview_url || p.vercel_url;
+    if (!url) {
+      toast.error("Demo not deployed yet");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Demo URL copied — share with your client!");
+    } catch {
+      toast.error("Failed to copy");
+    }
+  }
+
+  async function extendDemo(p: WebsiteProject) {
+    if (!confirm("Extend demo by 7 days for $2?")) return;
+    toast.loading("Extending demo…", { id: "ext" });
+    try {
+      const res = await fetch(`/api/websites/${p.id}/extend-demo`, { method: "POST" });
+      const out = await res.json();
+      toast.dismiss("ext");
+      if (out.success) {
+        if (out.checkout_url && !out.simulated) {
+          window.location.href = out.checkout_url;
+        } else {
+          toast.success(out.simulated ? "Demo extended 7 days (simulated)" : "Demo extended");
+          loadData();
+        }
+      } else {
+        toast.error(out.error || "Extend failed");
+      }
+    } catch {
+      toast.dismiss("ext");
+      toast.error("Extend failed");
+    }
+  }
+
+  /* ─────────────────────────── Pricing modal ─────────────────────────── */
+
+  async function openPricing(p: WebsiteProject) {
+    setPricingFor(p);
+    setActiveAddons(Array.isArray(p.addons) ? p.addons : []);
+    setBillingCycle("monthly");
+    await loadQuote(p, Array.isArray(p.addons) ? p.addons : []);
+  }
+
+  async function loadQuote(p: WebsiteProject, addons: string[]) {
+    setQuoteLoading(true);
+    try {
+      const res = await fetch(`/api/websites/${p.id}/price-quote`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ addons }),
+      });
+      const out = await res.json();
+      if (out.success) setQuote(out.quote);
+    } catch {
+      // ignore
+    }
+    setQuoteLoading(false);
+  }
+
+  function toggleAddon(key: string) {
+    if (!pricingFor) return;
+    const next = activeAddons.includes(key)
+      ? activeAddons.filter((a) => a !== key)
+      : [...activeAddons, key];
+    setActiveAddons(next);
+    loadQuote(pricingFor, next);
+  }
+
+  async function subscribe() {
+    if (!pricingFor || !quote) return;
+    setSubscribing(true);
+    try {
+      const res = await fetch(`/api/websites/${pricingFor.id}/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tier: quote.tier,
+          monthly_price: quote.monthly_price,
+          yearly_price: quote.yearly_price,
+          billing_cycle: billingCycle,
+          addons: activeAddons,
+        }),
+      });
+      const out = await res.json();
+      if (out.success) {
+        if (out.checkout_url && !out.simulated) {
+          window.location.href = out.checkout_url;
+        } else {
+          toast.success(out.simulated ? "Site is live (stub mode)" : "Subscribed!");
+          setPricingFor(null);
+          loadData();
+        }
+      } else {
+        toast.error(out.error || "Subscribe failed");
+      }
+    } catch {
+      toast.error("Subscribe failed");
+    }
+    setSubscribing(false);
+  }
+
+  /* ─────────────────────────── Render ─────────────────────────── */
 
   const indexHtml = active?.generated_files?.["index.html"] || "";
 
@@ -415,7 +607,7 @@ export default function WebsitesPage() {
       <PageHero
         icon={<Globe size={28} />}
         title="Website Builder"
-        subtitle="Claude designs high-converting one-pagers. Deploy to Vercel. Buy a domain via GoDaddy."
+        subtitle="Claude designs high-converting one-pagers. Try a free 14-day demo before paying."
         gradient="sunset"
         actions={
           <>
@@ -438,7 +630,7 @@ export default function WebsitesPage() {
       <CreationWizard
         open={wizardOpen}
         title="Website Builder"
-        subtitle="Answer a few questions — Claude will design a high-converting one-pager."
+        subtitle="Answer a few questions — Claude will design and demo your one-pager free for 14 days."
         icon={<Globe size={18} />}
         submitLabel="Generate with Claude"
         initialData={{
@@ -459,9 +651,14 @@ export default function WebsitesPage() {
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2 min-w-0">
               <h2 className="text-sm font-semibold truncate">{active.name}</h2>
-              <span className={`text-[9px] px-2 py-0.5 rounded-full border ${STATUS_BADGE[active.status] || STATUS_BADGE.draft}`}>
-                {active.status}
+              <span className={`text-[9px] px-2 py-0.5 rounded-full border ${STATUS_BADGE[effectiveStatus(active)] || STATUS_BADGE.draft}`}>
+                {STATUS_LABEL[effectiveStatus(active)] || active.status}
               </span>
+              {effectiveStatus(active) === "preview" && active.demo_expires_at && (
+                <span className="text-[9px] px-2 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 inline-flex items-center gap-1">
+                  <Clock size={9} /> {daysUntil(active.demo_expires_at)} days left
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-1.5 flex-wrap">
               <button
@@ -473,33 +670,39 @@ export default function WebsitesPage() {
                 Regenerate
               </button>
               <button
+                onClick={() => shareDemo(active)}
+                className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+              >
+                <Share2 size={10} /> Share Demo
+              </button>
+              <button
+                onClick={() => openPricing(active)}
+                className="text-[10px] px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1"
+              >
+                <Rocket size={10} /> Go Live
+              </button>
+              <button
                 onClick={() => deploy(active)}
                 disabled={deploying || !indexHtml}
                 className="text-[10px] px-3 py-1.5 rounded-lg bg-black text-white hover:bg-black/80 flex items-center gap-1 disabled:opacity-50"
               >
                 {deploying ? <Loader size={10} className="animate-spin" /> : <VercelIcon size={10} />}
-                Deploy to Vercel
+                Deploy
               </button>
-              <a
-                href="/dashboard/domains"
-                className="text-[10px] px-3 py-1.5 rounded-lg bg-[#1BDBDB]/20 border border-[#1BDBDB]/30 text-[#1BDBDB] hover:bg-[#1BDBDB]/30 flex items-center gap-1"
-              >
-                <GoDaddyIcon size={10} /> Buy domain
-              </a>
               {active.vercel_url && (
                 <a href={active.vercel_url} target="_blank" rel="noopener" className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
-                  <ExternalLink size={10} /> Live
+                  <ExternalLink size={10} /> Open
                 </a>
               )}
             </div>
           </div>
 
-          {active.vercel_url && (
+          {(active.preview_url || active.vercel_url) && (
             <div className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
-              <a href={active.vercel_url} target="_blank" rel="noopener" className="text-[11px] text-gold hover:text-gold-light truncate">
-                {active.vercel_url}
+              <a href={active.preview_url || active.vercel_url || "#"} target="_blank" rel="noopener" className="text-[11px] text-gold hover:text-gold-light truncate">
+                {active.preview_url || active.vercel_url}
               </a>
-              <button onClick={() => { navigator.clipboard.writeText(active.vercel_url!); toast.success("Copied"); }}>
+              <button onClick={() => { navigator.clipboard.writeText(active.preview_url || active.vercel_url || ""); toast.success("Copied"); }}>
                 <Copy size={11} className="text-muted hover:text-foreground" />
               </button>
             </div>
@@ -528,7 +731,7 @@ export default function WebsitesPage() {
         ) : projects.length === 0 ? (
           <div className="py-10 text-center">
             <Globe size={24} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-xs text-muted mb-3">No websites yet. Launch the wizard to build your first one.</p>
+            <p className="text-xs text-muted mb-3">No websites yet. Launch the wizard to build your first one — free 14-day demo, no card required.</p>
             <button
               onClick={() => setWizardOpen(true)}
               className="text-xs px-4 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold inline-flex items-center gap-1.5"
@@ -538,9 +741,11 @@ export default function WebsitesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            {projects.map(p => {
+            {projects.map((p) => {
               const html = p.generated_files?.["index.html"] || "";
-              const clientName = clients.find(c => c.id === p.client_id)?.business_name;
+              const clientName = clients.find((c) => c.id === p.client_id)?.business_name;
+              const status = effectiveStatus(p);
+              const days = daysUntil(p.demo_expires_at);
               return (
                 <div key={p.id} className="card-hover p-0 overflow-hidden">
                   {/* Thumbnail */}
@@ -557,9 +762,19 @@ export default function WebsitesPage() {
                         <Globe size={24} className="opacity-30" />
                       </div>
                     )}
-                    <span className={`absolute top-2 right-2 text-[9px] px-2 py-0.5 rounded-full border backdrop-blur ${STATUS_BADGE[p.status] || STATUS_BADGE.draft}`}>
-                      {p.status}
+                    <span className={`absolute top-2 right-2 text-[9px] px-2 py-0.5 rounded-full border backdrop-blur ${STATUS_BADGE[status] || STATUS_BADGE.draft}`}>
+                      {STATUS_LABEL[status] || p.status}
                     </span>
+                    {status === "preview" && days !== null && (
+                      <span className="absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-200 backdrop-blur inline-flex items-center gap-1">
+                        <Clock size={9} /> {days}d
+                      </span>
+                    )}
+                    {status === "live" && p.pricing_tier && (
+                      <span className={`absolute top-2 left-2 text-[9px] px-2 py-0.5 rounded-full text-white bg-gradient-to-r ${TIER_COLOR[p.pricing_tier] || TIER_COLOR.starter}`}>
+                        {p.pricing_tier}
+                      </span>
+                    )}
                   </div>
 
                   <div className="p-3 space-y-2">
@@ -571,26 +786,41 @@ export default function WebsitesPage() {
                       </p>
                     </div>
 
-                    {(p.vercel_url || p.custom_domain) && (
+                    {(p.preview_url || p.vercel_url || p.custom_domain) && (
                       <a
-                        href={`https://${p.custom_domain || p.vercel_url?.replace(/^https?:\/\//, "")}`}
+                        href={p.custom_domain ? `https://${p.custom_domain}` : (p.preview_url || p.vercel_url || "#")}
                         target="_blank"
                         rel="noopener"
                         className="text-[10px] text-gold hover:text-gold-light truncate block"
                       >
-                        {p.custom_domain || p.vercel_url}
+                        {p.custom_domain || p.preview_url || p.vercel_url}
                       </a>
                     )}
 
-                    <div className="flex items-center justify-between pt-1">
-                      <div className="flex items-center gap-1">
+                    <div className="flex items-center justify-between pt-1 gap-1">
+                      <div className="flex items-center gap-1 flex-wrap">
                         <button onClick={() => setActive(p)} className="text-[10px] px-2 py-1 rounded-md bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1">
                           <Eye size={10} /> Open
                         </button>
-                        {p.vercel_url && (
-                          <a href={p.vercel_url} target="_blank" rel="noopener" className="text-[10px] px-2 py-1 rounded-md border border-border text-muted hover:text-foreground flex items-center gap-1">
-                            <ExternalLink size={10} />
-                          </a>
+                        {status === "preview" && (
+                          <>
+                            <button onClick={() => openPricing(p)} className="text-[10px] px-2 py-1 rounded-md bg-gradient-to-r from-amber-400 to-orange-500 text-black font-semibold flex items-center gap-1">
+                              <Rocket size={10} /> Go Live
+                            </button>
+                            <button onClick={() => shareDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-border text-muted hover:text-foreground flex items-center gap-1">
+                              <Share2 size={10} />
+                            </button>
+                          </>
+                        )}
+                        {status === "expired" && (
+                          <button onClick={() => extendDemo(p)} className="text-[10px] px-2 py-1 rounded-md border border-amber-500/30 bg-amber-500/10 text-amber-300 flex items-center gap-1">
+                            <Calendar size={10} /> Extend
+                          </button>
+                        )}
+                        {status === "live" && p.monthly_price && (
+                          <span className="text-[10px] px-2 py-1 rounded-md bg-green-500/10 text-green-400 border border-green-500/30 inline-flex items-center gap-1">
+                            <DollarSign size={10} />{p.monthly_price}/mo
+                          </span>
                         )}
                       </div>
                       <button onClick={() => deleteProject(p.id)} className="p-1 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400">
@@ -615,15 +845,15 @@ export default function WebsitesPage() {
         </div>
         <div className="card border-gold/10">
           <h3 className="section-header flex items-center gap-2">
-            <Wand2 size={12} className="text-gold" /> 2. Claude designs
+            <Wand2 size={12} className="text-gold" /> 2. Free 14-day demo
           </h3>
-          <p className="text-[10px] text-muted">Claude Sonnet generates a conversion-optimized one-pager: hero animations, social proof, CTAs, FAQ, footer.</p>
+          <p className="text-[10px] text-muted">Auto-deployed to a shareable demo URL. Test, share with clients, no card required.</p>
         </div>
         <div className="card border-gold/10">
           <h3 className="section-header flex items-center gap-2">
-            <Zap size={12} className="text-gold" /> 3. Deploy & own
+            <Zap size={12} className="text-gold" /> 3. Go live when ready
           </h3>
-          <p className="text-[10px] text-muted">One-click deploy to Vercel. Buy a domain via GoDaddy — you own it, access DNS in <a href="/dashboard/domains" className="text-gold">Domains</a>.</p>
+          <p className="text-[10px] text-muted">Custom monthly pricing based on complexity. Pay only when you go live with your domain.</p>
         </div>
       </div>
 
@@ -640,6 +870,218 @@ export default function WebsitesPage() {
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Trust badges & guarantees</div>
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Mobile-first Tailwind</div>
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Scroll-reveal animations</div>
+        </div>
+      </div>
+
+      {/* Pricing modal */}
+      {pricingFor && (
+        <PricingModal
+          project={pricingFor}
+          quote={quote}
+          quoteLoading={quoteLoading}
+          activeAddons={activeAddons}
+          billingCycle={billingCycle}
+          subscribing={subscribing}
+          onClose={() => setPricingFor(null)}
+          onToggleAddon={toggleAddon}
+          onCycleChange={setBillingCycle}
+          onSubscribe={subscribe}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ────────────────────────── Pricing modal component ────────────────────────── */
+
+function PricingModal({
+  project,
+  quote,
+  quoteLoading,
+  activeAddons,
+  billingCycle,
+  subscribing,
+  onClose,
+  onToggleAddon,
+  onCycleChange,
+  onSubscribe,
+}: {
+  project: WebsiteProject;
+  quote: PriceQuote | null;
+  quoteLoading: boolean;
+  activeAddons: string[];
+  billingCycle: "monthly" | "yearly";
+  subscribing: boolean;
+  onClose: () => void;
+  onToggleAddon: (k: string) => void;
+  onCycleChange: (c: "monthly" | "yearly") => void;
+  onSubscribe: () => void;
+}) {
+  const indexHtml = project.generated_files?.["index.html"] || "";
+  const display = billingCycle === "yearly" ? quote?.yearly_price : quote?.monthly_price;
+  const cyclePer = billingCycle === "yearly" ? "/yr" : "/mo";
+  const tier = quote?.tier || "starter";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm fade-in" onClick={onClose}>
+      <div
+        className="card max-w-5xl w-full max-h-[90vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-base font-bold flex items-center gap-2">
+              <Rocket size={16} className="text-gold" /> Your Website is Ready!
+            </h2>
+            <p className="text-[11px] text-muted">{project.name} — pick a plan to go live.</p>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/5"><X size={14} /></button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Live preview */}
+          <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23]" style={{ height: 480 }}>
+            {indexHtml ? (
+              <iframe srcDoc={indexHtml} className="w-full h-full" title="Live preview" sandbox="allow-scripts" />
+            ) : (
+              <div className="h-full flex items-center justify-center text-muted text-xs">
+                <Loader size={16} className="animate-spin" />
+              </div>
+            )}
+          </div>
+
+          {/* Pricing details */}
+          <div className="space-y-3">
+            {/* Tier badge + price */}
+            <div className={`rounded-xl p-4 text-white bg-gradient-to-br ${TIER_COLOR[tier]}`}>
+              <p className="text-[10px] uppercase tracking-wider opacity-80">Recommended tier</p>
+              <p className="text-lg font-bold capitalize">{tier}</p>
+              <div className="flex items-baseline gap-1 mt-2">
+                {quoteLoading ? (
+                  <Loader size={20} className="animate-spin" />
+                ) : (
+                  <>
+                    <span className="text-3xl font-bold">${display ?? "—"}</span>
+                    <span className="text-xs opacity-90">{cyclePer}</span>
+                  </>
+                )}
+              </div>
+              {billingCycle === "yearly" && quote && (
+                <p className="text-[10px] opacity-90 mt-1">
+                  Save 17% — equiv ${(quote.yearly_price / 12).toFixed(2)}/mo
+                </p>
+              )}
+            </div>
+
+            {/* Billing cycle toggle */}
+            <div className="flex items-center bg-surface-light border border-border rounded-lg p-0.5">
+              <button
+                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "monthly" ? "bg-gold text-black font-semibold" : "text-muted"}`}
+                onClick={() => onCycleChange("monthly")}
+              >
+                Monthly
+              </button>
+              <button
+                className={`flex-1 text-[10px] py-1.5 rounded-md transition ${billingCycle === "yearly" ? "bg-gold text-black font-semibold" : "text-muted"}`}
+                onClick={() => onCycleChange("yearly")}
+              >
+                Yearly <span className="text-[9px] opacity-80">(-17%)</span>
+              </button>
+            </div>
+
+            {/* Breakdown */}
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-2">Price breakdown</p>
+              <div className="space-y-1">
+                {quote?.breakdown.map((b, i) => (
+                  <div key={i} className="flex items-center justify-between text-[11px] py-1 border-b border-border/40">
+                    <span className="text-foreground">{b.item}</span>
+                    <span className="text-muted">${b.price}</span>
+                  </div>
+                ))}
+                {!quote?.breakdown?.length && !quoteLoading && (
+                  <p className="text-[11px] text-muted">Calculating…</p>
+                )}
+              </div>
+            </div>
+
+            {/* Addons */}
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-muted mb-2">Customize your plan</p>
+              <div className="space-y-1.5">
+                {ALL_ADDONS.map((a) => {
+                  const active = activeAddons.includes(a.key);
+                  return (
+                    <button
+                      key={a.key}
+                      onClick={() => onToggleAddon(a.key)}
+                      className={`w-full flex items-center justify-between p-2 rounded-lg border text-left transition ${active ? "border-gold bg-gold/10" : "border-border hover:border-gold/30"}`}
+                    >
+                      <span className="flex items-center gap-2 text-[11px]">
+                        <span className={active ? "text-gold" : "text-muted"}>{a.icon}</span>
+                        {a.label}
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <span className="text-[10px] text-muted">+${a.price}/mo</span>
+                        <span className={`w-4 h-4 rounded-full border flex items-center justify-center ${active ? "bg-gold border-gold" : "border-border"}`}>
+                          {active && <Check size={10} className="text-black" />}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* CTA */}
+            <div className="space-y-2 pt-2">
+              <button
+                onClick={onSubscribe}
+                disabled={subscribing || quoteLoading || !quote}
+                className="w-full text-xs px-4 py-3 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center justify-center gap-1.5 disabled:opacity-50"
+              >
+                {subscribing ? <Loader size={12} className="animate-spin" /> : <Rocket size={12} />}
+                Go Live — ${display}{cyclePer}
+              </button>
+              <button
+                onClick={onClose}
+                className="w-full text-[11px] px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground"
+              >
+                Continue Demo (14 days free)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Comparison */}
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="card border-border">
+            <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
+              <Eye size={11} className="text-muted" /> Free Demo
+            </h3>
+            <ul className="text-[10px] text-muted space-y-1">
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Shareable demo URL</li>
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> 14-day access</li>
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Vercel preview hosting</li>
+              <li className="flex items-center gap-1 text-muted/60"><X size={9} /> ShortStack watermark</li>
+              <li className="flex items-center gap-1 text-muted/60"><X size={9} /> No custom domain</li>
+              <li className="flex items-center gap-1 text-muted/60"><X size={9} /> No analytics</li>
+            </ul>
+          </div>
+          <div className="card border-gold/30 bg-gradient-to-br from-amber-500/5 to-orange-500/5">
+            <h3 className="text-[11px] font-semibold mb-2 flex items-center gap-1.5">
+              <Crown size={11} className="text-gold" /> Paid Plan
+            </h3>
+            <ul className="text-[10px] text-muted space-y-1">
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Everything in demo</li>
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> No watermark</li>
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Custom domain support</li>
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Production hosting</li>
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Analytics + uptime</li>
+              <li className="flex items-center gap-1"><Check size={9} className="text-success" /> Cancel anytime</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

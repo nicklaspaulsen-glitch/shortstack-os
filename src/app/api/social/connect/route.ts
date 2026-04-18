@@ -32,13 +32,21 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { client_id, platform, account_name, account_id, access_token, refresh_token, action } = body;
 
-  if (!client_id || !platform) {
-    return NextResponse.json({ error: "client_id and platform are required" }, { status: 400 });
+  if (!platform) {
+    return NextResponse.json({ error: "platform is required" }, { status: 400 });
   }
 
-  // Verify ownership of client_id
-  const access = await verifyClientAccess(supabase, user.id, client_id);
-  if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // Verify ownership if client_id is provided.
+  // If client_id is missing/null, the user is connecting an AGENCY-LEVEL social account
+  // (their own social presence, not a client's). That's allowed for any authenticated user.
+  if (client_id) {
+    const access = await verifyClientAccess(supabase, user.id, client_id);
+    if (access.denied) {
+      return NextResponse.json({
+        error: "You don't own this client. Try connecting without selecting a client (agency-level), or switch to a client you manage.",
+      }, { status: 403 });
+    }
+  }
 
   // If action is "zernio_oauth", redirect to Zernio OAuth flow
   if (action === "zernio_oauth") {
@@ -64,14 +72,34 @@ export async function POST(request: NextRequest) {
       if (!zernioRes.ok) {
         const zernioApiBase = "https://api.zernio.com/v1";
 
-        // Ensure Zernio profile exists
-        const { data: client } = await supabase
-          .from("clients")
-          .select("id, business_name, zernio_profile_id")
-          .eq("id", client_id)
-          .single();
+        // Determine the Zernio profile to use
+        // - If client_id: the client's Zernio profile (create if missing)
+        // - If no client_id: the agency's own Zernio profile (create under profiles.zernio_profile_id)
+        let profileId: string | null = null;
+        let profileName: string;
+        let externalId: string;
 
-        let profileId = client?.zernio_profile_id;
+        if (client_id) {
+          const { data: client } = await supabase
+            .from("clients")
+            .select("id, business_name, zernio_profile_id")
+            .eq("id", client_id)
+            .single();
+          profileId = client?.zernio_profile_id || null;
+          profileName = client?.business_name || `Client ${client_id}`;
+          externalId = String(client_id);
+        } else {
+          // Agency-level: use or create the user's own Zernio profile
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("id, full_name, company_name, zernio_profile_id")
+            .eq("id", user.id)
+            .single();
+          profileId = profile?.zernio_profile_id || null;
+          profileName = profile?.company_name || profile?.full_name || `Agency ${user.id.slice(0, 8)}`;
+          externalId = String(user.id);
+        }
+
         if (!profileId) {
           const profileRes = await fetch(`${zernioApiBase}/profiles`, {
             method: "POST",
@@ -80,14 +108,24 @@ export async function POST(request: NextRequest) {
               Authorization: `Bearer ${ZERNIO_API_KEY}`,
             },
             body: JSON.stringify({
-              name: client?.business_name || `Client ${client_id}`,
-              external_id: client_id,
+              name: profileName,
+              external_id: externalId,
             }),
           });
           if (profileRes.ok) {
             const profileData = await profileRes.json();
             profileId = profileData.id;
-            await supabase.from("clients").update({ zernio_profile_id: profileId }).eq("id", client_id);
+            if (client_id) {
+              await supabase.from("clients").update({ zernio_profile_id: profileId }).eq("id", client_id);
+            } else {
+              await supabase.from("profiles").update({ zernio_profile_id: profileId }).eq("id", user.id);
+            }
+          } else {
+            const errText = await profileRes.text();
+            return NextResponse.json({
+              error: `Zernio profile creation failed: ${errText.slice(0, 200)}`,
+              status: profileRes.status,
+            }, { status: 502 });
           }
         }
 

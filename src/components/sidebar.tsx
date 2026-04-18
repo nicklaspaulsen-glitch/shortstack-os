@@ -262,6 +262,70 @@ export default function Sidebar() {
   const [renames, setRenames] = useState<Record<string, string>>({});
   const [iconOverrides, setIconOverrides] = useState<Record<string, string>>({});
 
+  // ── Unread counts per nav path (Discord-style red dots) ───────────
+  const [unread, setUnread] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    if (authLoading || !userRole) return;
+    let cancelled = false;
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch("/api/user/sidebar-unread", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled) return;
+        if (data?.unread && typeof data.unread === "object") {
+          setUnread(data.unread as Record<string, number>);
+        }
+      } catch {
+        // Silent — dots simply won't appear
+      }
+    };
+
+    fetchUnread();
+    // Refetch every 30s for live updates (tab visible only)
+    timer = setInterval(() => {
+      if (typeof document === "undefined" || !document.hidden) fetchUnread();
+    }, 30_000);
+
+    return () => {
+      cancelled = true;
+      if (timer) clearInterval(timer);
+    };
+  }, [authLoading, userRole]);
+
+  // Debounced "mark visited" — fires when user navigates to a tracked path.
+  // We piggyback off pathname changes so any nav method (link click, back/fwd,
+  // programmatic push) all flow through here.
+  useEffect(() => {
+    if (!pathname) return;
+    if (!(pathname in unread)) return; // not tracked or already 0
+    const handle = setTimeout(() => {
+      void fetch("/api/user/sidebar-unread", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nav_path: pathname }),
+        cache: "no-store",
+      })
+        .then(() => {
+          // Optimistically clear the count locally so the dot disappears immediately.
+          setUnread((prev) => {
+            if (!(pathname in prev)) return prev;
+            const next = { ...prev };
+            delete next[pathname];
+            return next;
+          });
+        })
+        .catch(() => {});
+    }, 400);
+    return () => clearTimeout(handle);
+    // We only want this firing on pathname change, not whenever unread updates,
+    // otherwise typing into a different page could re-fire spuriously.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+
   useEffect(() => {
     if (authLoading || !userRole) return;
     let cancelled = false;
@@ -407,24 +471,26 @@ export default function Sidebar() {
     const isActive = isItemActive(item.href, pathname);
     const customIcon = renderCustomIcon(iconOverrides[item.href], 16);
     const label = renames[item.href] || item.label;
+    const unreadCount = unread[item.href] || 0;
     return (
       <div key={item.href} className="relative sidebar-item-anim">
         <Link
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`flex items-center gap-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
+          className={`nav-item-hover flex items-center gap-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
             indented ? "px-3.5" : "px-2.5"
           } ${
             isActive
-              ? "text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
+              ? "active text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
               : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
           }`}
         >
           <span className={`shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
             {customIcon || item.icon}
           </span>
-          <span className="truncate">{label}</span>
+          <span className="truncate flex-1">{label}</span>
+          {unreadCount > 0 && <UnreadBadge count={unreadCount} />}
           {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
         </Link>
       </div>
@@ -436,21 +502,23 @@ export default function Sidebar() {
     const isActive = isItemActive(item.href, pathname);
     const customIcon = renderCustomIcon(iconOverrides[item.href], 16);
     const label = renames[item.href] || item.label;
+    const unreadCount = unread[item.href] || 0;
     return (
       <div key={item.href} className="relative">
         <Link
           href={item.href}
           onMouseEnter={() => setHoveredItem(item.href)}
           onMouseLeave={() => setHoveredItem(null)}
-          className={`flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
+          className={`nav-item-hover flex items-center gap-2.5 px-2.5 py-[7px] my-[1px] rounded-xl text-[12px] transition-all duration-100 ${
             isActive
-              ? "text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
+              ? "active text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
               : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
           }`}
-          title={label}
+          title={unreadCount > 0 ? `${label} (${unreadCount})` : label}
         >
-          <span className={`shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
+          <span className={`relative shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
             {customIcon || item.icon}
+            {unreadCount > 0 && <UnreadDotMini />}
           </span>
           {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
         </Link>
@@ -458,6 +526,7 @@ export default function Sidebar() {
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
             <div className="bg-surface border border-border rounded-xl px-2.5 py-1.5 shadow-elevated text-xs font-medium text-foreground">
               {label}
+              {unreadCount > 0 && <span className="ml-1.5 text-[10px] text-red-500 font-bold">{unreadCount > 9 ? "9+" : unreadCount}</span>}
             </div>
           </div>
         )}
@@ -795,6 +864,29 @@ function ExtInstallTooltip() {
         </>
       )}
     </div>
+  );
+}
+
+/* ─── Unread Badge (Discord-style red pill with count) ───────────── */
+function UnreadBadge({ count }: { count: number }) {
+  const display = count > 9 ? "9+" : String(count);
+  return (
+    <span
+      className="ml-auto shrink-0 inline-flex items-center justify-center min-w-[16px] h-[16px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold leading-none unread-pulse"
+      aria-label={`${count} unread`}
+    >
+      {display}
+    </span>
+  );
+}
+
+/* ─── Mini dot for the collapsed sidebar (overlays the icon) ─────── */
+function UnreadDotMini() {
+  return (
+    <span
+      className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-red-500 ring-1 ring-surface unread-pulse"
+      aria-hidden
+    />
   );
 }
 

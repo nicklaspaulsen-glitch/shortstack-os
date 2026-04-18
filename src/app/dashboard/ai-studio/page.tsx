@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Mic, ImagePlus, Scissors, Film, Music, Volume2, Layers, Sparkles,
   Upload, Download, Play, Loader, X,
@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import ImageWizard from "@/components/image-wizard";
 
 // ── Types ────────────────────────────────────────────────────────
 interface JobResult {
@@ -39,6 +40,19 @@ export default function AIStudioPage() {
   const [activeTool, setActiveTool] = useState<ToolId>("transcribe");
   const [processing, setProcessing] = useState(false);
   const [history, setHistory] = useState<JobResult[]>([]);
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardImages, setWizardImages] = useState<{ url: string; width: number; height: number }[]>([]);
+
+  // Auto-open the wizard on first visit (newbie-friendly default)
+  useEffect(() => {
+    try {
+      const seen = localStorage.getItem("ss-image-wizard-seen");
+      if (!seen) {
+        setWizardOpen(true);
+        setActiveTool("image-gen");
+      }
+    } catch { /* localStorage unavailable */ }
+  }, []);
 
   return (
     <div className="fade-in p-6 max-w-7xl mx-auto">
@@ -49,11 +63,61 @@ export default function AIStudioPage() {
         subtitle="GPU-powered AI tools on your RunPod cluster."
         gradient="ocean"
         actions={
-          <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
-            9 tools available
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setActiveTool("image-gen");
+                setWizardOpen(true);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all hover-lift"
+            >
+              <Wand2 size={12} /> Generate with AI
+            </button>
+            <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
+              9 tools available
+            </span>
+          </div>
         }
       />
+
+      <ImageWizard
+        open={wizardOpen}
+        onClose={() => {
+          setWizardOpen(false);
+          try { localStorage.setItem("ss-image-wizard-seen", "1"); } catch { /* ignore */ }
+        }}
+        onComplete={(imgs) => {
+          setWizardImages(imgs.map(i => ({ url: i.url, width: i.width, height: i.height })));
+          setActiveTool("image-gen");
+        }}
+      />
+
+      {/* Wizard results — show inline once produced so they don't disappear when modal closes */}
+      {wizardImages.length > 0 && (
+        <div className="bg-surface border border-gold/30 rounded-2xl p-4 mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles size={14} className="text-gold" />
+              <h3 className="text-sm font-semibold text-foreground">Latest wizard generation</h3>
+              <span className="text-[10px] text-muted">{wizardImages.length} image{wizardImages.length > 1 ? "s" : ""}</span>
+            </div>
+            <button
+              onClick={() => setWizardImages([])}
+              className="text-[10px] text-muted hover:text-foreground"
+            >
+              Clear
+            </button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {wizardImages.map((img, i) => (
+              <a key={i} href={img.url} target="_blank" rel="noopener noreferrer" className="block bg-black rounded-lg overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img.url} alt={`Wizard ${i + 1}`} className="w-full" style={{ aspectRatio: `${img.width} / ${img.height}` }} />
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Tool grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

@@ -385,6 +385,70 @@ export async function POST(request: NextRequest) {
             },
           });
         }
+      } else if (type === "website_subscription") {
+        // Per-website subscription from the website builder pricing modal.
+        const websiteId = session.metadata?.website_id;
+        const profileId = session.metadata?.profile_id;
+        const tier = session.metadata?.tier;
+        const billingCycle = session.metadata?.billing_cycle || "monthly";
+        const addonsRaw = session.metadata?.addons || "";
+        const addons = addonsRaw ? addonsRaw.split(",").filter(Boolean) : [];
+        const includesWhiteLabel = addons.includes("white_label");
+
+        if (websiteId && profileId) {
+          // Promote the site to live and (optionally) strip the watermark.
+          await supabase.from("website_projects").update({
+            status: "live",
+            watermark_enabled: !includesWhiteLabel,
+            demo_expires_at: null,
+            pricing_tier: tier,
+            updated_at: new Date().toISOString(),
+          }).eq("id", websiteId);
+
+          // Update the most-recent pending subscription row with the Stripe IDs.
+          const { data: latest } = await supabase
+            .from("website_subscriptions")
+            .select("id")
+            .eq("website_id", websiteId)
+            .eq("profile_id", profileId)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .single();
+
+          if (latest?.id) {
+            await supabase.from("website_subscriptions").update({
+              stripe_subscription_id: typeof session.subscription === "string" ? session.subscription : null,
+              status: "active",
+              current_period_end: new Date(Date.now() + (billingCycle === "yearly" ? 365 : 30) * 86_400_000).toISOString(),
+              updated_at: new Date().toISOString(),
+            }).eq("id", latest.id);
+          }
+
+          await supabase.from("trinity_log").insert({
+            action_type: "custom",
+            description: `Website went live: ${tier} tier ($${((session.amount_total || 0) / 100).toFixed(2)}/${billingCycle === "yearly" ? "yr" : "mo"})`,
+            user_id: profileId,
+            status: "completed",
+            result: {
+              type: "website_subscription",
+              website_id: websiteId,
+              tier,
+              billing_cycle: billingCycle,
+              addons,
+              session_id: session.id,
+            },
+          });
+        }
+      } else if (type === "demo_extension") {
+        const websiteId = session.metadata?.website_id;
+        const newExpiry = session.metadata?.new_expires_at;
+        if (websiteId && newExpiry) {
+          await supabase.from("website_projects").update({
+            demo_expires_at: newExpiry,
+            status: "preview",
+            updated_at: new Date().toISOString(),
+          }).eq("id", websiteId);
+        }
       }
       break;
     }

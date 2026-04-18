@@ -915,11 +915,172 @@ body {
   --color-muted-rgb: 136 136 136;
 }
 
+/* ═══════════ PREMIUM ANIMATION POLISH ═══════════
+   Utility classes for subtle, classy interactions across the app.
+   All animations are <400ms and respect prefers-reduced-motion via the
+   universal rule below. */
+
+/* Button press with slight depression */
+.btn-premium {
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.15s ease;
+  will-change: transform, box-shadow;
+}
+.btn-premium:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Card hover with subtle lift */
+.card-premium {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+  will-change: transform;
+}
+.card-premium:hover {
+  transform: translateY(-2px);
+}
+
+/* Input focus glow (gold) */
+.input-glow:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+  transition: box-shadow 0.2s ease;
+}
+
+/* Stagger fade-in for lists (premium variant — 8px, four-stage curve) */
+@keyframes premiumFadeSlideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.stagger-fade > * {
+  animation: premiumFadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.stagger-fade > *:nth-child(1) { animation-delay: 0.04s; }
+.stagger-fade > *:nth-child(2) { animation-delay: 0.08s; }
+.stagger-fade > *:nth-child(3) { animation-delay: 0.12s; }
+.stagger-fade > *:nth-child(4) { animation-delay: 0.16s; }
+.stagger-fade > *:nth-child(5) { animation-delay: 0.20s; }
+.stagger-fade > *:nth-child(6) { animation-delay: 0.24s; }
+.stagger-fade > *:nth-child(7) { animation-delay: 0.28s; }
+.stagger-fade > *:nth-child(8) { animation-delay: 0.32s; }
+
+/* Number counter pop-in for big metrics */
+@keyframes numberPopIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.number-popin {
+  animation: numberPopIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Gold shimmer sweep (for new items / CTAs) */
+@keyframes shimmerSweep {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer-gold {
+  background: linear-gradient(90deg,
+    rgba(201,168,76,0)    0%,
+    rgba(201,168,76,0.15) 50%,
+    rgba(201,168,76,0)    100%);
+  background-size: 200% 100%;
+  animation: shimmerSweep 2.5s ease-in-out infinite;
+}
+
+/* Smooth skeleton pulse */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.7; }
+}
+.skeleton-pulse {
+  animation: skeletonPulse 1.6s ease-in-out infinite;
+}
+
+/* Sidebar nav item hover (subtle gold left bar slide-in) */
+.nav-item-hover {
+  position: relative;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.nav-item-hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  background: var(--color-accent, #C9A84C);
+  transform: translateY(-50%);
+  transition: height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1px;
+  pointer-events: none;
+}
+.nav-item-hover:hover::before,
+.nav-item-hover.active::before {
+  height: 60%;
+}
+
+/* Checkbox bounce when checked */
+@keyframes checkBounce {
+  0%   { transform: scale(0.8); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1);   }
+}
+.check-bounce {
+  animation: checkBounce 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Modal / dropdown entry */
+@keyframes popFade {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+.pop-fade {
+  animation: popFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tab indicator slide */
+.tab-indicator {
+  transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Toast slide-in from the right */
+@keyframes toastSlide {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+.toast-slide {
+  animation: toastSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Sidebar unread red-dot pulse (subtle, 2s loop) */
+@keyframes unreadPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); }
+  50%      { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0);  }
+}
+.unread-pulse {
+  animation: unreadPulse 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+  /* Belt-and-suspenders: kill the named animations explicitly so they
+     don't reach a partial state when the global "0.01ms" override applies. */
+  .stagger-fade > *,
+  .number-popin,
+  .shimmer-gold,
+  .skeleton-pulse,
+  .check-bounce,
+  .pop-fade,
+  .toast-slide,
+  .unread-pulse {
+    animation: none !important;
   }
 }
 

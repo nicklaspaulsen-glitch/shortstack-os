@@ -11,7 +11,7 @@ interface EmptyStateProps {
 
 export default function EmptyState({ icon, title, description, action }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 gap-3 fade-in">
+    <div className="flex flex-col items-center justify-center py-12 gap-3 fade-in pop-fade">
       {icon && (
         <div className="text-muted/30 mb-1 float">{icon}</div>
       )}

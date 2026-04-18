@@ -239,7 +239,7 @@ export default function DashboardPage() {
       <TodaysPriority />
 
       {/* ─── Primary Metrics ──────────────────────────────────────── */}
-      {!focus && <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      {!focus && <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 stagger-fade">
         <MetricCard
           label="Monthly Revenue"
           value={formatCurrency(stats.totalMRR)}
@@ -781,7 +781,7 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
   }).join(" ");
 
   return (
-    <div className={`relative rounded-2xl border ${t.border} ${t.bg} ${t.glow} p-4 transition-all duration-250 hover:-translate-y-0.5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_2px_4px_rgba(0,0,0,0.15),0_8px_20px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_2px_4px_rgba(0,0,0,0.15),0_14px_32px_-8px_rgba(0,0,0,0.5)] overflow-hidden`}>
+    <div className={`card-premium relative rounded-2xl border ${t.border} ${t.bg} ${t.glow} p-4 transition-all duration-250 hover:-translate-y-0.5 shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_2px_4px_rgba(0,0,0,0.15),0_8px_20px_-6px_rgba(0,0,0,0.35)] hover:shadow-[0_1px_0_rgba(255,255,255,0.06)_inset,0_2px_4px_rgba(0,0,0,0.15),0_14px_32px_-8px_rgba(0,0,0,0.5)] overflow-hidden`}>
       {/* Decorative blob */}
       <div
         className={`pointer-events-none absolute -bottom-8 -right-8 w-24 h-24 rounded-full ${t.iconBg} blur-xl`}
@@ -794,7 +794,7 @@ function MetricCard({ label, value, sub, icon, trend, accent = "gold" }: {
         </div>
       </div>
       <div className="relative flex items-end gap-2">
-        <span className="text-2xl font-bold font-mono tracking-tight text-foreground">{value}</span>
+        <span key={value} className="text-2xl font-bold font-mono tracking-tight text-foreground number-popin">{value}</span>
         {trend && (
           <span className={`mb-0.5 ${trend === "up" ? "text-success" : "text-danger"}`}>
             {trend === "up" ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}

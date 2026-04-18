@@ -191,14 +191,14 @@ export default function SocialManagerPage() {
   }
 
   async function connectPlatform(platform: string) {
-    if (!selectedClient) return;
     setConnectingPlatform(platform);
     try {
       const res = await fetch("/api/social/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          client_id: selectedClient,
+          // client_id is optional — if null, connects at agency level
+          client_id: selectedClient || null,
           platform,
           action: "zernio_oauth",
         }),

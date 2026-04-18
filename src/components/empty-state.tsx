@@ -20,7 +20,7 @@ export default function EmptyState({
   onAction,
 }: EmptyStateProps) {
   return (
-    <div className="relative flex flex-col items-center justify-center text-center py-16 px-6 rounded-2xl border border-dashed border-border bg-gradient-to-b from-gold/[0.02] to-transparent overflow-hidden">
+    <div className="pop-fade relative flex flex-col items-center justify-center text-center py-16 px-6 rounded-2xl border border-dashed border-border bg-gradient-to-b from-gold/[0.02] to-transparent overflow-hidden">
       {/* Background pattern */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
