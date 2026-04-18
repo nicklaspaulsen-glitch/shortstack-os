@@ -1604,15 +1604,15 @@ export default function CommunityPage() {
             </div>
           )}
 
-          {/* Helpful Links */}
+          {/* Helpful Links — point at real in-app destinations */}
           <div className="card p-4">
             <h3 className="text-xs font-semibold mb-3 flex items-center gap-2"><Link2 size={12} className="text-gold" /> Helpful Links</h3>
             <div className="space-y-2">
               {[
-                { label: "ShortStack Documentation", url: "#", desc: "Official docs and API reference" },
-                { label: "Video Tutorials Playlist", url: "#", desc: "Step-by-step walkthroughs on YouTube" },
-                { label: "Feature Changelog", url: "#", desc: "See what's new in each release" },
-                { label: "Status Page", url: "#", desc: "Check system uptime and incidents" },
+                { label: "API Documentation", url: "/dashboard/api-docs", desc: "Full API reference for integrations" },
+                { label: "Changelog", url: "/dashboard/changelog", desc: "What's new in each release" },
+                { label: "Referral Program", url: "/dashboard/referrals", desc: "Earn rewards for every client you refer" },
+                { label: "Marketplace", url: "/dashboard/marketplace", desc: "Plugins and templates from the community" },
               ].map(link => (
                 <a key={link.label} href={link.url} className="flex items-center gap-3 p-2.5 rounded-lg border border-border hover:border-gold/20 transition-all">
                   <ExternalLink size={12} className="text-gold shrink-0" />
