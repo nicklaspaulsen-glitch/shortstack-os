@@ -84,11 +84,69 @@ export default function ClientChatWidget() {
   if (hidden) return null;
 
   if (!isOpen) {
+    const unreadCount = messages.filter(m => m.role === "assistant").length - 1; // excluding the initial greeting; could be wired to real unread later
     return (
       <Draggable defaultX={typeof window !== "undefined" ? window.innerWidth - 80 : 1000} defaultY={typeof window !== "undefined" ? window.innerHeight - 80 : 700} storageKey="chat_bubble">
-        <button onClick={() => setIsOpen(true)}
-          className="w-14 h-14 bg-gold rounded-full shadow-lg shadow-gold/20 flex items-center justify-center hover:bg-gold-light transition-all hover:scale-105 active:scale-95">
-          <MessageSquare size={24} className="text-black" />
+        <button
+          onClick={() => setIsOpen(true)}
+          aria-label="Open Trinity AI chat"
+          className="trinity-orb relative w-14 h-14 rounded-full flex items-center justify-center cursor-pointer group"
+        >
+          {/* Pulsing halos */}
+          <span className="trinity-halo pointer-events-none" />
+          <span className="trinity-halo trinity-halo-delay pointer-events-none" />
+
+          {/* Main gradient orb */}
+          <div className="trinity-body w-14 h-14 rounded-full flex items-center justify-center relative overflow-hidden">
+            <MessageSquare size={22} className="text-black relative z-10 group-hover:rotate-6 transition-transform" />
+            {/* Inner gloss */}
+            <span className="absolute top-1.5 left-2 w-3.5 h-2 bg-white/50 rounded-full blur-sm pointer-events-none" />
+          </div>
+
+          {/* Unread dot */}
+          {unreadCount > 0 && (
+            <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-red-500 border-2 border-black animate-pulse z-20" />
+          )}
+
+          <style jsx>{`
+            .trinity-orb {
+              filter: drop-shadow(0 4px 18px rgba(201, 168, 76, 0.45));
+            }
+            .trinity-body {
+              background: radial-gradient(circle at 35% 30%, #ffe28a 0%, #f5c03c 35%, #c9a84c 70%, #8c6d1a 100%);
+              border: 1px solid rgba(255, 220, 130, 0.6);
+              box-shadow:
+                inset 0 0 10px rgba(255, 240, 190, 0.4),
+                0 0 20px rgba(201, 168, 76, 0.5);
+              animation: trinity-breathe 3.2s ease-in-out infinite;
+              transition: transform 0.3s ease;
+            }
+            .trinity-orb:hover .trinity-body {
+              transform: rotate(6deg) scale(1.08);
+              box-shadow:
+                inset 0 0 14px rgba(255, 240, 190, 0.6),
+                0 0 32px rgba(255, 200, 90, 0.7);
+            }
+            .trinity-orb:active .trinity-body {
+              transform: scale(0.95);
+            }
+            @keyframes trinity-breathe {
+              0%, 100% { transform: scale(1); }
+              50%      { transform: scale(1.05); }
+            }
+            .trinity-halo {
+              position: absolute;
+              inset: 0;
+              border-radius: 9999px;
+              background: radial-gradient(circle, rgba(201, 168, 76, 0.5) 0%, transparent 70%);
+              animation: trinity-halo-pulse 2.4s ease-out infinite;
+            }
+            .trinity-halo-delay { animation-delay: 1.2s; }
+            @keyframes trinity-halo-pulse {
+              0%   { transform: scale(1);   opacity: 0.7; }
+              100% { transform: scale(1.9); opacity: 0; }
+            }
+          `}</style>
         </button>
       </Draggable>
     );

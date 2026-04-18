@@ -10,6 +10,7 @@
 
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Check, Sparkles, X, Zap, Image as ImageIcon, Type, Palette, Film, Music, Wand2, RefreshCw } from "lucide-react";
+import { mergeNonEmpty } from "@/lib/merge-patch";
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -119,17 +120,9 @@ export default function CreationWizard({
     setAiLoading(true);
     try {
       const patch = await currentStep.aiHelper.onClick(data);
-      // Only merge keys that have truthy values — prevents AI helpers from
-      // wiping existing user input when the API fails or returns undefined.
-      setData(prev => {
-        const next = { ...prev };
-        for (const [k, v] of Object.entries(patch || {})) {
-          if (v !== undefined && v !== null && v !== "") {
-            next[k] = v;
-          }
-        }
-        return next;
-      });
+      // mergeNonEmpty skips undefined/null/"" — prevents AI helpers from
+      // wiping existing user input when the API fails or returns partial data.
+      setData(prev => mergeNonEmpty(prev, patch));
     } catch (err) {
       console.error("AI helper failed:", err);
     } finally {

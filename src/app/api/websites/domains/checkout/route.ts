@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import Stripe from "stripe";
+import { computeMonthlyPrice, computeYearlyPrice } from "@/lib/domain-pricing";
 
 /**
  * Create a Stripe Checkout session for a domain purchase.
@@ -15,14 +16,6 @@ import Stripe from "stripe";
  */
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
-
-function computeMonthly(base: number, registrarMarkup = 0.35, opsFee = 4): number {
-  // Client pays the domain cost spread monthly + a small ops fee covering
-  // Vercel hosting, SSL, DNS management. Default: GoDaddy cost + 35% markup
-  // + $4 ops = sane floor.
-  const annual = base * (1 + registrarMarkup);
-  return Math.max(9, Math.round(annual / 12 + opsFee));
-}
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -52,9 +45,8 @@ export async function POST(request: NextRequest) {
     }, { status: 500 });
   }
 
-  // Pricing: monthly = base*(1 + markup)/12 + ops, yearly = base*(1 + markup) + ops*12*0.8 (20% annual discount)
-  const monthlyPrice = computeMonthly(base_price);
-  const yearlyPrice = Math.round((monthlyPrice * 12) * 0.8); // 20% off for yearly
+  const monthlyPrice = computeMonthlyPrice(base_price);
+  const yearlyPrice = computeYearlyPrice(monthlyPrice);
   const unitAmount = billing_cycle === "yearly" ? yearlyPrice * 100 : monthlyPrice * 100;
   const interval = billing_cycle === "yearly" ? "year" : "month";
 
