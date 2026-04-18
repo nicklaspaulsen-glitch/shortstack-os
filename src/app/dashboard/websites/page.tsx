@@ -420,8 +420,11 @@ export default function WebsitesPage() {
         const wp = row as WebsiteProject;
         setActive(wp);
         setWizardOpen(false);
-        // Open pricing modal so the user can see the price + go live
-        openPricing(wp);
+        // Let the user SEE the demo first — they open pricing when ready
+        toast.success(
+          "Your demo is live! Try it out — go live when you're ready.",
+          { duration: 6000 },
+        );
       }
     } catch {
       toast.dismiss("gen");
@@ -644,6 +647,41 @@ export default function WebsitesPage() {
         onClose={() => setWizardOpen(false)}
         onComplete={handleWizardComplete}
       />
+
+      {/* Demo-ready banner — shown while demo is live and not yet subscribed */}
+      {active && effectiveStatus(active) === "preview" && (
+        <div className="card p-4 bg-gradient-to-br from-emerald-500/[0.06] to-transparent border-emerald-500/30 fade-in">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+              <Rocket size={18} className="text-emerald-400" />
+            </div>
+            <div className="flex-1 min-w-[200px]">
+              <p className="text-xs font-semibold text-emerald-400">Your demo is live — try it before you pay</p>
+              <p className="text-[10px] text-muted">
+                Free for {daysUntil(active.demo_expires_at) ?? 14} days. Go live anytime when you're ready — custom monthly price based on what's in your site.
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {(active.preview_url || active.vercel_url) && (
+                <a
+                  href={active.preview_url || active.vercel_url || "#"}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-[10px] px-3 py-2 rounded-lg bg-white/5 border border-border text-foreground hover:bg-white/10 flex items-center gap-1"
+                >
+                  <ExternalLink size={11} /> View demo
+                </a>
+              )}
+              <button
+                onClick={() => openPricing(active)}
+                className="text-[10px] px-3 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-amber-400/30"
+              >
+                <Rocket size={11} /> See pricing
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Active project result */}
       {active && (

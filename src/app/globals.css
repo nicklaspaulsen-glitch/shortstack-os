@@ -496,6 +496,56 @@ body {
   .fade-in .card:nth-child(2) { animation: fadeSlideUp 0.35s 0.08s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
   .fade-in .card:nth-child(3) { animation: fadeSlideUp 0.35s 0.12s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
   .fade-in .card:nth-child(4) { animation: fadeSlideUp 0.35s 0.16s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(5) { animation: fadeSlideUp 0.35s 0.20s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(6) { animation: fadeSlideUp 0.35s 0.24s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(7) { animation: fadeSlideUp 0.35s 0.28s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(8) { animation: fadeSlideUp 0.35s 0.32s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+  .fade-in .card:nth-child(n+9) { animation: fadeSlideUp 0.35s 0.36s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+
+  /* ═══════════ PREMIUM MICRO-INTERACTIONS ═══════════ */
+  /* Tactile press-down on every .btn-primary and .btn-secondary */
+  .btn-primary, .btn-secondary {
+    transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.2s ease,
+                background 0.2s ease,
+                color 0.2s ease;
+  }
+  .btn-primary:not(:disabled):hover, .btn-secondary:not(:disabled):hover { transform: translateY(-1px); }
+  .btn-primary:not(:disabled):active, .btn-secondary:not(:disabled):active { transform: translateY(0) scale(0.98); }
+
+  /* Tab content cross-fade — add `.tab-content` + `key={activeTab}` */
+  .tab-content { animation: fadeIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+  /* Gold-ring loading — drop-in enhancement for <Loader2 />.
+     Wrap: <span className="loader-ring"><Loader2 className="animate-spin" /></span> */
+  .loader-ring {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .loader-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 168, 76, 0.18) 0%, transparent 70%);
+    animation: breathe 2s ease-in-out infinite;
+  }
+
+  /* Modal backdrop with blur fade-in — apply to any fixed overlay */
+  .modal-backdrop {
+    animation: backdropIn 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  @keyframes backdropIn {
+    from { opacity: 0; backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+    to   { opacity: 1; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  }
+
+  /* Chip/pill press state — cascades across every button with rounded-full */
+  button.rounded-full:not(:disabled):active { transform: scale(0.96); }
 
   /* Status dots */
   .glow-dot {
