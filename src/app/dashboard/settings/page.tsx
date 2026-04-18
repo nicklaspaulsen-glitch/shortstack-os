@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import Modal from "@/components/ui/modal";
-import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink, Key, Shield, Mail, Download, Upload, Trash2, AlertTriangle, Eye, Lock, Database, RotateCcw, CheckCircle2, Loader2, Server, ChevronDown, ChevronUp, Send, ToggleLeft, ToggleRight, Cloud, XCircle, Plus } from "lucide-react";
+import { Settings, Bot, Zap, Globe, Bell, Save, Volume2, VolumeX, Info, Palette, Monitor, User, Camera, CreditCard, ExternalLink, Key, Shield, Mail, Download, Upload, Trash2, AlertTriangle, Eye, Lock, Database, RotateCcw, CheckCircle2, Loader2, Server, ChevronDown, ChevronUp, Send, ToggleLeft, ToggleRight, Cloud, XCircle, Plus, Sparkles, PanelLeft, Sliders, Building2, ShieldCheck, Keyboard, HardDrive, Gauge, Link2 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import toast from "react-hot-toast";
 import { applyTheme } from "@/components/theme-provider";
@@ -14,8 +14,14 @@ import { getPlanConfig } from "@/lib/plan-config";
 import PageHero from "@/components/ui/page-hero";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
+import SidebarCustomizerFull from "@/components/settings/sidebar-customizer-full";
 
-type Tab = "general" | "agents" | "integrations" | "automation" | "notifications" | "billing" | "api_keys" | "white_label" | "smtp" | "security" | "data" | "danger";
+type Tab =
+  | "general" | "agents" | "integrations" | "automation" | "notifications"
+  | "billing" | "api_keys" | "white_label" | "smtp" | "security" | "data" | "danger"
+  // New tabs
+  | "sidebar" | "appearance" | "ai_prefs" | "workspace" | "privacy"
+  | "shortcuts" | "backups" | "usage_limits" | "connected_apps";
 
 interface AgentConfig {
   id: string;
@@ -127,6 +133,147 @@ export default function SettingsPage() {
   // Danger zone
   const [deleteConfirm, setDeleteConfirm] = useState("");
 
+  // ─── New-tab state: Appearance ─────────────────────────────
+  const [appearance, setAppearance] = useState(() => {
+    if (typeof window === "undefined") return {
+      theme: "system", density: "comfortable", animations: true, reduce_motion: false,
+      font_size: 14, sidebar_position: "left" as "left" | "right",
+    };
+    try {
+      const saved = safeGet("ss-appearance");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      theme: "system", density: "comfortable", animations: true, reduce_motion: false,
+      font_size: 14, sidebar_position: "left" as "left" | "right",
+    };
+  });
+
+  // ─── AI Preferences ──────────────────────────────────────
+  const [aiPrefs, setAiPrefs] = useState(() => {
+    if (typeof window === "undefined") return {
+      default_model: "claude-sonnet-4-6", response_style: "detailed", language: "en",
+      temperature: 0.7, experimental: false,
+    };
+    try { const s = safeGet("ss-ai-prefs"); if (s) return JSON.parse(s); } catch {}
+    return {
+      default_model: "claude-sonnet-4-6", response_style: "detailed", language: "en",
+      temperature: 0.7, experimental: false,
+    };
+  });
+
+  // ─── Workspace ────────────────────────────────────────────
+  const [workspace, setWorkspace] = useState(() => {
+    if (typeof window === "undefined") return {
+      workspace_name: "", timezone: "Europe/Copenhagen", week_start: "monday",
+      date_format: "YYYY-MM-DD", currency: "USD", measurement: "metric",
+    };
+    try { const s = safeGet("ss-workspace"); if (s) return JSON.parse(s); } catch {}
+    return {
+      workspace_name: "", timezone: "Europe/Copenhagen", week_start: "monday",
+      date_format: "YYYY-MM-DD", currency: "USD", measurement: "metric",
+    };
+  });
+
+  // ─── Privacy ─────────────────────────────────────────────
+  const [privacy, setPrivacy] = useState(() => {
+    if (typeof window === "undefined") return {
+      public_profile: false, analytics_opt_out: false,
+      cookies: { essential: true, analytics: true, marketing: false },
+      data_visibility: "team" as "private" | "team" | "public",
+    };
+    try { const s = safeGet("ss-privacy"); if (s) return JSON.parse(s); } catch {}
+    return {
+      public_profile: false, analytics_opt_out: false,
+      cookies: { essential: true, analytics: true, marketing: false },
+      data_visibility: "team" as "private" | "team" | "public",
+    };
+  });
+
+  // ─── Backups ─────────────────────────────────────────────
+  const [backup, setBackup] = useState(() => {
+    if (typeof window === "undefined") return {
+      auto_backup_enabled: false, frequency: "weekly", last_backup: null as string | null,
+    };
+    try { const s = safeGet("ss-backup"); if (s) return JSON.parse(s); } catch {}
+    return { auto_backup_enabled: false, frequency: "weekly", last_backup: null as string | null };
+  });
+  const [restorePreview, setRestorePreview] = useState<Record<string, number> | null>(null);
+  const [restorePayload, setRestorePayload] = useState<Record<string, unknown> | null>(null);
+  const [restoreLoading, setRestoreLoading] = useState(false);
+
+  // ─── Usage Limits ────────────────────────────────────────
+  const [usageLimits, setUsageLimits] = useState({
+    max_tokens_per_day: 0, max_videos_per_day: 0, max_thumbnails_per_day: 0,
+    max_emails_per_day: 0, warn_at_percent: 85, warning_enabled: true,
+  });
+  const [usageLimitsLoaded, setUsageLimitsLoaded] = useState(false);
+
+  // ─── Connected Apps ──────────────────────────────────────
+  const [connectedApps, setConnectedApps] = useState<Array<{
+    id: string; platform: string; account_name: string | null; created_at: string;
+    last_used?: string | null; is_active?: boolean;
+  }>>([]);
+  const [connectedAppsLoading, setConnectedAppsLoading] = useState(false);
+
+  // Persist new tab state to localStorage
+  useEffect(() => { if (typeof window !== "undefined") safeSet("ss-appearance", JSON.stringify(appearance)); }, [appearance]);
+  useEffect(() => { if (typeof window !== "undefined") safeSet("ss-ai-prefs", JSON.stringify(aiPrefs)); }, [aiPrefs]);
+  useEffect(() => { if (typeof window !== "undefined") safeSet("ss-workspace", JSON.stringify(workspace)); }, [workspace]);
+  useEffect(() => { if (typeof window !== "undefined") safeSet("ss-privacy", JSON.stringify(privacy)); }, [privacy]);
+  useEffect(() => { if (typeof window !== "undefined") safeSet("ss-backup", JSON.stringify(backup)); }, [backup]);
+
+  // Load usage limits when that tab opens
+  useEffect(() => {
+    if (tab !== "usage_limits" || usageLimitsLoaded) return;
+    (async () => {
+      try {
+        const res = await fetch("/api/user/usage-limits");
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.limits) setUsageLimits(data.limits);
+        }
+      } catch {}
+      setUsageLimitsLoaded(true);
+    })();
+  }, [tab, usageLimitsLoaded]);
+
+  // Load connected apps when that tab opens
+  useEffect(() => {
+    if (tab !== "connected_apps") return;
+    setConnectedAppsLoading(true);
+    (async () => {
+      try {
+        // Try oauth_connections first; fall back to social_accounts.
+        const [{ data: firstClient }] = await Promise.all([
+          supabase.from("clients").select("id").eq("is_active", true).limit(1).single(),
+        ]);
+        if (firstClient) {
+          const r = await fetch(`/api/social/connect?client_id=${firstClient.id}&zernio=true`);
+          if (r.ok) {
+            const j = await r.json();
+            const rows = (j?.accounts || []) as Array<{
+              id: string; platform: string; account_name: string; created_at?: string;
+              is_active?: boolean; token_expires_at?: string | null;
+            }>;
+            setConnectedApps(rows.map(r => ({
+              id: r.id,
+              platform: r.platform,
+              account_name: r.account_name || null,
+              created_at: r.created_at || new Date().toISOString(),
+              last_used: r.token_expires_at || null,
+              is_active: r.is_active,
+            })));
+          }
+        }
+      } catch {
+        // ignore
+      }
+      setConnectedAppsLoading(false);
+    })();
+  }, [tab, supabase]);
+
+  // ─── AutoSave for workspace name + nickname + timezone + language ─
   // Auto-save state for profile (nickname + timezone + language)
   // Timezone and language persist to localStorage (no API backing yet)
   const autoSaveValue = useMemo(() => ({ nickname, timezone, language }), [nickname, timezone, language]);
@@ -464,17 +611,107 @@ export default function SettingsPage() {
     toast.success(`${provider.name} template applied`);
   }
 
+  // ── Save helpers for new tabs ─────────────────────────────────
+  const saveUsageLimits = useCallback(async (patch: Partial<typeof usageLimits>) => {
+    const next = { ...usageLimits, ...patch };
+    setUsageLimits(next);
+    try {
+      const res = await fetch("/api/user/usage-limits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(next),
+      });
+      if (!res.ok) throw new Error("save failed");
+    } catch {
+      toast.error("Failed to save usage limits");
+    }
+  }, [usageLimits]);
+
+  const downloadBackup = useCallback(async () => {
+    try {
+      const res = await fetch("/api/user/backup", { cache: "no-store" });
+      if (!res.ok) throw new Error("export failed");
+      const blob = await res.blob();
+      const date = new Date().toISOString().slice(0, 10);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `shortstack-backup-${date}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      setBackup((b: typeof backup) => ({ ...b, last_backup: new Date().toISOString() }));
+      toast.success("Backup downloaded");
+    } catch {
+      toast.error("Couldn't export backup");
+    }
+  }, []);
+
+  const previewRestore = useCallback(async (file: File) => {
+    setRestoreLoading(true);
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text) as Record<string, unknown>;
+      setRestorePayload(parsed);
+      const res = await fetch("/api/user/backup/restore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(parsed),
+      });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j?.error || "restore failed");
+      setRestorePreview(j.counts || {});
+      toast.success("Backup validated — click Apply to commit");
+    } catch (err) {
+      console.error(err);
+      toast.error("Invalid backup file");
+      setRestorePayload(null);
+      setRestorePreview(null);
+    }
+    setRestoreLoading(false);
+  }, []);
+
+  const applyRestore = useCallback(async () => {
+    if (!restorePayload) return;
+    setRestoreLoading(true);
+    try {
+      const res = await fetch("/api/user/backup/restore?apply=true", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(restorePayload),
+      });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j?.error || "restore failed");
+      setRestorePreview(j.counts || {});
+      setRestorePayload(null);
+      toast.success("Backup applied");
+    } catch {
+      toast.error("Couldn't apply backup");
+    }
+    setRestoreLoading(false);
+  }, [restorePayload]);
+
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: "general", label: "General", icon: <Settings size={16} /> },
+    { key: "sidebar", label: "Sidebar", icon: <PanelLeft size={16} /> },
+    { key: "appearance", label: "Appearance", icon: <Palette size={16} /> },
+    { key: "ai_prefs", label: "AI Preferences", icon: <Sparkles size={16} /> },
+    { key: "workspace", label: "Workspace", icon: <Building2 size={16} /> },
     { key: "agents", label: "AI Agents", icon: <Bot size={16} /> },
     { key: "integrations", label: "Integrations", icon: <Globe size={16} /> },
+    { key: "connected_apps", label: "Connected Apps", icon: <Link2 size={16} /> },
     { key: "automation", label: "Automation", icon: <Zap size={16} /> },
     { key: "notifications", label: "Notifications", icon: <Bell size={16} /> },
     { key: "billing", label: "Billing", icon: <CreditCard size={16} /> },
+    { key: "usage_limits", label: "Usage Limits", icon: <Gauge size={16} /> },
     { key: "api_keys", label: "API Keys", icon: <Key size={16} /> },
     { key: "white_label", label: "White Label", icon: <Palette size={16} /> },
     { key: "smtp", label: "SMTP", icon: <Mail size={16} /> },
+    { key: "privacy", label: "Privacy", icon: <ShieldCheck size={16} /> },
     { key: "security", label: "Security", icon: <Shield size={16} /> },
+    { key: "shortcuts", label: "Shortcuts", icon: <Keyboard size={16} /> },
+    { key: "backups", label: "Backups", icon: <HardDrive size={16} /> },
     { key: "data", label: "Import/Export", icon: <Database size={16} /> },
     { key: "danger", label: "Danger Zone", icon: <AlertTriangle size={16} /> },
   ];
@@ -489,10 +726,10 @@ export default function SettingsPage() {
         gradient="blue"
       />
 
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+      <div className="flex flex-wrap gap-1 bg-surface rounded-lg p-1">
         {tabs.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2 text-sm rounded-md flex items-center gap-2 transition-all ${tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
+            className={`px-3 py-1.5 text-xs rounded-md flex items-center gap-1.5 transition-all ${tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"}`}
           >{t.icon} {t.label}</button>
         ))}
       </div>
@@ -1906,6 +2143,542 @@ export default function SettingsPage() {
         </div>
       )}
 
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Sidebar Tab — full customizer                                */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "sidebar" && (
+        <div className="space-y-3">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2">
+              <PanelLeft size={14} className="text-gold" /> Sidebar Customization
+            </h2>
+            <p className="text-[11px] text-muted mb-0">
+              Fully control which items show in your sidebar, how they&apos;re grouped, and what they look like.
+              Changes take effect after you click <span className="text-gold">Save Changes</span>.
+            </p>
+          </div>
+          <SidebarCustomizerFull businessType={(profile as Record<string, unknown> | null)?.user_type as string | undefined} />
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Appearance Tab                                              */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "appearance" && (
+        <div className="space-y-4 max-w-2xl">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Palette size={14} className="text-gold" /> Theme</h2>
+            <p className="text-[10px] text-muted mb-3">Switch between light, dark, or follow system setting.</p>
+            <div className="grid grid-cols-3 gap-2">
+              {(["light", "dark", "system"] as const).map(t => (
+                <button
+                  key={t}
+                  onClick={() => { setAppearance({ ...appearance, theme: t }); applyTheme(t); }}
+                  className={`p-3 rounded-lg border text-xs font-medium capitalize transition-all ${
+                    appearance.theme === t ? "border-gold bg-gold/10 text-gold" : "border-border bg-surface-light/30 text-muted hover:text-foreground"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Monitor size={14} className="text-gold" /> Density</h2>
+            <p className="text-[10px] text-muted mb-3">How spacious your interface feels.</p>
+            <div className="grid grid-cols-3 gap-2">
+              {(["compact", "comfortable", "spacious"] as const).map(d => (
+                <button
+                  key={d}
+                  onClick={() => setAppearance({ ...appearance, density: d })}
+                  className={`p-3 rounded-lg border text-xs font-medium capitalize transition-all ${
+                    appearance.density === d ? "border-gold bg-gold/10 text-gold" : "border-border bg-surface-light/30 text-muted hover:text-foreground"
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Sliders size={14} className="text-gold" /> Font Size</h2>
+            <p className="text-[10px] text-muted mb-3">Adjust the base font size across the dashboard.</p>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={12}
+                max={18}
+                step={1}
+                value={appearance.font_size}
+                onChange={e => setAppearance({ ...appearance, font_size: Number(e.target.value) })}
+                className="flex-1 accent-gold"
+              />
+              <span className="text-gold font-bold text-sm w-10 text-center">{appearance.font_size}px</span>
+            </div>
+          </div>
+
+          <div className="card space-y-3">
+            <h2 className="section-header flex items-center gap-2"><Zap size={14} className="text-gold" /> Motion & Animations</h2>
+            <ToggleRow
+              label="Animations"
+              hint="Subtle transitions and fade-ins."
+              checked={appearance.animations}
+              onChange={(v) => setAppearance({ ...appearance, animations: v })}
+            />
+            <ToggleRow
+              label="Reduce motion"
+              hint="Disable non-essential motion (respects your OS setting)."
+              checked={appearance.reduce_motion}
+              onChange={(v) => setAppearance({ ...appearance, reduce_motion: v })}
+            />
+          </div>
+
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><PanelLeft size={14} className="text-gold" /> Sidebar Position</h2>
+            <p className="text-[10px] text-muted mb-3">Place the main navigation on the left or right side.</p>
+            <div className="grid grid-cols-2 gap-2">
+              {(["left", "right"] as const).map(p => (
+                <button
+                  key={p}
+                  onClick={() => setAppearance({ ...appearance, sidebar_position: p })}
+                  className={`p-3 rounded-lg border text-xs font-medium capitalize transition-all ${
+                    appearance.sidebar_position === p ? "border-gold bg-gold/10 text-gold" : "border-border bg-surface-light/30 text-muted hover:text-foreground"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* AI Preferences Tab                                          */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "ai_prefs" && (
+        <div className="space-y-4 max-w-2xl">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Sparkles size={14} className="text-gold" /> Default Model</h2>
+            <p className="text-[10px] text-muted mb-3">Used by default when you generate content.</p>
+            <select
+              value={aiPrefs.default_model}
+              onChange={e => setAiPrefs({ ...aiPrefs, default_model: e.target.value })}
+              className="input w-full text-xs"
+            >
+              <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fastest, cheapest)</option>
+              <option value="claude-sonnet-4-6">Claude Sonnet 4.6 (Balanced)</option>
+              <option value="claude-opus-4-7">Claude Opus 4.7 (Best reasoning)</option>
+            </select>
+          </div>
+
+          <div className="card">
+            <h2 className="section-header">Response Style</h2>
+            <p className="text-[10px] text-muted mb-3">How verbose you want AI responses to be.</p>
+            <div className="grid grid-cols-3 gap-2">
+              {(["short", "detailed", "casual"] as const).map(s => (
+                <button
+                  key={s}
+                  onClick={() => setAiPrefs({ ...aiPrefs, response_style: s })}
+                  className={`p-2.5 rounded-lg border text-xs font-medium capitalize transition-all ${
+                    aiPrefs.response_style === s ? "border-gold bg-gold/10 text-gold" : "border-border bg-surface-light/30 text-muted hover:text-foreground"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 className="section-header">Language</h2>
+            <select
+              value={aiPrefs.language}
+              onChange={e => setAiPrefs({ ...aiPrefs, language: e.target.value })}
+              className="input w-full text-xs"
+            >
+              <option value="en">English</option>
+              <option value="da">Danish</option>
+              <option value="es">Spanish</option>
+              <option value="de">German</option>
+              <option value="fr">French</option>
+              <option value="pt">Portuguese</option>
+              <option value="it">Italian</option>
+            </select>
+          </div>
+
+          <div className="card">
+            <h2 className="section-header">Creativity (Temperature)</h2>
+            <p className="text-[10px] text-muted mb-3">Lower = more deterministic. Higher = more creative.</p>
+            <div className="flex items-center gap-3">
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.05}
+                value={aiPrefs.temperature}
+                onChange={e => setAiPrefs({ ...aiPrefs, temperature: Number(e.target.value) })}
+                className="flex-1 accent-gold"
+              />
+              <span className="text-gold font-bold text-sm w-12 text-center">{aiPrefs.temperature.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div className="card">
+            <ToggleRow
+              label="Enable experimental features"
+              hint="New AI capabilities that may be unstable. Opt-in early access."
+              checked={aiPrefs.experimental}
+              onChange={(v) => setAiPrefs({ ...aiPrefs, experimental: v })}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Workspace Tab                                               */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "workspace" && (
+        <WorkspaceTab workspace={workspace} setWorkspace={setWorkspace} />
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Privacy Tab                                                 */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "privacy" && (
+        <div className="space-y-4 max-w-2xl">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Eye size={14} className="text-gold" /> Public Profile</h2>
+            <ToggleRow
+              label="Make profile public"
+              hint="Allow other users on the platform to see your name and avatar."
+              checked={privacy.public_profile}
+              onChange={(v) => setPrivacy({ ...privacy, public_profile: v })}
+            />
+          </div>
+          <div className="card">
+            <h2 className="section-header">Analytics</h2>
+            <ToggleRow
+              label="Opt out of analytics"
+              hint="We won't collect anonymized usage stats from your account."
+              checked={privacy.analytics_opt_out}
+              onChange={(v) => setPrivacy({ ...privacy, analytics_opt_out: v })}
+            />
+          </div>
+          <div className="card">
+            <h2 className="section-header">Cookie Preferences</h2>
+            <div className="space-y-2">
+              <ToggleRow
+                label="Essential (required)"
+                hint="Needed for login and core features."
+                checked={true}
+                onChange={() => {}}
+                disabled
+              />
+              <ToggleRow
+                label="Analytics cookies"
+                hint="Help us understand how the app is used."
+                checked={privacy.cookies.analytics}
+                onChange={(v) => setPrivacy({ ...privacy, cookies: { ...privacy.cookies, analytics: v } })}
+              />
+              <ToggleRow
+                label="Marketing cookies"
+                hint="Used for personalized ads and campaigns."
+                checked={privacy.cookies.marketing}
+                onChange={(v) => setPrivacy({ ...privacy, cookies: { ...privacy.cookies, marketing: v } })}
+              />
+            </div>
+          </div>
+          <div className="card">
+            <h2 className="section-header">Who can see your data</h2>
+            <div className="grid grid-cols-3 gap-2">
+              {(["private", "team", "public"] as const).map(v => (
+                <button
+                  key={v}
+                  onClick={() => setPrivacy({ ...privacy, data_visibility: v })}
+                  className={`p-2.5 rounded-lg border text-xs font-medium capitalize transition-all ${
+                    privacy.data_visibility === v ? "border-gold bg-gold/10 text-gold" : "border-border bg-surface-light/30 text-muted hover:text-foreground"
+                  }`}
+                >
+                  {v === "private" ? "Only me" : v === "team" ? "My team" : "Everyone"}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Shortcuts Tab                                               */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "shortcuts" && (
+        <div className="space-y-4 max-w-3xl">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Keyboard size={14} className="text-gold" /> Keyboard Shortcuts</h2>
+            <p className="text-[10px] text-muted mb-3">Use these shortcuts to move around faster. Some are customizable.</p>
+            <div className="divide-y divide-border/40">
+              {[
+                { keys: ["⌘", "K"], label: "Open command palette" },
+                { keys: ["⌘", "/"], label: "Global search" },
+                { keys: ["⌘", "N"], label: "Quick add" },
+                { keys: ["⌘", "B"], label: "Toggle sidebar" },
+                { keys: ["G", "D"], label: "Go to Dashboard" },
+                { keys: ["G", "I"], label: "Go to Inbox" },
+                { keys: ["G", "C"], label: "Go to CRM" },
+                { keys: ["?", ""], label: "Show all shortcuts" },
+              ].map((s) => (
+                <div key={s.label} className="flex items-center py-2 text-xs">
+                  <span className="flex-1 text-foreground">{s.label}</span>
+                  <div className="flex items-center gap-1">
+                    {s.keys.filter(Boolean).map((k, i) => (
+                      <kbd key={i} className="px-2 py-0.5 rounded bg-surface-light border border-border text-[10px] font-mono">{k}</kbd>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-[10px] text-muted mt-3 pt-3 border-t border-border/30">
+              More customization for chord shortcuts is coming soon.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Backups Tab                                                 */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "backups" && (
+        <div className="space-y-4 max-w-2xl">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><HardDrive size={14} className="text-gold" /> Manual Backup</h2>
+            <p className="text-[10px] text-muted mb-3">Export all your data as a JSON file.</p>
+            <button
+              onClick={downloadBackup}
+              className="btn-primary text-xs flex items-center gap-1.5"
+            >
+              <Download size={12} /> Export All Data
+            </button>
+            {backup.last_backup && (
+              <p className="text-[10px] text-muted mt-2">
+                Last export: {new Date(backup.last_backup).toLocaleString()}
+              </p>
+            )}
+          </div>
+
+          <div className="card">
+            <h2 className="section-header">Scheduled Auto-Backup</h2>
+            <ToggleRow
+              label="Enable auto-backup"
+              hint="We'll remind you to export regularly. (Automatic server-side backups coming soon.)"
+              checked={backup.auto_backup_enabled}
+              onChange={(v: boolean) => setBackup({ ...backup, auto_backup_enabled: v })}
+            />
+            {backup.auto_backup_enabled && (
+              <div className="mt-3">
+                <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Frequency</label>
+                <select
+                  value={backup.frequency}
+                  onChange={e => setBackup({ ...backup, frequency: e.target.value })}
+                  className="input w-full text-xs"
+                >
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div className="card">
+            <h2 className="section-header">Restore from Backup</h2>
+            <p className="text-[10px] text-muted mb-3">Upload a JSON backup file. We&apos;ll show you what will be restored before applying.</p>
+            <div className="space-y-2">
+              <label className="btn-secondary text-xs inline-flex items-center gap-1.5 cursor-pointer">
+                <Upload size={12} /> Choose backup file...
+                <input
+                  type="file"
+                  accept="application/json,.json"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) previewRestore(file);
+                  }}
+                />
+              </label>
+              {restoreLoading && <p className="text-[10px] text-muted flex items-center gap-1"><Loader2 size={10} className="animate-spin" /> Working...</p>}
+              {restorePreview && (
+                <div className="mt-3 p-3 rounded-lg border border-gold/30 bg-gold/[0.04]">
+                  <p className="text-xs font-medium mb-2">Preview — will restore:</p>
+                  <ul className="text-[11px] text-muted space-y-0.5">
+                    {Object.entries(restorePreview).map(([k, v]) => (
+                      <li key={k}><span className="text-foreground">{v}</span>× {k.replace(/_/g, " ")}</li>
+                    ))}
+                  </ul>
+                  {restorePayload && (
+                    <div className="flex gap-2 mt-3">
+                      <button onClick={applyRestore} disabled={restoreLoading} className="btn-primary text-xs flex items-center gap-1">
+                        <CheckCircle2 size={12} /> Apply Restore
+                      </button>
+                      <button onClick={() => { setRestorePreview(null); setRestorePayload(null); }} className="btn-secondary text-xs">Cancel</button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Usage Limits Tab                                            */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "usage_limits" && (
+        <div className="space-y-4 max-w-2xl">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Gauge size={14} className="text-gold" /> Daily Caps</h2>
+            <p className="text-[10px] text-muted mb-4">
+              Set your own ceilings to avoid runaway usage. Set to <span className="text-gold">0</span> to
+              use your plan&apos;s default.
+            </p>
+            <div className="space-y-4">
+              <UsageSlider
+                label="Tokens per day"
+                value={usageLimits.max_tokens_per_day}
+                min={0}
+                max={5_000_000}
+                step={10_000}
+                format={(v) => v === 0 ? "No override" : `${v.toLocaleString()} tokens`}
+                onChange={(v) => saveUsageLimits({ max_tokens_per_day: v })}
+              />
+              <UsageSlider
+                label="Videos per day"
+                value={usageLimits.max_videos_per_day}
+                min={0}
+                max={500}
+                step={1}
+                format={(v) => v === 0 ? "No override" : `${v} videos`}
+                onChange={(v) => saveUsageLimits({ max_videos_per_day: v })}
+              />
+              <UsageSlider
+                label="Thumbnails per day"
+                value={usageLimits.max_thumbnails_per_day}
+                min={0}
+                max={1000}
+                step={5}
+                format={(v) => v === 0 ? "No override" : `${v} thumbs`}
+                onChange={(v) => saveUsageLimits({ max_thumbnails_per_day: v })}
+              />
+              <UsageSlider
+                label="Emails per day"
+                value={usageLimits.max_emails_per_day}
+                min={0}
+                max={10_000}
+                step={10}
+                format={(v) => v === 0 ? "No override" : `${v} emails`}
+                onChange={(v) => saveUsageLimits({ max_emails_per_day: v })}
+              />
+            </div>
+          </div>
+
+          <div className="card">
+            <h2 className="section-header">Warnings</h2>
+            <ToggleRow
+              label="Warn me when approaching my cap"
+              hint="Send a notification when usage crosses your warning threshold."
+              checked={usageLimits.warning_enabled}
+              onChange={(v) => saveUsageLimits({ warning_enabled: v })}
+            />
+            {usageLimits.warning_enabled && (
+              <div className="mt-3">
+                <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Warn at</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="range"
+                    min={50}
+                    max={99}
+                    step={1}
+                    value={usageLimits.warn_at_percent}
+                    onChange={e => saveUsageLimits({ warn_at_percent: Number(e.target.value) })}
+                    className="flex-1 accent-gold"
+                  />
+                  <span className="text-gold font-bold text-sm w-12 text-center">{usageLimits.warn_at_percent}%</span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════ */}
+      {/* Connected Apps Tab                                          */}
+      {/* ══════════════════════════════════════════════════════════ */}
+      {tab === "connected_apps" && (
+        <div className="space-y-4">
+          <div className="card">
+            <h2 className="section-header flex items-center gap-2"><Link2 size={14} className="text-gold" /> Connected Apps</h2>
+            <p className="text-[10px] text-muted mb-3">Third-party services you&apos;ve linked to your ShortStack account.</p>
+            {connectedAppsLoading ? (
+              <div className="flex items-center gap-2 text-xs text-muted py-6 justify-center">
+                <Loader2 size={12} className="animate-spin" /> Loading connections...
+              </div>
+            ) : connectedApps.length === 0 ? (
+              <div className="text-[11px] text-muted text-center py-8 border border-dashed border-border/50 rounded-xl">
+                No apps connected yet. Visit the <a href="/dashboard/integrations" className="text-gold hover:underline">Integrations</a> page to connect one.
+              </div>
+            ) : (
+              <div className="divide-y divide-border/40">
+                {connectedApps.map(app => (
+                  <div key={app.id} className="flex items-center gap-3 py-3">
+                    <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center shrink-0">
+                      <ConnectedAppIcon platform={app.platform} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-medium capitalize">{app.platform.replace(/_/g, " ")}</p>
+                      <p className="text-[10px] text-muted truncate">
+                        {app.account_name || "Connected"}
+                        {" · "}
+                        Since {new Date(app.created_at).toLocaleDateString()}
+                        {app.last_used ? ` · Expires ${new Date(app.last_used).toLocaleDateString()}` : ""}
+                      </p>
+                    </div>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full ${app.is_active ? "bg-emerald-500/10 text-emerald-400" : "bg-danger/10 text-danger"}`}>
+                      {app.is_active ? "Active" : "Inactive"}
+                    </span>
+                    <button
+                      onClick={async () => {
+                        if (!confirm(`Revoke ${app.platform}?`)) return;
+                        try {
+                          const { data: firstClient } = await supabase
+                            .from("clients").select("id").eq("is_active", true).limit(1).single();
+                          const res = await fetch("/api/social/connect", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ account_id: app.id, client_id: firstClient?.id }),
+                          });
+                          if (res.ok) {
+                            setConnectedApps(apps => apps.filter(a => a.id !== app.id));
+                            toast.success(`${app.platform} revoked`);
+                          } else {
+                            toast.error("Couldn't revoke");
+                          }
+                        } catch {
+                          toast.error("Revoke failed");
+                        }
+                      }}
+                      className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1 text-danger"
+                    >
+                      <XCircle size={10} /> Revoke
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Danger Zone Tab */}
       {tab === "danger" && (
         <div className="space-y-4">
@@ -2014,6 +2787,209 @@ export default function SettingsPage() {
         )}
       </Modal>
     </div>
+  );
+}
+
+/* ─── Shared tiny toggle row used by Appearance / Privacy / Backups ──── */
+function ToggleRow({
+  label,
+  hint,
+  checked,
+  onChange,
+  disabled,
+}: {
+  label: string;
+  hint?: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  disabled?: boolean;
+}) {
+  return (
+    <label className={`flex items-center gap-3 cursor-pointer ${disabled ? "opacity-60 cursor-not-allowed" : ""}`}>
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-medium text-foreground">{label}</p>
+        {hint && <p className="text-[10px] text-muted leading-snug">{hint}</p>}
+      </div>
+      <button
+        type="button"
+        onClick={() => { if (!disabled) onChange(!checked); }}
+        disabled={disabled}
+        className={`shrink-0 w-9 h-5 rounded-full transition-colors ${checked ? "bg-gold" : "bg-border"} ${disabled ? "pointer-events-none" : ""}`}
+        aria-pressed={checked}
+      >
+        <span className={`block w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-[18px]" : "translate-x-0.5"} mt-0.5`} />
+      </button>
+    </label>
+  );
+}
+
+/* ─── Usage slider row (for Usage Limits tab) ────────────────────────── */
+function UsageSlider({
+  label, value, min, max, step, format, onChange,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  format: (v: number) => string;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <label className="text-[11px] text-foreground font-medium">{label}</label>
+        <span className="text-[10px] text-gold font-semibold">{format(value)}</span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className="w-full accent-gold"
+      />
+      <div className="flex items-center justify-between text-[9px] text-muted mt-0.5">
+        <span>0</span>
+        <span>{format(max)}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Workspace Tab content ──────────────────────────────────────────── */
+function WorkspaceTab({
+  workspace, setWorkspace,
+}: {
+  workspace: {
+    workspace_name: string; timezone: string; week_start: string;
+    date_format: string; currency: string; measurement: string;
+  };
+  setWorkspace: (w: typeof workspace) => void;
+}) {
+  // Auto-save the workspace name
+  const { status: st, lastSavedAt, error: err } = useAutoSave({
+    value: workspace,
+    save: async (v) => {
+      if (typeof window !== "undefined") safeSet("ss-workspace", JSON.stringify(v));
+    },
+    delay: 900,
+  });
+
+  return (
+    <div className="space-y-4 max-w-2xl">
+      <AutoSaveIndicator status={st} lastSavedAt={lastSavedAt} error={err} />
+      <div className="card">
+        <h2 className="section-header flex items-center gap-2"><Building2 size={14} className="text-gold" /> Workspace</h2>
+        <p className="text-[10px] text-muted mb-3">Name your workspace and set its formatting defaults.</p>
+        <div className="space-y-3">
+          <div>
+            <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Workspace Name</label>
+            <input
+              value={workspace.workspace_name}
+              onChange={e => setWorkspace({ ...workspace, workspace_name: e.target.value })}
+              placeholder="My Workspace"
+              className="input w-full text-xs"
+            />
+            <p className="text-[9px] text-muted mt-1 flex items-center gap-1"><CheckCircle2 size={8} /> Auto-saves as you type</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Timezone</label>
+              <select
+                value={workspace.timezone}
+                onChange={e => setWorkspace({ ...workspace, timezone: e.target.value })}
+                className="input w-full text-xs"
+              >
+                <option value="Europe/Copenhagen">Europe/Copenhagen (CET)</option>
+                <option value="Europe/London">Europe/London (GMT)</option>
+                <option value="America/New_York">America/New York (EST)</option>
+                <option value="America/Los_Angeles">America/Los Angeles (PST)</option>
+                <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                <option value="UTC">UTC</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Week starts on</label>
+              <select
+                value={workspace.week_start}
+                onChange={e => setWorkspace({ ...workspace, week_start: e.target.value })}
+                className="input w-full text-xs"
+              >
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="saturday">Saturday</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Date format</label>
+              <select
+                value={workspace.date_format}
+                onChange={e => setWorkspace({ ...workspace, date_format: e.target.value })}
+                className="input w-full text-xs"
+              >
+                <option value="YYYY-MM-DD">2026-04-18 (ISO)</option>
+                <option value="MM/DD/YYYY">04/18/2026 (US)</option>
+                <option value="DD/MM/YYYY">18/04/2026 (EU)</option>
+                <option value="DD.MM.YYYY">18.04.2026 (German)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Currency</label>
+              <select
+                value={workspace.currency}
+                onChange={e => setWorkspace({ ...workspace, currency: e.target.value })}
+                className="input w-full text-xs"
+              >
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="DKK">DKK (kr)</option>
+                <option value="JPY">JPY (¥)</option>
+                <option value="CAD">CAD (C$)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-[10px] uppercase tracking-wider text-muted mb-1">Measurement Units</label>
+              <select
+                value={workspace.measurement}
+                onChange={e => setWorkspace({ ...workspace, measurement: e.target.value })}
+                className="input w-full text-xs"
+              >
+                <option value="metric">Metric (km, kg, °C)</option>
+                <option value="imperial">Imperial (mi, lb, °F)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Connected Apps icon resolver ───────────────────────────────────── */
+function ConnectedAppIcon({ platform }: { platform: string }) {
+  // Dynamically load platform icon component.
+  const p = platform.toLowerCase();
+  // Use lazy import via require guarded by typeof window check.
+  // Falls back to a small colored box with first letter.
+  let icon: React.ReactNode = null;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const mod = require("@/components/ui/platform-icons");
+    if (mod && typeof mod.getPlatformIcon === "function") {
+      icon = mod.getPlatformIcon(p, 16);
+    }
+  } catch {
+    icon = null;
+  }
+  if (icon) return <>{icon}</>;
+  return (
+    <span className="w-4 h-4 rounded bg-gold/20 text-gold text-[9px] font-bold flex items-center justify-center">
+      {p[0]?.toUpperCase() || "?"}
+    </span>
   );
 }
 

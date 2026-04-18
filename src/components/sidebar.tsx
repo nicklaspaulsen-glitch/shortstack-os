@@ -5,7 +5,12 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
+import type { LucideIcon } from "lucide-react";
 import {
+  Pin,
+  DollarSign,
+  Briefcase,
+  Home,
   Zap,
   Search,
   Users,
@@ -157,6 +162,7 @@ const navItems: NavItem[] = [
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Usage & Tokens", href: "/dashboard/usage", icon: <Zap size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Phone & Email", href: "/dashboard/phone-email", icon: <Phone size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "Domains", href: "/dashboard/domains", icon: <Link2 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Client Health", href: "/dashboard/client-health", icon: <Heart size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Tickets", href: "/dashboard/tickets", icon: <LifeBuoy size={16} />, roles: ["admin"], sub: "Support" },
@@ -195,6 +201,22 @@ function isItemActive(href: string, pathname: string) {
   return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 }
 
+/* ─── Icon name → Lucide component (curated list that matches the
+ * icon picker in the sidebar customizer). Unknown names fall back. ── */
+const CUSTOM_ICON_MAP: Record<string, LucideIcon> = {
+  Home, Film, Users, Phone, DollarSign, BarChart3, Briefcase, Mail,
+  Globe, Bot, Zap, Target, Crown, LayoutDashboard, Inbox, MessageSquare,
+  Star, Calendar, FileText, Send, Gift, Heart, Calculator, Award, Bell,
+  Layers, Sparkles, Settings,
+};
+
+function renderCustomIcon(iconName: string | undefined, size = 16): React.ReactNode | null {
+  if (!iconName) return null;
+  const Cmp = CUSTOM_ICON_MAP[iconName];
+  if (!Cmp) return null;
+  return <Cmp size={size} />;
+}
+
 export default function Sidebar() {
   const pathname = usePathname() || "";
   const { profile, signOut, loading: authLoading } = useAuth();
@@ -221,10 +243,24 @@ export default function Sidebar() {
     // will redirect non-admin users anyway)
     return "admin";
   })();
-  // ── User sidebar preferences (enabled_items) ────────────────────
+  // ── User sidebar preferences (enabled_items + customizations) ───
   // Load asynchronously; while loading or empty, we show the default nav.
   const [enabledHrefs, setEnabledHrefs] = useState<string[] | null>(null);
-  const [customGroups, setCustomGroups] = useState<Array<{ id: string; label: string; items: string[] }>>([]);
+  type SubGroup = { id: string; name: string; items: string[] };
+  type CustomGroupShape = {
+    id: string;
+    name?: string;
+    label?: string;
+    icon?: string;
+    color?: string;
+    order?: number;
+    items: string[];
+    subgroups?: SubGroup[];
+  };
+  const [customGroups, setCustomGroups] = useState<CustomGroupShape[]>([]);
+  const [pins, setPins] = useState<string[]>([]);
+  const [renames, setRenames] = useState<Record<string, string>>({});
+  const [iconOverrides, setIconOverrides] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (authLoading || !userRole) return;
@@ -242,8 +278,11 @@ export default function Sidebar() {
           setEnabledHrefs([]); // explicit "no overrides, show all defaults"
         }
         if (Array.isArray(prefs?.custom_groups)) {
-          setCustomGroups(prefs.custom_groups as Array<{ id: string; label: string; items: string[] }>);
+          setCustomGroups(prefs.custom_groups as CustomGroupShape[]);
         }
+        if (Array.isArray(prefs?.pins)) setPins(prefs.pins as string[]);
+        if (prefs?.renames && typeof prefs.renames === "object") setRenames(prefs.renames as Record<string, string>);
+        if (prefs?.icon_overrides && typeof prefs.icon_overrides === "object") setIconOverrides(prefs.icon_overrides as Record<string, string>);
       } catch {
         // Silent fail — default nav will continue to render.
       }
@@ -366,6 +405,8 @@ export default function Sidebar() {
   /* ─── Render a single nav link ────────────────────────────────── */
   const renderNavLink = (item: NavItem, indented?: boolean) => {
     const isActive = isItemActive(item.href, pathname);
+    const customIcon = renderCustomIcon(iconOverrides[item.href], 16);
+    const label = renames[item.href] || item.label;
     return (
       <div key={item.href} className="relative sidebar-item-anim">
         <Link
@@ -381,9 +422,9 @@ export default function Sidebar() {
           }`}
         >
           <span className={`shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
-            {item.icon}
+            {customIcon || item.icon}
           </span>
-          <span className="truncate">{item.label}</span>
+          <span className="truncate">{label}</span>
           {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
         </Link>
       </div>
@@ -393,6 +434,8 @@ export default function Sidebar() {
   /* ─── Render a collapsed-sidebar nav link (icon + tooltip) ───── */
   const renderCollapsedLink = (item: NavItem) => {
     const isActive = isItemActive(item.href, pathname);
+    const customIcon = renderCustomIcon(iconOverrides[item.href], 16);
+    const label = renames[item.href] || item.label;
     return (
       <div key={item.href} className="relative">
         <Link
@@ -404,17 +447,17 @@ export default function Sidebar() {
               ? "text-gold font-semibold bg-gradient-to-r from-gold/[0.14] to-gold/[0.06] border border-gold/20 shadow-[0_0_14px_rgba(201,168,76,0.1),0_1px_0_rgba(255,255,255,0.04)_inset]"
               : "text-muted hover:text-foreground hover:bg-surface-light hover:shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] border border-transparent"
           }`}
-          title={item.label}
+          title={label}
         >
           <span className={`shrink-0 transition-colors nav-icon-alive ${isActive ? "text-gold drop-shadow-[0_0_4px_rgba(201,168,76,0.5)]" : hoveredItem === item.href ? "text-foreground" : ""}`}>
-            {item.icon}
+            {customIcon || item.icon}
           </span>
           {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
         </Link>
         {hoveredItem === item.href && (
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">
             <div className="bg-surface border border-border rounded-xl px-2.5 py-1.5 shadow-elevated text-xs font-medium text-foreground">
-              {item.label}
+              {label}
             </div>
           </div>
         )}
@@ -481,9 +524,111 @@ export default function Sidebar() {
         </div>
       )}
 
-      {/* Navigation — collapsible sections with smart sub-groups */}
+      {/* Navigation — collapsible sections with smart sub-groups.
+          When the user has defined custom_groups, use those as the primary
+          layout (plus "Other" for any remaining items). */}
       <nav className="flex-1 px-1.5 py-1 overflow-y-auto scrollbar-none">
-        {groups.map((group) => {
+        {/* Pinned items (always at top if any) */}
+        {!collapsed && pins.length > 0 && (() => {
+          const pinnedNavItems = pins
+            .map(href => navItems.find(i => i.href === href))
+            .filter((x): x is NavItem => !!x && userRole ? x.roles.includes(userRole) : false)
+            .filter(i => !enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href));
+          if (pinnedNavItems.length === 0) return null;
+          return (
+            <div>
+              <div className="w-full flex items-center gap-2 px-2 pt-1 pb-1">
+                <Pin size={8} className="text-gold" />
+                <span className="text-[8px] text-gold uppercase tracking-[0.2em] font-semibold">Pinned</span>
+                <div className="flex-1 h-px bg-gold/15" />
+              </div>
+              {pinnedNavItems.map(item => renderNavLink(item))}
+            </div>
+          );
+        })()}
+
+        {customGroups.length > 0 && !collapsed ? (
+          <>
+            {/* Render user-defined groups first */}
+            {customGroups
+              .slice()
+              .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+              .map((cg) => {
+                const groupName = cg.name || cg.label || "Group";
+                const groupIconNode = renderCustomIcon(cg.icon, 10);
+                const pinnedSet = new Set(pins);
+                const directItems = cg.items
+                  .filter(h => !pinnedSet.has(h))
+                  .map(h => navItems.find(i => i.href === h))
+                  .filter((x): x is NavItem => !!x && userRole ? x.roles.includes(userRole) : false)
+                  .filter(i => !enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href));
+                const subs = (cg.subgroups || []).map(sg => ({
+                  id: sg.id,
+                  name: sg.name,
+                  items: sg.items
+                    .filter(h => !pinnedSet.has(h))
+                    .map(h => navItems.find(i => i.href === h))
+                    .filter((x): x is NavItem => !!x && userRole ? x.roles.includes(userRole) : false)
+                    .filter(i => !enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href)),
+                })).filter(s => s.items.length > 0);
+                if (directItems.length === 0 && subs.length === 0) return null;
+                return (
+                  <div key={`cg-${cg.id}`}>
+                    <div className="w-full flex items-center gap-2 px-2 pt-3 pb-1">
+                      {groupIconNode ? (
+                        <span className="shrink-0" style={{ color: cg.color || "#C9A84C" }}>{groupIconNode}</span>
+                      ) : null}
+                      <span className="text-[8px] uppercase tracking-[0.2em] font-semibold" style={{ color: cg.color || "#C9A84C" }}>
+                        {groupName}
+                      </span>
+                      <div className="flex-1 h-px" style={{ backgroundColor: `${cg.color || "#C9A84C"}33` }} />
+                    </div>
+                    {directItems.map(item => renderNavLink(item))}
+                    {subs.map(sg => (
+                      <div key={`sg-${sg.id}`}>
+                        <div className="w-full flex items-center gap-1.5 pl-3 pr-2 pt-1 pb-0.5">
+                          <span className="text-[7px] text-muted/60">&bull;</span>
+                          <span className="text-[10px] text-muted/70 font-medium select-none">{sg.name}</span>
+                        </div>
+                        {sg.items.map(item => renderNavLink(item, true))}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })}
+
+            {/* "Other" bucket — items not in any custom group (collapsible) */}
+            {(() => {
+              const assigned = new Set<string>();
+              customGroups.forEach(cg => {
+                cg.items.forEach(h => assigned.add(h));
+                (cg.subgroups || []).forEach(sg => sg.items.forEach(h => assigned.add(h)));
+              });
+              pins.forEach(h => assigned.add(h));
+              const otherItems = filteredNav.filter(i => !assigned.has(i.href));
+              if (otherItems.length === 0) return null;
+              const otherExpanded = expandedSections["_other"] !== false;
+              return (
+                <div>
+                  <button
+                    onClick={() => setExpandedSections(p => ({ ...p, _other: !otherExpanded }))}
+                    className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec cursor-pointer"
+                  >
+                    <span className="text-[8px] text-muted uppercase tracking-[0.2em] font-semibold group-hover/sec:text-foreground transition-colors">
+                      Other
+                    </span>
+                    <div className="flex-1 h-px bg-border" />
+                    <ChevronDown
+                      size={10}
+                      className={`text-muted group-hover/sec:text-foreground transition-transform duration-200 ${otherExpanded ? "" : "-rotate-90"}`}
+                    />
+                  </button>
+                  {otherExpanded && otherItems.map(item => renderNavLink(item))}
+                </div>
+              );
+            })()}
+          </>
+        ) : groups.map((group) => {
           const expanded = isSectionExpanded(group.section);
           const sectionSubs = group.section ? subGroupsForSection[group.section] : null;
 
@@ -560,28 +705,6 @@ export default function Sidebar() {
                   collapsed ? renderCollapsedLink(item) : renderNavLink(item)
                 )
               )}
-            </div>
-          );
-        })}
-
-        {/* User-defined custom groups (from sidebar preferences) */}
-        {!collapsed && customGroups.length > 0 && customGroups.map((cg) => {
-          // Only show items the user can see (role-aware) and that are enabled.
-          const items = navItems.filter((i) =>
-            cg.items.includes(i.href) &&
-            userRole && i.roles.includes(userRole) &&
-            (!enabledHrefs || enabledHrefs.length === 0 || enabledHrefs.includes(i.href))
-          );
-          if (items.length === 0) return null;
-          return (
-            <div key={`custom-${cg.id}`}>
-              <div className="w-full flex items-center gap-2 px-2 pt-3 pb-1">
-                <span className="text-[8px] text-gold uppercase tracking-[0.2em] font-semibold">
-                  {cg.label}
-                </span>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-              <div>{items.map((item) => renderNavLink(item))}</div>
             </div>
           );
         })}

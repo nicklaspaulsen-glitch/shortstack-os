@@ -119,7 +119,9 @@
 - [ ] `NOTION_API_KEY` — Notion API key (integration)
 - [ ] `PANDADOC_API_KEY` — PandaDoc API key (contracts/proposals)
 - [ ] `CALENDLY_API_TOKEN` — Calendly API token (scheduling)
-- [ ] `LOVABLE_API_KEY` — Lovable API key (website/app generation)
+- [ ] `VERCEL_API_TOKEN` — Vercel API token (deploy generated websites)
+- [ ] `VERCEL_TEAM_ID` — Vercel team ID (optional, team-scoped deployments)
+- [ ] `GODADDY_CUSTOMER_ID` — GoDaddy customer ID for domain purchase attribution
 - [ ] `INSTANTLY_API_KEY` — Instantly API key (email outreach)
 - [ ] `METRICOOL_API_KEY` — Metricool API key (social analytics)
 - [ ] `ZERNIO_API_KEY` — Zernio API key

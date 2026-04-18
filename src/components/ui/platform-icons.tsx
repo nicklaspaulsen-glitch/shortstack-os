@@ -527,6 +527,28 @@ export function ThreadsIcon({ size = 18, className }: IconProps) {
   );
 }
 
+/* ============================================================== */
+/*  Hosting & Domain Platforms                                     */
+/* ============================================================== */
+
+export function VercelIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <path d="M12 6L20 18H4L12 6z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function GoDaddyIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#1BDBDB"/>
+      <path d="M7 15c.5-3 2-5.5 5-5.5s4.5 2.5 5 5.5c.2 1.2-.4 1.8-1.2 1.8-1 0-1.4-.6-1.6-1.4-.3-1.6-1-3-2.2-3-1.3 0-1.9 1.4-2.2 3-.2.8-.6 1.4-1.6 1.4-.8 0-1.4-.6-1.2-1.8z" fill="#000"/>
+    </svg>
+  );
+}
+
 /** Utility: get platform icon by string ID */
 export function getPlatformIcon(platform: string, size = 18): React.ReactNode {
   const map: Record<string, React.ReactNode> = {
