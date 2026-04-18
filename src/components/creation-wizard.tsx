@@ -119,7 +119,17 @@ export default function CreationWizard({
     setAiLoading(true);
     try {
       const patch = await currentStep.aiHelper.onClick(data);
-      setData(prev => ({ ...prev, ...patch }));
+      // Only merge keys that have truthy values — prevents AI helpers from
+      // wiping existing user input when the API fails or returns undefined.
+      setData(prev => {
+        const next = { ...prev };
+        for (const [k, v] of Object.entries(patch || {})) {
+          if (v !== undefined && v !== null && v !== "") {
+            next[k] = v;
+          }
+        }
+        return next;
+      });
     } catch (err) {
       console.error("AI helper failed:", err);
     } finally {

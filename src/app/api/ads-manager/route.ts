@@ -29,7 +29,7 @@ interface Campaign {
 // ---------------------------------------------------------------------------
 // GET — Return ads manager data (real, from DB; empty by default)
 // ---------------------------------------------------------------------------
-export async function GET() {
+export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -42,33 +42,87 @@ export async function GET() {
     const { data } = await supabase
       .from("ad_campaigns")
       .select("*")
-      .eq("profile_id", user.id)
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false });
     campaigns = (data as Campaign[]) || [];
   } catch {
     // Table doesn't exist yet or query error — leave empty
   }
 
-  // Check which platforms are connected (from oauth_connections or similar)
+  // Check which platforms are connected
   const platforms_connected: Record<string, boolean> = {
     meta_ads: false,
     google_ads: false,
     tiktok_ads: false,
   };
+  const platforms_last_synced: Record<string, string | null> = {
+    meta_ads: null,
+    google_ads: null,
+    tiktok_ads: null,
+  };
   try {
     const { data: conns } = await supabase
       .from("oauth_connections")
-      .select("platform, is_active")
-      .eq("profile_id", user.id);
+      .select("platform, is_active, updated_at, created_at, platform_type")
+      .eq("user_id", user.id);
     if (Array.isArray(conns)) {
       for (const c of conns) {
-        if (c.platform === "meta" || c.platform === "facebook") platforms_connected.meta_ads = !!c.is_active;
-        if (c.platform === "google" || c.platform === "google_ads") platforms_connected.google_ads = !!c.is_active;
-        if (c.platform === "tiktok") platforms_connected.tiktok_ads = !!c.is_active;
+        const p = c.platform as string;
+        if (p === "meta_ads" || p === "meta" || p === "facebook") platforms_connected.meta_ads = !!c.is_active;
+        if (p === "google_ads" || p === "google") platforms_connected.google_ads = !!c.is_active;
+        if (p === "tiktok_ads" || p === "tiktok") platforms_connected.tiktok_ads = !!c.is_active;
       }
     }
   } catch {
     // ignore
+  }
+
+  // Attach last_synced_at per platform from ad_accounts
+  try {
+    const { data: accounts } = await supabase
+      .from("ad_accounts")
+      .select("platform, last_synced_at")
+      .eq("user_id", user.id);
+    if (Array.isArray(accounts)) {
+      for (const a of accounts) {
+        const key = a.platform as string;
+        if (!platforms_last_synced[key]) platforms_last_synced[key] = a.last_synced_at;
+        else if (a.last_synced_at && a.last_synced_at > (platforms_last_synced[key] || "")) {
+          platforms_last_synced[key] = a.last_synced_at;
+        }
+      }
+    }
+  } catch {
+    // ignore
+  }
+
+  // Best-effort background refresh of campaigns for connected platforms.
+  // Kicked off via a cookie-forwarded fetch so the user's session applies.
+  const shouldRefresh = request.nextUrl.searchParams.get("refresh") === "1";
+  if (shouldRefresh) {
+    const origin = request.nextUrl.origin;
+    const cookieHeader = request.headers.get("cookie") || "";
+    const connectedPlatforms = (Object.keys(platforms_connected) as Array<keyof typeof platforms_connected>)
+      .filter(k => platforms_connected[k]);
+    await Promise.allSettled(
+      connectedPlatforms.map(p =>
+        fetch(`${origin}/api/ads/${p.replace("_", "-")}/campaigns`, {
+          headers: { cookie: cookieHeader },
+          cache: "no-store",
+        })
+      )
+    );
+    // Re-read after refresh
+    try {
+      const { data } = await supabase
+        .from("ad_campaigns")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+      if (data) campaigns = data as Campaign[];
+    } catch {
+      // ignore
+    }
   }
 
   // Compute overview from real campaigns (will be 0 when empty)
@@ -95,6 +149,7 @@ export async function GET() {
     audiences: [],
     ai_log: [],
     platforms_connected,
+    platforms_last_synced,
   });
 }
 
@@ -129,7 +184,7 @@ export async function POST(request: NextRequest) {
       try {
         await supabase.from("ad_campaigns").insert({
           ...newCampaign,
-          profile_id: user.id,
+          user_id: user.id,
         });
       } catch {
         // table may not exist — still return the campaign for UI
@@ -143,7 +198,7 @@ export async function POST(request: NextRequest) {
           .from("ad_campaigns")
           .update(body.campaign)
           .eq("id", body.campaign.id)
-          .eq("profile_id", user.id);
+          .eq("user_id", user.id);
       } catch {}
       return NextResponse.json({ success: true, campaign: body.campaign });
     }

@@ -3180,14 +3180,30 @@ export default function ThumbnailGeneratorPage() {
       aiHelper: {
         label: "Optimize my title with AI",
         onClick: async (d) => {
-          const res = await fetch("/api/thumbnail/optimize-title", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: d.title, niche: d.niche }),
-          });
-          const data = await res.json();
-          if (data.variants?.[0]) return { title: data.variants[0].title };
-          return {};
+          if (!d.title || !String(d.title).trim()) {
+            toast.error("Type a title first, then AI will optimize it");
+            return {};
+          }
+          try {
+            const res = await fetch("/api/thumbnail/optimize-title", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ title: d.title, niche: d.niche }),
+            });
+            const data = await res.json();
+            // API returns { variants: [{ text, score, reason }] }
+            const optimized = data?.variants?.[0]?.text;
+            if (optimized) {
+              toast.success(`AI optimized: "${optimized}"`);
+              return { title: optimized };
+            }
+            if (data?.error) toast.error(data.error);
+            else toast.error("AI couldn't optimize — try rewording your title");
+            return {};
+          } catch {
+            toast.error("Network error — title kept as-is");
+            return {};
+          }
         },
       },
       preview: (d) => (

@@ -150,6 +150,8 @@ export default function AdsManagerPage() {
   const [audiences, setAudiences] = useState<Audience[]>([]);
   const [aiLog, setAiLog] = useState<AILogEntry[]>([]);
   const [platformsConnected, setPlatformsConnected] = useState<Record<string, boolean>>({});
+  const [platformsLastSynced, setPlatformsLastSynced] = useState<Record<string, string | null>>({});
+  const [refreshingPlatform, setRefreshingPlatform] = useState<string | null>(null);
 
   // Campaign filters
   const [platformFilter, setPlatformFilter] = useState("all");
@@ -194,12 +196,35 @@ export default function AdsManagerPage() {
   // ---------------------------------------------------------------------------
   useEffect(() => {
     fetchData();
+    // Handle OAuth callback redirect toasts (?connected=meta_ads or ?error=...)
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const connected = params.get("connected");
+      const errorMsg = params.get("error");
+      const platformParam = params.get("platform");
+      if (connected) {
+        const label = connected === "meta_ads" ? "Meta Ads"
+          : connected === "google_ads" ? "Google Ads"
+          : connected === "tiktok_ads" ? "TikTok Ads"
+          : connected;
+        toast.success(`${label} connected`);
+        // Strip params from URL
+        window.history.replaceState({}, "", window.location.pathname);
+      } else if (errorMsg) {
+        const platformLabel = platformParam === "meta_ads" ? "Meta Ads"
+          : platformParam === "google_ads" ? "Google Ads"
+          : platformParam === "tiktok_ads" ? "TikTok Ads"
+          : "OAuth";
+        toast.error(`${platformLabel} connection failed: ${decodeURIComponent(errorMsg)}`);
+        window.history.replaceState({}, "", window.location.pathname);
+      }
+    }
   }, []);
 
-  async function fetchData() {
+  async function fetchData(refresh = false) {
     setLoading(true);
     try {
-      const res = await fetch("/api/ads-manager");
+      const res = await fetch(`/api/ads-manager${refresh ? "?refresh=1" : ""}`);
       const data = await res.json();
       setOverview(data.overview);
       setCampaigns(data.campaigns || []);
@@ -207,12 +232,50 @@ export default function AdsManagerPage() {
       setAudiences(data.audiences || []);
       setAiLog(data.ai_log || []);
       setPlatformsConnected(data.platforms_connected || {});
+      setPlatformsLastSynced(data.platforms_last_synced || {});
     } catch (err) {
       console.error("[AdsManager] fetch error:", err);
       toast.error("Failed to load ads data");
     } finally {
       setLoading(false);
     }
+  }
+
+  // Connect / refresh helpers
+  function connectPlatform(platformId: string) {
+    const slug = platformId.replace("_", "-");
+    window.location.href = `/api/oauth/${slug}/start?return_to=${encodeURIComponent("/dashboard/ads-manager")}`;
+  }
+
+  async function refreshPlatform(platformId: string) {
+    setRefreshingPlatform(platformId);
+    try {
+      const slug = platformId.replace("_", "-");
+      const res = await fetch(`/api/ads/${slug}/campaigns`, { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Refresh failed");
+        return;
+      }
+      toast.success(`Synced ${data.count || 0} campaigns`);
+      await fetchData();
+    } catch {
+      toast.error("Refresh failed");
+    } finally {
+      setRefreshingPlatform(null);
+    }
+  }
+
+  function formatSyncedAgo(iso: string | null): string {
+    if (!iso) return "Never synced";
+    const diffMs = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return "Just now";
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
   }
 
   // ---------------------------------------------------------------------------
@@ -454,6 +517,8 @@ export default function AdsManagerPage() {
               {PLATFORMS.map(p => {
                 const stats = platformBreakdown[p.id];
                 const connected = platformsConnected[p.id];
+                const syncedAt = platformsLastSynced[p.id];
+                const refreshing = refreshingPlatform === p.id;
                 return (
                   <div key={p.id} className={`bg-gradient-to-br ${p.gradient} border border-white/[0.06] rounded-xl p-4`}>
                     <div className="flex items-center justify-between mb-3">
@@ -468,8 +533,11 @@ export default function AdsManagerPage() {
                           <CheckCircle2 size={10} /> Connected
                         </span>
                       ) : (
-                        <button className="text-[10px] px-2 py-1 rounded-md bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20 transition">
-                          Connect via Zernio
+                        <button
+                          onClick={() => connectPlatform(p.id)}
+                          className="text-[10px] px-2 py-1 rounded-md bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20 transition"
+                        >
+                          Connect {p.label}
                         </button>
                       )}
                     </div>
@@ -482,6 +550,21 @@ export default function AdsManagerPage() {
                       </div>
                     ) : (
                       <p className="text-muted text-[11px]">No campaign data yet</p>
+                    )}
+                    {connected && (
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/[0.06]">
+                        <span className="text-[10px] text-muted">
+                          {syncedAt ? `Last synced ${formatSyncedAgo(syncedAt)}` : "Never synced"}
+                        </span>
+                        <button
+                          onClick={() => refreshPlatform(p.id)}
+                          disabled={refreshing}
+                          className="text-[10px] px-2 py-1 rounded-md bg-white/[0.04] border border-white/[0.08] text-foreground hover:bg-white/[0.08] transition flex items-center gap-1 disabled:opacity-50"
+                        >
+                          <RefreshCw size={10} className={refreshing ? "animate-spin" : ""} />
+                          {refreshing ? "Syncing..." : "Refresh"}
+                        </button>
+                      </div>
                     )}
                   </div>
                 );
