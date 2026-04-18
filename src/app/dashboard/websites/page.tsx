@@ -656,9 +656,9 @@ export default function WebsitesPage() {
               <Rocket size={18} className="text-emerald-400" />
             </div>
             <div className="flex-1 min-w-[200px]">
-              <p className="text-xs font-semibold text-emerald-400">Your demo is live — try it before you pay</p>
+              <p className="text-xs font-semibold text-emerald-400">Your demo is live &mdash; try it before you pay</p>
               <p className="text-[10px] text-muted">
-                Free for {daysUntil(active.demo_expires_at) ?? 14} days. Go live anytime when you're ready — custom monthly price based on what's in your site.
+                Free for {daysUntil(active.demo_expires_at) ?? 14} days. Go live anytime when you&apos;re ready &mdash; custom monthly price based on what&apos;s in your site.
               </p>
             </div>
             <div className="flex items-center gap-1.5">
