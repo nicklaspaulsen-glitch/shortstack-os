@@ -18,6 +18,7 @@ import DataTable from "@/components/ui/data-table";
 import PageHero from "@/components/ui/page-hero";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import Modal from "@/components/ui/modal";
+import InlineSocialConnect from "@/components/inline-social-connect";
 import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -1650,10 +1651,12 @@ export default function ScraperPage() {
                   <Users size={13} className="text-gold" /> Social Media Accounts
                 </h3>
                 <div className="p-3 rounded-lg bg-white/[0.03] border border-white/5">
-                  <p className="text-[10px] text-muted">No social accounts connected.</p>
-                  <a href="/dashboard/social-manager" className="text-[10px] text-gold hover:underline">
-                    Connect in Social Manager
-                  </a>
+                  <p className="text-[10px] text-muted mb-2">Connect accounts to scrape from your feed:</p>
+                  <InlineSocialConnect
+                    platforms={["instagram", "facebook", "linkedin", "tiktok"]}
+                    compact
+                    label="Connect"
+                  />
                 </div>
               </div>
 

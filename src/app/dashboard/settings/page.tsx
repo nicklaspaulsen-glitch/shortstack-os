@@ -15,6 +15,7 @@ import PageHero from "@/components/ui/page-hero";
 import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
 import SidebarCustomizerFull from "@/components/settings/sidebar-customizer-full";
+import InlineSocialConnect from "@/components/inline-social-connect";
 
 type Tab =
   | "general" | "agents" | "integrations" | "automation" | "notifications"
@@ -1519,13 +1520,12 @@ export default function SettingsPage() {
                 ))}
               </div>
             ) : (
-              <div className="card p-6 text-center">
+              <div className="card p-6">
                 <Globe size={20} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-xs text-muted mb-2">No social accounts connected</p>
-                <p className="text-[10px] text-muted/70 mb-3">Go to Social Manager to connect accounts via Zernio</p>
-                <a href="/dashboard/social-manager" className="text-xs text-gold hover:underline">
-                  Open Social Manager
-                </a>
+                <p className="text-xs text-muted mb-3 text-center">No social accounts connected</p>
+                <InlineSocialConnect
+                  platforms={["instagram", "facebook", "linkedin", "tiktok"]}
+                />
               </div>
             )}
           </div>

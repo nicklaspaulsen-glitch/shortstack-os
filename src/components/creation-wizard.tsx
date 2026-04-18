@@ -245,14 +245,29 @@ export default function CreationWizard({
                 />
 
                 {currentStep.aiHelper && (
-                  <button
-                    onClick={runAiHelper}
-                    disabled={aiLoading}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-gradient-to-r from-gold/15 to-amber-400/10 border border-gold/30 text-gold text-xs font-medium hover:from-gold/20 hover:to-amber-400/15 transition-all disabled:opacity-50"
-                  >
-                    {aiLoading ? <RefreshCw size={12} className="animate-spin" /> : <Wand2 size={12} />}
-                    {aiLoading ? "Thinking..." : currentStep.aiHelper.label}
-                  </button>
+                  <div className="relative group">
+                    {/* Glow halo */}
+                    <div className="absolute -inset-0.5 rounded-lg bg-gradient-to-r from-gold via-amber-400 to-gold opacity-60 blur group-hover:opacity-90 transition-opacity animate-pulse-slow" />
+                    <button
+                      onClick={runAiHelper}
+                      disabled={aiLoading}
+                      className="relative w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-60 disabled:hover:scale-100"
+                    >
+                      {aiLoading ? (
+                        <>
+                          <RefreshCw size={14} className="animate-spin" />
+                          <span>Thinking...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={14} className="animate-pulse" />
+                          <span className="tracking-wide">{currentStep.aiHelper.label}</span>
+                          <span className="ml-1 text-[9px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold">Recommended</span>
+                        </>
+                      )}
+                    </button>
+                    <p className="text-[9px] text-center text-muted mt-1.5">or fill it in manually above</p>
+                  </div>
                 )}
               </div>
             </div>

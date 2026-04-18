@@ -17,6 +17,7 @@ import {
   InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon,
   XTwitterIcon, YouTubeIcon,
 } from "@/components/ui/platform-icons";
+import InlineSocialConnect from "@/components/inline-social-connect";
 
 /* ──────────────── Types ──────────────── */
 
@@ -375,16 +376,14 @@ export default function ContentPlanPage() {
               <DotsPulse label="Loading posts..." />
             </div>
           ) : filteredPosts.length === 0 ? (
-            <EmptyState
-              type="no-calendar"
-              title="No content yet"
-              description="Connect a social account or schedule a post to see it here. Content from every platform appears in this unified view."
-              action={
-                <a href="/dashboard/social-manager" className="btn-primary text-xs">
-                  Connect socials
-                </a>
-              }
-            />
+            <div className="card p-8">
+              <EmptyState
+                type="no-calendar"
+                title="No content yet"
+                description="Connect a social account or schedule a post to see it here. Content from every platform appears in this unified view."
+                action={<div className="w-full max-w-md mx-auto mt-2"><InlineSocialConnect platforms={["instagram", "facebook", "tiktok", "linkedin"]} /></div>}
+              />
+            </div>
           ) : (
             <>
               {viewMode === "grid" && (

@@ -17,6 +17,7 @@ import {
 import {
   FacebookIcon, InstagramIcon, LinkedInIcon, TikTokIcon, XTwitterIcon,
 } from "@/components/ui/platform-icons";
+import InlineSocialConnect from "@/components/inline-social-connect";
 import toast from "react-hot-toast";
 
 /* ── Types ───────────────────────────────────────────────────────────── */
@@ -493,7 +494,14 @@ export default function OutreachAccounts() {
           {activeTab === "social" && (
             <>
               {socials.length === 0 ? (
-                <EmptyState icon={<Zap size={18} />} label="No social accounts" linkText="Connect social" link="/dashboard/social-manager" />
+                <div className="p-3 rounded-lg border border-dashed border-border bg-surface-light/20">
+                  <p className="text-[10px] text-muted mb-2 text-center">No social accounts yet</p>
+                  <InlineSocialConnect
+                    platforms={["instagram", "facebook", "linkedin", "tiktok"]}
+                    compact
+                    label="Connect"
+                  />
+                </div>
               ) : socials.map(acc => (
                 <div key={acc.id} className={`flex items-center gap-2 p-2 rounded-lg border transition-all ${
                   acc.is_active !== false ? "border-border bg-surface-light/30 hover:bg-surface-light/60" : "border-border/50 bg-surface-light/10 opacity-60"
@@ -534,12 +542,22 @@ export default function OutreachAccounts() {
           {activeTab === "phone" && `${activePhones}/${phones.length} phones active`}
           {activeTab === "social" && `${activeSocials}/${socials.length} socials active`}
         </span>
-        <Link
-          href={activeTab === "social" ? "/dashboard/social-manager" : "/dashboard/phone-email"}
-          className="flex items-center gap-1 text-gold hover:text-amber-400 transition-colors"
-        >
-          <Plus size={10} /> Add new
-        </Link>
+        {activeTab === "social" ? (
+          <div className="flex items-center gap-1.5">
+            <InlineSocialConnect
+              platforms={["instagram", "facebook", "linkedin", "tiktok"]}
+              compact
+              label="Add"
+            />
+          </div>
+        ) : (
+          <Link
+            href="/dashboard/phone-email"
+            className="flex items-center gap-1 text-gold hover:text-amber-400 transition-colors"
+          >
+            <Plus size={10} /> Add new
+          </Link>
+        )}
       </div>
     </div>
   );

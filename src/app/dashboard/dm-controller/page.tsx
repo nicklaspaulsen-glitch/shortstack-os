@@ -17,6 +17,8 @@ import {
   InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon,
 } from "@/components/ui/platform-icons";
 import CreationWizard, { WizardStep } from "@/components/creation-wizard";
+import InlineSocialConnect from "@/components/inline-social-connect";
+import { useSocialAccounts } from "@/hooks/use-social-accounts";
 
 /* ------------------------------------------------------------------ */
 /*  Platforms & Constants                                              */
@@ -1845,7 +1847,7 @@ function HowItWorksFlow() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
         {[
           { n: 1, title: "Pick your lead source", desc: "Scraped leads from Lead Finder, a Campaign list, or CRM contacts", href: "/dashboard/scraper", link: "Lead Finder" },
-          { n: 2, title: "Pick sender accounts", desc: "Which of YOUR connected IG/FB/LI/TikTok accounts will send the DMs", href: "/dashboard/social-manager", link: "Connect accounts" },
+          { n: 2, title: "Pick sender accounts", desc: "Which of YOUR connected IG/FB/LI/TikTok accounts will send the DMs", href: null, link: null },
           { n: 3, title: "Pick platform", desc: "Instagram, Facebook, LinkedIn, or TikTok — rotates across your senders", href: null, link: null },
           { n: 4, title: "Write & launch", desc: "AI-generated or custom message, schedule, monitor replies in Inbox tab", href: null, link: null },
         ].map(step => (
@@ -1962,22 +1964,20 @@ function LeadSourcePicker() {
  * SENDER ACCOUNT PICKER
  * ================================================================== */
 function SenderAccountPicker() {
-  const [accounts, setAccounts] = useState<Array<{ id: string; platform: string; account_name: string; status?: string }>>([]);
+  const { accounts, loading } = useSocialAccounts();
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [loading, setLoading] = useState(true);
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    fetch("/api/social/status")
-      .then(r => r.ok ? r.json() : { accounts: [] })
-      .then(d => {
-        const list = d.accounts || d.social_accounts || [];
-        setAccounts(list);
-        // Pre-select all active accounts
-        setSelected(new Set(list.filter((a: { status?: string }) => a.status === "active" || !a.status).map((a: { id: string }) => a.id)));
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+    if (!loading && !initialized && accounts.length > 0) {
+      setSelected(new Set(
+        accounts
+          .filter(a => a.status === "active" || !a.status)
+          .map(a => a.id)
+      ));
+      setInitialized(true);
+    }
+  }, [accounts, loading, initialized]);
 
   function toggle(id: string) {
     setSelected(prev => {
@@ -2005,18 +2005,23 @@ function SenderAccountPicker() {
           </h2>
           <p className="text-[10px] text-muted mt-0.5">Which of YOUR accounts will send the DMs? Rotates across selected to avoid spam flags.</p>
         </div>
-        <Link href="/dashboard/social-manager" className="text-[10px] text-gold hover:underline flex items-center gap-1">
-          + Connect more
-        </Link>
+        <div className="hidden md:block">
+          <InlineSocialConnect
+            platforms={["instagram", "facebook", "linkedin", "tiktok"]}
+            compact
+            label="Add"
+          />
+        </div>
       </div>
       {loading ? (
         <p className="text-[10px] text-muted">Loading your connected accounts...</p>
       ) : accounts.length === 0 ? (
-        <div className="text-center py-6 border border-dashed border-border rounded-lg">
-          <p className="text-xs text-muted mb-2">No accounts connected yet</p>
-          <Link href="/dashboard/social-manager" className="btn-primary text-xs inline-flex items-center gap-1">
-            Connect Instagram, Facebook, TikTok, LinkedIn →
-          </Link>
+        <div className="py-5 border border-dashed border-border rounded-lg px-4">
+          <p className="text-xs text-muted mb-3 text-center">No accounts connected yet — connect one below to start</p>
+          <InlineSocialConnect
+            platforms={["instagram", "facebook", "linkedin", "tiktok"]}
+            label="Connect"
+          />
         </div>
       ) : (
         <div className="space-y-3">
