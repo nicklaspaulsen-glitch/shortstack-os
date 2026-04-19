@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
 // Budget & Usage Alert Cron — checks API spend and token limits, alerts via Telegram
-// Run daily or every 6h. Monitors: Stripe, ElevenLabs, RunPod, Anthropic, SendGrid, Twilio
+// Run daily or every 6h. Monitors: Stripe, ElevenLabs, RunPod, Anthropic, Resend, Twilio
 export const maxDuration = 120;
 
 interface AlertItem {
@@ -57,23 +57,22 @@ export async function GET(request: NextRequest) {
     }
   } catch { checks.runpod = "error"; }
 
-  // ── 3. SendGrid Usage ──
+  // ── 3. Resend Usage ──
   try {
-    const today = new Date().toISOString().split("T")[0];
-    const monthStart = today.slice(0, 7) + "-01";
-    const res = await fetch(`https://api.sendgrid.com/v3/stats?start_date=${monthStart}&end_date=${today}&aggregated_by=month`, {
-      headers: { Authorization: `Bearer ${process.env.SENDGRID_API_KEY || ""}` },
+    const apiKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY || "";
+    const res = await fetch("https://api.resend.com/domains", {
+      headers: { Authorization: `Bearer ${apiKey}` },
     });
     if (res.ok) {
       const data = await res.json();
-      const stats = data[0]?.stats?.[0]?.metrics || {};
-      const sent = stats.requests || 0;
-      const FREE_TIER_LIMIT = 100; // SendGrid free = 100/day
-      checks.sendgrid = `${sent} emails this month`;
-
-      if (sent > FREE_TIER_LIMIT * 25) alerts.push({ service: "SendGrid", metric: "Monthly sends", current: sent, limit: "High volume", severity: "warning" });
+      const domains = data.data?.length || 0;
+      const verified = data.data?.filter((d: { status?: string }) => d.status === "verified").length || 0;
+      checks.resend = `${verified}/${domains} domains verified`;
+      if (domains > 0 && verified === 0) {
+        alerts.push({ service: "Resend", metric: "Domain verification", current: "0 verified", limit: "at least 1", severity: "warning" });
+      }
     }
-  } catch { checks.sendgrid = "error"; }
+  } catch { checks.resend = "error"; }
 
   // ── 4. Anthropic (estimate from logs) ──
   try {

@@ -7,7 +7,7 @@ import SectionHeading from "./section-heading";
 const TOOLS = [
   { tool: "GoHighLevel", for: "CRM & Automation", saved: "$97/mo" },
   { tool: "Apollo / ZoomInfo", for: "Lead Scraping", saved: "$99/mo" },
-  { tool: "Mailchimp / SendGrid", for: "Email Outreach", saved: "$50/mo" },
+  { tool: "Mailchimp / Resend", for: "Email Outreach", saved: "$50/mo" },
   { tool: "HubSpot", for: "Client Management", saved: "$45/mo" },
   { tool: "Canva Pro", for: "Design Assets", saved: "$13/mo" },
   { tool: "Later / Buffer", for: "Social Scheduling", saved: "$25/mo" },

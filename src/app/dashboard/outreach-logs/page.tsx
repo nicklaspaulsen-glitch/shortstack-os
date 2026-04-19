@@ -1393,14 +1393,14 @@ export default function OutreachLogsPage() {
             <h3 className="text-sm font-semibold flex items-center gap-2"><Mail size={14} className="text-gold" /> Email Configuration</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {/* SendGrid status */}
+              {/* Resend status */}
               <div className="p-3 rounded-xl bg-surface-light border border-border">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-6 h-6 rounded bg-blue-500/10 flex items-center justify-center">
                     <Mail size={12} className="text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold">SendGrid</p>
+                    <p className="text-xs font-semibold">Resend</p>
                     <p className="text-[9px] text-muted">Transactional emails</p>
                   </div>
                   <span className="ml-auto text-[8px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400 flex items-center gap-1">

@@ -45,7 +45,7 @@ const INTEGRATIONS: Integration[] = [
   { id: "calendly", name: "Calendly", description: "Scheduling (built-in available)", category: "Scheduling", icon: "C", connected: false, url: "https://calendly.com", rating: 4.6, installs: 12300 },
   { id: "openai", name: "OpenAI", description: "GPT fallback & DALL-E", category: "AI", icon: "O", connected: false, url: "https://openai.com", rating: 4.7, installs: 21000, featured: true },
   { id: "twilio", name: "Twilio", description: "SMS & voice APIs", category: "Communication", icon: "T", connected: false, url: "https://twilio.com", rating: 4.5, installs: 17400 },
-  { id: "sendgrid", name: "SendGrid", description: "Transactional email", category: "Marketing", icon: "S", connected: false, url: "https://sendgrid.com", rating: 4.4, installs: 13200 },
+  { id: "resend", name: "Resend", description: "Transactional email", category: "Marketing", icon: "R", connected: false, url: "https://resend.com", rating: 4.7, installs: 14500 },
   { id: "canva", name: "Canva", description: "Design tool API", category: "Design", icon: "C", connected: false, url: "https://canva.com", rating: 4.6, installs: 8900 },
   { id: "instantly", name: "Instantly", description: "Cold email at scale", category: "Outreach", icon: "I", connected: false, url: "https://instantly.ai", rating: 4.5, installs: 7800 },
   { id: "lemlist", name: "Lemlist", description: "Cold outreach sequences", category: "Outreach", icon: "L", connected: false, url: "https://lemlist.com", rating: 4.3, installs: 6200 },

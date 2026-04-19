@@ -77,14 +77,15 @@ async function checkWhatsApp(): Promise<HealthResult> {
   return { id: "whatsapp", status: "error", detail: `Meta Graph returned HTTP ${status || "timeout"}` };
 }
 
-async function checkSendGrid(): Promise<HealthResult> {
-  // email-marketing supports Mailchimp OR SendGrid — check whichever is set
-  if (process.env.SENDGRID_API_KEY) {
-    const { ok, status } = await probe("https://api.sendgrid.com/v3/user/profile", {
-      headers: { Authorization: `Bearer ${process.env.SENDGRID_API_KEY}` },
+async function checkEmailProvider(): Promise<HealthResult> {
+  // email-marketing supports Mailchimp OR Resend — check whichever is set
+  const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
+  if (resendKey) {
+    const { ok, status } = await probe("https://api.resend.com/domains", {
+      headers: { Authorization: `Bearer ${resendKey}` },
     });
     if (ok) return { id: "email_marketing", status: "connected" };
-    return { id: "email_marketing", status: "error", detail: `SendGrid returned HTTP ${status || "timeout"}` };
+    return { id: "email_marketing", status: "error", detail: `Resend returned HTTP ${status || "timeout"}` };
   }
   if (process.env.MAILCHIMP_API_KEY) {
     const server = process.env.MAILCHIMP_SERVER_PREFIX || "us21";
@@ -94,7 +95,7 @@ async function checkSendGrid(): Promise<HealthResult> {
     if (ok) return { id: "email_marketing", status: "connected" };
     return { id: "email_marketing", status: "error", detail: `Mailchimp returned HTTP ${status || "timeout"}` };
   }
-  return { id: "email_marketing", status: "not_configured", missing: ["SENDGRID_API_KEY"] };
+  return { id: "email_marketing", status: "not_configured", missing: ["SMTP_PASS"] };
 }
 
 async function checkTwilio(): Promise<HealthResult> {
@@ -129,7 +130,7 @@ async function check(id: string): Promise<HealthResult> {
     case "google_business": return checkGoogleBusiness();
     case "calendly": return checkCalendly();
     case "whatsapp": return checkWhatsApp();
-    case "email_marketing": return checkSendGrid();
+    case "email_marketing": return checkEmailProvider();
     case "twilio": return checkTwilio();
     case "notion": return checkNotion();
     default: return { id, status: "not_configured", detail: "Unknown integration" };
@@ -149,7 +150,7 @@ export async function GET(request: NextRequest) {
 
   const results = await Promise.all([
     checkGoogleAds(), checkGoogleBusiness(), checkCalendly(), checkWhatsApp(),
-    checkSendGrid(), checkTwilio(), checkNotion(),
+    checkEmailProvider(), checkTwilio(), checkNotion(),
   ]);
   return NextResponse.json({ success: true, results });
 }

@@ -1,6 +1,6 @@
 /**
  * Transactional email service.
- * Uses SendGrid for delivery. Falls back to Telegram notification if SendGrid is not configured.
+ * Uses Resend via SMTP (nodemailer). Falls back to Telegram if SMTP is not configured.
  *
  * Usage:
  *   await sendEmail({ to: "user@example.com", subject: "Welcome!", html: "<p>Hi!</p>" });
@@ -9,9 +9,9 @@
  */
 
 import { BRAND } from "@/lib/brand-config";
+import nodemailer from "nodemailer";
 
-const SENDGRID_API = "https://api.sendgrid.com/v3/mail/send";
-const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || "noreply@shortstack.work";
+const FROM_EMAIL = process.env.SMTP_FROM || "growth@mail.shortstack.work";
 // Sender display name pulls from brand-config so agencies that flip the
 // white-label toggle send emails from their own brand rather than Trinity.
 const FROM_NAME = BRAND.product_name;
@@ -24,41 +24,36 @@ interface EmailPayload {
 }
 
 /**
- * Send a transactional email via SendGrid.
- * Returns true if sent, false if SendGrid is not configured.
+ * Send a transactional email via Resend SMTP.
+ * Returns true if sent, false if SMTP is not configured.
  */
 export async function sendEmail(payload: EmailPayload): Promise<boolean> {
-  const apiKey = process.env.SENDGRID_API_KEY;
+  const host = process.env.SMTP_HOST;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
 
-  if (!apiKey) {
-    console.warn("[email] SendGrid not configured, skipping email to", payload.to);
-    // Fallback: send via Telegram if configured
-    await notifyTelegram(`Email not sent (no SendGrid):\nTo: ${payload.to}\nSubject: ${payload.subject}`);
+  if (!host || !user || !pass) {
+    console.warn("[email] SMTP not configured, skipping email to", payload.to);
+    await notifyTelegram(`Email not sent (no SMTP):\nTo: ${payload.to}\nSubject: ${payload.subject}`);
     return false;
   }
 
   try {
-    const res = await fetch(SENDGRID_API, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: payload.to }] }],
-        from: { email: FROM_EMAIL, name: FROM_NAME },
-        subject: payload.subject,
-        content: [
-          ...(payload.text ? [{ type: "text/plain", value: payload.text }] : []),
-          { type: "text/html", value: payload.html },
-        ],
-      }),
+    const port = Number(process.env.SMTP_PORT) || 587;
+    const transport = nodemailer.createTransport({
+      host,
+      port,
+      secure: port === 465,
+      auth: { user, pass },
     });
 
-    if (!res.ok) {
-      console.error("[email] SendGrid error:", res.status, await res.text().catch(() => ""));
-      return false;
-    }
+    await transport.sendMail({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+      to: payload.to,
+      subject: payload.subject,
+      html: payload.html,
+      text: payload.text,
+    });
 
     return true;
   } catch (err) {

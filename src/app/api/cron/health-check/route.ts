@@ -258,11 +258,11 @@ const healthChecks: HealthCheck[] = [
     requiresCredential: () => hasCredential(process.env.ELEVENLABS_API_KEY),
   },
   {
-    name: "SendGrid",
-    check: () => checkEndpoint("https://api.sendgrid.com/v3/user/profile", {
-      Authorization: `Bearer ${process.env.SENDGRID_API_KEY || ""}`,
+    name: "Resend",
+    check: () => checkEndpoint("https://api.resend.com/domains", {
+      Authorization: `Bearer ${process.env.SMTP_PASS || process.env.RESEND_API_KEY || ""}`,
     }),
-    requiresCredential: () => hasCredential(process.env.SENDGRID_API_KEY),
+    requiresCredential: () => hasCredential(process.env.SMTP_PASS || process.env.RESEND_API_KEY),
   },
 ];
 

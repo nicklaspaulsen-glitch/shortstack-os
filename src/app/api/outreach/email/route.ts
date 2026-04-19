@@ -98,13 +98,13 @@ export async function POST(request: NextRequest) {
       body = `Hi ${lead.owner_name || "there"},\n\nI came across ${lead.business_name} and noticed you're doing great work in the ${lead.industry || "local business"} space.\n\nAt ShortStack, we help businesses like yours get more clients through digital marketing — social media, ads, SEO, and content.\n\nWould you be open to a quick 15-minute call to see if we can help? No pressure at all.\n\nBest,\n${from_name || "The ShortStack Team"}`;
     }
 
-    // Send via pool sender (rotation) → SendGrid (default) → GHL (fallback)
+    // Send via pool sender (rotation) → default Resend SMTP → GHL (fallback)
     let didSend = false;
     const htmlBody = body.replace(/\n/g, "<br>");
     const currentSender = senderIdx < senderQueue.length ? senderQueue[senderIdx] : null;
     senderIdx++;
 
-    // Try pool sender first (custom SMTP or SendGrid identity)
+    // Try pool sender first (custom SMTP identity)
     if (currentSender) {
       try {
         if (currentSender.smtp_provider === "custom" && currentSender.smtp_host && currentSender.smtp_user) {
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
           });
           didSend = true;
         } else {
-          // SendGrid identity — use existing sendEmail but we still track via rotation
+          // Shared default — route through central Resend SMTP via sendEmail()
           didSend = await sendEmail({ to: lead.email, subject, html: htmlBody });
         }
         if (didSend) {
@@ -134,7 +134,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fallback: default SendGrid if no pool sender or pool send failed
+    // Fallback: default Resend SMTP if no pool sender or pool send failed
     if (!didSend && !currentSender) {
       try {
         didSend = await sendEmail({ to: lead.email, subject, html: htmlBody });

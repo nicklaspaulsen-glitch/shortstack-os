@@ -1,14 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-// Email Marketing Integration — supports both Mailchimp and SendGrid
+// Email Marketing Integration — supports both Mailchimp and Resend
 // Mailchimp: MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX (e.g., us21)
-// SendGrid: SENDGRID_API_KEY
+// Resend:    SMTP_PASS (the Resend API key), SMTP_FROM
 
-function getProvider(): "mailchimp" | "sendgrid" | null {
+function getProvider(): "mailchimp" | "resend" | null {
   if (process.env.MAILCHIMP_API_KEY) return "mailchimp";
-  if (process.env.SENDGRID_API_KEY) return "sendgrid";
+  if (process.env.SMTP_PASS || process.env.RESEND_API_KEY) return "resend";
   return null;
+}
+
+function resendKey() {
+  return process.env.SMTP_PASS || process.env.RESEND_API_KEY || "";
 }
 
 // ── Mailchimp Helpers ──
@@ -64,46 +68,51 @@ async function mailchimpAddContact(listId: string, email: string, firstName: str
   return res.json();
 }
 
-// ── SendGrid Helpers ──
+// ── Resend Helpers ──
 
-async function sendgridFetch(path: string, options: RequestInit = {}) {
-  return fetch(`https://api.sendgrid.com/v3${path}`, {
+async function resendFetch(path: string, options: RequestInit = {}) {
+  return fetch(`https://api.resend.com${path}`, {
     ...options,
     headers: {
-      Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`,
+      Authorization: `Bearer ${resendKey()}`,
       "Content-Type": "application/json",
       ...(options.headers || {}),
     },
   });
 }
 
-async function sendgridGetLists() {
-  const res = await sendgridFetch("/marketing/lists?page_size=50");
+async function resendGetLists() {
+  // Resend calls them "audiences"
+  const res = await resendFetch("/audiences");
   const data = await res.json();
-  return (data.result || []).map((l: Record<string, unknown>) => ({
-    id: l.id, name: l.name, contact_count: l.contact_count,
+  return (data.data || []).map((a: Record<string, unknown>) => ({
+    id: a.id, name: a.name,
   }));
 }
 
-async function sendgridSendEmail(to: string, subject: string, html: string, from?: string) {
-  const res = await sendgridFetch("/mail/send", {
+async function resendSendEmail(to: string, subject: string, html: string, from?: string) {
+  const fromAddr = from || process.env.SMTP_FROM || "growth@mail.shortstack.work";
+  const res = await resendFetch("/emails", {
     method: "POST",
     body: JSON.stringify({
-      personalizations: [{ to: [{ email: to }] }],
-      from: { email: from || process.env.SENDGRID_FROM_EMAIL || "hello@shortstack.agency" },
+      from: fromAddr,
+      to: [to],
       subject,
-      content: [{ type: "text/html", value: html }],
+      html,
     }),
   });
-  return { success: res.status === 202 };
+  return { success: res.ok };
 }
 
-async function sendgridAddContact(email: string, firstName: string, lastName: string, listIds: string[]) {
-  const res = await sendgridFetch("/marketing/contacts", {
-    method: "PUT",
+async function resendAddContact(email: string, firstName: string, lastName: string, audienceId: string) {
+  if (!audienceId) return { error: "audienceId required" };
+  const res = await resendFetch(`/audiences/${audienceId}/contacts`, {
+    method: "POST",
     body: JSON.stringify({
-      list_ids: listIds,
-      contacts: [{ email, first_name: firstName, last_name: lastName }],
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      unsubscribed: false,
     }),
   });
   return res.json();
@@ -127,8 +136,8 @@ export async function GET(request: NextRequest) {
       if (action === "campaigns") return NextResponse.json({ success: true, provider, campaigns: await mailchimpGetCampaigns() });
     }
 
-    if (provider === "sendgrid") {
-      if (action === "lists") return NextResponse.json({ success: true, provider, lists: await sendgridGetLists() });
+    if (provider === "resend") {
+      if (action === "lists") return NextResponse.json({ success: true, provider, lists: await resendGetLists() });
     }
 
     return NextResponse.json({ success: true, provider, action: "unsupported" });
@@ -156,13 +165,13 @@ export async function POST(request: NextRequest) {
       if (provider === "mailchimp") {
         result = await mailchimpAddContact(list_id, email, first_name || "", last_name || "", tags || []);
       } else {
-        result = await sendgridAddContact(email, first_name || "", last_name || "", list_id ? [list_id] : []);
+        result = await resendAddContact(email, first_name || "", last_name || "", list_id || "");
       }
 
       if (client_id) {
         await supabase.from("trinity_log").insert({
           action_type: "custom",
-          description: `Added ${email} to ${provider} list`,
+          description: `Added ${email} to ${provider} audience`,
           client_id,
           status: "completed",
           result: { type: "email_marketing_contact", provider, email },
@@ -172,18 +181,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, provider, result });
     }
 
-    if (action === "send_email" && provider === "sendgrid") {
+    if (action === "send_email" && provider === "resend") {
       const { to, subject, html } = params;
       if (!to || !subject) return NextResponse.json({ error: "to and subject required" }, { status: 400 });
-      const result = await sendgridSendEmail(to, subject, html || "<p>Hello</p>");
+      const result = await resendSendEmail(to, subject, html || "<p>Hello</p>");
 
       if (client_id) {
         await supabase.from("trinity_log").insert({
           action_type: "custom",
-          description: `Email sent to ${to} via SendGrid`,
+          description: `Email sent to ${to} via Resend`,
           client_id,
           status: "completed",
-          result: { type: "sendgrid_email", to, subject },
+          result: { type: "resend_email", to, subject },
         });
       }
 

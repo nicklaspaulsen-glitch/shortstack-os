@@ -134,10 +134,15 @@
 
 ## Email Marketing
 
-- [ ] `MAILCHIMP_API_KEY` — Mailchimp API key
+- [ ] `SMTP_HOST` — SMTP host (Resend: `smtp.resend.com`)
+- [ ] `SMTP_USER` — SMTP username (Resend: `resend`)
+- [ ] `SMTP_PASS` — Resend API key (also used as `RESEND_API_KEY` fallback for audiences/emails endpoints)
+- [ ] `SMTP_FROM` — sender address on a verified Resend domain (e.g. `growth@mail.shortstack.work`)
+- [ ] `SMTP_PORT` — SMTP port (defaults to 587)
+- [ ] `RESEND_API_KEY` — (optional) separate key if you don't want to reuse `SMTP_PASS`
+- [ ] `MAILCHIMP_API_KEY` — Mailchimp API key (optional alternative to Resend for email marketing)
 - [ ] `MAILCHIMP_SERVER_PREFIX` — Mailchimp server prefix (defaults to `us21`)
-- [ ] `SENDGRID_API_KEY` — SendGrid API key
-- [ ] `SENDGRID_FROM_EMAIL` — SendGrid sender email (defaults to `hello@shortstack.agency`)
+- [ ] `SMTP_POOL_PASSWORD` — shared password for custom SMTP identities in the outreach sender pool
 
 ## Webhooks / Automation
 

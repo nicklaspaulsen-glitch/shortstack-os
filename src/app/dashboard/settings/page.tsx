@@ -505,7 +505,7 @@ export default function SettingsPage() {
   const smtpProviders = [
     { name: "Gmail", host: "smtp.gmail.com", port: "587", use_tls: true, icon: "G", color: "#EA4335", hint: "Use an App Password (Settings > Security > 2-Step Verification > App Passwords)" },
     { name: "Outlook / Microsoft 365", host: "smtp.office365.com", port: "587", use_tls: true, icon: "O", color: "#0078D4", hint: "Use your Microsoft account credentials" },
-    { name: "SendGrid", host: "smtp.sendgrid.net", port: "587", use_tls: true, icon: "SG", color: "#1A82E2", hint: "Username is 'apikey', password is your SendGrid API key" },
+    { name: "Resend", host: "smtp.resend.com", port: "587", use_tls: true, icon: "R", color: "#000000", hint: "Username is 'resend', password is your Resend API key (starts with re_)" },
     { name: "Mailgun", host: "smtp.mailgun.org", port: "587", use_tls: true, icon: "MG", color: "#F06B54", hint: "Find credentials under Sending > Domain settings > SMTP" },
     { name: "AWS SES", host: "email-smtp.us-east-1.amazonaws.com", port: "587", use_tls: true, icon: "SES", color: "#FF9900", hint: "Use SMTP credentials from the SES console (not IAM keys)" },
   ];
