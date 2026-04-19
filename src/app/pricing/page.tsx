@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Check, ArrowRight, Infinity } from "lucide-react";
 import { PLAN_TIERS, formatBytes } from "@/lib/plan-config";
+import { BRAND } from "@/lib/brand-config";
 
 const PLANS = [
   {
@@ -115,8 +116,11 @@ export default function PricingPage() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-16">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={28} height={28} />
-            <span className="text-white font-bold text-sm">ShortStack</span>
+            <Image src={BRAND.logo_svg} alt={BRAND.product_name} width={28} height={28} />
+            <span className="text-white font-bold text-sm leading-tight flex flex-col">
+              <span>{BRAND.product_name}</span>
+              <span className="text-[8px] font-medium text-gray-400 tracking-wide">by {BRAND.company_name}</span>
+            </span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/book" className="text-xs text-gray-400 hover:text-white transition-colors">Book a Call</Link>

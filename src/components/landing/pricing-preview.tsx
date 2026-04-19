@@ -6,52 +6,57 @@ import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
 import SectionHeading from "./section-heading";
 
+/**
+ * Condensed 3-tier preview on the landing page. The full 5-tier grid
+ * (Starter / Growth / Pro / Business / Unlimited) lives at /pricing.
+ * Prices here MUST match PLAN_TIERS in src/lib/plan-config.ts.
+ */
 const PLANS = [
   {
     name: "Starter",
-    price: "$49",
+    price: "$497",
     cadence: "/mo",
-    blurb: "Solo operators and consultants dipping a toe in automation.",
+    blurb: "Solo agencies getting started with AI.",
     bullets: [
-      "Up to 3 client workspaces",
-      "CRM, proposals, billing",
-      "1,000 lead enrichments/mo",
-      "500 AI outreach sends/mo",
-      "Standard email support",
+      "Up to 5 clients",
+      "250K AI tokens / month",
+      "Lead Finder + CRM + Social Manager",
+      "AI Script Lab + Client Portal",
+      "Email support",
     ],
     cta: "Start free trial",
     featured: false,
   },
   {
-    name: "Growth",
-    price: "$199",
+    name: "Pro",
+    price: "$2,497",
     cadence: "/mo",
-    blurb: "The plan most agencies run on. Full stack, no gates.",
+    blurb: "For established agencies running at scale — most teams land here.",
     bullets: [
-      "Up to 20 client workspaces",
-      "White-label client portals",
-      "10,000 lead enrichments/mo",
-      "10,000 AI outreach sends/mo",
-      "AI voice caller included",
+      "Up to 50 clients, 10 team members",
+      "5M AI tokens / month",
+      "Workflows, Agent HQ, Design Studio",
+      "AI Caller 500 min, API + Webhooks",
+      "Advanced analytics",
       "Priority support",
     ],
     cta: "Start free trial",
     featured: true,
   },
   {
-    name: "Agency",
-    price: "$499",
+    name: "Unlimited",
+    price: "$9,997",
     cadence: "/mo",
-    blurb: "Multi-team agencies and franchises. Scale pricing, no surprise bills.",
+    blurb: "No caps, no limits, everything unlimited. For multi-brand ops.",
     bullets: [
-      "Unlimited client workspaces",
-      "Custom domains & SSO",
-      "Unlimited lead enrichments",
-      "Unlimited AI outreach",
-      "Dedicated CSM",
-      "SLA & data residency options",
+      "Unlimited clients + team members",
+      "Unlimited AI tokens + outreach",
+      "White-label + custom AI model tuning",
+      "Unlimited AI Caller minutes",
+      "SLA + dedicated support in Slack",
+      "Custom integrations",
     ],
-    cta: "Talk to sales",
+    cta: "Go Unlimited",
     featured: false,
   },
 ];
@@ -59,6 +64,7 @@ const PLANS = [
 export default function PricingPreview() {
   return (
     <section
+      id="pricing-preview"
       className="py-20 md:py-28 px-6"
       style={{ borderTop: "1px solid rgba(255,255,255,0.03)" }}
     >
@@ -66,8 +72,8 @@ export default function PricingPreview() {
         <Reveal>
           <SectionHeading
             eyebrow="Pricing"
-            title="Simple plans. Honest caps."
-            subtitle={`Every plan includes the full ${BRAND.product_name} platform — no feature gates on core workflows. You pay for volume and workspaces, not for the ability to use the product.`}
+            title="Honest pricing. No feature gates."
+            subtitle={`Every ${BRAND.product_name} plan includes the full platform — what you pay for is volume and team size, not the ability to use the product. 14-day free trial on all plans. Cancel anytime.`}
             className="mb-14"
           />
         </Reveal>
@@ -161,14 +167,17 @@ export default function PricingPreview() {
         </div>
 
         <Reveal delay={0.3}>
-          <div className="text-center mt-10">
+          <div className="text-center mt-10 space-y-2">
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
+              className="inline-flex items-center gap-1.5 text-sm text-gray-300 hover:text-white transition-colors"
             >
-              See all plans and volume pricing
+              See all 5 plans (Growth $997 + Business $4,997 too)
               <ArrowRight size={14} />
             </Link>
+            <p className="text-[11px] text-gray-500">
+              14-day free trial · No credit card required to start · You own your data
+            </p>
           </div>
         </Reveal>
       </div>

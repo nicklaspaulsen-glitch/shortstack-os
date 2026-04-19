@@ -1,110 +1,70 @@
 "use client";
 
-import { Star } from "lucide-react";
+import Link from "next/link";
+import { Sparkles, ArrowRight } from "lucide-react";
+import { BRAND } from "@/lib/brand-config";
 import Reveal from "./reveal";
-import SectionHeading from "./section-heading";
 
 /**
- * TODO: Replace these with real quotes from agency owners using Trinity.
- * Each entry is currently a placeholder — clearly marked below.
+ * Intentionally quiet "case studies coming" section — we don't fabricate
+ * testimonials. Until real agency founders send us quotes with names,
+ * faces, and logos, we show an honest invitation instead of placeholders.
+ *
+ * When real testimonials land, swap this component for a proper grid
+ * keyed off (name, role, quote, logo_url, agency_name).
  */
-const TESTIMONIALS = [
-  {
-    quote:
-      "We replaced five tools in the first week. Our ops lead got his Fridays back and our clients actually compliment the portal now.",
-    name: "[TODO — Agency Founder]",
-    role: "[TODO — Role, Agency]",
-    rating: 5,
-    placeholder: true,
-  },
-  {
-    quote:
-      "The AI outreach booked us 14 discovery calls from a single campaign. First time since 2022 I've seen cold email convert without a VA babysitting it.",
-    name: "[TODO — Agency Founder]",
-    role: "[TODO — Role, Agency]",
-    rating: 5,
-    placeholder: true,
-  },
-  {
-    quote:
-      "I was skeptical about another 'agency OS'. This one is different — the team clearly built it while running an agency, and it shows in every workflow.",
-    name: "[TODO — Agency Founder]",
-    role: "[TODO — Role, Agency]",
-    rating: 5,
-    placeholder: true,
-  },
-];
-
 export default function Testimonials() {
   return (
-    <section className="py-20 md:py-28 px-6">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-16 md:py-20 px-6">
+      <div className="max-w-4xl mx-auto">
         <Reveal>
-          <SectionHeading
-            eyebrow="From agency owners using Trinity"
-            title="Loved by operators, not marketers."
-            subtitle="Real quotes from agency founders running the platform. We'll swap these for real testimonials with names, faces, and agency logos as we publish case studies."
-            className="mb-16"
-          />
+          <div
+            className="rounded-3xl p-10 md:p-14 text-center"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(200,168,85,0.05), rgba(200,168,85,0.02))",
+              border: "1px solid rgba(200,168,85,0.15)",
+            }}
+          >
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest mb-5"
+              style={{
+                background: "rgba(200,168,85,0.1)",
+                color: "#c8a855",
+                border: "1px solid rgba(200,168,85,0.2)",
+              }}
+            >
+              <Sparkles size={11} />
+              Real testimonials coming
+            </div>
+
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              We don&rsquo;t fake social proof.
+            </h2>
+            <p className="text-sm md:text-base text-gray-400 leading-relaxed max-w-xl mx-auto mb-6">
+              {BRAND.product_name} is brand-new, and we&rsquo;d rather show you no
+              testimonials than make them up. Case studies with real agency
+              founders, real numbers, and real logos will land here as the
+              first wave of users publishes their results.
+            </p>
+            <p className="text-xs text-gray-500 mb-8">
+              Want to be one of the first? Try the free trial and we&rsquo;ll
+              feature your story (with your permission) when you get a win.
+            </p>
+
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:opacity-90"
+              style={{
+                background: "linear-gradient(135deg, #c8a855, #b89840)",
+                color: "#0b0d12",
+              }}
+            >
+              Start your free trial
+              <ArrowRight size={14} />
+            </Link>
+          </div>
         </Reveal>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {TESTIMONIALS.map((t, i) => (
-            <Reveal key={i} delay={0.1 * i}>
-              <div
-                className="rounded-2xl p-6 h-full transition-all duration-300 hover:-translate-y-1"
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid rgba(255,255,255,0.05)",
-                }}
-              >
-                <div className="flex gap-0.5 mb-4">
-                  {Array.from({ length: t.rating }).map((_, idx) => (
-                    <Star
-                      key={idx}
-                      size={14}
-                      fill="#c8a855"
-                      style={{ color: "#c8a855" }}
-                    />
-                  ))}
-                </div>
-
-                <p className="text-sm text-gray-300 leading-relaxed mb-6">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold"
-                    style={{
-                      background: "rgba(200,168,85,0.1)",
-                      color: "#c8a855",
-                    }}
-                  >
-                    ?
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white">
-                      {t.name}
-                    </p>
-                    <p className="text-xs text-gray-500">{t.role}</p>
-                  </div>
-                  {t.placeholder && (
-                    <span
-                      className="ml-auto text-[9px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider"
-                      style={{
-                        background: "rgba(200,168,85,0.1)",
-                        color: "#c8a855",
-                      }}
-                    >
-                      Placeholder
-                    </span>
-                  )}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
       </div>
     </section>
   );
