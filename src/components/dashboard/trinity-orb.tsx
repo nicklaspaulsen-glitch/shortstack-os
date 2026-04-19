@@ -52,11 +52,11 @@ interface Props {
 
 const DEFAULT_SUGGESTIONS = [
   "How am I doing this month?",
-  "Find new leads for fitness studios",
-  "Generate a content plan for next week",
-  "Draft a proposal for my newest client",
-  "Create a task: follow up with Acme tomorrow",
-  "Post on all my socials today",
+  "Search for plumber leads in Dallas",
+  "Send a $500 invoice to my newest client",
+  "Schedule an Instagram post for tomorrow",
+  "Generate a 30-day content plan for Acme",
+  "What are my latest replies?",
 ];
 
 export default function TrinityOrb({ firstName, clientId = null, suggestions = DEFAULT_SUGGESTIONS }: Props) {
