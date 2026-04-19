@@ -99,7 +99,7 @@ export default function DownloadDesktopPage() {
     <div className="space-y-6 pb-10">
       <PageHero
         eyebrow="Desktop App"
-        title="Download ShortStack OS for Desktop"
+        title="Download Trinity for Desktop"
         subtitle="Work faster with a native app. Chrome browser built in, AI-assisted clicks, keyboard automation."
         icon={<Download size={22} />}
         gradient="gold"

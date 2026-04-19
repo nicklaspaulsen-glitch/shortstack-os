@@ -32,8 +32,8 @@ export default function DemoPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-16">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={28} height={28} />
-            <span className="text-white font-bold text-sm">ShortStack OS</span>
+            <Image src="/trinity-logo.svg" alt="Trinity" width={28} height={28} />
+            <span className="text-white font-bold text-sm">Trinity</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/pricing" className="text-xs text-gray-400 hover:text-white">Pricing</Link>

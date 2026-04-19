@@ -434,7 +434,7 @@ export default function OnboardPage() {
       <div className="fade-in space-y-6">
         <PageHero
           icon={<Sparkles size={28} />}
-          title="Welcome to ShortStack OS"
+          title="Welcome to Trinity"
           subtitle="Tell us who you are — we'll set up your workspace."
           gradient="gold"
         />
@@ -816,7 +816,7 @@ export default function OnboardPage() {
                   </div>
                   <h2 className="text-xl font-bold">Welcome to Client Onboarding</h2>
                   <p className="text-sm text-muted max-w-md mx-auto">
-                    This wizard will guide you through setting up a new client in ShortStack OS.
+                    This wizard will guide you through setting up a new client in Trinity.
                     Everything from business details to brand assets and service configuration.
                   </p>
                 </div>

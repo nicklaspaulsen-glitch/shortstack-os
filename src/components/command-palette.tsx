@@ -226,7 +226,7 @@ export default function CommandPalette() {
               <span>↵ select</span>
               <span>esc close</span>
             </div>
-            <span className="text-[8px] text-muted/30">ShortStack OS</span>
+            <span className="text-[8px] text-muted/30">Trinity</span>
           </div>
         </div>
       </div>

@@ -6,7 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   Link2, Globe, Loader, Check, Unlink, LogIn, Shield, Clock, AlertCircle,
-  MessageSquare, Mail, Phone, ExternalLink, Zap, RefreshCw
+  MessageSquare, Mail, Phone, ExternalLink, Zap, RefreshCw,
+  X, Key, Settings2, ArrowUpRight, Copy
 } from "lucide-react";
 import toast from "react-hot-toast";
 import {
@@ -504,7 +505,24 @@ function SocialAccountsPage() {
   );
 }
 
-const BUSINESS_INTEGRATIONS = [
+const VERCEL_ENV_URL = "https://vercel.com/growth-9598s-projects/shortstack-os/settings/environment-variables";
+
+type BusinessIntegration = {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  color: string;
+  bg: string;
+  description: string;
+  endpoint: string;
+  envKeys: string[];
+  docsUrl: string;
+  instructions: string;
+  /** OAuth path (hits /api/oauth/...) when client_id creds are already in env */
+  oauthPath?: string;
+};
+
+const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
   {
     id: "google_ads",
     name: "Google Ads",
@@ -515,6 +533,8 @@ const BUSINESS_INTEGRATIONS = [
     endpoint: "/api/integrations/google-ads",
     envKeys: ["GOOGLE_ADS_DEVELOPER_TOKEN", "GOOGLE_CLIENT_ID"],
     docsUrl: "https://developers.google.com/google-ads/api/docs/start",
+    instructions: "Get a developer token at https://ads.google.com/aw/apicenter → paste into Vercel env vars as GOOGLE_ADS_DEVELOPER_TOKEN. You also need GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET from Google Cloud Console.",
+    oauthPath: "/api/oauth/google-ads",
   },
   {
     id: "google_business",
@@ -526,6 +546,8 @@ const BUSINESS_INTEGRATIONS = [
     endpoint: "/api/integrations/google-business",
     envKeys: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
     docsUrl: "https://developers.google.com/my-business",
+    instructions: "Enable the Business Profile API in Google Cloud Console → create OAuth 2.0 credentials → add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to Vercel env vars.",
+    oauthPath: "/api/oauth/google",
   },
   {
     id: "calendly",
@@ -537,6 +559,7 @@ const BUSINESS_INTEGRATIONS = [
     endpoint: "/api/integrations/calendly",
     envKeys: ["CALENDLY_API_TOKEN"],
     docsUrl: "https://developer.calendly.com",
+    instructions: "Get your personal access token at https://calendly.com/integrations/api_webhooks → add as CALENDLY_API_TOKEN in Vercel env vars.",
   },
   {
     id: "whatsapp",
@@ -548,6 +571,8 @@ const BUSINESS_INTEGRATIONS = [
     endpoint: "/api/integrations/whatsapp",
     envKeys: ["WHATSAPP_ACCESS_TOKEN", "WHATSAPP_PHONE_NUMBER_ID"],
     docsUrl: "https://developers.facebook.com/docs/whatsapp/cloud-api",
+    instructions: "Set up WhatsApp Business in Meta for Developers → get WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID → paste both into Vercel env vars.",
+    oauthPath: "/api/oauth/meta",
   },
   {
     id: "email_marketing",
@@ -559,6 +584,7 @@ const BUSINESS_INTEGRATIONS = [
     endpoint: "/api/integrations/email-marketing",
     envKeys: ["SENDGRID_API_KEY"],
     docsUrl: "https://docs.sendgrid.com/",
+    instructions: "Create a SendGrid API key at https://app.sendgrid.com/settings/api_keys with Mail Send permission → add as SENDGRID_API_KEY. Optionally set SENDGRID_FROM_EMAIL too.",
   },
   {
     id: "twilio",
@@ -570,6 +596,7 @@ const BUSINESS_INTEGRATIONS = [
     endpoint: "/api/integrations/twilio",
     envKeys: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
     docsUrl: "https://www.twilio.com/docs",
+    instructions: "Grab your Account SID and Auth Token from https://console.twilio.com → add as TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN. Also set TWILIO_PHONE_NUMBER for outbound.",
   },
   {
     id: "notion",
@@ -581,29 +608,47 @@ const BUSINESS_INTEGRATIONS = [
     endpoint: "/api/integrations/notion",
     envKeys: ["NOTION_API_KEY"],
     docsUrl: "https://developers.notion.com",
+    instructions: "Create an internal integration at https://notion.so/my-integrations → copy the Internal Integration Secret → add as NOTION_API_KEY. Share the databases you want accessible with the integration.",
   },
 ];
 
+type HealthStatus = "connected" | "not_configured" | "error" | "checking";
+
+interface HealthResult {
+  id: string;
+  status: HealthStatus;
+  detail?: string;
+  missing?: string[];
+}
+
 function BusinessIntegrations() {
-  const [statuses, setStatuses] = useState<Record<string, "connected" | "not_configured" | "checking">>({});
+  const [statuses, setStatuses] = useState<Record<string, HealthResult>>({});
+  const [activeModal, setActiveModal] = useState<BusinessIntegration | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    BUSINESS_INTEGRATIONS.forEach(async (integration) => {
-      setStatuses(prev => ({ ...prev, [integration.id]: "checking" }));
-      try {
-        const res = await fetch(`${integration.endpoint}?action=me&client_id=_check`, { method: "GET" });
-        const data = await res.json();
-        setStatuses(prev => ({
-          ...prev,
-          [integration.id]: data.connected === false || data.error?.includes("not configured") ? "not_configured" : "connected",
-        }));
-      } catch {
-        setStatuses(prev => ({ ...prev, [integration.id]: "not_configured" }));
-      }
-    });
-  }, []);
+  async function loadHealth() {
+    setRefreshing(true);
+    const initial: Record<string, HealthResult> = {};
+    BUSINESS_INTEGRATIONS.forEach(i => { initial[i.id] = { id: i.id, status: "checking" }; });
+    setStatuses(initial);
+    try {
+      const res = await fetch("/api/integrations/health");
+      const data = await res.json();
+      const next: Record<string, HealthResult> = {};
+      (data.results || []).forEach((r: HealthResult) => { next[r.id] = r; });
+      setStatuses(next);
+    } catch {
+      const fallback: Record<string, HealthResult> = {};
+      BUSINESS_INTEGRATIONS.forEach(i => { fallback[i.id] = { id: i.id, status: "not_configured" }; });
+      setStatuses(fallback);
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
-  const configured = Object.values(statuses).filter(s => s === "connected").length;
+  useEffect(() => { loadHealth(); }, []);
+
+  const configured = Object.values(statuses).filter(s => s.status === "connected").length;
 
   return (
     <div>
@@ -611,15 +656,26 @@ function BusinessIntegrations() {
         <h2 className="section-header mb-0 flex items-center gap-2">
           <Zap size={14} className="text-gold" /> Business Integrations
         </h2>
-        <span className="text-[10px] text-muted">{configured}/{BUSINESS_INTEGRATIONS.length} configured</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={loadHealth}
+            disabled={refreshing}
+            className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground transition-colors disabled:opacity-50"
+            title="Re-check all integrations"
+          >
+            <RefreshCw size={10} className={refreshing ? "animate-spin" : ""} />
+            Re-check
+          </button>
+          <span className="text-[10px] text-muted">{configured}/{BUSINESS_INTEGRATIONS.length} configured</span>
+        </div>
       </div>
-      <p className="text-[10px] text-muted mb-3">Connect business tools via API keys. Configure in your environment variables.</p>
+      <p className="text-[10px] text-muted mb-3">Connect business tools via API keys or OAuth. Status reflects live reachability &mdash; keys present and the provider responded.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {BUSINESS_INTEGRATIONS.map(integration => {
-          const status = statuses[integration.id] || "checking";
+          const health = statuses[integration.id] || { id: integration.id, status: "checking" as HealthStatus };
           return (
             <div key={integration.id}
-              className={`rounded-xl p-4 border bg-gradient-to-br ${integration.bg} relative overflow-hidden`}>
+              className={`rounded-xl p-4 border bg-gradient-to-br ${integration.bg} relative overflow-hidden flex flex-col gap-2.5`}>
               <div className="absolute top-0 right-0 w-16 h-16 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2" />
               <div className="relative">
                 <div className="flex items-center justify-between mb-2">
@@ -631,28 +687,227 @@ function BusinessIntegrations() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-between mt-1">
                   <div className="flex items-center gap-1">
-                    {status === "checking" ? (
+                    {health.status === "checking" ? (
                       <span className="text-[9px] text-muted flex items-center gap-1"><Loader size={8} className="animate-spin" /> Checking...</span>
-                    ) : status === "connected" ? (
-                      <span className="text-[9px] text-success flex items-center gap-1 bg-success/10 px-1.5 py-0.5 rounded"><Check size={8} /> Connected</span>
+                    ) : health.status === "connected" ? (
+                      <span className="text-[9px] text-success flex items-center gap-1 bg-success/10 px-1.5 py-0.5 rounded" title={health.detail}><Check size={8} /> Connected</span>
+                    ) : health.status === "error" ? (
+                      <span className="text-[9px] text-warning flex items-center gap-1 bg-warning/10 px-1.5 py-0.5 rounded" title={health.detail}><AlertCircle size={8} /> Unreachable</span>
                     ) : (
                       <span className="text-[9px] text-muted flex items-center gap-1 bg-surface-light px-1.5 py-0.5 rounded"><AlertCircle size={8} /> Not configured</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[8px] text-muted/60">{integration.envKeys.join(", ")}</span>
-                    <a href={integration.docsUrl} target="_blank" rel="noopener noreferrer"
-                      className="text-[10px] text-muted hover:text-foreground flex items-center gap-0.5">
-                      <ExternalLink size={9} /> Docs
-                    </a>
-                  </div>
+                  <a href={integration.docsUrl} target="_blank" rel="noopener noreferrer"
+                    className="text-[10px] text-muted hover:text-foreground flex items-center gap-0.5">
+                    <ExternalLink size={9} /> Docs
+                  </a>
                 </div>
               </div>
+              <div className="relative flex items-center gap-2 pt-1">
+                {health.status === "connected" ? (
+                  <button
+                    onClick={() => setActiveModal(integration)}
+                    className="flex-1 flex items-center justify-center gap-1 text-[10px] text-muted hover:text-foreground bg-surface/40 hover:bg-surface border border-border/60 px-2 py-1.5 rounded transition-colors"
+                  >
+                    <Settings2 size={10} /> Manage
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setActiveModal(integration)}
+                    className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium text-[#C9A84C] hover:text-[#d4b85c] bg-gold/10 hover:bg-gold/15 border border-gold/25 px-2 py-1.5 rounded transition-colors"
+                  >
+                    <LogIn size={10} /> Connect
+                  </button>
+                )}
+              </div>
+              <span className="relative text-[8px] text-muted/60 font-mono truncate" title={integration.envKeys.join(", ")}>
+                {integration.envKeys.join(", ")}
+              </span>
             </div>
           );
         })}
+      </div>
+
+      {activeModal && (
+        <IntegrationConnectModal
+          integration={activeModal}
+          currentStatus={statuses[activeModal.id]}
+          onClose={() => setActiveModal(null)}
+          onStatusChange={(result) => setStatuses(prev => ({ ...prev, [activeModal.id]: result }))}
+        />
+      )}
+    </div>
+  );
+}
+
+interface IntegrationConnectModalProps {
+  integration: BusinessIntegration;
+  currentStatus?: HealthResult;
+  onClose: () => void;
+  onStatusChange: (result: HealthResult) => void;
+}
+
+function IntegrationConnectModal({ integration, currentStatus, onClose, onStatusChange }: IntegrationConnectModalProps) {
+  const [testing, setTesting] = useState(false);
+
+  useEffect(() => {
+    const onEsc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onEsc);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onEsc);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  async function testConnection() {
+    setTesting(true);
+    try {
+      const res = await fetch(`/api/integrations/health?id=${integration.id}`);
+      const data = await res.json();
+      const result: HealthResult = data.result || { id: integration.id, status: "error" };
+      onStatusChange(result);
+      if (result.status === "connected") {
+        toast.success(`${integration.name} is reachable!`);
+      } else if (result.status === "error") {
+        toast.error(result.detail || `${integration.name} returned an error`);
+      } else {
+        toast.error(`Missing: ${(result.missing || []).join(", ")}`);
+      }
+    } catch {
+      toast.error("Test failed");
+    } finally {
+      setTesting(false);
+    }
+  }
+
+  function copyEnvKey(key: string) {
+    navigator.clipboard.writeText(key).then(() => toast.success(`Copied ${key}`));
+  }
+
+  function startOAuth() {
+    // Business integrations that support OAuth all require per-client linking.
+    // Send the user to the Connected Accounts section above with a hash so they
+    // can pick the client first, then click Connect via Zernio.
+    toast("Pick a client above, then use 'Connect via Zernio' for OAuth-based linking.", { icon: "ℹ️" });
+    onClose();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  const isConnected = currentStatus?.status === "connected";
+  const hasError = currentStatus?.status === "error";
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center" role="dialog" aria-modal="true">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
+      <div className="relative w-full max-w-lg mx-4 bg-surface border border-border/50 rounded-xl shadow-2xl shadow-black/50 fade-in max-h-[85vh] overflow-y-auto">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-border/30 sticky top-0 bg-surface/95 backdrop-blur-sm z-10">
+          <div className="flex items-center gap-2.5">
+            <span className={integration.color}>{integration.icon}</span>
+            <div>
+              <h2 className="text-sm font-semibold text-foreground">Connect {integration.name}</h2>
+              <p className="text-[10px] text-muted">{integration.description}</p>
+            </div>
+          </div>
+          <button onClick={onClose}
+            className="p-1 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors">
+            <X size={16} />
+          </button>
+        </div>
+
+        <div className="p-5 space-y-4">
+          {/* Status banner */}
+          <div className={`rounded-lg border p-3 text-[11px] ${
+            isConnected ? "border-success/30 bg-success/5 text-success" :
+            hasError ? "border-warning/30 bg-warning/5 text-warning" :
+            "border-gold/30 bg-gold/5 text-[#C9A84C]"
+          }`}>
+            <div className="flex items-start gap-2">
+              {isConnected ? <Check size={12} className="mt-0.5 shrink-0" /> :
+                hasError ? <AlertCircle size={12} className="mt-0.5 shrink-0" /> :
+                <AlertCircle size={12} className="mt-0.5 shrink-0" />}
+              <div>
+                {isConnected && <span><strong>Connected.</strong> {currentStatus?.detail || `${integration.name} is reachable with the current credentials.`}</span>}
+                {hasError && <span><strong>Keys present but provider rejected.</strong> {currentStatus?.detail}</span>}
+                {!isConnected && !hasError && <span>Add the environment variables below to enable {integration.name}.</span>}
+              </div>
+            </div>
+          </div>
+
+          {/* Required env vars */}
+          <div>
+            <p className="text-[11px] font-semibold mb-2 flex items-center gap-1.5 text-foreground">
+              <Key size={11} className="text-gold" /> Required environment variables
+            </p>
+            <div className="space-y-1.5">
+              {integration.envKeys.map(key => (
+                <div key={key} className="flex items-center gap-2 bg-surface-light border border-border/60 rounded-md px-2.5 py-1.5">
+                  <code className="text-[11px] font-mono text-foreground flex-1">{key}</code>
+                  <button
+                    onClick={() => copyEnvKey(key)}
+                    className="text-muted hover:text-foreground transition-colors"
+                    title="Copy env var name"
+                  >
+                    <Copy size={11} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div>
+            <p className="text-[11px] font-semibold mb-1.5 text-foreground">How to get these</p>
+            <p className="text-[11px] text-muted leading-relaxed whitespace-pre-line">{integration.instructions}</p>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex flex-col gap-2 pt-1">
+            {integration.oauthPath && (
+              <button
+                onClick={startOAuth}
+                className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-white bg-gradient-to-br from-[#C9A84C] to-[#b3932f] hover:from-[#d4b85c] hover:to-[#C9A84C] px-3 py-2 rounded-lg border border-gold/40 transition-all"
+                title="OAuth requires selecting a client in Connected Accounts"
+              >
+                <LogIn size={12} /> Connect with OAuth (per-client)
+              </button>
+            )}
+
+            <div className="flex gap-2">
+              <a
+                href={VERCEL_ENV_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+              >
+                <ArrowUpRight size={12} /> Open Vercel Settings
+              </a>
+              <a
+                href={integration.docsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+              >
+                <ExternalLink size={11} /> Docs
+              </a>
+            </div>
+
+            <button
+              onClick={testConnection}
+              disabled={testing}
+              className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-gold/30 px-3 py-2 rounded-lg transition-colors disabled:opacity-60 disabled:pointer-events-none"
+            >
+              {testing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} className="text-gold" />}
+              {testing ? "Testing..." : "Test connection"}
+            </button>
+          </div>
+
+          <p className="text-[10px] text-muted/70 pt-1 border-t border-border/30">
+            After adding env vars in Vercel, redeploy your app (or wait for the next build). Then click <strong className="text-foreground">Test connection</strong> above.
+          </p>
+        </div>
       </div>
     </div>
   );

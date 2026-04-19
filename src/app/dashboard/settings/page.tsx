@@ -834,7 +834,7 @@ export default function SettingsPage() {
               <h2 className="section-header flex items-center gap-2">
                 <CreditCard size={14} className="text-gold" /> Subscription
               </h2>
-              <p className="text-[10px] text-muted mb-3">Manage your ShortStack OS plan</p>
+              <p className="text-[10px] text-muted mb-3">Manage your Trinity plan</p>
               {(() => {
                 const plan = getPlanConfig(profile?.plan_tier);
                 return (
@@ -900,10 +900,10 @@ export default function SettingsPage() {
               <h2 className="section-header flex items-center gap-2">
                 <Monitor size={14} className="text-gold" /> Desktop App
               </h2>
-              <p className="text-[10px] text-muted mb-3">Settings for the ShortStack OS desktop application</p>
+              <p className="text-[10px] text-muted mb-3">Settings for the Trinity desktop application</p>
               <div className="space-y-2">
                 {[
-                  { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch ShortStack OS when your computer starts" },
+                  { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch Trinity when your computer starts" },
                   { key: "ss_auto_update", label: "Auto-Update", desc: "Automatically check for and apply updates" },
                 ].map(setting => {
                   const isEnabled = typeof window !== "undefined" && safeGet(setting.key) === "true";
@@ -1216,7 +1216,7 @@ export default function SettingsPage() {
                   <Globe size={18} className="text-gold" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-foreground mb-1">Buy a domain through ShortStack OS</p>
+                  <p className="text-xs font-semibold text-foreground mb-1">Buy a domain through Trinity</p>
                   <p className="text-[10px] text-muted mb-3">
                     Search, purchase, and deploy in under 2 minutes. Includes SSL,
                     DNS, and hosting. Cancel anytime.

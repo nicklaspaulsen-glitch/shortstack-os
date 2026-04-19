@@ -320,7 +320,7 @@ export default function AgentDesktopPage() {
                   <div className="flex items-start gap-2 mt-3 p-2.5 bg-surface-light rounded-lg">
                     <Info size={11} className="text-muted mt-0.5 shrink-0" />
                     <p className="text-[9px] text-muted leading-relaxed">
-                      Works on Chrome, Edge, Brave, and any Chromium browser. Requires ShortStack OS account.
+                      Works on Chrome, Edge, Brave, and any Chromium browser. Requires Trinity account.
                     </p>
                   </div>
                 )}
@@ -378,7 +378,7 @@ export default function AgentDesktopPage() {
                 <div className="flex justify-between"><span className="text-muted">Version</span><span>Chrome 114+</span></div>
                 <div className="flex justify-between"><span className="text-muted">Manifest</span><span>V3</span></div>
                 <div className="flex justify-between"><span className="text-muted">Permissions</span><span>Active tab, Side panel</span></div>
-                <div className="flex justify-between"><span className="text-muted">Account</span><span>ShortStack OS login</span></div>
+                <div className="flex justify-between"><span className="text-muted">Account</span><span>Trinity login</span></div>
               </div>
             </div>
           </div>

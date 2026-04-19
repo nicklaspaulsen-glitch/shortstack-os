@@ -11,12 +11,12 @@ export default function TermsPage() {
         <div className="space-y-6 text-sm text-muted leading-relaxed">
           <section>
             <h2 className="text-sm font-semibold text-foreground mb-2">1. Acceptance of Terms</h2>
-            <p>By accessing or using ShortStack OS (&quot;the Service&quot;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
+            <p>By accessing or using Trinity (&quot;the Service&quot;), a product of ShortStack, you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
           </section>
 
           <section>
             <h2 className="text-sm font-semibold text-foreground mb-2">2. Description of Service</h2>
-            <p>ShortStack OS is a digital marketing agency operating system that provides tools for lead generation, content creation, social media management, client management, and AI-powered automation. The Service is provided on a subscription basis.</p>
+            <p>Trinity is a digital marketing agency operating system that provides tools for lead generation, content creation, social media management, client management, and AI-powered automation. The Service is provided on a subscription basis.</p>
           </section>
 
           <section>
@@ -41,12 +41,12 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-sm font-semibold text-foreground mb-2">7. Social Media Integrations</h2>
-            <p>By connecting your social media accounts, you authorize ShortStack OS to access and manage those accounts on your behalf within the permissions you grant. You can revoke access at any time.</p>
+            <p>By connecting your social media accounts, you authorize Trinity to access and manage those accounts on your behalf within the permissions you grant. You can revoke access at any time.</p>
           </section>
 
           <section>
             <h2 className="text-sm font-semibold text-foreground mb-2">8. Limitation of Liability</h2>
-            <p>ShortStack OS is provided &quot;as is&quot; without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the Service.</p>
+            <p>Trinity is provided &quot;as is&quot; without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the Service.</p>
           </section>
 
           <section>

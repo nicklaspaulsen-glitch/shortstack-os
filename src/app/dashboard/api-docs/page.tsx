@@ -272,7 +272,7 @@ export default function ApiDocsPage() {
       <PageHero
         icon={<FileText size={28} />}
         title="API Documentation"
-        subtitle="Complete reference for ShortStack OS API."
+        subtitle="Complete reference for the Trinity API."
         gradient="blue"
         actions={
           <div className="flex items-center gap-2 text-[10px] text-white">

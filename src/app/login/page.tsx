@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, ArrowRight, Mail, Lock, User, Loader, ArrowLeft, Zap } from "lucide-react";
 import toast from "react-hot-toast";
 import { PLAN_TIERS, PlanTier } from "@/lib/plan-config";
+import { BRAND } from "@/lib/brand-config";
 
 export default function LoginPage() {
   return (
@@ -122,8 +123,9 @@ function LoginForm() {
       <div className="w-full max-w-[380px]">
         {/* Logo */}
         <div className="text-center mb-8 flex flex-col items-center">
-          <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={56} height={56} />
-          <h1 className="text-lg font-bold text-foreground tracking-tight mt-4">ShortStack OS</h1>
+          <Image src={BRAND.logo_svg} alt={BRAND.product_name} width={56} height={56} />
+          <h1 className="text-lg font-bold text-foreground tracking-tight mt-4">{BRAND.product_name}</h1>
+          <p className="text-[10px] text-gold/80 font-medium mt-0.5 tracking-wide">by {BRAND.company_name}</p>
           <p className="text-[11px] text-muted mt-1 tracking-wide">Agency Operating System</p>
         </div>
 

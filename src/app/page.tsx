@@ -106,7 +106,7 @@ const STEPS = [
 const TESTIMONIALS = [
   {
     quote:
-      "ShortStack replaced five different tools for us. Our team went from managing 8 clients to 22 without hiring anyone new.",
+      "Trinity replaced five different tools for us. Our team went from managing 8 clients to 22 without hiring anyone new.",
     name: "Marcus Chen",
     role: "Founder, Apex Digital",
     rating: 5,
@@ -251,14 +251,17 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
             <Image
-              src="/icons/shortstack-logo.png"
-              alt="ShortStack"
+              src="/trinity-logo.svg"
+              alt="Trinity"
               width={32}
               height={32}
               className="w-8 h-8"
             />
-            <span className="text-white font-bold tracking-tight">
-              ShortStack
+            <span className="text-white font-bold tracking-tight leading-tight flex flex-col">
+              <span>Trinity</span>
+              <span className="text-[9px] font-medium text-gray-400 tracking-wide">
+                by ShortStack
+              </span>
             </span>
           </Link>
 
@@ -466,7 +469,7 @@ export default function LandingPage() {
                   <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
                   <div className="w-3 h-3 rounded-full bg-green-500/50" />
                   <span className="text-[10px] text-gray-600 ml-2">
-                    ShortStack OS — Dashboard
+                    Trinity — Dashboard
                   </span>
                 </div>
 
@@ -585,7 +588,7 @@ export default function LandingPage() {
               One platform. Zero excuses.
             </h2>
             <p className="text-gray-400 max-w-xl mx-auto">
-              Replace your entire tool stack with ShortStack OS. Every feature
+              Replace your entire tool stack with Trinity. Every feature
               your agency needs, integrated and AI-powered.
             </p>
           </ScrollReveal>
@@ -722,7 +725,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-gray-400 max-w-lg mx-auto">
               Don&apos;t take our word for it. Here&apos;s what real agency
-              founders say about ShortStack OS.
+              founders say about Trinity.
             </p>
           </ScrollReveal>
 
@@ -790,7 +793,7 @@ export default function LandingPage() {
               Replace your entire tool stack
             </h2>
             <p className="text-gray-400 max-w-lg mx-auto">
-              Stop paying for a dozen subscriptions. ShortStack OS combines everything into one.
+              Stop paying for a dozen subscriptions. Trinity combines everything into one.
             </p>
           </ScrollReveal>
 
@@ -835,12 +838,12 @@ export default function LandingPage() {
 
           <div className="space-y-3">
             {[
-              { q: "Who is ShortStack OS for?", a: "Digital marketing agencies, freelance marketers, and consultants who want to automate lead generation, client management, outreach, and content creation in one platform." },
-              { q: "Do I need technical skills to use it?", a: "No. ShortStack is designed for agency owners, not developers. Everything is point-and-click with AI assistance built in." },
+              { q: "Who is Trinity for?", a: "Digital marketing agencies, freelance marketers, and consultants who want to automate lead generation, client management, outreach, and content creation in one platform." },
+              { q: "Do I need technical skills to use it?", a: "No. Trinity is designed for agency owners, not developers. Everything is point-and-click with AI assistance built in." },
               { q: "Can my clients log in and see their own portal?", a: "Yes. Each client gets their own portal with deliverables, invoices, contracts, tasks, and real-time progress updates." },
               { q: "What integrations are included?", a: "Stripe for billing, Google for leads and ads, Meta for social and ads, TikTok, LinkedIn, Telegram for notifications, and more. We add new integrations regularly." },
               { q: "Is there a free trial?", a: "We offer a Starter plan so you can explore the platform. You can upgrade anytime as your agency grows." },
-              { q: "Can I white-label ShortStack for my clients?", a: "White-label options are available on Growth and Enterprise plans, including custom domains and branding." },
+              { q: "Can I white-label Trinity for my clients?", a: "White-label options are available on Growth and Enterprise plans, including custom domains and branding." },
             ].map((faq, i) => (
               <ScrollReveal key={i} delay={0.06 * i}>
                 <FAQItem question={faq.q} answer={faq.a} />
@@ -894,7 +897,7 @@ export default function LandingPage() {
                 {[
                   { text: "14 AI-powered tools for file management and content creation", icon: Zap },
                   { text: "Project templates: websites, campaigns, brand kits, calendars", icon: Layers },
-                  { text: "Syncs with your ShortStack OS dashboard automatically", icon: Globe },
+                  { text: "Syncs with your Trinity dashboard automatically", icon: Globe },
                   { text: "Works offline — your files never leave your machine", icon: Lock },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3">
@@ -936,7 +939,7 @@ export default function LandingPage() {
               </div>
 
               <p className="text-[10px] text-gray-600 mt-3">
-                Free to download. Requires a ShortStack account to use.
+                Free to download. Requires a Trinity account to use.
               </p>
             </ScrollReveal>
 
@@ -1098,15 +1101,18 @@ export default function LandingPage() {
             <div className="col-span-2 md:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
                 <Image
-                  src="/icons/shortstack-logo.png"
-                  alt="ShortStack"
+                  src="/trinity-logo.svg"
+                  alt="Trinity"
                   width={28}
                   height={28}
                   className="w-7 h-7"
                 />
-                <span className="text-white font-bold text-sm">
-                  ShortStack OS
-                </span>
+                <div className="leading-tight">
+                  <div className="text-white font-bold text-sm">Trinity</div>
+                  <div className="text-[10px] text-gray-500 font-medium">
+                    by ShortStack
+                  </div>
+                </div>
               </div>
               <p className="text-xs text-gray-600 leading-relaxed">
                 The operating system for modern digital marketing agencies.
@@ -1180,8 +1186,8 @@ export default function LandingPage() {
             style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
           >
             <p className="text-[10px] text-gray-700">
-              &copy; {new Date().getFullYear()} ShortStack OS. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} ShortStack Digital. Trinity is a
+              product of ShortStack. All rights reserved.
             </p>
             <p className="text-[10px] text-gray-700">
               Built with AI. Designed for agencies.

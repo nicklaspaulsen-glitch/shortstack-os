@@ -18,7 +18,7 @@ export default function StylePreviewPage() {
     <div className="min-h-screen bg-black p-6">
       <div className="max-w-[1400px] mx-auto">
         <h1 className="text-2xl font-bold text-white mb-1">Pick Your Style</h1>
-        <p className="text-sm text-white/50 mb-8">Click any card to expand. Each is a mini dashboard mockup showing how ShortStack OS would look.</p>
+        <p className="text-sm text-white/50 mb-8">Click any card to expand. Each is a mini dashboard mockup showing how Trinity would look.</p>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {styles.map((s) => (
@@ -137,7 +137,7 @@ function NeoBrutalStyle({ expanded }: { expanded: boolean }) {
       <div className="flex items-center justify-between px-5 py-3" style={{ background: "#1A1A1A", borderBottom: "3px solid #1A1A1A" }}>
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-sm" style={{ background: "#FACC15", border: "2px solid #1A1A1A" }} />
-          <span style={{ fontWeight: 900, fontSize: 14, color: "#FFFEF5", letterSpacing: "-0.02em" }}>ShortStack OS</span>
+          <span style={{ fontWeight: 900, fontSize: 14, color: "#FFFEF5", letterSpacing: "-0.02em" }}>Trinity</span>
         </div>
         <span style={{ fontSize: 10, color: "#888", fontWeight: 600 }}>FRI 11 APR</span>
       </div>

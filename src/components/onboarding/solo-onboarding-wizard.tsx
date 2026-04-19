@@ -441,7 +441,7 @@ function StepUserType({
           <Sparkles size={24} className="text-gold" />
         </div>
         <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
-        <p className="text-sm text-muted">We&apos;ll tailor ShortStack OS to your business.</p>
+        <p className="text-sm text-muted">We&apos;ll tailor Trinity to your business.</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {USER_TYPES.map((t) => {

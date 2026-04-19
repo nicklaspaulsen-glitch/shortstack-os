@@ -10,7 +10,8 @@ import {
   Send, BarChart3, Globe, Briefcase,
   ArrowRight, Activity, ArrowUpRight, ArrowDownRight,
   Search, Clock, ChevronRight, Target, Mail, PhoneCall,
-  Bot, XCircle, Shield, Loader
+  Bot, XCircle, Shield, Loader,
+  Mic, Maximize2, Scissors, Volume2, Film, Music, Brain
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -89,7 +90,7 @@ export default function DashboardPage() {
     const params = new URLSearchParams(window.location.search);
     const subscribed = params.get("subscribed");
     if (subscribed) {
-      toast.success(`Welcome to ShortStack OS! Your ${subscribed.charAt(0).toUpperCase() + subscribed.slice(1)} plan is active.`, { duration: 5000 });
+      toast.success(`Welcome to Trinity! Your ${subscribed.charAt(0).toUpperCase() + subscribed.slice(1)} plan is active.`, { duration: 5000 });
       window.history.replaceState({}, "", "/dashboard");
     }
   }, []);
@@ -315,18 +316,20 @@ export default function DashboardPage() {
         </div>
         <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
           {[
-            { label: "Transcribe", icon: "🎙️", href: "/dashboard/ai-studio?tab=transcribe", desc: "Speech → Text" },
-            { label: "Upscale", icon: "🔍", href: "/dashboard/ai-studio?tab=upscale", desc: "Enhance images" },
-            { label: "Remove BG", icon: "✂️", href: "/dashboard/ai-studio?tab=remove-bg", desc: "Background removal" },
-            { label: "Voice Clone", icon: "🗣️", href: "/dashboard/ai-studio?tab=voice-clone", desc: "AI voice synthesis" },
-            { label: "AI Video", icon: "🎬", href: "/dashboard/ai-video", desc: "Image → Video" },
-            { label: "Music Gen", icon: "🎵", href: "/dashboard/ai-studio?tab=music-gen", desc: "AI music creation" },
-            { label: "Image Gen", icon: "🎨", href: "/dashboard/ai-studio?tab=batch-generate", desc: "FLUX / SDXL" },
-            { label: "LoRA Train", icon: "🧠", href: "/dashboard/ai-studio?tab=train-lora", desc: "Custom AI models" },
+            { label: "Transcribe", Icon: Mic, gradient: "from-blue-400 to-indigo-500", href: "/dashboard/ai-studio?tab=transcribe", desc: "Speech → Text" },
+            { label: "Upscale", Icon: Maximize2, gradient: "from-emerald-400 to-teal-500", href: "/dashboard/ai-studio?tab=upscale", desc: "Enhance images" },
+            { label: "Remove BG", Icon: Scissors, gradient: "from-purple-400 to-pink-500", href: "/dashboard/ai-studio?tab=remove-bg", desc: "Background removal" },
+            { label: "Voice Clone", Icon: Volume2, gradient: "from-cyan-400 to-blue-500", href: "/dashboard/ai-studio?tab=voice-clone", desc: "AI voice synthesis" },
+            { label: "AI Video", Icon: Film, gradient: "from-rose-400 to-orange-500", href: "/dashboard/ai-video", desc: "Image → Video" },
+            { label: "Music Gen", Icon: Music, gradient: "from-violet-400 to-purple-500", href: "/dashboard/ai-studio?tab=music-gen", desc: "AI music creation" },
+            { label: "Image Gen", Icon: Sparkles, gradient: "from-amber-400 to-orange-500", href: "/dashboard/ai-studio?tab=batch-generate", desc: "FLUX / SDXL" },
+            { label: "LoRA Train", Icon: Brain, gradient: "from-fuchsia-400 to-pink-500", href: "/dashboard/ai-studio?tab=train-lora", desc: "Custom AI models" },
           ].map((tool) => (
             <Link key={tool.label} href={tool.href}
-              className="flex flex-col items-center gap-1 p-2.5 rounded-xl border border-border hover:border-purple-500/20 hover:bg-purple-500/5 transition-all group cursor-pointer text-center">
-              <span className="text-lg">{tool.icon}</span>
+              className="flex flex-col items-center gap-1.5 p-2.5 rounded-xl border border-border hover:border-purple-500/20 hover:bg-purple-500/5 transition-all group cursor-pointer text-center">
+              <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${tool.gradient} flex items-center justify-center shadow-[0_2px_6px_rgba(0,0,0,0.25),0_1px_0_rgba(255,255,255,0.12)_inset] group-hover:scale-105 transition-transform`}>
+                <tool.Icon size={16} className="text-white" />
+              </div>
               <span className="text-[10px] font-medium text-muted group-hover:text-foreground transition-colors">{tool.label}</span>
               <span className="text-[8px] text-muted/60 hidden md:block">{tool.desc}</span>
             </Link>

@@ -1,7 +1,7 @@
 {
-  "name": "ShortStack OS",
-  "short_name": "ShortStack",
-  "description": "Internal operating system for ShortStack digital marketing agency",
+  "name": "Trinity",
+  "short_name": "Trinity",
+  "description": "Trinity — the AI operating system for modern agencies. Built by ShortStack.",
   "start_url": "/dashboard",
   "display": "standalone",
   "background_color": "#0a0a0a",
@@ -9,15 +9,16 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "/icons/shortstack-logo.png",
+      "src": "/trinity-logo.svg",
       "sizes": "any",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon.svg",
+      "src": "/icons/shortstack-logo.png",
       "sizes": "any",
-      "type": "image/svg+xml"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

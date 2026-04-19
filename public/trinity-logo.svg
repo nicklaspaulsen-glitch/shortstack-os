@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Trinity">
+  <title>Trinity</title>
+  <defs>
+    <radialGradient id="trinityGold" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#E4C876"/>
+      <stop offset="60%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#8C6D1A"/>
+    </radialGradient>
+  </defs>
+  <!--
+    Three overlapping circles (trinity/triskele) — one for each pillar:
+    Automation, Content, Clients. Filled with a gold radial gradient and
+    partially transparent so overlaps read as a single cohesive mark.
+  -->
+  <g fill="url(#trinityGold)" fill-opacity="0.72" stroke="#C9A84C" stroke-width="2">
+    <circle cx="64" cy="44" r="26"/>
+    <circle cx="46" cy="74" r="26"/>
+    <circle cx="82" cy="74" r="26"/>
+  </g>
+  <!-- Central highlight dot where the three overlap -->
+  <circle cx="64" cy="64" r="4" fill="#FFEFB8" opacity="0.9"/>
+</svg>

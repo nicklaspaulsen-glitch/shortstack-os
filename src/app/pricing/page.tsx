@@ -216,7 +216,7 @@ export default function PricingPage() {
           </Link>
         </div>
 
-        <p className="text-center text-[10px] text-gray-600">Powered by ShortStack OS</p>
+        <p className="text-center text-[10px] text-gray-600">Trinity · by ShortStack</p>
       </div>
     </div>
   );

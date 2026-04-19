@@ -599,7 +599,7 @@ export default function CompetitiveMonitorPage() {
             </div>
             {showAiAnalysis ? (
               <div className="p-4 bg-gold/5 border border-gold/10 rounded-lg text-sm text-muted leading-relaxed space-y-3">
-                <p><strong className="text-white">Market Position:</strong> ShortStack OS occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
+                <p><strong className="text-white">Market Position:</strong> Trinity occupies a strong mid-market position in the agency SaaS space. Your pricing is competitive against 6 of 8 tracked competitors, and your feature count (42) exceeds the median (32). However, MarketMind AI&apos;s introduction of a free tier and AgencyFlow&apos;s upmarket push are creating a squeeze that requires strategic response.</p>
                 <p><strong className="text-white">Key Threats:</strong> The convergence of AgencyFlow and ClientPulse toward enterprise signals a market bifurcation. SocialSpark&apos;s rapid growth (5,000 customers) and AI content calendar launch pose the most immediate feature-parity threat. MarketMind&apos;s free tier could erode your starter plan acquisition.</p>
                 <p><strong className="text-white">Opportunities:</strong> AgencyFlow&apos;s 34% price increase creates a window for targeted switching campaigns. ContentEngine&apos;s limited feature set (22) makes their customer base vulnerable. The enterprise space is underserved by purpose-built agency tools -- an enterprise tier with SSO and advanced reporting could capture this growing segment.</p>
                 <p><strong className="text-white">Recommended Actions:</strong> (1) Ship AI scheduling to match SocialSpark within 30 days. (2) Launch a &ldquo;Switch from AgencyFlow&rdquo; campaign targeting price-sensitive users. (3) Evaluate a free tier or extended trial to counter MarketMind. (4) Invest in content marketing to close the blog frequency gap.</p>
@@ -809,7 +809,7 @@ export default function CompetitiveMonitorPage() {
                 { name: "AgencyFlow", share: 22, color: "#6366f1" },
                 { name: "MarketMind AI", share: 18, color: "#8b5cf6" },
                 { name: "SocialSpark", share: 15, color: "#f59e0b" },
-                { name: "ShortStack OS (You)", share: 12, color: "#C9A84C" },
+                { name: "Trinity (You)", share: 12, color: "#C9A84C" },
                 { name: "ClientPulse", share: 10, color: "#ec4899" },
                 { name: "ContentEngine", share: 8, color: "#0ea5e9" },
                 { name: "Others", share: 15, color: "#64748b" },

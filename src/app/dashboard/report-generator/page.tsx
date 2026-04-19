@@ -647,7 +647,7 @@ export default function ReportGeneratorPage() {
                     <h1 className="text-xl font-bold text-gray-900">{REPORT_LABELS[selectedType]}</h1>
                     <p className="text-gray-500 mt-1 text-sm">Prepared for {clientName}</p>
                     <p className="text-gray-400 mt-1">{dateLabel(dateRange)} &mdash; {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" })}</p>
-                    {whiteLabel && <p className="text-[9px] text-gray-300 mt-3">Powered by ShortStack OS</p>}
+                    {whiteLabel && <p className="text-[9px] text-gray-300 mt-3">Powered by Trinity</p>}
                   </div>
                 )}
 

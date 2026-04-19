@@ -62,14 +62,17 @@ export default function ChangelogPage() {
       <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="flex items-center justify-between mb-12">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={28} height={28} />
-            <span className="text-white font-bold text-sm">ShortStack</span>
+            <Image src="/trinity-logo.svg" alt="Trinity" width={28} height={28} />
+            <span className="text-white font-bold text-sm leading-tight flex flex-col">
+              <span>Trinity</span>
+              <span className="text-[9px] font-medium text-gray-500 tracking-wide">by ShortStack</span>
+            </span>
           </Link>
           <Link href="/login" className="text-xs text-gray-400 hover:text-white">Login</Link>
         </div>
 
         <h1 className="text-3xl font-extrabold text-white mb-2" style={{ letterSpacing: "-0.03em" }}>Changelog</h1>
-        <p className="text-gray-500 text-sm mb-12">What&apos;s new in ShortStack OS</p>
+        <p className="text-gray-500 text-sm mb-12">What&apos;s new in Trinity</p>
 
         <div className="space-y-12">
           {ENTRIES.map((entry, i) => (
@@ -96,7 +99,7 @@ export default function ChangelogPage() {
           ))}
         </div>
 
-        <p className="text-center text-[10px] text-gray-600 mt-16">Powered by ShortStack OS</p>
+        <p className="text-center text-[10px] text-gray-600 mt-16">Trinity · by ShortStack</p>
       </div>
     </div>
   );

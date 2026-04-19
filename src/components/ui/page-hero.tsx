@@ -1,8 +1,14 @@
 "use client";
 
 import { ReactNode } from "react";
+import { BRAND } from "@/lib/brand-config";
 
 export type HeroGradient = "gold" | "blue" | "purple" | "green" | "sunset" | "ocean";
+
+/** Product brand primary color — central source of truth, used as the
+ *  baseline for the "gold" hero gradient. Swapping BRAND.primary_color
+ *  in brand-config flips all default gold heroes. */
+const BRAND_PRIMARY = BRAND.primary_color;
 
 interface PageHeroProps {
   title: string;
@@ -16,14 +22,20 @@ interface PageHeroProps {
   className?: string;
 }
 
+// Hex helper so the gold preset can pull BRAND.primary_color as its accent
+// without hardcoding the color in two places. For non-gold presets (which
+// are purely decorative/section colors) hex literals stay inline.
+const HERO_GOLD_ACCENT = BRAND_PRIMARY; // "#C9A84C" by default
+
 const GRADIENT_PRESETS: Record<HeroGradient, { bg: string; glowA: string; glowB: string; accent: string; iconBg: string; iconBorder: string }> = {
   gold: {
     bg: "linear-gradient(135deg, #1a1611 0%, #2d2418 45%, #3d3020 100%)",
     glowA: "rgba(201, 168, 76, 0.35)",
     glowB: "rgba(201, 168, 76, 0.12)",
+    // Light gold highlight is derived; core accent comes from brand config.
     accent: "#E4C876",
-    iconBg: "rgba(201, 168, 76, 0.18)",
-    iconBorder: "rgba(201, 168, 76, 0.35)",
+    iconBg: `${HERO_GOLD_ACCENT}2E`, // ~0.18 alpha as hex suffix
+    iconBorder: `${HERO_GOLD_ACCENT}59`, // ~0.35 alpha as hex suffix
   },
   blue: {
     bg: "linear-gradient(135deg, #0a1428 0%, #112447 45%, #1a3e7a 100%)",

@@ -11,29 +11,29 @@ import { CookieConsent } from "@/components/cookie-consent";
 
 export const metadata: Metadata = {
   title: {
-    default: "ShortStack OS — AI-Powered Agency Operating System",
-    template: "%s | ShortStack OS",
+    default: "Trinity · by ShortStack",
+    template: "%s | Trinity",
   },
   description: "The all-in-one operating system for digital marketing agencies. Scrape leads, automate outreach, manage clients, create content, and scale revenue — all powered by AI.",
   keywords: ["agency management", "marketing automation", "lead generation", "CRM", "AI outreach", "digital marketing", "client portal", "agency OS"],
-  icons: { icon: "/icons/shortstack-logo.png", apple: "/icons/shortstack-logo.png" },
+  icons: { icon: "/trinity-logo.svg", apple: "/trinity-logo.svg" },
   manifest: "/manifest.json",
   themeColor: "#0b0d12",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "ShortStack OS",
+    title: "Trinity",
   },
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   openGraph: {
     type: "website",
-    siteName: "ShortStack OS",
-    title: "ShortStack OS — AI-Powered Agency Operating System",
+    siteName: "Trinity",
+    title: "Trinity · by ShortStack",
     description: "The all-in-one operating system for digital marketing agencies. Scrape leads, automate outreach, manage clients, and scale revenue.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ShortStack OS — AI-Powered Agency Operating System",
+    title: "Trinity · by ShortStack",
     description: "The all-in-one operating system for digital marketing agencies.",
   },
   robots: {

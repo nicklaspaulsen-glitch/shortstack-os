@@ -45,7 +45,7 @@ export function BrowserModeBanner() {
         <Download size={16} className="text-gold" />
         <p className="text-sm">
           <span className="text-gold font-medium">View-only mode.</span>
-          <span className="text-muted"> Install ShortStack OS as an app to make changes.</span>
+          <span className="text-muted"> Install Trinity as an app to make changes.</span>
         </p>
       </div>
       <button

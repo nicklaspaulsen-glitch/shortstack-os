@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
+import { BRAND } from "@/lib/brand-config";
 import type { LucideIcon } from "lucide-react";
 import {
   Pin,
@@ -546,22 +547,44 @@ export default function Sidebar() {
     >
       {/* LED light strip — lives on the sidebar's right edge, theme-colored */}
       <span className="sidebar-led-strip" aria-hidden />
-      {/* Logo — uses white label config when available */}
-      <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-3 h-12 shrink-0`}>
-        {!collapsed ? (
-          <Link href="/dashboard" className="flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={wl.logo_url || "/icons/shortstack-logo.png"} alt={wl.company_name || "ShortStack"} width={24} height={24} className="rounded object-contain" />
-            <span className="text-foreground font-bold text-[13px] tracking-tight">{wl.company_name || "ShortStack"}</span>
-          </Link>
-        ) : (
-          <Link href="/dashboard">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={wl.logo_url || "/icons/shortstack-logo.png"} alt={wl.company_name || "SS"} width={22} height={22} className="rounded object-contain" />
-          </Link>
-        )}
+      {/* Logo — uses white label config when available; otherwise falls back to
+          the Trinity product brand (by ShortStack). If an agency white-labels
+          the product they can override company_name/logo_url via settings. */}
+      <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} px-3 h-14 shrink-0`}>
+        {(() => {
+          // A white-label override is active when the tenant set their own
+          // company_name (anything other than the ShortStack parent default).
+          const wlOverride = !!wl.company_name && wl.company_name !== BRAND.company_name;
+          const displayName = wlOverride ? wl.company_name! : BRAND.product_name;
+          const subtext = wlOverride ? null : `by ${BRAND.company_name}`;
+          const logoSrc = wlOverride
+            ? (wl.logo_url || "/icons/shortstack-logo.png")
+            : BRAND.logo_svg;
+
+          if (collapsed) {
+            return (
+              <Link href="/dashboard">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={logoSrc} alt={displayName} width={22} height={22} className="rounded object-contain" />
+              </Link>
+            );
+          }
+
+          return (
+            <Link href="/dashboard" className="flex items-center gap-2 min-w-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={logoSrc} alt={displayName} width={26} height={26} className="shrink-0 object-contain" />
+              <div className="min-w-0 leading-tight">
+                <div className="text-foreground font-bold text-[13px] tracking-tight truncate">{displayName}</div>
+                {subtext && (
+                  <div className="text-[9px] text-gold/80 font-medium tracking-wide truncate">{subtext}</div>
+                )}
+              </div>
+            </Link>
+          );
+        })()}
         {!collapsed && (
-          <button onClick={() => setCollapsed(!collapsed)} className="p-1 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors">
+          <button onClick={() => setCollapsed(!collapsed)} className="p-1 rounded-md text-muted hover:text-foreground hover:bg-surface-light transition-colors shrink-0">
             <ChevronLeft size={14} />
           </button>
         )}

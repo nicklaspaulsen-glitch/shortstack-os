@@ -142,7 +142,7 @@ export default function PageAI({ pageName, context, suggestions, accentColor: _a
         body: JSON.stringify({
           message: msg,
           history: messages.slice(-8),
-          system_context: `You are an AI assistant embedded in the ${pageName} page of ShortStack OS (a digital marketing agency platform). The user is currently working on this page. Here is the current page context:\n\n${context}\n\nHelp the user with tasks related to this page. Be specific, actionable, and concise. No markdown formatting. If they ask you to generate content, actually generate it fully.`,
+          system_context: `You are an AI assistant embedded in the ${pageName} page of Trinity (a digital marketing agency platform). The user is currently working on this page. Here is the current page context:\n\n${context}\n\nHelp the user with tasks related to this page. Be specific, actionable, and concise. No markdown formatting. If they ask you to generate content, actually generate it fully.`,
         }),
       });
       const data = await res.json();
