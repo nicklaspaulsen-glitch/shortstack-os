@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       if (chatId) {
         await sendTelegramMessage(chatId, `📞 *Cold Call Initiated via GHL*\n${name}\n${phone}\n${leadIndustry}`);
       }
-    } catch {}
+    } catch (err) { console.error("[ghl/call] Telegram notify failed:", err); }
 
     return NextResponse.json({ success: true, contactId, phone, business: name });
   } catch (err) {

@@ -123,7 +123,7 @@ Return a complete automation workflow as JSON.`;
         status: "completed",
         metadata: { goal, nodes_count: workflow.nodes.length, confidence: workflow.confidence },
       });
-    } catch {}
+    } catch (err) { console.error("[workflows/generate] trinity_log insert failed:", err); }
 
     return NextResponse.json({ success: true, workflow });
   } catch (err) {

@@ -76,7 +76,7 @@ export async function GET(_request: NextRequest) {
       connectedPlatforms = (socials || []).filter(
         (s) => s.is_active && s.platform !== "ai_bot_config" && s.platform !== "white_label_config" && s.platform !== "zernio"
       );
-    } catch {}
+    } catch (err) { console.error(`[switch-client] socials lookup failed for ${client.business_name}:`, err); }
 
     enriched.push({
       ...client,

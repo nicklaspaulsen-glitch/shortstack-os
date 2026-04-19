@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
         ghl_error: ghlResult?.error ?? null,
       },
     });
-  } catch {}
+  } catch (err) { console.error("[clients/update-contact] trinity_log insert failed:", err); }
 
   return NextResponse.json({
     success: true,

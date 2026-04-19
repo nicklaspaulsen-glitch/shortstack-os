@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
             headers: { "X-N8N-API-KEY": n8nKey },
           });
         }
-      } catch {}
+      } catch (err) { console.error("[n8n/create-workflow] deploy/activate failed:", err); }
     }
 
     // Log

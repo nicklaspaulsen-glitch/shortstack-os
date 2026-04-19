@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       if (!(customer as Stripe.DeletedCustomer).deleted) {
         return NextResponse.json({ success: true, customer_id: client.stripe_customer_id, exists: true });
       }
-    } catch {}
+    } catch (err) { console.error("[billing/customer] Stripe retrieve failed, will re-create:", err); }
   }
 
   // Create new Stripe customer

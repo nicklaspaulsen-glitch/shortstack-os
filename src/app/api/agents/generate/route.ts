@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       const data = await res.json();
       const reply = data.content?.[0]?.text;
       if (reply) return NextResponse.json({ success: true, result: reply, model: "claude-haiku" });
-    } catch {}
+    } catch (err) { console.error("[agents/generate] Claude Haiku call failed:", err); }
   }
 
   // Fallback to OpenAI GPT-4
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       const data = await res.json();
       const reply = data.choices?.[0]?.message?.content;
       if (reply) return NextResponse.json({ success: true, result: reply, model: "gpt-4o-mini" });
-    } catch {}
+    } catch (err) { console.error("[agents/generate] OpenAI fallback failed:", err); }
   }
 
   return NextResponse.json({ error: "No AI service available" }, { status: 500 });

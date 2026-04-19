@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       if (ttM) { updates.tiktok_url = `https://tiktok.com/@${ttM[1]}`; r.tt = ttM[1]; }
 
       if (Object.keys(updates).length > 0) { await supabase.from("leads").update(updates).eq("id", lead.id); enriched++; results.push(r); }
-    } catch {}
+    } catch (err) { console.error("[leads/enrich] lead scrape failed:", err); }
   }
 
   if (enriched > 0) {
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
       const { sendTelegramMessage } = await import("@/lib/services/trinity");
       const chatId = process.env.TELEGRAM_CHAT_ID;
       if (chatId) await sendTelegramMessage(chatId, `🔍 *Enricher*\n${enriched}/${leads.length} leads got social profiles`);
-    } catch {}
+    } catch (err) { console.error("[leads/enrich] Telegram notify failed:", err); }
   }
 
   return NextResponse.json({ success: true, enriched, total: leads.length, results });

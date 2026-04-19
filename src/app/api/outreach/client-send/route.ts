@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         });
         const data = await res.json();
         message = data.content?.[0]?.text || message;
-      } catch {}
+      } catch (err) { console.error("[outreach/client-send] Claude personalization failed:", err); }
     }
 
     // Send via each requested channel

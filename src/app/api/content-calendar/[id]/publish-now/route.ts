@@ -48,7 +48,7 @@ export async function POST(
       .from("content_calendar")
       .update({ approved_by: user.id, approved_at: new Date().toISOString() })
       .eq("id", rowId);
-  } catch {}
+  } catch (err) { console.error("[content-calendar/publish-now] audit stamp failed:", err); }
 
   if (outcome.status === "posted") {
     return NextResponse.json({ success: true, outcome });

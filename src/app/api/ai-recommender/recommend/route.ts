@@ -146,7 +146,7 @@ Recommend 6-8 things they should do NEXT to grow their business.`;
           },
         })
         .eq("id", user.id);
-    } catch {}
+    } catch (err) { console.error("[ai-recommender] profile cache update failed:", err); }
 
     // Log
     try {
@@ -157,7 +157,7 @@ Recommend 6-8 things they should do NEXT to grow their business.`;
         status: "completed",
         metadata: { count: parsed.recommendations.length, regenerate },
       });
-    } catch {}
+    } catch (err) { console.error("[ai-recommender] trinity_log insert failed:", err); }
 
     return NextResponse.json({ success: true, ...parsed, user_type });
   } catch (err) {

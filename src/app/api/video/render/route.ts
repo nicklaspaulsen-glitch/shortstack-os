@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
           render_id: data.renderId,
         });
       }
-    } catch {}
+    } catch (err) { console.error("[video/render] Remotion render failed:", err); }
   }
 
   // Option 2: Mochi Video Generator on RunPod Serverless (AI text-to-video)
@@ -324,7 +324,7 @@ export async function POST(request: NextRequest) {
           status: job.status || "IN_QUEUE",
         });
       }
-    } catch {}
+    } catch (err) { console.error("[video/render] Mochi RunPod generation failed:", err); }
   }
 
   // Option 3: Generate video plan with AI (self-hosted LLM first, Claude fallback)
@@ -379,7 +379,7 @@ export async function POST(request: NextRequest) {
             "Video plan generated via self-hosted AI. Click Render to generate the actual video.",
         });
       }
-    } catch {}
+    } catch (err) { console.error("[video/render] Self-hosted LLM plan failed:", err); }
   }
 
   // Fallback: Claude API for complex plans
@@ -426,7 +426,7 @@ export async function POST(request: NextRequest) {
         plan: data.content?.[0]?.text || "",
         message: "Video plan generated. Click Render to create the actual video.",
       });
-    } catch {}
+    } catch (err) { console.error("[video/render] Claude plan fallback failed:", err); }
   }
 
   return NextResponse.json(

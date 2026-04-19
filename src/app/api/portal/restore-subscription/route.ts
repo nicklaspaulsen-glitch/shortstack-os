@@ -44,7 +44,7 @@ export async function POST() {
       description: "User restored their cancelled subscription.",
       status: "completed",
     });
-  } catch {}
+  } catch (err) { console.error("[portal/restore-subscription] trinity_log insert failed:", err); }
 
   return NextResponse.json({ success: true, message: "Your subscription has been restored. Welcome back!" });
 }

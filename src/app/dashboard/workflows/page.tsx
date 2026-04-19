@@ -112,7 +112,10 @@ export default function WorkflowsPage() {
       const res = await fetch("/api/n8n/workflows");
       const data = await res.json();
       setN8nWorkflows(data.workflows || []);
-    } catch {}
+    } catch (err) {
+      console.error("[workflows] fetchN8n failed:", err);
+      toast.error("Couldn't load n8n workflows");
+    }
     setN8nLoading(false);
   }
 

@@ -199,7 +199,7 @@ export async function POST(request: NextRequest) {
           .update(body.campaign)
           .eq("id", body.campaign.id)
           .eq("user_id", user.id);
-      } catch {}
+      } catch (err) { console.error("[ads-manager] update_campaign DB write failed:", err); }
       return NextResponse.json({ success: true, campaign: body.campaign });
     }
 

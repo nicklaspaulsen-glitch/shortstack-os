@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
           ],
         }),
       });
-    } catch {}
+    } catch (err) { console.error("[production/submit] Slack notify failed:", err); }
   }
 
   // Also send Telegram notification
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     if (chatId) {
       await sendTelegramMessage(chatId, `🎬 *New Edit Request*\n\nClient: ${clientName}\nTitle: ${title}\nType: ${edit_type}\nDeadline: ${deadline || "ASAP"}\n${notes ? `Notes: ${notes}` : ""}`);
     }
-  } catch {}
+  } catch (err) { console.error("[production/submit] Telegram notify failed:", err); }
 
   return NextResponse.json({ success: true, production_id: production?.id });
 }

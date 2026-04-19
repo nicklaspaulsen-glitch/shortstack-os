@@ -130,8 +130,13 @@ export default function TeamPage() {
       if (res.ok) {
         const d = await res.json();
         setRealMembers(d.members || []);
+      } else {
+        toast.error("Couldn't load team members");
       }
-    } catch {}
+    } catch (err) {
+      console.error("[team] loadRealMembers failed:", err);
+      toast.error("Couldn't load team members");
+    }
   }
 
   useEffect(() => { loadRealMembers(); }, []);

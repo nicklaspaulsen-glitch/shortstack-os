@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
         adAccountId = String(activeAdAccount.account_id);
         adAccountName = String(activeAdAccount.name || "Meta Ad Account");
       }
-    } catch {}
+    } catch (err) { console.error("[oauth/meta] ad accounts fetch failed:", err); }
 
     // Try to get Instagram business account linked to the Facebook page
     let igAccount: { id?: string; username?: string; name?: string; followers_count?: number } | null = null;
@@ -78,11 +78,12 @@ export async function GET(request: NextRequest) {
           try {
             const igProfileRes = await fetch(`https://graph.facebook.com/v18.0/${igData.instagram_business_account.id}?fields=username,name,followers_count,profile_picture_url&access_token=${pageToken}`);
             igAccount = await igProfileRes.json();
-          } catch {
+          } catch (err) {
+            console.error("[oauth/meta] IG profile fetch failed:", err);
             igAccount = { id: igData.instagram_business_account.id, username: "Instagram Business" };
           }
         }
-      } catch {}
+      } catch (err) { console.error("[oauth/meta] IG business account lookup failed:", err); }
     }
 
     if (state.client_id) {

@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       });
       const data = await res.json();
       emailBody = data.content?.[0]?.text || "";
-    } catch {}
+    } catch (err) { console.error("[onboarding-email] Claude personalization failed:", err); }
   }
 
   if (!emailBody) {
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({ type: "Email", contactId, subject: seq.subject, html: emailBody }),
         });
       }
-    } catch {}
+    } catch (err) { console.error("[onboarding-email] GHL send failed:", err); }
   }
 
   // Log

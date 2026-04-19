@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
         } catch {
           body = text;
         }
-      } catch {}
+      } catch (err) { console.error("[outreach/email] Claude personalization failed:", err); }
     }
 
     if (!body) {

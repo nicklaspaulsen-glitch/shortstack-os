@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         if (chatId) {
           await sendTelegramMessage(chatId, `🏢 *GHL Sub-Account Created*\n\nClient: ${business_name}\nLocation ID: ${locationId}`);
         }
-      } catch {}
+      } catch (err) { console.error("[ghl/create-subaccount] Telegram notify failed:", err); }
 
       return NextResponse.json({ success: true, location_id: locationId });
     }
