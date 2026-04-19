@@ -85,9 +85,13 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
     if (Ctor) setMicSupported(true);
   }, []);
 
-  // Auto-scroll thread on new messages.
+  // Auto-scroll thread on new messages. Scroll the thread container only,
+  // not the document — otherwise the whole page jumps when a new message
+  // arrives or while the user is typing.
   useEffect(() => {
-    threadEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const end = threadEndRef.current;
+    const container = end?.parentElement;
+    if (container) container.scrollTop = container.scrollHeight;
   }, [messages, sending]);
 
   // Auto-grow the textarea up to ~4 lines.
