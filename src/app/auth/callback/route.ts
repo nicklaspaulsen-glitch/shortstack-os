@@ -5,7 +5,10 @@ import { sendWelcomeEmail } from "@/lib/email";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/dashboard";
+  // `next` is user-controlled — only allow relative paths beginning with a
+  // single "/" to prevent open redirects (e.g. /auth/callback?next=//evil.com).
+  const nextRaw = searchParams.get("next");
+  const next = nextRaw && nextRaw.startsWith("/") && !nextRaw.startsWith("//") ? nextRaw : "/dashboard";
 
   if (code) {
     const supabase = createServerSupabase();

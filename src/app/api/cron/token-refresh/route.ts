@@ -1,11 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
 // Cron: Refresh expiring OAuth tokens (runs daily)
 // Vercel Cron: 0 3 * * * (3 AM daily)
 // Refreshes Google tokens that expire within 24 hours
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // Verify cron secret to prevent unauthorized triggering
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabase = createServiceClient();
 
   // Find tokens expiring in next 24 hours

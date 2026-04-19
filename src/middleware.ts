@@ -9,7 +9,9 @@ export async function middleware(request: NextRequest) {
     path.endsWith(".txt") ||
     path.endsWith(".xml") ||
     path.startsWith("/.well-known") ||
-    path.includes("tiktok") ||
+    // TikTok domain verification files only — pattern is /tiktok<hex>.txt
+    // `path.includes("tiktok")` was too broad (would match /dashboard/tiktok-ads, etc.)
+    /^\/tiktok[A-Za-z0-9]*\.txt$/.test(path) ||
     path.startsWith("/api/agents/auth") ||
     (path.startsWith("/api/agents/") && request.headers.get("authorization")?.startsWith("Bearer ")) ||
     path.startsWith("/api/forms") ||

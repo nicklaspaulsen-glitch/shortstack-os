@@ -263,7 +263,13 @@ const healthChecks: HealthCheck[] = [
   },
 ];
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
+  // Verify cron secret to prevent unauthorized triggering
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabase = createServiceClient();
   const alerts: string[] = [];
   let checked = 0;
