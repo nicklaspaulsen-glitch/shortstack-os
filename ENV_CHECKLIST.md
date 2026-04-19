@@ -152,5 +152,6 @@
 
 ## Misc / Client-Side
 
-- [ ] `NEXT_PUBLIC_CRON_SECRET` — Cron secret exposed to frontend (voice assistant quick actions)
 - [ ] `YELP_API_KEY` — Yelp Fusion API key (lead scraping)
+
+> **Note:** `CRON_SECRET` is **server-only**. There must be no `NEXT_PUBLIC_CRON_SECRET` — exposing it in the client bundle would let any site visitor trigger cron/webhook routes. Voice-assistant quick actions go through the authed `/api/voice-actions` proxy, which checks the caller's Supabase session + role then forwards server-side with `CRON_SECRET`.

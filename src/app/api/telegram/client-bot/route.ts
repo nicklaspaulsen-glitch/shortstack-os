@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 
 /**
  * Per-client Telegram Bot Webhook
  * Each client registers their own bot via @BotFather.
  * Webhook URL: /api/telegram/client-bot?client_id=<id>
+ *
+ * Security: Telegram forwards the secret_token registered via setWebhook in
+ * the `X-Telegram-Bot-Api-Secret-Token` header. We look up the client's
+ * stored secret (scoped by the query param client_id) and constant-time
+ * compare it against the header. Without this check, an attacker could POST
+ * to this URL and make any client's bot leak data to any chat the attacker
+ * controls.
  *
  * The bot gives clients a personal interface to:
  * - Check project status, tasks, invoices
@@ -15,6 +23,53 @@ export async function POST(request: NextRequest) {
   const clientId = request.nextUrl.searchParams.get("client_id");
   if (!clientId) return NextResponse.json({ ok: true });
 
+  const supabase = createServiceClient();
+
+  // Look up client and their bot token — scoped strictly by the query param
+  // client_id so an attacker cannot cross-reference another client's secret.
+  const { data: client } = await supabase
+    .from("clients")
+    .select("*, telegram_bot_token, telegram_bot_username, telegram_chat_id, telegram_webhook_secret")
+    .eq("id", clientId)
+    .single();
+
+  if (!client?.telegram_bot_token) {
+    // No bot configured for this client — silently ack so attackers can't
+    // enumerate which client_ids exist.
+    return NextResponse.json({ ok: true });
+  }
+
+  // Verify Telegram's webhook signature. The column `telegram_webhook_secret`
+  // is optional for now (migration pending). If it's missing, refuse to
+  // process the request rather than trusting the raw POST. Bots registered
+  // before the secret column existed must be re-registered via
+  // /api/telegram/setup-bot to populate it.
+  const clientRecord = client as Record<string, unknown>;
+  const storedSecret =
+    typeof clientRecord.telegram_webhook_secret === "string"
+      ? (clientRecord.telegram_webhook_secret as string)
+      : null;
+
+  if (!storedSecret) {
+    return NextResponse.json(
+      { ok: false, error: "bot not fully configured" },
+      { status: 503 }
+    );
+  }
+
+  const providedSecret = request.headers.get("x-telegram-bot-api-secret-token") || "";
+  const storedBuf = Buffer.from(storedSecret, "utf8");
+  const providedBuf = Buffer.from(providedSecret, "utf8");
+  // timingSafeEqual requires equal-length buffers; length mismatch is itself
+  // a rejection, but we still perform a constant-time compare over a
+  // same-length zero buffer to avoid leaking length info via timing.
+  const lengthsMatch = storedBuf.length === providedBuf.length;
+  const comparisonBuf = lengthsMatch ? providedBuf : Buffer.alloc(storedBuf.length);
+  const secretsMatch = crypto.timingSafeEqual(storedBuf, comparisonBuf) && lengthsMatch;
+  if (!secretsMatch) {
+    return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+
   const body = await request.json();
   const message = body.message;
   if (!message?.text || !message?.chat?.id) {
@@ -23,18 +78,6 @@ export async function POST(request: NextRequest) {
 
   const chatId = String(message.chat.id);
   const text = message.text;
-  const supabase = createServiceClient();
-
-  // Look up client and their bot token
-  const { data: client } = await supabase
-    .from("clients")
-    .select("*, telegram_bot_token, telegram_chat_id")
-    .eq("id", clientId)
-    .single();
-
-  if (!client?.telegram_bot_token) {
-    return NextResponse.json({ ok: true });
-  }
 
   const botToken = client.telegram_bot_token;
 

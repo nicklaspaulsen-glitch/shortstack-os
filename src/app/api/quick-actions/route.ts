@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
+// Actions that fan out cron jobs across the tenant (outreach, scraping,
+// retention, content, invoice chase) — agency staff only.
+const AGENCY_STAFF_ROLES = ["admin", "owner", "team_member"] as const;
+const SENSITIVE_ACTIONS = new Set([
+  "morning_routine",
+  "full_outreach",
+  "full_autopilot",
+  "content_week",
+  "chase_payments",
+  "check_retention",
+]);
+
 // Quick Actions API — one-click triggers for common tasks
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -11,6 +23,21 @@ export async function POST(request: NextRequest) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
   const cronSecret = process.env.CRON_SECRET || "";
   const results: string[] = [];
+
+  // Role gate: sensitive actions (full_*, anything that triggers cron fan-out)
+  // must be restricted to agency staff. Client-role users are end-customers and
+  // must not be able to mass-trigger outreach/scraping across the tenant.
+  if (SENSITIVE_ACTIONS.has(action) || typeof action === "string" && action.startsWith("full_")) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+    const role = profile?.role;
+    if (!role || !(AGENCY_STAFF_ROLES as readonly string[]).includes(role)) {
+      return NextResponse.json({ error: "Agency staff only" }, { status: 403 });
+    }
+  }
 
   switch (action) {
     case "morning_routine":

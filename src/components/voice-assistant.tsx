@@ -226,18 +226,30 @@ export default function VoiceAssistant() {
         setMessages(prev => [...prev, { role: "assistant", content: reply, timestamp: new Date() }]);
       }
 
-      // Execute actions based on voice command
+      // Execute actions based on voice command.
+      // Calls go through /api/voice-actions (authed proxy) which checks the
+      // user's Supabase session + role, then server-side forwards to the
+      // matching /api/cron/* route using CRON_SECRET. The cron secret is never
+      // exposed to the browser.
       const cmd = text.toLowerCase();
+      const triggerAction = (action: "outreach" | "scrape-leads" | "health-check") =>
+        fetch("/api/voice-actions", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action }),
+        }).catch(() => {});
+
       if (cmd.includes("send email") || cmd.includes("cold call") || cmd.includes("outreach")) {
-        fetch("/api/cron/outreach", { headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ""}` } }).catch(() => {});
+        triggerAction("outreach");
         reply += " I triggered the outreach system — 20 emails, 20 SMS, and 200 call tags.";
       }
       if (cmd.includes("scrape") || cmd.includes("find lead")) {
-        fetch("/api/cron/scrape-leads", { headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ""}` } }).catch(() => {});
+        triggerAction("scrape-leads");
         reply += " Lead scraping started.";
       }
       if (cmd.includes("health check") || cmd.includes("check system")) {
-        fetch("/api/cron/health-check", { headers: { authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET || ""}` } }).catch(() => {});
+        triggerAction("health-check");
         reply += " Running health check now.";
       }
 
