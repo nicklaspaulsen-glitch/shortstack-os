@@ -86,7 +86,7 @@ const FEATURES = [
 ];
 
 export default function DownloadDesktopPage() {
-  const [detectedOS, setDetectedOS] = useState<Platform | null>(() => {
+  const [detectedOS] = useState<Platform | null>(() => {
     if (typeof window === "undefined") return null;
     const ua = navigator.userAgent.toLowerCase();
     if (ua.includes("win")) return "windows";
