@@ -75,6 +75,7 @@ import {
   Inbox,
   Puzzle,
   X,
+  Download,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -169,6 +170,7 @@ const navItems: NavItem[] = [
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"], sub: "Tools" },
   { label: "Reports Gen", href: "/dashboard/report-generator", icon: <FileBarChart2 size={16} />, roles: ["admin"], sub: "Tools" },
   { label: "Marketplace", href: "/dashboard/marketplace", icon: <Store size={16} />, roles: ["admin"], sub: "Tools" },
+  { label: "Download Desktop", href: "/dashboard/download", icon: <Download size={16} />, roles: ["admin", "team_member"], sub: "Tools" },
 
   // ── Connect (integrations) — no sub-groups ──
   { label: "Google Biz", href: "/dashboard/google-business", icon: <Globe size={16} />, roles: ["admin"], section: "Connect" },

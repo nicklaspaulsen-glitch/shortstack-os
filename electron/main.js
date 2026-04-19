@@ -6,6 +6,33 @@ const http = require("http");
 
 const agentRuntime = require("./agent-runtime");
 
+// ── Performance flags ──────────────────────────────────────────
+// Must be set BEFORE app.whenReady() to take effect on the GPU process.
+// Safe on all platforms; a try/catch guards against Electron versions
+// that may not recognize a switch.
+try {
+  app.commandLine.appendSwitch("enable-gpu-rasterization");
+  app.commandLine.appendSwitch("enable-zero-copy");
+  app.commandLine.appendSwitch("disable-renderer-backgrounding");
+  app.commandLine.appendSwitch("disable-backgrounding-occluded-windows");
+} catch (e) {
+  console.warn("[shortstack] gpu flags failed:", e?.message);
+}
+
+// ── Optional native automation bridge (Phase 2) ────────────────
+// We attempt to wire up @nut-tree/nut-js for AI-assisted mouse/keyboard
+// automation. If the native module isn't installed (or fails to load on
+// this OS), we fall back to a stub so the app keeps launching. The IPC
+// interface is still registered so the renderer always has a bridge to
+// call — it just returns a "not available" error when no backend is
+// present. Safe: all wiring is wrapped in try/catch.
+let automationHandlers = null;
+try {
+  automationHandlers = require("./automation-handlers");
+} catch (err) {
+  console.warn("[shortstack] automation-handlers unavailable:", err?.message);
+}
+
 let mainWindow;
 let splashWindow;
 let agentWindow;
@@ -506,14 +533,21 @@ function createMainWindow() {
     width: 1440, height: 900, minWidth: 1000, minHeight: 700,
     title: "ShortStack OS",
     icon: path.join(__dirname, "../public/icons/shortstack-logo.png"),
-    backgroundColor: "#06080c",
+    // Match the dark theme so there's no white-flash before first paint.
+    backgroundColor: "#0a0a0a",
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      // Shared preload exposes the automation + agent bridge to the renderer.
+      preload: path.join(__dirname, "preload-agent.js"),
       devTools: !app.isPackaged,
+      // Keep renderer ticks running when the window is in the background
+      // so long-running jobs (agent loop, uploads) don't get throttled.
+      backgroundThrottling: false,
+      spellcheck: false,
     },
     titleBarStyle: "hidden",
-    titleBarOverlay: { color: "#06080c", symbolColor: "#64748b", height: 32 },
+    titleBarOverlay: { color: "#0a0a0a", symbolColor: "#64748b", height: 32 },
     autoHideMenuBar: true,
     show: false,
   });
@@ -587,8 +621,49 @@ function createMainWindow() {
     startWebDeployChecker();
   });
 
-  // Application menu (none — clean look)
-  Menu.setApplicationMenu(null);
+  // ── Application menu — provides standard shortcuts without cluttering the UI.
+  // On Windows/Linux the menu bar is hidden (autoHideMenuBar) but accelerators
+  // still register. On macOS the menu appears in the top bar as expected.
+  const isMac = process.platform === "darwin";
+  const template = [
+    ...(isMac ? [{ label: "ShortStack OS", submenu: [
+      { role: "about" },
+      { type: "separator" },
+      { role: "services" },
+      { type: "separator" },
+      { role: "hide" }, { role: "hideOthers" }, { role: "unhide" },
+      { type: "separator" },
+      { role: "quit" },
+    ] }] : []),
+    { label: "File", submenu: [
+      { label: "Open Agent", accelerator: "CmdOrCtrl+Shift+A", click: () => createAgentWindow() },
+      { type: "separator" },
+      isMac ? { role: "close" } : { role: "quit" },
+    ] },
+    { label: "Edit", submenu: [
+      { role: "undo" }, { role: "redo" }, { type: "separator" },
+      { role: "cut" }, { role: "copy" }, { role: "paste" }, { role: "selectAll" },
+    ] },
+    { label: "View", submenu: [
+      { role: "reload", accelerator: "CmdOrCtrl+R" },
+      { role: "forceReload", accelerator: "CmdOrCtrl+Shift+R" },
+      { role: "toggleDevTools", accelerator: isMac ? "Cmd+Alt+I" : "Ctrl+Shift+I" },
+      { type: "separator" },
+      { role: "resetZoom" }, { role: "zoomIn" }, { role: "zoomOut" },
+      { type: "separator" },
+      { role: "togglefullscreen" },
+    ] },
+    { label: "Window", submenu: [
+      { role: "minimize" }, { role: "zoom" },
+      ...(isMac ? [{ type: "separator" }, { role: "front" }] : [{ role: "close" }]),
+    ] },
+  ];
+  try {
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  } catch (e) {
+    // Fallback to no menu if building fails — keeps the app alive.
+    Menu.setApplicationMenu(null);
+  }
 
   // System tray
   try {
@@ -732,15 +807,16 @@ function createAgentWindow() {
     minHeight: 500,
     title: "ShortStack Agent",
     icon: path.join(__dirname, "../public/icons/shortstack-logo.png"),
-    backgroundColor: "#06080c",
+    backgroundColor: "#0a0a0a",
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, "preload-agent.js"),
       devTools: !app.isPackaged,
+      backgroundThrottling: false,
     },
     titleBarStyle: "hidden",
-    titleBarOverlay: { color: "#06080c", symbolColor: "#64748b", height: 36 },
+    titleBarOverlay: { color: "#0a0a0a", symbolColor: "#64748b", height: 36 },
     autoHideMenuBar: true,
     alwaysOnTop: false,
     show: false,

@@ -1508,11 +1508,53 @@ function workspaceStats() {
 }
 
 // ---------------------------------------------------------------------------
+//  RATE LIMITER — cap tool calls to avoid runaway loops / abuse.
+//  Token-bucket per tool name, refilled over a rolling window.
+// ---------------------------------------------------------------------------
+
+const RATE_LIMIT = {
+  // Max calls per rolling window, per tool name.
+  maxPerWindow: 60,
+  // Destructive tools get a tighter budget.
+  destructiveMax: 15,
+  destructive: new Set(["delete_file", "move_file", "batch_rename", "auto_organize", "zip_folder"]),
+  windowMs: 60 * 1000, // 1 minute
+  _calls: new Map(), // name → array of timestamps
+};
+
+function rateLimitCheck(name) {
+  const now = Date.now();
+  const arr = RATE_LIMIT._calls.get(name) || [];
+  // Drop entries older than the window.
+  const fresh = arr.filter((t) => now - t < RATE_LIMIT.windowMs);
+  const cap = RATE_LIMIT.destructive.has(name)
+    ? RATE_LIMIT.destructiveMax
+    : RATE_LIMIT.maxPerWindow;
+  if (fresh.length >= cap) {
+    const retryIn = Math.max(1, Math.ceil((RATE_LIMIT.windowMs - (now - fresh[0])) / 1000));
+    return { allowed: false, retryIn };
+  }
+  fresh.push(now);
+  RATE_LIMIT._calls.set(name, fresh);
+  return { allowed: true };
+}
+
+// ---------------------------------------------------------------------------
 //  TOOL EXECUTOR — routes tool calls to the right function
 // ---------------------------------------------------------------------------
 
 async function executeTool(name, input) {
   ensureWorkspace();
+
+  // Rate limit before any work happens.
+  const gate = rateLimitCheck(name);
+  if (!gate.allowed) {
+    return {
+      success: false,
+      error: `Rate limit reached for "${name}". Retry in ~${gate.retryIn}s.`,
+    };
+  }
+
   switch (name) {
     // Original tools
     case "run_command":
@@ -1554,8 +1596,42 @@ async function executeTool(name, input) {
     case "workspace_stats":
       return workspaceStats();
 
+    // Browser navigation — prefers the embedded browser panel if the
+    // renderer has one mounted, otherwise falls back to shell.openExternal.
+    case "browser_navigate":
+      return browserNavigate(input.url);
+
     default:
       return { success: false, error: `Unknown tool: ${name}` };
+  }
+}
+
+// ---------------------------------------------------------------------------
+//  TOOL 14 — browser_navigate
+//  Route the URL through the automation bridge (embedded <webview>) when
+//  present, else open in the OS default browser. Never throws.
+// ---------------------------------------------------------------------------
+
+async function browserNavigate(url) {
+  if (!url || typeof url !== "string") {
+    return { success: false, error: "url (string) required" };
+  }
+  try { new URL(url); } catch { return { success: false, error: "Invalid URL" }; }
+
+  // Prefer the automation bridge (sends to renderer for embedded browser).
+  try {
+    const auto = require("./automation-handlers");
+    if (auto && typeof auto.browserNavigate === "function") {
+      return await auto.browserNavigate({ url });
+    }
+  } catch { /* fall through to shell */ }
+
+  try {
+    const { shell } = require("electron");
+    await shell.openExternal(url);
+    return { success: true, url, delivery: "external" };
+  } catch (err) {
+    return { success: false, error: String(err?.message || err) };
   }
 }
 

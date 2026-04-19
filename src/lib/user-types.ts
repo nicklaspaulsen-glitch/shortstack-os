@@ -150,6 +150,7 @@ export const SIDEBAR_CATEGORIES: {
       { href: "/dashboard/monitor", label: "Monitor" },
       { href: "/dashboard/report-generator", label: "Reports Gen" },
       { href: "/dashboard/marketplace", label: "Marketplace" },
+      { href: "/dashboard/download", label: "Download Desktop" },
     ],
   },
   {

@@ -27,6 +27,16 @@ import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
+import {
+  CAPTION_STYLES_LIBRARY,
+  EFFECTS_CATALOG,
+  SFX_LIBRARY,
+  MUSIC_LIBRARY,
+  playSfxPlaceholderTone,
+  type CaptionBestFor,
+  type EffectCategory,
+  type SfxCategory,
+} from "@/lib/asset-catalog";
 
 /* ──────────────────── AI API TYPES ──────────────────── */
 
@@ -1528,6 +1538,27 @@ export default function VideoEditorPage() {
   // Effect-category filter state for Effects Library panel
   const [effectCategoryFilter, setEffectCategoryFilter] = useState<string>("All");
 
+  // ── Asset-catalog selections (caption style / effects / SFX / music) ──
+  // These pass through to the AI script generator / GPU render request.
+  const [selectedCaptionStyleId, setSelectedCaptionStyleId] = useState<string>("");
+  const [captionStyleFilter, setCaptionStyleFilter] = useState<CaptionBestFor | "all">("all");
+  const [selectedEffectIds, setSelectedEffectIds] = useState<string[]>([]);
+  const [effectsCategoryTab, setEffectsCategoryTab] = useState<EffectCategory | "all">("all");
+  const [selectedSfxIds, setSelectedSfxIds] = useState<string[]>([]);
+  const [sfxCategoryTab, setSfxCategoryTab] = useState<SfxCategory | "all">("all");
+  const [selectedMusicId, setSelectedMusicId] = useState<string>("");
+  const [musicMoodFilter, setMusicMoodFilter] = useState<string>("all");
+  const [musicBpmFilter, setMusicBpmFilter] = useState<string>("all"); // "all" | "slow" | "medium" | "fast"
+
+  // Collapsible panels for the new asset sections
+  const [openAssetPanels, setOpenAssetPanels] = useState<Record<string, boolean>>({
+    captionStyle: true,
+    effectsTransitions: false,
+    sfxPalette: false,
+    music: false,
+  });
+  const toggleAssetPanel = (k: string) => setOpenAssetPanels((p) => ({ ...p, [k]: !p[k] }));
+
   // AI tool loading state (per tool, to spin individual loaders)
   const [aiToolLoading, setAiToolLoading] = useState<Record<string, boolean>>({});
 
@@ -2401,6 +2432,12 @@ export default function VideoEditorPage() {
           reference_files: referenceFiles.map(f => ({ name: f.name, type: f.type, data: f.data })),
           editor_settings: editorSettings,
           captions,
+          asset_selections: {
+            caption_style_id: selectedCaptionStyleId || null,
+            effect_ids: selectedEffectIds,
+            sfx_ids: selectedSfxIds,
+            music_id: selectedMusicId || null,
+          },
         }),
       });
       const data = await res.json();
@@ -2455,6 +2492,12 @@ export default function VideoEditorPage() {
           storyboard_mode: mode === "storyboard",
           reference_files: referenceFiles.map(f => ({ name: f.name, type: f.type, data: f.data })),
           editor_settings: editorSettings,
+          asset_selections: {
+            caption_style_id: selectedCaptionStyleId || null,
+            effect_ids: selectedEffectIds,
+            sfx_ids: selectedSfxIds,
+            music_id: selectedMusicId || null,
+          },
         }),
       });
       clearInterval(progressInterval);
@@ -4773,6 +4816,337 @@ export default function VideoEditorPage() {
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Caption Style (asset catalog) */}
+            <div className="card">
+              <button
+                onClick={() => toggleAssetPanel("captionStyle")}
+                className="w-full flex items-center justify-between mb-2"
+              >
+                <h2 className="section-header flex items-center gap-2 mb-0">
+                  <Captions size={13} className="text-gold" /> Caption Style ({CAPTION_STYLES_LIBRARY.length})
+                </h2>
+                {openAssetPanels.captionStyle ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
+              </button>
+              {openAssetPanels.captionStyle && (
+                <>
+                  <p className="text-[9px] text-muted mb-2">Live CSS previews of viral caption styles. Click to apply.</p>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {(["all", "tiktok", "youtube", "reel", "shorts", "podcast"] as const).map((f) => (
+                      <button
+                        key={f}
+                        onClick={() => setCaptionStyleFilter(f)}
+                        className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
+                          captionStyleFilter === f
+                            ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
+                            : "border-border text-muted hover:text-foreground"
+                        }`}
+                      >
+                        {f === "all" ? "All" : f}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-80 overflow-y-auto">
+                    {CAPTION_STYLES_LIBRARY.filter(
+                      (c) => captionStyleFilter === "all" || c.best_for.includes(captionStyleFilter)
+                    ).map((c) => {
+                      const active = selectedCaptionStyleId === c.id;
+                      return (
+                        <button
+                          key={c.id}
+                          onClick={() => {
+                            setSelectedCaptionStyleId(c.id);
+                            setConfig((prev) => ({ ...prev, caption_style: c.id }));
+                            // Sync editorSettings preview fields so downstream render consumes them
+                            setEditorSettings((prev) => ({
+                              ...prev,
+                              captions: {
+                                ...prev.captions,
+                                enabled: true,
+                                fontFamily: c.css_preview.fontFamily.replace(/['",]/g, "").split(" ")[0] || "Inter",
+                                fontSize: c.css_preview.size * 2,
+                                textColor: c.css_preview.color,
+                                strokeColor: c.css_preview.stroke === "transparent" ? "#000000" : c.css_preview.stroke,
+                                backdropColor: c.css_preview.bg,
+                                strokeWidth: c.css_preview.stroke === "transparent" ? 0 : 4,
+                              },
+                            }));
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all ${
+                            active ? "border-gold/40 bg-gold/[0.07]" : "border-border hover:border-gold/15"
+                          }`}
+                        >
+                          <div
+                            className="rounded-md py-3 px-2 text-center mb-1.5"
+                            style={{
+                              background: c.css_preview.bg === "transparent" ? "rgba(0,0,0,0.35)" : c.css_preview.bg,
+                              color: c.css_preview.color,
+                              fontFamily: c.css_preview.fontFamily,
+                              fontSize: c.css_preview.size,
+                              fontWeight: c.css_preview.weight,
+                              WebkitTextStroke:
+                                c.css_preview.stroke === "transparent" ? "0" : `1.5px ${c.css_preview.stroke}`,
+                              letterSpacing: "0.5px",
+                            }}
+                          >
+                            YOUR TEXT HERE
+                          </div>
+                          <p className={`text-[10px] font-semibold ${active ? "text-gold" : ""}`}>{c.name}</p>
+                          <p className="text-[8px] text-muted">{c.desc}</p>
+                          <div className="flex gap-1 mt-1 flex-wrap">
+                            {c.best_for.map((b) => (
+                              <span key={b} className="text-[7px] px-1 py-[1px] rounded bg-gold/10 text-gold/90">
+                                {b}
+                              </span>
+                            ))}
+                            <span className="text-[7px] px-1 py-[1px] rounded bg-muted/20 text-muted ml-auto">
+                              {c.css_preview.animation}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* Effects & Transitions (asset catalog) */}
+            <div className="card">
+              <button
+                onClick={() => toggleAssetPanel("effectsTransitions")}
+                className="w-full flex items-center justify-between mb-2"
+              >
+                <h2 className="section-header flex items-center gap-2 mb-0">
+                  <Wand2 size={13} className="text-gold" /> Effects &amp; Transitions ({EFFECTS_CATALOG.length})
+                </h2>
+                {openAssetPanels.effectsTransitions ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
+              </button>
+              {openAssetPanels.effectsTransitions && (
+                <>
+                  <p className="text-[9px] text-muted mb-2">Hover for description. Click to toggle — multiple allowed.</p>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {(["all", "transition", "overlay", "filter"] as const).map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => setEffectsCategoryTab(cat)}
+                        className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
+                          effectsCategoryTab === cat
+                            ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
+                            : "border-border text-muted hover:text-foreground"
+                        }`}
+                      >
+                        {cat === "all" ? "All" : cat}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {EFFECTS_CATALOG.filter(
+                      (e) => effectsCategoryTab === "all" || e.category === effectsCategoryTab
+                    ).map((e) => {
+                      const active = selectedEffectIds.includes(e.id);
+                      return (
+                        <button
+                          key={e.id}
+                          title={e.description}
+                          onClick={() => {
+                            const next = active
+                              ? selectedEffectIds.filter((id) => id !== e.id)
+                              : [...selectedEffectIds, e.id];
+                            setSelectedEffectIds(next);
+                            // Mirror into editorSettings.effects.active so render consumes it
+                            setEditorSettings((prev) => ({
+                              ...prev,
+                              effects: { ...prev.effects, active: next },
+                            }));
+                          }}
+                          className={`flex items-center gap-1.5 px-2 py-1 rounded-full border text-[10px] transition-all ${
+                            active
+                              ? "border-gold/40 bg-gold/[0.08] text-gold"
+                              : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+                          }`}
+                        >
+                          {e.preview && <span className={`inline-block w-3 h-3 rounded-sm ${e.preview}`} />}
+                          <span className="font-semibold">{e.name}</span>
+                          <span className="text-[8px] text-muted/80">{e.category}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedEffectIds.length > 0 && (
+                    <p className="text-[9px] text-gold mt-2">{selectedEffectIds.length} effect{selectedEffectIds.length === 1 ? "" : "s"} selected</p>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* SFX Palette (asset catalog) */}
+            <div className="card">
+              <button
+                onClick={() => toggleAssetPanel("sfxPalette")}
+                className="w-full flex items-center justify-between mb-2"
+              >
+                <h2 className="section-header flex items-center gap-2 mb-0">
+                  <Volume2 size={13} className="text-gold" /> SFX Palette ({SFX_LIBRARY.length})
+                </h2>
+                {openAssetPanels.sfxPalette ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
+              </button>
+              {openAssetPanels.sfxPalette && (
+                <>
+                  <p className="text-[9px] text-muted mb-2">Short-form favorites. Preview plays a placeholder tone.</p>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {(["all", "impact", "ambient", "tech", "transition"] as const).map((cat) => (
+                      <button
+                        key={cat}
+                        onClick={() => setSfxCategoryTab(cat)}
+                        className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
+                          sfxCategoryTab === cat
+                            ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
+                            : "border-border text-muted hover:text-foreground"
+                        }`}
+                      >
+                        {cat === "all" ? "All" : cat}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
+                    {SFX_LIBRARY.filter((s) => sfxCategoryTab === "all" || s.category === sfxCategoryTab).map((s) => {
+                      const active = selectedSfxIds.includes(s.id);
+                      return (
+                        <div
+                          key={s.id}
+                          className={`flex items-center gap-2 p-2 rounded-lg border transition-all ${
+                            active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"
+                          }`}
+                        >
+                          <button
+                            onClick={() => playSfxPlaceholderTone(s)}
+                            className="p-1 rounded-full bg-gold/15 text-gold hover:bg-gold/25 transition-all flex-shrink-0"
+                            title={`Preview ${s.name}`}
+                          >
+                            <Play size={10} />
+                          </button>
+                          <div className="flex-1 min-w-0">
+                            <p className={`text-[10px] font-semibold truncate ${active ? "text-gold" : ""}`}>{s.name}</p>
+                            <p className="text-[8px] text-muted truncate">{s.desc} · {s.duration_sec}s</p>
+                          </div>
+                          <span className="text-[7px] px-1 py-[1px] rounded bg-muted/20 text-muted">{s.category}</span>
+                          <button
+                            onClick={() =>
+                              setSelectedSfxIds((prev) =>
+                                active ? prev.filter((id) => id !== s.id) : [...prev, s.id]
+                              )
+                            }
+                            className={`text-[9px] px-2 py-0.5 rounded-full border transition-all flex-shrink-0 ${
+                              active
+                                ? "border-gold/40 bg-gold/[0.12] text-gold"
+                                : "border-border text-muted hover:text-foreground"
+                            }`}
+                          >
+                            {active ? "Added" : "Add"}
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {selectedSfxIds.length > 0 && (
+                    <p className="text-[9px] text-gold mt-2">{selectedSfxIds.length} SFX selected</p>
+                  )}
+                </>
+              )}
+            </div>
+
+            {/* Music (asset catalog) */}
+            <div className="card">
+              <button
+                onClick={() => toggleAssetPanel("music")}
+                className="w-full flex items-center justify-between mb-2"
+              >
+                <h2 className="section-header flex items-center gap-2 mb-0">
+                  <Music size={13} className="text-gold" /> Music ({MUSIC_LIBRARY.length})
+                </h2>
+                {openAssetPanels.music ? <ChevronDown size={13} className="text-muted" /> : <ChevronRight size={13} className="text-muted" />}
+              </button>
+              {openAssetPanels.music && (
+                <>
+                  <p className="text-[9px] text-muted mb-2">Royalty-free tracks filtered by BPM + mood.</p>
+                  <div className="grid grid-cols-2 gap-2 mb-2">
+                    <div>
+                      <label className="text-[8px] text-muted uppercase tracking-wider block mb-1">Mood</label>
+                      <select
+                        value={musicMoodFilter}
+                        onChange={(e) => setMusicMoodFilter(e.target.value)}
+                        className="input w-full text-[10px] py-1"
+                      >
+                        <option value="all">All moods</option>
+                        {Array.from(new Set(MUSIC_LIBRARY.map((m) => m.mood))).sort().map((m) => (
+                          <option key={m} value={m}>{m}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-[8px] text-muted uppercase tracking-wider block mb-1">BPM</label>
+                      <select
+                        value={musicBpmFilter}
+                        onChange={(e) => setMusicBpmFilter(e.target.value)}
+                        className="input w-full text-[10px] py-1"
+                      >
+                        <option value="all">Any BPM</option>
+                        <option value="slow">Slow (&lt; 90)</option>
+                        <option value="medium">Medium (90-120)</option>
+                        <option value="fast">Fast (&gt; 120)</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="space-y-1 max-h-72 overflow-y-auto pr-1">
+                    {MUSIC_LIBRARY.filter((m) => {
+                      if (musicMoodFilter !== "all" && m.mood !== musicMoodFilter) return false;
+                      if (musicBpmFilter === "slow" && m.bpm >= 90) return false;
+                      if (musicBpmFilter === "medium" && (m.bpm < 90 || m.bpm > 120)) return false;
+                      if (musicBpmFilter === "fast" && m.bpm <= 120) return false;
+                      return true;
+                    }).map((m) => {
+                      const active = selectedMusicId === m.id;
+                      return (
+                        <button
+                          key={m.id}
+                          onClick={() => {
+                            setSelectedMusicId(m.id);
+                            setConfig((prev) => ({ ...prev, music_mood: m.mood.toLowerCase() }));
+                            // Sync editorSettings.audio.bgGenre so render picks it up
+                            setEditorSettings((prev) => ({
+                              ...prev,
+                              audio: { ...prev.audio, enabled: true, bgGenre: m.genre.toLowerCase() },
+                            }));
+                          }}
+                          className={`w-full flex items-center gap-2 p-2 rounded-lg border text-left transition-all ${
+                            active ? "border-gold/40 bg-gold/[0.06]" : "border-border hover:border-gold/15"
+                          }`}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <p className={`text-[10px] font-semibold truncate ${active ? "text-gold" : ""}`}>{m.name}</p>
+                              {active && <Check size={10} className="text-gold flex-shrink-0" />}
+                            </div>
+                            <p className="text-[8px] text-muted truncate">{m.genre} · {m.mood} · {m.bpm} BPM · {m.duration_sec}s</p>
+                          </div>
+                          <div className="flex gap-1 flex-shrink-0">
+                            {m.suggested_platforms.slice(0, 2).map((p) => (
+                              <span key={p} className="text-[7px] px-1 py-[1px] rounded bg-gold/10 text-gold/90">{p}</span>
+                            ))}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedMusicId && (
+                    <p className="text-[9px] text-gold mt-2">
+                      Selected: {MUSIC_LIBRARY.find((m) => m.id === selectedMusicId)?.name}
+                    </p>
+                  )}
+                </>
+              )}
             </div>
 
             {/* Video type */}

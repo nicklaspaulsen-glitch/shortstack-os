@@ -24,6 +24,7 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
+import { POPULAR_FONTS, loadGoogleFont, preloadGoogleFonts } from "@/lib/asset-catalog";
 
 /* ──────────────────── AI API TYPES ──────────────────── */
 
@@ -2084,6 +2085,8 @@ export default function ThumbnailGeneratorPage() {
   const [graphicFilter, setGraphicFilter] = useState("all");
   // Font category filter
   const [fontFilter, setFontFilter] = useState("all");
+  // Popular Fonts (creator-favorites) category filter
+  const [popularFontFilter, setPopularFontFilter] = useState<"all" | "thumbnail" | "headline" | "body" | "handwritten">("all");
   // YouTuber preset category filter
   const [youtuberPresetFilter, setYoutuberPresetFilter] = useState("all");
 
@@ -4599,6 +4602,161 @@ export default function ThumbnailGeneratorPage() {
                             </button>
                           );
                         })}
+                      </div>
+                    </div>
+
+                    {/* Popular Fonts Library (creator-favorites, live Google Fonts preview) */}
+                    <div className="card">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="section-header flex items-center gap-2 mb-0">
+                          <Type size={12} className="text-gold" /> Popular Fonts ({POPULAR_FONTS.length})
+                        </h3>
+                        <button
+                          onClick={() => { preloadGoogleFonts(POPULAR_FONTS); toast.success("Loaded Google Fonts"); }}
+                          className="text-[9px] text-muted hover:text-gold"
+                          title="Preload all Google Font CDN assets for instant previews"
+                        >
+                          Preload all
+                        </button>
+                      </div>
+                      <p className="text-[9px] text-muted mb-2">High-CTR typefaces used by top creators. Click to apply.</p>
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {(["all", "thumbnail", "headline", "body", "handwritten"] as const).map((cat) => (
+                          <button
+                            key={cat}
+                            onClick={() => setPopularFontFilter(cat)}
+                            className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${
+                              popularFontFilter === cat
+                                ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
+                                : "border-border text-muted hover:text-foreground"
+                            }`}
+                          >
+                            {cat === "all" ? "All" : cat}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5 max-h-72 overflow-y-auto">
+                        {POPULAR_FONTS.filter((f) => popularFontFilter === "all" || f.category === popularFontFilter).map((f) => {
+                          const active = thumbnailConfig.typography.fontId === f.id;
+                          return (
+                            <button
+                              key={f.id}
+                              onClick={() => {
+                                loadGoogleFont(f);
+                                patchConfig("typography", { fontId: f.id, weight: f.weight });
+                              }}
+                              onMouseEnter={() => loadGoogleFont(f)}
+                              className={`p-2 rounded-xl border transition-all text-left relative ${
+                                active ? "border-gold/40 bg-gold/[0.07]" : "border-border hover:border-gold/15"
+                              }`}
+                            >
+                              <p
+                                className={`text-[13px] leading-tight ${active ? "text-gold" : ""}`}
+                                style={{ fontFamily: f.stack, fontWeight: f.weight }}
+                              >
+                                {f.preview_text}
+                              </p>
+                              <p className="text-[8px] text-muted mt-0.5">{f.name}</p>
+                              {f.vibe && <p className="text-[7px] text-muted/70 truncate">{f.vibe}</p>}
+                              <div className="flex gap-1 mt-1 flex-wrap">
+                                {f.used_by && (
+                                  <span className="text-[7px] px-1 py-[1px] rounded bg-gold/15 text-gold">{f.used_by.split(",")[0]}</span>
+                                )}
+                                <span className={`text-[7px] px-1 py-[1px] rounded ${f.license === "paid" ? "bg-amber-500/15 text-amber-400" : "bg-emerald-500/15 text-emerald-400"}`}>
+                                  {f.license}
+                                </span>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Text Overlay Effects — quick toggle row */}
+                    <div className="card">
+                      <h3 className="section-header flex items-center gap-2"><Sparkles size={12} className="text-gold" /> Text Overlay Effects</h3>
+                      <p className="text-[9px] text-muted mb-2">Quick toggles for popular text overlay effects.</p>
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {/* Glow (textEffectToggles) */}
+                        <button
+                          onClick={() => toggleTextEffectFlag("glow")}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.textEffectToggles.glow ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u{1F4A1}"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.textEffectToggles.glow ? "text-gold" : ""}`}>Glow</p>
+                        </button>
+                        {/* Neon (textEffectToggles) */}
+                        <button
+                          onClick={() => toggleTextEffectFlag("neon")}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.textEffectToggles.neon ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u{1F4A0}"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.textEffectToggles.neon ? "text-gold" : ""}`}>Neon</p>
+                        </button>
+                        {/* Stroke (typography.strokeEnabled) */}
+                        <button
+                          onClick={() => patchConfig("typography", { strokeEnabled: !thumbnailConfig.typography.strokeEnabled })}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.typography.strokeEnabled ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u25E6"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.typography.strokeEnabled ? "text-gold" : ""}`}>Stroke</p>
+                        </button>
+                        {/* Shadow (typography.shadowEnabled) */}
+                        <button
+                          onClick={() => patchConfig("typography", { shadowEnabled: !thumbnailConfig.typography.shadowEnabled })}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.typography.shadowEnabled ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u{1F319}"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.typography.shadowEnabled ? "text-gold" : ""}`}>Shadow</p>
+                        </button>
+                        {/* 3D (typography.threeDEnabled) */}
+                        <button
+                          onClick={() => patchConfig("typography", { threeDEnabled: !thumbnailConfig.typography.threeDEnabled })}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.typography.threeDEnabled ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u{1F532}"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.typography.threeDEnabled ? "text-gold" : ""}`}>3D</p>
+                        </button>
+                        {/* Metallic (textEffectToggles) */}
+                        <button
+                          onClick={() => toggleTextEffectFlag("metallic")}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.textEffectToggles.metallic ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u2728"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.textEffectToggles.metallic ? "text-gold" : ""}`}>Metallic</p>
+                        </button>
+                        {/* Chrome (textEffectToggles) */}
+                        <button
+                          onClick={() => toggleTextEffectFlag("chrome")}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.textEffectToggles.chrome ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u{1FA9E}"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.textEffectToggles.chrome ? "text-gold" : ""}`}>Chrome</p>
+                        </button>
+                        {/* Gradient (typography.gradientEnabled) */}
+                        <button
+                          onClick={() => patchConfig("typography", { gradientEnabled: !thumbnailConfig.typography.gradientEnabled })}
+                          className={`p-2 rounded-xl border transition-all text-center ${
+                            thumbnailConfig.typography.gradientEnabled ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:border-gold/15 hover:text-foreground"
+                          }`}
+                        >
+                          <span className="text-base">{"\u{1F308}"}</span>
+                          <p className={`text-[9px] font-semibold mt-0.5 ${thumbnailConfig.typography.gradientEnabled ? "text-gold" : ""}`}>Gradient</p>
+                        </button>
                       </div>
                     </div>
 

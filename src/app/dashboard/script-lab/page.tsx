@@ -12,7 +12,8 @@ import {
   Mic, Mail, Hash, TrendingUp, Layers, PenTool,
   ListChecks, Type, Volume2,
   Clapperboard, Box, Headphones, Music,
-  ArrowRightLeft, Quote
+  ArrowRightLeft, Quote,
+  Flame, ExternalLink, Users as UsersIcon, Activity, Repeat
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
@@ -87,6 +88,66 @@ interface SavedScript {
   platform: string;
   created_at: string;
   metadata: Record<string, unknown>;
+}
+
+// ── Trending / Viral Remix types ──────────────────────────────────
+interface TrendingVideo {
+  id: string;
+  title: string;
+  creator_name: string;
+  creator_handle: string;
+  platform: string;
+  thumbnail_hint: string;
+  thumbnail_emoji?: string;
+  view_count: number;
+  view_count_label: string;
+  published_days_ago: number;
+  engagement_rate: number;
+  duration_sec: number;
+  hook: string;
+  why_trending: string;
+  keywords_used: string[];
+  url_hint: string;
+}
+
+interface RemixResult {
+  remixed_script: string;
+  hook: string;
+  cta: string;
+  suggested_title: string;
+  differences: string[];
+  structure_kept: string;
+  twist_applied: string;
+}
+
+const TRENDING_NICHES = [
+  "dental", "fitness", "saas", "coaching", "real estate", "ecommerce",
+  "law", "finance", "beauty", "food", "travel", "automotive",
+  "education", "health", "marketing", "construction", "automotive",
+] as const;
+
+const TRENDING_PLATFORM_OPTS = [
+  { id: "youtube", label: "YouTube" },
+  { id: "tiktok", label: "TikTok" },
+  { id: "instagram", label: "Instagram Reels" },
+  { id: "shorts", label: "YouTube Shorts" },
+] as const;
+
+function platformColor(p: string): string {
+  switch (p) {
+    case "youtube": return "text-red-400 border-red-400/30 bg-red-400/5";
+    case "tiktok": return "text-pink-400 border-pink-400/30 bg-pink-400/5";
+    case "instagram": return "text-purple-400 border-purple-400/30 bg-purple-400/5";
+    case "shorts": return "text-orange-400 border-orange-400/30 bg-orange-400/5";
+    default: return "text-muted border-border";
+  }
+}
+
+function daysAgoLabel(n: number): string {
+  if (n === 0) return "Today";
+  if (n === 1) return "Yesterday";
+  if (n < 7) return `${n}d ago`;
+  return `${Math.round(n / 7)}w ago`;
 }
 
 // ── Storyboard types ──────────────────────────────────────────────
@@ -173,7 +234,7 @@ export default function ScriptLabPage() {
   const { clientId: managedClientId } = useManagedClient();
   const [clients, setClients] = useState<Array<{ id: string; business_name: string; industry: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
-  const [tab, setTab] = useState<"generate" | "research" | "results" | "history" | "templates" | "tools" | "voiceover" | "approval">("generate");
+  const [tab, setTab] = useState<"generate" | "research" | "trending" | "results" | "history" | "templates" | "tools" | "voiceover" | "approval">("generate");
   const supabase = createClient();
 
   const [config, setConfig] = useState({
@@ -210,6 +271,20 @@ export default function ScriptLabPage() {
   const [storyboardFormat, setStoryboardFormat] = useState<StoryboardFormat>("ugc");
   const [storyboard, setStoryboard] = useState<Storyboard | null>(null);
   const [generatingStoryboard, setGeneratingStoryboard] = useState(false);
+
+  // ── Trending (viral research) state ─────────────────────────────
+  const [trendingNiche, setTrendingNiche] = useState("");
+  const [trendingKeywords, setTrendingKeywords] = useState("");
+  const [trendingPlatforms, setTrendingPlatforms] = useState<string[]>(["youtube", "tiktok", "instagram"]);
+  const [trendingVideos, setTrendingVideos] = useState<TrendingVideo[]>([]);
+  const [loadingTrending, setLoadingTrending] = useState(false);
+  const [trendingCached, setTrendingCached] = useState<{ cached: boolean; cached_at?: string; expires_at?: string } | null>(null);
+  const [transcribingId, setTranscribingId] = useState<string | null>(null);
+  const [remixingId, setRemixingId] = useState<string | null>(null);
+  const [transcriptsById, setTranscriptsById] = useState<Record<string, { transcript: string; is_estimated: boolean; source: string }>>({});
+  const [remixModal, setRemixModal] = useState<{ video: TrendingVideo; transcript: string } | null>(null);
+  const [remixTwistAngle, setRemixTwistAngle] = useState("");
+  const [remixResult, setRemixResult] = useState<RemixResult | null>(null);
 
   // Template categories
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -286,6 +361,25 @@ export default function ScriptLabPage() {
       setSelectedClient(managedClientId);
     }
   }, [managedClientId, clients]);
+
+  // Seed trending niche from the selected client's industry (if not already set)
+  useEffect(() => {
+    if (trendingNiche) return;
+    const c = clients.find(x => x.id === selectedClient);
+    if (c?.industry) setTrendingNiche(c.industry.toLowerCase());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedClient, clients]);
+
+  // Load niche from profile.onboarding on first mount
+  useEffect(() => {
+    if (trendingNiche) return;
+    supabase.from("profiles").select("onboarding_personalization").then((res: { data: Array<{ onboarding_personalization?: Record<string, unknown> }> | null }) => {
+      const row = res.data?.[0];
+      const industry = (row?.onboarding_personalization as Record<string, unknown> | undefined)?.industry;
+      if (typeof industry === "string" && industry.trim()) setTrendingNiche(industry.toLowerCase());
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function loadSavedScripts() {
     const { data } = await supabase
@@ -523,6 +617,159 @@ export default function ScriptLabPage() {
     setResearching(false);
   }
 
+  // ── Trending / Viral Remix handlers ────────────────────────────
+  async function findTrending(forceRefresh = false) {
+    const niche = trendingNiche.trim();
+    if (!niche) { toast.error("Pick a niche first"); return; }
+    if (trendingPlatforms.length === 0) { toast.error("Select at least one platform"); return; }
+    setLoadingTrending(true);
+    setTrendingVideos([]);
+    setTrendingCached(null);
+    toast.loading(forceRefresh ? "Refreshing trending videos..." : "Finding today's trending videos...");
+    try {
+      const keywords = trendingKeywords.split(",").map(k => k.trim()).filter(Boolean);
+      const res = await fetch("/api/script-lab/trending", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          niche,
+          keywords,
+          platforms: trendingPlatforms,
+          limit: 30,
+          force_refresh: forceRefresh,
+        }),
+      });
+      toast.dismiss();
+      const data = await res.json();
+      if (data.success && Array.isArray(data.videos)) {
+        setTrendingVideos(data.videos);
+        setTrendingCached({ cached: Boolean(data.cached), cached_at: data.cached_at, expires_at: data.expires_at });
+        toast.success(`${data.videos.length} trending videos loaded${data.cached ? " (cached)" : ""}`);
+      } else {
+        toast.error(data.error || "Couldn't load trending");
+      }
+    } catch {
+      toast.dismiss();
+      toast.error("Network error");
+    }
+    setLoadingTrending(false);
+  }
+
+  async function transcribeVideo(video: TrendingVideo): Promise<string | null> {
+    setTranscribingId(video.id);
+    try {
+      const res = await fetch("/api/script-lab/transcribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          video_url: video.url_hint,
+          title: video.title,
+          creator_name: video.creator_name,
+          hook: video.hook,
+          platform: video.platform,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.transcript) {
+        setTranscriptsById(prev => ({
+          ...prev,
+          [video.id]: { transcript: data.transcript, is_estimated: Boolean(data.is_estimated), source: String(data.source || "") },
+        }));
+        toast.success(data.is_estimated ? "Transcript (AI-estimated)" : "Real transcript fetched!");
+        return data.transcript as string;
+      }
+      toast.error(data.error || "Transcript failed");
+      return null;
+    } catch {
+      toast.error("Network error");
+      return null;
+    } finally {
+      setTranscribingId(null);
+    }
+  }
+
+  async function openRemix(video: TrendingVideo) {
+    let transcript = transcriptsById[video.id]?.transcript;
+    if (!transcript) {
+      const fetched = await transcribeVideo(video);
+      if (!fetched) return;
+      transcript = fetched;
+    }
+    setRemixModal({ video, transcript });
+    setRemixTwistAngle("");
+    setRemixResult(null);
+  }
+
+  async function runRemix() {
+    if (!remixModal) return;
+    setRemixingId(remixModal.video.id);
+    setRemixResult(null);
+    toast.loading("Remixing with your twist...");
+    try {
+      const clientObj = clients.find(c => c.id === selectedClient);
+      const niche = clientObj?.industry || trendingNiche || "general business";
+      const res = await fetch("/api/script-lab/remix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transcript: remixModal.transcript,
+          client_niche: niche,
+          client_voice: config.tone || "professional, conversational",
+          original_hook: remixModal.video.hook,
+          original_title: remixModal.video.title,
+          twist_angle: remixTwistAngle,
+          platform: remixModal.video.platform,
+          client_id: selectedClient || null,
+        }),
+      });
+      toast.dismiss();
+      const data = await res.json();
+      if (data.success && data.remix) {
+        setRemixResult(data.remix);
+        toast.success("Remix ready!");
+        // Track generation
+        await trackGeneration({
+          category: "script",
+          source_tool: "Script Lab — Viral Remix",
+          title: data.remix.suggested_title || remixModal.video.title,
+          content_preview: (data.remix.remixed_script || "").slice(0, 200),
+          metadata: {
+            original_video: {
+              title: remixModal.video.title,
+              creator: remixModal.video.creator_handle,
+              platform: remixModal.video.platform,
+              url: remixModal.video.url_hint,
+            },
+            twist_angle: remixTwistAngle,
+            niche,
+            hook: data.remix.hook,
+            cta: data.remix.cta,
+          },
+        });
+        loadSavedScripts();
+      } else {
+        toast.error(data.error || "Remix failed");
+      }
+    } catch {
+      toast.dismiss();
+      toast.error("Network error");
+    }
+    setRemixingId(null);
+  }
+
+  function useRemixAsTopic() {
+    if (!remixResult || !remixModal) return;
+    setConfig(prev => ({
+      ...prev,
+      topic: remixResult.suggested_title,
+      viral_reference: `${remixModal.video.title}: ${remixModal.video.hook}`,
+      platform: remixModal.video.platform === "shorts" ? "youtube" : remixModal.video.platform,
+    }));
+    setRemixModal(null);
+    setTab("generate");
+    toast.success("Loaded into Generator — tweak then click Generate!");
+  }
+
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
     toast.success("Copied!");
@@ -700,6 +947,7 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         {([
           { id: "generate" as const, label: "Generator", icon: Sparkles },
           { id: "templates" as const, label: `Templates (${scriptTemplates.length})`, icon: BookOpen },
+          { id: "trending" as const, label: "🔥 Trending", icon: Flame },
           { id: "research" as const, label: "Viral Research", icon: Search },
           { id: "results" as const, label: `Results ${batchScripts.length > 1 ? `(${batchScripts.length})` : script ? "(1)" : ""}`, icon: FileText },
           { id: "tools" as const, label: "Tools", icon: Wand2 },
@@ -914,6 +1162,331 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <p className="text-[8px] text-muted">Frameworks</p>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🔥 Trending Tab — live viral research across platforms */}
+      {tab === "trending" && (
+        <div className="space-y-4">
+          {/* Controls */}
+          <div className="card bg-gradient-to-br from-gold/[0.05] via-surface to-surface border-gold/15 space-y-3">
+            <div className="flex items-center gap-2">
+              <Flame size={16} className="text-gold animate-pulse" />
+              <h2 className="text-sm font-semibold">Find today&apos;s trending videos</h2>
+              <Sparkles size={12} className="text-gold" />
+            </div>
+            <p className="text-[10px] text-muted">Discover what&apos;s going viral right now in your niche across YouTube, TikTok, and Instagram. Transcribe the top performers and remix them with your own twist.</p>
+
+            {/* Niche chip-select */}
+            <div>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Niche *</label>
+              <div className="flex flex-wrap gap-1 mb-1.5">
+                {TRENDING_NICHES.map(n => (
+                  <button key={n} onClick={() => setTrendingNiche(n)}
+                    className={`text-[9px] px-2 py-0.5 rounded-full border transition-all ${
+                      trendingNiche === n
+                        ? "border-gold/40 bg-gold/[0.08] text-gold"
+                        : "border-border text-muted hover:text-foreground hover:border-gold/20"
+                    }`}>
+                    {n}
+                  </button>
+                ))}
+              </div>
+              <input value={trendingNiche} onChange={e => setTrendingNiche(e.target.value)}
+                className="input w-full text-xs" placeholder="Or type your own niche…" />
+            </div>
+
+            {/* Keywords */}
+            <div>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Keywords the client searches for (comma-separated)</label>
+              <input value={trendingKeywords} onChange={e => setTrendingKeywords(e.target.value)}
+                className="input w-full text-xs" placeholder="e.g. teeth whitening, Invisalign, smile makeover" />
+            </div>
+
+            {/* Platform filter */}
+            <div>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Platforms</label>
+              <div className="flex flex-wrap gap-1.5">
+                {TRENDING_PLATFORM_OPTS.map(p => {
+                  const active = trendingPlatforms.includes(p.id);
+                  return (
+                    <button key={p.id} onClick={() => {
+                      setTrendingPlatforms(prev => active ? prev.filter(x => x !== p.id) : [...prev, p.id]);
+                    }}
+                      className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
+                        active
+                          ? `${platformColor(p.id)} border-opacity-50`
+                          : "border-border text-muted hover:text-foreground"
+                      }`}>
+                      {p.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Refresh button */}
+            <div className="flex items-center gap-2 pt-1">
+              <button onClick={() => findTrending(false)} disabled={loadingTrending || !trendingNiche}
+                className="btn-primary text-xs py-2 flex items-center gap-2 disabled:opacity-50">
+                {loadingTrending ? <Loader size={12} className="animate-spin" /> : <Flame size={12} />}
+                {loadingTrending ? "Searching…" : "Find today's trending"}
+              </button>
+              {trendingVideos.length > 0 && (
+                <button onClick={() => findTrending(true)} disabled={loadingTrending}
+                  className="btn-secondary text-xs py-2 flex items-center gap-1.5 disabled:opacity-50">
+                  <RefreshCw size={11} /> Force refresh
+                </button>
+              )}
+              {trendingCached?.cached && (
+                <span className="text-[9px] text-muted ml-auto flex items-center gap-1">
+                  <Clock size={9} /> Cached {trendingCached.cached_at ? new Date(trendingCached.cached_at).toLocaleTimeString() : ""}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Empty state */}
+          {!loadingTrending && trendingVideos.length === 0 && (
+            <div className="card text-center py-10">
+              <Flame size={32} className="text-gold/40 mx-auto mb-3" />
+              <p className="text-xs text-muted">Pick a niche + platform to see what&apos;s working today</p>
+              <p className="text-[9px] text-muted mt-1">We&apos;ll surface up to 30 trending videos, then you can transcribe and remix any of them.</p>
+            </div>
+          )}
+
+          {/* Loading state */}
+          {loadingTrending && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="card animate-pulse">
+                  <div className="h-24 bg-surface-light rounded-lg mb-2" />
+                  <div className="h-3 bg-surface-light rounded w-3/4 mb-1.5" />
+                  <div className="h-2 bg-surface-light rounded w-1/2" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Results grid */}
+          {!loadingTrending && trendingVideos.length > 0 && (
+            <div className="fade-in">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-semibold flex items-center gap-1.5">
+                  <TrendingUp size={13} className="text-gold" />
+                  {trendingVideos.length} trending in {trendingNiche}
+                </h3>
+                <p className="text-[9px] text-muted">Click any card to transcribe + remix</p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {trendingVideos.map(v => {
+                  const hasTranscript = Boolean(transcriptsById[v.id]);
+                  const isTranscribing = transcribingId === v.id;
+                  const isRemixing = remixingId === v.id;
+                  return (
+                    <div key={v.id} className="card hover:border-gold/20 transition-all group overflow-hidden">
+                      {/* Thumbnail placeholder — gold gradient with emoji + hint */}
+                      <div className="relative h-28 rounded-lg bg-gradient-to-br from-gold/15 via-gold/5 to-surface-light border border-gold/10 mb-2 flex items-center justify-center overflow-hidden">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(218,165,32,0.15),transparent_60%)]" />
+                        <div className="relative text-4xl">{v.thumbnail_emoji || "🔥"}</div>
+                        <div className={`absolute top-1.5 left-1.5 text-[8px] px-1.5 py-0.5 rounded border ${platformColor(v.platform)}`}>
+                          {v.platform}
+                        </div>
+                        <div className="absolute bottom-1.5 right-1.5 text-[8px] px-1.5 py-0.5 rounded bg-black/60 text-white">
+                          {Math.floor(v.duration_sec / 60)}:{String(v.duration_sec % 60).padStart(2, "0")}
+                        </div>
+                        {hasTranscript && (
+                          <div className="absolute top-1.5 right-1.5 text-[8px] px-1.5 py-0.5 rounded bg-success/20 text-success border border-success/30 flex items-center gap-0.5">
+                            <CheckCircle size={8} /> Transcribed
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Title + creator */}
+                      <h4 className="text-[11px] font-semibold line-clamp-2 mb-0.5 group-hover:text-gold transition-colors">{v.title}</h4>
+                      <p className="text-[9px] text-muted mb-1.5 flex items-center gap-1">
+                        <UsersIcon size={8} /> {v.creator_name} <span className="text-gold/70">{v.creator_handle}</span>
+                      </p>
+
+                      {/* Metrics row */}
+                      <div className="flex items-center gap-2 text-[9px] mb-2">
+                        <span className="flex items-center gap-0.5 text-success"><Eye size={9} /> {v.view_count_label}</span>
+                        <span className="flex items-center gap-0.5 text-gold"><Activity size={9} /> {v.engagement_rate.toFixed(1)}%</span>
+                        <span className="flex items-center gap-0.5 text-muted"><Clock size={9} /> {daysAgoLabel(v.published_days_ago)}</span>
+                      </div>
+
+                      {/* Hook */}
+                      <div className="bg-gold/[0.03] border border-gold/10 rounded-lg p-2 mb-1.5">
+                        <p className="text-[8px] text-gold uppercase tracking-wider font-medium mb-0.5">Hook</p>
+                        <p className="text-[10px] italic line-clamp-2">&ldquo;{v.hook}&rdquo;</p>
+                      </div>
+
+                      {/* Why trending */}
+                      <p className="text-[9px] text-muted mb-2 line-clamp-2">{v.why_trending}</p>
+
+                      {/* Keywords */}
+                      {v.keywords_used && v.keywords_used.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {v.keywords_used.slice(0, 4).map((k, i) => (
+                            <span key={i} className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light border border-border text-muted">#{k}</span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Actions */}
+                      <div className="flex gap-1 pt-1 border-t border-border/50">
+                        <button onClick={() => transcribeVideo(v)} disabled={isTranscribing}
+                          className="flex-1 text-[9px] py-1.5 rounded-lg border border-border hover:border-gold/30 transition-all disabled:opacity-50 flex items-center justify-center gap-1">
+                          {isTranscribing ? <Loader size={9} className="animate-spin" /> : <Mic size={9} />}
+                          {hasTranscript ? "Re-transcribe" : "Transcribe"}
+                        </button>
+                        <button onClick={() => openRemix(v)} disabled={isRemixing || isTranscribing}
+                          className="flex-1 text-[9px] py-1.5 rounded-lg bg-gradient-to-r from-gold/20 to-gold/10 border border-gold/30 text-gold hover:from-gold/30 hover:to-gold/20 transition-all disabled:opacity-50 flex items-center justify-center gap-1">
+                          {isRemixing ? <Loader size={9} className="animate-spin" /> : <Sparkles size={9} />}
+                          Remix
+                        </button>
+                        {v.url_hint && (
+                          <a href={v.url_hint} target="_blank" rel="noopener noreferrer"
+                            className="text-[9px] py-1.5 px-2 rounded-lg border border-border hover:border-gold/30 transition-all flex items-center justify-center gap-1">
+                            <ExternalLink size={9} />
+                          </a>
+                        )}
+                      </div>
+
+                      {/* Inline transcript preview */}
+                      {hasTranscript && (
+                        <div className="mt-2 pt-2 border-t border-border/50">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-[8px] text-muted uppercase tracking-wider">
+                              Transcript {transcriptsById[v.id].is_estimated ? "(AI-estimated)" : "(real)"}
+                            </span>
+                            <button onClick={() => copyToClipboard(transcriptsById[v.id].transcript)}
+                              className="text-[8px] text-muted hover:text-gold flex items-center gap-0.5">
+                              <Copy size={8} /> Copy
+                            </button>
+                          </div>
+                          <p className="text-[9px] text-muted line-clamp-3">{transcriptsById[v.id].transcript}</p>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Remix modal — shown when user clicks ✨ Remix on any trending card */}
+      {remixModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={() => setRemixModal(null)}>
+          <div className="bg-surface border border-border rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="sticky top-0 bg-surface/95 backdrop-blur-md border-b border-border p-4 flex items-center justify-between z-10">
+              <div className="flex items-center gap-2">
+                <Repeat size={16} className="text-gold" />
+                <h3 className="text-sm font-semibold">Remix with my twist</h3>
+              </div>
+              <button onClick={() => setRemixModal(null)} className="text-muted hover:text-foreground text-xs">Close</button>
+            </div>
+            <div className="p-4 space-y-4">
+              {/* Original reference */}
+              <div className="card bg-surface-light/50">
+                <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Original</p>
+                <p className="text-[11px] font-semibold mb-1">{remixModal.video.title}</p>
+                <p className="text-[9px] text-muted">{remixModal.video.creator_handle} · {remixModal.video.view_count_label} views · {remixModal.video.platform}</p>
+              </div>
+
+              {/* Transcript preview */}
+              <div>
+                <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Transcript (used as the structural reference)</p>
+                <div className="text-[10px] p-2.5 rounded-lg bg-surface-light border border-border max-h-32 overflow-y-auto whitespace-pre-wrap">{remixModal.transcript}</div>
+              </div>
+
+              {/* Twist angle input */}
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Your twist / angle (optional)</label>
+                <input value={remixTwistAngle} onChange={e => setRemixTwistAngle(e.target.value)}
+                  className="input w-full text-xs" placeholder="e.g. contrarian take, personal story, industry-specific data" />
+              </div>
+
+              {/* Run button */}
+              {!remixResult && (
+                <button onClick={runRemix} disabled={remixingId !== null}
+                  className="btn-primary text-xs py-2 w-full flex items-center justify-center gap-2 disabled:opacity-50">
+                  {remixingId ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  {remixingId ? "Remixing…" : "Generate remixed script"}
+                </button>
+              )}
+
+              {/* Result */}
+              {remixResult && (
+                <div className="space-y-3 fade-in">
+                  <div className="card bg-gold/[0.03] border-gold/20">
+                    <p className="text-[9px] text-gold uppercase tracking-wider mb-1">Suggested title</p>
+                    <p className="text-sm font-semibold">{remixResult.suggested_title}</p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="card">
+                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1">New hook</p>
+                      <p className="text-[11px] italic">&ldquo;{remixResult.hook}&rdquo;</p>
+                    </div>
+                    <div className="card">
+                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1">New CTA</p>
+                      <p className="text-[11px]">{remixResult.cta}</p>
+                    </div>
+                  </div>
+
+                  <div className="card">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <p className="text-[9px] text-muted uppercase tracking-wider">Remixed script</p>
+                      <button onClick={() => copyToClipboard(remixResult.remixed_script)}
+                        className="text-[9px] text-gold hover:text-gold-light flex items-center gap-0.5">
+                        <Copy size={9} /> Copy
+                      </button>
+                    </div>
+                    <div className="text-[10px] whitespace-pre-wrap leading-relaxed">{remixResult.remixed_script}</div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="card">
+                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Structure kept</p>
+                      <p className="text-[10px]">{remixResult.structure_kept}</p>
+                    </div>
+                    <div className="card">
+                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1">Twist applied</p>
+                      <p className="text-[10px]">{remixResult.twist_applied}</p>
+                    </div>
+                  </div>
+
+                  {remixResult.differences?.length > 0 && (
+                    <div className="card">
+                      <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Differences from original</p>
+                      <ul className="space-y-1">
+                        {remixResult.differences.map((d, i) => (
+                          <li key={i} className="text-[10px] flex items-start gap-1.5">
+                            <ArrowRight size={9} className="text-gold shrink-0 mt-0.5" />
+                            <span>{d}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <div className="flex gap-2">
+                    <button onClick={useRemixAsTopic}
+                      className="btn-primary text-xs py-2 flex-1 flex items-center justify-center gap-2">
+                      <Wand2 size={12} /> Use in Generator
+                    </button>
+                    <button onClick={() => { setRemixResult(null); setRemixTwistAngle(""); }}
+                      className="btn-secondary text-xs py-2 flex items-center gap-2">
+                      <RefreshCw size={12} /> Redo
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
