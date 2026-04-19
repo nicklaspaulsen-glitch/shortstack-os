@@ -41,11 +41,10 @@ export async function GET(request: NextRequest) {
   const nowIso = now.toISOString();
   const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
 
-  // Grab anything approved (primary path). We also include rows still in
-  // `scheduled` state if the project opts out of approval (legacy); that is
-  // controlled by whether metadata.auto_approve is set, so we simply include
-  // both states and let the caller move rows into `approved_for_publish` to
-  // gate on approval.
+  // Only pick up rows the user has explicitly approved. Rows in `scheduled`
+  // are still awaiting human review — the user must hit "Approve all" (or
+  // approve each individually) before we ever auto-post. This keeps consent
+  // explicit.
   const { data: rows, error } = await supabase
     .from("content_calendar")
     .select("id, client_id, title, platform, scheduled_at, status, notes, metadata")

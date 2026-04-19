@@ -134,10 +134,20 @@ export async function POST(request: NextRequest) {
         metadata: { shortstack_user_id: user.id },
       });
       customerId = customer.id;
-      await supabase
+      // Persist so subsequent checkouts don't create duplicate Stripe
+      // customers. Log the failure if it happens — the user can still
+      // check out this time, but we want to catch the dupe-generation path.
+      const { error: updateErr } = await supabase
         .from("profiles")
         .update({ stripe_customer_id: customerId })
         .eq("id", user.id);
+      if (updateErr) {
+        console.error("[billing/checkout] Failed to persist stripe_customer_id", {
+          user_id: user.id,
+          customer_id: customerId,
+          error: updateErr.message,
+        });
+      }
     }
 
     // Stripe Tax is optional — only enable if explicitly turned on via env.

@@ -172,7 +172,12 @@ export default function PricingPage() {
         }
         setCheckoutLoading(null);
       }
-    } catch {
+    } catch (err) {
+      // Surface the error so the user isn't stuck on a silent spinner.
+      if (typeof window !== "undefined") {
+        const msg = err instanceof Error ? err.message : "Network error. Please try again.";
+        alert(msg);
+      }
       setCheckoutLoading(null);
     }
   }

@@ -99,11 +99,36 @@ export async function publishCalendarRow(
     return { id: row.id, status: "failed", error: "Row has no client_id", platform: row.platform };
   }
 
-  // Mark publishing (optimistic lock — also used by the UI spinner)
-  await supabase
+  // Atomic claim: only transition to "publishing" if the row is in a
+  // re-triable state. Prevents (a) cron + publish-now double-posting the
+  // same row and (b) re-posting rows that already succeeded (status=posted)
+  // or are mid-flight (status=publishing).
+  const CLAIMABLE_STATUSES = ["approved_for_publish", "scheduled", "failed", "needs_connection"];
+  const { data: claimed } = await supabase
     .from("content_calendar")
     .update({ status: "publishing" })
-    .eq("id", row.id);
+    .eq("id", row.id)
+    .in("status", CLAIMABLE_STATUSES)
+    .select("id");
+
+  if (!claimed || claimed.length === 0) {
+    // Another worker already grabbed it, or the row is in a terminal /
+    // in-flight state we refuse to overwrite (posted, publishing).
+    // Re-read current status so the caller / UI can show the real state
+    // rather than a misleading "failed".
+    const { data: cur } = await supabase
+      .from("content_calendar")
+      .select("status")
+      .eq("id", row.id)
+      .maybeSingle();
+    const curStatus = cur?.status || row.status;
+    return {
+      id: row.id,
+      status: "failed",
+      error: `Row is not in a publishable state (current: ${curStatus}). Already posted or being processed.`,
+      platform: row.platform,
+    };
+  }
 
   const shortPlatform = calendarPlatformToShort(row.platform);
 
@@ -260,8 +285,11 @@ async function postToPlatform(input: PostInput): Promise<PostResult> {
     if (!publishRes.ok || pubData.error) {
       return { error: fbError(pubData) || "Instagram publish failed" };
     }
-    const postId = typeof pubData.id === "string" ? pubData.id : null;
-    return { liveUrl: postId ? `https://instagram.com/p/${postId}` : null, raw: pubData };
+    // Instagram post URLs use short-codes, not the numeric media id the
+    // Graph API returns here. Looking up the `permalink` field requires
+    // an extra Graph call — until we add that, return null rather than
+    // a guaranteed-404 link.
+    return { liveUrl: null, raw: pubData };
   }
 
   if (shortPlatform === "linkedin") {

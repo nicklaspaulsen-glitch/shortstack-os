@@ -77,6 +77,7 @@ import {
   Puzzle,
   X,
   Download,
+  ShieldCheck,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -181,6 +182,7 @@ const navItems: NavItem[] = [
   { label: "Competitors", href: "/dashboard/competitive-monitor", icon: <Target size={16} />, roles: ["admin"] },
   { label: "Telegram Bot", href: "/dashboard/telegram-bot", icon: <Bot size={16} />, roles: ["admin"] },
   { label: "Notifications", href: "/dashboard/notifications", icon: <Bell size={16} />, roles: ["admin", "team_member"] },
+  { label: "System Status", href: "/dashboard/system-status", icon: <ShieldCheck size={16} />, roles: ["admin"] },
   { label: "Settings", href: "/dashboard/settings", icon: <Settings size={16} />, roles: ["admin"] },
 
   // ── Client Portal ──
