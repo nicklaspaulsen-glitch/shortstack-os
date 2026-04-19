@@ -110,6 +110,13 @@ export default function ProjectsPage() {
   // Track drag state to suppress the click that follows dragend on the same card.
   const justDraggedRef = useRef(false);
 
+  // Assignee profile lookup — keyed by profile_id, populated from
+  // /api/profiles/by-ids when tasks load. Fixes the bug where the first
+  // character of the UUID was rendered as an "initial".
+  const [profileMap, setProfileMap] = useState<
+    Record<string, { full_name: string | null; avatar_url: string | null }>
+  >({});
+
   // Submission guards — prevent Enter-spam from creating duplicate rows.
   const [submittingQuickTask, setSubmittingQuickTask] = useState(false);
   const [submittingInlineTask, setSubmittingInlineTask] = useState(false);
@@ -160,6 +167,60 @@ export default function ProjectsPage() {
     if (activeBoardId) fetchTasks(activeBoardId);
     else setTasks([]);
   }, [activeBoardId, fetchTasks]);
+
+  // Look up assignee profiles whenever task list changes. We only fetch
+  // IDs we haven't seen yet so a bunch of status changes don't re-hit the
+  // endpoint unnecessarily.
+  useEffect(() => {
+    const missing = Array.from(
+      new Set(
+        tasks
+          .map((t) => t.assignee_profile_id)
+          .filter((id): id is string => !!id && !profileMap[id]),
+      ),
+    );
+    if (missing.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/profiles/by-ids?ids=${encodeURIComponent(missing.join(","))}`,
+        );
+        if (!res.ok) return;
+        const json = await res.json();
+        if (cancelled || !Array.isArray(json.profiles)) return;
+        setProfileMap((prev) => {
+          const next = { ...prev };
+          for (const p of json.profiles) {
+            next[p.id] = {
+              full_name: p.full_name || null,
+              avatar_url: p.avatar_url || null,
+            };
+          }
+          return next;
+        });
+      } catch {
+        /* ignore — avatar falls back to generic icon */
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [tasks, profileMap]);
+
+  /** Render-helper: resolve a profile_id to a readable initial. */
+  const getAssigneeInitial = useCallback(
+    (profileId: string | null): { initial: string; name: string | null } => {
+      if (!profileId) return { initial: "", name: null };
+      const p = profileMap[profileId];
+      if (!p || !p.full_name) return { initial: "?", name: null };
+      const trimmed = p.full_name.trim();
+      if (!trimmed) return { initial: "?", name: null };
+      const parts = trimmed.split(/\s+/);
+      const initial =
+        (parts[0]?.[0] || "") + (parts.length > 1 ? (parts[parts.length - 1]?.[0] || "") : "");
+      return { initial: initial.toUpperCase() || "?", name: trimmed };
+    },
+    [profileMap],
+  );
 
   // ── Cmd/Ctrl+Shift+K → quick task dialog ───────────────────
   // Plain Cmd/Ctrl+K is already claimed by the global command palette and
@@ -563,9 +624,7 @@ export default function ProjectsPage() {
                       {columnTasks.map((task) => {
                         const overdue = isOverdue(task.due_date);
                         const pri = PRIORITY_META[task.priority];
-                        const assigneeInitial = task.assignee_profile_id
-                          ? task.assignee_profile_id.slice(0, 1).toUpperCase()
-                          : null;
+                        const assignee = getAssigneeInitial(task.assignee_profile_id);
                         return (
                           <div
                             key={task.id}
@@ -610,12 +669,12 @@ export default function ProjectsPage() {
                                   <Calendar size={8} /> {formatDue(task.due_date)}
                                 </span>
                               )}
-                              {assigneeInitial && (
+                              {task.assignee_profile_id && (
                                 <span
                                   className="ml-auto w-5 h-5 rounded-full bg-gold/20 border border-gold/30 text-gold text-[9px] font-bold flex items-center justify-center"
-                                  title="Assignee"
+                                  title={assignee.name ? `Assigned to ${assignee.name}` : "Assignee"}
                                 >
-                                  {assigneeInitial}
+                                  {assignee.initial || <User size={10} />}
                                 </span>
                               )}
                             </div>

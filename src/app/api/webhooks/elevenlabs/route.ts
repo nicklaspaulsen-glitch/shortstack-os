@@ -1,12 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 
 // POST /api/webhooks/elevenlabs
 // Receives conversation events from ElevenLabs Conversational AI.
 // Configure this URL in ElevenLabs agent platform_settings.webhooks.
+//
+// SECURITY: if ELEVENLABS_WEBHOOK_SECRET is configured, we verify the
+// HMAC-SHA256 signature ElevenLabs sends in the `ElevenLabs-Signature`
+// header. Without this check, anyone on the internet could POST fake
+// call outcomes and corrupt lead status / transcripts. The verification
+// is fail-closed when the secret IS set; if it isn't, we log and accept
+// (back-compat for setups that haven't rotated in the webhook secret).
 export async function POST(request: NextRequest) {
+  // Read raw body first so we can verify signature against the exact bytes.
+  const rawBody = await request.text();
+
+  const webhookSecret = process.env.ELEVENLABS_WEBHOOK_SECRET;
+  if (webhookSecret) {
+    const sigHeader =
+      request.headers.get("elevenlabs-signature") ||
+      request.headers.get("ElevenLabs-Signature") ||
+      request.headers.get("x-elevenlabs-signature") ||
+      "";
+    if (!sigHeader) {
+      return NextResponse.json({ error: "Missing signature" }, { status: 401 });
+    }
+    // ElevenLabs signature format is `t=<ts>,v0=<hex-hmac>` (Stripe-like).
+    // We support both the full header and a bare hex value.
+    const parts = Object.fromEntries(
+      sigHeader.split(",").map((kv) => {
+        const [k, ...v] = kv.trim().split("=");
+        return [k, v.join("=")];
+      }),
+    );
+    const timestamp = parts.t;
+    const provided = parts.v0 || sigHeader; // fallback: raw hex
+    const payloadToSign = timestamp ? `${timestamp}.${rawBody}` : rawBody;
+    const expected = crypto
+      .createHmac("sha256", webhookSecret)
+      .update(payloadToSign)
+      .digest("hex");
+    // Constant-time compare to avoid timing attacks
+    const providedBuf = Buffer.from(provided, "hex");
+    const expectedBuf = Buffer.from(expected, "hex");
+    if (
+      providedBuf.length !== expectedBuf.length ||
+      !crypto.timingSafeEqual(providedBuf, expectedBuf)
+    ) {
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+    }
+    // Reject replays >5 min old if we have a timestamp
+    if (timestamp) {
+      const ts = Number(timestamp);
+      if (Number.isFinite(ts) && Math.abs(Date.now() / 1000 - ts) > 300) {
+        return NextResponse.json({ error: "Timestamp out of window" }, { status: 401 });
+      }
+    }
+  } else {
+    console.warn(
+      "[webhooks/elevenlabs] ELEVENLABS_WEBHOOK_SECRET not set — accepting unverified payload. Configure the secret in ElevenLabs + Vercel to enable HMAC verification.",
+    );
+  }
+
   try {
-    const body = await request.json();
+    const body = JSON.parse(rawBody);
     const eventType = body.type || body.event_type;
     const conversationId = body.conversation_id;
 
