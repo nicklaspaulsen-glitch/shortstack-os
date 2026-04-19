@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Trinity Logo Previews — pick one</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  :root {
+    --gold:#c8a855; --gold-light:#e4c876; --gold-dark:#8a6f2f;
+    --bg:#0b0d12; --tile:#12151d; --ink:#e6e6e6; --muted:#8a93a8;
+  }
+  * { box-sizing: border-box }
+  body {
+    margin:0; background: radial-gradient(1200px 800px at 20% -10%, #1a1d27 0%, var(--bg) 55%);
+    color:var(--ink); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    min-height:100vh; padding:40px 24px 80px;
+  }
+  h1 { font-size:28px; margin:0 0 8px; letter-spacing:-.01em }
+  h1 span { color: var(--gold); }
+  p.sub { color:var(--muted); margin:0 0 32px; font-size:13px }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; max-width:1280px; margin:0 auto; }
+  .tile {
+    background:var(--tile); border:1px solid rgba(255,255,255,.06); border-radius:16px;
+    padding:24px 16px 12px; display:flex; flex-direction:column; align-items:center; gap:10px;
+    transition: all .18s ease; position:relative; overflow:hidden;
+  }
+  .tile:hover { transform:translateY(-2px); border-color:rgba(200,168,85,.35); box-shadow:0 12px 32px rgba(0,0,0,.35), 0 0 0 1px rgba(200,168,85,.12) inset; }
+  .tile::before {
+    content:""; position:absolute; inset:-1px; border-radius:16px; pointer-events:none;
+    background: radial-gradient(260px 140px at 80% 0%, rgba(200,168,85,.10), transparent 60%);
+  }
+  .logo-box { width:130px; height:130px; display:flex; align-items:center; justify-content:center; }
+  .logo-box svg { width:100%; height:100%; }
+  .num { position:absolute; top:8px; left:10px; color:var(--muted); font-size:10px; font-variant-numeric: tabular-nums; }
+  .label { font-size:12px; color:var(--ink); font-weight:600 }
+  .desc { font-size:10px; color:var(--muted); text-align:center; min-height:24px }
+  .footer { max-width:1280px; margin:40px auto 0; font-size:12px; color:var(--muted); text-align:center }
+</style>
+</head>
+<body>
+  <h1>Trinity <span>logo</span> gallery · 20 previews</h1>
+  <p class="sub">Open in a browser. Right-click any SVG → Save As to export. Each logo is self-contained SVG you can drop into <code>public/trinity-logo.svg</code>.</p>
+
+  <div class="grid">
+  <!-- ============ 1. Triskele (current baseline, refined) ============ -->
+  <div class="tile"><span class="num">01</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#e4c876"/><stop offset="1" stop-color="#8a6f2f"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#g1)" stroke-width="9" stroke-linecap="round">
+          <path d="M64 64 m0-32 a32 32 0 0 1 27.7 48" />
+          <path d="M64 64 m27.7-16 a32 32 0 0 1 -27.7 48" transform="rotate(120 64 64)"/>
+          <path d="M64 64 m27.7-16 a32 32 0 0 1 -27.7 48" transform="rotate(240 64 64)"/>
+        </g>
+        <circle cx="64" cy="64" r="7" fill="#e4c876"/>
+      </svg>
+    </div>
+    <div class="label">Triskele</div>
+    <div class="desc">Three-spoked spiral — classic trinity mark</div>
+  </div>
+
+  <!-- ============ 2. Trinity Knot ============ -->
+  <div class="tile"><span class="num">02</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e4c876"/><stop offset="1" stop-color="#c8a855"/></linearGradient></defs>
+        <g fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M64 22 L32 78 L96 78 Z" />
+          <circle cx="64" cy="44" r="18" />
+          <circle cx="44" cy="76" r="18" />
+          <circle cx="84" cy="76" r="18" />
+        </g>
+      </svg>
+    </div>
+    <div class="label">Celtic Knot</div>
+    <div class="desc">Interwoven three-circle triquetra</div>
+  </div>
+
+  <!-- ============ 3. Three Overlapping Circles (Venn) ============ -->
+  <div class="tile"><span class="num">03</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke-width="5" stroke-linecap="round" opacity=".9">
+          <circle cx="50" cy="54" r="28" stroke="#c8a855"/>
+          <circle cx="78" cy="54" r="28" stroke="#a5559c"/>
+          <circle cx="64" cy="80" r="28" stroke="#4e86c9"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Tri Venn</div>
+    <div class="desc">Three brand colors intersecting</div>
+  </div>
+
+  <!-- ============ 4. Gold Prism ============ -->
+  <div class="tile"><span class="num">04</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g4a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient>
+          <linearGradient id="g4b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a855"/><stop offset="1" stop-color="#55411a"/></linearGradient>
+        </defs>
+        <polygon points="64,18 22,98 106,98" fill="url(#g4a)"/>
+        <polygon points="64,18 22,98 64,98" fill="url(#g4b)" opacity=".75"/>
+        <line x1="64" y1="18" x2="64" y2="98" stroke="#0b0d12" stroke-width="1.5"/>
+      </svg>
+    </div>
+    <div class="label">Prism</div>
+    <div class="desc">Gold light refraction triangle</div>
+  </div>
+
+  <!-- ============ 5. Stacked-T ============ -->
+  <div class="tile"><span class="num">05</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4c876"/><stop offset="1" stop-color="#c8a855"/></linearGradient></defs>
+        <g fill="url(#g5)">
+          <rect x="18" y="26" width="92" height="14" rx="4"/>
+          <rect x="18" y="58" width="92" height="14" rx="4" opacity=".72"/>
+          <rect x="18" y="90" width="92" height="14" rx="4" opacity=".45"/>
+          <rect x="57" y="26" width="14" height="78" opacity=".55"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Stacked T</div>
+    <div class="desc">Three horizontal rails — ops feel</div>
+  </div>
+
+  <!-- ============ 6. 3-Point Crown ============ -->
+  <div class="tile"><span class="num">06</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient></defs>
+        <path d="M24 92 L30 46 L52 72 L64 36 L76 72 L98 46 L104 92 Z" fill="url(#g6)" stroke="#c8a855" stroke-width="2" stroke-linejoin="round"/>
+        <circle cx="30" cy="46" r="5" fill="#e4c876"/>
+        <circle cx="64" cy="36" r="6" fill="#e4c876"/>
+        <circle cx="98" cy="46" r="5" fill="#e4c876"/>
+        <rect x="22" y="94" width="84" height="8" rx="2" fill="#8a6f2f"/>
+      </svg>
+    </div>
+    <div class="label">Crown</div>
+    <div class="desc">Three-jeweled agency crown</div>
+  </div>
+
+  <!-- ============ 7. Trident ============ -->
+  <div class="tile"><span class="num">07</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g7" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4c876"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient></defs>
+        <g fill="url(#g7)">
+          <path d="M34 22 L34 62 Q34 78 50 78 L50 96 L44 96 L44 108 L84 108 L84 96 L78 96 L78 78 Q94 78 94 62 L94 22 L84 22 L84 62 Q84 70 78 70 L78 22 L68 22 L68 70 L60 70 L60 22 L50 22 L50 70 Q44 70 44 62 L44 22 Z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Trident</div>
+    <div class="desc">Three-pronged spear — direct</div>
+  </div>
+
+  <!-- ============ 8. Hexagon Core ============ -->
+  <div class="tile"><span class="num">08</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><radialGradient id="g8" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#8a6f2f"/></radialGradient></defs>
+        <polygon points="64,18 104,42 104,86 64,110 24,86 24,42" fill="url(#g8)" stroke="#c8a855" stroke-width="2"/>
+        <g stroke="#0b0d12" stroke-width="3" stroke-linecap="round">
+          <line x1="64" y1="64" x2="64" y2="24"/>
+          <line x1="64" y1="64" x2="98" y2="84"/>
+          <line x1="64" y1="64" x2="30" y2="84"/>
+        </g>
+        <circle cx="64" cy="64" r="8" fill="#0b0d12"/>
+        <circle cx="64" cy="64" r="4" fill="#e4c876"/>
+      </svg>
+    </div>
+    <div class="label">Hex Core</div>
+    <div class="desc">Hexagon with 3 rays — AI/tech</div>
+  </div>
+
+  <!-- ============ 9. Atomic Orbits ============ -->
+  <div class="tile"><span class="num">09</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="#c8a855" stroke-width="2.5">
+          <ellipse cx="64" cy="64" rx="42" ry="16"/>
+          <ellipse cx="64" cy="64" rx="42" ry="16" transform="rotate(60 64 64)"/>
+          <ellipse cx="64" cy="64" rx="42" ry="16" transform="rotate(120 64 64)"/>
+        </g>
+        <circle cx="64" cy="64" r="8" fill="#e4c876"/>
+        <circle cx="106" cy="64" r="3" fill="#e4c876"/>
+        <circle cx="43" cy="100" r="3" fill="#e4c876"/>
+        <circle cx="43" cy="28" r="3" fill="#e4c876"/>
+      </svg>
+    </div>
+    <div class="label">Atomic</div>
+    <div class="desc">3 orbits — automation engine</div>
+  </div>
+
+  <!-- ============ 10. Eye of Providence ============ -->
+  <div class="tile"><span class="num">10</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g10" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient></defs>
+        <polygon points="64,18 110,100 18,100" fill="none" stroke="url(#g10)" stroke-width="5" stroke-linejoin="round"/>
+        <g>
+          <path d="M38 72 Q64 52 90 72 Q64 92 38 72 Z" fill="url(#g10)" opacity=".9"/>
+          <circle cx="64" cy="72" r="9" fill="#0b0d12"/>
+          <circle cx="64" cy="72" r="4" fill="#e4c876"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">All-Seeing</div>
+    <div class="desc">Triangle + eye — oversight / control</div>
+  </div>
+
+  <!-- ============ 11. Chevron Stack ============ -->
+  <div class="tile"><span class="num">11</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
+          <polyline points="20,42 64,78 108,42" stroke="#e4c876"/>
+          <polyline points="20,62 64,98 108,62" stroke="#c8a855" opacity=".8"/>
+          <polyline points="20,82 64,118 108,82" stroke="#8a6f2f" opacity=".55"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Chevron</div>
+    <div class="desc">Three V's — ascending, military-clean</div>
+  </div>
+
+  <!-- ============ 12. Compass Rose ============ -->
+  <div class="tile"><span class="num">12</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient></defs>
+        <circle cx="64" cy="64" r="46" fill="none" stroke="#c8a855" stroke-width="2" opacity=".5"/>
+        <polygon points="64,20 70,64 64,48 58,64" fill="url(#g12)"/>
+        <polygon points="64,20 70,64 64,48 58,64" fill="url(#g12)" transform="rotate(120 64 64)"/>
+        <polygon points="64,20 70,64 64,48 58,64" fill="url(#g12)" transform="rotate(240 64 64)"/>
+        <circle cx="64" cy="64" r="6" fill="#0b0d12" stroke="#e4c876" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="label">Compass</div>
+    <div class="desc">3-directional rose — agency navigator</div>
+  </div>
+
+  <!-- ============ 13. Lotus (3 petals) ============ -->
+  <div class="tile"><span class="num">13</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g13" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#c8a855"/></linearGradient></defs>
+        <g fill="url(#g13)" opacity=".9">
+          <path d="M64 30 Q82 64 64 96 Q46 64 64 30 Z"/>
+          <path d="M64 30 Q82 64 64 96 Q46 64 64 30 Z" transform="rotate(120 64 64)"/>
+          <path d="M64 30 Q82 64 64 96 Q46 64 64 30 Z" transform="rotate(240 64 64)"/>
+        </g>
+        <circle cx="64" cy="64" r="6" fill="#0b0d12"/>
+      </svg>
+    </div>
+    <div class="label">Lotus</div>
+    <div class="desc">3-petal bloom — calm, premium</div>
+  </div>
+
+  <!-- ============ 14. Molecular Nodes ============ -->
+  <div class="tile"><span class="num">14</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#c8a855" stroke-width="3" fill="none">
+          <line x1="64" y1="34" x2="34" y2="88"/>
+          <line x1="64" y1="34" x2="94" y2="88"/>
+          <line x1="34" y1="88" x2="94" y2="88"/>
+        </g>
+        <g fill="#e4c876" stroke="#8a6f2f" stroke-width="2">
+          <circle cx="64" cy="34" r="12"/>
+          <circle cx="34" cy="88" r="12"/>
+          <circle cx="94" cy="88" r="12"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Nodes</div>
+    <div class="desc">Connected-triangle network</div>
+  </div>
+
+  <!-- ============ 15. Sparkle Tri ============ -->
+  <div class="tile"><span class="num">15</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g15" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient></defs>
+        <g fill="url(#g15)">
+          <path d="M64 18 L71 40 L93 47 L71 54 L64 76 L57 54 L35 47 L57 40 Z"/>
+          <path d="M32 78 L37 90 L49 95 L37 100 L32 112 L27 100 L15 95 L27 90 Z" transform="scale(0.9) translate(4 4)"/>
+          <path d="M96 78 L101 90 L113 95 L101 100 L96 112 L91 100 L79 95 L91 90 Z" transform="scale(0.9) translate(8 4)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Sparkle Tri</div>
+    <div class="desc">3 sparkles in a triangle — AI magic</div>
+  </div>
+
+  <!-- ============ 16. Faceted Head (current OS) ============ -->
+  <div class="tile"><span class="num">16</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g16a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient>
+          <linearGradient id="g16b" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8a855"/><stop offset="1" stop-color="#55411a"/></linearGradient>
+        </defs>
+        <polygon points="42,30 86,30 98,52 86,104 64,118 42,104 30,52" fill="url(#g16a)"/>
+        <polygon points="64,30 86,30 98,52 64,64" fill="#f4dc96" opacity=".55"/>
+        <polygon points="64,30 42,30 30,52 64,64" fill="url(#g16b)"/>
+        <polygon points="64,64 98,52 86,104 64,118" fill="url(#g16b)" opacity=".82"/>
+        <circle cx="52" cy="62" r="3.5" fill="#fff"/>
+        <circle cx="76" cy="62" r="3.5" fill="#fff"/>
+      </svg>
+    </div>
+    <div class="label">Faceted Head</div>
+    <div class="desc">Current OS mascot (in dashboard)</div>
+  </div>
+
+  <!-- ============ 17. Monogram T ============ -->
+  <div class="tile"><span class="num">17</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g17" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4c876"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient></defs>
+        <rect x="18" y="18" width="92" height="92" rx="20" fill="none" stroke="url(#g17)" stroke-width="4"/>
+        <text x="64" y="94" text-anchor="middle" font-family="'Times New Roman',serif" font-weight="bold" font-size="86" fill="url(#g17)">T</text>
+      </svg>
+    </div>
+    <div class="label">Monogram T</div>
+    <div class="desc">Simple "T" in a square — clean wordmark</div>
+  </div>
+
+  <!-- ============ 18. Diamond Tri ============ -->
+  <div class="tile"><span class="num">18</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g18a" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f4dc96"/><stop offset="1" stop-color="#c8a855"/></linearGradient>
+          <linearGradient id="g18b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#c8a855"/><stop offset="1" stop-color="#8a6f2f"/></linearGradient>
+        </defs>
+        <polygon points="64,18 22,60 64,110 106,60" fill="none" stroke="#c8a855" stroke-width="2"/>
+        <polygon points="64,18 22,60 64,60" fill="url(#g18a)"/>
+        <polygon points="64,18 106,60 64,60" fill="url(#g18b)" opacity=".85"/>
+        <polygon points="64,60 22,60 64,110" fill="url(#g18b)" opacity=".6"/>
+        <polygon points="64,60 106,60 64,110" fill="url(#g18a)" opacity=".45"/>
+      </svg>
+    </div>
+    <div class="label">Diamond Tri</div>
+    <div class="desc">Faceted diamond, three visible planes</div>
+  </div>
+
+  <!-- ============ 19. Phoenix Flame ============ -->
+  <div class="tile"><span class="num">19</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g19" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffdc7a"/><stop offset="1" stop-color="#8a3520"/></linearGradient></defs>
+        <g fill="url(#g19)">
+          <path d="M64 20 Q48 38 50 56 Q44 46 40 54 Q38 76 64 104 Q90 76 88 54 Q84 46 78 56 Q80 38 64 20 Z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Phoenix</div>
+    <div class="desc">3-tongued flame — rebirth / scale</div>
+  </div>
+
+  <!-- ============ 20. Minimal Dot-T ============ -->
+  <div class="tile"><span class="num">20</span>
+    <div class="logo-box">
+      <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g20" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4c876"/><stop offset="1" stop-color="#c8a855"/></linearGradient></defs>
+        <g fill="url(#g20)">
+          <rect x="36" y="44" width="56" height="10" rx="2"/>
+          <rect x="59" y="44" width="10" height="60" rx="2"/>
+          <circle cx="64" cy="30" r="7"/>
+        </g>
+      </svg>
+    </div>
+    <div class="label">Dot-T</div>
+    <div class="desc">Wordmark-ready favicon monogram</div>
+  </div>
+
+  </div>
+
+  <p class="footer">
+    When you pick one, tell me the number and I'll commit it as <code>public/trinity-logo.svg</code> + <code>trinity-logo-white.svg</code>.
+    Prefer your own Midjourney/Canva output? Just drop the file into <code>public/trinity-logo.svg</code> and redeploy.
+  </p>
+</body>
+</html>
