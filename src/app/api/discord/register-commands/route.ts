@@ -62,6 +62,59 @@ const COMMANDS = [
       },
     ],
   },
+  // --- Public Trinity-prefixed commands (for agencies who install the bot) ---
+  {
+    name: "trinity-status",
+    description: "Current revenue, active deals, and agency snapshot",
+    type: 1,
+  },
+  {
+    name: "trinity-check",
+    description: "Get a quick status on a specific client",
+    type: 1,
+    options: [
+      {
+        name: "client",
+        description: "Client business name",
+        type: 3,
+        required: true,
+      },
+    ],
+  },
+  {
+    name: "trinity-lead",
+    description: "Add a new lead to your Trinity CRM",
+    type: 1,
+    options: [
+      {
+        name: "action",
+        description: "What to do",
+        type: 3,
+        required: true,
+        choices: [
+          { name: "add", value: "add" },
+        ],
+      },
+      {
+        name: "business",
+        description: "Business name of the lead",
+        type: 3,
+        required: true,
+      },
+      {
+        name: "category",
+        description: "Industry / category",
+        type: 3,
+        required: false,
+      },
+      {
+        name: "city",
+        description: "City",
+        type: 3,
+        required: false,
+      },
+    ],
+  },
 ];
 
 export async function POST() {

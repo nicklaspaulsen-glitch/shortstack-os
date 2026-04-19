@@ -1,16 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Hash, Users, MessageSquare, Volume2, Server, Shield,
   Zap, Terminal, BarChart3, UserCheck, Globe,
   Calendar, Code, Link, Megaphone, Trash2, Plus, Check,
   Copy, TrendingUp, AlertTriangle, Edit3,
-  Search, Send, Smile
+  Search, Send, Smile, LogIn, Bell, Sparkles, ExternalLink, Unlink, Loader, Bot
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
-const tabs = ["Servers", "Commands", "Auto-Roles", "Welcome", "Moderation", "Analytics", "Events", "Embeds", "Webhooks", "Announcements", "Insights"] as const;
+interface TrinityIntegration {
+  id: string;
+  guild_id: string;
+  guild_name: string | null;
+  icon_hash: string | null;
+  installed_at: string;
+  notifications_enabled: boolean;
+  notify_channel_id: string | null;
+  notify_on: Record<string, boolean>;
+}
+
+interface GuildChannel {
+  id: string;
+  name: string;
+  type: number;
+}
+
+const NOTIFY_CATEGORIES: { key: string; label: string; desc: string }[] = [
+  { key: "new_client", label: "New client", desc: "When an onboarding form is completed" },
+  { key: "new_lead", label: "New lead", desc: "When a lead is scraped, imported, or replies" },
+  { key: "milestone", label: "Milestone", desc: "Revenue, follower, or MRR milestones reached" },
+  { key: "workflow_complete", label: "Workflow complete", desc: "Automation pipeline finishes" },
+  { key: "payment_received", label: "Payment received", desc: "Invoice is paid" },
+];
+
+const tabs = ["Install", "Servers", "Commands", "Auto-Roles", "Welcome", "Moderation", "Analytics", "Events", "Embeds", "Webhooks", "Announcements", "Insights"] as const;
 type Tab = (typeof tabs)[number];
 
 const mockServers: { id: string; name: string; guildId: string; members: number; channels: number; online: number; status: string; client: string; invite: string }[] = [];
@@ -40,7 +65,7 @@ const dailyActivity = [
 ];
 
 export default function DiscordPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("Servers");
+  const [activeTab, setActiveTab] = useState<Tab>("Install");
   const [selectedServer, setSelectedServer] = useState(mockServers[0]?.id ?? "");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [commandFilter, setCommandFilter] = useState("All");
@@ -58,6 +83,74 @@ export default function DiscordPage() {
   const [showNewEvent, setShowNewEvent] = useState(false);
   const [announcementDraft, setAnnouncementDraft] = useState("");
   const [searchMembers, setSearchMembers] = useState("");
+
+  // --- Public bot install state ---
+  const [integrations, setIntegrations] = useState<TrinityIntegration[]>([]);
+  const [installing, setInstalling] = useState(false);
+  const [loadingIntegrations, setLoadingIntegrations] = useState(false);
+  const [channelsByIntegration, setChannelsByIntegration] = useState<Record<string, GuildChannel[]>>({});
+
+  useEffect(() => {
+    loadIntegrations();
+  }, []);
+
+  async function loadIntegrations() {
+    setLoadingIntegrations(true);
+    try {
+      const res = await fetch("/api/integrations/discord/settings");
+      if (!res.ok) return;
+      const data = await res.json();
+      const list: TrinityIntegration[] = data.integrations || [];
+      setIntegrations(list);
+      // Prefetch channels for each integration
+      list.forEach(async (i) => {
+        try {
+          const r = await fetch(`/api/integrations/discord/channels?integration_id=${i.id}`);
+          if (r.ok) {
+            const d = await r.json();
+            setChannelsByIntegration(prev => ({ ...prev, [i.id]: d.channels || [] }));
+          }
+        } catch { /* ignore */ }
+      });
+    } finally {
+      setLoadingIntegrations(false);
+    }
+  }
+
+  async function startInstall() {
+    setInstalling(true);
+    try {
+      const res = await fetch("/api/integrations/discord/install-url");
+      const data = await res.json();
+      if (data.install_url) {
+        window.location.href = data.install_url;
+      } else {
+        alert(data.error || "Discord bot not configured yet. Ask your admin to set DISCORD_CLIENT_ID.");
+      }
+    } finally {
+      setInstalling(false);
+    }
+  }
+
+  async function updateIntegration(id: string, patch: Partial<TrinityIntegration>) {
+    // Optimistic
+    setIntegrations(prev => prev.map(i => i.id === id ? { ...i, ...patch } as TrinityIntegration : i));
+    await fetch("/api/integrations/discord/settings", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, ...patch }),
+    });
+  }
+
+  async function removeIntegration(id: string) {
+    if (!confirm("Remove this Discord integration? The bot will stop posting to this server.")) return;
+    setIntegrations(prev => prev.filter(i => i.id !== id));
+    await fetch("/api/integrations/discord/settings", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+  }
 
   function copyText(text: string, id: string) {
     navigator.clipboard.writeText(text);
@@ -123,6 +216,210 @@ export default function DiscordPage() {
           </button>
         ))}
       </div>
+
+      {/* Install Tab — public Trinity bot */}
+      {activeTab === "Install" && (
+        <div className="space-y-5">
+          {/* Hero / pitch */}
+          <div className="card p-6 bg-gradient-to-br from-[#5865F2]/10 via-[#5865F2]/5 to-transparent border-[#5865F2]/20">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-xl bg-[#5865F2]/20 flex items-center justify-center shrink-0">
+                <Bot size={24} className="text-[#5865F2]" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-lg font-semibold mb-1">Install Trinity in your own Discord</h2>
+                <p className="text-xs text-muted leading-relaxed mb-4">
+                  Trinity is a public Discord bot. Your agency, your clients, or any partner team can install
+                  Trinity in their own server in one click — then get real-time pings, slash commands, and AI
+                  digests right where your team already talks.
+                </p>
+                <button
+                  onClick={startInstall}
+                  disabled={installing}
+                  className="inline-flex items-center gap-2 text-xs bg-[#5865F2] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#4752C4] disabled:opacity-60"
+                >
+                  {installing ? <Loader size={14} className="animate-spin" /> : <LogIn size={14} />}
+                  Add Trinity to Discord
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Why-it's-useful grid */}
+          <div>
+            <h3 className="section-header">Why agencies put Trinity in Discord</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {[
+                { icon: Bell, color: "text-[#5865F2]", title: "Real-time agency status in your team's Discord",
+                  desc: "Never miss a client signup, booked call, outreach reply, or paid invoice — it pings the channel you pick, the second it happens." },
+                { icon: Terminal, color: "text-gold", title: "Slash commands anywhere",
+                  desc: "Run /trinity-status, /trinity-check <client>, /trinity-lead add <business> from any channel. No dashboard switch." },
+                { icon: Sparkles, color: "text-purple-400", title: "AI-written weekly digest",
+                  desc: "Every Monday at 9am, Trinity posts a plain-English summary of the past week's revenue, leads, and wins." },
+                { icon: MessageSquare, color: "text-green-400", title: "Tag @Trinity to ask questions",
+                  desc: "Team members can @-mention Trinity with a question — Claude answers with real data pulled from your workspace." },
+                { icon: Users, color: "text-cyan-400", title: "Everyone stays aligned",
+                  desc: "Account managers, cold-call team, designers, clients — one Discord, one source of truth." },
+                { icon: Shield, color: "text-muted", title: "Minimal permissions",
+                  desc: "Trinity asks for Send Messages, Embed Links, Read History, and Slash Commands. Nothing else." },
+              ].map((f, i) => (
+                <div key={i} className="card p-4 flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-surface-light flex items-center justify-center shrink-0">
+                    <f.icon size={16} className={f.color} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold mb-1">{f.title}</p>
+                    <p className="text-[11px] text-muted leading-relaxed">{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Installed integrations */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="section-header mb-0">Your installed servers</h3>
+              {loadingIntegrations && <Loader size={12} className="animate-spin text-muted" />}
+            </div>
+
+            {integrations.length === 0 && !loadingIntegrations && (
+              <div className="card p-6 text-center">
+                <Server size={20} className="mx-auto mb-2 text-muted opacity-50" />
+                <p className="text-xs text-muted">No servers connected yet. Click <strong className="text-foreground">Add Trinity to Discord</strong> above to install.</p>
+              </div>
+            )}
+
+            <div className="space-y-3">
+              {integrations.map(int => {
+                const channels = channelsByIntegration[int.id] || [];
+                return (
+                  <div key={int.id} className="card p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        {int.icon_hash ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={`https://cdn.discordapp.com/icons/${int.guild_id}/${int.icon_hash}.png?size=64`}
+                            alt={int.guild_name ?? "Guild"}
+                            className="w-10 h-10 rounded-lg"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-lg bg-[#5865F2]/10 flex items-center justify-center text-[#5865F2] font-bold text-sm">
+                            {(int.guild_name || "?").charAt(0)}
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-sm font-semibold">{int.guild_name || "Unknown server"}</p>
+                          <p className="text-[10px] text-muted">
+                            Installed {new Date(int.installed_at).toLocaleDateString()} · guild ID <code className="font-mono">{int.guild_id}</code>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <label className="flex items-center gap-1.5 text-[10px] text-muted cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={int.notifications_enabled}
+                            onChange={e => updateIntegration(int.id, { notifications_enabled: e.target.checked })}
+                          />
+                          Notifications on
+                        </label>
+                        <button
+                          onClick={() => removeIntegration(int.id)}
+                          className="text-[10px] text-muted hover:text-danger flex items-center gap-1"
+                        >
+                          <Unlink size={11} /> Remove
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Channel selector */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] text-muted font-semibold uppercase">Post notifications in</label>
+                        <select
+                          value={int.notify_channel_id || ""}
+                          onChange={e => updateIntegration(int.id, { notify_channel_id: e.target.value || null })}
+                          className="w-full mt-1 text-xs border border-border rounded-lg px-3 py-2 bg-surface"
+                        >
+                          <option value="">— Pick a channel —</option>
+                          {channels.map(c => (
+                            <option key={c.id} value={c.id}>#{c.name}</option>
+                          ))}
+                        </select>
+                        {channels.length === 0 && (
+                          <p className="text-[9px] text-muted mt-1">
+                            No channels visible — make sure Trinity has View Channel permission in your server.
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] text-muted font-semibold uppercase">Event categories</label>
+                        <div className="grid grid-cols-2 gap-1.5 mt-1">
+                          {NOTIFY_CATEGORIES.map(cat => {
+                            const enabled = int.notify_on?.[cat.key] !== false;
+                            return (
+                              <label key={cat.key}
+                                className="flex items-center gap-1.5 p-1.5 rounded bg-surface-light border border-border text-[10px] cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  checked={enabled}
+                                  onChange={e => updateIntegration(int.id, {
+                                    notify_on: { ...int.notify_on, [cat.key]: e.target.checked } as Record<string, boolean>,
+                                  })}
+                                />
+                                <span title={cat.desc}>{cat.label}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Day-to-day usage */}
+          <div className="card p-5">
+            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
+              <Zap size={14} className="text-gold" /> What agencies actually do with it
+            </h3>
+            <ol className="space-y-2 text-[11px] text-muted leading-relaxed list-decimal list-inside">
+              <li><strong className="text-foreground">Morning standup at 9:30am:</strong> team opens #trinity-ops in Discord, sees the overnight AI digest (leads, replies, revenue), and plans the day.</li>
+              <li><strong className="text-foreground">Account manager gets a ping</strong> the moment a client pays an invoice — acknowledges with a reaction; Trinity logs it to the CRM.</li>
+              <li><strong className="text-foreground">Cold-call rep runs</strong> <code className="font-mono">/trinity-lead add business:&quot;Acme Plumbing&quot; city:Dallas</code> straight from Discord — no tab switching.</li>
+              <li><strong className="text-foreground">Designer asks</strong> <code className="font-mono">@Trinity what did we post for Acme this week?</code> — gets a list back with links.</li>
+              <li><strong className="text-foreground">Founder checks</strong> <code className="font-mono">/trinity-status</code> on their phone in bed on a Sunday. MRR went up. They smile.</li>
+            </ol>
+          </div>
+
+          {/* Env vars */}
+          <div className="card p-4 border-warning/30 bg-warning/5">
+            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
+              <AlertTriangle size={14} className="text-warning" /> Required env vars (set in Vercel)
+            </h3>
+            <ul className="space-y-1 text-[11px] font-mono">
+              <li><code className="text-foreground">DISCORD_CLIENT_ID</code> <span className="text-muted">— app ID from the Discord Developer Portal</span></li>
+              <li><code className="text-foreground">DISCORD_CLIENT_SECRET</code> <span className="text-muted">— app secret (server-side only)</span></li>
+              <li><code className="text-foreground">DISCORD_BOT_TOKEN</code> <span className="text-muted">— bot token, used for bot-level API calls</span></li>
+              <li><code className="text-foreground">DISCORD_PUBLIC_KEY</code> <span className="text-muted">— for verifying interaction webhook signatures</span></li>
+              <li><code className="text-foreground">NEXT_PUBLIC_APP_URL</code> <span className="text-muted">— your app&apos;s public URL, used for the OAuth redirect</span></li>
+            </ul>
+            <a
+              href="https://discord.com/developers/applications"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 mt-3 text-[11px] text-gold hover:underline"
+            >
+              <ExternalLink size={11} /> Open Discord Developer Portal
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* Servers Tab */}
       {activeTab === "Servers" && (

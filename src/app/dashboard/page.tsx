@@ -25,6 +25,7 @@ import DowntimeBanner from "@/components/dashboard/downtime-banner";
 import OutreachAccounts from "@/components/dashboard/outreach-accounts";
 import PersonalizedMetrics from "@/components/dashboard/personalized-metrics";
 import AiRecommender from "@/components/dashboard/ai-recommender";
+import TrinityOrb from "@/components/dashboard/trinity-orb";
 import {
   useFocusMode,
   FocusModeToggle,
@@ -231,6 +232,11 @@ export default function DashboardPage() {
 
       {/* ─── Service health banner — alerts when something is down ── */}
       <DowntimeBanner />
+
+      {/* ─── Trinity AI — the centerpiece ─────────────────────────── */}
+      <TrinityOrb
+        firstName={profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0]}
+      />
 
       {/* ─── AI Recommender — the big "ready to let AI do your job?" button ─ */}
       <AiRecommender />
@@ -840,6 +846,7 @@ function getGreeting() {
 function ClientDashboard() {
   const { profile } = useAuth();
   const router = useRouter();
+  const firstName = profile?.nickname?.split(" ")[0] || profile?.full_name?.split(" ")[0];
 
   return (
     <div className="fade-in space-y-6 max-w-[1000px] mx-auto">
@@ -847,6 +854,19 @@ function ClientDashboard() {
         <h1 className="text-2xl font-semibold tracking-tight">Welcome, {profile?.full_name}</h1>
         <p className="text-sm text-muted mt-0.5">Your client portal</p>
       </div>
+
+      {/* Trinity centerpiece — scoped to this client's own account */}
+      <TrinityOrb
+        firstName={firstName}
+        suggestions={[
+          "Show me what's happening with my account",
+          "What's in my content plan this week?",
+          "Draft a message to my account manager",
+          "When's my next scheduled post?",
+          "Summarise my latest results",
+        ]}
+      />
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "My Services", icon: <Briefcase size={22} />, color: "text-gold", route: "/dashboard/portal" },

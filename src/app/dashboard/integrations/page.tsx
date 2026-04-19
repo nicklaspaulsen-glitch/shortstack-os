@@ -7,8 +7,9 @@ import { createClient } from "@/lib/supabase/client";
 import {
   Link2, Globe, Loader, Check, Unlink, LogIn, Shield, Clock, AlertCircle,
   MessageSquare, Mail, Phone, ExternalLink, Zap, RefreshCw,
-  X, Key, Settings2, ArrowUpRight, Copy
+  X, Key, Settings2, ArrowUpRight, Copy, Bot, Bell, Sparkles, Terminal
 } from "lucide-react";
+import Link from "next/link";
 import toast from "react-hot-toast";
 import {
   CalendlyIcon, WhatsAppIcon, NotionIcon, GoogleAdsIcon, GoogleMapsIcon
@@ -185,6 +186,15 @@ function SocialAccountsPage() {
   useEffect(() => {
     const connected = searchParams?.get("connected");
     const error = searchParams?.get("error");
+    const discord = searchParams?.get("discord");
+    const discordGuild = searchParams?.get("guild");
+    const discordError = searchParams?.get("discord_error");
+    if (discord === "connected") {
+      toast.success(discordGuild
+        ? `Trinity bot installed in ${discordGuild}!`
+        : "Trinity bot installed in your Discord server!");
+    }
+    if (discordError) toast.error(`Discord install failed: ${discordError}`);
     if (connected) {
       toast.success(`${connected} connected successfully via Zernio!`);
       // Sync accounts after successful OAuth callback
@@ -434,6 +444,9 @@ function SocialAccountsPage() {
         </div>
       )}
 
+      {/* Trinity Discord Bot (public) */}
+      <TrinityDiscordInstallCard />
+
       {/* Connect platforms */}
       <div>
         <h2 className="section-header">{connectedIds.length > 0 ? "Connect More" : "Connect Your Accounts"}</h2>
@@ -517,6 +530,130 @@ function SocialAccountsPage() {
           </svg>
           <span>Powered by <span className="text-[#C9A84C]/80 font-medium">Zernio</span> &mdash; Unified Social Media API for 14+ platforms</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+interface TrinityIntegrationRow {
+  id: string;
+  guild_id: string;
+  guild_name: string | null;
+  icon_hash: string | null;
+  installed_at: string;
+  notifications_enabled: boolean;
+  notify_channel_id: string | null;
+}
+
+function TrinityDiscordInstallCard() {
+  const [integrations, setIntegrations] = useState<TrinityIntegrationRow[]>([]);
+  const [installing, setInstalling] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/integrations/discord/settings")
+      .then(r => r.ok ? r.json() : { integrations: [] })
+      .then(d => setIntegrations(d.integrations || []))
+      .catch(() => setIntegrations([]))
+      .finally(() => setLoaded(true));
+  }, []);
+
+  async function startInstall() {
+    setInstalling(true);
+    try {
+      const res = await fetch("/api/integrations/discord/install-url");
+      const data = await res.json();
+      if (data.install_url) {
+        window.location.href = data.install_url;
+      } else {
+        toast.error(data.error || "Discord bot not configured");
+      }
+    } catch {
+      toast.error("Failed to start install");
+    } finally {
+      setInstalling(false);
+    }
+  }
+
+  const hasAny = integrations.length > 0;
+
+  return (
+    <div>
+      <h2 className="section-header flex items-center gap-2">
+        <Bot size={14} className="text-[#5865F2]" /> Trinity Discord Bot
+      </h2>
+      <div className="card p-5 bg-gradient-to-br from-[#5865F2]/10 via-[#5865F2]/5 to-transparent border-[#5865F2]/20">
+        <div className="flex flex-col md:flex-row items-start gap-4">
+          <div className="w-12 h-12 rounded-xl bg-[#5865F2]/20 flex items-center justify-center shrink-0">
+            <Bot size={24} className="text-[#5865F2]" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-semibold mb-1">Install Trinity in your own Discord</p>
+            <p className="text-[11px] text-muted leading-relaxed mb-3">
+              Get real-time pings for new clients, leads, and payments; run slash commands like
+              <code className="mx-1 font-mono">/trinity-status</code> and
+              <code className="mx-1 font-mono">/trinity-lead</code> from any channel; and let your team
+              tag @Trinity to ask data-backed questions.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+              {[
+                { icon: Bell, label: "Real-time pings" },
+                { icon: Terminal, label: "Slash commands" },
+                { icon: Sparkles, label: "AI weekly digest" },
+                { icon: MessageSquare, label: "@Trinity Q&A" },
+              ].map((f, i) => (
+                <div key={i} className="flex items-center gap-1.5 text-[10px] text-muted bg-surface/40 border border-border/50 rounded-md px-2 py-1.5">
+                  <f.icon size={11} className="text-[#5865F2]" />
+                  <span>{f.label}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={startInstall}
+                disabled={installing}
+                className="inline-flex items-center gap-2 text-xs bg-[#5865F2] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#4752C4] disabled:opacity-60"
+              >
+                {installing ? <Loader size={12} className="animate-spin" /> : <LogIn size={12} />}
+                Add Trinity to Discord
+              </button>
+              <Link
+                href="/dashboard/discord"
+                className="inline-flex items-center gap-1.5 text-[11px] text-muted hover:text-foreground"
+              >
+                <Settings2 size={11} /> Manage & configure channels
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {loaded && hasAny && (
+          <div className="mt-4 pt-4 border-t border-border/30">
+            <p className="text-[10px] text-muted font-semibold uppercase mb-2">Installed in {integrations.length} server{integrations.length === 1 ? "" : "s"}</p>
+            <div className="flex flex-wrap gap-2">
+              {integrations.map(int => (
+                <div key={int.id} className="flex items-center gap-2 bg-surface-light border border-border/60 rounded-md px-2.5 py-1.5 text-[11px]">
+                  {int.icon_hash ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={`https://cdn.discordapp.com/icons/${int.guild_id}/${int.icon_hash}.png?size=32`}
+                      alt=""
+                      className="w-4 h-4 rounded"
+                    />
+                  ) : (
+                    <Bot size={11} className="text-[#5865F2]" />
+                  )}
+                  <span className="font-medium">{int.guild_name || int.guild_id}</span>
+                  {int.notifications_enabled && int.notify_channel_id ? (
+                    <span className="text-[9px] text-success bg-success/10 px-1.5 py-0.5 rounded">Active</span>
+                  ) : (
+                    <span className="text-[9px] text-warning bg-warning/10 px-1.5 py-0.5 rounded">Needs channel</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

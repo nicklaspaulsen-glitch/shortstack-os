@@ -304,6 +304,148 @@ function handleAnnounce(interaction: { data?: { options?: { name: string; value:
   ]);
 }
 
+// Look up the agency (profile_id) that installed Trinity into this guild.
+async function getUserIdForGuild(guildId: string | undefined): Promise<string | null> {
+  if (!guildId) return null;
+  const supabase = createServiceClient();
+  const { data } = await supabase
+    .from("discord_integrations")
+    .select("user_id")
+    .eq("guild_id", guildId)
+    .maybeSingle();
+  return data?.user_id || null;
+}
+
+async function handleTrinityStatus(guildId: string | undefined) {
+  const userId = await getUserIdForGuild(guildId);
+  const supabase = createServiceClient();
+
+  // Scope queries to the installing agency if we know who they are;
+  // otherwise fall back to global stats.
+  const query = (table: string) => {
+    const q = supabase.from(table).select("id", { count: "exact", head: true });
+    return userId ? q.eq("profile_id", userId) : q;
+  };
+
+  const twentyFourAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+  const [clientsCount, leadsCount, dealsCount] = await Promise.all([
+    (userId
+      ? supabase
+          .from("clients")
+          .select("id, mrr", { count: "exact" })
+          .eq("profile_id", userId)
+          .eq("is_active", true)
+      : supabase.from("clients").select("id, mrr", { count: "exact" }).eq("is_active", true)),
+    query("leads").gte("created_at", twentyFourAgo),
+    query("deals"),
+  ]);
+
+  const totalMrr = (clientsCount.data as Array<{ mrr: number | null }> | null)?.reduce(
+    (sum, c) => sum + (c.mrr || 0),
+    0
+  ) ?? 0;
+
+  return embed(
+    "Trinity Status",
+    userId
+      ? "Live snapshot of your agency."
+      : "Trinity is installed but not yet linked to your agency account — visit /dashboard/integrations to finish setup.",
+    [
+      { name: "Active Clients", value: `${clientsCount.count ?? 0}`, inline: true },
+      { name: "Total MRR", value: `$${totalMrr.toLocaleString()}`, inline: true },
+      { name: "Leads (24h)", value: `${leadsCount.count ?? 0}`, inline: true },
+      { name: "Active Deals", value: `${dealsCount.count ?? 0}`, inline: true },
+    ]
+  );
+}
+
+async function handleTrinityCheck(
+  interaction: { data?: { options?: { name: string; value: string }[] }; guild_id?: string }
+) {
+  const clientNameOpt = interaction.data?.options?.find((o) => o.name === "client");
+  const clientName = clientNameOpt?.value;
+  if (!clientName) {
+    return embed("Trinity Check", "Missing `client` argument. Usage: `/trinity-check client:<name>`");
+  }
+
+  const userId = await getUserIdForGuild(interaction.guild_id);
+  const supabase = createServiceClient();
+
+  let query = supabase
+    .from("clients")
+    .select("business_name, mrr, health_score, industry, is_active")
+    .ilike("business_name", `%${clientName}%`)
+    .limit(1);
+  if (userId) query = query.eq("profile_id", userId);
+  const { data: clients } = await query;
+  const client = clients?.[0];
+
+  if (!client) {
+    return embed("Client Not Found", `No client matching **${clientName}** found.`);
+  }
+
+  return embed(
+    `Client: ${client.business_name}`,
+    "Here is the latest snapshot for this client.",
+    [
+      { name: "Status", value: client.is_active ? "Active" : "Paused", inline: true },
+      { name: "MRR", value: `$${client.mrr ?? 0}/mo`, inline: true },
+      { name: "Health", value: `${client.health_score ?? "N/A"}`, inline: true },
+      { name: "Industry", value: client.industry ?? "N/A", inline: true },
+    ]
+  );
+}
+
+async function handleTrinityLead(
+  interaction: { data?: { options?: { name: string; value: string }[] }; guild_id?: string }
+) {
+  const opts = interaction.data?.options || [];
+  const action = opts.find((o) => o.name === "action")?.value;
+  const business = opts.find((o) => o.name === "business")?.value;
+  const category = opts.find((o) => o.name === "category")?.value;
+  const city = opts.find((o) => o.name === "city")?.value;
+
+  if (action !== "add") {
+    return embed("Trinity Lead", "Only `add` is supported right now. Usage: `/trinity-lead action:add business:<name>`");
+  }
+  if (!business) {
+    return embed("Trinity Lead", "Missing `business` argument.");
+  }
+
+  const userId = await getUserIdForGuild(interaction.guild_id);
+  if (!userId) {
+    return embed(
+      "Trinity not linked",
+      "This Discord server is not linked to a Trinity agency account yet. Visit /dashboard/integrations to connect."
+    );
+  }
+
+  const supabase = createServiceClient();
+  const { error } = await supabase.from("leads").insert({
+    profile_id: userId,
+    name: business,
+    category: category || null,
+    city: city || null,
+    status: "new",
+    source: "discord",
+  });
+
+  if (error) {
+    return embed("Trinity Lead", `Could not create lead: ${error.message}`);
+  }
+
+  return embed(
+    "Lead Added",
+    `Added **${business}** to your Trinity CRM.`,
+    [
+      { name: "Category", value: category || "—", inline: true },
+      { name: "City", value: city || "—", inline: true },
+      { name: "Source", value: "discord", inline: true },
+    ]
+  );
+}
+
 function handleHelp() {
   return embed(
     "ShortStack Bot Commands",
@@ -312,6 +454,21 @@ function handleHelp() {
       {
         name: "/status",
         value: "View agent activity, leads today, and active client count.",
+        inline: false,
+      },
+      {
+        name: "/trinity-status",
+        value: "Agency-scoped revenue, active deals, and client count.",
+        inline: false,
+      },
+      {
+        name: "/trinity-check",
+        value: "Look up status for a specific client.",
+        inline: false,
+      },
+      {
+        name: "/trinity-lead",
+        value: "Add a new lead to your CRM from Discord.",
         inline: false,
       },
       {
@@ -426,6 +583,15 @@ export async function POST(request: NextRequest) {
           break;
         case "announce":
           response = handleAnnounce(interaction);
+          break;
+        case "trinity-status":
+          response = await handleTrinityStatus(interaction.guild_id);
+          break;
+        case "trinity-check":
+          response = await handleTrinityCheck(interaction);
+          break;
+        case "trinity-lead":
+          response = await handleTrinityLead(interaction);
           break;
         case "help":
           response = handleHelp();
