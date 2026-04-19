@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 
 // Budget & Usage Alert Cron — checks API spend and token limits, alerts via Telegram
 // Run daily or every 6h. Monitors: Stripe, ElevenLabs, RunPod, Anthropic, SendGrid, Twilio
+export const maxDuration = 120;
 
 interface AlertItem {
   service: string;

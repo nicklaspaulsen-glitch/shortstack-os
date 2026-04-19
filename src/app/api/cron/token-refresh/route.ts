@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 // Cron: Refresh expiring OAuth tokens (runs daily)
 // Vercel Cron: 0 3 * * * (3 AM daily)
 // Refreshes Google tokens that expire within 24 hours
+export const maxDuration = 180;
 
 export async function GET(request: NextRequest) {
   // Verify cron secret to prevent unauthorized triggering

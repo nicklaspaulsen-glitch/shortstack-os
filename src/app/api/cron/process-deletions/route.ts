@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
+// Account deletions cascade through many tables + storage — long-running by nature.
+export const maxDuration = 300;
+
 /**
  * Cron: Process pending account deletions whose grace period has elapsed.
  * Protected by CRON_SECRET bearer token.

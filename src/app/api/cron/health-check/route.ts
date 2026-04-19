@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
 
+// Probe up to ~15 external endpoints; allow enough wall-clock for slow ones.
+export const maxDuration = 120;
+
 interface HealthCheck {
   name: string;
   check: () => Promise<{ healthy: boolean; responseTime: number; error?: string; degraded?: boolean }>;

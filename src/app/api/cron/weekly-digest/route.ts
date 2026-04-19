@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 // Cron: Weekly performance digest — sent every Monday at 9 AM
 // Vercel Cron: 0 9 * * 1
 // Sends a summary via Telegram with key metrics
+export const maxDuration = 60;
 
 export async function GET(request: NextRequest) {
   // Verify cron secret to prevent unauthorized triggering

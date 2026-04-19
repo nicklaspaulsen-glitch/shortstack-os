@@ -6,6 +6,7 @@ import { createServiceClient } from "@/lib/supabase/server";
  * Protected by CRON_SECRET. Deletes senders that have been in error/expired
  * state for more than 7 days.
  */
+export const maxDuration = 300;
 export async function GET(req: NextRequest) {
   const auth = req.headers.get("authorization") || "";
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {

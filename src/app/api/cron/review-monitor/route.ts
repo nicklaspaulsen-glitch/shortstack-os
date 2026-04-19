@@ -4,6 +4,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 // Cron: Monitor new Google Business reviews and notify
 // Vercel Cron: 0 */6 * * * (every 6 hours)
 // Checks all connected GBP accounts for new reviews and sends Telegram alerts
+export const maxDuration = 120;
 
 export async function GET(request: NextRequest) {
   // Verify cron secret to prevent unauthorized triggering
