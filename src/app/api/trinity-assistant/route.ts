@@ -4,6 +4,10 @@ import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { anthropic, MODEL_HAIKU, getResponseText } from "@/lib/ai/claude-helpers";
 import type Anthropic from "@anthropic-ai/sdk";
 
+// Trinity can fire up to 4 Claude calls + a synthesis call in one request.
+// Default 10s Hobby limit is too tight; bump to 60s (max for Pro).
+export const maxDuration = 60;
+
 /**
  * Trinity AI Assistant — the centerpiece agent.
  *
@@ -483,8 +487,10 @@ LIMITS:
 
   const actions: Array<{ tool: string; input: unknown; result: ToolResult }> = [];
   let finalText = "";
+  let stopped = false;
+  const MAX_HOPS = 4;
 
-  for (let hop = 0; hop < 4; hop++) {
+  for (let hop = 0; hop < MAX_HOPS; hop++) {
     const resp = await anthropic.messages.create({
       model: MODEL_HAIKU,
       max_tokens: 2000,
@@ -493,13 +499,17 @@ LIMITS:
       messages: conversation,
     });
 
-    // Collect text
+    // Collect text from this hop (overwrites earlier hops — we want the most
+    // recent synthesis Claude produced).
+    let hopText = "";
     for (const block of resp.content) {
-      if (block.type === "text") finalText = block.text;
+      if (block.type === "text") hopText = block.text;
     }
+    if (hopText) finalText = hopText;
 
     if (resp.stop_reason !== "tool_use") {
       conversation.push({ role: "assistant", content: resp.content });
+      stopped = true;
       break;
     }
 
@@ -510,8 +520,14 @@ LIMITS:
     const toolResults: Anthropic.ToolResultBlockParam[] = [];
     for (const block of resp.content) {
       if (block.type !== "tool_use") continue;
-      const result = await runTool(block.name, (block.input as Record<string, unknown>) || {}, ctx);
-      actions.push({ tool: block.name, input: block.input, result });
+      // Guard against malformed tool input — must be an object.
+      const rawInput = block.input;
+      const input: Record<string, unknown> =
+        rawInput && typeof rawInput === "object" && !Array.isArray(rawInput)
+          ? (rawInput as Record<string, unknown>)
+          : {};
+      const result = await runTool(block.name, input, ctx);
+      actions.push({ tool: block.name, input, result });
       toolResults.push({
         type: "tool_result",
         tool_use_id: block.id,
@@ -520,6 +536,28 @@ LIMITS:
       });
     }
     conversation.push({ role: "user", content: toolResults });
+  }
+
+  // If we exhausted MAX_HOPS without Claude stopping, force a final
+  // tool-free synthesis so the user gets a real reply instead of stale text.
+  if (!stopped) {
+    try {
+      const synth = await anthropic.messages.create({
+        model: MODEL_HAIKU,
+        max_tokens: 600,
+        system: systemPrompt +
+          "\n\nYou've already done the research — now give the user a short, friendly synthesis of what you found and did. Do not call any more tools.",
+        messages: conversation,
+      });
+      const synthText = synth.content
+        .filter((b): b is Anthropic.TextBlock => b.type === "text")
+        .map((b) => b.text)
+        .join("\n")
+        .trim();
+      if (synthText) finalText = synthText;
+    } catch {
+      // If synthesis fails, fall through to the existing "Done." fallback.
+    }
   }
 
   if (!finalText) {

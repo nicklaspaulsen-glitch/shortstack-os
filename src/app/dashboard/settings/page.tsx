@@ -16,6 +16,7 @@ import { useAutoSave } from "@/lib/use-auto-save";
 import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
 import SidebarCustomizerFull from "@/components/settings/sidebar-customizer-full";
 import InlineSocialConnect from "@/components/inline-social-connect";
+import AgencyStripeConnect from "@/components/settings/agency-stripe-connect";
 
 type Tab =
   | "general" | "agents" | "integrations" | "automation" | "notifications"
@@ -1782,6 +1783,10 @@ export default function SettingsPage() {
               </button>
             </div>
           </div>
+
+          {/* Agency Stripe Connect — separate from Trinity subscription above.
+              Lets agencies connect their OWN Stripe account to bill clients. */}
+          <AgencyStripeConnect />
           <div className="card">
             <h3 className="section-header">Usage This Month</h3>
             <div className="grid grid-cols-3 gap-4">

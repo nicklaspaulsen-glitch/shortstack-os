@@ -98,7 +98,7 @@ async function handleLeads() {
 
   const { data: leads } = await supabase
     .from("leads")
-    .select("name, category, city")
+    .select("business_name, industry, city")
     .order("created_at", { ascending: false })
     .limit(5);
 
@@ -107,8 +107,8 @@ async function handleLeads() {
   }
 
   const fields = leads.map((l, i) => ({
-    name: `${i + 1}. ${l.name || "Unnamed"}`,
-    value: `${l.category || "N/A"} | ${l.city || "N/A"}`,
+    name: `${i + 1}. ${l.business_name || "Unnamed"}`,
+    value: `${l.industry || "N/A"} | ${l.city || "N/A"}`,
     inline: false,
   }));
 
@@ -321,11 +321,11 @@ async function handleTrinityStatus(guildId: string | undefined) {
   const supabase = createServiceClient();
 
   // Scope queries to the installing agency if we know who they are;
-  // otherwise fall back to global stats.
-  const query = (table: string) => {
-    const q = supabase.from(table).select("id", { count: "exact", head: true });
-    return userId ? q.eq("profile_id", userId) : q;
-  };
+  // otherwise fall back to global stats. `clients` uses `profile_id`; both
+  // `leads` and `deals` use `user_id`.
+  const scopeByUserId = (
+    q: ReturnType<ReturnType<typeof supabase.from>["select"]>
+  ) => (userId ? q.eq("user_id", userId) : q);
 
   const twentyFourAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
@@ -337,8 +337,12 @@ async function handleTrinityStatus(guildId: string | undefined) {
           .eq("profile_id", userId)
           .eq("is_active", true)
       : supabase.from("clients").select("id, mrr", { count: "exact" }).eq("is_active", true)),
-    query("leads").gte("created_at", twentyFourAgo),
-    query("deals"),
+    scopeByUserId(
+      supabase.from("leads").select("id", { count: "exact", head: true })
+    ).gte("created_at", twentyFourAgo),
+    scopeByUserId(
+      supabase.from("deals").select("id", { count: "exact", head: true })
+    ),
   ]);
 
   const totalMrr = (clientsCount.data as Array<{ mrr: number | null }> | null)?.reduce(
@@ -423,9 +427,9 @@ async function handleTrinityLead(
 
   const supabase = createServiceClient();
   const { error } = await supabase.from("leads").insert({
-    profile_id: userId,
-    name: business,
-    category: category || null,
+    user_id: userId,
+    business_name: business,
+    industry: category || null,
     city: city || null,
     status: "new",
     source: "discord",

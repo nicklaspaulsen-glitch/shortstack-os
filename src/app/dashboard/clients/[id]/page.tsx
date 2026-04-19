@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import toast from "react-hot-toast";
 import SocialConnect from "@/components/social-connect";
+import ClientBillingPanel from "@/components/clients/client-billing-panel";
 
 export default function ClientDetailPage() {
   const params = useParams();
@@ -30,7 +31,7 @@ export default function ClientDetailPage() {
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "access">("overview");
+  const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "payments" | "access">("overview");
   const [pageAccess, setPageAccess] = useState<Record<string, boolean>>({
     portal: true, content: true, billing: true, reports: true, socials: true,
     workflows: false, analytics: false, ads: false, websites: false,
@@ -88,6 +89,7 @@ export default function ClientDetailPage() {
     { key: "ads" as const, label: `Ads (${campaigns.length})` },
     { key: "tasks" as const, label: `Tasks (${tasks.length})` },
     { key: "billing" as const, label: `Billing (${invoices.length})` },
+    { key: "payments" as const, label: "Payments" },
     { key: "access" as const, label: "Access" },
   ];
 
@@ -345,6 +347,11 @@ export default function ClientDetailPage() {
           />
         </div>
       )}
+
+      {/* Payments — agency Stripe Connect flow. Shows connect CTA if the
+          caller hasn't connected their Stripe yet; otherwise renders the
+          payment-link + invoice tools backed by the agency's connected account. */}
+      {tab === "payments" && <ClientBillingPanel clientId={client.id} />}
 
       {/* Access Control */}
       {tab === "access" && (
