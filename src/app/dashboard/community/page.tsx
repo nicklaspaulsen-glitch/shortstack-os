@@ -118,7 +118,7 @@ const ACTIVITY_FEED: ActivityItem[] = [];
 const BADGES: Badge[] = [];
 
 const DISCUSSION_CATEGORIES = [
-  { id: "general", label: "General", icon: MessageSquare, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", description: "Open discussion about anything ShortStack", threads: 48 },
+  { id: "general", label: "General", icon: MessageSquare, color: "text-blue-400", bg: "bg-blue-400/10 border-blue-400/20", description: "Open discussion about anything Trinity", threads: 48 },
   { id: "tips", label: "Tips & Tricks", icon: Sparkles, color: "text-purple-400", bg: "bg-purple-400/10 border-purple-400/20", description: "Share your best workflows and hacks", threads: 32 },
   { id: "features", label: "Feature Requests", icon: Target, color: "text-green-400", bg: "bg-green-400/10 border-green-400/20", description: "Request and vote on new features", threads: 27 },
   { id: "showcase", label: "Show & Tell", icon: Gift, color: "text-gold", bg: "bg-gold/10 border-gold/20", description: "Show off what you've built", threads: 19 },
@@ -752,7 +752,7 @@ export default function CommunityPage() {
       <PageHero
         icon={<Users size={28} />}
         title="Community"
-        subtitle="Discussions, resources & events for ShortStack."
+        subtitle="Discussions, resources & events for Trinity."
         gradient="purple"
         actions={
           <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">

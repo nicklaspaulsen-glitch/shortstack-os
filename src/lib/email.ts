@@ -8,9 +8,13 @@
  *   await sendUsageWarningEmail("user@example.com", "Pro", 90);
  */
 
+import { BRAND } from "@/lib/brand-config";
+
 const SENDGRID_API = "https://api.sendgrid.com/v3/mail/send";
 const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || "noreply@shortstack.work";
-const FROM_NAME = "ShortStack OS";
+// Sender display name pulls from brand-config so agencies that flip the
+// white-label toggle send emails from their own brand rather than Trinity.
+const FROM_NAME = BRAND.product_name;
 
 interface EmailPayload {
   to: string;
@@ -206,7 +210,7 @@ export async function sendInvoiceEmail(
 ) {
   return sendEmail({
     to: email,
-    subject: `Invoice from ShortStack: $${amount.toFixed(2)}`,
+    subject: `Invoice from ${BRAND.company_name}: $${amount.toFixed(2)}`,
     html: `
       <div style="${baseStyle}">
         <h1 style="color:#fff;font-size:20px;margin-bottom:8px;">Invoice</h1>

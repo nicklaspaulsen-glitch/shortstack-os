@@ -41,7 +41,7 @@ const MOCK_QUEUE: Array<{ id: string; task: string; priority: string; agent: str
 export default function TrinityPage() {
   const [tab, setTab] = useState<Tab>("Chat");
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "assistant", content: "Hey, I am Trinity -- ShortStack AI agent. I can build websites, set up AI receptionists, create chatbots, manage automations, set up Discord servers, and much more. What do you need?", timestamp: new Date() },
+    { role: "assistant", content: "Hey, I am Trinity -- your AI operating system. I can build websites, set up AI receptionists, create chatbots, manage automations, set up Discord servers, and much more. What do you need?", timestamp: new Date() },
   ]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -86,7 +86,7 @@ export default function TrinityPage() {
           </div>
           <div>
             <h1 className="page-header mb-0">Trinity AI</h1>
-            <p className="text-muted text-xs">ShortStack autonomous AI agent -- chat, orchestrate, and monitor</p>
+            <p className="text-muted text-xs">Trinity autonomous AI agent -- chat, orchestrate, and monitor</p>
           </div>
         </div>
       </div>

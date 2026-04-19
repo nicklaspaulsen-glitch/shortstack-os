@@ -2303,7 +2303,11 @@ export default function VideoEditorPage() {
     toast.success("Settings applied from reference");
   }
 
-  // Helper used by walkthrough steps
+  // Helper used by walkthrough steps.
+  // Returns true if the step completed, false if it was cancelled OR threw.
+  // When a step throws we mark it as `failed` and set the cancelled ref so
+  // the caller bails out — otherwise we'd pretend the remaining steps
+  // succeeded and mislead the user ("fake success").
   async function runStep(index: number, task: () => Promise<void>): Promise<boolean> {
     if (walkthroughCancelledRef.current) return false;
     setWalkthroughStepIndex(index);
@@ -2312,6 +2316,9 @@ export default function VideoEditorPage() {
       await task();
     } catch (err) {
       console.error("walkthrough step failed", index, err);
+      setWalkthroughStatus("failed");
+      walkthroughCancelledRef.current = true;
+      return false;
     }
     if (walkthroughCancelledRef.current) return false;
     setWalkthroughStatus("completed");
@@ -6117,7 +6124,13 @@ export default function VideoEditorPage() {
         }))}
         currentStepIndex={walkthroughStepIndex}
         stepStatus={walkthroughStatus}
-        onClose={() => setWalkthroughOpen(false)}
+        onClose={() => {
+          // Closing the modal mid-generation should also abort the pipeline —
+          // otherwise `generating` stays true and the UI gets stuck.
+          walkthroughCancelledRef.current = true;
+          setWalkthroughOpen(false);
+          setGenerating(false);
+        }}
         onCancel={() => {
           walkthroughCancelledRef.current = true;
           setWalkthroughOpen(false);

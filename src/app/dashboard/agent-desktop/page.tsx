@@ -45,7 +45,7 @@ const INSTALL_STEPS_EXTENSION = [
   "Go to chrome://extensions in Chrome",
   'Enable "Developer mode" (top-right toggle)',
   'Click "Load unpacked" → select folder',
-  "Pin ShortStack to your toolbar",
+  "Pin Trinity to your toolbar",
 ];
 
 /* ── Monitoring mock data ──────────────────────────────────── */

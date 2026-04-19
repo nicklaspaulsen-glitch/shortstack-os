@@ -678,7 +678,7 @@ print(data['content'])`}
               <Zap size={14} className="text-gold" />
               <h2 className="text-sm font-semibold">Webhook Documentation</h2>
             </div>
-            <p className="text-[10px] text-muted mb-4">ShortStack sends webhook events to your configured URL when specific actions occur.</p>
+            <p className="text-[10px] text-muted mb-4">Trinity sends webhook events to your configured URL when specific actions occur.</p>
 
             <div className="mb-4">
               <p className="text-xs font-medium mb-2">Available Events</p>

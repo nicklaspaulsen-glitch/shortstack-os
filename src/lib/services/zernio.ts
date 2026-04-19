@@ -1,6 +1,8 @@
 // Zernio Integration — Free social media auto-publishing for clients
 // Supports: Instagram, TikTok, Twitter/X, YouTube, Facebook, LinkedIn
 
+import { BRAND } from "@/lib/brand-config";
+
 const ZERNIO_BASE = "https://api.zernio.com/v1";
 
 async function zernioFetch(endpoint: string, options: RequestInit = {}) {
@@ -45,7 +47,7 @@ export async function createClientProfile(clientName: string): Promise<{
       method: "POST",
       body: JSON.stringify({
         name: clientName,
-        description: `Social media accounts for ${clientName} — managed by ShortStack`,
+        description: `Social media accounts for ${clientName} — managed by ${BRAND.company_name}`,
       }),
     });
     const data = await res.json();

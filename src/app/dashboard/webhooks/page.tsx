@@ -142,7 +142,7 @@ export default function WebhooksPage() {
       {/* Inbound webhook URL */}
       <div className="card">
         <h2 className="section-header">Inbound Webhook URL</h2>
-        <p className="text-[10px] text-muted mb-2">Send data TO ShortStack from external tools (Zapier, Make, n8n)</p>
+        <p className="text-[10px] text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
         <div className="flex gap-2">
           <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">{inboundUrl}</code>
           <button onClick={() => navigator.clipboard.writeText(inboundUrl)} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
@@ -204,7 +204,7 @@ export default function WebhooksPage() {
             <EmptyState
               icon={<Webhook size={24} />}
               title="No Webhooks Yet"
-              description="Connect ShortStack to Zapier, Make, Slack, or any external tool by creating outbound webhooks that fire on key events."
+              description="Connect Trinity to Zapier, Make, Slack, or any external tool by creating outbound webhooks that fire on key events."
               actionLabel="Create Webhook"
               onAction={() => setShowCreate(true)}
             />

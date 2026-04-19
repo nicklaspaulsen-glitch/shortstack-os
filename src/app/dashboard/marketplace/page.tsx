@@ -561,7 +561,7 @@ export default function MarketplacePage() {
             <div className="flex-1">
               <h3 className="text-base font-bold text-white">Build Your Own Plugin</h3>
               <p className="mt-1 text-sm text-muted">
-                Extend ShortStack with custom plugins. Use our SDK to hook into CRM events,
+                Extend Trinity with custom plugins. Use our SDK to hook into CRM events,
                 add UI panels, and connect external services.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">

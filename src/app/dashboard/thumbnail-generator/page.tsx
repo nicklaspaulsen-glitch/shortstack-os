@@ -6114,7 +6114,13 @@ export default function ThumbnailGeneratorPage() {
         }))}
         currentStepIndex={walkthroughStepIndex}
         stepStatus={walkthroughStatus}
-        onClose={() => setWalkthroughOpen(false)}
+        onClose={() => {
+          // Closing the modal mid-generation should also abort the pipeline —
+          // otherwise `generating` stays true and the UI gets stuck.
+          walkthroughCancelledRef.current = true;
+          setWalkthroughOpen(false);
+          setGenerating(false);
+        }}
         onCancel={() => {
           walkthroughCancelledRef.current = true;
           setWalkthroughOpen(false);

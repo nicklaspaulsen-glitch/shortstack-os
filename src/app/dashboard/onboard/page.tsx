@@ -680,9 +680,35 @@ export default function OnboardPage() {
                 Switch to Full Wizard
               </button>
               <button
-                onClick={() => {
-                  if (quickForm.business_name.trim() && quickForm.contact_name.trim() && quickForm.email.trim()) {
-                    setQuickSubmitted(true);
+                onClick={async () => {
+                  if (!quickForm.business_name.trim() || !quickForm.contact_name.trim() || !quickForm.email.trim()) return;
+                  try {
+                    const res = await fetch("/api/clients/onboard", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        business_name: quickForm.business_name,
+                        contact_name: quickForm.contact_name,
+                        email: quickForm.email,
+                        phone: quickForm.phone,
+                        package_tier: quickForm.package_tier,
+                        mrr: 0,
+                        services: [],
+                        create_portal: true,
+                        password: null,
+                        create_invoice: false,
+                        notes: "",
+                        setup_zernio: false,
+                      }),
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                      setQuickSubmitted(true);
+                    } else {
+                      toast.error(data.error || "Failed to create client");
+                    }
+                  } catch {
+                    toast.error("Network error — please try again");
                   }
                 }}
                 disabled={!quickForm.business_name.trim() || !quickForm.contact_name.trim() || !quickForm.email.trim()}

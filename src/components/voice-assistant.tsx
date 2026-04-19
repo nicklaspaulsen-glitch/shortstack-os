@@ -284,7 +284,7 @@ export default function VoiceAssistant() {
             {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-gold animate-ping" />}
           </div>
           <div>
-            <p className="text-sm font-medium text-foreground">ShortStack AI</p>
+            <p className="text-sm font-medium text-foreground">Trinity AI</p>
             <p className="text-[10px] text-gold">{isListening ? "Listening..." : isSpeaking ? "Speaking..." : processing ? "Thinking..." : "Ready"}</p>
           </div>
         </div>

@@ -1,7 +1,9 @@
 /**
  * Discord announcement utility
- * Posts important events to the ShortStack OS Discord server.
+ * Posts important events to the Trinity Discord server (agency ops channel).
  */
+
+import { BRAND } from "@/lib/brand-config";
 
 const DISCORD_API = "https://discord.com/api/v10";
 const ANNOUNCEMENTS_CHANNEL = "1492846003580178442";
@@ -37,7 +39,7 @@ export async function postDiscordAnnouncement(
               description,
               color: color || 0xc9a84c,
               fields: fields || [],
-              footer: { text: "ShortStack Bot" },
+              footer: { text: `${BRAND.product_name} Bot` },
               timestamp: new Date().toISOString(),
             },
           ],
@@ -54,7 +56,7 @@ export async function postDiscordAnnouncement(
 export async function announceNewClient(clientName: string, industry?: string) {
   return postDiscordAnnouncement(
     "\uD83C\uDF89 New Client Onboarded!",
-    `**${clientName}** just joined ShortStack OS!${industry ? `\nIndustry: ${industry}` : ""}`,
+    `**${clientName}** just joined ${BRAND.product_name}!${industry ? `\nIndustry: ${industry}` : ""}`,
     undefined,
     0x2ecc71
   );

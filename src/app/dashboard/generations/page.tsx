@@ -192,7 +192,7 @@ export default function GenerationsPage() {
             <Sparkles size={32} className="mx-auto mb-3 text-muted/30" />
             <p className="text-sm text-muted font-medium mb-1">No generations yet</p>
             <p className="text-[10px] text-muted max-w-xs mx-auto">
-              Create content from any tool in ShortStack and it will appear here automatically.
+              Create content from any tool in Trinity and it will appear here automatically.
             </p>
           </div>
         ) : (

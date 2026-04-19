@@ -2647,7 +2647,7 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><Link2 size={14} className="text-gold" /> Connected Apps</h2>
-            <p className="text-[10px] text-muted mb-3">Third-party services you&apos;ve linked to your ShortStack account.</p>
+            <p className="text-[10px] text-muted mb-3">Third-party services you&apos;ve linked to your Trinity account.</p>
             {connectedAppsLoading ? (
               <div className="flex items-center gap-2 text-xs text-muted py-6 justify-center">
                 <Loader2 size={12} className="animate-spin" /> Loading connections...

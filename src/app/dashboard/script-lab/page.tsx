@@ -791,7 +791,7 @@ export default function ScriptLabPage() {
     if (!script) return;
     const text = [
       "═══════════════════════════════════════",
-      "        SHORTSTACK DIGITAL AGENCY",
+      "              TRINITY",
       "           Script Document",
       "═══════════════════════════════════════",
       "",
@@ -854,7 +854,7 @@ export default function ScriptLabPage() {
   function downloadAsHTML() {
     if (!script) return;
     const html = `<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>${script.title} — ShortStack Script</title>
+<html><head><meta charset="utf-8"><title>${script.title} — Trinity Script</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Inter', system-ui, sans-serif; background: #fff; color: #1a1a1a; padding: 40px; max-width: 800px; margin: 0 auto; }
@@ -879,7 +879,7 @@ export default function ScriptLabPage() {
   @media print { body { padding: 20px; } }
 </style></head><body>
 <div class="logo-bar">
-  <div><h1>SHORTSTACK</h1><div class="sub">Digital Agency</div></div>
+  <div><h1>TRINITY</h1><div class="sub">Script Document</div></div>
   <div style="font-size:11px;color:#888">Script Document<br>${new Date().toLocaleDateString()}</div>
 </div>
 <div class="meta">Framework: ${config.framework.replace(/_/g, " ")} | Platform: ${config.platform} | Tone: ${config.tone} | Words: ${getWordCount()} | Duration: ${getEstimatedDuration()}</div>

@@ -86,7 +86,7 @@ export default function RecentGenerations() {
           <Sparkles size={28} className="mx-auto mb-2 text-muted/30" />
           <p className="text-xs text-muted font-medium mb-1">No generations yet</p>
           <p className="text-[10px] text-muted max-w-xs mx-auto mb-3">
-            Use any AI tool in ShortStack and your output will land here.
+            Use any AI tool in Trinity and your output will land here.
           </p>
           <Link
             href="/dashboard/ai-studio"

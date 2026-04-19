@@ -415,7 +415,7 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
             className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold hover:shadow-lg hover:shadow-gold/20 transition-all disabled:opacity-50"
           >
             {submitting ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
-            {submitting ? "Setting up..." : "Finish & Enter ShortStack"}
+            {submitting ? "Setting up..." : "Finish & Enter Trinity"}
           </button>
         )}
       </div>
@@ -874,7 +874,7 @@ function StepReady({
       </div>
       <h2 className="text-2xl font-bold mb-2">You&apos;re all set!</h2>
       <p className="text-sm text-muted max-w-md mx-auto mb-6">
-        ShortStack is personalized for <span className="text-foreground font-medium">{businessName}</span>. Your
+        Trinity is personalized for <span className="text-foreground font-medium">{businessName}</span>. Your
         dashboard will focus on <span className="text-gold font-medium">{userTypeLabel}</span> metrics and your
         sidebar has <span className="text-gold font-medium">{enabledCount}</span> tools enabled.
       </p>

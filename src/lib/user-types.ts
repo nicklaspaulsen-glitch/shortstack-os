@@ -370,7 +370,7 @@ export const USER_TYPES: UserTypeMeta[] = [
   {
     id: "other",
     label: "Something Else",
-    description: "Tell us about you — we'll personalize ShortStack for your business.",
+    description: "Tell us about you — we'll personalize Trinity for your business.",
     iconKey: "Sparkles",
     nichePrompt: "Tell us what kind of business you run — as specific as you can.",
     recommendedSidebar: [

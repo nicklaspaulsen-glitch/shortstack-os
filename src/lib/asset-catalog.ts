@@ -913,7 +913,8 @@ export function playSfxPlaceholderTone(clip: SfxClip): void {
     gain.gain.value = 0.07;
     osc.connect(gain);
     gain.connect(ctx.destination);
-    const dur = Math.min(clip.duration_sec, 0.4);
+    // Clamp duration — must be > 0 or exponentialRampToValueAtTime throws
+    const dur = Math.max(0.05, Math.min(clip.duration_sec || 0.2, 0.4));
     osc.start();
     gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + dur);
     osc.stop(ctx.currentTime + dur);

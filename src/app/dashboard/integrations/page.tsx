@@ -485,7 +485,7 @@ function SocialAccountsPage() {
         <div className="flex items-start gap-3">
           <Shield size={14} className="text-gold shrink-0 mt-0.5" />
           <p className="text-[10px] text-muted leading-relaxed">
-            All social accounts connect through Zernio&apos;s unified OAuth flow. ShortStack never sees your password &mdash;
+            All social accounts connect through Zernio&apos;s unified OAuth flow. Trinity never sees your password &mdash;
             you sign in directly with each platform via Zernio&apos;s secure authentication. You can revoke access anytime from here or from your account settings on each platform.
             Business integrations use API keys stored securely in environment variables.
           </p>
