@@ -65,7 +65,14 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: `GoDaddy returned ${res.status}`, records: [] }, { status: 500 });
     }
     const records = await res.json();
-    await supabase.from("website_domains").update({ dns_records: records }).eq("domain", domain);
+    // Always scope by profile_id — the same domain can exist in multiple
+    // users' rows (e.g. one purchased, one pending), and without the scope
+    // we'd overwrite the wrong user's cached records.
+    await supabase
+      .from("website_domains")
+      .update({ dns_records: records })
+      .eq("domain", domain)
+      .eq("profile_id", user.id);
     return NextResponse.json({ records, source: "godaddy" });
   } catch (err) {
     return NextResponse.json({ error: String(err), records: [] }, { status: 500 });
@@ -89,11 +96,11 @@ export async function PUT(request: NextRequest) {
   const godaddySecret = process.env.GODADDY_API_SECRET;
 
   if (!godaddyKey || !godaddySecret) {
-    // Persist to cache only
+    // Persist to cache only — scope by profile_id (see above).
     await supabase.from("website_domains").update({
       dns_records: records as DnsRecord[],
       status: "dns_configured",
-    }).eq("domain", domain);
+    }).eq("domain", domain).eq("profile_id", user.id);
     return NextResponse.json({ success: true, stub: true, records });
   }
 
@@ -113,7 +120,7 @@ export async function PUT(request: NextRequest) {
     await supabase.from("website_domains").update({
       dns_records: records as DnsRecord[],
       status: "dns_configured",
-    }).eq("domain", domain);
+    }).eq("domain", domain).eq("profile_id", user.id);
     return NextResponse.json({ success: true, records });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });

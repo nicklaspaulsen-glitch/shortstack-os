@@ -12,10 +12,16 @@ export async function POST(request: NextRequest) {
 
   // Validate required fields
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
-  if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+  const amountNum = parseFloat(amount);
+  if (!amountNum || Number.isNaN(amountNum) || amountNum <= 0) {
     return NextResponse.json({ error: "Valid amount required" }, { status: 400 });
   }
-  if (due_days !== undefined && (isNaN(parseInt(due_days)) || parseInt(due_days) < 1 || parseInt(due_days) > 365)) {
+  // Guard against enormous values that would overflow Stripe's integer unit field.
+  if (amountNum > 1_000_000) {
+    return NextResponse.json({ error: "amount too large" }, { status: 400 });
+  }
+  const dueDaysNum = due_days !== undefined ? parseInt(due_days) : undefined;
+  if (dueDaysNum !== undefined && (Number.isNaN(dueDaysNum) || dueDaysNum < 1 || dueDaysNum > 365)) {
     return NextResponse.json({ error: "due_days must be between 1 and 365" }, { status: 400 });
   }
 
@@ -38,7 +44,7 @@ export async function POST(request: NextRequest) {
         headers: { Authorization: `Bearer ${stripeKey}`, "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
           customer: client.stripe_customer_id,
-          amount: String(Math.round(amount * 100)),
+          amount: String(Math.round(amountNum * 100)),
           currency: "usd",
           description: description || `ShortStack ${client.package_tier || "Growth"} Package`,
         }),
@@ -51,7 +57,7 @@ export async function POST(request: NextRequest) {
         body: new URLSearchParams({
           customer: client.stripe_customer_id,
           collection_method: "send_invoice",
-          days_until_due: String(due_days || 7),
+          days_until_due: String(dueDaysNum || 7),
           auto_advance: "true",
         }),
       });
@@ -74,12 +80,12 @@ export async function POST(request: NextRequest) {
 
   // Save in our DB
   const dueDate = new Date();
-  dueDate.setDate(dueDate.getDate() + (due_days || 7));
+  dueDate.setDate(dueDate.getDate() + (dueDaysNum || 7));
 
   const { data: inv } = await supabase.from("invoices").insert({
     client_id,
     stripe_invoice_id: stripeInvoiceId,
-    amount,
+    amount: amountNum,
     status: stripeInvoiceId ? "sent" : "draft",
     due_date: dueDate.toISOString().split("T")[0],
     invoice_url: invoiceUrl,

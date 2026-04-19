@@ -26,13 +26,18 @@ export async function POST(request: NextRequest) {
     stripeCustomerId = profile?.stripe_customer_id as string | null;
     returnPath = "/dashboard/settings";
   } else if (client_id) {
-    // Admin accessing for a specific client
+    // Agency owner accessing the billing portal for a specific client they own.
+    // Scope by profile_id so one agency can't open another's client portal.
     const { data: client } = await supabase
       .from("clients")
-      .select("stripe_customer_id")
+      .select("stripe_customer_id, profile_id")
       .eq("id", client_id)
-      .single();
-    stripeCustomerId = client?.stripe_customer_id || null;
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    if (!client) {
+      return NextResponse.json({ error: "Client not found or forbidden" }, { status: 403 });
+    }
+    stripeCustomerId = client.stripe_customer_id || null;
     returnPath = "/dashboard/clients";
   } else {
     // Client portal — find their own client record

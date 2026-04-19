@@ -13,6 +13,17 @@ export async function POST(request: NextRequest) {
   const { client_id } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 
+  // Ownership check before we switch to the service client for data aggregation.
+  const { data: owned } = await authSupabase
+    .from("clients")
+    .select("id")
+    .eq("id", client_id)
+    .eq("profile_id", user.id)
+    .maybeSingle();
+  if (!owned) {
+    return NextResponse.json({ error: "Client not found or forbidden" }, { status: 403 });
+  }
+
   const supabase = createServiceClient();
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
 
@@ -29,8 +40,8 @@ export async function POST(request: NextRequest) {
   ] = await Promise.all([
     supabase.from("clients").select("*").eq("id", client_id).single(),
     supabase.from("leads").select("*", { count: "exact", head: true }).eq("client_id", client_id).gte("scraped_at", weekAgo),
-    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "sent").gte("sent_at", weekAgo),
-    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied").gte("sent_at", weekAgo),
+    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("client_id", client_id).eq("status", "sent").gte("sent_at", weekAgo),
+    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("client_id", client_id).eq("status", "replied").gte("sent_at", weekAgo),
     supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("client_id", client_id).eq("status", "published").gte("scheduled_at", weekAgo),
     supabase.from("campaigns").select("name, spend, roas, conversions, status").eq("client_id", client_id).eq("status", "active"),
     supabase.from("client_tasks").select("title, is_completed").eq("client_id", client_id),

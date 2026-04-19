@@ -10,8 +10,15 @@ export async function GET(request: NextRequest) {
   const clientId = request.nextUrl.searchParams.get("client_id");
   if (!clientId) return NextResponse.json({ error: "Client ID required" }, { status: 400 });
 
-  const { data: client } = await supabase.from("clients").select("*").eq("id", clientId).single();
-  if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
+  // Scope by profile_id so one user can't download another user's monthly
+  // report PDF just by hitting the endpoint with someone else's client_id.
+  const { data: client } = await supabase
+    .from("clients")
+    .select("*")
+    .eq("id", clientId)
+    .eq("profile_id", user.id)
+    .maybeSingle();
+  if (!client) return NextResponse.json({ error: "Client not found or forbidden" }, { status: 403 });
 
   const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
   const since = monthStart.toISOString();
@@ -33,7 +40,13 @@ export async function GET(request: NextRequest) {
 
   const totalSpend = campaigns?.reduce((s, c) => s + (c.spend || 0), 0) || 0;
   const totalConversions = campaigns?.reduce((s, c) => s + (c.conversions || 0), 0) || 0;
-  const avgRoas = campaigns?.filter(c => c.roas > 0).reduce((s, c) => s + c.roas, 0) / (campaigns?.filter(c => c.roas > 0).length || 1) || 0;
+  // Previous expression produced NaN when campaigns was undefined because the
+  // left-hand .reduce was `undefined / 1 || 0` — JS evaluates left-to-right and
+  // the `|| 0` fallback can't rescue a NaN that entered via a numeric op.
+  const roasCampaigns = (campaigns || []).filter((c) => (c.roas ?? 0) > 0);
+  const avgRoas = roasCampaigns.length > 0
+    ? roasCampaigns.reduce((s, c) => s + (c.roas || 0), 0) / roasCampaigns.length
+    : 0;
 
   // Generate AI summary
   let aiSummary = "";

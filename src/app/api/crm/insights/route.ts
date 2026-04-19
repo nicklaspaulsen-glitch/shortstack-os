@@ -57,15 +57,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "entity_type and entity_id required" }, { status: 400 });
   }
 
-  // Fetch entity context
+  // Fetch entity context — always scope by the caller's user_id so users can't
+  // generate insights for someone else's lead / deal / client by guessing an ID.
   const context: Record<string, unknown> = {};
 
   if (entity_type === "lead") {
-    const { data: lead } = await supabase.from("leads").select("*").eq("id", entity_id).single();
+    const { data: lead } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("id", entity_id)
+      .eq("user_id", user.id)
+      .maybeSingle();
     if (!lead) return NextResponse.json({ error: "Lead not found" }, { status: 404 });
     context.lead = lead;
 
-    // Fetch recent outreach
+    // Fetch recent outreach (scoped via lead_id which we've already verified above)
     const { data: outreach } = await supabase
       .from("outreach_entries")
       .select("platform, message_text, status, sent_at, reply_text, replied_at")
@@ -74,11 +80,21 @@ export async function POST(req: NextRequest) {
       .limit(10);
     context.outreach_history = outreach || [];
   } else if (entity_type === "deal") {
-    const { data: deal } = await supabase.from("deals").select("*").eq("id", entity_id).single();
+    const { data: deal } = await supabase
+      .from("deals")
+      .select("*")
+      .eq("id", entity_id)
+      .eq("user_id", user.id)
+      .maybeSingle();
     if (!deal) return NextResponse.json({ error: "Deal not found" }, { status: 404 });
     context.deal = deal;
   } else if (entity_type === "client") {
-    const { data: client } = await supabase.from("clients").select("*").eq("id", entity_id).single();
+    const { data: client } = await supabase
+      .from("clients")
+      .select("*")
+      .eq("id", entity_id)
+      .eq("profile_id", user.id)
+      .maybeSingle();
     if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
     context.client = client;
   } else {

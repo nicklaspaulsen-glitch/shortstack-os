@@ -15,6 +15,12 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { prospect_name, business_name, industry, services, package_tier, mrr, pain_points, goals } = body;
 
+  // Minimum required fields — we render the PDF even without Claude.
+  if (!prospect_name || !business_name) {
+    return NextResponse.json({ error: "prospect_name and business_name are required" }, { status: 400 });
+  }
+  const servicesList: string[] = Array.isArray(services) ? services : [];
+
   // Generate proposal content with Claude
   const apiKey = process.env.ANTHROPIC_API_KEY;
   let proposalContent = "";
@@ -30,7 +36,7 @@ export async function POST(request: NextRequest) {
         messages: [{ role: "user", content: `Write a sales proposal for:
 Prospect: ${prospect_name} at ${business_name}
 Industry: ${industry}
-Proposed services: ${services.join(", ")}
+Proposed services: ${servicesList.join(", ")}
 Package: ${package_tier}
 Monthly investment: $${mrr}
 Their pain points: ${pain_points || "Need more clients and online visibility"}

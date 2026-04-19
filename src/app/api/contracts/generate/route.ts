@@ -10,14 +10,20 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { client_id } = body;
 
-  // Get client data
+  if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  // Scope by profile_id — otherwise any authed user could download a
+  // branded PDF contract for someone else's client.
   const { data: client } = await supabase
     .from("clients")
     .select("*")
     .eq("id", client_id)
-    .single();
+    .eq("profile_id", user.id)
+    .maybeSingle();
 
-  if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
+  if (!client) return NextResponse.json({ error: "Client not found or forbidden" }, { status: 403 });
+
+  const mrr = Number(client.mrr) || 0;
 
   const pdfBuffer = await generateContractPDF({
     clientName: client.contact_name,
@@ -25,18 +31,19 @@ export async function POST(request: NextRequest) {
     clientBusiness: client.business_name,
     services: client.services || [],
     packageTier: client.package_tier || "Growth",
-    mrr: client.mrr || 0,
+    mrr,
     startDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
     contractLength: body.contract_length || "12 months",
     customTerms: body.custom_terms,
   });
 
-  // Save contract record
+  // Save contract record. Without the Number() coercion above, client.mrr
+  // being null made `client.mrr * 12` -> NaN which silently failed the insert.
   await supabase.from("contracts").insert({
     client_id,
     title: `Service Agreement — ${client.business_name}`,
     status: "draft",
-    value: client.mrr * 12,
+    value: mrr * 12,
     start_date: new Date().toISOString().split("T")[0],
   });
 

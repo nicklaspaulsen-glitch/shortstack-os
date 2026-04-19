@@ -65,7 +65,12 @@ const WORKFLOW_ACTIONS: Record<string, {
     name: "Update Lead Status",
     description: "Change a lead's status in the pipeline",
     execute: async (params, context) => {
-      await context.supabase.from("leads").update({ status: params.status }).eq("id", params.lead_id);
+      // Scope by client_id if provided so an automation triggered from one
+      // tenant's workflow can't mutate a lead that happens to share an id in
+      // another tenant (service-role client bypasses RLS).
+      let query = context.supabase.from("leads").update({ status: params.status }).eq("id", params.lead_id);
+      if (context.clientId) query = query.eq("client_id", context.clientId);
+      await query;
       return { updated: true, lead_id: params.lead_id, status: params.status };
     },
   },

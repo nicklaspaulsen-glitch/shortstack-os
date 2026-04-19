@@ -177,6 +177,8 @@ export async function POST(
     });
 
     // Insert pending subscription row — webhook upgrades to active on payment.
+    // Previously this was inserted with status:"active" which contradicted the
+    // comment and silently entitled the user before the card actually charged.
     await supabase.from("website_subscriptions").insert({
       website_id: project.id,
       profile_id: user.id,
@@ -186,7 +188,7 @@ export async function POST(
       yearly_price: yearlyPrice,
       billing_cycle,
       addons,
-      status: "active",
+      status: "pending",
     });
 
     return NextResponse.json({

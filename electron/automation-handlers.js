@@ -211,13 +211,27 @@ async function doCursorPos() {
 // ── Browser navigate (works with or without backend) ──────────────
 // Opens a URL in a BrowserView embedded in the main window if possible,
 // otherwise delegates to the OS default browser. Safe either way.
+//
+// SECURITY: even though the renderer is our own app, we treat requested
+// URLs as untrusted in case of XSS or malicious content that reaches the
+// navigate handler. We hard-block non-http(s) schemes (file://, javascript:,
+// data:, chrome://, about:...) and browser-internal surfaces that Electron
+// would otherwise happily navigate to.
+const BLOCKED_PROTOCOLS = /^(file|javascript|data|ftp|about|chrome|chrome-extension|view-source):/i;
+
 async function doBrowserNavigate({ url }) {
   try {
     if (!url || typeof url !== "string") {
       return { success: false, error: "url (string) required" };
     }
-    // Very basic URL validation
-    try { new URL(url); } catch { return { success: false, error: "Invalid URL" }; }
+    if (BLOCKED_PROTOCOLS.test(url.trim())) {
+      return { success: false, error: "Blocked URL scheme" };
+    }
+    let parsed;
+    try { parsed = new URL(url); } catch { return { success: false, error: "Invalid URL" }; }
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return { success: false, error: "Only http(s) URLs are allowed" };
+    }
 
     // Try to send to the main window's renderer so it can mount a <webview>
     // in the embedded browser panel. If no listener is registered, fall back
@@ -232,8 +246,13 @@ async function doBrowserNavigate({ url }) {
     shell.openExternal(url);
     return { success: true, url, delivery: "external" };
   } catch (err) {
-    shell.openExternal(url);
-    return { success: true, url, delivery: "external-fallback", warning: String(err?.message || err) };
+    // Re-validate before the fallback in case the error is from something
+    // other than the embedded-browser path.
+    if (typeof url === "string" && !BLOCKED_PROTOCOLS.test(url)) {
+      shell.openExternal(url);
+      return { success: true, url, delivery: "external-fallback", warning: String(err?.message || err) };
+    }
+    return { success: false, error: String(err?.message || err) };
   }
 }
 

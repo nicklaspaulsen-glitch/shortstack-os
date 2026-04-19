@@ -64,13 +64,16 @@ export async function POST(request: NextRequest) {
       .eq("user_id", ownerId)
       .single();
     if (lead) {
+      // Match the actual deals schema (see src/app/api/deals/route.ts) —
+      // the prior shape used fields (service / amount / status / closed_at)
+      // that don't exist and would fail the insert silently.
       await supabase.from("deals").insert({
         user_id: ownerId,
+        title: `Deal — ${lead.business_name}`,
         client_name: lead.business_name,
-        service: "Digital Marketing",
-        amount: 0,
-        status: "won",
-        closed_at: new Date().toISOString(),
+        value: 0,
+        stage: "closed_won",
+        probability: 100,
         notes: notes || "Converted from lead pipeline",
       });
 

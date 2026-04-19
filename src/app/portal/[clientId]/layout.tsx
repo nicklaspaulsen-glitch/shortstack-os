@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useWhiteLabel } from "@/lib/white-label-context";
 import {
   LayoutDashboard,
   FolderKanban,
@@ -35,8 +36,16 @@ export default function PortalLayout({
 }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [showPoweredBy, _setShowPoweredBy] = useState(true);
+  const { config } = useWhiteLabel();
+  // Agency owner controls this via /dashboard/settings → White-label
+  const showPoweredBy = config.show_powered_by;
+  const companyName = config.company_name || "ShortStack";
+  // First letter of the agency's brand for the square logo tile when
+  // no explicit logo_url is uploaded. Falls back to "S" for ShortStack.
+  const logoLetter = companyName.charAt(0).toUpperCase() || "S";
+  const logoUrl = config.logo_url && !config.logo_url.includes("shortstack-logo")
+    ? config.logo_url
+    : null;
   const basePath = `/portal/${params.clientId}`;
 
   function isActive(segment: string) {
@@ -59,6 +68,9 @@ export default function PortalLayout({
               basePath={basePath}
               isActive={isActive}
               showPoweredBy={showPoweredBy}
+              companyName={companyName}
+              logoLetter={logoLetter}
+              logoUrl={logoUrl}
               onClose={() => setSidebarOpen(false)}
             />
           </aside>
@@ -71,6 +83,9 @@ export default function PortalLayout({
           basePath={basePath}
           isActive={isActive}
           showPoweredBy={showPoweredBy}
+          companyName={companyName}
+          logoLetter={logoLetter}
+          logoUrl={logoUrl}
         />
       </aside>
 
@@ -89,8 +104,13 @@ export default function PortalLayout({
           >
             <Menu size={18} />
           </button>
-          <div className="h-7 w-7 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center">
-            <span className="text-gold text-xs font-bold">S</span>
+          <div className="h-7 w-7 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center overflow-hidden">
+            {logoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={logoUrl} alt={companyName} className="w-full h-full object-contain" />
+            ) : (
+              <span className="text-gold text-xs font-bold">{logoLetter}</span>
+            )}
           </div>
           <div className="w-9" />
         </header>
@@ -111,11 +131,17 @@ function SidebarContent({
   basePath,
   isActive,
   showPoweredBy,
+  companyName,
+  logoLetter,
+  logoUrl,
   onClose,
 }: {
   basePath: string;
   isActive: (segment: string) => boolean | undefined;
   showPoweredBy: boolean;
+  companyName: string;
+  logoLetter: string;
+  logoUrl: string | null;
   onClose?: () => void;
 }) {
   return (
@@ -123,12 +149,17 @@ function SidebarContent({
       {/* ─── Logo / brand area ─── */}
       <div className="flex items-center justify-between h-16 px-5 border-b border-border shrink-0">
         <div className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center">
-            <span className="text-gold font-bold text-sm">S</span>
+          <div className="h-9 w-9 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center overflow-hidden">
+            {logoUrl ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={logoUrl} alt={companyName} className="w-full h-full object-contain" />
+            ) : (
+              <span className="text-gold font-bold text-sm">{logoLetter}</span>
+            )}
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground leading-tight">Client Portal</p>
-            <p className="text-[10px] text-muted leading-tight">Your workspace</p>
+            <p className="text-[10px] text-muted leading-tight">{companyName}</p>
           </div>
         </div>
         {onClose && (
@@ -182,12 +213,12 @@ function SidebarContent({
           </button>
         </div>
 
-        {/* Powered by */}
+        {/* Powered by — hidden when white-label agency flips the switch */}
         {showPoweredBy && (
           <div className="text-center">
             <p className="text-[10px] text-muted/50">
               Powered by{" "}
-              <span className="text-gold/40 font-medium">ShortStack</span>
+              <span className="text-gold/40 font-medium">{companyName}</span>
             </p>
           </div>
         )}

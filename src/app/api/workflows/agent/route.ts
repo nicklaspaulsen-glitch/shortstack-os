@@ -10,6 +10,19 @@ export async function POST(request: NextRequest) {
 
   const { message, history, client_id, client_name } = await request.json();
 
+  // Verify the caller owns the client_id they're attaching automations to.
+  if (client_id) {
+    const { data: owned } = await supabase
+      .from("clients")
+      .select("id")
+      .eq("id", client_id)
+      .eq("profile_id", user.id)
+      .maybeSingle();
+    if (!owned) {
+      return NextResponse.json({ error: "Forbidden — not your client" }, { status: 403 });
+    }
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });
 

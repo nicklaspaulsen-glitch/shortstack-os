@@ -81,7 +81,18 @@ export async function POST(request: NextRequest) {
 
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 
-  // Fetch client
+  // Verify the caller owns this client BEFORE we fetch with the service client.
+  const { data: owned } = await authSupabase
+    .from("clients")
+    .select("id")
+    .eq("id", client_id)
+    .eq("profile_id", user.id)
+    .maybeSingle();
+  if (!owned) {
+    return NextResponse.json({ error: "Client not found or forbidden" }, { status: 403 });
+  }
+
+  // Fetch client (service client is fine now that we've verified ownership)
   const { data: client } = await supabase
     .from("clients")
     .select("id, business_name, contact_name, email, mrr, package_tier, health_score, industry, services, onboarded_at")
@@ -118,8 +129,8 @@ export async function POST(request: NextRequest) {
   ] = await Promise.all([
     supabase.from("leads").select("*", { count: "exact", head: true }).eq("client_id", client_id).gte("scraped_at", since),
     supabase.from("leads").select("*", { count: "exact", head: true }).eq("client_id", client_id).gte("scraped_at", prevSince).lt("scraped_at", since),
-    supabase.from("outreach_log").select("*", { count: "exact", head: true }).gte("sent_at", since),
-    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied").gte("sent_at", since),
+    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("client_id", client_id).gte("sent_at", since),
+    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("client_id", client_id).eq("status", "replied").gte("sent_at", since),
     supabase.from("deals").select("amount, status").eq("client_id", client_id).gte("created_at", since),
     supabase.from("invoices").select("amount, status").eq("client_id", client_id).gte("created_at", since),
     supabase.from("trinity_log").select("description, action_type, created_at").eq("client_id", client_id).gte("created_at", since).order("created_at", { ascending: false }).limit(10),
@@ -246,11 +257,24 @@ Format each section with a clear header line (## Section Name). Keep it professi
 /* ── GET: Fetch previously generated reports ─────────────────── */
 
 export async function GET(request: NextRequest) {
-  const supabase = createServiceClient();
+  // Auth was missing entirely here — anyone could read any user's reports
+  // including the AI-generated text and metrics. Require login and scope by
+  // the caller's owned clients.
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: ownedClients } = await authSupabase
+    .from("clients")
+    .select("id")
+    .eq("profile_id", user.id);
+  const ownedIds = (ownedClients || []).map((c) => c.id);
+
   const url = new URL(request.url);
   const clientId = url.searchParams.get("client_id");
-  const limit = parseInt(url.searchParams.get("limit") || "20");
+  const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") || "20"), 1), 100);
 
+  const supabase = createServiceClient();
   let query = supabase
     .from("trinity_log")
     .select("id, description, client_id, created_at, result")
@@ -259,7 +283,15 @@ export async function GET(request: NextRequest) {
     .limit(limit);
 
   if (clientId) {
+    if (!ownedIds.includes(clientId)) {
+      return NextResponse.json({ error: "Forbidden — not your client" }, { status: 403 });
+    }
     query = query.eq("client_id", clientId);
+  } else {
+    if (ownedIds.length === 0) {
+      return NextResponse.json({ success: true, reports: [] });
+    }
+    query = query.in("client_id", ownedIds);
   }
 
   const { data: reports } = await query;

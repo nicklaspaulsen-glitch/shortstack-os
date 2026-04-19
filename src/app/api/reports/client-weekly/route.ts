@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
 
       const [{ count: leadsThisWeek }, { count: outreachThisWeek }, { data: aiActions }] = await Promise.all([
         supabase.from("leads").select("*", { count: "exact", head: true }).eq("client_id", client.id).gte("created_at", weekAgo),
-        supabase.from("outreach_log").select("*", { count: "exact", head: true }).gte("sent_at", weekAgo),
+        supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("client_id", client.id).gte("sent_at", weekAgo),
         supabase.from("trinity_log").select("description").eq("client_id", client.id).gte("created_at", weekAgo).limit(5),
       ]);
 

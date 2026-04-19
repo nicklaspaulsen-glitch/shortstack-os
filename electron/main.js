@@ -1089,18 +1089,10 @@ ipcMain.handle("agent:complete-task", async (event, taskId) => {
 
 // ── App lifecycle ───────────────────────────────────────────────
 
-app.whenReady().then(() => {
-  createSplash();
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createSplash();
-  });
-});
-
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
-});
-
-// Prevent multiple instances
+// Single-instance lock must be claimed BEFORE any other lifecycle work —
+// if we're the second instance, we want to bail out synchronously before
+// registering whenReady/activate handlers (which would otherwise still try
+// to create a splash window before the quit takes effect).
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
@@ -1110,5 +1102,16 @@ if (!gotTheLock) {
       if (mainWindow.isMinimized()) mainWindow.restore();
       mainWindow.focus();
     }
+  });
+
+  app.whenReady().then(() => {
+    createSplash();
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) createSplash();
+    });
+  });
+
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") app.quit();
   });
 }

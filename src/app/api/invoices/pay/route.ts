@@ -13,14 +13,20 @@ export async function POST(request: NextRequest) {
   const { invoice_id } = await request.json();
   if (!invoice_id) return NextResponse.json({ error: "invoice_id required" }, { status: 400 });
 
-  // Get invoice
+  // Get invoice + verify the caller owns the underlying client. Without this
+  // scope check, any authed user could spin up a Stripe Checkout session for
+  // any other user's invoice by guessing its id.
   const { data: invoice } = await supabase
     .from("invoices")
-    .select("*, clients(business_name, email)")
+    .select("*, clients!inner(business_name, email, profile_id)")
     .eq("id", invoice_id)
     .single();
 
   if (!invoice) return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
+  const ownerId = (invoice.clients as { profile_id?: string } | null)?.profile_id;
+  if (ownerId && ownerId !== user.id) {
+    return NextResponse.json({ error: "Forbidden — not your invoice" }, { status: 403 });
+  }
   if (invoice.status === "paid") return NextResponse.json({ error: "Already paid" }, { status: 400 });
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
