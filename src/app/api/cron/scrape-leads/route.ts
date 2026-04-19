@@ -60,12 +60,17 @@ export async function GET(request: NextRequest) {
   let targetLeads = 50;
   let customIndustries: string[] | null = null;
   let customLocations: string[] | null = null;
+  let settingsLoadFailed = false;
   try {
-    const { data: settingsRow } = await supabase
+    const { data: settingsRow, error: settingsErr } = await supabase
       .from("system_health")
       .select("metadata")
       .eq("integration_name", "agent_settings")
       .single();
+    if (settingsErr) {
+      settingsLoadFailed = true;
+      console.warn("[scrape-leads] Failed to load agent_settings, falling back to defaults:", settingsErr.message);
+    }
     if (settingsRow?.metadata) {
       const settings = settingsRow.metadata as Record<string, Record<string, unknown>>;
       targetLeads = (settings.lead_engine?.leads_per_run as number) || 50;
@@ -74,7 +79,10 @@ export async function GET(request: NextRequest) {
       const locations = settings.lead_engine?.target_locations as string[];
       if (locations && locations.length > 0) customLocations = locations;
     }
-  } catch {}
+  } catch (err) {
+    settingsLoadFailed = true;
+    console.warn("[scrape-leads] agent_settings load threw:", err);
+  }
 
   // Auto-run config overrides defaults if present
   if (autoRunConfig) {
@@ -93,18 +101,27 @@ export async function GET(request: NextRequest) {
     const industries = customIndustries || TARGET_INDUSTRIES;
     const allCities = customLocations || TARGET_CITIES;
 
-    // Spread cities across the week instead of binary flip
-    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-    const citiesPerDay = Math.max(3, Math.min(allCities.length, 8));
-    const cityOffset = (dayOfYear * citiesPerDay) % Math.max(allCities.length, 1);
-    const todayCities: string[] = [];
-    for (let i = 0; i < citiesPerDay; i++) {
-      todayCities.push(allCities[(cityOffset + i) % allCities.length]);
+    // Spread cities across the week. If user gave a custom list, use ALL of
+    // them (they picked exactly what they want) — don't silently cap at 8.
+    // Only when falling back to the large default TARGET_CITIES do we cap.
+    let todayCities: string[];
+    if (customLocations) {
+      todayCities = allCities.slice();
+    } else {
+      const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+      const citiesPerDay = Math.max(3, Math.min(allCities.length, 8));
+      const cityOffset = (dayOfYear * citiesPerDay) % Math.max(allCities.length, 1);
+      todayCities = [];
+      for (let i = 0; i < citiesPerDay; i++) {
+        todayCities.push(allCities[(cityOffset + i) % allCities.length]);
+      }
     }
 
-    // Calculate how many leads per query to hit target
+    // Calculate leads per query. scrapeGooglePlaces now paginates, so remove
+    // the hard 20 cap — just distribute the target across combos with a
+    // sensible floor of 5 and a ceiling to keep API costs reasonable.
     const totalCombinations = industries.length * todayCities.length;
-    const leadsPerQuery = Math.max(2, Math.min(20, Math.ceil(targetLeads / Math.max(totalCombinations, 1))));
+    const leadsPerQuery = Math.max(5, Math.min(100, Math.ceil(targetLeads / Math.max(totalCombinations, 1))));
 
     // Track progress toward target
     let scraped = 0;
@@ -228,6 +245,11 @@ export async function GET(request: NextRequest) {
       totalImported,
       totalSkipped,
       totalEnriched,
+      settingsLoadFailed,
+      // If imported < target, the server logs in Vercel now show the breakdown
+      // per query: `raw=N pages=N droppedNoPhone=N droppedTooPopular=N`.
+      // That's how you diagnose why a target of 100 only yielded 50.
+      shortfall: Math.max(0, targetLeads - totalImported),
       errors: errors.slice(0, 10),
       timestamp: new Date().toISOString(),
     });

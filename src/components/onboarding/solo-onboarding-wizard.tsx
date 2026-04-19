@@ -54,6 +54,8 @@ interface WizardState {
   pain_answers: Record<string, unknown>;
   goal_answers: Record<string, unknown>;
   enabled_sidebar: string[];
+  personalize_answers: Record<string, string>;
+  personalize_questions: PersonalizeQuestion[];
 }
 
 const INITIAL_STATE: WizardState = {
@@ -65,6 +67,8 @@ const INITIAL_STATE: WizardState = {
   pain_answers: {},
   goal_answers: {},
   enabled_sidebar: [],
+  personalize_answers: {},
+  personalize_questions: [],
 };
 
 interface Props {
@@ -83,9 +87,17 @@ const STEPS = [
   "pain_points",
   "goals",
   "sidebar",
+  "personalize",
   "ready",
 ] as const;
 type StepKey = (typeof STEPS)[number];
+
+interface PersonalizeQuestion {
+  id: string;
+  question: string;
+  placeholder: string;
+  help_text: string;
+}
 
 /* ─── Component ────────────────────────────────────────────────────── */
 
@@ -99,6 +111,8 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
   const [goalQuestions, setGoalQuestions] = useState<AIQuestion[]>([]);
   const [loadingPain, setLoadingPain] = useState(false);
   const [loadingGoals, setLoadingGoals] = useState(false);
+  const [loadingPersonalize, setLoadingPersonalize] = useState(false);
+  const [personalizeFetched, setPersonalizeFetched] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const stepKey: StepKey = STEPS[stepIdx];
@@ -134,6 +148,41 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
       ...prev,
       enabled_sidebar: getUserTypeMeta(prev.user_type).recommendedSidebar,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepKey]);
+
+  // Fetch AI personalization questions when the user reaches the personalize step
+  useEffect(() => {
+    if (stepKey !== "personalize" || personalizeFetched) return;
+    setPersonalizeFetched(true);
+    setLoadingPersonalize(true);
+    (async () => {
+      try {
+        const flatGoals = Object.values(state.goal_answers)
+          .filter((v): v is string => typeof v === "string")
+          .join(" | ");
+        const res = await fetch("/api/onboarding/personalize", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            business_name: state.business_name,
+            industry: state.niche,
+            target_audience: "",
+            goals: flatGoals,
+            brand_voice: "",
+            user_type: state.user_type || "other",
+          }),
+        });
+        const data = await res.json();
+        if (Array.isArray(data.questions)) {
+          setState((prev) => ({ ...prev, personalize_questions: data.questions as PersonalizeQuestion[] }));
+        }
+      } catch (err) {
+        console.error("[SoloOnboardingWizard] personalize fetch failed:", err);
+      } finally {
+        setLoadingPersonalize(false);
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepKey]);
 
@@ -184,6 +233,8 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
         return Object.keys(state.goal_answers).length > 0 || goalQuestions.length === 0;
       case "sidebar":
         return state.enabled_sidebar.length > 0;
+      case "personalize":
+        return true;
       case "ready":
         return true;
       default:
@@ -312,6 +363,15 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
           />
         )}
 
+        {stepKey === "personalize" && (
+          <StepPersonalize
+            loading={loadingPersonalize}
+            questions={state.personalize_questions}
+            answers={state.personalize_answers}
+            onChange={(answers) => update("personalize_answers", answers)}
+          />
+        )}
+
         {stepKey === "ready" && currentTypeMeta && (
           <StepReady
             businessName={state.business_name || "your business"}
@@ -331,13 +391,23 @@ export default function SoloOnboardingWizard({ initialUserType, onComplete, onCa
         </button>
 
         {stepIdx < STEPS.length - 1 ? (
-          <button
-            onClick={next}
-            disabled={!canAdvance()}
-            className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold hover:shadow-lg hover:shadow-gold/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            Continue <ArrowRight size={13} />
-          </button>
+          <div className="flex items-center gap-2">
+            {stepKey === "personalize" && (
+              <button
+                onClick={next}
+                className="text-[11px] text-muted hover:text-gold transition-colors px-3 py-2 font-medium"
+              >
+                Skip for now
+              </button>
+            )}
+            <button
+              onClick={next}
+              disabled={!canAdvance()}
+              className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold hover:shadow-lg hover:shadow-gold/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Continue <ArrowRight size={13} />
+            </button>
+          </div>
         ) : (
           <button
             onClick={handleFinish}
@@ -712,6 +782,74 @@ function StepSidebar({
         enabledItems={enabledItems}
         onChange={onChange}
       />
+    </div>
+  );
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   STEP: Personalize (AI-generated personal follow-up questions)
+   ════════════════════════════════════════════════════════════════════ */
+
+function StepPersonalize({
+  loading,
+  questions,
+  answers,
+  onChange,
+}: {
+  loading: boolean;
+  questions: PersonalizeQuestion[];
+  answers: Record<string, string>;
+  onChange: (answers: Record<string, string>) => void;
+}) {
+  return (
+    <div>
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold mb-1 flex items-center gap-2 bg-gradient-to-r from-gold to-amber-300 bg-clip-text text-transparent">
+          <Sparkles size={22} className="text-gold" /> Personalized for you
+        </h2>
+        <p className="text-sm text-muted">
+          Optional follow-up questions — your answers help us tune content generation and your AI copilot.
+        </p>
+      </div>
+
+      {loading && (
+        <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-gold/20 bg-gradient-to-b from-gold/5 to-transparent">
+          <Loader2 size={22} className="animate-spin text-gold" />
+          <p className="text-xs text-muted">Our AI is getting to know you...</p>
+        </div>
+      )}
+
+      {!loading && questions.length === 0 && (
+        <div className="rounded-xl border border-border p-6 text-center text-sm text-muted">
+          We couldn&apos;t generate custom questions right now — click Continue to skip.
+        </div>
+      )}
+
+      {!loading && questions.length > 0 && (
+        <div className="space-y-4">
+          {questions.map((q) => (
+            <div key={q.id} className="rounded-xl border border-border p-4 bg-surface-light/30">
+              <label className="block text-xs font-semibold text-foreground mb-1.5 flex items-start gap-1.5">
+                <Sparkles size={11} className="text-gold mt-0.5 shrink-0" />
+                <span>{q.question}</span>
+              </label>
+              {q.help_text && (
+                <p className="text-[10px] text-muted mb-2 ml-5">{q.help_text}</p>
+              )}
+              <textarea
+                value={answers[q.id] || ""}
+                onChange={(e) => onChange({ ...answers, [q.id]: e.target.value })}
+                placeholder={q.placeholder}
+                rows={2}
+                className="w-full px-3 py-2.5 bg-surface-light border border-border rounded-lg text-sm text-foreground focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+              />
+            </div>
+          ))}
+          <p className="text-[10px] text-muted text-center">
+            All questions are optional.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

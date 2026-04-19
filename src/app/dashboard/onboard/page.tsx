@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   UserPlus, ArrowRight, ArrowLeft, Check, Sparkles,
   Upload, Palette, Briefcase, ShieldCheck, Eye,
@@ -148,8 +148,16 @@ const STEP_META = [
   { label: "Brand Assets", icon: Palette, description: "Logo, colors, fonts" },
   { label: "Services", icon: Briefcase, description: "Select services" },
   { label: "Access Setup", icon: ShieldCheck, description: "Team & portal" },
+  { label: "Personalize", icon: Sparkles, description: "AI-tailored Qs" },
   { label: "Review & Launch", icon: Rocket, description: "Final review" },
 ];
+
+interface PersonalizeQuestion {
+  id: string;
+  question: string;
+  placeholder: string;
+  help_text: string;
+}
 
 /* ================================================================== */
 /*  Component                                                          */
@@ -217,6 +225,12 @@ export default function OnboardPage() {
   // FAQ state
   const [expandedFaq, setExpandedFaq] = useState<string | null>(null);
 
+  // AI Personalize step state
+  const [personalizeQuestions, setPersonalizeQuestions] = useState<PersonalizeQuestion[]>([]);
+  const [personalizeAnswers, setPersonalizeAnswers] = useState<Record<string, string>>({});
+  const [personalizeLoading, setPersonalizeLoading] = useState(false);
+  const [personalizeFetched, setPersonalizeFetched] = useState(false);
+
   // Solo wizard finish state
   const [soloComplete, setSoloComplete] = useState(false);
   const [soloSummary, setSoloSummary] = useState<{ name: string; label: string; count: number } | null>(null);
@@ -245,9 +259,63 @@ export default function OnboardPage() {
   const categories = ["All", ...Array.from(new Set(services.map(s => s.category)))];
   const filteredServices = serviceFilter === "All" ? services : services.filter(s => s.category === serviceFilter);
 
+  // Auto-fetch AI personalization questions when the user lands on Step 5
+  useEffect(() => {
+    if (step !== 5 || personalizeFetched) return;
+    setPersonalizeFetched(true);
+    setPersonalizeLoading(true);
+    (async () => {
+      try {
+        const res = await fetch("/api/onboarding/personalize", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            business_name: form.business_name,
+            industry: form.industry,
+            target_audience: form.target_audience,
+            goals: form.goals,
+            brand_voice: form.brand_voice,
+            user_type: "agency",
+          }),
+        });
+        const data = await res.json();
+        if (Array.isArray(data.questions)) {
+          setPersonalizeQuestions(data.questions as PersonalizeQuestion[]);
+        }
+      } catch (err) {
+        console.error("[onboard] personalize fetch failed:", err);
+      } finally {
+        setPersonalizeLoading(false);
+      }
+    })();
+  }, [step, personalizeFetched, form.business_name, form.industry, form.target_audience, form.goals, form.brand_voice]);
+
+  async function savePersonalization() {
+    // Only save if we have anything meaningful
+    const hasAnswers = Object.values(personalizeAnswers).some((v) => v && v.trim().length > 0);
+    if (!hasAnswers && personalizeQuestions.length === 0) return;
+    try {
+      await fetch("/api/user/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          onboarding_personalization: {
+            questions: personalizeQuestions,
+            answers: personalizeAnswers,
+            completed_at: new Date().toISOString(),
+          },
+        }),
+      });
+    } catch (err) {
+      console.error("[onboard] personalization save failed:", err);
+    }
+  }
+
   async function launchClient() {
     setLaunching(true);
     setLaunchError("");
+    // Fire-and-forget the personalization save
+    void savePersonalization();
     try {
       const res = await fetch("/api/clients/onboard", {
         method: "POST",
@@ -300,6 +368,8 @@ export default function OnboardPage() {
     pain_answers: Record<string, unknown>;
     goal_answers: Record<string, unknown>;
     enabled_sidebar: string[];
+    personalize_answers?: Record<string, string>;
+    personalize_questions?: PersonalizeQuestion[];
   }) {
     try {
       // 1. Save user_type + onboarding_preferences to profile
@@ -325,6 +395,11 @@ export default function OnboardPage() {
             niche: soloState.niche,
             pain_answers: soloState.pain_answers,
             goal_answers: soloState.goal_answers,
+            completed_at: new Date().toISOString(),
+          },
+          onboarding_personalization: {
+            questions: soloState.personalize_questions || [],
+            answers: soloState.personalize_answers || {},
             completed_at: new Date().toISOString(),
           },
         }),
@@ -1120,8 +1195,63 @@ export default function OnboardPage() {
               </div>
             )}
 
-            {/* ── Step 5: Review & Launch ──────────────────────── */}
+            {/* ── Step 5: AI Personalize ───────────────────────── */}
             {step === 5 && (
+              <div className="space-y-5">
+                <div>
+                  <h2 className="text-lg font-bold flex items-center gap-2 bg-gradient-to-r from-gold to-amber-300 bg-clip-text text-transparent">
+                    <Sparkles size={18} className="text-gold" /> Personalized for you
+                  </h2>
+                  <p className="text-xs text-muted mt-0.5">
+                    A few optional follow-up questions — your answers help us tune content generation and your AI copilot.
+                  </p>
+                </div>
+
+                {personalizeLoading && (
+                  <div className="flex flex-col items-center gap-2 py-12 rounded-xl border border-gold/20 bg-gradient-to-b from-gold/5 to-transparent">
+                    <Loader2 size={22} className="animate-spin text-gold" />
+                    <p className="text-xs text-muted">Our AI is getting to know you...</p>
+                  </div>
+                )}
+
+                {!personalizeLoading && personalizeQuestions.length === 0 && (
+                  <div className="rounded-xl border border-[var(--color-border)] p-6 text-center text-xs text-muted">
+                    No custom questions right now — click Continue to skip this step.
+                  </div>
+                )}
+
+                {!personalizeLoading && personalizeQuestions.length > 0 && (
+                  <div className="space-y-4">
+                    {personalizeQuestions.map((q) => (
+                      <div key={q.id} className="rounded-xl border border-[var(--color-border)] p-4 bg-white/[0.01]">
+                        <label className="block text-xs font-semibold text-foreground mb-1.5 flex items-start gap-1.5">
+                          <Sparkles size={11} className="text-gold mt-0.5 shrink-0" />
+                          <span>{q.question}</span>
+                        </label>
+                        {q.help_text && (
+                          <p className="text-[10px] text-muted mb-2 ml-5">{q.help_text}</p>
+                        )}
+                        <textarea
+                          value={personalizeAnswers[q.id] || ""}
+                          onChange={(e) =>
+                            setPersonalizeAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))
+                          }
+                          placeholder={q.placeholder}
+                          rows={2}
+                          className="w-full px-3 py-2.5 bg-white/[0.03] border border-[var(--color-border)] rounded-lg text-foreground text-sm focus:outline-none focus:border-gold transition-colors resize-none"
+                        />
+                      </div>
+                    ))}
+                    <p className="text-[10px] text-muted text-center">
+                      All questions are optional. Click Skip or Continue when done.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ── Step 6: Review & Launch ──────────────────────── */}
+            {step === 6 && (
               <div className="space-y-5">
                 <div className="text-center space-y-2">
                   <h2 className="text-lg font-bold flex items-center justify-center gap-2"><Eye size={18} className="text-gold" /> Review & Launch</h2>
@@ -1222,7 +1352,13 @@ export default function OnboardPage() {
             </button>
 
             <div className="flex items-center gap-2">
-              {step > 0 && step < STEP_META.length - 1 && (
+              {step === 5 && (
+                <button onClick={() => setStep(step + 1)}
+                  className="text-[11px] text-muted hover:text-gold transition-colors px-3 py-2 font-medium">
+                  Skip for now
+                </button>
+              )}
+              {step > 0 && step < STEP_META.length - 1 && step !== 5 && (
                 <button onClick={() => setStep(STEP_META.length - 1)}
                   className="text-[10px] text-muted hover:text-foreground transition-colors px-3 py-2">
                   Skip to Review

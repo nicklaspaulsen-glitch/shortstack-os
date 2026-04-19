@@ -51,75 +51,128 @@ const TARGET_CITIES = [
   "Cambridge, UK", "Reading, UK", "Aberdeen, UK", "Belfast, UK",
 ];
 
+/**
+ * Google Places API (New) caps each response at 20 results. To actually hit
+ * a user's `maxResults` target, we paginate using `pageToken` until we hit
+ * the target OR Google runs out of results OR we hit the page cap.
+ *
+ * Filters (no phone / >500 reviews) run BEFORE the count so the user gets
+ * exactly as many qualified leads as they asked for (not "20 raw, 12 left
+ * after filtering"). Filter drops are logged so you can see why a query
+ * that "should" return 50 only produced 30.
+ */
 export async function scrapeGooglePlaces(
   industry: string,
   location: string,
-  maxResults: number = 20
+  maxResults: number = 20,
+  opts: { requirePhone?: boolean; maxReviewCount?: number; maxPages?: number } = {}
 ): Promise<ScrapedLead[]> {
   const apiKey = process.env.GOOGLE_PLACES_API_KEY;
   if (!apiKey) throw new Error("Google Places API key not configured");
 
+  const requirePhone = opts.requirePhone !== false; // default true
+  const maxReviewCount = opts.maxReviewCount ?? 500;
+  const maxPages = opts.maxPages ?? 10; // 10 pages × 20 = 200 leads ceiling per query
+
   const leads: ScrapedLead[] = [];
+  const seen = new Set<string>(); // dedupe within this run by place name+phone
   const query = `${industry} in ${location}`;
+  let pageToken: string | undefined;
+  let pagesFetched = 0;
+  let rawFetched = 0;
+  let droppedNoPhone = 0;
+  let droppedTooPopular = 0;
 
   try {
-    // Places API (New) — replaces legacy Text Search
-    const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri,places.types",
-      },
-      body: JSON.stringify({ textQuery: query, maxResultCount: Math.min(maxResults, 20) }),
-    });
-    const searchData = await searchRes.json();
-
-    if (!searchData.places) return leads;
-
-    for (const place of searchData.places) {
-      const detail = {
-        name: place.displayName?.text || "",
-        formatted_phone_number: place.nationalPhoneNumber || null,
-        formatted_address: place.formattedAddress || "",
-        website: place.websiteUri || null,
-        rating: place.rating || null,
-        user_ratings_total: place.userRatingCount || 0,
-        url: place.googleMapsUri || null,
-        types: place.types || [],
+    // Paginate until target met or API exhausted
+    while (leads.length < maxResults && pagesFetched < maxPages) {
+      const body: Record<string, unknown> = {
+        textQuery: query,
+        // Places API (New) max per page is 20 — pageToken pulls next page.
+        maxResultCount: Math.min(maxResults - leads.length + 5, 20),
       };
+      if (pageToken) body.pageToken = pageToken;
 
-      if (!detail) continue;
-
-      // Filter: must have phone, be local, under 500 reviews
-      if (!detail.formatted_phone_number) continue;
-      if (detail.user_ratings_total && detail.user_ratings_total > 500) continue;
-
-      const addressParts = (detail.formatted_address || "").split(",").map((s: string) => s.trim());
-
-      leads.push({
-        business_name: detail.name || place.name,
-        owner_name: null,
-        phone: detail.formatted_phone_number || null,
-        email: null, // Will be enriched by website scraping
-        website: detail.website || null,
-        address: detail.formatted_address || null,
-        city: addressParts[1] || null,
-        state: addressParts[2]?.split(" ")[0] || null,
-        country: addressParts[addressParts.length - 1] || "US",
-        google_rating: detail.rating || null,
-        review_count: detail.user_ratings_total || 0,
-        industry: industry,
-        category: (detail.types || []).join(", "),
-        source: "google_maps",
-        source_url: detail.url || null,
-        instagram_url: null,
-        facebook_url: null,
-        linkedin_url: null,
+      const searchRes = await fetch("https://places.googleapis.com/v1/places:searchText", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.googleMapsUri,places.types,nextPageToken",
+        },
+        body: JSON.stringify(body),
       });
+      if (!searchRes.ok) {
+        const errText = await searchRes.text().catch(() => "");
+        console.error(`[scrapeGooglePlaces] ${query} HTTP ${searchRes.status}: ${errText.slice(0, 200)}`);
+        break;
+      }
+      const searchData = await searchRes.json();
+      pagesFetched++;
+      if (!searchData.places || !Array.isArray(searchData.places) || searchData.places.length === 0) break;
+      rawFetched += searchData.places.length;
+
+      for (const place of searchData.places) {
+        if (leads.length >= maxResults) break;
+        const detail = {
+          name: place.displayName?.text || "",
+          formatted_phone_number: place.nationalPhoneNumber || null,
+          formatted_address: place.formattedAddress || "",
+          website: place.websiteUri || null,
+          rating: place.rating || null,
+          user_ratings_total: place.userRatingCount || 0,
+          url: place.googleMapsUri || null,
+          types: place.types || [],
+        };
+
+        // Dedupe within this run — Google sometimes returns same place across pages
+        const key = `${detail.name}::${detail.formatted_phone_number || ""}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+
+        // Filters — tracked so we can report what was dropped
+        if (requirePhone && !detail.formatted_phone_number) { droppedNoPhone++; continue; }
+        if (detail.user_ratings_total && detail.user_ratings_total > maxReviewCount) { droppedTooPopular++; continue; }
+
+        const addressParts = (detail.formatted_address || "").split(",").map((s: string) => s.trim());
+
+        leads.push({
+          business_name: detail.name || place.name,
+          owner_name: null,
+          phone: detail.formatted_phone_number || null,
+          email: null,
+          website: detail.website || null,
+          address: detail.formatted_address || null,
+          city: addressParts[1] || null,
+          state: addressParts[2]?.split(" ")[0] || null,
+          country: addressParts[addressParts.length - 1] || "US",
+          google_rating: detail.rating || null,
+          review_count: detail.user_ratings_total || 0,
+          industry: industry,
+          category: (detail.types || []).join(", "),
+          source: "google_maps",
+          source_url: detail.url || null,
+          instagram_url: null,
+          facebook_url: null,
+          linkedin_url: null,
+        });
+      }
+
+      pageToken = searchData.nextPageToken;
+      if (!pageToken) break; // no more pages
+      // Google recommends a 2s delay between paginated calls
+      await new Promise(r => setTimeout(r, 2000));
+    }
+
+    // Log the breakdown so the user can see WHY a query returned fewer than requested
+    if (leads.length < maxResults) {
+      console.log(
+        `[scrapeGooglePlaces] ${query}: requested=${maxResults} got=${leads.length} ` +
+        `raw=${rawFetched} pages=${pagesFetched} droppedNoPhone=${droppedNoPhone} droppedTooPopular=${droppedTooPopular}`,
+      );
     }
   } catch (error) {
-    console.error(`Error scraping Google Places for ${industry} in ${location}:`, error);
+    console.error(`[scrapeGooglePlaces] ${query} error:`, error);
   }
 
   return leads;

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useManagedClient } from "@/lib/use-managed-client";
 import { createClient } from "@/lib/supabase/client";
+import { useAuth } from "@/lib/auth-context";
 import { ContentScript, ContentRequest, PublishQueueItem, PersonalBrandIdea, ContentCalendarEntry, PublishPlatform } from "@/lib/types";
 import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
@@ -15,14 +16,39 @@ import {
   Film, FileText, Inbox, Upload, User, Sparkles, Calendar,
   Check, Edit3, Clock, Send, Search, BarChart3, RefreshCw,
   AlertTriangle, Zap, TrendingUp, Shield, Layers, Loader,
-  ThumbsUp, GitBranch, Star, ChevronRight
+  ThumbsUp, GitBranch, Star, ChevronRight, X
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal" | "pipeline" | "analytics" | "seo";
 
+type DropGoPlatform = "youtube" | "instagram" | "tiktok" | "linkedin" | "twitter";
+const DROP_GO_PLATFORMS: DropGoPlatform[] = ["youtube", "instagram", "tiktok", "linkedin", "twitter"];
+
+interface AIPackage {
+  titles?: Partial<Record<DropGoPlatform, string>>;
+  descriptions?: Partial<Record<DropGoPlatform, string>>;
+  hashtags?: Partial<Record<DropGoPlatform, string[]>>;
+  best_times?: Partial<Record<DropGoPlatform, string>>;
+  suggested_caption_variations?: string[];
+}
+
+interface DropGoItem {
+  id: string;              // local id
+  file_name: string;
+  file_size: number;
+  file_url?: string;
+  mime_type?: string;
+  file_type?: string;
+  status: "uploading" | "analyzing" | "ready" | "failed";
+  ai_package?: AIPackage;
+  package_id?: string;
+  error?: string;
+}
+
 export default function ContentPage() {
   const { clientId: managedClientId } = useManagedClient();
+  const { profile } = useAuth();
   const [tab, setTab] = useState<Tab>("scripts");
   const [scripts, setScripts] = useState<ContentScript[]>([]);
   const [requests, setRequests] = useState<ContentRequest[]>([]);
@@ -34,6 +60,15 @@ export default function ContentPage() {
   const [showPublishEditor, setShowPublishEditor] = useState<PublishQueueItem | null>(null);
   const [editingPublish, setEditingPublish] = useState<Partial<PublishQueueItem>>({});
   const supabase = createClient();
+
+  // ── Drop & Go state ──────────────────────────────────────────────
+  const [dropItems, setDropItems] = useState<DropGoItem[]>([]);
+  const [dragOver, setDragOver] = useState(false);
+  const [remixing, setRemixing] = useState<{ itemId: string; platform: DropGoPlatform } | null>(null);
+  const [remixOptions, setRemixOptions] = useState<{ itemId: string; platform: DropGoPlatform; alternatives: string[] } | null>(null);
+  const [planningWeek, setPlanningWeek] = useState(false);
+  const [weekPlan, setWeekPlan] = useState<Array<{ day: string; date: string; platform: string; asset_id?: string | null; post_time: string; title?: string; caption?: string }>>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Pipeline state
   const [pipelineFilter, setPipelineFilter] = useState<string>("all");
@@ -186,6 +221,195 @@ export default function ContentPage() {
     fetchData();
   }
 
+  // ── Drop & Go: upload + auto-package ───────────────────────────────
+  function fileKindFromMime(mime: string): string {
+    if (mime.startsWith("image/")) return "image";
+    if (mime.startsWith("video/")) return "video";
+    if (mime.startsWith("audio/")) return "audio";
+    if (mime.includes("pdf") || mime.includes("document")) return "document";
+    return "general";
+  }
+
+  async function handleDropGoFiles(files: File[]) {
+    if (files.length === 0) return;
+
+    for (const file of files) {
+      const localId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
+
+      setDropItems((prev) => [
+        ...prev,
+        {
+          id: localId,
+          file_name: file.name,
+          file_size: file.size,
+          mime_type: file.type,
+          file_type: ext,
+          status: "uploading",
+        },
+      ]);
+
+      try {
+        // Upload to Supabase storage (client-uploads bucket — same as portal uploads)
+        const path = `content-hub/${profile?.id || "anon"}/${Date.now()}-${file.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from("client-uploads")
+          .upload(path, file, { contentType: file.type });
+        if (uploadError) throw uploadError;
+
+        const { data: urlData } = supabase.storage.from("client-uploads").getPublicUrl(path);
+        const fileUrl = urlData.publicUrl;
+
+        // Mirror upload metadata into client_uploads when we have a client context
+        if (managedClientId) {
+          try {
+            await fetch("/api/uploads", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                client_id: managedClientId,
+                file_name: file.name,
+                file_type: ext,
+                file_size: file.size,
+                file_url: fileUrl,
+                category: fileKindFromMime(file.type),
+              }),
+            });
+          } catch { /* non-fatal */ }
+        }
+
+        setDropItems((prev) => prev.map((i) => (i.id === localId ? { ...i, status: "analyzing", file_url: fileUrl } : i)));
+
+        // Kick off AI auto-package
+        const res = await fetch("/api/content/auto-package", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            file_url: fileUrl,
+            file_type: ext,
+            mime_type: file.type,
+            file_name: file.name,
+            client_id: managedClientId || undefined,
+          }),
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data?.ai_package) {
+          setDropItems((prev) => prev.map((i) => (i.id === localId ? { ...i, status: "failed", error: data?.error || "AI package failed" } : i)));
+          toast.error(`AI package failed: ${file.name}`);
+          continue;
+        }
+
+        setDropItems((prev) => prev.map((i) => (i.id === localId ? {
+          ...i,
+          status: "ready",
+          ai_package: data.ai_package as AIPackage,
+          package_id: data.package?.id,
+        } : i)));
+        toast.success(`AI package ready: ${file.name}`);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : "Upload failed";
+        setDropItems((prev) => prev.map((i) => (i.id === localId ? { ...i, status: "failed", error: msg } : i)));
+        toast.error(`Failed: ${file.name}`);
+      }
+    }
+  }
+
+  function removeDropItem(id: string) {
+    setDropItems((prev) => prev.filter((i) => i.id !== id));
+  }
+
+  function onDropZone(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) handleDropGoFiles(files);
+  }
+
+  async function remixPlatformTitle(item: DropGoItem, platform: DropGoPlatform) {
+    const currentTitle = item.ai_package?.titles?.[platform];
+    if (!currentTitle) { toast.error("No title to remix"); return; }
+    setRemixing({ itemId: item.id, platform });
+    try {
+      const res = await fetch("/api/content/remix-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          platform,
+          current_title: currentTitle,
+          file_context: {
+            file_name: item.file_name,
+            file_type: item.file_type,
+            descriptions: item.ai_package?.descriptions,
+          },
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.alternatives) && data.alternatives.length > 0) {
+        setRemixOptions({ itemId: item.id, platform, alternatives: data.alternatives });
+      } else {
+        toast.error(data.error || "No alternatives returned");
+      }
+    } catch {
+      toast.error("Remix failed");
+    } finally {
+      setRemixing(null);
+    }
+  }
+
+  function applyRemixTitle(newTitle: string) {
+    if (!remixOptions) return;
+    const { itemId, platform } = remixOptions;
+    setDropItems((prev) => prev.map((i) => {
+      if (i.id !== itemId || !i.ai_package) return i;
+      return {
+        ...i,
+        ai_package: {
+          ...i.ai_package,
+          titles: { ...(i.ai_package.titles || {}), [platform]: newTitle },
+        },
+      };
+    }));
+    setRemixOptions(null);
+    toast.success("Title updated");
+  }
+
+  async function planMyWeek() {
+    const readyItems = dropItems.filter((i) => i.status === "ready");
+    if (readyItems.length === 0) { toast.error("Add some assets first"); return; }
+    setPlanningWeek(true);
+    try {
+      const res = await fetch("/api/content-plan/auto-generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assets: readyItems.map((i) => ({
+            id: i.package_id,
+            file_url: i.file_url,
+            file_name: i.file_name,
+            file_type: i.file_type,
+            mime_type: i.mime_type,
+            ai_package: i.ai_package,
+          })),
+          platforms: DROP_GO_PLATFORMS,
+          days: 7,
+          client_id: managedClientId || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.schedule)) {
+        setWeekPlan(data.schedule);
+        toast.success(`Planned ${data.schedule.length} posts${data.saved ? ` · saved ${data.saved} to calendar` : ""}`);
+      } else {
+        toast.error(data.error || "Plan generation failed");
+      }
+    } catch {
+      toast.error("Plan generation failed");
+    } finally {
+      setPlanningWeek(false);
+    }
+  }
+
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: "scripts", label: "Scripts", icon: <FileText size={16} /> },
     { key: "requests", label: "Request Inbox", icon: <Inbox size={16} /> },
@@ -209,6 +433,223 @@ export default function ContentPage() {
         <button onClick={() => setShowGenerateModal(true)} className="btn-primary flex items-center gap-2">
           <Sparkles size={16} /> Generate Script
         </button>
+      </div>
+
+      {/* ── Drop & Go ───────────────────────────────────────────── */}
+      <div className="card border border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h2 className="section-header flex items-center gap-2 mb-1">
+              <Sparkles size={18} className="text-gold" /> Drop & Go — AI handles the rest
+            </h2>
+            <p className="text-xs text-muted">Drop any file. AI writes titles, descriptions, hashtags, and best post times for every platform.</p>
+          </div>
+          {dropItems.filter((i) => i.status === "ready").length > 0 && (
+            <button
+              onClick={planMyWeek}
+              disabled={planningWeek}
+              className="btn-primary flex items-center gap-2 disabled:opacity-50 bg-gradient-to-r from-gold to-gold-light"
+            >
+              {planningWeek ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
+              Plan my week from these assets
+            </button>
+          )}
+        </div>
+
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={onDropZone}
+          onClick={() => fileInputRef.current?.click()}
+          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all ${
+            dragOver ? "border-gold bg-gold/5" : "border-gold/30 hover:border-gold/50"
+          }`}
+        >
+          <Upload size={36} className="mx-auto mb-3 text-gold" />
+          <p className="text-sm font-medium">Drag & drop images, videos, PDFs, or docs</p>
+          <p className="text-xs text-muted mt-1">or click to browse. AI auto-packages each file.</p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/*,video/*,application/pdf,.doc,.docx,.txt,.md,audio/*"
+            onChange={(e) => {
+              const files = Array.from(e.target.files || []);
+              if (files.length > 0) handleDropGoFiles(files);
+              e.target.value = "";
+            }}
+            className="hidden"
+          />
+        </div>
+
+        {dropItems.length > 0 && (
+          <div className="mt-5 space-y-4">
+            {dropItems.map((item) => (
+              <div key={item.id} className="border border-gold/20 rounded-xl p-4 bg-surface/50">
+                {/* Header row */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2 min-w-0">
+                    {item.mime_type?.startsWith("video/") ? <Film size={14} className="text-purple-400 shrink-0" /> :
+                      item.mime_type?.startsWith("image/") ? <FileText size={14} className="text-blue-400 shrink-0" /> :
+                        <FileText size={14} className="text-gold shrink-0" />}
+                    <p className="text-sm font-medium truncate">{item.file_name}</p>
+                    {item.status === "uploading" && (
+                      <span className="text-[10px] text-muted flex items-center gap-1">
+                        <Loader size={10} className="animate-spin" /> Uploading...
+                      </span>
+                    )}
+                    {item.status === "analyzing" && (
+                      <span className="text-[10px] text-gold flex items-center gap-1">
+                        <Loader size={10} className="animate-spin" /> Analyzing...
+                      </span>
+                    )}
+                    {item.status === "ready" && (
+                      <span className="text-[10px] text-success flex items-center gap-1">
+                        <Check size={10} /> Ready
+                      </span>
+                    )}
+                    {item.status === "failed" && (
+                      <span className="text-[10px] text-danger flex items-center gap-1">
+                        <AlertTriangle size={10} /> Failed
+                      </span>
+                    )}
+                  </div>
+                  <button onClick={() => removeDropItem(item.id)} className="text-muted hover:text-danger transition-colors">
+                    <X size={14} />
+                  </button>
+                </div>
+
+                {/* AI Package */}
+                {item.status === "ready" && item.ai_package && (
+                  <div className="space-y-3">
+                    {/* Titles per platform with remix */}
+                    <div>
+                      <p className="text-[10px] text-muted uppercase tracking-wider mb-2">AI Titles per Platform</p>
+                      <div className="space-y-2">
+                        {DROP_GO_PLATFORMS.map((plat) => {
+                          const title = item.ai_package?.titles?.[plat];
+                          if (!title) return null;
+                          const isRemixing = remixing?.itemId === item.id && remixing.platform === plat;
+                          return (
+                            <div key={plat} className="flex items-start gap-2">
+                              <span className="text-[10px] uppercase text-gold w-20 shrink-0 pt-1">{plat}</span>
+                              <p className="text-xs text-foreground flex-1">{title}</p>
+                              <button
+                                onClick={() => remixPlatformTitle(item, plat)}
+                                disabled={isRemixing}
+                                title="Find a better title"
+                                className="text-gold/60 hover:text-gold transition-colors disabled:opacity-40 shrink-0"
+                              >
+                                {isRemixing ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Descriptions */}
+                    {item.ai_package.descriptions && (
+                      <div>
+                        <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Descriptions</p>
+                        <div className="space-y-1">
+                          {DROP_GO_PLATFORMS.map((plat) => {
+                            const desc = item.ai_package?.descriptions?.[plat];
+                            if (!desc) return null;
+                            return (
+                              <div key={plat} className="flex items-start gap-2">
+                                <span className="text-[10px] uppercase text-muted w-20 shrink-0 pt-0.5">{plat}</span>
+                                <p className="text-[11px] text-muted/90 flex-1">{desc}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Hashtags + Best times grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {item.ai_package.hashtags && (
+                        <div className="border border-border rounded-lg p-3">
+                          <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Hashtags</p>
+                          <div className="space-y-1.5">
+                            {(["instagram", "tiktok", "twitter", "linkedin"] as DropGoPlatform[]).map((plat) => {
+                              const tags = item.ai_package?.hashtags?.[plat];
+                              if (!tags || tags.length === 0) return null;
+                              return (
+                                <div key={plat}>
+                                  <span className="text-[9px] uppercase text-gold mr-2">{plat}</span>
+                                  <span className="text-[10px] text-muted">{tags.join(" ")}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      {item.ai_package.best_times && (
+                        <div className="border border-border rounded-lg p-3">
+                          <p className="text-[10px] text-muted uppercase tracking-wider mb-2 flex items-center gap-1">
+                            <Clock size={10} /> Best Post Times
+                          </p>
+                          <div className="grid grid-cols-2 gap-1.5">
+                            {DROP_GO_PLATFORMS.map((plat) => {
+                              const t = item.ai_package?.best_times?.[plat];
+                              if (!t) return null;
+                              return (
+                                <div key={plat} className="flex items-center justify-between text-[10px]">
+                                  <span className="text-muted capitalize">{plat}</span>
+                                  <span className="text-gold font-medium">{t}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Caption variations */}
+                    {Array.isArray(item.ai_package.suggested_caption_variations) && item.ai_package.suggested_caption_variations.length > 0 && (
+                      <div>
+                        <p className="text-[10px] text-muted uppercase tracking-wider mb-2">Caption Variations</p>
+                        <div className="space-y-1.5">
+                          {item.ai_package.suggested_caption_variations.map((cap, idx) => (
+                            <div key={idx} className="text-[11px] p-2 bg-surface-light/50 border border-border rounded flex items-start gap-2">
+                              <span className="text-gold font-medium shrink-0">#{idx + 1}</span>
+                              <span className="text-foreground/90">{cap}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {item.status === "failed" && item.error && (
+                  <p className="text-[10px] text-danger/80 mt-2">{item.error}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Week plan preview */}
+        {weekPlan.length > 0 && (
+          <div className="mt-5 border border-gold/30 rounded-xl p-4 bg-gold/5">
+            <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+              <Calendar size={14} className="text-gold" /> 7-Day Plan
+            </h3>
+            <div className="space-y-1.5">
+              {weekPlan.map((p, i) => (
+                <div key={i} className="flex items-center gap-3 text-[11px] p-2 border border-border rounded bg-surface/50">
+                  <span className="text-gold font-medium w-10 shrink-0">{p.day}</span>
+                  <span className="text-muted w-20 shrink-0">{p.post_time}</span>
+                  <span className="text-foreground capitalize w-20 shrink-0">{p.platform}</span>
+                  <span className="text-muted flex-1 truncate">{p.title || p.caption || "—"}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Tabs */}
@@ -666,6 +1107,30 @@ export default function ContentPage() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* Remix Title Modal */}
+      <Modal isOpen={!!remixOptions} onClose={() => setRemixOptions(null)} title="Pick a better title" size="md">
+        {remixOptions && (
+          <div className="space-y-3">
+            <p className="text-xs text-muted">AI suggestions for <span className="text-gold capitalize">{remixOptions.platform}</span>:</p>
+            <div className="space-y-2">
+              {remixOptions.alternatives.map((alt, i) => (
+                <button
+                  key={i}
+                  onClick={() => applyRemixTitle(alt)}
+                  className="w-full text-left p-3 border border-gold/30 rounded-lg hover:border-gold hover:bg-gold/5 transition-all"
+                >
+                  <span className="text-[10px] text-gold font-medium mr-2">#{i + 1}</span>
+                  <span className="text-sm">{alt}</span>
+                </button>
+              ))}
+            </div>
+            <div className="flex justify-end pt-2">
+              <button onClick={() => setRemixOptions(null)} className="btn-secondary">Cancel</button>
+            </div>
+          </div>
+        )}
       </Modal>
 
       {/* Publish Editor Modal */}

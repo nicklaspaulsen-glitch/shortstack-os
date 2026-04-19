@@ -23,7 +23,12 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  let body: { user_type?: unknown; onboarding_preferences?: unknown };
+  let body: {
+    user_type?: unknown;
+    onboarding_preferences?: unknown;
+    onboarding_personalization?: unknown;
+    onboarding_ai_answers?: unknown;
+  };
   try {
     body = await req.json();
   } catch {
@@ -37,6 +42,12 @@ export async function POST(req: NextRequest) {
   }
   if (body.onboarding_preferences && typeof body.onboarding_preferences === "object") {
     updates.onboarding_preferences = body.onboarding_preferences;
+  }
+  if (body.onboarding_personalization && typeof body.onboarding_personalization === "object") {
+    updates.onboarding_personalization = body.onboarding_personalization;
+  }
+  if (body.onboarding_ai_answers && typeof body.onboarding_ai_answers === "object") {
+    updates.onboarding_ai_answers = body.onboarding_ai_answers;
   }
 
   if (Object.keys(updates).length === 0) {
@@ -62,12 +73,14 @@ export async function GET() {
   const service = createServiceClient();
   const { data } = await service
     .from("profiles")
-    .select("user_type, onboarding_preferences")
+    .select("user_type, onboarding_preferences, onboarding_personalization, onboarding_ai_answers")
     .eq("id", user.id)
     .maybeSingle();
 
   return NextResponse.json({
     user_type: data?.user_type || "agency",
     onboarding_preferences: data?.onboarding_preferences || {},
+    onboarding_personalization: data?.onboarding_personalization || {},
+    onboarding_ai_answers: data?.onboarding_ai_answers || {},
   });
 }
