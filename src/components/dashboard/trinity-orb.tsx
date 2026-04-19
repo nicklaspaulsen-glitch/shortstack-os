@@ -3,11 +3,15 @@
 /**
  * TrinityOrb — the dashboard centerpiece.
  *
- * A CSS-only 3D gradient sphere with pulsing glow sits at the top.
- * Below it: text input + mic button (Web Speech API) + quick-action chips.
- * When the user sends a message, the orb shrinks + moves aside, and the
- * conversation streams below as a chat thread. All messages persist via
- * /api/trinity-assistant.
+ * A faceted low-poly 3D head ("Trinity Persona") sits at the top — built
+ * with SVG polygons + CSS so there's no Three.js bundle cost. It breathes
+ * when idle, focuses + spins faster when thinking, and pulses with a
+ * voice-reactive halo when listening. Eyes follow the cursor subtly.
+ *
+ * Below the head: text input + mic button (Web Speech API) + quick-action
+ * chips. When the user sends a message, the head shrinks + moves aside and
+ * the conversation streams below as a chat thread. All messages persist
+ * via /api/trinity-assistant.
  *
  * Works for both agency-admin and client-portal surfaces — pass `clientId`
  * to scope the assistant to a single client (client portal mode).
@@ -181,7 +185,11 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
 
       {/* ─── Header: orb + tagline ─────────────────────────────── */}
       <div className={`relative flex flex-col items-center text-center transition-all duration-500 ${active ? "py-4" : "py-8 sm:py-10"}`}>
-        <TrinityOrbVisual size={active ? "small" : "large"} pulsing={sending} />
+        <TrinityOrbVisual
+          size={active ? "small" : "large"}
+          pulsing={sending}
+          state={sending ? "thinking" : listening ? "listening" : "idle"}
+        />
         <div className={`mt-3 transition-all ${active ? "opacity-80" : "opacity-100"}`}>
           <p className="text-[10px] uppercase tracking-[0.22em] text-muted flex items-center gap-1.5 justify-center">
             <Sparkles size={10} className="text-gold" />
@@ -330,79 +338,343 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
 }
 
 /**
- * The actual CSS 3D orb — nested radial gradients + slow rotation + breathing.
- * Not Three.js. Pure CSS + Tailwind + inline styles, no extra deps.
+ * Trinity Persona — a stylized faceted low-poly 3D head built with SVG.
+ *
+ * No Three.js, no extra deps. Just SVG polygons shaded with brand-gold
+ * gradients, plus a cursor-tracked subtle head turn, glowing eyes, and
+ * a jaw that animates when "thinking" / "listening".
+ *
+ * States:
+ *  - idle      : slow breathing, slow ambient ring rotation, eyes track cursor
+ *  - thinking  : faster ring spin, scanline sweep across face, jaw murmurs
+ *  - listening : wide concentric voice rings, brightened eyes, alert posture
+ *
+ * Honors prefers-reduced-motion (animations damped or stilled).
  */
-function TrinityOrbVisual({ size, pulsing }: { size: "large" | "small"; pulsing: boolean }) {
-  const px = size === "large" ? 150 : 72;
+type TrinityState = "idle" | "thinking" | "listening";
+
+function TrinityOrbVisual({
+  size,
+  pulsing,
+  state = "idle",
+}: {
+  size: "large" | "small";
+  pulsing: boolean;
+  state?: TrinityState;
+}) {
+  const px = size === "large" ? 170 : 80;
+  const wrapRef = useRef<HTMLDivElement>(null);
+  // Head turn (-1..1 on each axis) driven by cursor position relative to component.
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [reduced, setReduced] = useState(false);
+
+  // Detect reduced motion preference once.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener?.("change", handler);
+    return () => mq.removeEventListener?.("change", handler);
+  }, []);
+
+  // Cursor-tracked head turn — subtle parallax, capped at ~12deg.
+  useEffect(() => {
+    if (reduced) return;
+    function onMove(e: MouseEvent) {
+      const el = wrapRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      // Distance falloff so far-away cursors don't pin the head sideways.
+      const dx = (e.clientX - cx) / Math.max(window.innerWidth / 2, 1);
+      const dy = (e.clientY - cy) / Math.max(window.innerHeight / 2, 1);
+      setTilt({
+        x: Math.max(-1, Math.min(1, dx)),
+        y: Math.max(-1, Math.min(1, dy)),
+      });
+    }
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => window.removeEventListener("mousemove", onMove);
+  }, [reduced]);
+
+  // Animation timing knobs per state.
+  const ringSpeed = state === "thinking" ? "5s" : state === "listening" ? "8s" : "16s";
+  const breathSpeed = pulsing ? "1.4s" : state === "listening" ? "2.2s" : "5s";
+  const eyeIntensity = state === "listening" ? 1 : state === "thinking" ? 0.8 : 0.55;
+  const tiltDeg = reduced ? { x: 0, y: 0 } : { x: tilt.x * 10, y: tilt.y * -8 };
+  const eyeOffset = reduced ? { x: 0, y: 0 } : { x: tilt.x * 1.2, y: tilt.y * 1.0 };
+
+  // Voice listening rings render only in listening mode.
+  const voiceRings = state === "listening" ? [0, 1, 2] : [];
+
+  const ariaLabel =
+    state === "thinking"
+      ? "Trinity is thinking"
+      : state === "listening"
+      ? "Trinity is listening"
+      : "Trinity AI assistant";
+
   return (
     <div
-      className="relative"
-      style={{ width: px, height: px }}
-      aria-hidden
+      ref={wrapRef}
+      className="relative select-none"
+      style={{ width: px, height: px, perspective: 600 }}
+      role="img"
+      aria-label={ariaLabel}
     >
-      {/* outer glow */}
+      {/* outer aurora glow — always behind */}
       <div
-        className={`absolute inset-[-30%] rounded-full blur-2xl ${pulsing ? "animate-pulse" : ""}`}
+        className="absolute inset-[-32%] rounded-full blur-2xl pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(200,168,85,0.55), rgba(200,168,85,0.15) 45%, transparent 70%)",
-          animation: pulsing ? undefined : "trinity-breath 4s ease-in-out infinite",
+            state === "listening"
+              ? "radial-gradient(circle at 50% 50%, rgba(200,168,85,0.55), rgba(139,92,246,0.25) 45%, transparent 72%)"
+              : state === "thinking"
+              ? "radial-gradient(circle at 50% 50%, rgba(200,168,85,0.50), rgba(59,130,246,0.20) 50%, transparent 75%)"
+              : "radial-gradient(circle at 50% 50%, rgba(200,168,85,0.40), rgba(200,168,85,0.10) 50%, transparent 70%)",
+          animation: reduced ? undefined : `trinity-breath ${breathSpeed} ease-in-out infinite`,
         }}
-      />
-      {/* rotating highlight ring */}
-      <div
-        className="absolute inset-[-6%] rounded-full opacity-60"
-        style={{
-          background:
-            "conic-gradient(from 0deg, rgba(200,168,85,0) 0%, rgba(200,168,85,0.55) 25%, rgba(139,92,246,0.4) 50%, rgba(59,130,246,0.35) 75%, rgba(200,168,85,0) 100%)",
-          filter: "blur(6px)",
-          animation: "trinity-spin 12s linear infinite",
-        }}
-      />
-      {/* core sphere */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background:
-            "radial-gradient(circle at 32% 28%, #fff6d8 0%, #e8c870 18%, #c8a855 42%, #8a7032 72%, #241b08 100%)",
-          boxShadow:
-            "inset 0 -14px 28px rgba(0,0,0,0.55), inset 0 14px 28px rgba(255,235,180,0.2), 0 18px 40px -12px rgba(200,168,85,0.55)",
-          animation: pulsing ? "trinity-breath 1.2s ease-in-out infinite" : "trinity-breath 5s ease-in-out infinite",
-        }}
-      />
-      {/* specular highlight */}
-      <div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          top: "12%",
-          left: "22%",
-          width: "34%",
-          height: "22%",
-          background:
-            "radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.75), rgba(255,255,255,0) 70%)",
-          filter: "blur(4px)",
-        }}
-      />
-      {/* faint inner swirl — purple/blue depth hint */}
-      <div
-        className="absolute inset-[8%] rounded-full mix-blend-screen opacity-40"
-        style={{
-          background:
-            "radial-gradient(circle at 70% 80%, rgba(139,92,246,0.5), transparent 55%), radial-gradient(circle at 20% 80%, rgba(59,130,246,0.45), transparent 50%)",
-          animation: "trinity-spin 18s linear infinite reverse",
-        }}
+        aria-hidden
       />
 
-      {/* keyframes — scoped inline so the component is drop-in */}
+      {/* rotating conic ring — accent halo */}
+      <div
+        className="absolute inset-[-4%] rounded-full opacity-70 pointer-events-none"
+        style={{
+          background:
+            "conic-gradient(from 0deg, rgba(200,168,85,0) 0%, rgba(200,168,85,0.55) 22%, rgba(139,92,246,0.40) 50%, rgba(59,130,246,0.35) 78%, rgba(200,168,85,0) 100%)",
+          filter: "blur(5px)",
+          animation: reduced ? undefined : `trinity-spin ${ringSpeed} linear infinite`,
+        }}
+        aria-hidden
+      />
+
+      {/* voice-reactive concentric rings (listening only) */}
+      {voiceRings.map((i) => (
+        <div
+          key={i}
+          aria-hidden
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{
+            border: "1px solid rgba(200,168,85,0.55)",
+            animation: reduced
+              ? undefined
+              : `trinity-voicering 1.6s ease-out ${i * 0.5}s infinite`,
+            opacity: 0,
+          }}
+        />
+      ))}
+
+      {/* The faceted head — wrapped in a 3D-tilt container */}
+      <div
+        className="absolute inset-0"
+        style={{
+          transformStyle: "preserve-3d",
+          transform: `rotateY(${tiltDeg.x}deg) rotateX(${tiltDeg.y}deg)`,
+          transition: "transform 350ms cubic-bezier(0.22, 1, 0.36, 1)",
+          animation: reduced ? undefined : `trinity-breath ${breathSpeed} ease-in-out infinite`,
+        }}
+      >
+        <svg
+          viewBox="0 0 100 100"
+          width={px}
+          height={px}
+          className="overflow-visible block"
+          aria-hidden
+        >
+          <defs>
+            {/* Brand-gold gradient for facets — light side */}
+            <linearGradient id="trinity-facet-light" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fff1c2" />
+              <stop offset="55%" stopColor="#e8c870" />
+              <stop offset="100%" stopColor="#c8a855" />
+            </linearGradient>
+            <linearGradient id="trinity-facet-mid" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#d8b766" />
+              <stop offset="55%" stopColor="#c8a855" />
+              <stop offset="100%" stopColor="#8a7032" />
+            </linearGradient>
+            <linearGradient id="trinity-facet-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#8a7032" />
+              <stop offset="55%" stopColor="#5a4720" />
+              <stop offset="100%" stopColor="#241b08" />
+            </linearGradient>
+            {/* Eye glow */}
+            <radialGradient id="trinity-eye" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+              <stop offset="40%" stopColor="#ffe9a8" stopOpacity={eyeIntensity} />
+              <stop offset="100%" stopColor="#c8a855" stopOpacity="0" />
+            </radialGradient>
+            {/* Scanline mask for "thinking" */}
+            <linearGradient id="trinity-scan" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="rgba(255,247,210,0)" />
+              <stop offset="50%" stopColor="rgba(255,247,210,0.7)" />
+              <stop offset="100%" stopColor="rgba(255,247,210,0)" />
+            </linearGradient>
+          </defs>
+
+          {/* ─── Head silhouette (low-poly facets, viewed 3/4) ────────── */}
+          <g>
+            {/* Forehead/crown — light */}
+            <polygon points="32,22 50,12 68,22 60,32 40,32" fill="url(#trinity-facet-light)" />
+            {/* Top-right temple — mid */}
+            <polygon points="68,22 78,34 70,42 60,32" fill="url(#trinity-facet-mid)" />
+            {/* Top-left temple — light */}
+            <polygon points="32,22 22,34 30,42 40,32" fill="url(#trinity-facet-light)" opacity="0.92" />
+            {/* Right cheek — dark (shadow side) */}
+            <polygon points="78,34 80,52 70,58 70,42" fill="url(#trinity-facet-dark)" />
+            {/* Left cheek — mid */}
+            <polygon points="22,34 20,52 30,58 30,42" fill="url(#trinity-facet-mid)" opacity="0.95" />
+            {/* Mid-face plane (around eyes / nose bridge) — light */}
+            <polygon points="40,32 60,32 70,42 65,52 50,50 35,52 30,42" fill="url(#trinity-facet-light)" />
+            {/* Nose ridge — light triangle */}
+            <polygon points="50,42 54,56 46,56" fill="url(#trinity-facet-light)" opacity="0.9" />
+            {/* Right cheek-to-jaw — mid */}
+            <polygon points="65,52 70,58 64,68 54,64" fill="url(#trinity-facet-mid)" />
+            {/* Left cheek-to-jaw — mid */}
+            <polygon points="35,52 30,58 36,68 46,64" fill="url(#trinity-facet-mid)" opacity="0.95" />
+            {/* Mouth plane — dark */}
+            <polygon points="46,64 54,64 50,72" fill="url(#trinity-facet-dark)" />
+            {/* Jaw — animates open/close on thinking & listening */}
+            <g
+              style={{
+                transformOrigin: "50px 64px",
+                animation:
+                  reduced || state === "idle"
+                    ? undefined
+                    : state === "listening"
+                    ? "trinity-jaw 0.6s ease-in-out infinite"
+                    : "trinity-jaw 1.1s ease-in-out infinite",
+              }}
+            >
+              <polygon points="36,68 64,68 58,80 50,84 42,80" fill="url(#trinity-facet-dark)" />
+              <polygon points="50,72 58,80 50,84" fill="url(#trinity-facet-mid)" opacity="0.85" />
+              <polygon points="50,72 42,80 50,84" fill="url(#trinity-facet-mid)" opacity="0.75" />
+            </g>
+
+            {/* Wireframe edge overlay — gives the "AI lattice" feel */}
+            <g
+              fill="none"
+              stroke="rgba(255,235,180,0.18)"
+              strokeWidth="0.4"
+              strokeLinejoin="round"
+            >
+              <polyline points="32,22 50,12 68,22" />
+              <polyline points="22,34 32,22" />
+              <polyline points="68,22 78,34" />
+              <polyline points="22,34 20,52 30,58 36,68 42,80 50,84 58,80 64,68 70,58 80,52 78,34" />
+              <line x1="40" y1="32" x2="60" y2="32" />
+              <line x1="30" y1="42" x2="70" y2="42" />
+              <line x1="35" y1="52" x2="65" y2="52" />
+              <line x1="46" y1="64" x2="54" y2="64" />
+              <line x1="50" y1="42" x2="50" y2="56" />
+              <line x1="40" y1="32" x2="30" y2="42" />
+              <line x1="60" y1="32" x2="70" y2="42" />
+              <line x1="35" y1="52" x2="30" y2="58" />
+              <line x1="65" y1="52" x2="70" y2="58" />
+            </g>
+
+            {/* ─── Eyes — glowing gold orbs that follow the cursor ─── */}
+            <g
+              style={{
+                transform: `translate(${eyeOffset.x}px, ${eyeOffset.y}px)`,
+                transition: "transform 220ms ease-out",
+              }}
+            >
+              {/* Halo */}
+              <circle cx="42" cy="46" r="5" fill="url(#trinity-eye)" />
+              <circle cx="58" cy="46" r="5" fill="url(#trinity-eye)" />
+              {/* Iris core */}
+              <circle
+                cx="42"
+                cy="46"
+                r="1.6"
+                fill="#fff7d8"
+                style={{
+                  animation: reduced
+                    ? undefined
+                    : state === "thinking"
+                    ? "trinity-blink 2.4s ease-in-out infinite"
+                    : "trinity-blink 5.5s ease-in-out infinite",
+                  transformOrigin: "42px 46px",
+                }}
+              />
+              <circle
+                cx="58"
+                cy="46"
+                r="1.6"
+                fill="#fff7d8"
+                style={{
+                  animation: reduced
+                    ? undefined
+                    : state === "thinking"
+                    ? "trinity-blink 2.4s ease-in-out infinite"
+                    : "trinity-blink 5.5s ease-in-out infinite",
+                  transformOrigin: "58px 46px",
+                }}
+              />
+            </g>
+
+            {/* Specular highlight on the brow — sells the 3D form */}
+            <ellipse
+              cx="44"
+              cy="22"
+              rx="9"
+              ry="2.4"
+              fill="rgba(255,247,210,0.45)"
+              transform="rotate(-15 44 22)"
+            />
+
+            {/* Scanline (thinking only) */}
+            {state === "thinking" && !reduced && (
+              <rect
+                x="18"
+                y="0"
+                width="64"
+                height="6"
+                fill="url(#trinity-scan)"
+                style={{
+                  animation: "trinity-scan 2.6s linear infinite",
+                  mixBlendMode: "screen",
+                }}
+              />
+            )}
+          </g>
+        </svg>
+      </div>
+
+      {/* keyframes — scoped to the visual */}
       <style jsx>{`
         @keyframes trinity-breath {
           0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.06); }
+          50% { transform: scale(1.045); }
         }
         @keyframes trinity-spin {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+        @keyframes trinity-voicering {
+          0% { transform: scale(0.85); opacity: 0.65; }
+          100% { transform: scale(1.6); opacity: 0; }
+        }
+        @keyframes trinity-jaw {
+          0%, 100% { transform: scaleY(1) translateY(0); }
+          50% { transform: scaleY(1.18) translateY(1px); }
+        }
+        @keyframes trinity-blink {
+          0%, 92%, 100% { transform: scaleY(1); }
+          95% { transform: scaleY(0.1); }
+        }
+        @keyframes trinity-scan {
+          0% { transform: translateY(10px); opacity: 0; }
+          15% { opacity: 0.9; }
+          85% { opacity: 0.9; }
+          100% { transform: translateY(95px); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          :global(*) { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
         }
       `}</style>
     </div>
