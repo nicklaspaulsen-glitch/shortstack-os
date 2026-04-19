@@ -1215,20 +1215,27 @@ export default function ClientsPage() {
                 <UserPlus size={16} /> {selectedClient.profile_id ? "Reset Password" : "Give Portal Access"}
               </button>
               <button onClick={async () => {
-                toast.loading("Generating contract...");
-                const res = await fetch("/api/contracts/generate", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ client_id: selectedClient.id }),
-                });
-                toast.dismiss();
-                if (res.ok) {
-                  const blob = await res.blob();
-                  const url = URL.createObjectURL(blob);
-                  const a = document.createElement("a"); a.href = url;
-                  a.download = `${selectedClient.business_name}_contract.pdf`; a.click();
-                  toast.success("Contract downloaded!");
-                } else { toast.error("Failed to generate contract"); }
+                const tid = "contract-gen";
+                toast.loading("Generating contract...", { id: tid });
+                try {
+                  const res = await fetch("/api/contracts/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ client_id: selectedClient.id }),
+                  });
+                  if (res.ok) {
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a"); a.href = url;
+                    a.download = `${selectedClient.business_name}_contract.pdf`; a.click();
+                    // Free the object URL once the browser starts the download so we
+                    // don't leak blob memory on every contract generation.
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                    toast.success("Contract downloaded!", { id: tid });
+                  } else { toast.error("Failed to generate contract", { id: tid }); }
+                } catch {
+                  toast.error("Failed to generate contract", { id: tid });
+                }
               }} className="btn-secondary flex items-center gap-2">
                 <Download size={16} /> Generate Contract PDF
               </button>
@@ -1285,7 +1292,7 @@ export default function ClientsPage() {
               <input name="password" type="text" className="input w-full" placeholder="Set their initial password" required minLength={6} />
             </div>
             <div className="bg-surface-light rounded-lg p-3 text-xs text-muted">
-              The client will be able to log in at shortstack-os.vercel.app and see: their active services, task checklist, invoices, contracts, and deliverables.
+              The client will be able to log in at shortstack.work and see: their active services, task checklist, invoices, contracts, and deliverables.
             </div>
             <div className="flex justify-end gap-3">
               <button type="button" onClick={() => setShowInviteModal(null)} className="btn-secondary">Cancel</button>

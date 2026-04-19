@@ -347,7 +347,11 @@ export default function FormsPage() {
 
   function generateEmbedCode(): string {
     if (!activeForm) return "";
-    return `<iframe src="https://shortstack-os.vercel.app/forms/embed/${activeForm.id}" width="100%" height="600" frameborder="0" style="border:none;border-radius:12px;"></iframe>`;
+    // Use the current origin so copied embed code works in both production
+    // (shortstack.work) and preview/staging environments without hardcoding
+    // the stale Vercel subdomain.
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://shortstack.work";
+    return `<iframe src="${origin}/forms/embed/${activeForm.id}" width="100%" height="600" frameborder="0" style="border:none;border-radius:12px;"></iframe>`;
   }
 
   const totalSubmissions = MOCK_SUBMISSIONS.length;

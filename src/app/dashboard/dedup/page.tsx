@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   GitMerge, Search, Trash2, AlertTriangle, CheckCircle,
   Settings, Clock, BarChart3, Shield, RefreshCw,
@@ -53,6 +53,15 @@ export default function DedupPage() {
   const [whitelistPairs, setWhitelistPairs] = useState<string[]>([]);
   const [confidenceFilter, setConfidenceFilter] = useState(0);
   const [expandedGroup, setExpandedGroup] = useState<string | null>(null);
+  // Track the scan interval so we can clear it if the component unmounts
+  // mid-scan (otherwise React logs "setState on unmounted" warnings).
+  const scanIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+    };
+  }, []);
 
   const totalDupes = duplicates.reduce((s, g) => s + g.leads.length - 1, 0);
   const highConfidence = duplicates.filter(g => g.confidence >= 90).length;
@@ -60,9 +69,15 @@ export default function DedupPage() {
   const startScan = () => {
     setScanning(true);
     setScanProgress(0);
-    const interval = setInterval(() => {
+    if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+    scanIntervalRef.current = setInterval(() => {
       setScanProgress(prev => {
-        if (prev >= 100) { clearInterval(interval); setScanning(false); return 100; }
+        if (prev >= 100) {
+          if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
+          scanIntervalRef.current = null;
+          setScanning(false);
+          return 100;
+        }
         return prev + 5;
       });
     }, 100);

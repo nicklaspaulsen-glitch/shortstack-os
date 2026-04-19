@@ -50,7 +50,8 @@ export async function POST(request: NextRequest) {
   }
 
   if (!emailBody) {
-    emailBody = `<p>Hi ${client.contact_name},</p><p>Welcome to ShortStack! We're excited to help ${client.business_name} grow.</p><p>Log in to your portal to get started: <a href="https://shortstack-os.vercel.app/login">shortstack-os.vercel.app</a></p><p>Best,<br>The ShortStack Team</p>`;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack.work";
+    emailBody = `<p>Hi ${client.contact_name},</p><p>Welcome to Trinity! We're excited to help ${client.business_name} grow.</p><p>Log in to your portal to get started: <a href="${appUrl}/login">${appUrl.replace(/^https?:\/\//, "")}</a></p><p>Best,<br>The Trinity Team</p>`;
   }
 
   // Send via GHL if available

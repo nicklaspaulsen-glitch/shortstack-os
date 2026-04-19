@@ -290,9 +290,13 @@ function SocialAccountsPage() {
   }
 
   async function disconnect(account: SocialAccount) {
+    // Optimistically remove the tile so the user gets instant feedback;
+    // we re-sync with the server below and restore on failure.
+    const prev = accounts;
+    setAccounts(a => a.filter(x => x.id !== account.id));
     try {
       // Disconnect via Zernio API
-      await fetch("/api/social/zernio", {
+      const zRes = await fetch("/api/social/zernio", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -301,15 +305,28 @@ function SocialAccountsPage() {
           local_account_id: account.id,
         }),
       });
-      // Also disconnect locally via existing endpoint
-      await fetch("/api/social/connect", {
+      // Also disconnect locally via existing endpoint (hard-deletes the row).
+      const cRes = await fetch("/api/social/connect", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ account_id: account.id }),
+        body: JSON.stringify({
+          account_id: account.id,
+          client_id: clientId,
+          zernio_account_id: account.account_id,
+        }),
       });
+      if (!zRes.ok && !cRes.ok) {
+        // Both failed — restore UI and surface the error.
+        setAccounts(prev);
+        toast.error("Failed to disconnect");
+        return;
+      }
       toast.success(`${account.account_name} disconnected`);
-      fetchAccounts();
+      // Await the refetch so the UI stays in sync; previously this was
+      // fire-and-forget and the user could see a stale tile flash back.
+      await fetchAccounts();
     } catch {
+      setAccounts(prev);
       toast.error("Failed to disconnect");
     }
   }

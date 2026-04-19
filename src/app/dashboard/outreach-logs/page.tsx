@@ -508,6 +508,8 @@ export default function OutreachLogsPage() {
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a"); a.href = url; a.download = "outreach_logs.csv"; a.click();
+    // Free the blob so repeated exports don't leak memory.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   function copyText(text: string) {

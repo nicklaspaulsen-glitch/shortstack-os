@@ -80,13 +80,17 @@ export default function ReportsPage() {
 
   async function fetchData() {
     setLoading(true);
-    const [{ data: clientData }, reportsRes] = await Promise.all([
-      supabase.from("clients").select("id, business_name, contact_name, email, mrr, health_score, is_active").eq("is_active", true).order("business_name"),
-      fetch("/api/reports/generate").then(r => r.json()),
-    ]);
-    setClients(clientData || []);
-    setReports(reportsRes.reports || []);
-    setLoading(false);
+    try {
+      const [{ data: clientData }, reportsRes] = await Promise.all([
+        supabase.from("clients").select("id, business_name, contact_name, email, mrr, health_score, is_active").eq("is_active", true).order("business_name"),
+        fetch("/api/reports/generate").then(r => r.json()).catch(() => ({ reports: [] })),
+      ]);
+      setClients(clientData || []);
+      setReports(reportsRes.reports || []);
+    } finally {
+      // Prevent the page from hanging on a spinner if either request throws.
+      setLoading(false);
+    }
   }
 
   async function generateReport() {

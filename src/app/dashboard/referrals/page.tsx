@@ -59,7 +59,8 @@ export default function ReferralsPage() {
   const [calcReferrals, setCalcReferrals] = useState(5);
 
   const referralCode = "ALEX-SS-2026";
-  const referralLink = `https://shortstack-os.vercel.app/book?ref=${referralCode}`;
+  // Use the live domain so copied links don't 404 on the old Vercel subdomain.
+  const referralLink = `https://shortstack.work/book?ref=${referralCode}`;
 
   const stats = {
     total: referrals.length,

@@ -123,34 +123,40 @@ export default function ClientDetailPage() {
         </div>
         <div className="flex gap-2">
           <button onClick={async () => {
-            toast.loading("Generating welcome doc...");
-            const res = await fetch(`/api/clients/welcome-doc?id=${client.id}`);
-            toast.dismiss();
-            if (res.ok) {
-              const blob = await res.blob();
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a"); a.href = url;
-              a.download = `${client.business_name}_welcome.pdf`; a.click();
-              toast.success("Welcome doc downloaded!");
-            } else toast.error("Failed");
+            const tid = "welcome-doc";
+            toast.loading("Generating welcome doc...", { id: tid });
+            try {
+              const res = await fetch(`/api/clients/welcome-doc?id=${client.id}`);
+              if (res.ok) {
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a"); a.href = url;
+                a.download = `${client.business_name}_welcome.pdf`; a.click();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                toast.success("Welcome doc downloaded!", { id: tid });
+              } else toast.error("Failed", { id: tid });
+            } catch { toast.error("Failed", { id: tid }); }
           }} className="btn-secondary flex items-center gap-2 text-sm">
             <Download size={14} /> Welcome Doc
           </button>
           <button onClick={async () => {
-            toast.loading("Generating contract...");
-            const res = await fetch("/api/contracts/generate", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ client_id: client.id }),
-            });
-            toast.dismiss();
-            if (res.ok) {
-              const blob = await res.blob();
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a"); a.href = url;
-              a.download = `${client.business_name}_contract.pdf`; a.click();
-              toast.success("Contract downloaded!");
-            } else toast.error("Failed");
+            const tid = "contract-pdf";
+            toast.loading("Generating contract...", { id: tid });
+            try {
+              const res = await fetch("/api/contracts/generate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ client_id: client.id }),
+              });
+              if (res.ok) {
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a"); a.href = url;
+                a.download = `${client.business_name}_contract.pdf`; a.click();
+                setTimeout(() => URL.revokeObjectURL(url), 1000);
+                toast.success("Contract downloaded!", { id: tid });
+              } else toast.error("Failed", { id: tid });
+            } catch { toast.error("Failed", { id: tid }); }
           }} className="btn-primary flex items-center gap-2 text-sm">
             <FileText size={14} /> Contract PDF
           </button>
@@ -252,8 +258,17 @@ export default function ClientDetailPage() {
               { key: "actions", label: "", render: (s: ContentScript) => (
                 <button onClick={async () => {
                   const res = await fetch(`/api/content/pdf?id=${s.id}`);
-                  if (res.ok) { const blob = await res.blob(); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = `${s.title}_script.pdf`; a.click(); }
-                }} className="text-gold text-xs hover:text-gold-light"><Download size={14} /></button>
+                  if (res.ok) {
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url; a.download = `${s.title}_script.pdf`;
+                    a.click();
+                    // Revoke the blob URL so we don't leak memory every time
+                    // the user downloads a script.
+                    setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  }
+                }} aria-label={`Download ${s.title} as PDF`} className="text-gold text-xs hover:text-gold-light"><Download size={14} /></button>
               )},
             ]}
             data={scripts}

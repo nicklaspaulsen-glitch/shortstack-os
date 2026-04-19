@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     monthly_report: `Write an email to ${client_name} sharing their monthly performance report. Highlight key wins, mention areas of improvement, and tease next month's strategy.`,
     upsell: `Write a value-driven email to ${client_name} suggesting they upgrade their package. Reference their current results and show how additional services could accelerate growth.`,
     check_in: `Write a casual check-in email to ${client_name}. Ask how things are going, if they have any feedback, and remind them of upcoming deliverables.`,
-    onboarding: `Write an onboarding email for ${client_name} with: portal login instructions (shortstack-os.vercel.app), what to expect in week 1, items we need from them (brand assets, passwords, goals), and contact info.`,
+    onboarding: `Write an onboarding email for ${client_name} with: portal login instructions (shortstack.work), what to expect in week 1, items we need from them (brand assets, passwords, goals), and contact info.`,
     contract_followup: `Write a follow-up email to ${client_name} about the contract we sent. Keep it casual but professional, ask if they have any questions.`,
     win_announcement: `Write an internal team email announcing a new client win: ${client_name}. Include what services they signed up for and who's assigned.`,
     feedback_request: `Write an email to ${client_name} requesting a testimonial/review. Make it easy for them — suggest they can reply with a few sentences or record a quick video.`,

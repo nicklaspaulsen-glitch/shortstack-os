@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   Mic, ImagePlus, Scissors, Film, Music, Volume2, Layers, Sparkles,
   Upload, Download, Play, Loader, X,
@@ -1042,6 +1042,15 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
     setImages(prev => [...prev, ...newFiles].slice(0, 20));
   };
 
+  // Cache blob URLs per-file so we don't create a new URL on every render
+  // (which previously leaked a new blob URL per image per render keystroke).
+  const imagePreviews = useMemo(() => images.map(img => URL.createObjectURL(img)), [images]);
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [imagePreviews]);
+
   const handleTrain = async () => {
     if (images.length < 5) return toast.error("Need at least 5 images (10-20 recommended)");
     setProcessing(true);
@@ -1089,7 +1098,7 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
               {images.map((img, i) => (
                 <div key={i} className="relative w-12 h-12 rounded-lg overflow-hidden bg-surface-light">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={URL.createObjectURL(img)} alt="" className="w-full h-full object-cover" />
+                  <img src={imagePreviews[i]} alt={`Training sample ${i + 1}`} className="w-full h-full object-cover" />
                   <button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))}
                     className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white flex items-center justify-center">
                     <X size={8} />

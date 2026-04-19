@@ -483,7 +483,8 @@ export default function CRMPage() {
       toast.error(`Need ${valid.length} credits, have ${emailCredits}`);
       setShowBuyCredits(true); return;
     }
-    toast.loading(`Processing ${valid.length} ${action}s...`);
+    const tid = "bulk-action";
+    toast.loading(`Processing ${valid.length} ${action}s...`, { id: tid });
     let success = 0;
     if (action === "call") {
       // Calls must be sent individually (each is a live call)
@@ -505,35 +506,34 @@ export default function CRMPage() {
         success = data.sent || 0;
       } catch { /* continue */ }
     }
-    toast.dismiss();
     if (action === "email") setEmailCredits(p => p - success);
-    toast.success(`${success}/${valid.length} ${action}s completed`);
+    toast.success(`${success}/${valid.length} ${action}s completed`, { id: tid });
     setSelectedIds(new Set()); fetchLeads();
   }
 
   async function bulkDelete() {
     if (selectedIds.size === 0) return;
     if (!confirm(`Delete ${selectedIds.size} leads? This cannot be undone.`)) return;
-    toast.loading(`Deleting ${selectedIds.size} leads...`);
+    const tid = "bulk-delete";
+    toast.loading(`Deleting ${selectedIds.size} leads...`, { id: tid });
     try {
       const { error } = await supabase.from("leads").delete().in("id", Array.from(selectedIds));
-      toast.dismiss();
-      if (error) { toast.error("Delete failed"); return; }
-      toast.success(`Deleted ${selectedIds.size} leads`);
+      if (error) { toast.error("Delete failed", { id: tid }); return; }
+      toast.success(`Deleted ${selectedIds.size} leads`, { id: tid });
       setSelectedIds(new Set()); fetchLeads();
-    } catch { toast.dismiss(); toast.error("Delete error"); }
+    } catch { toast.error("Delete error", { id: tid }); }
   }
 
   async function bulkUpdateStatus(newStatus: string) {
     if (selectedIds.size === 0) return;
-    toast.loading(`Updating ${selectedIds.size} leads...`);
+    const tid = "bulk-status";
+    toast.loading(`Updating ${selectedIds.size} leads...`, { id: tid });
     try {
       const { error } = await supabase.from("leads").update({ status: newStatus }).in("id", Array.from(selectedIds));
-      toast.dismiss();
-      if (error) { toast.error("Update failed"); return; }
-      toast.success(`Updated ${selectedIds.size} leads to "${newStatus}"`);
+      if (error) { toast.error("Update failed", { id: tid }); return; }
+      toast.success(`Updated ${selectedIds.size} leads to "${newStatus}"`, { id: tid });
       setShowBulkStatusMenu(false); setSelectedIds(new Set()); fetchLeads();
-    } catch { toast.dismiss(); toast.error("Update error"); }
+    } catch { toast.error("Update error", { id: tid }); }
   }
 
   async function updateLeadStatus(leadId: string, newStatus: string) {
@@ -741,14 +741,14 @@ export default function CRMPage() {
                 headers.forEach((h, i) => { obj[h] = vals[i] || ""; });
                 return obj;
               });
-              toast.loading(`Importing ${csvLeads.length} leads...`);
+              const tid = "csv-import";
+              toast.loading(`Importing ${csvLeads.length} leads...`, { id: tid });
               try {
                 const res = await fetch("/api/leads/import", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ leads: csvLeads }) });
-                toast.dismiss();
                 const data = await res.json();
-                if (data.success) { toast.success(`Imported ${data.imported} leads`); fetchLeads(); }
-                else toast.error(data.error || "Import failed");
-              } catch { toast.dismiss(); toast.error("Import error"); }
+                if (data.success) { toast.success(`Imported ${data.imported} leads`, { id: tid }); fetchLeads(); }
+                else toast.error(data.error || "Import failed", { id: tid });
+              } catch { toast.error("Import error", { id: tid }); }
               e.target.value = "";
             }} />
           </label>

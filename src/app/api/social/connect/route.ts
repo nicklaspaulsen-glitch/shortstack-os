@@ -290,12 +290,8 @@ export async function DELETE(request: NextRequest) {
 
   const { account_id, client_id, zernio_account_id } = await request.json();
 
-  // Deactivate locally
-  if (account_id) {
-    await supabase.from("social_accounts").update({ is_active: false }).eq("id", account_id);
-  }
-
-  // Also disconnect on Zernio if we have the info
+  // Also disconnect on Zernio if we have the info — do this FIRST so that if
+  // it fails we can still return an error without having already mutated local state.
   if (ZERNIO_API_KEY && client_id && zernio_account_id) {
     try {
       const { data: client } = await supabase
@@ -311,7 +307,19 @@ export async function DELETE(request: NextRequest) {
         });
       }
     } catch {
-      // Best-effort Zernio disconnect
+      // Best-effort Zernio disconnect — still delete locally so the user isn't stuck.
+    }
+  }
+
+  // Delete the row entirely (not just is_active:false) so the UI doesn't show
+  // a lingering "Inactive" tile that the user has to click "Revoke" on again.
+  // Previously this only flipped is_active, which caused the "bubbles that don't
+  // save" UX: revoked tiles kept reappearing because the row still existed and
+  // the GET endpoint returned all rows regardless of is_active.
+  if (account_id) {
+    const { error: delErr } = await supabase.from("social_accounts").delete().eq("id", account_id);
+    if (delErr) {
+      return NextResponse.json({ error: delErr.message }, { status: 500 });
     }
   }
 

@@ -403,7 +403,8 @@ export default function ScriptLabPage() {
     setGenerating(true);
     setBatchScripts([]);
     setActiveBatchIndex(0);
-    toast.loading(config.batch_count > 1 ? `Generating ${config.batch_count} variations...` : "AI is crafting your script...");
+    const toastId = "gen-script";
+    toast.loading(config.batch_count > 1 ? `Generating ${config.batch_count} variations...` : "AI is crafting your script...", { id: toastId });
     try {
       const results: ScriptResult[] = [];
       for (let i = 0; i < config.batch_count; i++) {
@@ -421,7 +422,6 @@ export default function ScriptLabPage() {
         const data = await res.json();
         if (data.success) results.push(data.script);
       }
-      toast.dismiss();
       if (results.length > 0) {
         setScript(results[0]);
         setBatchScripts(results);
@@ -435,21 +435,22 @@ export default function ScriptLabPage() {
           metadata: { framework: config.framework, platform: config.platform, tone: config.tone, script_type: config.script_type, script: results[0] },
         });
         loadSavedScripts();
-        toast.success(results.length > 1 ? `${results.length} script variations generated!` : "Script generated!");
+        toast.success(results.length > 1 ? `${results.length} script variations generated!` : "Script generated!", { id: toastId });
       } else {
-        toast.error("Failed to generate");
+        toast.error("Failed to generate", { id: toastId });
       }
     } catch {
-      toast.dismiss();
-      toast.error("Error generating script");
+      toast.error("Error generating script", { id: toastId });
+    } finally {
+      setGenerating(false);
     }
-    setGenerating(false);
   }
 
   async function rewriteScript(instruction: string) {
     if (!script) return;
     setRewriting(true);
-    toast.loading("AI is rewriting...");
+    const toastId = "rewrite";
+    toast.loading("AI is rewriting...", { id: toastId });
     try {
       const res = await fetch("/api/content/advanced-script", {
         method: "POST",
@@ -461,17 +462,15 @@ export default function ScriptLabPage() {
           original_script: JSON.stringify(script),
         }),
       });
-      toast.dismiss();
       const data = await res.json();
       if (data.success) {
         setScript(data.script);
-        toast.success("Script rewritten!");
+        toast.success("Script rewritten!", { id: toastId });
       } else {
-        toast.error("Rewrite failed");
+        toast.error("Rewrite failed", { id: toastId });
       }
     } catch {
-      toast.dismiss();
-      toast.error("Error");
+      toast.error("Error", { id: toastId });
     }
     setRewriting(false);
   }
@@ -482,7 +481,8 @@ export default function ScriptLabPage() {
     if (!scriptText) { toast.error("Script has no content"); return; }
     setGeneratingStoryboard(true);
     setStoryboard(null);
-    toast.loading("AI is breaking down your script shot-by-shot...");
+    const toastId = "storyboard";
+    toast.loading("AI is breaking down your script shot-by-shot...", { id: toastId });
     try {
       const res = await fetch("/api/script-lab/storyboard", {
         method: "POST",
@@ -493,11 +493,10 @@ export default function ScriptLabPage() {
           platform: config.platform,
         }),
       });
-      toast.dismiss();
       const data = await res.json();
       if (data.success && data.storyboard) {
         setStoryboard(data.storyboard);
-        toast.success(`Storyboard ready — ${data.storyboard.total_shots} shots`);
+        toast.success(`Storyboard ready — ${data.storyboard.total_shots} shots`, { id: toastId });
         // Fire-and-forget Generations tracking
         trackGeneration({
           category: "storyboard",
@@ -513,13 +512,13 @@ export default function ScriptLabPage() {
           },
         });
       } else {
-        toast.error(data.error || "Storyboard generation failed");
+        toast.error(data.error || "Storyboard generation failed", { id: toastId });
       }
     } catch {
-      toast.dismiss();
-      toast.error("Error generating storyboard");
+      toast.error("Error generating storyboard", { id: toastId });
+    } finally {
+      setGeneratingStoryboard(false);
     }
-    setGeneratingStoryboard(false);
   }
 
   function buildScriptPlainText(s: ScriptResult): string {
@@ -595,26 +594,26 @@ export default function ScriptLabPage() {
   async function doResearch() {
     if (!researchConfig.industry) { toast.error("Enter an industry"); return; }
     setResearching(true);
-    toast.loading("Researching viral content...");
+    const toastId = "research";
+    toast.loading("Researching viral content...", { id: toastId });
     try {
       const res = await fetch("/api/content/viral-research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...researchConfig, client_id: selectedClient || null }),
       });
-      toast.dismiss();
       const data = await res.json();
       if (data.success) {
         setResearch(data.research);
-        toast.success("Research complete!");
+        toast.success("Research complete!", { id: toastId });
       } else {
-        toast.error(data.error || "Research failed");
+        toast.error(data.error || "Research failed", { id: toastId });
       }
     } catch {
-      toast.dismiss();
-      toast.error("Error");
+      toast.error("Error", { id: toastId });
+    } finally {
+      setResearching(false);
     }
-    setResearching(false);
   }
 
   // ── Trending / Viral Remix handlers ────────────────────────────
@@ -625,7 +624,10 @@ export default function ScriptLabPage() {
     setLoadingTrending(true);
     setTrendingVideos([]);
     setTrendingCached(null);
-    toast.loading(forceRefresh ? "Refreshing trending videos..." : "Finding today's trending videos...");
+    // Use a stable toast id so rapid clicks don't stack bubbles and so the
+    // success/error update the same toast instead of leaking a stray loader.
+    const toastId = "trending";
+    toast.loading(forceRefresh ? "Refreshing trending videos..." : "Finding today's trending videos...", { id: toastId });
     try {
       const keywords = trendingKeywords.split(",").map(k => k.trim()).filter(Boolean);
       const res = await fetch("/api/script-lab/trending", {
@@ -639,20 +641,19 @@ export default function ScriptLabPage() {
           force_refresh: forceRefresh,
         }),
       });
-      toast.dismiss();
-      const data = await res.json();
-      if (data.success && Array.isArray(data.videos)) {
+      const data = await res.json().catch(() => ({ error: "Invalid response from server" }));
+      if (res.ok && data.success && Array.isArray(data.videos)) {
         setTrendingVideos(data.videos);
         setTrendingCached({ cached: Boolean(data.cached), cached_at: data.cached_at, expires_at: data.expires_at });
-        toast.success(`${data.videos.length} trending videos loaded${data.cached ? " (cached)" : ""}`);
+        toast.success(`${data.videos.length} trending videos loaded${data.cached ? " (cached)" : ""}`, { id: toastId });
       } else {
-        toast.error(data.error || "Couldn't load trending");
+        toast.error(data.error || "Couldn't load trending", { id: toastId });
       }
     } catch {
-      toast.dismiss();
-      toast.error("Network error");
+      toast.error("Network error", { id: toastId });
+    } finally {
+      setLoadingTrending(false);
     }
-    setLoadingTrending(false);
   }
 
   async function transcribeVideo(video: TrendingVideo): Promise<string | null> {
@@ -704,7 +705,8 @@ export default function ScriptLabPage() {
     if (!remixModal) return;
     setRemixingId(remixModal.video.id);
     setRemixResult(null);
-    toast.loading("Remixing with your twist...");
+    const toastId = "remix";
+    toast.loading("Remixing with your twist...", { id: toastId });
     try {
       const clientObj = clients.find(c => c.id === selectedClient);
       const niche = clientObj?.industry || trendingNiche || "general business";
@@ -722,11 +724,10 @@ export default function ScriptLabPage() {
           client_id: selectedClient || null,
         }),
       });
-      toast.dismiss();
       const data = await res.json();
       if (data.success && data.remix) {
         setRemixResult(data.remix);
-        toast.success("Remix ready!");
+        toast.success("Remix ready!", { id: toastId });
         // Track generation
         await trackGeneration({
           category: "script",
@@ -748,13 +749,13 @@ export default function ScriptLabPage() {
         });
         loadSavedScripts();
       } else {
-        toast.error(data.error || "Remix failed");
+        toast.error(data.error || "Remix failed", { id: toastId });
       }
     } catch {
-      toast.dismiss();
-      toast.error("Network error");
+      toast.error("Network error", { id: toastId });
+    } finally {
+      setRemixingId(null);
     }
-    setRemixingId(null);
   }
 
   function useRemixAsTopic() {

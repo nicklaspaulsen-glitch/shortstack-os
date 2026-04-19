@@ -135,7 +135,7 @@ Week 3-4: Content creation begins, ad campaigns launch
 Month 2+: Optimization, scaling, and regular reporting
 
 # Your Client Portal
-Access your personalized dashboard at shortstack-os.vercel.app where you can track tasks, view invoices, and monitor progress.
+Access your personalized dashboard at shortstack.work where you can track tasks, view invoices, and monitor progress.
 
 # FAQ
 Q: How often will I receive updates?

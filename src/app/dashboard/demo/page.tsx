@@ -35,13 +35,18 @@ export default function DemoManagementPage() {
 
   async function fetchDemoClient() {
     setLoading(true);
-    const { data } = await supabase
-      .from("clients")
-      .select("id, business_name, industry, mrr, health_score, package_tier, services, contract_status")
-      .eq("business_name", "Bright Smile Dental")
-      .single();
-    setDemoClient(data || null);
-    setLoading(false);
+    try {
+      // maybeSingle() instead of single() so a missing demo client doesn't
+      // throw and leave the loader spinning forever.
+      const { data } = await supabase
+        .from("clients")
+        .select("id, business_name, industry, mrr, health_score, package_tier, services, contract_status")
+        .eq("business_name", "Bright Smile Dental")
+        .maybeSingle();
+      setDemoClient(data || null);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function seedDemo() {
@@ -57,8 +62,9 @@ export default function DemoManagementPage() {
       }
     } catch {
       toast.error("Network error while seeding demo");
+    } finally {
+      setSeeding(false);
     }
-    setSeeding(false);
   }
 
   async function resetDemo() {
@@ -75,8 +81,9 @@ export default function DemoManagementPage() {
       }
     } catch {
       toast.error("Network error while resetting", { id: "reset" });
+    } finally {
+      setSeeding(false);
     }
-    setSeeding(false);
   }
 
   function copyDemoLink() {

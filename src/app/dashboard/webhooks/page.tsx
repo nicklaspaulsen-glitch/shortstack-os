@@ -89,7 +89,9 @@ export default function WebhooksPage() {
   const [editingRetry, setEditingRetry] = useState<string | null>(null);
   const [showSecret, setShowSecret] = useState<string | null>(null);
 
-  const inboundUrl = "https://shortstack-os.vercel.app/api/webhooks/inbound";
+  // Use the live domain or fall back to window.location.origin so devs on
+  // localhost see the correct URL instead of the stale Vercel subdomain.
+  const inboundUrl = (typeof window !== "undefined" ? window.location.origin : "https://shortstack.work") + "/api/webhooks/inbound";
 
   const categories = ["all", ...Array.from(new Set(EVENTS.map(e => e.category)))];
 

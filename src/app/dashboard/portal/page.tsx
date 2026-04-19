@@ -47,13 +47,15 @@ export default function ClientPortalPage() {
     if (!profile?.id) { setLoading(false); return; }
     try {
       let clientData;
+      // Use maybeSingle() so newly-created clients without a matching record
+      // land on the empty-portal state instead of an unhandled 406 error.
       if (isImpersonating && impersonatedClient) {
         // Admin is viewing as this client -- look up by client ID
         const { data } = await supabase
           .from("clients")
           .select("*")
           .eq("id", impersonatedClient.id)
-          .single();
+          .maybeSingle();
         clientData = data;
       } else {
         // Normal client login -- look up by profile_id
@@ -61,7 +63,7 @@ export default function ClientPortalPage() {
           .from("clients")
           .select("*")
           .eq("profile_id", profile.id)
-          .single();
+          .maybeSingle();
         clientData = data;
       }
 

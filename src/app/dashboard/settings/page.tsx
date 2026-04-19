@@ -246,9 +246,9 @@ export default function SettingsPage() {
     (async () => {
       try {
         // Try oauth_connections first; fall back to social_accounts.
-        const [{ data: firstClient }] = await Promise.all([
-          supabase.from("clients").select("id").eq("is_active", true).limit(1).single(),
-        ]);
+        // Use maybeSingle() instead of single() so a missing client row doesn't throw.
+        const { data: firstClient } = await supabase
+          .from("clients").select("id").eq("is_active", true).limit(1).maybeSingle();
         if (firstClient) {
           const r = await fetch(`/api/social/connect?client_id=${firstClient.id}&zernio=true`);
           if (r.ok) {
@@ -257,7 +257,11 @@ export default function SettingsPage() {
               id: string; platform: string; account_name: string; created_at?: string;
               is_active?: boolean; token_expires_at?: string | null;
             }>;
-            setConnectedApps(rows.map(r => ({
+            // Filter out any inactive rows that lingered from the old is_active-flip
+            // revoke flow; users reported "bubbles that don't save" where the revoked
+            // tile kept reappearing. Revoke now deletes the row outright, but this
+            // guard keeps existing soft-deleted rows from polluting the list.
+            setConnectedApps(rows.filter(r => r.is_active !== false).map(r => ({
               id: r.id,
               platform: r.platform,
               account_name: r.account_name || null,
@@ -2680,7 +2684,7 @@ export default function SettingsPage() {
                         if (!confirm(`Revoke ${app.platform}?`)) return;
                         try {
                           const { data: firstClient } = await supabase
-                            .from("clients").select("id").eq("is_active", true).limit(1).single();
+                            .from("clients").select("id").eq("is_active", true).limit(1).maybeSingle();
                           const res = await fetch("/api/social/connect", {
                             method: "DELETE",
                             headers: { "Content-Type": "application/json" },
@@ -2690,7 +2694,8 @@ export default function SettingsPage() {
                             setConnectedApps(apps => apps.filter(a => a.id !== app.id));
                             toast.success(`${app.platform} revoked`);
                           } else {
-                            toast.error("Couldn't revoke");
+                            const j = await res.json().catch(() => ({}));
+                            toast.error(j?.error || "Couldn't revoke");
                           }
                         } catch {
                           toast.error("Revoke failed");

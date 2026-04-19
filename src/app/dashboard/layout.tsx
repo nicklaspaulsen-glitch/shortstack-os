@@ -23,6 +23,7 @@ const CommandPalette = dynamic(() => import("@/components/command-palette"), { s
 const KeyboardShortcuts = dynamic(() => import("@/components/keyboard-shortcuts"), { ssr: false });
 const QuickAdd = dynamic(() => import("@/components/quick-add"), { ssr: false });
 const ClientContextPill = dynamic(() => import("@/components/client-context-pill"), { ssr: false });
+const TokenUsageWidget = dynamic(() => import("@/components/token-usage-widget"), { ssr: false });
 
 // ── Role-based route access control ──
 // Complements the sidebar role filtering (which hides nav items) by
@@ -222,6 +223,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <KeyboardShortcuts />
         <QuickAdd />
         <ClientContextPill />
+        {/* Admin-only floating token-usage ring (self-gates on role) */}
+        <TokenUsageWidget />
       </div>
     </>
   );

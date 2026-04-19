@@ -210,11 +210,12 @@ export async function DELETE(request: NextRequest) {
       });
     }
 
-    // Deactivate locally
+    // Delete locally (row removal, not just is_active flip) so the UI doesn't
+    // show a lingering "Inactive" row that the user has to revoke again.
     if (local_account_id) {
       await supabase
         .from("social_accounts")
-        .update({ is_active: false })
+        .delete()
         .eq("id", local_account_id);
     }
 
