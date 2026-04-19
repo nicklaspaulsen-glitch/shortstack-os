@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { makeOutboundCall } from "@/lib/services/eleven-agents";
+import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // POST — make an outbound AI call to a lead via ElevenAgents
 // TODO: Add rate limiting in production to prevent call abuse
@@ -9,6 +10,9 @@ export async function POST(request: NextRequest) {
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await request.json();
   const { lead_id, phone, phone_number, business_name, industry } = body;
@@ -29,8 +33,11 @@ export async function POST(request: NextRequest) {
   let agentId = "";
   let phoneNumberId = "";
 
-  // If client_id provided, try per-client agent
+  // If client_id provided, verify caller owns the client before reading its config.
   if (body.client_id) {
+    const ctx = await requireOwnedClient(authSupabase, user.id, body.client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
     const { data: clientRow } = await supabase
       .from("clients")
       .select("eleven_agent_id, eleven_phone_number_id, business_name")
@@ -40,6 +47,18 @@ export async function POST(request: NextRequest) {
     if (clientRow?.eleven_agent_id && clientRow?.eleven_phone_number_id) {
       agentId = clientRow.eleven_agent_id;
       phoneNumberId = clientRow.eleven_phone_number_id;
+    }
+  }
+
+  // If caller passed a lead_id, verify they own it before reading/updating it.
+  if (lead_id) {
+    const { data: leadCheck } = await supabase
+      .from("leads")
+      .select("user_id")
+      .eq("id", lead_id)
+      .single();
+    if (leadCheck?.user_id !== ownerId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
   }
 
@@ -84,8 +103,9 @@ export async function POST(request: NextRequest) {
   }
 
   // Update lead status + log the call (only advance forward, never overwrite replied/booked)
+  // Ownership verified above — still filter on user_id defensively.
   if (lead_id) {
-    await supabase.from("leads").update({ status: "called" }).eq("id", lead_id).in("status", ["new"]);
+    await supabase.from("leads").update({ status: "called" }).eq("id", lead_id).eq("user_id", ownerId).in("status", ["new"]);
 
     await supabase.from("outreach_log").insert({
       lead_id,

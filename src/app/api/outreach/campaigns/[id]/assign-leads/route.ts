@@ -91,15 +91,12 @@ export async function POST(
   const { data: ownLeads } = await service
     .from("leads")
     .select("id, metadata, user_id")
+    .eq("user_id", ownerId)
     .in("id", leadIds);
 
-  const allowedLeads = (ownLeads || []).filter(l => {
-    // Require leads to either be owned by this user_id OR not yet assigned.
-    // (Some legacy leads may not have user_id populated; treat those as
-    // owned if the caller requested them by id.)
-    const uid = (l as { user_id?: string | null }).user_id ?? null;
-    return !uid || uid === ownerId;
-  });
+  // Strict scope to caller's owned leads — never auto-claim legacy null-user_id
+  // rows (previous logic let any caller take ownership of them).
+  const allowedLeads = ownLeads || [];
 
   if (allowedLeads.length === 0) {
     return NextResponse.json({ error: "No permitted leads in request" }, { status: 403 });

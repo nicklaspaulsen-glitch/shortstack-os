@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // AI Email Nurture Sequence Builder — Creates complete drip campaigns
 export async function POST(request: NextRequest) {
@@ -12,6 +13,10 @@ export async function POST(request: NextRequest) {
   let clientName = "ShortStack";
   let industry = "marketing";
   if (client_id) {
+    // Gate reads to clients the caller owns.
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
     const { data: client } = await supabase.from("clients").select("business_name, industry").eq("id", client_id).single();
     if (client) { clientName = client.business_name; industry = client.industry || "business"; }
   }

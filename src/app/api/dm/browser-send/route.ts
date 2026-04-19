@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Browser-based DM sender — coordinates with Claude in Chrome
 // Generates personalized messages and stores the DM queue
@@ -8,6 +9,9 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { platforms, dmsPerPlatform, niches, services, messageStyle, customMessage } = await request.json();
 
@@ -25,9 +29,11 @@ export async function POST(request: NextRequest) {
 
   for (const platform of (platforms || ["instagram"])) {
     const urlField = `${platform}_url`;
+    // Scope to caller's owned leads to prevent cross-tenant DM queueing.
     const { data: leads } = await serviceSupabase
       .from("leads")
       .select("id, business_name, industry, instagram_url, facebook_url, linkedin_url, tiktok_url")
+      .eq("user_id", ownerId)
       .not(urlField, "is", null)
       .eq("status", "new")
       .limit(dmsPerPlatform || 20);

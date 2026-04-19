@@ -6,11 +6,15 @@ import {
   recordPhoneSend,
   recordEmailSend,
 } from "@/lib/services/sender-rotation";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { action, lead_ids, tier } = await request.json();
   if (!action || !lead_ids?.length) return NextResponse.json({ error: "Missing action or lead_ids" }, { status: 400 });
@@ -20,10 +24,11 @@ export async function POST(request: NextRequest) {
   const locationId = process.env.GHL_LOCATION_ID || "";
   let processed = 0;
 
-  // Get lead details
+  // Get lead details — scoped to caller's owned leads to block cross-tenant outreach.
   const { data: leads } = await serviceSupabase
     .from("leads")
     .select("id, business_name, email, phone, industry")
+    .eq("user_id", ownerId)
     .in("id", lead_ids.slice(0, 50));
 
   if (!leads) return NextResponse.json({ error: "No leads found" }, { status: 404 });
@@ -134,12 +139,16 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Update lead statuses
-  await serviceSupabase
-    .from("leads")
-    .update({ status: "contacted" })
-    .in("id", lead_ids.slice(0, 50))
-    .eq("status", "new");
+  // Update lead statuses — scoped to owned leads that were actually processed.
+  const processedIds = leads.map(l => l.id);
+  if (processedIds.length > 0) {
+    await serviceSupabase
+      .from("leads")
+      .update({ status: "contacted" })
+      .eq("user_id", ownerId)
+      .in("id", processedIds)
+      .eq("status", "new");
+  }
 
   // Log to trinity
   await serviceSupabase.from("trinity_log").insert({

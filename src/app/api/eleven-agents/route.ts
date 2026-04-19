@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 const API_KEY = process.env.ELEVENLABS_API_KEY ?? "";
 const BASE = "https://api.elevenlabs.io/v1";
@@ -10,8 +11,18 @@ function headers() {
   };
 }
 
-// GET /api/eleven-agents  — list agents
+async function requireAuth() {
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
+  return { user };
+}
+
+// GET /api/eleven-agents  — list agents (authed only — exposes account-level agents)
 export async function GET() {
+  const auth = await requireAuth();
+  if ("error" in auth && auth.error) return auth.error;
+
   if (!API_KEY) {
     return NextResponse.json(
       { agents: [], message: "ELEVENLABS_API_KEY is not configured" },
@@ -44,8 +55,11 @@ export async function GET() {
   }
 }
 
-// POST /api/eleven-agents  — create or delete an agent
+// POST /api/eleven-agents  — create or delete an agent (authed only)
 export async function POST(req: NextRequest) {
+  const auth = await requireAuth();
+  if ("error" in auth && auth.error) return auth.error;
+
   if (!API_KEY) {
     return NextResponse.json(
       { error: "ELEVENLABS_API_KEY is not configured" },

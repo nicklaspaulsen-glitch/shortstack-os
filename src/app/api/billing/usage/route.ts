@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // Usage Tracking & Paywall System
 // Tracks API usage per client and enforces tier limits
@@ -59,9 +60,11 @@ export async function GET(request: NextRequest) {
 
   const clientId = request.nextUrl.searchParams.get("client_id");
 
-  // Get client's tier
+  // Get client's tier — if client_id provided, verify ownership first.
   let tier = "Growth";
   if (clientId) {
+    const ctx = await requireOwnedClient(supabase, user.id, clientId);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const { data: client } = await supabase.from("clients").select("package_tier").eq("id", clientId).single();
     tier = client?.package_tier || "Growth";
   }
@@ -119,6 +122,8 @@ export async function POST(request: NextRequest) {
 
   let tier = "Growth";
   if (client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const { data: client } = await supabase.from("clients").select("package_tier").eq("id", client_id).single();
     tier = client?.package_tier || "Growth";
   }

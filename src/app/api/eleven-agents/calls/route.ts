@@ -1,10 +1,15 @@
 import { NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 const API_KEY = process.env.ELEVENLABS_API_KEY ?? "";
 const BASE = "https://api.elevenlabs.io/v1";
 
-// GET /api/eleven-agents/calls  — list recent conversations
+// GET /api/eleven-agents/calls  — list recent conversations (authed — can include transcripts)
 export async function GET() {
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   if (!API_KEY) {
     return NextResponse.json(
       { conversations: [], message: "ELEVENLABS_API_KEY is not configured" },

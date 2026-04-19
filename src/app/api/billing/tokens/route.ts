@@ -34,10 +34,13 @@ export async function GET(_request: NextRequest) {
     (nextMonth.getTime() - now.getTime()) / 86400000
   );
 
-  // Count token usage from trinity_log this month
+  // Count token usage from trinity_log this month — scope to the authed user,
+  // otherwise every user sees the same global usage (and over-reports quotas).
+  // trinity_log has both profile_id (preferred) and user_id on some rows, so OR them.
   const { data: logs } = await supabase
     .from("trinity_log")
     .select("action_type, description, created_at, status")
+    .or(`profile_id.eq.${user.id},user_id.eq.${user.id}`)
     .gte("created_at", monthStart.toISOString())
     .order("created_at", { ascending: false })
     .limit(1000);

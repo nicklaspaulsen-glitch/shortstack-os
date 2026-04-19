@@ -224,6 +224,7 @@ export async function runElevenAgentCalls(
   supabase: ReturnType<typeof import("@/lib/supabase/server").createServiceClient>,
   maxCalls: number = 10,
   clientId?: string,
+  ownerId?: string,
 ): Promise<{
   totalCalled: number;
   errors: number;
@@ -277,14 +278,19 @@ export async function runElevenAgentCalls(
     .gte("created_at", cutoff);
   const recentlyCalledIds = new Set((recentCalls || []).map(c => c.lead_id).filter(Boolean));
 
-  // Get leads with phone numbers, prioritized by lead_score
-  const { data: allLeads } = await supabase
+  // Get leads with phone numbers, prioritized by lead_score.
+  // Scope to the requesting agency owner to prevent dialing another tenant's list.
+  let leadsQuery = supabase
     .from("leads")
-    .select("id, business_name, phone, industry, email, lead_score")
+    .select("id, business_name, phone, industry, email, lead_score, user_id")
     .not("phone", "is", null)
     .in("status", ["new", "called"])
     .order("lead_score", { ascending: false, nullsFirst: false })
-    .limit(maxCalls * 2); // fetch extra to account for filtered duplicates
+    .limit(maxCalls * 2);
+  if (ownerId) {
+    leadsQuery = leadsQuery.eq("user_id", ownerId);
+  }
+  const { data: allLeads } = await leadsQuery;
 
   const leads = (allLeads || []).filter(l => !recentlyCalledIds.has(l.id)).slice(0, maxCalls);
 
@@ -317,8 +323,10 @@ export async function runElevenAgentCalls(
         conversationId: callResult.conversationId,
       });
 
-      // Update lead
-      await supabase.from("leads").update({ status: "called" }).eq("id", lead.id);
+      // Update lead (defensive scope in case ownerId was omitted by caller).
+      let updateQuery = supabase.from("leads").update({ status: "called" }).eq("id", lead.id);
+      if (ownerId) updateQuery = updateQuery.eq("user_id", ownerId);
+      await updateQuery;
 
       // Log with conversation ID for later transcript fetch
       await supabase.from("outreach_log").insert({

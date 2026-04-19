@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { syncPlatformCampaigns } from "@/lib/ads/platforms";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 const PLATFORMS = ["meta_ads", "google_ads", "tiktok_ads"] as const;
 
@@ -17,6 +18,10 @@ export async function POST(request: NextRequest) {
     if (!client_id) {
       return NextResponse.json({ error: "client_id is required" }, { status: 400 });
     }
+
+    // Verify ownership before syncing another tenant's ad platform data.
+    const ctx = await requireOwnedClient(authSupabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     // Determine which platforms to sync
     const platformsToSync = platform ? [platform] : [...PLATFORMS];
@@ -51,12 +56,20 @@ export async function POST(request: NextRequest) {
 // GET — Check sync status for a client
 export async function GET(request: NextRequest) {
   try {
+    const authSupabase = createServerSupabase();
+    const { data: { user } } = await authSupabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const supabase = createServiceClient();
     const clientId = request.nextUrl.searchParams.get("client_id");
 
     if (!clientId) {
       return NextResponse.json({ error: "client_id is required" }, { status: 400 });
     }
+
+    // Ownership guard — caller may only query sync status for their own clients.
+    const ctx = await requireOwnedClient(authSupabase, user.id, clientId);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const platforms: Record<
       string,

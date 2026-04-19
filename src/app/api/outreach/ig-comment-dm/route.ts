@@ -10,7 +10,18 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { action, client_id, trigger_keyword, dm_message, post_id } = await request.json();
+  // Parse body ONCE — calling request.json() twice throws "Body already used".
+  const requestBody = await request.json();
+  const {
+    action,
+    client_id,
+    trigger_keyword,
+    dm_message,
+    post_id,
+    comment_text,
+    commenter_id,
+    commenter_name,
+  } = requestBody;
 
   const access = await verifyClientAccess(authSupabase, user.id, client_id);
   if (access.denied) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -36,8 +47,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (action === "process_comment") {
-    // This would be called by a Meta webhook when a comment is received
-    const { comment_text, commenter_id, commenter_name } = await request.json();
+    // comment_text / commenter_id / commenter_name came from the single body read above.
 
     // Get all active automations for this client
     const { data: automations } = await supabase

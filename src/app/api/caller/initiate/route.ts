@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // ShortStack AI Cold Caller — Uses Retell AI (our own, not GHL)
 export async function POST(request: NextRequest) {
@@ -7,23 +8,32 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { lead_id, phone_number, business_name, owner_name, industry, script_override } = await request.json();
 
   const retellKey = process.env.RETELL_API_KEY;
   if (!retellKey) return NextResponse.json({ error: "Retell AI not configured" }, { status: 500 });
 
-  // Get lead data if lead_id provided
+  // Get lead data if lead_id provided — scoped to caller's owned leads.
   let leadData = { business_name, owner_name, industry, phone: phone_number };
   if (lead_id) {
-    const { data: lead } = await supabase.from("leads").select("*").eq("id", lead_id).single();
-    if (lead) {
-      leadData = {
-        business_name: lead.business_name,
-        owner_name: lead.owner_name || "the owner",
-        industry: lead.industry || "business",
-        phone: lead.phone || phone_number,
-      };
+    const { data: lead } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("id", lead_id)
+      .eq("user_id", ownerId)
+      .single();
+    if (!lead) {
+      return NextResponse.json({ error: "Lead not found or not owned by caller" }, { status: 403 });
     }
+    leadData = {
+      business_name: lead.business_name,
+      owner_name: lead.owner_name || "the owner",
+      industry: lead.industry || "business",
+      phone: lead.phone || phone_number,
+    };
   }
 
   if (!leadData.phone) return NextResponse.json({ error: "No phone number" }, { status: 400 });
@@ -78,9 +88,9 @@ export async function POST(request: NextRequest) {
 
     const callData = await callRes.json();
 
-    // Update lead status
+    // Update lead status (scoped to owner — ownership already verified above)
     if (lead_id) {
-      await supabase.from("leads").update({ status: "called" }).eq("id", lead_id);
+      await supabase.from("leads").update({ status: "called" }).eq("id", lead_id).eq("user_id", ownerId);
     }
 
     // Log

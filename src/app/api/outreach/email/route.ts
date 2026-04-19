@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 import { allocateEmailSenders, recordEmailSend, getMinDelay, type EmailSender } from "@/lib/services/sender-rotation";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import nodemailer from "nodemailer";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
@@ -11,6 +12,9 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { lead_ids, subject_template, body_template, from_name, batch_size } = await request.json();
   // Cap batch size to prevent abuse
   const safeBatchSize = Math.min(batch_size || 20, 50);
@@ -19,16 +23,18 @@ export async function POST(request: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   const ghlKey = process.env.GHL_API_KEY;
 
-  // Get leads
+  // Get leads — all queries scoped to caller's owned leads to prevent cross-tenant email sends.
   let leads;
   if (lead_ids && lead_ids.length > 0) {
-    const { data } = await serviceSupabase.from("leads").select("*").in("id", lead_ids);
+    const { data } = await serviceSupabase.from("leads").select("*")
+      .eq("user_id", ownerId).in("id", lead_ids);
     leads = data;
   } else {
     // Get leads with emails that haven't been emailed
     const { data } = await serviceSupabase
       .from("leads")
       .select("*")
+      .eq("user_id", ownerId)
       .not("email", "is", null)
       .eq("status", "new")
       .limit(safeBatchSize);
@@ -195,7 +201,8 @@ export async function POST(request: NextRequest) {
 
     // Update lead status (only advance forward, never overwrite replied/booked)
     if (didSend) {
-      await serviceSupabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new", "called"]);
+      await serviceSupabase.from("leads").update({ status: "contacted" })
+        .eq("id", lead.id).eq("user_id", ownerId).in("status", ["new", "called"]);
     }
 
     // Respect minimum delay between sends (spam protection)

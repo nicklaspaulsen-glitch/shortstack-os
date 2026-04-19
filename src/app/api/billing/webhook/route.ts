@@ -212,6 +212,33 @@ export async function POST(request: NextRequest) {
       const sub = event.data.object as Stripe.Subscription;
       const customerId = sub.customer as string;
 
+      // Propagate agency-owner plan changes (upgrade / downgrade via Stripe portal,
+      // proration, status changes). Without this, a user upgrades in the portal
+      // but their profile.plan_tier stays on the old tier — silent failure.
+      const subMeta = (sub.metadata || {}) as Record<string, string>;
+      if (subMeta.type === "agency_subscription" && subMeta.user_id) {
+        // When active/trialing, reflect the new plan_tier; when past_due/unpaid/canceled, null it.
+        const isActive = sub.status === "active" || sub.status === "trialing";
+        const newPlan = isActive ? (subMeta.plan_tier || null) : null;
+        await supabase
+          .from("profiles")
+          .update({ plan_tier: newPlan })
+          .eq("id", subMeta.user_id);
+
+        await supabase.from("trinity_log").insert({
+          action_type: "custom",
+          description: `Agency subscription ${sub.status}: plan=${newPlan || "(cleared)"}`,
+          user_id: subMeta.user_id,
+          status: isActive ? "completed" : "failed",
+          result: {
+            type: "agency_subscription_updated",
+            plan_tier: newPlan,
+            stripe_status: sub.status,
+            stripe_sub_id: sub.id,
+          },
+        });
+      }
+
       const { data: client } = await supabase
         .from("clients")
         .select("id")
@@ -448,6 +475,55 @@ export async function POST(request: NextRequest) {
             status: "preview",
             updated_at: new Date().toISOString(),
           }).eq("id", websiteId);
+        }
+      } else if (type === "token_purchase") {
+        // One-time AI token top-up — credit bonus tokens to the user.
+        const userId = session.metadata?.user_id;
+        const tokens = Number(session.metadata?.tokens || 0);
+        const packId = session.metadata?.pack_id || "";
+
+        if (userId && tokens > 0) {
+          const key = `bonus_tokens_${userId}`;
+          const { data: existing } = await supabase
+            .from("system_health")
+            .select("metadata")
+            .eq("integration_name", key)
+            .single();
+
+          const current = (existing?.metadata as Record<string, number> | null)?.tokens || 0;
+          const newTotal = current + tokens;
+
+          if (existing) {
+            await supabase
+              .from("system_health")
+              .update({
+                metadata: {
+                  tokens: newTotal,
+                  last_purchase: new Date().toISOString(),
+                  pack_id: packId,
+                },
+              })
+              .eq("integration_name", key);
+          } else {
+            await supabase.from("system_health").insert({
+              integration_name: key,
+              status: "healthy",
+              metadata: {
+                tokens: newTotal,
+                last_purchase: new Date().toISOString(),
+                pack_id: packId,
+              },
+              last_check_at: new Date().toISOString(),
+            });
+          }
+
+          await supabase.from("trinity_log").insert({
+            action_type: "token_purchase",
+            description: `Purchased ${tokens.toLocaleString()} tokens ($${((session.amount_total || 0) / 100).toFixed(2)})`,
+            user_id: userId,
+            status: "completed",
+            result: { type: "token_purchase", tokens, pack_id: packId, new_balance: newTotal },
+          });
         }
       } else if (type === "domain_purchase") {
         // Client paid for a custom domain subscription. Auto-purchase the

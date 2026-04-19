@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Client Cold Outreach — Sends DMs and emails FROM client's connected accounts
 // Like Instantly.ai but built into ShortStack OS
@@ -7,6 +8,9 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const {
     client_id,
@@ -34,10 +38,10 @@ export async function POST(request: NextRequest) {
 
   const connectedPlatforms = (socialAccounts || []).map(a => a.platform);
 
-  // Get leads to contact
+  // Get leads to contact — all queries scoped to caller's owned leads.
   const { data: leads } = lead_ids
-    ? await supabase.from("leads").select("*").in("id", lead_ids).limit(daily_limit || 20)
-    : await supabase.from("leads").select("*").eq("status", "new").limit(daily_limit || 20);
+    ? await supabase.from("leads").select("*").eq("user_id", ownerId).in("id", lead_ids).limit(daily_limit || 20)
+    : await supabase.from("leads").select("*").eq("user_id", ownerId).eq("status", "new").limit(daily_limit || 20);
 
   if (!leads || leads.length === 0) return NextResponse.json({ error: "No leads to contact" }, { status: 400 });
 
@@ -114,8 +118,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Update lead status
-    await supabase.from("leads").update({ status: "called" }).eq("id", lead.id);
+    // Update lead status — owner-scoped (ownership already verified above).
+    await supabase.from("leads").update({ status: "called" }).eq("id", lead.id).eq("user_id", ownerId);
 
     // Schedule follow-ups
     const day3 = new Date(); day3.setDate(day3.getDate() + 3);

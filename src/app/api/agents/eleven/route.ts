@@ -11,9 +11,11 @@ async function requireAdmin() {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }) };
-  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
+  const { data: profile } = await supabase.from("profiles").select("role, parent_agency_id").eq("id", user.id).single();
   if (profile?.role !== "admin") return { error: NextResponse.json({ error: "Admin only" }, { status: 403 }) };
-  return { user };
+  // Effective agency owner for scoping lead pool in run_calls.
+  const ownerId = profile?.parent_agency_id || user.id;
+  return { user, ownerId };
 }
 
 // GET — list agents, phone numbers, or conversations
@@ -149,7 +151,9 @@ export async function POST(request: NextRequest) {
   if (action === "run_calls") {
     const { runElevenAgentCalls } = await import("@/lib/services/eleven-agents");
     const supabase = createServiceClient();
-    const results = await runElevenAgentCalls(supabase, body.maxCalls || 5);
+    // Pass owner id so the run only dials this agency's leads.
+    const ownerId = "ownerId" in auth ? auth.ownerId : undefined;
+    const results = await runElevenAgentCalls(supabase, body.maxCalls || 5, body.clientId, ownerId);
     return NextResponse.json(results);
   }
 

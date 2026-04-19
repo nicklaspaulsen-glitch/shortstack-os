@@ -22,8 +22,27 @@ export async function POST(request: NextRequest) {
   const phone = data.phone || null;
   const formId = data.form_id || "unknown";
 
-  // Create lead in database
+  // Resolve the form owner if a known form_id was submitted so the lead
+  // lands in the right tenant's inbox. If unknown or the forms table doesn't
+  // exist, leave user_id null so the lead doesn't silently attach to a random
+  // tenant. Wrapped in try/catch in case the forms table isn't yet provisioned.
+  let formOwnerId: string | null = null;
+  if (formId && formId !== "unknown") {
+    try {
+      const { data: form } = await supabase
+        .from("forms")
+        .select("user_id, profile_id")
+        .eq("id", formId)
+        .maybeSingle();
+      formOwnerId = (form?.user_id as string | null) || (form?.profile_id as string | null) || null;
+    } catch {
+      // forms table missing — leave formOwnerId null.
+    }
+  }
+
+  // Create lead in database (attributed to the form owner so their tenant sees it)
   await supabase.from("leads").insert({
+    user_id: formOwnerId,
     business_name: name,
     email,
     phone,
@@ -38,6 +57,7 @@ export async function POST(request: NextRequest) {
     action_type: "lead_gen",
     description: `Form submission: ${name} (${email || "no email"})`,
     status: "completed",
+    user_id: formOwnerId,
     result: { source: "form", form_id: formId, data },
   });
 

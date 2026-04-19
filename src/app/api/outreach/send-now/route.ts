@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { generatePersonalizedMessage } from "@/lib/services/outreach";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Manual outreach trigger — Send DMs right now with custom settings
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { platforms, count_per_platform, target_industry } = await request.json();
 
@@ -17,11 +21,12 @@ export async function POST(request: NextRequest) {
   for (const platform of selectedPlatforms) {
     results[platform] = { sent: 0, failed: 0 };
 
-    // Get leads with social profiles for this platform
+    // Get leads with social profiles for this platform — scoped to caller's owned leads.
     const socialField = `${platform}_url`;
     let query = supabase
       .from("leads")
       .select("*")
+      .eq("user_id", ownerId)
       .not(socialField, "is", null)
       .eq("status", "new")
       .limit(countPer);

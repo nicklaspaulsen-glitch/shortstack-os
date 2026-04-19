@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { analyzeCampaign, generateAdCopy } from "@/lib/ads/ai-engine";
 import { syncPlatformCampaigns, executePlatformAction, metaAds, getPlatformCredentials } from "@/lib/ads/platforms";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import type { Campaign, Client, AdAction } from "@/lib/types";
 
 // Autopilot settings shape
@@ -35,8 +36,12 @@ const DEFAULT_CONFIG: AdsAutopilotConfig = {
   notify_on_action: true,
 };
 
-// GET — fetch autopilot config
+// GET — fetch autopilot config (authed only — config contains AI thresholds)
 export async function GET() {
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const supabase = createServiceClient();
   const { data } = await supabase
     .from("system_health")
@@ -99,10 +104,24 @@ export async function POST(request: NextRequest) {
       details: [] as string[],
     };
 
-    // Get all clients with ad accounts
+    // Resolve caller's owned clients so autopilot only operates on their accounts.
+    const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+    if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    const { data: ownedClients } = await supabase
+      .from("clients")
+      .select("id")
+      .eq("profile_id", ownerId);
+    const ownedClientIds = (ownedClients || []).map(c => c.id as string);
+    if (ownedClientIds.length === 0) {
+      return NextResponse.json({ ...results, details: ["No clients owned by caller"] });
+    }
+
+    // Get caller's clients with ad accounts — never operate cross-tenant.
     const { data: adAccounts } = await supabase
       .from("social_accounts")
       .select("client_id, platform")
+      .in("client_id", ownedClientIds)
       .in("platform", ["meta_ads", "google_ads", "tiktok_ads"])
       .eq("is_active", true);
 

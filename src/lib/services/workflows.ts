@@ -147,12 +147,60 @@ const WORKFLOW_ACTIONS: Record<string, {
     name: "Call Webhook",
     description: "Send data to any external URL",
     execute: async (params) => {
-      const res = await fetch(params.url, {
-        method: params.method || "POST",
-        headers: { "Content-Type": "application/json", ...(params.headers ? JSON.parse(params.headers) : {}) },
-        body: params.body || JSON.stringify(params.data || {}),
-      });
-      return { status: res.status, ok: res.ok };
+      // SSRF guard: block non-http(s) schemes and internal / link-local /
+      // localhost ranges so a user can't point a workflow webhook at cloud
+      // metadata endpoints, LAN services, or loopback. Users who truly need
+      // to hit an internal IP can deploy their own proxy.
+      if (!params.url || typeof params.url !== "string") {
+        return { error: "webhook url is required" };
+      }
+      let parsed: URL;
+      try { parsed = new URL(params.url); }
+      catch { return { error: "Invalid webhook URL" }; }
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        return { error: "Only http(s) webhook URLs are allowed" };
+      }
+      const hostname = parsed.hostname.toLowerCase();
+      // Reject localhost / loopback / link-local / cloud-metadata / RFC1918 on hostname match.
+      // Note: resolving the hostname would catch DNS-rebinding too, but that needs a lookup
+      // on every call — the host match alone blocks the common accidents + obvious abuse.
+      const BLOCKED = [
+        "localhost", "127.0.0.1", "0.0.0.0", "::1",
+        "169.254.169.254", // AWS/GCP metadata
+        "metadata.google.internal",
+      ];
+      if (BLOCKED.includes(hostname)) {
+        return { error: "Webhook target is blocked (internal/metadata endpoint)" };
+      }
+      // Block IPv4 private ranges by literal match
+      if (/^10\./.test(hostname) || /^192\.168\./.test(hostname) || /^172\.(1[6-9]|2\d|3[01])\./.test(hostname)) {
+        return { error: "Webhook target is blocked (private IP range)" };
+      }
+      let headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (params.headers) {
+        try {
+          const extra = JSON.parse(params.headers);
+          if (extra && typeof extra === "object") headers = { ...headers, ...extra };
+        } catch {
+          return { error: "Invalid headers JSON" };
+        }
+      }
+      // Cap request time so a slow/malicious target can't tie up a worker.
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 10_000);
+      try {
+        const res = await fetch(parsed.toString(), {
+          method: params.method || "POST",
+          headers,
+          body: params.body || JSON.stringify(params.data || {}),
+          signal: ctrl.signal,
+        });
+        return { status: res.status, ok: res.ok };
+      } catch (err) {
+        return { error: err instanceof Error ? err.message : "Webhook request failed" };
+      } finally {
+        clearTimeout(timer);
+      }
     },
   },
   delay: {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Social Profile Enricher — scans lead websites to find Instagram, Facebook, LinkedIn, TikTok
 export async function POST(request: NextRequest) {
@@ -8,15 +9,21 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { lead_ids, batch_size } = await request.json();
   const supabase = createServiceClient();
 
+  // Scope all enrichment queries to caller's owned leads — prevents cross-tenant write.
   let leads;
   if (lead_ids?.length > 0) {
-    const { data } = await supabase.from("leads").select("id, website, business_name").in("id", lead_ids);
+    const { data } = await supabase.from("leads").select("id, website, business_name")
+      .eq("user_id", ownerId).in("id", lead_ids);
     leads = data;
   } else {
     const { data } = await supabase.from("leads").select("id, website, business_name")
+      .eq("user_id", ownerId)
       .not("website", "is", null).is("instagram_url", null).is("facebook_url", null).limit(batch_size || 10);
     leads = data;
   }

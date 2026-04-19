@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { generateAdCopy } from "@/lib/ads/ai-engine";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // POST — Generate 5 AI ad copy variations via Anthropic API
 export async function POST(request: NextRequest) {
@@ -35,6 +36,10 @@ export async function POST(request: NextRequest) {
     let industry = "business";
 
     if (client_id) {
+      // Verify caller owns the client before reading it.
+      const ctx = await requireOwnedClient(authSupabase, user.id, client_id);
+      if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
       const { data: client } = await supabase
         .from("clients")
         .select("business_name, industry")
