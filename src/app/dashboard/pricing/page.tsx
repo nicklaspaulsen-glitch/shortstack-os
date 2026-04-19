@@ -146,19 +146,34 @@ export default function PricingPage() {
   const [annual, setAnnual] = useState(false);
   const currentPlan = profile?.plan_tier || null;
 
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+
   async function handleSubscribe(planKey: string) {
+    if (checkoutLoading) return;
+    setCheckoutLoading(planKey);
     try {
       const res = await fetch("/api/billing/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planKey.toLowerCase(), billing: annual ? "annual" : "monthly" }),
+        body: JSON.stringify({
+          plan_tier: planKey.toLowerCase(),
+          billing_cycle: annual ? "yearly" : "monthly",
+        }),
       });
       const data = await res.json();
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url;
+      const redirectUrl = data.url || data.checkout_url;
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        const msg = data.error || "Checkout failed. Please try again.";
+        if (typeof window !== "undefined") {
+          // Lightweight inline alert; toast infra may not always be loaded here.
+          alert(msg);
+        }
+        setCheckoutLoading(null);
       }
     } catch {
-      // Toast will be shown by the API error handler
+      setCheckoutLoading(null);
     }
   }
 
@@ -239,17 +254,23 @@ export default function PricingPage() {
 
               <button
                 onClick={() => handleSubscribe(plan.key)}
-                disabled={isCurrentPlan}
+                disabled={isCurrentPlan || checkoutLoading !== null}
                 className={`w-full py-2 rounded-xl text-xs font-medium transition-all ${
                   isCurrentPlan
                     ? "bg-success/10 text-success border border-success/20 cursor-default"
                     : plan.popular
                     ? "bg-gold text-white hover:bg-gold/90 shadow-sm"
                     : "bg-surface-light text-foreground hover:bg-gold/10 hover:text-gold border border-border"
-                }`}
+                } ${checkoutLoading === plan.key ? "opacity-60 cursor-wait" : ""}`}
               >
-                {isCurrentPlan ? "Current Plan" : "Get Started"}
-                {!isCurrentPlan && <ArrowRight size={12} className="inline ml-1" />}
+                {isCurrentPlan
+                  ? "Current Plan"
+                  : checkoutLoading === plan.key
+                  ? "Redirecting..."
+                  : "Get Started"}
+                {!isCurrentPlan && checkoutLoading !== plan.key && (
+                  <ArrowRight size={12} className="inline ml-1" />
+                )}
               </button>
 
               <div className="mt-4 pt-4 border-t border-border space-y-2">

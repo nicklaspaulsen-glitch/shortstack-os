@@ -39,16 +39,16 @@ export default function ClientSetupPage() {
   };
 
   async function completeSetup() {
-    toast.success("Setup complete! Welcome to ShortStack.");
+    toast.success("Setup complete! Welcome aboard.");
     router.push("/dashboard/portal");
   }
 
   const steps = [
     // Step 0: Welcome
     <div key="welcome" className="text-center space-y-6">
-      <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={80} height={80} className="mx-auto" />
+      <Image src="/icons/shortstack-logo.png" alt="Trinity" width={80} height={80} className="mx-auto" />
       <div>
-        <h1 className="text-3xl font-bold text-gold">Welcome to ShortStack</h1>
+        <h1 className="text-3xl font-bold text-gold">Welcome aboard</h1>
         <p className="text-muted mt-2 max-w-md mx-auto">
           Hi {profile?.full_name || "there"}! Let&apos;s get your account set up so our AI agents can start working for you.
         </p>
@@ -111,7 +111,7 @@ export default function ClientSetupPage() {
         <button onClick={() => setStep(3)} className="text-sm text-muted hover:text-foreground flex items-center gap-1">
           <X size={14} /> No thanks, maybe later
         </button>
-        <button onClick={() => toast("Contact your ShortStack account manager for help connecting accounts.")}
+        <button onClick={() => toast("Contact your account manager for help connecting accounts.")}
           className="text-sm text-gold hover:text-gold-light flex items-center gap-1">
           <HelpCircle size={14} /> Need help setting it up?
         </button>

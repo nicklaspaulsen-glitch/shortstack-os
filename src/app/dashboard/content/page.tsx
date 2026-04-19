@@ -67,7 +67,10 @@ export default function ContentPage() {
   const [remixing, setRemixing] = useState<{ itemId: string; platform: DropGoPlatform } | null>(null);
   const [remixOptions, setRemixOptions] = useState<{ itemId: string; platform: DropGoPlatform; alternatives: string[] } | null>(null);
   const [planningWeek, setPlanningWeek] = useState(false);
-  const [weekPlan, setWeekPlan] = useState<Array<{ day: string; date: string; platform: string; asset_id?: string | null; post_time: string; title?: string; caption?: string; brief?: string; needs_creation?: boolean }>>([]);
+  // Phase 3: each entry can carry its calendar row id + live publish status
+  const [weekPlan, setWeekPlan] = useState<Array<{ day: string; date: string; platform: string; asset_id?: string | null; post_time: string; title?: string; caption?: string; brief?: string; needs_creation?: boolean; calendar_id?: string; status?: string; live_url?: string | null; published_error?: string | null }>>([]);
+  const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [approvingAll, setApprovingAll] = useState(false);
   // Phase 2: longer plans, themes, gap analysis, completion dialog
   const [planGapAnalysis, setPlanGapAnalysis] = useState<{ target_posts: number; real_assets: number; needs_creation: number; recommendation: string } | null>(null);
   const [planThemes, setPlanThemes] = useState<Array<{ week: number; theme: string }>>([]);
@@ -427,6 +430,77 @@ export default function ContentPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function _planMyWeek() { await planForPeriod(7); }
 
+  // ── Phase 3: publish execution ─────────────────────────────────────
+  async function publishNow(idx: number) {
+    const entry = weekPlan[idx];
+    if (!entry?.calendar_id) { toast.error("This plan entry isn't saved yet — regenerate the plan first."); return; }
+    setPublishingId(entry.calendar_id);
+    // Optimistic UI
+    setWeekPlan(prev => prev.map((p, i) => i === idx ? { ...p, status: "publishing" } : p));
+    try {
+      const res = await fetch(`/api/content-calendar/${entry.calendar_id}/publish-now`, { method: "POST" });
+      const data = await res.json();
+      if (res.ok && data?.outcome?.status === "posted") {
+        setWeekPlan(prev => prev.map((p, i) => i === idx ? { ...p, status: "posted", live_url: data.outcome.live_url } : p));
+        toast.success("Posted live");
+      } else if (res.status === 409 && data?.outcome?.status === "needs_connection") {
+        setWeekPlan(prev => prev.map((p, i) => i === idx ? { ...p, status: "needs_connection", published_error: data.error } : p));
+        toast.error(data.error || "Connect the account first", {
+          duration: 6000,
+        });
+        // Offer a link to integrations
+        setTimeout(() => {
+          if (confirm("Open Integrations to connect the account?")) {
+            window.location.href = data.connect_url || "/dashboard/social-manager";
+          }
+        }, 300);
+      } else {
+        const err = data?.error || data?.outcome?.error || "Publish failed";
+        setWeekPlan(prev => prev.map((p, i) => i === idx ? { ...p, status: "failed", published_error: err } : p));
+        toast.error(err);
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Network error";
+      setWeekPlan(prev => prev.map((p, i) => i === idx ? { ...p, status: "failed", published_error: msg } : p));
+      toast.error(msg);
+    } finally {
+      setPublishingId(null);
+    }
+  }
+
+  async function approveAndPublishAll() {
+    if (weekPlan.length === 0) { toast.error("Nothing to approve"); return; }
+    const saved = weekPlan.filter(p => p.calendar_id && (p.status === "scheduled" || !p.status));
+    if (saved.length === 0) { toast.error("These plan entries are already approved or posted."); return; }
+    setApprovingAll(true);
+    try {
+      const res = await fetch("/api/content-calendar/approve-all", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: managedClientId || undefined,
+          ids: saved.map(p => p.calendar_id).filter(Boolean),
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        const approvedIds = new Set<string>((data.items || []).map((i: { id: string }) => i.id));
+        setWeekPlan(prev => prev.map(p =>
+          p.calendar_id && approvedIds.has(p.calendar_id)
+            ? { ...p, status: "approved_for_publish" }
+            : p,
+        ));
+        toast.success(`Approved ${data.approved} posts — will publish on schedule`);
+      } else {
+        toast.error(data.error || "Approve-all failed");
+      }
+    } catch {
+      toast.error("Approve-all failed");
+    } finally {
+      setApprovingAll(false);
+    }
+  }
+
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: "scripts", label: "Scripts", icon: <FileText size={16} /> },
     { key: "requests", label: "Request Inbox", icon: <Inbox size={16} /> },
@@ -670,16 +744,28 @@ export default function ContentPage() {
         {/* Plan preview (week / month / year) */}
         {weekPlan.length > 0 && (
           <div className="mt-5 border border-gold/30 rounded-xl p-4 bg-gold/5">
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
               <h3 className="text-sm font-medium flex items-center gap-2">
                 <Calendar size={14} className="text-gold" />
                 {planPeriodDays}-Day Plan ({weekPlan.length} posts)
               </h3>
-              {planGapAnalysis && planGapAnalysis.needs_creation > 0 && (
-                <span className="text-[10px] px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
-                  Gap: {planGapAnalysis.needs_creation} ideas generated
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                {planGapAnalysis && planGapAnalysis.needs_creation > 0 && (
+                  <span className="text-[10px] px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                    Gap: {planGapAnalysis.needs_creation} ideas generated
+                  </span>
+                )}
+                {weekPlan.some(p => p.calendar_id && (p.status === "scheduled" || !p.status)) && (
+                  <button
+                    onClick={approveAndPublishAll}
+                    disabled={approvingAll}
+                    className="text-[11px] px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-400 text-black font-semibold flex items-center gap-1.5 hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {approvingAll ? <Loader size={12} className="animate-spin" /> : <Send size={12} />}
+                    Approve all + publish on schedule
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Gap analysis banner */}
@@ -707,16 +793,72 @@ export default function ContentPage() {
             )}
 
             <div className="space-y-1.5 max-h-80 overflow-y-auto">
-              {weekPlan.map((p, i) => (
-                <div key={i} className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}>
-                  <span className="text-gold font-medium w-12 shrink-0">{p.day}</span>
-                  <span className="text-muted w-16 shrink-0">{p.date?.slice(5)}</span>
-                  <span className="text-muted w-14 shrink-0">{p.post_time}</span>
-                  <span className="text-foreground capitalize w-20 shrink-0">{p.platform}</span>
-                  <span className="text-muted flex-1 truncate">{p.title || p.caption || "—"}</span>
-                  {p.needs_creation && <span className="text-[9px] text-amber-400 shrink-0">NEEDS CREATION</span>}
-                </div>
-              ))}
+              {weekPlan.map((p, i) => {
+                const status = p.status || "scheduled";
+                const isPublishing = status === "publishing" || publishingId === p.calendar_id;
+                const canPublishNow = !!p.calendar_id && !p.needs_creation && status !== "posted" && !isPublishing;
+                return (
+                  <div key={i} className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}>
+                    <span className="text-gold font-medium w-12 shrink-0">{p.day}</span>
+                    <span className="text-muted w-16 shrink-0">{p.date?.slice(5)}</span>
+                    <span className="text-muted w-14 shrink-0">{p.post_time}</span>
+                    <span className="text-foreground capitalize w-20 shrink-0">{p.platform}</span>
+                    <span className="text-muted flex-1 truncate">{p.title || p.caption || "—"}</span>
+                    {/* Status indicator */}
+                    <span className="shrink-0 flex items-center gap-1 min-w-[80px] justify-end">
+                      {isPublishing && (
+                        <><Loader size={10} className="animate-spin text-blue-400" /><span className="text-blue-400">Publishing…</span></>
+                      )}
+                      {!isPublishing && status === "posted" && (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                          {p.live_url ? (
+                            <a href={p.live_url} target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline">Posted</a>
+                          ) : (
+                            <span className="text-emerald-400">Posted</span>
+                          )}
+                        </>
+                      )}
+                      {!isPublishing && status === "failed" && (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                          <span className="text-red-400" title={p.published_error || "Publish failed"}>Failed</span>
+                        </>
+                      )}
+                      {!isPublishing && status === "needs_connection" && (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+                          <a href="/dashboard/social-manager" className="text-orange-400 hover:underline" title={p.published_error || "No account connected"}>Connect</a>
+                        </>
+                      )}
+                      {!isPublishing && status === "approved_for_publish" && (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+                          <span className="text-gold">Approved</span>
+                        </>
+                      )}
+                      {!isPublishing && (status === "scheduled" || (!p.status && !p.needs_creation)) && (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+                          <span className="text-yellow-300">Scheduled</span>
+                        </>
+                      )}
+                    </span>
+                    {p.needs_creation && <span className="text-[9px] text-amber-400 shrink-0">NEEDS CREATION</span>}
+                    {/* Publish Now button */}
+                    {canPublishNow && (
+                      <button
+                        onClick={() => publishNow(i)}
+                        disabled={isPublishing}
+                        title="Publish this entry right now"
+                        className="shrink-0 text-[10px] px-2 py-1 rounded border border-gold/30 hover:bg-gold/10 text-gold flex items-center gap-1 disabled:opacity-40"
+                      >
+                        <Send size={10} /> Publish now
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

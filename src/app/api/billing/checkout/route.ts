@@ -1,3 +1,38 @@
+/**
+ * Agency self-checkout — creates a Stripe Checkout Session so users can
+ * subscribe to a ShortStack plan (Starter / Pro / Business / Unlimited).
+ *
+ * Request body (preferred):
+ *   { plan_tier: "starter"|"pro"|"business"|"unlimited", billing_cycle: "monthly"|"yearly" }
+ *
+ * Request body (legacy — still accepted for backward compat with existing callers):
+ *   { plan: "starter"|..., billing: "monthly"|"annual" }
+ *
+ * Returns: { url: string, checkout_url: string }  (checkout_url kept for legacy)
+ *
+ * Stripe Price IDs are looked up from env vars with the pattern
+ *   STRIPE_PRICE_<TIER>_<CYCLE>      e.g. STRIPE_PRICE_PRO_MONTHLY, STRIPE_PRICE_BUSINESS_ANNUAL
+ *
+ * Currently configured (as of 2026-04-19) — Annual prices are live:
+ *   STRIPE_PRICE_STARTER_ANNUAL, STRIPE_PRICE_PRO_ANNUAL,
+ *   STRIPE_PRICE_BUSINESS_ANNUAL, STRIPE_PRICE_UNLIMITED_ANNUAL, STRIPE_PRICE_GROWTH_ANNUAL
+ *
+ * TODO (user action required): create monthly Prices in Stripe Dashboard
+ * and add to Vercel as:
+ *   STRIPE_PRICE_STARTER_MONTHLY
+ *   STRIPE_PRICE_PRO_MONTHLY
+ *   STRIPE_PRICE_BUSINESS_MONTHLY
+ *   STRIPE_PRICE_UNLIMITED_MONTHLY
+ *   STRIPE_PRICE_GROWTH_MONTHLY   (optional — Growth tier is still in PLAN_TIERS)
+ *
+ * If the env var for the requested cycle is missing, the endpoint returns a
+ * clear 400 error telling the user which variable to configure. It will NOT
+ * auto-create ad-hoc Prices (that made testing flaky and leaked test Prices
+ * into the dashboard).
+ *
+ * The Founder tier is INTERNAL ONLY and will always be rejected here.
+ */
+
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { PLAN_TIERS, PlanTier } from "@/lib/plan-config";
@@ -5,37 +40,82 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
-// Map plan names to Stripe Price IDs (create these in Stripe Dashboard)
-// If not set, ad-hoc prices are created automatically
-const PRICE_IDS: Record<string, string | undefined> = {
-  starter: process.env.STRIPE_PRICE_STARTER,
-  growth: process.env.STRIPE_PRICE_GROWTH,
-  pro: process.env.STRIPE_PRICE_PRO,
-  business: process.env.STRIPE_PRICE_BUSINESS,
-  unlimited: process.env.STRIPE_PRICE_UNLIMITED,
-  starter_annual: process.env.STRIPE_PRICE_STARTER_ANNUAL,
-  growth_annual: process.env.STRIPE_PRICE_GROWTH_ANNUAL,
-  pro_annual: process.env.STRIPE_PRICE_PRO_ANNUAL,
-  business_annual: process.env.STRIPE_PRICE_BUSINESS_ANNUAL,
-  unlimited_annual: process.env.STRIPE_PRICE_UNLIMITED_ANNUAL,
-};
+// Plan tiers that are valid for self-checkout (Founder is internal-only,
+// Growth is still supported as a legacy tier).
+const CHECKOUT_TIERS = ["starter", "growth", "pro", "business", "unlimited"] as const;
+type CheckoutTier = typeof CHECKOUT_TIERS[number];
 
-// Agency self-checkout — creates a Stripe Checkout Session for the agency's own plan
+function normalizeTier(raw: unknown): CheckoutTier | null {
+  if (typeof raw !== "string") return null;
+  const lower = raw.toLowerCase().trim();
+  return (CHECKOUT_TIERS as readonly string[]).includes(lower) ? (lower as CheckoutTier) : null;
+}
+
+function normalizeCycle(raw: unknown): "monthly" | "yearly" | null {
+  if (typeof raw !== "string") return null;
+  const lower = raw.toLowerCase().trim();
+  if (lower === "monthly" || lower === "month") return "monthly";
+  if (lower === "yearly" || lower === "annual" || lower === "year") return "yearly";
+  return null;
+}
+
+/** Env var name for a given tier + cycle. */
+function priceEnvName(tier: CheckoutTier, cycle: "monthly" | "yearly"): string {
+  // STRIPE_PRICE_PRO_ANNUAL vs STRIPE_PRICE_PRO_MONTHLY
+  // Existing Vercel env uses *_ANNUAL for yearly; we keep that for compat.
+  const cycleToken = cycle === "yearly" ? "ANNUAL" : "MONTHLY";
+  return `STRIPE_PRICE_${tier.toUpperCase()}_${cycleToken}`;
+}
+
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { plan, billing } = await request.json();
-  const tierKey = (plan || "").charAt(0).toUpperCase() + (plan || "").slice(1).toLowerCase() as PlanTier;
-  const isAnnual = billing === "annual";
-
-  if (!PLAN_TIERS[tierKey]) {
-    return NextResponse.json({ error: "Invalid plan tier" }, { status: 400 });
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const tier = PLAN_TIERS[tierKey];
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  // Accept both new spec names (plan_tier/billing_cycle) and legacy (plan/billing).
+  const tier = normalizeTier(body.plan_tier ?? body.plan);
+  const cycle = normalizeCycle(body.billing_cycle ?? body.billing);
+
+  if (!tier) {
+    return NextResponse.json(
+      { error: `Invalid plan_tier. Must be one of: ${CHECKOUT_TIERS.join(", ")}` },
+      { status: 400 },
+    );
+  }
+  if (!cycle) {
+    return NextResponse.json(
+      { error: "Invalid billing_cycle. Must be 'monthly' or 'yearly'" },
+      { status: 400 },
+    );
+  }
+
+  // Proper-cased key for PLAN_TIERS lookup (e.g. "Pro")
+  const tierKey = (tier.charAt(0).toUpperCase() + tier.slice(1)) as PlanTier;
+  if (!PLAN_TIERS[tierKey]) {
+    return NextResponse.json({ error: "Unknown plan tier" }, { status: 400 });
+  }
+
+  // Look up Stripe Price ID from env
+  const envName = priceEnvName(tier, cycle);
+  const priceId = process.env[envName];
+  if (!priceId) {
+    return NextResponse.json(
+      {
+        error: `Pricing not configured for ${tierKey} (${cycle}). Set ${envName} in Vercel env to enable this plan/cycle combination.`,
+        missing_env_var: envName,
+      },
+      { status: 400 },
+    );
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin || "https://shortstack-os.vercel.app";
 
   try {
     // Get or create Stripe customer for this agency owner
@@ -54,49 +134,51 @@ export async function POST(request: NextRequest) {
         metadata: { shortstack_user_id: user.id },
       });
       customerId = customer.id;
-      await supabase.from("profiles").update({ stripe_customer_id: customerId }).eq("id", user.id);
+      await supabase
+        .from("profiles")
+        .update({ stripe_customer_id: customerId })
+        .eq("id", user.id);
     }
 
-    // Use pre-configured Stripe Price ID or create ad-hoc
-    // Annual pricing has env vars like STRIPE_PRICE_GROWTH_ANNUAL
-    const annualKey = `${plan.toLowerCase()}_annual`;
-    let priceId = isAnnual
-      ? (PRICE_IDS[annualKey] || null)
-      : PRICE_IDS[plan.toLowerCase()];
-
-    if (!priceId) {
-      const monthlyAmount = tier.price_monthly * 100;
-      const unitAmount = isAnnual ? Math.round(monthlyAmount * 12 * 0.8) : monthlyAmount;
-      const price = await stripe.prices.create({
-        unit_amount: unitAmount,
-        currency: "usd",
-        recurring: { interval: isAnnual ? "year" : "month" },
-        product_data: {
-          name: `ShortStack OS — ${tierKey} Plan (${isAnnual ? "Annual" : "Monthly"})`,
-          metadata: { plan_tier: tierKey },
-        },
-      });
-      priceId = price.id;
-    }
+    // Stripe Tax is optional — only enable if explicitly turned on via env.
+    // (If the account hasn't completed Stripe Tax onboarding, enabling this
+    //  causes the session creation to fail.)
+    const enableAutomaticTax = process.env.STRIPE_AUTOMATIC_TAX === "true";
 
     const session = await stripe.checkout.sessions.create({
-      customer: customerId,
       mode: "subscription",
+      customer: customerId,
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: {
+        type: "agency_subscription",
         user_id: user.id,
         plan_tier: tierKey,
-        type: "agency_subscription",
+        billing_cycle: cycle,
       },
-      success_url: `${baseUrl}/dashboard?subscribed=${tierKey.toLowerCase()}`,
+      subscription_data: {
+        metadata: {
+          type: "agency_subscription",
+          user_id: user.id,
+          plan_tier: tierKey,
+          billing_cycle: cycle,
+        },
+      },
+      success_url: `${baseUrl}/dashboard?subscribed=${tier}`,
       cancel_url: `${baseUrl}/pricing?cancelled=true`,
       allow_promotion_codes: true,
+      ...(enableAutomaticTax ? { automatic_tax: { enabled: true } } : {}),
     });
 
-    return NextResponse.json({ checkout_url: session.url });
+    if (!session.url) {
+      return NextResponse.json({ error: "Stripe did not return a checkout URL" }, { status: 500 });
+    }
+
+    // Return `url` per spec, and `checkout_url` for legacy callers.
+    return NextResponse.json({ url: session.url, checkout_url: session.url });
   } catch (err) {
     console.error("Stripe checkout error:", err);
-    return NextResponse.json({ error: "Failed to create checkout session. Please try again." }, { status: 500 });
+    const message = err instanceof Error ? err.message : "Failed to create checkout session";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

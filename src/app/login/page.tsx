@@ -66,11 +66,15 @@ function LoginForm() {
           const res = await fetch("/api/billing/checkout", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ plan: planParam, billing: billingParam || "monthly" }),
+            body: JSON.stringify({
+              plan_tier: planParam,
+              billing_cycle: billingParam === "annual" || billingParam === "yearly" ? "yearly" : "monthly",
+            }),
           });
           const data = await res.json();
-          if (data.checkout_url) {
-            window.location.href = data.checkout_url;
+          const redirectUrl = data.url || data.checkout_url;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
             return;
           }
           // If checkout fails, still go to dashboard

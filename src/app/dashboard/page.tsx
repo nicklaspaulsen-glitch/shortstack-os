@@ -58,7 +58,7 @@ interface LeadPipeline {
 }
 
 export default function DashboardPage() {
-  const { profile } = useAuth();
+  const { profile, refreshProfile } = useAuth();
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats>({
     leadsToday: 0, totalLeads: 0, dmsSentToday: 0, dmsTarget: 80,
@@ -85,14 +85,22 @@ export default function DashboardPage() {
     return () => clearTimeout(t);
   }, []);
 
-  // Show success toast after Stripe checkout redirect
+  // Show success toast after Stripe checkout redirect.
+  // The webhook activates the plan server-side before the user returns here,
+  // but refreshProfile() pulls the fresh plan_tier so gated features unlock
+  // immediately without a page reload.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const subscribed = params.get("subscribed");
     if (subscribed) {
-      toast.success(`Welcome to Trinity! Your ${subscribed.charAt(0).toUpperCase() + subscribed.slice(1)} plan is active.`, { duration: 5000 });
+      const planLabel = subscribed.charAt(0).toUpperCase() + subscribed.slice(1);
+      toast.success(`Welcome to ${planLabel}! Your plan is active.`, { duration: 5000 });
+      // Reload profile from server so new plan's features unlock.
+      // Small delay lets the Stripe webhook land first.
+      setTimeout(() => { refreshProfile().catch(() => {}); }, 1500);
       window.history.replaceState({}, "", "/dashboard");
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchDashboardData() {

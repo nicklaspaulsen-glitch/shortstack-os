@@ -45,7 +45,6 @@ export async function POST(req: NextRequest) {
       // Update existing user password
       await supabaseAdmin.auth.admin.updateUserById(existing.id, { password });
       userId = existing.id;
-      console.log(`[setup-account] Updated existing user ${email}`);
     } else {
       // Create new user
       const { data: newUser, error: createErr } = await supabaseAdmin.auth.admin.createUser({
@@ -58,7 +57,6 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: createErr?.message || "Failed to create user" }, { status: 500 });
       }
       userId = newUser.user.id;
-      console.log(`[setup-account] Created new user ${email} with id ${userId}`);
     }
 
     // Upsert profile with role and details

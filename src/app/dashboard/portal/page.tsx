@@ -513,7 +513,7 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
         <div className="w-14 h-14 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-gold/20">
           <Sparkles size={24} className="text-gold" />
         </div>
-        <h1 className="text-lg font-bold tracking-tight">Welcome to ShortStack</h1>
+        <h1 className="text-lg font-bold tracking-tight">Welcome to Trinity</h1>
         <p className="text-xs text-muted mt-1">Let&apos;s set up your account — takes less than 2 minutes</p>
         <p className="text-[10px] text-gold mt-1">Complete your detailed onboarding after account creation</p>
       </div>

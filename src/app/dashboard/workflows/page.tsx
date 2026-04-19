@@ -134,7 +134,8 @@ export default function WorkflowsPage() {
   async function deleteN8nWorkflow(id: string) {
     if (!confirm("Delete this n8n workflow?")) return;
     try {
-      await fetch(`/api/n8n/workflows/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/n8n/workflows/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Delete failed");
       toast.success("Workflow deleted");
       fetchN8n();
     } catch { toast.error("Failed to delete"); }

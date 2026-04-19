@@ -42,7 +42,6 @@ export async function GET(_request: NextRequest) {
   }
 
   if (!clients || clients.length === 0) {
-    console.log("[switch-client] No clients found in database");
     return NextResponse.json({ success: true, clients: [] });
   }
 
@@ -89,6 +88,5 @@ export async function GET(_request: NextRequest) {
     });
   }
 
-  console.log(`[switch-client] Returning ${enriched.length} clients`);
   return NextResponse.json({ success: true, clients: enriched });
 }

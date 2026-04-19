@@ -86,19 +86,19 @@ export async function sendWelcomeEmail(email: string, name: string, planTier?: s
 
   return sendEmail({
     to: email,
-    subject: `Welcome to ShortStack OS${planTier ? ` — ${planTier} Plan Activated` : ""}`,
+    subject: `Welcome to Trinity${planTier ? ` — ${planTier} Plan Activated` : ""}`,
     html: `
       <div style="${baseStyle}">
         <!-- Logo -->
         <div style="text-align:center;margin-bottom:24px;">
-          <img src="${logoUrl}" alt="ShortStack OS" width="60" height="60" style="border-radius:12px;" />
+          <img src="${logoUrl}" alt="Trinity" width="60" height="60" style="border-radius:12px;" />
         </div>
 
         <h1 style="color:#fff;font-size:24px;margin-bottom:4px;text-align:center;">Welcome aboard, ${name}!</h1>
         ${planBadge ? `<div style="text-align:center;margin:12px 0 24px;">${planBadge}</div>` : ""}
 
         <p style="color:#a0a0a0;font-size:14px;line-height:1.7;">
-          Your agency command center is live. ShortStack OS gives you AI-powered lead generation,
+          Your agency command center is live. Trinity gives you AI-powered lead generation,
           content creation, client management, and automated outreach — all in one place.
         </p>
 
@@ -162,7 +162,7 @@ export async function sendWelcomeEmail(email: string, name: string, planTier?: s
             or message us on the dashboard.
           </p>
           <p style="color:#444;font-size:10px;margin-top:12px;">
-            ShortStack OS &mdash; Your Agency, Automated.
+            Trinity &mdash; Your Agency, Automated.
           </p>
         </div>
       </div>

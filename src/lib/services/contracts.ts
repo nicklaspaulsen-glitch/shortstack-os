@@ -209,7 +209,7 @@ ShortStack Digital Marketing Agency ("Provider") agrees to provide the following
 ${params.services.map(s => `- ${s}`).join("\n")}
 
 2. DELIVERABLES
-The Provider will deliver monthly reports, content as specified in the service package, and maintain all active campaigns. Specific deliverables will be tracked in the ShortStack OS client portal.
+The Provider will deliver monthly reports, content as specified in the service package, and maintain all active campaigns. Specific deliverables will be tracked in the Trinity client portal.
 
 3. PAYMENT TERMS
 The Client agrees to pay $${params.mrr.toLocaleString()} per month, due on the 1st of each month. Payment is due within 7 days of invoice date. Late payments may incur a 5% monthly fee.

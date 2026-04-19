@@ -45,3 +45,10 @@ dist-electron/
 /playwright-report/
 /test-results/
 /playwright/.auth/
+
+# Supabase CLI scratch
+supabase/.temp/
+
+# Windows path-encoded tsc-out junk (from Windows path escaping bug)
+C:Claudetsc-*.txt
+

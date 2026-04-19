@@ -157,7 +157,7 @@ export async function generateScriptPDF(script: {
       info: {
         Title: script.title,
         Author: "ShortStack Digital Marketing Agency",
-        Creator: "ShortStack OS",
+        Creator: "Trinity",
       },
     });
 
@@ -204,7 +204,7 @@ export async function generateScriptPDF(script: {
     doc.text(`Generated: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, 50, doc.y + 5);
 
     // Footer on cover
-    doc.fontSize(8).fillColor(gray).text("Confidential — ShortStack OS", 50, doc.page.height - 60, {
+    doc.fontSize(8).fillColor(gray).text("Confidential — Trinity", 50, doc.page.height - 60, {
       width: pageWidth,
       align: "center",
     });

@@ -200,10 +200,12 @@ Return JSON: {
     schedule = buildFallbackSchedule(assets, platforms, dayList);
   }
 
-  // Persist to content_calendar
+  // Persist to content_calendar — annotate each schedule entry with the
+  // resulting calendar row id so the UI can target it for Publish Now.
   const inserted: Array<Record<string, unknown>> = [];
   if (clientId) {
-    for (const entry of schedule) {
+    for (let i = 0; i < schedule.length; i++) {
+      const entry = schedule[i];
       const scheduledAt = combineDateAndTime(entry.date, entry.post_time);
       const { data, error } = await supabase
         .from("content_calendar")
@@ -222,7 +224,13 @@ Return JSON: {
         })
         .select()
         .single();
-      if (!error && data) inserted.push(data);
+      if (!error && data) {
+        inserted.push(data);
+        (schedule[i] as PlanEntry & { calendar_id?: string; status?: string }).calendar_id =
+          (data.id as string) || undefined;
+        (schedule[i] as PlanEntry & { calendar_id?: string; status?: string }).status =
+          (data.status as string) || "scheduled";
+      }
     }
   }
 

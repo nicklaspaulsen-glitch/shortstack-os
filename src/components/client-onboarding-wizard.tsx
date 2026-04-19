@@ -367,7 +367,7 @@ export default function ClientOnboardingWizard({
               <div className="absolute -inset-3 rounded-[2rem] bg-gold/[0.04] -z-10" />
             </div>
             <p className="text-xs font-semibold uppercase tracking-widest text-gold mb-3">
-              Welcome to ShortStack OS
+              Welcome to Trinity
             </p>
             <h1 className="text-3xl font-bold text-foreground tracking-tight mb-4">
               Hey, {clientName}! 👋

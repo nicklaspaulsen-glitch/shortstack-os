@@ -37,7 +37,6 @@ export async function GET() {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 });
     }
     profile = created;
-    console.log("[profile] Auto-created profile for", user.email);
   }
 
   // Ensure plan_tier is set — column may not exist in DB yet

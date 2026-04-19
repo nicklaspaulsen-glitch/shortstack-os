@@ -151,7 +151,7 @@ export default function ReportGeneratorPage() {
   //   1. brand_kit.logos[0] (preferred — user's explicit brand logo)
   //   2. brand_kit.favicon / ogImage (fallback from extracted website)
   //   3. profiles.avatar_url (user avatar)
-  //   4. null → renders "SS" initials placeholder
+  //   4. null → renders "T" initial placeholder
   const [brandLogo, setBrandLogo] = useState<string | null>(null);
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -640,7 +640,7 @@ export default function ReportGeneratorPage() {
                             }}
                           />
                         ) : (
-                          <span className="text-white font-bold text-lg">SS</span>
+                          <span className="text-white font-bold text-lg">T</span>
                         )}
                       </div>
                     )}

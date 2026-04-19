@@ -75,8 +75,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Log the inbound call
-    console.log(
+    // Log the inbound call for observability
+    console.info(
       `[Voice Inbound] call_sid=${call_sid} phone=${caller_phone} name=${caller_name || "Unknown"} time=${new Date().toISOString()}`
     );
 

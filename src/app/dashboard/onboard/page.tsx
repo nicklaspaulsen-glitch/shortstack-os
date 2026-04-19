@@ -412,7 +412,7 @@ export default function OnboardPage() {
         count: soloState.enabled_sidebar.length,
       });
       setSoloComplete(true);
-      toast.success("You're all set! Welcome to ShortStack.");
+      toast.success("You're all set! Welcome to Trinity.");
     } catch (err) {
       console.error("[onboard] persist failed:", err);
       toast.error("Couldn't save your preferences — please try again.");
@@ -474,7 +474,7 @@ export default function OnboardPage() {
           <PageHero
             icon={<CheckCircle2 size={28} />}
             title="You're all set!"
-            subtitle={`ShortStack has been personalized for your ${soloSummary.label} business.`}
+            subtitle={`Trinity has been personalized for your ${soloSummary.label} business.`}
             gradient="gold"
           />
           <div className="rounded-2xl border border-gold/30 bg-[var(--color-surface)] p-10 text-center space-y-5">

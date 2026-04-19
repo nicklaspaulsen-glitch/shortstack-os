@@ -12,7 +12,7 @@ interface TourStep {
 
 const STEPS: TourStep[] = [
   {
-    title: "Welcome to ShortStack",
+    title: "Welcome to Trinity",
     description: "Your all-in-one agency operating system. Let us show you around so you can hit the ground running.",
     target: "[data-tour='welcome']",
     position: "bottom",

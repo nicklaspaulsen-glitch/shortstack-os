@@ -26,7 +26,7 @@ export type OutreachStatus = "sent" | "delivered" | "replied" | "no_reply" | "bo
 export type FollowupStatus = "pending" | "sent" | "completed" | "cancelled";
 export type ContractStatus = "draft" | "sent" | "viewed" | "signed" | "expired" | "declined";
 export type InvoiceStatus = "draft" | "sent" | "paid" | "overdue" | "cancelled";
-export type ContentStatus = "idea" | "scripted" | "in_production" | "editing" | "ready_to_publish" | "scheduled" | "published" | "failed";
+export type ContentStatus = "idea" | "scripted" | "in_production" | "editing" | "ready_to_publish" | "scheduled" | "published" | "failed" | "approved_for_publish" | "publishing" | "posted" | "needs_connection";
 export type PublishPlatform = "youtube" | "youtube_shorts" | "tiktok" | "instagram_reels" | "facebook_reels" | "linkedin_video";
 export type CampaignPlatform = "meta_ads" | "tiktok_ads" | "google_ads";
 export type CampaignStatus = "draft" | "active" | "paused" | "completed" | "archived";
@@ -243,6 +243,10 @@ export interface ContentCalendarEntry {
   notes: string | null;
   metadata?: Record<string, unknown>;
   created_at: string;
+  // Phase 3 auto-publish execution fields
+  approved_at?: string | null;
+  approved_by?: string | null;
+  published_error?: string | null;
 }
 
 export interface ContentRequest {
