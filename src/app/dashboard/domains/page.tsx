@@ -318,7 +318,7 @@ export default function DomainsPage() {
                             ? (r.price ? `${r.currency} $${r.price.toFixed(2)} wholesale/yr` : "Available")
                             : r.available === false
                               ? "Taken"
-                              : (r.error ? `Unknown (${r.error.slice(0, 60)})` : "Unknown — check failed")}
+                              : "Unknown — can't verify"}
                         </p>
                       </div>
                     </div>

@@ -51,11 +51,16 @@ export async function POST(request: NextRequest) {
   const platforms: string[] = Array.isArray(body?.platforms) && body.platforms.length > 0
     ? body.platforms.map((p: unknown) => String(p))
     : ["instagram", "tiktok", "youtube", "linkedin", "twitter"];
-  const days: number = Math.min(30, Math.max(1, Number(body?.days) || 7));
+  // Phase 2: support week (7), month (30), quarter (90), or year (365)
+  const days: number = Math.min(365, Math.max(1, Number(body?.days) || 7));
   const clientId: string | null = body?.client_id || null;
   const startDate = body?.start_date ? new Date(body.start_date) : new Date();
+  // Phase 2: when assets are insufficient to fill the period, Claude
+  // generates NEW content IDEAS (titles + briefs) for the gap.
+  const fillGap: boolean = body?.fill_gap !== false;
+  const postsPerWeekPerPlatform: number = Math.max(1, Math.min(7, Number(body?.posts_per_week) || 3));
 
-  if (assets.length === 0) {
+  if (assets.length === 0 && !fillGap) {
     return NextResponse.json({ error: "assets array required" }, { status: 400 });
   }
 
@@ -82,39 +87,107 @@ export async function POST(request: NextRequest) {
 
   const dayList = generateDays(startDate, days);
 
-  const systemPrompt = `You are a content-scheduling expert. Given a small pool of assets and a set of platforms, design a ${days}-day posting plan. Spread posts naturally, avoid posting the same asset on the same platform twice on the same day, pick platform-appropriate post_times (24h HH:mm) aligned with common peak windows per platform. Return ONLY valid JSON, no markdown.`;
+  // Phase 2: math the gap so Claude knows when to invent new content
+  const weeks = Math.max(1, Math.ceil(days / 7));
+  const targetPosts = platforms.length * postsPerWeekPerPlatform * weeks;
+  const gap = Math.max(0, targetPosts - assets.length);
+  const needsGenerated = fillGap && gap > 0;
 
-  const userPrompt = `Assets (${assets.length}):
+  const systemPrompt = `You are an elite content strategist and scheduler. Given a pool of real assets and a set of platforms, design a ${days}-day content plan (${weeks} week${weeks > 1 ? "s" : ""}).
+
+Rules:
+- Spread posts naturally across the period. Avoid clustering all uploads on day 1.
+- Don't double-post the same asset on the same platform on the same day.
+- Pick platform-appropriate post_times (24h HH:mm) in common peak windows:
+  - Instagram: 11-13 and 19-21
+  - TikTok: 18-22
+  - LinkedIn: 07-09 and 17-18 (weekdays only)
+  - YouTube: 14-17 and 20-22
+  - Twitter/X: 08-10 and 17-19
+- Target ~${postsPerWeekPerPlatform} posts/week per platform.
+${needsGenerated ? `- When real assets run out, INVENT ${gap} new content ideas. For each: write a clear title, a 1-line brief of what the content should be, and a platform-appropriate caption. Set asset_id=null and include "needs_creation": true.` : "- Stop when real assets are exhausted."}
+- Return ONLY valid JSON, no markdown.`;
+
+  const userPrompt = `Real assets available (${assets.length}):
 ${JSON.stringify(assetSummary, null, 2)}
 
 Platforms: ${platforms.join(", ")}
-Days in plan: ${days}
-Day labels (in order): ${dayList.map((d) => `${d.label} (${d.iso})`).join(", ")}
+Period: ${days} days (${weeks} week${weeks > 1 ? "s" : ""}), starting ${dayList[0]?.iso}
+Target cadence: ${postsPerWeekPerPlatform} posts/week/platform = ${targetPosts} total posts
+Gap to fill with new ideas: ${gap}
 
-Return JSON: { "schedule": [ { "day": "Mon", "date": "YYYY-MM-DD", "platform": "instagram", "asset_id": "<id or null>", "asset_idx": 0, "post_time": "19:00", "title": "...", "caption": "..." } ] }
+${days > 90 ? "Since this is a LONG plan (quarter/year), include thematic arcs: launch announcement, education, social proof, seasonal moments, year-end reflection. Each week should have a theme." : ""}
 
-Rules:
-- Prefer one post per platform per day where assets allow.
-- Use each asset at least once if possible.
-- Pull titles/captions from the asset's ai_package when present; otherwise invent a short platform-appropriate caption.
-- post_time must be HH:mm 24h.`;
+Return JSON: {
+  "schedule": [
+    {
+      "day": "Mon",
+      "date": "YYYY-MM-DD",
+      "platform": "instagram",
+      "asset_id": "<id or null>",
+      "asset_idx": <number or null>,
+      "post_time": "19:00",
+      "title": "...",
+      "caption": "...",
+      "brief": "<only when asset_id=null — what the content should be>",
+      "needs_creation": <boolean>
+    }
+  ],
+  "themes": [
+    { "week": 1, "theme": "Foundation — introduce brand" },
+    ...
+  ],
+  "gap_analysis": {
+    "target_posts": ${targetPosts},
+    "real_assets": ${assets.length},
+    "needs_creation": ${gap},
+    "recommendation": "<one-line suggestion>"
+  }
+}`;
 
   let schedule: PlanEntry[] = [];
+  let themes: Array<{ week: number; theme: string }> = [];
+  let gapAnalysis: {
+    target_posts: number;
+    real_assets: number;
+    needs_creation: number;
+    recommendation: string;
+  } | null = null;
   let aiError: string | null = null;
 
   try {
+    // Scale max_tokens with plan size — year plans need more room
+    const maxTokens = days > 90 ? 8000 : days > 30 ? 5000 : 3000;
     const response = await anthropic.messages.create({
       model: MODEL_HAIKU,
-      max_tokens: 3000,
+      max_tokens: maxTokens,
       system: systemPrompt,
       messages: [{ role: "user", content: userPrompt }],
     });
     const raw = getResponseText(response);
-    const parsed = safeJsonParse<{ schedule?: unknown }>(raw);
+    const parsed = safeJsonParse<{
+      schedule?: unknown;
+      themes?: unknown;
+      gap_analysis?: unknown;
+    }>(raw);
     if (parsed && Array.isArray(parsed.schedule)) {
       schedule = (parsed.schedule as Array<Record<string, unknown>>)
         .map((s) => normaliseEntry(s, assets, dayList))
         .filter((s): s is PlanEntry => !!s);
+      if (Array.isArray(parsed.themes)) {
+        themes = (parsed.themes as Array<Record<string, unknown>>)
+          .filter(t => typeof t.week === "number" && typeof t.theme === "string")
+          .map(t => ({ week: t.week as number, theme: t.theme as string }));
+      }
+      if (parsed.gap_analysis && typeof parsed.gap_analysis === "object") {
+        const g = parsed.gap_analysis as Record<string, unknown>;
+        gapAnalysis = {
+          target_posts: Number(g.target_posts) || targetPosts,
+          real_assets: Number(g.real_assets) || assets.length,
+          needs_creation: Number(g.needs_creation) || gap,
+          recommendation: String(g.recommendation || ""),
+        };
+      }
     } else {
       aiError = "AI returned no schedule";
     }
@@ -157,6 +230,16 @@ Rules:
     success: true,
     schedule,
     saved: inserted.length,
+    days,
+    themes,
+    gap_analysis: gapAnalysis || {
+      target_posts: targetPosts,
+      real_assets: assets.length,
+      needs_creation: gap,
+      recommendation: gap > 0
+        ? `Upload or generate ${gap} more pieces of content to fully fill the ${days}-day plan.`
+        : `You have enough content for the ${days}-day plan.`,
+    },
     warning: aiError || undefined,
   });
 }

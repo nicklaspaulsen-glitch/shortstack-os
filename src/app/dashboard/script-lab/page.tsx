@@ -10,10 +10,13 @@ import {
   ArrowRight, RefreshCw, Eye, CheckCircle, Clock,
   Download, FileText, Wand2, BookOpen,
   Mic, Mail, Hash, TrendingUp, Layers, PenTool,
-  ListChecks, Type, Volume2
+  ListChecks, Type, Volume2,
+  Clapperboard, Box, Headphones, Music,
+  ArrowRightLeft, Quote
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import { trackGeneration } from "@/lib/track-generation";
 
 const FRAMEWORKS = [
   { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll → tell story → make offer", color: "text-gold" },
@@ -85,6 +88,50 @@ interface SavedScript {
   created_at: string;
   metadata: Record<string, unknown>;
 }
+
+// ── Storyboard types ──────────────────────────────────────────────
+type StoryboardFormat =
+  | "ugc"
+  | "ad"
+  | "motion_graphics"
+  | "talking_head"
+  | "product_demo"
+  | "explainer"
+  | "cinematic"
+  | "podcast_clip";
+
+interface StoryboardShot {
+  shot_number: number;
+  duration_sec: number;
+  visual_description: string;
+  camera: string;
+  dialog: string;
+  action: string;
+  transition_in: string;
+  transition_out: string;
+  on_screen_text: string;
+  b_roll_suggestions: string[];
+  music_cue: string;
+}
+
+interface Storyboard {
+  total_duration_sec: number;
+  format: StoryboardFormat;
+  shots: StoryboardShot[];
+  style_notes: string;
+  total_shots: number;
+}
+
+const STORYBOARD_FORMATS: Array<{ id: StoryboardFormat; name: string; desc: string; icon: React.ReactNode }> = [
+  { id: "ugc", name: "UGC", desc: "Handheld, authentic, 15-30s", icon: <Film size={12} /> },
+  { id: "ad", name: "Ad", desc: "Punchy cuts, CTA, 15-60s", icon: <Target size={12} /> },
+  { id: "motion_graphics", name: "Motion Graphics", desc: "Typography, kinetic, 10-30s", icon: <Layers size={12} /> },
+  { id: "talking_head", name: "Talking Head", desc: "Wide + A/B close-ups, 60-180s", icon: <Mic size={12} /> },
+  { id: "product_demo", name: "Product Demo", desc: "Tabletop, feature zooms, 30-90s", icon: <Box size={12} /> },
+  { id: "explainer", name: "Explainer", desc: "Screen rec + talking head, 60-180s", icon: <BookOpen size={12} /> },
+  { id: "cinematic", name: "Cinematic", desc: "B-roll montage, slow moves", icon: <Clapperboard size={12} /> },
+  { id: "podcast_clip", name: "Podcast Clip", desc: "Waveform + quotes, 30-60s", icon: <Headphones size={12} /> },
+];
 
 const TOPIC_PRESETS: Record<string, string[]> = {
   general: [
@@ -158,6 +205,11 @@ export default function ScriptLabPage() {
   const [activeBatchIndex, setActiveBatchIndex] = useState(0);
   const [research, setResearch] = useState<ViralResearch | null>(null);
   const [savedScripts, setSavedScripts] = useState<SavedScript[]>([]);
+
+  // Storyboard state
+  const [storyboardFormat, setStoryboardFormat] = useState<StoryboardFormat>("ugc");
+  const [storyboard, setStoryboard] = useState<Storyboard | null>(null);
+  const [generatingStoryboard, setGeneratingStoryboard] = useState(false);
 
   // Template categories
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -328,6 +380,122 @@ export default function ScriptLabPage() {
       toast.error("Error");
     }
     setRewriting(false);
+  }
+
+  async function generateStoryboard() {
+    if (!activeScript) { toast.error("Generate a script first"); return; }
+    const scriptText = buildScriptPlainText(activeScript);
+    if (!scriptText) { toast.error("Script has no content"); return; }
+    setGeneratingStoryboard(true);
+    setStoryboard(null);
+    toast.loading("AI is breaking down your script shot-by-shot...");
+    try {
+      const res = await fetch("/api/script-lab/storyboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          script_text: scriptText,
+          format: storyboardFormat,
+          platform: config.platform,
+        }),
+      });
+      toast.dismiss();
+      const data = await res.json();
+      if (data.success && data.storyboard) {
+        setStoryboard(data.storyboard);
+        toast.success(`Storyboard ready — ${data.storyboard.total_shots} shots`);
+        // Fire-and-forget Generations tracking
+        trackGeneration({
+          category: "storyboard",
+          title: `${activeScript.title} — ${storyboardFormat.replace(/_/g, " ")}`,
+          source_tool: "Script Lab",
+          content_preview: data.storyboard.style_notes?.slice(0, 200) || "",
+          metadata: {
+            format: storyboardFormat,
+            platform: config.platform,
+            total_duration_sec: data.storyboard.total_duration_sec,
+            total_shots: data.storyboard.total_shots,
+            storyboard_id: data.storyboard_id,
+          },
+        });
+      } else {
+        toast.error(data.error || "Storyboard generation failed");
+      }
+    } catch {
+      toast.dismiss();
+      toast.error("Error generating storyboard");
+    }
+    setGeneratingStoryboard(false);
+  }
+
+  function buildScriptPlainText(s: ScriptResult): string {
+    const hook = s.hook?.text ? `HOOK: ${s.hook.text}\n\n` : "";
+    const sections = (s.script?.sections || [])
+      .map(sec => `[${sec.name}] (${sec.duration})\n${sec.dialogue}${sec.visual_direction ? `\nVisual: ${sec.visual_direction}` : ""}${sec.text_overlay ? `\nOverlay: ${sec.text_overlay}` : ""}`)
+      .join("\n\n");
+    const cta = s.cta?.text ? `\n\nCTA: ${s.cta.text}` : "";
+    return `${hook}${sections}${cta}`.trim();
+  }
+
+  function getShotTheme(index: number, total: number): "opening" | "middle" | "ending" {
+    if (index === 0) return "opening";
+    if (index >= total - 1) return "ending";
+    return "middle";
+  }
+
+  function copyStoryboardAsMarkdown() {
+    if (!storyboard) return;
+    const lines: string[] = [];
+    lines.push(`# Storyboard — ${storyboardFormat.replace(/_/g, " ")}`);
+    lines.push("");
+    lines.push(`**Total duration:** ${storyboard.total_duration_sec}s | **Total shots:** ${storyboard.total_shots}`);
+    if (storyboard.style_notes) {
+      lines.push("");
+      lines.push(`**Style notes:** ${storyboard.style_notes}`);
+    }
+    lines.push("");
+    storyboard.shots.forEach(shot => {
+      lines.push(`## Shot ${shot.shot_number} — ${shot.duration_sec}s`);
+      lines.push("");
+      lines.push(`- **Visual:** ${shot.visual_description}`);
+      lines.push(`- **Camera:** ${shot.camera}`);
+      if (shot.dialog) lines.push(`- **Dialog:** "${shot.dialog}"`);
+      if (shot.action) lines.push(`- **Action:** ${shot.action}`);
+      lines.push(`- **Transition in:** ${shot.transition_in}`);
+      lines.push(`- **Transition out:** ${shot.transition_out}`);
+      if (shot.on_screen_text) lines.push(`- **On-screen text:** ${shot.on_screen_text}`);
+      if (shot.b_roll_suggestions?.length) lines.push(`- **B-roll:** ${shot.b_roll_suggestions.join(", ")}`);
+      if (shot.music_cue) lines.push(`- **Music:** ${shot.music_cue}`);
+      lines.push("");
+    });
+    navigator.clipboard.writeText(lines.join("\n"));
+    toast.success("Storyboard copied as Markdown!");
+  }
+
+  function copyStoryboardAsCSV() {
+    if (!storyboard) return;
+    const header = [
+      "shot_number", "duration_sec", "visual_description", "camera", "dialog",
+      "action", "transition_in", "transition_out", "on_screen_text",
+      "b_roll_suggestions", "music_cue"
+    ];
+    const escape = (v: string) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const rows = storyboard.shots.map(s => [
+      s.shot_number,
+      s.duration_sec,
+      escape(s.visual_description),
+      escape(s.camera),
+      escape(s.dialog),
+      escape(s.action),
+      escape(s.transition_in),
+      escape(s.transition_out),
+      escape(s.on_screen_text),
+      escape((s.b_roll_suggestions || []).join(" | ")),
+      escape(s.music_cue),
+    ].join(","));
+    const csv = [header.join(","), ...rows].join("\n");
+    navigator.clipboard.writeText(csv);
+    toast.success("CSV copied — paste into Premiere/Resolve spreadsheet!");
   }
 
   async function doResearch() {
@@ -648,6 +816,26 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               </div>
             </div>
 
+            {/* Storyboard format picker */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Clapperboard size={13} className="text-gold" /> Storyboard Format (for visual breakdown)</h2>
+              <p className="text-[9px] text-muted mb-2">Pick the visual style your storyboard will follow. You can generate a shot-by-shot breakdown after your script is created.</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5">
+                {STORYBOARD_FORMATS.map(f => (
+                  <button key={f.id} onClick={() => setStoryboardFormat(f.id)}
+                    className={`flex items-center gap-1.5 p-2 rounded-xl border text-left transition-all ${
+                      storyboardFormat === f.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                    }`}>
+                    <span className={storyboardFormat === f.id ? "text-gold" : "text-muted"}>{f.icon}</span>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-semibold truncate">{f.name}</p>
+                      <p className="text-[8px] text-muted truncate">{f.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* AI Extras */}
             <div className="card">
               <h2 className="section-header flex items-center gap-2"><Wand2 size={13} className="text-gold" /> AI Options</h2>
@@ -904,6 +1092,38 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
           </div>
 
+          {/* Generate Storyboard bar */}
+          <div className="card border-gold/10 py-3 px-4">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <Clapperboard size={14} className="text-gold" />
+                <div>
+                  <p className="text-[11px] font-bold text-foreground">Turn this script into a shot-by-shot storyboard</p>
+                  <p className="text-[9px] text-muted">AI director breaks your script down into camera shots, dialog, transitions, b-roll, and music cues.</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5 ml-auto flex-wrap">
+                <div className="flex items-center gap-1">
+                  {STORYBOARD_FORMATS.map(f => (
+                    <button key={f.id} onClick={() => setStoryboardFormat(f.id)}
+                      title={f.name}
+                      className={`p-1.5 rounded-lg border transition-all ${
+                        storyboardFormat === f.id ? "border-gold/40 bg-gold/[0.08] text-gold" : "border-border text-muted hover:text-foreground hover:border-gold/20"
+                      }`}>
+                      {f.icon}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={generateStoryboard} disabled={generatingStoryboard}
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100">
+                  {generatingStoryboard ? <Loader size={13} className="animate-spin" /> : <Clapperboard size={13} className="animate-pulse" />}
+                  {generatingStoryboard ? "Generating..." : "Generate Storyboard"}
+                  <Sparkles size={11} className="opacity-70" />
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Title + Hook */}
           <div className="card border-gold/10 relative overflow-hidden">
             <div className="absolute inset-0 bg-mesh opacity-30" />
@@ -1025,6 +1245,165 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               ))}
             </div>
           </div>
+
+          {/* ── Storyboard render ───────────────────────────────────── */}
+          {storyboard && (
+            <div className="space-y-3 fade-in">
+              <div className="card border-gold/20 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.06] to-transparent pointer-events-none" />
+                <div className="relative flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold to-amber-500 flex items-center justify-center text-black shadow-lg shadow-gold/30">
+                      <Clapperboard size={18} />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-bold">Storyboard</h2>
+                      <p className="text-[10px] text-muted">
+                        {STORYBOARD_FORMATS.find(f => f.id === storyboard.format)?.name || storyboard.format} ·{" "}
+                        {storyboard.total_shots} shots · ~{storyboard.total_duration_sec}s
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <button onClick={copyStoryboardAsMarkdown} className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
+                      <FileText size={10} /> Copy as Markdown
+                    </button>
+                    <button onClick={copyStoryboardAsCSV} className="btn-secondary text-[9px] py-1 px-2.5 flex items-center gap-1">
+                      <Download size={10} /> Copy as CSV
+                    </button>
+                    <button onClick={() => toast("PDF export coming soon", { icon: "📄" })}
+                      className="btn-ghost text-[9px] py-1 px-2.5 flex items-center gap-1">
+                      <Download size={10} /> Export PDF
+                    </button>
+                  </div>
+                </div>
+                {storyboard.style_notes && (
+                  <div className="relative mt-3 p-2.5 rounded-lg bg-surface-light/60 border border-gold/10">
+                    <p className="text-[9px] text-gold uppercase tracking-wider font-medium mb-0.5">Style Notes</p>
+                    <p className="text-[11px] leading-relaxed">{storyboard.style_notes}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Timeline */}
+              <div className="space-y-2">
+                {storyboard.shots.map((shot, idx) => {
+                  const theme = getShotTheme(idx, storyboard.shots.length);
+                  const themeStyles =
+                    theme === "opening"
+                      ? { border: "border-gold/30", accent: "text-gold", bg: "bg-gold/[0.06]", bar: "bg-gold" }
+                      : theme === "ending"
+                        ? { border: "border-emerald-400/30", accent: "text-emerald-400", bg: "bg-emerald-400/[0.05]", bar: "bg-emerald-400" }
+                        : { border: "border-blue-400/25", accent: "text-blue-400", bg: "bg-blue-400/[0.04]", bar: "bg-blue-400" };
+                  return (
+                    <div key={idx} className={`card ${themeStyles.border} overflow-hidden relative`}>
+                      <div className={`absolute inset-y-0 left-0 w-1 ${themeStyles.bar}`} />
+                      <div className="pl-2">
+                        {/* Header row */}
+                        <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                          <div className="flex items-center gap-3">
+                            <div className={`flex items-center justify-center w-8 h-8 rounded-lg ${themeStyles.bg} border ${themeStyles.border}`}>
+                              <span className={`text-[11px] font-bold ${themeStyles.accent}`}>{shot.shot_number}</span>
+                            </div>
+                            <div>
+                              <p className="text-[11px] font-bold">Shot {shot.shot_number}</p>
+                              <p className="text-[9px] text-muted uppercase tracking-wider">{theme === "opening" ? "Opening" : theme === "ending" ? "CTA / Ending" : "Middle"}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 text-[10px] text-muted">
+                              <Clock size={10} /> <span className="font-mono">{shot.duration_sec}s</span>
+                            </div>
+                            <div className="w-24 h-1.5 rounded-full bg-surface-light overflow-hidden">
+                              <div className={`h-full ${themeStyles.bar}`}
+                                style={{ width: `${Math.min(100, (shot.duration_sec / Math.max(1, storyboard.total_duration_sec)) * 100 * 3)}%` }} />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Content grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {/* Visual */}
+                          <div className="p-2.5 rounded-lg bg-surface-light/60 border border-border">
+                            <p className="text-[9px] text-muted uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Eye size={9} /> Visual</p>
+                            <p className="text-[11px] leading-relaxed">{shot.visual_description}</p>
+                          </div>
+                          {/* Camera */}
+                          <div className="p-2.5 rounded-lg bg-surface-light/60 border border-border">
+                            <p className="text-[9px] text-muted uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Camera size={9} /> Camera</p>
+                            <p className="text-[11px] leading-relaxed">{shot.camera}</p>
+                          </div>
+                        </div>
+
+                        {/* Dialog quote */}
+                        {shot.dialog && (
+                          <div className={`mt-2 p-3 rounded-lg ${themeStyles.bg} border ${themeStyles.border} relative`}>
+                            <Quote size={12} className={`absolute top-2 left-2 ${themeStyles.accent} opacity-60`} />
+                            <p className="text-[11px] italic font-medium leading-relaxed pl-6">&ldquo;{shot.dialog}&rdquo;</p>
+                          </div>
+                        )}
+
+                        {/* Action */}
+                        {shot.action && (
+                          <div className="mt-2 flex items-start gap-2 text-[10px]">
+                            <span className="text-[9px] text-muted uppercase tracking-wider font-medium shrink-0 mt-0.5">Action</span>
+                            <p className="flex-1">{shot.action}</p>
+                          </div>
+                        )}
+
+                        {/* Transition badges */}
+                        {(shot.transition_in || shot.transition_out) && (
+                          <div className="mt-2 flex items-center gap-2 flex-wrap">
+                            {shot.transition_in && (
+                              <span className="inline-flex items-center gap-1 text-[9px] bg-surface-light border border-border rounded-full px-2 py-0.5">
+                                <ArrowRight size={9} className="text-blue-400" />
+                                In: {shot.transition_in}
+                              </span>
+                            )}
+                            {shot.transition_out && (
+                              <span className="inline-flex items-center gap-1 text-[9px] bg-surface-light border border-border rounded-full px-2 py-0.5">
+                                <ArrowRightLeft size={9} className="text-purple-400" />
+                                Out: {shot.transition_out}
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* On-screen text */}
+                        {shot.on_screen_text && (
+                          <div className="mt-2 p-2 rounded-lg bg-warning/5 border border-warning/20">
+                            <p className="text-[9px] text-warning uppercase tracking-wider font-medium mb-0.5 flex items-center gap-1"><Type size={9} /> On-screen Text</p>
+                            <p className="text-[11px] font-semibold">{shot.on_screen_text}</p>
+                          </div>
+                        )}
+
+                        {/* B-roll suggestions */}
+                        {shot.b_roll_suggestions?.length > 0 && (
+                          <div className="mt-2">
+                            <p className="text-[9px] text-muted uppercase tracking-wider font-medium mb-1 flex items-center gap-1"><Film size={9} /> B-roll Suggestions</p>
+                            <div className="flex flex-wrap gap-1">
+                              {shot.b_roll_suggestions.map((b, bi) => (
+                                <span key={bi} className="text-[9px] bg-surface-light border border-border rounded-full px-2 py-0.5">{b}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Music cue */}
+                        {shot.music_cue && (
+                          <div className="mt-2 flex items-center gap-2 text-[10px] text-muted">
+                            <Music size={10} className="text-pink-400" />
+                            <span className="text-[9px] uppercase tracking-wider font-medium">Music</span>
+                            <span>{shot.music_cue}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

@@ -67,7 +67,12 @@ export default function ContentPage() {
   const [remixing, setRemixing] = useState<{ itemId: string; platform: DropGoPlatform } | null>(null);
   const [remixOptions, setRemixOptions] = useState<{ itemId: string; platform: DropGoPlatform; alternatives: string[] } | null>(null);
   const [planningWeek, setPlanningWeek] = useState(false);
-  const [weekPlan, setWeekPlan] = useState<Array<{ day: string; date: string; platform: string; asset_id?: string | null; post_time: string; title?: string; caption?: string }>>([]);
+  const [weekPlan, setWeekPlan] = useState<Array<{ day: string; date: string; platform: string; asset_id?: string | null; post_time: string; title?: string; caption?: string; brief?: string; needs_creation?: boolean }>>([]);
+  // Phase 2: longer plans, themes, gap analysis, completion dialog
+  const [planGapAnalysis, setPlanGapAnalysis] = useState<{ target_posts: number; real_assets: number; needs_creation: number; recommendation: string } | null>(null);
+  const [planThemes, setPlanThemes] = useState<Array<{ week: number; theme: string }>>([]);
+  const [planPeriodDays, setPlanPeriodDays] = useState<number>(7);
+  const [showPlanComplete, setShowPlanComplete] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Pipeline state
@@ -374,7 +379,7 @@ export default function ContentPage() {
     toast.success("Title updated");
   }
 
-  async function planMyWeek() {
+  async function planForPeriod(days: number) {
     const readyItems = dropItems.filter((i) => i.status === "ready");
     if (readyItems.length === 0) { toast.error("Add some assets first"); return; }
     setPlanningWeek(true);
@@ -392,14 +397,21 @@ export default function ContentPage() {
             ai_package: i.ai_package,
           })),
           platforms: DROP_GO_PLATFORMS,
-          days: 7,
+          days,
+          fill_gap: true,
           client_id: managedClientId || undefined,
         }),
       });
       const data = await res.json();
       if (res.ok && Array.isArray(data.schedule)) {
         setWeekPlan(data.schedule);
-        toast.success(`Planned ${data.schedule.length} posts${data.saved ? ` · saved ${data.saved} to calendar` : ""}`);
+        setPlanGapAnalysis(data.gap_analysis || null);
+        setPlanThemes(Array.isArray(data.themes) ? data.themes : []);
+        setPlanPeriodDays(days);
+        // After a plan lands, show the "What's next?" dialog
+        setShowPlanComplete(true);
+        const label = days === 7 ? "week" : days === 30 ? "month" : days === 90 ? "quarter" : "year";
+        toast.success(`${label[0].toUpperCase() + label.slice(1)} planned: ${data.schedule.length} posts${data.saved ? ` · saved ${data.saved} to calendar` : ""}`);
       } else {
         toast.error(data.error || "Plan generation failed");
       }
@@ -409,6 +421,9 @@ export default function ContentPage() {
       setPlanningWeek(false);
     }
   }
+
+  // Legacy alias — UI still calls this
+  async function planMyWeek() { await planForPeriod(7); }
 
   const tabs: { key: Tab; label: string; icon: React.ReactNode }[] = [
     { key: "scripts", label: "Scripts", icon: <FileText size={16} /> },
@@ -445,14 +460,32 @@ export default function ContentPage() {
             <p className="text-xs text-muted">Drop any file. AI writes titles, descriptions, hashtags, and best post times for every platform.</p>
           </div>
           {dropItems.filter((i) => i.status === "ready").length > 0 && (
-            <button
-              onClick={planMyWeek}
-              disabled={planningWeek}
-              className="btn-primary flex items-center gap-2 disabled:opacity-50 bg-gradient-to-r from-gold to-gold-light"
-            >
-              {planningWeek ? <Loader size={14} className="animate-spin" /> : <Sparkles size={14} />}
-              Plan my week from these assets
-            </button>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => planForPeriod(7)}
+                disabled={planningWeek}
+                className="btn-primary flex items-center gap-1.5 disabled:opacity-50 bg-gradient-to-r from-gold to-gold-light text-xs px-3 py-1.5"
+              >
+                {planningWeek && planPeriodDays === 7 ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                Plan Week
+              </button>
+              <button
+                onClick={() => planForPeriod(30)}
+                disabled={planningWeek}
+                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-gold/30 text-gold hover:bg-gold/10 rounded-lg"
+              >
+                {planningWeek && planPeriodDays === 30 ? <Loader size={12} className="animate-spin" /> : null}
+                Plan Month
+              </button>
+              <button
+                onClick={() => planForPeriod(365)}
+                disabled={planningWeek}
+                className="btn-ghost flex items-center gap-1.5 disabled:opacity-50 text-xs px-3 py-1.5 border border-gold/30 text-gold hover:bg-gold/10 rounded-lg"
+              >
+                {planningWeek && planPeriodDays === 365 ? <Loader size={12} className="animate-spin" /> : null}
+                Plan Year
+              </button>
+            </div>
           )}
         </div>
 
@@ -632,25 +665,136 @@ export default function ContentPage() {
           </div>
         )}
 
-        {/* Week plan preview */}
+        {/* Plan preview (week / month / year) */}
         {weekPlan.length > 0 && (
           <div className="mt-5 border border-gold/30 rounded-xl p-4 bg-gold/5">
-            <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
-              <Calendar size={14} className="text-gold" /> 7-Day Plan
-            </h3>
-            <div className="space-y-1.5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-medium flex items-center gap-2">
+                <Calendar size={14} className="text-gold" />
+                {planPeriodDays}-Day Plan ({weekPlan.length} posts)
+              </h3>
+              {planGapAnalysis && planGapAnalysis.needs_creation > 0 && (
+                <span className="text-[10px] px-2 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                  Gap: {planGapAnalysis.needs_creation} ideas generated
+                </span>
+              )}
+            </div>
+
+            {/* Gap analysis banner */}
+            {planGapAnalysis && (
+              <div className="mb-3 p-2.5 rounded-lg bg-surface/60 border border-border text-[10px] text-muted flex items-center gap-3">
+                <span><strong className="text-foreground">{planGapAnalysis.real_assets}</strong> real assets</span>
+                <span className="text-border">/</span>
+                <span><strong className="text-foreground">{planGapAnalysis.target_posts}</strong> target posts</span>
+                <span className="text-border">/</span>
+                <span><strong className="text-amber-400">{planGapAnalysis.needs_creation}</strong> to create</span>
+                {planGapAnalysis.recommendation && <span className="text-muted/70 ml-2 flex-1 italic truncate">&ldquo;{planGapAnalysis.recommendation}&rdquo;</span>}
+              </div>
+            )}
+
+            {/* Themes (month/year plans only) */}
+            {planThemes.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-1.5">
+                {planThemes.slice(0, 12).map((t) => (
+                  <span key={t.week} className="text-[10px] px-2 py-1 rounded border border-gold/20 bg-gold/5 text-gold">
+                    W{t.week}: {t.theme}
+                  </span>
+                ))}
+                {planThemes.length > 12 && <span className="text-[10px] text-muted">+{planThemes.length - 12} more weeks…</span>}
+              </div>
+            )}
+
+            <div className="space-y-1.5 max-h-80 overflow-y-auto">
               {weekPlan.map((p, i) => (
-                <div key={i} className="flex items-center gap-3 text-[11px] p-2 border border-border rounded bg-surface/50">
-                  <span className="text-gold font-medium w-10 shrink-0">{p.day}</span>
-                  <span className="text-muted w-20 shrink-0">{p.post_time}</span>
+                <div key={i} className={`flex items-center gap-3 text-[11px] p-2 border rounded ${p.needs_creation ? "border-amber-500/30 bg-amber-500/5" : "border-border bg-surface/50"}`}>
+                  <span className="text-gold font-medium w-12 shrink-0">{p.day}</span>
+                  <span className="text-muted w-16 shrink-0">{p.date?.slice(5)}</span>
+                  <span className="text-muted w-14 shrink-0">{p.post_time}</span>
                   <span className="text-foreground capitalize w-20 shrink-0">{p.platform}</span>
                   <span className="text-muted flex-1 truncate">{p.title || p.caption || "—"}</span>
+                  {p.needs_creation && <span className="text-[9px] text-amber-400 shrink-0">NEEDS CREATION</span>}
                 </div>
               ))}
             </div>
           </div>
         )}
       </div>
+
+      {/* Plan Complete dialog — asks what to do next */}
+      {showPlanComplete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm modal-backdrop" onClick={() => setShowPlanComplete(false)}>
+          <div className="card max-w-lg w-full p-6" onClick={(e) => e.stopPropagation()}>
+            <h2 className="text-lg font-bold mb-1 flex items-center gap-2">
+              <Sparkles size={18} className="text-gold" /> Plan ready — what&apos;s next?
+            </h2>
+            <p className="text-xs text-muted mb-5">
+              {planPeriodDays === 7 && "Your 7-day schedule is live. "}
+              {planPeriodDays === 30 && "Your 30-day schedule is live. "}
+              {planPeriodDays === 365 && "Your 12-month content strategy is live. "}
+              {planGapAnalysis && planGapAnalysis.needs_creation > 0
+                ? `${planGapAnalysis.needs_creation} posts still need real content. Choose your next move:`
+                : "You have enough content. Choose your next move:"}
+            </p>
+            <div className="space-y-2">
+              <button
+                onClick={() => {
+                  setShowPlanComplete(false);
+                  // Scroll to the drop zone so user can add more
+                  const el = document.querySelector('[data-drop-zone]');
+                  el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="w-full text-left p-3 rounded-lg border border-border hover:border-gold/40 hover:bg-gold/5 transition flex items-start gap-3"
+              >
+                <Upload size={16} className="text-gold mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium">I have more content to upload</p>
+                  <p className="text-[10px] text-muted">Drop more files — I&apos;ll re-plan with the full set</p>
+                </div>
+              </button>
+              {planPeriodDays < 30 && (
+                <button
+                  onClick={() => { setShowPlanComplete(false); planForPeriod(30); }}
+                  className="w-full text-left p-3 rounded-lg border border-gold/30 bg-gold/5 hover:bg-gold/10 transition flex items-start gap-3"
+                >
+                  <Calendar size={16} className="text-gold mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium">Plan the rest of the month</p>
+                    <p className="text-[10px] text-muted">30-day schedule with themes + AI-generated content ideas to fill gaps</p>
+                  </div>
+                </button>
+              )}
+              {planPeriodDays < 365 && (
+                <button
+                  onClick={() => { setShowPlanComplete(false); planForPeriod(365); }}
+                  className="w-full text-left p-3 rounded-lg border border-gold/30 bg-gradient-to-r from-gold/10 to-amber-400/10 hover:from-gold/15 transition flex items-start gap-3"
+                >
+                  <Sparkles size={16} className="text-gold mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium">Plan the whole year</p>
+                    <p className="text-[10px] text-muted">12-month strategy with weekly themes, seasonal moments, and gap-filling ideas for every week</p>
+                  </div>
+                </button>
+              )}
+              <button
+                onClick={() => { setShowPlanComplete(false); setTab("calendar"); }}
+                className="w-full text-left p-3 rounded-lg border border-border hover:border-border/60 transition flex items-start gap-3"
+              >
+                <Calendar size={16} className="text-muted mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium">View my calendar</p>
+                  <p className="text-[10px] text-muted">Jump to the Calendar tab to edit or reschedule</p>
+                </div>
+              </button>
+              <button
+                onClick={() => setShowPlanComplete(false)}
+                className="w-full text-center py-2 text-[11px] text-muted hover:text-foreground"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit overflow-x-auto">

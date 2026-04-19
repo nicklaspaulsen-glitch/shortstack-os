@@ -141,11 +141,43 @@ const MOCK_LINE_DATA: { label: string; value: number }[] = [];
    ══════════════════════════════════════════════════════════════════ */
 
 export default function ReportGeneratorPage() {
-  useAuth();
+  const { profile } = useAuth();
   createClient();
 
   // Tab state
   const [activeTab, setActiveTab] = useState<Tab>("builder");
+
+  // Branded logo for the Report Preview cover page. Priority:
+  //   1. brand_kit.logos[0] (preferred — user's explicit brand logo)
+  //   2. brand_kit.favicon / ogImage (fallback from extracted website)
+  //   3. profiles.avatar_url (user avatar)
+  //   4. null → renders "SS" initials placeholder
+  const [brandLogo, setBrandLogo] = useState<string | null>(null);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = localStorage.getItem("ss_brand_kit_data");
+      if (raw) {
+        const parsed = JSON.parse(raw) as {
+          logos?: string[];
+          favicon?: string;
+          ogImage?: string;
+          images?: string[];
+        };
+        const fromLogos = Array.isArray(parsed?.logos) && parsed.logos[0];
+        const fromFavicon = typeof parsed?.favicon === "string" && parsed.favicon;
+        const fromOg = typeof parsed?.ogImage === "string" && parsed.ogImage;
+        const firstImage = Array.isArray(parsed?.images) && parsed.images[0];
+        const picked = fromLogos || fromFavicon || fromOg || firstImage || null;
+        if (picked) {
+          setBrandLogo(picked);
+          return;
+        }
+      }
+    } catch { /* ignore — fall through to avatar */ }
+    const avatar = profile?.avatar_url;
+    if (typeof avatar === "string" && avatar) setBrandLogo(avatar);
+  }, [profile]);
 
   // Builder state
   const [selectedType, setSelectedType] = useState<ReportType>("monthly");
@@ -594,8 +626,22 @@ export default function ReportGeneratorPage() {
                       <Edit3 className="w-3 h-3 text-gray-400" />
                     </button>
                     {whiteLabel && (
-                      <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">SS</span>
+                      <div className="w-16 h-16 mx-auto mb-3 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center overflow-hidden">
+                        {brandLogo ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={brandLogo}
+                            alt="Brand logo"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              // If the logo URL fails, fall back to initials by clearing state.
+                              (e.currentTarget as HTMLImageElement).style.display = "none";
+                              setBrandLogo(null);
+                            }}
+                          />
+                        ) : (
+                          <span className="text-white font-bold text-lg">SS</span>
+                        )}
                       </div>
                     )}
                     <h1 className="text-xl font-bold text-gray-900">{REPORT_LABELS[selectedType]}</h1>

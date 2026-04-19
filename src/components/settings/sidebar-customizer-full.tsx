@@ -535,7 +535,10 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
   const [dragTarget, setDragTarget] = useState<string | null>(null);
 
   const onDragStart = (href: string) => (e: React.DragEvent) => {
+    // Set BOTH text/plain and a custom type. Some browsers (Firefox in
+    // particular) require text/plain data for the drag to even start.
     e.dataTransfer.setData("text/plain", href);
+    try { e.dataTransfer.setData("application/x-ss-nav-href", href); } catch { /* IE fallback */ }
     e.dataTransfer.effectAllowed = "move";
     setDraggedItem(href);
   };
@@ -544,13 +547,23 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
     setDragTarget(null);
   };
   const onDragOverTarget = (targetId: string) => (e: React.DragEvent) => {
+    // CRITICAL: preventDefault is what tells the browser a drop is allowed.
+    // Without it the onDrop handler will never fire.
     e.preventDefault();
+    e.stopPropagation();
     e.dataTransfer.dropEffect = "move";
     setDragTarget(targetId);
   };
   const onDropIntoGroup = (groupId: string, subGroupId?: string) => (e: React.DragEvent) => {
     e.preventDefault();
-    const href = e.dataTransfer.getData("text/plain");
+    e.stopPropagation();
+    // Fall back to our custom type if the browser scrubbed text/plain (some
+    // drag sources on Chrome/Safari do this between frames).
+    const href =
+      e.dataTransfer.getData("text/plain") ||
+      e.dataTransfer.getData("application/x-ss-nav-href") ||
+      draggedItem ||
+      "";
     if (!href) return;
     setPrefs(p => {
       // Remove from every group's items/subgroup items first.
@@ -576,7 +589,12 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
   };
   const onDropUnassign = (e: React.DragEvent) => {
     e.preventDefault();
-    const href = e.dataTransfer.getData("text/plain");
+    e.stopPropagation();
+    const href =
+      e.dataTransfer.getData("text/plain") ||
+      e.dataTransfer.getData("application/x-ss-nav-href") ||
+      draggedItem ||
+      "";
     if (!href) return;
     setPrefs(p => ({
       ...p,
@@ -837,8 +855,43 @@ export default function SidebarCustomizerFull({ businessType }: Props) {
 
           {/* Custom groups */}
           {prefs.custom_groups.length === 0 ? (
-            <div className="text-[11px] text-muted text-center py-6 border border-dashed border-border/50 rounded-xl">
-              No custom groups yet. Click <span className="text-gold font-medium">+ New Group</span> to start organizing.
+            <div
+              onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = "move"; setDragTarget("_newgroup"); }}
+              onDragLeave={() => setDragTarget(null)}
+              onDrop={(e) => {
+                // If the user drags an item onto the empty state, auto-create a
+                // starter group so they don't have to click "+ New Group" first.
+                e.preventDefault();
+                const href = e.dataTransfer.getData("text/plain");
+                if (!href) return;
+                const groupId = newId("grp");
+                setPrefs(p => ({
+                  ...p,
+                  custom_groups: [
+                    ...p.custom_groups,
+                    {
+                      id: groupId,
+                      name: "My Group",
+                      label: "My Group",
+                      icon: "Layers",
+                      color: "#C9A84C",
+                      order: p.custom_groups.length,
+                      items: [href],
+                      subgroups: [],
+                    },
+                  ],
+                }));
+                setDraggedItem(null);
+                setDragTarget(null);
+                toast.success("Created your first group — drop more items in, or rename it.");
+              }}
+              className={`text-[11px] text-center py-6 border border-dashed rounded-xl transition-colors ${
+                dragTarget === "_newgroup" ? "border-gold bg-gold/[0.06] text-foreground" : "border-border/50 text-muted"
+              }`}
+            >
+              {dragTarget === "_newgroup"
+                ? "Release to create your first group"
+                : <>No custom groups yet. Drop an item here or click <span className="text-gold font-medium">+ New Group</span>.</>}
             </div>
           ) : (
             <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1 scrollbar-none">

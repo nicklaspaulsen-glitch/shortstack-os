@@ -859,6 +859,15 @@ export default function SettingsPage() {
                     </div>
                     <button
                       onClick={async () => {
+                        // Founder plan is free ($0/mo) — no Stripe customer exists and
+                        // there's literally nothing to manage. Send users to Pricing to
+                        // pick a paid plan instead of hitting a dead "No Stripe customer
+                        // found" error from the billing portal endpoint.
+                        if (plan.price_monthly === 0) {
+                          toast.success("Founder plan is free — nothing to manage. Browse paid plans instead.");
+                          window.location.href = "/dashboard/pricing";
+                          return;
+                        }
                         const res = await fetch("/api/billing/portal", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
@@ -867,13 +876,17 @@ export default function SettingsPage() {
                         const data = await res.json();
                         if (data.portal_url) {
                           window.open(data.portal_url, "_blank");
+                        } else if (res.status === 404) {
+                          // No Stripe customer yet — point user to Pricing to subscribe.
+                          toast("No active subscription yet — pick a plan to get started.", { icon: "ℹ" });
+                          window.location.href = "/dashboard/pricing";
                         } else {
                           toast.error(data.error || "Could not open billing portal");
                         }
                       }}
                       className="btn-secondary text-[10px] px-3 py-1.5 flex items-center gap-1"
                     >
-                      Manage <ExternalLink size={9} />
+                      {plan.price_monthly === 0 ? "Change Plan" : "Manage"} <ExternalLink size={9} />
                     </button>
                   </div>
                 );

@@ -2,21 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 /**
- * Check domain availability across common TLDs via GoDaddy.
+ * Check domain availability across common TLDs.
+ *
+ * Resolution order per domain:
+ *   1. GoDaddy /v1/domains/available (needs reseller-grade API key, gives price)
+ *   2. RDAP fallback (open standard, free, no auth) when GoDaddy returns 401/403
+ *      or is not configured. RDAP returns 200 if taken, 404 if available.
+ *
+ * RDAP cannot tell us price, so we only get available/taken — the UI shows a
+ * fallback placeholder price. If both sources fail we return `available: null`
+ * ("Unknown — can't verify") instead of lying about the status.
+ *
  * Body: { query: string }
  * Returns: { results: Array<{ domain, available, price, currency, source }> }
- *
- * Environment:
- *   GODADDY_API_KEY / GODADDY_API_SECRET  — production credentials (default)
- *   GODADDY_API_KEY_OTE / GODADDY_API_SECRET_OTE  — OTE sandbox credentials
- *   GODADDY_USE_OTE=1                     — force OTE endpoint even with prod key
- *
- * If neither set of creds is present we return stub data marked source="stub".
- *
- * Note: GoDaddy's /v1/domains/available endpoint requires a reseller account
- * on production. Personal API keys will receive 403 Forbidden. If that happens
- * we now propagate a useful error instead of silently marking every domain as
- * "Taken" (the old behaviour that made every random search look unavailable).
  */
 
 const TLDS = ["com", "io", "co", "net", "app", "dev", "xyz"];
@@ -49,6 +47,53 @@ function resolveGoDaddyConfig() {
   return null;
 }
 
+/**
+ * Return the RDAP endpoint URL for a given domain's TLD.
+ * Uses per-TLD servers where known (faster, more reliable) and falls back to
+ * the federated rdap.org resolver which redirects to the correct server.
+ */
+function rdapUrlFor(domain: string): string {
+  const tld = domain.split(".").pop()?.toLowerCase() || "";
+  const enc = encodeURIComponent(domain);
+  switch (tld) {
+    case "com":
+    case "net":
+      return `https://rdap.verisign.com/com/v1/domain/${enc}`;
+    case "io":
+      return `https://rdap.nic.io/domain/${enc}`;
+    case "co":
+      return `https://rdap.nic.co/domain/${enc}`;
+    case "app":
+    case "dev":
+      return `https://rdap.nic.google/domain/${enc}`;
+    case "xyz":
+      return `https://rdap.centralnic.com/xyz/domain/${enc}`;
+    default:
+      return `https://rdap.org/domain/${enc}`;
+  }
+}
+
+/**
+ * Probe RDAP for a domain. Per RFC 9082:
+ *   - 200 → domain is registered (taken)
+ *   - 404 → domain is not registered (available)
+ *   - anything else → uncertain; return null
+ */
+async function rdapLookup(domain: string): Promise<boolean | null> {
+  try {
+    const res = await fetch(rdapUrlFor(domain), {
+      headers: { Accept: "application/rdap+json, application/json" },
+      // Don't let a slow RDAP server block the whole search — bail after 4s.
+      signal: AbortSignal.timeout(4000),
+    });
+    if (res.status === 200) return false; // registered → NOT available
+    if (res.status === 404) return true;  // not found → available
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -64,26 +109,30 @@ export async function POST(request: NextRequest) {
 
   const config = resolveGoDaddyConfig();
 
-  // Stub mode
+  // Stub mode — no GoDaddy creds at all. We still try RDAP so the user gets
+  // real availability data even without a paid reseller account.
   if (!config) {
     const stubPrices: Record<string, number> = {
       com: 12.99, io: 34.99, co: 29.99, net: 14.99, app: 14.99, dev: 12.99, xyz: 2.99,
     };
-    return NextResponse.json({
-      results: TLDS.map(tld => ({
-        domain: `${clean}.${tld}`,
-        available: tld !== "com", // pretend .com is taken for realism
-        price: stubPrices[tld],
+    const results = await Promise.all(TLDS.map(async tld => {
+      const domain = `${clean}.${tld}`;
+      const available = await rdapLookup(domain);
+      return {
+        domain,
+        available,
+        price: available === true ? stubPrices[tld] : null,
         currency: "USD",
-        source: "stub",
-      })),
+        source: available === null ? "stub" : "rdap",
+      };
+    }));
+    return NextResponse.json({
+      results,
       stub: true,
-      message: "Stub data — set GODADDY_API_KEY + GODADDY_API_SECRET for real lookups.",
+      message: "Using RDAP (no GoDaddy creds). Set GODADDY_API_KEY + GODADDY_API_SECRET for wholesale pricing.",
     });
   }
 
-  // Track API errors so we can surface them (instead of silently flagging all
-  // domains as taken).
   const apiErrors: string[] = [];
 
   try {
@@ -100,17 +149,19 @@ export async function POST(request: NextRequest) {
             `[domains/search] GoDaddy ${config.env} returned HTTP ${res.status} for ${domain}: ${bodyText.slice(0, 200)}`
           );
           apiErrors.push(`HTTP ${res.status}`);
-          // CRITICAL: when GoDaddy returns an auth/permission error (401/403)
-          // we have NO idea if the domain is available — return `null` rather
-          // than `false` so the UI can show an "unknown" state instead of
-          // misleading "Taken".
+          // Auth/permission errors are where GoDaddy personal keys fail on
+          // production (403). Fall back to RDAP so the user still sees real
+          // availability instead of a useless "Unknown (HTTP 403)" string.
+          const rdapAvailable = await rdapLookup(domain);
           return {
             domain,
-            available: null,
+            available: rdapAvailable,
             price: null,
             currency: "USD",
-            source: `godaddy-${config.env}`,
-            error: `HTTP ${res.status}${bodyText ? `: ${bodyText.slice(0, 120)}` : ""}`,
+            source: rdapAvailable === null ? `godaddy-${config.env}` : "rdap",
+            error: rdapAvailable === null
+              ? "Unknown — can't verify"
+              : undefined,
           };
         }
         const data: GoDaddyAvailability = await res.json();
@@ -126,29 +177,30 @@ export async function POST(request: NextRequest) {
       } catch (err) {
         console.warn(`[domains/search] GoDaddy ${config.env} fetch error for ${domain}:`, err);
         apiErrors.push(String(err));
+        // Network/transport errors → try RDAP as a safety net.
+        const rdapAvailable = await rdapLookup(domain);
         return {
           domain,
-          available: null,
+          available: rdapAvailable,
           price: null,
           currency: "USD",
-          source: `godaddy-${config.env}`,
-          error: String(err),
+          source: rdapAvailable === null ? `godaddy-${config.env}` : "rdap",
+          error: rdapAvailable === null ? "Unknown — can't verify" : undefined,
         };
       }
     }));
 
-    // If EVERY request failed with the same auth error, surface a top-level
-    // error so the UI can explain what's wrong rather than mislabelling every
-    // domain as taken.
-    const allFailed = results.every(r => r.available === null);
+    // If every GoDaddy call failed with auth errors but RDAP rescued most of
+    // them, we still want to tell the operator so they can fix the API key.
+    const allGoDaddyFailed = apiErrors.length === TLDS.length;
     const hasAuthError = apiErrors.some(e => e.includes("401") || e.includes("403"));
-    if (allFailed && hasAuthError) {
+    if (allGoDaddyFailed && hasAuthError) {
       return NextResponse.json({
         results,
         stub: false,
         env: config.env,
-        error: `GoDaddy ${config.env} rejected the API credentials (likely reseller-only access required). Verify GODADDY_API_KEY / GODADDY_API_SECRET are for ${config.env === "production" ? "production" : "OTE"} and have domain availability access enabled.`,
-      }, { status: 200 });
+        warning: `GoDaddy ${config.env} rejected the API credentials — using RDAP fallback (no pricing). Fix GODADDY_API_KEY / GODADDY_API_SECRET for wholesale prices.`,
+      });
     }
 
     return NextResponse.json({ results, stub: false, env: config.env });
