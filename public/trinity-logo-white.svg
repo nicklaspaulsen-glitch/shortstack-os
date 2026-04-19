@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Trinity">
   <title>Trinity</title>
-  <!--
-    White/monochrome variant for dark backgrounds. Three overlapping circles
-    represent Automation, Content, Clients.
-  -->
-  <g fill="#FFFFFF" fill-opacity="0.72" stroke="#FFFFFF" stroke-width="2">
-    <circle cx="64" cy="44" r="26"/>
-    <circle cx="46" cy="74" r="26"/>
-    <circle cx="82" cy="74" r="26"/>
+
+  <!-- Monochrome white variant for dark backgrounds or flat rendering -->
+
+  <!-- Connector lines -->
+  <g stroke="#FFFFFF" stroke-width="2.25" stroke-linecap="round" fill="none" opacity="0.85">
+    <line x1="64" y1="22" x2="20" y2="98"/>
+    <line x1="64" y1="22" x2="108" y2="98"/>
+    <line x1="20" y1="98" x2="108" y2="98"/>
   </g>
-  <circle cx="64" cy="64" r="4" fill="#FFFFFF" opacity="0.95"/>
+
+  <!-- Three trinity nodes -->
+  <g fill="#FFFFFF">
+    <circle cx="64" cy="22" r="11"/>
+    <circle cx="20" cy="98" r="11"/>
+    <circle cx="108" cy="98" r="11"/>
+  </g>
+
+  <!-- Core dot at centroid (64, 72.67) -->
+  <circle cx="64" cy="72.67" r="3" fill="#FFFFFF" opacity="0.95"/>
 </svg>

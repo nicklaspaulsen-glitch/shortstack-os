@@ -2,22 +2,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Trinity">
   <title>Trinity</title>
   <defs>
-    <radialGradient id="trinityGold" cx="50%" cy="45%" r="60%">
-      <stop offset="0%" stop-color="#E4C876"/>
-      <stop offset="60%" stop-color="#C9A84C"/>
+    <radialGradient id="trinityNode" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#F5E0A0"/>
+      <stop offset="45%" stop-color="#D4B56A"/>
       <stop offset="100%" stop-color="#8C6D1A"/>
     </radialGradient>
+    <linearGradient id="trinityLine" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E4C876" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#8C6D1A" stop-opacity="0.6"/>
+    </linearGradient>
+    <radialGradient id="trinityCore" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF4CB"/>
+      <stop offset="100%" stop-color="#F5E0A0" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <!--
-    Three overlapping circles (trinity/triskele) — one for each pillar:
-    Automation, Content, Clients. Filled with a gold radial gradient and
-    partially transparent so overlaps read as a single cohesive mark.
-  -->
-  <g fill="url(#trinityGold)" fill-opacity="0.72" stroke="#C9A84C" stroke-width="2">
-    <circle cx="64" cy="44" r="26"/>
-    <circle cx="46" cy="74" r="26"/>
-    <circle cx="82" cy="74" r="26"/>
+
+  <!-- Equilateral triangle: top (64,22), bottom-left (20,98), bottom-right (108,98) -->
+  <!-- Centroid at (64, 72.67) -->
+
+  <!-- Connector lines behind nodes -->
+  <g stroke="url(#trinityLine)" stroke-width="2.25" stroke-linecap="round" fill="none">
+    <line x1="64" y1="22" x2="20" y2="98"/>
+    <line x1="64" y1="22" x2="108" y2="98"/>
+    <line x1="20" y1="98" x2="108" y2="98"/>
   </g>
-  <!-- Central highlight dot where the three overlap -->
-  <circle cx="64" cy="64" r="4" fill="#FFEFB8" opacity="0.9"/>
+
+  <!-- Central pulse halo -->
+  <circle cx="64" cy="72.67" r="16" fill="url(#trinityCore)"/>
+
+  <!-- Three trinity nodes (filled gold) -->
+  <g fill="url(#trinityNode)" stroke="#8C6D1A" stroke-width="1.25">
+    <circle cx="64" cy="22" r="11"/>
+    <circle cx="20" cy="98" r="11"/>
+    <circle cx="108" cy="98" r="11"/>
+  </g>
+
+  <!-- Core dot at centroid -->
+  <circle cx="64" cy="72.67" r="3" fill="#F5E8B8"/>
+  <circle cx="64" cy="72.67" r="1.25" fill="#FFF4CB"/>
 </svg>
