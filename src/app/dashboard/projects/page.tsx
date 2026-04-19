@@ -107,6 +107,13 @@ export default function ProjectsPage() {
   // Drag state
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<Status | null>(null);
+  // Track drag state to suppress the click that follows dragend on the same card.
+  const justDraggedRef = useRef(false);
+
+  // Submission guards — prevent Enter-spam from creating duplicate rows.
+  const [submittingQuickTask, setSubmittingQuickTask] = useState(false);
+  const [submittingInlineTask, setSubmittingInlineTask] = useState(false);
+  const [submittingComment, setSubmittingComment] = useState(false);
 
   // ── Load boards on mount ───────────────────────────────────
   const fetchBoards = useCallback(async () => {
@@ -154,10 +161,14 @@ export default function ProjectsPage() {
     else setTasks([]);
   }, [activeBoardId, fetchTasks]);
 
-  // ── Cmd/Ctrl+K → quick task dialog ─────────────────────────
+  // ── Cmd/Ctrl+Shift+K → quick task dialog ───────────────────
+  // Plain Cmd/Ctrl+K is already claimed by the global command palette and
+  // global search — stacking a third handler on the same combo opened all
+  // three at once. Use Shift+K here so the shortcut is additive, not
+  // conflicting.
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === "k") {
         if (!activeBoardId) return;
         e.preventDefault();
         setQuickTaskOpen(true);
@@ -175,6 +186,7 @@ export default function ProjectsPage() {
 
   // ── Create board ───────────────────────────────────────────
   const handleCreateBoard = async () => {
+    if (creatingBoard) return;
     const name = newBoardName.trim();
     if (!name) return;
     setCreatingBoard(true);
@@ -258,20 +270,32 @@ export default function ProjectsPage() {
   };
 
   const submitInlineNewTask = async (status: Status) => {
+    if (submittingInlineTask) return;
     if (!newTaskTitle.trim()) {
       setAddingTaskColumn(null);
       return;
     }
-    await createTask(newTaskTitle, status);
-    setNewTaskTitle("");
-    setAddingTaskColumn(null);
+    setSubmittingInlineTask(true);
+    try {
+      await createTask(newTaskTitle, status);
+      setNewTaskTitle("");
+      setAddingTaskColumn(null);
+    } finally {
+      setSubmittingInlineTask(false);
+    }
   };
 
   const submitQuickTask = async () => {
+    if (submittingQuickTask) return;
     if (!quickTaskTitle.trim()) return;
-    await createTask(quickTaskTitle, quickTaskStatus);
-    setQuickTaskTitle("");
-    setQuickTaskOpen(false);
+    setSubmittingQuickTask(true);
+    try {
+      await createTask(quickTaskTitle, quickTaskStatus);
+      setQuickTaskTitle("");
+      setQuickTaskOpen(false);
+    } finally {
+      setSubmittingQuickTask(false);
+    }
   };
 
   // ── Move task (drag-drop) ──────────────────────────────────
@@ -364,19 +388,25 @@ export default function ProjectsPage() {
   };
 
   const submitComment = async () => {
+    if (submittingComment) return;
     if (!selectedTask || !newComment.trim()) return;
-    const res = await fetch(`/api/projects/tasks/${selectedTask.id}/comments`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ body: newComment.trim() }),
-    });
-    if (!res.ok) {
-      toast.error("Failed to post comment");
-      return;
+    setSubmittingComment(true);
+    try {
+      const res = await fetch(`/api/projects/tasks/${selectedTask.id}/comments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: newComment.trim() }),
+      });
+      if (!res.ok) {
+        toast.error("Failed to post comment");
+        return;
+      }
+      const json = await res.json();
+      setTaskComments((prev) => [...prev, json.comment]);
+      setNewComment("");
+    } finally {
+      setSubmittingComment(false);
     }
-    const json = await res.json();
-    setTaskComments((prev) => [...prev, json.comment]);
-    setNewComment("");
   };
 
   // ── Render ─────────────────────────────────────────────────
@@ -540,9 +570,23 @@ export default function ProjectsPage() {
                           <div
                             key={task.id}
                             draggable
-                            onDragStart={() => setDraggedTaskId(task.id)}
-                            onDragEnd={() => setDraggedTaskId(null)}
-                            onClick={() => openTaskPanel(task)}
+                            onDragStart={() => {
+                              setDraggedTaskId(task.id);
+                              justDraggedRef.current = true;
+                            }}
+                            onDragEnd={() => {
+                              setDraggedTaskId(null);
+                              // Clear the drag-just-ended flag shortly after
+                              // so a trailing click event (fired after drop
+                              // on some browsers) does not open the panel.
+                              setTimeout(() => {
+                                justDraggedRef.current = false;
+                              }, 50);
+                            }}
+                            onClick={() => {
+                              if (justDraggedRef.current) return;
+                              openTaskPanel(task);
+                            }}
                             className="p-3 rounded-lg bg-surface-light border border-border hover:border-gold/30 transition-all cursor-grab active:cursor-grabbing"
                           >
                             <p className="text-[12px] font-semibold leading-snug mb-2 break-words">
@@ -623,7 +667,7 @@ export default function ProjectsPage() {
           )}
 
           <p className="text-[9px] text-muted">
-            Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border">Cmd/Ctrl+K</kbd> to quickly add a task.
+            Tip: Press <kbd className="px-1.5 py-0.5 rounded bg-surface-light border border-border">Cmd/Ctrl+Shift+K</kbd> to quickly add a task.
           </p>
         </>
       )}
@@ -711,9 +755,10 @@ export default function ProjectsPage() {
               </select>
               <button
                 onClick={submitQuickTask}
-                disabled={!quickTaskTitle.trim()}
-                className="btn-primary ml-auto text-xs disabled:opacity-50"
+                disabled={submittingQuickTask || !quickTaskTitle.trim()}
+                className="btn-primary ml-auto text-xs disabled:opacity-50 flex items-center gap-1.5"
               >
+                {submittingQuickTask && <Loader2 size={12} className="animate-spin" />}
                 Add task
               </button>
             </div>
@@ -880,7 +925,7 @@ export default function ProjectsPage() {
                   />
                   <button
                     onClick={submitComment}
-                    disabled={!newComment.trim()}
+                    disabled={submittingComment || !newComment.trim()}
                     className="btn-primary text-xs disabled:opacity-50"
                   >
                     Post

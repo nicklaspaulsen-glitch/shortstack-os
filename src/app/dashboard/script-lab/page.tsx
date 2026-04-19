@@ -286,6 +286,27 @@ export default function ScriptLabPage() {
   const [remixTwistAngle, setRemixTwistAngle] = useState("");
   const [remixResult, setRemixResult] = useState<RemixResult | null>(null);
 
+  // ── Watchlists state ────────────────────────────────────────────
+  interface Watchlist {
+    id: string;
+    name: string;
+    niche: string;
+    keywords: string[];
+    platforms: string[];
+    active: boolean;
+    alert_on_new: boolean;
+    created_at: string;
+    updated_at: string;
+    last_scanned_at: string | null;
+  }
+  const [watchlists, setWatchlists] = useState<Watchlist[]>([]);
+  const [loadingWatchlists, setLoadingWatchlists] = useState(false);
+  const [scanningWatchlistId, setScanningWatchlistId] = useState<string | null>(null);
+  const [savingWatchlist, setSavingWatchlist] = useState(false);
+  const [editingWatchlist, setEditingWatchlist] = useState<Watchlist | null>(null);
+  const [saveWatchlistModal, setSaveWatchlistModal] = useState(false);
+  const [newWatchlistName, setNewWatchlistName] = useState("");
+
   // Template categories
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [templateCategory, setTemplateCategory] = useState("all");
@@ -352,6 +373,7 @@ export default function ScriptLabPage() {
       setClients(data || []);
     });
     loadSavedScripts();
+    loadWatchlists();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -653,6 +675,182 @@ export default function ScriptLabPage() {
       toast.error("Network error", { id: toastId });
     } finally {
       setLoadingTrending(false);
+    }
+  }
+
+  // ── Watchlist handlers ─────────────────────────────────────────
+  async function loadWatchlists() {
+    setLoadingWatchlists(true);
+    try {
+      const res = await fetch("/api/viral/watchlists");
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.watchlists)) {
+        setWatchlists(data.watchlists);
+      }
+    } catch {
+      // silent — watchlist UI stays empty
+    } finally {
+      setLoadingWatchlists(false);
+    }
+  }
+
+  async function saveAsWatchlist() {
+    const niche = trendingNiche.trim();
+    const name = newWatchlistName.trim() || niche;
+    if (!name) { toast.error("Give the watchlist a name"); return; }
+    if (!niche) { toast.error("Pick a niche first"); return; }
+    if (trendingPlatforms.length === 0) { toast.error("Select at least one platform"); return; }
+    setSavingWatchlist(true);
+    const toastId = "save-watchlist";
+    toast.loading("Saving watchlist...", { id: toastId });
+    try {
+      const keywords = trendingKeywords.split(",").map(k => k.trim()).filter(Boolean);
+      const res = await fetch("/api/viral/watchlists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, niche, keywords, platforms: trendingPlatforms, active: true, alert_on_new: false }),
+      });
+      const data = await res.json();
+      if (res.ok && data.watchlist) {
+        toast.success("Watchlist saved!", { id: toastId });
+        setSaveWatchlistModal(false);
+        setNewWatchlistName("");
+        loadWatchlists();
+      } else {
+        toast.error(data.error || "Couldn't save watchlist", { id: toastId });
+      }
+    } catch {
+      toast.error("Network error", { id: toastId });
+    } finally {
+      setSavingWatchlist(false);
+    }
+  }
+
+  async function loadWatchlistTrending(w: Watchlist) {
+    // Hydrate the search form from the watchlist, then fire the normal
+    // trending fetch — the 24h cache means this is usually instant.
+    setTrendingNiche(w.niche);
+    setTrendingKeywords(w.keywords.join(", "));
+    setTrendingPlatforms(w.platforms);
+    setLoadingTrending(true);
+    setTrendingVideos([]);
+    setTrendingCached(null);
+    const toastId = "watchlist-load";
+    toast.loading(`Loading ${w.name}...`, { id: toastId });
+    try {
+      const res = await fetch("/api/script-lab/trending", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          niche: w.niche,
+          keywords: w.keywords,
+          platforms: w.platforms,
+          limit: 30,
+        }),
+      });
+      const data = await res.json().catch(() => ({ error: "Invalid response" }));
+      if (res.ok && data.success && Array.isArray(data.videos)) {
+        setTrendingVideos(data.videos);
+        setTrendingCached({ cached: Boolean(data.cached), cached_at: data.cached_at, expires_at: data.expires_at });
+        toast.success(`${data.videos.length} videos loaded${data.cached ? " (cached)" : ""}`, { id: toastId });
+      } else {
+        toast.error(data.error || "Couldn't load watchlist", { id: toastId });
+      }
+    } catch {
+      toast.error("Network error", { id: toastId });
+    } finally {
+      setLoadingTrending(false);
+    }
+  }
+
+  async function scanWatchlistNow(w: Watchlist) {
+    setScanningWatchlistId(w.id);
+    const toastId = `scan-${w.id}`;
+    toast.loading(`Scanning ${w.name}...`, { id: toastId });
+    try {
+      const res = await fetch(`/api/viral/watchlists/${w.id}/scan-now`, { method: "POST" });
+      const data = await res.json().catch(() => ({ error: "Invalid response" }));
+      if (res.ok && data.success && Array.isArray(data.videos)) {
+        setTrendingNiche(w.niche);
+        setTrendingKeywords(w.keywords.join(", "));
+        setTrendingPlatforms(w.platforms);
+        setTrendingVideos(data.videos);
+        setTrendingCached({ cached: false });
+        toast.success(`${data.videos.length} fresh videos for ${w.name}`, { id: toastId });
+        loadWatchlists(); // refresh last_scanned_at
+      } else {
+        toast.error(data.error || "Scan failed", { id: toastId });
+      }
+    } catch {
+      toast.error("Network error", { id: toastId });
+    } finally {
+      setScanningWatchlistId(null);
+    }
+  }
+
+  async function deleteWatchlist(w: Watchlist) {
+    if (!confirm(`Delete watchlist "${w.name}"?`)) return;
+    try {
+      const res = await fetch(`/api/viral/watchlists/${w.id}`, { method: "DELETE" });
+      if (res.ok) {
+        toast.success("Watchlist deleted");
+        setWatchlists(prev => prev.filter(x => x.id !== w.id));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        toast.error(data.error || "Delete failed");
+      }
+    } catch {
+      toast.error("Network error");
+    }
+  }
+
+  async function toggleWatchlistAlerts(w: Watchlist) {
+    try {
+      const res = await fetch(`/api/viral/watchlists/${w.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ alert_on_new: !w.alert_on_new }),
+      });
+      const data = await res.json();
+      if (res.ok && data.watchlist) {
+        setWatchlists(prev => prev.map(x => x.id === w.id ? data.watchlist : x));
+        toast.success(data.watchlist.alert_on_new ? "Alerts on" : "Alerts off");
+      } else {
+        toast.error(data.error || "Toggle failed");
+      }
+    } catch {
+      toast.error("Network error");
+    }
+  }
+
+  async function saveEditedWatchlist() {
+    if (!editingWatchlist) return;
+    setSavingWatchlist(true);
+    try {
+      const res = await fetch(`/api/viral/watchlists/${editingWatchlist.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editingWatchlist.name,
+          niche: editingWatchlist.niche,
+          keywords: editingWatchlist.keywords,
+          platforms: editingWatchlist.platforms,
+          active: editingWatchlist.active,
+          alert_on_new: editingWatchlist.alert_on_new,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.watchlist) {
+        setWatchlists(prev => prev.map(x => x.id === editingWatchlist.id ? data.watchlist : x));
+        toast.success("Watchlist updated");
+        setEditingWatchlist(null);
+      } else {
+        toast.error(data.error || "Update failed");
+      }
+    } catch {
+      toast.error("Network error");
+    } finally {
+      setSavingWatchlist(false);
     }
   }
 
@@ -1171,6 +1369,96 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {/* 🔥 Trending Tab — live viral research across platforms */}
       {tab === "trending" && (
         <div className="space-y-4">
+          {/* My Watchlists — scheduled daily scans */}
+          <div className="card border-gold/10 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Eye size={14} className="text-gold" />
+                <h3 className="text-xs font-semibold">My Watchlists</h3>
+                <span className="text-[9px] text-muted">Auto-refreshed daily at 6 AM</span>
+              </div>
+              {loadingWatchlists && <Loader size={11} className="animate-spin text-muted" />}
+            </div>
+
+            {!loadingWatchlists && watchlists.length === 0 && (
+              <p className="text-[10px] text-muted py-1">
+                Save a niche + keyword search as a watchlist to get fresh trends every morning — one click, no Claude call needed.
+              </p>
+            )}
+
+            {watchlists.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                {watchlists.map(w => {
+                  const isScanning = scanningWatchlistId === w.id;
+                  return (
+                    <div
+                      key={w.id}
+                      className="rounded-lg border border-border p-2.5 hover:border-gold/30 transition-all bg-surface-light/30 group"
+                    >
+                      <div
+                        className="cursor-pointer"
+                        onClick={() => loadWatchlistTrending(w)}
+                      >
+                        <div className="flex items-start justify-between gap-1 mb-1">
+                          <h4 className="text-[11px] font-semibold line-clamp-1 group-hover:text-gold transition-colors">{w.name}</h4>
+                          {w.alert_on_new && (
+                            <span title="Alerts on" className="text-[9px] text-gold"><Activity size={9} /></span>
+                          )}
+                        </div>
+                        <p className="text-[9px] text-muted mb-1">
+                          <span className="text-gold/80">#{w.niche}</span>
+                          {w.platforms.length > 0 && <span> · {w.platforms.join(", ")}</span>}
+                        </p>
+                        <p className="text-[8px] text-muted">
+                          {w.last_scanned_at
+                            ? <>Last scanned {new Date(w.last_scanned_at).toLocaleString()}</>
+                            : <>Never scanned</>}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-1 mt-2 pt-2 border-t border-border/50">
+                        <button
+                          onClick={() => scanWatchlistNow(w)}
+                          disabled={isScanning}
+                          className="flex-1 text-[9px] py-1 rounded border border-border hover:border-gold/30 transition-all disabled:opacity-50 flex items-center justify-center gap-1"
+                          title="Scan now"
+                        >
+                          {isScanning ? <Loader size={9} className="animate-spin" /> : <RefreshCw size={9} />}
+                          Scan
+                        </button>
+                        <button
+                          onClick={() => toggleWatchlistAlerts(w)}
+                          className={`text-[9px] py-1 px-1.5 rounded border transition-all ${
+                            w.alert_on_new
+                              ? "border-gold/40 bg-gold/10 text-gold"
+                              : "border-border text-muted hover:text-foreground"
+                          }`}
+                          title={w.alert_on_new ? "Alerts on" : "Alerts off"}
+                        >
+                          <Activity size={9} />
+                        </button>
+                        <button
+                          onClick={() => setEditingWatchlist({ ...w })}
+                          className="text-[9px] py-1 px-1.5 rounded border border-border text-muted hover:text-foreground transition-all"
+                          title="Edit"
+                        >
+                          <PenTool size={9} />
+                        </button>
+                        <button
+                          onClick={() => deleteWatchlist(w)}
+                          className="text-[9px] py-1 px-1.5 rounded border border-border text-muted hover:text-danger transition-all"
+                          title="Delete"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
           {/* Controls */}
           <div className="card bg-gradient-to-br from-gold/[0.05] via-surface to-surface border-gold/15 space-y-3">
             <div className="flex items-center gap-2">
@@ -1241,6 +1529,14 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   <RefreshCw size={11} /> Force refresh
                 </button>
               )}
+              <button
+                onClick={() => { setNewWatchlistName(trendingNiche); setSaveWatchlistModal(true); }}
+                disabled={!trendingNiche || trendingPlatforms.length === 0}
+                className="btn-secondary text-xs py-2 flex items-center gap-1.5 disabled:opacity-50"
+                title="Save this search as a watchlist"
+              >
+                <Eye size={11} /> Save as watchlist
+              </button>
               {trendingCached?.cached && (
                 <span className="text-[9px] text-muted ml-auto flex items-center gap-1">
                   <Clock size={9} /> Cached {trendingCached.cached_at ? new Date(trendingCached.cached_at).toLocaleTimeString() : ""}
@@ -2218,6 +2514,166 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Save-as-watchlist modal */}
+      {saveWatchlistModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSaveWatchlistModal(false)}
+        >
+          <div
+            className="bg-surface border border-border rounded-2xl max-w-md w-full"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="border-b border-border p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Eye size={14} className="text-gold" />
+                <h3 className="text-sm font-semibold">Save as watchlist</h3>
+              </div>
+              <button onClick={() => setSaveWatchlistModal(false)} className="text-muted hover:text-foreground text-xs">Close</button>
+            </div>
+            <div className="p-4 space-y-3">
+              <p className="text-[10px] text-muted">
+                Saves the current niche, keywords, and platforms. The daily cron will refresh trending videos for it every morning.
+              </p>
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Watchlist name</label>
+                <input
+                  value={newWatchlistName}
+                  onChange={e => setNewWatchlistName(e.target.value)}
+                  className="input w-full text-xs"
+                  placeholder="e.g. Dental — Invisalign"
+                  autoFocus
+                />
+              </div>
+              <div className="text-[10px] text-muted bg-surface-light/50 rounded p-2 space-y-0.5">
+                <p><span className="text-gold">Niche:</span> {trendingNiche || "—"}</p>
+                <p><span className="text-gold">Keywords:</span> {trendingKeywords || "—"}</p>
+                <p><span className="text-gold">Platforms:</span> {trendingPlatforms.join(", ") || "—"}</p>
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={saveAsWatchlist}
+                  disabled={savingWatchlist}
+                  className="btn-primary text-xs py-2 flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {savingWatchlist ? <Loader size={12} className="animate-spin" /> : <CheckCircle size={12} />}
+                  {savingWatchlist ? "Saving…" : "Save watchlist"}
+                </button>
+                <button
+                  onClick={() => setSaveWatchlistModal(false)}
+                  className="btn-secondary text-xs py-2 px-4"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit watchlist modal */}
+      {editingWatchlist && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setEditingWatchlist(null)}
+        >
+          <div
+            className="bg-surface border border-border rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="sticky top-0 bg-surface/95 backdrop-blur-md border-b border-border p-4 flex items-center justify-between z-10">
+              <div className="flex items-center gap-2">
+                <PenTool size={14} className="text-gold" />
+                <h3 className="text-sm font-semibold">Edit watchlist</h3>
+              </div>
+              <button onClick={() => setEditingWatchlist(null)} className="text-muted hover:text-foreground text-xs">Close</button>
+            </div>
+            <div className="p-4 space-y-3">
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Name</label>
+                <input
+                  value={editingWatchlist.name}
+                  onChange={e => setEditingWatchlist({ ...editingWatchlist, name: e.target.value })}
+                  className="input w-full text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Niche</label>
+                <input
+                  value={editingWatchlist.niche}
+                  onChange={e => setEditingWatchlist({ ...editingWatchlist, niche: e.target.value })}
+                  className="input w-full text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Keywords (comma-separated)</label>
+                <input
+                  value={editingWatchlist.keywords.join(", ")}
+                  onChange={e => setEditingWatchlist({
+                    ...editingWatchlist,
+                    keywords: e.target.value.split(",").map(k => k.trim()).filter(Boolean),
+                  })}
+                  className="input w-full text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Platforms</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {TRENDING_PLATFORM_OPTS.map(p => {
+                    const active = editingWatchlist.platforms.includes(p.id);
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => setEditingWatchlist({
+                          ...editingWatchlist,
+                          platforms: active
+                            ? editingWatchlist.platforms.filter(x => x !== p.id)
+                            : [...editingWatchlist.platforms, p.id],
+                        })}
+                        className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${
+                          active
+                            ? `${platformColor(p.id)} border-opacity-50`
+                            : "border-border text-muted hover:text-foreground"
+                        }`}
+                      >
+                        {p.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <label className="flex items-center gap-2 text-[11px]">
+                <input
+                  type="checkbox"
+                  checked={editingWatchlist.active}
+                  onChange={e => setEditingWatchlist({ ...editingWatchlist, active: e.target.checked })}
+                />
+                Active (cron will scan)
+              </label>
+              <label className="flex items-center gap-2 text-[11px]">
+                <input
+                  type="checkbox"
+                  checked={editingWatchlist.alert_on_new}
+                  onChange={e => setEditingWatchlist({ ...editingWatchlist, alert_on_new: e.target.checked })}
+                />
+                Send Telegram alert when new trends found
+              </label>
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={saveEditedWatchlist}
+                  disabled={savingWatchlist}
+                  className="btn-primary text-xs py-2 flex-1 flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {savingWatchlist ? <Loader size={12} className="animate-spin" /> : <CheckCircle size={12} />}
+                  Save changes
+                </button>
+                <button onClick={() => setEditingWatchlist(null)} className="btn-secondary text-xs py-2 px-4">Cancel</button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
