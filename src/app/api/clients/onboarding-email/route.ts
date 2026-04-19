@@ -54,8 +54,16 @@ export async function POST(request: NextRequest) {
     emailBody = `<p>Hi ${client.contact_name},</p><p>Welcome to Trinity! We're excited to help ${client.business_name} grow.</p><p>Log in to your portal to get started: <a href="${appUrl}/login">${appUrl.replace(/^https?:\/\//, "")}</a></p><p>Best,<br>The Trinity Team</p>`;
   }
 
-  // Send via GHL if available
-  if (ghlKey && client.email) {
+  // Send via GHL if available. Track whether the send actually succeeded so
+  // we don't return a fake success when GHL is misconfigured or errors.
+  let didSend = false;
+  let sendError: string | undefined;
+
+  if (!ghlKey) {
+    sendError = "GHL_API_KEY not configured";
+  } else if (!client.email) {
+    sendError = "Client has no email address";
+  } else {
     try {
       // Find or create GHL contact
       const contactRes = await fetch(`https://services.leadconnectorhq.com/contacts/search/duplicate?email=${encodeURIComponent(client.email)}`, {
@@ -75,23 +83,40 @@ export async function POST(request: NextRequest) {
       }
 
       if (contactId) {
-        await fetch("https://services.leadconnectorhq.com/conversations/messages", {
+        const sendRes = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
           method: "POST",
           headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
           body: JSON.stringify({ type: "Email", contactId, subject: seq.subject, html: emailBody }),
         });
+        if (sendRes.ok) {
+          didSend = true;
+        } else {
+          sendError = `GHL send returned HTTP ${sendRes.status}`;
+        }
+      } else {
+        sendError = "Could not resolve GHL contact id";
       }
-    } catch (err) { console.error("[onboarding-email] GHL send failed:", err); }
+    } catch (err) {
+      sendError = err instanceof Error ? err.message : "GHL send failed";
+      console.error("[onboarding-email] GHL send failed:", err);
+    }
   }
 
-  // Log
+  // Log with honest status
   await serviceSupabase.from("trinity_log").insert({
     action_type: "automation",
-    description: `Onboarding email #${(email_number || 0) + 1} sent to ${client.contact_name} (${seq.type})`,
+    description: didSend
+      ? `Onboarding email #${(email_number || 0) + 1} sent to ${client.contact_name} (${seq.type})`
+      : `Onboarding email #${(email_number || 0) + 1} FAILED for ${client.contact_name} (${seq.type}): ${sendError}`,
     client_id,
-    status: "completed",
-    result: { email_number, subject: seq.subject, type: seq.type },
+    status: didSend ? "completed" : "warning",
+    result: { email_number, subject: seq.subject, type: seq.type, sent: didSend, error: sendError },
   });
 
-  return NextResponse.json({ success: true, email_number: email_number || 0, subject: seq.subject });
+  return NextResponse.json({
+    success: didSend,
+    email_number: email_number || 0,
+    subject: seq.subject,
+    ...(didSend ? {} : { error: sendError || "Email could not be sent" }),
+  });
 }

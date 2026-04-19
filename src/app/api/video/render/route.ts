@@ -180,11 +180,19 @@ export async function POST(request: NextRequest) {
     music_mood,
   } = await request.json();
 
+  // Track which upstream services we actually *tried* (i.e. were configured
+  // and returned a response), and the last error message from a failed call.
+  // "Not configured" services (no env var set) are silently skipped — only
+  // real failures should surface to the user.
+  const attempted: string[] = [];
+  let lastError: string | undefined;
+
   // Option 1: Remotion (self-hosted on Railway) — skip if plan_only
   const remotionUrl =
     process.env.REMOTION_RENDER_URL ||
     "https://shortstack-remotion-production.up.railway.app";
   if (remotionUrl && !plan_only) {
+    attempted.push("remotion");
     try {
       const res = await fetch(`${remotionUrl}/api/render`, {
         method: "POST",
@@ -220,13 +228,19 @@ export async function POST(request: NextRequest) {
           render_id: data.renderId,
         });
       }
-    } catch (err) { console.error("[video/render] Remotion render failed:", err); }
+      // Responded but produced no usable output — treat as failure.
+      lastError = `Remotion returned no url/renderId (HTTP ${res.status})`;
+    } catch (err) {
+      lastError = `Remotion: ${err instanceof Error ? err.message : String(err)}`;
+      console.error("[video/render] Remotion render failed:", err);
+    }
   }
 
   // Option 2: Mochi Video Generator on RunPod Serverless (AI text-to-video)
   const videoUrl = process.env.HIGGSFIELD_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;
   if (videoUrl && runpodKey && !plan_only) {
+    attempted.push("mochi");
     try {
       // Map aspect ratio to Mochi-compatible dimensions
       let vidWidth = 848,
@@ -324,13 +338,19 @@ export async function POST(request: NextRequest) {
           status: job.status || "IN_QUEUE",
         });
       }
-    } catch (err) { console.error("[video/render] Mochi RunPod generation failed:", err); }
+      // Responded but produced no id/output — treat as failure.
+      lastError = `Mochi returned no id/output (status=${job.status ?? "unknown"})`;
+    } catch (err) {
+      lastError = `Mochi: ${err instanceof Error ? err.message : String(err)}`;
+      console.error("[video/render] Mochi RunPod generation failed:", err);
+    }
   }
 
   // Option 3: Generate video plan with AI (self-hosted LLM first, Claude fallback)
   // Try self-hosted LLM first to save Claude tokens
   const llmUrl = process.env.RUNPOD_LLM_URL;
   if (llmUrl && runpodKey) {
+    attempted.push("self-hosted-llm");
     try {
       const res = await fetch(`${llmUrl}/runsync`, {
         method: "POST",
@@ -379,12 +399,17 @@ export async function POST(request: NextRequest) {
             "Video plan generated via self-hosted AI. Click Render to generate the actual video.",
         });
       }
-    } catch (err) { console.error("[video/render] Self-hosted LLM plan failed:", err); }
+      lastError = "Self-hosted LLM returned no usable plan";
+    } catch (err) {
+      lastError = `Self-hosted LLM: ${err instanceof Error ? err.message : String(err)}`;
+      console.error("[video/render] Self-hosted LLM plan failed:", err);
+    }
   }
 
   // Fallback: Claude API for complex plans
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (apiKey) {
+    attempted.push("claude");
     try {
       const res = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
@@ -420,17 +445,41 @@ export async function POST(request: NextRequest) {
         }),
       });
       const data = await res.json();
-      return NextResponse.json({
-        success: true,
-        source: "ai-plan",
-        plan: data.content?.[0]?.text || "",
-        message: "Video plan generated. Click Render to create the actual video.",
-      });
-    } catch (err) { console.error("[video/render] Claude plan fallback failed:", err); }
+      const planText = data.content?.[0]?.text || "";
+      if (planText && planText.length > 50) {
+        return NextResponse.json({
+          success: true,
+          source: "ai-plan",
+          plan: planText,
+          message: "Video plan generated. Click Render to create the actual video.",
+        });
+      }
+      lastError = "Claude returned empty plan";
+    } catch (err) {
+      lastError = `Claude: ${err instanceof Error ? err.message : String(err)}`;
+      console.error("[video/render] Claude plan fallback failed:", err);
+    }
+  }
+
+  // Nothing succeeded. Distinguish "nothing was even configured" from
+  // "services were tried and all failed" so the caller sees the real cause.
+  if (attempted.length === 0) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "No video service configured",
+        attempted,
+      },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json(
-    { error: "No video service configured" },
-    { status: 500 }
+    {
+      success: false,
+      error: `Video render failed: ${lastError || "all upstream services failed"}`,
+      attempted,
+    },
+    { status: 502 },
   );
 }

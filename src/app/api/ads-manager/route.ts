@@ -180,15 +180,36 @@ export async function POST(request: NextRequest) {
         roas: 0,
         created_at: new Date().toISOString(),
       };
-      // Attempt to insert into DB (safe fail if table doesn't exist)
-      try {
-        await supabase.from("ad_campaigns").insert({
-          ...newCampaign,
-          user_id: user.id,
-        });
-      } catch {
-        // table may not exist — still return the campaign for UI
+      // Attempt to insert into DB. If the table genuinely doesn't exist yet
+      // (Postgres error code 42P01 "undefined_table"), treat it as a
+      // "feature not set up" error instead of pretending we saved anything.
+      // Any other error is a real DB failure and must surface.
+      const { error: insertError } = await supabase
+        .from("ad_campaigns")
+        .insert({ ...newCampaign, user_id: user.id });
+
+      if (insertError) {
+        console.error("[ads-manager] create_campaign DB insert failed:", insertError);
+        if (insertError.code === "42P01") {
+          return NextResponse.json(
+            {
+              success: false,
+              error: "Ads feature is not set up — the ad_campaigns table does not exist in this environment.",
+              campaign: null,
+            },
+            { status: 500 },
+          );
+        }
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Campaign could not be saved",
+            campaign: null,
+          },
+          { status: 500 },
+        );
       }
+
       return NextResponse.json({ success: true, campaign: newCampaign });
     }
 
