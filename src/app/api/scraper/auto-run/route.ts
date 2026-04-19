@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 /**
  * POST /api/scraper/auto-run
@@ -7,6 +7,13 @@ import { createServiceClient } from "@/lib/supabase/server";
  * Stores in system_config table — the cron job reads this to decide whether to run.
  */
 export async function POST(request: NextRequest) {
+  // Auth — this endpoint writes into the shared `system_config` row that the
+  // nightly `cron/scrape-leads` job reads, so an anonymous caller could have
+  // turned the scraper off or redirected it at any niche/location they chose.
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const { enabled, time, days, platforms, niches, locations, max_results, filters } =
       await request.json();
@@ -79,6 +86,12 @@ export async function POST(request: NextRequest) {
  * Retrieve current auto-run configuration.
  */
 export async function GET() {
+  // Auth — configuration includes the user's chosen niches/locations, which
+  // amounts to competitive intelligence. Keep read gated as well.
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const supabase = createServiceClient();
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -175,6 +176,13 @@ function buildPrompt(body: {
 
 // POST — Generate AI thumbnails via RunPod SDXL
 export async function POST(request: NextRequest) {
+  // Auth — this route dispatches paid RunPod jobs and proxies to a self-hosted
+  // LLM for prompt enhancement. Anonymous callers would let anyone on the
+  // internet drain the GPU budget.
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const body = await request.json();
     const {

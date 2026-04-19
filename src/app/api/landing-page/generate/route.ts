@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 // POST /api/landing-page/generate
 // Accepts business info + template choice and returns structured landing page content
 export async function POST(request: NextRequest) {
+  // Auth — this endpoint proxies to Anthropic; without auth anyone on the
+  // internet can burn our API credits by pointing traffic at us.
+  const authSupabase = createServerSupabase();
+  const { data: { user } } = await authSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   try {
     const body = await request.json();
     const { business_name, industry, description, template, sections } = body;

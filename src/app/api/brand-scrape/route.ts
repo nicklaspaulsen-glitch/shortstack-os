@@ -22,6 +22,29 @@ export async function POST(req: NextRequest) {
     } catch {
       return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
     }
+    if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+      return NextResponse.json({ error: "URL must use http or https" }, { status: 400 });
+    }
+    // SSRF guard — block loopback / private / link-local hosts.
+    {
+      const host = parsedUrl.hostname.toLowerCase();
+      const isPrivate =
+        host === "localhost" ||
+        host === "0.0.0.0" ||
+        host.endsWith(".local") ||
+        host.endsWith(".internal") ||
+        /^127\./.test(host) ||
+        /^10\./.test(host) ||
+        /^192\.168\./.test(host) ||
+        /^169\.254\./.test(host) ||
+        /^172\.(1[6-9]|2[0-9]|3[01])\./.test(host) ||
+        /^::1$/.test(host) ||
+        /^fe80:/i.test(host) ||
+        /^fc00:/i.test(host);
+      if (isPrivate) {
+        return NextResponse.json({ error: "Refusing to fetch private host" }, { status: 400 });
+      }
+    }
 
     // Fetch the website HTML
     const controller = new AbortController();
