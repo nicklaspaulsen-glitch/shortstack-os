@@ -14,22 +14,23 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 
-// Static fallback examples used when no DB query is available. These URLs
-// can be swapped for real sample outputs later. Unsplash source URLs are
-// public-CDN, no API key needed.
+// Static fallback — real AI-video showcase thumbs from ytimg.com (public CDN).
+// Used only when the preview_content table is unreachable. RollingPreview with
+// fetchRemote+tool="ai_video" is the primary source and will replace this.
+const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 const AI_VIDEO_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "v1", src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=640&h=360&fit=crop", alt: "Cinematic scene", tag: "Cinematic" },
-  { id: "v2", src: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=640&h=360&fit=crop", alt: "Drone coast", tag: "Drone" },
-  { id: "v3", src: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&h=360&fit=crop", alt: "Neon particles", tag: "Abstract" },
-  { id: "v4", src: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=640&h=360&fit=crop", alt: "Product shot", tag: "Product" },
-  { id: "v5", src: "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=640&h=360&fit=crop", alt: "City skyline", tag: "Timelapse" },
-  { id: "v6", src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=640&h=360&fit=crop", alt: "Misty forest", tag: "Nature" },
-  { id: "v7", src: "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=640&h=360&fit=crop", alt: "Sports car", tag: "Automotive" },
-  { id: "v8", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640&h=360&fit=crop", alt: "Tech close-up", tag: "Tech" },
-  { id: "v9", src: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=640&h=360&fit=crop", alt: "Dreamy sunset", tag: "Dreamy" },
-  { id: "v10", src: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=640&h=360&fit=crop", alt: "Food plating", tag: "Lifestyle" },
-  { id: "v11", src: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=640&h=360&fit=crop", alt: "Cyberpunk arcade", tag: "Futuristic" },
-  { id: "v12", src: "https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=640&h=360&fit=crop", alt: "Paint splash", tag: "Motion" },
+  { id: "v1", src: YT("FfqqDxF_qFY"), alt: "OpenAI Sora Trailer", tag: "AI Video" },
+  { id: "v2", src: YT("_9LX9HSQkWo"), alt: "Runway Gen-3", tag: "AI Video" },
+  { id: "v3", src: YT("YSs8QelfwjI"), alt: "Luma Dream Machine", tag: "AI Video" },
+  { id: "v4", src: YT("HK6y8DAPN_0"), alt: "Kling AI", tag: "AI Video" },
+  { id: "v5", src: YT("LXb3EKWsInQ"), alt: "Costa Rica 4K", tag: "Nature" },
+  { id: "v6", src: YT("fRmzCfUhW7o"), alt: "Tokyo Neon", tag: "City" },
+  { id: "v7", src: YT("R_tHrd7n7_A"), alt: "Peter McKinnon Aerial", tag: "Drone" },
+  { id: "v8", src: YT("pWtH9PbsXYs"), alt: "Shot on iPhone", tag: "Cinematic" },
+  { id: "v9", src: YT("z9Ul9ccDOqE"), alt: "iPhone Macro", tag: "Macro" },
+  { id: "v10", src: YT("JGPNAc_N4k8"), alt: "Kurzgesagt Motion", tag: "Animation" },
+  { id: "v11", src: YT("gFD3NFR7fKw"), alt: "Northern Lights", tag: "Nature" },
+  { id: "v12", src: YT("rDRR5XxIy8E"), alt: "Slo-Mo Water", tag: "Abstract" },
 ];
 
 const AI_VIDEO_TUTORIAL_STEPS: TutorialStep[] = [
@@ -496,7 +497,7 @@ export default function AIVideoPage() {
         <div className="lg:col-span-4 space-y-4">
           {results.length === 0 ? (
             <div className="relative card-static overflow-hidden py-16 text-center">
-              {/* Rolling preview background */}
+              {/* Rolling preview — pulls real AI video showcases from preview_content */}
               <div className="absolute inset-0 pointer-events-none">
                 <RollingPreview
                   items={AI_VIDEO_PREVIEW_FALLBACK}
@@ -504,6 +505,8 @@ export default function AIVideoPage() {
                   aspectRatio="16:9"
                   opacity={0.25}
                   speed="medium"
+                  fetchRemote
+                  tool="ai_video"
                 />
               </div>
               {/* Foreground content */}

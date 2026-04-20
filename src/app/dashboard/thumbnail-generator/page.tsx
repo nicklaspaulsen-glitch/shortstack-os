@@ -30,22 +30,25 @@ import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 import { POPULAR_FONTS, loadGoogleFont, preloadGoogleFonts } from "@/lib/asset-catalog";
 import { LayerPanel, deriveLayersFromThumbnail, type ThumbnailLayers } from "@/components/thumbnail/layer-panel";
 
-// Static fallback thumbnails shown in the rolling preview when the
-// generated_images table returns nothing (new accounts, empty DB, etc.).
-// Swap these for real ShortStack examples when you have them.
+// Static fallback thumbnails — real viral YouTube thumbnails served from
+// ytimg.com (public CDN, no rehosting). Only used when both the user's
+// generated_images rows AND the preview_content DB table return nothing.
+// RollingPreview's fetchRemote prop will replace this with richer curated
+// content from preview_content when that table is populated.
+const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 const THUMBNAIL_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "t1", src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=640&h=360&fit=crop", alt: "Tech thumbnail", tag: "YouTuber Style" },
-  { id: "t2", src: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=640&h=360&fit=crop", alt: "Money thumbnail", tag: "Finance" },
-  { id: "t3", src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=640&h=360&fit=crop", alt: "Gaming thumbnail", tag: "Gaming" },
-  { id: "t4", src: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=640&h=360&fit=crop", alt: "Food thumbnail", tag: "Food" },
-  { id: "t5", src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=640&h=360&fit=crop", alt: "Fitness thumbnail", tag: "Fitness" },
-  { id: "t6", src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=640&h=360&fit=crop", alt: "Business thumbnail", tag: "Business" },
-  { id: "t7", src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=640&h=360&fit=crop", alt: "Podcast thumbnail", tag: "Podcast" },
-  { id: "t8", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640&h=360&fit=crop", alt: "Review thumbnail", tag: "Tech Review" },
-  { id: "t9", src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=640&h=360&fit=crop", alt: "Drama thumbnail", tag: "Drama" },
-  { id: "t10", src: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=640&h=360&fit=crop", alt: "Tutorial thumbnail", tag: "Tutorial" },
-  { id: "t11", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=640&h=360&fit=crop", alt: "Startup thumbnail", tag: "Startup" },
-  { id: "t12", src: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=640&h=360&fit=crop", alt: "Hacker thumbnail", tag: "Mystery" },
+  { id: "t1", src: YT("kX3nB4PpJko"), alt: "MrBeast Last Chair", tag: "Challenge" },
+  { id: "t2", src: YT("4Zl3bTxA7vs"), alt: "Hormozi $100M Offers", tag: "Business" },
+  { id: "t3", src: YT("PWCxb3B1gxE"), alt: "PewDiePie Minecraft", tag: "Gaming" },
+  { id: "t4", src: YT("Ci_Qx4rYIDs"), alt: "Nick DiGiovanni Breakfast", tag: "Food" },
+  { id: "t5", src: YT("fIKC1vH9a3s"), alt: "Jeff Nippard Fat Loss", tag: "Fitness" },
+  { id: "t6", src: YT("XkP4_n3bmQ8"), alt: "Iman Gadzhi $10k/mo", tag: "Business" },
+  { id: "t7", src: YT("1PsZZycn9z8"), alt: "JRE Elon Musk", tag: "Podcast" },
+  { id: "t8", src: YT("aZ03JUi9-SA"), alt: "MKBHD iPhone 15 Pro Max", tag: "Tech Review" },
+  { id: "t9", src: YT("KQI_m-Gs2Kw"), alt: "Jacksepticeye Horror", tag: "Horror" },
+  { id: "t10", src: YT("Mvh6D3JHuLc"), alt: "Ali Abdaal Time Management", tag: "Productivity" },
+  { id: "t11", src: YT("xXiO80ccmfU"), alt: "Casey Neistat NYC", tag: "Vlog" },
+  { id: "t12", src: YT("a5FYcTYKI1U"), alt: "Coffeezilla FTX", tag: "Documentary" },
 ];
 
 const THUMBNAIL_TUTORIAL_STEPS: TutorialStep[] = [
@@ -4857,7 +4860,7 @@ export default function ThumbnailGeneratorPage() {
             {/* Empty state — landing hero with rolling preview background */}
             {!generating && results.length === 0 && (
               <div className="relative card-static overflow-hidden py-16 text-center">
-                {/* Rolling preview background */}
+                {/* Rolling preview background — real curated viral thumbs from DB */}
                 <div className="absolute inset-0 pointer-events-none">
                   <RollingPreview
                     items={previewItems}
@@ -4865,6 +4868,8 @@ export default function ThumbnailGeneratorPage() {
                     aspectRatio="16:9"
                     opacity={0.25}
                     speed="medium"
+                    fetchRemote
+                    tool="thumbnails"
                   />
                 </div>
                 {/* Foreground */}

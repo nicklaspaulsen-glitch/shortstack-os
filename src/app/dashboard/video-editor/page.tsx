@@ -53,21 +53,24 @@ import {
   type PresetDropPayload,
 } from "@/components/video-editor/preset-picker-panel";
 
-// Curated vertical-style ad/video thumbnails for the rolling preview.
-// 9:16 crops keep the marquee feeling native to Reels/TikTok/Shorts.
+// Real ad / brand / product thumbnails served from ytimg.com (public CDN).
+// RollingPreview with fetchRemote + tool="video_editor" swaps these for the
+// curated library in `preview_content` at runtime; this list is the fallback
+// if that table is unreachable.
+const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 const VIDEO_EDITOR_PREVIEW_ITEMS: RollingPreviewItem[] = [
-  { id: "ve1", src: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=360&h=640&fit=crop", alt: "Fashion ad", tag: "Ads Preset" },
-  { id: "ve2", src: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=360&h=640&fit=crop", alt: "Sneaker drop", tag: "Product" },
-  { id: "ve3", src: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=360&h=640&fit=crop", alt: "Audio gear", tag: "Tech Ad" },
-  { id: "ve4", src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=360&h=640&fit=crop", alt: "Watch close-up", tag: "Luxury" },
-  { id: "ve5", src: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=360&h=640&fit=crop", alt: "Fitness reel", tag: "9:16 Reel" },
-  { id: "ve6", src: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=360&h=640&fit=crop", alt: "Beauty product", tag: "Beauty" },
-  { id: "ve7", src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=360&h=640&fit=crop", alt: "Modern product", tag: "Minimal" },
-  { id: "ve8", src: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=360&h=640&fit=crop", alt: "Food reel", tag: "Food" },
-  { id: "ve9", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=360&h=640&fit=crop", alt: "Circuit board", tag: "Tech" },
-  { id: "ve10", src: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=360&h=640&fit=crop", alt: "Laptop reel", tag: "SaaS" },
-  { id: "ve11", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=360&h=640&fit=crop", alt: "Startup team", tag: "Brand" },
-  { id: "ve12", src: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=360&h=640&fit=crop", alt: "Studio shoot", tag: "Studio" },
+  { id: "ve1", src: YT("pWtH9PbsXYs"), alt: "Shot on iPhone", tag: "Apple" },
+  { id: "ve2", src: YT("tQ0yjYUFKAE"), alt: "Dollar Shave Club", tag: "DTC" },
+  { id: "ve3", src: YT("I38b8-9syRU"), alt: "Squarespace Super Bowl", tag: "Ad" },
+  { id: "ve4", src: YT("hXWIENcHtyQ"), alt: "Volvo Epic Split", tag: "Volvo" },
+  { id: "ve5", src: YT("uYPbbksJxIg"), alt: "Oatly Wow No Cow", tag: "Oatly" },
+  { id: "ve6", src: YT("ZOCcDbJ5uV4"), alt: "Nike Dream Crazy", tag: "Nike" },
+  { id: "ve7", src: YT("JxS5E-kZc2s"), alt: "Dove Real Beauty", tag: "Dove" },
+  { id: "ve8", src: YT("u4ZoJKF_VuA"), alt: "Red Bull Gives Wings", tag: "Red Bull" },
+  { id: "ve9", src: YT("L_LUpnjgPso"), alt: "Airbnb Belong Anywhere", tag: "Airbnb" },
+  { id: "ve10", src: YT("Q7P7oMRyq-o"), alt: "Rolex Pioneer", tag: "Luxury" },
+  { id: "ve11", src: YT("KqffpTQVAqY"), alt: "BMW The 8", tag: "Auto" },
+  { id: "ve12", src: YT("PnzVhqbzyMw"), alt: "Tesla Cybertruck", tag: "Tesla" },
 ];
 
 const VIDEO_EDITOR_TUTORIAL_STEPS: TutorialStep[] = [
@@ -3146,6 +3149,8 @@ export default function VideoEditorPage() {
               aspectRatio="9:16"
               opacity={0.45}
               speed="medium"
+              fetchRemote
+              tool="video_editor"
             />
           </div>
           <div className="relative text-center px-4">

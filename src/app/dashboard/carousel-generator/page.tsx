@@ -13,20 +13,23 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
 
-// Square (1:1) Instagram-carousel-style previews. Unsplash cropped to 1:1.
+// Real viral carousel-style thumbnails served from ytimg.com (public CDN).
+// RollingPreview with fetchRemote + tool="carousel" replaces these with the
+// curated library in `preview_content` at runtime; this list is the fallback.
+const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
 const CAROUSEL_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "cg1", src: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=480&h=480&fit=crop", alt: "Finance carousel", tag: "Finance" },
-  { id: "cg2", src: "https://images.unsplash.com/photo-1522252234503-e356532cafd5?w=480&h=480&fit=crop", alt: "Productivity carousel", tag: "Productivity" },
-  { id: "cg3", src: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=480&h=480&fit=crop", alt: "Marketing carousel", tag: "Marketing" },
-  { id: "cg4", src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=480&h=480&fit=crop", alt: "Business tips", tag: "Business" },
-  { id: "cg5", src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=480&h=480&fit=crop", alt: "Tech tips", tag: "Tech" },
-  { id: "cg6", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=480&h=480&fit=crop", alt: "Startup carousel", tag: "Startup" },
-  { id: "cg7", src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=480&h=480&fit=crop", alt: "Design carousel", tag: "Design" },
-  { id: "cg8", src: "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=480&h=480&fit=crop", alt: "Lifestyle carousel", tag: "Lifestyle" },
-  { id: "cg9", src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=480&h=480&fit=crop", alt: "Minimalist tips", tag: "Minimal" },
-  { id: "cg10", src: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=480&h=480&fit=crop", alt: "Creator tips", tag: "Creator" },
-  { id: "cg11", src: "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?w=480&h=480&fit=crop", alt: "Growth tips", tag: "Growth" },
-  { id: "cg12", src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=480&h=480&fit=crop", alt: "Fitness carousel", tag: "Fitness" },
+  { id: "cg1", src: YT("4Zl3bTxA7vs"), alt: "Hormozi $100M Offers", tag: "Business" },
+  { id: "cg2", src: YT("Mvh6D3JHuLc"), alt: "Ali Abdaal Time Mgmt", tag: "Productivity" },
+  { id: "cg3", src: YT("fIKC1vH9a3s"), alt: "Jeff Nippard Fat Loss", tag: "Fitness" },
+  { id: "cg4", src: YT("TUt1JlP48nE"), alt: "Graham Selling", tag: "Finance" },
+  { id: "cg5", src: YT("bHIhgxav9LY"), alt: "Veritasium Electricity", tag: "Education" },
+  { id: "cg6", src: YT("XkP4_n3bmQ8"), alt: "Iman $10k/mo", tag: "Business" },
+  { id: "cg7", src: YT("rRYXVCswkKk"), alt: "Davella Own Nothing", tag: "Minimal" },
+  { id: "cg8", src: YT("ulCdoCfw-bY"), alt: "Kurzgesagt Black Hole", tag: "Education" },
+  { id: "cg9", src: YT("a5FYcTYKI1U"), alt: "Coffeezilla FTX", tag: "Documentary" },
+  { id: "cg10", src: YT("aZ03JUi9-SA"), alt: "MKBHD iPhone 15", tag: "Tech" },
+  { id: "cg11", src: YT("1PsZZycn9z8"), alt: "JRE Elon", tag: "Podcast" },
+  { id: "cg12", src: YT("FMlVTSGlC8g"), alt: "Cbum Olympia", tag: "Fitness" },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
@@ -657,6 +660,8 @@ export default function CarouselGeneratorPage() {
             aspectRatio="1:1"
             opacity={0.45}
             speed="medium"
+            fetchRemote
+            tool="carousel"
           />
         </div>
         <div className="relative text-center px-4">

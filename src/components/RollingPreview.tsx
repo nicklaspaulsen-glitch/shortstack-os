@@ -9,9 +9,16 @@
  * Pure CSS animation (no JS scroll handler) so it stays smooth.
  * Respects prefers-reduced-motion automatically via the media query in
  * the inline <style jsx> block.
+ *
+ * When `fetchRemote` is true and `tool` is provided, the component queries
+ * the public `preview_content` table for real curated viral assets and falls
+ * back to the caller-supplied static list when the DB returns fewer than 6
+ * rows (or errors out). Thumbnails are served directly from ytimg.com —
+ * no rehosting.
  */
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export interface RollingPreviewItem {
   id: string;
@@ -51,6 +58,27 @@ export interface RollingPreviewProps {
    * copy-focused tools (copywriter, script-lab) where there's no image.
    */
   variant?: "image" | "text";
+  /**
+   * When true, the component queries the `preview_content` table for real
+   * curated viral assets scoped to `tool`. Falls back to `items` when the
+   * DB returns <6 rows or errors. Defaults to false.
+   */
+  fetchRemote?: boolean;
+  /**
+   * Which tool bucket to query — one of "thumbnails", "video_editor",
+   * "ai_video", "carousel", "ads". Required when `fetchRemote` is true.
+   */
+  tool?: string;
+  /**
+   * Optional — filter remote rows by kind ("thumbnail" | "video_clip").
+   * Defaults to "thumbnail" because marquees render best with stills.
+   */
+  remoteKind?: "thumbnail" | "video_clip";
+  /**
+   * Minimum remote rows required before replacing the static fallback.
+   * Defaults to 6 to guarantee a filled row at any speed/aspect ratio.
+   */
+  minRemoteRows?: number;
 }
 
 // Curated gradient palette used as a fallback for text-card tiles when the
@@ -94,13 +122,57 @@ export default function RollingPreview({
   opacity = 0.3,
   className = "",
   variant = "image",
+  fetchRemote = false,
+  tool,
+  remoteKind = "thumbnail",
+  minRemoteRows = 6,
 }: RollingPreviewProps) {
+  // Remote items (from preview_content) — only used when fetchRemote=true.
+  const [remoteItems, setRemoteItems] = useState<RollingPreviewItem[] | null>(null);
+
+  useEffect(() => {
+    if (!fetchRemote || !tool) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from("preview_content")
+          .select("id, media_url, title, tag, kind")
+          .eq("tool", tool)
+          .eq("kind", remoteKind)
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true })
+          .limit(60);
+        if (cancelled || error || !data) return;
+        type Row = { id: string; media_url: string | null; title: string | null; tag: string | null };
+        const rows = data as Row[];
+        const mapped: RollingPreviewItem[] = rows
+          .filter((r): r is Row & { media_url: string } => typeof r.media_url === "string" && r.media_url.length > 0)
+          .map((r) => ({
+            id: String(r.id),
+            src: r.media_url,
+            alt: r.title || "preview",
+            tag: r.tag || undefined,
+          }));
+        if (mapped.length >= minRemoteRows) setRemoteItems(mapped);
+      } catch {
+        /* swallow — fall back to static items */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchRemote, tool, remoteKind, minRemoteRows]);
+
+  const sourceItems = remoteItems && remoteItems.length >= minRemoteRows ? remoteItems : items;
+
   // Duplicate the list to make the CSS loop seamless. Memoised so React
   // doesn't rebuild the DOM each render.
   const looped = useMemo(() => {
-    if (!items || items.length === 0) return [];
-    return [...items, ...items];
-  }, [items]);
+    if (!sourceItems || sourceItems.length === 0) return [];
+    return [...sourceItems, ...sourceItems];
+  }, [sourceItems]);
 
   if (!looped.length) return null;
 
