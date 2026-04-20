@@ -23,10 +23,11 @@ const MAX_TEXT_LENGTH = 2000;
 const DEFAULT_ELEVENLABS_VOICE_ID = "XB0fDUnXU5powFXDhCwa";
 // Nova — warm, soft-spoken, slightly British female. Closest OpenAI voice to Charlotte.
 const DEFAULT_OPENAI_VOICE = "nova";
-// Default voice pace. 1.0 = standard; 1.15 = snappy human tempo (recommended);
-// 1.25 = conversational-fast; cap at 1.3 (OpenAI limit is 4.0, natural cap ~1.3).
-// Override via body.speed or env TTS_DEFAULT_SPEED.
-const DEFAULT_VOICE_SPEED = Number(process.env.TTS_DEFAULT_SPEED) || 1.25;
+// Default voice pace. 1.0 = OpenAI natural pace (what we landed on after
+// the user said 1.25 was "way too fast"). Snap back up via env
+// TTS_DEFAULT_SPEED or body.speed per-request if anyone wants it snappier.
+// Clamped to [0.7, 1.3] on both paths.
+const DEFAULT_VOICE_SPEED = Number(process.env.TTS_DEFAULT_SPEED) || 1.0;
 
 // ───────────────────────────────────────────────────────────────────
 // Provider: Runpod XTTS v2 (self-hosted, free)
