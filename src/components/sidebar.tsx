@@ -165,6 +165,7 @@ const navItems: NavItem[] = [
   { label: "Projects", href: "/dashboard/projects", icon: <Kanban size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Invoices", href: "/dashboard/invoices", icon: <Receipt size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "Billing", href: "/dashboard/billing", icon: <CreditCard size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Usage & Tokens", href: "/dashboard/usage", icon: <Zap size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Phone & Email", href: "/dashboard/phone-email", icon: <Phone size={16} />, roles: ["admin"], sub: "Business" },

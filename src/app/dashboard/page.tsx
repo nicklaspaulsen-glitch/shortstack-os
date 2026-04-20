@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import UsageNudgeBanner from "@/components/billing/usage-nudge-banner";
 import RecentGenerations from "@/components/dashboard/recent-generations";
 import JumpBackIn from "@/components/dashboard/jump-back-in";
 import TodaysPriority from "@/components/dashboard/todays-priority";
@@ -184,6 +185,9 @@ export default function DashboardPage() {
 
   return (
     <div className="fade-in space-y-5 max-w-[1400px] mx-auto">
+      {/* ─── Upgrade nudge (Starter only, >70% usage) ──────────── */}
+      <UsageNudgeBanner planTier={profile?.plan_tier} />
+
       {/* ─── Hero + Command Bar ─────────────────────────────────── */}
       <PageHero
         icon={<Sparkles size={22} />}

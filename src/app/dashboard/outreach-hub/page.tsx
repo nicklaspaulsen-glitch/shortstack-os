@@ -22,6 +22,7 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { useQuotaWall } from "@/components/billing/quota-wall";
 
 /* ── Types ── */
 type MainTab = "campaigns" | "sequences" | "templates" | "analytics" | "settings";
@@ -71,12 +72,14 @@ interface OutreachSequence {
 /* ── AI Enhance Button Component ── */
 function AIEnhanceButton({ value, onResult, context }: { value: string; onResult: (v: string) => void; context: string }) {
   const [loading, setLoading] = useState(false);
+  const { fetchWithWall } = useQuotaWall();
 
   async function enhance() {
     if (!value.trim()) { toast.error("Type something first"); return; }
     setLoading(true);
     try {
-      const res = await fetch("/api/copywriter/generate", {
+      // fetchWithWall surfaces QuotaWall modal on 402 token-limit responses.
+      const res = await fetchWithWall("/api/copywriter/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -88,6 +91,11 @@ function AIEnhanceButton({ value, onResult, context }: { value: string; onResult
           wordCount: Math.max(value.split(" ").length * 2, 50),
         }),
       });
+      if (res.status === 402) {
+        toast.error("You hit your token limit — click to upgrade", { duration: 5000 });
+        setLoading(false);
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         const improved = data.content || data.text || "";

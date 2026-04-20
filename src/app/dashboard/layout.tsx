@@ -7,6 +7,7 @@ import ClientSwitcher from "@/components/client-switcher";
 import Notifications from "@/components/notifications";
 import ErrorBoundary from "@/components/ui/error-boundary";
 import ManagedClientBanner from "@/components/managed-client-banner";
+import { QuotaWallProvider } from "@/components/billing/quota-wall";
 import { useAuth } from "@/lib/auth-context";
 import { getPlanConfig } from "@/lib/plan-config";
 import { useRouter, usePathname } from "next/navigation";
@@ -152,7 +153,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <>
+    <QuotaWallProvider>
       <div className="flex min-h-screen bg-background">
 
         {/* Desktop sidebar */}
@@ -226,7 +227,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Admin-only floating token-usage ring (self-gates on role) */}
         <TokenUsageWidget />
       </div>
-    </>
+    </QuotaWallProvider>
   );
 }
 

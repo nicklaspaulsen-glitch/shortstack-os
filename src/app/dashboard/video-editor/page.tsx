@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
@@ -45,7 +46,12 @@ import {
   buildProjectFromStoryboard,
   DEFAULT_TRACKS as DEFAULT_TIMELINE_TRACKS,
   type TimelineProject,
+  type TimelineClip,
 } from "@/components/video-editor/timeline";
+import {
+  PresetPickerPanel,
+  type PresetDropPayload,
+} from "@/components/video-editor/preset-picker-panel";
 
 // Curated vertical-style ad/video thumbnails for the rolling preview.
 // 9:16 crops keep the marquee feeling native to Reels/TikTok/Shorts.
@@ -1226,6 +1232,7 @@ interface VideoResult {
 export default function VideoEditorPage() {
   const { profile } = useAuth();
   const { clientId: managedClientId } = useManagedClient();
+  const { fetchWithWall } = useQuotaWall();
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<VideoResult | null>(null);
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
@@ -1244,6 +1251,110 @@ export default function VideoEditorPage() {
   const [timelinePlayhead, setTimelinePlayhead] = useState(0);
   const [timelinePlaying, setTimelinePlaying] = useState(false);
   const lastSeededResultRef = useRef<string | null>(null);
+
+  // ─── Preset Picker sidebar state ─────────────────────────────────────
+  const [showPresetPicker, setShowPresetPicker] = useState(false);
+
+  // ─── AI timeline suggestions (ghost markers with accept/reject) ──────
+  const [timelineSuggestions, setTimelineSuggestions] = useState<
+    Array<{
+      id: string;
+      timestamp_sec: number;
+      type: string;
+      payload: Record<string, unknown>;
+      confidence: number;
+      reasoning: string;
+      scene_index?: number;
+    }>
+  >([]);
+
+  // Drop a preset onto the timeline at the current playhead. Each preset
+  // kind maps to a different default track (SFX → A2, music → A1, etc.).
+  const handlePresetDrop = (drop: PresetDropPayload) => {
+    setTimelineProject((p) => {
+      const at = Math.max(0, timelinePlayhead);
+      let newClip: TimelineClip | null = null;
+      if (drop.kind === "sfx") {
+        const dur = Number(drop.payload.duration_ms) || 500;
+        newClip = {
+          id: `sfx-${drop.id}-${Date.now()}`,
+          trackId: "a2",
+          start: at,
+          duration: dur,
+          label: String(drop.payload.name || drop.id).slice(0, 32),
+          color: "#F59E0B",
+        };
+      } else if (drop.kind === "music") {
+        const durSec = Number(drop.payload.duration_sec) || 0;
+        const durMs = durSec > 0 ? durSec * 1000 : Math.max(p.duration, 10000);
+        newClip = {
+          id: `mus-${drop.id}-${Date.now()}`,
+          trackId: "a1",
+          start: at,
+          duration: durMs,
+          label: String(drop.payload.title || drop.id).slice(0, 32),
+          color: "#22C55E",
+        };
+      } else if (drop.kind === "vfx") {
+        newClip = {
+          id: `vfx-${drop.id}-${Date.now()}`,
+          trackId: "fx",
+          start: at,
+          duration: 800,
+          label: String(drop.payload.name || drop.id).slice(0, 32),
+          color: "#EF4444",
+          isMarker: true,
+        };
+      } else if (drop.kind === "transition") {
+        const dur = Number(drop.payload.duration_ms) || 400;
+        newClip = {
+          id: `tr-${drop.id}-${Date.now()}`,
+          trackId: "fx",
+          start: at,
+          duration: dur,
+          label: String(drop.payload.name || drop.id).slice(0, 32),
+          color: "#EF4444",
+          isMarker: true,
+        };
+      } else if (drop.kind === "broll") {
+        const durSec = Number(drop.payload.duration_sec) || 6;
+        newClip = {
+          id: `br-${drop.id}-${Date.now()}`,
+          trackId: "v2",
+          start: at,
+          duration: durSec * 1000,
+          label: String(drop.payload.label || drop.id).slice(0, 32),
+          color: "#60A5FA",
+          thumbnailUrl:
+            typeof drop.payload.thumbnail_url === "string"
+              ? (drop.payload.thumbnail_url as string)
+              : undefined,
+        };
+      } else if (drop.kind === "font") {
+        // Fonts aren't clips — apply to the selected caption layer instead.
+        // Store the font family into CSS variable so caption rendering can
+        // pick it up. Silent no-op on the timeline.
+        try {
+          document.documentElement.style.setProperty(
+            "--caption-font-family",
+            `"${String(drop.payload.family || "Inter")}"`,
+          );
+        } catch {
+          /* ignore */
+        }
+        toast.success(`Font applied: ${drop.payload.family}`);
+        return p;
+      }
+      if (!newClip) return p;
+      const nextDuration = Math.max(p.duration, newClip.start + newClip.duration);
+      toast.success(`Added ${drop.kind} to timeline`);
+      return {
+        ...p,
+        duration: nextDuration,
+        clips: [...p.clips, newClip],
+      };
+    });
+  };
 
   useEffect(() => {
     if (!result) return;
@@ -2531,7 +2642,9 @@ export default function VideoEditorPage() {
     if (!aiGenTopic.trim()) { toast.error("Enter a topic first"); return; }
     setAiGenLoading(true);
     try {
-      const res = await fetch("/api/video/generate-project", {
+      // fetchWithWall surfaces the QuotaWall on 402 (plan limit) — saves
+      // the user from a mysterious "Request failed (402)" toast.
+      const res = await fetchWithWall("/api/video/generate-project", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -2542,6 +2655,11 @@ export default function VideoEditorPage() {
           niche: undefined,
         }),
       });
+      if (res.status === 402) {
+        toast.error("You hit your AI token limit — upgrade to continue", { duration: 6000 });
+        setAiGenLoading(false);
+        return;
+      }
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err?.error || `Request failed (${res.status})`);
@@ -6114,6 +6232,19 @@ export default function VideoEditorPage() {
               <h3 className="section-header flex items-center gap-2">
                 <Film size={12} className="text-gold" /> Timeline
                 <span className="text-[8px] text-muted font-normal">multi-track editor</span>
+                <span className="flex-1" />
+                <button
+                  type="button"
+                  onClick={() => setShowPresetPicker((v) => !v)}
+                  className={`flex items-center gap-1 rounded border px-2 py-0.5 text-[9px] transition ${
+                    showPresetPicker
+                      ? "border-gold/40 bg-gold/10 text-gold"
+                      : "border-border text-muted hover:text-foreground"
+                  }`}
+                  title="Open Preset Picker (Cmd/Ctrl+K)"
+                >
+                  <Wand2 size={9} /> Presets <span className="text-[7px]">⌘K</span>
+                </button>
               </h3>
               <VideoTimeline
                 project={timelineProject}
@@ -6123,6 +6254,108 @@ export default function VideoEditorPage() {
                 playing={timelinePlaying}
                 onPlayPause={() => setTimelinePlaying((v) => !v)}
                 videoRef={timelineVideoRef}
+                onGenerateCaptions={result?.url ? async () => {
+                  const toastId = toast.loading("Generating captions…");
+                  try {
+                    const res = await fetch("/api/video/auto-edit/captions", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ video_url: result.url, style_id: config.caption_style || "clean-sans" }),
+                    });
+                    const j = await res.json();
+                    if (!res.ok || !j.ok) {
+                      toast.error(j.error || "Caption generation failed", { id: toastId });
+                      return;
+                    }
+                    const caps: Array<{ start: number; end: number; text: string }> = j.captions || [];
+                    if (caps.length === 0) {
+                      toast.error("No captions returned", { id: toastId });
+                      return;
+                    }
+                    setTimelineProject((p) => ({
+                      ...p,
+                      clips: [
+                        ...p.clips.filter((c) => c.trackId !== "cap"),
+                        ...caps.map((c, i) => ({
+                          id: `cap-auto-${i}-${Date.now()}`,
+                          trackId: "cap",
+                          start: Math.round(c.start * 1000),
+                          duration: Math.max(300, Math.round((c.end - c.start) * 1000)),
+                          label: c.text.slice(0, 32),
+                          color: "#A855F7",
+                          isMarker: false,
+                        })),
+                      ],
+                    }));
+                    toast.success(`Added ${caps.length} captions`, { id: toastId });
+                  } catch (e) {
+                    toast.error(e instanceof Error ? e.message : "Caption request failed", { id: toastId });
+                  }
+                } : undefined}
+                onSuggestEdits={result?.url ? async () => {
+                  const toastId = toast.loading("Asking AI for edits…");
+                  try {
+                    // Use existing scenes from timeline video clips as a minimal scene list.
+                    const videoClips = timelineProject.clips.filter((c) => c.trackId.startsWith("v") && !c.isMarker);
+                    const scenes = videoClips.length > 0
+                      ? videoClips.map((c, i) => ({
+                          index: i,
+                          start_sec: c.start / 1000,
+                          end_sec: (c.start + c.duration) / 1000,
+                          scene_type: "talking_head" as const,
+                          motion_level: "medium" as const,
+                        }))
+                      : [{
+                          index: 0,
+                          start_sec: 0,
+                          end_sec: Math.max(5, timelineProject.duration / 1000),
+                          scene_type: "talking_head" as const,
+                          motion_level: "medium" as const,
+                        }];
+                    const res = await fetch("/api/video/auto-edit/suggest", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ video_url: result.url, scenes }),
+                    });
+                    const j = await res.json();
+                    if (!res.ok || !j.ok) {
+                      toast.error(j.error || "AI suggestions failed", { id: toastId });
+                      return;
+                    }
+                    setTimelineSuggestions(Array.isArray(j.suggestions) ? j.suggestions : []);
+                    toast.success(`Got ${j.total || 0} suggestion(s)`, { id: toastId });
+                  } catch (e) {
+                    toast.error(e instanceof Error ? e.message : "Suggest request failed", { id: toastId });
+                  }
+                } : undefined}
+                suggestions={timelineSuggestions}
+                onAcceptSuggestion={(sug) => {
+                  // Turn the suggestion into a clip/marker and push to the timeline.
+                  const at = Math.round(sug.timestamp_sec * 1000);
+                  let clip: TimelineClip | null = null;
+                  if (sug.type === "sfx") {
+                    clip = { id: `sug-${sug.id}`, trackId: "a2", start: at, duration: 500, label: `SFX: ${String((sug.payload as Record<string, unknown>).sfx_id || "")}`.slice(0, 32), color: "#F59E0B" };
+                  } else if (sug.type === "transition") {
+                    clip = { id: `sug-${sug.id}`, trackId: "fx", start: at, duration: 400, label: `${String((sug.payload as Record<string, unknown>).transition_id || "")}`.slice(0, 32), color: "#EF4444", isMarker: true };
+                  } else if (sug.type === "color_grade") {
+                    clip = { id: `sug-${sug.id}`, trackId: "fx", start: at, duration: 800, label: `${String((sug.payload as Record<string, unknown>).effect_id || "")}`.slice(0, 32), color: "#EF4444", isMarker: true };
+                  } else if (sug.type === "caption") {
+                    clip = { id: `sug-${sug.id}`, trackId: "cap", start: at, duration: 2000, label: sug.reasoning.slice(0, 32), color: "#A855F7", isMarker: false };
+                  } else if (sug.type === "broll_insert") {
+                    clip = { id: `sug-${sug.id}`, trackId: "v2", start: at, duration: Math.round((Number((sug.payload as Record<string, unknown>).duration_sec) || 3) * 1000), label: `B-roll: ${String((sug.payload as Record<string, unknown>).query || "")}`.slice(0, 32), color: "#60A5FA" };
+                  } else {
+                    clip = { id: `sug-${sug.id}`, trackId: "fx", start: at, duration: 400, label: sug.reasoning.slice(0, 32), color: "#EF4444", isMarker: true };
+                  }
+                  if (clip) {
+                    const nextClip = clip;
+                    setTimelineProject((p) => ({ ...p, clips: [...p.clips, nextClip], duration: Math.max(p.duration, nextClip.start + nextClip.duration) }));
+                  }
+                  setTimelineSuggestions((s) => s.filter((x) => x.id !== sug.id));
+                  toast.success("Suggestion accepted");
+                }}
+                onRejectSuggestion={(sug) => {
+                  setTimelineSuggestions((s) => s.filter((x) => x.id !== sug.id));
+                }}
               />
             </div>
 
@@ -6795,6 +7028,24 @@ export default function VideoEditorPage() {
             </div>
           )
         }
+      />
+
+      {/* Preset Picker sidebar — right-side drawer; Cmd/Ctrl+K toggles. */}
+      <PresetPickerPanel
+        open={showPresetPicker}
+        onOpenChange={setShowPresetPicker}
+        onDropOnTimeline={handlePresetDrop}
+        onApplyFont={(font) => {
+          try {
+            document.documentElement.style.setProperty(
+              "--caption-font-family",
+              `"${font.family}"`,
+            );
+          } catch {
+            /* ignore */
+          }
+          toast.success(`Font applied: ${font.family}`);
+        }}
       />
     </div>
   );

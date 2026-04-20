@@ -21,6 +21,7 @@ import { trackGeneration } from "@/lib/track-generation";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus } from "@/components/creation-walkthrough";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
@@ -1445,6 +1446,7 @@ interface HistoryItem {
 export default function ThumbnailGeneratorPage() {
   useAuth();
   const supabase = useMemo(() => createClient(), []);
+  const { fetchWithWall } = useQuotaWall();
 
   // Rolling preview items — try DB first, fall back to static list.
   const [previewItems, setPreviewItems] = useState<RollingPreviewItem[]>(THUMBNAIL_PREVIEW_FALLBACK);
@@ -3288,7 +3290,8 @@ export default function ThumbnailGeneratorPage() {
     );
     try {
       // ── 1) Kick off FLUX background generation via existing endpoint ──
-      const res = await fetch("/api/thumbnail/generate", {
+      // fetchWithWall auto-surfaces the QuotaWall modal on 402 (plan limit).
+      const res = await fetchWithWall("/api/thumbnail/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -3305,6 +3308,11 @@ export default function ThumbnailGeneratorPage() {
           reference_images: referenceImages,
         }),
       });
+      if (res.status === 402) {
+        toast.error("You hit your token limit — upgrade to continue", { id: toastId, duration: 6000 });
+        setGenerating(false);
+        return;
+      }
       const data = await res.json();
       if (!data.success) {
         toast.error(data.error || "Generation failed", { id: toastId });
