@@ -1486,6 +1486,46 @@ export default function ThumbnailGeneratorPage() {
   const [aiBgGenerating, setAiBgGenerating] = useState(false);
   const [aiBgResult, setAiBgResult] = useState<string | null>(null);
 
+  // ── POWER FEATURES (Face Swap / Recreate URL / Title+Thumb / 4-Variant + CTR) ──
+  const [faceSwapOpen, setFaceSwapOpen] = useState(false);
+  const [faceSwapFileUrl, setFaceSwapFileUrl] = useState<string | null>(null);
+  const [faceSwapUploading, setFaceSwapUploading] = useState(false);
+  const [faceSwapScene, setFaceSwapScene] = useState("");
+  const [faceSwapRunning, setFaceSwapRunning] = useState(false);
+  const [faceSwapResultUrl, setFaceSwapResultUrl] = useState<string | null>(null);
+
+  const [recreateUrl, setRecreateUrl] = useState("");
+  const [recreateStyleMod, setRecreateStyleMod] = useState("");
+  const [recreateRunning, setRecreateRunning] = useState(false);
+  const [recreateResultUrl, setRecreateResultUrl] = useState<string | null>(null);
+  const [recreateReferenceUrl, setRecreateReferenceUrl] = useState<string | null>(null);
+
+  const [titleThumbTopic, setTitleThumbTopic] = useState("");
+  const [titleThumbRunning, setTitleThumbRunning] = useState(false);
+  const [titleThumbResult, setTitleThumbResult] = useState<{
+    title: string;
+    thumbnail_text_overlay: string;
+    prompt: string;
+    imageUrl: string | null;
+  } | null>(null);
+
+  const [fourVariantMode, setFourVariantMode] = useState(false);
+  interface VariantResult {
+    thumbnail_id: string;
+    job_id: string;
+    variant_label: string | null;
+    seed: number | null;
+    imageUrl: string | null;
+    status: "processing" | "completed" | "failed";
+    ctrScore?: number;
+    ctrReason?: string;
+    isTop?: boolean;
+  }
+  const [variantResults, setVariantResults] = useState<VariantResult[]>([]);
+  const [variantsRunning, setVariantsRunning] = useState(false);
+  const [variantsRanking, setVariantsRanking] = useState(false);
+  const [keptVariantId, setKeptVariantId] = useState<string | null>(null);
+
   // Step-by-step creation walkthrough state
   const [walkthroughEnabled, setWalkthroughEnabled] = useState(true);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
@@ -2264,6 +2304,246 @@ export default function ThumbnailGeneratorPage() {
     setSelectedFaces((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
     );
+  }
+
+  // ── POWER FEATURE HANDLERS ─────────────────────────────────────────
+
+  // Poll a generic job_id until COMPLETED/FAILED. Returns imageUrl on success.
+  async function pollJobGeneric(jobId: string, timeoutMs = 120000): Promise<string | null> {
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      await new Promise((r) => setTimeout(r, 1500));
+      try {
+        const res = await fetch(`/api/thumbnail/status?job_id=${jobId}`);
+        const data = await res.json();
+        if (data.status === "COMPLETED") return data.imageUrl || null;
+        if (data.status === "FAILED") return null;
+      } catch {
+        // keep polling
+      }
+    }
+    return null;
+  }
+
+  // 1. Face Swap
+  async function uploadFaceImage(file: File) {
+    setFaceSwapUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      const res = await fetch("/api/thumbnail/face-upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        toast.error(data.error || "Upload failed");
+        return;
+      }
+      setFaceSwapFileUrl(data.url);
+      toast.success("Face uploaded");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setFaceSwapUploading(false);
+    }
+  }
+
+  async function runFaceSwap() {
+    if (!faceSwapFileUrl) {
+      toast.error("Upload a face image first");
+      return;
+    }
+    if (!faceSwapScene.trim()) {
+      toast.error("Describe the scene you want your face in");
+      return;
+    }
+    setFaceSwapRunning(true);
+    setFaceSwapResultUrl(null);
+    try {
+      const res = await fetch("/api/thumbnail/face-swap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ face_image_url: faceSwapFileUrl, prompt: faceSwapScene }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        toast.error(data.error || "Face swap failed");
+        return;
+      }
+      toast.success("Face swap queued — generating...");
+      const imageUrl = await pollJobGeneric(data.job_id);
+      if (imageUrl) {
+        setFaceSwapResultUrl(imageUrl);
+        toast.success("Face swap done");
+      } else {
+        toast.error("Face swap timed out");
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Face swap failed");
+    } finally {
+      setFaceSwapRunning(false);
+    }
+  }
+
+  // 2. Recreate from URL
+  async function runRecreate() {
+    if (!recreateUrl.trim()) {
+      toast.error("Paste a YouTube URL");
+      return;
+    }
+    setRecreateRunning(true);
+    setRecreateResultUrl(null);
+    setRecreateReferenceUrl(null);
+    try {
+      const res = await fetch("/api/thumbnail/recreate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: recreateUrl, style_modifier: recreateStyleMod || undefined }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        toast.error(data.error || "Recreate failed");
+        return;
+      }
+      setRecreateReferenceUrl(data.reference_url || null);
+      toast.success("Remix queued...");
+      const imageUrl = await pollJobGeneric(data.job_id);
+      if (imageUrl) {
+        setRecreateResultUrl(imageUrl);
+        toast.success("Remixed thumbnail ready");
+      } else {
+        toast.error("Remix timed out");
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Recreate failed");
+    } finally {
+      setRecreateRunning(false);
+    }
+  }
+
+  // 3. Title + Thumbnail
+  async function runTitleWithThumb() {
+    if (!titleThumbTopic.trim()) {
+      toast.error("Enter a topic");
+      return;
+    }
+    setTitleThumbRunning(true);
+    setTitleThumbResult(null);
+    try {
+      const res = await fetch("/api/thumbnail/with-title", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ topic: titleThumbTopic }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        toast.error(data.error || "Title+Thumbnail failed");
+        return;
+      }
+      setTitleThumbResult({
+        title: data.title,
+        thumbnail_text_overlay: data.thumbnail_text_overlay,
+        prompt: data.prompt,
+        imageUrl: null,
+      });
+      toast.success("Got your title — generating thumbnail...");
+      const imageUrl = await pollJobGeneric(data.job_id);
+      setTitleThumbResult((prev) => (prev ? { ...prev, imageUrl } : prev));
+      if (imageUrl) toast.success("Title + thumbnail ready");
+      else toast.error("Thumbnail timed out");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Title+Thumbnail failed");
+    } finally {
+      setTitleThumbRunning(false);
+    }
+  }
+
+  // 4. 4-Variant + 5. CTR ranking
+  async function runFourVariants() {
+    if (!prompt.trim()) {
+      toast.error("Enter a prompt first");
+      return;
+    }
+    setVariantsRunning(true);
+    setVariantResults([]);
+    setKeptVariantId(null);
+    try {
+      const res = await fetch("/api/thumbnail/generate-variants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt, style, aspect: "16:9", variants: 4 }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        toast.error(data.error || "Variant generation failed");
+        return;
+      }
+      const initial: VariantResult[] = (data.variants as Array<{ thumbnail_id: string; job_id: string; variant_label: string | null; seed: number | null }>).map((v) => ({
+        thumbnail_id: v.thumbnail_id,
+        job_id: v.job_id,
+        variant_label: v.variant_label,
+        seed: v.seed,
+        imageUrl: null,
+        status: "processing",
+      }));
+      setVariantResults(initial);
+      toast.success(`Generating ${initial.length} variants...`);
+
+      // Poll all in parallel
+      const settled = await Promise.all(
+        initial.map(async (v) => {
+          const imageUrl = await pollJobGeneric(v.job_id);
+          return { ...v, imageUrl, status: (imageUrl ? "completed" : "failed") as "completed" | "failed" };
+        }),
+      );
+      setVariantResults(settled);
+
+      const readyForRanking = settled.filter((v) => v.imageUrl);
+      if (readyForRanking.length < 2) {
+        toast.error("Not enough variants completed to rank");
+        return;
+      }
+
+      // 5. CTR rank — silent fail per spec.
+      setVariantsRanking(true);
+      try {
+        const rankRes = await fetch("/api/thumbnail/generate-variants/rank", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            context: prompt,
+            variants: readyForRanking.map((v) => ({
+              thumbnail_id: v.thumbnail_id,
+              image_url: v.imageUrl as string,
+            })),
+          }),
+        });
+        const rankData = await rankRes.json();
+        if (rankRes.ok && rankData.ok && Array.isArray(rankData.rankings)) {
+          setVariantResults((prev) => {
+            const byId = new Map<string, { score: number; reason: string; isTop: boolean }>();
+            for (const r of rankData.rankings as Array<{ thumbnail_id: string; score: number; reason: string }>) {
+              byId.set(r.thumbnail_id, {
+                score: r.score,
+                reason: r.reason,
+                isTop: r.thumbnail_id === rankData.top_thumbnail_id,
+              });
+            }
+            return prev.map((v) => {
+              const info = byId.get(v.thumbnail_id);
+              return info ? { ...v, ctrScore: info.score, ctrReason: info.reason, isTop: info.isTop } : v;
+            });
+          });
+          toast.success("CTR ranking ready");
+        }
+      } catch {
+        // silent — CTR is optional
+      } finally {
+        setVariantsRanking(false);
+      }
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Variant flow failed");
+    } finally {
+      setVariantsRunning(false);
+    }
   }
 
   // Poll a single job until completion
@@ -3480,6 +3760,146 @@ export default function ThumbnailGeneratorPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
           {/* LEFT PANEL — Controls */}
           <div className="lg:col-span-2 space-y-4">
+            {/* Power Tools — Face Swap, Recreate URL, Title+Thumb, 4-Variant */}
+            <div className="card border border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">
+              <h2 className="section-header flex items-center gap-2">
+                <Sparkles size={13} className="text-gold" /> Power Tools <span className="text-[9px] text-gold/70 font-normal">(beats Pikzels)</span>
+              </h2>
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                <button
+                  onClick={() => setFaceSwapOpen(true)}
+                  className="flex flex-col items-center gap-1 p-2.5 rounded-lg border border-border hover:border-gold/40 hover:bg-white/5 transition-all text-left"
+                >
+                  <Fingerprint size={16} className="text-gold" />
+                  <span className="text-[11px] font-semibold">Face Swap</span>
+                  <span className="text-[9px] text-muted">Put your face in</span>
+                </button>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById("ss-recreate-box");
+                    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }}
+                  className="flex flex-col items-center gap-1 p-2.5 rounded-lg border border-border hover:border-gold/40 hover:bg-white/5 transition-all text-left"
+                >
+                  <Shuffle size={16} className="text-gold" />
+                  <span className="text-[11px] font-semibold">Recreate URL</span>
+                  <span className="text-[9px] text-muted">YouTube remix</span>
+                </button>
+                <button
+                  onClick={() => {
+                    const el = document.getElementById("ss-title-thumb-box");
+                    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+                  }}
+                  className="flex flex-col items-center gap-1 p-2.5 rounded-lg border border-border hover:border-gold/40 hover:bg-white/5 transition-all text-left"
+                >
+                  <Type size={16} className="text-gold" />
+                  <span className="text-[11px] font-semibold">Title + Thumb</span>
+                  <span className="text-[9px] text-muted">One topic, both</span>
+                </button>
+                <button
+                  onClick={() => setFourVariantMode((v) => !v)}
+                  className={`flex flex-col items-center gap-1 p-2.5 rounded-lg border transition-all text-left ${fourVariantMode ? "border-gold bg-gold/10" : "border-border hover:border-gold/40 hover:bg-white/5"}`}
+                >
+                  <Grid size={16} className={fourVariantMode ? "text-gold" : "text-gold"} />
+                  <span className="text-[11px] font-semibold">4 Variants {fourVariantMode && "(on)"}</span>
+                  <span className="text-[9px] text-muted">CTR-ranked</span>
+                </button>
+              </div>
+
+              {/* Recreate from URL — inline */}
+              <div id="ss-recreate-box" className="mt-3 space-y-2 pt-3 border-t border-border/50">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted flex items-center gap-1">
+                  <Shuffle size={11} /> Recreate from URL
+                </label>
+                <input
+                  type="url"
+                  value={recreateUrl}
+                  onChange={(e) => setRecreateUrl(e.target.value)}
+                  placeholder="https://youtube.com/watch?v=..."
+                  className="w-full px-2 py-1.5 rounded bg-white/5 border border-border text-[11px] focus:border-gold/50 focus:outline-none"
+                />
+                <input
+                  type="text"
+                  value={recreateStyleMod}
+                  onChange={(e) => setRecreateStyleMod(e.target.value)}
+                  placeholder="optional style twist (e.g. cinematic, neon)"
+                  className="w-full px-2 py-1.5 rounded bg-white/5 border border-border text-[11px] focus:border-gold/50 focus:outline-none"
+                />
+                <button
+                  onClick={runRecreate}
+                  disabled={recreateRunning || !recreateUrl.trim()}
+                  className="w-full btn-secondary flex items-center justify-center gap-1.5 py-1.5 text-[11px] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {recreateRunning ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />}
+                  {recreateRunning ? "Remixing..." : "Remix Thumbnail"}
+                </button>
+                {(recreateReferenceUrl || recreateResultUrl) && (
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {recreateReferenceUrl && (
+                      <div className="space-y-1">
+                        <div className="text-[9px] text-muted uppercase">Original</div>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={recreateReferenceUrl} alt="original" className="w-full rounded border border-border" />
+                      </div>
+                    )}
+                    {recreateResultUrl && (
+                      <div className="space-y-1">
+                        <div className="text-[9px] text-gold uppercase">Remixed</div>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={recreateResultUrl} alt="remixed" className="w-full rounded border border-gold/50" />
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Title + Thumbnail — inline */}
+              <div id="ss-title-thumb-box" className="mt-3 space-y-2 pt-3 border-t border-border/50">
+                <label className="text-[10px] font-semibold uppercase tracking-wider text-muted flex items-center gap-1">
+                  <Type size={11} /> Title + Thumbnail
+                </label>
+                <input
+                  type="text"
+                  value={titleThumbTopic}
+                  onChange={(e) => setTitleThumbTopic(e.target.value)}
+                  placeholder="Topic (e.g. 'How I made $1M in 30 days')"
+                  className="w-full px-2 py-1.5 rounded bg-white/5 border border-border text-[11px] focus:border-gold/50 focus:outline-none"
+                />
+                <button
+                  onClick={runTitleWithThumb}
+                  disabled={titleThumbRunning || !titleThumbTopic.trim()}
+                  className="w-full btn-secondary flex items-center justify-center gap-1.5 py-1.5 text-[11px] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {titleThumbRunning ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                  {titleThumbRunning ? "Working..." : "Generate Title + Thumbnail"}
+                </button>
+                {titleThumbResult && (
+                  <div className="mt-2 space-y-2 p-2 rounded-lg bg-white/5 border border-border">
+                    <div>
+                      <div className="text-[9px] text-muted uppercase">Title</div>
+                      <div className="text-[12px] font-semibold">{titleThumbResult.title}</div>
+                    </div>
+                    {titleThumbResult.thumbnail_text_overlay && (
+                      <div>
+                        <div className="text-[9px] text-muted uppercase">Overlay Hook</div>
+                        <div className="text-[11px]">{titleThumbResult.thumbnail_text_overlay}</div>
+                      </div>
+                    )}
+                    {titleThumbResult.imageUrl ? (
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={titleThumbResult.imageUrl} alt="generated" className="w-full rounded border border-border" />
+                      </>
+                    ) : (
+                      <div className="flex items-center gap-1.5 text-[10px] text-muted">
+                        <Loader2 size={11} className="animate-spin" /> Generating thumbnail...
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Reference Images */}
             <div className="card">
               <h2 className="section-header flex items-center gap-2">
@@ -4442,6 +4862,173 @@ export default function ThumbnailGeneratorPage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── 4-Variant Mode Panel (active on Generate tab when toggled) ─── */}
+      {activeFeatureTab === "generate" && fourVariantMode && (
+        <div className="card border border-gold/30">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="section-header flex items-center gap-2">
+              <Grid size={13} className="text-gold" /> 4-Variant Generation <span className="text-[9px] text-gold/70 font-normal">(with CTR ranking)</span>
+            </h2>
+            <button
+              onClick={runFourVariants}
+              disabled={variantsRunning || !prompt.trim()}
+              className="btn-primary flex items-center gap-1.5 text-[11px] py-1.5 px-3 disabled:opacity-50"
+            >
+              {variantsRunning ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
+              {variantsRunning ? "Generating..." : "Generate 4 Variants"}
+            </button>
+          </div>
+          {variantResults.length > 0 && (
+            <>
+              {variantsRanking && (
+                <div className="flex items-center gap-1.5 text-[10px] text-muted mb-2">
+                  <Loader2 size={11} className="animate-spin" /> Ranking by predicted CTR...
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                {variantResults.map((v) => (
+                  <div
+                    key={v.thumbnail_id}
+                    onClick={() => v.imageUrl && setKeptVariantId(v.thumbnail_id)}
+                    className={`relative rounded-lg overflow-hidden border cursor-pointer transition-all ${
+                      keptVariantId === v.thumbnail_id
+                        ? "border-gold shadow-lg shadow-gold/20"
+                        : v.isTop
+                          ? "border-gold/60"
+                          : "border-border hover:border-white/30"
+                    }`}
+                  >
+                    {v.isTop && (
+                      <div className="absolute top-1.5 left-1.5 z-10 bg-gold text-black text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                        <span>🏆</span> TOP
+                      </div>
+                    )}
+                    {typeof v.ctrScore === "number" && (
+                      <div className="absolute top-1.5 right-1.5 z-10 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                        <TrendingUp size={9} /> {v.ctrScore}
+                      </div>
+                    )}
+                    {v.imageUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={v.imageUrl} alt={v.variant_label || ""} className="w-full aspect-video object-cover" />
+                    ) : v.status === "failed" ? (
+                      <div className="w-full aspect-video flex items-center justify-center bg-white/5 text-[10px] text-danger">
+                        <XCircle size={14} className="mr-1" /> Failed
+                      </div>
+                    ) : (
+                      <div className="w-full aspect-video flex items-center justify-center bg-white/5 text-[10px] text-muted">
+                        <Loader2 size={14} className="animate-spin mr-1" /> {v.variant_label}
+                      </div>
+                    )}
+                    <div className="p-2 bg-black/30 text-[10px] flex items-center justify-between">
+                      <span className="uppercase tracking-wider text-muted">{v.variant_label}</span>
+                      {keptVariantId === v.thumbnail_id && (
+                        <span className="text-gold font-semibold flex items-center gap-1">
+                          <CheckCircle2 size={11} /> kept
+                        </span>
+                      )}
+                    </div>
+                    {v.ctrReason && (
+                      <div className="px-2 pb-2 text-[9px] text-muted leading-tight">{v.ctrReason}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* ─── Face Swap Modal ─── */}
+      {faceSwapOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => !faceSwapRunning && setFaceSwapOpen(false)}
+        >
+          <div
+            className="bg-card border border-border rounded-xl max-w-lg w-full p-5 space-y-3 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-semibold flex items-center gap-2">
+                <Fingerprint size={16} className="text-gold" /> Face Swap
+              </h3>
+              <button
+                onClick={() => !faceSwapRunning && setFaceSwapOpen(false)}
+                className="text-muted hover:text-white"
+                aria-label="Close"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <p className="text-[11px] text-muted">
+              Upload a selfie, describe the scene, and we&apos;ll render you into a brand-new thumbnail using FLUX InstantID.
+            </p>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted">1. Selfie</label>
+              {faceSwapFileUrl ? (
+                <div className="flex items-center gap-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={faceSwapFileUrl} alt="face" className="w-16 h-16 rounded-lg object-cover border border-border" />
+                  <button
+                    onClick={() => setFaceSwapFileUrl(null)}
+                    className="text-[10px] text-muted hover:text-danger"
+                  >
+                    Replace
+                  </button>
+                </div>
+              ) : (
+                <label className="flex items-center justify-center gap-2 border-2 border-dashed border-border/50 hover:border-gold/30 rounded-xl py-5 cursor-pointer transition-colors">
+                  {faceSwapUploading ? <Loader2 size={14} className="animate-spin text-muted" /> : <Upload size={14} className="text-muted" />}
+                  <span className="text-[11px] text-muted">
+                    {faceSwapUploading ? "Uploading..." : "Click to upload (JPG/PNG/WebP, 10MB max)"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) uploadFaceImage(f);
+                    }}
+                  />
+                </label>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-semibold uppercase tracking-wider text-muted">2. Scene description</label>
+              <textarea
+                value={faceSwapScene}
+                onChange={(e) => setFaceSwapScene(e.target.value)}
+                placeholder="e.g. cinematic thumbnail of me standing next to a Lamborghini with cash flying, MrBeast style"
+                className="w-full h-20 px-2.5 py-2 rounded bg-white/5 border border-border text-[11px] focus:border-gold/50 focus:outline-none resize-none"
+              />
+            </div>
+
+            <button
+              onClick={runFaceSwap}
+              disabled={faceSwapRunning || !faceSwapFileUrl || !faceSwapScene.trim()}
+              className="w-full btn-primary flex items-center justify-center gap-2 py-2 text-[12px] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {faceSwapRunning ? <Loader2 size={14} className="animate-spin" /> : <Wand2 size={14} />}
+              {faceSwapRunning ? "Generating..." : "Run Face Swap"}
+            </button>
+
+            {faceSwapResultUrl && (
+              <div className="pt-2 border-t border-border/50">
+                <div className="text-[10px] text-gold uppercase mb-1 flex items-center gap-1">
+                  <CheckCircle2 size={11} /> Result
+                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={faceSwapResultUrl} alt="result" className="w-full rounded-lg border border-gold/50" />
+              </div>
+            )}
           </div>
         </div>
       )}
