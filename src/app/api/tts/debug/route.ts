@@ -91,14 +91,34 @@ export async function GET() {
   if (elevenKey) {
     results.elevenlabs.configured = true;
     try {
-      // Cheaper probe: hit /v1/user instead of doing a real synthesis.
-      // Any 2xx means the key works. 401/402 means bad key or out of quota.
-      const res = await fetch("https://api.elevenlabs.io/v1/user", {
-        headers: { "xi-api-key": elevenKey },
-        signal: AbortSignal.timeout(10000),
-      });
+      // Real synthesis probe — NOT /v1/user. The user's key can be valid
+      // (/v1/user returns 200) while their TTS quota is exhausted (the
+      // actual TTS endpoint returns 402). Only the real endpoint tells
+      // the truth, so do a 1-char synthesis and discard the audio.
+      const voiceId =
+        process.env.ELEVENLABS_VOICE_ID || "XB0fDUnXU5powFXDhCwa";
+      const res = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`,
+        {
+          method: "POST",
+          headers: {
+            "xi-api-key": elevenKey,
+            "Content-Type": "application/json",
+            Accept: "audio/mpeg",
+          },
+          body: JSON.stringify({
+            text: probeText,
+            model_id: "eleven_turbo_v2_5",
+            voice_settings: { stability: 0.7, similarity_boost: 0.8 },
+          }),
+          signal: AbortSignal.timeout(15000),
+        },
+      );
       results.elevenlabs.reachable = res.ok;
-      if (!res.ok) {
+      if (res.ok) {
+        const buf = await res.arrayBuffer();
+        results.elevenlabs.bytes = buf.byteLength;
+      } else {
         const body = await res.text().catch(() => "");
         results.elevenlabs.reason = `http_${res.status}: ${body.slice(0, 160)}`;
       }
