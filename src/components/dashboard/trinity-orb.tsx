@@ -19,7 +19,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Mic, MicOff, Send, Sparkles, Loader, CheckCircle, XCircle, Volume2, VolumeX } from "lucide-react";
+import { Mic, MicOff, Send, Sparkles, Loader, CheckCircle, XCircle, Volume2, VolumeX, Square } from "lucide-react";
 
 // Web Speech API types — browsers expose it unprefixed or as webkitSpeechRecognition.
 // We declare the bits we use so TS is happy without pulling in @types/dom-speech-recognition.
@@ -335,22 +335,34 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
              style={{ background: "radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%)" }} />
       </div>
 
-      {/* ─── Mute / unmute Trinity's voice (TTS) ────────────────── */}
+      {/* ─── Stop-speaking + mute controls for Trinity's voice ──── */}
       {ttsSupported && (
-        <button
-          type="button"
-          onClick={toggleMute}
-          title={muted ? "Unmute Trinity's voice" : "Mute Trinity's voice"}
-          className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
-            muted
-              ? "bg-surface-light text-muted hover:text-gold"
-              : speaking
-              ? "bg-gold/15 text-gold animate-pulse"
-              : "bg-surface-light text-gold hover:bg-gold/10"
-          }`}
-        >
-          {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-        </button>
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
+          {speaking && !muted && (
+            <button
+              type="button"
+              onClick={stopAllAudio}
+              title="Stop speaking"
+              className="w-8 h-8 rounded-xl flex items-center justify-center bg-danger/15 text-danger hover:bg-danger/25 transition-all"
+            >
+              <Square size={12} fill="currentColor" />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={toggleMute}
+            title={muted ? "Unmute Trinity's voice" : "Mute Trinity's voice"}
+            className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
+              muted
+                ? "bg-surface-light text-muted hover:text-gold"
+                : speaking
+                ? "bg-gold/15 text-gold animate-pulse"
+                : "bg-surface-light text-gold hover:bg-gold/10"
+            }`}
+          >
+            {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+          </button>
+        </div>
       )}
 
       {/* ─── Header: orb + tagline ─────────────────────────────── */}

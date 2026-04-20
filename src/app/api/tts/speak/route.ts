@@ -14,8 +14,10 @@ export const runtime = "nodejs";
 export const maxDuration = 30;
 
 const MAX_TEXT_LENGTH = 2000;
-// Rachel — one of the ElevenLabs stock voices, natural warm female.
-const DEFAULT_VOICE_ID = "21m00Tcm4TlvDq8ikWAM";
+// Charlotte — calm, composed, British-accented female. Closest match to
+// a "Jarvis-but-female" vibe out of ElevenLabs' stock voices.
+// Override per-deploy via ELEVENLABS_VOICE_ID.
+const DEFAULT_VOICE_ID = "XB0fDUnXU5powFXDhCwa";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -71,10 +73,13 @@ export async function POST(request: NextRequest) {
           // turbo v2_5 is fast + cheap + sounds good; flash_v2_5 is even faster
           // but slightly lower quality.
           model_id: "eleven_turbo_v2_5",
+          // Tuned for a calm, composed "digital assistant" delivery —
+          // higher stability for consistent prosody, lower style for neutral
+          // affect, speaker-boost on for clarity.
           voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.75,
-            style: 0.2,
+            stability: 0.7,
+            similarity_boost: 0.8,
+            style: 0.0,
             use_speaker_boost: true,
           },
         }),
