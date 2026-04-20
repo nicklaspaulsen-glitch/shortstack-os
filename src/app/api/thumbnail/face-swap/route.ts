@@ -10,15 +10,29 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 //                                                     — generate a new thumbnail
 //                                                       with the user's face
 //
-// Uses the RunPod FLUX endpoint with an InstantID-style ComfyUI workflow. If
-// the required InstantID nodes aren't in the FLUX worker, the endpoint returns
-// a clear error telling the operator to deploy a face-swap-capable worker.
+// Provider order:
+//   1. Replicate (preferred: `cdingram/face-swap` for target-swap,
+//                 `zsxkib/instant-id` for prompt-based generation) — reliable,
+//                 pre-hosted, no InstantID node setup required
+//   2. Runpod FLUX with InstantID ComfyUI workflow — requires the face-swap
+//                                                    worker; returns 501 if the
+//                                                    required nodes are missing
+//   3. 501 — no face-swap provider configured
 //
 // Writes a `generated_images` row with metadata.source = "face_swap" so the
 // UI can filter these out.
 // ──────────────────────────────────────────────────────────────────────────
 
 export const maxDuration = 60;
+
+// Replicate model version hashes. Update these occasionally; `Prefer: wait`
+// tells Replicate to hold the HTTP connection open for up to 60s.
+// cdingram/face-swap is an InsightFace/Roop single-shot face-swap model.
+// zsxkib/instant-id is an InstantID port (prompt + face → styled image).
+const REPLICATE_FACESWAP_MODEL = "cdingram/face-swap";
+const REPLICATE_FACESWAP_VERSION = "d1d6ea8c8be89d664a07a457526f7128109dee7030fdac424788d762c71ed111";
+const REPLICATE_INSTANTID_MODEL = "zsxkib/instant-id";
+const REPLICATE_INSTANTID_VERSION = "491ddf5be6b827f8931f088ef10c6d015f6d99685e6454e6f04c8ac298979686";
 
 interface FluxInstantIdNode {
   inputs: Record<string, unknown>;
@@ -125,6 +139,125 @@ function buildInstantIdWorkflow(opts: {
   };
 }
 
+// ─── Replicate ────────────────────────────────────────────────────────────
+type ReplicateOutcome =
+  | { ok: true; completed: true; imageUrl: string; model: string }
+  | { ok: true; completed: false; predictionId: string; model: string }
+  | { ok: false; reason: string };
+
+async function callReplicate(body: Record<string, unknown>): Promise<Response | null> {
+  const token = process.env.REPLICATE_API_TOKEN;
+  if (!token) return null;
+  return fetch("https://api.replicate.com/v1/predictions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      Prefer: "wait", // hold up to 60s for a sync result
+    },
+    body: JSON.stringify(body),
+  });
+}
+
+function firstImageUrl(output: unknown): string | null {
+  // Replicate model outputs can be a string URL, an array of URLs, or an
+  // object keyed by name. Grab the first URL we can find.
+  if (typeof output === "string") return output;
+  if (Array.isArray(output) && typeof output[0] === "string") return output[0];
+  if (output && typeof output === "object") {
+    const first = Object.values(output as Record<string, unknown>).find(
+      (v): v is string => typeof v === "string",
+    );
+    return first ?? null;
+  }
+  return null;
+}
+
+async function synthesizeViaReplicateFaceSwap(
+  targetImageUrl: string,
+  faceImageUrl: string,
+): Promise<ReplicateOutcome> {
+  const res = await callReplicate({
+    version: REPLICATE_FACESWAP_VERSION,
+    input: {
+      // cdingram/face-swap convention: input_image = target, swap_image = face.
+      input_image: targetImageUrl,
+      swap_image: faceImageUrl,
+    },
+  });
+  if (!res) return { ok: false, reason: "not_configured" };
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    console.error("[face-swap/replicate]", res.status, errText.slice(0, 300));
+    return { ok: false, reason: `http_${res.status}` };
+  }
+  const prediction = (await res.json()) as {
+    id?: string;
+    status?: string;
+    output?: unknown;
+    error?: string;
+  };
+  if (prediction.status === "succeeded") {
+    const url = firstImageUrl(prediction.output);
+    if (!url) return { ok: false, reason: "no_image_in_output" };
+    return { ok: true, completed: true, imageUrl: url, model: REPLICATE_FACESWAP_MODEL };
+  }
+  if (prediction.status === "failed" || prediction.error) {
+    return { ok: false, reason: prediction.error || "replicate_failed" };
+  }
+  if (prediction.id) {
+    return { ok: true, completed: false, predictionId: prediction.id, model: REPLICATE_FACESWAP_MODEL };
+  }
+  return { ok: false, reason: "no_prediction_id" };
+}
+
+async function synthesizeViaReplicateInstantId(opts: {
+  prompt: string;
+  faceImageUrl: string;
+  width: number;
+  height: number;
+  negativePrompt: string;
+}): Promise<ReplicateOutcome> {
+  const res = await callReplicate({
+    version: REPLICATE_INSTANTID_VERSION,
+    input: {
+      image: opts.faceImageUrl,
+      prompt: opts.prompt,
+      negative_prompt: opts.negativePrompt,
+      width: opts.width,
+      height: opts.height,
+      num_inference_steps: 30,
+      guidance_scale: 5,
+      ip_adapter_scale: 0.8,
+      controlnet_conditioning_scale: 0.8,
+    },
+  });
+  if (!res) return { ok: false, reason: "not_configured" };
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    console.error("[face-swap/replicate-instantid]", res.status, errText.slice(0, 300));
+    return { ok: false, reason: `http_${res.status}` };
+  }
+  const prediction = (await res.json()) as {
+    id?: string;
+    status?: string;
+    output?: unknown;
+    error?: string;
+  };
+  if (prediction.status === "succeeded") {
+    const url = firstImageUrl(prediction.output);
+    if (!url) return { ok: false, reason: "no_image_in_output" };
+    return { ok: true, completed: true, imageUrl: url, model: REPLICATE_INSTANTID_MODEL };
+  }
+  if (prediction.status === "failed" || prediction.error) {
+    return { ok: false, reason: prediction.error || "replicate_failed" };
+  }
+  if (prediction.id) {
+    return { ok: true, completed: false, predictionId: prediction.id, model: REPLICATE_INSTANTID_MODEL };
+  }
+  return { ok: false, reason: "no_prediction_id" };
+}
+
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const {
@@ -196,12 +329,15 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Resolve the prompt: from thumbnail_id OR direct body.
+  // Resolve target image + prompt. If a thumbnail_id is given, look up the
+  // existing row (image_url + prompt). Prefer swap-onto-target (cheaper + more
+  // predictable) when we have a target image. Otherwise generate from prompt.
   let prompt = rawPrompt;
-  if (thumbnailId && !prompt) {
+  let targetImageUrl: string | null = null;
+  if (thumbnailId) {
     const { data: existing } = await db
       .from("generated_images")
-      .select("prompt, profile_id")
+      .select("prompt, profile_id, image_url")
       .eq("id", thumbnailId)
       .maybeSingle();
     if (!existing) {
@@ -210,21 +346,14 @@ export async function POST(request: NextRequest) {
     if ((existing as { profile_id: string }).profile_id !== ownerId) {
       return NextResponse.json({ ok: false, error: "Thumbnail access denied" }, { status: 403 });
     }
-    prompt = (existing as { prompt: string | null }).prompt || "";
-  }
-  if (!prompt) {
-    return NextResponse.json(
-      { ok: false, error: "Provide either { thumbnail_id } of an existing generation or a { prompt }" },
-      { status: 400 },
-    );
+    prompt = prompt || (existing as { prompt: string | null }).prompt || "";
+    targetImageUrl = (existing as { image_url: string | null }).image_url || null;
   }
 
-  const fluxUrl = process.env.RUNPOD_FLUX_URL;
-  const runpodKey = process.env.RUNPOD_API_KEY;
-  if (!fluxUrl || !runpodKey) {
+  if (!prompt && !targetImageUrl) {
     return NextResponse.json(
-      { ok: false, error: "RUNPOD_FLUX_URL / RUNPOD_API_KEY not configured" },
-      { status: 503 },
+      { ok: false, error: "Provide either { thumbnail_id } (of a rendered thumbnail) or a { prompt }" },
+      { status: 400 },
     );
   }
 
@@ -242,111 +371,207 @@ export async function POST(request: NextRequest) {
     "duplicate, mutated hands, poorly drawn face, bad anatomy, different person, face swap artifacts, " +
     "uncanny valley, plastic skin, dead eyes, asymmetric face";
 
-  const seed = Math.floor(Math.random() * 2147483647);
-  const workflow = buildInstantIdWorkflow({
-    prompt,
-    faceImageUrl,
-    width: genWidth,
-    height: genHeight,
-    seed,
-    negativePrompt,
-  });
+  const replicateToken = process.env.REPLICATE_API_TOKEN;
+  const fluxUrl = process.env.RUNPOD_FLUX_URL;
+  const runpodKey = process.env.RUNPOD_API_KEY;
 
-  let jobId: string | null = null;
-  let faceswapUnsupported = false;
-  let runpodErrorMessage: string | null = null;
+  // ── Provider 1: Replicate ────────────────────────────────────────────
+  if (replicateToken) {
+    const outcome = targetImageUrl
+      ? await synthesizeViaReplicateFaceSwap(targetImageUrl, faceImageUrl)
+      : await synthesizeViaReplicateInstantId({
+          prompt,
+          faceImageUrl,
+          width: genWidth,
+          height: genHeight,
+          negativePrompt,
+        });
 
-  try {
-    const res = await fetch(`${fluxUrl}/run`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${runpodKey}`,
-      },
-      body: JSON.stringify({ input: { workflow } }),
-    });
-    const job = (await res.json()) as Record<string, unknown>;
+    if (outcome.ok) {
+      const status = outcome.completed ? "completed" : "processing";
+      const jobIdValue = outcome.completed ? null : outcome.predictionId;
+      const imageUrlValue = outcome.completed ? outcome.imageUrl : null;
 
-    // Detect "missing InstantID nodes" — the worker responds with an error
-    // mentioning the unknown class_type. Anything hinting at InstantID/Apply/Load
-    // failure means the worker isn't face-swap capable.
-    const errText =
-      typeof job?.error === "string"
-        ? job.error
-        : typeof (job?.message as string) === "string"
-          ? (job.message as string)
-          : "";
-    if (
-      errText &&
-      /InstantID|LoadImageFromUrl|ApplyInstantID|InstantIDModelLoader|unknown class_type/i.test(errText)
-    ) {
-      faceswapUnsupported = true;
-      runpodErrorMessage = errText;
-    } else if (typeof job?.id === "string") {
-      jobId = job.id as string;
-    } else if (errText) {
-      runpodErrorMessage = errText;
+      const { data: row, error: insertErr } = await db
+        .from("generated_images")
+        .insert({
+          profile_id: ownerId,
+          client_id: clientIdInput || null,
+          prompt,
+          model: outcome.model,
+          width: dims.width,
+          height: dims.height,
+          status,
+          job_id: jobIdValue,
+          image_url: imageUrlValue,
+          metadata: {
+            source: "face_swap",
+            provider: "replicate",
+            face_image_url: faceImageUrl,
+            parent_thumbnail_id: thumbnailId || null,
+            target_image_url: targetImageUrl,
+            style,
+            aspect,
+          },
+        })
+        .select("id")
+        .single();
+
+      if (insertErr || !row) {
+        return NextResponse.json(
+          { ok: false, error: insertErr?.message || "Failed to persist thumbnail row" },
+          { status: 500 },
+        );
+      }
+
+      return NextResponse.json({
+        ok: true,
+        thumbnail_id: (row as { id: string }).id,
+        status,
+        image_url: imageUrlValue,
+        job_id: jobIdValue,
+        poll_url: outcome.completed
+          ? null
+          : `/api/thumbnail/status?job_id=${outcome.predictionId}&provider=replicate`,
+        provider: "replicate",
+        model: outcome.model,
+      });
     }
-  } catch (err) {
-    runpodErrorMessage = err instanceof Error ? err.message : "RunPod request failed";
+
+    console.warn(`[face-swap] Replicate failed (${outcome.reason}), trying Runpod`);
   }
 
-  if (faceswapUnsupported) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error:
-          "FaceSwap requires InstantID nodes — deploy the faceswap worker. " +
-          "Add `comfyui-instantid` and `comfyui-custom-nodes` to the RUNPOD_FLUX_URL worker image, " +
-          "and place `instantid-ip-adapter.bin` + `instantid-controlnet.safetensors` into the models dir.",
-        worker_error: runpodErrorMessage,
-      },
-      { status: 501 },
-    );
-  }
-
-  if (!jobId) {
-    return NextResponse.json(
-      { ok: false, error: runpodErrorMessage || "RunPod did not return a job id" },
-      { status: 502 },
-    );
-  }
-
-  // Persist the generated_images row.
-  const { data: row, error: insertErr } = await db
-    .from("generated_images")
-    .insert({
-      profile_id: ownerId,
-      client_id: clientIdInput || null,
+  // ── Provider 2: Runpod FLUX InstantID ────────────────────────────────
+  if (fluxUrl && runpodKey) {
+    const seed = Math.floor(Math.random() * 2147483647);
+    const workflow = buildInstantIdWorkflow({
       prompt,
-      model: "flux1-dev-fp8-instantid",
-      width: dims.width,
-      height: dims.height,
+      faceImageUrl,
+      width: genWidth,
+      height: genHeight,
+      seed,
+      negativePrompt,
+    });
+
+    let jobId: string | null = null;
+    let faceswapUnsupported = false;
+    let runpodErrorMessage: string | null = null;
+
+    try {
+      const res = await fetch(`${fluxUrl}/run`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${runpodKey}`,
+        },
+        body: JSON.stringify({ input: { workflow } }),
+      });
+      const job = (await res.json()) as Record<string, unknown>;
+
+      const errText =
+        typeof job?.error === "string"
+          ? job.error
+          : typeof (job?.message as string) === "string"
+            ? (job.message as string)
+            : "";
+      if (
+        errText &&
+        /InstantID|LoadImageFromUrl|ApplyInstantID|InstantIDModelLoader|unknown class_type/i.test(errText)
+      ) {
+        faceswapUnsupported = true;
+        runpodErrorMessage = errText;
+      } else if (typeof job?.id === "string") {
+        jobId = job.id as string;
+      } else if (errText) {
+        runpodErrorMessage = errText;
+      }
+    } catch (err) {
+      runpodErrorMessage = err instanceof Error ? err.message : "RunPod request failed";
+    }
+
+    if (faceswapUnsupported) {
+      // Only return the "deploy the worker" error if we didn't already have
+      // Replicate configured. If Replicate was set but failed, surface the
+      // Replicate failure instead — that's more actionable.
+      if (!replicateToken) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error:
+              "FaceSwap requires InstantID nodes — deploy the faceswap worker or set REPLICATE_API_TOKEN. " +
+              "Replicate is the simpler path: grab a token from replicate.com/account and add it to Vercel.",
+            worker_error: runpodErrorMessage,
+          },
+          { status: 501 },
+        );
+      }
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "FaceSwap unavailable — Replicate returned an error and the Runpod worker lacks InstantID nodes.",
+          worker_error: runpodErrorMessage,
+        },
+        { status: 502 },
+      );
+    }
+
+    if (!jobId) {
+      return NextResponse.json(
+        { ok: false, error: runpodErrorMessage || "RunPod did not return a job id" },
+        { status: 502 },
+      );
+    }
+
+    const { data: row, error: insertErr } = await db
+      .from("generated_images")
+      .insert({
+        profile_id: ownerId,
+        client_id: clientIdInput || null,
+        prompt,
+        model: "flux1-dev-fp8-instantid",
+        width: dims.width,
+        height: dims.height,
+        status: "processing",
+        job_id: jobId,
+        metadata: {
+          source: "face_swap",
+          provider: "runpod",
+          face_image_url: faceImageUrl,
+          parent_thumbnail_id: thumbnailId || null,
+          target_image_url: targetImageUrl,
+          style,
+          aspect,
+        },
+      })
+      .select("id")
+      .single();
+
+    if (insertErr || !row) {
+      return NextResponse.json(
+        { ok: false, error: insertErr?.message || "Failed to persist thumbnail row" },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({
+      ok: true,
+      thumbnail_id: (row as { id: string }).id,
       status: "processing",
       job_id: jobId,
-      metadata: {
-        source: "face_swap",
-        face_image_url: faceImageUrl,
-        parent_thumbnail_id: thumbnailId || null,
-        style,
-        aspect,
-      },
-    })
-    .select("id")
-    .single();
-
-  if (insertErr || !row) {
-    return NextResponse.json(
-      { ok: false, error: insertErr?.message || "Failed to persist thumbnail row" },
-      { status: 500 },
-    );
+      poll_url: `/api/thumbnail/status?job_id=${jobId}`,
+      provider: "runpod",
+      model: "flux1-dev-fp8-instantid",
+    });
   }
 
-  return NextResponse.json({
-    ok: true,
-    thumbnail_id: (row as { id: string }).id,
-    status: "processing",
-    job_id: jobId,
-    poll_url: `/api/thumbnail/status?job_id=${jobId}`,
-  });
+  // ── No provider configured ──────────────────────────────────────────
+  return NextResponse.json(
+    {
+      ok: false,
+      error:
+        "FaceSwap unavailable — set REPLICATE_API_TOKEN (easy path) or configure RUNPOD_FLUX_URL with an InstantID-capable worker.",
+    },
+    { status: 501 },
+  );
 }

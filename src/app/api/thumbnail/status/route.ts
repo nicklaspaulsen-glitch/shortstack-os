@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// GET — Poll RunPod job status (supports both FLUX/ComfyUI and SDXL response formats)
+// GET — Poll thumbnail job status.
+// Supports:
+//   ?job_id=X                       (RunPod FLUX/SDXL, default)
+//   ?job_id=X&provider=replicate    (Replicate prediction)
 export async function GET(request: NextRequest) {
   const jobId = request.nextUrl.searchParams.get("job_id");
+  const provider = request.nextUrl.searchParams.get("provider");
 
   if (!jobId) {
     return NextResponse.json(
@@ -11,7 +15,61 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Try FLUX endpoint first, then SDXL
+  // ── Replicate path ────────────────────────────────────────────────
+  if (provider === "replicate") {
+    const token = process.env.REPLICATE_API_TOKEN;
+    if (!token) {
+      return NextResponse.json({ error: "REPLICATE_API_TOKEN not set" }, { status: 503 });
+    }
+    try {
+      const res = await fetch(`https://api.replicate.com/v1/predictions/${jobId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        return NextResponse.json({ error: `Replicate returned ${res.status}` }, { status: res.status });
+      }
+      const data = (await res.json()) as {
+        id: string;
+        status: string;
+        output?: unknown;
+        error?: string;
+      };
+
+      let imageUrl: string | null = null;
+      if (data.status === "succeeded" && data.output) {
+        if (typeof data.output === "string") imageUrl = data.output;
+        else if (Array.isArray(data.output) && typeof data.output[0] === "string") {
+          imageUrl = data.output[0];
+        } else if (typeof data.output === "object") {
+          const first = Object.values(data.output as Record<string, unknown>).find(
+            (v): v is string => typeof v === "string",
+          );
+          imageUrl = first ?? null;
+        }
+      }
+
+      // Normalize to the same shape as the RunPod path.
+      const normalized =
+        data.status === "succeeded"
+          ? "COMPLETED"
+          : data.status === "failed" || data.status === "canceled"
+            ? "FAILED"
+            : "IN_PROGRESS";
+
+      return NextResponse.json({
+        job_id: jobId,
+        status: normalized,
+        imageUrl,
+        executionTime: null,
+        error: data.error || null,
+      });
+    } catch (err) {
+      console.error("Replicate status check error:", err);
+      return NextResponse.json({ error: "Failed to check Replicate status" }, { status: 500 });
+    }
+  }
+
+  // ── RunPod path (FLUX first, SDXL fallback) ──────────────────────
   const fluxUrl = process.env.RUNPOD_FLUX_URL;
   const sdxlUrl = process.env.RUNPOD_SDXL_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;
