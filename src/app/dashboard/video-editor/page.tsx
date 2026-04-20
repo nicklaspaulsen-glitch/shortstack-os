@@ -26,6 +26,7 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
+import { ADS_PRESET } from "@/lib/video-presets/ads";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
 import {
   CAPTION_STYLES_LIBRARY,
@@ -1517,6 +1518,7 @@ export default function VideoEditorPage() {
   // Collapsible panel open-state (each panel can be folded)
   const [openPanels, setOpenPanels] = useState<Record<string, boolean>>({
     youtuberStyles: true,
+    adsPack: true,
     captions: true,
     textAnimation: false,
     motion: false,
@@ -1595,6 +1597,46 @@ export default function VideoEditorPage() {
   const [refAnalysis, setRefAnalysis] = useState<Record<string, unknown> | null>(null);
   const [refAnalysisOpen, setRefAnalysisOpen] = useState(false);
 
+  // ── Ads pack state (script-to-ad, kinetic captions, b-roll, music) ──
+  const [adsPresetActive, setAdsPresetActive] = useState(false);
+  const [adsGenOpen, setAdsGenOpen] = useState(false);
+  const [adsGenLoading, setAdsGenLoading] = useState(false);
+  const [adsGenDescription, setAdsGenDescription] = useState("");
+  const [adsGenDuration, setAdsGenDuration] = useState(30);
+  const [adsResult, setAdsResult] = useState<{
+    video_id: string;
+    script: { hook: string; benefits: string[]; cta: string; full_script: string; suggested_mood: string };
+    broll: Array<{ time_range: [number, number]; description: string; search_terms: string[]; priority: string; pexels_video_url?: string }>;
+    music: { id: string; title: string; mood: string; bpm: number; duration_sec: number; url: string };
+    edit_url: string;
+  } | null>(null);
+
+  const [brollSuggestLoading, setBrollSuggestLoading] = useState(false);
+  const [brollSuggestions, setBrollSuggestions] = useState<
+    Array<{ time_range: [number, number]; description: string; search_terms: string[]; priority: string; pexels_video_url?: string }>
+  >([]);
+
+  const [musicMatchLoading, setMusicMatchLoading] = useState(false);
+  const [musicMatch, setMusicMatch] = useState<{
+    id: string;
+    title: string;
+    mood: string;
+    bpm: number;
+    duration_sec: number;
+    url: string;
+    source?: string;
+  } | null>(null);
+
+  const [captionsLoading, setCaptionsLoading] = useState(false);
+  const [captionsResult, setCaptionsResult] = useState<{
+    caption_id: string;
+    style: "kinetic" | "classic" | "highlight";
+    words: Array<{ text: string; start_ms: number; end_ms: number; emphasis?: boolean }>;
+    duration_ms: number;
+  } | null>(null);
+  const [captionsStyle, setCaptionsStyle] = useState<"kinetic" | "classic" | "highlight">("kinetic");
+  const [captionsVideoUrl, setCaptionsVideoUrl] = useState("");
+
   const togglePanel = (id: string) =>
     setOpenPanels(prev => ({ ...prev, [id]: !prev[id] }));
 
@@ -1631,6 +1673,167 @@ export default function VideoEditorPage() {
     }));
     setSelectedYouTuberPreset("");
     toast.success("Reset to custom (defaults)");
+  }
+
+  function applyAdsPreset() {
+    const patch = ADS_PRESET.editor_settings_patch;
+    setEditorSettings(prev => ({
+      ...prev,
+      captions: { ...prev.captions, ...patch.captions } as typeof prev.captions,
+      textAnimation: { ...prev.textAnimation, ...patch.textAnimation } as typeof prev.textAnimation,
+      motion: { ...prev.motion, ...patch.motion } as typeof prev.motion,
+      transitions: { ...prev.transitions, ...patch.transitions } as typeof prev.transitions,
+      color: { ...prev.color, ...patch.color } as typeof prev.color,
+      audio: { ...prev.audio, ...patch.audio } as typeof prev.audio,
+      smart: { ...prev.smart, ...patch.smart } as typeof prev.smart,
+      aspect: { ...prev.aspect, ...patch.aspect } as typeof prev.aspect,
+    }));
+    setConfig(prev => ({
+      ...prev,
+      aspect_ratio: ADS_PRESET.aspect_ratio,
+      duration: ADS_PRESET.default_duration,
+      type: "ad",
+      style: "bold-gradient",
+      music_mood: ADS_PRESET.music_mood_filters[0],
+    }));
+    setSelectedYouTuberPreset("");
+    setAdsPresetActive(true);
+    toast.success(`Applied "${ADS_PRESET.name}" preset — bold type, hard cuts, kinetic captions`);
+  }
+
+  async function runScriptToAd() {
+    const desc = adsGenDescription.trim();
+    if (!desc) { toast.error("Paste a product description first"); return; }
+    setAdsGenLoading(true);
+    setAdsResult(null);
+    try {
+      const res = await fetch("/api/video/script-to-ad", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_description: desc,
+          duration: adsGenDuration,
+          client_id: selectedClient || managedClientId || null,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || `HTTP ${res.status}`);
+      }
+      setAdsResult(data);
+      // Populate editor with generated script
+      setConfig(prev => ({
+        ...prev,
+        title: `Ad: ${desc.slice(0, 60)}`,
+        script: data.script?.full_script || "",
+        type: "ad",
+        duration: adsGenDuration,
+        aspect_ratio: ADS_PRESET.aspect_ratio,
+        music_mood: data.script?.suggested_mood || "upbeat",
+        cta_text: data.script?.cta || prev.cta_text,
+      }));
+      applyAdsPreset();
+      setBrollSuggestions(Array.isArray(data.broll) ? data.broll : []);
+      if (data.music) setMusicMatch(data.music);
+      toast.success("Ad generated — script, B-roll, and music loaded");
+      setAdsGenOpen(false);
+    } catch (err) {
+      console.error("[script-to-ad] failed", err);
+      toast.error(err instanceof Error ? err.message : "Failed to generate ad");
+    } finally {
+      setAdsGenLoading(false);
+    }
+  }
+
+  async function suggestBrollForScript() {
+    const script = (config.script || "").trim();
+    if (!script) { toast.error("Write a script first"); return; }
+    setBrollSuggestLoading(true);
+    try {
+      const res = await fetch("/api/video/b-roll", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          script,
+          count: 5,
+          client_id: selectedClient || managedClientId || null,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || `HTTP ${res.status}`);
+      }
+      setBrollSuggestions(Array.isArray(data.suggestions) ? data.suggestions : []);
+      toast.success(`${data.suggestions?.length || 0} B-roll moments suggested`);
+    } catch (err) {
+      console.error("[b-roll] failed", err);
+      toast.error(err instanceof Error ? err.message : "Failed to suggest B-roll");
+    } finally {
+      setBrollSuggestLoading(false);
+    }
+  }
+
+  async function matchMusicForScript() {
+    setMusicMatchLoading(true);
+    try {
+      const res = await fetch("/api/video/music-match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          script_mood: config.music_mood || "upbeat",
+          duration: config.duration || 30,
+          preset: adsPresetActive ? "ads" : undefined,
+          script: (config.script || "").slice(0, 1000),
+          client_id: selectedClient || managedClientId || null,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || `HTTP ${res.status}`);
+      }
+      if (data.track) setMusicMatch({ ...data.track, source: data.source });
+      toast.success(`Matched music: ${data.track?.title || "track"}`);
+    } catch (err) {
+      console.error("[music-match] failed", err);
+      toast.error(err instanceof Error ? err.message : "Failed to match music");
+    } finally {
+      setMusicMatchLoading(false);
+    }
+  }
+
+  async function generateKineticCaptions(videoUrlOverride?: string) {
+    const url = (videoUrlOverride || captionsVideoUrl || result?.url || "").trim();
+    if (!url) { toast.error("Need a video URL (render the video first, or paste one)"); return; }
+    setCaptionsLoading(true);
+    setCaptionsResult(null);
+    try {
+      const res = await fetch("/api/captions/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          video_url: url,
+          style: captionsStyle,
+          language: "en",
+          client_id: selectedClient || managedClientId || null,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.ok) {
+        throw new Error(data?.error || `HTTP ${res.status}`);
+      }
+      setCaptionsResult({
+        caption_id: data.caption_id,
+        style: data.style,
+        words: data.words,
+        duration_ms: data.duration_ms,
+      });
+      toast.success(`${data.words?.length || 0} caption words generated (${data.style})`);
+    } catch (err) {
+      console.error("[captions/generate] failed", err);
+      toast.error(err instanceof Error ? err.message : "Failed to generate captions");
+    } finally {
+      setCaptionsLoading(false);
+    }
   }
 
   function applyPlatformExportPreset(presetId: string) {
@@ -2758,6 +2961,14 @@ export default function VideoEditorPage() {
           >
             <Sparkles size={14} /> Generate with AI
           </button>
+          <button
+            onClick={() => setAdsGenOpen(true)}
+            type="button"
+            className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-500/90 to-amber-500/90 text-white hover:from-red-500 hover:to-amber-500 hover-lift flex items-center gap-1.5 border border-red-400/50"
+            title="Paste a product description → get a complete ad video ready to render"
+          >
+            <Megaphone size={14} /> Generate Full Ad from Description
+          </button>
           <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[140px]">
             <option value="">No client</option>
             {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
@@ -3469,6 +3680,36 @@ export default function VideoEditorPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {/* Ads preset — our signature ad template, promoted to the top */}
+                  <div
+                    key="ads"
+                    className={`group relative rounded-lg border overflow-hidden transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-lg ${adsPresetActive ? "border-red-400 ring-2 ring-red-400/40" : "border-red-500/40 hover:border-red-400"}`}
+                    onClick={applyAdsPreset}
+                    title={ADS_PRESET.description}
+                  >
+                    <div className="h-12 w-full bg-gradient-to-br from-red-600 via-black to-amber-500 relative flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/10" />
+                      <span className="text-white font-black tracking-widest text-[10px] relative z-10">ADS</span>
+                      {adsPresetActive && (
+                        <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5 z-10">
+                          <Check size={10} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-2">
+                      <h4 className="text-[10px] font-bold leading-tight flex items-center gap-1">
+                        <Megaphone size={10} className="text-red-500" /> {ADS_PRESET.name}
+                      </h4>
+                      <p className="text-[8px] text-muted mt-0.5 leading-tight line-clamp-2">
+                        Bold display type, hard cuts, kinetic captions — IG Reels / TikTok ads
+                      </p>
+                      <div className="flex flex-wrap gap-0.5 mt-1.5">
+                        <span className="text-[7px] bg-red-500/10 text-red-400 px-1 py-0.5 rounded font-mono">9:16</span>
+                        <span className="text-[7px] bg-red-500/10 text-red-400 px-1 py-0.5 rounded font-mono">Fast-Cut</span>
+                        <span className="text-[7px] bg-red-500/10 text-red-400 px-1 py-0.5 rounded font-mono">Kinetic</span>
+                      </div>
+                    </div>
+                  </div>
                   {YOUTUBER_PRESETS.map(preset => {
                     const active = selectedYouTuberPreset === preset.id;
                     return (
@@ -3531,6 +3772,147 @@ export default function VideoEditorPage() {
                 <p className="mt-3 text-[8px] text-muted italic">
                   Tip: Applying a creator preset overwrites captions, motion, color, audio, transitions, smart flags, and aspect ratio in one click. Use the panels below to fine-tune further.
                 </p>
+              </CollapsiblePanel>
+
+              {/* === Ads Pack Sidebar — B-roll, Music, Kinetic Captions === */}
+              <CollapsiblePanel
+                id="adsPack"
+                icon={<Megaphone size={13} className="text-red-500" />}
+                title="Ads Pack — B-roll, Music, Captions"
+                desc="Script-driven helpers tuned for high-converting ads"
+                open={openPanels.adsPack}
+                onToggle={() => togglePanel("adsPack")}
+                badge={(brollSuggestions.length ? 1 : 0) + (musicMatch ? 1 : 0) + (captionsResult ? 1 : 0)}
+              >
+                <div className="space-y-3">
+                  {/* Top action row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      onClick={suggestBrollForScript}
+                      disabled={brollSuggestLoading}
+                      className="text-[10px] px-2.5 py-2 rounded-lg bg-surface-light hover:bg-red-500/10 border border-border hover:border-red-400 text-foreground hover-lift flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Claude reads the script and returns 3-5 timed B-roll moments"
+                    >
+                      {brollSuggestLoading ? <Loader2 size={12} className="animate-spin" /> : <ImagePlus size={12} className="text-red-400" />}
+                      Suggest B-roll
+                    </button>
+                    <button
+                      type="button"
+                      onClick={matchMusicForScript}
+                      disabled={musicMatchLoading}
+                      className="text-[10px] px-2.5 py-2 rounded-lg bg-surface-light hover:bg-red-500/10 border border-border hover:border-red-400 text-foreground hover-lift flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Claude picks a track from 20 curated royalty-free options"
+                    >
+                      {musicMatchLoading ? <Loader2 size={12} className="animate-spin" /> : <Music size={12} className="text-red-400" />}
+                      Match Music
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => generateKineticCaptions()}
+                      disabled={captionsLoading}
+                      className="text-[10px] px-2.5 py-2 rounded-lg bg-surface-light hover:bg-red-500/10 border border-border hover:border-red-400 text-foreground hover-lift flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Whisper transcribes video → kinetic word-by-word captions"
+                    >
+                      {captionsLoading ? <Loader2 size={12} className="animate-spin" /> : <Captions size={12} className="text-red-400" />}
+                      Generate Captions
+                    </button>
+                  </div>
+
+                  {/* Caption style selector + optional video URL */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Caption Style</label>
+                      <div className="grid grid-cols-3 gap-1">
+                        {(["kinetic", "classic", "highlight"] as const).map(s => (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => setCaptionsStyle(s)}
+                            className={`text-[9px] px-2 py-1.5 rounded border capitalize transition-all ${captionsStyle === s ? "border-red-400 bg-red-500/10 text-red-400" : "border-border text-muted hover:text-foreground"}`}
+                          >{s}</button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[8px] text-muted uppercase mb-1">Video URL (optional — uses render URL if empty)</label>
+                      <input
+                        value={captionsVideoUrl}
+                        onChange={e => setCaptionsVideoUrl(e.target.value)}
+                        placeholder="https://...mp4"
+                        className="input text-[10px] py-1.5 w-full"
+                      />
+                    </div>
+                  </div>
+
+                  {/* B-roll suggestions chip list */}
+                  {brollSuggestions.length > 0 && (
+                    <div>
+                      <h4 className="text-[9px] font-bold uppercase text-muted mb-1">B-roll Moments ({brollSuggestions.length})</h4>
+                      <div className="flex flex-wrap gap-1.5">
+                        {brollSuggestions.map((b, i) => (
+                          <div
+                            key={i}
+                            className={`text-[9px] px-2 py-1 rounded-lg border flex items-center gap-1.5 ${
+                              b.priority === "high" ? "border-red-500/40 bg-red-500/10 text-red-300" :
+                              b.priority === "medium" ? "border-amber-500/40 bg-amber-500/10 text-amber-300" :
+                              "border-border bg-surface-light text-muted"
+                            }`}
+                            title={`${b.description}\nSearch: ${b.search_terms.join(", ")}`}
+                          >
+                            <span className="font-mono">{b.time_range[0]}s-{b.time_range[1]}s</span>
+                            <span className="max-w-[200px] truncate">{b.description}</span>
+                            {b.pexels_video_url && <Check size={9} className="text-emerald-400" />}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Music match card */}
+                  {musicMatch && (
+                    <div className="p-2.5 rounded-lg border border-red-500/30 bg-red-500/[0.05]">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Music size={14} className="text-red-400" />
+                          <div>
+                            <h4 className="text-[10px] font-bold">{musicMatch.title}</h4>
+                            <p className="text-[8px] text-muted">
+                              {musicMatch.mood} • {musicMatch.bpm} BPM • {musicMatch.duration_sec}s
+                            </p>
+                          </div>
+                        </div>
+                        <a
+                          href={musicMatch.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-[8px] px-2 py-1 rounded bg-red-500/20 text-red-300 hover:bg-red-500/30 border border-red-500/30"
+                        >Preview</a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Caption preview */}
+                  {captionsResult && (
+                    <div className="p-2.5 rounded-lg border border-border bg-surface-light">
+                      <h4 className="text-[9px] font-bold uppercase text-muted mb-1.5">
+                        Caption Track ({captionsResult.style}) — {captionsResult.words.length} words
+                      </h4>
+                      <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
+                        {captionsResult.words.slice(0, 60).map((w, i) => (
+                          <span
+                            key={i}
+                            className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${w.emphasis ? "bg-yellow-400 text-black font-bold" : "bg-surface text-muted"}`}
+                            title={`${w.start_ms}ms – ${w.end_ms}ms`}
+                          >{w.text}</span>
+                        ))}
+                        {captionsResult.words.length > 60 && (
+                          <span className="text-[8px] text-muted">+{captionsResult.words.length - 60} more…</span>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CollapsiblePanel>
 
               {/* === Smart Features Panel (TOP) === */}
@@ -6081,6 +6463,75 @@ export default function VideoEditorPage() {
               )}
             </button>
           </div>
+        </div>
+      </Modal>
+
+      {/* ─── Generate Full Ad from Description Modal ─── */}
+      <Modal
+        isOpen={adsGenOpen}
+        onClose={() => { if (!adsGenLoading) setAdsGenOpen(false); }}
+        title="Generate Full Ad from Description"
+        size="lg"
+      >
+        <div className="space-y-3">
+          <div className="p-2.5 rounded-lg bg-gradient-to-r from-red-500/10 to-amber-500/10 border border-red-500/30">
+            <p className="text-[11px] text-foreground flex items-center gap-1.5">
+              <Megaphone size={13} className="text-red-400" />
+              <span><strong>Ads Pack</strong> — paste your product / offer. We write a 30s ad script (hook + benefits + CTA), pick B-roll moments, match music, and load the Ads preset into the editor.</span>
+            </p>
+          </div>
+          <div>
+            <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Product / Offer Description</label>
+            <textarea
+              value={adsGenDescription}
+              onChange={e => setAdsGenDescription(e.target.value)}
+              rows={4}
+              className="input w-full text-xs"
+              placeholder="e.g., A posture-correcting backpack for college students — lightweight frame, USB-C charging port, 25L capacity, waterproof, currently 30% off"
+            />
+          </div>
+          <div>
+            <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration</label>
+            <select
+              value={adsGenDuration}
+              onChange={e => setAdsGenDuration(parseInt(e.target.value, 10))}
+              className="input w-full text-xs"
+            >
+              <option value={15}>15 seconds</option>
+              <option value={30}>30 seconds (recommended)</option>
+              <option value={45}>45 seconds</option>
+              <option value={60}>60 seconds</option>
+            </select>
+          </div>
+          <div className="flex gap-2 pt-2">
+            <button
+              onClick={() => setAdsGenOpen(false)}
+              disabled={adsGenLoading}
+              className="flex-1 text-xs py-2 rounded-xl border border-border text-muted hover:text-foreground disabled:opacity-40"
+            >Cancel</button>
+            <button
+              onClick={runScriptToAd}
+              disabled={adsGenLoading || !adsGenDescription.trim()}
+              className="flex-1 text-xs py-2 rounded-xl bg-gradient-to-r from-red-500 to-amber-500 text-white hover:from-red-600 hover:to-amber-600 flex items-center justify-center gap-1.5 disabled:opacity-40"
+            >
+              {adsGenLoading ? (
+                <><Loader2 size={12} className="animate-spin" /> Generating ad...</>
+              ) : (
+                <><Megaphone size={12} /> Generate Full Ad</>
+              )}
+            </button>
+          </div>
+          {adsResult && (
+            <div className="mt-3 p-2.5 rounded-lg border border-red-500/30 bg-red-500/[0.05] space-y-1.5">
+              <h4 className="text-[10px] font-bold text-red-300">Generated</h4>
+              <div className="text-[10px] space-y-1">
+                <p><span className="font-bold text-muted">HOOK:</span> {adsResult.script.hook}</p>
+                <p><span className="font-bold text-muted">CTA:</span> {adsResult.script.cta}</p>
+                <p><span className="font-bold text-muted">B-roll:</span> {adsResult.broll.length} moments</p>
+                <p><span className="font-bold text-muted">Music:</span> {adsResult.music.title} ({adsResult.music.bpm} BPM)</p>
+              </div>
+            </div>
+          )}
         </div>
       </Modal>
 

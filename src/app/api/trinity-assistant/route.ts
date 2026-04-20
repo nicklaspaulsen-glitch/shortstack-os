@@ -289,6 +289,54 @@ const TOOLS: Anthropic.Tool[] = [
     },
   },
   {
+    name: "face_swap_thumbnail",
+    description:
+      "Swap the user's face into a generated thumbnail via the RunPod FLUX InstantID pipeline. Use when the user says 'put my face in that thumbnail' or 'swap my face into a thumbnail of X'. The caller must have already uploaded a face image (public URL) via /api/thumbnail/face-upload. Accepts either an existing thumbnail_id OR a fresh prompt. Returns { thumbnail_id, job_id }. If the FLUX worker lacks InstantID nodes, returns a clear error.",
+    input_schema: {
+      type: "object",
+      properties: {
+        face_image_url: { type: "string", description: "Public URL of the user's face image (from the faces bucket)." },
+        thumbnail_id: { type: "string", description: "Optional — an existing generated_images.id whose prompt should be reused." },
+        prompt: { type: "string", description: "Optional — a fresh scene prompt (used when no thumbnail_id is provided)." },
+        style: { type: "string", description: "Optional style preset. Defaults to 'youtube_classic'." },
+        aspect: { type: "string", enum: ["16:9", "9:16", "1:1"], description: "Aspect ratio. Defaults to 16:9." },
+        client_id: { type: "string", description: "Optional — attach to a client." },
+      },
+      required: ["face_image_url"],
+    },
+  },
+  {
+    name: "recreate_thumbnail_from_url",
+    description:
+      "Recreate a fresh version of a YouTube video's thumbnail by pasting its video URL. Fetches the video's public maxresdefault.jpg from ytimg, then runs FLUX img2img to generate a reimagined version. Use when the user says 'recreate this thumbnail <youtube url>' or 'remix the thumbnail from this video'. Supports watch URLs, Shorts, and youtu.be links. Returns { thumbnail_id, job_id, video_id }.",
+    input_schema: {
+      type: "object",
+      properties: {
+        url: { type: "string", description: "YouTube video URL (watch, Shorts, or youtu.be)." },
+        style_modifier: { type: "string", description: "Optional free-text style twist, e.g. 'cinematic', 'neon cyberpunk', 'MrBeast-style'." },
+        aspect: { type: "string", enum: ["16:9", "9:16", "1:1"], description: "Aspect ratio. Defaults to 16:9." },
+        client_id: { type: "string", description: "Optional — attach to a client." },
+      },
+      required: ["url"],
+    },
+  },
+  {
+    name: "generate_thumbnail_with_title",
+    description:
+      "One-shot: takes a topic, calls Claude Haiku to generate a punchy YouTube title + a short overlay hook + a detailed FLUX image prompt, then kicks off the FLUX job. Use when the user says 'generate me a title AND thumbnail for X' or 'give me a YouTube title and cover for X'. Returns { title, thumbnail_text_overlay, prompt, thumbnail_id, job_id }.",
+    input_schema: {
+      type: "object",
+      properties: {
+        topic: { type: "string", description: "What the video is about. A sentence or short phrase is enough." },
+        style: { type: "string", description: "Optional style preset. Defaults to 'youtube_classic'." },
+        aspect: { type: "string", enum: ["16:9", "9:16", "1:1"], description: "Aspect ratio. Defaults to 16:9." },
+        variants: { type: "number", description: "Number of image variants (1-4). Default 1." },
+        client_id: { type: "string", description: "Optional — attach to a client." },
+      },
+      required: ["topic"],
+    },
+  },
+  {
     name: "generate_carousel",
     description:
       "Create a multi-slide Instagram/LinkedIn/TikTok carousel draft. Use when the user says 'make a carousel about X' or '7 slides on Y'. Claude will be called async via the carousel pipeline; this tool creates the tracking record scoped to the caller and returns the carousel_id.",
@@ -465,6 +513,83 @@ const TOOLS: Anthropic.Tool[] = [
         },
       },
       required: ["page"],
+    },
+  },
+  // ── Ads Video Pack tools (video-editor/ads) ──────────────────────────
+  {
+    name: "generate_ad_from_description",
+    description:
+      "Generate a full IG Reels / TikTok ad project from a product or offer description. Writes a 30-second ad script (hook + benefits + CTA), picks B-roll moments, matches music, and creates a video_projects row with the Ads preset pre-loaded. Returns a video_id + edit_url the user can click to open in the video editor.",
+    input_schema: {
+      type: "object",
+      properties: {
+        product_description: {
+          type: "string",
+          description: "Plain-English description of the product, offer, or service to advertise.",
+        },
+        duration: {
+          type: "number",
+          description: "Ad length in seconds (15-60). Defaults to 30.",
+        },
+        client_id: { type: "string", description: "Optional client UUID to scope the project to." },
+      },
+      required: ["product_description"],
+    },
+  },
+  {
+    name: "generate_video_captions",
+    description:
+      "Generate word-level kinetic captions (TikTok / MrBeast style) from a video URL using Whisper. Stores the caption track on the video_captions table scoped to the caller. Styles: 'kinetic' (word-by-word highlight), 'classic' (standard subtitles), 'highlight' (single-word emphasis).",
+    input_schema: {
+      type: "object",
+      properties: {
+        video_url: { type: "string", description: "Publicly reachable URL to the video/audio." },
+        style: {
+          type: "string",
+          enum: ["kinetic", "classic", "highlight"],
+          description: "Caption style preset. Defaults to kinetic.",
+        },
+        language: { type: "string", description: "Two-letter language hint (default 'en')." },
+        video_project_id: {
+          type: "string",
+          description: "Optional UUID of the video_projects row to attach captions to.",
+        },
+        client_id: { type: "string", description: "Optional client UUID." },
+      },
+      required: ["video_url"],
+    },
+  },
+  {
+    name: "suggest_broll_for_script",
+    description:
+      "Given a narration script, return 3-5 timed B-roll suggestions (time_range, description, search_terms, priority). If PEXELS_API_KEY is configured, also attaches a preview video URL. Use this when the user asks 'what B-roll should I add' or 'suggest cutaways for my script'.",
+    input_schema: {
+      type: "object",
+      properties: {
+        script: { type: "string", description: "The narration / ad script text." },
+        count: { type: "number", description: "Number of suggestions (3-6, default 5)." },
+        client_id: { type: "string", description: "Optional client UUID." },
+      },
+      required: ["script"],
+    },
+  },
+  {
+    name: "match_music_for_script",
+    description:
+      "Pick a royalty-free music track from the 20-track Ads music library based on mood, duration, and script. Returns a single track + 3 alternatives. Use this when the user asks 'find music for my ad' or 'what song fits this video'.",
+    input_schema: {
+      type: "object",
+      properties: {
+        script_mood: {
+          type: "string",
+          description: "Mood hint: 'upbeat', 'energetic', 'hype', or 'motivational'.",
+        },
+        duration: { type: "number", description: "Target video duration in seconds (default 30)." },
+        preset: { type: "string", description: "Preset name (e.g. 'ads')." },
+        script: { type: "string", description: "Optional script text for mood inference." },
+        client_id: { type: "string", description: "Optional client UUID." },
+      },
+      required: [],
     },
   },
 ];
@@ -1370,6 +1495,352 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         };
       }
 
+      // ── face_swap_thumbnail ─────────────────────────────────────────
+      case "face_swap_thumbnail": {
+        const faceImageUrl = typeof input.face_image_url === "string" ? input.face_image_url.trim() : "";
+        if (!faceImageUrl) return { ok: false, error: "face_image_url required (upload via /api/thumbnail/face-upload first)." };
+        const thumbnailId = typeof input.thumbnail_id === "string" ? input.thumbnail_id : "";
+        let sourcePrompt = typeof input.prompt === "string" ? input.prompt.trim() : "";
+        const style = typeof input.style === "string" ? input.style : "youtube_classic";
+        const aspect = typeof input.aspect === "string" ? input.aspect : "16:9";
+        const dims = aspect === "9:16" ? { width: 720, height: 1280 } : aspect === "1:1" ? { width: 1024, height: 1024 } : { width: 1280, height: 720 };
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        if (thumbnailId && !sourcePrompt) {
+          const { data: existing } = await db.from("generated_images").select("prompt, profile_id").eq("id", thumbnailId).maybeSingle();
+          if (!existing) return { ok: false, error: "Thumbnail not found." };
+          if ((existing as { profile_id: string }).profile_id !== ctx.ownerId) return { ok: false, error: "Thumbnail access denied." };
+          sourcePrompt = (existing as { prompt: string | null }).prompt || "";
+        }
+        if (!sourcePrompt) return { ok: false, error: "Provide either thumbnail_id of an existing generation or a prompt." };
+
+        const fluxUrl = process.env.RUNPOD_FLUX_URL;
+        const runpodKey = process.env.RUNPOD_API_KEY;
+        if (!fluxUrl || !runpodKey) return { ok: false, error: "RUNPOD_FLUX_URL / RUNPOD_API_KEY not configured." };
+
+        const seed = Math.floor(Math.random() * 2147483647);
+        const negativePrompt = "blurry, deformed, uncanny valley, plastic skin, dead eyes, face swap artifacts, different person";
+        const workflow = {
+          "1": { inputs: { ckpt_name: "flux1-dev-fp8.safetensors" }, class_type: "CheckpointLoaderSimple" },
+          "2": { inputs: { url: faceImageUrl }, class_type: "LoadImageFromUrl" },
+          "3": { inputs: { provider: "CPU" }, class_type: "InstantIDFaceAnalysis" },
+          "4": { inputs: { instantid_file: "instantid-ip-adapter.bin" }, class_type: "InstantIDModelLoader" },
+          "5": { inputs: { control_net_name: "instantid-controlnet.safetensors" }, class_type: "ControlNetLoader" },
+          "6": { inputs: { text: sourcePrompt, clip: ["1", 1] }, class_type: "CLIPTextEncode" },
+          "7": { inputs: { text: negativePrompt, clip: ["1", 1] }, class_type: "CLIPTextEncode" },
+          "8": { inputs: { weight: 0.8, start_at: 0, end_at: 1, instantid: ["4", 0], insightface: ["3", 0], control_net: ["5", 0], image: ["2", 0], model: ["1", 0], positive: ["6", 0], negative: ["7", 0] }, class_type: "ApplyInstantID" },
+          "9": { inputs: { width: Math.min(dims.width, 1024), height: Math.min(dims.height, 1024), batch_size: 1 }, class_type: "EmptySD3LatentImage" },
+          "10": { inputs: { seed, steps: 14, cfg: 1.2, sampler_name: "euler", scheduler: "simple", denoise: 1, model: ["8", 0], positive: ["8", 1], negative: ["8", 2], latent_image: ["9", 0] }, class_type: "KSampler" },
+          "11": { inputs: { samples: ["10", 0], vae: ["1", 2] }, class_type: "VAEDecode" },
+          "12": { inputs: { filename_prefix: "FaceSwap", images: ["11", 0] }, class_type: "SaveImage" },
+        };
+
+        let jobId: string | null = null;
+        let workerError: string | null = null;
+        let instantIdMissing = false;
+        try {
+          const res = await fetch(`${fluxUrl}/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${runpodKey}` },
+            body: JSON.stringify({ input: { workflow } }),
+          });
+          const job = (await res.json()) as Record<string, unknown>;
+          const errText = typeof job?.error === "string" ? job.error : typeof job?.message === "string" ? (job.message as string) : "";
+          if (errText && /InstantID|LoadImageFromUrl|ApplyInstantID|InstantIDModelLoader|unknown class_type/i.test(errText)) {
+            instantIdMissing = true;
+            workerError = errText;
+          } else if (typeof job?.id === "string") {
+            jobId = job.id;
+          } else if (errText) {
+            workerError = errText;
+          }
+        } catch (e) {
+          workerError = e instanceof Error ? e.message : "RunPod request failed";
+        }
+        if (instantIdMissing) {
+          return { ok: false, error: "FaceSwap requires InstantID nodes — deploy the faceswap worker." };
+        }
+        if (!jobId) {
+          return { ok: false, error: workerError || "RunPod did not return a job id." };
+        }
+
+        const { data, error } = await db
+          .from("generated_images")
+          .insert({
+            profile_id: ctx.ownerId,
+            client_id: clientId || null,
+            prompt: sourcePrompt,
+            model: "flux1-dev-fp8-instantid",
+            width: dims.width,
+            height: dims.height,
+            status: "processing",
+            job_id: jobId,
+            metadata: { source: "face_swap", face_image_url: faceImageUrl, parent_thumbnail_id: thumbnailId || null, style, aspect, tool: "face_swap_thumbnail" },
+          })
+          .select("id")
+          .single();
+        if (error) return { ok: false, error: error.message };
+
+        return {
+          ok: true,
+          data: {
+            thumbnail_id: (data as { id: string }).id,
+            status: "processing",
+            job_id: jobId,
+            poll_url: `/api/thumbnail/status?job_id=${jobId}`,
+          },
+        };
+      }
+
+      // ── recreate_thumbnail_from_url ─────────────────────────────────
+      case "recreate_thumbnail_from_url": {
+        const rawUrl = typeof input.url === "string" ? input.url.trim() : "";
+        if (!rawUrl) return { ok: false, error: "url required." };
+        const styleModifier = typeof input.style_modifier === "string" ? input.style_modifier.trim() : "";
+        const aspect = typeof input.aspect === "string" ? input.aspect : "16:9";
+        const dims = aspect === "9:16" ? { width: 720, height: 1280 } : aspect === "1:1" ? { width: 1024, height: 1024 } : { width: 1280, height: 720 };
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        // Parse video ID.
+        let videoId: string | null = null;
+        try {
+          const url = new URL(rawUrl);
+          const host = url.hostname.replace(/^www\./, "");
+          if (host === "youtu.be") {
+            const seg = url.pathname.replace(/^\//, "").split("/")[0];
+            if (seg && /^[A-Za-z0-9_-]{6,}$/.test(seg)) videoId = seg;
+          } else if (host === "youtube.com" || host === "m.youtube.com" || host === "music.youtube.com") {
+            const v = url.searchParams.get("v");
+            if (v && /^[A-Za-z0-9_-]{6,}$/.test(v)) videoId = v;
+            else {
+              const m = url.pathname.match(/\/(?:shorts|embed|live|v)\/([A-Za-z0-9_-]{6,})/);
+              if (m) videoId = m[1];
+            }
+          }
+        } catch {
+          return { ok: false, error: "Invalid URL." };
+        }
+        if (!videoId) return { ok: false, error: "Could not parse a YouTube video id from the URL." };
+
+        // Fetch thumbnail from ytimg.
+        let thumbBuf: Buffer | null = null;
+        let thumbType = "image/jpeg";
+        for (const res of ["maxresdefault", "hqdefault", "mqdefault"]) {
+          try {
+            const r = await fetch(`https://i.ytimg.com/vi/${videoId}/${res}.jpg`);
+            if (r.ok) {
+              const b = Buffer.from(await r.arrayBuffer());
+              if (b.byteLength > 1000) {
+                thumbBuf = b;
+                thumbType = r.headers.get("content-type") || "image/jpeg";
+                break;
+              }
+            }
+          } catch {}
+        }
+        if (!thumbBuf) return { ok: false, error: `Could not fetch thumbnail for video ${videoId}.` };
+
+        const refKey = `recreate-refs/${ctx.userId}/${videoId}-${Date.now()}.jpg`;
+        const { error: upErr } = await db.storage.from("content-assets").upload(refKey, thumbBuf, { contentType: thumbType, upsert: true });
+        if (upErr) return { ok: false, error: `Reference upload failed: ${upErr.message}` };
+        const refPublic = db.storage.from("content-assets").getPublicUrl(refKey).data.publicUrl;
+
+        const fluxUrl = process.env.RUNPOD_FLUX_URL;
+        const runpodKey = process.env.RUNPOD_API_KEY;
+        if (!fluxUrl || !runpodKey) return { ok: false, error: "RUNPOD_FLUX_URL / RUNPOD_API_KEY not configured." };
+
+        const basePrompt = "recreate this YouTube thumbnail composition with fresh art direction, preserve the layout and subject placement but produce a brand new image, high-CTR viral thumbnail quality, sharp focus, vivid colors";
+        const prompt = styleModifier ? `${basePrompt}, ${styleModifier}` : basePrompt;
+        const seed = Math.floor(Math.random() * 2147483647);
+        const workflow = {
+          "1": { inputs: { ckpt_name: "flux1-dev-fp8.safetensors" }, class_type: "CheckpointLoaderSimple" },
+          "2": { inputs: { url: refPublic }, class_type: "LoadImageFromUrl" },
+          "3": { inputs: { pixels: ["2", 0], vae: ["1", 2] }, class_type: "VAEEncode" },
+          "4": { inputs: { text: prompt, clip: ["1", 1] }, class_type: "CLIPTextEncode" },
+          "5": { inputs: { text: "blurry, watermark, duplicate, identical image", clip: ["1", 1] }, class_type: "CLIPTextEncode" },
+          "6": { inputs: { guidance: 3.5, conditioning: ["4", 0] }, class_type: "FluxGuidance" },
+          "7": { inputs: { seed, steps: 14, cfg: 1, sampler_name: "euler", scheduler: "simple", denoise: 0.65, model: ["1", 0], positive: ["6", 0], negative: ["5", 0], latent_image: ["3", 0] }, class_type: "KSampler" },
+          "8": { inputs: { samples: ["7", 0], vae: ["1", 2] }, class_type: "VAEDecode" },
+          "9": { inputs: { filename_prefix: "Recreate", images: ["8", 0] }, class_type: "SaveImage" },
+        };
+
+        let jobId: string | null = null;
+        let runpodError: string | null = null;
+        try {
+          const res = await fetch(`${fluxUrl}/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${runpodKey}` },
+            body: JSON.stringify({ input: { workflow } }),
+          });
+          const job = (await res.json()) as Record<string, unknown>;
+          if (typeof job?.id === "string") jobId = job.id;
+          else runpodError = (job?.error as string) || (job?.message as string) || `RunPod ${res.status}`;
+        } catch (e) {
+          runpodError = e instanceof Error ? e.message : "RunPod request failed";
+        }
+        if (!jobId) return { ok: false, error: runpodError || "RunPod did not return a job id." };
+
+        const { data, error } = await db
+          .from("generated_images")
+          .insert({
+            profile_id: ctx.ownerId,
+            client_id: clientId || null,
+            prompt,
+            model: "flux1-dev-fp8-img2img",
+            width: dims.width,
+            height: dims.height,
+            status: "processing",
+            job_id: jobId,
+            metadata: { source: "recreate", youtube_video_id: videoId, reference_url: refPublic, style_modifier: styleModifier || null, aspect, tool: "recreate_thumbnail_from_url" },
+          })
+          .select("id")
+          .single();
+        if (error) return { ok: false, error: error.message };
+
+        return {
+          ok: true,
+          data: {
+            thumbnail_id: (data as { id: string }).id,
+            job_id: jobId,
+            video_id: videoId,
+            reference_url: refPublic,
+            poll_url: `/api/thumbnail/status?job_id=${jobId}`,
+          },
+        };
+      }
+
+      // ── generate_thumbnail_with_title ───────────────────────────────
+      case "generate_thumbnail_with_title": {
+        const topic = typeof input.topic === "string" ? input.topic.trim() : "";
+        if (!topic) return { ok: false, error: "topic required." };
+        const style = typeof input.style === "string" ? input.style : "youtube_classic";
+        const aspect = typeof input.aspect === "string" ? input.aspect : "16:9";
+        const variantCount = Math.max(1, Math.min(4, Number(input.variants) || 1));
+        const dims = aspect === "9:16" ? { width: 720, height: 1280 } : aspect === "1:1" ? { width: 1024, height: 1024 } : { width: 1280, height: 720 };
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        // Step A — Claude Haiku produces title + overlay + FLUX prompt
+        let ai: { title: string; thumbnail_text_overlay: string; flux_prompt: string } | null = null;
+        try {
+          const resp = await anthropic.messages.create({
+            model: MODEL_HAIKU,
+            max_tokens: 400,
+            temperature: 0.8,
+            system: "You are a viral YouTube creative director. Output JSON only — no preamble, no markdown fences.",
+            messages: [{
+              role: "user",
+              content:
+                `Topic: "${topic}"\nStyle: "${style}"\n\nOutput exactly this JSON and nothing else:\n{\n  "title": string (under 60 chars),\n  "thumbnail_text_overlay": string (1-6 words, ALL CAPS OK),\n  "flux_prompt": string (60-120 words describing the image; do NOT describe text)\n}`,
+            }],
+          });
+          let raw = "";
+          for (const block of resp.content) if (block.type === "text") raw = block.text;
+          const stripped = raw.replace(/^```(?:json|JSON)?\s*\n?/i, "").replace(/\n?```\s*$/i, "").trim();
+          const parsed = JSON.parse(stripped);
+          if (parsed?.title && parsed?.flux_prompt) {
+            ai = {
+              title: String(parsed.title).slice(0, 120),
+              thumbnail_text_overlay: String(parsed.thumbnail_text_overlay || "").slice(0, 60),
+              flux_prompt: String(parsed.flux_prompt),
+            };
+          }
+        } catch {
+          // fall through
+        }
+        if (!ai) return { ok: false, error: "Title AI failed — could not parse JSON." };
+        const aiPayload = ai; // narrow once so the closures below don't lose the non-null type
+
+        const fluxUrl = process.env.RUNPOD_FLUX_URL;
+        const runpodKey = process.env.RUNPOD_API_KEY;
+        if (!fluxUrl || !runpodKey) return { ok: false, error: "RUNPOD_FLUX_URL / RUNPOD_API_KEY not configured." };
+
+        const negativePrompt = "blurry, low quality, text in image, words, letters, watermark, cropped";
+        const seeds = Array.from({ length: variantCount }, (_, i) => Math.floor(Math.random() * 2147483647) + i * 1000);
+        const jobs = await Promise.all(seeds.map(async (seed) => {
+          const workflow = {
+            "6": { inputs: { text: aiPayload.flux_prompt, clip: ["30", 1] }, class_type: "CLIPTextEncode" },
+            "8": { inputs: { samples: ["31", 0], vae: ["30", 2] }, class_type: "VAEDecode" },
+            "9": { inputs: { filename_prefix: "WithTitle", images: ["8", 0] }, class_type: "SaveImage" },
+            "27": { inputs: { width: Math.min(dims.width, 1024), height: Math.min(dims.height, 1024), batch_size: 1 }, class_type: "EmptySD3LatentImage" },
+            "30": { inputs: { ckpt_name: "flux1-dev-fp8.safetensors" }, class_type: "CheckpointLoaderSimple" },
+            "31": { inputs: { seed, steps: 12, cfg: 1, sampler_name: "euler", scheduler: "simple", denoise: 1, model: ["30", 0], positive: ["35", 0], negative: ["33", 0], latent_image: ["27", 0] }, class_type: "KSampler" },
+            "33": { inputs: { text: negativePrompt, clip: ["30", 1] }, class_type: "CLIPTextEncode" },
+            "35": { inputs: { guidance: 3.5, conditioning: ["6", 0] }, class_type: "FluxGuidance" },
+          };
+          try {
+            const res = await fetch(`${fluxUrl}/run`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${runpodKey}` },
+              body: JSON.stringify({ input: { workflow } }),
+            });
+            const job = (await res.json()) as Record<string, unknown>;
+            return { seed, jobId: typeof job?.id === "string" ? job.id : null };
+          } catch {
+            return { seed, jobId: null };
+          }
+        }));
+        const successes = jobs.filter((j) => j.jobId);
+        if (successes.length === 0) return { ok: false, error: "All FLUX jobs failed to queue." };
+
+        const rows = successes.map((j) => ({
+          profile_id: ctx.ownerId,
+          client_id: clientId || null,
+          prompt: aiPayload.flux_prompt,
+          model: "flux1-dev-fp8",
+          width: dims.width,
+          height: dims.height,
+          status: "processing" as const,
+          job_id: j.jobId,
+          metadata: { source: "with_title", topic, title: aiPayload.title, thumbnail_text_overlay: aiPayload.thumbnail_text_overlay, style, aspect, seed: j.seed, tool: "generate_thumbnail_with_title" },
+        }));
+        const { data: inserted, error } = await db.from("generated_images").insert(rows).select("id, job_id");
+        if (error || !inserted) return { ok: false, error: error?.message || "Insert failed." };
+        const first = inserted[0] as { id: string; job_id: string };
+
+        return {
+          ok: true,
+          data: {
+            title: aiPayload.title,
+            thumbnail_text_overlay: aiPayload.thumbnail_text_overlay,
+            prompt: aiPayload.flux_prompt,
+            thumbnail_id: first.id,
+            job_id: first.job_id,
+            poll_url: `/api/thumbnail/status?job_id=${first.job_id}`,
+            variants: inserted.length > 1 ? (inserted as Array<{ id: string; job_id: string }>).map((r) => ({ thumbnail_id: r.id, job_id: r.job_id })) : undefined,
+          },
+        };
+      }
+
       // ── generate_carousel ───────────────────────────────────────────
       case "generate_carousel": {
         const topic = typeof input.topic === "string" ? input.topic.trim() : "";
@@ -1818,6 +2289,335 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         return { ok: true, data: { url, page, hint: "Trinity can't navigate the user on its own — share this URL and ask them to click it to open the page." } };
       }
 
+      // ── Ads Video Pack handlers ─────────────────────────────────────
+      case "generate_ad_from_description": {
+        const productDescription =
+          typeof input.product_description === "string" ? input.product_description.trim() : "";
+        if (!productDescription) return { ok: false, error: "product_description required." };
+        const duration = typeof input.duration === "number" ? input.duration : 30;
+        const clientIdArg =
+          typeof input.client_id === "string"
+            ? input.client_id
+            : ctx.clientScope || null;
+
+        try {
+          // Import lazily to avoid circular; use direct library helpers.
+          const { anthropic: ant, MODEL_HAIKU: haiku, safeJsonParse, getResponseText } =
+            await import("@/lib/ai/claude-helpers");
+          const { ADS_PRESET, ADS_MUSIC_LIBRARY, filterMusicByMood } =
+            await import("@/lib/video-presets/ads");
+
+          // Step A: script
+          const scriptResp = await ant.messages.create({
+            model: haiku,
+            max_tokens: 700,
+            system: [
+              {
+                type: "text",
+                text: "You are a direct-response copywriter for IG Reels / TikTok ads. Output ONLY JSON: {\"hook\": string, \"benefits\": string[], \"cta\": string, \"full_script\": string, \"suggested_mood\": \"upbeat\"|\"energetic\"|\"hype\"|\"motivational\"}.",
+                cache_control: { type: "ephemeral" },
+              },
+            ],
+            messages: [
+              {
+                role: "user",
+                content: `Write a ${duration}s ad for: ${productDescription}`,
+              },
+            ],
+          });
+          type AdScriptOut = {
+            hook: string;
+            benefits: string[];
+            cta: string;
+            full_script: string;
+            suggested_mood: "upbeat" | "energetic" | "hype" | "motivational";
+          };
+          const script = safeJsonParse<AdScriptOut>(getResponseText(scriptResp));
+          if (!script || !script.full_script) {
+            return { ok: false, error: "Failed to generate ad script." };
+          }
+
+          // Step B: B-roll suggestions via Claude (inline to avoid internal fetch)
+          const brollResp = await ant.messages.create({
+            model: haiku,
+            max_tokens: 900,
+            messages: [
+              {
+                role: "user",
+                content:
+                  `Return JSON {"suggestions":[{"time_range":[s,e],"description":str,"search_terms":[str],"priority":"high"|"medium"|"low"}]} — 3-5 B-roll cutaways for this script:\n${script.full_script}`,
+              },
+            ],
+          });
+          type BrollOut = {
+            suggestions: Array<{
+              time_range: [number, number];
+              description: string;
+              search_terms: string[];
+              priority: "high" | "medium" | "low";
+            }>;
+          };
+          const broll = safeJsonParse<BrollOut>(getResponseText(brollResp));
+          const brollSuggestions = broll?.suggestions || [];
+
+          // Step C: music (deterministic — Claude not strictly needed for small library)
+          const filtered = filterMusicByMood([script.suggested_mood]);
+          const track = filtered[0] || ADS_MUSIC_LIBRARY[0];
+          const alternatives = filtered.slice(1, 4);
+
+          // Step D: persist
+          const { data: proj, error: projErr } = await db
+            .from("video_projects")
+            .insert({
+              profile_id: ctx.ownerId,
+              client_id: clientIdArg,
+              topic: productDescription.slice(0, 200),
+              duration,
+              style_preset: "ads",
+              title: `Ad: ${productDescription.slice(0, 60)}`,
+              script,
+              editor_settings: {
+                preset: "ads",
+                preset_patch: ADS_PRESET.editor_settings_patch,
+                broll_suggestions: brollSuggestions,
+                music_track: track,
+                music_alternatives: alternatives,
+                aspect_ratio: ADS_PRESET.aspect_ratio,
+                caption_style: ADS_PRESET.caption_style,
+              },
+              call_to_action: script.cta,
+              status: "active",
+              render_status: "draft",
+            })
+            .select("id")
+            .single();
+
+          if (projErr || !proj) {
+            return { ok: false, error: `Persist failed: ${projErr?.message || "unknown"}` };
+          }
+
+          return {
+            ok: true,
+            data: {
+              video_id: proj.id,
+              script,
+              broll: brollSuggestions,
+              music: track,
+              music_alternatives: alternatives,
+              preset: "ads",
+              edit_url: `/dashboard/video-editor?project=${proj.id}`,
+            },
+          };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "Ad generation failed",
+          };
+        }
+      }
+
+      case "generate_video_captions": {
+        const videoUrl = typeof input.video_url === "string" ? input.video_url.trim() : "";
+        if (!videoUrl) return { ok: false, error: "video_url required." };
+        const style = ["kinetic", "classic", "highlight"].includes(input.style as string)
+          ? (input.style as "kinetic" | "classic" | "highlight")
+          : "kinetic";
+        const language =
+          typeof input.language === "string" ? input.language.slice(0, 8).toLowerCase() : "en";
+        const videoProjectId =
+          typeof input.video_project_id === "string" ? input.video_project_id : null;
+        const clientIdArg =
+          typeof input.client_id === "string" ? input.client_id : ctx.clientScope || null;
+
+        if (!process.env.RUNPOD_WHISPER_URL || !process.env.RUNPOD_API_KEY) {
+          return { ok: false, error: "Whisper not configured on server." };
+        }
+
+        try {
+          const base = process.env.RUNPOD_WHISPER_URL!;
+          const endpoint = base.endsWith("/runsync")
+            ? base
+            : `${base.replace(/\/+$/, "")}/runsync`;
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.RUNPOD_API_KEY}`,
+            },
+            body: JSON.stringify({
+              input: {
+                audio: videoUrl,
+                audio_url: videoUrl,
+                url: videoUrl,
+                word_timestamps: true,
+                word_level_timestamps: true,
+                language,
+                model: "large-v3",
+              },
+            }),
+          });
+          if (!res.ok) {
+            const t = await res.text().catch(() => "");
+            return { ok: false, error: `Whisper HTTP ${res.status}: ${t.slice(0, 200)}` };
+          }
+          const raw = await res.json();
+          const data = raw.output || raw;
+          type WhisperWord = { word?: string; text?: string; start?: number; end?: number };
+          type WhisperSeg = { start?: number; end?: number; text?: string; words?: WhisperWord[] };
+          type Caption = { text: string; start_ms: number; end_ms: number; emphasis?: boolean };
+          const flat: Caption[] = [];
+          if (Array.isArray(data.words)) {
+            for (const w of data.words as WhisperWord[]) {
+              const t = (w.word || w.text || "").trim();
+              if (!t) continue;
+              flat.push({
+                text: t,
+                start_ms: Math.round((w.start || 0) * 1000),
+                end_ms: Math.round((w.end || 0) * 1000),
+              });
+            }
+          }
+          if (!flat.length && Array.isArray(data.segments)) {
+            for (const seg of data.segments as WhisperSeg[]) {
+              if (Array.isArray(seg.words)) {
+                for (const w of seg.words) {
+                  const t = (w.word || w.text || "").trim();
+                  if (!t) continue;
+                  flat.push({
+                    text: t,
+                    start_ms: Math.round((w.start || 0) * 1000),
+                    end_ms: Math.round((w.end || 0) * 1000),
+                  });
+                }
+              }
+            }
+          }
+          if (!flat.length) return { ok: false, error: "No words in Whisper output." };
+
+          // emphasis by style
+          const STOP = new Set(["the", "and", "of", "a", "to", "in", "is", "it", "for", "on", "with", "that", "this", "an"]);
+          let withEmph: Caption[];
+          if (style === "classic") {
+            withEmph = flat.map((w) => ({ ...w, emphasis: false }));
+          } else if (style === "kinetic") {
+            withEmph = flat.map((w) => {
+              const c = w.text.toLowerCase().replace(/[^a-z0-9]/g, "");
+              return { ...w, emphasis: c.length > 3 && !STOP.has(c) };
+            });
+          } else {
+            withEmph = flat.map((w) => ({ ...w, emphasis: false }));
+            let windowStart = 0, bestIdx = -1, bestScore = -1;
+            const flush = () => { if (bestIdx >= 0) withEmph[bestIdx].emphasis = true; bestIdx = -1; bestScore = -1; };
+            for (let i = 0; i < withEmph.length; i++) {
+              const w = withEmph[i];
+              if (w.start_ms - windowStart > 1000) { flush(); windowStart = w.start_ms; }
+              const c = w.text.toLowerCase().replace(/[^a-z0-9]/g, "");
+              if (STOP.has(c)) continue;
+              if (c.length > bestScore) { bestScore = c.length; bestIdx = i; }
+            }
+            flush();
+          }
+
+          const durationMs = withEmph[withEmph.length - 1]?.end_ms || 0;
+          const { data: row, error: insErr } = await db
+            .from("video_captions")
+            .insert({
+              profile_id: ctx.ownerId,
+              client_id: clientIdArg,
+              video_project_id: videoProjectId,
+              video_url: videoUrl,
+              words: withEmph,
+              style,
+              language,
+              duration_ms: durationMs,
+            })
+            .select("id")
+            .single();
+          if (insErr || !row) return { ok: false, error: `Persist failed: ${insErr?.message}` };
+          return {
+            ok: true,
+            data: {
+              caption_id: row.id,
+              style,
+              words: withEmph,
+              duration_ms: durationMs,
+              language,
+            },
+          };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "Caption generation failed",
+          };
+        }
+      }
+
+      case "suggest_broll_for_script": {
+        const script = typeof input.script === "string" ? input.script.trim() : "";
+        if (!script) return { ok: false, error: "script required." };
+        const count = Math.max(3, Math.min(6, typeof input.count === "number" ? input.count : 5));
+
+        try {
+          const { anthropic: ant, MODEL_HAIKU: haiku, safeJsonParse, getResponseText } =
+            await import("@/lib/ai/claude-helpers");
+          const resp = await ant.messages.create({
+            model: haiku,
+            max_tokens: 1000,
+            messages: [
+              {
+                role: "user",
+                content:
+                  `Return JSON {"suggestions":[{"time_range":[s,e],"description":str,"search_terms":[str],"priority":"high"|"medium"|"low"}]} — ${count} B-roll cutaways for:\n${script}`,
+              },
+            ],
+          });
+          type BrollOut = {
+            suggestions: Array<{
+              time_range: [number, number];
+              description: string;
+              search_terms: string[];
+              priority: "high" | "medium" | "low";
+            }>;
+          };
+          const parsed = safeJsonParse<BrollOut>(getResponseText(resp));
+          return {
+            ok: true,
+            data: { suggestions: parsed?.suggestions || [], count: parsed?.suggestions?.length || 0 },
+          };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "B-roll suggestion failed",
+          };
+        }
+      }
+
+      case "match_music_for_script": {
+        const mood =
+          typeof input.script_mood === "string" ? input.script_mood.toLowerCase() : undefined;
+        const duration =
+          typeof input.duration === "number" ? input.duration : 30;
+        try {
+          const { ADS_MUSIC_LIBRARY, filterMusicByMood } = await import("@/lib/video-presets/ads");
+          const pool = mood ? filterMusicByMood([mood]) : ADS_MUSIC_LIBRARY;
+          const ranked = [...(pool.length ? pool : ADS_MUSIC_LIBRARY)].sort((a, b) => {
+            const aFits = a.duration_sec >= duration ? 1 : 0;
+            const bFits = b.duration_sec >= duration ? 1 : 0;
+            if (aFits !== bFits) return bFits - aFits;
+            return b.bpm - a.bpm;
+          });
+          return {
+            ok: true,
+            data: { track: ranked[0], alternatives: ranked.slice(1, 4), source: "library" },
+          };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "Music match failed",
+          };
+        }
+      }
+
       default:
         return { ok: false, error: `Unknown tool: ${name}` };
     }
@@ -1957,7 +2757,7 @@ WHAT YOU CAN DO:
 - Outreach: draft_outreach_message (personalised DM/email/SMS — user reviews before send), get_recent_conversations (inbox replies), create_email_draft (save an email to Email Composer, NOT send).
 - Clients: search_clients.
 - Project management: create_task.
-- Content creation: create_ai_script (Script Lab), create_blog_post (Copywriter), generate_thumbnail (AI FLUX thumbnail), generate_carousel (Instagram/LinkedIn carousel), render_video (video pipeline — agency-only).
+- Content creation: create_ai_script (Script Lab), create_blog_post (Copywriter), generate_thumbnail (AI FLUX thumbnail), face_swap_thumbnail (put the user's selfie into a thumbnail — requires a pre-uploaded face URL), recreate_thumbnail_from_url (remix a YouTube video's thumbnail via img2img), generate_thumbnail_with_title (one-shot title + thumbnail from a topic), generate_carousel (Instagram/LinkedIn carousel), render_video (video pipeline — agency-only).
 - Social: schedule_social_post (queues), publish_social_post (publishes NOW), create_content_calendar_item (planning only, not publishing), generate_content_plan (auto-generator for a client across platforms).
 - Ads: create_ad_campaign (creates campaign shell in Ads Manager; does NOT launch to Meta/Google/TikTok — user launches from UI).
 - Automations: create_workflow (Workflow Builder node-based automation).
