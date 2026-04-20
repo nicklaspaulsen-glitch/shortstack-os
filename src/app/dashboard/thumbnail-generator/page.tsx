@@ -15,6 +15,8 @@ import {
   Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight,
   Droplet, Wand, Scissors, Smartphone, FileImage, ShoppingBag,
   Loader2, Sun, Contrast, Frame, Play, Film, Sliders,
+  Flame, Cloud, Coffee, Theater, Mic, Crown, Activity,
+  Gem, Rocket, type LucideIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { trackGeneration } from "@/lib/track-generation";
@@ -1442,6 +1444,312 @@ interface HistoryItem {
   description: string;
   created_at: string;
   metadata: Record<string, unknown>;
+}
+
+/* ──────────────────── ICON HELPERS ──────────────────── */
+
+/**
+ * MOOD_ICON_MAP — each mood gets a lucide icon + colored tint.
+ * Used by the Mood / Emotion selector to replace plain text chips.
+ */
+const MOOD_ICON_MAP: Record<
+  string,
+  { Icon: LucideIcon; tint: string; ring: string; iconColor: string }
+> = {
+  Dramatic:      { Icon: Theater,     tint: "bg-purple-500/15",   ring: "ring-purple-400/30",   iconColor: "text-purple-300" },
+  Funny:         { Icon: Sparkles,    tint: "bg-yellow-400/15",   ring: "ring-yellow-300/30",   iconColor: "text-yellow-300" },
+  Shocking:      { Icon: Zap,         tint: "bg-amber-400/15",    ring: "ring-amber-300/30",    iconColor: "text-amber-300" },
+  Inspiring:     { Icon: Flame,       tint: "bg-orange-500/15",   ring: "ring-orange-400/30",   iconColor: "text-orange-300" },
+  Educational:   { Icon: BrainCircuit,tint: "bg-blue-500/15",     ring: "ring-blue-400/30",     iconColor: "text-blue-300" },
+  Luxurious:     { Icon: Crown,       tint: "bg-yellow-600/15",   ring: "ring-yellow-500/30",   iconColor: "text-yellow-400" },
+  Scary:         { Icon: Mountain,    tint: "bg-slate-700/20",    ring: "ring-slate-500/30",    iconColor: "text-slate-300" },
+  Exciting:      { Icon: Rocket,      tint: "bg-pink-500/15",     ring: "ring-pink-400/30",     iconColor: "text-pink-300" },
+  Mysterious:    { Icon: Eye,         tint: "bg-indigo-500/15",   ring: "ring-indigo-400/30",   iconColor: "text-indigo-300" },
+  Urgent:        { Icon: AlertTriangle,tint:"bg-red-500/15",      ring: "ring-red-400/30",      iconColor: "text-red-300" },
+  Calm:          { Icon: Cloud,       tint: "bg-sky-400/15",      ring: "ring-sky-300/30",      iconColor: "text-sky-300" },
+  Controversial: { Icon: Flame,       tint: "bg-rose-500/15",     ring: "ring-rose-400/30",     iconColor: "text-rose-300" },
+  Nostalgic:     { Icon: Coffee,      tint: "bg-amber-500/15",    ring: "ring-amber-400/30",    iconColor: "text-amber-300" },
+  Futuristic:    { Icon: Cpu,         tint: "bg-cyan-500/15",     ring: "ring-cyan-400/30",     iconColor: "text-cyan-300" },
+  Playful:       { Icon: Activity,    tint: "bg-fuchsia-500/15",  ring: "ring-fuchsia-400/30",  iconColor: "text-fuchsia-300" },
+  Elegant:       { Icon: Gem,         tint: "bg-violet-500/15",   ring: "ring-violet-400/30",   iconColor: "text-violet-300" },
+};
+
+/**
+ * STYLE_PREVIEW_MAP — each thumbnail style gets a rich gradient + inner decorative element.
+ * Used to replace flat tiny colored squares.
+ */
+type StylePreviewConfig = {
+  gradient: string; // tailwind bg-gradient classes
+  inner: "none" | "diagonal" | "stars" | "triangle" | "circle" | "play" | "mic" | "grid" | "bolt" | "crown" | "sparkle" | "tv" | "pill";
+  innerTone: string; // color for the inner element
+};
+const STYLE_PREVIEW_MAP: Record<string, StylePreviewConfig> = {
+  youtube_classic:   { gradient: "from-red-500 via-orange-500 to-yellow-400",     inner: "play",    innerTone: "text-white/95" },
+  cinematic:         { gradient: "from-teal-800 via-slate-700 to-orange-600",     inner: "diagonal",innerTone: "text-orange-300" },
+  minimal_clean:     { gradient: "from-white via-gray-100 to-gray-200",           inner: "pill",    innerTone: "text-gray-700" },
+  bold_colorful:     { gradient: "from-purple-500 via-pink-500 to-rose-400",      inner: "sparkle", innerTone: "text-white/95" },
+  dark_mysterious:   { gradient: "from-slate-900 via-purple-900 to-indigo-900",   inner: "circle",  innerTone: "text-purple-300" },
+  news_breaking:     { gradient: "from-red-800 via-red-600 to-red-400",           inner: "bolt",    innerTone: "text-yellow-200" },
+  tutorial_howto:    { gradient: "from-blue-500 via-cyan-400 to-teal-300",        inner: "grid",    innerTone: "text-white/90" },
+  listicle:          { gradient: "from-orange-400 via-amber-300 to-yellow-200",   inner: "grid",    innerTone: "text-orange-800" },
+  split_screen:      { gradient: "from-emerald-500 via-teal-500 to-blue-500",     inner: "diagonal",innerTone: "text-white/90" },
+  neon_glow:         { gradient: "from-fuchsia-500 via-violet-600 to-cyan-400",   inner: "stars",   innerTone: "text-white" },
+  vlog_style:        { gradient: "from-amber-300 via-yellow-200 to-orange-200",   inner: "circle",  innerTone: "text-amber-700" },
+  podcast_style:     { gradient: "from-indigo-500 via-purple-500 to-fuchsia-500", inner: "mic",     innerTone: "text-white/95" },
+  retro_vintage:     { gradient: "from-amber-700 via-orange-500 to-rose-400",     inner: "circle",  innerTone: "text-amber-200" },
+  tech_futuristic:   { gradient: "from-cyan-400 via-blue-600 to-indigo-800",      inner: "grid",    innerTone: "text-cyan-200" },
+  comic_book:        { gradient: "from-yellow-400 via-red-500 to-pink-500",       inner: "sparkle", innerTone: "text-white" },
+  luxury_premium:    { gradient: "from-yellow-500 via-amber-600 to-black",        inner: "crown",   innerTone: "text-yellow-300" },
+  fitness_energy:    { gradient: "from-red-500 via-orange-500 to-yellow-400",     inner: "bolt",    innerTone: "text-white" },
+  food_recipe:       { gradient: "from-orange-300 via-red-400 to-rose-500",       inner: "circle",  innerTone: "text-orange-100" },
+  real_estate:       { gradient: "from-teal-500 via-emerald-500 to-green-400",    inner: "tv",      innerTone: "text-white/90" },
+  gaming:            { gradient: "from-purple-700 via-pink-600 to-cyan-400",      inner: "triangle",innerTone: "text-cyan-200" },
+};
+
+/**
+ * StylePreviewTile — rich gradient tile with SVG noise + decorative inner element.
+ * Replaces the tiny flat colored squares in the Thumbnail Style grid.
+ */
+function StylePreviewTile({
+  styleId,
+  size = 44,
+  active = false,
+}: {
+  styleId: string;
+  size?: number;
+  active?: boolean;
+}) {
+  const cfg = STYLE_PREVIEW_MAP[styleId] ?? STYLE_PREVIEW_MAP.youtube_classic;
+  // Tiny SVG noise data URI for subtle grain texture
+  const noise =
+    "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.18 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>\")";
+  return (
+    <div
+      className={`relative rounded-lg overflow-hidden bg-gradient-to-br ${cfg.gradient} flex-shrink-0 ${
+        active ? "ring-2 ring-gold/70 shadow-lg shadow-gold/10" : "ring-1 ring-white/10"
+      }`}
+      style={{ width: size, height: size, backgroundImage: `linear-gradient(var(--tw-gradient-stops)), ${noise}` }}
+    >
+      {/* noise overlay layered via pseudo bg */}
+      <div
+        className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none"
+        style={{ backgroundImage: noise, backgroundSize: "60px 60px" }}
+      />
+      {/* inner decorative element */}
+      <div className={`absolute inset-0 flex items-center justify-center ${cfg.innerTone}`}>
+        {cfg.inner === "diagonal" && (
+          <svg viewBox="0 0 40 40" className="w-full h-full opacity-80">
+            <line x1="5" y1="35" x2="35" y2="5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+          </svg>
+        )}
+        {cfg.inner === "stars" && (
+          <svg viewBox="0 0 40 40" className="w-3/4 h-3/4 opacity-90">
+            <path d="M20 6 l2.5 6.5 L29 14 l-5 4 l1.5 7 L20 22 l-5.5 3 L16 18 l-5 -4 l6.5 -1.5 z" fill="currentColor" />
+            <circle cx="32" cy="30" r="1.5" fill="currentColor" />
+            <circle cx="9" cy="9" r="1" fill="currentColor" />
+          </svg>
+        )}
+        {cfg.inner === "triangle" && (
+          <svg viewBox="0 0 40 40" className="w-3/5 h-3/5 opacity-90">
+            <polygon points="20,8 34,32 6,32" fill="currentColor" />
+          </svg>
+        )}
+        {cfg.inner === "circle" && (
+          <div className="w-1/2 h-1/2 rounded-full border-2 border-current opacity-90" />
+        )}
+        {cfg.inner === "play" && (
+          <svg viewBox="0 0 40 40" className="w-3/5 h-3/5 opacity-95">
+            <polygon points="14,10 32,20 14,30" fill="currentColor" />
+          </svg>
+        )}
+        {cfg.inner === "mic" && (
+          <Mic size={Math.round(size * 0.45)} strokeWidth={2.5} />
+        )}
+        {cfg.inner === "grid" && (
+          <svg viewBox="0 0 40 40" className="w-3/5 h-3/5 opacity-80">
+            <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" />
+            <rect x="22" y="6" width="12" height="12" rx="2" fill="currentColor" opacity="0.7" />
+            <rect x="6" y="22" width="12" height="12" rx="2" fill="currentColor" opacity="0.7" />
+            <rect x="22" y="22" width="12" height="12" rx="2" fill="currentColor" opacity="0.5" />
+          </svg>
+        )}
+        {cfg.inner === "bolt" && (
+          <Zap size={Math.round(size * 0.55)} strokeWidth={2.5} fill="currentColor" />
+        )}
+        {cfg.inner === "crown" && (
+          <Crown size={Math.round(size * 0.5)} strokeWidth={2.2} fill="currentColor" />
+        )}
+        {cfg.inner === "sparkle" && (
+          <Sparkles size={Math.round(size * 0.5)} strokeWidth={2.5} fill="currentColor" />
+        )}
+        {cfg.inner === "tv" && (
+          <svg viewBox="0 0 40 40" className="w-3/5 h-3/5 opacity-90">
+            <rect x="6" y="10" width="28" height="18" rx="2" stroke="currentColor" strokeWidth="2.5" fill="none" />
+            <line x1="14" y1="33" x2="26" y2="33" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        )}
+        {cfg.inner === "pill" && (
+          <div className="w-3/5 h-1.5 rounded-full bg-current opacity-80" />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * FaceAvatar — lightweight inline SVG avatar silhouette for each face type.
+ * Replaces emoji faces with consistent, professional-looking placeholders.
+ */
+function FaceAvatar({
+  faceId,
+  size = 28,
+  active = false,
+}: {
+  faceId: string;
+  size?: number;
+  active?: boolean;
+}) {
+  const color = active ? "#C9A84C" : "rgba(255,255,255,0.7)"; // gold when active
+  const accent = active ? "#8C6E2F" : "rgba(255,255,255,0.35)";
+
+  // Shared head path helper
+  const head = (cx: number, cy: number, r: number) => (
+    <circle cx={cx} cy={cy} r={r} fill={color} />
+  );
+
+  const renderFace = () => {
+    switch (faceId) {
+      case "professional_man":
+        return (
+          <>
+            {head(20, 15, 7)}
+            {/* suit shoulders */}
+            <path d="M5 36 Q20 24 35 36 L35 40 L5 40 Z" fill={color} />
+            {/* tie */}
+            <path d="M18.5 26 L20 32 L21.5 26 Z" fill={accent} />
+            <rect x="18" y="24" width="4" height="2" fill={accent} />
+          </>
+        );
+      case "young_guy":
+        return (
+          <>
+            {/* rounded head with slight hair tuft */}
+            <circle cx="20" cy="15" r="7.5" fill={color} />
+            <path d="M13 12 Q20 7 27 12 L26 10 Q20 5 14 10 Z" fill={accent} />
+            {/* casual shoulders */}
+            <path d="M6 38 Q20 26 34 38 L34 40 L6 40 Z" fill={color} opacity="0.85" />
+          </>
+        );
+      case "bearded_man":
+        return (
+          <>
+            {head(20, 14, 7)}
+            {/* beard */}
+            <path d="M13.5 16 Q20 24 26.5 16 Q26 22 20 24 Q14 22 13.5 16 Z" fill={accent} />
+            <path d="M6 38 Q20 26 34 38 L34 40 L6 40 Z" fill={color} />
+          </>
+        );
+      case "business_man":
+        return (
+          <>
+            {head(20, 14, 6.5)}
+            {/* formal suit with lapels */}
+            <path d="M6 38 Q20 24 34 38 L34 40 L6 40 Z" fill={color} />
+            <path d="M15 28 L20 34 L25 28 L23 36 L17 36 Z" fill={accent} />
+            {/* bow tie */}
+            <path d="M17 24 L20 26 L23 24 L23 28 L17 28 Z" fill={accent} />
+          </>
+        );
+      case "professional_woman":
+        return (
+          <>
+            {head(20, 15, 7)}
+            {/* side-swept hair */}
+            <path d="M12 10 Q14 6 20 7 Q26 6 28 11 L28 18 Q26 15 23 15 Q22 11 20 12 Q14 11 12 16 Z" fill={accent} />
+            <path d="M6 38 Q20 26 34 38 L34 40 L6 40 Z" fill={color} />
+          </>
+        );
+      case "young_woman":
+        return (
+          <>
+            {head(20, 15, 7)}
+            {/* ponytail */}
+            <path d="M26 13 Q31 16 30 24 Q28 22 26 20 Z" fill={accent} />
+            <path d="M6 38 Q20 26 34 38 L34 40 L6 40 Z" fill={color} opacity="0.9" />
+          </>
+        );
+      case "fitness_woman":
+        return (
+          <>
+            {head(20, 13, 6)}
+            {/* flexed biceps */}
+            <path d="M7 34 Q11 22 20 24 Q29 22 33 34 L33 40 L7 40 Z" fill={color} />
+            <circle cx="11" cy="27" r="3.5" fill={accent} />
+            <circle cx="29" cy="27" r="3.5" fill={accent} />
+          </>
+        );
+      case "business_woman":
+        return (
+          <>
+            {head(20, 14, 6.5)}
+            {/* blazer collar + shoulders */}
+            <path d="M6 38 Q20 26 34 38 L34 40 L6 40 Z" fill={color} />
+            <path d="M14 28 L20 34 L26 28 L24 36 L16 36 Z" fill={accent} />
+            {/* earrings dots */}
+            <circle cx="13.5" cy="16" r="0.8" fill={accent} />
+            <circle cx="26.5" cy="16" r="0.8" fill={accent} />
+          </>
+        );
+      case "surprised_face":
+        return (
+          <>
+            {head(20, 20, 12)}
+            <circle cx="16" cy="18" r="1.8" fill="#111" />
+            <circle cx="24" cy="18" r="1.8" fill="#111" />
+            {/* O mouth */}
+            <ellipse cx="20" cy="26" rx="2.2" ry="3" fill="#111" />
+          </>
+        );
+      case "angry_face":
+        return (
+          <>
+            {head(20, 20, 12)}
+            {/* furrowed brows */}
+            <path d="M13 15 L18 17" stroke="#111" strokeWidth="1.6" strokeLinecap="round" />
+            <path d="M27 15 L22 17" stroke="#111" strokeWidth="1.6" strokeLinecap="round" />
+            <circle cx="16" cy="20" r="1.3" fill="#111" />
+            <circle cx="24" cy="20" r="1.3" fill="#111" />
+            {/* frown */}
+            <path d="M15 28 Q20 24 25 28" stroke="#111" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          </>
+        );
+      case "happy_face":
+        return (
+          <>
+            {head(20, 20, 12)}
+            {/* eyes */}
+            <circle cx="16" cy="18" r="1.3" fill="#111" />
+            <circle cx="24" cy="18" r="1.3" fill="#111" />
+            {/* smile */}
+            <path d="M14 25 Q20 30 26 25" stroke="#111" strokeWidth="1.8" fill="none" strokeLinecap="round" />
+          </>
+        );
+      case "no_face":
+      default:
+        return (
+          <g opacity="0.6">
+            <circle cx="20" cy="20" r="11" stroke={color} strokeWidth="2" fill="none" />
+            <line x1="11" y1="11" x2="29" y2="29" stroke={color} strokeWidth="2" strokeLinecap="round" />
+          </g>
+        );
+    }
+  };
+
+  return (
+    <svg viewBox="0 0 40 40" width={size} height={size} className="flex-shrink-0">
+      {renderFace()}
+    </svg>
+  );
 }
 
 /* ──────────────────── PAGE ──────────────────── */
@@ -4130,13 +4438,21 @@ export default function ThumbnailGeneratorPage() {
                     <button
                       key={face.id}
                       onClick={() => toggleFace(face.id)}
-                      className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${
+                      className={`flex flex-col items-center gap-1.5 p-2 rounded-xl border transition-all ${
                         selected
-                          ? "border-gold/40 bg-gold/[0.07] ring-1 ring-gold/20"
-                          : "border-border hover:border-gold/15"
+                          ? "border-gold/50 bg-gold/[0.08] ring-1 ring-gold/30 shadow-sm shadow-gold/10"
+                          : "border-border hover:border-gold/20 hover:bg-white/[0.02]"
                       }`}
                     >
-                      <span className="text-lg leading-none">{face.emoji}</span>
+                      <div
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                          selected
+                            ? "bg-gradient-to-br from-gold/20 to-amber-600/10 ring-1 ring-gold/40"
+                            : "bg-gradient-to-br from-white/[0.06] to-white/[0.02]"
+                        }`}
+                      >
+                        <FaceAvatar faceId={face.id} size={28} active={selected} />
+                      </div>
                       <span
                         className={`text-[8px] leading-tight text-center ${
                           selected ? "text-gold font-semibold" : "text-muted"
@@ -4156,31 +4472,32 @@ export default function ThumbnailGeneratorPage() {
                 <Layers size={13} className="text-gold" /> Thumbnail Style
               </h2>
               <div className="grid grid-cols-2 gap-2">
-                {THUMBNAIL_STYLES.map((s) => (
-                  <button
-                    key={s.id}
-                    onClick={() => setStyle(s.id)}
-                    className={`flex items-center gap-2.5 p-2.5 rounded-xl border transition-all text-left ${
-                      style === s.id
-                        ? "border-gold/30 bg-gold/[0.05]"
-                        : "border-border hover:border-gold/15"
-                    }`}
-                  >
-                    <div
-                      className={`w-7 h-7 rounded-lg bg-gradient-to-br ${s.gradient} flex-shrink-0`}
-                    />
-                    <div className="min-w-0">
-                      <p
-                        className={`text-[10px] font-semibold truncate ${
-                          style === s.id ? "text-gold" : ""
-                        }`}
-                      >
-                        {s.name}
-                      </p>
-                      <p className="text-[8px] text-muted truncate">{s.desc}</p>
-                    </div>
-                  </button>
-                ))}
+                {THUMBNAIL_STYLES.map((s) => {
+                  const active = style === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => setStyle(s.id)}
+                      className={`flex items-center gap-2.5 p-2 rounded-xl border transition-all text-left ${
+                        active
+                          ? "border-gold/40 bg-gold/[0.06] shadow-sm shadow-gold/10"
+                          : "border-border hover:border-gold/20 hover:bg-white/[0.02]"
+                      }`}
+                    >
+                      <StylePreviewTile styleId={s.id} size={44} active={active} />
+                      <div className="min-w-0">
+                        <p
+                          className={`text-[10px] font-semibold truncate ${
+                            active ? "text-gold" : ""
+                          }`}
+                        >
+                          {s.name}
+                        </p>
+                        <p className="text-[8px] text-muted truncate">{s.desc}</p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -4275,35 +4592,52 @@ export default function ThumbnailGeneratorPage() {
               <h2 className="section-header flex items-center gap-2">
                 <Palette size={13} className="text-gold" /> Color Theme
               </h2>
-              <div className="grid grid-cols-3 gap-2">
-                {COLOR_THEMES.map((ct) => (
-                  <button
-                    key={ct.id}
-                    onClick={() => setColorTheme(ct.id)}
-                    className={`flex items-center gap-2 p-2 rounded-xl border transition-all ${
-                      colorTheme === ct.id
-                        ? "border-gold/30 bg-gold/[0.05]"
-                        : "border-border hover:border-gold/15"
-                    }`}
-                  >
-                    <div className="flex -space-x-1">
-                      {ct.colors.map((c, ci) => (
-                        <div
-                          key={ci}
-                          className="w-4 h-4 rounded-full border border-white/50"
-                          style={{ backgroundColor: c }}
-                        />
-                      ))}
-                    </div>
-                    <span
-                      className={`text-[9px] truncate ${
-                        colorTheme === ct.id ? "text-gold font-semibold" : "text-muted"
+              <div className="grid grid-cols-2 gap-2">
+                {COLOR_THEMES.map((ct) => {
+                  const active = colorTheme === ct.id;
+                  // Ensure at least 4 swatches by padding with mid/tone variations
+                  const pad: string[] = [];
+                  if (ct.colors.length < 4) {
+                    // Derive additional tones: mix with white/black for extra swatches
+                    const base = ct.colors[0] ?? "#888";
+                    const accent = ct.colors[1] ?? "#444";
+                    pad.push(base, accent);
+                  }
+                  const swatches = [...ct.colors, ...pad].slice(0, 5);
+                  return (
+                    <button
+                      key={ct.id}
+                      onClick={() => setColorTheme(ct.id)}
+                      className={`flex flex-col items-start gap-1.5 p-2 rounded-xl border transition-all text-left ${
+                        active
+                          ? "border-gold/40 bg-gold/[0.06] shadow-sm shadow-gold/10"
+                          : "border-border hover:border-gold/20 hover:bg-white/[0.02]"
                       }`}
                     >
-                      {ct.name}
-                    </span>
-                  </button>
-                ))}
+                      {/* Adobe-style horizontal palette strip */}
+                      <div
+                        className={`flex w-full h-5 rounded-md overflow-hidden ring-1 ${
+                          active ? "ring-gold/40" : "ring-white/10"
+                        }`}
+                      >
+                        {swatches.map((c, ci) => (
+                          <div
+                            key={ci}
+                            className="flex-1 h-full"
+                            style={{ backgroundColor: c }}
+                          />
+                        ))}
+                      </div>
+                      <span
+                        className={`text-[9px] truncate w-full ${
+                          active ? "text-gold font-semibold" : "text-muted"
+                        }`}
+                      >
+                        {ct.name}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -4312,20 +4646,44 @@ export default function ThumbnailGeneratorPage() {
               <h2 className="section-header flex items-center gap-2">
                 <Smile size={13} className="text-gold" /> Mood / Emotion
               </h2>
-              <div className="flex flex-wrap gap-1.5">
-                {MOODS.map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => setMood(m)}
-                    className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
-                      mood === m
-                        ? "border-gold/30 bg-gold/[0.08] text-gold font-semibold"
-                        : "border-border text-muted hover:text-foreground hover:border-gold/15"
-                    }`}
-                  >
-                    {m}
-                  </button>
-                ))}
+              <div className="grid grid-cols-4 gap-1.5">
+                {MOODS.map((m) => {
+                  const cfg = MOOD_ICON_MAP[m] ?? { Icon: Smile, tint: "bg-white/5", ring: "ring-white/10", iconColor: "text-white/70" };
+                  const active = mood === m;
+                  const { Icon } = cfg;
+                  return (
+                    <button
+                      key={m}
+                      onClick={() => setMood(m)}
+                      className={`flex flex-col items-center gap-1 p-1.5 rounded-xl border transition-all ${
+                        active
+                          ? "border-gold/50 bg-gold/[0.08] ring-1 ring-gold/30 shadow-sm shadow-gold/10"
+                          : "border-border hover:border-gold/20 hover:bg-white/[0.02]"
+                      }`}
+                    >
+                      <div
+                        className={`w-9 h-9 rounded-lg flex items-center justify-center ring-1 ${
+                          active
+                            ? "bg-gradient-to-br from-gold/25 to-amber-600/10 ring-gold/40"
+                            : `${cfg.tint} ${cfg.ring}`
+                        }`}
+                      >
+                        <Icon
+                          size={16}
+                          className={active ? "text-gold" : cfg.iconColor}
+                          strokeWidth={2.2}
+                        />
+                      </div>
+                      <span
+                        className={`text-[8px] leading-tight text-center ${
+                          active ? "text-gold font-semibold" : "text-muted"
+                        }`}
+                      >
+                        {m}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -4638,21 +4996,43 @@ export default function ThumbnailGeneratorPage() {
                     : "grid-cols-1"
                 }`}
               >
-                {Array.from({ length: variations }).map((_, i) => (
-                  <div key={i} className="card-static">
-                    <div className={`${getAspectClass()} rounded-xl overflow-hidden relative`}>
-                      <div className="absolute inset-0 skeleton" />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="flex flex-col items-center gap-2">
-                          <Loader size={24} className="text-gold animate-spin" />
-                          <span className="text-[10px] text-muted">
-                            Generating {i + 1}/{variations}...
-                          </span>
+                {Array.from({ length: variations }).map((_, i) => {
+                  const stylePreview = STYLE_PREVIEW_MAP[style] ?? STYLE_PREVIEW_MAP.youtube_classic;
+                  return (
+                    <div key={i} className="card-static">
+                      <div className={`${getAspectClass()} rounded-xl overflow-hidden relative`}>
+                        {/* Rich gradient background matching selected style */}
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-br ${stylePreview.gradient} opacity-40 animate-pulse`}
+                        />
+                        <div className="absolute inset-0 skeleton opacity-60" />
+                        {/* Subtle grid pattern overlay */}
+                        <div
+                          className="absolute inset-0 opacity-10"
+                          style={{
+                            backgroundImage:
+                              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+                            backgroundSize: "24px 24px",
+                          }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="w-14 h-14 rounded-2xl bg-black/30 backdrop-blur-sm border border-white/10 flex items-center justify-center relative">
+                              <ImageIcon size={22} className="text-white/70" />
+                              <Loader size={14} className="text-gold animate-spin absolute -bottom-1 -right-1 bg-black/60 rounded-full p-0.5" />
+                            </div>
+                            <span className="text-[10px] text-white/80 font-medium drop-shadow">
+                              Generating {i + 1}/{variations}...
+                            </span>
+                            <div className="w-32 h-1 bg-black/30 rounded-full overflow-hidden">
+                              <div className="h-full bg-gold rounded-full animate-pulse w-2/3" />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
@@ -4690,24 +5070,41 @@ export default function ThumbnailGeneratorPage() {
                         )}
 
                         {/* Loading state */}
-                        {isLoading && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-surface-light">
-                            <div className="flex flex-col items-center gap-2">
-                              <Loader
-                                size={28}
-                                className="text-gold animate-spin"
+                        {isLoading && (() => {
+                          const stylePreview = STYLE_PREVIEW_MAP[thumb.style] ?? STYLE_PREVIEW_MAP.youtube_classic;
+                          return (
+                            <div className="absolute inset-0">
+                              {/* Gradient backdrop matching the thumb's selected style */}
+                              <div className={`absolute inset-0 bg-gradient-to-br ${stylePreview.gradient} opacity-45 animate-pulse`} />
+                              <div className="absolute inset-0 skeleton opacity-55" />
+                              {/* Subtle grid pattern */}
+                              <div
+                                className="absolute inset-0 opacity-10"
+                                style={{
+                                  backgroundImage:
+                                    "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+                                  backgroundSize: "24px 24px",
+                                }}
                               />
-                              <span className="text-[10px] text-muted">
-                                {thumb.status === "IN_QUEUE"
-                                  ? "Waiting for GPU..."
-                                  : "Generating image..."}
-                              </span>
-                              <div className="w-32 h-1 bg-border rounded-full overflow-hidden">
-                                <div className="h-full bg-gold/60 rounded-full animate-pulse w-2/3" />
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="w-14 h-14 rounded-2xl bg-black/30 backdrop-blur-sm border border-white/10 flex items-center justify-center relative">
+                                    <ImageIcon size={22} className="text-white/70" />
+                                    <Loader size={14} className="text-gold animate-spin absolute -bottom-1 -right-1 bg-black/60 rounded-full p-0.5" />
+                                  </div>
+                                  <span className="text-[10px] text-white/80 font-medium drop-shadow">
+                                    {thumb.status === "IN_QUEUE"
+                                      ? "Waiting for GPU..."
+                                      : "Generating image..."}
+                                  </span>
+                                  <div className="w-32 h-1 bg-black/30 rounded-full overflow-hidden">
+                                    <div className="h-full bg-gold rounded-full animate-pulse w-2/3" />
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        )}
+                          );
+                        })()}
 
                         {/* Failed state */}
                         {isFailed && (
@@ -4754,9 +5151,10 @@ export default function ThumbnailGeneratorPage() {
                               return face ? (
                                 <span
                                   key={fid}
-                                  className="w-6 h-6 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-xs"
+                                  className="w-7 h-7 rounded-full bg-black/50 backdrop-blur-sm border border-white/15 flex items-center justify-center"
+                                  title={face.label}
                                 >
-                                  {face.emoji}
+                                  <FaceAvatar faceId={face.id} size={20} />
                                 </span>
                               ) : null;
                             })}
