@@ -18,6 +18,9 @@ import {
   MousePointer2, Star, Smile, Flame, TrendingUp, Bot,
   VolumeX, Waves, ChevronDown, ChevronRight,
   Loader2,
+  Cloud, Briefcase, Heart, Headphones, Guitar, Crown, Disc3,
+  Activity,
+  type LucideIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
@@ -195,24 +198,35 @@ const STYLES = [
   { id: "cyberpunk", name: "Cyberpunk", desc: "Futuristic neon dystopia" },
 ];
 
-const MUSIC_MOODS = [
-  { id: "upbeat", name: "Upbeat", emoji: "🎵" },
-  { id: "motivational", name: "Motivational", emoji: "💪" },
-  { id: "chill", name: "Chill", emoji: "😎" },
-  { id: "dramatic", name: "Dramatic", emoji: "🎬" },
-  { id: "corporate", name: "Corporate", emoji: "💼" },
-  { id: "trendy", name: "Trendy/Pop", emoji: "🔥" },
-  { id: "emotional", name: "Emotional", emoji: "❤️" },
-  { id: "lofi", name: "Lo-Fi", emoji: "🎧" },
-  { id: "cinematic", name: "Cinematic", emoji: "🎞️" },
-  { id: "edm", name: "EDM/Electronic", emoji: "⚡" },
-  { id: "hip-hop", name: "Hip-Hop", emoji: "🎤" },
-  { id: "acoustic", name: "Acoustic", emoji: "🎸" },
-  { id: "jazz", name: "Jazz", emoji: "🎷" },
-  { id: "ambient", name: "Ambient", emoji: "🌊" },
-  { id: "epic", name: "Epic/Orchestral", emoji: "🎻" },
-  { id: "funk", name: "Funk/Groove", emoji: "🕺" },
-  { id: "none", name: "No Music", emoji: "🔇" },
+// Music moods — each gets a lucide icon + a color tint so the grid feels
+// like a designed product instead of an emoji picker. Tints are tailwind
+// arbitrary-value classes so every tile can have its own hue without a
+// full theme extension.
+interface MoodOption {
+  id: string;
+  name: string;
+  icon: LucideIcon;
+  tint: string; // tailwind class for icon color when inactive
+  bg: string;   // tailwind class for icon tile background tint
+}
+const MUSIC_MOODS: MoodOption[] = [
+  { id: "upbeat",       name: "Upbeat",          icon: Zap,        tint: "text-amber-300",  bg: "bg-amber-500/15" },
+  { id: "motivational", name: "Motivational",    icon: Flame,      tint: "text-orange-300", bg: "bg-orange-500/15" },
+  { id: "chill",        name: "Chill",           icon: Cloud,      tint: "text-sky-300",    bg: "bg-sky-500/15" },
+  { id: "dramatic",     name: "Dramatic",        icon: Film,       tint: "text-violet-300", bg: "bg-violet-500/15" },
+  { id: "corporate",    name: "Corporate",       icon: Briefcase,  tint: "text-slate-300",  bg: "bg-slate-500/15" },
+  { id: "trendy",       name: "Trendy/Pop",      icon: Sparkles,   tint: "text-pink-300",   bg: "bg-pink-500/15" },
+  { id: "emotional",    name: "Emotional",       icon: Heart,      tint: "text-rose-300",   bg: "bg-rose-500/15" },
+  { id: "lofi",         name: "Lo-Fi",           icon: Headphones, tint: "text-indigo-300", bg: "bg-indigo-500/15" },
+  { id: "cinematic",    name: "Cinematic",       icon: Camera,     tint: "text-teal-300",   bg: "bg-teal-500/15" },
+  { id: "edm",          name: "EDM/Electronic",  icon: Activity,   tint: "text-cyan-300",   bg: "bg-cyan-500/15" },
+  { id: "hip-hop",      name: "Hip-Hop",         icon: Mic,        tint: "text-purple-300", bg: "bg-purple-500/15" },
+  { id: "acoustic",     name: "Acoustic",        icon: Guitar,     tint: "text-amber-400",  bg: "bg-amber-600/15" },
+  { id: "jazz",         name: "Jazz",            icon: Music,      tint: "text-blue-300",   bg: "bg-blue-500/15" },
+  { id: "ambient",      name: "Ambient",         icon: Waves,      tint: "text-emerald-300",bg: "bg-emerald-500/15" },
+  { id: "epic",         name: "Epic/Orchestral", icon: Crown,      tint: "text-yellow-300", bg: "bg-yellow-500/15" },
+  { id: "funk",         name: "Funk/Groove",     icon: Disc3,      tint: "text-fuchsia-300",bg: "bg-fuchsia-500/15" },
+  { id: "none",         name: "No Music",        icon: VolumeX,    tint: "text-muted",      bg: "bg-surface-light" },
 ];
 
 const CAPTION_STYLES = [
@@ -6075,16 +6089,32 @@ export default function VideoEditorPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Music Mood</label>
-                  <div className="grid grid-cols-4 gap-1">
-                    {MUSIC_MOODS.map(m => (
-                      <button key={m.id} onClick={() => setConfig({ ...config, music_mood: m.id })}
-                        className={`text-[9px] p-1.5 rounded-lg border transition-all text-center ${
-                          config.music_mood === m.id ? "border-gold/30 bg-gold/[0.05] text-gold" : "border-border text-muted hover:text-foreground"
-                        }`}>
-                        <span className="text-sm">{m.emoji}</span>
-                        <p className="text-[8px] mt-0.5">{m.name}</p>
-                      </button>
-                    ))}
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {MUSIC_MOODS.map(m => {
+                      const active = config.music_mood === m.id;
+                      const Icon = m.icon;
+                      return (
+                        <button
+                          key={m.id}
+                          onClick={() => setConfig({ ...config, music_mood: m.id })}
+                          className={`group flex flex-col items-center gap-1 rounded-lg border p-2 transition-all ${
+                            active
+                              ? "border-gold/40 bg-gold/[0.08] text-gold shadow-[0_0_0_1px_rgba(201,168,76,0.15)]"
+                              : "border-border text-muted hover:border-border/80 hover:text-foreground"
+                          }`}
+                          title={m.name}
+                        >
+                          <span
+                            className={`flex h-7 w-7 items-center justify-center rounded-md transition ${
+                              active ? "bg-gold/15" : m.bg
+                            }`}
+                          >
+                            <Icon size={13} className={active ? "text-gold" : m.tint} />
+                          </span>
+                          <p className="text-[8.5px] leading-tight">{m.name}</p>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
                 <div>
