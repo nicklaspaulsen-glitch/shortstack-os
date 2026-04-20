@@ -12,7 +12,8 @@ import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
   ArrowLeft, FileText, CreditCard, CheckCircle, Circle,
   Film, Megaphone, Download, Sparkles, Plus, Loader, Rocket,
-  Target, Palette, BarChart3, ChevronDown, ChevronRight, Zap
+  Target, Palette, BarChart3, ChevronDown, ChevronRight, Zap,
+  Phone, MessageSquare, Bot
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
@@ -192,6 +193,11 @@ export default function ClientDetailPage() {
       <div className="card">
         <SocialConnect clientId={client.id} clientName={client.business_name} />
       </div>
+
+      {/* Dedicated Phone Number — mirrors mail-setup pattern on /dashboard/domains.
+          Agency provisions a Twilio number + ElevenAgent per client; read-only
+          view lives in /dashboard/portal. */}
+      <ClientPhoneSection clientId={client.id} clientName={client.business_name} readOnly={false} />
 
       {/* Tabs */}
       <div className="tab-group w-fit">
@@ -420,6 +426,216 @@ export default function ClientDetailPage() {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Per-client Phone Number section ─────────────────────────────────
+   Mirrors the Resend mail-setup flow on /dashboard/domains: shows the
+   client's assigned Twilio number, monthly SMS + call minutes for this
+   client only, and a "Provision a number" button that calls the existing
+   /api/twilio/provision endpoint (which auto-sets webhooks + creates an
+   ElevenAgent). `readOnly` hides the provision button for portal users. */
+interface PhoneStatus {
+  phone_number: string | null;
+  eleven_agent_id: string | null;
+  eleven_phone_number_id: string | null;
+  has_number: boolean;
+  usage: { sms_this_month: number; call_minutes_this_month: number };
+  plan: {
+    plan_tier: string;
+    cap: number | "unlimited";
+    current: number;
+    remaining: number | "unlimited";
+  };
+}
+
+function ClientPhoneSection({
+  clientId,
+  clientName,
+  readOnly,
+}: {
+  clientId: string;
+  clientName: string;
+  readOnly: boolean;
+}) {
+  const [status, setStatus] = useState<PhoneStatus | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [provisioning, setProvisioning] = useState(false);
+  const [areaCode, setAreaCode] = useState("");
+
+  async function load() {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/clients/${clientId}/phone`);
+      if (res.ok) {
+        const data = await res.json();
+        setStatus(data as PhoneStatus);
+      }
+    } catch {
+      // ignore — UI will show "not set up" with stale data
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientId]);
+
+  async function provision() {
+    setProvisioning(true);
+    const tid = toast.loading("Provisioning phone number...");
+    try {
+      const res = await fetch("/api/twilio/provision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: clientId,
+          area_code: areaCode || undefined,
+          country: "US",
+          agent_name: `${clientName} AI Caller`,
+        }),
+      });
+      const data = await res.json();
+      toast.dismiss(tid);
+      if (res.status === 402) {
+        // Plan-tier cap hit — surface upgrade prompt.
+        toast.error(
+          data.error || `Phone number limit reached for ${data.plan_tier} plan.`,
+          { duration: 7000 },
+        );
+      } else if (data.success) {
+        toast.success(`Number provisioned: ${data.phone_number}`);
+        await load();
+      } else {
+        toast.error(data.error || "Failed to provision number");
+      }
+    } catch {
+      toast.dismiss(tid);
+      toast.error("Failed to provision number");
+    }
+    setProvisioning(false);
+  }
+
+  if (loading) {
+    return (
+      <div className="card">
+        <h3 className="section-header flex items-center gap-2">
+          <Phone size={13} className="text-gold" /> Dedicated Phone Number
+        </h3>
+        <p className="text-xs text-muted">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!status) {
+    return (
+      <div className="card">
+        <h3 className="section-header flex items-center gap-2">
+          <Phone size={13} className="text-gold" /> Dedicated Phone Number
+        </h3>
+        <p className="text-xs text-muted">Unable to load phone status.</p>
+      </div>
+    );
+  }
+
+  const capLabel =
+    status.plan.cap === "unlimited"
+      ? "Unlimited"
+      : `${status.plan.current} of ${status.plan.cap}`;
+  const capHit =
+    status.plan.cap !== "unlimited" && status.plan.current >= status.plan.cap;
+
+  return (
+    <div className="card">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="section-header flex items-center gap-2 mb-0">
+          <Phone size={13} className="text-gold" /> Dedicated Phone Number
+        </h3>
+        <span className="text-[10px] text-muted">
+          Plan: <span className="text-gold font-semibold">{status.plan.plan_tier}</span>
+          <span className="mx-1.5 opacity-40">·</span>
+          <span className={capHit ? "text-red-400" : ""}>{capLabel} numbers</span>
+        </span>
+      </div>
+
+      {status.has_number ? (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-mono font-semibold">{status.phone_number}</span>
+              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-400 border-green-500/30 flex items-center gap-1">
+                <Phone size={9} /> Active
+              </span>
+              {status.eleven_agent_id ? (
+                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-400 border-blue-500/30 flex items-center gap-1">
+                  <Bot size={9} /> AI agent ready
+                </span>
+              ) : (
+                <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-400 border-slate-500/30 flex items-center gap-1">
+                  <Bot size={9} /> AI agent not configured
+                </span>
+              )}
+            </div>
+            <button
+              onClick={() => { navigator.clipboard.writeText(status.phone_number || ""); toast.success("Copied"); }}
+              className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1"
+            >
+              Copy
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="rounded-xl border border-border bg-surface-light p-3">
+              <div className="flex items-center gap-1.5 text-[10px] text-muted mb-0.5">
+                <MessageSquare size={10} /> SMS this month
+              </div>
+              <p className="text-base font-bold">{status.usage.sms_this_month}</p>
+            </div>
+            <div className="rounded-xl border border-border bg-surface-light p-3">
+              <div className="flex items-center gap-1.5 text-[10px] text-muted mb-0.5">
+                <Phone size={10} /> Call minutes this month
+              </div>
+              <p className="text-base font-bold">{status.usage.call_minutes_this_month}</p>
+            </div>
+          </div>
+          <p className="text-[10px] text-muted mt-1">
+            Inbound SMS + voice route to this client automatically via the Twilio webhook.
+          </p>
+        </div>
+      ) : readOnly ? (
+        <p className="text-xs text-muted">
+          No dedicated phone number assigned yet. Your agency can provision one for you.
+        </p>
+      ) : (
+        <div className="space-y-2">
+          <p className="text-xs text-muted">
+            No phone number assigned yet. Provisioning buys a Twilio number, wires the SMS + voice webhooks, and creates an ElevenAgent for AI calling.
+          </p>
+          {capHit && (
+            <p className="text-[11px] text-red-400">
+              You&apos;re at your plan&apos;s phone number cap ({capLabel}). <Link href="/dashboard/pricing" className="underline">Upgrade</Link> to provision more.
+            </p>
+          )}
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              value={areaCode}
+              onChange={(e) => setAreaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 3))}
+              placeholder="Area code (optional)"
+              className="input text-xs w-40"
+            />
+            <button
+              onClick={provision}
+              disabled={provisioning || capHit}
+              className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
+            >
+              {provisioning ? <Loader size={12} className="animate-spin" /> : <Plus size={12} />}
+              {provisioning ? "Provisioning..." : "Provision a number"}
+            </button>
           </div>
         </div>
       )}

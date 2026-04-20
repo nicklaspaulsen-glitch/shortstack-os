@@ -16,7 +16,7 @@ import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
   Package, CheckCircle, CreditCard, Circle, Bot,
   Sparkles, Film, ArrowRight, Calendar, MessageSquare,
-  BarChart3, Zap, Star, Building, MapPin, Globe, Target, Loader
+  BarChart3, Zap, Star, Building, MapPin, Globe, Target, Loader, Phone
 } from "lucide-react";
 import Link from "next/link";
 
@@ -296,6 +296,9 @@ export default function ClientPortalPage() {
         </div>
       </div>
 
+      {/* Dedicated phone number (read-only for client) */}
+      <ClientPortalPhoneCard clientId={client.id} />
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tasks */}
         <div className="card">
@@ -403,6 +406,82 @@ export default function ClientPortalPage() {
             </Link>
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+
+// Read-only phone number card for portal users. Shows assigned Twilio
+// number + monthly SMS/call usage for this client only. Provisioning is
+// agency-side — portal users see "not set up" when empty.
+function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
+  const [status, setStatus] = useState<{
+    phone_number: string | null;
+    eleven_agent_id: string | null;
+    has_number: boolean;
+    usage: { sms_this_month: number; call_minutes_this_month: number };
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch(`/api/clients/${clientId}/phone`);
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setStatus(data);
+        }
+      } catch {
+        // ignore
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [clientId]);
+
+  if (loading) return null;
+  if (!status) return null;
+
+  return (
+    <div className="card">
+      <h2 className="section-header flex items-center gap-2">
+        <Phone size={13} className="text-gold" /> Your Phone Number
+      </h2>
+      {status.has_number ? (
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-mono font-semibold">{status.phone_number}</span>
+            <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-400 border-green-500/30 flex items-center gap-1">
+              <Phone size={9} /> Active
+            </span>
+            {status.eleven_agent_id && (
+              <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-400 border-blue-500/30 flex items-center gap-1">
+                <Bot size={9} /> AI caller ready
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-1">
+            <div className="rounded-xl border border-border bg-surface-light p-3">
+              <div className="flex items-center gap-1.5 text-[10px] text-muted mb-0.5">
+                <MessageSquare size={10} /> SMS this month
+              </div>
+              <p className="text-base font-bold">{status.usage.sms_this_month}</p>
+            </div>
+            <div className="rounded-xl border border-border bg-surface-light p-3">
+              <div className="flex items-center gap-1.5 text-[10px] text-muted mb-0.5">
+                <Phone size={10} /> Call minutes this month
+              </div>
+              <p className="text-base font-bold">{status.usage.call_minutes_this_month}</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <p className="text-xs text-muted">
+          No dedicated phone number assigned yet. Your agency can provision one for you.
+        </p>
       )}
     </div>
   );

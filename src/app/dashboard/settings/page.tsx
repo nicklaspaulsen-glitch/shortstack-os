@@ -3475,6 +3475,7 @@ function PlanUsageWidget({
     { key: "emails", label: "Emails" },
     { key: "tokens", label: "AI Tokens", fmt: (n) => n >= 1000 ? `${(n / 1000).toFixed(n >= 10_000 ? 0 : 1)}K` : String(n) },
     { key: "clients", label: "Active Clients" },
+    { key: "phone_numbers", label: "Phone Numbers" },
     { key: "sms", label: "SMS" },
     { key: "call_minutes", label: "Call Minutes" },
   ];

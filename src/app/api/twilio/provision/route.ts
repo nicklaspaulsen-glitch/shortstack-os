@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { importPhoneNumber, createAgent, DEFAULT_COLD_CALL_PROMPT, DEFAULT_FIRST_MESSAGE } from "@/lib/services/eleven-agents";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkLimit } from "@/lib/usage-limits";
 
 // Provision a Twilio phone number for a client
 // Full pipeline: Twilio purchase → ElevenLabs phone import → ElevenAgent creation
@@ -16,6 +18,28 @@ export async function POST(request: NextRequest) {
 
   const { client_id, area_code, country, agent_name, voice_id, skip_agent } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  // Plan-tier concurrent cap: block new number purchase when the agency is
+  // already at its tier's phone_numbers ceiling. Returns 402 on cap hit so the
+  // client can surface an upgrade prompt. `phone_numbers` is a concurrent
+  // cap (point-in-time count of clients with an attached Twilio number),
+  // not a monthly spend, which checkLimit handles correctly since it just
+  // compares current vs limit.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const gate = await checkLimit(ownerId, "phone_numbers", 1);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        error: gate.reason || "Phone number limit reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
 
   const twilioSid = process.env.TWILIO_ACCOUNT_SID;
   const twilioToken = process.env.TWILIO_AUTH_TOKEN;

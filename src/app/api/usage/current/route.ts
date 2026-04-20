@@ -30,7 +30,7 @@ export async function GET() {
   const limits = limitsForTier(planTier);
 
   const usageRaw = await getCurrentUsage(ownerId);
-  const resources: UsageResource[] = ["emails", "tokens", "clients", "sms", "call_minutes"];
+  const resources: UsageResource[] = ["emails", "tokens", "clients", "sms", "call_minutes", "phone_numbers"];
 
   const usage: Record<string, number> = {};
   const limitsOut: Record<string, number | "unlimited"> = {};

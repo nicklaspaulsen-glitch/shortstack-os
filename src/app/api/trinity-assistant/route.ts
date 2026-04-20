@@ -1423,7 +1423,7 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         const platform = typeof input.platform === "string" && ["youtube", "tiktok", "reel"].includes(input.platform) ? (input.platform as string) : "reel";
         const aspectRatio = platform === "youtube" ? "16:9" : "9:16";
 
-        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        const clientId = typeof input.client_id === "string" ? input.client_id : "";
         if (clientId) {
           const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
           if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {

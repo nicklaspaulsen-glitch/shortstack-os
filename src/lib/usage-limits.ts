@@ -13,7 +13,7 @@
 import { createServiceClient } from "@/lib/supabase/server";
 
 export type UsageKind = "tokens" | "videos" | "thumbnails" | "emails";
-export type UsageResource = "emails" | "tokens" | "clients" | "sms" | "call_minutes";
+export type UsageResource = "emails" | "tokens" | "clients" | "sms" | "call_minutes" | "phone_numbers";
 
 export interface UserUsageLimits {
   max_tokens_per_day: number;
@@ -105,20 +105,24 @@ export interface TierLimits {
   clients: number;
   sms: number;
   call_minutes: number;
+  phone_numbers: number;
 }
 
 /**
  * Hard monthly caps per Stripe plan tier. `Infinity` = no cap.
  * Keys match the TitleCase values stored in `profiles.plan_tier`.
  * "Founder" is an internal/dev tier — treated as unlimited.
+ *
+ * NOTE: `clients` and `phone_numbers` are CONCURRENT caps (point-in-time,
+ * not monthly sums). Everything else is a per-calendar-month limit.
  */
 export const LIMITS_BY_TIER: Record<string, TierLimits> = {
-  Starter:   { emails:     500, tokens:    250_000, clients:   5, sms:    100, call_minutes:     60 },
-  Growth:    { emails:   5_000, tokens:  1_000_000, clients:  15, sms:  1_000, call_minutes:    300 },
-  Pro:       { emails:  25_000, tokens:  5_000_000, clients:  50, sms:  5_000, call_minutes:  2_000 },
-  Business:  { emails: 100_000, tokens: 20_000_000, clients: 150, sms: 25_000, call_minutes: 10_000 },
-  Unlimited: { emails: Infinity, tokens: Infinity, clients: Infinity, sms: Infinity, call_minutes: Infinity },
-  Founder:   { emails: Infinity, tokens: Infinity, clients: Infinity, sms: Infinity, call_minutes: Infinity },
+  Starter:   { emails:     500, tokens:    250_000, clients:   5, sms:    100, call_minutes:     60, phone_numbers:  1 },
+  Growth:    { emails:   5_000, tokens:  1_000_000, clients:  15, sms:  1_000, call_minutes:    300, phone_numbers:  3 },
+  Pro:       { emails:  25_000, tokens:  5_000_000, clients:  50, sms:  5_000, call_minutes:  2_000, phone_numbers: 10 },
+  Business:  { emails: 100_000, tokens: 20_000_000, clients: 150, sms: 25_000, call_minutes: 10_000, phone_numbers: 50 },
+  Unlimited: { emails: Infinity, tokens: Infinity, clients: Infinity, sms: Infinity, call_minutes: Infinity, phone_numbers: Infinity },
+  Founder:   { emails: Infinity, tokens: Infinity, clients: Infinity, sms: Infinity, call_minutes: Infinity, phone_numbers: Infinity },
 };
 
 /** Normalise a plan_tier value from the DB. Nulls default to "Starter". */
@@ -158,6 +162,7 @@ export interface CurrentUsage {
   clients: number;
   sms: number;
   call_minutes: number;
+  phone_numbers: number;
   notes?: string[]; // reasons a metric could not be computed
 }
 
@@ -175,7 +180,7 @@ export async function getCurrentUsage(ownerId: string): Promise<CurrentUsage> {
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
   const result: CurrentUsage = {
-    emails: 0, tokens: 0, clients: 0, sms: 0, call_minutes: 0,
+    emails: 0, tokens: 0, clients: 0, sms: 0, call_minutes: 0, phone_numbers: 0,
   };
 
   // ── usage_events: canonical source (if any rows exist yet) ──
@@ -258,6 +263,24 @@ export async function getCurrentUsage(ownerId: string): Promise<CurrentUsage> {
     notes.push("clients count failed");
   }
 
+  // ── Phone numbers: concurrent (dedicated per-client Twilio numbers) ──
+  // Twilio numbers live on the `clients` row itself (twilio_phone_number).
+  // There is no separate `twilio_numbers` table — the agency-wide
+  // `phone_numbers` table is a rotation pool, not per-client dedicated
+  // numbers. Count active clients owned by this agency that currently have
+  // a Twilio number attached.
+  try {
+    const { count } = await service
+      .from("clients")
+      .select("*", { count: "exact", head: true })
+      .eq("profile_id", ownerId)
+      .eq("is_active", true)
+      .not("twilio_phone_number", "is", null);
+    result.phone_numbers = count || 0;
+  } catch {
+    notes.push("phone_numbers count failed");
+  }
+
   if (notes.length) result.notes = notes;
   return result;
 }
@@ -329,7 +352,7 @@ export async function recordUsage(
   metadata?: Record<string, unknown>,
 ): Promise<void> {
   if (!ownerId || !resource) return;
-  const allowed: UsageResource[] = ["emails", "tokens", "clients", "sms", "call_minutes"];
+  const allowed: UsageResource[] = ["emails", "tokens", "clients", "sms", "call_minutes", "phone_numbers"];
   if (!allowed.includes(resource as UsageResource)) return;
   try {
     const service = createServiceClient();
