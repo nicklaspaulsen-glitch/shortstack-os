@@ -579,6 +579,415 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
       "Chris Bumstead-style classic physique thumbnail, massive chiseled bodybuilder in a vacuum pose or front double biceps, dramatic golden spotlight rim light sculpting every muscle, deep black background with faint red smoke, Mr. Olympia gold trophy or laurel wreath element, classic physique division aesthetic, gold and crimson palette, confident champion stare, cinematic gym poster polish",
     gradient: ["#0B0B0B", "#D4AF37"],
   },
+
+  // ───────── 43 ADDITIONAL NAMED YOUTUBER / CREATOR PRESETS ─────────
+  // Each tuned via prompt engineering to match a real creator's visual
+  // signature — palette, framing, props, color grade. No LoRA needed.
+
+  // TECH / REVIEW
+  {
+    id: "creator_mkbhd",
+    name: "MKBHD Studio Review",
+    category: "tech",
+    description: "Moody teal-red MKBHD studio, single gadget hero, glossy reflective surface.",
+    promptModifier:
+      "Marques Brownlee MKBHD-inspired studio review thumbnail, single premium gadget (smartphone, headphones, or laptop) sharply lit on a glossy reflective black surface, dominant teal-and-red color grade, soft overhead softbox key light with crisp specular highlights, shallow depth of field, deep matte-black background, ultra-clean tech-reviewer polish, oversized white bold sans-serif title space on right",
+    gradient: ["#DC2626", "#0F766E"],
+  },
+  {
+    id: "creator_ltt_linus",
+    name: "Linus Tech Tips Chaos",
+    category: "tech",
+    description: "Linus mid-drop shocked face, overflowing parts on wooden desk, warm fluorescent.",
+    promptModifier:
+      "Linus Tech Tips-style thumbnail, mid-laugh or exaggerated shocked expression with hands thrown up, cluttered warm-lit workshop desk overflowing with PC components, RGB motherboard glow, white pegboard backdrop, slightly chaotic high-energy framing, red LTT logo bold red accent, casual nerd-dad humor tone, handheld run-and-gun feel",
+    gradient: ["#DC2626", "#0F172A"],
+  },
+  {
+    id: "creator_unbox_therapy",
+    name: "Unbox Therapy Hero Shot",
+    category: "tech",
+    description: "Hands holding mystery gadget, black backdrop, tight macro crop, white text.",
+    promptModifier:
+      "Unbox Therapy-style thumbnail, close-up of hands cradling a mystery or flagship gadget against a pure jet-black seamless backdrop, single hard key light from top-left, extreme macro framing on the product detail, minimal composition, bold white sans-serif headline space, understated intrigue aesthetic, matte finish product photography",
+    gradient: ["#0F172A", "#E5E7EB"],
+  },
+  {
+    id: "creator_mrwhosetheboss",
+    name: "Mrwhosetheboss Premium",
+    category: "tech",
+    description: "Deep indigo backdrop, phone floating with glow halo, Arun-style polish.",
+    promptModifier:
+      "Mrwhosetheboss-inspired premium tech thumbnail, flagship smartphone floating mid-air with a soft circular radial glow halo behind it, deep indigo and midnight-blue backdrop with subtle star-field particles, polished cinematic product composition, British-reviewer cool aesthetic, sleek futuristic typography space, ultra-crisp focus and smooth gradients",
+    gradient: ["#312E81", "#38BDF8"],
+  },
+  {
+    id: "creator_dave2d",
+    name: "Dave2D Minimal Laptop",
+    category: "tech",
+    description: "One laptop, clean wood desk, natural window light, minimalist restraint.",
+    promptModifier:
+      "Dave2D-style minimalist laptop review thumbnail, a single thin-bezel ultrabook open at a precise 100-degree angle on a light oak wooden desk, soft diffuse natural window daylight from the left, muted neutral palette, zero clutter, Scandinavian minimalism, very shallow depth of field, small plant or coffee cup as the only secondary element",
+    gradient: ["#D6D3D1", "#57534E"],
+  },
+
+  // GAMING
+  {
+    id: "creator_pewdiepie",
+    name: "PewDiePie Cartoon Chaos",
+    category: "gaming",
+    description: "Felix cartoon face exaggerated, meme overlay, bright red-blue Swedish chaos.",
+    promptModifier:
+      "PewDiePie-style gaming thumbnail, exaggerated cartoonified face with wide bulging eyes and open laughing mouth, meme arrow or circle overlay with Impact-font style caption, Swedish flag blue and vibrant red palette, chair-throwing or flopping ragdoll meme vibe, slightly lo-fi gritty edge, irreverent chaotic energy, Brofist callback element in corner",
+    gradient: ["#2563EB", "#EF4444"],
+  },
+  {
+    id: "creator_dream_speedrun",
+    name: "Dream Minecraft Manhunt",
+    category: "gaming",
+    description: "Green smile logo looming, pixel Minecraft landscape, lime-green glow.",
+    promptModifier:
+      "Dream-style Minecraft manhunt thumbnail, iconic Dream smiley-face mask logo looming large and slightly blurred behind, blocky Minecraft biome landscape (forest or nether) in the background, lime-green magical glow emanating from the mask, small pixel Steve player figure running in the foreground, bright saturated sky blue, speedrun-tension composition",
+    gradient: ["#22C55E", "#1E3A8A"],
+  },
+  {
+    id: "creator_ninja",
+    name: "Ninja Fortnite Blue",
+    category: "gaming",
+    description: "Blue-haired streamer hero pose, Fortnite purple-blue sky, massive victory.",
+    promptModifier:
+      "Ninja-style Fortnite streamer thumbnail, platinum-blue-haired streamer in a hero victory pose wearing a headset, stylized Fortnite battle royale skyline behind with storm-purple and electric-blue clouds, Victory Royale graphic bar across the top, stylized cel-shaded cartoon render, twitch-streamer overlay frame, explosive hype energy",
+    gradient: ["#1D4ED8", "#A855F7"],
+  },
+  {
+    id: "creator_shroud",
+    name: "Shroud Tactical Focus",
+    category: "gaming",
+    description: "Tactical FPS silhouette, muted military grade, laser-focus stare.",
+    promptModifier:
+      "Shroud-style tactical FPS gaming thumbnail, subject in dark green operator jacket and headset with an intensely focused laser-calm stare, desaturated tactical military color grade with olive drab and gunmetal tones, crosshair reticle overlay on a distant target, a tactical operator silhouette in the backdrop, no exaggeration, pure aim-god precision aesthetic",
+    gradient: ["#1F2937", "#65A30D"],
+  },
+  {
+    id: "creator_jacksepticeye",
+    name: "Jacksepticeye Green Hype",
+    category: "gaming",
+    description: "Bright neon-green backdrop, Sean's beaming grin, Irish energy explosion.",
+    promptModifier:
+      "Jacksepticeye-style gaming reaction thumbnail, bright neon-green backdrop with black Septic-Sam eye logo watermark, host with messy bright-green-tinted hair beaming ear-to-ear with both fists pumped, playful tongue-out expression option, bouncy kinetic pose, yellow and green accent palette, pure Irish hype-energy, motion-blurred confetti in corners",
+    gradient: ["#22C55E", "#0F172A"],
+  },
+  {
+    id: "creator_coryxkenshin",
+    name: "CoryxKenshin Samurai Horror",
+    category: "gaming",
+    description: "Cory in samurai headband, exaggerated scared-serious face, red-black.",
+    promptModifier:
+      "CoryxKenshin-style horror gaming thumbnail, Cory wearing his signature red samurai headband and hoodie with an exaggerated scared-but-determined face, one eye squinted, dark horror game environment (abandoned hallway, flickering bulb) behind him, deep crimson-red and jet-black palette, subtle katana silhouette element, Samurai-family bold callout space",
+    gradient: ["#991B1B", "#0B0B0B"],
+  },
+  {
+    id: "creator_ssundee",
+    name: "SSundee Cartoon Explosion",
+    category: "gaming",
+    description: "Cartoonified Ssundee tiny body big head, pastel Minecraft chaos, sunglasses.",
+    promptModifier:
+      "SSundee-style cartoon gaming thumbnail, exaggerated cartoonified Ssundee with oversized head and tiny body wearing his signature sunglasses and purple hoodie, goofy exaggerated open-mouth laugh, bright pastel Minecraft-mod chaos in background (exploding creepers, flying pigs, rainbow blocks), kid-friendly toon-shaded lighting, sky-blue and pink bubble accents",
+    gradient: ["#60A5FA", "#F472B6"],
+  },
+
+  // FITNESS
+  {
+    id: "creator_jeff_nippard",
+    name: "Jeff Nippard Science",
+    category: "fitness",
+    description: "Whiteboard with muscle diagrams, lean athletic host, clean white gym.",
+    promptModifier:
+      "Jeff Nippard-style science-based fitness thumbnail, lean natural bodybuilder in a fitted white t-shirt gesturing to a whiteboard displaying muscle anatomy diagrams, EMG charts, or rep-range graphs, brightly-lit clean white gym studio backdrop, evidence-based nerdy-but-jacked tone, blue and white color palette, crisp professional educational polish",
+    gradient: ["#DBEAFE", "#1D4ED8"],
+  },
+  {
+    id: "creator_david_laid",
+    name: "David Laid Aesthetic Lean",
+    category: "fitness",
+    description: "Greek-statue lean physique, moody studio, minimalist high fashion gym.",
+    promptModifier:
+      "David Laid-style aesthetic physique thumbnail, extremely lean Greek-statue-proportioned subject in minimalist black compression shorts, soft chiaroscuro studio lighting carving every striation, muted grayscale backdrop with a single cold blue rim light, high-fashion editorial mood, cold emotionless model stare, GymShark campaign polish",
+    gradient: ["#1E293B", "#CBD5E1"],
+  },
+  {
+    id: "creator_larry_wheels",
+    name: "Larry Wheels Monster Lift",
+    category: "fitness",
+    description: "Massive powerlifter mid-deadlift, chalk cloud, red-black intensity.",
+    promptModifier:
+      "Larry Wheels-style powerlifting thumbnail, massive heavily-muscled strongman mid-deadlift with a chalk dust explosion in the air, veins bulging, open-mouth roaring intensity, industrial warehouse gym with a loaded deadlift bar bending, red and black blood-and-iron palette, harsh overhead work-light, raw unfiltered strength energy",
+    gradient: ["#7F1D1D", "#0B0B0B"],
+  },
+  {
+    id: "creator_sam_sulek",
+    name: "Sam Sulek Gym Rat POV",
+    category: "fitness",
+    description: "GoPro chest-angle, teen bodybuilder pumped, Ohio commercial gym.",
+    promptModifier:
+      "Sam Sulek-style raw gym-rat thumbnail, chest-up GoPro selfie angle of a young massive bodybuilder mid-pump wearing a sweat-stained gray cutoff and backwards cap, absurd pump visible in the arms, generic commercial gym in the background with a familiar squat rack, warm yellowish fluorescent lighting, casual unpolished authentic gen-Z bro-science vibe",
+    gradient: ["#78716C", "#F59E0B"],
+  },
+  {
+    id: "creator_chris_heria",
+    name: "Chris Heria Calisthenics Rooftop",
+    category: "fitness",
+    description: "Miami rooftop calisthenics, shirtless muscle-up silhouette, neon sunset.",
+    promptModifier:
+      "Chris Heria-style calisthenics thumbnail, shirtless subject at the top of a muscle-up on an outdoor Miami rooftop pull-up bar, golden-hour Miami sunset silhouette with palm trees and pastel pink-orange sky, defined functional aesthetic physique, THENX-style bold white block text space below, motivational street-workout energy",
+    gradient: ["#F97316", "#F43F5E"],
+  },
+
+  // FINANCE / BUSINESS
+  {
+    id: "creator_graham_stephan",
+    name: "Graham Stephan Real Estate",
+    category: "finance",
+    description: "Graham pointing at chart, big green number, LA background, clean white.",
+    promptModifier:
+      "Graham Stephan-style real-estate/finance thumbnail, host with a neat beard pointing at an oversized green revenue number (like $50,000/mo), crisp white background with a faint LA home exterior visible, a subtle Tesla or property photo in the corner, friendly minimalist energy, money-green and clean-white palette, approachable millennial-millionaire tone, let-me-explain-everything body language",
+    gradient: ["#16A34A", "#F9FAFB"],
+  },
+  {
+    id: "creator_ali_abdaal",
+    name: "Ali Abdaal Productivity",
+    category: "education",
+    description: "Ali smiling with Notion/iPad, warm teal-cream, cozy study-desk aesthetic.",
+    promptModifier:
+      "Ali Abdaal-style productivity thumbnail, host smiling warmly while holding an iPad or showing a Notion dashboard, cozy warm-teal and cream color palette, wooden desk with a neatly arranged cup of coffee and a plant, soft window light from the left, doctor-turned-creator intelligent-approachable aesthetic, hand-drawn doodle arrow callout, friendly-educator tone",
+    gradient: ["#14B8A6", "#FEF3C7"],
+  },
+  {
+    id: "creator_hormozi",
+    name: "Alex Hormozi Offer Stack",
+    category: "business",
+    description: "Bald Hormozi stare-down, black t-shirt, bold yellow offer-stack graphic.",
+    promptModifier:
+      "Alex Hormozi-style direct-response business thumbnail, bald heavily-tattooed host in a plain black t-shirt locked into an unbroken stare at the camera with a slight smirk, oversized bold yellow and black value-stack graphic with crossed-out old price and bolded new price, stark white background, aggressive money-making guarantee energy, Acquisition-dot-com typography",
+    gradient: ["#FACC15", "#0B0B0B"],
+  },
+  {
+    id: "creator_patrick_bet_david",
+    name: "Patrick Bet-David Valuetainment",
+    category: "business",
+    description: "PBD at glass whiteboard, suit no tie, Valuetainment red-black studio.",
+    promptModifier:
+      "Patrick Bet-David-style Valuetainment thumbnail, sharp-jawed host in a charcoal suit with open-collar shirt, standing next to a glass whiteboard with hand-drawn business-strategy diagrams, Valuetainment logo-red and deep-black studio backdrop, one strong rim light, authoritative exec-interviewer gaze, leadership-and-entrepreneurship polish",
+    gradient: ["#DC2626", "#111827"],
+  },
+  {
+    id: "creator_gary_vee",
+    name: "Gary Vaynerchuk Hustle",
+    category: "business",
+    description: "Gary mid-yell at phone, sneakers/hoodie, NYC chaotic hustle energy.",
+    promptModifier:
+      "Gary Vaynerchuk-style hustle-energy thumbnail, Gary mid-yell into his phone wearing a Jets hoodie and sneakers, bustling NYC street or VaynerMedia office in the background slightly motion-blurred, raw handheld energy, bright pops of red and yellow accents, kinetic on-the-go entrepreneur vibe, hand-scrawled exclamation callout, authentic unfiltered-hustle aesthetic",
+    gradient: ["#F59E0B", "#DC2626"],
+  },
+
+  // FOOD
+  {
+    id: "creator_nick_digiovanni",
+    name: "Nick DiGiovanni Rainbow Plate",
+    category: "food",
+    description: "Colorful plate, Nick smiling, bright pastel rainbow studio kitchen.",
+    promptModifier:
+      "Nick DiGiovanni-style MasterChef thumbnail, cheerful young chef in a clean white apron holding up a vibrantly plated dish with rainbow-colored fruits or sushi, bright pastel kitchen studio backdrop with seafoam-green cabinets, playful youthful energy, saturated but clean food-styling photography, joyful-foodie approachable tone",
+    gradient: ["#F472B6", "#34D399"],
+  },
+  {
+    id: "creator_joshua_weissman",
+    name: "Joshua Weissman But Better",
+    category: "food",
+    description: "Close-up pristine homemade version, papa-tier crispy, warm studio kitchen.",
+    promptModifier:
+      "Joshua Weissman But-Better-style food thumbnail, extreme macro close-up of a pristinely plated homemade fast-food-remake (a perfect burger, crispy fried chicken, or ramen) with visible steam and glistening sauce, warm-lit tidy home kitchen in soft-focus background, host's arm barely visible holding a knife, deep amber and cream palette, papa-tier-quality food-porn composition",
+    gradient: ["#B45309", "#FEF3C7"],
+  },
+  {
+    id: "creator_gordon_ramsay",
+    name: "Gordon Ramsay MasterChef",
+    category: "food",
+    description: "Ramsay yelling, stainless-steel kitchen, dramatic blue-white spotlight.",
+    promptModifier:
+      "Gordon Ramsay MasterChef-style thumbnail, Ramsay in crisp chef whites mid-yell pointing at something off-frame, gleaming stainless-steel professional kitchen backdrop, cold dramatic blue-and-white spotlight from above, blue fire flame element in the corner, intense high-stakes culinary-tension energy, reality-TV signature composition",
+    gradient: ["#1E40AF", "#F3F4F6"],
+  },
+  {
+    id: "creator_babish",
+    name: "Binging with Babish",
+    category: "food",
+    description: "Overhead recreation of movie-food, blue wooden board, calm Brooklyn home.",
+    promptModifier:
+      "Binging with Babish-style thumbnail, overhead flat-lay shot of a meticulously recreated iconic movie or TV show dish on Babish's signature blue wooden cutting board, arms in rolled-sleeve chef shirt just entering the frame, warm Brooklyn-apartment kitchen natural daylight, soft shadows, calm methodical tone, muted teal and oak palette",
+    gradient: ["#1E3A8A", "#D97706"],
+  },
+  {
+    id: "creator_mrbeast_burger",
+    name: "MrBeast Burger Chain",
+    category: "food",
+    description: "Giant oozing burger, wood table, MrBeast red-orange branding energy.",
+    promptModifier:
+      "MrBeast Burger-style fast-food thumbnail, oversized dripping double-smash-burger with glossy American cheese and crispy lettuce hero-shot on rustic wood, bright studio softbox light, bold MrBeast red and orange palette, French fries and a shake in the blurred backdrop, appetizing-yet-chaotic challenge-channel food-ad composition, giant number or dollar-sign badge",
+    gradient: ["#EF4444", "#F97316"],
+  },
+
+  // LIFESTYLE / VLOG
+  {
+    id: "creator_casey_neistat",
+    name: "Casey Neistat NYC Vlog",
+    category: "lifestyle",
+    description: "Casey on boosted-board, NYC street, Technics-style black-white-yellow.",
+    promptModifier:
+      "Casey Neistat-style NYC vlog thumbnail, subject in a Sony beanie and glasses riding a Boosted board down a Manhattan street, handheld fisheye DSLR-vlog aesthetic, gritty black-white-and-yellow signature color grade with bold sans-serif title card, steam rising from subway grates, busy taxis and yellow cabs, authentic run-and-gun filmmaker tone",
+    gradient: ["#FACC15", "#111827"],
+  },
+  {
+    id: "creator_emma_chamberlain",
+    name: "Emma Chamberlain Film Grain",
+    category: "lifestyle",
+    description: "Emma with Chamberlain coffee, faded film, fisheye bedroom, gen-Z mess.",
+    promptModifier:
+      "Emma Chamberlain-style vlog thumbnail, casual messy-bun subject holding a Chamberlain Coffee cup, faded film-grain color grade with washed-out yellows and dusty pinks, slight fisheye distortion, lived-in bedroom or LA cafe backdrop, unposed candid mid-laugh moment, gen-Z chaotic-authentic aesthetic, low-saturation vintage feel",
+    gradient: ["#F5D0A9", "#A78BFA"],
+  },
+  {
+    id: "creator_david_dobrik",
+    name: "David Dobrik Vlog Squad",
+    category: "lifestyle",
+    description: "Group selfie, big ensemble laugh, bright LA sun, fisheye warm chaos.",
+    promptModifier:
+      "David Dobrik Vlog-Squad-style thumbnail, a big group selfie of eight-plus friends all cramming into a fisheye wide-angle frame with over-the-top laughing open-mouth expressions, piled into a Tesla or crammed into a hotel room, bright LA sunny midday overexposed look, chaotic prank-aftermath energy, orange and sky-blue palette, 4-minute-vlog signature",
+    gradient: ["#FB923C", "#38BDF8"],
+  },
+  {
+    id: "creator_jake_paul",
+    name: "Jake Paul Problem Child",
+    category: "entertainment",
+    description: "Jake in boxing gloves, purple-red fight poster, Problem Child branding.",
+    promptModifier:
+      "Jake Paul Problem-Child-style thumbnail, host in red boxing gloves with a smirking trash-talking stare-down pose, Problem-Child deep-purple-and-red fight-poster color palette, stadium lights hinted behind with boxing-ring ropes, oversized bold white block fight-card typography space, confrontational showboat energy, influencer-boxer polish",
+    gradient: ["#7C3AED", "#DC2626"],
+  },
+
+  // EDUCATION
+  {
+    id: "creator_thomas_frank",
+    name: "Thomas Frank Study",
+    category: "education",
+    description: "Open Notion on laptop, cozy study desk, College Info Geek warm tones.",
+    promptModifier:
+      "Thomas Frank-style study-productivity thumbnail, overhead angle of a laptop running a color-coded Notion dashboard on a tidy wooden desk, bullet-journal notebook, leather pen, and a cup of tea arranged around it, warm amber reading-lamp light, College-Info-Geek cozy-intellectual aesthetic, autumn-earth-tone palette, friendly student-focused tone",
+    gradient: ["#B45309", "#064E3B"],
+  },
+  {
+    id: "creator_matt_davella",
+    name: "Matt D'Avella Minimalist",
+    category: "lifestyle",
+    description: "Stark white room, one object, Matt in plain tee, silent-frame minimalism.",
+    promptModifier:
+      "Matt D'Avella-style minimalist documentary thumbnail, subject in a plain white or heather-gray t-shirt standing in a stark white empty room with one single meaningful object (a chair, a book, a plant), muted slightly-desaturated natural daylight, wide negative space, Helvetica-clean typography room, The-Minimalists thoughtful-pause aesthetic",
+    gradient: ["#F3F4F6", "#57534E"],
+  },
+  {
+    id: "creator_veritasium",
+    name: "Veritasium Science",
+    category: "education",
+    description: "Derek holding a counter-intuitive object, physics demo, electric blue.",
+    promptModifier:
+      "Veritasium-style science-education thumbnail, Derek Muller holding a counter-intuitive physics demonstration object (a spinning top, a vacuum chamber, a magnet), dramatic key light and dark teal backdrop, electric-blue chalkboard-style equation overlay, raised-eyebrow curious expression, educational-but-mind-blown mood, sharp professional documentary polish",
+    gradient: ["#0EA5E9", "#0F172A"],
+  },
+  {
+    id: "creator_kurzgesagt",
+    name: "Kurzgesagt Flat Illustration",
+    category: "education",
+    description: "Flat vector ducks, space scene, Kurzgesagt cool-pastel gradient sky.",
+    promptModifier:
+      "Kurzgesagt-style flat-illustration thumbnail, crisp flat-vector cartoon ducks or tiny geometric characters floating in a cosmic or microscopic scene, signature cool-pastel gradient sky (teal to pink to orange), clean rounded-corner shapes, zero-photoreal textures, Birds-In-A-Nutshell whimsical-explainer tone, cheerful-yet-existential science-of-everything polish",
+    gradient: ["#06B6D4", "#FB7185"],
+  },
+
+  // COMMENTARY / DOCUMENTARY
+  {
+    id: "creator_johnny_harris",
+    name: "Johnny Harris Map Explainer",
+    category: "news",
+    description: "Vintage world map zoom, red pins, Johnny in earth-tone jacket.",
+    promptModifier:
+      "Johnny Harris-style geopolitical-explainer thumbnail, vintage sepia-toned world map dominating the frame with red-string connection lines and pinned markers on conflict zones, host in a rugged earth-tone field-jacket staring thoughtfully off-frame, cinematic warm tungsten light, Vox-alum documentary polish, burnt-orange and forest-green palette",
+    gradient: ["#78350F", "#166534"],
+  },
+  {
+    id: "creator_wendover",
+    name: "Wendover Productions Infographic",
+    category: "education",
+    description: "Isometric airplane/map infographic, clean vector, blue corporate palette.",
+    promptModifier:
+      "Wendover Productions-style infographic thumbnail, isometric vector illustration of a Boeing airplane or a world-trade-route map with clean animated-style arrows and data callouts, corporate-infographic clean cyan and navy palette, no human subject, crisp bold sans-serif title space, systems-analysis-explainer educational-documentary polish",
+    gradient: ["#1E3A8A", "#0EA5E9"],
+  },
+  {
+    id: "creator_coffeezilla",
+    name: "Coffeezilla Scam Exposé",
+    category: "news",
+    description: "Coffeezilla cup glare, investigator shadow, brown-black conspiracy moody.",
+    promptModifier:
+      "Coffeezilla-style scam-investigator thumbnail, low-key lit host with dramatic half-shadow across his face holding a coffee mug with signature skull-and-coffee graphic, a blurred screenshot of crypto scammers or NFT rug-pull evidence behind him, deep brown and black investigative palette, single cool rim light, serious-investigative-journalist tone, evidence-file aesthetic",
+    gradient: ["#431407", "#0B0B0B"],
+  },
+  {
+    id: "creator_joe_rogan",
+    name: "Joe Rogan Experience Clip",
+    category: "entertainment",
+    description: "Two-shot at desk, Shure SM7B mics, moody blue JRE studio.",
+    promptModifier:
+      "Joe Rogan Experience-style podcast clip thumbnail, two-shot of host and guest leaning on the wooden desk holding Shure SM7B microphones mid-conversation, moody blue JRE studio backdrop with shelves of skull art and books, warm amber accent light on the guest, deep navy and amber palette, bold white pull-quote text space, long-form-podcast intensity",
+    gradient: ["#0C4A6E", "#F59E0B"],
+  },
+  {
+    id: "creator_lex_fridman",
+    name: "Lex Fridman Interview",
+    category: "entertainment",
+    description: "Two-shot against black wall, suit-and-tie Lex, philosophical dark polish.",
+    promptModifier:
+      "Lex Fridman-style long-form-interview thumbnail, Lex in his signature black suit and black tie sitting across from a guest against a pure matte black wall, single warm key light on each face creating dramatic rim separation, minimalist no-logo composition, contemplative philosophical energy, muted gold and black palette, AI-ML-and-meaning-of-life gravitas",
+    gradient: ["#0B0B0B", "#CA8A04"],
+  },
+
+  // ANIME / ANIMATED / CREATIVE
+  {
+    id: "creator_rdcworld1",
+    name: "RDCworld1 Anime Sketch",
+    category: "entertainment",
+    description: "Group in anime-style pose, explosive speed lines, black dudes as otakus.",
+    promptModifier:
+      "RDCworld1-style anime-sketch comedy thumbnail, ensemble cast of friends in over-the-top anime battle poses with exaggerated serious expressions, dramatic radial speed-lines exploding from center, bold cel-shaded saturated outlines, If-Anime-Characters-Were-Black energy, Dragon-Ball-Z and Naruto homage composition, text-callout space top and bottom",
+    gradient: ["#F97316", "#7C3AED"],
+  },
+  {
+    id: "creator_jaiden_animations",
+    name: "Jaiden Animations",
+    category: "entertainment",
+    description: "Jaiden cartoon avatar with Ari bird, pastel flat backdrop, diary-vlog cute.",
+    promptModifier:
+      "Jaiden Animations-style storytime-animation thumbnail, Jaiden's pink-hooded cartoon avatar with her green parrot Ari perched on her shoulder, flat pastel-cream backdrop with small doodle sparkles, big expressive anime-style eyes, cozy wholesome diary-vlog energy, soft mint-green and peach palette, hand-drawn caption bubble space, approachable animator-storyteller tone",
+    gradient: ["#A7F3D0", "#FECACA"],
+  },
+  {
+    id: "creator_somethingelseyt",
+    name: "SomethingElseYT Fast Paced",
+    category: "entertainment",
+    description: "Adam's yellow-hoodie avatar, motion-blur cartoon chaos, yellow-purple pop.",
+    promptModifier:
+      "SomethingElseYT-style hyperactive-animation thumbnail, Adam's yellow-hoodie cartoon avatar with giant Kirby-style eyes mid-shout with motion lines radiating out, chaotic bright purple and yellow backdrop with scribble textures, fast-cut vlog-style cartoon energy, over-caffeinated storyteller vibe, comic-strip BAM-style callout graphic in corner",
+    gradient: ["#FACC15", "#7C3AED"],
+  },
 ];
 
 export const STYLE_CATEGORIES: { id: StyleCategory; label: string }[] = [

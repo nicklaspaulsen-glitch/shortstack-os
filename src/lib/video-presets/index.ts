@@ -69,3 +69,12 @@ export {
   type MusicLicense,
   type MusicSource,
 } from "./music";
+
+// Creator video packs — one per named YouTuber preset in thumbnail-styles.ts
+export {
+  CREATOR_VIDEO_PACKS,
+  getCreatorPackById,
+  filterCreatorPacks,
+  type CreatorVideoPack,
+  type CreatorVideoPackSignature,
+} from "./creator-packs";
