@@ -294,6 +294,8 @@ export default function AdsManagerPage() {
         setShowCreate(false);
         setNewCampaign({ name: "", platform: "meta_ads", objective: "conversions", daily_budget: 50, start_date: new Date().toISOString().split("T")[0], end_date: "", audience: "", ai_optimized: true });
         toast.success("Campaign created");
+      } else {
+        toast.error(data.error || "Failed to create campaign");
       }
     } catch { toast.error("Failed to create campaign"); }
   }

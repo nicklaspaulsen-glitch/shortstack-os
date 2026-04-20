@@ -108,7 +108,10 @@ export default function AIVideoPage() {
         toast.success("Video plan created (GPU endpoint not configured — showing scene plan)");
       } else {
         setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
-        toast.error(data.error || "Generation failed");
+        const attemptedMsg = Array.isArray(data.attempted) && data.attempted.length > 0
+          ? `Video render failed. Tried: ${data.attempted.join(", ")}`
+          : (data.error || "Generation failed");
+        toast.error(attemptedMsg);
       }
     } catch (err) {
       console.error("[ai-video] generateVideo error:", err);

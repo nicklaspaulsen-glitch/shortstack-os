@@ -2457,7 +2457,10 @@ export default function VideoEditorPage() {
           if (mode === "storyboard") setTab("storyboard");
         }
       } else {
-        toast.error(data.error || "Render failed");
+        const attemptedMsg = Array.isArray(data.attempted) && data.attempted.length > 0
+          ? `Video render failed. Tried: ${data.attempted.join(", ")}`
+          : (data.error || "Render failed");
+        toast.error(attemptedMsg);
       }
     });
     if (!ok8) { setGenerating(false); return; }
@@ -2520,7 +2523,10 @@ export default function VideoEditorPage() {
           if (mode === "storyboard") setTab("storyboard");
         }
       } else {
-        toast.error(data.error || "Failed");
+        const attemptedMsg = Array.isArray(data.attempted) && data.attempted.length > 0
+          ? `Video render failed. Tried: ${data.attempted.join(", ")}`
+          : (data.error || "Failed");
+        toast.error(attemptedMsg);
       }
     } catch {
       clearInterval(progressInterval);
