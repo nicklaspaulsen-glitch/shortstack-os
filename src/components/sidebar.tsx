@@ -78,6 +78,7 @@ import {
   X,
   Download,
   ShieldCheck,
+  ArrowUpRight,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -752,16 +753,27 @@ export default function Sidebar() {
                   const hubHref = SECTION_HUB_HREF[group.section!];
                   const hubActive = hubHref ? pathname === hubHref : false;
                   if (hubHref) {
+                    // Hub-bearing section: label is a clickable Link that
+                    // routes to /dashboard/<section>. A tiny arrow icon +
+                    // gold accent makes it visibly distinct from plain
+                    // non-hub section headers, so users learn they can
+                    // click it to see the full section dashboard.
                     return (
-                      <div className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec">
+                      <div className="w-full flex items-center gap-1.5 px-2 pt-3 pb-1 group/sec">
                         <Link
                           href={hubHref}
-                          className={`text-[8px] uppercase tracking-[0.2em] font-semibold transition-colors ${
-                            hubActive ? "text-gold" : "text-muted group-hover/sec:text-foreground hover:text-foreground"
+                          className={`group/hub flex items-center gap-1 rounded px-1 py-0.5 text-[9px] uppercase tracking-[0.2em] font-bold transition-colors ${
+                            hubActive
+                              ? "text-gold bg-gold/10"
+                              : "text-gold/70 hover:text-gold hover:bg-gold/5"
                           }`}
-                          title={`Open ${group.section} hub`}
+                          title={`Open ${group.section} hub →`}
                         >
-                          {group.section}
+                          <span>{group.section}</span>
+                          <ArrowUpRight
+                            size={9}
+                            className="opacity-60 transition-all group-hover/hub:opacity-100 group-hover/hub:-translate-y-0.5 group-hover/hub:translate-x-0.5"
+                          />
                         </Link>
                         <div className="flex-1 h-px bg-border" />
                         <button

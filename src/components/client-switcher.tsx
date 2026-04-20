@@ -57,8 +57,9 @@ export default function ClientSwitcher() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  // Only show for admins
-  if (profile?.role !== "admin") return null;
+  // Show for anyone who can own clients. Hides for pure "client" end-users.
+  const ownerRoles = ["admin", "founder", "agency", "team_member"];
+  if (!profile?.role || !ownerRoles.includes(profile.role)) return null;
 
   const filtered = clients.filter(c =>
     !search || c.business_name.toLowerCase().includes(search.toLowerCase()) ||

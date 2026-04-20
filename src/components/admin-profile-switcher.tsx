@@ -52,7 +52,9 @@ export default function AdminProfileSwitcher() {
   const [showCreateProfile, setShowCreateProfile] = useState<ClientAccount | null>(null);
   const [creating, setCreating] = useState(false);
 
-  if (profile?.role !== "admin") return null;
+  // Show for any role that can own clients. Hides for pure "client" end-users.
+  const ownerRoles = ["admin", "founder", "agency", "team_member"];
+  if (!profile?.role || !ownerRoles.includes(profile.role)) return null;
 
   async function fetchClients() {
     if (clients.length > 0) return;

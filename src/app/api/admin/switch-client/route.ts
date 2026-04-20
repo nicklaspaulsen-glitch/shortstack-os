@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
-// Admin Client Switcher — View any client's portal as admin
+// Admin Client Switcher — View any client's portal as admin/founder/agency
 export async function GET(_request: NextRequest) {
-  // Verify the requester is an admin via cookie auth
+  // Verify the requester via cookie auth
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) {
@@ -14,10 +14,12 @@ export async function GET(_request: NextRequest) {
   // Use service client for all data queries (bypasses RLS, more reliable)
   const supabase = createServiceClient();
 
-  // Verify admin role
+  // Verify role — anyone who can own clients (admin, founder, agency) is
+  // allowed to view their own list. Team members resolve up to the parent
+  // agency. Clients themselves (end-users) are blocked.
   const { data: profile, error: profileErr } = await supabase
     .from("profiles")
-    .select("role")
+    .select("id, role, parent_agency_id")
     .eq("id", user.id)
     .single();
 
@@ -25,16 +27,24 @@ export async function GET(_request: NextRequest) {
     console.error("[switch-client] Profile lookup error:", profileErr.message);
     return NextResponse.json({ error: "Profile not found" }, { status: 403 });
   }
-  if (profile?.role !== "admin") {
-    return NextResponse.json({ error: "Admin only" }, { status: 403 });
+  const ownerRoles = ["admin", "founder", "agency"];
+  const role = (profile as { role: string } | null)?.role || "";
+  const parentAgencyId = (profile as { parent_agency_id?: string } | null)?.parent_agency_id || null;
+  const isTeamMember = role === "team_member" && parentAgencyId;
+  if (!ownerRoles.includes(role) && !isTeamMember) {
+    return NextResponse.json(
+      { error: "Only agency owners, founders, admins, or team members can switch clients" },
+      { status: 403 },
+    );
   }
+  const effectiveOwnerId = isTeamMember ? (parentAgencyId as string) : user.id;
 
-  // Get only the caller's own clients (security: scope by profile_id)
+  // Get only the caller's own clients (team members resolve to parent agency)
   const { data: clients, error: clientsErr } = await supabase.from("clients").select(`
     id, profile_id, business_name, contact_name, email, phone, website, industry,
     package_tier, services, mrr, contract_status, health_score, is_active,
     created_at, onboarded_at
-  `).eq("profile_id", user.id).order("business_name");
+  `).eq("profile_id", effectiveOwnerId).order("business_name");
 
   if (clientsErr) {
     console.error("[switch-client] Clients query error:", clientsErr.message);

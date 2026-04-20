@@ -3,14 +3,17 @@ import { createServerSupabase } from "@/lib/supabase/server";
 
 // Text-to-speech proxy. Tries providers in order of preference:
 //   1. Runpod XTTS v2   — self-hosted, free, natural voice cloning
-//   2. ElevenLabs       — commercial, highest quality, paid per character
-//   3. 501 (client falls back to browser SpeechSynthesis)
+//   2. OpenAI TTS       — commercial, rock-solid, cheap ($0.015/1k chars)
+//   3. ElevenLabs       — commercial, highest quality, paid per character
+//   4. 501 (client picks a natural browser voice, not Microsoft David)
 //
 // Env vars:
-//   RUNPOD_XTTS_URL + RUNPOD_API_KEY   — primary path
-//   ELEVENLABS_API_KEY                 — secondary
+//   RUNPOD_XTTS_URL + RUNPOD_API_KEY   — primary (free, needs worker)
+//   OPENAI_API_KEY                     — secondary (reliable, cheap)
+//   ELEVENLABS_API_KEY                 — tertiary
 //   ELEVENLABS_VOICE_ID                — override voice (defaults to Charlotte)
-//   TRINITY_TTS_PROVIDER=elevenlabs    — force ElevenLabs first (dev/testing)
+//   OPENAI_TTS_VOICE                   — override OpenAI voice (defaults to nova)
+//   TRINITY_TTS_PROVIDER               — force order: xtts | openai | elevenlabs
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -18,6 +21,8 @@ export const maxDuration = 30;
 const MAX_TEXT_LENGTH = 2000;
 // Charlotte — calm, composed, British-accented female. Jarvis-but-female vibe.
 const DEFAULT_ELEVENLABS_VOICE_ID = "XB0fDUnXU5powFXDhCwa";
+// Nova — warm, soft-spoken, slightly British female. Closest OpenAI voice to Charlotte.
+const DEFAULT_OPENAI_VOICE = "nova";
 
 // ───────────────────────────────────────────────────────────────────
 // Provider: Runpod XTTS v2 (self-hosted, free)
@@ -93,6 +98,46 @@ async function synthesizeViaRunpodXTTS(text: string): Promise<
     return { ok: true, audio };
   } catch (err) {
     console.error("[tts/xtts] fetch failed:", err);
+    return { ok: false, reason: "fetch_error" };
+  }
+}
+
+// ───────────────────────────────────────────────────────────────────
+// Provider: OpenAI TTS (tts-1, cheap + rock-solid)
+// ───────────────────────────────────────────────────────────────────
+async function synthesizeViaOpenAI(text: string): Promise<
+  | { ok: true; audio: ArrayBuffer }
+  | { ok: false; reason: string; status?: number }
+> {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) return { ok: false, reason: "not_configured" };
+
+  const voice = process.env.OPENAI_TTS_VOICE || DEFAULT_OPENAI_VOICE;
+
+  try {
+    const res = await fetch("https://api.openai.com/v1/audio/speech", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "tts-1",
+        voice, // alloy | echo | fable | onyx | nova | shimmer
+        input: text,
+        response_format: "mp3",
+        speed: 1.0,
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      console.error("[tts/openai]", res.status, errText.slice(0, 300));
+      return { ok: false, reason: `http_${res.status}`, status: res.status };
+    }
+    const audio = await res.arrayBuffer();
+    return { ok: true, audio };
+  } catch (err) {
+    console.error("[tts/openai] fetch failed:", err);
     return { ok: false, reason: "fetch_error" };
   }
 }
@@ -189,12 +234,18 @@ export async function POST(request: NextRequest) {
   const overrideVoice =
     typeof body.voice_id === "string" && body.voice_id ? body.voice_id : undefined;
 
-  // Provider order. Default: XTTS (free) → ElevenLabs (paid backup).
-  // Override via TRINITY_TTS_PROVIDER=elevenlabs for testing.
-  const preferElevenLabs = process.env.TRINITY_TTS_PROVIDER === "elevenlabs";
-  const providers = preferElevenLabs
-    ? ["elevenlabs" as const, "xtts" as const]
-    : ["xtts" as const, "elevenlabs" as const];
+  // Provider order. Default: XTTS (free) → OpenAI (cheap+reliable) →
+  // ElevenLabs (premium fallback). Override via TRINITY_TTS_PROVIDER.
+  type Provider = "xtts" | "openai" | "elevenlabs";
+  const forced = process.env.TRINITY_TTS_PROVIDER as Provider | undefined;
+  const providers: Provider[] =
+    forced === "elevenlabs"
+      ? ["elevenlabs", "openai", "xtts"]
+      : forced === "openai"
+        ? ["openai", "xtts", "elevenlabs"]
+        : forced === "xtts"
+          ? ["xtts", "openai", "elevenlabs"]
+          : ["xtts", "openai", "elevenlabs"];
 
   const attempts: Array<{ provider: string; reason: string; status?: number }> = [];
 
@@ -202,9 +253,12 @@ export async function POST(request: NextRequest) {
     const result =
       provider === "xtts"
         ? await synthesizeViaRunpodXTTS(text)
-        : await synthesizeViaElevenLabs(text, overrideVoice);
+        : provider === "openai"
+          ? await synthesizeViaOpenAI(text)
+          : await synthesizeViaElevenLabs(text, overrideVoice);
 
     if (result.ok) {
+      console.log(`[tts] served via ${provider} (${result.audio.byteLength} bytes)`);
       return new NextResponse(result.audio, {
         status: 200,
         headers: {
@@ -232,7 +286,7 @@ export async function POST(request: NextRequest) {
     {
       error: "No TTS provider available",
       attempts,
-      hint: "Check RUNPOD_XTTS_URL or ELEVENLABS_API_KEY. If ElevenLabs returned 402, your quota is exhausted.",
+      hint: "Set OPENAI_API_KEY (easy, $0.015/1k chars) or RUNPOD_XTTS_URL (free). ElevenLabs 402 = quota exhausted.",
     },
     { status: attempts.every((a) => a.reason === "not_configured") ? 501 : 502 },
   );

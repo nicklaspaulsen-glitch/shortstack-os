@@ -142,31 +142,51 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
     });
   }
 
-  // Fallback path: browser SpeechSynthesis. Used when ElevenLabs isn't
-  // available OR returns an error. Picks the best available voice.
+  // Fallback path: browser SpeechSynthesis. Used when ALL server providers
+  // (XTTS, OpenAI, ElevenLabs) are down. Picks the best available voice —
+  // avoiding the robotic Microsoft David/Zira Desktop voices if at all
+  // possible by preferring Windows neural voices ("Microsoft Aria Online
+  // (Natural)"), Google voices, and Apple premium voices.
   function speakViaBrowser(text: string) {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
 
-    // Browser voice quality varies a lot. Prefer high-quality natural voices
-    // when present, in this rough order of preference.
     const voices = window.speechSynthesis.getVoices();
+
+    // Strongly prefer female neural voices. "Aria", "Jenny", "Nova" = natural.
+    // Avoid "David", "Mark", "Zira Desktop" = robotic.
+    const blocklist = /David|Mark|Zira Desktop|Zira - English|Microsoft Desktop|James|Richard|George|Hazel/i;
     const pickers: Array<(v: SpeechSynthesisVoice) => boolean> = [
-      (v) => /Natural|Neural/i.test(v.name) && v.lang.startsWith("en"),
-      (v) => /Samantha|Karen|Alex|Daniel|Serena/.test(v.name),
-      (v) => /Google.*US English/i.test(v.name),
+      // Tier 1: Windows 11 neural voices (highest quality on Windows)
+      (v) => /Aria.*Online.*Natural|Jenny.*Online.*Natural|Guy.*Online.*Natural/i.test(v.name),
+      // Tier 2: Any "Natural" or "Neural" voice tagged English
+      (v) => /Natural|Neural/i.test(v.name) && v.lang.startsWith("en") && !blocklist.test(v.name),
+      // Tier 3: Apple premium voices (macOS / iOS)
+      (v) => /Samantha|Serena|Ava|Allison/.test(v.name),
+      // Tier 4: Google voices (Chrome on any OS)
+      (v) => /Google.*US English|Google.*UK English.*Female/i.test(v.name),
       (v) => v.name.startsWith("Google") && v.lang.startsWith("en"),
-      (v) => v.lang === "en-US",
+      // Tier 5: Any en-US voice that isn't blocklisted
+      (v) => v.lang === "en-US" && !blocklist.test(v.name),
+      // Tier 6: Any English voice that isn't blocklisted
+      (v) => v.lang.startsWith("en") && !blocklist.test(v.name),
+      // Last resort: any English voice
       (v) => v.lang.startsWith("en"),
     ];
+    let pickedName: string | null = null;
     for (const pick of pickers) {
       const found = voices.find(pick);
       if (found) {
         utter.voice = found;
+        pickedName = found.name;
         break;
       }
     }
+
+    // Debug: tell the user which fallback voice we landed on. Makes the
+    // "why do I hear Microsoft David" question answerable from the console.
+    console.log(`[trinity/tts] browser fallback voice: ${pickedName || "(default)"}`);
 
     utter.rate = 1.0;
     utter.pitch = 1.0;
@@ -192,7 +212,13 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text }),
       });
-      if (!res.ok) throw new Error(`tts returned ${res.status}`);
+      if (!res.ok) {
+        const debug = await res.json().catch(() => ({}));
+        console.warn(`[trinity/tts] /api/tts/speak ${res.status}`, debug);
+        throw new Error(`tts returned ${res.status}`);
+      }
+      const provider = res.headers.get("x-tts-provider") || "unknown";
+      console.log(`[trinity/tts] audio via ${provider}`);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
