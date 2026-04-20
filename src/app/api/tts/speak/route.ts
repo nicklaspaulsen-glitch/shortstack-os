@@ -26,7 +26,7 @@ const DEFAULT_OPENAI_VOICE = "nova";
 // Default voice pace. 1.0 = standard; 1.15 = snappy human tempo (recommended);
 // 1.25 = conversational-fast; cap at 1.3 (OpenAI limit is 4.0, natural cap ~1.3).
 // Override via body.speed or env TTS_DEFAULT_SPEED.
-const DEFAULT_VOICE_SPEED = Number(process.env.TTS_DEFAULT_SPEED) || 1.15;
+const DEFAULT_VOICE_SPEED = Number(process.env.TTS_DEFAULT_SPEED) || 1.25;
 
 // ───────────────────────────────────────────────────────────────────
 // Provider: Runpod XTTS v2 (self-hosted, free)

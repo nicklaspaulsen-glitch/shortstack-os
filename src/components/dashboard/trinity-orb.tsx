@@ -82,6 +82,9 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
   // Audio element used to play ElevenLabs MP3. Kept in a ref so we can
   // cancel/stop it when the user mutes or sends a new message.
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  // Bumped on every new speak() / stopAllAudio() so any in-flight sentence
+  // stream from a previous invocation knows to bail out instead of barging in.
+  const speakVersionRef = useRef(0);
 
   // Extract the current dashboard page slug (e.g. "script-lab", "ads-manager")
   // so Trinity can bias tool choice toward the page the user is viewing.
@@ -117,6 +120,8 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
 
   function stopAllAudio() {
     if (typeof window === "undefined") return;
+    // Bump version so any in-flight sentence-stream aborts on its next check.
+    speakVersionRef.current++;
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = "";
@@ -222,9 +227,90 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
       .trim();
   }
 
+  // Split text into sentences so we can synthesise them in parallel and
+  // start playing the FIRST one while the rest are still being generated.
+  // Cuts time-to-first-audio from ~1s (full reply) down to ~300ms
+  // (just the first sentence's TTS). Merges tiny fragments so we don't
+  // spam tiny TTS requests.
+  function splitSentences(text: string): string[] {
+    const raw: string[] = [];
+    let current = "";
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      current += c;
+      const next = text[i + 1];
+      if ((c === "." || c === "!" || c === "?" || c === "\n") &&
+          (!next || next === " " || next === "\n")) {
+        if (current.trim()) raw.push(current.trim());
+        current = "";
+      }
+    }
+    if (current.trim()) raw.push(current.trim());
+
+    // Merge tiny fragments (< 30 chars) — TTS has a latency floor per call,
+    // so batching small bits keeps parallel-overhead manageable.
+    const merged: string[] = [];
+    let buf = "";
+    for (const s of raw) {
+      buf = buf ? `${buf} ${s}` : s;
+      if (buf.length >= 30) {
+        merged.push(buf);
+        buf = "";
+      }
+    }
+    if (buf) {
+      if (merged.length > 0) merged[merged.length - 1] += ` ${buf}`;
+      else merged.push(buf);
+    }
+    return merged;
+  }
+
+  async function fetchTtsBlob(sentence: string): Promise<{ blob: Blob; provider: string } | null> {
+    try {
+      const res = await fetch("/api/tts/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: sentence }),
+      });
+      if (!res.ok) {
+        const debug = await res.json().catch(() => ({}));
+        console.error(`[trinity/tts] ${res.status}`, debug);
+        return null;
+      }
+      const provider = res.headers.get("x-tts-provider") || "unknown";
+      const blob = await res.blob();
+      return { blob, provider };
+    } catch (err) {
+      console.error("[trinity/tts] fetch error:", err);
+      return null;
+    }
+  }
+
+  function playBlob(blob: Blob): Promise<void> {
+    return new Promise((resolve) => {
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.volume = 1.0;
+      audioRef.current = audio;
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        if (audioRef.current === audio) audioRef.current = null;
+        resolve();
+      };
+      audio.onerror = () => {
+        URL.revokeObjectURL(url);
+        if (audioRef.current === audio) audioRef.current = null;
+        resolve();
+      };
+      audio.play().catch(() => resolve());
+    });
+  }
+
   // Primary path: /api/tts/speak. Provider cascade on the server:
-  // XTTS (free) → OpenAI → ElevenLabs → 501. Falls back to browser only
-  // if ALL server providers fail.
+  // XTTS → OpenAI → ElevenLabs → 501. Falls back to browser only if the
+  // FIRST sentence fails on the server.
+  // Sentence-streaming: parallel TTS requests, play in order. First audio
+  // starts ~1s sooner than synthesizing the full reply in one shot.
   async function speak(text: string) {
     if (muted || !text) return;
     if (typeof window === "undefined") return;
@@ -232,47 +318,48 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
     const cleaned = sanitizeForSpeech(text);
     if (!cleaned) return;
 
-    // Stop anything that's already playing.
+    // Stop anything that's already playing and bump the version so any
+    // in-flight sentence stream from a previous call aborts cleanly.
     stopAllAudio();
+    const myVersion = ++speakVersionRef.current;
 
-    try {
-      const res = await fetch("/api/tts/speak", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: cleaned }),
-      });
-      if (!res.ok) {
-        const debug = await res.json().catch(() => ({}));
-        console.error(
-          `[trinity/tts] /api/tts/speak ${res.status} — server providers all failed. See attempts below. Falling back to browser voice.`,
-          debug,
-        );
-        throw new Error(`tts returned ${res.status}`);
+    const sentences = splitSentences(cleaned);
+    if (sentences.length === 0) return;
+
+    // Fire all TTS requests in parallel so they're all in-flight from t=0.
+    const blobPromises = sentences.map((s) => fetchTtsBlob(s));
+
+    setSpeaking(true);
+    let playedAny = false;
+    for (let i = 0; i < blobPromises.length; i++) {
+      // Cancelled by mute/stop/new speak()? Bail out.
+      if (myVersion !== speakVersionRef.current || muted) {
+        setSpeaking(false);
+        return;
       }
-      const provider = res.headers.get("x-tts-provider") || "unknown";
-      console.log(`[trinity/tts] ✓ audio via ${provider}`);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
-      audio.volume = 1.0;
-      audioRef.current = audio;
-      setSpeaking(true);
-      audio.onended = () => {
+      const result = await blobPromises[i];
+      if (myVersion !== speakVersionRef.current || muted) {
         setSpeaking(false);
-        URL.revokeObjectURL(url);
-        if (audioRef.current === audio) audioRef.current = null;
-      };
-      audio.onerror = () => {
-        setSpeaking(false);
-        URL.revokeObjectURL(url);
-        if (audioRef.current === audio) audioRef.current = null;
-      };
-      await audio.play();
-    } catch {
-      // All server providers unavailable — fall back to browser
-      // SpeechSynthesis with the sanitized text (no emoji mispronunciation).
-      speakViaBrowser(cleaned);
+        return;
+      }
+      if (!result) {
+        if (!playedAny) {
+          // First-sentence failure → fall back to browser for the whole reply.
+          speakViaBrowser(sentences.slice(i).join(" "));
+          setSpeaking(false);
+          return;
+        }
+        continue; // skip this sentence, keep going
+      }
+      if (i === 0) {
+        console.log(
+          `[trinity/tts] ✓ streaming via ${result.provider} — ${sentences.length} sentence${sentences.length === 1 ? "" : "s"}`,
+        );
+      }
+      playedAny = true;
+      await playBlob(result.blob);
     }
+    setSpeaking(false);
   }
 
   // Detect Web Speech API support once mounted (client-only).

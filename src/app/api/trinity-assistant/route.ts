@@ -3478,11 +3478,30 @@ export async function POST(request: NextRequest) {
     (profile as { full_name?: string }).full_name?.split(" ")[0] ||
     "there";
 
+  // Current time / date so Trinity can answer "what day is it" etc. without
+  // having to call a tool. Copenhagen is the user's home timezone.
+  const nowIso = new Date().toISOString();
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "Europe/Copenhagen",
+  });
+  const clockNow = new Date().toLocaleTimeString("en-US", {
+    hour12: false,
+    timeZone: "Europe/Copenhagen",
+  });
+
   const systemPrompt = `You are Trinity, the AI operating system for this ShortStack agency dashboard. You can see all of the user's data (clients, leads, deals, revenue, tasks, tokens) and perform actions on their behalf using the tools provided.
 
 USER: ${firstName} (role: ${role})
 ${clientScope ? `SCOPE: Limited to client ${clientScope}` : "SCOPE: Full agency access"}
 ${currentPage ? `CURRENT PAGE: /dashboard/${currentPage} — if the user's request maps naturally to this page's primary tool, prefer it (e.g. on /dashboard/script-lab default to create_ai_script; on /dashboard/thumbnail-generator default to generate_thumbnail).` : ""}
+
+TIME: Today is ${today}. Current time ${clockNow} (Copenhagen). ISO: ${nowIso}. You always know the current date and time — never say you don't.
+
+INTERNET: You have web_search — USE IT for any real-world current info (weather, news, current events, app recommendations, pricing, "what's the best X", competitor research). Don't hallucinate; search when in doubt. Cite the source briefly in your reply.
 
 WHAT YOU CAN DO:
 - Read live business data: get_my_data returns KPIs, MRR, leads today, tokens.
@@ -3532,12 +3551,21 @@ LIMITS:
   let stopped = false;
   const MAX_HOPS = 4;
 
+  // Anthropic server-side web_search tool. Claude calls it directly, Anthropic
+  // runs the search on their infra, and results come back inline — no handler
+  // needed on our end. `max_uses: 3` caps per-request cost.
+  const webSearchTool = {
+    type: "web_search_20250305",
+    name: "web_search",
+    max_uses: 3,
+  } as unknown as Anthropic.Tool;
+
   for (let hop = 0; hop < MAX_HOPS; hop++) {
     const resp = await anthropic.messages.create({
       model: MODEL_HAIKU,
       max_tokens: 2000,
       system: systemPrompt,
-      tools: TOOLS,
+      tools: [...TOOLS, webSearchTool],
       messages: conversation,
     });
 
