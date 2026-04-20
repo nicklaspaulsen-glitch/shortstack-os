@@ -142,8 +142,9 @@ const navItems: NavItem[] = [
   { label: "AI Studio", href: "/dashboard/ai-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], sub: "Image" },
   { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"], sub: "Image" },
   { label: "Carousel Gen", href: "/dashboard/carousel-generator", icon: <Layers size={16} />, roles: ["admin", "team_member"], sub: "Image" },
-  { label: "Video Editor", href: "/dashboard/video-editor", icon: <Film size={16} />, roles: ["admin", "team_member"], sub: "Video" },
-  { label: "AI Video Gen", href: "/dashboard/ai-video", icon: <Film size={16} />, roles: ["admin", "team_member"], sub: "Video" },
+  { label: "Video Editor", href: "/dashboard/video-editor", icon: <Film size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
+  { label: "Preset Library", href: "/dashboard/video-editor/library", icon: <LayoutTemplate size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
+  { label: "AI Video Gen", href: "/dashboard/ai-video", icon: <Film size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
 
   // ── Automate (AI & workflows) ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI" },
