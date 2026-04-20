@@ -40,6 +40,12 @@ import {
   type EffectCategory,
   type SfxCategory,
 } from "@/lib/asset-catalog";
+import {
+  Timeline as VideoTimeline,
+  buildProjectFromStoryboard,
+  DEFAULT_TRACKS as DEFAULT_TIMELINE_TRACKS,
+  type TimelineProject,
+} from "@/components/video-editor/timeline";
 
 // Curated vertical-style ad/video thumbnails for the rolling preview.
 // 9:16 crops keep the marquee feeling native to Reels/TikTok/Shorts.
@@ -1225,6 +1231,66 @@ export default function VideoEditorPage() {
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
   const supabase = createClient();
+
+  // ─── Adobe-Premiere-style multi-track timeline state ──────────────
+  // Seeded from result.storyboard when one becomes available.
+  // Shape is defensive — if nothing exists, we show empty rails.
+  const timelineVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [timelineProject, setTimelineProject] = useState<TimelineProject>({
+    duration: 30000,
+    tracks: DEFAULT_TIMELINE_TRACKS,
+    clips: [],
+  });
+  const [timelinePlayhead, setTimelinePlayhead] = useState(0);
+  const [timelinePlaying, setTimelinePlaying] = useState(false);
+  const lastSeededResultRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!result) return;
+    // Only seed when storyboard first arrives — don't clobber user's manual edits.
+    const sig = JSON.stringify({ u: result.url, s: result.storyboard?.length, id: result.render_id });
+    if (lastSeededResultRef.current === sig) return;
+    lastSeededResultRef.current = sig;
+
+    if (result.storyboard && result.storyboard.length > 0) {
+      const next = buildProjectFromStoryboard(result.storyboard);
+      setTimelineProject(next);
+    } else if (result.url) {
+      // No storyboard but we have a rendered MP4 — create a single-clip project.
+      const durMs = 30000;
+      setTimelineProject({
+        duration: durMs,
+        tracks: DEFAULT_TIMELINE_TRACKS,
+        clips: [
+          { id: "main", trackId: "v1", start: 0, duration: durMs, label: "Rendered video", color: "#60A5FA", thumbnailUrl: undefined },
+        ],
+      });
+    }
+  }, [result]);
+
+  // Keep the internal "playing" state in sync with the real <video>.
+  useEffect(() => {
+    const el = timelineVideoRef.current;
+    if (!el) return;
+    const onPlay = () => setTimelinePlaying(true);
+    const onPause = () => setTimelinePlaying(false);
+    const onTime = () => setTimelinePlayhead(Math.round(el.currentTime * 1000));
+    const onDurChange = () => {
+      if (isFinite(el.duration) && el.duration > 0) {
+        setTimelineProject((p) => ({ ...p, duration: Math.max(p.duration, Math.round(el.duration * 1000)) }));
+      }
+    };
+    el.addEventListener("play", onPlay);
+    el.addEventListener("pause", onPause);
+    el.addEventListener("timeupdate", onTime);
+    el.addEventListener("durationchange", onDurChange);
+    return () => {
+      el.removeEventListener("play", onPlay);
+      el.removeEventListener("pause", onPause);
+      el.removeEventListener("timeupdate", onTime);
+      el.removeEventListener("durationchange", onDurChange);
+    };
+  }, [result?.url]);
 
   const [referenceFiles, setReferenceFiles] = useState<Array<{ name: string; type: string; preview: string; data: string }>>([]);
   const [tab, setTab] = useState<"create" | "storyboard" | "templates" | "assets" | "export">("create");
@@ -5975,7 +6041,7 @@ export default function VideoEditorPage() {
                   selectedType.aspect === "9:16" ? "w-28 h-48" : selectedType.aspect === "16:9" ? "w-48 h-28" : "w-36 h-36"
                 } bg-surface-light/50 border border-border`}>
                   {result?.url ? (
-                    <video src={result.url} controls className="w-full h-full object-cover rounded-xl" />
+                    <video ref={timelineVideoRef} src={result.url} controls className="w-full h-full object-cover rounded-xl" />
                   ) : generating ? (
                     <div className="flex flex-col items-center gap-2">
                       <Loader size={20} className="animate-spin text-gold" />
@@ -6040,6 +6106,25 @@ export default function VideoEditorPage() {
                 )}
               </div>
             )}
+
+            {/* ─── Adobe-Premiere-style multi-track timeline ─────────
+             *  Shown once we have either a storyboard or a rendered URL.
+             *  Before that, it renders empty rails (harmless). */}
+            <div className="card">
+              <h3 className="section-header flex items-center gap-2">
+                <Film size={12} className="text-gold" /> Timeline
+                <span className="text-[8px] text-muted font-normal">multi-track editor</span>
+              </h3>
+              <VideoTimeline
+                project={timelineProject}
+                onProjectChange={setTimelineProject}
+                playhead={timelinePlayhead}
+                onPlayheadChange={setTimelinePlayhead}
+                playing={timelinePlaying}
+                onPlayPause={() => setTimelinePlaying((v) => !v)}
+                videoRef={timelineVideoRef}
+              />
+            </div>
 
             <div className="card border-gold/10">
               <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-gold" /> How it works</h3>

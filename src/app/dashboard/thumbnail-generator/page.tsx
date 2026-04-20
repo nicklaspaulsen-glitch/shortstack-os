@@ -27,6 +27,7 @@ import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPre
 import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 import { POPULAR_FONTS, loadGoogleFont, preloadGoogleFonts } from "@/lib/asset-catalog";
+import { LayerPanel, deriveLayersFromThumbnail, type ThumbnailLayers } from "@/components/thumbnail/layer-panel";
 
 // Static fallback thumbnails shown in the rolling preview when the
 // generated_images table returns nothing (new accounts, empty DB, etc.).
@@ -1511,6 +1512,65 @@ export default function ThumbnailGeneratorPage() {
   const [results, setResults] = useState<ThumbnailResult[]>([]);
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Per-thumbnail editable LAYER state (Adobe-Premiere-style decomposition).
+  // Keyed by thumbnail.id. Seeded whenever a new thumbnail completes.
+  const [layersByThumb, setLayersByThumb] = useState<Record<string, ThumbnailLayers>>({});
+  const [regeneratingLayers, setRegeneratingLayers] = useState<Record<string, boolean>>({});
+
+  // Seed layer state when results change (only for thumbs we haven't seen).
+  useEffect(() => {
+    setLayersByThumb((prev) => {
+      const next = { ...prev };
+      let changed = false;
+      for (const r of results) {
+        if (!r.id || next[r.id] || r.status !== "COMPLETED" || !r.imageUrl) continue;
+        next[r.id] = deriveLayersFromThumbnail({
+          style: r.style,
+          colorTheme: r.colorTheme,
+          textOverlay: r.textOverlay,
+          faces: r.faces,
+          faceSwapUrl: null,
+        });
+        changed = true;
+      }
+      return changed ? next : prev;
+    });
+  }, [results]);
+
+  const regenerateWithLayerEdits = async (thumbId: string, instruction: string) => {
+    const thumb = results.find((r) => r.id === thumbId);
+    if (!thumb || !thumb.imageUrl) {
+      toast.error("Original thumbnail not found");
+      return;
+    }
+    setRegeneratingLayers((prev) => ({ ...prev, [thumbId]: true }));
+    try {
+      const res = await fetch("/api/thumbnail/edit-with-notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          thumbnail_id: thumb.job_id || thumb.id,
+          instruction,
+          source_url: thumb.imageUrl,
+        }),
+      });
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        throw new Error(errBody || `HTTP ${res.status}`);
+      }
+      toast.success("Regenerating thumbnail with your edits...");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Regenerate failed";
+      toast.error(msg);
+    } finally {
+      setRegeneratingLayers((prev) => {
+        const next = { ...prev };
+        delete next[thumbId];
+        return next;
+      });
+    }
+  };
 
   // New feature state
   const [activeFeatureTab, setActiveFeatureTab] = useState<"generate" | "history" | "tools" | "studio">("generate");
@@ -4762,6 +4822,24 @@ export default function ThumbnailGeneratorPage() {
                           <Edit3 size={12} /> Edit
                         </button>
                       </div>
+
+                      {/* Adobe-Premiere-style Layer Panel (shows after generation completes) */}
+                      {isComplete && layersByThumb[thumb.id] && (
+                        <div className="mt-3">
+                          <LayerPanel
+                            imageUrl={thumb.imageUrl}
+                            layers={layersByThumb[thumb.id]}
+                            onChange={(next) =>
+                              setLayersByThumb((prev) => ({ ...prev, [thumb.id]: next }))
+                            }
+                            onRegenerate={(instruction) =>
+                              regenerateWithLayerEdits(thumb.id, instruction)
+                            }
+                            regenerating={!!regeneratingLayers[thumb.id]}
+                            defaultCollapsed={results.length > 1}
+                          />
+                        </div>
+                      )}
                     </div>
                   );
                 })}
