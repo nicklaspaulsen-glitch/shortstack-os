@@ -10,7 +10,7 @@ import {
   Layers, Mic, Volume2, Palette, LayoutGrid, Eye,
   BookOpen, Scissors, Image as ImageIcon, Upload, X,
   GripVertical, FileText, Paintbrush, Sliders, Ratio,
-  SunMedium, MessageSquare, History, Speech, MonitorPlay,
+  SunMedium, MessageSquare, Speech, MonitorPlay,
   Gauge, TextCursorInput, Droplets, BarChart3, ListChecks,
   ImagePlus, Megaphone, Settings2,
   Plus, Minus, Check, AlertCircle, Timer,
@@ -27,7 +27,6 @@ import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
-import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { ADS_PRESET } from "@/lib/video-presets/ads";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
@@ -52,6 +51,48 @@ import {
   PresetPickerPanel,
   type PresetDropPayload,
 } from "@/components/video-editor/preset-picker-panel";
+import FootageBadge, { type FootageType } from "@/components/video-editor/footage-badge";
+
+// UI caption-style id → server-accepted id. Server accepts only 6 styles
+// (see src/app/api/video/auto-edit/captions/route.ts:36-43). Everything else
+// silently falls back to "clean-sans". This map fixes that mismatch when
+// the timeline fires POST /auto-edit/captions.
+const CAPTION_STYLE_UI_TO_API: Record<string, string> = {
+  // Legacy CAPTION_STYLES list → server IDs
+  bottom_bar: "subtle-lower-third",
+  word_highlight: "kinetic-colour",
+  centered_bold: "mrbeast-pop",
+  karaoke: "hormozi-bounce",
+  typewriter: "vlog-handwritten",
+  bounce: "hormozi-bounce",
+  gradient_text: "mrbeast-pop",
+  neon_glow: "mrbeast-pop",
+  handwritten: "vlog-handwritten",
+  subtitle_bar: "subtle-lower-third",
+  pop_in: "kinetic-colour",
+  classic_white: "clean-sans",
+  bold_impact: "mrbeast-pop",
+  karaoke_gold: "hormozi-bounce",
+  subtitle_pro: "subtle-lower-third",
+  tiktok_style: "kinetic-colour",
+  minimal_gray: "clean-sans",
+  // CAPTION_STYLES_LIBRARY ids → server IDs
+  "bold-yellow-word": "hormozi-bounce",
+  "hormozi-karaoke": "hormozi-bounce",
+  "bottom-bar-clean": "subtle-lower-third",
+  "centered-bold-outline": "mrbeast-pop",
+  "gold-highlight": "hormozi-bounce",
+  "word-pop": "kinetic-colour",
+  "typewriter-white": "vlog-handwritten",
+  "subtitles-2line-bottom": "subtle-lower-third",
+  "minimal-white": "clean-sans",
+  "film-style": "clean-sans",
+};
+
+function resolveCaptionStyleForApi(uiId: string | undefined): string {
+  if (!uiId) return "clean-sans";
+  return CAPTION_STYLE_UI_TO_API[uiId] || uiId; // already-valid ids pass through
+}
 
 // Real ad / brand / product thumbnails served from ytimg.com (public CDN).
 // RollingPreview with fetchRemote + tool="video_editor" swaps these for the
@@ -71,39 +112,6 @@ const VIDEO_EDITOR_PREVIEW_ITEMS: RollingPreviewItem[] = [
   { id: "ve10", src: YT("Q7P7oMRyq-o"), alt: "Rolex Pioneer", tag: "Luxury" },
   { id: "ve11", src: YT("KqffpTQVAqY"), alt: "BMW The 8", tag: "Auto" },
   { id: "ve12", src: YT("PnzVhqbzyMw"), alt: "Tesla Cybertruck", tag: "Tesla" },
-];
-
-const VIDEO_EDITOR_TUTORIAL_STEPS: TutorialStep[] = [
-  {
-    number: 1,
-    title: "Generate Full Ad",
-    description: "Paste a product description → we write script, build storyboard, and set render defaults. Full ad in under 60 seconds.",
-    icon: Megaphone,
-  },
-  {
-    number: 2,
-    title: "Ads Preset",
-    description: "Pick the Ads preset to lock in hook + pain + offer + CTA structure. Proven to lift watch-time on cold traffic.",
-    icon: Sparkles,
-  },
-  {
-    number: 3,
-    title: "Auto-captions",
-    description: "Captions auto-generate with word-level timing. Pick a Caption Style (bold, subtitle, karaoke) that fits your brand.",
-    icon: Captions,
-  },
-  {
-    number: 4,
-    title: "B-roll suggest",
-    description: "For every scene, we suggest B-roll clips that match the script beat. One click inserts them into the storyboard.",
-    icon: Film,
-  },
-  {
-    number: 5,
-    title: "Music match",
-    description: "Pick a mood and we score the video with a royalty-free track that ducks under voiceover automatically.",
-    icon: Music,
-  },
 ];
 
 /* ──────────────────── AI API TYPES ──────────────────── */
@@ -561,22 +569,6 @@ const EFFECTS_LIBRARY: Array<{ id: string; name: string; category: string; previ
 ];
 
 const EFFECT_CATEGORIES = ["Light & Glow", "Distortion", "Color FX", "Motion FX", "Atmospheric"];
-
-/* ─── AI Smart Tools (12 features) ─── */
-const AI_SMART_TOOLS: Array<{ id: string; name: string; desc: string; endpoint: string }> = [
-  { id: "auto-edit", name: "AI Auto-Edit", desc: "Analyzes script and auto-cuts, removes pauses/filler words", endpoint: "/api/ai/auto-edit" },
-  { id: "voice-clone", name: "AI Voice Clone", desc: "Upload 30s sample, clone voice for narration", endpoint: "/api/ai/voice-clone" },
-  { id: "translate-dub", name: "AI Translation + Dub", desc: "Translates captions to 10+ languages with voice dubbing", endpoint: "/api/ai/translate-dub" },
-  { id: "multi-caption", name: "AI Multi-Language Captions", desc: "Generate caption tracks in 12 languages", endpoint: "/api/ai/multi-caption" },
-  { id: "hook-tester", name: "AI Hook Tester", desc: "Generates 5 opening-30s variants and predicts retention", endpoint: "/api/ai/hook-tester" },
-  { id: "seo-title", name: "AI Title SEO Optimizer", desc: "Rewrites title for YouTube search + CTR", endpoint: "/api/ai/seo-title" },
-  { id: "description", name: "AI Description Generator", desc: "Full description with chapters + tags", endpoint: "/api/ai/description" },
-  { id: "thumbnail-extract", name: "AI Thumbnail from Video", desc: "Extract 10 best frames as thumbnail candidates", endpoint: "/api/ai/thumbnail-extract" },
-  { id: "end-screen", name: "AI End Screen Builder", desc: "Designs end screen with subscribe CTA + suggestions", endpoint: "/api/ai/end-screen" },
-  { id: "chapter-detect", name: "AI Chapter Detector", desc: "Auto-generates YouTube chapters from content", endpoint: "/api/ai/chapter-detect" },
-  { id: "viral-moments", name: "AI Viral Moment Finder", desc: "Identifies 15-60s shareable clips", endpoint: "/api/ai/viral-moments" },
-  { id: "trend-match", name: "AI Trend Match", desc: "Suggests trending topics matching user's niche", endpoint: "/api/ai/trend-match" },
-];
 
 /* ─── Voice Presets (20+ voices across styles/accents) ─── */
 const VOICE_PRESETS: Array<{ id: string; name: string; gender: string; style: string; accent: string }> = [
@@ -1436,6 +1428,24 @@ export default function VideoEditorPage() {
 
   // --- New feature states ---
   const [createSubTab, setCreateSubTab] = useState<"editor" | "scene-builder" | "ai-script" | "audio-mixer" | "advanced" | "smart">("editor");
+  // Left-panel tab (replaces the wall of accordions in the editor sub-tab).
+  // Style  → caption/effects/SFX/music libraries + visual style
+  // Brand  → brand kit + color palette
+  // AI     → Claude-driven actions (auto-edit, classify, analyze viral)
+  // Assets → references / uploads / project details
+  const [editorLeftTab, setEditorLeftTab] = useState<"style" | "brand" | "ai" | "assets">("style");
+
+  // Classify-footage wiring — maps reference-file index → detected footage type + confidence.
+  const [footageBadges, setFootageBadges] = useState<Record<number, { footage_type: FootageType; confidence: number; recommended_creator_pack_id?: string } | null>>({});
+  const [classifyingIdx, setClassifyingIdx] = useState<number | null>(null);
+
+  // Viral-analysis wiring — one-shot analyze of a pasted URL.
+  const [viralUrl, setViralUrl] = useState("");
+  const [viralAnalyzing, setViralAnalyzing] = useState(false);
+  const [viralResult, setViralResult] = useState<Record<string, unknown> | null>(null);
+
+  // One-click auto-edit (full-pass) state.
+  const [fullPassRunning, setFullPassRunning] = useState(false);
   const [sceneBuilderScenes, setSceneBuilderScenes] = useState<Array<{ id: string; name: string; duration: number; description: string }>>([
     { id: "s1", name: "Hook / Intro", duration: 3, description: "Attention-grabbing opening" },
     { id: "s2", name: "Main Content", duration: 15, description: "Core message delivery" },
@@ -1476,11 +1486,6 @@ export default function VideoEditorPage() {
   });
   const [collabNotes, setCollabNotes] = useState<Array<{ time: string; note: string; author: string }>>([]);
   const [newNote, setNewNote] = useState({ time: "0:00", note: "" });
-  const [versionHistory] = useState([
-    { id: "v3", version: "v3", date: "Apr 14, 2026 2:30 PM", status: "current", changes: "Added CTA overlay + music" },
-    { id: "v2", version: "v2", date: "Apr 14, 2026 1:15 PM", status: "previous", changes: "Updated script timing" },
-    { id: "v1", version: "v1", date: "Apr 14, 2026 11:00 AM", status: "previous", changes: "Initial render" },
-  ]);
   const [voiceoverConfig, setVoiceoverConfig] = useState({
     voice: "nova",
     script: "",
@@ -1497,27 +1502,7 @@ export default function VideoEditorPage() {
     opacity: 50,
     size: "small" as "small" | "medium" | "large",
   });
-  const [analyticsPreview] = useState({
-    predictedWatchThrough: 72,
-    hookStrength: 85,
-    optimalLength: 28,
-    engagementScore: 78,
-  });
   const [batchQueue, setBatchQueue] = useState<Array<{ id: string; title: string; status: "queued" | "rendering" | "done" | "failed"; progress: number }>>([]);
-  const [thumbnailFrames] = useState([
-    { id: "f1", time: "0:03", score: 92, desc: "High-energy hook moment" },
-    { id: "f2", time: "0:12", score: 87, desc: "Key visual with text overlay" },
-    { id: "f3", time: "0:08", score: 81, desc: "Product close-up shot" },
-    { id: "f4", time: "0:22", score: 76, desc: "Before/after comparison" },
-  ]);
-  const [selectedThumbnail, setSelectedThumbnail] = useState("f1");
-  const [hookVariants] = useState([
-    { id: "h1", text: "Stop scrolling. This changes everything.", style: "bold-statement" },
-    { id: "h2", text: "Nobody talks about this... but they should.", style: "curiosity-gap" },
-    { id: "h3", text: "I tested this for 30 days. Here's what happened.", style: "personal-story" },
-  ]);
-  const [selectedHook, setSelectedHook] = useState("");
-
   // --- New upgrade: consolidated editor settings for new preset/toggle panels ---
   type EditorSettings = {
     captions: {
@@ -1763,7 +1748,6 @@ export default function VideoEditorPage() {
     platformExport: false,
     // New panels
     effects: false,
-    aiTools: false,
     voice: false,
     broll: false,
     advancedTimeline: false,
@@ -1792,9 +1776,6 @@ export default function VideoEditorPage() {
     music: false,
   });
   const toggleAssetPanel = (k: string) => setOpenAssetPanels((p) => ({ ...p, [k]: !p[k] }));
-
-  // AI tool loading state (per tool, to spin individual loaders)
-  const [aiToolLoading, setAiToolLoading] = useState<Record<string, boolean>>({});
 
   // Voice preview state
   const [voiceScriptPreview, setVoiceScriptPreview] = useState<string>("");
@@ -2184,35 +2165,6 @@ export default function VideoEditorPage() {
     toast.success("Effects cleared");
   }
 
-  // ── AI Smart Tools — invoke stub endpoint ──
-  async function invokeAiTool(tool: typeof AI_SMART_TOOLS[number]) {
-    setAiToolLoading(prev => ({ ...prev, [tool.id]: true }));
-    try {
-      const res = await fetch(tool.endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: config.title,
-          script: config.script,
-          type: config.type,
-          style: config.style,
-        }),
-      });
-      if (!res.ok) {
-        // Backend stubbed for now — this is a real failure, not a success
-        toast.error(`${tool.name} backend pending (${res.status}) — endpoint not ready`);
-      } else {
-        const data = await res.json().catch(() => ({}));
-        toast.success(data?.message || `${tool.name} complete`);
-      }
-    } catch (err) {
-      console.error(`[video-editor] ${tool.name} error:`, err);
-      toast.error(`${tool.name} endpoint not yet wired`);
-    } finally {
-      setAiToolLoading(prev => ({ ...prev, [tool.id]: false }));
-    }
-  }
-
   // ── Voice panel helpers ──
   function selectVoicePreset(voiceId: string) {
     setEditorSettings(prev => ({
@@ -2292,28 +2244,6 @@ export default function VideoEditorPage() {
           : [...prev.broll.selectedClips, clipId],
       },
     }));
-  }
-
-  async function runAiBrollMatch() {
-    if (!config.script.trim()) {
-      toast.error("Add a script first for AI matching");
-      return;
-    }
-    try {
-      const res = await fetch("/api/ai/broll-match", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ script: config.script }),
-      });
-      if (!res.ok) {
-        toast.error("AI B-Roll match backend pending — endpoint not ready");
-      } else {
-        toast.success("AI B-roll suggestions generated");
-      }
-    } catch (err) {
-      console.error("[video-editor] B-Roll match error:", err);
-      toast.error("AI B-roll endpoint not yet wired");
-    }
   }
 
   function handleBrollUpload(files: File[]) {
@@ -2638,6 +2568,123 @@ export default function VideoEditorPage() {
   // Sleep helper for walkthrough progression simulation
   function sleep(ms: number) {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
+  }
+
+  // ─── One-click Auto-Edit (full-pass) — detect-scenes → suggest → captions → broll ─
+  // Wired to /api/video/auto-edit/full-pass. Requires an existing project_id
+  // (from AI-generated project) and a video_url. Seeds the timeline with the
+  // returned scenes + suggestions. This replaces the stubbed "AI Auto-Edit"
+  // button from the old AI Smart Tools grid.
+  async function runFullPassAutoEdit() {
+    const videoUrl = result?.url;
+    const projectId = aiProject?.project_id;
+    if (!videoUrl) { toast.error("Render or load a video first (need a video URL)"); return; }
+    if (!projectId) { toast.error("Generate an AI project first — full-pass needs a project_id"); return; }
+    setFullPassRunning(true);
+    const tid = toast.loading("Running full-pass auto-edit…");
+    try {
+      const res = await fetch("/api/video/auto-edit/full-pass", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          video_url: videoUrl,
+          project_id: projectId,
+          client_id: selectedClient || managedClientId || undefined,
+          auto_accept: false,
+        }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        toast.error(j.error || `Full-pass failed (${res.status})`, { id: tid });
+        return;
+      }
+      // Seed timeline suggestions from the returned suggestions (if any).
+      const sugs = Array.isArray(j.suggestions) ? j.suggestions : [];
+      if (sugs.length > 0) {
+        setTimelineSuggestions(sugs);
+      }
+      toast.success(`Full-pass complete — ${sugs.length} suggestion(s), ${j.errors?.length || 0} sub-error(s)`, { id: tid });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Full-pass request failed", { id: tid });
+    } finally {
+      setFullPassRunning(false);
+    }
+  }
+
+  // ─── Classify Footage — detect footage type + confidence → render FootageBadge ─
+  async function classifyReferenceFootage(idx: number) {
+    const f = referenceFiles[idx];
+    if (!f) return;
+    if (!f.type.startsWith("video/") && !f.type.startsWith("image/")) {
+      toast.error("Reference must be an image or video");
+      return;
+    }
+    setClassifyingIdx(idx);
+    const tid = toast.loading(`Classifying ${f.name}…`);
+    try {
+      const body: Record<string, unknown> = { client_id: selectedClient || managedClientId || undefined };
+      if (f.type.startsWith("video/")) {
+        body.video_url = f.data; // data: URL — server accepts per route docs
+      } else {
+        body.video_url = f.data;
+      }
+      const res = await fetch("/api/video/classify-footage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const j = await res.json();
+      if (!res.ok || !j) {
+        toast.error(j?.error || `Classify failed (${res.status})`, { id: tid });
+        return;
+      }
+      setFootageBadges((prev) => ({
+        ...prev,
+        [idx]: {
+          footage_type: (j.footage_type as FootageType) || "unknown",
+          confidence: typeof j.confidence === "number" ? j.confidence : 0,
+          recommended_creator_pack_id:
+            typeof j.recommended_creator_pack_id === "string"
+              ? (j.recommended_creator_pack_id as string)
+              : undefined,
+        },
+      }));
+      toast.success(`Detected: ${j.footage_type}`, { id: tid });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Classify request failed", { id: tid });
+    } finally {
+      setClassifyingIdx(null);
+    }
+  }
+
+  // ─── Analyze Viral Video — pass a URL, get a ViralPattern ─
+  async function analyzeViralUrl() {
+    const url = viralUrl.trim();
+    if (!url) { toast.error("Paste a YouTube / Shorts URL first"); return; }
+    setViralAnalyzing(true);
+    const tid = toast.loading("Analyzing viral video…");
+    try {
+      const res = await fetch("/api/video/analyze-viral", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source_url: url,
+          client_id: selectedClient || managedClientId || undefined,
+          store_as_template: false,
+        }),
+      });
+      const j = await res.json();
+      if (!res.ok) {
+        toast.error(j.error || `Analyze failed (${res.status})`, { id: tid });
+        return;
+      }
+      setViralResult(j as Record<string, unknown>);
+      toast.success("Pattern extracted — see results below", { id: tid });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Analyze request failed", { id: tid });
+    } finally {
+      setViralAnalyzing(false);
+    }
   }
 
   // ─── Task 2A: Generate full AI project (script + captions + shotlist) ───
@@ -3138,27 +3185,23 @@ export default function VideoEditorPage() {
         gradient="sunset"
       />
 
-      {/* Landing-state rolling preview — only shown until the user has
-          generated or loaded an AI project. Keeps the page lively while empty. */}
+      {/* Landing-state rolling preview — compact strip, only while empty. */}
       {!aiProject && (
-        <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
+        <div className="relative rounded-xl overflow-hidden border border-border bg-surface-light/30 py-2 h-14">
           <div className="absolute inset-0 pointer-events-none">
             <RollingPreview
               items={VIDEO_EDITOR_PREVIEW_ITEMS}
-              rows={2}
+              rows={1}
               aspectRatio="9:16"
-              opacity={0.45}
+              opacity={0.35}
               speed="medium"
               fetchRemote
               tool="video_editor"
             />
           </div>
           <div className="relative text-center px-4">
-            <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
-              Example ad library
-            </p>
-            <p className="text-sm text-foreground/90 mt-1">
-              Describe a product below — we&apos;ll generate a full ad in the same vertical style.
+            <p className="text-[10px] uppercase tracking-widest text-gold/80 font-semibold">
+              Example ad library — describe a product below to generate a full ad
             </p>
           </div>
         </div>
@@ -3240,15 +3283,6 @@ export default function VideoEditorPage() {
           </select>
         </div>
       </div>
-
-      {/* How to use it — tutorial walkthrough */}
-      <TutorialSection
-        title="How to use it"
-        subtitle="Five moves from blank canvas to rendered ad."
-        steps={VIDEO_EDITOR_TUTORIAL_STEPS}
-        columns={3}
-        collapsible
-      />
 
       {/* Tabs */}
       <div className="tab-group w-fit">
@@ -3474,31 +3508,6 @@ export default function VideoEditorPage() {
                 </div>
               )}
 
-              {/* Hook Generator */}
-              <div className="card">
-                <h2 className="section-header flex items-center gap-2"><Megaphone size={13} className="text-gold" /> AI Hook Generator</h2>
-                <p className="text-[9px] text-muted mb-3">AI generates attention-grabbing first 3 seconds based on your content.</p>
-                <div className="grid grid-cols-1 gap-2">
-                  {hookVariants.map(hook => (
-                    <button key={hook.id} onClick={() => {
-                      setSelectedHook(hook.id);
-                      toast.success("Hook selected");
-                    }}
-                      className={`p-3 rounded-xl border text-left transition-all ${
-                        selectedHook === hook.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
-                      }`}>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-[8px] uppercase tracking-wider text-gold">{hook.style.replace(/-/g, " ")}</span>
-                        {selectedHook === hook.id && <Check size={10} className="text-gold" />}
-                      </div>
-                      <p className="text-[11px] font-medium">{hook.text}</p>
-                    </button>
-                  ))}
-                </div>
-                <button onClick={() => toast.success("Generating new hooks...")} className="mt-2 text-[9px] text-gold hover:underline flex items-center gap-1">
-                  <Sparkles size={9} /> Generate More Hooks
-                </button>
-              </div>
             </div>
 
             {/* Script Sidebar */}
@@ -5034,43 +5043,6 @@ export default function VideoEditorPage() {
                 </div>
               </CollapsiblePanel>
 
-              {/* === AI Smart Tools (12 features) === */}
-              <CollapsiblePanel
-                id="aiTools"
-                icon={<Bot size={13} className="text-gold" />}
-                title="AI Smart Tools"
-                desc={`${AI_SMART_TOOLS.length} AI-powered enhancements`}
-                open={openPanels.aiTools}
-                onToggle={() => togglePanel("aiTools")}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                  {AI_SMART_TOOLS.map(tool => {
-                    const loading = !!aiToolLoading[tool.id];
-                    return (
-                      <div key={tool.id} className="card p-3 border hover:border-gold/30 transition-all">
-                        <div className="flex items-center gap-1.5 mb-1">
-                          <Wand2 size={12} className="text-gold flex-shrink-0" />
-                          <h4 className="text-[10px] font-semibold leading-tight">{tool.name}</h4>
-                        </div>
-                        <p className="text-[8px] text-muted leading-tight mb-2 line-clamp-2">{tool.desc}</p>
-                        <button
-                          type="button"
-                          onClick={() => invokeAiTool(tool)}
-                          disabled={loading}
-                          className="btn btn-sm w-full text-[9px] flex items-center justify-center gap-1 disabled:opacity-50"
-                        >
-                          {loading ? <Loader2 size={10} className="animate-spin" /> : <Play size={10} />}
-                          {loading ? "Running..." : "Run"}
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div>
-                <p className="text-[8px] text-muted italic mt-2">
-                  Each tool calls a stub endpoint — backend will fill in responses as features ship.
-                </p>
-              </CollapsiblePanel>
-
               {/* === Voice & Narration Panel === */}
               <CollapsiblePanel
                 id="voice"
@@ -5240,14 +5212,15 @@ export default function VideoEditorPage() {
                   />
                 </div>
 
-                {/* AI match + Upload buttons */}
+                {/* Upload + Browse all */}
                 <div className="grid grid-cols-2 gap-2 mb-3">
                   <button
                     type="button"
-                    onClick={runAiBrollMatch}
+                    onClick={() => setShowPresetPicker(true)}
                     className="btn btn-sm flex items-center justify-center gap-1.5"
+                    title="Open the full B-roll browser (Cmd/Ctrl+K)"
                   >
-                    <Sparkles size={11} className="text-gold" /> AI B-Roll Match
+                    <Sparkles size={11} className="text-gold" /> Browse all B-roll
                   </button>
                   <input
                     ref={brollFileInputRef}
@@ -5288,41 +5261,21 @@ export default function VideoEditorPage() {
                   </div>
                 </div>
 
-                {/* Mock stock suggestions */}
-                <div>
-                  <h4 className="text-[10px] font-semibold mb-2">Suggestions — {STOCK_CATEGORIES.find(c => c.id === editorSettings.broll.activeCategory)?.name}</h4>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-                    {Array.from({ length: 8 }).map((_, i) => {
-                      const clipId = `${editorSettings.broll.activeCategory}-clip-${i}`;
-                      const selected = editorSettings.broll.selectedClips.includes(clipId);
-                      const sources = ["Pexels", "Unsplash", "Pixabay"];
-                      const source = sources[i % sources.length];
-                      const duration = 5 + (i * 3) % 20;
-                      return (
-                        <div
-                          key={clipId}
-                          className={`rounded-lg border overflow-hidden transition-all ${selected ? "border-gold ring-1 ring-gold/30" : "border-border hover:border-gold/20"}`}
-                        >
-                          <div className={`h-16 w-full bg-gradient-to-br ${i % 2 === 0 ? "from-slate-700 to-slate-900" : "from-sky-700 to-indigo-900"} relative flex items-center justify-center`}>
-                            <Film size={16} className="text-white/40" />
-                            <span className="absolute bottom-0.5 right-0.5 text-[7px] bg-black/60 text-white px-1 rounded">{duration}s</span>
-                          </div>
-                          <div className="p-1.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[7px] px-1 py-0.5 rounded bg-surface-light text-muted">{source}</span>
-                              <button
-                                type="button"
-                                onClick={() => toggleBrollClip(clipId)}
-                                className={`text-[8px] px-1.5 py-0.5 rounded ${selected ? "bg-gold text-black" : "bg-gold/10 text-gold hover:bg-gold/20"}`}
-                              >
-                                {selected ? "Added" : "+ Add"}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                {/* Pointer to the real Preset Picker — previously this was a
+                    grid of 8 fake gradient tiles. The real clip browser lives
+                    in the sidebar at Cmd/Ctrl+K (Preset Picker). */}
+                <div className="p-3 rounded-lg border border-dashed border-gold/25 bg-gold/[0.03] text-center">
+                  <p className="text-[10px] text-muted mb-2">
+                    {editorSettings.broll.selectedClips.length} clip{editorSettings.broll.selectedClips.length === 1 ? "" : "s"} selected. For the full library
+                    (real Pexels / Pixabay results), open the Preset Picker.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setShowPresetPicker(true)}
+                    className="text-[10px] px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 flex items-center justify-center gap-1.5 mx-auto"
+                  >
+                    <Wand2 size={10} /> Open Preset Picker <span className="text-[8px] opacity-70">⌘K</span>
+                  </button>
                 </div>
               </CollapsiblePanel>
 
@@ -5335,37 +5288,6 @@ export default function VideoEditorPage() {
                 open={openPanels.advancedTimeline}
                 onToggle={() => togglePanel("advancedTimeline")}
               >
-                {/* Multi-track visual preview */}
-                <div className="mb-4">
-                  <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5">
-                    <Layers size={11} className="text-gold" /> Multi-Track Preview
-                  </h4>
-                  <div className="rounded-lg border border-border p-2 bg-surface/50 space-y-1">
-                    {[
-                      { name: "Video A", color: "bg-sky-500/40", segments: [15, 25, 30, 30] },
-                      { name: "Video B", color: "bg-purple-500/40", segments: [10, 20, 35, 35] },
-                      { name: "Captions", color: "bg-gold/40", segments: [20, 30, 25, 25] },
-                      { name: "Music", color: "bg-emerald-500/40", segments: [100] },
-                      { name: "SFX", color: "bg-rose-500/40", segments: [15, 25, 20, 40] },
-                    ].map((track, ti) => (
-                      <div key={ti} className="flex items-center gap-2">
-                        <span className="text-[8px] font-mono text-muted w-14 flex-shrink-0">{track.name}</span>
-                        <div className="flex-1 flex gap-0.5 h-4">
-                          {track.segments.map((w, si) => (
-                            <div key={si} className={`${track.color} rounded-sm`} style={{ width: `${w}%` }} />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                    <div className="flex items-center gap-2 pt-1 border-t border-border mt-1">
-                      <span className="text-[8px] font-mono text-muted w-14 flex-shrink-0">Timeline</span>
-                      <div className="flex-1 flex justify-between text-[7px] text-muted font-mono">
-                        <span>0:00</span><span>0:15</span><span>0:30</span><span>0:45</span><span>1:00</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Feature toggles */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mb-4">
                   <ToggleRow
@@ -5479,7 +5401,150 @@ export default function VideoEditorPage() {
         {createSubTab === "editor" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="lg:col-span-2 space-y-4">
+            {/* ─── Left-panel tabs: Style / Brand / AI / Assets ─────────
+             *  Collapses the old wall of 4 accordions (Caption/Effects/SFX/
+             *  Music + Brand + Details + AI Options + Style) into a single
+             *  tab-switcher. Only one group renders at a time — this is the
+             *  biggest win against the "every section is the same weight"
+             *  complaint from the audit. */}
+            <div className="tab-group">
+              {([
+                { id: "style" as const, label: "Style", icon: <Palette size={11} /> },
+                { id: "brand" as const, label: "Brand", icon: <Paintbrush size={11} /> },
+                { id: "ai" as const, label: "AI", icon: <Sparkles size={11} /> },
+                { id: "assets" as const, label: "Assets", icon: <FileText size={11} /> },
+              ]).map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setEditorLeftTab(t.id)}
+                  className={editorLeftTab === t.id ? "tab-item-active" : "tab-item-inactive"}
+                >
+                  <span className="flex items-center gap-1.5">{t.icon}{t.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* ─── AI Tab: three REAL backend-wired actions ─────────
+             *  Replaces the 12-tool stub grid that the audit flagged as 11/12
+             *  fake endpoints. These three call existing, shipped backends. */}
+            {editorLeftTab === "ai" && (
+              <div className="space-y-3">
+                <div className="card space-y-2">
+                  <h2 className="section-header flex items-center gap-2 mb-0">
+                    <Wand2 size={13} className="text-gold" /> One-click Auto-Edit
+                  </h2>
+                  <p className="text-[9px] text-muted">
+                    Runs detect-scenes → suggest → captions → B-roll candidates on your rendered video.
+                    Seeds the timeline with ghost-marker suggestions you can accept or reject.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={runFullPassAutoEdit}
+                    disabled={fullPassRunning || !result?.url || !aiProject?.project_id}
+                    className="btn-primary w-full text-xs py-2 flex items-center justify-center gap-1.5 disabled:opacity-40"
+                  >
+                    {fullPassRunning ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+                    {fullPassRunning ? "Running full-pass…" : "Run Full-Pass Auto-Edit"}
+                  </button>
+                  {(!result?.url || !aiProject?.project_id) && (
+                    <p className="text-[8px] text-muted italic">
+                      Requires a rendered video + AI-generated project (use &ldquo;Generate with AI&rdquo; above).
+                    </p>
+                  )}
+                </div>
+
+                <div className="card space-y-2">
+                  <h2 className="section-header flex items-center gap-2 mb-0">
+                    <Eye size={13} className="text-gold" /> Classify Footage
+                  </h2>
+                  <p className="text-[9px] text-muted">
+                    Claude Vision detects the content type of each reference (webcam talk,
+                    vlog, drone, gameplay…) and suggests a creator pack. Click any
+                    reference below, then click Classify.
+                  </p>
+                  {referenceFiles.length === 0 ? (
+                    <p className="text-[9px] text-muted italic">
+                      Upload a reference video or image in the Assets tab first.
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-2">
+                      {referenceFiles.map((f, i) => (
+                        <div key={i} className="p-2 rounded-lg border border-border flex items-center gap-2">
+                          <div className="w-10 h-10 rounded bg-surface-light flex items-center justify-center flex-shrink-0">
+                            {f.type.startsWith("image/") ? (
+                              <img src={f.preview} alt={f.name} className="w-10 h-10 object-cover rounded" />
+                            ) : f.type.startsWith("video/") ? (
+                              <Film size={12} className="text-gold" />
+                            ) : (
+                              <ImageIcon size={12} className="text-muted" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[9px] font-semibold truncate">{f.name}</p>
+                            {footageBadges[i] && (
+                              <div className="mt-0.5">
+                                <FootageBadge
+                                  footage_type={footageBadges[i]!.footage_type}
+                                  confidence={footageBadges[i]!.confidence}
+                                  recommended_creator_pack_id={footageBadges[i]!.recommended_creator_pack_id}
+                                  compact
+                                />
+                              </div>
+                            )}
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => classifyReferenceFootage(i)}
+                            disabled={classifyingIdx === i}
+                            className="text-[8px] px-1.5 py-0.5 rounded border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1 disabled:opacity-40"
+                          >
+                            {classifyingIdx === i ? <Loader2 size={8} className="animate-spin" /> : <Bot size={8} />}
+                            {classifyingIdx === i ? "Classifying" : "Classify"}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="card space-y-2">
+                  <h2 className="section-header flex items-center gap-2 mb-0">
+                    <TrendingUp size={13} className="text-gold" /> Analyze Viral Video
+                  </h2>
+                  <p className="text-[9px] text-muted">
+                    Paste a YouTube / Shorts URL. Claude Vision extracts the visual
+                    pattern (hook, thumbnail, pacing, caption style) and returns a
+                    prompt suffix you can paste into any generator.
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      value={viralUrl}
+                      onChange={(e) => setViralUrl(e.target.value)}
+                      placeholder="https://youtube.com/watch?v=…"
+                      className="input flex-1 text-xs"
+                    />
+                    <button
+                      type="button"
+                      onClick={analyzeViralUrl}
+                      disabled={viralAnalyzing || !viralUrl.trim()}
+                      className="btn-primary text-xs px-3 flex items-center gap-1 disabled:opacity-40"
+                    >
+                      {viralAnalyzing ? <Loader2 size={11} className="animate-spin" /> : <TrendingUp size={11} />}
+                      {viralAnalyzing ? "…" : "Analyze"}
+                    </button>
+                  </div>
+                  {viralResult && (
+                    <pre className="text-[9px] bg-surface-light border border-border rounded-lg p-2 overflow-x-auto max-h-72">
+                      {JSON.stringify(viralResult, null, 2)}
+                    </pre>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Brand Kit Integration */}
+            {editorLeftTab === "brand" && (
             <div className="card">
               <h2 className="section-header flex items-center gap-2"><Paintbrush size={13} className="text-gold" /> Brand Kit</h2>
               <div className="grid grid-cols-3 gap-2">
@@ -5503,7 +5568,10 @@ export default function VideoEditorPage() {
                 ))}
               </div>
             </div>
+            )}
 
+            {editorLeftTab === "style" && (
+            <>
             {/* Caption Style (asset catalog) */}
             <div className="card">
               <button
@@ -5835,6 +5903,26 @@ export default function VideoEditorPage() {
               )}
             </div>
 
+            {/* Style (visual style — belongs with Style tab) */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-gold" /> Visual Style</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {STYLES.map(s => (
+                  <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
+                    className={`p-2 rounded-xl border text-left transition-all ${
+                      config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
+                    }`}>
+                    <p className="text-[10px] font-semibold">{s.name}</p>
+                    <p className="text-[8px] text-muted">{s.desc}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+            </>
+            )}
+
+            {editorLeftTab === "assets" && (
+            <>
             {/* Video type */}
             <div className="card">
               <h2 className="section-header flex items-center gap-2"><Film size={13} className="text-gold" /> Video Type</h2>
@@ -5930,6 +6018,16 @@ export default function VideoEditorPage() {
                             {refAnalyzing ? <Loader2 size={7} className="animate-spin" /> : "AI"}
                           </button>
                         )}
+                        {footageBadges[i] && (
+                          <div className="absolute top-1 left-1">
+                            <FootageBadge
+                              footage_type={footageBadges[i]!.footage_type}
+                              confidence={footageBadges[i]!.confidence}
+                              recommended_creator_pack_id={footageBadges[i]!.recommended_creator_pack_id}
+                              compact
+                            />
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -5968,22 +6066,6 @@ export default function VideoEditorPage() {
                   <input value={config.brand_colors} onChange={e => setConfig({ ...config, brand_colors: e.target.value })}
                     className="input w-full text-xs" placeholder="#C9A84C, #1a1a1a" />
                 </div>
-              </div>
-            </div>
-
-            {/* Style */}
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2"><Palette size={13} className="text-gold" /> Visual Style</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                {STYLES.map(s => (
-                  <button key={s.id} onClick={() => setConfig({ ...config, style: s.id })}
-                    className={`p-2 rounded-xl border text-left transition-all ${
-                      config.style === s.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
-                    }`}>
-                    <p className="text-[10px] font-semibold">{s.name}</p>
-                    <p className="text-[8px] text-muted">{s.desc}</p>
-                  </button>
-                ))}
               </div>
             </div>
 
@@ -6111,6 +6193,8 @@ export default function VideoEditorPage() {
                 )}
               </div>
             )}
+            </>
+            )}
 
             {/* Mode toggle */}
             <div className="flex gap-2">
@@ -6157,6 +6241,36 @@ export default function VideoEditorPage() {
 
           {/* Preview / Result */}
           <div className="space-y-4">
+            {/* Inspector — shows project meta when nothing's selected; swaps to
+                clip properties when a timeline clip is picked. Minimal v1. */}
+            <div className="card border-gold/15 p-3 space-y-1">
+              <h3 className="section-header flex items-center gap-2 mb-0">
+                <Sliders size={11} className="text-gold" /> Inspector
+              </h3>
+              <div className="text-[9px] text-muted space-y-0.5">
+                <div className="flex justify-between">
+                  <span>Title</span>
+                  <span className="text-foreground font-medium truncate max-w-[140px]" title={config.title || "Untitled"}>{config.title || "Untitled"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Duration</span>
+                  <span className="text-foreground font-mono">{Math.round(timelineProject.duration / 1000)}s</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Aspect</span>
+                  <span className="text-foreground font-mono">{selectedType.aspect}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Clips</span>
+                  <span className="text-foreground font-mono">{timelineProject.clips.length}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Suggestions</span>
+                  <span className="text-foreground font-mono">{timelineSuggestions.length}</span>
+                </div>
+              </div>
+            </div>
+
             <div className="card-premium border-gold/10 text-center py-6 relative overflow-hidden">
               <div className="absolute inset-0 bg-mesh opacity-20" />
               <div className="relative">
@@ -6265,7 +6379,7 @@ export default function VideoEditorPage() {
                     const res = await fetch("/api/video/auto-edit/captions", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ video_url: result.url, style_id: config.caption_style || "clean-sans" }),
+                      body: JSON.stringify({ video_url: result.url, style_id: resolveCaptionStyleForApi(config.caption_style) }),
                     });
                     const j = await res.json();
                     if (!res.ok || !j.ok) {
@@ -6364,15 +6478,6 @@ export default function VideoEditorPage() {
               />
             </div>
 
-            <div className="card border-gold/10">
-              <h3 className="section-header flex items-center gap-2"><Clock size={12} className="text-gold" /> How it works</h3>
-              <div className="space-y-1.5 text-[9px] text-muted">
-                <p><span className="text-gold font-medium">1.</span> Pick video type, style & AI options</p>
-                <p><span className="text-gold font-medium">2.</span> Choose: Storyboard / Plan / Direct Render</p>
-                <p><span className="text-gold font-medium">3.</span> AI creates your video with music, captions & CTA</p>
-                <p><span className="text-gold font-medium">4.</span> Download and post to social media</p>
-              </div>
-            </div>
           </div>
         </div>
         )}
@@ -6482,80 +6587,6 @@ export default function VideoEditorPage() {
             </div>
           </div>
 
-          {/* AI Thumbnail Extractor */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><ImagePlus size={13} className="text-gold" /> AI Thumbnail Extractor</h2>
-            <p className="text-[9px] text-muted mb-3">AI selects the best frames from your video as thumbnail candidates.</p>
-            <div className="space-y-2">
-              {thumbnailFrames.map(frame => (
-                <button key={frame.id} onClick={() => setSelectedThumbnail(frame.id)}
-                  className={`w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all text-left ${
-                    selectedThumbnail === frame.id ? "border-gold/30 bg-gold/[0.05]" : "border-border hover:border-gold/15"
-                  }`}>
-                  <div className="w-16 h-10 rounded-lg bg-surface-light border border-border flex items-center justify-center flex-shrink-0">
-                    <ImageIcon size={14} className="text-muted" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <span className="text-[10px] font-semibold">{frame.desc}</span>
-                      <span className="text-[9px] font-mono text-gold">{frame.score}%</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[8px] text-muted">@ {frame.time}</span>
-                      <div className="flex-1 bg-surface-light rounded-full h-1">
-                        <div className="bg-gold rounded-full h-1" style={{ width: `${frame.score}%` }} />
-                      </div>
-                    </div>
-                  </div>
-                  {selectedThumbnail === frame.id && <Check size={12} className="text-gold flex-shrink-0" />}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Video Analytics Preview */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><BarChart3 size={13} className="text-gold" /> Video Analytics Preview</h2>
-            <p className="text-[9px] text-muted mb-3">AI-predicted performance metrics based on video length, style, and content.</p>
-            <div className="space-y-3">
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-[9px] text-muted">Predicted Watch-Through Rate</span>
-                  <span className="text-[10px] font-bold text-gold">{analyticsPreview.predictedWatchThrough}%</span>
-                </div>
-                <div className="w-full bg-surface-light rounded-full h-2">
-                  <div className="bg-gradient-gold rounded-full h-2" style={{ width: `${analyticsPreview.predictedWatchThrough}%` }} />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-[9px] text-muted">Hook Strength Score</span>
-                  <span className="text-[10px] font-bold text-gold">{analyticsPreview.hookStrength}%</span>
-                </div>
-                <div className="w-full bg-surface-light rounded-full h-2">
-                  <div className="bg-gradient-gold rounded-full h-2" style={{ width: `${analyticsPreview.hookStrength}%` }} />
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between mb-1">
-                  <span className="text-[9px] text-muted">Engagement Score</span>
-                  <span className="text-[10px] font-bold text-gold">{analyticsPreview.engagementScore}%</span>
-                </div>
-                <div className="w-full bg-surface-light rounded-full h-2">
-                  <div className="bg-gradient-gold rounded-full h-2" style={{ width: `${analyticsPreview.engagementScore}%` }} />
-                </div>
-              </div>
-              <div className="p-2.5 bg-surface-light rounded-xl">
-                <div className="flex items-center gap-2 text-[9px]">
-                  <AlertCircle size={10} className="text-gold" />
-                  <span className="text-muted">Optimal length for this type: <strong className="text-gold">{analyticsPreview.optimalLength}s</strong></span>
-                </div>
-                {config.duration > analyticsPreview.optimalLength + 15 && (
-                  <p className="text-[8px] text-amber-400 mt-1 ml-4">Video may be too long for maximum engagement. Consider trimming.</p>
-                )}
-              </div>
-            </div>
-          </div>
         </div>
       )}
 
@@ -6675,30 +6706,6 @@ export default function VideoEditorPage() {
             </div>
           </div>
 
-          {/* Version History */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2"><History size={13} className="text-gold" /> Version History</h2>
-            <div className="space-y-2">
-              {versionHistory.map(v => (
-                <div key={v.id} className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all ${
-                  v.status === "current" ? "border-gold/30 bg-gold/[0.05]" : "border-border"
-                }`}>
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold ${
-                    v.status === "current" ? "bg-gold/10 text-gold" : "bg-surface-light text-muted"
-                  }`}>{v.version}</div>
-                  <div className="flex-1">
-                    <p className="text-[10px] font-medium">{v.changes}</p>
-                    <p className="text-[8px] text-muted">{v.date}</p>
-                  </div>
-                  {v.status === "current" ? (
-                    <span className="text-[8px] bg-gold/10 text-gold px-1.5 py-0.5 rounded">Current</span>
-                  ) : (
-                    <button onClick={() => toast.success(`Restored ${v.version}`)} className="text-[8px] text-gold hover:underline">Restore</button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       )}
 
@@ -7034,6 +7041,70 @@ export default function VideoEditorPage() {
           )
         }
       />
+
+      {/* ─── Footer action bar ──────────────────────────────────────
+       *  Sticks to the bottom of the viewport. Primary: Export / Download.
+       *  Secondary: One-click Auto-Edit. Shows render progress when active.
+       *  Only rendered on the Create tab so other tabs stay clean. */}
+      {tab === "create" && (
+        <div
+          className="sticky bottom-2 z-30 mt-2 rounded-2xl border border-gold/25 bg-surface/95 backdrop-blur px-3 py-2 flex items-center gap-2 shadow-lg"
+          role="toolbar"
+          aria-label="Video editor actions"
+        >
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-semibold truncate">
+              {config.title || "Untitled video"}
+              <span className="text-muted font-normal ml-2">
+                · {selectedType.aspect} · {config.duration}s
+              </span>
+            </p>
+            {generating && (
+              <div className="mt-1 w-full h-1 bg-surface-light rounded-full overflow-hidden">
+                <div
+                  className="h-1 bg-gradient-gold transition-all duration-300"
+                  style={{ width: `${renderProgress}%` }}
+                />
+              </div>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={runFullPassAutoEdit}
+            disabled={fullPassRunning || !result?.url || !aiProject?.project_id}
+            className="text-[10px] px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 flex items-center gap-1.5 disabled:opacity-40"
+            title={
+              !result?.url || !aiProject?.project_id
+                ? "Generate a video + AI project first"
+                : "Run detect-scenes → suggest → captions → B-roll"
+            }
+          >
+            {fullPassRunning ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
+            One-click AI edit
+          </button>
+          {result?.url ? (
+            <a
+              href={result.url}
+              download
+              target="_blank"
+              rel="noopener"
+              className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1.5"
+            >
+              <Download size={10} /> Export
+            </a>
+          ) : (
+            <button
+              type="button"
+              onClick={generateVideo}
+              disabled={generating || !config.title}
+              className="btn-primary text-[10px] px-3 py-1.5 flex items-center gap-1.5 disabled:opacity-40"
+            >
+              {generating ? <Loader2 size={10} className="animate-spin" /> : <Film size={10} />}
+              {generating ? "Rendering…" : "Render + Export"}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Preset Picker sidebar — right-side drawer; Cmd/Ctrl+K toggles. */}
       <PresetPickerPanel
