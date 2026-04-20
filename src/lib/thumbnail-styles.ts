@@ -510,6 +510,75 @@ export const THUMBNAIL_STYLES: ThumbnailStyle[] = [
       "isometric illustration thumbnail, clean flat-shaded 3D diagram, infographic tile composition, muted professional palette, explanatory tech-product aesthetic, Dribbble-style",
     gradient: ["#60A5FA", "#A78BFA"],
   },
+
+  // ───────── NAMED YOUTUBER CHANNEL PRESETS ─────────
+  // Seven curated style matches for the creators Nicklas picked. Each is
+  // tuned via prompt engineering alone — no LoRA training required. Add
+  // a reference image URL later if IP-Adapter grip is needed.
+
+  {
+    id: "creator_mrbeast_challenge",
+    name: "MrBeast Challenge",
+    category: "youtube_viral",
+    description: "Giant number hook ($100,000), oversized prop, wide-eyed gasp, pristine red/yellow.",
+    promptModifier:
+      "MrBeast-style challenge thumbnail, gigantic bold number overlay (like $100,000 or 1,000,000), oversized real-world prop (car, yacht, mountain of cash, house), wide-eyed gasp with jaw dropped, saturated red and yellow accents on clean blue-sky or colored background, perfect studio lighting, 3-color palette, hyperclean composition, trending YouTube megabudget feel",
+    gradient: ["#FF2D2D", "#FACC15"],
+  },
+  {
+    id: "creator_8bitryan",
+    name: "8BitRyan Mascot Horror",
+    category: "gaming",
+    description: "Poppy/Bendy-style mascot looming over player, glowing eyes, red-black dread.",
+    promptModifier:
+      "mascot horror gaming thumbnail in 8BitRyan style, large terrifying mascot character (fluffy blue or yellow monster) looming behind player silhouette, glowing yellow or red eyes, dark pitch-black environment with dim rim light, blood-red accents and scratches, worn creepypasta texture overlay, small gamer face reacting in terror in the corner, cinematic horror vignette",
+    gradient: ["#0B0B0B", "#DC2626"],
+  },
+  {
+    id: "creator_markiplier",
+    name: "Markiplier Horror Reaction",
+    category: "gaming",
+    description: "His face reaction dominating frame, horror game screenshot behind, pink-red accents.",
+    promptModifier:
+      "Markiplier-style horror gaming thumbnail, large exaggerated reaction face in center-left with mouth wide open in horror, red-brown mustache styling implied, horror-game screenshot as the backdrop (dark corridor or creature), hot pink and crimson text callout space, vignette darkening the edges, cinematic horror film tone, 30-percent face / 70-percent game scene composition",
+    gradient: ["#BE123C", "#1E1B4B"],
+  },
+  {
+    id: "creator_iman_gadzhi",
+    name: "Iman Gadzhi Agency Luxe",
+    category: "business",
+    description: "Cold stare, charcoal suit no tie, Porsche/London backdrop, champagne-gold tones.",
+    promptModifier:
+      "Iman Gadzhi-inspired agency-guru thumbnail, young entrepreneur in charcoal tailored suit with crisp white shirt no tie, cold unflinching stare directly at camera, London or Dubai luxury backdrop (Porsche 911 Turbo, penthouse terrace, Mayfair street, or Monaco yacht), soft champagne-gold key light, cinematic navy and cream palette, subtle vignette, refined wealth energy without vulgarity, editorial magazine polish",
+    gradient: ["#1E293B", "#D4AF37"],
+  },
+  {
+    id: "creator_jordan_welch",
+    name: "Jordan Welch E-Com",
+    category: "business",
+    description: "Laptop hero, neon-green arrow charts, Shopify/Amazon hint, navy+green palette.",
+    promptModifier:
+      "Jordan Welch-style e-commerce thumbnail, sleek young entrepreneur in fitted navy suit presenting a MacBook Pro, bright neon-green revenue-arrow chart graphic hovering above, subtle Shopify or Amazon visual cues, clean white or navy gradient background, bold white headline space on one side, professional confident tone, Wall Street meets Silicon Valley energy, crisp modern polish",
+    gradient: ["#0F172A", "#22C55E"],
+  },
+  {
+    id: "creator_vanossgaming",
+    name: "VanossGaming Cartoon Gang",
+    category: "gaming",
+    description: "Cartoon-style group characters, bright pastel chaos, GTA/GMod comedy feel.",
+    promptModifier:
+      "VanossGaming-style multiplayer cartoon thumbnail, exaggerated cartoonified characters (the whale-headed Vanoss mascot plus friend avatars) striking silly action poses, bright pastel sky-blue and magenta palette, GTA V or Garry's Mod chaos backdrop (cars exploding, ragdoll physics), comedic motion lines, cel-shaded outlines, group-shot composition with all characters fitting into frame, meme-energy playful chaos",
+    gradient: ["#3B82F6", "#F472B6"],
+  },
+  {
+    id: "creator_chris_bumstead",
+    name: "Chris Bumstead Classic Olympia",
+    category: "fitness",
+    description: "CBum physique hero shot, gold Mr. Olympia trophy, red-black-gold palette.",
+    promptModifier:
+      "Chris Bumstead-style classic physique thumbnail, massive chiseled bodybuilder in a vacuum pose or front double biceps, dramatic golden spotlight rim light sculpting every muscle, deep black background with faint red smoke, Mr. Olympia gold trophy or laurel wreath element, classic physique division aesthetic, gold and crimson palette, confident champion stare, cinematic gym poster polish",
+    gradient: ["#0B0B0B", "#D4AF37"],
+  },
 ];
 
 export const STYLE_CATEGORIES: { id: StyleCategory; label: string }[] = [
