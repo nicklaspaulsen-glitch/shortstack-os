@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // AI Lead Gen Agent — Fully autonomous lead generation pipeline
 // Like Clay + Instantly combined: finds leads, enriches them, scores them, and sends outreach
+// SECURITY: every leads read/write is scoped to the caller's `ownerId` so a
+// body-supplied lead_id[] can't reach into another tenant's data.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const {
     mode, // "find", "enrich", "score", "outreach", "full_pipeline"
@@ -49,8 +55,10 @@ export async function POST(request: NextRequest) {
         } catch {}
       }
 
-      // Insert into database
+      // Insert into database — tag owner so the lead is visible to the
+      // tenant who ran this pipeline (previously: orphaned rows).
       const { data: lead } = await supabase.from("leads").insert({
+        user_id: ownerId,
         business_name: p.displayName?.text || "",
         phone: p.nationalPhoneNumber || null,
         email,
@@ -78,7 +86,12 @@ export async function POST(request: NextRequest) {
     const enriched: Array<Record<string, unknown>> = [];
 
     for (const id of ids.slice(0, 20)) {
-      const { data: lead } = await supabase.from("leads").select("*").eq("id", id).single();
+      const { data: lead } = await supabase
+        .from("leads")
+        .select("*")
+        .eq("id", id)
+        .eq("user_id", ownerId)
+        .single();
       if (!lead) continue;
 
       // Scrape website for more info
@@ -107,7 +120,11 @@ export async function POST(request: NextRequest) {
           if (ownerMatch && !lead.owner_name) updates.owner_name = ownerMatch[1];
 
           if (Object.keys(updates).length > 0) {
-            await supabase.from("leads").update(updates).eq("id", id);
+            await supabase
+              .from("leads")
+              .update(updates)
+              .eq("id", id)
+              .eq("user_id", ownerId);
           }
 
           enriched.push({ id, name: lead.business_name, ...updates, has_website_content: true });
@@ -124,7 +141,11 @@ export async function POST(request: NextRequest) {
   if (mode === "score" || mode === "full_pipeline") {
     if (!apiKey) { results.scoring_error = "AI not configured"; } else {
       const ids = lead_ids || (results.leads as Array<Record<string, string>>)?.map(l => l.id) || [];
-      const { data: leadsToScore } = await supabase.from("leads").select("*").in("id", ids.slice(0, 30));
+      const { data: leadsToScore } = await supabase
+        .from("leads")
+        .select("*")
+        .eq("user_id", ownerId)
+        .in("id", ids.slice(0, 30));
 
       if (leadsToScore && leadsToScore.length > 0) {
         const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -151,7 +172,12 @@ export async function POST(request: NextRequest) {
   // ============ STEP 4: AUTO OUTREACH ============
   if (mode === "outreach" || mode === "full_pipeline") {
     const ids = lead_ids || (results.leads as Array<Record<string, string>>)?.map(l => l.id) || [];
-    const { data: leadsForOutreach } = await supabase.from("leads").select("*").in("id", ids.slice(0, 20)).eq("status", "new");
+    const { data: leadsForOutreach } = await supabase
+      .from("leads")
+      .select("*")
+      .eq("user_id", ownerId)
+      .in("id", ids.slice(0, 20))
+      .eq("status", "new");
 
     let dmsSent = 0;
     let emailsSent = 0;
@@ -206,8 +232,12 @@ export async function POST(request: NextRequest) {
       });
       dmsSent++;
 
-      // Update lead status
-      await supabase.from("leads").update({ status: "called" }).eq("id", lead.id);
+      // Update lead status (scoped to owner)
+      await supabase
+        .from("leads")
+        .update({ status: "called" })
+        .eq("id", lead.id)
+        .eq("user_id", ownerId);
       await new Promise(r => setTimeout(r, 500));
     }
 

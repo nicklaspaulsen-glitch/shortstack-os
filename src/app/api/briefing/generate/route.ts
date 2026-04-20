@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { cleanupOldTelegramMessages } from "@/lib/services/trinity";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function POST(_request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // SECURITY: every count below MUST be scoped to the caller's owner,
+  // otherwise the response leaks aggregate revenue/lead/outreach numbers
+  // across every tenant to the current user. Previously unscoped.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   // Get last login/briefing time
   const { data: lastBriefing } = await supabase
@@ -18,7 +25,9 @@ export async function POST(_request: NextRequest) {
 
   const since = lastBriefing?.generated_at || new Date(Date.now() - 24 * 3600000).toISOString();
 
-  // Gather all stats
+  // Gather all stats — tenant-scoped. `system_health` stays global because
+  // integration status (e.g. "Twilio down") is platform-level and the same
+  // for every tenant.
   const [
     { count: newLeads },
     { count: totalLeads },
@@ -33,18 +42,51 @@ export async function POST(_request: NextRequest) {
     { count: newDeals },
     { data: clients },
   ] = await Promise.all([
-    supabase.from("leads").select("*", { count: "exact", head: true }).gte("scraped_at", since),
-    supabase.from("leads").select("*", { count: "exact", head: true }),
-    supabase.from("outreach_log").select("*", { count: "exact", head: true }).gte("sent_at", since),
-    supabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied").gte("sent_at", since),
-    supabase.from("team_members").select("*", { count: "exact", head: true }).eq("is_active", true),
-    supabase.from("clients").select("*", { count: "exact", head: true }).gte("updated_at", since),
-    supabase.from("client_tasks").select("*", { count: "exact", head: true }).eq("is_completed", false),
-    supabase.from("trinity_log").select("*", { count: "exact", head: true }).gte("created_at", since),
+    supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).gte("scraped_at", since),
+    supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId),
+    // outreach_log has no direct user_id — scope via the caller's lead_ids.
+    // Cheap approximation: filter lead_id via a subquery-ish IN.
+    (async () => {
+      const { data: myLeadIds } = await supabase.from("leads").select("id").eq("user_id", ownerId);
+      const ids = (myLeadIds || []).map((l) => l.id);
+      if (ids.length === 0) return { count: 0 };
+      const { count } = await supabase
+        .from("outreach_log")
+        .select("*", { count: "exact", head: true })
+        .in("lead_id", ids)
+        .gte("sent_at", since);
+      return { count };
+    })(),
+    (async () => {
+      const { data: myLeadIds } = await supabase.from("leads").select("id").eq("user_id", ownerId);
+      const ids = (myLeadIds || []).map((l) => l.id);
+      if (ids.length === 0) return { count: 0 };
+      const { count } = await supabase
+        .from("outreach_log")
+        .select("*", { count: "exact", head: true })
+        .in("lead_id", ids)
+        .eq("status", "replied")
+        .gte("sent_at", since);
+      return { count };
+    })(),
+    supabase.from("team_members").select("*", { count: "exact", head: true }).eq("parent_profile_id", ownerId).eq("is_active", true),
+    supabase.from("clients").select("*", { count: "exact", head: true }).eq("profile_id", ownerId).gte("updated_at", since),
+    (async () => {
+      const { data: myClientIds } = await supabase.from("clients").select("id").eq("profile_id", ownerId);
+      const ids = (myClientIds || []).map((c) => c.id);
+      if (ids.length === 0) return { count: 0 };
+      const { count } = await supabase
+        .from("client_tasks")
+        .select("*", { count: "exact", head: true })
+        .in("client_id", ids)
+        .eq("is_completed", false);
+      return { count };
+    })(),
+    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).gte("created_at", since),
     supabase.from("system_health").select("*", { count: "exact", head: true }).eq("status", "down"),
     supabase.from("system_health").select("integration_name").eq("status", "down"),
-    supabase.from("deals").select("*", { count: "exact", head: true }).eq("status", "won").gte("closed_at", since),
-    supabase.from("clients").select("mrr").eq("is_active", true),
+    supabase.from("deals").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "won").gte("closed_at", since),
+    supabase.from("clients").select("mrr").eq("profile_id", ownerId).eq("is_active", true),
   ]);
 
   const totalMRR = clients?.reduce((sum, c) => sum + (c.mrr || 0), 0) || 0;

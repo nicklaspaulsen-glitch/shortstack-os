@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -9,7 +10,20 @@ export async function GET(request: NextRequest) {
   const clientId = request.nextUrl.searchParams.get("id");
   if (!clientId) return NextResponse.json({ error: "Client ID required" }, { status: 400 });
 
-  const { data: client } = await supabase.from("clients").select("*").eq("id", clientId).single();
+  // SECURITY: the welcome PDF includes contact name, business, MRR, package,
+  // and services. Verify ownership before fetching — previously any authed
+  // user could enumerate client ids and read other tenants' revenue data.
+  const ctx = await requireOwnedClient(supabase, user.id, clientId);
+  if (!ctx || !ctx.clientId) {
+    return NextResponse.json({ error: "Client not found or access denied" }, { status: 403 });
+  }
+
+  const { data: client } = await supabase
+    .from("clients")
+    .select("*")
+    .eq("id", ctx.clientId)
+    .eq("profile_id", ctx.ownerId)
+    .single();
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 
   const PDFDocument = (await import("pdfkit")).default;

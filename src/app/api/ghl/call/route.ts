@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
 
 // Initiate cold call via GoHighLevel
 export async function POST(request: NextRequest) {
@@ -7,25 +9,48 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // SECURITY: scope all lead reads to the caller's owner so a body-supplied
+  // lead_id can't reach into another tenant's data.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { lead_id, phone_number, business_name, campaign_id } = await request.json();
+
+  // Plan-tier cap: mirror `/api/call` and `/api/caller/initiate` so this
+  // endpoint can't be used to bypass call_minutes limits.
+  const gate = await checkLimit(ownerId, "call_minutes", 1);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      { error: gate.reason || "Call minutes limit reached for your plan.", current: gate.current, limit: gate.limit, plan_tier: gate.plan_tier },
+      { status: 402 },
+    );
+  }
 
   const ghlKey = process.env.GHL_API_KEY;
   if (!ghlKey) return NextResponse.json({ error: "GHL not configured" }, { status: 500 });
 
   const serviceSupabase = createServiceClient();
 
-  // Get lead data
+  // Get lead data — ALWAYS scoped to the caller's owner. If the supplied
+  // lead_id doesn't belong to this owner, the lookup returns no row and we
+  // fall back to the (optional) phone_number/business_name passed in the body.
   let phone = phone_number;
   let name = business_name || "Lead";
   let leadIndustry = "";
 
   if (lead_id) {
-    const { data: lead } = await serviceSupabase.from("leads").select("*").eq("id", lead_id).single();
-    if (lead) {
-      phone = lead.phone || phone_number;
-      name = lead.business_name;
-      leadIndustry = lead.industry || "";
+    const { data: lead } = await serviceSupabase
+      .from("leads")
+      .select("*")
+      .eq("id", lead_id)
+      .eq("user_id", ownerId)
+      .single();
+    if (!lead) {
+      return NextResponse.json({ error: "Lead not found or access denied" }, { status: 403 });
     }
+    phone = lead.phone || phone_number;
+    name = lead.business_name;
+    leadIndustry = lead.industry || "";
   }
 
   if (!phone) return NextResponse.json({ error: "No phone number" }, { status: 400 });
@@ -85,10 +110,17 @@ export async function POST(request: NextRequest) {
     });
     const callData = await callRes.json();
 
-    // Update lead status
+    // Update lead status — scoped to owner to prevent cross-tenant writes.
     if (lead_id) {
-      await serviceSupabase.from("leads").update({ status: "called" }).eq("id", lead_id);
+      await serviceSupabase
+        .from("leads")
+        .update({ status: "called" })
+        .eq("id", lead_id)
+        .eq("user_id", ownerId);
     }
+
+    // Plan-tier usage metering
+    await recordUsage(ownerId, "call_minutes", 1, { lead_id: lead_id || null, platform: "ghl_call" });
 
     // Log
     await serviceSupabase.from("trinity_log").insert({

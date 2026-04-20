@@ -25,8 +25,13 @@ export async function verifyClientAccess(
 
   const role = profile.role;
 
-  // ── Admin: must own the client ───────────────────────────────
-  if (role === "admin") {
+  // ── Agency owner roles (admin / founder / agency): must own the client ─
+  // Previously only `admin` was in this branch — founders + agency owners
+  // fell through to the client-role branch below and got `denied: true`
+  // because they don't have a `clients.profile_id === userId` row. That
+  // blocked them from using invoice / payment-link / content-calendar
+  // publish routes on their own clients.
+  if (role === "admin" || role === "founder" || role === "agency") {
     if (!requestedClientId) {
       // No specific client requested — allowed (list queries should scope by owner separately)
       return { clientId: null, role, denied: false };

@@ -3,12 +3,16 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { sendTelegramMessage } from "@/lib/services/trinity";
 import { isAtClientLimit } from "@/lib/plan-config";
 import { recordUsage } from "@/lib/usage-limits";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Full client onboarding — creates client, portal access, welcome doc, first invoice, Zernio profile
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const body = await request.json();
   const {
@@ -28,10 +32,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
   }
 
-  // Check client limit for the agency's plan
+  // Check client limit for the agency's plan — scope to the CALLER'S clients
+  // only (previously this counted every tenant's clients globally, so the
+  // first tenant to hit a cap blocked every other tenant's onboarding).
   const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
   const agencyPlan = profile?.plan_tier || "Starter";
-  const { count: currentClients } = await supabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true);
+  const { count: currentClients } = await supabase
+    .from("clients")
+    .select("*", { count: "exact", head: true })
+    .eq("profile_id", ownerId)
+    .eq("is_active", true);
   if (isAtClientLimit(agencyPlan, currentClients || 0)) {
     return NextResponse.json({
       error: `You've reached the maximum number of clients for your ${agencyPlan} plan. Upgrade to add more.`,
@@ -41,8 +51,10 @@ export async function POST(request: NextRequest) {
 
   const results: Record<string, unknown> = {};
 
-  // 1. Create the client record
+  // 1. Create the client record — profile_id is REQUIRED so the row shows
+  // up in the caller's list (previously omitted → orphaned invisible client).
   const { data: client, error: clientError } = await supabase.from("clients").insert({
+    profile_id: ownerId,
     business_name, contact_name, email, phone, website, industry,
     package_tier, mrr: parseFloat(mrr) || 0,
     services: services || [],

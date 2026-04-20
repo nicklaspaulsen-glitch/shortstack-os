@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getNextPhoneNumber, recordPhoneSend } from "@/lib/services/sender-rotation";
-import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { getEffectiveOwnerId, requireOwnedClient } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
 
 // Send SMS to leads using Twilio
@@ -42,12 +42,20 @@ export async function POST(request: NextRequest) {
   const serviceSupabase = createServiceClient();
 
   // Resolve sender number: explicit from_number → client's provisioned number → system default
+  // SECURITY: if a client_id is supplied, verify the caller owns that client
+  // before pulling its twilio_phone_number. Previously this route would pull
+  // any tenant's number.
   let resolvedFrom = from_number || "";
   if (!resolvedFrom && client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx || !ctx.clientId) {
+      return NextResponse.json({ error: "Client not found or access denied" }, { status: 403 });
+    }
     const { data: clientRow } = await serviceSupabase
       .from("clients")
       .select("twilio_phone_number")
-      .eq("id", client_id)
+      .eq("id", ctx.clientId)
+      .eq("profile_id", ctx.ownerId)
       .single();
     if (clientRow?.twilio_phone_number) resolvedFrom = clientRow.twilio_phone_number;
   }
@@ -64,13 +72,25 @@ export async function POST(request: NextRequest) {
 
   if (!resolvedFrom) resolvedFrom = process.env.TWILIO_DEFAULT_NUMBER || "";
 
-  // Get leads with phone numbers
+  // Get leads with phone numbers — ALWAYS scoped to the caller's ownerId so
+  // another tenant's lead_ids can't be smuggled in via the body.
   let leads;
   if (lead_ids?.length) {
-    const { data } = await serviceSupabase.from("leads").select("*").in("id", lead_ids).not("phone", "is", null);
+    const { data } = await serviceSupabase
+      .from("leads")
+      .select("*")
+      .eq("user_id", ownerId)
+      .in("id", lead_ids)
+      .not("phone", "is", null);
     leads = data;
   } else {
-    const { data } = await serviceSupabase.from("leads").select("*").not("phone", "is", null).eq("status", "new").limit(safeBatchSize);
+    const { data } = await serviceSupabase
+      .from("leads")
+      .select("*")
+      .eq("user_id", ownerId)
+      .not("phone", "is", null)
+      .eq("status", "new")
+      .limit(safeBatchSize);
     leads = data;
   }
 
@@ -149,8 +169,14 @@ export async function POST(request: NextRequest) {
           sent_at: new Date().toISOString(),
           metadata: { direction: "outbound" },
         });
-        // Only advance status if lead hasn't already replied/booked
-        await serviceSupabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new", "called"]);
+        // Only advance status if lead hasn't already replied/booked, and
+        // scope the update to the caller's owner to prevent cross-tenant writes.
+        await serviceSupabase
+          .from("leads")
+          .update({ status: "contacted" })
+          .eq("id", lead.id)
+          .eq("user_id", ownerId)
+          .in("status", ["new", "called"]);
       } else {
         failed++;
       }

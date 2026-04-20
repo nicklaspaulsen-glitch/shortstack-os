@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { importPhoneNumber, createAgent, DEFAULT_COLD_CALL_PROMPT, DEFAULT_FIRST_MESSAGE } from "@/lib/services/eleven-agents";
-import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 import { checkLimit } from "@/lib/usage-limits";
 
 // Provision a Twilio phone number for a client
@@ -19,14 +19,20 @@ export async function POST(request: NextRequest) {
   const { client_id, area_code, country, agent_name, voice_id, skip_agent } = await request.json();
   if (!client_id) return NextResponse.json({ error: "client_id required" }, { status: 400 });
 
+  // SECURITY: verify the caller owns this client BEFORE any Twilio purchase.
+  // Previously this route accepted any authed user's body-supplied client_id
+  // and provisioned a phone number on ShortStack's tab (ongoing $1/mo) and
+  // attached it to another tenant's client.
+  const ctx = await requireOwnedClient(supabase, user.id, client_id);
+  if (!ctx || !ctx.clientId) {
+    return NextResponse.json({ error: "Client not found or access denied" }, { status: 403 });
+  }
+  const ownerId = ctx.ownerId;
+
   // Plan-tier concurrent cap: block new number purchase when the agency is
   // already at its tier's phone_numbers ceiling. Returns 402 on cap hit so the
-  // client can surface an upgrade prompt. `phone_numbers` is a concurrent
-  // cap (point-in-time count of clients with an attached Twilio number),
-  // not a monthly spend, which checkLimit handles correctly since it just
-  // compares current vs limit.
-  const ownerId = await getEffectiveOwnerId(supabase, user.id);
-  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  // client can surface an upgrade prompt. Uses the REAL owner's tier so a
+  // Starter user can't bypass the cap by targeting an Enterprise tenant.
   const gate = await checkLimit(ownerId, "phone_numbers", 1);
   if (!gate.allowed) {
     return NextResponse.json(
@@ -52,11 +58,12 @@ export async function POST(request: NextRequest) {
   const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
   const serviceSupabase = createServiceClient();
 
-  // Get client info for naming
+  // Get client info for naming (ownership already verified above).
   const { data: client } = await serviceSupabase
     .from("clients")
     .select("business_name, industry")
-    .eq("id", client_id)
+    .eq("id", ctx.clientId)
+    .eq("profile_id", ownerId)
     .single();
 
   const clientName = client?.business_name || "Client";
@@ -141,7 +148,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // ── Step 5: Save everything to client record ──
+    // ── Step 5: Save everything to client record (scoped to owner) ──
     await serviceSupabase
       .from("clients")
       .update({
@@ -150,7 +157,8 @@ export async function POST(request: NextRequest) {
         ...(elevenPhoneId && { eleven_phone_number_id: elevenPhoneId }),
         ...(elevenAgentId && { eleven_agent_id: elevenAgentId }),
       })
-      .eq("id", client_id);
+      .eq("id", ctx.clientId)
+      .eq("profile_id", ownerId);
 
     // ── Step 6: Log ──
     await serviceSupabase.from("trinity_log").insert({

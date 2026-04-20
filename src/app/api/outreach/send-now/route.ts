@@ -46,7 +46,12 @@ export async function POST(request: NextRequest) {
         lead.owner_name
       );
 
-      // Log outreach
+      // Log outreach as QUEUED — no provider has actually been called yet.
+      // The browser extension (`/api/dm/browser-send`) or a scheduled DM
+      // worker flips the row to `sent` once the DM is really dispatched.
+      // Previously this row was written with status="sent" even though
+      // nothing was sent — that broke reply-rate dashboards and the user's
+      // trust in their own outreach numbers.
       const { data: outreachEntry } = await supabase
         .from("outreach_log")
         .insert({
@@ -55,7 +60,7 @@ export async function POST(request: NextRequest) {
           business_name: lead.business_name,
           recipient_handle: lead[socialField as keyof typeof lead] as string || "",
           message_text: message,
-          status: "sent",
+          status: "queued",
         })
         .select("id")
         .single();
@@ -93,15 +98,26 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const totalSent = Object.values(results).reduce((s, r) => s + r.sent, 0);
+  const totalQueued = Object.values(results).reduce((s, r) => s + r.sent, 0);
 
-  // Notify on Telegram
+  // Notify on Telegram — phrase as "queued" so the user isn't misled.
   const { sendTelegramMessage } = await import("@/lib/services/trinity");
   const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (chatId && totalSent > 0) {
+  if (chatId && totalQueued > 0) {
     const platformBreakdown = Object.entries(results).map(([p, r]) => `${p}: ${r.sent}`).join(", ");
-    await sendTelegramMessage(chatId, `📨 *Manual Outreach Sent*\n\n${totalSent} DMs sent\n${platformBreakdown}`);
+    await sendTelegramMessage(
+      chatId,
+      `📨 *Outreach queued*\n\n${totalQueued} DMs queued (awaiting browser extension or DM worker)\n${platformBreakdown}`,
+    );
   }
 
-  return NextResponse.json({ success: true, results, totalSent });
+  // Rename key in response for honesty; keep `totalSent` as an alias for
+  // legacy clients that read it.
+  return NextResponse.json({
+    success: true,
+    results,
+    totalQueued,
+    totalSent: totalQueued,
+    note: "Messages are queued — DMs actually go out via the browser extension or scheduled worker.",
+  });
 }
