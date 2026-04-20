@@ -11,9 +11,22 @@
  * Plan-tier usage is backed by `usage_events` (migration applied separately).
  */
 import { createServiceClient } from "@/lib/supabase/server";
+// Import from the client-safe plan config module so we can use these types
+// and values within this file AND re-export them for backward compat with
+// existing server-side callers that import from `@/lib/usage-limits`.
+// Client components should import from `@/lib/plan-limits` directly to
+// avoid dragging this (server-only) module into the browser bundle.
+import {
+  LIMITS_BY_TIER,
+  normalizePlanTier,
+  limitsForTier,
+  type TierLimits,
+  type UsageResource,
+} from "@/lib/plan-limits";
+export { LIMITS_BY_TIER, normalizePlanTier, limitsForTier };
+export type { TierLimits, UsageResource };
 
 export type UsageKind = "tokens" | "videos" | "thumbnails" | "emails";
-export type UsageResource = "emails" | "tokens" | "clients" | "sms" | "call_minutes" | "phone_numbers";
 
 export interface UserUsageLimits {
   max_tokens_per_day: number;
@@ -96,51 +109,10 @@ function numberOr(v: unknown, d: number): number {
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
-//  Plan-tier monthly limits (Starter / Growth / Pro / Business / Unlimited)
+//  Plan-tier monthly limits — types + constants now live in `./plan-limits.ts`
+//  (client-safe module). Re-exported above so existing `@/lib/usage-limits`
+//  imports continue to work. This section is intentionally empty now.
 // ──────────────────────────────────────────────────────────────────────────────
-
-export interface TierLimits {
-  emails: number;
-  tokens: number;
-  clients: number;
-  sms: number;
-  call_minutes: number;
-  phone_numbers: number;
-}
-
-/**
- * Hard monthly caps per Stripe plan tier. `Infinity` = no cap.
- * Keys match the TitleCase values stored in `profiles.plan_tier`.
- * "Founder" is an internal/dev tier — treated as unlimited.
- *
- * NOTE: `clients` and `phone_numbers` are CONCURRENT caps (point-in-time,
- * not monthly sums). Everything else is a per-calendar-month limit.
- */
-export const LIMITS_BY_TIER: Record<string, TierLimits> = {
-  Starter:   { emails:     500, tokens:    250_000, clients:   5, sms:    100, call_minutes:     60, phone_numbers:  1 },
-  Growth:    { emails:   5_000, tokens:  1_000_000, clients:  15, sms:  1_000, call_minutes:    300, phone_numbers:  3 },
-  Pro:       { emails:  25_000, tokens:  5_000_000, clients:  50, sms:  5_000, call_minutes:  2_000, phone_numbers: 10 },
-  Business:  { emails: 100_000, tokens: 20_000_000, clients: 150, sms: 25_000, call_minutes: 10_000, phone_numbers: 50 },
-  Unlimited: { emails: Infinity, tokens: Infinity, clients: Infinity, sms: Infinity, call_minutes: Infinity, phone_numbers: Infinity },
-  Founder:   { emails: Infinity, tokens: Infinity, clients: Infinity, sms: Infinity, call_minutes: Infinity, phone_numbers: Infinity },
-};
-
-/** Normalise a plan_tier value from the DB. Nulls default to "Starter". */
-export function normalizePlanTier(raw: string | null | undefined): string {
-  if (!raw) return "Starter";
-  const v = String(raw).trim();
-  // Accept lowercase too (billing checkout accepts lowercase)
-  const titled = v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
-  if (titled in LIMITS_BY_TIER) return titled;
-  // Legacy "Enterprise" → Business
-  if (titled === "Enterprise") return "Business";
-  return "Starter";
-}
-
-export function limitsForTier(tier: string | null | undefined): TierLimits {
-  const key = normalizePlanTier(tier);
-  return LIMITS_BY_TIER[key] ?? LIMITS_BY_TIER.Starter;
-}
 
 // Token estimation for trinity_log rows (mirrors billing/tokens/route.ts)
 const TOKEN_ESTIMATES: Record<string, number> = {

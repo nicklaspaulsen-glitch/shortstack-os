@@ -15,7 +15,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, AlertTriangle, X } from "lucide-react";
-import { normalizePlanTier } from "@/lib/usage-limits";
+import { normalizePlanTier } from "@/lib/plan-limits";
 
 type UsageMap = Record<string, number>;
 type LimitMap = Record<string, number | "unlimited">;

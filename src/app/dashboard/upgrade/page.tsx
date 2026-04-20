@@ -39,7 +39,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
-import { LIMITS_BY_TIER, normalizePlanTier } from "@/lib/usage-limits";
+import { LIMITS_BY_TIER, normalizePlanTier } from "@/lib/plan-limits";
 import PageHero from "@/components/ui/page-hero";
 
 // ── Plan order (low → high) for "upgrade path" gating ────────────────────────
