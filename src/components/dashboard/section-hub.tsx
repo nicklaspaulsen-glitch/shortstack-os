@@ -40,7 +40,7 @@ export interface HubStat {
 }
 
 export interface SectionHubProps {
-  section: "sales" | "create" | "visual" | "automate";
+  section: "sales" | "create" | "visual" | "automate" | "manage" | "connect";
   title: string;
   subtitle: string;
   heroIcon: React.ReactNode;

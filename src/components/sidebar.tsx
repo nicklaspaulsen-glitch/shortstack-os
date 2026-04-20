@@ -219,6 +219,8 @@ const SECTION_HUB_HREF: Record<string, string> = {
   Create: "/dashboard/create",
   Visual: "/dashboard/visual",
   Automate: "/dashboard/automate",
+  Manage: "/dashboard/manage",
+  Connect: "/dashboard/connect",
 };
 
 /* ─── Icon name → Lucide component (curated list that matches the

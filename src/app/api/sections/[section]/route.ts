@@ -13,8 +13,15 @@ import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
  * gracefully to `null` so the UI can render "—".
  */
 
-type SectionKey = "sales" | "create" | "visual" | "automate";
-const VALID: readonly SectionKey[] = ["sales", "create", "visual", "automate"] as const;
+type SectionKey = "sales" | "create" | "visual" | "automate" | "manage" | "connect";
+const VALID: readonly SectionKey[] = [
+  "sales",
+  "create",
+  "visual",
+  "automate",
+  "manage",
+  "connect",
+] as const;
 
 // Tool slug → list of action_type prefixes in trinity_log. Used for
 // "last used per tool" + per-section activity feed.
@@ -59,6 +66,39 @@ const SECTION_TOOLS: Record<SectionKey, { slug: string; actions: string[] }[]> =
     { slug: "sequences", actions: ["sequence"] },
     { slug: "integrations", actions: ["integration"] },
     { slug: "webhooks", actions: ["webhook"] },
+  ],
+  manage: [
+    { slug: "workspaces", actions: ["workspace", "workspace_created"] },
+    { slug: "team", actions: ["team_member_invited", "team_member_updated", "team_member_removed"] },
+    { slug: "production", actions: ["production"] },
+    { slug: "projects", actions: ["project"] },
+    { slug: "financials", actions: ["financial"] },
+    { slug: "invoices", actions: ["invoice"] },
+    { slug: "billing", actions: ["billing", "token_purchase"] },
+    { slug: "pricing", actions: ["pricing"] },
+    { slug: "usage", actions: ["usage"] },
+    { slug: "phone-email", actions: ["phone", "email_config"] },
+    { slug: "domains", actions: ["domain", "domain_purchased"] },
+    { slug: "client-health", actions: ["client_health"] },
+    { slug: "reviews", actions: ["review"] },
+    { slug: "tickets", actions: ["ticket"] },
+    { slug: "referrals", actions: ["referral"] },
+    { slug: "roi-calculator", actions: ["roi"] },
+    { slug: "monitor", actions: ["monitor"] },
+    { slug: "report-generator", actions: ["report_generated"] },
+    { slug: "marketplace", actions: ["marketplace"] },
+    { slug: "download", actions: ["desktop_download"] },
+  ],
+  connect: [
+    { slug: "google-business", actions: ["google_business", "gbp"] },
+    { slug: "discord", actions: ["discord"] },
+    { slug: "notion-sync", actions: ["notion"] },
+    { slug: "integrations", actions: ["integration", "social_connected"] },
+    { slug: "competitive-monitor", actions: ["competitor_monitor"] },
+    { slug: "telegram-bot", actions: ["telegram"] },
+    { slug: "notifications", actions: ["notification"] },
+    { slug: "system-status", actions: ["system_status"] },
+    { slug: "settings", actions: ["settings_update"] },
   ],
 };
 
@@ -304,6 +344,121 @@ export async function GET(
         integrations = null;
       }
       stats.integrations = integrations;
+    }
+
+    if (section === "manage") {
+      // Active team members (team_members.status = 'active')
+      let teamMembers: number | null = null;
+      try {
+        const { count } = await service
+          .from("team_members")
+          .select("*", { count: "exact", head: true })
+          .eq("agency_owner_id", ownerId)
+          .eq("status", "active");
+        teamMembers = count ?? 0;
+      } catch {
+        teamMembers = null;
+      }
+      stats.team_members = teamMembers;
+
+      // Workspaces (table may not exist yet — graceful null)
+      let workspaces: number | null = null;
+      try {
+        const { count } = await service
+          .from("workspaces")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", ownerId);
+        workspaces = count ?? 0;
+      } catch {
+        workspaces = null;
+      }
+      stats.workspaces = workspaces;
+
+      // Plan tier — passthrough string, falls back to "Free"
+      try {
+        const { data: p } = await service
+          .from("profiles")
+          .select("plan_tier")
+          .eq("id", ownerId)
+          .single();
+        stats.plan_tier = (p?.plan_tier as string) || "Free";
+      } catch {
+        stats.plan_tier = null;
+      }
+
+      // Monthly spend — sum usage_events.amount this month as a proxy
+      // (no Stripe invoice mirror available). Null if the table is missing.
+      let monthlySpend: number | null = null;
+      try {
+        const { data: events } = await service
+          .from("usage_events")
+          .select("amount")
+          .eq("user_id", ownerId)
+          .gte("created_at", monthAgo);
+        monthlySpend = (events || []).reduce(
+          (sum, e) => sum + (Number(e.amount) || 0),
+          0,
+        );
+      } catch {
+        monthlySpend = null;
+      }
+      stats.monthly_spend = monthlySpend;
+    }
+
+    if (section === "connect") {
+      // Active integrations
+      let activeIntegrations: number | null = null;
+      try {
+        const { count } = await service
+          .from("integrations")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", ownerId)
+          .eq("connected", true);
+        activeIntegrations = count ?? 0;
+      } catch {
+        activeIntegrations = null;
+      }
+      stats.active_integrations = activeIntegrations;
+
+      // Connected social accounts
+      let socialAccounts: number | null = null;
+      try {
+        const { count } = await service
+          .from("social_accounts")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", ownerId);
+        socialAccounts = count ?? 0;
+      } catch {
+        socialAccounts = null;
+      }
+      stats.social_accounts = socialAccounts;
+
+      // Webhooks live (table may not exist — graceful null)
+      let webhooks: number | null = null;
+      try {
+        const { count } = await service
+          .from("webhooks")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", ownerId)
+          .eq("active", true);
+        webhooks = count ?? 0;
+      } catch {
+        webhooks = null;
+      }
+      stats.webhooks_live = webhooks;
+
+      // API keys issued (table may not exist — graceful null)
+      let apiKeys: number | null = null;
+      try {
+        const { count } = await service
+          .from("api_keys")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", ownerId);
+        apiKeys = count ?? 0;
+      } catch {
+        apiKeys = null;
+      }
+      stats.api_keys = apiKeys;
     }
   } catch (err) {
     // Swallow — the page will show "—" for any missing numeric stat.
