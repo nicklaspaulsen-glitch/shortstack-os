@@ -126,11 +126,6 @@ const navItems: NavItem[] = [
   { label: "Email Templates", href: "/dashboard/email-templates", icon: <MailPlus size={16} />, roles: ["admin"], sub: "Writing" },
   { label: "SMS Templates", href: "/dashboard/sms-templates", icon: <Smartphone size={16} />, roles: ["admin"], sub: "Writing" },
   { label: "Newsletter", href: "/dashboard/newsletter", icon: <Newspaper size={16} />, roles: ["admin"], sub: "Writing" },
-  { label: "Video Editor", href: "/dashboard/video-editor", icon: <Film size={16} />, roles: ["admin", "team_member"], sub: "Visual" },
-  { label: "AI Video Gen", href: "/dashboard/ai-video", icon: <Film size={16} />, roles: ["admin", "team_member"], sub: "Visual" },
-  { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"], sub: "Visual" },
-  { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: <ImageIcon size={16} />, roles: ["admin", "team_member"], sub: "Visual" },
-  { label: "Carousel Gen", href: "/dashboard/carousel-generator", icon: <Layers size={16} />, roles: ["admin", "team_member"], sub: "Visual" },
   { label: "Brand Voice", href: "/dashboard/brand-voice", icon: <BookOpen size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Brand Kit", href: "/dashboard/brand-kit", icon: <Palette size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Content Library", href: "/dashboard/content-library", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
@@ -141,10 +136,17 @@ const navItems: NavItem[] = [
   { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={16} />, roles: ["admin", "team_member"], sub: "Social" },
   { label: "Content Plan", href: "/dashboard/content-plan", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Social" },
 
+  // ── Visual (image, video, design) ──
+  { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: <ImageIcon size={16} />, roles: ["admin", "team_member"], section: "Visual", sub: "Image" },
+  { label: "AI Studio", href: "/dashboard/ai-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], sub: "Image" },
+  { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"], sub: "Image" },
+  { label: "Carousel Gen", href: "/dashboard/carousel-generator", icon: <Layers size={16} />, roles: ["admin", "team_member"], sub: "Image" },
+  { label: "Video Editor", href: "/dashboard/video-editor", icon: <Film size={16} />, roles: ["admin", "team_member"], sub: "Video" },
+  { label: "AI Video Gen", href: "/dashboard/ai-video", icon: <Film size={16} />, roles: ["admin", "team_member"], sub: "Video" },
+
   // ── Automate (AI & workflows) ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI" },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"], sub: "AI" },
-  { label: "AI Studio", href: "/dashboard/ai-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Apps", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], sub: "Workflows" },
   { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Workflows" },
@@ -204,6 +206,17 @@ const navItems: NavItem[] = [
 function isItemActive(href: string, pathname: string) {
   return pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
 }
+
+/* ─── Section header → hub page mapping. Sections with a value here
+ * render as a clickable <Link> (expand/collapse moves to a chevron
+ * button). Sections without a hub (Manage / Connect / Grow) keep the
+ * all-button behavior. ─────────────────────────────────────────── */
+const SECTION_HUB_HREF: Record<string, string> = {
+  Sales: "/dashboard/sales",
+  Create: "/dashboard/create",
+  Visual: "/dashboard/visual",
+  Automate: "/dashboard/automate",
+};
 
 /* ─── Icon name → Lucide component (curated list that matches the
  * icon picker in the sidebar customizer). Unknown names fall back. ── */
@@ -729,21 +742,58 @@ export default function Sidebar() {
 
           return (
             <div key={group.section || "_core"}>
-              {/* Section header (e.g. Sales, Create, etc.) */}
+              {/* Section header (e.g. Sales, Create, etc.).
+                  If the section has a hub page, we split the header into
+                  a <Link> (the label) + a separate chevron button (the
+                  expand/collapse toggle) so both behaviors coexist.
+                  Otherwise the whole row is a toggle button as before. */}
               {group.section && !collapsed && (
-                <button
-                  onClick={() => toggleSection(group.section!)}
-                  className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec cursor-pointer"
-                >
-                  <span className="text-[8px] text-muted uppercase tracking-[0.2em] font-semibold group-hover/sec:text-foreground transition-colors">
-                    {group.section}
-                  </span>
-                  <div className="flex-1 h-px bg-border" />
-                  <ChevronDown
-                    size={10}
-                    className={`text-muted group-hover/sec:text-foreground transition-transform duration-200 ${expanded ? "" : "-rotate-90"}`}
-                  />
-                </button>
+                (() => {
+                  const hubHref = SECTION_HUB_HREF[group.section!];
+                  const hubActive = hubHref ? pathname === hubHref : false;
+                  if (hubHref) {
+                    return (
+                      <div className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec">
+                        <Link
+                          href={hubHref}
+                          className={`text-[8px] uppercase tracking-[0.2em] font-semibold transition-colors ${
+                            hubActive ? "text-gold" : "text-muted group-hover/sec:text-foreground hover:text-foreground"
+                          }`}
+                          title={`Open ${group.section} hub`}
+                        >
+                          {group.section}
+                        </Link>
+                        <div className="flex-1 h-px bg-border" />
+                        <button
+                          type="button"
+                          onClick={() => toggleSection(group.section!)}
+                          className="p-0.5 rounded text-muted hover:text-foreground transition-colors cursor-pointer"
+                          aria-label={expanded ? `Collapse ${group.section}` : `Expand ${group.section}`}
+                        >
+                          <ChevronDown
+                            size={10}
+                            className={`transition-transform duration-200 ${expanded ? "" : "-rotate-90"}`}
+                          />
+                        </button>
+                      </div>
+                    );
+                  }
+                  return (
+                    <button
+                      onClick={() => toggleSection(group.section!)}
+                      className="w-full flex items-center gap-2 px-2 pt-3 pb-1 group/sec cursor-pointer"
+                    >
+                      <span className="text-[8px] text-muted uppercase tracking-[0.2em] font-semibold group-hover/sec:text-foreground transition-colors">
+                        {group.section}
+                      </span>
+                      <div className="flex-1 h-px bg-border" />
+                      <ChevronDown
+                        size={10}
+                        className={`text-muted group-hover/sec:text-foreground transition-transform duration-200 ${expanded ? "" : "-rotate-90"}`}
+                      />
+                    </button>
+                  );
+                })()
               )}
 
               {/* Section content */}
