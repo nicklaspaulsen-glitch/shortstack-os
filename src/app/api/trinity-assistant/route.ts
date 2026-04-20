@@ -637,6 +637,28 @@ const TOOLS: Anthropic.Tool[] = [
       required: ["thumbnail_id", "instruction"],
     },
   },
+  // ── AI footage auto-detect (Claude Vision) ─────────────────────────────
+  {
+    name: "classify_footage",
+    description:
+      "Auto-detect what TYPE of content a video clip is (webcam talking head, vlog, b-roll, screen recording, gameplay, product shot, interview, drone, animation, dance, slide, action) using Claude Sonnet Vision. Returns { footage_type, confidence, detected_subjects, lighting, motion_level, color_palette, recommended_creator_pack_id, suggested_edits } so the video editor can suggest a preset pack. Use when the user asks 'what kind of footage is this' or 'which preset pack should I use for this clip'. Requires a public URL to either the clip or a still frame.",
+    input_schema: {
+      type: "object",
+      properties: {
+        video_url: {
+          type: "string",
+          description:
+            "Publicly reachable URL to the video clip OR a still frame/thumbnail of it. Claude Vision currently needs an image — if you have a video URL, extract a thumbnail first.",
+        },
+        client_id: { type: "string", description: "Optional client UUID." },
+        frame_sample_count: {
+          type: "number",
+          description: "How many frames to sample from the clip (1-5, default 3). Forward-compat; today only the first frame is sent.",
+        },
+      },
+      required: ["video_url"],
+    },
+  },
 ];
 
 interface ToolCtx {
@@ -2838,6 +2860,116 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
             poll_url: `/api/thumbnail/status?job_id=${jobId}`,
           },
         };
+      }
+
+      // ── classify_footage ───────────────────────────────────────────
+      case "classify_footage": {
+        const videoUrl = typeof input.video_url === "string" ? input.video_url.trim() : "";
+        if (!videoUrl) return { ok: false, error: "video_url required." };
+
+        // Reuse the classify-footage route logic by forwarding through it —
+        // but we already have ownerId in ctx so call the underlying helpers
+        // directly to avoid an internal HTTP hop on Vercel.
+        const { checkLimit, recordUsage } = await import("@/lib/usage-limits");
+        const metered = await checkLimit(ctx.ownerId, "tokens", 1);
+        if (!metered.allowed) {
+          return {
+            ok: false,
+            error: metered.reason || "Monthly token limit reached — upgrade to continue.",
+          };
+        }
+
+        try {
+          const res = await fetch(videoUrl);
+          if (!res.ok) {
+            return { ok: false, error: `Failed to fetch frame (${res.status})` };
+          }
+          const contentType = res.headers.get("content-type") || "image/jpeg";
+          if (contentType.startsWith("video/")) {
+            return {
+              ok: false,
+              error:
+                "video/* MIME received — Claude Vision needs an image still; extract a frame first or pass a thumbnail URL.",
+            };
+          }
+          const buf = Buffer.from(await res.arrayBuffer());
+          const mediaType: "image/jpeg" | "image/png" | "image/gif" | "image/webp" =
+            contentType.includes("png")
+              ? "image/png"
+              : contentType.includes("gif")
+                ? "image/gif"
+                : contentType.includes("webp")
+                  ? "image/webp"
+                  : "image/jpeg";
+
+          const { anthropic: ant, MODEL_SONNET, safeJsonParse, getResponseText } =
+            await import("@/lib/ai/claude-helpers");
+
+          const systemPrompt = `You are a video editor classifying raw clips in one glance. Pick exactly one footage_type from: webcam_talking_head, vlog, screen_recording, gameplay, b_roll, interview_seated, product_close_up, action_handheld, drone_aerial, animation_motion_graphics, dance_performance, text_only_slide, unknown. Pick a recommended_creator_pack_id from: creator_ali_abdaal, creator_casey_neistat, creator_mrbeast, creator_mkbhd, creator_emma_chamberlain, creator_valuetainment, creator_corridor_digital, creator_fstoppers, creator_dude_perfect, creator_vox, creator_tiktok_dance, creator_generic_minimal. Respond with ONLY JSON: {"footage_type":"...","confidence":0..1,"detected_subjects":[...],"lighting":"...","motion_level":"none|low|medium|high|very-high","color_palette":[...],"recommended_creator_pack_id":"...","suggested_edits":["...","...","..."]}. No markdown.`;
+
+          const resp = await ant.messages.create({
+            model: MODEL_SONNET,
+            max_tokens: 1024,
+            system: systemPrompt,
+            messages: [
+              {
+                role: "user",
+                content: [
+                  {
+                    type: "image",
+                    source: { type: "base64", media_type: mediaType, data: buf.toString("base64") },
+                  },
+                  { type: "text", text: "Classify this footage frame. JSON only." },
+                ],
+              },
+            ],
+          });
+
+          interface ClassifyShape {
+            footage_type?: string;
+            confidence?: number;
+            detected_subjects?: string[];
+            lighting?: string;
+            motion_level?: string;
+            color_palette?: string[];
+            recommended_creator_pack_id?: string;
+            suggested_edits?: string[];
+          }
+          const parsed = safeJsonParse<ClassifyShape>(getResponseText(resp));
+          if (!parsed) {
+            return { ok: false, error: "Claude returned an unparseable response." };
+          }
+
+          // Track tokens best-effort.
+          const total =
+            (resp.usage?.input_tokens || 0) + (resp.usage?.output_tokens || 0);
+          void recordUsage(ctx.ownerId, "tokens", total || 1500, {
+            source: "trinity_classify_footage",
+            footage_type: parsed.footage_type,
+          });
+
+          return {
+            ok: true,
+            data: {
+              footage_type: parsed.footage_type || "unknown",
+              confidence:
+                typeof parsed.confidence === "number"
+                  ? Math.max(0, Math.min(1, parsed.confidence))
+                  : 0.5,
+              detected_subjects: Array.isArray(parsed.detected_subjects) ? parsed.detected_subjects.slice(0, 8) : [],
+              lighting: parsed.lighting || "unknown",
+              motion_level: parsed.motion_level || "medium",
+              color_palette: Array.isArray(parsed.color_palette) ? parsed.color_palette.slice(0, 8) : [],
+              recommended_creator_pack_id: parsed.recommended_creator_pack_id || "creator_generic_minimal",
+              suggested_edits: Array.isArray(parsed.suggested_edits) ? parsed.suggested_edits.slice(0, 5) : [],
+            },
+          };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "Classification failed",
+          };
+        }
       }
 
       default:
