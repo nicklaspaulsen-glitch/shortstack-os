@@ -79,6 +79,9 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
   const recognitionRef = useRef<SpeechRecognitionLite | null>(null);
   const threadEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // Audio element used to play ElevenLabs MP3. Kept in a ref so we can
+  // cancel/stop it when the user mutes or sends a new message.
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Extract the current dashboard page slug (e.g. "script-lab", "ads-manager")
   // so Trinity can bias tool choice toward the page the user is viewing.
@@ -88,10 +91,13 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
       ? pathname.replace(/^\/dashboard\//, "").split("/")[0] || null
       : null;
 
-  // Detect TTS support + restore mute preference once on mount.
+  // TTS is "supported" if the browser can play audio OR has SpeechSynthesis
+  // as a fallback. We prefer ElevenLabs via /api/tts/speak (natural voice),
+  // and fall back to the browser's built-in SpeechSynthesis only if the
+  // ElevenLabs call fails (e.g. the env var isn't set on this deploy).
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if ("speechSynthesis" in window) setTtsSupported(true);
+    setTtsSupported(typeof Audio !== "undefined" || "speechSynthesis" in window);
     try {
       const saved = window.localStorage.getItem("trinity_muted");
       if (saved === "1") setMuted(true);
@@ -100,14 +106,27 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
     }
   }, []);
 
-  // Cancel any in-flight speech when the component unmounts or the user mutes.
+  // Stop all audio on unmount.
   useEffect(() => {
     return () => {
-      if (typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
+      stopAllAudio();
     };
+    // stopAllAudio is stable (closure only reads refs) so no dep needed.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function stopAllAudio() {
+    if (typeof window === "undefined") return;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
+      audioRef.current = null;
+    }
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeaking(false);
+  }
 
   function toggleMute() {
     setMuted((prev) => {
@@ -118,27 +137,83 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
         // ignore
       }
       // Hitting mute while speaking should stop immediately.
-      if (next && typeof window !== "undefined" && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-        setSpeaking(false);
-      }
+      if (next) stopAllAudio();
       return next;
     });
   }
 
-  function speak(text: string) {
-    if (muted || !ttsSupported || !text) return;
+  // Fallback path: browser SpeechSynthesis. Used when ElevenLabs isn't
+  // available OR returns an error. Picks the best available voice.
+  function speakViaBrowser(text: string) {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    // Cancel any pending utterance so we don't queue up back-to-back speech.
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 1.05;
+
+    // Browser voice quality varies a lot. Prefer high-quality natural voices
+    // when present, in this rough order of preference.
+    const voices = window.speechSynthesis.getVoices();
+    const pickers: Array<(v: SpeechSynthesisVoice) => boolean> = [
+      (v) => /Natural|Neural/i.test(v.name) && v.lang.startsWith("en"),
+      (v) => /Samantha|Karen|Alex|Daniel|Serena/.test(v.name),
+      (v) => /Google.*US English/i.test(v.name),
+      (v) => v.name.startsWith("Google") && v.lang.startsWith("en"),
+      (v) => v.lang === "en-US",
+      (v) => v.lang.startsWith("en"),
+    ];
+    for (const pick of pickers) {
+      const found = voices.find(pick);
+      if (found) {
+        utter.voice = found;
+        break;
+      }
+    }
+
+    utter.rate = 1.0;
     utter.pitch = 1.0;
     utter.volume = 1.0;
     utter.onstart = () => setSpeaking(true);
     utter.onend = () => setSpeaking(false);
     utter.onerror = () => setSpeaking(false);
     window.speechSynthesis.speak(utter);
+  }
+
+  // Primary path: ElevenLabs via /api/tts/speak. Falls back to browser if
+  // the API returns anything non-OK (e.g. ELEVENLABS_API_KEY not set).
+  async function speak(text: string) {
+    if (muted || !text) return;
+    if (typeof window === "undefined") return;
+
+    // Stop anything that's already playing.
+    stopAllAudio();
+
+    try {
+      const res = await fetch("/api/tts/speak", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text }),
+      });
+      if (!res.ok) throw new Error(`tts returned ${res.status}`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.volume = 1.0;
+      audioRef.current = audio;
+      setSpeaking(true);
+      audio.onended = () => {
+        setSpeaking(false);
+        URL.revokeObjectURL(url);
+        if (audioRef.current === audio) audioRef.current = null;
+      };
+      audio.onerror = () => {
+        setSpeaking(false);
+        URL.revokeObjectURL(url);
+        if (audioRef.current === audio) audioRef.current = null;
+      };
+      await audio.play();
+    } catch {
+      // ElevenLabs unavailable — fall back to browser SpeechSynthesis.
+      speakViaBrowser(text);
+    }
   }
 
   // Detect Web Speech API support once mounted (client-only).
@@ -208,10 +283,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
       setListening(false);
     }
     // If Trinity is mid-reply out loud, cancel it so we don't talk over the user.
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setSpeaking(false);
-    }
+    stopAllAudio();
 
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setInput("");
