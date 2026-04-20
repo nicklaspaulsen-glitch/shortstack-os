@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { setupResendMailForDomain } from "../mail-setup/route";
 
 /**
  * Auto-configure a purchased domain:
@@ -170,7 +171,44 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // ── Step 4: Link the domain to the project ──────────────────────────
+  // ── Step 4: Resend mail auto-setup (additive, never fails the flow) ──
+  // Provision the domain in Resend and write DKIM/SPF/MX records to
+  // GoDaddy so the client can send from anything@their-domain.com.
+  // Failures here are surfaced in `steps` but do NOT break the outer
+  // website-setup flow — clients can retry from the UI.
+  try {
+    const mailResult = await setupResendMailForDomain(user_id, domain);
+    if (mailResult.ok) {
+      result.steps.push({
+        step: "resend_mail",
+        status: "ok",
+        detail: `Resend id ${mailResult.resend_domain_id} — status ${mailResult.status}`,
+      });
+    } else if (mailResult.sandbox) {
+      // OTE can't hold the real domain, so DNS write was rejected. Not a
+      // real failure — flag as skipped so the overall success flag stays
+      // clean during staging.
+      result.steps.push({
+        step: "resend_mail",
+        status: "skipped",
+        detail: mailResult.error || "Sandbox limitation (GoDaddy OTE)",
+      });
+    } else {
+      result.steps.push({
+        step: "resend_mail",
+        status: "error",
+        detail: mailResult.error || "Unknown Resend mail-setup error",
+      });
+    }
+  } catch (err) {
+    result.steps.push({
+      step: "resend_mail",
+      status: "error",
+      detail: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  // ── Step 5: Link the domain to the project ──────────────────────────
   if (project_id) {
     await supabase.from("website_projects").update({
       custom_domain: domain,
@@ -178,8 +216,12 @@ export async function POST(request: NextRequest) {
     }).eq("id", project_id);
   }
 
-  // Final status
-  const anyError = result.steps.some(s => s.status === "error");
+  // Final status — only consider the pre-existing steps (GoDaddy / Vercel /
+  // DNS). Resend mail setup is additive and must not break the caller.
+  const fatalErrorSteps = result.steps.filter(
+    s => s.status === "error" && s.step !== "resend_mail",
+  );
+  const anyError = fatalErrorSteps.length > 0;
   if (!anyError) {
     await supabase.from("website_domains").update({ status: "active" })
       .eq("profile_id", user_id).eq("domain", domain);

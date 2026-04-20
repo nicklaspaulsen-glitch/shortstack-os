@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Globe, Search, Loader, CheckCircle, XCircle, ExternalLink,
   ShieldCheck, Plus, RefreshCw, Link2, Copy, Trash2,
-  AlertTriangle, Edit3, AlertCircle,
+  AlertTriangle, Edit3, AlertCircle, Mail, MailCheck, MailWarning,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -23,6 +23,10 @@ interface WebsiteDomain {
   website_id: string | null;
   dns_records: DnsRecord[];
   created_at: string;
+  resend_domain_id: string | null;
+  resend_status: "pending" | "verifying" | "verified" | "failed" | null;
+  resend_dns_configured: boolean | null;
+  resend_last_error: string | null;
 }
 
 interface DnsRecord {
@@ -192,6 +196,54 @@ export default function DomainsPage() {
     } catch {
       toast.dismiss(toastId);
       toast.error("Auto-configure failed");
+    }
+  }
+
+  // Resend mail provisioning — creates the domain in Resend, writes DKIM/SPF
+  // to GoDaddy, kicks off verification. Client can then send from
+  // anything@this-domain.com once verification flips to "verified".
+  async function setupMail(domain: WebsiteDomain) {
+    const toastId = toast.loading("Setting up mail via Resend...");
+    try {
+      const res = await fetch("/api/websites/domains/mail-setup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ domain: domain.domain }),
+      });
+      const data = await res.json();
+      toast.dismiss(toastId);
+      if (data.ok) {
+        toast.success(`Mail provisioned — ${data.status}`);
+        await loadData();
+      } else if (data.sandbox) {
+        toast("Sandbox: GoDaddy OTE can't hold real DNS. Works on production.", { icon: "⚠️", duration: 7000 });
+        await loadData();
+      } else {
+        toast.error(data.error || "Mail setup failed");
+      }
+    } catch {
+      toast.dismiss(toastId);
+      toast.error("Mail setup failed");
+    }
+  }
+
+  async function refreshMailStatus(domain: WebsiteDomain) {
+    const toastId = toast.loading("Checking Resend status...");
+    try {
+      const res = await fetch(
+        `/api/websites/domains/mail-setup?domain=${encodeURIComponent(domain.domain)}`,
+      );
+      const data = await res.json();
+      toast.dismiss(toastId);
+      if (data.ok) {
+        toast.success(`Status: ${data.status || "pending"}`);
+        await loadData();
+      } else {
+        toast.error(data.error || "Status check failed");
+      }
+    } catch {
+      toast.dismiss(toastId);
+      toast.error("Status check failed");
     }
   }
 
@@ -380,6 +432,24 @@ export default function DomainsPage() {
                         <span className={`text-[9px] px-2 py-0.5 rounded-full border ${STATUS_BADGE[d.status] || STATUS_BADGE.pending}`}>
                           {d.status.replace(/_/g, " ")}
                         </span>
+                        {/* Resend mail badge — one per status */}
+                        {d.resend_status === "verified" ? (
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-green-500/10 text-green-400 border-green-500/30 flex items-center gap-1">
+                            <MailCheck size={9} /> Mail verified
+                          </span>
+                        ) : d.resend_status === "verifying" || d.resend_status === "pending" ? (
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-blue-500/10 text-blue-400 border-blue-500/30 flex items-center gap-1">
+                            <Mail size={9} /> Mail verifying
+                          </span>
+                        ) : d.resend_status === "failed" ? (
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-red-500/10 text-red-400 border-red-500/30 flex items-center gap-1">
+                            <MailWarning size={9} /> Mail failed
+                          </span>
+                        ) : (
+                          <span className="text-[9px] px-2 py-0.5 rounded-full border bg-slate-500/10 text-slate-400 border-slate-500/30 flex items-center gap-1">
+                            <Mail size={9} /> Mail not set up
+                          </span>
+                        )}
                       </div>
                       <p className="text-[10px] text-muted mt-0.5">
                         {d.purchase_price ? `$${d.purchase_price.toFixed(2)} / year` : "—"}
@@ -394,6 +464,31 @@ export default function DomainsPage() {
                         className="text-[10px] px-2.5 py-1 rounded-lg bg-gold/15 border border-gold/30 text-gold hover:bg-gold/25 flex items-center gap-1"
                       >
                         <RefreshCw size={10} /> Finish setup
+                      </button>
+                    )}
+                    {/* Resend mail action: set up, or refresh while verifying */}
+                    {!d.resend_status && (
+                      <button
+                        onClick={() => setupMail(d)}
+                        className="text-[10px] px-2.5 py-1 rounded-lg bg-blue-500/15 border border-blue-500/30 text-blue-300 hover:bg-blue-500/25 flex items-center gap-1"
+                      >
+                        <Mail size={10} /> Set up mail
+                      </button>
+                    )}
+                    {(d.resend_status === "verifying" || d.resend_status === "pending") && (
+                      <button
+                        onClick={() => refreshMailStatus(d)}
+                        className="text-[10px] px-2.5 py-1 rounded-lg border border-blue-500/30 text-blue-300 hover:bg-blue-500/10 flex items-center gap-1"
+                      >
+                        <RefreshCw size={10} /> Check status
+                      </button>
+                    )}
+                    {d.resend_status === "failed" && (
+                      <button
+                        onClick={() => setupMail(d)}
+                        className="text-[10px] px-2.5 py-1 rounded-lg border border-red-500/30 text-red-300 hover:bg-red-500/10 flex items-center gap-1"
+                      >
+                        <RefreshCw size={10} /> Retry mail
                       </button>
                     )}
                     <button onClick={() => openDns(d)} className="text-[10px] px-2.5 py-1 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1">
@@ -435,6 +530,20 @@ export default function DomainsPage() {
                     </span>
                   )}
                 </div>
+
+                {/* Resend mail-status hints */}
+                {d.resend_status === "verified" && (
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-300 flex items-center gap-2">
+                    <MailCheck size={11} />
+                    <span>Client can now send from <span className="font-mono">anything@{d.domain}</span></span>
+                  </div>
+                )}
+                {d.resend_status === "failed" && d.resend_last_error && (
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-300 flex items-start gap-2">
+                    <MailWarning size={11} className="mt-0.5 shrink-0" />
+                    <span className="break-all">{d.resend_last_error}</span>
+                  </div>
+                )}
 
                 {/* DNS editor */}
                 {dnsOpen === d.id && (
