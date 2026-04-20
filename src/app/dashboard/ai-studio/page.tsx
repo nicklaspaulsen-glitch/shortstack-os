@@ -910,7 +910,7 @@ function MusicGenTool({ processing, setProcessing }: ToolProps) {
 function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [mode, setMode] = useState<"clone" | "speak">("clone");
-  const [voiceFile, setVoiceFile] = useState<File | null>(null);
+  const [voiceFiles, setVoiceFiles] = useState<File[]>([]);
   const [text, setText] = useState("");
   const [voiceName, setVoiceName] = useState("");
   const [result, setResult] = useState<string | null>(null);
@@ -918,20 +918,29 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
   const [selectedVoice, setSelectedVoice] = useState<string>("");
 
   const handleClone = async () => {
-    if (!voiceFile) return toast.error("Upload a voice sample (6+ seconds)");
+    if (voiceFiles.length === 0) return toast.error("Upload at least one voice sample (6+ seconds)");
     setProcessing(true);
+    let successCount = 0;
     try {
-      const fd = new FormData();
-      fd.append("mode", "clone");
-      fd.append("voice_file", voiceFile);
-      fd.append("voice_name", voiceName || "Custom Voice");
-      const res = await fetch("/api/ai/voice-clone", { method: "POST", body: fd });
-      const data = await res.json();
-      if (data.success) {
-        toast.success(`Voice "${data.voice_name}" cloned!`);
-        if (data.voice_id) setSavedVoices(prev => [...prev, { id: data.voice_id, name: data.voice_name }]);
-      } else {
-        toast.error(data.error || "Failed");
+      for (let i = 0; i < voiceFiles.length; i++) {
+        const vf = voiceFiles[i];
+        const fd = new FormData();
+        fd.append("mode", "clone");
+        fd.append("voice_file", vf);
+        const baseName = voiceName || "Custom Voice";
+        fd.append("voice_name", voiceFiles.length > 1 ? `${baseName} ${i + 1}` : baseName);
+        const res = await fetch("/api/ai/voice-clone", { method: "POST", body: fd });
+        const data = await res.json();
+        if (data.success) {
+          successCount++;
+          if (data.voice_id) setSavedVoices(prev => [...prev, { id: data.voice_id, name: data.voice_name }]);
+        } else {
+          toast.error(`"${vf.name}": ${data.error || "Failed"}`);
+        }
+      }
+      if (successCount > 0) {
+        toast.success(`${successCount} voice${successCount > 1 ? "s" : ""} cloned!`);
+        setVoiceFiles([]);
       }
     } catch { toast.error("Clone failed"); }
     setProcessing(false);
@@ -945,7 +954,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
       fd.append("mode", "speak");
       fd.append("text", text);
       if (selectedVoice) fd.append("voice_id", selectedVoice);
-      else if (voiceFile) fd.append("voice_file", voiceFile);
+      else if (voiceFiles[0]) fd.append("voice_file", voiceFiles[0]);
       const res = await fetch("/api/ai/voice-clone", { method: "POST", body: fd });
       const data = await res.json();
       if (data.audio) {
@@ -980,16 +989,34 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
         <div className="space-y-3">
           <div onClick={() => fileRef.current?.click()}
             className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:border-orange-400/30 transition-all">
-            <input ref={fileRef} type="file" accept="audio/*" className="hidden" onChange={e => setVoiceFile(e.target.files?.[0] || null)} />
+            <input ref={fileRef} type="file" accept="audio/*" multiple className="hidden" onChange={e => {
+              const files = Array.from(e.target.files || []);
+              if (files.length) setVoiceFiles(prev => [...prev, ...files]);
+              e.target.value = "";
+            }} />
             <FileAudio size={24} className="mx-auto mb-2 text-muted" />
-            <p className="text-xs text-foreground font-medium">{voiceFile ? voiceFile.name : "Upload voice sample (6+ seconds)"}</p>
+            <p className="text-xs text-foreground font-medium">{voiceFiles.length > 0 ? `${voiceFiles.length} sample${voiceFiles.length > 1 ? "s" : ""} selected` : "Upload voice samples (6+ seconds each)"}</p>
+            <p className="text-[10px] text-muted mt-1">Clone multiple voices in one batch</p>
           </div>
+          {voiceFiles.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {voiceFiles.map((f, i) => (
+                <div key={i} className="flex items-center gap-1 bg-surface-light border border-border rounded-lg px-2 py-1 text-[10px] text-foreground">
+                  <FileAudio size={10} className="text-orange-400" />
+                  <span className="truncate max-w-[120px]">{f.name}</span>
+                  <button onClick={() => setVoiceFiles(prev => prev.filter((_, j) => j !== i))} className="text-muted hover:text-red-400">
+                    <X size={10} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <input value={voiceName} onChange={e => setVoiceName(e.target.value)} placeholder="Voice name (e.g. 'Client - John')"
             className="w-full text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
-          <button onClick={handleClone} disabled={processing || !voiceFile}
+          <button onClick={handleClone} disabled={processing || voiceFiles.length === 0}
             className="w-full px-4 py-2.5 bg-orange-500 text-white text-xs font-semibold rounded-lg disabled:opacity-40 flex items-center justify-center gap-1.5">
             {processing ? <Loader size={12} className="animate-spin" /> : <Volume2 size={12} />}
-            Clone Voice
+            Clone {voiceFiles.length > 1 ? `${voiceFiles.length} Voices` : "Voice"}
           </button>
         </div>
       ) : (

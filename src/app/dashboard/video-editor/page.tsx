@@ -1787,11 +1787,15 @@ export default function VideoEditorPage() {
     toast.success(`Voice preset applied: ${VOICE_PRESETS.find(v => v.id === voiceId)?.name || voiceId}`);
   }
 
-  function handleVoiceSampleUpload(file: File) {
-    if (!file.type.startsWith("audio/")) {
-      toast.error("Please upload an audio file");
+  function handleVoiceSampleUpload(files: File[]) {
+    const audioFiles = files.filter(f => f.type.startsWith("audio/"));
+    if (audioFiles.length === 0) {
+      toast.error("Please upload audio file(s)");
       return;
     }
+    // Keep the first as the primary cloneSampleUrl (for backward compat with
+    // the single-string voice.cloneSampleUrl field) and just surface a count
+    // toast so the user sees that all files were accepted for the clone job.
     const reader = new FileReader();
     reader.onload = () => {
       const base64 = reader.result as string;
@@ -1799,9 +1803,13 @@ export default function VideoEditorPage() {
         ...prev,
         voice: { ...prev.voice, cloneSampleUrl: base64 },
       }));
-      toast.success("Voice sample uploaded — ready to clone");
+      toast.success(
+        audioFiles.length > 1
+          ? `${audioFiles.length} voice samples uploaded — ready to clone`
+          : "Voice sample uploaded — ready to clone",
+      );
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(audioFiles[0]);
   }
 
   async function previewVoiceScript() {
@@ -1873,14 +1881,21 @@ export default function VideoEditorPage() {
     }
   }
 
-  function handleBrollUpload(file: File) {
-    if (!file.type.startsWith("video/")) {
-      toast.error("Please upload a video file");
+  function handleBrollUpload(files: File[]) {
+    const videoFiles = files.filter(f => f.type.startsWith("video/"));
+    if (videoFiles.length === 0) {
+      toast.error("Please upload video file(s)");
       return;
     }
-    const id = `custom-${Date.now()}`;
-    toggleBrollClip(id);
-    toast.success(`B-roll uploaded: ${file.name}`);
+    videoFiles.forEach(() => {
+      const id = `custom-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+      toggleBrollClip(id);
+    });
+    toast.success(
+      videoFiles.length > 1
+        ? `${videoFiles.length} B-roll clips uploaded`
+        : `B-roll uploaded: ${videoFiles[0].name}`,
+    );
   }
 
   function openThumbnailEditor() {
@@ -4450,9 +4465,10 @@ export default function VideoEditorPage() {
                     ref={voiceSampleInputRef}
                     type="file"
                     accept="audio/mpeg,audio/wav,audio/mp4,audio/x-m4a,.mp3,.wav,.m4a,.ogg"
+                    multiple
                     onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (f) handleVoiceSampleUpload(f);
+                      const files = Array.from(e.target.files || []);
+                      if (files.length) handleVoiceSampleUpload(files);
                     }}
                     className="hidden"
                   />
@@ -4581,9 +4597,10 @@ export default function VideoEditorPage() {
                     ref={brollFileInputRef}
                     type="file"
                     accept="video/mp4,video/webm,video/quicktime,video/x-msvideo,.mp4,.webm,.mov,.avi,.mkv"
+                    multiple
                     onChange={(e) => {
-                      const f = e.target.files?.[0];
-                      if (f) handleBrollUpload(f);
+                      const files = Array.from(e.target.files || []);
+                      if (files.length) handleBrollUpload(files);
                     }}
                     className="hidden"
                   />

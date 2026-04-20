@@ -16,7 +16,8 @@ import { formatCurrency, formatDate, formatRelativeTime } from "@/lib/utils";
 import {
   Package, CheckCircle, CreditCard, Circle, Bot,
   Sparkles, Film, ArrowRight, Calendar, MessageSquare,
-  BarChart3, Zap, Star, Building, MapPin, Globe, Target, Loader, Phone
+  BarChart3, Zap, Star, Building, MapPin, Globe, Target, Loader, Phone,
+  FolderOpen, ImageIcon, Music, FileText, File as FileIcon, ExternalLink
 } from "lucide-react";
 import Link from "next/link";
 
@@ -299,6 +300,11 @@ export default function ClientPortalPage() {
       {/* Dedicated phone number (read-only for client) */}
       <ClientPortalPhoneCard clientId={client.id} />
 
+      {/* Uploaded files (read-only unified list across portal drops + tagged
+          content library assets). Mirrors the same section on the agency
+          /dashboard/clients/[id] page. */}
+      <ClientPortalFilesCard clientId={client.id} />
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tasks */}
         <div className="card">
@@ -482,6 +488,135 @@ function ClientPortalPhoneCard({ clientId }: { clientId: string }) {
         <p className="text-xs text-muted">
           No dedicated phone number assigned yet. Your agency can provision one for you.
         </p>
+      )}
+    </div>
+  );
+}
+
+// Read-only unified files card for portal users. Shows every file they've
+// dropped via /dashboard/portal/uploads + any agency-side content_assets
+// tagged with their client slug. Backed by GET /api/clients/[id]/files.
+interface PortalFileRow {
+  id: string;
+  name: string;
+  url: string | null;
+  type: string;
+  size: number;
+  uploaded_at: string;
+  source_tool: string;
+}
+
+function portalFormatBytes(bytes: number): string {
+  if (!bytes) return "—";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
+  if (bytes < 1073741824) return `${(bytes / 1048576).toFixed(1)} MB`;
+  return `${(bytes / 1073741824).toFixed(2)} GB`;
+}
+
+function portalFileIcon(type: string) {
+  const t = (type || "").toLowerCase();
+  if (t.startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp", "svg"].includes(t))
+    return <ImageIcon size={14} className="text-blue-400" />;
+  if (t.startsWith("video") || ["mp4", "mov", "avi", "webm", "mkv"].includes(t))
+    return <Film size={14} className="text-purple-400" />;
+  if (t.startsWith("audio") || ["mp3", "wav", "ogg", "m4a", "flac"].includes(t))
+    return <Music size={14} className="text-pink-400" />;
+  if (["pdf", "doc", "docx", "txt"].includes(t) || t.includes("document"))
+    return <FileText size={14} className="text-gold" />;
+  return <FileIcon size={14} className="text-muted" />;
+}
+
+function ClientPortalFilesCard({ clientId }: { clientId: string }) {
+  const [files, setFiles] = useState<PortalFileRow[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/clients/${clientId}/files`);
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) setFiles(data.files || []);
+        }
+      } catch {
+        // ignore — show empty state
+      }
+      if (!cancelled) setLoading(false);
+    }
+    load();
+    return () => { cancelled = true; };
+  }, [clientId]);
+
+  return (
+    <div className="card">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="section-header flex items-center gap-2 mb-0">
+          <FolderOpen size={13} className="text-gold" /> Your Uploaded Files
+        </h2>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-muted">
+            {loading ? "Loading..." : `${files.length} file${files.length === 1 ? "" : "s"}`}
+          </span>
+          <Link href="/dashboard/portal/uploads" className="btn-secondary text-[10px] py-1 px-2.5">
+            Manage
+          </Link>
+        </div>
+      </div>
+      {loading ? (
+        <p className="text-xs text-muted">Loading files...</p>
+      ) : files.length === 0 ? (
+        <p className="text-xs text-muted">
+          You haven&apos;t uploaded any files yet. Drop files in the{" "}
+          <Link href="/dashboard/portal/uploads" className="text-gold hover:underline">
+            My Uploads
+          </Link>{" "}
+          page to share them with your agency.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {files.slice(0, 9).map(f => {
+            const isImage = (f.type || "").toLowerCase().startsWith("image") || ["png", "jpg", "jpeg", "gif", "webp"].includes((f.type || "").toLowerCase());
+            return (
+              <a
+                key={f.id}
+                href={f.url || "#"}
+                target={f.url ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                className={`flex items-center gap-2 p-2 rounded-lg border border-border bg-surface-light/50 hover:border-gold/30 transition-colors min-w-0 ${f.url ? "" : "pointer-events-none opacity-60"}`}
+                title={f.name}
+              >
+                <div className="w-10 h-10 rounded-lg bg-surface flex items-center justify-center shrink-0 overflow-hidden">
+                  {isImage && f.url ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img src={f.url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    portalFileIcon(f.type)
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] font-medium truncate">{f.name}</p>
+                  <div className="flex items-center gap-1.5 text-[9px] text-muted">
+                    <span>{portalFormatBytes(f.size)}</span>
+                    <span className="opacity-40">·</span>
+                    <span className="truncate">{f.source_tool}</span>
+                  </div>
+                  <p className="text-[9px] text-muted mt-0.5">{formatRelativeTime(f.uploaded_at)}</p>
+                </div>
+                {f.url && <ExternalLink size={10} className="text-muted shrink-0" />}
+              </a>
+            );
+          })}
+        </div>
+      )}
+      {files.length > 9 && (
+        <div className="mt-3 text-center">
+          <Link href="/dashboard/portal/uploads" className="text-[10px] text-gold hover:underline">
+            View all {files.length} files →
+          </Link>
+        </div>
       )}
     </div>
   );
