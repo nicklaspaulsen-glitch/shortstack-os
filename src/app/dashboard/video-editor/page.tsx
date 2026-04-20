@@ -25,6 +25,8 @@ import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus }
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { ADS_PRESET } from "@/lib/video-presets/ads";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
@@ -38,6 +40,56 @@ import {
   type EffectCategory,
   type SfxCategory,
 } from "@/lib/asset-catalog";
+
+// Curated vertical-style ad/video thumbnails for the rolling preview.
+// 9:16 crops keep the marquee feeling native to Reels/TikTok/Shorts.
+const VIDEO_EDITOR_PREVIEW_ITEMS: RollingPreviewItem[] = [
+  { id: "ve1", src: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=360&h=640&fit=crop", alt: "Fashion ad", tag: "Ads Preset" },
+  { id: "ve2", src: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=360&h=640&fit=crop", alt: "Sneaker drop", tag: "Product" },
+  { id: "ve3", src: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=360&h=640&fit=crop", alt: "Audio gear", tag: "Tech Ad" },
+  { id: "ve4", src: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=360&h=640&fit=crop", alt: "Watch close-up", tag: "Luxury" },
+  { id: "ve5", src: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=360&h=640&fit=crop", alt: "Fitness reel", tag: "9:16 Reel" },
+  { id: "ve6", src: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=360&h=640&fit=crop", alt: "Beauty product", tag: "Beauty" },
+  { id: "ve7", src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=360&h=640&fit=crop", alt: "Modern product", tag: "Minimal" },
+  { id: "ve8", src: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=360&h=640&fit=crop", alt: "Food reel", tag: "Food" },
+  { id: "ve9", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=360&h=640&fit=crop", alt: "Circuit board", tag: "Tech" },
+  { id: "ve10", src: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=360&h=640&fit=crop", alt: "Laptop reel", tag: "SaaS" },
+  { id: "ve11", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=360&h=640&fit=crop", alt: "Startup team", tag: "Brand" },
+  { id: "ve12", src: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=360&h=640&fit=crop", alt: "Studio shoot", tag: "Studio" },
+];
+
+const VIDEO_EDITOR_TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    number: 1,
+    title: "Generate Full Ad",
+    description: "Paste a product description → we write script, build storyboard, and set render defaults. Full ad in under 60 seconds.",
+    icon: Megaphone,
+  },
+  {
+    number: 2,
+    title: "Ads Preset",
+    description: "Pick the Ads preset to lock in hook + pain + offer + CTA structure. Proven to lift watch-time on cold traffic.",
+    icon: Sparkles,
+  },
+  {
+    number: 3,
+    title: "Auto-captions",
+    description: "Captions auto-generate with word-level timing. Pick a Caption Style (bold, subtitle, karaoke) that fits your brand.",
+    icon: Captions,
+  },
+  {
+    number: 4,
+    title: "B-roll suggest",
+    description: "For every scene, we suggest B-roll clips that match the script beat. One click inserts them into the storyboard.",
+    icon: Film,
+  },
+  {
+    number: 5,
+    title: "Music match",
+    description: "Pick a mood and we score the video with a royalty-free track that ducks under voiceover automatically.",
+    icon: Music,
+  },
+];
 
 /* ──────────────────── AI API TYPES ──────────────────── */
 
@@ -2899,6 +2951,30 @@ export default function VideoEditorPage() {
         gradient="sunset"
       />
 
+      {/* Landing-state rolling preview — only shown until the user has
+          generated or loaded an AI project. Keeps the page lively while empty. */}
+      {!aiProject && (
+        <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
+          <div className="absolute inset-0 pointer-events-none">
+            <RollingPreview
+              items={VIDEO_EDITOR_PREVIEW_ITEMS}
+              rows={2}
+              aspectRatio="9:16"
+              opacity={0.45}
+              speed="medium"
+            />
+          </div>
+          <div className="relative text-center px-4">
+            <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+              Example ad library
+            </p>
+            <p className="text-sm text-foreground/90 mt-1">
+              Describe a product below — we&apos;ll generate a full ad in the same vertical style.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Step-by-Step Guided Creation Wizard */}
       <CreationWizard
         open={videoWizardOpen}
@@ -2975,6 +3051,15 @@ export default function VideoEditorPage() {
           </select>
         </div>
       </div>
+
+      {/* How to use it — tutorial walkthrough */}
+      <TutorialSection
+        title="How to use it"
+        subtitle="Five moves from blank canvas to rendered ad."
+        steps={VIDEO_EDITOR_TUTORIAL_STEPS}
+        columns={3}
+        collapsible
+      />
 
       {/* Tabs */}
       <div className="tab-group w-fit">

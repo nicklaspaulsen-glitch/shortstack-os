@@ -23,8 +23,55 @@ import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus }
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 import { POPULAR_FONTS, loadGoogleFont, preloadGoogleFonts } from "@/lib/asset-catalog";
+
+// Static fallback thumbnails shown in the rolling preview when the
+// generated_images table returns nothing (new accounts, empty DB, etc.).
+// Swap these for real ShortStack examples when you have them.
+const THUMBNAIL_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "t1", src: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=640&h=360&fit=crop", alt: "Tech thumbnail", tag: "YouTuber Style" },
+  { id: "t2", src: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=640&h=360&fit=crop", alt: "Money thumbnail", tag: "Finance" },
+  { id: "t3", src: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=640&h=360&fit=crop", alt: "Gaming thumbnail", tag: "Gaming" },
+  { id: "t4", src: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=640&h=360&fit=crop", alt: "Food thumbnail", tag: "Food" },
+  { id: "t5", src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=640&h=360&fit=crop", alt: "Fitness thumbnail", tag: "Fitness" },
+  { id: "t6", src: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=640&h=360&fit=crop", alt: "Business thumbnail", tag: "Business" },
+  { id: "t7", src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=640&h=360&fit=crop", alt: "Podcast thumbnail", tag: "Podcast" },
+  { id: "t8", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640&h=360&fit=crop", alt: "Review thumbnail", tag: "Tech Review" },
+  { id: "t9", src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=640&h=360&fit=crop", alt: "Drama thumbnail", tag: "Drama" },
+  { id: "t10", src: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=640&h=360&fit=crop", alt: "Tutorial thumbnail", tag: "Tutorial" },
+  { id: "t11", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=640&h=360&fit=crop", alt: "Startup thumbnail", tag: "Startup" },
+  { id: "t12", src: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=640&h=360&fit=crop", alt: "Hacker thumbnail", tag: "Mystery" },
+];
+
+const THUMBNAIL_TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    number: 1,
+    title: "Face Swap",
+    description: "Upload a face, we fuse it into the generated thumbnail. Best for creator-face thumbnails (MrBeast style) where identity matters.",
+    icon: Fingerprint,
+  },
+  {
+    number: 2,
+    title: "4 Variants + CTR Rank",
+    description: "Toggle 4-Variant mode to render four unique thumbnails from the same prompt. We rank them by predicted CTR — pick the winner.",
+    icon: Grid,
+  },
+  {
+    number: 3,
+    title: "Recreate from URL",
+    description: "Paste any YouTube URL. We reverse-engineer the thumbnail's style, composition, and color palette — then remix it for your topic.",
+    icon: Shuffle,
+  },
+  {
+    number: 4,
+    title: "Title + Thumbnail together",
+    description: "Type one topic. We generate a high-CTR title, a bold overlay hook, and the matching thumbnail — all in one click.",
+    icon: Type,
+  },
+];
 
 /* ──────────────────── AI API TYPES ──────────────────── */
 
@@ -1397,6 +1444,41 @@ interface HistoryItem {
 export default function ThumbnailGeneratorPage() {
   useAuth();
   const supabase = useMemo(() => createClient(), []);
+
+  // Rolling preview items — try DB first, fall back to static list.
+  const [previewItems, setPreviewItems] = useState<RollingPreviewItem[]>(THUMBNAIL_PREVIEW_FALLBACK);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from("generated_images")
+          .select("id,image_url,prompt,metadata")
+          .eq("category", "thumbnail")
+          .eq("status", "completed")
+          .not("image_url", "is", null)
+          .order("created_at", { ascending: false })
+          .limit(30);
+        if (cancelled) return;
+        if (error || !data || data.length === 0) return; // keep fallback
+        type Row = { id?: string | number; image_url?: string | null; prompt?: string | null };
+        const rows = data as Row[];
+        const mapped: RollingPreviewItem[] = rows
+          .filter((row): row is Row & { image_url: string } => typeof row.image_url === "string" && row.image_url.length > 0)
+          .map((row) => ({
+            id: String(row.id ?? row.image_url),
+            src: row.image_url,
+            alt: typeof row.prompt === "string" ? row.prompt.slice(0, 80) : "thumbnail",
+          }));
+        if (mapped.length >= 6) setPreviewItems(mapped);
+      } catch {
+        /* swallow — keep fallback */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [supabase]);
 
   // Form state
   const [prompt, setPrompt] = useState("");
@@ -3900,6 +3982,15 @@ export default function ThumbnailGeneratorPage() {
               </div>
             </div>
 
+            {/* How to use the Power Tools — tutorial walkthrough */}
+            <TutorialSection
+              title="How to use Power Tools"
+              subtitle="The four moves that beat Pikzels."
+              steps={THUMBNAIL_TUTORIAL_STEPS}
+              columns={2}
+              collapsible
+            />
+
             {/* Reference Images */}
             <div className="card">
               <h2 className="section-header flex items-center gap-2">
@@ -4677,31 +4768,44 @@ export default function ThumbnailGeneratorPage() {
               </div>
             )}
 
-            {/* Empty state */}
+            {/* Empty state — landing hero with rolling preview background */}
             {!generating && results.length === 0 && (
-              <div className="card-static flex flex-col items-center justify-center py-16 text-center">
-                <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-4">
-                  <ImageIcon size={28} className="text-gold" />
+              <div className="relative card-static overflow-hidden py-16 text-center">
+                {/* Rolling preview background */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <RollingPreview
+                    items={previewItems}
+                    rows={2}
+                    aspectRatio="16:9"
+                    opacity={0.25}
+                    speed="medium"
+                  />
                 </div>
-                <h3 className="text-sm font-semibold mb-1">No thumbnails yet</h3>
-                <p className="text-xs text-muted max-w-xs">
-                  Fill out the settings on the left and click Generate to create
-                  AI-powered thumbnails for your content.
-                </p>
-                <div className="flex items-center gap-4 mt-6">
-                  {[
-                    { icon: <Sparkles size={14} />, label: "AI-Powered" },
-                    { icon: <Palette size={14} />, label: "Custom Styles" },
-                    { icon: <Square size={14} />, label: "Multi-Platform" },
-                  ].map((feat, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-1.5 text-[10px] text-muted"
-                    >
-                      <span className="text-gold">{feat.icon}</span>
-                      {feat.label}
-                    </div>
-                  ))}
+                {/* Foreground */}
+                <div className="relative flex flex-col items-center">
+                  <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm">
+                    <ImageIcon size={28} className="text-gold" />
+                  </div>
+                  <h3 className="text-sm font-semibold mb-1">No thumbnails yet</h3>
+                  <p className="text-xs text-muted max-w-xs">
+                    Fill out the settings on the left and click Generate to create
+                    AI-powered thumbnails for your content.
+                  </p>
+                  <div className="flex items-center gap-4 mt-6">
+                    {[
+                      { icon: <Sparkles size={14} />, label: "AI-Powered" },
+                      { icon: <Palette size={14} />, label: "Custom Styles" },
+                      { icon: <Square size={14} />, label: "Multi-Platform" },
+                    ].map((feat, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-1.5 text-[10px] text-muted bg-surface/70 backdrop-blur-sm px-2 py-1 rounded-full border border-border/60"
+                      >
+                        <span className="text-gold">{feat.icon}</span>
+                        {feat.label}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}

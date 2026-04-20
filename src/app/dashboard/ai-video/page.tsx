@@ -11,6 +11,53 @@ import PromptEnhancer from "@/components/prompt-enhancer";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
+
+// Static fallback examples used when no DB query is available. These URLs
+// can be swapped for real sample outputs later. Unsplash source URLs are
+// public-CDN, no API key needed.
+const AI_VIDEO_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "v1", src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=640&h=360&fit=crop", alt: "Cinematic scene", tag: "Cinematic" },
+  { id: "v2", src: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=640&h=360&fit=crop", alt: "Drone coast", tag: "Drone" },
+  { id: "v3", src: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&h=360&fit=crop", alt: "Neon particles", tag: "Abstract" },
+  { id: "v4", src: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=640&h=360&fit=crop", alt: "Product shot", tag: "Product" },
+  { id: "v5", src: "https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=640&h=360&fit=crop", alt: "City skyline", tag: "Timelapse" },
+  { id: "v6", src: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=640&h=360&fit=crop", alt: "Misty forest", tag: "Nature" },
+  { id: "v7", src: "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=640&h=360&fit=crop", alt: "Sports car", tag: "Automotive" },
+  { id: "v8", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640&h=360&fit=crop", alt: "Tech close-up", tag: "Tech" },
+  { id: "v9", src: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=640&h=360&fit=crop", alt: "Dreamy sunset", tag: "Dreamy" },
+  { id: "v10", src: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=640&h=360&fit=crop", alt: "Food plating", tag: "Lifestyle" },
+  { id: "v11", src: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=640&h=360&fit=crop", alt: "Cyberpunk arcade", tag: "Futuristic" },
+  { id: "v12", src: "https://images.unsplash.com/photo-1519608487953-e999c86e7455?w=640&h=360&fit=crop", alt: "Paint splash", tag: "Motion" },
+];
+
+const AI_VIDEO_TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    number: 1,
+    title: "Describe your scene",
+    description: "Paint a picture with words — subject, lighting, camera, mood. The richer the prompt, the sharper the render.",
+    icon: Type,
+  },
+  {
+    number: 2,
+    title: "Pick style + aspect ratio",
+    description: "Cinematic, anime, vintage, dreamy — match the vibe to the platform (9:16 for Reels, 16:9 for YouTube).",
+    icon: Palette,
+  },
+  {
+    number: 3,
+    title: "Dial in frames & guidance",
+    description: "24 frames = 1s at 24fps. Higher guidance = stricter prompt adherence. Most clips nail it at 72 frames + 7.5.",
+    icon: Sparkles,
+  },
+  {
+    number: 4,
+    title: "Hit Generate → review → download",
+    description: "Your clip renders on RunPod GPU. If GPU is offline, you'll get a scene plan you can use elsewhere.",
+    icon: Play,
+  },
+];
 
 const ASPECT_RATIOS = [
   { id: "16:9", label: "16:9 Landscape", icon: <Monitor size={12} /> },
@@ -448,24 +495,37 @@ export default function AIVideoPage() {
         {/* Right — Results */}
         <div className="lg:col-span-4 space-y-4">
           {results.length === 0 ? (
-            <div className="card-static flex flex-col items-center justify-center py-16 text-center">
-              <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-4">
-                <Film size={28} className="text-gold" />
+            <div className="relative card-static overflow-hidden py-16 text-center">
+              {/* Rolling preview background */}
+              <div className="absolute inset-0 pointer-events-none">
+                <RollingPreview
+                  items={AI_VIDEO_PREVIEW_FALLBACK}
+                  rows={2}
+                  aspectRatio="16:9"
+                  opacity={0.25}
+                  speed="medium"
+                />
               </div>
-              <h3 className="text-sm font-semibold mb-1">No videos yet</h3>
-              <p className="text-xs text-muted max-w-xs">
-                Describe a scene and click Generate to create AI-powered video clips.
-              </p>
-              <div className="grid grid-cols-2 gap-3 mt-6 max-w-sm">
-                <div className="p-3 rounded-xl border border-border text-center">
-                  <Film size={16} className="text-gold mx-auto mb-1" />
-                  <p className="text-[10px] font-semibold">Text to Video</p>
-                  <p className="text-[8px] text-muted">Describe any scene</p>
+              {/* Foreground content */}
+              <div className="relative flex flex-col items-center">
+                <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm">
+                  <Film size={28} className="text-gold" />
                 </div>
-                <div className="p-3 rounded-xl border border-border text-center">
-                  <RefreshCw size={16} className="text-gold mx-auto mb-1" />
-                  <p className="text-[10px] font-semibold">Open Source</p>
-                  <p className="text-[8px] text-muted">No per-video fees</p>
+                <h3 className="text-sm font-semibold mb-1">No videos yet</h3>
+                <p className="text-xs text-muted max-w-xs">
+                  Describe a scene and click Generate to create AI-powered video clips.
+                </p>
+                <div className="grid grid-cols-2 gap-3 mt-6 max-w-sm">
+                  <div className="p-3 rounded-xl border border-border bg-surface/80 backdrop-blur-sm text-center">
+                    <Film size={16} className="text-gold mx-auto mb-1" />
+                    <p className="text-[10px] font-semibold">Text to Video</p>
+                    <p className="text-[8px] text-muted">Describe any scene</p>
+                  </div>
+                  <div className="p-3 rounded-xl border border-border bg-surface/80 backdrop-blur-sm text-center">
+                    <RefreshCw size={16} className="text-gold mx-auto mb-1" />
+                    <p className="text-[10px] font-semibold">Open Source</p>
+                    <p className="text-[8px] text-muted">No per-video fees</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -528,6 +588,15 @@ export default function AIVideoPage() {
           )}
         </div>
       </div>
+
+      {/* How to use it — tutorial walkthrough */}
+      <TutorialSection
+        title="How to use it"
+        subtitle="Four steps from idea to rendered clip."
+        steps={AI_VIDEO_TUTORIAL_STEPS}
+        columns={4}
+        collapsible
+      />
     </div>
   );
 }
