@@ -19,7 +19,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Mic, MicOff, Send, Sparkles, Loader, CheckCircle, XCircle } from "lucide-react";
+import { Mic, MicOff, Send, Sparkles, Loader, CheckCircle, XCircle, Volume2, VolumeX } from "lucide-react";
 
 // Web Speech API types — browsers expose it unprefixed or as webkitSpeechRecognition.
 // We declare the bits we use so TS is happy without pulling in @types/dom-speech-recognition.
@@ -71,6 +71,11 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [listening, setListening] = useState(false);
   const [micSupported, setMicSupported] = useState(false);
+  // Text-to-speech state. `muted` persists in localStorage so the user's
+  // mute choice sticks across sessions. `ttsSupported` gates the button.
+  const [muted, setMuted] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [ttsSupported, setTtsSupported] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionLite | null>(null);
   const threadEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -82,6 +87,59 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
     pathname && pathname.startsWith("/dashboard/")
       ? pathname.replace(/^\/dashboard\//, "").split("/")[0] || null
       : null;
+
+  // Detect TTS support + restore mute preference once on mount.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if ("speechSynthesis" in window) setTtsSupported(true);
+    try {
+      const saved = window.localStorage.getItem("trinity_muted");
+      if (saved === "1") setMuted(true);
+    } catch {
+      // localStorage can throw in incognito — ignore
+    }
+  }, []);
+
+  // Cancel any in-flight speech when the component unmounts or the user mutes.
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  function toggleMute() {
+    setMuted((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem("trinity_muted", next ? "1" : "0");
+      } catch {
+        // ignore
+      }
+      // Hitting mute while speaking should stop immediately.
+      if (next && typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        setSpeaking(false);
+      }
+      return next;
+    });
+  }
+
+  function speak(text: string) {
+    if (muted || !ttsSupported || !text) return;
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    // Cancel any pending utterance so we don't queue up back-to-back speech.
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 1.05;
+    utter.pitch = 1.0;
+    utter.volume = 1.0;
+    utter.onstart = () => setSpeaking(true);
+    utter.onend = () => setSpeaking(false);
+    utter.onerror = () => setSpeaking(false);
+    window.speechSynthesis.speak(utter);
+  }
 
   // Detect Web Speech API support once mounted (client-only).
   useEffect(() => {
@@ -149,6 +207,11 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
       recognitionRef.current?.stop();
       setListening(false);
     }
+    // If Trinity is mid-reply out loud, cancel it so we don't talk over the user.
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+    }
 
     setMessages((prev) => [...prev, { role: "user", content: text }]);
     setInput("");
@@ -167,10 +230,13 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Trinity failed");
       if (data.conversation_id) setConversationId(data.conversation_id);
+      const replyText = data.reply || "Done.";
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.reply || "Done.", actions: data.actions || [] },
+        { role: "assistant", content: replyText, actions: data.actions || [] },
       ]);
+      // Speak the reply out loud if TTS is on and not muted.
+      speak(replyText);
     } catch (err) {
       setMessages((prev) => [
         ...prev,
@@ -196,6 +262,24 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
         <div className="absolute top-[120px] right-[20%] w-[160px] h-[160px] rounded-full blur-3xl"
              style={{ background: "radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%)" }} />
       </div>
+
+      {/* ─── Mute / unmute Trinity's voice (TTS) ────────────────── */}
+      {ttsSupported && (
+        <button
+          type="button"
+          onClick={toggleMute}
+          title={muted ? "Unmute Trinity's voice" : "Mute Trinity's voice"}
+          className={`absolute top-3 right-3 z-10 w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
+            muted
+              ? "bg-surface-light text-muted hover:text-gold"
+              : speaking
+              ? "bg-gold/15 text-gold animate-pulse"
+              : "bg-surface-light text-gold hover:bg-gold/10"
+          }`}
+        >
+          {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+        </button>
+      )}
 
       {/* ─── Header: orb + tagline ─────────────────────────────── */}
       <div className={`relative flex flex-col items-center text-center transition-all duration-500 ${active ? "py-4" : "py-8 sm:py-10"}`}>
