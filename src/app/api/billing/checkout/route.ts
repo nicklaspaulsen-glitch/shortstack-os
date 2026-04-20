@@ -59,12 +59,17 @@ function normalizeCycle(raw: unknown): "monthly" | "yearly" | null {
   return null;
 }
 
-/** Env var name for a given tier + cycle. */
-function priceEnvName(tier: CheckoutTier, cycle: "monthly" | "yearly"): string {
-  // STRIPE_PRICE_PRO_ANNUAL vs STRIPE_PRICE_PRO_MONTHLY
-  // Existing Vercel env uses *_ANNUAL for yearly; we keep that for compat.
-  const cycleToken = cycle === "yearly" ? "ANNUAL" : "MONTHLY";
-  return `STRIPE_PRICE_${tier.toUpperCase()}_${cycleToken}`;
+/** Env var names to check, in priority order, for a given tier + cycle.
+ *  Backward-compat: original setup used STRIPE_PRICE_<TIER> (no suffix) for
+ *  monthly + STRIPE_PRICE_<TIER>_ANNUAL for yearly. Newer convention adds
+ *  STRIPE_PRICE_<TIER>_MONTHLY. Try the new name first, then the legacy. */
+function priceEnvNames(tier: CheckoutTier, cycle: "monthly" | "yearly"): string[] {
+  const upper = tier.toUpperCase();
+  if (cycle === "yearly") {
+    return [`STRIPE_PRICE_${upper}_ANNUAL`, `STRIPE_PRICE_${upper}_YEARLY`];
+  }
+  // Monthly: try _MONTHLY first, then legacy no-suffix name.
+  return [`STRIPE_PRICE_${upper}_MONTHLY`, `STRIPE_PRICE_${upper}`];
 }
 
 export async function POST(request: NextRequest) {
@@ -102,18 +107,29 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unknown plan tier" }, { status: 400 });
   }
 
-  // Look up Stripe Price ID from env
-  const envName = priceEnvName(tier, cycle);
-  const priceId = process.env[envName];
+  // Look up Stripe Price ID from env — try new + legacy names in order.
+  const envCandidates = priceEnvNames(tier, cycle);
+  let priceId: string | undefined;
+  let resolvedFrom: string | undefined;
+  for (const name of envCandidates) {
+    const v = process.env[name];
+    if (v && v.trim()) {
+      priceId = v.trim();
+      resolvedFrom = name;
+      break;
+    }
+  }
   if (!priceId) {
     return NextResponse.json(
       {
-        error: `Pricing not configured for ${tierKey} (${cycle}). Set ${envName} in Vercel env to enable this plan/cycle combination.`,
-        missing_env_var: envName,
+        error: `Pricing not configured for ${tierKey} (${cycle}). Set one of ${envCandidates.join(" or ")} in Vercel env to enable this plan/cycle combination.`,
+        missing_env_var: envCandidates[0],
+        tried: envCandidates,
       },
       { status: 400 },
     );
   }
+  console.log(`[billing/checkout] using ${resolvedFrom} for ${tierKey} ${cycle}`);
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin || "https://shortstack-os.vercel.app";
 
