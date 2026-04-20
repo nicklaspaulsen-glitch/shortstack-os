@@ -1,19 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getNextPhoneNumber, recordPhoneSend } from "@/lib/services/sender-rotation";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
 
 // Send SMS to leads using Twilio
 // Supports AI personalization via Anthropic Claude
-// TODO: Add rate limiting in production — SMS costs money per message
+// Rate limited by plan-tier monthly caps (checkLimit) + per-lead cost tracking.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const { lead_ids, message_template, from_number, client_id, batch_size, use_ai } = await request.json();
 
   // Cap batch size to prevent runaway SMS costs
   const safeBatchSize = Math.min(batch_size || 20, 50);
+
+  // Plan-tier usage cap (monthly SMS). Block the whole batch if it would exceed.
+  const gate = await checkLimit(ownerId, "sms", safeBatchSize);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        error: gate.reason || "Monthly SMS limit reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
 
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const token = process.env.TWILIO_AUTH_TOKEN;
@@ -117,6 +137,8 @@ export async function POST(request: NextRequest) {
         if (usedPoolSender) {
           await recordPhoneSend(serviceSupabase, usedPoolSender.id);
         }
+        // Plan-tier usage metering
+        await recordUsage(ownerId, "sms", 1, { lead_id: lead.id, platform: "sms" });
         await serviceSupabase.from("outreach_log").insert({
           lead_id: lead.id,
           platform: "sms",

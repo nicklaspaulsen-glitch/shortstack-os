@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
 import { isAtClientLimit } from "@/lib/plan-config";
+import { recordUsage } from "@/lib/usage-limits";
 
 // Full client onboarding — creates client, portal access, welcome doc, first invoice, Zernio profile
 export async function POST(request: NextRequest) {
@@ -54,6 +55,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: clientError?.message || "Failed to create client" }, { status: 500 });
   }
   results.client = { id: client.id, created: true };
+
+  // Plan-tier usage metering — concurrent clients is computed from count, but
+  // we still log an event so the usage timeline reflects the signup.
+  await recordUsage(user.id, "clients", 1, { client_id: client.id, business_name });
 
   // 2. Create portal access if requested
   if (create_portal && password) {

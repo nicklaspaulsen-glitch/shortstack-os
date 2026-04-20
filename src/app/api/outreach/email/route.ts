@@ -3,6 +3,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { sendEmail } from "@/lib/email";
 import { allocateEmailSenders, recordEmailSend, getMinDelay, type EmailSender } from "@/lib/services/sender-rotation";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
 import nodemailer from "nodemailer";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
@@ -18,6 +19,21 @@ export async function POST(request: NextRequest) {
   const { lead_ids, subject_template, body_template, from_name, batch_size } = await request.json();
   // Cap batch size to prevent abuse
   const safeBatchSize = Math.min(batch_size || 20, 50);
+
+  // Plan-tier usage cap (monthly emails). Block the whole batch if it would exceed.
+  const gate = await checkLimit(ownerId, "emails", safeBatchSize);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        error: gate.reason || "Monthly email limit reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
 
   const serviceSupabase = createServiceClient();
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -184,6 +200,8 @@ export async function POST(request: NextRequest) {
     if (didSend) {
       sent++;
       results.push({ business: lead.business_name, email: lead.email, status: "sent" });
+      // Plan-tier usage metering
+      await recordUsage(ownerId, "emails", 1, { lead_id: lead.id, platform: "email" });
     } else {
       failed++;
       results.push({ business: lead.business_name, email: lead.email, status: "failed" });

@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
 
 // ShortStack AI Cold Caller — Uses Retell AI (our own, not GHL)
+// Plan-tier monthly call_minutes enforcement; records 1 minute on initiate.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -10,6 +12,21 @@ export async function POST(request: NextRequest) {
 
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  // Plan-tier usage cap (monthly call minutes)
+  const gate = await checkLimit(ownerId, "call_minutes", 1);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        error: gate.reason || "Monthly call-minutes limit reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
 
   const { lead_id, phone_number, business_name, owner_name, industry, script_override } = await request.json();
 
@@ -87,6 +104,14 @@ export async function POST(request: NextRequest) {
     });
 
     const callData = await callRes.json();
+
+    // Plan-tier usage metering (call initiated = 1 minute debit)
+    await recordUsage(ownerId, "call_minutes", 1, {
+      call_id: callData.call_id,
+      lead_id: lead_id ?? null,
+      phase: "initiate",
+      provider: "retell",
+    });
 
     // Update lead status (scoped to owner — ownership already verified above)
     if (lead_id) {

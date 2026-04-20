@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { makeOutboundCall } from "@/lib/services/eleven-agents";
 import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
 
 // POST — make an outbound AI call to a lead via ElevenAgents
-// TODO: Add rate limiting in production to prevent call abuse
+// Plan-tier monthly call_minutes enforcement; records 1 minute on initiate
+// (a real "true-up" should replace this at the webhooks/elevenlabs handler when
+// actual duration is known — until then we debit conservatively on initiation).
 export async function POST(request: NextRequest) {
   // Auth check — only authenticated users can initiate calls
   const authSupabase = createServerSupabase();
@@ -13,6 +16,22 @@ export async function POST(request: NextRequest) {
 
   const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  // Plan-tier usage cap (monthly call minutes). Debit 1 minute upfront; later
+  // reconciliation can add more via recordUsage when real duration is known.
+  const gate = await checkLimit(ownerId, "call_minutes", 1);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        error: gate.reason || "Monthly call-minutes limit reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
 
   const body = await request.json();
   const { lead_id, phone, phone_number, business_name, industry } = body;
@@ -101,6 +120,13 @@ export async function POST(request: NextRequest) {
   if (result.error) {
     return NextResponse.json({ error: result.error, success: false }, { status: 500 });
   }
+
+  // Plan-tier usage metering (call initiated = 1 minute debit; reconciled later)
+  await recordUsage(ownerId, "call_minutes", 1, {
+    conversationId: result.conversationId,
+    lead_id: lead_id ?? null,
+    phase: "initiate",
+  });
 
   // Update lead status + log the call (only advance forward, never overwrite replied/booked)
   // Ownership verified above — still filter on user_id defensively.

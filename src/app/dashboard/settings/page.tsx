@@ -211,6 +211,15 @@ export default function SettingsPage() {
   });
   const [usageLimitsLoaded, setUsageLimitsLoaded] = useState(false);
 
+  // ─── Plan-tier monthly usage (from /api/usage/current) ───
+  const [planUsage, setPlanUsage] = useState<{
+    plan_tier: string;
+    usage: Record<string, number>;
+    limits: Record<string, number | "unlimited">;
+    remaining: Record<string, number | "unlimited">;
+  } | null>(null);
+  const [planUsageLoaded, setPlanUsageLoaded] = useState(false);
+
   // ─── Connected Apps ──────────────────────────────────────
   const [connectedApps, setConnectedApps] = useState<Array<{
     id: string; platform: string; account_name: string | null; created_at: string;
@@ -239,6 +248,21 @@ export default function SettingsPage() {
       setUsageLimitsLoaded(true);
     })();
   }, [tab, usageLimitsLoaded]);
+
+  // Load plan-tier monthly usage when billing tab opens
+  useEffect(() => {
+    if (tab !== "billing" || planUsageLoaded) return;
+    (async () => {
+      try {
+        const res = await fetch("/api/usage/current");
+        if (res.ok) {
+          const data = await res.json();
+          setPlanUsage(data);
+        }
+      } catch {}
+      setPlanUsageLoaded(true);
+    })();
+  }, [tab, planUsageLoaded]);
 
   // Load connected apps when that tab opens
   useEffect(() => {
@@ -1789,19 +1813,13 @@ export default function SettingsPage() {
           <AgencyStripeConnect />
           <div className="card">
             <h3 className="section-header">Usage This Month</h3>
-            <div className="grid grid-cols-3 gap-4">
-              {[
-                { label: "AI Requests", used: "1,247", limit: getPlanConfig(profile?.plan_tier).ai_requests_per_min === -1 ? "Unlimited" : `${getPlanConfig(profile?.plan_tier).ai_requests_per_min}/min` },
-                { label: "Clients", used: String(clients.length), limit: getPlanConfig(profile?.plan_tier).max_clients === -1 ? "Unlimited" : String(getPlanConfig(profile?.plan_tier).max_clients) },
-                { label: "AI Tokens", used: "124K", limit: getPlanConfig(profile?.plan_tier).tokens_label },
-              ].map(u => (
-                <div key={u.label} className="p-3 bg-surface-light/50 rounded-lg border border-border text-center">
-                  <p className="text-sm font-bold text-gold">{u.used}</p>
-                  <p className="text-[10px] text-muted">{u.label}</p>
-                  <p className="text-[9px] text-muted">Limit: {u.limit}</p>
-                </div>
-              ))}
-            </div>
+            {!planUsageLoaded ? (
+              <div className="flex items-center gap-2 text-xs text-muted py-6 justify-center">
+                <Loader2 size={12} className="animate-spin" /> Loading usage...
+              </div>
+            ) : (
+              <PlanUsageWidget planUsage={planUsage} />
+            )}
           </div>
           <div className="card">
             <h3 className="section-header">Payment Method</h3>
@@ -3432,6 +3450,80 @@ function LogoDropZone({
           className="hidden"
         />
       </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Plan-tier monthly usage widget (emails, tokens, clients, SMS, call minutes)
+// Data from /api/usage/current. Progress bars coloured by % used.
+// ─────────────────────────────────────────────────────────────────────────────
+function PlanUsageWidget({
+  planUsage,
+}: {
+  planUsage: {
+    plan_tier: string;
+    usage: Record<string, number>;
+    limits: Record<string, number | "unlimited">;
+    remaining: Record<string, number | "unlimited">;
+  } | null;
+}) {
+  if (!planUsage) {
+    return <p className="text-xs text-muted text-center py-4">No usage data available.</p>;
+  }
+  const rows: Array<{ key: string; label: string; fmt?: (n: number) => string }> = [
+    { key: "emails", label: "Emails" },
+    { key: "tokens", label: "AI Tokens", fmt: (n) => n >= 1000 ? `${(n / 1000).toFixed(n >= 10_000 ? 0 : 1)}K` : String(n) },
+    { key: "clients", label: "Active Clients" },
+    { key: "sms", label: "SMS" },
+    { key: "call_minutes", label: "Call Minutes" },
+  ];
+  const anyOverLimit = rows.some(r => {
+    const l = planUsage.limits[r.key];
+    const u = planUsage.usage[r.key] || 0;
+    return typeof l === "number" && u >= l;
+  });
+  return (
+    <div className="space-y-3">
+      <p className="text-[10px] text-muted">
+        Plan: <span className="text-gold font-semibold">{planUsage.plan_tier}</span>
+        {anyOverLimit && (
+          <span className="ml-2 text-red-400">· Over limit on one or more resources — <a href="/dashboard/pricing" className="underline">upgrade</a></span>
+        )}
+      </p>
+      {rows.map(r => {
+        const used = planUsage.usage[r.key] || 0;
+        const limit = planUsage.limits[r.key];
+        const isUnlimited = limit === "unlimited";
+        const limitNum = typeof limit === "number" ? limit : 0;
+        const pct = isUnlimited || limitNum === 0 ? 0 : Math.min(100, (used / limitNum) * 100);
+        const over = !isUnlimited && used >= limitNum;
+        const warn = !isUnlimited && !over && pct >= 80;
+        const barColor = over ? "bg-red-500" : warn ? "bg-amber-400" : "bg-gold";
+        const textColor = over ? "text-red-400" : warn ? "text-amber-400" : "text-gold";
+        const fmt = r.fmt || ((n: number) => n.toLocaleString());
+        return (
+          <div key={r.key}>
+            <div className="flex items-center justify-between text-[11px] mb-1">
+              <span className="text-muted">{r.label}</span>
+              <span className={textColor}>
+                {fmt(used)} {isUnlimited ? "· Unlimited" : `/ ${fmt(limitNum)}`}
+              </span>
+            </div>
+            <div className="h-1.5 bg-surface-light/50 rounded-full overflow-hidden">
+              <div
+                className={`h-full ${barColor} transition-all`}
+                style={{ width: isUnlimited ? "6%" : `${Math.max(2, pct)}%` }}
+              />
+            </div>
+            {over && (
+              <p className="text-[9px] text-red-400 mt-0.5">
+                Limit reached — <a href="/dashboard/pricing" className="underline">upgrade your plan</a> to continue.
+              </p>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
