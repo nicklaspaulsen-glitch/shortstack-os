@@ -23,6 +23,10 @@ const MAX_TEXT_LENGTH = 2000;
 const DEFAULT_ELEVENLABS_VOICE_ID = "XB0fDUnXU5powFXDhCwa";
 // Nova — warm, soft-spoken, slightly British female. Closest OpenAI voice to Charlotte.
 const DEFAULT_OPENAI_VOICE = "nova";
+// Default voice pace. 1.0 = standard; 1.15 = snappy human tempo (recommended);
+// 1.25 = conversational-fast; cap at 1.3 (OpenAI limit is 4.0, natural cap ~1.3).
+// Override via body.speed or env TTS_DEFAULT_SPEED.
+const DEFAULT_VOICE_SPEED = Number(process.env.TTS_DEFAULT_SPEED) || 1.15;
 
 // ───────────────────────────────────────────────────────────────────
 // Provider: Runpod XTTS v2 (self-hosted, free)
@@ -105,7 +109,7 @@ async function synthesizeViaRunpodXTTS(text: string): Promise<
 // ───────────────────────────────────────────────────────────────────
 // Provider: OpenAI TTS (tts-1, cheap + rock-solid)
 // ───────────────────────────────────────────────────────────────────
-async function synthesizeViaOpenAI(text: string): Promise<
+async function synthesizeViaOpenAI(text: string, speed: number): Promise<
   | { ok: true; audio: ArrayBuffer }
   | { ok: false; reason: string; status?: number }
 > {
@@ -122,11 +126,11 @@ async function synthesizeViaOpenAI(text: string): Promise<
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "tts-1",
+        model: "tts-1", // tts-1 optimizes for latency; tts-1-hd is slower
         voice, // alloy | echo | fable | onyx | nova | shimmer
         input: text,
         response_format: "mp3",
-        speed: 1.0,
+        speed, // snappier default — human tempo ≈ 1.15
       }),
     });
     if (!res.ok) {
@@ -216,7 +220,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { text?: unknown; voice_id?: unknown };
+  let body: { text?: unknown; voice_id?: unknown; speed?: unknown };
   try {
     body = await request.json();
   } catch {
@@ -233,6 +237,9 @@ export async function POST(request: NextRequest) {
   }
   const overrideVoice =
     typeof body.voice_id === "string" && body.voice_id ? body.voice_id : undefined;
+  // Voice speed: clamp to OpenAI's safe range [0.7, 1.3]. 1.15 default.
+  const requestedSpeed = typeof body.speed === "number" ? body.speed : DEFAULT_VOICE_SPEED;
+  const speed = Math.max(0.7, Math.min(1.3, requestedSpeed));
 
   // Provider order. Default: XTTS (free) → OpenAI (cheap+reliable) →
   // ElevenLabs (premium fallback). Override via TRINITY_TTS_PROVIDER.
@@ -254,7 +261,7 @@ export async function POST(request: NextRequest) {
       provider === "xtts"
         ? await synthesizeViaRunpodXTTS(text)
         : provider === "openai"
-          ? await synthesizeViaOpenAI(text)
+          ? await synthesizeViaOpenAI(text, speed)
           : await synthesizeViaElevenLabs(text, overrideVoice);
 
     if (result.ok) {
