@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { anthropic, MODEL_HAIKU, getResponseText } from "@/lib/ai/claude-helpers";
+import {
+  THUMBNAIL_STYLES,
+  getStylesByCategory,
+  type StyleCategory,
+} from "@/lib/thumbnail-styles";
 import type Anthropic from "@anthropic-ai/sdk";
 import Stripe from "stripe";
 
@@ -590,6 +595,46 @@ const TOOLS: Anthropic.Tool[] = [
         client_id: { type: "string", description: "Optional client UUID." },
       },
       required: [],
+    },
+  },
+  // ── Thumbnail style library + edit-with-notes ──
+  {
+    name: "browse_thumbnail_styles",
+    description:
+      "Browse the 50-style thumbnail preset library. Use when the user is unsure which style to pick, or asks for recommendations (e.g. 'what's a good style for a finance video?'). Returns a list of presets with { id, name, category, description } so the assistant can recommend one. Pass the `id` to generate_thumbnail via its `style` param.",
+    input_schema: {
+      type: "object",
+      properties: {
+        category: {
+          type: "string",
+          description:
+            "Optional category filter: youtube_viral | tech | finance | gaming | food | fitness | business | education | entertainment | lifestyle | news | cinematic | minimal | experimental.",
+        },
+        search: {
+          type: "string",
+          description: "Optional free-text search (matches name, description, or category).",
+        },
+      },
+      required: [],
+    },
+  },
+  {
+    name: "edit_thumbnail_with_notes",
+    description:
+      "Edit an existing thumbnail with a plain-English instruction. Use when the user says 'make the title bigger', 'change the background to a basketball court', or 'remove the watermark'. Re-runs FLUX img2img at moderate denoise so the composition survives but the change lands. Requires an existing thumbnail_id and an instruction string. Returns a new thumbnail_id + job_id to poll.",
+    input_schema: {
+      type: "object",
+      properties: {
+        thumbnail_id: { type: "string", description: "ID of the source thumbnail to edit." },
+        instruction: { type: "string", description: "Plain-English change description." },
+        denoise: {
+          type: "number",
+          description: "0.3 (subtle edit) to 0.8 (heavy rework). Default 0.5.",
+        },
+        aspect: { type: "string", enum: ["16:9", "9:16", "1:1"], description: "Optional. Defaults to 16:9." },
+        client_id: { type: "string", description: "Optional client UUID." },
+      },
+      required: ["thumbnail_id", "instruction"],
     },
   },
 ];
@@ -2616,6 +2661,183 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
             error: err instanceof Error ? err.message : "Music match failed",
           };
         }
+      }
+
+      // ── browse_thumbnail_styles ────────────────────────────────────
+      case "browse_thumbnail_styles": {
+        const category = typeof input.category === "string" ? input.category.trim() : "";
+        const search = typeof input.search === "string" ? input.search.trim().toLowerCase() : "";
+
+        let styles = THUMBNAIL_STYLES;
+        if (category) {
+          styles = getStylesByCategory(category as StyleCategory);
+        }
+        if (search) {
+          styles = styles.filter(
+            (s) =>
+              s.name.toLowerCase().includes(search) ||
+              s.description.toLowerCase().includes(search) ||
+              s.category.toLowerCase().includes(search),
+          );
+        }
+
+        // Trim the payload — Claude doesn't need gradient or reference URL.
+        const slim = styles.slice(0, 30).map((s) => ({
+          id: s.id,
+          name: s.name,
+          category: s.category,
+          description: s.description,
+        }));
+        return {
+          ok: true,
+          data: {
+            total: styles.length,
+            returned: slim.length,
+            styles: slim,
+            hint: "Pass the `id` of your choice to generate_thumbnail via its `style` param.",
+          },
+        };
+      }
+
+      // ── edit_thumbnail_with_notes ──────────────────────────────────
+      case "edit_thumbnail_with_notes": {
+        const thumbnailId = typeof input.thumbnail_id === "string" ? input.thumbnail_id.trim() : "";
+        const instruction = typeof input.instruction === "string" ? input.instruction.trim() : "";
+        if (!thumbnailId) return { ok: false, error: "thumbnail_id required." };
+        if (!instruction) return { ok: false, error: "instruction required." };
+
+        const denoise = Math.max(
+          0.3,
+          Math.min(0.8, typeof input.denoise === "number" ? input.denoise : 0.5),
+        );
+        const aspect = typeof input.aspect === "string" ? input.aspect : "16:9";
+        const dims =
+          aspect === "9:16"
+            ? { width: 720, height: 1280 }
+            : aspect === "1:1"
+              ? { width: 1024, height: 1024 }
+              : { width: 1280, height: 720 };
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db
+            .from("clients")
+            .select("id, profile_id")
+            .eq("id", clientId)
+            .maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const { data: existing } = await db
+          .from("generated_images")
+          .select("prompt, profile_id, image_url")
+          .eq("id", thumbnailId)
+          .maybeSingle();
+        if (!existing) return { ok: false, error: "Thumbnail not found." };
+        if ((existing as { profile_id: string }).profile_id !== ctx.ownerId) {
+          return { ok: false, error: "Thumbnail access denied." };
+        }
+        const sourceUrl = (existing as { image_url: string | null }).image_url;
+        const sourcePrompt = (existing as { prompt: string | null }).prompt || "";
+        if (!sourceUrl) {
+          return { ok: false, error: "Source thumbnail has no image_url yet (still rendering?)." };
+        }
+
+        const fluxUrl = process.env.RUNPOD_FLUX_URL;
+        const runpodKey = process.env.RUNPOD_API_KEY;
+        if (!fluxUrl || !runpodKey) {
+          return { ok: false, error: "RUNPOD_FLUX_URL / RUNPOD_API_KEY not configured." };
+        }
+
+        const editPrompt =
+          (sourcePrompt ? `${sourcePrompt}. ` : "") +
+          `EDIT: ${instruction}. ` +
+          "Preserve the overall composition, subject placement, and aspect. " +
+          "Only apply the requested change. Maintain viral YouTube thumbnail quality.";
+        const negativePrompt =
+          "blurry, low quality, deformed, ugly, watermark, signature, cropped, worst quality, " +
+          "duplicate subjects, garbled text, different composition, different subject, different layout";
+        const seed = Math.floor(Math.random() * 2147483647);
+        const workflow = {
+          "1": { inputs: { ckpt_name: "flux1-dev-fp8.safetensors" }, class_type: "CheckpointLoaderSimple" },
+          "2": { inputs: { url: sourceUrl }, class_type: "LoadImageFromUrl" },
+          "3": { inputs: { pixels: ["2", 0], vae: ["1", 2] }, class_type: "VAEEncode" },
+          "4": { inputs: { text: editPrompt, clip: ["1", 1] }, class_type: "CLIPTextEncode" },
+          "5": { inputs: { text: negativePrompt, clip: ["1", 1] }, class_type: "CLIPTextEncode" },
+          "6": {
+            inputs: {
+              seed,
+              steps: 20,
+              cfg: 1.5,
+              sampler_name: "euler",
+              scheduler: "simple",
+              denoise,
+              model: ["1", 0],
+              positive: ["4", 0],
+              negative: ["5", 0],
+              latent_image: ["3", 0],
+            },
+            class_type: "KSampler",
+          },
+          "7": { inputs: { samples: ["6", 0], vae: ["1", 2] }, class_type: "VAEDecode" },
+          "8": { inputs: { filename_prefix: "EditNotes", images: ["7", 0] }, class_type: "SaveImage" },
+        };
+
+        let jobId: string | null = null;
+        let runpodError: string | null = null;
+        try {
+          const res = await fetch(`${fluxUrl}/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${runpodKey}` },
+            body: JSON.stringify({ input: { workflow } }),
+          });
+          const job = (await res.json()) as Record<string, unknown>;
+          if (typeof job?.id === "string") jobId = job.id;
+          else runpodError = (job?.error as string) || (job?.message as string) || `RunPod ${res.status}`;
+        } catch (e) {
+          runpodError = e instanceof Error ? e.message : "RunPod request failed";
+        }
+        if (!jobId) return { ok: false, error: runpodError || "RunPod did not return a job id." };
+
+        const { data, error } = await db
+          .from("generated_images")
+          .insert({
+            profile_id: ctx.ownerId,
+            client_id: clientId || null,
+            prompt: editPrompt,
+            model: "flux1-dev-fp8-img2img",
+            width: dims.width,
+            height: dims.height,
+            status: "processing",
+            job_id: jobId,
+            metadata: {
+              source: "edit_with_notes",
+              parent_thumbnail_id: thumbnailId,
+              instruction,
+              denoise,
+              aspect,
+              tool: "edit_thumbnail_with_notes",
+            },
+          })
+          .select("id")
+          .single();
+        if (error) return { ok: false, error: error.message };
+
+        return {
+          ok: true,
+          data: {
+            thumbnail_id: (data as { id: string }).id,
+            parent_thumbnail_id: thumbnailId,
+            instruction,
+            job_id: jobId,
+            poll_url: `/api/thumbnail/status?job_id=${jobId}`,
+          },
+        };
       }
 
       default:

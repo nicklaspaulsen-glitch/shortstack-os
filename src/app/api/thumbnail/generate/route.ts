@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getStyleById } from "@/lib/thumbnail-styles";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -143,9 +144,17 @@ function buildPrompt(body: {
     }
   }
 
-  // Add style
-  if (body.style && STYLE_PROMPTS[body.style]) {
-    parts.push(STYLE_PROMPTS[body.style]);
+  // Add style — check legacy STYLE_PROMPTS first, then fall back to the
+  // 50-style preset library (src/lib/thumbnail-styles.ts).
+  if (body.style) {
+    if (STYLE_PROMPTS[body.style]) {
+      parts.push(STYLE_PROMPTS[body.style]);
+    } else {
+      const preset = getStyleById(body.style);
+      if (preset) {
+        parts.push(preset.promptModifier);
+      }
+    }
   }
 
   // Add mood
