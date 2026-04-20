@@ -18,6 +18,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Mic, MicOff, Send, Sparkles, Loader, CheckCircle, XCircle } from "lucide-react";
 
 // Web Speech API types — browsers expose it unprefixed or as webkitSpeechRecognition.
@@ -73,6 +74,14 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
   const recognitionRef = useRef<SpeechRecognitionLite | null>(null);
   const threadEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Extract the current dashboard page slug (e.g. "script-lab", "ads-manager")
+  // so Trinity can bias tool choice toward the page the user is viewing.
+  const pathname = usePathname();
+  const currentPage =
+    pathname && pathname.startsWith("/dashboard/")
+      ? pathname.replace(/^\/dashboard\//, "").split("/")[0] || null
+      : null;
 
   // Detect Web Speech API support once mounted (client-only).
   useEffect(() => {
@@ -152,6 +161,7 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
           message: text,
           conversation_id: conversationId,
           client_id: clientId,
+          current_page: currentPage,
         }),
       });
       const data = await res.json();

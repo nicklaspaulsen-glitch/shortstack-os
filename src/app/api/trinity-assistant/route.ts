@@ -217,6 +217,256 @@ const TOOLS: Anthropic.Tool[] = [
       required: ["client_id"],
     },
   },
+  // ── Content creation ──
+  {
+    name: "create_ai_script",
+    description:
+      "Create a script in Script Lab (saved to content_scripts). Use when the user says 'write me a TikTok script about X' or 'draft a YouTube script for Acme'. Short-form by default; pass platform to target a channel.",
+    input_schema: {
+      type: "object",
+      properties: {
+        title: { type: "string", description: "Short working title for the script." },
+        content: { type: "string", description: "Full script body — hook, beats, CTA." },
+        platform: {
+          type: "string",
+          enum: ["youtube", "tiktok", "instagram", "linkedin"],
+          description: "Target platform. Maps to the publish_platform enum (instagram→instagram_reels, linkedin→linkedin_video).",
+        },
+        client_id: { type: "string", description: "Optional — attach the script to a specific client. Clients are auto-scoped." },
+      },
+      required: ["title", "content"],
+    },
+  },
+  {
+    name: "create_email_draft",
+    description:
+      "Draft an email (saved, NOT sent) for the Email Composer. Use when the user says 'draft an email to X about Y' or 'write a follow-up email to Acme'. The user reviews before sending.",
+    input_schema: {
+      type: "object",
+      properties: {
+        subject: { type: "string", description: "Email subject line." },
+        body: { type: "string", description: "Email body (plain text or markdown)." },
+        to: { type: "string", description: "Optional recipient email." },
+        client_id: { type: "string", description: "Optional — associate with a client." },
+        tone: { type: "string", description: "Optional tone hint (professional, friendly, urgent, etc.)." },
+      },
+      required: ["subject", "body"],
+    },
+  },
+  {
+    name: "create_blog_post",
+    description:
+      "Create a long-form blog post via Copywriter (saved to content_scripts as long_form). Use when the user says 'write a blog post about X' or 'draft a post for Acme on Y'. Defaults to draft status.",
+    input_schema: {
+      type: "object",
+      properties: {
+        title: { type: "string", description: "Blog post title / SEO headline." },
+        content: { type: "string", description: "Full blog body in markdown." },
+        excerpt: { type: "string", description: "Optional short summary / meta description." },
+        client_id: { type: "string", description: "Optional — attach to a client." },
+        status: { type: "string", enum: ["draft", "published"], description: "Defaults to 'draft'." },
+      },
+      required: ["title", "content"],
+    },
+  },
+  // ── Media / creative ──
+  {
+    name: "generate_thumbnail",
+    description:
+      "Kick off an AI thumbnail generation on RunPod FLUX. Use when the user says 'make me a YouTube thumbnail for X' or 'generate a cover image'. Returns a thumbnail_id and a RunPod job_id — the image finishes async, the user polls /api/thumbnail/status. If the image service isn't configured, enqueues the row anyway so a worker can pick it up later.",
+    input_schema: {
+      type: "object",
+      properties: {
+        prompt: { type: "string", description: "What should be in the thumbnail — subject, scene, vibe. Keep it a sentence or two." },
+        style: {
+          type: "string",
+          description: "Optional style preset: 'youtube_classic', 'cinematic', 'minimal', 'bold_text', 'dark_moody', 'news_breaking', 'tutorial', 'listicle'. Defaults to 'youtube_classic'.",
+        },
+        client_id: { type: "string", description: "Optional — attach to a specific client. Clients are auto-scoped." },
+        aspect: { type: "string", enum: ["16:9", "9:16", "1:1"], description: "Aspect ratio. Defaults to 16:9." },
+      },
+      required: ["prompt"],
+    },
+  },
+  {
+    name: "generate_carousel",
+    description:
+      "Create a multi-slide Instagram/LinkedIn/TikTok carousel draft. Use when the user says 'make a carousel about X' or '7 slides on Y'. Claude will be called async via the carousel pipeline; this tool creates the tracking record scoped to the caller and returns the carousel_id.",
+    input_schema: {
+      type: "object",
+      properties: {
+        topic: { type: "string", description: "What the carousel is about — a headline or angle." },
+        num_slides: { type: "number", description: "Slide count. Default 7. Clamped to 3–10." },
+        platform: { type: "string", enum: ["instagram", "linkedin", "tiktok"], description: "Target platform. Defaults to 'instagram'." },
+        client_id: { type: "string", description: "Optional — attach to a specific client." },
+        tone: {
+          type: "string",
+          description: "Tone/style hint: 'minimalist', 'bold', 'corporate', 'playful', 'dark', 'gradient'. Defaults to 'bold'.",
+        },
+      },
+      required: ["topic"],
+    },
+  },
+  {
+    name: "render_video",
+    description:
+      "Kick off a video render via the ShortStack video pipeline (Remotion template or Mochi text-to-video on RunPod). Use when the user says 'render a video for X' or 'turn this script into a reel'. Returns a video_id and queued status — the render finishes async. Agency + team_member only; clients can't spend GPU budget.",
+    input_schema: {
+      type: "object",
+      properties: {
+        script: { type: "string", description: "Video script or topic. Required." },
+        style: {
+          type: "string",
+          description: "Style preset: 'modern-dark', 'clean-white', 'bold-gradient', 'neon', 'minimal', 'corporate', 'retro', 'cinematic'. Defaults to 'modern-dark'.",
+        },
+        client_id: { type: "string", description: "Optional — attach the video to a client." },
+        platform: {
+          type: "string",
+          enum: ["youtube", "tiktok", "reel"],
+          description: "Platform — controls aspect ratio. youtube=16:9, tiktok/reel=9:16. Defaults to 'reel'.",
+        },
+      },
+      required: ["script"],
+    },
+  },
+  // ── Automation / marketing ──
+  {
+    name: "scrape_lead_niche",
+    description:
+      "Kick off a Lead Finder scrape for a specific niche and location. Uses Google Maps to find businesses matching the niche in the city/state, writes them as leads scoped to the user, and returns how many were saved. Use when the user says 'find me plumbers in Austin' or 'scrape 50 dentists in Miami FL'. Agency-only.",
+    input_schema: {
+      type: "object",
+      properties: {
+        niche: { type: "string", description: "Business type to search for (e.g. 'dentist', 'roofer', 'med spa')." },
+        city: { type: "string", description: "Optional city (e.g. 'Austin')." },
+        state: { type: "string", description: "Optional state code or name (e.g. 'TX' or 'Texas')." },
+        limit: { type: "number", description: "Max leads to save (default 50, capped at 100)." },
+      },
+      required: ["niche"],
+    },
+  },
+  {
+    name: "create_workflow",
+    description:
+      "Create a new automation workflow in the Workflow Builder. Stores the workflow under the user with an initial trigger node. Use when the user says 'build a workflow that emails new leads' or 'create an automation for won deals'. Agency-only.",
+    input_schema: {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "Short, unique workflow name." },
+        description: { type: "string" },
+        trigger_type: {
+          type: "string",
+          description: "What kicks the workflow off — e.g. 'new_lead', 'deal_won', 'schedule', 'webhook', 'manual'.",
+        },
+        steps: {
+          type: "array",
+          description: "Optional array of step objects ({ type, config }). Becomes workflow nodes.",
+          items: { type: "object" },
+        },
+        client_id: { type: "string", description: "Optional — scope this workflow to a specific client." },
+      },
+      required: ["name", "trigger_type"],
+    },
+  },
+  {
+    name: "create_ad_campaign",
+    description:
+      "Create a new ad campaign record in the Ads Manager. Does NOT push to Meta/Google/TikTok APIs — it creates the campaign shell the user can launch from the Ads Manager UI. Use when the user says 'set up a Meta campaign for $50/day' or 'create a Google Ads campaign for Acme'. Agency-only.",
+    input_schema: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        platform: { type: "string", enum: ["meta", "google", "tiktok", "linkedin"] },
+        budget: { type: "number", description: "Daily budget in whole dollars (e.g. 50 for $50/day)." },
+        goal: { type: "string", description: "Campaign objective — e.g. 'leads', 'traffic', 'conversions', 'awareness'." },
+        client_id: { type: "string", description: "Optional — the client this campaign is running for." },
+      },
+      required: ["name", "platform"],
+    },
+  },
+  {
+    name: "publish_social_post",
+    description:
+      "Publish a social post RIGHT NOW (distinct from schedule_social_post which queues it for later). Fans out to every platform in `platforms` via the connected social provider (Zernio/Ayrshare). Use when the user says 'post this to Instagram and Twitter now' or 'publish immediately'.",
+    input_schema: {
+      type: "object",
+      properties: {
+        content: { type: "string", description: "The post body / caption." },
+        platforms: {
+          type: "array",
+          items: { type: "string" },
+          description: "Platforms to publish to — e.g. ['instagram','facebook','twitter','linkedin','tiktok'].",
+        },
+        media_urls: {
+          type: "array",
+          items: { type: "string" },
+          description: "Optional public URLs for images/video attached to the post.",
+        },
+        client_id: { type: "string", description: "Client whose connected social accounts to post from. Required unless caller is a client (auto-scoped)." },
+      },
+      required: ["content", "platforms"],
+    },
+  },
+  // ── Ops / utility ──
+  {
+    name: "create_invoice",
+    description:
+      "Create a DRAFT Stripe invoice on the agency's connected Stripe account for a specific client. Use when the user wants to prepare an invoice without sending it yet (e.g. 'draft an invoice for Acme for $500'). Distinct from send_invoice, which finalizes and emails. Agency-only. Requires Stripe Connect.",
+    input_schema: {
+      type: "object",
+      properties: {
+        client_id: { type: "string", description: "The client's UUID. Call search_clients first if needed." },
+        amount: { type: "number", description: "Invoice amount in the target currency's major unit (e.g. 500 for $500.00)." },
+        currency: { type: "string", description: "ISO currency code. Defaults to 'usd'." },
+        description: { type: "string", description: "Optional line description / memo." },
+        due_in_days: { type: "number", description: "Days until due (default 14, 1-365)." },
+      },
+      required: ["client_id", "amount"],
+    },
+  },
+  {
+    name: "create_content_calendar_item",
+    description:
+      "Add a planning entry to the content calendar. Use for CALENDAR PLANNING (an idea penciled in for a date), not scheduled publishing — use schedule_social_post for anything that should actually be posted. Good for 'add a YouTube video idea to my calendar for next Friday'.",
+    input_schema: {
+      type: "object",
+      properties: {
+        title: { type: "string", description: "Short title shown on the calendar." },
+        scheduled_for: { type: "string", description: "ISO date or datetime this item is planned for." },
+        platform: { type: "string", description: "Optional platform label (instagram_reels, tiktok, youtube_shorts, linkedin, facebook, twitter, etc.)." },
+        content: { type: "string", description: "Optional notes / draft copy / outline." },
+        client_id: { type: "string", description: "Optional client this item belongs to." },
+        category: { type: "string", description: "Optional category tag (e.g. 'educational', 'promo', 'ugc')." },
+      },
+      required: ["title", "scheduled_for"],
+    },
+  },
+  {
+    name: "navigate_to_page",
+    description:
+      "Return a deep-link URL the user can click to jump to a specific page in the dashboard, optionally with prefilled query params. Trinity can't redirect the user on its own, so use this to hand them a link when they ask 'take me to my leads' or 'open the campaigns page'.",
+    input_schema: {
+      type: "object",
+      properties: {
+        page: {
+          type: "string",
+          enum: [
+            "leads", "pipeline", "content-plan", "campaigns", "invoices", "clients",
+            "analytics", "script-lab", "thumbnail-generator", "email-composer",
+            "copywriter", "ads-manager", "workflows", "content-calendar",
+            "lead-finder", "video-editor", "carousel-generator",
+          ],
+          description: "Which dashboard page to link to.",
+        },
+        query: {
+          type: "object",
+          description: "Optional key/value pairs to encode as query-string params (prefilters, selected ids, etc.).",
+          additionalProperties: { type: "string" },
+        },
+      },
+      required: ["page"],
+    },
+  },
 ];
 
 interface ToolCtx {
@@ -912,6 +1162,662 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         }
       }
 
+      // ── create_ai_script ────────────────────────────────────────────
+      case "create_ai_script": {
+        const title = typeof input.title === "string" ? input.title.trim() : "";
+        const content = typeof input.content === "string" ? input.content : "";
+        if (!title) return { ok: false, error: "title required." };
+        if (!content) return { ok: false, error: "content required." };
+
+        const platformMap: Record<string, string> = {
+          youtube: "youtube",
+          tiktok: "tiktok",
+          instagram: "instagram_reels",
+          linkedin: "linkedin_video",
+        };
+        const rawPlatform = typeof input.platform === "string" ? input.platform : "";
+        const targetPlatform = platformMap[rawPlatform] || null;
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const { data, error } = await db
+          .from("content_scripts")
+          .insert({
+            client_id: clientId || null,
+            title,
+            script_type: "short_form",
+            script_body: content,
+            target_platform: targetPlatform,
+            status: "idea",
+          })
+          .select("id, title")
+          .single();
+        if (error) return { ok: false, error: error.message };
+        return { ok: true, data: { script_id: (data as { id: string }).id, title: (data as { title: string }).title } };
+      }
+
+      // ── create_email_draft ──────────────────────────────────────────
+      case "create_email_draft": {
+        const subject = typeof input.subject === "string" ? input.subject.trim() : "";
+        const body = typeof input.body === "string" ? input.body : "";
+        if (!subject) return { ok: false, error: "subject required." };
+        if (!body) return { ok: false, error: "body required." };
+        const to = typeof input.to === "string" ? input.to : null;
+        const tone = typeof input.tone === "string" ? input.tone : null;
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const { data, error } = await db
+          .from("trinity_log")
+          .insert({
+            action_type: "custom",
+            description: `Email draft: ${subject.slice(0, 100)}`,
+            client_id: clientId || null,
+            user_id: ctx.ownerId,
+            status: "completed",
+            agent: "email_composer",
+            result: { source: "trinity_assistant", kind: "email_draft", subject, body, to, tone, drafted_at: new Date().toISOString() },
+          })
+          .select("id")
+          .single();
+        if (error) return { ok: false, error: error.message };
+        return { ok: true, data: { draft_id: (data as { id: string }).id, subject } };
+      }
+
+      // ── create_blog_post ────────────────────────────────────────────
+      case "create_blog_post": {
+        const title = typeof input.title === "string" ? input.title.trim() : "";
+        const content = typeof input.content === "string" ? input.content : "";
+        if (!title) return { ok: false, error: "title required." };
+        if (!content) return { ok: false, error: "content required." };
+        const excerpt = typeof input.excerpt === "string" ? input.excerpt : null;
+        const requestedStatus = typeof input.status === "string" ? input.status : "draft";
+        const status = requestedStatus === "published" ? "published" : "scripted";
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const { data, error } = await db
+          .from("content_scripts")
+          .insert({
+            client_id: clientId || null,
+            title,
+            script_type: "long_form",
+            script_body: content,
+            seo_title: title,
+            description: excerpt,
+            status,
+          })
+          .select("id, title, status")
+          .single();
+        if (error) return { ok: false, error: error.message };
+        return { ok: true, data: { blog_post_id: (data as { id: string }).id, title: (data as { title: string }).title, status: (data as { status: string }).status } };
+      }
+
+      // ── generate_thumbnail ──────────────────────────────────────────
+      case "generate_thumbnail": {
+        const prompt = typeof input.prompt === "string" ? input.prompt.trim() : "";
+        if (!prompt) return { ok: false, error: "prompt required." };
+        const style = typeof input.style === "string" ? input.style : "youtube_classic";
+        const aspect = typeof input.aspect === "string" ? input.aspect : "16:9";
+        const dims = aspect === "9:16" ? { width: 1080, height: 1920 } : aspect === "1:1" ? { width: 1080, height: 1080 } : { width: 1280, height: 720 };
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const fluxUrl = process.env.RUNPOD_FLUX_URL;
+        const runpodKey = process.env.RUNPOD_API_KEY;
+        let jobId: string | null = null;
+        let initialStatus: "pending" | "processing" = "pending";
+
+        if (fluxUrl && runpodKey) {
+          try {
+            const seed = Math.floor(Math.random() * 2147483647);
+            const res = await fetch(`${fluxUrl}/run`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Authorization: `Bearer ${runpodKey}` },
+              body: JSON.stringify({
+                input: {
+                  workflow: {
+                    "6": { inputs: { text: prompt, clip: ["30", 1] }, class_type: "CLIPTextEncode" },
+                    "8": { inputs: { samples: ["31", 0], vae: ["30", 2] }, class_type: "VAEDecode" },
+                    "9": { inputs: { filename_prefix: "ComfyUI", images: ["8", 0] }, class_type: "SaveImage" },
+                    "27": { inputs: { width: Math.min(dims.width, 1024), height: Math.min(dims.height, 1024), batch_size: 1 }, class_type: "EmptySD3LatentImage" },
+                    "30": { inputs: { ckpt_name: "flux1-dev-fp8.safetensors" }, class_type: "CheckpointLoaderSimple" },
+                    "31": { inputs: { seed, steps: 12, cfg: 1, sampler_name: "euler", scheduler: "simple", denoise: 1, model: ["30", 0], positive: ["35", 0], negative: ["33", 0], latent_image: ["27", 0] }, class_type: "KSampler" },
+                    "33": { inputs: { text: "blurry, low quality, watermark, text", clip: ["30", 1] }, class_type: "CLIPTextEncode" },
+                    "35": { inputs: { guidance: 3.5, conditioning: ["6", 0] }, class_type: "FluxGuidance" },
+                  },
+                },
+              }),
+            });
+            const job = await res.json();
+            jobId = (job?.id as string) || null;
+            if (jobId) initialStatus = "processing";
+          } catch {
+            // Non-fatal — row still queued for retry.
+          }
+        }
+
+        const { data, error } = await db
+          .from("generated_images")
+          .insert({
+            profile_id: ctx.ownerId,
+            client_id: clientId || null,
+            prompt,
+            model: "flux1-dev-fp8",
+            width: dims.width,
+            height: dims.height,
+            status: initialStatus,
+            job_id: jobId,
+            metadata: { source: "trinity_assistant", tool: "generate_thumbnail", style, aspect },
+          })
+          .select("id")
+          .single();
+        if (error) return { ok: false, error: error.message };
+
+        await db.from("generations").insert({
+          user_id: ctx.ownerId,
+          category: "thumbnail",
+          title: prompt.slice(0, 80),
+          source_tool: "Trinity Assistant",
+          content_preview: prompt.slice(0, 200),
+          metadata: { generated_image_id: (data as { id: string }).id, job_id: jobId, style, aspect },
+        });
+
+        return {
+          ok: true,
+          data: {
+            thumbnail_id: (data as { id: string }).id,
+            status: jobId ? "generating" : "queued",
+            job_id: jobId,
+            poll_url: jobId ? `/api/thumbnail/status?job_id=${jobId}` : null,
+          },
+        };
+      }
+
+      // ── generate_carousel ───────────────────────────────────────────
+      case "generate_carousel": {
+        const topic = typeof input.topic === "string" ? input.topic.trim() : "";
+        if (!topic) return { ok: false, error: "topic required." };
+        const rawCount = Number(input.num_slides || 7);
+        const numSlides = Math.max(3, Math.min(10, Math.round(rawCount)));
+        const platform = typeof input.platform === "string" && ["instagram", "linkedin", "tiktok"].includes(input.platform) ? (input.platform as string) : "instagram";
+        const tone = typeof input.tone === "string" ? input.tone : "bold";
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const { data, error } = await db
+          .from("generations")
+          .insert({
+            user_id: ctx.ownerId,
+            category: "social_post",
+            title: `Carousel: ${topic.slice(0, 60)}`,
+            source_tool: "Carousel Generator",
+            content_preview: topic.slice(0, 200),
+            metadata: { source: "trinity_assistant", tool: "generate_carousel", topic, num_slides: numSlides, platform, tone, client_id: clientId || null, status: "queued" },
+          })
+          .select("id")
+          .single();
+        if (error) return { ok: false, error: error.message };
+        return {
+          ok: true,
+          data: {
+            carousel_id: (data as { id: string }).id,
+            num_slides: numSlides,
+            platform,
+            link: `/dashboard/carousel-generator?topic=${encodeURIComponent(topic)}&slides=${numSlides}&style=${tone}`,
+          },
+        };
+      }
+
+      // ── render_video ────────────────────────────────────────────────
+      case "render_video": {
+        if (ctx.role === "client") return { ok: false, error: "Only the agency can render videos." };
+        const script = typeof input.script === "string" ? input.script.trim() : "";
+        if (!script) return { ok: false, error: "script required." };
+        const style = typeof input.style === "string" ? input.style : "modern-dark";
+        const platform = typeof input.platform === "string" && ["youtube", "tiktok", "reel"].includes(input.platform) ? (input.platform as string) : "reel";
+        const aspectRatio = platform === "youtube" ? "16:9" : "9:16";
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const hasRender = !!(process.env.REMOTION_RENDER_URL || process.env.RUNPOD_SVD_URL || process.env.HIGGSFIELD_URL);
+        if (!hasRender) {
+          return { ok: false, error: "Video service not configured — set RUNPOD_SVD_URL or REMOTION_RENDER_URL" };
+        }
+
+        const title = script.slice(0, 60);
+        const { data, error } = await db
+          .from("video_projects")
+          .insert({
+            profile_id: ctx.ownerId,
+            client_id: clientId || null,
+            topic: title,
+            title,
+            duration: 30,
+            style_preset: style,
+            script: { raw: script },
+            render_status: "draft",
+            status: "active",
+            editor_settings: { source: "trinity_assistant", platform, aspect_ratio: aspectRatio, queued_at: new Date().toISOString() },
+          })
+          .select("id")
+          .single();
+        if (error) return { ok: false, error: error.message };
+
+        await db.from("generations").insert({
+          user_id: ctx.ownerId,
+          category: "video",
+          title: `Video: ${title}`,
+          source_tool: "Trinity Assistant",
+          content_preview: script.slice(0, 200),
+          metadata: { video_project_id: (data as { id: string }).id, style, platform },
+        });
+
+        return {
+          ok: true,
+          data: {
+            video_id: (data as { id: string }).id,
+            status: "queued",
+            platform,
+            aspect_ratio: aspectRatio,
+            render_url: `/dashboard/video-editor/${(data as { id: string }).id}`,
+          },
+        };
+      }
+
+      // ── scrape_lead_niche ───────────────────────────────────────────
+      case "scrape_lead_niche": {
+        if (ctx.role === "client") return { ok: false, error: "Only the agency can scrape leads." };
+        const niche = typeof input.niche === "string" ? input.niche.trim() : "";
+        if (!niche) return { ok: false, error: "niche required." };
+        const city = typeof input.city === "string" ? input.city.trim() : "";
+        const state = typeof input.state === "string" ? input.state.trim() : "";
+        const limit = Math.max(1, Math.min(100, Number(input.limit || 50)));
+        const location = [city, state].filter(Boolean).join(", ") || "United States";
+
+        const origin = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || "";
+        const baseUrl = origin ? (origin.startsWith("http") ? origin : `https://${origin}`) : "";
+
+        try {
+          const res = await fetch(`${baseUrl}/api/scraper/run`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              platforms: ["google_maps"],
+              niches: [niche],
+              locations: [location],
+              max_results_per_search: limit,
+              filters: {},
+              tags: [],
+            }),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) return { ok: false, error: data?.error || `scraper/run returned ${res.status}` };
+          return {
+            ok: true,
+            data: {
+              scrape_job_id: `scrape_${Date.now()}`,
+              status: "completed",
+              estimated_leads: Number(data?.totalScraped || 0),
+              skipped: Number(data?.totalSkipped || 0),
+              niche,
+              location,
+              link: "/dashboard/leads",
+            },
+          };
+        } catch (err) {
+          return { ok: false, error: err instanceof Error ? err.message : "Failed to call scraper/run." };
+        }
+      }
+
+      // ── create_workflow ─────────────────────────────────────────────
+      case "create_workflow": {
+        if (ctx.role === "client") return { ok: false, error: "Only the agency can create workflows." };
+        const name = typeof input.name === "string" ? input.name.trim() : "";
+        if (!name) return { ok: false, error: "name required." };
+        const triggerType = typeof input.trigger_type === "string" ? input.trigger_type.trim() : "";
+        if (!triggerType) return { ok: false, error: "trigger_type required." };
+        const description = typeof input.description === "string" ? input.description : null;
+        const clientId = typeof input.client_id === "string" ? input.client_id : "";
+
+        if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const rawSteps = Array.isArray(input.steps) ? (input.steps as unknown[]) : [];
+        const triggerNode = { id: "trigger", type: "trigger", data: { trigger_type: triggerType, client_id: clientId || null } };
+        const stepNodes = rawSteps.map((s, i) => ({ id: `step_${i + 1}`, type: "action", data: s }));
+        const nodes = [triggerNode, ...stepNodes];
+        const edges = stepNodes.map((_, i) => ({ id: `edge_${i}`, source: i === 0 ? "trigger" : `step_${i}`, target: `step_${i + 1}` }));
+
+        const { data, error } = await db
+          .from("workflows")
+          .upsert({ user_id: ctx.ownerId, name, description, nodes, edges, active: true }, { onConflict: "user_id,name" })
+          .select("id, name")
+          .single();
+        if (error) return { ok: false, error: error.message };
+        return { ok: true, data: { workflow_id: (data as { id: string }).id, name: (data as { name: string }).name, link: "/dashboard/workflows" } };
+      }
+
+      // ── create_ad_campaign ──────────────────────────────────────────
+      case "create_ad_campaign": {
+        if (ctx.role === "client") return { ok: false, error: "Only the agency can create ad campaigns." };
+        const name = typeof input.name === "string" ? input.name.trim() : "";
+        if (!name) return { ok: false, error: "name required." };
+        const platform = typeof input.platform === "string" ? input.platform : "";
+        if (!["meta", "google", "tiktok", "linkedin"].includes(platform)) {
+          return { ok: false, error: "platform must be one of: meta, google, tiktok, linkedin." };
+        }
+        const budget = Number(input.budget || 0);
+        const goal = typeof input.goal === "string" ? input.goal : "leads";
+        const clientId = typeof input.client_id === "string" ? input.client_id : "";
+
+        if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const campaignId = `cmp_${Date.now()}`;
+        const { data, error } = await db
+          .from("ad_campaigns")
+          .insert({
+            id: campaignId,
+            user_id: ctx.ownerId,
+            client_id: clientId || null,
+            name,
+            platform,
+            status: "draft",
+            objective: goal,
+            daily_budget: budget,
+            total_spend: 0,
+            impressions: 0,
+            clicks: 0,
+            ctr: 0,
+            conversions: 0,
+            cpa: 0,
+            roas: 0,
+            ai_optimized: false,
+            start_date: new Date().toISOString(),
+            end_date: null,
+            created_at: new Date().toISOString(),
+          })
+          .select("id, name, platform")
+          .single();
+
+        if (error) {
+          if ((error as { code?: string }).code === "42P01") {
+            return { ok: false, error: "Ads feature is not set up — the ad_campaigns table does not exist in this environment." };
+          }
+          return { ok: false, error: error.message };
+        }
+        return { ok: true, data: { campaign_id: (data as { id: string }).id, name: (data as { name: string }).name, platform: (data as { platform: string }).platform, link: "/dashboard/ads-manager" } };
+      }
+
+      // ── publish_social_post ─────────────────────────────────────────
+      case "publish_social_post": {
+        const content = typeof input.content === "string" ? input.content.trim() : "";
+        if (!content) return { ok: false, error: "content required." };
+        const platforms = Array.isArray(input.platforms) ? (input.platforms as unknown[]).map((p) => String(p)).filter(Boolean) : [];
+        if (platforms.length === 0) return { ok: false, error: "platforms must be a non-empty array." };
+        const mediaUrls = Array.isArray(input.media_urls) ? (input.media_urls as unknown[]).map((u) => String(u)).filter(Boolean) : [];
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: c } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!c || (c as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        } else {
+          return { ok: false, error: "client_id required — social accounts are connected per-client." };
+        }
+
+        const { data: accts } = await db.from("social_accounts").select("platform, is_active").eq("client_id", clientId).eq("is_active", true);
+        const connected = new Set(((accts || []) as Array<{ platform: string }>).map((a) => a.platform));
+        const missing = platforms.filter((p) => !connected.has(p));
+        if (connected.size === 0) {
+          return { ok: false, error: "No social accounts connected for this client. Connect an account in Settings → Social first." };
+        }
+        const eligible = platforms.filter((p) => connected.has(p));
+        if (eligible.length === 0) {
+          return { ok: false, error: `None of the requested platforms are connected (${platforms.join(", ")}). Connect them first.` };
+        }
+
+        try {
+          const { publish } = await import("@/lib/services/social-publisher");
+          const result = await publish({ text: content, platforms: eligible, mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined });
+          if (!result.success) return { ok: false, error: result.error || "Social provider refused the post." };
+
+          const { data: logged } = await db
+            .from("content_calendar")
+            .insert({
+              client_id: clientId,
+              user_id: ctx.ownerId,
+              title: content.slice(0, 100),
+              platform: eligible[0],
+              scheduled_at: new Date().toISOString(),
+              status: "published",
+              notes: content,
+              metadata: { source: "trinity_assistant", provider: result.provider, provider_post_id: result.postId, platforms: eligible, media_urls: mediaUrls },
+            })
+            .select("id")
+            .single();
+
+          return {
+            ok: true,
+            data: {
+              post_id: (logged as { id?: string } | null)?.id || result.postId || null,
+              published_to: eligible,
+              failed_platforms: missing.length > 0 ? missing : undefined,
+              provider: result.provider,
+            },
+          };
+        } catch (err) {
+          return { ok: false, error: err instanceof Error ? err.message : "Failed to publish social post." };
+        }
+      }
+
+      // ── create_invoice ──────────────────────────────────────────────
+      case "create_invoice": {
+        if (ctx.role === "client") return { ok: false, error: "Only the agency can create invoices." };
+        const clientId = typeof input.client_id === "string" ? input.client_id : "";
+        const amountNum = Number(input.amount);
+        if (!clientId) return { ok: false, error: "client_id required." };
+        if (!Number.isFinite(amountNum) || amountNum <= 0) return { ok: false, error: "amount must be a positive number." };
+        if (amountNum > 1_000_000) return { ok: false, error: "amount too large." };
+        const currency = typeof input.currency === "string" && input.currency.trim() ? input.currency.trim().toLowerCase() : "usd";
+        const description = typeof input.description === "string" ? input.description : "";
+        const dueDays = Math.max(1, Math.min(365, Number(input.due_in_days || 14)));
+        const amountCents = Math.round(amountNum * 100);
+        if (amountCents < 50) return { ok: false, error: "amount must be at least 0.50." };
+
+        const { data: client } = await db.from("clients").select("id, business_name, email, contact_name, profile_id, agency_stripe_customer_id").eq("id", clientId).maybeSingle();
+        if (!client || (client as { profile_id: string }).profile_id !== ctx.ownerId) {
+          return { ok: false, error: "Client not found or access denied." };
+        }
+        const c = client as { id: string; business_name?: string; email?: string; contact_name?: string; agency_stripe_customer_id?: string | null };
+
+        const { data: account } = await db.from("agency_stripe_accounts").select("stripe_account_id, charges_enabled").eq("user_id", ctx.ownerId).maybeSingle();
+        const acct = account as { stripe_account_id?: string; charges_enabled?: boolean } | null;
+        if (!acct?.stripe_account_id) return { ok: false, error: "Stripe Connect isn't set up. Connect Stripe in Settings → Payments first." };
+        if (!acct.charges_enabled) return { ok: false, error: "Your Stripe account isn't ready to accept charges yet — finish onboarding first." };
+
+        const connectOpts = { stripeAccount: acct.stripe_account_id };
+        try {
+          let customerId = c.agency_stripe_customer_id || null;
+          if (!customerId) {
+            if (!c.email) return { ok: false, error: "Client has no email on file — can't create Stripe customer." };
+            const customer = await stripe.customers.create({ email: c.email, name: c.business_name || c.contact_name || undefined, metadata: { shortstack_client_id: c.id, shortstack_agency_user_id: ctx.ownerId } }, connectOpts);
+            customerId = customer.id;
+            await db.from("clients").update({ agency_stripe_customer_id: customerId }).eq("id", c.id);
+          }
+
+          const invoice = await stripe.invoices.create(
+            {
+              customer: customerId,
+              collection_method: "send_invoice",
+              days_until_due: dueDays,
+              currency,
+              description: description || undefined,
+              auto_advance: false,
+              metadata: { shortstack_client_id: c.id, shortstack_agency_user_id: ctx.ownerId, shortstack_source: "trinity_create_invoice" },
+            },
+            connectOpts,
+          );
+          if (!invoice.id) return { ok: false, error: "Stripe did not return an invoice ID." };
+
+          await stripe.invoiceItems.create(
+            { customer: customerId, invoice: invoice.id, amount: amountCents, currency, description: description || `Draft invoice for ${c.business_name || "client"}` },
+            connectOpts,
+          );
+
+          const dueDate = new Date(Date.now() + dueDays * 86_400_000).toISOString().split("T")[0];
+          const { data: inserted, error: dbErr } = await db
+            .from("invoices")
+            .insert({
+              client_id: c.id,
+              stripe_invoice_id: invoice.id,
+              amount: amountNum,
+              currency: currency.toUpperCase(),
+              status: "draft",
+              due_date: dueDate,
+              description: description || null,
+            })
+            .select("id")
+            .single();
+          if (dbErr) return { ok: false, error: dbErr.message };
+
+          return { ok: true, data: { invoice_id: (inserted as { id: string }).id, stripe_invoice_id: invoice.id, amount: amountNum, status: "draft" } };
+        } catch (err) {
+          return { ok: false, error: err instanceof Error ? err.message : "Stripe refused the draft invoice." };
+        }
+      }
+
+      // ── create_content_calendar_item ────────────────────────────────
+      case "create_content_calendar_item": {
+        const title = typeof input.title === "string" ? input.title.trim() : "";
+        const scheduledForRaw = typeof input.scheduled_for === "string" ? input.scheduled_for.trim() : "";
+        if (!title) return { ok: false, error: "title required." };
+        if (!scheduledForRaw) return { ok: false, error: "scheduled_for required." };
+        const dt = new Date(scheduledForRaw);
+        if (isNaN(dt.getTime())) return { ok: false, error: "scheduled_for is not a valid ISO date/datetime." };
+        const scheduledAt = dt.toISOString();
+
+        const platform = typeof input.platform === "string" && input.platform.trim() ? input.platform.trim() : "instagram_reels";
+        const contentNotes = typeof input.content === "string" ? input.content : "";
+        const category = typeof input.category === "string" ? input.category : "";
+
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          if (!ctx.clientScope) return { ok: false, error: "No client scope resolved." };
+          clientId = ctx.clientScope;
+        } else if (clientId) {
+          const { data: owned } = await db.from("clients").select("id, profile_id").eq("id", clientId).maybeSingle();
+          if (!owned || (owned as { profile_id: string }).profile_id !== ctx.ownerId) {
+            return { ok: false, error: "Client not found or access denied." };
+          }
+        }
+
+        const { data, error } = await db
+          .from("content_calendar")
+          .insert({
+            client_id: clientId || null,
+            user_id: ctx.ownerId,
+            title,
+            platform,
+            scheduled_at: scheduledAt,
+            status: "idea",
+            notes: contentNotes || null,
+            metadata: { source: "trinity_create_calendar_item", category: category || null },
+          })
+          .select("id, title, scheduled_at")
+          .single();
+        if (error) return { ok: false, error: error.message };
+        const row = data as { id: string; title: string; scheduled_at: string };
+        return { ok: true, data: { calendar_item_id: row.id, title: row.title, scheduled_for: row.scheduled_at } };
+      }
+
+      // ── navigate_to_page ────────────────────────────────────────────
+      case "navigate_to_page": {
+        const allowedPages = [
+          "leads", "pipeline", "content-plan", "campaigns", "invoices", "clients",
+          "analytics", "script-lab", "thumbnail-generator", "email-composer",
+          "copywriter", "ads-manager", "workflows", "content-calendar",
+          "lead-finder", "video-editor", "carousel-generator",
+        ];
+        const page = typeof input.page === "string" ? input.page : "";
+        if (!allowedPages.includes(page)) {
+          return { ok: false, error: `page must be one of: ${allowedPages.join(", ")}` };
+        }
+        const queryRaw = input.query && typeof input.query === "object" && !Array.isArray(input.query) ? (input.query as Record<string, unknown>) : {};
+        const params = new URLSearchParams();
+        for (const [k, v] of Object.entries(queryRaw)) {
+          if (v === null || v === undefined) continue;
+          params.append(String(k), String(v));
+        }
+        const qs = params.toString();
+        const url = qs ? `/dashboard/${page}?${qs}` : `/dashboard/${page}`;
+        return { ok: true, data: { url, page, hint: "Trinity can't navigate the user on its own — share this URL and ask them to click it to open the page." } };
+      }
+
       default:
         return { ok: false, error: `Unknown tool: ${name}` };
     }
@@ -935,7 +1841,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "AI not configured (missing ANTHROPIC_API_KEY)." }, { status: 500 });
   }
 
-  let body: { message?: unknown; conversation_id?: unknown; client_id?: unknown };
+  let body: {
+    message?: unknown;
+    conversation_id?: unknown;
+    client_id?: unknown;
+    current_page?: unknown;
+  };
   try {
     body = await request.json();
   } catch {
@@ -946,6 +1857,10 @@ export async function POST(request: NextRequest) {
   if (!message) return NextResponse.json({ error: "message required." }, { status: 400 });
   const conversationId = typeof body.conversation_id === "string" ? body.conversation_id : null;
   const clientIdInput = typeof body.client_id === "string" ? body.client_id : null;
+  // Optional: the page slug the caller is currently on (e.g. "script-lab",
+  // "thumbnail-generator", "ads-manager"). Gets injected into the system
+  // prompt so Trinity can bias tool choice toward that page's features.
+  const currentPage = typeof body.current_page === "string" ? body.current_page.slice(0, 60) : null;
 
   // Resolve role + scope
   const { data: profile } = await supabase
@@ -1034,22 +1949,29 @@ export async function POST(request: NextRequest) {
 
 USER: ${firstName} (role: ${role})
 ${clientScope ? `SCOPE: Limited to client ${clientScope}` : "SCOPE: Full agency access"}
+${currentPage ? `CURRENT PAGE: /dashboard/${currentPage} — if the user's request maps naturally to this page's primary tool, prefer it (e.g. on /dashboard/script-lab default to create_ai_script; on /dashboard/thumbnail-generator default to generate_thumbnail).` : ""}
 
 WHAT YOU CAN DO:
 - Read live business data: get_my_data returns KPIs, MRR, leads today, tokens.
-- Prospecting: search_leads (fuzzy search by name/industry/city), create_lead (add a new lead to the pipeline).
-- Outreach: draft_outreach_message (generate a personalised DM/email/SMS — user reviews before sending), get_recent_conversations (read the latest inbox replies).
-- Clients: search_clients to find one by name.
-- Project management: create_task adds work to the user's board.
-- Money (agency-only, requires Stripe Connect): create_payment_link generates a Stripe Payment Link for a client; send_invoice creates and emails a hosted Stripe invoice.
-- Content: schedule_social_post inserts a post into the content calendar; generate_content_plan runs the full auto-generator across a client's platforms.
+- Prospecting: search_leads (fuzzy search), create_lead (add to pipeline), scrape_lead_niche (run a Lead Finder scrape for a niche + city).
+- Outreach: draft_outreach_message (personalised DM/email/SMS — user reviews before send), get_recent_conversations (inbox replies), create_email_draft (save an email to Email Composer, NOT send).
+- Clients: search_clients.
+- Project management: create_task.
+- Content creation: create_ai_script (Script Lab), create_blog_post (Copywriter), generate_thumbnail (AI FLUX thumbnail), generate_carousel (Instagram/LinkedIn carousel), render_video (video pipeline — agency-only).
+- Social: schedule_social_post (queues), publish_social_post (publishes NOW), create_content_calendar_item (planning only, not publishing), generate_content_plan (auto-generator for a client across platforms).
+- Ads: create_ad_campaign (creates campaign shell in Ads Manager; does NOT launch to Meta/Google/TikTok — user launches from UI).
+- Automations: create_workflow (Workflow Builder node-based automation).
+- Money (agency-only, requires Stripe Connect): create_payment_link, create_invoice (draft invoice, not sent), send_invoice (finalizes and emails).
+- Navigation: navigate_to_page returns a deep link the user can click to jump to any dashboard page (with optional prefilled query params).
 
 HOW YOU WORK:
 - When the user asks about numbers, status, or "how am I doing", CALL get_my_data first — never guess.
-- When the user asks you to DO something (add a lead, draft a message, create a task, find a client, create a payment link, send an invoice, schedule a post, generate a plan), USE THE RIGHT TOOL. Don't just describe what you would do.
-- When acting on a specific client, call search_clients first to get the real id. Same for leads — use search_leads.
-- When drafting outreach, actually draft the message — don't just describe the approach.
-- After a tool returns, synthesise a short, friendly confirmation and tell the user what happened and where they can see it in the OS.
+- When the user asks you to DO something, USE THE RIGHT TOOL. Don't describe what you would do — do it.
+- If the user says "write a script and paste it in Script Lab" → generate the script in your head, then call create_ai_script with the finished content. Same pattern for create_blog_post, create_email_draft, generate_carousel — YOU produce the actual content, then pass it to the tool.
+- When acting on a specific client, call search_clients first to get the real client_id. Same for leads.
+- For publish_social_post, check the user really means "publish now" vs "schedule" — default to schedule_social_post when unsure.
+- After a tool returns, synthesise a short, friendly confirmation telling the user what happened and where to find it. If the tool returned a link, share the link.
+- If a tool returns ok=false, read the error and tell the user plainly — don't pretend it worked.
 
 STYLE:
 - Plain conversational text. No markdown, no bullet dashes, no bold. If you need a list, use sentences separated by line breaks.
