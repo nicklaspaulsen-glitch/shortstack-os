@@ -659,6 +659,62 @@ const TOOLS: Anthropic.Tool[] = [
       required: ["video_url"],
     },
   },
+  // ── AI Auto-Edit Engine (detect-scenes → suggest → apply) ─────────────
+  {
+    name: "auto_edit_video",
+    description:
+      "Run the full Auto-Edit Engine pipeline on an uploaded clip: detect scenes via Claude Vision, generate timed SFX/caption/transition/colour-grade/B-roll/zoom suggestions, transcribe captions via Whisper, and find Pexels B-roll candidates. When auto_accept is true, every suggestion is written into the project's timeline. Personalises suggestions based on the user's past accept/reject history. Use when the user says things like 'Trinity, auto-edit this in MrBeast style', 'make this clip pop', or 'apply the full AI edit pass'. Requires a video_url (public) and a project_id that belongs to the user.",
+    input_schema: {
+      type: "object",
+      properties: {
+        video_url: {
+          type: "string",
+          description:
+            "Publicly reachable URL to the clip OR a still frame. Whisper needs audio (mp3/mp4/wav) and scene detection needs image stills — pass a mp4 URL and the pipeline will do its best.",
+        },
+        project_id: {
+          type: "string",
+          description: "UUID of the video_projects row to attach the timeline to.",
+        },
+        creator_pack_id: {
+          type: "string",
+          description:
+            "Optional creator pack ID (e.g. 'creator_mrbeast_challenge', 'creator_mkbhd_tech_review') to bias style.",
+        },
+        client_id: { type: "string", description: "Optional client UUID." },
+        auto_accept: {
+          type: "boolean",
+          description:
+            "When true, every generated suggestion is immediately applied to the project. Default false — user reviews suggestions in the UI.",
+        },
+      },
+      required: ["video_url", "project_id"],
+    },
+  },
+  {
+    name: "suggest_edits",
+    description:
+      "Run detect-scenes + suggest (no apply, no auto-accept) and return the list of timed edit suggestions for the UI to render as accept/reject cards. Prefer this over auto_edit_video when the user wants to REVIEW suggestions before committing. Personalises based on past preferences.",
+    input_schema: {
+      type: "object",
+      properties: {
+        video_url: {
+          type: "string",
+          description: "Publicly reachable URL to the clip or a still frame.",
+        },
+        project_id: {
+          type: "string",
+          description: "UUID of the video_projects row (required for feedback logging + context).",
+        },
+        creator_pack_id: {
+          type: "string",
+          description: "Optional creator pack ID to bias style.",
+        },
+        client_id: { type: "string", description: "Optional client UUID." },
+      },
+      required: ["video_url", "project_id"],
+    },
+  },
 ];
 
 interface ToolCtx {
@@ -666,6 +722,10 @@ interface ToolCtx {
   userId: string;
   role: string;
   clientScope: string | null; // when the caller is a client, actions are limited to this client_id
+  /** Populated on the inbound POST handler — the auto-edit Trinity tools need these
+   *  to call the sub-routes as the signed-in user. */
+  origin?: string;
+  cookieHeader?: string;
 }
 
 interface ToolResult {
@@ -2972,6 +3032,70 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         }
       }
 
+      // ── auto_edit_video / suggest_edits ────────────────────────────
+      case "auto_edit_video":
+      case "suggest_edits": {
+        if (ctx.role === "client") {
+          return { ok: false, error: "Clients cannot trigger the auto-edit engine." };
+        }
+        if (!ctx.origin) {
+          return {
+            ok: false,
+            error: "Auto-edit tools need a resolvable origin — internal error.",
+          };
+        }
+        const videoUrl = typeof input.video_url === "string" ? input.video_url.trim() : "";
+        const projectId = typeof input.project_id === "string" ? input.project_id.trim() : "";
+        if (!videoUrl || !projectId) {
+          return { ok: false, error: "video_url and project_id are required." };
+        }
+
+        const creatorPackId =
+          typeof input.creator_pack_id === "string" && input.creator_pack_id.trim()
+            ? input.creator_pack_id.trim()
+            : undefined;
+        const autoAccept = name === "auto_edit_video" && !!input.auto_accept;
+
+        // Load recent preferences once here so the reply mentions how much
+        // personalisation the engine is applying. The sub-routes do their
+        // own few-shot formatting — we don't need to pass it in.
+        const { getRecentPreferences } = await import("@/lib/ai-edit-preferences");
+        const examples = await getRecentPreferences({ user_id: ctx.userId, limit: 20 });
+
+        try {
+          const { runFullPass } = await import("@/lib/auto-edit-pipeline");
+          const result = await runFullPass({
+            origin: ctx.origin,
+            cookieHeader: ctx.cookieHeader,
+            video_url: videoUrl,
+            project_id: projectId,
+            creator_pack_id: creatorPackId,
+            client_id: ctx.clientScope || undefined,
+            auto_accept: autoAccept,
+          });
+
+          return {
+            ok: result.ok,
+            data: {
+              mode: name,
+              auto_accept: autoAccept,
+              project_id: projectId,
+              personalised_from: examples.length,
+              steps: result.steps,
+              errors: result.errors,
+            },
+            error: result.ok
+              ? undefined
+              : result.errors.map((e) => `${e.step}: ${e.error}`).join("; "),
+          };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "Auto-edit pipeline failed",
+          };
+        }
+      }
+
       default:
         return { ok: false, error: `Unknown tool: ${name}` };
     }
@@ -3043,7 +3167,24 @@ export async function POST(request: NextRequest) {
     clientScope = clientIdInput;
   }
 
-  const ctx: ToolCtx = { ownerId, userId: user.id, role, clientScope };
+  // Compute origin + cookie header so tool handlers that need to call sibling
+  // routes (e.g. auto_edit_video → /api/video/auto-edit/*) can do so as the
+  // signed-in user without re-running the auth flow manually.
+  const proto = request.headers.get("x-forwarded-proto") || "https";
+  const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+  const origin = host
+    ? `${proto}://${host}`
+    : process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "http://localhost:3000";
+  const cookieHeader = request.headers.get("cookie") || undefined;
+
+  const ctx: ToolCtx = {
+    ownerId,
+    userId: user.id,
+    role,
+    clientScope,
+    origin,
+    cookieHeader,
+  };
 
   // ── Load or create the conversation ──────────────────────────────────
   const db = createServiceClient();
@@ -3112,6 +3253,7 @@ WHAT YOU CAN DO:
 - Clients: search_clients.
 - Project management: create_task.
 - Content creation: create_ai_script (Script Lab), create_blog_post (Copywriter), generate_thumbnail (AI FLUX thumbnail), face_swap_thumbnail (put the user's selfie into a thumbnail — requires a pre-uploaded face URL), recreate_thumbnail_from_url (remix a YouTube video's thumbnail via img2img), generate_thumbnail_with_title (one-shot title + thumbnail from a topic), generate_carousel (Instagram/LinkedIn carousel), render_video (video pipeline — agency-only).
+- Video auto-edit: classify_footage (what kind of clip is this?), suggest_edits (detect scenes + return timed edit suggestions for UI review), auto_edit_video (full detect → suggest → captions → B-roll pipeline; set auto_accept=true to immediately write all suggestions into the project timeline). Both auto-edit tools personalise over time based on the user's accept/reject history — no model training, just few-shot.
 - Social: schedule_social_post (queues), publish_social_post (publishes NOW), create_content_calendar_item (planning only, not publishing), generate_content_plan (auto-generator for a client across platforms).
 - Ads: create_ad_campaign (creates campaign shell in Ads Manager; does NOT launch to Meta/Google/TikTok — user launches from UI).
 - Automations: create_workflow (Workflow Builder node-based automation).
