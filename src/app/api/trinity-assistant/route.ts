@@ -715,6 +715,84 @@ const TOOLS: Anthropic.Tool[] = [
       required: ["video_url", "project_id"],
     },
   },
+  {
+    name: "analyze_viral_video",
+    description:
+      "Reverse-engineer a viral YouTube or Shorts video. Fetches the public thumbnail, runs Claude Sonnet Vision against it with a curated few-shot exemplar library, and returns a structured pattern: thumbnail composition, dominant colors, text style, subject emotion, hook element, estimated pacing + cut frequency + probable SFX + caption use + color grade, a recommended creator_pack_id, and 3-6 key elements to replicate. Optionally stores the pattern as a reusable viral_template the user can apply later. Use when the user says 'analyze this viral video', 'what makes this thumbnail work', 'reverse-engineer this MrBeast video', or pastes a URL asking how to replicate it. Costs 3 tokens.",
+    input_schema: {
+      type: "object",
+      properties: {
+        source_url: {
+          type: "string",
+          description: "YouTube / Shorts / youtu.be URL to analyze. TikTok currently returns a graceful 'not yet' error.",
+        },
+        store_as_template: {
+          type: "boolean",
+          description: "When true, saves the extracted pattern to viral_templates scoped to the caller.",
+        },
+        niche_hint: {
+          type: "string",
+          description: "Optional niche hint ('finance', 'tech_review', 'challenge', etc.) — biases few-shot exemplar selection.",
+        },
+        client_id: { type: "string", description: "Optional client UUID to scope the template." },
+      },
+      required: ["source_url"],
+    },
+  },
+  {
+    name: "smart_thumbnail_variants",
+    description:
+      "Generate N thumbnail variants, each using a different style preset Claude picks for the given prompt. Kicks off parallel renders and returns the variant plan with job IDs the UI can poll. After all jobs land, the UI ranks them via /api/thumbnail/generate-variants/rank. Use when the user says 'give me a few thumbnail takes', 'try different styles', or 'which thumbnail would get the most clicks'. Costs ~3 tokens.",
+    input_schema: {
+      type: "object",
+      properties: {
+        prompt: {
+          type: "string",
+          description: "The creator's brief for what the thumbnail should convey.",
+        },
+        count: {
+          type: "number",
+          description: "How many variants (2-6, default 4).",
+        },
+        platform: {
+          type: "string",
+          description: "youtube|instagram|tiktok|twitter|facebook|linkedin (default youtube).",
+        },
+      },
+      required: ["prompt"],
+    },
+  },
+  {
+    name: "analyze_thumbnail",
+    description:
+      "Analyse any thumbnail image and return composition, dominant colors, text overlay assessment, subject emotion, predicted 0-100 CTR, and concrete improvement suggestions. Works on the user's own thumbnails OR a viral reference they want to replicate. Use when the user says 'what's good about this thumbnail', 'predict my CTR', or 'why is this thumbnail viral'. Costs ~2 tokens.",
+    input_schema: {
+      type: "object",
+      properties: {
+        image_url: {
+          type: "string",
+          description: "Publicly reachable URL to the thumbnail image (or a data URL).",
+        },
+      },
+      required: ["image_url"],
+    },
+  },
+  {
+    name: "smart_crop_thumbnail",
+    description:
+      "Smart-crop an image from its source aspect ratio to a target (16:9 → 9:16, 1:1, etc.). Uses Claude Sonnet Vision to locate the subject, then computes the largest centered crop that preserves them. Returns coords and, when the server has Sharp available, the cropped image as a data URL. Use when the user says 'crop this for Shorts', 'make a square version', 'repurpose this for Stories'. Costs ~1 token.",
+    input_schema: {
+      type: "object",
+      properties: {
+        image_url: { type: "string" },
+        target_aspect: {
+          type: "string",
+          description: "Target aspect ratio as 'W:H' e.g. '9:16', '1:1', '16:9'.",
+        },
+      },
+      required: ["image_url", "target_aspect"],
+    },
+  },
 ];
 
 interface ToolCtx {
@@ -3032,6 +3110,46 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
         }
       }
 
+      // ── analyze_viral_video ─────────────────────────────────────────
+      case "analyze_viral_video": {
+        const sourceUrl = typeof input.source_url === "string" ? input.source_url.trim() : "";
+        if (!sourceUrl) return { ok: false, error: "source_url required." };
+        if (!ctx.origin) return { ok: false, error: "Trinity needs a resolvable origin to call /api/video/analyze-viral." };
+
+        const storeAsTemplate = input.store_as_template === true;
+        const nicheHint = typeof input.niche_hint === "string" ? input.niche_hint.trim() : "";
+        let clientId = typeof input.client_id === "string" ? input.client_id : "";
+        if (ctx.role === "client") {
+          clientId = ctx.clientScope || "";
+        }
+
+        try {
+          const res = await fetch(`${ctx.origin}/api/video/analyze-viral`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(ctx.cookieHeader ? { cookie: ctx.cookieHeader } : {}),
+            },
+            body: JSON.stringify({
+              source_url: sourceUrl,
+              store_as_template: storeAsTemplate,
+              niche_hint: nicheHint || undefined,
+              client_id: clientId || undefined,
+            }),
+          });
+          const json = (await res.json()) as Record<string, unknown>;
+          if (!res.ok || json.ok === false) {
+            return {
+              ok: false,
+              error: (json.error as string) || `analyze-viral returned ${res.status}`,
+            };
+          }
+          return { ok: true, data: json };
+        } catch (err) {
+          return { ok: false, error: err instanceof Error ? err.message : "analyze-viral call failed" };
+        }
+      }
+
       // ── auto_edit_video / suggest_edits ────────────────────────────
       case "auto_edit_video":
       case "suggest_edits": {
@@ -3092,6 +3210,126 @@ async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCt
           return {
             ok: false,
             error: err instanceof Error ? err.message : "Auto-edit pipeline failed",
+          };
+        }
+      }
+
+      // ── smart_thumbnail_variants ─────────────────────────────────────
+      case "smart_thumbnail_variants": {
+        if (!ctx.origin) {
+          return { ok: false, error: "smart_thumbnail_variants needs a resolvable origin." };
+        }
+        const prompt = typeof input.prompt === "string" ? input.prompt.trim() : "";
+        if (!prompt) return { ok: false, error: "prompt is required." };
+        const count =
+          typeof input.count === "number" && Number.isFinite(input.count)
+            ? Math.max(2, Math.min(6, Math.round(input.count)))
+            : 4;
+        const platform =
+          typeof input.platform === "string" ? input.platform : "youtube";
+        try {
+          const res = await fetch(`${ctx.origin}/api/thumbnail/smart-variants`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(ctx.cookieHeader ? { Cookie: ctx.cookieHeader } : {}),
+            },
+            body: JSON.stringify({ prompt, count, platform }),
+          });
+          const j = (await res.json()) as Record<string, unknown>;
+          if (!res.ok || !j.ok) {
+            return {
+              ok: false,
+              error: (j.error as string) || `smart-variants returned ${res.status}`,
+            };
+          }
+          return { ok: true, data: j };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "smart-variants call failed",
+          };
+        }
+      }
+
+      // ── analyze_thumbnail ────────────────────────────────────────────
+      case "analyze_thumbnail": {
+        if (!ctx.origin) {
+          return { ok: false, error: "analyze_thumbnail needs a resolvable origin." };
+        }
+        const imageUrl =
+          typeof input.image_url === "string" ? input.image_url.trim() : "";
+        if (!imageUrl) return { ok: false, error: "image_url is required." };
+        try {
+          const res = await fetch(`${ctx.origin}/api/thumbnail/analyze`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(ctx.cookieHeader ? { Cookie: ctx.cookieHeader } : {}),
+            },
+            body: JSON.stringify({ image_url: imageUrl }),
+          });
+          const j = (await res.json()) as Record<string, unknown>;
+          if (!res.ok || !j.ok) {
+            return {
+              ok: false,
+              error: (j.error as string) || `analyze returned ${res.status}`,
+            };
+          }
+          return { ok: true, data: j };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "analyze call failed",
+          };
+        }
+      }
+
+      // ── smart_crop_thumbnail ─────────────────────────────────────────
+      case "smart_crop_thumbnail": {
+        if (!ctx.origin) {
+          return { ok: false, error: "smart_crop_thumbnail needs a resolvable origin." };
+        }
+        const imageUrl =
+          typeof input.image_url === "string" ? input.image_url.trim() : "";
+        const targetAspect =
+          typeof input.target_aspect === "string"
+            ? input.target_aspect.trim()
+            : "";
+        if (!imageUrl || !targetAspect) {
+          return { ok: false, error: "image_url and target_aspect are required." };
+        }
+        try {
+          const res = await fetch(`${ctx.origin}/api/thumbnail/smart-crop`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(ctx.cookieHeader ? { Cookie: ctx.cookieHeader } : {}),
+            },
+            body: JSON.stringify({
+              image_url: imageUrl,
+              target_aspect: targetAspect,
+            }),
+          });
+          const j = (await res.json()) as Record<string, unknown>;
+          if (!res.ok || !j.ok) {
+            return {
+              ok: false,
+              error: (j.error as string) || `smart-crop returned ${res.status}`,
+            };
+          }
+          // Drop the heavy data URL from the assistant reply payload — the UI
+          // can re-fetch if it wants the preview.
+          if (j.cropped_image_url) {
+            const dataUrl = j.cropped_image_url as string;
+            j.cropped_image_url_size = dataUrl.length;
+            delete j.cropped_image_url;
+          }
+          return { ok: true, data: j };
+        } catch (err) {
+          return {
+            ok: false,
+            error: err instanceof Error ? err.message : "smart-crop call failed",
           };
         }
       }

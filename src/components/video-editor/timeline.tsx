@@ -29,6 +29,8 @@ import {
   Play, Pause, SkipBack, SkipForward, Scissors,
   Copy as CopyIcon, Trash2, AudioLines, ZoomIn, ZoomOut,
   Magnet, Keyboard, Film, Music, Type, Sparkles,
+  Captions as CaptionsIcon, Lightbulb, Check as CheckIcon, X as XIcon,
+  Activity,
 } from "lucide-react";
 
 /* ─── Types ────────────────────────────────────────────────── */
@@ -70,6 +72,17 @@ export interface TimelineProject {
   clips: TimelineClip[];
 }
 
+/** AI edit suggestion to render as an inline ghost marker on the timeline. */
+export interface TimelineSuggestion {
+  id: string;
+  timestamp_sec: number;
+  type: string;
+  payload: Record<string, unknown>;
+  confidence: number;
+  reasoning: string;
+  scene_index?: number;
+}
+
 export interface TimelineProps {
   project: TimelineProject;
   onProjectChange?: (next: TimelineProject) => void;
@@ -86,6 +99,16 @@ export interface TimelineProps {
   minPxPerMs?: number;
   maxPxPerMs?: number;
   className?: string;
+  /** When provided, the toolbar shows a "Generate Captions" button that calls
+   *  this (expected to hit /api/video/auto-edit/captions). */
+  onGenerateCaptions?: () => void | Promise<void>;
+  /** When provided, the toolbar shows a "Suggest edits" button that should
+   *  call /api/video/auto-edit/suggest and push the result into `suggestions`. */
+  onSuggestEdits?: () => void | Promise<void>;
+  /** Pending AI suggestions — rendered as ghost markers with accept/reject buttons. */
+  suggestions?: TimelineSuggestion[];
+  onAcceptSuggestion?: (sug: TimelineSuggestion) => void;
+  onRejectSuggestion?: (sug: TimelineSuggestion) => void;
 }
 
 /* ─── Defaults ─────────────────────────────────────────────── */
@@ -155,6 +178,11 @@ export function Timeline({
   minPxPerMs = 0.02,
   maxPxPerMs = 0.1,
   className = "",
+  onGenerateCaptions,
+  onSuggestEdits,
+  suggestions = [],
+  onAcceptSuggestion,
+  onRejectSuggestion,
 }: TimelineProps) {
   // Defensive defaults.
   const safeProject: TimelineProject = useMemo(() => ({
@@ -176,7 +204,9 @@ export function Timeline({
 
   const [pxPerMs, setPxPerMs] = useState(0.05);
   const [snap, setSnap] = useState(true);
+  const [snapToBeat, setSnapToBeat] = useState(false);
   const [selectedClipId, setSelectedClipId] = useState<string | null>(null);
+  const [hoveredSuggestionId, setHoveredSuggestionId] = useState<string | null>(null);
   const [ctxMenu, setCtxMenu] = useState<{ x: number; y: number; clipId: string } | null>(null);
   const [draggingClip, setDraggingClip] = useState<{
     id: string; mode: "move" | "trim-left" | "trim-right";
@@ -255,19 +285,47 @@ export function Timeline({
   const msToPx = useCallback((ms: number) => ms * pxPerMs, [pxPerMs]);
   const pxToMs = useCallback((px: number) => px / pxPerMs, [pxPerMs]);
 
+  /** Derive BPM from the first music clip on A1. Label format coming from the
+   *  Preset Picker drop is "<title>" but the music library also embeds BPM in
+   *  the (dataset) label attribute when present. We look for "(\\d+) *BPM" in
+   *  the label and fall back to 120 when missing. */
+  const bpm: number = useMemo(() => {
+    const musicClip = safeProject.clips.find((c) => c.trackId === "a1" && !c.isMarker);
+    if (!musicClip) return 120;
+    const match = /(\d{2,3})\s*BPM/i.exec(musicClip.label || "");
+    if (match) {
+      const n = Number(match[1]);
+      if (n >= 40 && n <= 300) return n;
+    }
+    return 120;
+  }, [safeProject.clips]);
+
+  const beatMs: number = useMemo(() => 60000 / Math.max(40, bpm), [bpm]);
+
+  const nearestBeat = useCallback(
+    (ms: number): number => Math.round(ms / beatMs) * beatMs,
+    [beatMs],
+  );
+
   /** Given a candidate ms position, snap it to playhead or nearest clip edge. */
   const applySnap = useCallback((candidateMs: number, ignoreClipId?: string): number => {
-    if (!snap) return candidateMs;
-    const targets: number[] = [playhead];
-    for (const c of safeProject.clips) {
-      if (c.id === ignoreClipId) continue;
-      targets.push(c.start, c.start + c.duration);
+    if (!snap && !snapToBeat) return candidateMs;
+    const targets: number[] = [];
+    if (snap) {
+      targets.push(playhead);
+      for (const c of safeProject.clips) {
+        if (c.id === ignoreClipId) continue;
+        targets.push(c.start, c.start + c.duration);
+      }
+    }
+    if (snapToBeat) {
+      targets.push(nearestBeat(candidateMs));
     }
     for (const t of targets) {
       if (Math.abs(candidateMs - t) <= SNAP_THRESHOLD_MS) return t;
     }
     return candidateMs;
-  }, [snap, playhead, safeProject.clips]);
+  }, [snap, snapToBeat, playhead, safeProject.clips, nearestBeat]);
 
   /* ─── Clip drag handlers ────────────────────────────── */
 
@@ -442,6 +500,41 @@ export function Timeline({
           <Magnet size={10} /> Snap
         </button>
 
+        {/* Snap to beat — reveals a BPM beat grid + snaps clips to beats. */}
+        <button
+          type="button"
+          onClick={() => setSnapToBeat((v) => !v)}
+          className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
+            snapToBeat ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"
+          }`}
+          title={`Snap drags to the nearest music beat (current BPM: ${bpm})`}
+        >
+          <Activity size={10} /> Beat
+          <span className="text-[8px] text-muted">{bpm}</span>
+        </button>
+
+        {onGenerateCaptions && (
+          <button
+            type="button"
+            onClick={() => void onGenerateCaptions()}
+            className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border text-muted hover:text-foreground"
+            title="Auto-transcribe primary video & render caption keyframes"
+          >
+            <CaptionsIcon size={10} /> Captions
+          </button>
+        )}
+
+        {onSuggestEdits && (
+          <button
+            type="button"
+            onClick={() => void onSuggestEdits()}
+            className="flex items-center gap-1 text-[9px] rounded px-2 py-1 border border-border text-muted hover:text-gold"
+            title="Ask the AI editor for timed edit suggestions"
+          >
+            <Lightbulb size={10} /> Suggest
+          </button>
+        )}
+
         {/* Zoom */}
         <div className="flex items-center gap-1.5">
           <button
@@ -546,6 +639,29 @@ export function Timeline({
               />
             ))}
 
+            {/* Beat grid — faint vertical lines at each BPM beat. Only rendered
+             *  when snapToBeat is on, so the default view stays uncluttered. */}
+            {snapToBeat && bpm >= 40 && (() => {
+              const lines: number[] = [];
+              const total = safeProject.duration;
+              for (let t = 0; t <= total; t += beatMs) lines.push(t);
+              return lines.map((ms, i) => {
+                const isDownbeat = i % 4 === 0;
+                return (
+                  <div
+                    key={`beat-${i}`}
+                    className="absolute top-0 pointer-events-none"
+                    style={{
+                      left: msToPx(ms),
+                      height: totalHeight,
+                      width: 1,
+                      background: isDownbeat ? "rgba(252,211,77,0.35)" : "rgba(252,211,77,0.12)",
+                    }}
+                  />
+                );
+              });
+            })()}
+
             {/* Clips */}
             {safeProject.clips.map((clip) => {
               const trackIdx = safeProject.tracks.findIndex((t) => t.id === clip.trackId);
@@ -629,6 +745,60 @@ export function Timeline({
                   <span className="absolute bottom-0.5 right-1 text-[8px] font-mono text-white/70">
                     {formatTime(clip.duration).replace("00:", "")}
                   </span>
+                </div>
+              );
+            })}
+
+            {/* AI suggestion ghost markers — green vertical lines with a chip
+             *  floating above the ruler. Hover to show accept/reject inline. */}
+            {suggestions.map((sug) => {
+              const ms = Math.round(sug.timestamp_sec * 1000);
+              const left = msToPx(ms);
+              const isHover = hoveredSuggestionId === sug.id;
+              return (
+                <div
+                  key={sug.id}
+                  className="absolute top-0 z-[15] pointer-events-none"
+                  style={{ left: left - 1, width: 2, height: totalHeight }}
+                >
+                  <div
+                    className="absolute top-0 left-0 w-[2px] h-full"
+                    style={{
+                      background: "rgba(16,185,129,0.55)",
+                      boxShadow: "0 0 6px rgba(16,185,129,0.7)",
+                    }}
+                  />
+                  <div
+                    className={`absolute -top-[20px] left-1 flex items-center gap-0.5 rounded px-1 py-0.5 text-[8px] font-medium pointer-events-auto ${
+                      isHover ? "bg-black/90 text-white" : "bg-emerald-500/80 text-white"
+                    }`}
+                    onMouseEnter={() => setHoveredSuggestionId(sug.id)}
+                    onMouseLeave={() => setHoveredSuggestionId(null)}
+                    title={sug.reasoning}
+                  >
+                    <Lightbulb size={8} />
+                    <span className="max-w-[80px] truncate">{sug.type}</span>
+                    {onAcceptSuggestion && (
+                      <button
+                        type="button"
+                        onClick={() => onAcceptSuggestion(sug)}
+                        className="ml-0.5 rounded bg-emerald-500 hover:bg-emerald-400 text-white h-3 w-3 flex items-center justify-center"
+                        title={`Accept: ${sug.reasoning}`}
+                      >
+                        <CheckIcon size={7} />
+                      </button>
+                    )}
+                    {onRejectSuggestion && (
+                      <button
+                        type="button"
+                        onClick={() => onRejectSuggestion(sug)}
+                        className="rounded bg-red-500/80 hover:bg-red-500 text-white h-3 w-3 flex items-center justify-center"
+                        title="Reject"
+                      >
+                        <XIcon size={7} />
+                      </button>
+                    )}
+                  </div>
                 </div>
               );
             })}
