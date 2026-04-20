@@ -197,11 +197,40 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
     window.speechSynthesis.speak(utter);
   }
 
-  // Primary path: ElevenLabs via /api/tts/speak. Falls back to browser if
-  // the API returns anything non-OK (e.g. ELEVENLABS_API_KEY not set).
+  // Strip characters that TTS engines mispronounce: emoji (read as their
+  // CLDR name like "waving hand"), markdown symbols, and URLs.
+  // Built via `new RegExp()` so we don't need the ES2018 `u` flag.
+  const EMOJI_RE = new RegExp(
+    // Surrogate pairs (most modern emoji live above U+FFFF)
+    "[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]" +
+      "|" +
+      // BMP pictograph ranges + variation selector + zero-width joiner
+      "[\\u2600-\\u27BF\\uFE0F\\u200D]",
+    "g",
+  );
+  function sanitizeForSpeech(text: string): string {
+    return text
+      .replace(EMOJI_RE, "")
+      // Strip markdown emphasis/code/link markers that get read as "asterisk"
+      .replace(/\*\*|__|`{1,3}|~~/g, "")
+      // Collapse markdown links [text](url) → text
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      // Replace bare URLs with "link" so TTS doesn't spell out the whole URL
+      .replace(/https?:\/\/\S+/g, "link")
+      // Collapse whitespace
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  // Primary path: /api/tts/speak. Provider cascade on the server:
+  // XTTS (free) → OpenAI → ElevenLabs → 501. Falls back to browser only
+  // if ALL server providers fail.
   async function speak(text: string) {
     if (muted || !text) return;
     if (typeof window === "undefined") return;
+
+    const cleaned = sanitizeForSpeech(text);
+    if (!cleaned) return;
 
     // Stop anything that's already playing.
     stopAllAudio();
@@ -210,15 +239,18 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
       const res = await fetch("/api/tts/speak", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text: cleaned }),
       });
       if (!res.ok) {
         const debug = await res.json().catch(() => ({}));
-        console.warn(`[trinity/tts] /api/tts/speak ${res.status}`, debug);
+        console.error(
+          `[trinity/tts] /api/tts/speak ${res.status} — server providers all failed. See attempts below. Falling back to browser voice.`,
+          debug,
+        );
         throw new Error(`tts returned ${res.status}`);
       }
       const provider = res.headers.get("x-tts-provider") || "unknown";
-      console.log(`[trinity/tts] audio via ${provider}`);
+      console.log(`[trinity/tts] ✓ audio via ${provider}`);
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
@@ -237,8 +269,9 @@ export default function TrinityOrb({ firstName, clientId = null, suggestions = D
       };
       await audio.play();
     } catch {
-      // ElevenLabs unavailable — fall back to browser SpeechSynthesis.
-      speakViaBrowser(text);
+      // All server providers unavailable — fall back to browser
+      // SpeechSynthesis with the sanitized text (no emoji mispronunciation).
+      speakViaBrowser(cleaned);
     }
   }
 
