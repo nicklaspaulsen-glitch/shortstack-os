@@ -827,7 +827,14 @@ function AudioCard({
 
   function toggle() {
     if (!audioRef.current) {
-      const a = new Audio(url);
+      // Route external audio through our CORS-safe proxy so SoundJay /
+      // archive.org / etc. play in the browser. Same-origin URLs
+      // (including relative) pass through directly.
+      const proxied = url.startsWith("http")
+        ? `/api/audio-proxy?url=${encodeURIComponent(url)}`
+        : url;
+      const a = new Audio(proxied);
+      a.crossOrigin = "anonymous";
       a.onended = () => setPlaying(false);
       a.onerror = () => {
         setError(true);
