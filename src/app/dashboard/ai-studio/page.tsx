@@ -12,6 +12,25 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+
+// Static AI-generated-style image previews (Unsplash wide crops) shown in
+// the marquee on the AI Studio landing state when nothing has been
+// generated yet.
+const AI_STUDIO_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "ai1", src: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&h=360&fit=crop", alt: "Neon sci-fi", tag: "Cyberpunk" },
+  { id: "ai2", src: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=640&h=360&fit=crop", alt: "Dreamy sunset", tag: "Dreamscape" },
+  { id: "ai3", src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=640&h=360&fit=crop", alt: "Moody forest", tag: "Moody" },
+  { id: "ai4", src: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=640&h=360&fit=crop", alt: "Luxury product", tag: "Product" },
+  { id: "ai5", src: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=640&h=360&fit=crop", alt: "Tech abstract", tag: "Tech" },
+  { id: "ai6", src: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=640&h=360&fit=crop", alt: "Nature", tag: "Nature" },
+  { id: "ai7", src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=640&h=360&fit=crop", alt: "Cinematic", tag: "Cinematic" },
+  { id: "ai8", src: "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=640&h=360&fit=crop", alt: "Automotive", tag: "Automotive" },
+  { id: "ai9", src: "https://images.unsplash.com/photo-1515894203077-9cd36032142f?w=640&h=360&fit=crop", alt: "Portrait light", tag: "Portrait" },
+  { id: "ai10", src: "https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?w=640&h=360&fit=crop", alt: "Futuristic", tag: "Futurism" },
+  { id: "ai11", src: "https://images.unsplash.com/photo-1554080353-a576cf803bda?w=640&h=360&fit=crop", alt: "Abstract pastel", tag: "Abstract" },
+  { id: "ai12", src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=640&h=360&fit=crop", alt: "Epic landscape", tag: "Epic" },
+];
 
 // ── Types ────────────────────────────────────────────────────────
 interface JobResult {
@@ -103,6 +122,31 @@ export default function AIStudioPage() {
           </div>
         }
       />
+
+      {/* Rolling preview of AI-generated examples */}
+      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
+        <div className="absolute inset-0 pointer-events-none">
+          <RollingPreview
+            items={AI_STUDIO_PREVIEW_FALLBACK}
+            rows={2}
+            aspectRatio="16:9"
+            opacity={0.35}
+            speed="medium"
+          />
+        </div>
+        <div className="relative text-center px-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            Example generations
+          </p>
+          <h3 className="text-lg font-bold text-foreground mt-1">
+            From a one-line prompt to a hero image
+          </h3>
+          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+            FLUX, SDXL, DALL-E, upscale, remove-bg, voice clone — everything
+            under one roof with your brand LoRA baked in.
+          </p>
+        </div>
+      </div>
 
       <ImageCreationWizard
         open={creationWizardOpen}

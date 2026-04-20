@@ -2,10 +2,28 @@
 
 import { useAuth } from "@/lib/auth-context";
 import SectionHub from "@/components/dashboard/section-hub";
+import type { RollingPreviewItem } from "@/components/RollingPreview";
 import {
   Zap, GitBranch, Bot, ListOrdered, Clock,
   Link2, Webhook, Plus, RotateCcw,
 } from "lucide-react";
+
+// Text-card previews — automations are workflows and triggers, so we
+// render them as "blueprint" cards rather than images.
+const AUTOMATE_HUB_PREVIEW: RollingPreviewItem[] = [
+  { id: "ah1", tag: "Workflow", title: "New lead → Slack + CRM + first-touch email", text: "Triggered when a prospect fills your contact form. Fires in under 2s." },
+  { id: "ah2", tag: "Sequence", title: "5-step nurture after trial signup", text: "Days 1 / 3 / 7 / 14 / 21 — adjusts cadence based on engagement." },
+  { id: "ah3", tag: "Scheduled", title: "Post LinkedIn carousel every Tue 9am", text: "Auto-generates graphic from latest blog post and schedules in buffer." },
+  { id: "ah4", tag: "Webhook", title: "Stripe charge → send invoice + issue license", text: "End-to-end checkout plumbing with no servers to manage." },
+  { id: "ah5", tag: "Agent", title: "Inbox triage every 15 minutes", text: "Classifies, auto-replies to simple asks, flags priority messages for you." },
+  { id: "ah6", tag: "Integration", title: "Sync Notion tasks ↔ Todoist ↔ Calendar", text: "Bi-directional sync with conflict-resolution and change history." },
+  { id: "ah7", tag: "Workflow", title: "Cold DM → auto-book a Cal.com demo", text: "Replies with availability, books the slot, adds to CRM — all autonomous." },
+  { id: "ah8", tag: "Sequence", title: "Win-back sleeping customers (30+ days)", text: "Detects dormancy, sends 3 personalised touches, re-engages 18% on avg." },
+  { id: "ah9", tag: "Scheduled", title: "Monthly revenue report to the team", text: "Pulls Stripe, GA4 and HubSpot data; ships a branded PDF on day 1." },
+  { id: "ah10", tag: "Webhook", title: "GitHub issue → create Linear ticket", text: "With assignee mapping and label inheritance — no more duplicate entry." },
+  { id: "ah11", tag: "Agent", title: "Daily brief: what moved, what's next", text: "Agent aggregates KPIs and blockers across tools and ships a 60-second read." },
+  { id: "ah12", tag: "Integration", title: "Shopify refund → Zendesk + accounting", text: "Closes the loop on refunds so nothing slips through the cracks." },
+];
 
 export default function AutomateHubPage() {
   useAuth();
@@ -18,6 +36,13 @@ export default function AutomateHubPage() {
       subtitle="Wire up agents, workflows, and integrations so your business runs itself."
       heroIcon={<Zap size={22} />}
       heroGradient="blue"
+      preview={{
+        items: AUTOMATE_HUB_PREVIEW,
+        variant: "text",
+        aspectRatio: "16:9",
+        opacity: 0.5,
+        caption: "Workflows, agents, sequences — building blocks of autopilot",
+      }}
       quickActions={[
         { label: "Create Workflow", href: "/dashboard/workflows", icon: Plus },
         { label: "New Agent", href: "/dashboard/services", icon: Bot },

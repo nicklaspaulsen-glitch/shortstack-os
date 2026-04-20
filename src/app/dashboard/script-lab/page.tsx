@@ -17,7 +17,26 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
+
+// Example "phone mockup" script cards used in the landing state marquee.
+// Each card shows 2-3 lines of a sample script opener — just enough to
+// hint at the range of frameworks (Hook-Story-Offer, PAS, AIDA, etc.).
+const SCRIPT_LAB_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "s1", tag: "Reel 30s", title: "Hook-Story-Offer", text: "\"I made $10k last month doing nothing. Here's the system…\"  Pattern-interrupt + story + CTA." },
+  { id: "s2", tag: "TikTok 45s", title: "Contrarian Hook", text: "\"Everyone tells you to post daily. That's wrong. Here's what actually works…\"" },
+  { id: "s3", tag: "Ad 15s", title: "PAS Framework", text: "\"Still using spreadsheets? You're losing 4 hours a week. Meet the fix…\"" },
+  { id: "s4", tag: "YouTube 8min", title: "Storytelling", text: "\"3 years ago I was broke. Today I run a 7-figure agency. Here's the turning point.\"" },
+  { id: "s5", tag: "Thread 9 tweets", title: "Listicle", text: "\"7 mistakes that quietly killed my first business. #3 still haunts me.\"" },
+  { id: "s6", tag: "Reel 60s", title: "Before/After", text: "\"I used to send 200 cold emails a day and get 2 replies. Now I send 30 and get 18.\"" },
+  { id: "s7", tag: "Podcast Intro", title: "Authority", text: "\"Today's guest has built 4 companies from zero to eight figures. Here's what nobody asks him…\"" },
+  { id: "s8", tag: "Email 1/5", title: "Curiosity", text: "\"I almost quit last Tuesday. Then one email changed everything. This is that email.\"" },
+  { id: "s9", tag: "TikTok 22s", title: "Myth Buster", text: "\"You don't need a funnel. You don't need ads. You need ONE thing and everyone ignores it…\"" },
+  { id: "s10", tag: "Carousel 8 slides", title: "How-To", text: "\"How I wrote 100 cold emails in 30 minutes (step-by-step, no AI fluff).\"" },
+  { id: "s11", tag: "Short 35s", title: "Question Hook", text: "\"What if I told you the #1 rule of marketing is a lie? Let me prove it in 35 seconds.\"" },
+  { id: "s12", tag: "Ad 30s", title: "Direct Offer", text: "\"Attention e-com founders: we'll 2x your AOV in 30 days or you pay nothing. No catch.\"" },
+];
 
 const FRAMEWORKS = [
   { id: "hook_story_offer", name: "Hook-Story-Offer", desc: "Stop scroll → tell story → make offer", color: "text-gold" },
@@ -1140,6 +1159,32 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </select>
         }
       />
+
+      {/* Rolling preview of example scripts — phone-mockup style text cards */}
+      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
+        <div className="absolute inset-0 pointer-events-none">
+          <RollingPreview
+            items={SCRIPT_LAB_PREVIEW_FALLBACK}
+            variant="text"
+            rows={2}
+            aspectRatio="9:16"
+            opacity={0.5}
+            speed="medium"
+          />
+        </div>
+        <div className="relative text-center px-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            Script library
+          </p>
+          <h3 className="text-lg font-bold text-foreground mt-1">
+            Hooks that stop the scroll. Frameworks that convert.
+          </h3>
+          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+            Reels, TikToks, ads, email sequences — built on proven frameworks
+            and validated against live viral research.
+          </p>
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">

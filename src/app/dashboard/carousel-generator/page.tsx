@@ -10,7 +10,24 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
+
+// Square (1:1) Instagram-carousel-style previews. Unsplash cropped to 1:1.
+const CAROUSEL_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "cg1", src: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=480&h=480&fit=crop", alt: "Finance carousel", tag: "Finance" },
+  { id: "cg2", src: "https://images.unsplash.com/photo-1522252234503-e356532cafd5?w=480&h=480&fit=crop", alt: "Productivity carousel", tag: "Productivity" },
+  { id: "cg3", src: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=480&h=480&fit=crop", alt: "Marketing carousel", tag: "Marketing" },
+  { id: "cg4", src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=480&h=480&fit=crop", alt: "Business tips", tag: "Business" },
+  { id: "cg5", src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=480&h=480&fit=crop", alt: "Tech tips", tag: "Tech" },
+  { id: "cg6", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=480&h=480&fit=crop", alt: "Startup carousel", tag: "Startup" },
+  { id: "cg7", src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=480&h=480&fit=crop", alt: "Design carousel", tag: "Design" },
+  { id: "cg8", src: "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?w=480&h=480&fit=crop", alt: "Lifestyle carousel", tag: "Lifestyle" },
+  { id: "cg9", src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=480&h=480&fit=crop", alt: "Minimalist tips", tag: "Minimal" },
+  { id: "cg10", src: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=480&h=480&fit=crop", alt: "Creator tips", tag: "Creator" },
+  { id: "cg11", src: "https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?w=480&h=480&fit=crop", alt: "Growth tips", tag: "Growth" },
+  { id: "cg12", src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=480&h=480&fit=crop", alt: "Fitness carousel", tag: "Fitness" },
+];
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -630,6 +647,31 @@ export default function CarouselGeneratorPage() {
           </div>
         }
       />
+
+      {/* Rolling preview of example carousels — 1:1 Instagram-native aspect */}
+      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
+        <div className="absolute inset-0 pointer-events-none">
+          <RollingPreview
+            items={CAROUSEL_PREVIEW_FALLBACK}
+            rows={2}
+            aspectRatio="1:1"
+            opacity={0.45}
+            speed="medium"
+          />
+        </div>
+        <div className="relative text-center px-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            Example carousel library
+          </p>
+          <h3 className="text-lg font-bold text-foreground mt-1">
+            Scroll-stopping carousels in every niche
+          </h3>
+          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+            How-tos, listicles, myths-vs-facts — pick a template and we
+            generate all slides, headlines, and body copy in one pass.
+          </p>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* ═══════════════════════════════════════════

@@ -12,7 +12,26 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { Pen } from "lucide-react";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
+
+// Fake-screenshot text cards used as the rolling marquee on the copywriter
+// landing state. Each card = one example of the kind of copy this tool
+// produces, rendered on a gradient background (no image required).
+const COPYWRITER_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "c1", tag: "Email Subject", title: "Your cart misses you", text: "A 3-line reminder that lifts recovery revenue by 18-24% vs. generic 'You forgot something'." },
+  { id: "c2", tag: "Ad Headline", title: "Stop losing leads to slow replies", text: "Facebook ad copy for a CRM — 3 hooks, 2 proof points, one CTA. 1.8x CTR." },
+  { id: "c3", tag: "Landing Hero", title: "Ship 10x faster. Without the burnout.", text: "Above-the-fold headline + subhead + social proof line for a dev-tools SaaS." },
+  { id: "c4", tag: "Cold Email", title: "Quick question about {Company}", text: "12-line outbound email that warms cold prospects using the PAS framework." },
+  { id: "c5", tag: "Blog Intro", title: "Why nobody reads your blog (and the 4-line fix)", text: "Hook-first intro that drops bounce rate by 30% on the first scroll fold." },
+  { id: "c6", tag: "Product Desc", title: "Engineered for the long haul", text: "80-word Shopify product description in a premium, confident tone. Feature → benefit → proof." },
+  { id: "c7", tag: "Social Post", title: "I stopped doing this. Revenue went up.", text: "LinkedIn storytelling post — hook + 3 beats + CTA. Avg. 40k impressions." },
+  { id: "c8", tag: "Ad Headline", title: "Your competitors are already doing this", text: "Urgency-driven Meta ad angle for B2B SaaS. Short. Punchy. Converts." },
+  { id: "c9", tag: "Email Subject", title: "Open this before Friday", text: "6-word subject line that beat the control by 41% in an A/B test." },
+  { id: "c10", tag: "Landing CTA", title: "Start free — keep it forever", text: "Zero-friction CTA copy + reassurance line for self-serve SaaS checkout." },
+  { id: "c11", tag: "Sales Page", title: "The last tool you'll need for X", text: "Long-form sales page skeleton: problem, agitate, solve, proof, offer, close." },
+  { id: "c12", tag: "Push Notif", title: "You're 1 step away from $500", text: "80-char push notification copy proven to reopen dormant users within 24h." },
+];
 
 // Map Copywriter's contentType to the unified generations category
 function copyTypeToCategory(t: ContentType): string {
@@ -939,6 +958,32 @@ export default function CopywriterPage() {
           </>
         }
       />
+
+      {/* Rolling preview of example copywriter outputs */}
+      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
+        <div className="absolute inset-0 pointer-events-none">
+          <RollingPreview
+            items={COPYWRITER_PREVIEW_FALLBACK}
+            variant="text"
+            rows={2}
+            aspectRatio="16:9"
+            opacity={0.55}
+            speed="medium"
+          />
+        </div>
+        <div className="relative text-center px-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            Example copy library
+          </p>
+          <h3 className="text-lg font-bold text-foreground mt-1">
+            Every angle, every tone, every funnel stage
+          </h3>
+          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+            Subject lines, ad headlines, landing heros — pick a template or
+            start blank. ShortStack writes in your brand voice automatically.
+          </p>
+        </div>
+      </div>
 
       {/* Creation Wizard */}
       <CreationWizard

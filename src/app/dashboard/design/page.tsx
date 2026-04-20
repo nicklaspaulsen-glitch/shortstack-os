@@ -21,6 +21,23 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import PageHero from "@/components/ui/page-hero";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+
+// Example design/banner artwork used for the landing-state marquee.
+const DESIGN_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "d1", src: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=640&h=360&fit=crop", alt: "Brand banner", tag: "Banner" },
+  { id: "d2", src: "https://images.unsplash.com/photo-1561070791-2526d30994b8?w=640&h=360&fit=crop", alt: "Poster design", tag: "Poster" },
+  { id: "d3", src: "https://images.unsplash.com/photo-1542744095-291d1f67b221?w=640&h=360&fit=crop", alt: "Pitch deck cover", tag: "Deck" },
+  { id: "d4", src: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=640&h=360&fit=crop", alt: "Logo mark", tag: "Logo" },
+  { id: "d5", src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=640&h=360&fit=crop", alt: "Landing page", tag: "Landing" },
+  { id: "d6", src: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=640&h=360&fit=crop", alt: "Ad creative", tag: "Ad" },
+  { id: "d7", src: "https://images.unsplash.com/photo-1541462608143-67571c6738dd?w=640&h=360&fit=crop", alt: "Minimal design", tag: "Minimal" },
+  { id: "d8", src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=640&h=360&fit=crop", alt: "Fitness creative", tag: "Sport" },
+  { id: "d9", src: "https://images.unsplash.com/photo-1434626881859-194d67b2b86f?w=640&h=360&fit=crop", alt: "Editorial design", tag: "Editorial" },
+  { id: "d10", src: "https://images.unsplash.com/photo-1541462608143-67571c6738dd?w=640&h=360&fit=crop", alt: "Brand kit", tag: "Brand Kit" },
+  { id: "d11", src: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=640&h=360&fit=crop", alt: "Infographic", tag: "Infographic" },
+  { id: "d12", src: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=640&h=360&fit=crop", alt: "Modern design", tag: "Modern" },
+];
 
 interface GeneratedPrompt {
   id: string;
@@ -692,6 +709,31 @@ export default function DesignStudioPage() {
           </>
         }
       />
+
+      {/* Rolling preview of example designs */}
+      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
+        <div className="absolute inset-0 pointer-events-none">
+          <RollingPreview
+            items={DESIGN_PREVIEW_FALLBACK}
+            rows={2}
+            aspectRatio="16:9"
+            opacity={0.35}
+            speed="medium"
+          />
+        </div>
+        <div className="relative text-center px-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            Design library
+          </p>
+          <h3 className="text-lg font-bold text-foreground mt-1">
+            Banners, posters, ad creatives, decks — one prompt away
+          </h3>
+          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+            Pair a template with a brand palette and we batch out every
+            asset at every ratio your campaign needs.
+          </p>
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="tab-group w-fit">

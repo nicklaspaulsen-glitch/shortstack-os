@@ -13,6 +13,24 @@ import {
   Newspaper,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+
+// Example newsletter "template covers" shown in the landing-state marquee.
+// Mix of image covers (tall portrait-ish 4:5 to feel like email previews).
+const NEWSLETTER_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "n1", src: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=500&fit=crop", alt: "Minimal newsletter", tag: "Minimal" },
+  { id: "n2", src: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=400&h=500&fit=crop", alt: "Editorial newsletter", tag: "Editorial" },
+  { id: "n3", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=500&fit=crop", alt: "Business newsletter", tag: "Business" },
+  { id: "n4", src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=500&fit=crop", alt: "Tech newsletter", tag: "Tech" },
+  { id: "n5", src: "https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=400&h=500&fit=crop", alt: "Creator newsletter", tag: "Creator" },
+  { id: "n6", src: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=500&fit=crop", alt: "Fitness newsletter", tag: "Fitness" },
+  { id: "n7", src: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=500&fit=crop", alt: "Food newsletter", tag: "Food" },
+  { id: "n8", src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=500&fit=crop", alt: "Product launch", tag: "Launch" },
+  { id: "n9", src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=500&fit=crop", alt: "Analytics report", tag: "Report" },
+  { id: "n10", src: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&h=500&fit=crop", alt: "Tutorial newsletter", tag: "Tutorial" },
+  { id: "n11", src: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=400&h=500&fit=crop", alt: "Design newsletter", tag: "Design" },
+  { id: "n12", src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=500&fit=crop", alt: "Moody newsletter", tag: "Moody" },
+];
 
 /* ─────────── types ─────────── */
 type MainTab = "builder" | "templates" | "preview" | "stats";
@@ -408,6 +426,31 @@ export default function NewsletterPage() {
           </>
         }
       />
+
+      {/* Rolling preview of example newsletter templates */}
+      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
+        <div className="absolute inset-0 pointer-events-none">
+          <RollingPreview
+            items={NEWSLETTER_PREVIEW_FALLBACK}
+            rows={2}
+            aspectRatio="4:5"
+            opacity={0.35}
+            speed="medium"
+          />
+        </div>
+        <div className="relative text-center px-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            Newsletter template library
+          </p>
+          <h3 className="text-lg font-bold text-foreground mt-1">
+            Every industry, every cadence, ready to send
+          </h3>
+          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+            Drag-and-drop blocks, AI subject lines, schedule or send
+            immediately — preview desktop & mobile before it leaves your outbox.
+          </p>
+        </div>
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">

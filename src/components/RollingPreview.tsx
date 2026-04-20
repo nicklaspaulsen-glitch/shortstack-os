@@ -15,9 +15,26 @@ import { useMemo } from "react";
 
 export interface RollingPreviewItem {
   id: string;
-  src: string;
+  /**
+   * Image src. Omit when using `variant="text"` — provide `text` instead.
+   */
+  src?: string;
   alt?: string;
   tag?: string;
+  /**
+   * Text body rendered as a "fake screenshot" card (only used when the
+   * component is rendered with `variant="text"`). Short — 1-3 lines.
+   */
+  text?: string;
+  /**
+   * Optional headline shown above the body text (text variant only).
+   */
+  title?: string;
+  /**
+   * Optional CSS gradient for the tile background (text variant only).
+   * Falls back to a rotating curated palette based on card index.
+   */
+  gradient?: string;
 }
 
 export interface RollingPreviewProps {
@@ -28,7 +45,25 @@ export interface RollingPreviewProps {
   rows?: 1 | 2 | 3;
   opacity?: number;
   className?: string;
+  /**
+   * "image" (default) renders each item as <img src>. "text" renders each
+   * item as a gradient card with `title`/`text` instead — useful for
+   * copy-focused tools (copywriter, script-lab) where there's no image.
+   */
+  variant?: "image" | "text";
 }
+
+// Curated gradient palette used as a fallback for text-card tiles when the
+// item itself doesn't specify a gradient. Mirrors the app's gold / dark
+// surface palette with just enough variety to feel like different outputs.
+const TEXT_CARD_GRADIENTS = [
+  "linear-gradient(135deg, #1f1b0e 0%, #2a2413 50%, #3a3018 100%)",
+  "linear-gradient(135deg, #0e1a1f 0%, #13262a 50%, #18343a 100%)",
+  "linear-gradient(135deg, #1f0e1a 0%, #2a1326 50%, #3a1834 100%)",
+  "linear-gradient(135deg, #1a1f0e 0%, #262a13 50%, #343a18 100%)",
+  "linear-gradient(135deg, #0e0f1f 0%, #13152a 50%, #181b3a 100%)",
+  "linear-gradient(135deg, #1f140e 0%, #2a1d13 50%, #3a2718 100%)",
+];
 
 const ASPECT_CLASS: Record<NonNullable<RollingPreviewProps["aspectRatio"]>, string> = {
   "16:9": "aspect-video",
@@ -58,6 +93,7 @@ export default function RollingPreview({
   rows = 2,
   opacity = 0.3,
   className = "",
+  variant = "image",
 }: RollingPreviewProps) {
   // Duplicate the list to make the CSS loop seamless. Memoised so React
   // doesn't rebuild the DOM each render.
@@ -98,26 +134,59 @@ export default function RollingPreview({
             }`}
             style={{ animationDuration: `${durationSec}s` }}
           >
-            {looped.map((item, i) => (
-              <div
-                key={`${row.key}-${item.id}-${i}`}
-                className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border bg-surface pointer-events-auto`}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={item.src}
-                  alt={item.alt || "preview"}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover"
-                />
-                {item.tag && (
-                  <span className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-black/70 text-gold border border-gold/30 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {item.tag}
-                  </span>
-                )}
-              </div>
-            ))}
+            {looped.map((item, i) => {
+              const tileKey = `${row.key}-${item.id}-${i}`;
+              if (variant === "text") {
+                const gradient =
+                  item.gradient ||
+                  TEXT_CARD_GRADIENTS[i % TEXT_CARD_GRADIENTS.length];
+                return (
+                  <div
+                    key={tileKey}
+                    className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border pointer-events-auto`}
+                    style={{ background: gradient }}
+                  >
+                    <div className="absolute inset-0 flex flex-col justify-center p-3 text-left">
+                      {item.tag && (
+                        <span className="text-[9px] uppercase tracking-widest text-gold/80 font-semibold mb-1.5">
+                          {item.tag}
+                        </span>
+                      )}
+                      {item.title && (
+                        <h4 className="text-[11px] font-semibold text-white leading-tight mb-1 line-clamp-2">
+                          {item.title}
+                        </h4>
+                      )}
+                      {item.text && (
+                        <p className="text-[10px] text-white/75 leading-snug line-clamp-4">
+                          {item.text}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div
+                  key={tileKey}
+                  className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border bg-surface pointer-events-auto`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={item.src}
+                    alt={item.alt || "preview"}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
+                  {item.tag && (
+                    <span className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-black/70 text-gold border border-gold/30 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {item.tag}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}

@@ -12,6 +12,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Activity, ChevronRight, Clock, Sparkles } from "lucide-react";
 import PageHero, { type HeroGradient } from "@/components/ui/page-hero";
+import RollingPreview, { type RollingPreviewItem, type RollingPreviewProps } from "@/components/RollingPreview";
 import { formatRelativeTime } from "@/lib/utils";
 
 export interface HubTool {
@@ -48,6 +49,17 @@ export interface SectionHubProps {
   quickActions: HubQuickAction[];
   tools: HubTool[];
   stats: HubStat[];
+  /**
+   * Optional rolling preview shown between hero and quick actions. Pass
+   * the items you want to showcase for this section (~12 items works best).
+   */
+  preview?: {
+    items: RollingPreviewItem[];
+    variant?: RollingPreviewProps["variant"];
+    aspectRatio?: RollingPreviewProps["aspectRatio"];
+    opacity?: RollingPreviewProps["opacity"];
+    caption?: string;
+  };
 }
 
 interface ApiResponse {
@@ -88,6 +100,7 @@ export default function SectionHub({
   quickActions,
   tools,
   stats,
+  preview,
 }: SectionHubProps) {
   const [data, setData] = useState<ApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -121,6 +134,30 @@ export default function SectionHub({
         subtitle={subtitle}
         gradient={heroGradient}
       />
+
+      {/* Rolling preview marquee (optional — each hub can pass its own set) */}
+      {preview && preview.items.length > 0 && (
+        <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-5">
+          <div className="absolute inset-0 pointer-events-none">
+            <RollingPreview
+              items={preview.items}
+              variant={preview.variant || "image"}
+              rows={2}
+              aspectRatio={preview.aspectRatio || "16:9"}
+              opacity={preview.opacity ?? 0.3}
+              speed="medium"
+            />
+          </div>
+          <div className="relative text-center px-4">
+            <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+              In this section
+            </p>
+            <h3 className="text-base font-bold text-foreground mt-1">
+              {preview.caption || `Explore the ${title.toLowerCase()} toolkit`}
+            </h3>
+          </div>
+        </div>
+      )}
 
       {/* Quick actions row */}
       {quickActions.length > 0 && (

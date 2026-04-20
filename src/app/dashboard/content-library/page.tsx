@@ -11,6 +11,23 @@ import {
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
+import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+
+// Sample content-piece tiles shown in the Content Library landing state.
+const CONTENT_LIBRARY_PREVIEW_FALLBACK: RollingPreviewItem[] = [
+  { id: "cl1", src: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=640&h=360&fit=crop", alt: "Blog post", tag: "Blog" },
+  { id: "cl2", src: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=640&h=360&fit=crop", alt: "Finance asset", tag: "Finance" },
+  { id: "cl3", src: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=640&h=360&fit=crop", alt: "Product shot", tag: "Product" },
+  { id: "cl4", src: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=640&h=360&fit=crop", alt: "Tutorial asset", tag: "Tutorial" },
+  { id: "cl5", src: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=640&h=360&fit=crop", alt: "Podcast asset", tag: "Podcast" },
+  { id: "cl6", src: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=640&h=360&fit=crop", alt: "Design asset", tag: "Design" },
+  { id: "cl7", src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=640&h=360&fit=crop", alt: "Minimal asset", tag: "Minimal" },
+  { id: "cl8", src: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=640&h=360&fit=crop", alt: "Beauty asset", tag: "Beauty" },
+  { id: "cl9", src: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=640&h=360&fit=crop", alt: "E-commerce", tag: "E-com" },
+  { id: "cl10", src: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=640&h=360&fit=crop", alt: "Moody asset", tag: "Moody" },
+  { id: "cl11", src: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=640&h=360&fit=crop", alt: "Startup asset", tag: "Startup" },
+  { id: "cl12", src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=640&h=360&fit=crop", alt: "Creator asset", tag: "Creator" },
+];
 
 // ── DB-aligned types ──
 
@@ -417,6 +434,31 @@ export default function ContentLibraryPage() {
           </>
         }
       />
+
+      {/* Rolling preview of example content */}
+      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
+        <div className="absolute inset-0 pointer-events-none">
+          <RollingPreview
+            items={CONTENT_LIBRARY_PREVIEW_FALLBACK}
+            rows={2}
+            aspectRatio="16:9"
+            opacity={0.32}
+            speed="medium"
+          />
+        </div>
+        <div className="relative text-center px-4">
+          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+            Content library
+          </p>
+          <h3 className="text-lg font-bold text-foreground mt-1">
+            Every asset, every client, one searchable vault
+          </h3>
+          <p className="text-xs text-muted max-w-md mx-auto mt-1">
+            Images, videos, audio, docs and brand kits — tagged, versioned
+            and ready to drop into any campaign.
+          </p>
+        </div>
+      </div>
 
       {/* Upload Drop Zone */}
       <div
