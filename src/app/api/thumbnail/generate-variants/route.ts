@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
+
+// Each FLUX variant costs ~1000 "tokens" in the plan budget — keep this
+// in sync with the constant in thumbnail/generate/route.ts.
+const THUMBNAIL_TOKEN_COST = 1000;
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/thumbnail/generate-variants
@@ -117,6 +122,24 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Plan-tier token gate — variants multiply the infra cost by N, so this
+  // is the hottest route to leave ungated. (bug-hunt-apr20-v2 HIGH #12)
+  const estimatedTokens = THUMBNAIL_TOKEN_COST * count;
+  const gate = await checkLimit(ownerId, "tokens", estimatedTokens);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: gate.reason || "Monthly token budget reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
+
   const fluxUrl = process.env.RUNPOD_FLUX_URL;
   const runpodKey = process.env.RUNPOD_API_KEY;
   if (!fluxUrl || !runpodKey) {
@@ -224,6 +247,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { ok: false, error: insertErr?.message || "Failed to persist variant rows" },
       { status: 500 },
+    );
+  }
+
+  // Meter on actual queued count (not requested) so partial failures don't
+  // double-charge the plan budget.
+  if (inserted.length > 0) {
+    await recordUsage(
+      ownerId,
+      "tokens",
+      THUMBNAIL_TOKEN_COST * inserted.length,
+      { kind: "thumbnail_variants", count: inserted.length },
     );
   }
 
