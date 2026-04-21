@@ -97,7 +97,10 @@ const COLOR_OPTIONS = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  AI Mock Data                                                       */
+/*  AI Smart placeholders — empty arrays/records until real APIs ship: */
+/*    /api/scheduling/ai-suggestions, /api/scheduling/conflicts,       */
+/*    /api/scheduling/prep-cards, /api/scheduling/heatmap,             */
+/*    /api/scheduling/team. The UI renders empty states when blank.    */
 /* ------------------------------------------------------------------ */
 const AI_SUGGESTED_TIMES: { time: string; day: string; score: number; reason: string }[] = [];
 
@@ -161,8 +164,8 @@ export default function SchedulingPage() {
       if (!res.ok) return;
       const json = await res.json();
       setMeetingTypes(json.meeting_types ?? []);
-    } catch {
-      // silent
+    } catch (err) {
+      console.error("[Scheduling] fetchMeetingTypes:", err);
     }
   }, []);
 
@@ -173,8 +176,8 @@ export default function SchedulingPage() {
       if (!res.ok) return;
       const json = await res.json();
       setBookings(json.bookings ?? []);
-    } catch {
-      // silent
+    } catch (err) {
+      console.error("[Scheduling] fetchBookings:", err);
     }
   }, []);
 

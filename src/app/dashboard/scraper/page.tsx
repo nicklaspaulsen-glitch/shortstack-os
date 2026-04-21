@@ -241,7 +241,8 @@ export default function ScraperPage() {
   const [stats, setStats] = useState({ scraped: 0, skipped: 0 });
   const [testResults, setTestResults] = useState<{ totalFound: number; totalSaved: number; totalSkipped: number; errors: string[]; breakdown: Array<{ niche: string; city: string; found: number; saved: number; skipped: number }> } | null>(null);
 
-  // Enrichment
+  // Enrichment — always false until real enrichment provider is wired up.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [enriching, setEnriching] = useState(false);
   const [selectedLeads, setSelectedLeads] = useState<Set<number>>(new Set());
   const [enrichmentType, setEnrichmentType] = useState<"contact" | "tech" | "decision_maker">("contact");
