@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Mail, Plus, Clock, Sparkles, Play, Pause, Trash2,
   ArrowDown, Phone, MessageSquare, Share2, GitBranch,
   Copy, BarChart3, Users, Target, Settings, Zap,
   CheckCircle, XCircle, Eye,
-  ArrowRight, Loader2
+  ArrowRight, Loader2, Activity
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
@@ -15,6 +15,10 @@ import { ListOrdered } from "lucide-react";
 
 type MainTab = "builder" | "templates" | "analytics" | "enrollment" | "settings";
 
+// Local step type — supports the extra "social" + "condition" UI affordances
+// that don't map 1:1 to server channels. When we save to the API we collapse
+// social → dm and skip condition steps (conditions aren't first-class on the
+// backend yet — the cron runner ignores them and the step order is preserved).
 interface SequenceStep {
   id: string;
   type: "email" | "sms" | "call" | "social" | "wait" | "condition";
@@ -29,11 +33,44 @@ interface SequenceStep {
 interface Sequence {
   id: string;
   name: string;
+  description?: string | null;
   steps: SequenceStep[];
   active: boolean;
   enrolled: number;
   completed: number;
   replied: number;
+  persisted?: boolean;
+}
+
+interface ServerStep {
+  id?: string;
+  step_order: number;
+  delay_days: number;
+  channel: string;
+  template_body: string | null;
+  template_subject: string | null;
+}
+
+interface ServerSequence {
+  id: string;
+  name: string;
+  description: string | null;
+  is_active: boolean;
+  step_count?: number;
+  enrolled_count?: number;
+}
+
+interface ActivityItem {
+  id: string;
+  sequence_id?: string;
+  sequence_name?: string;
+  step_order?: number;
+  channel?: string;
+  lead_id?: string;
+  note?: string | null;
+  executed_at?: string;
+  description?: string;
+  status?: string;
 }
 
 const TEMPLATE_LIBRARY: { name: string; description: string; steps: SequenceStep[]; category: string }[] = [
@@ -101,6 +138,7 @@ const STEP_COLORS: Record<string, { bg: string; text: string; border: string }> 
   social: { bg: "bg-pink-500/10", text: "text-pink-400", border: "border-pink-500/20" },
   wait: { bg: "bg-gray-500/10", text: "text-gray-400", border: "border-border" },
   condition: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20" },
+  dm: { bg: "bg-pink-500/10", text: "text-pink-400", border: "border-pink-500/20" },
 };
 
 const STEP_ICONS: Record<string, React.ReactNode> = {
@@ -108,19 +146,36 @@ const STEP_ICONS: Record<string, React.ReactNode> = {
   sms: <MessageSquare size={12} />,
   call: <Phone size={12} />,
   social: <Share2 size={12} />,
+  dm: <Share2 size={12} />,
   wait: <Clock size={12} />,
   condition: <GitBranch size={12} />,
 };
 
+// Map UI step type → server channel. "social" collapses to "dm"; "condition"
+// is a UI-only affordance (dropped on save for now).
+function typeToChannel(type: SequenceStep["type"]): string | null {
+  if (type === "social") return "dm";
+  if (type === "condition") return null;
+  return type;
+}
+
+function channelToType(channel: string): SequenceStep["type"] {
+  if (channel === "dm") return "social";
+  if (channel === "email" || channel === "sms" || channel === "call" || channel === "wait") return channel;
+  return "email";
+}
+
 export default function SequencesPage() {
   const [activeTab, setActiveTab] = useState<MainTab>("builder");
-  // TODO: Load actual user sequences from /api/sequences once available
   const [sequences, setSequences] = useState<Sequence[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeSequence, setActiveSequence] = useState<Sequence | null>(null);
   const [templateFilter, setTemplateFilter] = useState("all");
   const [abEnabled, setAbEnabled] = useState(false);
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [saving, setSaving] = useState(false);
 
-  /* ── AI generator state ── */
+  /* AI generator state */
   const [showAiModal, setShowAiModal] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [aiObjective, setAiObjective] = useState("");
@@ -129,6 +184,181 @@ export default function SequencesPage() {
   const [aiLength, setAiLength] = useState(7);
   const [aiTone, setAiTone] = useState("professional");
   const [aiSummary, setAiSummary] = useState<{ name: string; description: string; step_count: number; channels: string[]; duration_days: number } | null>(null);
+
+  useEffect(() => {
+    void loadSequences();
+    void loadActivity();
+  }, []);
+
+  async function loadSequences() {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/sequences");
+      if (!res.ok) {
+        if (res.status !== 401) toast.error("Failed to load sequences");
+        return;
+      }
+      const data = await res.json();
+      const raw = (data.sequences || []) as ServerSequence[];
+      // Hydrate each sequence with its steps (parallel). For the list screen
+      // we only need counts, but the builder wants full step arrays — so we
+      // lazy-load steps when a sequence is opened. Here we synthesize from
+      // step_count only.
+      const hydrated: Sequence[] = raw.map(s => ({
+        id: s.id,
+        name: s.name,
+        description: s.description,
+        steps: Array.from({ length: s.step_count || 0 }).map((_, i) => ({
+          id: `placeholder_${s.id}_${i}`,
+          type: "email",
+          body: "",
+          delay_days: 0,
+        })),
+        active: s.is_active,
+        enrolled: s.enrolled_count || 0,
+        completed: 0,
+        replied: 0,
+        persisted: true,
+      }));
+      setSequences(hydrated);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to load sequences");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function loadActivity() {
+    try {
+      const res = await fetch("/api/sequences/activity");
+      if (!res.ok) return;
+      const data = await res.json();
+      setActivity((data.activity || []) as ActivityItem[]);
+    } catch {
+      // soft-fail — activity panel just stays empty
+    }
+  }
+
+  async function openSequence(seq: Sequence) {
+    // Lazy-load full step list for the builder. No placeholder if already loaded.
+    if (seq.persisted && seq.steps.some(s => !s.id.startsWith("placeholder_"))) {
+      setActiveSequence(seq);
+      return;
+    }
+    try {
+      const res = await fetch(`/api/sequences/${seq.id}`);
+      if (!res.ok) {
+        toast.error("Failed to load sequence");
+        return;
+      }
+      const data = await res.json();
+      const steps: SequenceStep[] = ((data.steps || []) as ServerStep[]).map(s => ({
+        id: s.id || `s_${s.step_order}`,
+        type: channelToType(s.channel),
+        body: s.template_body || "",
+        subject: s.template_subject || undefined,
+        delay_days: s.delay_days,
+      }));
+      const full: Sequence = { ...seq, steps };
+      setActiveSequence(full);
+      setSequences(prev => prev.map(p => p.id === seq.id ? full : p));
+    } catch {
+      toast.error("Failed to load sequence");
+    }
+  }
+
+  async function persistSequence(seq: Sequence): Promise<Sequence | null> {
+    // Save — either create or sync steps to existing.
+    const channelSteps = seq.steps
+      .map(s => ({ type: s.type, body: s.body, subject: s.subject, delay_days: s.delay_days, channel: typeToChannel(s.type) }))
+      .filter(s => s.channel !== null);
+
+    const payload = {
+      name: seq.name,
+      description: seq.description || null,
+      is_active: seq.active,
+      steps: channelSteps.map((s, i) => ({
+        step_order: i,
+        delay_days: s.delay_days,
+        channel: s.channel!,
+        template_body: s.body || null,
+        template_subject: s.subject || null,
+      })),
+    };
+
+    if (!seq.persisted) {
+      const res = await fetch("/api/sequences", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err.error || "Failed to save sequence");
+        return null;
+      }
+      const data = await res.json();
+      const saved: Sequence = {
+        ...seq,
+        id: data.sequence.id,
+        persisted: true,
+        active: data.sequence.is_active,
+      };
+      setSequences(prev => [saved, ...prev.filter(p => p.id !== seq.id)]);
+      return saved;
+    }
+
+    // Update metadata + replace steps
+    const [metaRes, stepsRes] = await Promise.all([
+      fetch(`/api/sequences/${seq.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: seq.name, description: seq.description, is_active: seq.active }),
+      }),
+      fetch(`/api/sequences/${seq.id}/steps`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ steps: payload.steps }),
+      }),
+    ]);
+    if (!metaRes.ok || !stepsRes.ok) {
+      toast.error("Failed to save sequence");
+      return null;
+    }
+    setSequences(prev => prev.map(p => p.id === seq.id ? seq : p));
+    return seq;
+  }
+
+  async function handleSave() {
+    if (!activeSequence) return;
+    setSaving(true);
+    try {
+      const saved = await persistSequence(activeSequence);
+      if (saved) {
+        setActiveSequence(saved);
+        toast.success("Sequence saved");
+      }
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete(seq: Sequence) {
+    if (!seq.persisted) {
+      setSequences(prev => prev.filter(p => p.id !== seq.id));
+      if (activeSequence?.id === seq.id) setActiveSequence(null);
+      return;
+    }
+    if (!confirm(`Delete "${seq.name}"? This cannot be undone.`)) return;
+    const res = await fetch(`/api/sequences/${seq.id}`, { method: "DELETE" });
+    if (!res.ok) {
+      toast.error("Failed to delete");
+      return;
+    }
+    setSequences(prev => prev.filter(p => p.id !== seq.id));
+    if (activeSequence?.id === seq.id) setActiveSequence(null);
+    toast.success("Deleted");
+  }
 
   async function handleGenerateSequence() {
     const selectedChannels: ("email" | "sms" | "dm")[] = [];
@@ -184,23 +414,29 @@ export default function SequencesPage() {
         };
       });
 
-      const newSeq: Sequence = {
-        id: `seq_${Date.now()}`,
+      // Persist immediately — AI-generated sequences are sent to the backend
+      // so the cron runner can pick them up as soon as leads are enrolled.
+      const draft: Sequence = {
+        id: `tmp_${Date.now()}`,
         name: data.name || "AI Sequence",
+        description: data.description || null,
         steps,
         active: false,
         enrolled: 0, completed: 0, replied: 0,
+        persisted: false,
       };
-      setSequences(prev => [...prev, newSeq]);
-      setActiveSequence(newSeq);
-      setAiSummary({
-        name: newSeq.name,
-        description: data.description || "",
-        step_count: steps.length,
-        channels: selectedChannels,
-        duration_days: aiLength,
-      });
-      toast.success("Sequence generated");
+      const saved = await persistSequence(draft);
+      if (saved) {
+        setActiveSequence(saved);
+        setAiSummary({
+          name: saved.name,
+          description: draft.description || "",
+          step_count: steps.length,
+          channels: selectedChannels,
+          duration_days: aiLength,
+        });
+        toast.success("Sequence generated and saved");
+      }
       setShowAiModal(false);
       setActiveTab("builder");
     } catch (err) {
@@ -210,16 +446,21 @@ export default function SequencesPage() {
     }
   }
 
-  function createFromTemplate(template: typeof TEMPLATE_LIBRARY[0]) {
-    const seq: Sequence = {
-      id: `seq_${Date.now()}`,
+  async function createFromTemplate(template: typeof TEMPLATE_LIBRARY[0]) {
+    const draft: Sequence = {
+      id: `tmp_${Date.now()}`,
       name: template.name,
-      steps: template.steps,
+      description: template.description,
+      steps: template.steps.map((s, i) => ({ ...s, id: `s_${Date.now()}_${i}` })),
       active: false,
       enrolled: 0, completed: 0, replied: 0,
+      persisted: false,
     };
-    setSequences(prev => [...prev, seq]);
-    setActiveSequence(seq);
+    const saved = await persistSequence(draft);
+    if (saved) {
+      setActiveSequence(saved);
+      setActiveTab("builder");
+    }
   }
 
   function addStep(type: SequenceStep["type"]) {
@@ -245,22 +486,30 @@ export default function SequencesPage() {
     setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
   }
 
-  function toggleSequence() {
+  async function toggleSequence() {
     if (!activeSequence) return;
     const updated = { ...activeSequence, active: !activeSequence.active };
     setActiveSequence(updated);
     setSequences(prev => prev.map(s => s.id === updated.id ? updated : s));
+    if (updated.persisted) {
+      await fetch(`/api/sequences/${updated.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: updated.active }),
+      });
+    }
   }
 
-  function cloneSequence(seq: Sequence) {
-    const cloned: Sequence = {
+  async function cloneSequence(seq: Sequence) {
+    const draft: Sequence = {
       ...seq,
-      id: `seq_${Date.now()}`,
+      id: `tmp_${Date.now()}`,
       name: `${seq.name} (Copy)`,
       active: false,
       enrolled: 0, completed: 0, replied: 0,
+      persisted: false,
     };
-    setSequences(prev => [...prev, cloned]);
+    await persistSequence(draft);
   }
 
   const templateCategories = ["all", ...Array.from(new Set(TEMPLATE_LIBRARY.map(t => t.category)))];
@@ -286,12 +535,51 @@ export default function SequencesPage() {
             <button onClick={() => setShowAiModal(true)} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
               <Sparkles size={12} /> Generate with AI
             </button>
-            <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5" onClick={() => setActiveSequence(null)}>
+            <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5" onClick={() => {
+              const draft: Sequence = {
+                id: `tmp_${Date.now()}`,
+                name: "Untitled Sequence",
+                description: null,
+                steps: [],
+                active: false,
+                enrolled: 0, completed: 0, replied: 0,
+                persisted: false,
+              };
+              setSequences(prev => [draft, ...prev]);
+              setActiveSequence(draft);
+            }}>
               <Plus size={12} /> New Sequence
             </button>
           </>
         }
       />
+
+      {/* Recent activity panel — last 10 step executions from trinity_log */}
+      <div className="card p-4">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-xs font-semibold flex items-center gap-2">
+            <Activity size={12} className="text-gold" /> Recent activity
+          </h3>
+          <button onClick={() => void loadActivity()} className="text-[10px] text-muted hover:text-foreground">Refresh</button>
+        </div>
+        {activity.length === 0 ? (
+          <p className="text-[10px] text-muted">No sequence activity yet. Once the hourly cron runs, executions will appear here.</p>
+        ) : (
+          <ul className="space-y-1">
+            {activity.map(a => (
+              <li key={a.id} className="flex items-center justify-between text-[10px] py-1 border-b border-white/[0.03] last:border-0">
+                <span className="flex items-center gap-2">
+                  <span className={`px-1.5 py-0.5 rounded text-[9px] ${a.status === "completed" ? "bg-green-500/10 text-green-400" : a.status === "failed" ? "bg-red-500/10 text-red-400" : "bg-gray-500/10 text-gray-400"}`}>
+                    {a.status || "run"}
+                  </span>
+                  <span>{a.description || `${a.sequence_name} → step ${(a.step_order ?? 0) + 1}`}</span>
+                </span>
+                <span className="text-muted">{a.executed_at ? new Date(a.executed_at).toLocaleString() : ""}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       {/* AI Summary Card */}
       {aiSummary && (
@@ -382,30 +670,38 @@ export default function SequencesPage() {
           {!activeSequence ? (
             <>
               {/* Sequence List */}
-              <div className="space-y-2">
-                {sequences.map(seq => (
-                  <div key={seq.id} className="card p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
-                      <div>
-                        <p className="text-xs font-semibold">{seq.name}</p>
-                        <p className="text-[10px] text-muted">{seq.steps.length} steps | {seq.steps.filter(s => s.type === "email").length} emails, {seq.steps.filter(s => s.type === "sms").length} SMS, {seq.steps.filter(s => s.type === "call").length} calls</p>
+              {loading ? (
+                <div className="card p-8 text-center">
+                  <Loader2 size={24} className="animate-spin mx-auto text-gold mb-2" />
+                  <p className="text-[10px] text-muted">Loading sequences...</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {sequences.map(seq => (
+                    <div key={seq.id} className="card p-4 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2.5 h-2.5 rounded-full ${seq.active ? "bg-green-400 animate-pulse" : "bg-muted"}`} />
+                        <div>
+                          <p className="text-xs font-semibold">{seq.name}</p>
+                          <p className="text-[10px] text-muted">{seq.steps.length} steps | {seq.enrolled} enrolled</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
+                          <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
+                          <div><p className="font-bold text-green-400">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
+                          <div><p className="font-bold text-gold">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-muted">Rate</p></div>
+                        </div>
+                        <div className="flex gap-1.5">
+                          <button onClick={() => void openSequence(seq)} className="btn-secondary text-[9px] py-1 px-2">Edit</button>
+                          <button onClick={() => void cloneSequence(seq)} className="btn-ghost text-[9px] py-1 px-2"><Copy size={10} /></button>
+                          <button onClick={() => void handleDelete(seq)} className="btn-ghost text-[9px] py-1 px-2 text-red-400"><Trash2 size={10} /></button>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="grid grid-cols-3 gap-4 text-center text-[10px]">
-                        <div><p className="font-bold">{seq.enrolled}</p><p className="text-[8px] text-muted">Enrolled</p></div>
-                        <div><p className="font-bold text-green-400">{seq.replied}</p><p className="text-[8px] text-muted">Replied</p></div>
-                        <div><p className="font-bold text-gold">{seq.enrolled > 0 ? ((seq.replied / seq.enrolled) * 100).toFixed(1) : 0}%</p><p className="text-[8px] text-muted">Rate</p></div>
-                      </div>
-                      <div className="flex gap-1.5">
-                        <button onClick={() => setActiveSequence(seq)} className="btn-secondary text-[9px] py-1 px-2">Edit</button>
-                        <button onClick={() => cloneSequence(seq)} className="btn-ghost text-[9px] py-1 px-2"><Copy size={10} /></button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
               {/* Quick create from template hint */}
               <div className="card border-gold/10 text-center py-6">
                 <Sparkles size={24} className="mx-auto mb-2 text-gold" />
@@ -429,7 +725,11 @@ export default function SequencesPage() {
                     className="input text-sm font-semibold w-64" />
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={toggleSequence}
+                  <button onClick={() => void handleSave()} disabled={saving}
+                    className="btn-primary text-xs flex items-center gap-1.5">
+                    {saving ? <Loader2 size={12} className="animate-spin" /> : null} Save
+                  </button>
+                  <button onClick={() => void toggleSequence()}
                     className={`text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium ${
                       activeSequence.active ? "bg-red-400/10 text-red-400 border border-red-400/20" : "btn-primary"
                     }`}>
@@ -545,7 +845,7 @@ export default function SequencesPage() {
                   { type: "email" as const, label: "Email", icon: <Mail size={10} /> },
                   { type: "sms" as const, label: "SMS", icon: <MessageSquare size={10} /> },
                   { type: "call" as const, label: "Call", icon: <Phone size={10} /> },
-                  { type: "social" as const, label: "Social", icon: <Share2 size={10} /> },
+                  { type: "social" as const, label: "DM", icon: <Share2 size={10} /> },
                   { type: "wait" as const, label: "Wait", icon: <Clock size={10} /> },
                   { type: "condition" as const, label: "Condition", icon: <GitBranch size={10} /> },
                 ].map(s => (
@@ -615,7 +915,7 @@ export default function SequencesPage() {
                   ))}
                 </div>
                 <div className="flex items-center justify-end">
-                  <button onClick={() => { createFromTemplate(t); setActiveTab("builder"); }}
+                  <button onClick={() => void createFromTemplate(t)}
                     className="btn-primary text-[9px] px-2 py-1 flex items-center gap-1"><Plus size={9} /> Use Template</button>
                 </div>
               </div>
@@ -627,7 +927,6 @@ export default function SequencesPage() {
       {/* ===== PERFORMANCE ANALYTICS ===== */}
       {activeTab === "analytics" && (
         <div className="space-y-4">
-          {/* Overview stats */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {[
               { label: "Total Enrolled", value: sequences.reduce((s, seq) => s + seq.enrolled, 0), color: "text-gold" },
@@ -642,7 +941,6 @@ export default function SequencesPage() {
               </div>
             ))}
           </div>
-          {/* Per-sequence breakdown */}
           <div className="card">
             <h3 className="text-sm font-semibold mb-3">Sequence Performance</h3>
             <div className="space-y-3">
@@ -652,7 +950,7 @@ export default function SequencesPage() {
                   <div key={seq.id} className="p-3 rounded-lg bg-surface-light border border-border">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-xs font-semibold flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
+                        <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
                         {seq.name}
                       </p>
                       <span className="text-[9px] text-muted">{seq.steps.length} steps</span>
@@ -665,14 +963,6 @@ export default function SequencesPage() {
                     </div>
                     <div className="w-full bg-surface rounded-full h-1.5 mt-2">
                       <div className="bg-gold rounded-full h-1.5" style={{ width: `${seq.enrolled > 0 ? (seq.completed / seq.enrolled) * 100 : 0}%` }} />
-                    </div>
-                    {/* Step-by-step metrics */}
-                    <div className="flex gap-1 mt-2">
-                      {seq.steps.map((step, j) => (
-                        <div key={j} className={`flex-1 text-center p-1.5 rounded text-[8px] ${STEP_COLORS[step.type].bg}`}>
-                          <span className={STEP_COLORS[step.type].text}>{step.type}</span>
-                        </div>
-                      ))}
                     </div>
                   </div>
                 );
@@ -688,29 +978,12 @@ export default function SequencesPage() {
           <h3 className="text-sm font-semibold flex items-center gap-2">
             <Users size={14} className="text-gold" /> Contact Enrollment Rules
           </h3>
-          <div className="space-y-2">
-            {[
-              { rule: "New leads with email automatically enroll in 'Cold Outreach'", sequence: "Cold Outreach", active: true },
-              { rule: "Leads who replied get enrolled in 'Post-Call Follow Up'", sequence: "Post-Call Follow Up", active: true },
-              { rule: "New clients auto-enroll in 'Client Onboarding'", sequence: "Client Onboarding", active: true },
-              { rule: "Leads with score < 30 enroll in 'Re-engagement'", sequence: "Re-engagement", active: false },
-              { rule: "Leads from referrals skip to 'Post-Call Follow Up'", sequence: "Post-Call Follow Up", active: false },
-            ].map((rule, i) => (
-              <div key={i} className={`card p-4 flex items-center justify-between ${!rule.active ? "opacity-50" : ""}`}>
-                <div className="flex items-center gap-3">
-                  <Zap size={14} className="text-gold" />
-                  <div>
-                    <p className="text-xs">{rule.rule}</p>
-                    <p className="text-[9px] text-muted">Sequence: {rule.sequence}</p>
-                  </div>
-                </div>
-                <div className={`w-8 h-4 rounded-full ${rule.active ? "bg-gold" : "bg-surface-light"}`}>
-                  <div className={`w-3 h-3 bg-white rounded-full mt-0.5 ${rule.active ? "ml-4" : "ml-0.5"}`} />
-                </div>
-              </div>
-            ))}
+          <div className="card">
+            <p className="text-[10px] text-muted mb-3">
+              To enroll leads, call POST /api/sequences/{`{sequence_id}`}/enroll with {`{ lead_ids: [...] }`}.
+              Rule-based auto-enrollment is coming next.
+            </p>
           </div>
-          {/* Reply Detection Rules */}
           <div className="card">
             <h4 className="text-xs font-semibold mb-3 flex items-center gap-2">
               <Eye size={12} className="text-gold" /> Reply Detection Rules
@@ -741,7 +1014,6 @@ export default function SequencesPage() {
       {activeTab === "settings" && (
         <div className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {/* Sending limits */}
             <div className="card">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Settings size={14} className="text-gold" /> Sending Limits
@@ -761,7 +1033,6 @@ export default function SequencesPage() {
                 ))}
               </div>
             </div>
-            {/* Pause/Resume controls */}
             <div className="card">
               <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
                 <Pause size={14} className="text-gold" /> Pause / Resume Controls
@@ -770,15 +1041,22 @@ export default function SequencesPage() {
                 {sequences.map(seq => (
                   <div key={seq.id} className="flex items-center justify-between p-2.5 rounded bg-surface-light text-[10px]">
                     <div className="flex items-center gap-2">
-                      <div className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
+                      <span className={`w-2 h-2 rounded-full ${seq.active ? "bg-green-400" : "bg-muted"}`} />
                       <span className="font-semibold">{seq.name}</span>
                       <span className="text-muted">({seq.enrolled} enrolled)</span>
                     </div>
                     <button
-                      onClick={() => {
+                      onClick={async () => {
                         const updated = { ...seq, active: !seq.active };
                         setSequences(prev => prev.map(s => s.id === seq.id ? updated : s));
                         if (activeSequence?.id === seq.id) setActiveSequence(updated);
+                        if (seq.persisted) {
+                          await fetch(`/api/sequences/${seq.id}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ is_active: updated.active }),
+                          });
+                        }
                       }}
                       className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${
                       seq.active ? "bg-red-400/10 text-red-400" : "bg-green-400/10 text-green-400"
