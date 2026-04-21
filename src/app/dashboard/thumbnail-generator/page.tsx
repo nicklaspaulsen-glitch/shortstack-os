@@ -26,6 +26,7 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
+import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
@@ -1809,6 +1810,11 @@ export default function ThumbnailGeneratorPage() {
 
   // Guided wizard state — shows step-by-step creation for newbies
   const [wizardOpen, setWizardOpen] = useState(false);
+
+  // Guided Mode ↔ Advanced Mode (full studio)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("thumbnail-generator");
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [guidedFaceFile, setGuidedFaceFile] = useState<string | null>(null);
   useEffect(() => {
     // Auto-show wizard on first visit (no stored preference)
     try {
@@ -4150,12 +4156,15 @@ export default function ThumbnailGeneratorPage() {
         gradient="ocean"
         actions={
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setWizardOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all hover-lift"
-            >
-              <Sparkles size={12} /> Guided Mode
-            </button>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <button
+                onClick={() => setWizardOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-semibold hover:shadow-lg hover:shadow-gold/30 transition-all hover-lift"
+              >
+                <Sparkles size={12} /> Legacy Wizard
+              </button>
+            )}
             <span className="text-[10px] text-white/70 uppercase tracking-wider font-medium">
               {displayWidth} x {displayHeight}
             </span>
@@ -4165,6 +4174,203 @@ export default function ThumbnailGeneratorPage() {
           </div>
         }
       />
+
+      {/* Guided Mode — inline 4-step wizard */}
+      {!advancedMode && (
+        <Wizard
+          steps={[
+            {
+              id: "topic",
+              title: "What's your video about?",
+              description: "One sentence — the more specific, the punchier the thumbnail.",
+              icon: <Type size={18} />,
+              canProceed: prompt.trim().length > 0,
+              component: (
+                <div className="space-y-3">
+                  <textarea
+                    value={prompt}
+                    onChange={e => setPrompt(e.target.value)}
+                    placeholder="e.g., I tried the $10K MrBeast sandwich — is it worth it?"
+                    rows={3}
+                    className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                    autoFocus
+                  />
+                  <div>
+                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Quick starters</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {[
+                        { label: "Tutorial", text: "A step-by-step guide that teaches a specific skill" },
+                        { label: "Product review", text: "Honest review of a popular product with pros & cons" },
+                        { label: "Vlog", text: "A day in my life — real, unfiltered" },
+                        { label: "Reaction", text: "First time reacting to this viral moment" },
+                      ].map((p, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setPrompt(p.text)}
+                          className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
+                        >
+                          {p.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+                      Big overlay text <span className="text-muted/60 normal-case">(optional — the huge words on the thumbnail)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={textOverlay}
+                      onChange={e => setTextOverlay(e.target.value)}
+                      placeholder="e.g., I TRIED IT"
+                      className="w-full px-3 py-2 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 transition-all"
+                    />
+                  </div>
+                </div>
+              ),
+            },
+            {
+              id: "vibe",
+              title: "Pick a vibe",
+              description: "This picks the color palette and lighting — you can tweak everything later in Advanced mode.",
+              icon: <Palette size={18} />,
+              component: (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  {THUMBNAIL_STYLES.slice(0, 6).map(s => {
+                    const selected = style === s.id;
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => setStyle(s.id)}
+                        className={`text-left rounded-xl border overflow-hidden transition-all ${
+                          selected ? "border-gold ring-2 ring-gold/30 shadow-lg shadow-gold/20" : "border-border hover:border-gold/30"
+                        }`}
+                      >
+                        <div className={`h-20 bg-gradient-to-br ${s.gradient} flex items-center justify-center`}>
+                          <span className="text-sm font-black text-white drop-shadow-lg">{s.name.split(" ")[0].toUpperCase()}</span>
+                        </div>
+                        <div className="p-2.5 bg-surface-light">
+                          <p className="text-xs font-semibold">{s.name}</p>
+                          <p className="text-[10px] text-muted">{s.desc}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              ),
+            },
+            {
+              id: "face",
+              title: "Add a face? (optional)",
+              description: "Thumbnails with faces get ~38% more clicks. Upload yours or skip.",
+              icon: <User size={18} />,
+              optional: true,
+              component: (
+                <div className="space-y-3">
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          const result = reader.result as string;
+                          setGuidedFaceFile(result);
+                          setSelectedFaces([result]);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="hidden"
+                    id="guided-face-upload"
+                  />
+                  <label
+                    htmlFor="guided-face-upload"
+                    className="block border-2 border-dashed border-border rounded-2xl p-8 text-center cursor-pointer hover:border-gold/40 hover:bg-surface-light/50 transition-all"
+                  >
+                    {guidedFaceFile ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={guidedFaceFile} alt="Uploaded face" className="max-h-40 mx-auto rounded-xl" />
+                    ) : (
+                      <>
+                        <Upload size={32} className="mx-auto mb-2 text-muted" />
+                        <p className="text-sm font-semibold">Drop a selfie here</p>
+                        <p className="text-[10px] text-muted mt-1">PNG / JPG / WEBP · or skip this step</p>
+                      </>
+                    )}
+                  </label>
+                </div>
+              ),
+            },
+            {
+              id: "review",
+              title: "Ready to generate?",
+              description: "Hit the big button and we'll create your thumbnail. Generate more variants or tweak faces, fonts & colors in Advanced mode.",
+              icon: <Wand2 size={18} />,
+              component: (
+                <div className="card bg-gold/[0.04] border-gold/20 space-y-3">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Topic</p>
+                      <p className="text-xs font-semibold line-clamp-2">{prompt || <span className="text-muted italic">(none)</span>}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Style</p>
+                      <p className="text-xs font-semibold">{THUMBNAIL_STYLES.find(s => s.id === style)?.name}</p>
+                    </div>
+                    {textOverlay && (
+                      <div className="col-span-2">
+                        <p className="text-[9px] uppercase tracking-wider text-muted">Overlay text</p>
+                        <p className="text-xs font-black tracking-wider">{textOverlay}</p>
+                      </div>
+                    )}
+                    {guidedFaceFile && (
+                      <div className="col-span-2 flex items-center gap-2">
+                        <p className="text-[9px] uppercase tracking-wider text-muted">Face:</p>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={guidedFaceFile} alt="" className="w-8 h-8 rounded-full object-cover border border-gold/30" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={generating ? "Generating…" : "Generate thumbnail"}
+          busy={generating}
+          onFinish={async () => {
+            await generate();
+          }}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
+      {/* Result preview shown in guided mode too */}
+      {!advancedMode && results.length > 0 && (
+        <div className="card space-y-3">
+          <h2 className="section-header flex items-center gap-2">
+            <ImageIcon size={14} className="text-gold" /> Your thumbnails
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {results.slice(0, 4).map(r => (
+              <div key={r.id} className="rounded-xl overflow-hidden border border-border bg-surface-light">
+                {r.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={r.imageUrl} alt="Generated thumbnail" className="w-full aspect-video object-cover" />
+                ) : (
+                  <div className={`w-full aspect-video bg-gradient-to-br ${r.gradient || "from-slate-700 to-slate-900"} flex items-center justify-center`}>
+                    <p className="text-sm font-black text-white drop-shadow-lg px-4 text-center line-clamp-3">{r.prompt}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Step-by-Step Guided Creation Wizard */}
       <CreationWizard
@@ -4204,6 +4410,7 @@ export default function ThumbnailGeneratorPage() {
       />
 
       {/* ─── Tabs ─── */}
+      {advancedMode && (
       <div className="tab-group w-fit">
         {(["generate", "studio", "tools", "history"] as const).map((t) => (
           <button
@@ -4215,6 +4422,11 @@ export default function ThumbnailGeneratorPage() {
           </button>
         ))}
       </div>
+      )}
+
+      {advancedMode && (
+      <>
+      {/* ─── Advanced-only content below ─── */}
 
       {/* ─── Generate Tab ─── */}
       {activeFeatureTab === "generate" && (
@@ -7322,6 +7534,8 @@ export default function ThumbnailGeneratorPage() {
           )
         }
       />
+      </>
+      )}
     </div>
   );
 }
