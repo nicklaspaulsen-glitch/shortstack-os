@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { executeWorkflow } from "@/lib/services/workflows";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -12,14 +13,11 @@ export async function POST(request: NextRequest) {
   // If a client_id is supplied, verify the caller actually owns that client
   // before executing the workflow with a service-role client. Otherwise any
   // authed user could run automations scoped to another agency's client.
+  // Using requireOwnedClient so team_members resolve to their parent agency
+  // (raw profile_id eq was blocking legitimate team-member runs).
   if (client_id) {
-    const { data: owned } = await supabase
-      .from("clients")
-      .select("id")
-      .eq("id", client_id)
-      .eq("profile_id", user.id)
-      .maybeSingle();
-    if (!owned) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) {
       return NextResponse.json({ error: "Forbidden — not your client" }, { status: 403 });
     }
   }

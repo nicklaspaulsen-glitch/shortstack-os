@@ -27,8 +27,11 @@ export async function POST(request: NextRequest) {
       completed_at: new Date().toISOString(),
     });
 
-    // Create as a lead
+    // Create as a lead, scoped to the caller's agency — without user_id the
+    // row is orphaned (the clients list query filters by user_id/profile_id).
+    // ctx.ownerId resolves team_members to their parent agency.
     await supabase.from("leads").insert({
+      user_id: ctx.ownerId,
       business_name: referred_name,
       email: referred_email,
       phone: referred_phone,

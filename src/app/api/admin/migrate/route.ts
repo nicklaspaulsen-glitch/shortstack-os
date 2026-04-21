@@ -1,25 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 // One-time migration endpoint — adds missing columns
 // POST /api/admin/migrate
-// SECURITY: Requires admin auth + matching CRON_SECRET header to prevent
-// unauthenticated schema changes from the internet.
-export async function POST(request: NextRequest) {
-  // Require CRON_SECRET or admin session
-  const authHeader = request.headers.get("authorization") || "";
-  const hasCronSecret = authHeader === `Bearer ${process.env.CRON_SECRET}`;
+// SECURITY: admin session only. Migrations are a DDL-execution surface
+// and should never be triggerable by a cron/leaked shared secret.
+// (bug-hunt-apr20-v2 MEDIUM #4 — removed CRON_SECRET fallback.)
+export async function POST() {
+  const serverSupabase = createServerSupabase();
+  const { data: { user } } = await serverSupabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!hasCronSecret) {
-    const serverSupabase = createServerSupabase();
-    const { data: { user } } = await serverSupabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    const { data: profile } = await serverSupabase
-      .from("profiles").select("role").eq("id", user.id).single();
-    if (profile?.role !== "admin") {
-      return NextResponse.json({ error: "Admin only" }, { status: 403 });
-    }
+  const { data: profile } = await serverSupabase
+    .from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin" && profile?.role !== "founder") {
+    return NextResponse.json({ error: "Admin only" }, { status: 403 });
   }
 
   const supabase = createServiceClient();

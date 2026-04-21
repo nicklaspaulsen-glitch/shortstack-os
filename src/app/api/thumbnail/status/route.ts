@@ -1,10 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // GET — Poll thumbnail job status.
 // Supports:
 //   ?job_id=X                       (RunPod FLUX/SDXL, default)
 //   ?job_id=X&provider=replicate    (Replicate prediction)
+//
+// SECURITY: requires auth + cross-checks that the job_id belongs to a
+// generated_images row owned by the caller. (bug-hunt-apr20-v2 MEDIUM #5 —
+// previously anyone who knew a job id could retrieve another tenant's
+// thumbnail output.)
 export async function GET(request: NextRequest) {
+  const supabase = createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   const jobId = request.nextUrl.searchParams.get("job_id");
   const provider = request.nextUrl.searchParams.get("provider");
 
@@ -13,6 +24,22 @@ export async function GET(request: NextRequest) {
       { error: "job_id is required" },
       { status: 400 }
     );
+  }
+
+  // Only allow polling job ids that belong to the caller (or their agency
+  // if they're a team_member). The row is created synchronously by the
+  // generation endpoint before the job is queued, so this should always
+  // exist by the time the client polls.
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  const service = createServiceClient();
+  const { data: owned } = await service
+    .from("generated_images")
+    .select("id, profile_id")
+    .eq("job_id", jobId)
+    .eq("profile_id", ownerId)
+    .maybeSingle();
+  if (!owned) {
+    return NextResponse.json({ error: "Forbidden — not your job" }, { status: 403 });
   }
 
   // ── Replicate path ────────────────────────────────────────────────
