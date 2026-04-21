@@ -40,6 +40,7 @@ import {
 import { useAuth } from "@/lib/auth-context";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 import { LIMITS_BY_TIER, normalizePlanTier } from "@/lib/plan-limits";
+import { formatLimit, getTierFeatures } from "@/lib/plan-display";
 import PageHero from "@/components/ui/page-hero";
 
 // ── Plan order (low → high) for "upgrade path" gating ────────────────────────
@@ -69,47 +70,8 @@ const PLAN_TAGLINE: Record<CheckoutTier, string> = {
   Unlimited: "No caps. No limits.",
 };
 
-const PLAN_FEATURES: Record<CheckoutTier, string[]> = {
-  Starter: [
-    "Lead Finder + CRM",
-    "AI Script Lab",
-    "Client Portal",
-    "3 social platforms",
-    "Email support",
-  ],
-  Growth: [
-    "Everything in Starter",
-    "AI Agents + Workflows",
-    "Design Studio + Video Editor",
-    "All social platforms",
-    "AI Caller (200 min/mo)",
-    "Priority support",
-  ],
-  Pro: [
-    "Everything in Growth",
-    "10 team members",
-    "AI Caller (500 min/mo)",
-    "API access + webhooks",
-    "Advanced analytics",
-    "Priority support",
-  ],
-  Business: [
-    "Everything in Pro",
-    "25 team members",
-    "White-label branding",
-    "Custom AI model tuning",
-    "AI Caller (2,000 min/mo)",
-    "Dedicated success manager",
-  ],
-  Unlimited: [
-    "Everything in Business",
-    "Unlimited clients + tokens",
-    "Unlimited team members",
-    "Unlimited AI Caller",
-    "99.9% uptime SLA",
-    "Dedicated Slack channel",
-  ],
-};
+// Feature bullets are derived from LIMITS_BY_TIER / PLAN_TIERS so the copy
+// can never drift from what checkLimit enforces. See src/lib/plan-display.ts.
 
 // ── Resource limits table (display) ──────────────────────────────────────────
 const LIMIT_ROWS: Array<{ key: keyof (typeof LIMITS_BY_TIER)["Starter"]; label: string; icon: React.ReactNode; suffix?: string }> = [
@@ -119,13 +81,6 @@ const LIMIT_ROWS: Array<{ key: keyof (typeof LIMITS_BY_TIER)["Starter"]; label: 
   { key: "sms", label: "SMS / mo", icon: <Smartphone size={12} /> },
   { key: "call_minutes", label: "Call Minutes / mo", icon: <Phone size={12} />, suffix: "min" },
 ];
-
-function formatLimit(n: number, suffix?: string): string {
-  if (!Number.isFinite(n)) return "Unlimited";
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1)}M${suffix ? ` ${suffix}` : ""}`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(n % 1_000 === 0 ? 0 : 1)}K${suffix ? ` ${suffix}` : ""}`;
-  return `${n.toLocaleString()}${suffix ? ` ${suffix}` : ""}`;
-}
 
 // ── FAQ content ──────────────────────────────────────────────────────────────
 const FAQS: Array<{ q: string; a: string }> = [
@@ -340,7 +295,7 @@ export default function UpgradePage() {
                         {!Number.isFinite(val) ? (
                           <span className="text-gold">Unlimited</span>
                         ) : (
-                          formatLimit(val, row.suffix)
+                          formatLimit(val, { suffix: row.suffix })
                         )}
                       </span>
                     </div>
@@ -348,9 +303,9 @@ export default function UpgradePage() {
                 })}
               </div>
 
-              {/* Feature list */}
+              {/* Feature list — derived from LIMITS_BY_TIER via getTierFeatures */}
               <div className="mt-3 pt-3 border-t border-border space-y-1.5">
-                {PLAN_FEATURES[tier].map((f) => (
+                {getTierFeatures(tier).map((f) => (
                   <div key={f} className="flex items-start gap-1.5">
                     <Check size={10} className="mt-0.5 shrink-0 text-gold" />
                     <span className="text-[10px] text-foreground/80 leading-relaxed">{f}</span>

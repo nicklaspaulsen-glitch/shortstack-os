@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
+import { LIMITS_BY_TIER, normalizePlanTier } from "@/lib/plan-limits";
 
 export async function GET(_request: NextRequest) {
   const supabase = createServerSupabase();
@@ -16,11 +16,12 @@ export async function GET(_request: NextRequest) {
     .eq("id", user.id)
     .single();
 
-  const planTier = (profile?.plan_tier || "Growth") as string;
-  const tier = isValidPlanTier(planTier)
-    ? PLAN_TIERS[planTier as PlanTier]
-    : PLAN_TIERS.Growth;
-  const limit = tier.tokens_monthly;
+  const planTier = normalizePlanTier(profile?.plan_tier as string | null | undefined);
+  // Token cap is pulled from LIMITS_BY_TIER (the enforcement layer used by
+  // checkLimit), not PLAN_TIERS.tokens_monthly, so the usage bar can never
+  // drift from what the backend actually blocks.
+  const rawTokenLimit = LIMITS_BY_TIER[planTier]?.tokens ?? LIMITS_BY_TIER.Starter.tokens;
+  const limit = Number.isFinite(rawTokenLimit) ? rawTokenLimit : -1;
 
   // Get month boundaries
   const now = new Date();

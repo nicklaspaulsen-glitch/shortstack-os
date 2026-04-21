@@ -7,12 +7,31 @@ import {
   Plus, ArrowRight, Globe, PenTool, Film, Bot, Phone,
   Shield, Code, Users, Headphones, Lock,
 } from "lucide-react";
-import { PLAN_TIERS, formatBytes } from "@/lib/plan-config";
+import { PLAN_TIERS, formatBytes, type PlanTier } from "@/lib/plan-config";
+import { LIMITS_BY_TIER } from "@/lib/plan-limits";
+import { formatLimit, getTierFeatures } from "@/lib/plan-display";
 import PageHero from "@/components/ui/page-hero";
 import { CreditCard } from "lucide-react";
 
+// Description + icon + marketing badge are the only hand-curated bits.
+// Price, token count, client count, feature bullets — all derived from
+// LIMITS_BY_TIER / PLAN_TIERS / getTierFeatures (single source of truth).
+const PLAN_META: Array<{
+  key: PlanTier;
+  description: string;
+  icon: React.ReactNode;
+  popular?: boolean;
+  highlight?: string;
+}> = [
+  { key: "Starter", description: "For solo agencies getting started with AI", icon: <Zap size={20} /> },
+  { key: "Growth", description: "For growing agencies scaling operations", icon: <TrendingUp size={20} /> },
+  { key: "Pro", description: "For established agencies running at scale", icon: <Crown size={20} />, popular: true, highlight: "Most Popular" },
+  { key: "Business", description: "For large agencies & multi-brand operations", icon: <Building2 size={20} /> },
+  { key: "Unlimited", description: "Unlimited everything. No caps. No limits.", icon: <Infinity size={20} />, highlight: "Best Value" },
+];
+
 interface Plan {
-  key: string;
+  key: PlanTier;
   name: string;
   price: number;
   tokens: string;
@@ -23,106 +42,23 @@ interface Plan {
   highlight?: string;
 }
 
-const PLANS: Plan[] = [
-  {
-    key: "Starter",
-    name: "Starter",
-    price: PLAN_TIERS.Starter.price_monthly,
-    tokens: PLAN_TIERS.Starter.tokens_label,
-    description: "For solo agencies getting started with AI",
-    icon: <Zap size={20} />,
-    features: [
-      `Up to ${PLAN_TIERS.Starter.max_clients} clients`,
-      `${PLAN_TIERS.Starter.tokens_label} AI tokens / month`,
-      "Lead Finder + CRM",
-      `Social Manager (${PLAN_TIERS.Starter.social_platforms} platforms)`,
-      "AI Script Lab",
-      "Client Portal",
-      `Upload limit: ${formatBytes(PLAN_TIERS.Starter.max_storage_upload)} / file`,
-      "Email support",
-    ],
-  },
-  {
-    key: "Growth",
-    name: "Growth",
-    price: PLAN_TIERS.Growth.price_monthly,
-    tokens: PLAN_TIERS.Growth.tokens_label,
-    description: "For growing agencies scaling operations",
-    icon: <TrendingUp size={20} />,
-    features: [
-      `Up to ${PLAN_TIERS.Growth.max_clients} clients`,
-      `${PLAN_TIERS.Growth.tokens_label} AI tokens / month`,
-      "Everything in Starter",
-      "AI Agents + Agent HQ",
-      "Workflows & Automations",
-      "Social Manager (all platforms)",
-      "Design Studio + Video Editor",
-      `AI Caller (${PLAN_TIERS.Growth.caller_minutes} min/mo)`,
-      `Upload limit: ${formatBytes(PLAN_TIERS.Growth.max_storage_upload)} / file`,
-      "Priority support",
-    ],
-  },
-  {
-    key: "Pro",
-    name: "Pro",
-    price: PLAN_TIERS.Pro.price_monthly,
-    tokens: PLAN_TIERS.Pro.tokens_label,
-    description: "For established agencies running at scale",
-    icon: <Crown size={20} />,
-    popular: true,
-    highlight: "Most Popular",
-    features: [
-      `Up to ${PLAN_TIERS.Pro.max_clients} clients`,
-      `${PLAN_TIERS.Pro.tokens_label} AI tokens / month`,
-      "Everything in Growth",
-      `${PLAN_TIERS.Pro.team_members} team members`,
-      `AI Caller (${PLAN_TIERS.Pro.caller_minutes} min/mo)`,
-      "API access + Webhooks",
-      `Upload limit: ${formatBytes(PLAN_TIERS.Pro.max_storage_upload)} / file`,
-      "Advanced analytics",
-      "Priority support",
-    ],
-  },
-  {
-    key: "Business",
-    name: "Business",
-    price: PLAN_TIERS.Business.price_monthly,
-    tokens: PLAN_TIERS.Business.tokens_label,
-    description: "For large agencies & multi-brand operations",
-    icon: <Building2 size={20} />,
-    features: [
-      `Up to ${PLAN_TIERS.Business.max_clients} clients`,
-      `${PLAN_TIERS.Business.tokens_label} AI tokens / month`,
-      "Everything in Pro",
-      `${PLAN_TIERS.Business.team_members} team members`,
-      "White-label branding",
-      "Custom AI model tuning",
-      `AI Caller (${PLAN_TIERS.Business.caller_minutes.toLocaleString()} min/mo)`,
-      `Upload limit: ${formatBytes(PLAN_TIERS.Business.max_storage_upload)} / file`,
-      "Dedicated success manager",
-    ],
-  },
-  {
-    key: "Unlimited",
-    name: "Unlimited",
-    price: PLAN_TIERS.Unlimited.price_monthly,
-    tokens: PLAN_TIERS.Unlimited.tokens_label,
-    description: "Unlimited everything. No caps. No limits.",
-    icon: <Infinity size={20} />,
-    highlight: "Best Value",
-    features: [
-      "Unlimited clients",
-      "Unlimited AI tokens",
-      "Everything in Business",
-      "Unlimited team members",
-      "Unlimited AI Caller",
-      "Unlimited uploads",
-      "SLA guarantee",
-      "Dedicated support + Slack channel",
-      "Custom integrations",
-    ],
-  },
-];
+const PLANS: Plan[] = PLAN_META.map((m) => {
+  const cfg = PLAN_TIERS[m.key];
+  const limits = LIMITS_BY_TIER[m.key];
+  return {
+    key: m.key,
+    name: cfg.badge_label,
+    price: cfg.price_monthly,
+    // Display the enforced monthly cap from LIMITS_BY_TIER (not the legacy
+    // `tokens_label` string on PLAN_TIERS, which can drift).
+    tokens: Number.isFinite(limits.tokens) ? formatLimit(limits.tokens) : "Unlimited",
+    description: m.description,
+    icon: m.icon,
+    features: getTierFeatures(m.key),
+    popular: m.popular,
+    highlight: m.highlight,
+  };
+});
 
 interface AddOn {
   name: string;
@@ -253,7 +189,7 @@ export default function PricingPage() {
                 <span className="text-[10px] text-muted">/mo</span>
               </div>
               <p className="text-[10px] text-muted mb-4">
-                {plan.tokens === "Unlimited" ? "Unlimited AI tokens" : `${plan.tokens} AI tokens included`}
+                {plan.tokens === "Unlimited" || plan.tokens === "∞" ? "Unlimited AI tokens" : `${plan.tokens} AI tokens included`}
                 {annual && <span className="text-gold ml-1">(${(monthlyPrice * 12).toLocaleString()}/yr)</span>}
               </p>
 
@@ -353,12 +289,15 @@ export default function PricingPage() {
             </div>
             <div className="space-y-1">
               {PLANS.map(p => {
-                const t = PLAN_TIERS[p.key as keyof typeof PLAN_TIERS];
+                // Pull directly from LIMITS_BY_TIER — it's the enforcement
+                // layer used by checkLimit, so the pricing card claim can't
+                // drift from what the backend actually allows.
+                const mins = LIMITS_BY_TIER[p.key].call_minutes;
                 return (
                   <div key={p.key} className="flex justify-between text-[10px]">
                     <span className="text-muted">{p.name}</span>
                     <span className="font-mono font-medium text-foreground">
-                      {t.caller_minutes === -1 ? "Unlimited" : t.caller_minutes === 0 ? "---" : `${t.caller_minutes} min`}
+                      {Number.isFinite(mins) ? `${formatLimit(mins, { suffix: "min" })}` : "Unlimited"}
                     </span>
                   </div>
                 );

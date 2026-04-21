@@ -19,8 +19,8 @@ export const PLAN_TIERS = {
     max_storage_upload: 500 * 1024 * 1024,        // 500 MB — client uploads to storage
     // Rate limits
     ai_requests_per_min: 20,
-    // AI Caller
-    caller_minutes: 0,
+    // AI Caller — mirrors LIMITS_BY_TIER.Starter.call_minutes (source of truth).
+    caller_minutes: 60,
     // Feature gates
     has_agents: false,
     has_workflows: false,
@@ -45,7 +45,8 @@ export const PLAN_TIERS = {
     max_reference_file: 250 * 1024 * 1024,        // 250 MB
     max_storage_upload: 2 * 1024 * 1024 * 1024,   // 2 GB
     ai_requests_per_min: 50,
-    caller_minutes: 200,
+    // Mirrors LIMITS_BY_TIER.Growth.call_minutes.
+    caller_minutes: 300,
     has_agents: true,
     has_workflows: true,
     has_design_studio: true,
@@ -69,7 +70,8 @@ export const PLAN_TIERS = {
     max_reference_file: 500 * 1024 * 1024,        // 500 MB
     max_storage_upload: 5 * 1024 * 1024 * 1024,   // 5 GB
     ai_requests_per_min: 100,
-    caller_minutes: 500,
+    // Mirrors LIMITS_BY_TIER.Pro.call_minutes.
+    caller_minutes: 2000,
     has_agents: true,
     has_workflows: true,
     has_design_studio: true,
@@ -93,7 +95,8 @@ export const PLAN_TIERS = {
     max_reference_file: 1 * 1024 * 1024 * 1024,   // 1 GB
     max_storage_upload: 10 * 1024 * 1024 * 1024,   // 10 GB
     ai_requests_per_min: 200,
-    caller_minutes: 2000,
+    // Mirrors LIMITS_BY_TIER.Business.call_minutes.
+    caller_minutes: 10000,
     has_agents: true,
     has_workflows: true,
     has_design_studio: true,

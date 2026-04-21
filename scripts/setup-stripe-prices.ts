@@ -15,6 +15,8 @@
  */
 
 import Stripe from "stripe";
+import { PLAN_TIERS, type PlanTier } from "../src/lib/plan-config";
+import { stripeProductDescription } from "../src/lib/plan-display";
 
 const key = process.env.STRIPE_SECRET_KEY;
 if (!key) {
@@ -24,51 +26,40 @@ if (!key) {
 
 const stripe = new Stripe(key);
 
-// Plan definitions — adjust prices if you want different tiers.
-// These match the limits in src/lib/usage-limits.ts LIMITS_BY_TIER.
+/**
+ * Plan definitions derived from PLAN_TIERS + LIMITS_BY_TIER so the Stripe
+ * product description cannot drift from the platform's enforcement layer.
+ *
+ * NOTE: the actual USD prices here are the monthly prices from PLAN_TIERS.
+ * If you need to change pricing, update `src/lib/plan-config.ts` so every
+ * pricing surface — dashboard cards, billing page, Stripe product — stays
+ * aligned in one commit. Annual price is monthly * 12 * 0.8 (20% off).
+ */
+const TIER_KEYS: Array<{ key: PlanTier; envTier: "STARTER" | "GROWTH" | "PRO" | "BUSINESS" | "UNLIMITED" }> = [
+  { key: "Starter", envTier: "STARTER" },
+  { key: "Growth", envTier: "GROWTH" },
+  { key: "Pro", envTier: "PRO" },
+  { key: "Business", envTier: "BUSINESS" },
+  { key: "Unlimited", envTier: "UNLIMITED" },
+];
+
 const PLANS: Array<{
   tier: "STARTER" | "GROWTH" | "PRO" | "BUSINESS" | "UNLIMITED";
   name: string;
   description: string;
   monthlyUsd: number;
   annualUsd: number;
-}> = [
-  {
-    tier: "STARTER",
-    name: "ShortStack — Starter",
-    description: "1 client, 5k emails/mo, 1M tokens, 500 SMS, 60 call-min. Perfect for solo operators.",
-    monthlyUsd: 49,
-    annualUsd: 470,
-  },
-  {
-    tier: "GROWTH",
-    name: "ShortStack — Growth",
-    description: "5 clients, 20k emails, 5M tokens, 2k SMS, 300 call-min. For growing agencies.",
-    monthlyUsd: 149,
-    annualUsd: 1430,
-  },
-  {
-    tier: "PRO",
-    name: "ShortStack — Pro",
-    description: "15 clients, 50k emails, 15M tokens, 6k SMS, 800 call-min. For serious agencies.",
-    monthlyUsd: 299,
-    annualUsd: 2870,
-  },
-  {
-    tier: "BUSINESS",
-    name: "ShortStack — Business",
-    description: "40 clients, 200k emails, 50M tokens, 20k SMS, 2500 call-min. For scaling teams.",
-    monthlyUsd: 599,
-    annualUsd: 5750,
-  },
-  {
-    tier: "UNLIMITED",
-    name: "ShortStack — Unlimited",
-    description: "Unlimited clients, emails, tokens, SMS, and call-minutes. For agencies going huge.",
-    monthlyUsd: 1499,
-    annualUsd: 14390,
-  },
-];
+}> = TIER_KEYS.map(({ key, envTier }) => {
+  const monthly = PLAN_TIERS[key].price_monthly;
+  return {
+    tier: envTier,
+    name: `ShortStack — ${PLAN_TIERS[key].badge_label}`,
+    description: stripeProductDescription(key),
+    monthlyUsd: monthly,
+    // 20% annual discount, rounded to nearest dollar (matches dashboard/upgrade).
+    annualUsd: Math.round(monthly * 12 * 0.8),
+  };
+});
 
 async function findOrCreateProduct(name: string, description: string): Promise<string> {
   // Search existing products by name to avoid duplicates on re-run.

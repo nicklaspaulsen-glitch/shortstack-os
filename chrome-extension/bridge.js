@@ -1,37 +1,42 @@
 /* ShortStack OS — Extension Bridge Client
  *
- * Lightweight WebSocket client that lives in the background service
- * worker. Talks to wss://app.shortstack.work/api/extension-bridge.
+ * Background service-worker transport that connects the extension to the
+ * ShortStack OS web app. Previously this was a raw WebSocket to
+ * wss://app.shortstack.work/api/extension-bridge. That WS endpoint was
+ * never implemented on the server side — Next.js 14's App Router doesn't
+ * support WebSocket upgrade out of the box.
  *
- * Wire protocol (JSON text frames):
- *   Client → Server:
- *     { type: "hello", token, extId, ver }
- *     { type: "ack", cmdId, result }        // response to a server command
- *     { type: "error", cmdId, error }
- *     { type: "event", name, data }         // unsolicited (e.g. page changed)
+ * This rewrite keeps the same wire-protocol semantics (hello → ack,
+ * cmd → result, event, heartbeat) but delivers them over authenticated
+ * HTTPS long-poll + POST against:
  *
- *   Server → Client:
- *     { type: "cmd", cmdId, target, action, args }
- *       target: "tab" (active tab content script) | "bg" (background)
- *       action: matches HANDLERS in agentic.js OR background-only ones
- *               ("screenshot", "navigate", "getTabs", "listTabs")
+ *   GET  /api/extension-bridge/pending      ← long-poll, returns cmds
+ *   POST /api/extension-bridge/ack          ← result or event
+ *   POST /api/extension-bridge/heartbeat    ← keep-alive
  *
- * This module is deliberately standalone: no imports beyond
- * chrome.* APIs so it stays loadable from service-worker context.
+ * Wire shapes (unchanged):
+ *   cmd:    { id, target, action, params }
+ *   result: { type: "result", id, ok, data?, error? }
+ *   event:  { type: "event", kind, data? }
  *
- * IMPORTANT: This is the client-side scaffold only. The server side
- * at app.shortstack.work/api/extension-bridge is a future buildout.
- * Until the endpoint exists, connect() will fail quickly and stay
- * idle — this is intentional and not an error.
+ * Why not Supabase Realtime directly? Two reasons:
+ *   1. The @supabase/supabase-js realtime client is not easy to load in
+ *      an MV3 service worker (no importScripts URL loading allowed).
+ *   2. HTTPS long-poll reuses our existing Bearer-token auth flow from
+ *      requireExtensionUser(), avoiding the RLS + channel-auth policy
+ *      work we'd otherwise need.
+ *
+ * This module stays standalone: no imports beyond chrome.* + fetch so it
+ * remains importScripts-friendly from background.js.
  */
 
-const BRIDGE_URL_DEFAULT = "wss://app.shortstack.work/api/extension-bridge";
+const API_BASE_DEFAULT = "https://app.shortstack.work";
 const RECONNECT_BASE_MS = 2000;
 const RECONNECT_MAX_MS = 60000;
 const HEARTBEAT_MS = 25000;
+const EXTENSION_VERSION = "1.1.0";
 
 const bridgeState = {
-  ws: null,
   status: "disconnected", // disconnected | connecting | connected | error
   lastError: null,
   reconnectAttempts: 0,
@@ -39,6 +44,10 @@ const bridgeState = {
   reconnectTimer: null,
   manualDisconnect: false,
   lastConnectedAt: 0,
+  sessionId: null,
+  userId: null,
+  pollAbort: null,
+  pollActive: false,
 };
 
 function setBridgeStatus(status, extra = {}) {
@@ -62,102 +71,112 @@ function setBridgeStatus(status, extra = {}) {
 async function getBridgeConfig() {
   const sync = await chrome.storage.sync.get(["bridgeUrl", "bridgeEnabled"]);
   const local = await chrome.storage.local.get(["ss_access_token"]);
+  // bridgeUrl still accepted for backwards-compat, but we only use its
+  // origin (the WS protocol is no longer meaningful).
+  const raw = (sync.bridgeUrl && sync.bridgeUrl.trim()) || API_BASE_DEFAULT;
+  let apiBase = API_BASE_DEFAULT;
+  try {
+    const u = new URL(raw.replace(/^wss?:/, "https:"));
+    apiBase = `${u.protocol}//${u.host}`;
+  } catch (_) { /* fall back to default */ }
   return {
-    url: (sync.bridgeUrl && sync.bridgeUrl.trim()) || BRIDGE_URL_DEFAULT,
+    apiBase,
     enabled: sync.bridgeEnabled !== false, // default on
     token: local.ss_access_token || "",
   };
 }
 
+async function bridgeFetch(path, { method = "GET", body, signal, token, apiBase } = {}) {
+  const res = await fetch(`${apiBase}${path}`, {
+    method,
+    signal,
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`${res.status} ${res.statusText}: ${text.slice(0, 200)}`);
+  }
+  return res.json();
+}
+
 async function connectBridge() {
-  const { url, enabled, token } = await getBridgeConfig();
+  const { apiBase, enabled, token } = await getBridgeConfig();
   if (!enabled) {
     setBridgeStatus("disconnected");
     return;
   }
   if (!token) {
-    // No auth yet — don't spam the server with anonymous connects.
     setBridgeStatus("disconnected", { error: "Not authenticated" });
     return;
   }
-  if (bridgeState.ws && (bridgeState.ws.readyState === WebSocket.OPEN || bridgeState.ws.readyState === WebSocket.CONNECTING)) {
+  if (bridgeState.status === "connecting" || bridgeState.status === "connected") {
     return;
   }
 
   setBridgeStatus("connecting");
   bridgeState.manualDisconnect = false;
 
-  let ws;
   try {
-    // Token is sent in the hello frame (not the URL) so it isn't
-    // logged by intermediate proxies.
-    ws = new WebSocket(url);
-  } catch (e) {
-    setBridgeStatus("error", { error: String(e) });
-    scheduleReconnect();
-    return;
-  }
-  bridgeState.ws = ws;
-
-  ws.addEventListener("open", () => {
+    // Send "hello" equivalent — the heartbeat endpoint returns the ack
+    // (session_id, user_id) that the original protocol delivered on
+    // WebSocket open.
+    const ack = await bridgeFetch("/api/extension-bridge/heartbeat", {
+      method: "POST",
+      body: { extension_version: EXTENSION_VERSION },
+      token,
+      apiBase,
+    });
+    bridgeState.sessionId = ack.session_id || null;
+    bridgeState.userId = ack.user_id || null;
     bridgeState.reconnectAttempts = 0;
     bridgeState.lastConnectedAt = Date.now();
     setBridgeStatus("connected");
-    safeSend({ type: "hello", token, extId: chrome.runtime.id, ver: chrome.runtime.getManifest().version });
     startHeartbeat();
-  });
-
-  ws.addEventListener("message", (evt) => {
-    let msg;
-    try { msg = JSON.parse(evt.data); } catch { return; }
-    if (!msg || typeof msg !== "object") return;
-    handleServerMessage(msg).catch((e) => {
-      safeSend({ type: "error", cmdId: msg.cmdId, error: String(e) });
-    });
-  });
-
-  ws.addEventListener("close", () => {
-    stopHeartbeat();
-    bridgeState.ws = null;
-    if (bridgeState.manualDisconnect) {
-      setBridgeStatus("disconnected");
-      return;
-    }
-    setBridgeStatus("disconnected");
+    startPollLoop();
+  } catch (e) {
+    setBridgeStatus("error", { error: String(e) });
     scheduleReconnect();
-  });
-
-  ws.addEventListener("error", () => {
-    // Fires in addition to close — just flag state
-    setBridgeStatus("error", { error: "WebSocket error" });
-  });
+  }
 }
 
 function disconnectBridge() {
   bridgeState.manualDisconnect = true;
   stopHeartbeat();
   clearReconnect();
-  if (bridgeState.ws) {
-    try { bridgeState.ws.close(1000, "manual"); } catch (_) {}
-    bridgeState.ws = null;
+  if (bridgeState.pollAbort) {
+    try { bridgeState.pollAbort.abort(); } catch (_) {}
   }
+  bridgeState.pollActive = false;
+  bridgeState.sessionId = null;
+  bridgeState.userId = null;
   setBridgeStatus("disconnected");
-}
-
-function safeSend(obj) {
-  if (!bridgeState.ws || bridgeState.ws.readyState !== WebSocket.OPEN) return false;
-  try {
-    bridgeState.ws.send(JSON.stringify(obj));
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 function startHeartbeat() {
   stopHeartbeat();
-  bridgeState.heartbeatTimer = setInterval(() => {
-    safeSend({ type: "ping", t: Date.now() });
+  bridgeState.heartbeatTimer = setInterval(async () => {
+    try {
+      const { apiBase, token } = await getBridgeConfig();
+      if (!token) {
+        disconnectBridge();
+        return;
+      }
+      await bridgeFetch("/api/extension-bridge/heartbeat", {
+        method: "POST",
+        body: { extension_version: EXTENSION_VERSION },
+        token,
+        apiBase,
+      });
+    } catch (e) {
+      // Heartbeat fail → bounce the bridge
+      setBridgeStatus("error", { error: `Heartbeat failed: ${e}` });
+      stopHeartbeat();
+      scheduleReconnect();
+    }
   }, HEARTBEAT_MS);
 }
 
@@ -170,6 +189,7 @@ function stopHeartbeat() {
 
 function scheduleReconnect() {
   clearReconnect();
+  if (bridgeState.manualDisconnect) return;
   bridgeState.reconnectAttempts += 1;
   const delay = Math.min(RECONNECT_BASE_MS * 2 ** (bridgeState.reconnectAttempts - 1), RECONNECT_MAX_MS);
   bridgeState.reconnectTimer = setTimeout(() => { connectBridge(); }, delay);
@@ -182,32 +202,82 @@ function clearReconnect() {
   }
 }
 
-/* ── Server command dispatch ── */
-async function handleServerMessage(msg) {
-  if (msg.type === "pong") return;
-  if (msg.type !== "cmd") return;
-
-  const { cmdId, target, action, args } = msg;
-  try {
-    let result;
-    if (target === "bg") {
-      result = await handleBackgroundAction(action, args || {});
-    } else {
-      // Default to active tab
-      result = await sendToActiveTab({ type: "SS_AGENTIC", action, args: args || {} });
+/* ── Long-poll loop ──
+ * Maintains an open GET /pending request. The server holds it up to ~20s
+ * then returns { cmds } — either with queued work or empty. Either way we
+ * immediately re-poll so there's almost always one open socket.
+ */
+async function startPollLoop() {
+  if (bridgeState.pollActive) return;
+  bridgeState.pollActive = true;
+  while (bridgeState.pollActive && !bridgeState.manualDisconnect) {
+    let cmds = [];
+    try {
+      const { apiBase, token } = await getBridgeConfig();
+      if (!token) { disconnectBridge(); return; }
+      bridgeState.pollAbort = new AbortController();
+      const res = await bridgeFetch("/api/extension-bridge/pending", {
+        method: "GET",
+        signal: bridgeState.pollAbort.signal,
+        token,
+        apiBase,
+      });
+      cmds = Array.isArray(res.cmds) ? res.cmds : [];
+    } catch (e) {
+      if (bridgeState.manualDisconnect) break;
+      setBridgeStatus("error", { error: `Poll failed: ${e}` });
+      bridgeState.pollActive = false;
+      scheduleReconnect();
+      return;
     }
-    safeSend({ type: "ack", cmdId, result });
-  } catch (e) {
-    safeSend({ type: "error", cmdId, error: String(e) });
+    for (const cmd of cmds) {
+      handleServerCommand(cmd).catch(() => { /* already acked as error */ });
+    }
   }
+  bridgeState.pollActive = false;
+}
+
+async function ackToServer(body) {
+  try {
+    const { apiBase, token } = await getBridgeConfig();
+    if (!token) return false;
+    await bridgeFetch("/api/extension-bridge/ack", {
+      method: "POST",
+      body,
+      token,
+      apiBase,
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/* ── Server command dispatch ── */
+async function handleServerCommand(cmd) {
+  const { id, target, action, params } = cmd;
+  try {
+    let data;
+    if (target === "bg") {
+      data = await handleBackgroundAction(action, params || {});
+    } else {
+      data = await sendToActiveTab({ type: "SS_AGENTIC", action, args: params || {} });
+    }
+    await ackToServer({ type: "result", id, ok: true, data });
+  } catch (e) {
+    await ackToServer({ type: "result", id, ok: false, error: String(e) });
+  }
+}
+
+/** Public helper so agentic.js / content scripts can push an unsolicited
+ *  event back to the app (e.g. "page_loaded"). */
+async function emitBridgeEvent(kind, data) {
+  return ackToServer({ type: "event", kind, data });
 }
 
 async function handleBackgroundAction(action, args) {
   switch (action) {
     case "screenshot": {
-      // Capture currently visible tab. Requires "activeTab" + user gesture,
-      // but as long as the extension was invoked via the bridge recently
-      // Chrome allows captureVisibleTab on the focused window.
       return new Promise((resolve, reject) => {
         chrome.tabs.captureVisibleTab(null, { format: args.format || "png" }, (dataUrl) => {
           if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
@@ -256,6 +326,8 @@ function getBridgeState() {
     error: bridgeState.lastError,
     lastConnectedAt: bridgeState.lastConnectedAt,
     reconnectAttempts: bridgeState.reconnectAttempts,
+    sessionId: bridgeState.sessionId,
+    userId: bridgeState.userId,
   };
 }
 
@@ -267,4 +339,5 @@ self.ShortStackBridge = {
   disconnect: disconnectBridge,
   state: getBridgeState,
   sendToActiveTab,
+  emitEvent: emitBridgeEvent,
 };
