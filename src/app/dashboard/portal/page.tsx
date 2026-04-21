@@ -20,6 +20,7 @@ import {
   FolderOpen, ImageIcon, Music, FileText, File as FileIcon, ExternalLink
 } from "lucide-react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 const ClientOnboardingWizard = dynamic(() => import("@/components/client-onboarding-wizard"), { ssr: false });
 const AutopilotDashboard = dynamic(() => import("@/components/autopilot-dashboard"), { ssr: false });
@@ -99,8 +100,10 @@ export default function ClientPortalPage() {
       const sent = (outreachData || []).length;
       const replied = (outreachData || []).filter((o: { status: string }) => o.status === "replied").length;
       setOutreachStats({ sent, replied });
-    } catch {
-      // Data fetch failed silently; page shows empty/onboarding state
+    } catch (err) {
+      // Don't toast — empty/onboarding state is a valid UX here (new users
+      // hitting this page without a client row). Just log for debugging.
+      console.error("[portal] fetchPortalData error:", err);
     } finally {
       setLoading(false);
     }
@@ -138,9 +141,10 @@ export default function ClientPortalPage() {
         industry={client.industry || ""}
         onComplete={async (data) => {
           // Save onboarding data to client metadata
+          const existingMeta = (client as Client & { metadata?: Record<string, unknown> }).metadata || {};
           await supabase.from("clients").update({
             metadata: {
-              ...((client as any).metadata || {}),
+              ...existingMeta,
               ...data,
               onboarded_at: new Date().toISOString(),
             },
@@ -681,33 +685,39 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
     // create the client row even if the user skipped everything.
     setSubmitting(true);
 
-    // Create client record
-    const { data: newClient, error } = await supabase.from("clients").insert({
-      business_name: form.business_name || "New Client",
-      contact_name: form.contact_name || "",
-      email: form.email || "",
-      phone: form.phone || null,
-      website: form.website || null,
-      industry: form.industry || "unspecified",
-      profile_id: profileId,
-      is_active: true,
-      health_score: 100,
-      contract_status: "pending",
-      services: [],
-      mrr: 0,
-      metadata: {
-        self_onboarded: true,
-        city: form.city,
-        biggest_challenge: form.biggest_challenge,
-        goals: form.goals,
-        ideal_customer: form.ideal_customer,
-        past_marketing: form.past_marketing,
-        budget_range: form.budget_range,
-        onboarded_at: new Date().toISOString(),
-      },
-    }).select("id").single();
+    try {
+      // Create client record
+      const { data: newClient, error } = await supabase.from("clients").insert({
+        business_name: form.business_name || "New Client",
+        contact_name: form.contact_name || "",
+        email: form.email || "",
+        phone: form.phone || null,
+        website: form.website || null,
+        industry: form.industry || "unspecified",
+        profile_id: profileId,
+        is_active: true,
+        health_score: 100,
+        contract_status: "pending",
+        services: [],
+        mrr: 0,
+        metadata: {
+          self_onboarded: true,
+          city: form.city,
+          biggest_challenge: form.biggest_challenge,
+          goals: form.goals,
+          ideal_customer: form.ideal_customer,
+          past_marketing: form.past_marketing,
+          budget_range: form.budget_range,
+          onboarded_at: new Date().toISOString(),
+        },
+      }).select("id").single();
 
-    if (!error && newClient) {
+      if (error || !newClient) {
+        console.error("[portal] self-onboard insert failed:", error);
+        toast.error(error?.message || "Couldn't create your profile — try again.");
+        return;
+      }
+
       // Notify admin via trinity_log
       await supabase.from("trinity_log").insert({
         action_type: "custom",
@@ -717,8 +727,9 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
       });
 
       onComplete();
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   }
 
   const currentStep = steps[step];

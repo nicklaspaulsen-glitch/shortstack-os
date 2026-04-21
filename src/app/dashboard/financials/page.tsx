@@ -142,12 +142,18 @@ export default function FinancialsPage() {
   async function fetchClients() {
     try {
       setLoading(true);
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("clients")
         .select("mrr, is_active, created_at");
+      if (error) {
+        console.error("[Financials] fetchClients error:", error);
+        toast.error("Couldn't load client revenue data — try refreshing.");
+        return;
+      }
       setClients(data || []);
     } catch (err) {
       console.error("[Financials] fetchClients error:", err);
+      toast.error("Couldn't load client revenue data — try refreshing.");
     } finally {
       setLoading(false);
     }
@@ -1151,27 +1157,35 @@ export default function FinancialsPage() {
             )}
           </div>
 
-          {/* Quick Actions */}
+          {/* Quick Actions — route to real features, don't fake success. */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            <button onClick={() => toast.success("Invoice created (demo)")} className="card-hover p-3 text-left">
+            <button
+              onClick={() => { window.location.href = "/dashboard/clients"; }}
+              className="card-hover p-3 text-left">
               <Plus size={14} className="text-gold mb-1.5" />
               <p className="text-xs font-semibold">Create Invoice</p>
-              <p className="text-[10px] text-muted">Generate new invoice</p>
+              <p className="text-[10px] text-muted">Open a client → Billing tab</p>
             </button>
-            <button onClick={() => toast.success("Reminders sent (demo)")} className="card-hover p-3 text-left">
+            <button
+              onClick={() => toast("Automated reminders ship with the invoicing backend. For now, chase manually from the client's Billing tab.", { icon: "💡", duration: 6000 })}
+              className="card-hover p-3 text-left">
               <RefreshCw size={14} className="text-blue-400 mb-1.5" />
               <p className="text-xs font-semibold">Send Reminders</p>
-              <p className="text-[10px] text-muted">Nudge overdue invoices</p>
+              <p className="text-[10px] text-muted">Coming soon</p>
             </button>
-            <button onClick={() => toast.success("Recurring invoice set up (demo)")} className="card-hover p-3 text-left">
+            <button
+              onClick={() => { window.location.href = "/dashboard/clients"; }}
+              className="card-hover p-3 text-left">
               <Calendar size={14} className="text-purple-400 mb-1.5" />
               <p className="text-xs font-semibold">Recurring Invoice</p>
-              <p className="text-[10px] text-muted">Set up auto-billing</p>
+              <p className="text-[10px] text-muted">Open a client → Subscribe</p>
             </button>
-            <button onClick={() => toast.success("Batch export started (demo)")} className="card-hover p-3 text-left">
+            <button
+              onClick={() => toast("Batch invoice export is not yet wired. Export individual invoices from Stripe via Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
+              className="card-hover p-3 text-left">
               <Download size={14} className="text-green-400 mb-1.5" />
               <p className="text-xs font-semibold">Export Invoices</p>
-              <p className="text-[10px] text-muted">Download as PDF/CSV</p>
+              <p className="text-[10px] text-muted">Coming soon</p>
             </button>
           </div>
         </>
@@ -1355,14 +1369,14 @@ export default function FinancialsPage() {
             ].map(report => (
               <button
                 key={report.label}
-                onClick={() => toast.success(`${report.label} exported as ${exportFormat.toUpperCase()} (demo)`)}
+                onClick={() => toast(`${report.label} export is coming soon. Use Stripe's portal for payment reports today.`, { icon: "💡", duration: 6000 })}
                 className="card-hover p-4 text-left"
               >
                 <report.icon size={16} className={`${report.color} mb-2`} />
                 <p className="text-xs font-semibold">{report.label}</p>
                 <p className="text-[10px] text-muted mt-0.5">{report.desc}</p>
                 <p className="text-[10px] text-gold mt-2 flex items-center gap-1">
-                  <Download size={10} /> Export {exportFormat.toUpperCase()}
+                  <Download size={10} /> Coming soon
                 </p>
               </button>
             ))}
@@ -1433,15 +1447,19 @@ export default function FinancialsPage() {
               <FileText size={13} className="text-gold" /> Import Financial Data
             </p>
             <div className="grid grid-cols-2 gap-3">
-              <button onClick={() => toast.success("CSV import started (demo)")} className="p-4 rounded-lg border-2 border-dashed border-border hover:border-gold/30 transition-colors text-center">
+              <button
+                onClick={() => toast("CSV import is coming soon. Add expenses manually via the Expenses tab → Add Expense.", { icon: "💡", duration: 6000 })}
+                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-gold/30 transition-colors text-center">
                 <FileText size={20} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs font-semibold">Import CSV</p>
-                <p className="text-[10px] text-muted mt-0.5">Upload expense/revenue CSV</p>
+                <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
               </button>
-              <button onClick={() => toast.success("QuickBooks import started (demo)")} className="p-4 rounded-lg border-2 border-dashed border-border hover:border-gold/30 transition-colors text-center">
+              <button
+                onClick={() => toast("QuickBooks sync is on the roadmap. For now, enter expenses manually or use the Subscriptions tab.", { icon: "💡", duration: 6000 })}
+                className="p-4 rounded-lg border-2 border-dashed border-border hover:border-gold/30 transition-colors text-center">
                 <Globe size={20} className="mx-auto mb-2 text-muted" />
                 <p className="text-xs font-semibold">QuickBooks Import</p>
-                <p className="text-[10px] text-muted mt-0.5">Sync from QuickBooks</p>
+                <p className="text-[10px] text-muted mt-0.5">Coming soon</p>
               </button>
             </div>
           </div>

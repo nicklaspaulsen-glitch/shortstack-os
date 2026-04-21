@@ -81,19 +81,24 @@ export default function ClientsPage() {
     try {
       setLoading(true);
       const [
-        { data: clientsData },
-        { data: contractsData },
-        { data: invoicesData },
+        { data: clientsData, error: clientsErr },
+        { data: contractsData, error: contractsErr },
+        { data: invoicesData, error: invoicesErr },
       ] = await Promise.all([
         supabase.from("clients").select("*").order("created_at", { ascending: false }),
         supabase.from("contracts").select("*").order("created_at", { ascending: false }),
         supabase.from("invoices").select("*").order("created_at", { ascending: false }),
       ]);
+      if (clientsErr || contractsErr || invoicesErr) {
+        console.error("[Clients] fetchData error:", clientsErr || contractsErr || invoicesErr);
+        toast.error("Couldn't load some client data — try refreshing.");
+      }
       setClients(clientsData || []);
       setContracts(contractsData || []);
       setInvoices(invoicesData || []);
     } catch (err) {
       console.error("[Clients] fetchData error:", err);
+      toast.error("Failed to load clients — try refreshing.");
     } finally {
       setLoading(false);
     }
@@ -215,17 +220,30 @@ export default function ClientsPage() {
     switch (action) {
       case "export":
         handleExportCSV(clients.filter(c => selectedClients.has(c.id)));
+        setSelectedClients(new Set());
         break;
       case "tag":
-        toast.success(`Tag ${count} clients (open tag manager)`);
+        toast(`Open a client's tag menu to tag them (${count} selected).`, { icon: "💡" });
         break;
-      case "deactivate":
-        toast.success(`${count} client(s) would be deactivated`);
+      case "deactivate": {
+        if (!confirm(`Deactivate ${count} client${count === 1 ? "" : "s"}? They'll be marked inactive but not deleted.`)) return;
+        const ids = Array.from(selectedClients);
+        const { error } = await supabase
+          .from("clients")
+          .update({ is_active: false })
+          .in("id", ids);
+        if (error) {
+          toast.error(error.message || "Failed to deactivate clients");
+          return;
+        }
+        toast.success(`${count} client${count === 1 ? "" : "s"} deactivated`);
+        setSelectedClients(new Set());
+        fetchData();
         break;
+      }
     }
-    setSelectedClients(new Set());
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedClients, clients]);
+  }, [selectedClients, clients, supabase]);
 
   // --- Feature 10: Export CSV ---
   const handleExportCSV = useCallback((exportClients: Client[]) => {
@@ -317,19 +335,33 @@ export default function ClientsPage() {
   }, [sortField]);
 
   async function addClient(formData: FormData) {
+    const businessName = (formData.get("business_name") as string || "").trim();
+    const contactName = (formData.get("contact_name") as string || "").trim();
+    const email = (formData.get("email") as string || "").trim();
+    const mrrRaw = formData.get("mrr") as string;
+    const mrr = parseFloat(mrrRaw) || 0;
+
+    if (!businessName) { toast.error("Business name is required"); return; }
+    if (!contactName) { toast.error("Contact name is required"); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Enter a valid email address");
+      return;
+    }
+    if (mrr < 0) { toast.error("MRR cannot be negative"); return; }
+
     const { error } = await supabase.from("clients").insert({
-      business_name: formData.get("business_name"),
-      contact_name: formData.get("contact_name"),
-      email: formData.get("email"),
+      business_name: businessName,
+      contact_name: contactName,
+      email,
       phone: formData.get("phone"),
       website: formData.get("website"),
       industry: formData.get("industry"),
       package_tier: formData.get("package_tier"),
-      mrr: parseFloat(formData.get("mrr") as string) || 0,
-      services: (formData.get("services") as string)?.split(",").map((s) => s.trim()) || [],
+      mrr,
+      services: (formData.get("services") as string)?.split(",").map((s) => s.trim()).filter(Boolean) || [],
     });
     if (error) {
-      toast.error("Failed to add client");
+      toast.error(error.message || "Failed to add client");
     } else {
       toast.success("Client added");
       setShowAddModal(false);

@@ -352,8 +352,16 @@ export default function TeamPage() {
                     <td className="py-2.5 px-3 text-[10px] font-medium hidden lg:table-cell">{member.clients}</td>
                     <td className="py-2.5 px-3 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <button className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" onClick={e => e.stopPropagation()}><Pencil size={11} /></button>
-                        <button className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" onClick={e => e.stopPropagation()}><Mail size={11} /></button>
+                        <button
+                          onClick={e => { e.stopPropagation(); toast("Edit panel coming soon — use the 'Active Team Members' section below to manage real members.", { icon: "💡" }); }}
+                          className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
+                          title="Edit"
+                        ><Pencil size={11} /></button>
+                        <button
+                          onClick={e => { e.stopPropagation(); window.open(`mailto:${member.email}`); }}
+                          className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
+                          title="Email"
+                        ><Mail size={11} /></button>
                       </div>
                     </td>
                   </tr>
@@ -471,7 +479,11 @@ export default function TeamPage() {
                     <p className="text-xs font-bold">{role.label}</p>
                     <p className="text-[9px] text-muted">{role.memberCount} member{role.memberCount !== 1 ? "s" : ""}</p>
                   </div>
-                  <button className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors"><Pencil size={11} /></button>
+                  <button
+                    onClick={() => toast("Role editing is managed by the permission matrix — tweak per-member permissions in the Active Team Members list.", { icon: "💡" })}
+                    className="p-1.5 rounded-lg hover:bg-surface-light text-muted hover:text-foreground transition-colors"
+                    title="Role permissions are managed per-member"
+                  ><Pencil size={11} /></button>
                 </div>
                 <p className="text-[10px] text-muted mb-3">{role.description}</p>
                 <div className="flex items-center gap-1.5">
@@ -764,7 +776,27 @@ export default function TeamPage() {
             </div>
             <div className="flex justify-end gap-2 pt-1">
               <button onClick={() => setShowCustomRole(false)} className="btn-secondary text-xs">Cancel</button>
-              <button className="btn-primary text-xs flex items-center gap-1.5" onClick={() => setShowCustomRole(false)}>
+              <button
+                className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50"
+                disabled={!customRoleName.trim()}
+                onClick={() => {
+                  const name = customRoleName.trim();
+                  if (!name) { toast.error("Role name is required"); return; }
+                  const selected = Object.entries(customPermissions)
+                    .filter(([, v]) => v)
+                    .map(([k]) => k);
+                  if (selected.length === 0) {
+                    toast.error("Toggle at least one permission for this role");
+                    return;
+                  }
+                  // Custom roles aren't persisted to the backend yet — surface
+                  // that clearly instead of fake-success closing the modal.
+                  toast("Custom roles aren't saved yet. Use per-member permissions in Active Team Members for now.", { icon: "💡", duration: 6000 });
+                  setShowCustomRole(false);
+                  setCustomRoleName("");
+                  setCustomPermissions({});
+                }}
+              >
                 <CheckCircle size={12} /> Create Role
               </button>
             </div>

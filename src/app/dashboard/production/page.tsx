@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import {
   Film, CheckCircle, MessageSquare,
   ArrowRight, Clock, AlertTriangle,
@@ -210,7 +211,7 @@ export default function ProductionPage() {
                         <div className="w-5 h-5 rounded-full bg-gold/10 flex items-center justify-center text-[8px] font-bold text-gold">{item.assignee[0]}</div>
                         <span className="text-[9px] text-muted">{item.assignee}</span>
                       </div>
-                      <span className={`text-[9px] ${item.dueDate < "2026-04-14" && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
+                      <span className={`text-[9px] ${item.dueDate < new Date().toISOString().slice(0, 10) && item.status !== "delivered" ? "text-red-400" : "text-muted"}`}>
                         {item.dueDate.slice(5)}
                       </span>
                     </div>
@@ -413,7 +414,14 @@ export default function ProductionPage() {
                     <p className="text-xs font-medium truncate">{item.title}</p>
                     <p className="text-[9px] text-muted">{item.client}</p>
                   </div>
-                  <button className="btn-secondary text-[9px] flex items-center gap-1">
+                  <button
+                    onClick={() => {
+                      const url = `${window.location.origin}/dashboard/portal/approvals/${item.id}`;
+                      navigator.clipboard.writeText(url)
+                        .then(() => toast.success("Approval link copied to clipboard"))
+                        .catch(() => toast.error("Couldn't copy link"));
+                    }}
+                    className="btn-secondary text-[9px] flex items-center gap-1">
                     <Copy size={9} /> Copy Approval Link
                   </button>
                 </div>
@@ -475,7 +483,14 @@ export default function ProductionPage() {
             </div>
             <div className="flex justify-end gap-2 pt-1">
               <button onClick={() => setShowSubmit(false)} className="btn-secondary text-xs">Cancel</button>
-              <button onClick={() => setShowSubmit(false)} className="btn-primary text-xs flex items-center gap-1.5">
+              <button
+                onClick={() => {
+                  // Production board backend isn't wired yet — use /dashboard/projects
+                  // for real Kanban + tasks. Don't pretend the request was created.
+                  toast("Production board is coming soon. For now, create Kanban tasks in /dashboard/projects.", { icon: "💡", duration: 6000 });
+                  setShowSubmit(false);
+                }}
+                className="btn-primary text-xs flex items-center gap-1.5">
                 <Plus size={12} /> Create
               </button>
             </div>

@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import toast from "react-hot-toast";
 import {
   CreditCard, Plus, Send, Clock, CheckCircle, AlertTriangle,
-  FileText, Download, RefreshCw,
+  FileText, RefreshCw,
   BarChart3, Globe, Copy, ChevronRight,
   X, Search, Zap, ArrowRight
 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
 
@@ -26,8 +29,8 @@ interface Invoice {
   paymentLink: string;
 }
 
-const MOCK_INVOICES: Invoice[] = [];
-
+// Reserved for future user-saved templates. Keep empty so the UI renders the
+// honest empty state rather than fake fixtures.
 const INVOICE_TEMPLATES: { id: string; name: string; description: string; sections: string[] }[] = [];
 
 const formatCurrency = (amount: number, currency: string = "USD") => {
@@ -43,19 +46,73 @@ export default function InvoicesPage() {
   const [selectedCurrency, setSelectedCurrency] = useState("USD");
   const [taxRate, setTaxRate] = useState(0);
   const [expandedInvoice, setExpandedInvoice] = useState<string | null>(null);
+  const [invoicesData, setInvoicesData] = useState<Invoice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const supabase = createClient();
+
+  // Load real invoices from the agency-side `invoices` table. We map the DB
+  // shape into the local Invoice UI type so the rest of the page stays as-is.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("invoices")
+          .select("id, client_id, description, amount, status, due_date, paid_at, created_at, currency, clients:client_id(business_name)")
+          .order("created_at", { ascending: false });
+        if (cancelled) return;
+        if (error) {
+          console.error("[invoices] fetch error:", error);
+          toast.error("Couldn't load invoices — try refreshing.");
+          setInvoicesData([]);
+        } else {
+          const mapped: Invoice[] = (data || []).map((row: Record<string, unknown>) => {
+            const rawClients = row.clients;
+            const clientName = Array.isArray(rawClients)
+              ? ((rawClients[0] as { business_name?: string } | undefined)?.business_name ?? "Unknown")
+              : ((rawClients as { business_name?: string } | null)?.business_name ?? "Unknown");
+            const status = (row.status as Invoice["status"]) || "draft";
+            return {
+              id: (row.id as string).slice(0, 8),
+              client: clientName,
+              amount: Number(row.amount) || 0,
+              status,
+              dueDate: (row.due_date as string) || "",
+              sentDate: (row.created_at as string)?.slice(0, 10) || "",
+              description: (row.description as string) || "Invoice",
+              currency: (row.currency as string) || "USD",
+              tax: 0,
+              recurring: false,
+              paymentLink: "",
+            };
+          });
+          setInvoicesData(mapped);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error("[invoices] fetch error:", err);
+          toast.error("Couldn't load invoices — try refreshing.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [supabase]);
 
   const today = new Date().toISOString().split("T")[0];
-  const filtered = MOCK_INVOICES.filter(inv => {
+  const filtered = invoicesData.filter(inv => {
     const statusMatch = filter === "all" || (filter === "overdue" ? inv.status === "sent" && inv.dueDate < today || inv.status === "overdue" : inv.status === filter);
     const searchMatch = !search || inv.client.toLowerCase().includes(search.toLowerCase()) || inv.id.toLowerCase().includes(search.toLowerCase());
     return statusMatch && searchMatch;
   });
 
-  const totalSent = MOCK_INVOICES.filter(i => i.status === "sent").reduce((s, i) => s + i.amount, 0);
-  const totalPaid = MOCK_INVOICES.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
-  const totalOverdue = MOCK_INVOICES.filter(i => i.status === "overdue").reduce((s, i) => s + i.amount, 0);
-  const totalDraft = MOCK_INVOICES.filter(i => i.status === "draft").reduce((s, i) => s + i.amount, 0);
-  const recurringTotal = MOCK_INVOICES.filter(i => i.recurring && i.status !== "cancelled").reduce((s, i) => s + i.amount, 0);
+  const totalSent = invoicesData.filter(i => i.status === "sent").reduce((s, i) => s + i.amount, 0);
+  const totalPaid = invoicesData.filter(i => i.status === "paid").reduce((s, i) => s + i.amount, 0);
+  const totalOverdue = invoicesData.filter(i => i.status === "overdue").reduce((s, i) => s + i.amount, 0);
+  const totalDraft = invoicesData.filter(i => i.status === "draft").reduce((s, i) => s + i.amount, 0);
+  const recurringTotal = invoicesData.filter(i => i.recurring && i.status !== "cancelled").reduce((s, i) => s + i.amount, 0);
 
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "all", label: "All Invoices", icon: <CreditCard size={14} /> },
@@ -73,7 +130,7 @@ export default function InvoicesPage() {
       <PageHero
         icon={<CreditCard size={22} />}
         title="Invoices"
-        subtitle={`${MOCK_INVOICES.length} invoices — track payments, reminders, and recurring billing.`}
+        subtitle={`${invoicesData.length} invoices — track payments, reminders, and recurring billing.`}
         gradient="green"
         actions={
           <button onClick={() => setActiveTab("builder")}
@@ -82,6 +139,11 @@ export default function InvoicesPage() {
           </button>
         }
       />
+
+      {/* Loading note while initial fetch resolves. */}
+      {loading && (
+        <p className="text-[11px] text-muted flex items-center gap-1.5"><RefreshCw size={11} className="animate-spin" /> Loading invoices…</p>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -190,11 +252,21 @@ export default function InvoicesPage() {
                           <div><span className="text-muted">Tax:</span> <span>{inv.tax > 0 ? formatCurrency(inv.tax) : "None"}</span></div>
                           <div><span className="text-muted">Currency:</span> <span>{inv.currency}</span></div>
                         </div>
-                        <div className="flex gap-2 pt-2">
-                          {inv.status === "sent" && <button className="btn-ghost text-[9px] flex items-center gap-1"><Send size={9} /> Resend</button>}
-                          {inv.paymentLink && <button className="btn-ghost text-[9px] flex items-center gap-1"><Copy size={9} /> Copy Pay Link</button>}
-                          <button className="btn-ghost text-[9px] flex items-center gap-1"><Download size={9} /> PDF</button>
-                          {inv.status === "draft" && <button className="btn-primary text-[9px] flex items-center gap-1"><Send size={9} /> Send</button>}
+                        <div className="flex gap-2 pt-2 items-center">
+                          <Link href="/dashboard/billing" className="btn-ghost text-[9px] flex items-center gap-1">
+                            <ArrowRight size={9} /> Manage in Stripe portal
+                          </Link>
+                          {inv.paymentLink && (
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(inv.paymentLink)
+                                  .then(() => toast.success("Payment link copied"))
+                                  .catch(() => toast.error("Copy failed"));
+                              }}
+                              className="btn-ghost text-[9px] flex items-center gap-1">
+                              <Copy size={9} /> Copy Pay Link
+                            </button>
+                          )}
                         </div>
                       </div>
                     )}
@@ -218,7 +290,7 @@ export default function InvoicesPage() {
                     <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Client</label>
                     <select className="input w-full text-xs">
                       <option value="">Select client...</option>
-                      {Array.from(new Set(MOCK_INVOICES.map(i => i.client))).map(c => (
+                      {Array.from(new Set(invoicesData.map(i => i.client))).map(c => (
                         <option key={c} value={c}>{c}</option>
                       ))}
                     </select>
@@ -258,10 +330,14 @@ export default function InvoicesPage() {
                         <span className="col-span-2 text-center">{item.qty}</span>
                         <span className="col-span-2 text-center">{formatCurrency(item.rate, selectedCurrency)}</span>
                         <span className="col-span-2 text-right font-bold">{formatCurrency(item.qty * item.rate, selectedCurrency)}</span>
-                        <button className="col-span-1 text-right text-muted hover:text-red-400"><X size={10} /></button>
+                        <button
+                          onClick={() => toast("The in-app invoice builder is being replaced with Stripe's hosted invoices. Use /dashboard/billing → Stripe portal to create real invoices today.", { icon: "💡", duration: 6000 })}
+                          className="col-span-1 text-right text-muted hover:text-red-400"><X size={10} /></button>
                       </div>
                     ))}
-                    <button className="text-[9px] text-gold flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
+                    <button
+                      onClick={() => toast("In-app line items aren't wired. Create invoices via Stripe's hosted portal at /dashboard/billing.", { icon: "💡", duration: 6000 })}
+                      className="text-[9px] text-gold flex items-center gap-1 px-2"><Plus size={9} /> Add Line Item</button>
                   </div>
                 </div>
 
@@ -295,10 +371,12 @@ export default function InvoicesPage() {
                     <span>Total</span><span className="text-gold">{formatCurrency(Math.round(2497 * (1 + taxRate / 100)), selectedCurrency)}</span>
                   </div>
                 </div>
-                <button className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
-                  <Send size={12} /> Create & Send
-                </button>
-                <button className="btn-secondary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
+                <Link href="/dashboard/billing" className="btn-primary w-full text-xs mt-4 flex items-center justify-center gap-1.5">
+                  <Send size={12} /> Create in Stripe portal
+                </Link>
+                <button
+                  onClick={() => toast("Draft invoices save to Stripe. Open /dashboard/billing → Manage subscription to draft there.", { icon: "💡", duration: 6000 })}
+                  className="btn-secondary w-full text-xs mt-2 flex items-center justify-center gap-1.5">
                   <FileText size={12} /> Save as Draft
                 </button>
               </div>
@@ -312,7 +390,9 @@ export default function InvoicesPage() {
                 <select className="input w-full text-xs mb-2">
                   <option value="">Select proposal...</option>
                 </select>
-                <button className="btn-gold w-full text-xs flex items-center justify-center gap-1.5 bg-gold/10 text-gold border border-gold/20 rounded-lg py-1.5 hover:bg-gold/20 transition-all">
+                <button
+                  onClick={() => toast("Proposals → invoice pipeline ships with the proposals module. Track progress on the roadmap.", { icon: "💡", duration: 6000 })}
+                  className="btn-gold w-full text-xs flex items-center justify-center gap-1.5 bg-gold/10 text-gold border border-gold/20 rounded-lg py-1.5 hover:bg-gold/20 transition-all">
                   <ArrowRight size={12} /> Create from Proposal
                 </button>
               </div>
@@ -323,9 +403,9 @@ export default function InvoicesPage() {
                   <CreditCard size={12} className="text-gold" /> Payment Links
                 </h4>
                 <p className="text-[9px] text-muted mb-2">Stripe-powered payment links for quick collection</p>
-                <button className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
-                  <CreditCard size={12} /> Generate Payment Link
-                </button>
+                <Link href="/dashboard/clients" className="btn-secondary w-full text-xs flex items-center justify-center gap-1.5">
+                  <CreditCard size={12} /> Open client → Subscribe
+                </Link>
               </div>
             </div>
           </div>
@@ -339,15 +419,17 @@ export default function InvoicesPage() {
             <h3 className="text-sm font-semibold flex items-center gap-2">
               <RefreshCw size={14} className="text-gold" /> Recurring Invoices
             </h3>
-            <button className="btn-primary text-xs flex items-center gap-1.5"><Plus size={12} /> Add Recurring</button>
+            <Link href="/dashboard/clients" className="btn-primary text-xs flex items-center gap-1.5">
+              <Plus size={12} /> Add Recurring
+            </Link>
           </div>
           <div className="space-y-2">
-            {MOCK_INVOICES.filter(i => i.recurring).length === 0 ? (
+            {invoicesData.filter(i => i.recurring).length === 0 ? (
               <div className="card text-center py-8">
                 <RefreshCw size={20} className="mx-auto mb-2 text-muted/30" />
                 <p className="text-xs text-muted">No recurring invoices yet</p>
               </div>
-            ) : MOCK_INVOICES.filter(i => i.recurring).map(inv => (
+            ) : invoicesData.filter(i => i.recurring).map(inv => (
               <div key={inv.id} className="card p-4 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <RefreshCw size={14} className="text-gold" />
@@ -366,7 +448,9 @@ export default function InvoicesPage() {
                     <p className="text-[8px] text-muted">Next invoice</p>
                   </div>
                   <span className="text-[9px] px-2 py-0.5 rounded-full bg-green-400/10 text-green-400">Active</span>
-                  <button className="text-[9px] text-muted hover:text-red-400">Pause</button>
+                  <button
+                    onClick={() => toast("Pause recurring from the Stripe customer portal — use Billing → Manage subscription.", { icon: "💡", duration: 6000 })}
+                    className="text-[9px] text-muted hover:text-red-400">Pause</button>
                 </div>
               </div>
             ))}
@@ -414,9 +498,9 @@ export default function InvoicesPage() {
               <AlertTriangle size={12} /> Currently Overdue
             </h4>
             <div className="space-y-1.5">
-              {MOCK_INVOICES.filter(i => i.status === "overdue").length === 0 ? (
+              {invoicesData.filter(i => i.status === "overdue").length === 0 ? (
                 <p className="text-[10px] text-muted text-center py-4">No overdue invoices</p>
-              ) : MOCK_INVOICES.filter(i => i.status === "overdue").map(inv => (
+              ) : invoicesData.filter(i => i.status === "overdue").map(inv => (
                 <div key={inv.id} className="flex items-center justify-between p-2.5 rounded bg-red-400/5 border border-red-400/10 text-[10px]">
                   <div>
                     <p className="font-semibold">{inv.client} - {inv.id}</p>
@@ -424,7 +508,9 @@ export default function InvoicesPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     <p className="font-bold text-red-400">{formatCurrency(inv.amount)}</p>
-                    <button className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Send Reminder</button>
+                    <button
+                      onClick={() => toast("Automated reminders are coming. For now, contact the client directly or use Stripe's payment reminder emails.", { icon: "💡", duration: 6000 })}
+                      className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Send Reminder</button>
                   </div>
                 </div>
               ))}
@@ -460,7 +546,9 @@ export default function InvoicesPage() {
                     <span key={s} className="text-[8px] px-1.5 py-0.5 rounded bg-white/5 text-muted">{s}</span>
                   ))}
                 </div>
-                <button className="btn-secondary text-[9px] mt-3 w-full">Use Template</button>
+                <button
+                  onClick={() => toast("Invoice templates aren't yet persisted. Create invoices via Stripe at /dashboard/billing for now.", { icon: "💡", duration: 6000 })}
+                  className="btn-secondary text-[9px] mt-3 w-full">Use Template</button>
               </div>
             ))}
           </div>
@@ -475,7 +563,7 @@ export default function InvoicesPage() {
           </h3>
           <div className="grid grid-cols-5 gap-3">
             {[
-              { range: "Current", amount: totalSent - totalOverdue, count: MOCK_INVOICES.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-green-400" },
+              { range: "Current", amount: totalSent - totalOverdue, count: invoicesData.filter(i => i.status === "sent" && i.dueDate >= today).length, color: "text-green-400" },
               { range: "1-7 days", amount: 0, count: 0, color: "text-yellow-400" },
               { range: "8-14 days", amount: 0, count: 0, color: "text-orange-400" },
               { range: "15-30 days", amount: 0, count: 0, color: "text-red-400" },
@@ -494,11 +582,11 @@ export default function InvoicesPage() {
               <div className="grid grid-cols-6 text-[9px] text-muted uppercase tracking-wider font-semibold py-1.5 px-2">
                 <span>Invoice</span><span>Client</span><span>Amount</span><span>Due Date</span><span>Status</span><span>Age</span>
               </div>
-              {MOCK_INVOICES.length === 0 ? (
+              {invoicesData.length === 0 ? (
                 <div className="text-center py-6">
                   <p className="text-[10px] text-muted">No invoice history yet</p>
                 </div>
-              ) : MOCK_INVOICES.map(inv => {
+              ) : invoicesData.map(inv => {
                 const dueDate = new Date(inv.dueDate);
                 const ageDays = Math.max(0, Math.floor((Date.now() - dueDate.getTime()) / 86400000));
                 return (
@@ -529,26 +617,26 @@ export default function InvoicesPage() {
           </h3>
           <div className="grid grid-cols-3 gap-4">
             <div className="card text-center p-5">
-              <p className="text-[10px] text-muted uppercase mb-1">This Month</p>
+              <p className="text-[10px] text-muted uppercase mb-1">Paid Invoices</p>
               <p className="text-2xl font-bold text-gold">{formatCurrency(totalPaid)}</p>
-              <p className="text-[9px] text-muted mt-1">Current month</p>
+              <p className="text-[9px] text-muted mt-1">All-time collected</p>
             </div>
             <div className="card text-center p-5">
-              <p className="text-[10px] text-muted uppercase mb-1">This Quarter</p>
-              <p className="text-2xl font-bold text-purple-400">{formatCurrency(totalPaid * 3)}</p>
-              <p className="text-[9px] text-muted mt-1">Q2 2026</p>
+              <p className="text-[10px] text-muted uppercase mb-1">Outstanding</p>
+              <p className="text-2xl font-bold text-purple-400">{formatCurrency(totalSent)}</p>
+              <p className="text-[9px] text-muted mt-1">Sent, not paid</p>
             </div>
             <div className="card text-center p-5">
-              <p className="text-[10px] text-muted uppercase mb-1">Year to Date</p>
-              <p className="text-2xl font-bold text-green-400">{formatCurrency(totalPaid * 4)}</p>
-              <p className="text-[9px] text-muted mt-1">Jan - Apr 2026</p>
+              <p className="text-[10px] text-muted uppercase mb-1">Overdue</p>
+              <p className="text-2xl font-bold text-red-400">{formatCurrency(totalOverdue)}</p>
+              <p className="text-[9px] text-muted mt-1">Needs chasing</p>
             </div>
           </div>
           {/* Monthly bar chart */}
           <div className="card">
             <h4 className="text-xs font-semibold mb-3">Monthly Revenue</h4>
             <div className="flex items-end gap-3 h-40">
-              {MOCK_INVOICES.length === 0 ? (
+              {invoicesData.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center">
                   <p className="text-[10px] text-muted">No revenue data yet</p>
                 </div>

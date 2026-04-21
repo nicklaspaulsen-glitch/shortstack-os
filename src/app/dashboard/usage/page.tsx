@@ -155,11 +155,12 @@ export default function UsagePage() {
     setLoading(true);
     try {
       const res = await fetch("/api/billing/tokens");
-      if (!res.ok) throw new Error("Failed to fetch");
+      if (!res.ok) throw new Error(`Failed to fetch (${res.status})`);
       const data = await res.json();
       setTokenData(data);
-    } catch {
-      // Leave defaults in place on error
+    } catch (err) {
+      // Leave defaults in place on error — but log so we catch real outages.
+      console.error("[usage] fetchData error:", err);
     } finally {
       setLoading(false);
     }
@@ -196,14 +197,25 @@ export default function UsagePage() {
         body: JSON.stringify({ pack_id: selectedPack }),
       });
       const data = await res.json();
+      // Stripe's buy-tokens endpoint may return either a redirect URL
+      // (real Checkout flow) or a success message (when credits are
+      // applied directly). Handle both and surface any error.
+      const redirectUrl = data.url || data.checkout_url;
+      if (redirectUrl) {
+        window.location.href = redirectUrl as string;
+        return;
+      }
       if (data.success) {
-        setBuySuccess(data.message);
+        setBuySuccess(data.message || "Tokens added to your balance!");
         setSelectedPack(null);
         fetchData();
         setTimeout(() => setBuySuccess(null), 5000);
+      } else {
+        alert(data.error || "Token purchase failed. Please try again.");
       }
-    } catch {
-      // silent
+    } catch (err) {
+      console.error("[usage] handleBuy error:", err);
+      alert(err instanceof Error ? err.message : "Network error. Please try again.");
     } finally {
       setBuying(false);
     }

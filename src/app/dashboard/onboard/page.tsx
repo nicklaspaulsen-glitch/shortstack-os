@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   UserPlus, ArrowRight, ArrowLeft, Check, Sparkles,
   Upload, Palette, Briefcase, ShieldCheck, Eye,
@@ -164,6 +165,7 @@ interface PersonalizeQuestion {
 /* ================================================================== */
 
 export default function OnboardPage() {
+  const router = useRouter();
   // ── User-type gate (first screen) ──
   const [userType, setUserType] = useState<UserType | null>(null);
 
@@ -171,6 +173,7 @@ export default function OnboardPage() {
   const [mode, setMode] = useState<"full" | "quick">("full");
   const [step, setStep] = useState(0);
   const [wizardComplete, setWizardComplete] = useState(false);
+  const [launchedClientId, setLaunchedClientId] = useState<string | null>(null);
   const [showTemplates, setShowTemplates] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [launching, setLaunching] = useState(false);
@@ -185,6 +188,7 @@ export default function OnboardPage() {
     package_tier: "Growth",
   });
   const [quickSubmitted, setQuickSubmitted] = useState(false);
+  const [quickLaunchedId, setQuickLaunchedId] = useState<string | null>(null);
   const updateQuick = (key: string, value: string) =>
     setQuickForm(prev => ({ ...prev, [key]: value }));
 
@@ -312,6 +316,13 @@ export default function OnboardPage() {
   }
 
   async function launchClient() {
+    // Email is optional in the wizard, but if the user typed something, it
+    // has to be a real-looking address. Otherwise portal invites and invoice
+    // sends will silently fail downstream.
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      setLaunchError("Enter a valid email address or leave it blank.");
+      return;
+    }
     setLaunching(true);
     setLaunchError("");
     // Fire-and-forget the personalization save
@@ -339,6 +350,7 @@ export default function OnboardPage() {
       });
       const data = await res.json();
       if (data.success) {
+        setLaunchedClientId(data.client_id || data.clientId || null);
         setWizardComplete(true);
       } else {
         setLaunchError(data.error || "Failed to create client");
@@ -598,12 +610,18 @@ export default function OnboardPage() {
               <button
                 onClick={() => {
                   setQuickSubmitted(false);
+                  setQuickLaunchedId(null);
                   setQuickForm({ business_name: "", contact_name: "", email: "", phone: "", package_tier: "Growth" });
                 }}
                 className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-muted hover:text-foreground transition-colors">
                 Add Another
               </button>
-              <button className="px-5 py-2.5 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 flex items-center gap-1.5">
+              <button
+                onClick={() => {
+                  if (quickLaunchedId) router.push(`/dashboard/clients/${quickLaunchedId}`);
+                  else router.push("/dashboard/clients");
+                }}
+                className="px-5 py-2.5 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 flex items-center gap-1.5">
                 <Eye size={14} /> View Client Profile
               </button>
             </div>
@@ -683,15 +701,25 @@ export default function OnboardPage() {
               </button>
               <button
                 onClick={async () => {
-                  if (!quickForm.business_name.trim() || !quickForm.contact_name.trim() || !quickForm.email.trim()) return;
+                  const bizName = quickForm.business_name.trim();
+                  const contact = quickForm.contact_name.trim();
+                  const email = quickForm.email.trim();
+                  if (!bizName || !contact || !email) {
+                    toast.error("Business, contact and email are required");
+                    return;
+                  }
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    toast.error("Enter a valid email address");
+                    return;
+                  }
                   try {
                     const res = await fetch("/api/clients/onboard", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({
-                        business_name: quickForm.business_name,
-                        contact_name: quickForm.contact_name,
-                        email: quickForm.email,
+                        business_name: bizName,
+                        contact_name: contact,
+                        email,
                         phone: quickForm.phone,
                         package_tier: quickForm.package_tier,
                         mrr: 0,
@@ -705,6 +733,7 @@ export default function OnboardPage() {
                     });
                     const data = await res.json();
                     if (data.success) {
+                      setQuickLaunchedId(data.client_id || data.clientId || null);
                       setQuickSubmitted(true);
                     } else {
                       toast.error(data.error || "Failed to create client");
@@ -782,11 +811,16 @@ export default function OnboardPage() {
             ))}
           </div>
           <div className="flex items-center justify-center gap-3">
-            <button onClick={() => { setWizardComplete(false); setStep(0); setForm({ business_name: "", contact_name: "", email: "", phone: "", website: "", industry: "", target_audience: "", goals: "", brand_voice: "", package_tier: "Growth", notes: "" }); }}
+            <button onClick={() => { setWizardComplete(false); setLaunchedClientId(null); setStep(0); setForm({ business_name: "", contact_name: "", email: "", phone: "", website: "", industry: "", target_audience: "", goals: "", brand_voice: "", package_tier: "Growth", notes: "" }); }}
               className="px-5 py-2.5 rounded-lg border border-[var(--color-border)] text-sm text-muted hover:text-foreground transition-colors">
               Onboard Another Client
             </button>
-            <button className="px-5 py-2.5 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 flex items-center gap-1.5">
+            <button
+              onClick={() => {
+                if (launchedClientId) router.push(`/dashboard/clients/${launchedClientId}`);
+                else router.push("/dashboard/clients");
+              }}
+              className="px-5 py-2.5 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 flex items-center gap-1.5">
               <Eye size={14} /> View Client Profile
             </button>
           </div>
