@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
+
+// Keep in sync with thumbnail/generate/route.ts — each FLUX render costs
+// ~1000 "tokens" in the plan-tier budget.
+const THUMBNAIL_TOKEN_COST = 1000;
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/thumbnail/with-title
@@ -182,6 +187,24 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. This route also
+  // hits Claude Haiku for title/prompt gen, so the gate protects both
+  // surfaces.
+  const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: gate.reason || "Monthly token budget reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
+
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ ok: false, error: "ANTHROPIC_API_KEY not configured" }, { status: 503 });
   }
@@ -296,6 +319,8 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
+
+  await recordUsage(ownerId, "tokens", THUMBNAIL_TOKEN_COST, { kind: "thumbnail_with_title" });
 
   const firstRow = insertedRows[0] as { id: string; job_id: string };
 

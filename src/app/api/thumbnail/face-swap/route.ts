@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
+
+// Keep in sync with thumbnail/generate/route.ts — one face-swap (Replicate
+// or InstantID via RunPod) costs ~1000 "tokens" in the plan-tier budget.
+const THUMBNAIL_TOKEN_COST = 1000;
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/thumbnail/face-swap
@@ -329,6 +334,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. Gate once up front;
+  // we meter exactly once on whichever provider succeeds below.
+  const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: gate.reason || "Monthly token budget reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
+
   // Resolve target image + prompt. If a thumbnail_id is given, look up the
   // existing row (image_url + prompt). Prefer swap-onto-target (cheaper + more
   // predictable) when we have a target image. Otherwise generate from prompt.
@@ -423,6 +445,8 @@ export async function POST(request: NextRequest) {
           { status: 500 },
         );
       }
+
+      await recordUsage(ownerId, "tokens", THUMBNAIL_TOKEN_COST, { kind: "thumbnail_face_swap" });
 
       return NextResponse.json({
         ok: true,
@@ -553,6 +577,8 @@ export async function POST(request: NextRequest) {
         { status: 500 },
       );
     }
+
+    await recordUsage(ownerId, "tokens", THUMBNAIL_TOKEN_COST, { kind: "thumbnail_face_swap" });
 
     return NextResponse.json({
       ok: true,

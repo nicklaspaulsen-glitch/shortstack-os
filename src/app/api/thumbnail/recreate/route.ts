@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
+
+// Keep in sync with thumbnail/generate/route.ts — each FLUX render costs
+// ~1000 "tokens" in the plan-tier budget.
+const THUMBNAIL_TOKEN_COST = 1000;
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/thumbnail/recreate
@@ -132,6 +137,23 @@ export async function POST(request: NextRequest) {
     if (!c || (c as { profile_id: string }).profile_id !== ownerId) {
       return NextResponse.json({ ok: false, error: "Client not found or access denied" }, { status: 403 });
     }
+  }
+
+  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. Without this a
+  // Starter-plan user could queue unlimited RunPod img2img jobs.
+  const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: gate.reason || "Monthly token budget reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
   }
 
   // Fetch the source thumbnail from ytimg.
@@ -297,6 +319,8 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
+
+  await recordUsage(ownerId, "tokens", THUMBNAIL_TOKEN_COST, { kind: "thumbnail_recreate" });
 
   return NextResponse.json({
     ok: true,

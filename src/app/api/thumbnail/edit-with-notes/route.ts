@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
+
+// Keep in sync with thumbnail/generate/route.ts — each FLUX render costs
+// ~1000 "tokens" in the plan-tier budget.
+const THUMBNAIL_TOKEN_COST = 1000;
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/thumbnail/edit-with-notes
@@ -158,6 +163,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. Each edit dispatches
+  // a fresh FLUX img2img job — no free re-roll.
+  const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
+  if (!gate.allowed) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: gate.reason || "Monthly token budget reached for your plan.",
+        current: gate.current,
+        limit: gate.limit,
+        plan_tier: gate.plan_tier,
+        remaining: gate.remaining,
+      },
+      { status: 402 },
+    );
+  }
+
   // Look up the source thumbnail.
   const { data: existing } = await db
     .from("generated_images")
@@ -279,6 +301,8 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
+
+  await recordUsage(ownerId, "tokens", THUMBNAIL_TOKEN_COST, { kind: "thumbnail_edit_with_notes" });
 
   return NextResponse.json({
     ok: true,
