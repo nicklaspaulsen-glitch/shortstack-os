@@ -40,6 +40,15 @@ export async function updateSession(request: NextRequest) {
     || request.nextUrl.pathname.startsWith("/auth")
     || request.nextUrl.pathname.startsWith("/api/auth");
   if (!user && !isAuthRoute) {
+    // API routes get 401 JSON (idiomatic for programmatic callers + what the
+    // Apr 21 E2E audit flagged). Browser/page routes keep the redirect
+    // behaviour so users get bounced to /login.
+    if (request.nextUrl.pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
