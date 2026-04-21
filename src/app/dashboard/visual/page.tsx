@@ -15,7 +15,7 @@ const VISUAL_HUB_PREVIEW: RollingPreviewItem[] = [
   { id: "vh2", src: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?w=640&h=360&fit=crop", alt: "Product shot", tag: "Product" },
   { id: "vh3", src: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=640&h=360&fit=crop", alt: "Cinematic", tag: "Cinematic" },
   { id: "vh4", src: "https://images.unsplash.com/photo-1520390138845-fd2d229dd553?w=640&h=360&fit=crop", alt: "Automotive ad", tag: "Ad" },
-  { id: "vh5", src: "https://images.unsplash.com/photo-1561070791-2526d30994b8?w=640&h=360&fit=crop", alt: "Design poster", tag: "Poster" },
+  { id: "vh5", src: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=640&h=360&fit=crop", alt: "Design poster", tag: "Poster" },
   { id: "vh6", src: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=640&h=360&fit=crop", alt: "Neon", tag: "AI Gen" },
   { id: "vh7", src: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=640&h=360&fit=crop", alt: "Tutorial thumbnail", tag: "Creator" },
   { id: "vh8", src: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?w=640&h=360&fit=crop", alt: "Sunset", tag: "Dreamy" },

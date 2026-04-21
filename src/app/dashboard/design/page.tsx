@@ -27,7 +27,7 @@ import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/c
 // Example design/banner artwork used for the landing-state marquee.
 const DESIGN_PREVIEW_FALLBACK: RollingPreviewItem[] = [
   { id: "d1", src: "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=640&h=360&fit=crop", alt: "Brand banner", tag: "Banner" },
-  { id: "d2", src: "https://images.unsplash.com/photo-1561070791-2526d30994b8?w=640&h=360&fit=crop", alt: "Poster design", tag: "Poster" },
+  { id: "d2", src: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=640&h=360&fit=crop", alt: "Poster design", tag: "Poster" },
   { id: "d3", src: "https://images.unsplash.com/photo-1542744095-291d1f67b221?w=640&h=360&fit=crop", alt: "Pitch deck cover", tag: "Deck" },
   { id: "d4", src: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=640&h=360&fit=crop", alt: "Logo mark", tag: "Logo" },
   { id: "d5", src: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=640&h=360&fit=crop", alt: "Landing page", tag: "Landing" },
