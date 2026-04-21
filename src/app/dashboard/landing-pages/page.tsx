@@ -17,6 +17,7 @@ import PageHero from "@/components/ui/page-hero";
 import { LayoutTemplate } from "lucide-react";
 import PageAI from "@/components/page-ai";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
+import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -458,6 +459,9 @@ export default function LandingPagesPage() {
       canProceed: guidedOffer.trim().length > 0,
       component: (
         <div className="space-y-3">
+          <div className="flex justify-end">
+            <AIEnhanceButton value={guidedOffer} onResult={setGuidedOffer} context="landing page section copy" variant="pill" />
+          </div>
           <textarea
             value={guidedOffer}
             onChange={e => setGuidedOffer(e.target.value)}
@@ -863,7 +867,10 @@ export default function LandingPagesPage() {
                   <input value={content.hero.headline} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, headline: e.target.value } }))} className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-white" />
                 </div>
                 <div>
-                  <label className="text-xs text-muted mb-1 block">Subheadline</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs text-muted block">Subheadline</label>
+                    <AIEnhanceButton value={content.hero.subheadline} onResult={next => setContent(c => ({ ...c, hero: { ...c.hero, subheadline: next } }))} context="landing page subheadline" variant="inline" />
+                  </div>
                   <textarea value={content.hero.subheadline} onChange={e => setContent(c => ({ ...c, hero: { ...c.hero, subheadline: e.target.value } }))} className="w-full bg-surface-light border border-border rounded px-3 py-2 text-sm text-white h-20 resize-none" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -914,6 +921,10 @@ export default function LandingPagesPage() {
                       <input value={t.company} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], company: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Company" className="bg-surface border border-border rounded px-2 py-1.5 text-xs text-white" />
                     </div>
                     <input value={t.role} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], role: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Role" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-white" />
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] text-muted uppercase tracking-wider">Quote</label>
+                      <AIEnhanceButton value={t.quote} onResult={next => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], quote: next }; setContent(c => ({ ...c, testimonials: nt })); }} context="landing page section copy" variant="inline" />
+                    </div>
                     <textarea value={t.quote} onChange={e => { const nt = [...content.testimonials]; nt[ti] = { ...nt[ti], quote: e.target.value }; setContent(c => ({ ...c, testimonials: nt })); }} placeholder="Quote" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-white h-16 resize-none" />
                   </div>
                 ))}
@@ -957,6 +968,10 @@ export default function LandingPagesPage() {
                       <button onClick={() => setContent(c => ({ ...c, faq: c.faq.filter((_, i) => i !== fi) }))} className="text-red-400 hover:text-red-300"><X className="w-3.5 h-3.5" /></button>
                     </div>
                     <input value={item.question} onChange={e => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], question: e.target.value }; setContent(c => ({ ...c, faq: nf })); }} placeholder="Question" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-white" />
+                    <div className="flex items-center justify-between">
+                      <label className="text-[10px] text-muted uppercase tracking-wider">Answer</label>
+                      <AIEnhanceButton value={item.answer} onResult={next => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], answer: next }; setContent(c => ({ ...c, faq: nf })); }} context="landing page section copy" variant="inline" />
+                    </div>
                     <textarea value={item.answer} onChange={e => { const nf = [...content.faq]; nf[fi] = { ...nf[fi], answer: e.target.value }; setContent(c => ({ ...c, faq: nf })); }} placeholder="Answer" className="w-full bg-surface border border-border rounded px-2 py-1.5 text-xs text-white h-16 resize-none" />
                   </div>
                 ))}
@@ -1094,7 +1109,10 @@ export default function LandingPagesPage() {
               </div>
 
               <div>
-                <label className="text-xs text-muted mb-1.5 block font-medium">Business Description</label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs text-muted block font-medium">Business Description</label>
+                  <AIEnhanceButton value={bizInfo.description} onResult={next => setBizInfo(p => ({ ...p, description: next }))} context="landing page section copy" variant="inline" />
+                </div>
                 <textarea value={bizInfo.description} onChange={e => setBizInfo(p => ({ ...p, description: e.target.value }))} placeholder="Describe what your business does, your main value proposition, and what makes you unique..." className="w-full bg-surface-light border border-border rounded-lg px-4 py-3 text-sm text-white h-24 resize-none focus:border-gold focus:outline-none transition-colors" />
               </div>
 
