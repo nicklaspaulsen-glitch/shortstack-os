@@ -36,7 +36,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { fireTrigger } from "@/lib/workflows/trigger-dispatch";
 
 // GET — fetch bookings for the authenticated user, optionally filtered by meeting_type_id
 export async function GET(request: NextRequest) {
@@ -123,6 +124,23 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Fire the appointment_booked workflow trigger. Fire-and-forget so the
+  // booking response isn't delayed by downstream workflow execution.
+  fireTrigger({
+    supabase: createServiceClient(),
+    userId: user.id,
+    triggerType: "appointment_booked",
+    payload: {
+      booking_id: (data as { id?: string } | null)?.id,
+      meeting_type_id,
+      guest_name,
+      guest_email,
+      guest_phone,
+      date,
+      time,
+    },
+  }).catch((err) => console.error("[scheduling/bookings] fireTrigger failed:", err));
 
   return NextResponse.json({ booking: data }, { status: 201 });
 }

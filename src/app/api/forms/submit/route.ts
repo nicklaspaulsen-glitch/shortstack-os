@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { fireTrigger } from "@/lib/workflows/trigger-dispatch";
 
 // POST — receive form submissions from embedded forms and create leads
 export async function POST(request: NextRequest) {
@@ -60,6 +61,27 @@ export async function POST(request: NextRequest) {
     user_id: formOwnerId,
     result: { source: "form", form_id: formId, data },
   });
+
+  // Fire the form_submitted workflow trigger. Any trigger on this form
+  // (or any trigger with no form_id filter) will auto-run its workflow.
+  // Fire-and-forget — doesn't block the form response.
+  if (formOwnerId) {
+    fireTrigger({
+      supabase,
+      userId: formOwnerId,
+      triggerType: "form_submitted",
+      payload: {
+        form_id: formId,
+        name,
+        email,
+        phone,
+        submitted_at: new Date().toISOString(),
+        ...data,
+      },
+    }).catch((err) =>
+      console.error("[forms/submit] fireTrigger failed:", err),
+    );
+  }
 
   // Notify on Telegram
   const chatId = process.env.TELEGRAM_CHAT_ID;

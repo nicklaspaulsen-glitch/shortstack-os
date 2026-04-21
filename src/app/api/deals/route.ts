@@ -53,8 +53,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { fireTrigger } from "@/lib/workflows/trigger-dispatch";
 
 // GET — fetch deals for the authenticated user, optionally scoped to a client
 export async function GET(request: NextRequest) {
@@ -153,6 +154,19 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
   }
 
+  // Capture the previous stage BEFORE the update so we can include both
+  // from_stage and to_stage in the pipeline_stage_changed trigger payload.
+  let prevStage: string | null = null;
+  if ("stage" in safeUpdates) {
+    const { data: existing } = await supabase
+      .from("deals")
+      .select("stage")
+      .eq("id", id)
+      .eq("user_id", ownerId)
+      .maybeSingle();
+    prevStage = (existing as { stage?: string } | null)?.stage || null;
+  }
+
   const { data, error } = await supabase
     .from("deals")
     .update(safeUpdates)
@@ -162,6 +176,28 @@ export async function PATCH(request: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Fire the pipeline_stage_changed trigger if the stage actually moved.
+  // Fire-and-forget — doesn't block the API response.
+  if (
+    "stage" in safeUpdates &&
+    typeof safeUpdates.stage === "string" &&
+    prevStage &&
+    prevStage !== safeUpdates.stage
+  ) {
+    const service = createServiceClient();
+    fireTrigger({
+      supabase: service,
+      userId: ownerId,
+      triggerType: "pipeline_stage_changed",
+      payload: {
+        deal_id: id,
+        from_stage: prevStage,
+        to_stage: safeUpdates.stage,
+        ...(data as Record<string, unknown>),
+      },
+    }).catch((err) => console.error("[deals] fireTrigger failed:", err));
+  }
 
   return NextResponse.json({ deal: data });
 }
