@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import {
   Webhook, Plus, Trash2, Copy, CheckCircle, AlertCircle,
   Zap, Users, CreditCard, MessageSquare, Play, Pause,
   Key, Filter, ArrowRight, Shield,
-  Send, FileText
+  Send, FileText, Loader
 } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
@@ -67,27 +68,52 @@ const TEMPLATES = [
   { name: "n8n Workflow", url: "https://n8n.example.com/webhook/...", events: ["lead.created", "content.generated"] },
 ];
 
-const MOCK_WEBHOOKS: WebhookConfig[] = [];
-
-const MOCK_DELIVERIES: DeliveryLog[] = [];
+// Local-only state: webhook CRUD is client-side until the /api/webhooks/manage
+// endpoint ships. Endpoints persist to localStorage so they survive reloads.
+const LS_KEY = "ss-webhooks-local";
 
 const TABS = ["Endpoints", "Delivery Log", "Test", "Templates", "Settings"] as const;
 type Tab = typeof TABS[number];
 
 export default function WebhooksPage() {
   const [tab, setTab] = useState<Tab>("Endpoints");
-  const [webhooks, setWebhooks] = useState<WebhookConfig[]>(MOCK_WEBHOOKS);
-  const [deliveries] = useState<DeliveryLog[]>(MOCK_DELIVERIES);
+  const [webhooks, setWebhooks] = useState<WebhookConfig[]>([]);
+  const [deliveries] = useState<DeliveryLog[]>([]);
   const [form, setForm] = useState({ name: "", url: "", events: [] as string[] });
+  const [formError, setFormError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
   const [expandedDelivery, setExpandedDelivery] = useState<string | null>(null);
   const [filterCategory, setFilterCategory] = useState("all");
   const [testWebhook, setTestWebhook] = useState("");
   const [testEvent, setTestEvent] = useState("lead.created");
-  const [testSent, setTestSent] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [editingRetry, setEditingRetry] = useState<string | null>(null);
+  const [testStatus, setTestStatus] = useState<{ ok: boolean; message: string } | null>(null);
+  const [testing, setTesting] = useState(false);
+  const [editingRetry] = useState<string | null>(null);
   const [showSecret, setShowSecret] = useState<string | null>(null);
+
+  // Hydrate from localStorage on mount so endpoints survive reloads.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const raw = window.localStorage.getItem(LS_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as WebhookConfig[];
+        if (Array.isArray(parsed)) setWebhooks(parsed);
+      }
+    } catch (err) {
+      console.error("[webhooks] localStorage hydrate failed:", err);
+    }
+  }, []);
+
+  // Persist whenever webhooks change.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      window.localStorage.setItem(LS_KEY, JSON.stringify(webhooks));
+    } catch (err) {
+      console.error("[webhooks] localStorage save failed:", err);
+    }
+  }, [webhooks]);
 
   // Use the live domain or fall back to window.location.origin so devs on
   // localhost see the correct URL instead of the stale Vercel subdomain.
@@ -98,9 +124,31 @@ export default function WebhooksPage() {
   const filteredEvents = filterCategory === "all" ? EVENTS : EVENTS.filter(e => e.category === filterCategory);
 
   function createWebhook() {
-    if (!form.name || !form.url || form.events.length === 0) return;
+    setFormError(null);
+    if (!form.name.trim()) {
+      setFormError("Give your webhook a name");
+      return;
+    }
+    if (!form.url.trim()) {
+      setFormError("Paste a target URL");
+      return;
+    }
+    try {
+      const url = new URL(form.url);
+      if (url.protocol !== "http:" && url.protocol !== "https:") {
+        setFormError("URL must start with http(s)://");
+        return;
+      }
+    } catch {
+      setFormError("That doesn't look like a valid URL");
+      return;
+    }
+    if (form.events.length === 0) {
+      setFormError("Pick at least one event to subscribe to");
+      return;
+    }
     const webhook: WebhookConfig = {
-      id: `wh_${Date.now()}`, name: form.name, url: form.url, events: form.events,
+      id: `wh_${Date.now()}`, name: form.name.trim(), url: form.url.trim(), events: form.events,
       active: true, lastTriggered: null,
       secret: `whsec_${Math.random().toString(36).slice(2, 14)}`,
       retryCount: 3, rateLimit: 100, successCount: 0, failCount: 0,
@@ -108,6 +156,49 @@ export default function WebhooksPage() {
     setWebhooks(prev => [...prev, webhook]);
     setShowCreate(false);
     setForm({ name: "", url: "", events: [] });
+    toast.success("Webhook created (stored locally until the manage endpoint ships)");
+  }
+
+  async function sendTestWebhook() {
+    setTestStatus(null);
+    const target = webhooks.find(w => w.id === testWebhook);
+    if (!target) {
+      setTestStatus({ ok: false, message: "Pick a webhook first" });
+      return;
+    }
+    setTesting(true);
+    const payload = {
+      event: testEvent,
+      timestamp: new Date().toISOString(),
+      data: {
+        id: `test_${Math.random().toString(36).slice(2, 8)}`,
+        test: true,
+      },
+    };
+    const started = performance.now();
+    try {
+      const res = await fetch(target.url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        mode: "cors",
+      });
+      const ms = Math.round(performance.now() - started);
+      setTestStatus({
+        ok: res.ok,
+        message: res.ok
+          ? `Delivered (${res.status} · ${ms}ms)`
+          : `Target responded ${res.status} · ${ms}ms`,
+      });
+    } catch (err) {
+      console.error("[webhooks] test send failed:", err);
+      setTestStatus({
+        ok: false,
+        message: "Network error (possibly blocked by CORS). Use server-side delivery for full control.",
+      });
+    } finally {
+      setTesting(false);
+    }
   }
 
   function toggleEvent(eventId: string) {
@@ -147,7 +238,20 @@ export default function WebhooksPage() {
         <p className="text-[10px] text-muted mb-2">Send data TO Trinity from external tools (Zapier, Make, n8n)</p>
         <div className="flex gap-2">
           <code className="flex-1 text-[10px] font-mono p-2.5 rounded-lg truncate bg-surface-light border border-border">{inboundUrl}</code>
-          <button onClick={() => navigator.clipboard.writeText(inboundUrl)} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
+          <button onClick={() => { navigator.clipboard.writeText(inboundUrl); toast.success("Copied"); }} className="btn-secondary text-xs px-3"><Copy size={12} /></button>
+        </div>
+      </div>
+
+      {/* Local-only disclaimer */}
+      <div className="card border-warning/20 bg-warning/5">
+        <div className="flex items-start gap-2">
+          <AlertCircle size={12} className="text-warning shrink-0 mt-0.5" />
+          <p className="text-[10px] text-muted leading-relaxed">
+            Outbound endpoints and delivery log are stored locally in your browser while the server-side
+            <code className="mx-1 font-mono">/api/webhooks/manage</code> endpoint is wrapped up.
+            They&apos;ll persist across reloads but won&apos;t fire automatically yet. Trinity still delivers the
+            platform webhooks it already knows about (Stripe, Resend, Telegram, GHL, ElevenLabs).
+          </p>
         </div>
       </div>
 
@@ -194,8 +298,13 @@ export default function WebhooksPage() {
                     ))}
                   </div>
                 </div>
+                {formError && (
+                  <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/20 text-[10px] text-red-400 flex items-center gap-1.5">
+                    <AlertCircle size={10} /> {formError}
+                  </div>
+                )}
                 <div className="flex justify-end gap-2">
-                  <button onClick={() => setShowCreate(false)} className="btn-secondary text-xs">Cancel</button>
+                  <button onClick={() => { setShowCreate(false); setFormError(null); }} className="btn-secondary text-xs">Cancel</button>
                   <button onClick={createWebhook} className="btn-primary text-xs">Create Webhook</button>
                 </div>
               </div>
@@ -351,13 +460,17 @@ export default function WebhooksPage() {
 }`}
               </pre>
             </div>
-            <button onClick={() => setTestSent(true)} disabled={!testWebhook}
+            <button onClick={sendTestWebhook} disabled={!testWebhook || testing}
               className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-40">
-              <Play size={12} /> Send Test
+              {testing ? <Loader size={12} className="animate-spin" /> : <Play size={12} />} {testing ? "Sending..." : "Send Test"}
             </button>
-            {testSent && (
-              <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/15 text-[10px] text-emerald-400 flex items-center gap-2">
-                <CheckCircle size={12} /> Test payload sent successfully. Status: 200 OK (142ms)
+            {testStatus && (
+              <div className={`p-3 rounded-lg text-[10px] flex items-center gap-2 ${
+                testStatus.ok
+                  ? "bg-emerald-500/10 border border-emerald-500/15 text-emerald-400"
+                  : "bg-red-500/10 border border-red-500/15 text-red-400"
+              }`}>
+                {testStatus.ok ? <CheckCircle size={12} /> : <AlertCircle size={12} />} {testStatus.message}
               </div>
             )}
           </div>

@@ -8,6 +8,7 @@ import {
   Copy, TrendingUp, AlertTriangle, Edit3,
   Search, Send, Smile, LogIn, Bell, Sparkles, ExternalLink, Unlink, Loader, Bot
 } from "lucide-react";
+import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 
 interface TrinityIntegration {
@@ -125,8 +126,11 @@ export default function DiscordPage() {
       if (data.install_url) {
         window.location.href = data.install_url;
       } else {
-        alert(data.error || "Discord bot not configured yet. Ask your admin to set DISCORD_CLIENT_ID.");
+        toast.error(data.error || "Discord bot not configured yet. Ask your admin to set DISCORD_CLIENT_ID.");
       }
+    } catch (err) {
+      console.error("[discord] install-url failed:", err);
+      toast.error("Failed to start install");
     } finally {
       setInstalling(false);
     }
@@ -144,12 +148,39 @@ export default function DiscordPage() {
 
   async function removeIntegration(id: string) {
     if (!confirm("Remove this Discord integration? The bot will stop posting to this server.")) return;
-    setIntegrations(prev => prev.filter(i => i.id !== id));
-    await fetch("/api/integrations/discord/settings", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
+    const prev = integrations;
+    setIntegrations(prev.filter(i => i.id !== id));
+    try {
+      const res = await fetch("/api/integrations/discord/settings", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) {
+        setIntegrations(prev);
+        toast.error("Failed to remove integration");
+      } else {
+        toast.success("Integration removed");
+      }
+    } catch (err) {
+      console.error("[discord] removeIntegration failed:", err);
+      setIntegrations(prev);
+      toast.error("Failed to remove integration");
+    }
+  }
+
+  /** Banner shown on tabs whose UI exists but has no backend yet. */
+  function PreviewBanner() {
+    return (
+      <div className="card border-warning/20 bg-warning/5">
+        <div className="flex items-start gap-2">
+          <AlertTriangle size={12} className="text-warning shrink-0 mt-0.5" />
+          <p className="text-[10px] text-muted leading-relaxed">
+            <strong className="text-foreground">Preview only.</strong> This tab&apos;s UI is wired up for review; server-side wiring for moderation, analytics, and custom commands ships later. For now use the <span className="text-foreground">Install</span> tab to connect a server and receive real-time pings.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   function copyText(text: string, id: string) {
@@ -424,6 +455,7 @@ export default function DiscordPage() {
       {/* Servers Tab */}
       {activeTab === "Servers" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="space-y-2">
             {mockServers.map(server => (
               <div key={server.id} className={`card p-4 ${selectedServer === server.id ? "border-gold/30" : ""}`}>
@@ -479,6 +511,7 @@ export default function DiscordPage() {
       {/* Commands Tab */}
       {activeTab === "Commands" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted">Manage slash commands. Toggle to enable/disable per server.</p>
             <div className="flex gap-1">
@@ -538,6 +571,7 @@ export default function DiscordPage() {
       {/* Auto-Roles Tab */}
       {activeTab === "Auto-Roles" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <p className="text-xs text-muted">Automatically assign roles based on join events, reactions, or commands.</p>
           <div className="space-y-2">
             {autoRoles.map(role => (
@@ -586,6 +620,7 @@ export default function DiscordPage() {
       {/* Welcome Tab */}
       {activeTab === "Welcome" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Smile size={14} className="text-gold" /> Welcome Message Editor</h3>
             <div className="mb-3">
@@ -637,6 +672,7 @@ export default function DiscordPage() {
       {/* Moderation Tab */}
       {activeTab === "Moderation" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <p className="text-xs text-muted">Auto-moderation rules to keep your community safe and clean.</p>
           <div className="space-y-2">
             {modRules.map(rule => (
@@ -663,25 +699,9 @@ export default function DiscordPage() {
           {/* Mod log */}
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><AlertTriangle size={14} className="text-yellow-400" /> Recent Mod Actions</h3>
-            <div className="space-y-1.5">
-              {[
-                { user: "spammer_432", action: "Muted 10 min", reason: "Anti-Spam triggered", time: "5 min ago" },
-                { user: "newuser_88", action: "Message Deleted", reason: "Link Filter", time: "22 min ago" },
-                { user: "troll_xyz", action: "Warning Issued", reason: "Profanity Filter", time: "1 hr ago" },
-                { user: "bot_account", action: "Kicked", reason: "Raid Protection (manual)", time: "3 hrs ago" },
-              ].map((log, i) => (
-                <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-surface-light text-xs">
-                  <div className="flex items-center gap-2">
-                    <Users size={10} className="text-muted" />
-                    <span className="font-mono">{log.user}</span>
-                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-red-400/10 text-red-400">{log.action}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-[10px] text-muted">
-                    <span>{log.reason}</span>
-                    <span>{log.time}</span>
-                  </div>
-                </div>
-              ))}
+            <div className="p-6 text-center text-muted text-xs">
+              <AlertTriangle size={20} className="mx-auto mb-2 opacity-40" />
+              <p>No mod actions yet. Once moderation rules are enabled and the bot is posted to a server, auto-mod events will show up here.</p>
             </div>
           </div>
         </div>
@@ -690,12 +710,13 @@ export default function DiscordPage() {
       {/* Analytics Tab */}
       {activeTab === "Analytics" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
-              { label: "Messages Today", value: "512", icon: MessageSquare, color: "text-[#5865F2]" },
-              { label: "Active Members", value: "35", icon: Users, color: "text-green-400" },
-              { label: "New Members (7d)", value: "12", icon: UserCheck, color: "text-gold" },
-              { label: "Voice Hours (7d)", value: "28h", icon: Volume2, color: "text-purple-400" },
+              { label: "Messages Today", value: "—", icon: MessageSquare, color: "text-[#5865F2]" },
+              { label: "Active Members", value: "—", icon: Users, color: "text-green-400" },
+              { label: "New Members (7d)", value: "—", icon: UserCheck, color: "text-gold" },
+              { label: "Voice Hours (7d)", value: "—", icon: Volume2, color: "text-purple-400" },
             ].map((stat, i) => (
               <div key={i} className="card p-3 text-center">
                 <stat.icon size={16} className={`mx-auto mb-1 ${stat.color}`} />
@@ -744,6 +765,7 @@ export default function DiscordPage() {
       {/* Events Tab */}
       {activeTab === "Events" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted">Schedule and manage Discord events.</p>
             <button onClick={() => setShowNewEvent(!showNewEvent)} className="text-xs bg-gold/10 text-gold px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
@@ -806,6 +828,7 @@ export default function DiscordPage() {
       {/* Embeds Tab */}
       {activeTab === "Embeds" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Builder */}
             <div className="card p-4">
@@ -879,6 +902,7 @@ export default function DiscordPage() {
       {/* Webhooks Tab */}
       {activeTab === "Webhooks" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <p className="text-xs text-muted">Manage webhooks for external integrations and automated notifications.</p>
           <div className="space-y-2">
             {mockWebhooks.map(wh => (
@@ -935,6 +959,7 @@ export default function DiscordPage() {
       {/* Announcements Tab */}
       {activeTab === "Announcements" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="card p-4">
             <h3 className="text-sm font-semibold mb-3 flex items-center gap-2"><Megaphone size={14} className="text-gold" /> Schedule Announcement</h3>
             <div className="space-y-3">
@@ -992,6 +1017,7 @@ export default function DiscordPage() {
       {/* Insights Tab */}
       {activeTab === "Insights" && (
         <div className="space-y-4">
+          <PreviewBanner />
           <div className="flex items-center gap-2 mb-2">
             <Search size={14} className="text-muted" />
             <input value={searchMembers} onChange={e => setSearchMembers(e.target.value)} placeholder="Search members..."

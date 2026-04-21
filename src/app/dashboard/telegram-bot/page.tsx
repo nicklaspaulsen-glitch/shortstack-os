@@ -278,9 +278,11 @@ export default function TelegramBotPage() {
       const data = await res.json();
       if (res.ok) {
         setActivity(data.entries || []);
+      } else {
+        toast.error(data.error || "Couldn't load activity");
       }
-    } catch {
-      // soft fail
+    } catch (err) {
+      console.error("[telegram-bot] loadActivity failed:", err);
     } finally {
       setLoadingActivity(false);
     }
@@ -323,9 +325,10 @@ export default function TelegramBotPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ paused: newPaused }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) throw new Error(`PATCH returned ${res.status}`);
       toast.success(newPaused ? "Routine paused" : "Routine resumed");
-    } catch {
+    } catch (err) {
+      console.error("[telegram-bot] handleTogglePause failed:", err);
       toast.error("Failed to update");
       loadRoutines();
     }
@@ -856,10 +859,7 @@ export default function TelegramBotPage() {
             <p className="text-xs text-muted mt-1">Permanently remove routines and activity history</p>
             <div className="mt-3 flex gap-2 flex-wrap">
               <button
-                onClick={() => {
-                  if (!confirm("Clear all telegram activity history?")) return;
-                  toast.success("History cleared (stub)");
-                }}
+                onClick={() => toast("Server-side activity purge coming soon", { icon: "🚧" })}
                 className="px-4 py-2 bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg text-sm font-medium hover:bg-red-500/20 transition-all"
               >
                 Clear all history

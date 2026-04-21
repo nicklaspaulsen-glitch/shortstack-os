@@ -139,7 +139,11 @@ export default function InboxPage() {
     } catch {}
   }
 
-  /* ── Fetch all content from various tables ── */
+  /* ── Fetch all content from various tables ──
+     Supabase rows are untyped here (each table has ~15 fields we read without
+     pulling in the full generated types). Rather than wrap every access in a
+     runtime guard, we locally relax the `any` lint just for this iterator. */
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const fetchInbox = useCallback(async () => {
     setLoading(true);
     const readIds = getReadIds();
@@ -314,6 +318,7 @@ export default function InboxPage() {
     setItems(withReadState);
     setLoading(false);
   }, [supabase]);
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   useEffect(() => { fetchInbox(); }, [fetchInbox]);
 
@@ -1032,7 +1037,7 @@ export default function InboxPage() {
                     <textarea
                       value={replyText}
                       onChange={e => setReplyText(e.target.value)}
-                      placeholder="Type your reply..."
+                      placeholder="Type your reply... (saved as a draft — send flows per channel)"
                       className="w-full bg-transparent text-sm text-white/80 placeholder-white/20 px-4 py-3 resize-none focus:outline-none min-h-[120px]"
                       autoFocus
                     />
@@ -1045,15 +1050,19 @@ export default function InboxPage() {
                       </button>
                       <button
                         onClick={() => {
-                          if (replyText.trim()) {
-                            toast.success("Reply sent");
-                            setShowReply(false);
-                            setReplyText("");
-                          }
+                          if (!replyText.trim()) return;
+                          // Copy the draft so the user can paste into the channel's own UI.
+                          // Actual send flows differ per channel (email, SMS, outreach) and
+                          // don't have a unified endpoint yet — we don't want to fake a send.
+                          navigator.clipboard.writeText(replyText).catch(() => {});
+                          toast.success("Draft copied — paste into your send flow");
+                          setShowReply(false);
+                          setReplyText("");
                         }}
-                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gold/90 hover:bg-gold text-black text-xs font-semibold transition-all"
+                        disabled={!replyText.trim()}
+                        className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-gold/90 hover:bg-gold text-black text-xs font-semibold transition-all disabled:opacity-50"
                       >
-                        <Send size={12} /> Send Reply
+                        <Send size={12} /> Copy Draft
                       </button>
                     </div>
                   </div>

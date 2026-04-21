@@ -130,8 +130,13 @@ export default function WorkflowsPage() {
       if (data.success) {
         toast.success(`Workflow ${!active ? "activated" : "deactivated"}`);
         fetchN8n();
+      } else {
+        toast.error(data.error || "Failed to update workflow");
       }
-    } catch { toast.error("Failed to update"); }
+    } catch (err) {
+      console.error("[workflows] toggleN8nWorkflow failed:", err);
+      toast.error("Failed to update");
+    }
   }
 
   async function deleteN8nWorkflow(id: string) {
@@ -141,7 +146,10 @@ export default function WorkflowsPage() {
       if (!res.ok) throw new Error("Delete failed");
       toast.success("Workflow deleted");
       fetchN8n();
-    } catch { toast.error("Failed to delete"); }
+    } catch (err) {
+      console.error("[workflows] deleteN8nWorkflow failed:", err);
+      toast.error("Failed to delete");
+    }
   }
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [agentChat]);
 
@@ -178,9 +186,10 @@ export default function WorkflowsPage() {
         setPrompt("");
         fetchData();
       } else {
-        toast.error("Failed to design workflow");
+        toast.error(data.error || "Failed to design workflow");
       }
-    } catch {
+    } catch (err) {
+      console.error("[workflows] generateWorkflow failed:", err);
       toast.error("Error generating workflow");
     }
     setGenerating(false);
@@ -200,9 +209,10 @@ export default function WorkflowsPage() {
         toast.success(`Done — ${data.results.length} steps executed`);
         fetchData();
       } else {
-        toast.error("Workflow failed");
+        toast.error(data.error || "Workflow failed");
       }
-    } catch {
+    } catch (err) {
+      console.error("[workflows] runWorkflow failed:", err);
       toast.dismiss();
       toast.error("Error running workflow");
     }
@@ -242,7 +252,8 @@ export default function WorkflowsPage() {
           fetchData();
         }
       }
-    } catch {
+    } catch (err) {
+      console.error("[workflows] sendAgentMessage failed:", err);
       setAgentChat(prev => [...prev, { role: "agent", content: "Connection error. Try again." }]);
     }
     setAgentThinking(false);
@@ -258,6 +269,26 @@ export default function WorkflowsPage() {
     setPrompt(description);
     setTab("builder");
     setShowCreate(true);
+  }
+
+  function exportWorkflowsJson() {
+    if (workflows.length === 0) {
+      toast.error("No workflows to export yet");
+      return;
+    }
+    const payload = {
+      exported_at: new Date().toISOString(),
+      count: workflows.length,
+      workflows: workflows.map(w => ({ id: w.id, client_name: w.client_name, status: w.status, created_at: w.created_at, workflow: w.workflow })),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `workflows-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${workflows.length} workflow${workflows.length === 1 ? "" : "s"}`);
   }
 
   const CATEGORY_ICONS: Record<string, React.ReactNode> = {
@@ -893,7 +924,7 @@ export default function WorkflowsPage() {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-xs text-muted">Share workflows with your team or the community</p>
-            <button onClick={() => toast.success("Workflow shared (demo)")} className="btn-primary text-[10px] flex items-center gap-1"><Send size={10} /> Share Workflow</button>
+            <button onClick={() => toast("Community sharing coming soon", { icon: "🚧" })} className="btn-primary text-[10px] flex items-center gap-1"><Send size={10} /> Share Workflow</button>
           </div>
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Users size={13} className="text-gold" /> Community Workflows</p>
@@ -911,7 +942,7 @@ export default function WorkflowsPage() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-[9px] text-muted">{sw.downloads} downloads</span>
-                    <button onClick={() => toast.success(`Imported "${sw.name}" (demo)`)} className="btn-secondary text-[9px] flex items-center gap-1"><RotateCcw size={9} /> Import</button>
+                    <button onClick={() => toast("Import coming soon", { icon: "🚧" })} className="btn-secondary text-[9px] flex items-center gap-1"><RotateCcw size={9} /> Import</button>
                   </div>
                 </div>
               ))}
@@ -921,24 +952,20 @@ export default function WorkflowsPage() {
             <div className="card p-4">
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Send size={13} className="text-gold" /> Export Workflows</p>
               <p className="text-[10px] text-muted mb-3">Export as JSON to share or back up</p>
-              <button onClick={() => toast.success("Workflows exported (demo)")} className="btn-primary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Export All</button>
+              <button onClick={exportWorkflowsJson} className="btn-primary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Export All</button>
             </div>
             <div className="card p-4">
               <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><RotateCcw size={13} className="text-gold" /> Import Workflows</p>
               <p className="text-[10px] text-muted mb-3">Import from JSON or shared links</p>
-              <button onClick={() => toast.success("Import dialog opened (demo)")} className="btn-secondary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Import JSON</button>
+              <button onClick={() => toast("Import via JSON coming soon", { icon: "🚧" })} className="btn-secondary text-xs w-full flex items-center justify-center gap-1.5"><FileText size={12} /> Import JSON</button>
             </div>
           </div>
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><GitBranch size={13} className="text-gold" /> Workflow Versioning</p>
             <p className="text-[10px] text-muted mb-3">Each edit creates a new version. Rollback anytime.</p>
-            <div className="space-y-1.5">
-              {["v3 - Added delay node (Current)", "v2 - Updated email template", "v1 - Initial version"].map((version, i) => (
-                <div key={version} className="flex items-center justify-between p-2 rounded-lg bg-surface-light border border-border">
-                  <span className="text-[10px] flex items-center gap-2"><GitBranch size={10} className={i === 0 ? "text-gold" : "text-muted"} /><span className={i === 0 ? "font-semibold text-gold" : "text-muted"}>{version}</span></span>
-                  {i > 0 && <button onClick={() => toast.success("Rolled back (demo)")} className="btn-ghost text-[9px]"><RotateCcw size={9} /> Rollback</button>}
-                </div>
-              ))}
+            <div className="text-center py-6 text-[10px] text-muted">
+              <GitBranch size={16} className="mx-auto mb-2 text-muted/40" />
+              Version history will appear here once you edit a workflow.
             </div>
           </div>
         </div>
@@ -1034,10 +1061,11 @@ function AiWorkflowGenModal({ open, onClose }: { open: boolean; onClose: () => v
       if (data.success) {
         setResult(data.workflow);
       } else {
-        alert(data.error || "Generation failed");
+        toast.error(data.error || "Generation failed");
       }
-    } catch {
-      alert("Network error");
+    } catch (err) {
+      console.error("[workflows] AI generate failed:", err);
+      toast.error("Network error");
     } finally {
       setLoading(false);
     }

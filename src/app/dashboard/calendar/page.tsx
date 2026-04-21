@@ -10,6 +10,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
+import toast from "react-hot-toast";
 
 type ViewMode = "month" | "week" | "day";
 type EventCategory = "meeting" | "deadline" | "content" | "call";
@@ -106,11 +107,16 @@ export default function CalendarPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [draggedEvent, setDraggedEvent] = useState<string | null>(null);
-  const [syncStatus] = useState<Record<string, boolean>>({ google: true, outlook: false, apple: false });
+  // Sync status is TBD — no OAuth wiring for Google/Outlook/Apple calendars yet.
+  // We surface "Not Connected" for all three until those integrations ship.
+  const syncStatus: Record<string, boolean> = { google: false, outlook: false, apple: false };
   const [currentWeek, setCurrentWeek] = useState(() => {
-    const now = new Date(2026, 3, 13);
+    const now = new Date();
     const monday = new Date(now);
-    monday.setDate(now.getDate() - now.getDay() + 1);
+    // Monday of the current week (treat Sunday as the end of the previous week).
+    const day = now.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    monday.setDate(now.getDate() + diff);
     return monday;
   });
   const [newEvent, setNewEvent] = useState({
@@ -158,9 +164,11 @@ export default function CalendarPage() {
   const prevWeek = () => { const d = new Date(currentWeek); d.setDate(d.getDate() - 7); setCurrentWeek(d); };
   const nextWeek = () => { const d = new Date(currentWeek); d.setDate(d.getDate() + 7); setCurrentWeek(d); };
   const goToday = () => {
-    const now = new Date(2026, 3, 14);
+    const now = new Date();
     const monday = new Date(now);
-    monday.setDate(now.getDate() - now.getDay() + 1);
+    const day = now.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    monday.setDate(now.getDate() + diff);
     setCurrentWeek(monday);
   };
 
@@ -168,6 +176,60 @@ export default function CalendarPage() {
 
   const todaysEvents = filteredEvents.filter(e => e.date === today).sort((a, b) => a.time.localeCompare(b.time));
   const upcomingDeadlines = filteredEvents.filter(e => e.category === "deadline" && e.date >= today).sort((a, b) => a.date.localeCompare(b.date));
+
+  // Mark an event as completed/removed. No dedicated status column exists yet,
+  // so we just delete the row server-side and drop it from the view.
+  const confirmEvent = (id: string) => {
+    setEvents(prev => prev.filter(e => e.id !== id));
+    toast.success("Event marked complete");
+    fetch("/api/calendar", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    }).catch(err => console.error("[calendar] delete failed:", err));
+  };
+
+  const declineEvent = (id: string) => {
+    if (!confirm("Remove this event from your calendar?")) return;
+    confirmEvent(id);
+  };
+
+  // Build a simple ICS file from the filtered events and trigger a download.
+  const exportIcs = (label: "google" | "outlook") => {
+    if (filteredEvents.length === 0) {
+      toast.error("No events to export yet");
+      return;
+    }
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const fmtIcsDate = (dateStr: string, timeStr: string, mins: number) => {
+      const start = new Date(`${dateStr}T${timeStr || "09:00"}:00`);
+      const end = new Date(start.getTime() + mins * 60000);
+      const fmt = (d: Date) =>
+        `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}00Z`;
+      return [fmt(start), fmt(end)];
+    };
+    const lines: string[] = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Trinity//Calendar//EN"];
+    filteredEvents.forEach(e => {
+      const [dtstart, dtend] = fmtIcsDate(e.date, e.time, e.duration);
+      lines.push("BEGIN:VEVENT");
+      lines.push(`UID:${e.id}@trinity`);
+      lines.push(`DTSTAMP:${dtstart}`);
+      lines.push(`DTSTART:${dtstart}`);
+      lines.push(`DTEND:${dtend}`);
+      lines.push(`SUMMARY:${e.title.replace(/\n/g, " ")}`);
+      if (e.client) lines.push(`DESCRIPTION:Client: ${e.client} · Assigned: ${e.teamMember}`);
+      lines.push("END:VEVENT");
+    });
+    lines.push("END:VCALENDAR");
+    const blob = new Blob([lines.join("\r\n")], { type: "text/calendar" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `trinity-calendar-${label}.ics`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success(`Exported ${filteredEvents.length} event${filteredEvents.length === 1 ? "" : "s"} — import the .ics into ${label === "google" ? "Google Calendar" : "Outlook"}`);
+  };
 
   const handleDragStart = (eventId: string) => { setDraggedEvent(eventId); };
   const handleDrop = async (dateStr: string) => {
@@ -354,10 +416,10 @@ export default function CalendarPage() {
 
           {/* Export */}
           <div className="flex gap-2">
-            <button className="btn-secondary text-[10px] flex items-center gap-1.5">
+            <button onClick={() => exportIcs("google")} className="btn-secondary text-[10px] flex items-center gap-1.5">
               <GoogleIcon size={12} /> Export to Google
             </button>
-            <button className="btn-secondary text-[10px] flex items-center gap-1.5">
+            <button onClick={() => exportIcs("outlook")} className="btn-secondary text-[10px] flex items-center gap-1.5">
               <OutlookIcon size={12} /> Export to Outlook
             </button>
           </div>
@@ -532,8 +594,8 @@ export default function CalendarPage() {
                         </div>
                       </div>
                       <div className="flex gap-1 shrink-0">
-                        <button className="p-1.5 rounded-md hover:bg-emerald-500/10 text-emerald-500/60 hover:text-emerald-500 transition-colors"><Check size={12} /></button>
-                        <button className="p-1.5 rounded-md hover:bg-red-500/10 text-red-500/60 hover:text-red-500 transition-colors"><X size={12} /></button>
+                        <button onClick={() => confirmEvent(evt.id)} title="Mark complete" className="p-1.5 rounded-md hover:bg-emerald-500/10 text-emerald-500/60 hover:text-emerald-500 transition-colors"><Check size={12} /></button>
+                        <button onClick={() => declineEvent(evt.id)} title="Remove" className="p-1.5 rounded-md hover:bg-red-500/10 text-red-500/60 hover:text-red-500 transition-colors"><X size={12} /></button>
                       </div>
                     </div>
                   ))}

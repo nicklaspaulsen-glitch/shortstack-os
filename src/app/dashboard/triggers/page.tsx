@@ -212,7 +212,11 @@ export default function TriggersPage() {
         fetch("/api/workflows").catch(() => null),
       ]);
       const triggersData = await triggersRes.json();
-      if (triggersData.ok) setTriggers(triggersData.triggers || []);
+      if (triggersData.ok) {
+        setTriggers(triggersData.triggers || []);
+      } else {
+        toast.error(triggersData.error || "Failed to load triggers");
+      }
 
       if (wfRes && wfRes.ok) {
         const wfData = await wfRes.json();
@@ -220,6 +224,7 @@ export default function TriggersPage() {
       }
     } catch (err) {
       console.error("[triggers] load failed:", err);
+      toast.error("Failed to load triggers");
     } finally {
       setLoading(false);
     }
@@ -272,17 +277,14 @@ export default function TriggersPage() {
   async function loadRuns() {
     setShowRuns(true);
     try {
-      // There's no /api/trigger-runs endpoint yet — fall back to querying
-      // the workflow_trigger_runs table via a quick client-side Supabase
-      // call. For a first pass we just hit a new endpoint stub that may
-      // not exist, and show an empty state if so.
+      // /api/triggers/runs may not exist yet — empty state handles gracefully.
       const res = await fetch("/api/triggers/runs").catch(() => null);
       if (res && res.ok) {
         const data = await res.json();
         setRuns(data.runs || []);
       }
-    } catch {
-      /* no-op */
+    } catch (err) {
+      console.error("[triggers] loadRuns failed:", err);
     }
   }
 
@@ -568,7 +570,14 @@ function NewTriggerForm({
   );
 
   async function submit() {
-    if (!selectedType || !workflowId) return;
+    if (!selectedType) {
+      toast.error("Pick an event type first");
+      return;
+    }
+    if (!workflowId) {
+      toast.error("Pick a workflow this trigger should run");
+      return;
+    }
     setSubmitting(true);
     try {
       // Strip empty config fields so filter stays clean

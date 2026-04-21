@@ -588,11 +588,11 @@ function WorkflowBuilderInner() {
   }, [pushHistory, setNodes, setEdges, selectedNodeId]);
 
   // Register delete listener
-  useState(() => {
+  useEffect(() => {
     if (typeof window === "undefined") return;
     window.addEventListener("workflow-delete-node", deleteHandler);
     return () => window.removeEventListener("workflow-delete-node", deleteHandler);
-  });
+  }, [deleteHandler]);
 
   // Drag from palette
   const onDragOver = useCallback((e: DragEvent) => {
@@ -777,7 +777,7 @@ function WorkflowBuilderInner() {
   }, [setNodes]);
 
   // ── Keyboard shortcuts ──
-  useState(() => {
+  useEffect(() => {
     if (typeof window === "undefined") return;
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
@@ -786,7 +786,7 @@ function WorkflowBuilderInner() {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  });
+  }, [undo, redo, saveWorkflow]);
 
   /* ================================================================ */
   /*  RENDER                                                           */

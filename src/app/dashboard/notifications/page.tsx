@@ -197,8 +197,9 @@ export default function NotificationsPage() {
       if (fetchErr) throw fetchErr;
       setNotifications(data || []);
       setError(null);
-    } catch (err: any) {
-      setError(err.message || "Failed to load notifications");
+    } catch (err) {
+      console.error("[notifications] fetch failed:", err);
+      setError(err instanceof Error ? err.message : "Failed to load notifications");
     } finally {
       setLoading(false);
     }
@@ -226,8 +227,8 @@ export default function NotificationsPage() {
           table: "notifications",
           filter: `user_id=eq.${user.id}`,
         },
-        (payload: any) => {
-          setNotifications((prev) => [payload.new as Notification, ...prev]);
+        (payload: { new: Notification }) => {
+          setNotifications((prev) => [payload.new, ...prev]);
         }
       )
       .subscribe();
