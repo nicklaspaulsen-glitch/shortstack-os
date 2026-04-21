@@ -11,6 +11,7 @@ import PromptEnhancer from "@/components/prompt-enhancer";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 
@@ -97,7 +98,7 @@ export default function AIVideoPage() {
   const [results, setResults] = useState<GenerationResult[]>([]);
   const [progress, setProgress] = useState(0);
 
-  // Guided wizard
+  // Guided wizard (legacy modal — still accessible from PageHero button)
   const [wizardOpen, setWizardOpen] = useState(false);
   useEffect(() => {
     try {
@@ -105,6 +106,137 @@ export default function AIVideoPage() {
       if (!seen) setWizardOpen(true);
     } catch {}
   }, []);
+
+  // Guided Mode (in-page wizard) ↔ Advanced Mode (original controls)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("ai-video");
+  const [guidedStep, setGuidedStep] = useState(0);
+
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "prompt",
+      title: "Describe your scene",
+      description: "One or two sentences. Mention subject, lighting, camera movement, mood.",
+      icon: <Type size={18} />,
+      canProceed: prompt.trim().length > 0,
+      component: (
+        <div className="space-y-3">
+          <textarea
+            value={prompt}
+            onChange={e => setPrompt(e.target.value)}
+            placeholder="e.g., Golden retriever running through a field of sunflowers at sunset, cinematic warm lighting, slow tracking shot"
+            rows={4}
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+            autoFocus
+          />
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Need inspiration? Try one</p>
+            <div className="flex flex-wrap gap-1.5">
+              {PROMPT_IDEAS.slice(0, 4).map((idea, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPrompt(idea)}
+                  className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
+                >
+                  {idea.slice(0, 45)}…
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "aspect",
+      title: "Pick a shape",
+      description: "Match the platform where this video will live.",
+      icon: <Monitor size={18} />,
+      component: (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {[
+            { id: "9:16", label: "Vertical", sub: "TikTok, Reels, Shorts", emoji: "📱", box: "h-20 w-12" },
+            { id: "16:9", label: "Landscape", sub: "YouTube, web", emoji: "🖥️", box: "h-12 w-20" },
+            { id: "1:1", label: "Square", sub: "Instagram feed", emoji: "⬜", box: "h-16 w-16" },
+          ].map(ar => (
+            <button
+              key={ar.id}
+              onClick={() => setAspectRatio(ar.id)}
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
+                aspectRatio === ar.id
+                  ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                  : "border-border hover:border-gold/30 bg-surface-light"
+              }`}
+            >
+              <div className={`${ar.box} rounded-md bg-gradient-to-br from-gold/30 to-amber-400/20 border border-gold/20 flex items-center justify-center text-lg`}>
+                {ar.emoji}
+              </div>
+              <div>
+                <p className="text-sm font-semibold">{ar.id}</p>
+                <p className="text-[10px] text-muted">{ar.label}</p>
+                <p className="text-[9px] text-muted/70">{ar.sub}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: "duration",
+      title: "How long?",
+      description: "Longer clips take more GPU time. 3 seconds is the sweet spot.",
+      icon: <Clock size={18} />,
+      component: (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          {[
+            { f: 24, label: "1s", sub: "Fastest", emoji: "⚡" },
+            { f: 48, label: "2s", sub: "Quick", emoji: "🎯" },
+            { f: 72, label: "3s", sub: "Recommended", emoji: "⭐" },
+            { f: 120, label: "5s", sub: "Max quality", emoji: "💎" },
+          ].map(opt => (
+            <button
+              key={opt.f}
+              onClick={() => setNumFrames(opt.f)}
+              className={`p-3 rounded-xl border transition-all text-center ${
+                numFrames === opt.f
+                  ? "border-gold bg-gold/10"
+                  : "border-border hover:border-gold/30 bg-surface-light"
+              }`}
+            >
+              <div className="text-xl mb-1">{opt.emoji}</div>
+              <p className="text-sm font-bold">{opt.label}</p>
+              <p className="text-[9px] text-muted">{opt.sub}</p>
+            </button>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: "review",
+      title: "Ready to generate?",
+      description: "Click the big button and your clip will start rendering on the GPU.",
+      icon: <Sparkles size={18} />,
+      component: (
+        <div className="space-y-3">
+          <div className="card bg-gold/[0.04] border-gold/20">
+            <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-2">Your prompt</p>
+            <p className="text-sm text-foreground leading-relaxed">{prompt || <span className="text-muted italic">(no prompt set)</span>}</p>
+            <div className="grid grid-cols-2 gap-3 mt-4 pt-3 border-t border-border/50">
+              <div>
+                <p className="text-[9px] uppercase tracking-wider text-muted">Aspect</p>
+                <p className="text-xs font-semibold">{aspectRatio}</p>
+              </div>
+              <div>
+                <p className="text-[9px] uppercase tracking-wider text-muted">Duration</p>
+                <p className="text-xs font-semibold">~{(numFrames / 24).toFixed(1)}s ({numFrames} frames)</p>
+              </div>
+            </div>
+          </div>
+          <p className="text-[11px] text-muted text-center">
+            Want finer control? Flip to <span className="text-gold font-semibold">Advanced mode</span> at the top.
+          </p>
+        </div>
+      ),
+    },
+  ];
 
   async function generateVideo() {
     if (!prompt.trim()) { toast.error("Enter a video description"); return; }
@@ -325,18 +457,29 @@ export default function AIVideoPage() {
         gradient="purple"
         actions={
           <>
-            <button
-              onClick={() => setWizardOpen(true)}
-              className="text-[10px] px-3 py-1 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black font-semibold hover:shadow-lg hover:shadow-gold/30 flex items-center gap-1"
-            >
-              <Sparkles size={10} /> Guided Mode
-            </button>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg flex items-center gap-1">
               <Zap size={9} /> GPU Serverless
             </span>
           </>
         }
       />
+
+      {/* Guided Mode — the "4-year-old friendly" path */}
+      {!advancedMode && (
+        <Wizard
+          steps={guidedSteps}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={generating ? "Generating…" : "Generate video"}
+          busy={generating}
+          onFinish={async () => {
+            await generateVideo();
+          }}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
 
       {/* Step-by-step guided wizard */}
       <CreationWizard
@@ -371,6 +514,7 @@ export default function AIVideoPage() {
         }}
       />
 
+      {advancedMode && (
       <div className="grid grid-cols-1 lg:grid-cols-7 gap-5">
         {/* Left — Controls */}
         <div className="lg:col-span-3 space-y-4">
@@ -591,6 +735,51 @@ export default function AIVideoPage() {
           )}
         </div>
       </div>
+      )}
+
+      {/* Result preview shown in guided mode too (once generated) */}
+      {!advancedMode && results.length > 0 && (
+        <div className="space-y-3">
+          <h2 className="section-header flex items-center gap-2">
+            <Film size={14} className="text-gold" /> Your generated videos
+          </h2>
+          {results.slice(0, 3).map(result => (
+            <div key={result.id} className="card">
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium mb-1 line-clamp-2">{result.prompt}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{result.aspect_ratio}</span>
+                    {result.status === "generating" && (
+                      <span className="text-[8px] text-gold flex items-center gap-1">
+                        <Loader size={8} className="animate-spin" /> Generating…
+                      </span>
+                    )}
+                    {result.status === "completed" && (
+                      <span className="text-[8px] text-success flex items-center gap-1">
+                        <Play size={8} /> Ready
+                      </span>
+                    )}
+                    {result.status === "failed" && (
+                      <span className="text-[8px] text-danger">Failed</span>
+                    )}
+                  </div>
+                </div>
+                {result.url && (
+                  <a href={result.url} download className="btn-secondary text-[10px] flex items-center gap-1">
+                    <Download size={10} /> Download
+                  </a>
+                )}
+              </div>
+              {result.url && (
+                <div className="mt-3 rounded-xl overflow-hidden bg-black aspect-video">
+                  <video src={result.url} controls className="w-full h-full object-contain" />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* How to use it — tutorial walkthrough */}
       <TutorialSection
