@@ -774,7 +774,13 @@ export default function SequencesPage() {
                       <span className="font-semibold">{seq.name}</span>
                       <span className="text-muted">({seq.enrolled} enrolled)</span>
                     </div>
-                    <button className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${
+                    <button
+                      onClick={() => {
+                        const updated = { ...seq, active: !seq.active };
+                        setSequences(prev => prev.map(s => s.id === seq.id ? updated : s));
+                        if (activeSequence?.id === seq.id) setActiveSequence(updated);
+                      }}
+                      className={`text-[9px] px-2 py-1 rounded flex items-center gap-1 ${
                       seq.active ? "bg-red-400/10 text-red-400" : "bg-green-400/10 text-green-400"
                     }`}>
                       {seq.active ? <><Pause size={8} /> Pause</> : <><Play size={8} /> Resume</>}
