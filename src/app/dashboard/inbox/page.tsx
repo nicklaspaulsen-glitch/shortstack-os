@@ -548,8 +548,8 @@ export default function InboxPage() {
                   <Zap size={11} /> Auto-Runs
                 </button>
               </div>
-              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all" title="Refresh">
-                <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} />
+              <button onClick={view === "auto-runs" ? fetchAutoRuns : fetchInbox} className="p-2 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-all" title="Refresh" aria-label="Refresh">
+                <RefreshCw size={14} className={loading || autoRunsLoading ? "animate-spin" : ""} aria-hidden="true" />
               </button>
               {view === "inbox" && (
                 <button onClick={() => setShowArchived(!showArchived)} className={`px-3 py-1.5 rounded-lg text-xs text-white transition-all ${showArchived ? "bg-white/25" : "bg-white/10 hover:bg-white/20"}`}>

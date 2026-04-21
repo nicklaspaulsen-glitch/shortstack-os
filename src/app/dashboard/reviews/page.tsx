@@ -392,6 +392,7 @@ function ReviewCard({
             onClick={onDelete}
             className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-300 hover:bg-rose-500/20"
             title="Delete"
+            aria-label="Delete review"
           >
             <Trash2 size={11} />
           </button>
@@ -438,7 +439,7 @@ function NewReviewForm({
     <div className="rounded-xl border border-gold/30 bg-gold/5 p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground">
+          <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to reviews list">
             <ArrowLeft size={14} />
           </button>
           <h3 className="text-base font-semibold">Log review</h3>

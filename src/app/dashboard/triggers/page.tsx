@@ -500,6 +500,7 @@ function TriggerRowCard({
             onClick={onFire}
             className="rounded bg-surface-light/80 px-2 py-1.5 text-[11px] text-muted hover:bg-surface-light hover:text-foreground"
             title="Fire this trigger manually (for testing)"
+            aria-label="Fire this trigger manually for testing"
           >
             <Sparkles size={11} />
           </button>
@@ -511,6 +512,7 @@ function TriggerRowCard({
                 : "bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25"
             }`}
             title={trigger.is_active ? "Pause" : "Resume"}
+            aria-label={trigger.is_active ? "Pause trigger" : "Resume trigger"}
           >
             {trigger.is_active ? <Pause size={11} /> : <Play size={11} />}
           </button>
@@ -518,6 +520,8 @@ function TriggerRowCard({
             onClick={() => setExpanded(!expanded)}
             className="rounded bg-surface-light/80 px-2 py-1.5 text-muted hover:text-foreground"
             title="Show config"
+            aria-label={expanded ? "Hide config" : "Show config"}
+            aria-expanded={expanded}
           >
             {expanded ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
           </button>
@@ -525,6 +529,7 @@ function TriggerRowCard({
             onClick={onDelete}
             className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-300 hover:bg-rose-500/20"
             title="Delete"
+            aria-label="Delete trigger"
           >
             <Trash2 size={11} />
           </button>
@@ -612,7 +617,7 @@ function NewTriggerForm({
     <div className="rounded-xl border border-gold/30 bg-gold/5 p-5">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground">
+          <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to triggers list">
             <ArrowLeft size={14} />
           </button>
           <h3 className="text-base font-semibold">New trigger</h3>

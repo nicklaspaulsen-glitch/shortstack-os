@@ -1349,8 +1349,8 @@ export default function DMControllerPage() {
                         r.enabled ? "left-[22px]" : "left-0.5"
                       )} />
                     </button>
-                    <button className="p-1.5 rounded-lg border border-border text-muted hover:text-foreground"><Edit3 size={11} /></button>
-                    <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border text-muted hover:text-red-400"><Trash2 size={11} /></button>
+                    <button className="p-1.5 rounded-lg border border-border text-muted hover:text-foreground" aria-label="Edit rule"><Edit3 size={11} /></button>
+                    <button onClick={() => setRules(rs => rs.filter(x => x.id !== r.id))} className="p-1.5 rounded-lg border border-border text-muted hover:text-red-400" aria-label="Delete rule"><Trash2 size={11} /></button>
                   </div>
                 ))}
               </div>

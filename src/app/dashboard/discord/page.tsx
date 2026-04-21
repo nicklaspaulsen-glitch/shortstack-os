@@ -817,7 +817,7 @@ export default function DiscordPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   {event.recurring && <span className="text-[9px] px-2 py-0.5 rounded-full bg-purple-400/10 text-purple-400">Recurring</span>}
-                  <button className="text-[10px] text-muted hover:text-foreground"><Edit3 size={12} /></button>
+                  <button className="text-[10px] text-muted hover:text-foreground" aria-label="Edit event"><Edit3 size={12} /></button>
                 </div>
               </div>
             ))}
@@ -919,10 +919,10 @@ export default function DiscordPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className={`text-[9px] px-2 py-0.5 rounded-full ${wh.status === "active" ? "bg-green-400/10 text-green-400" : "bg-gray-400/10 text-gray-400"}`}>{wh.status}</span>
-                  <button onClick={() => copyText(wh.url, wh.id)} className="p-1.5 rounded hover:bg-surface-light">
+                  <button onClick={() => copyText(wh.url, wh.id)} className="p-1.5 rounded hover:bg-surface-light" aria-label="Copy webhook URL">
                     {copiedId === wh.id ? <Check size={12} className="text-green-400" /> : <Copy size={12} className="text-muted" />}
                   </button>
-                  <button className="p-1.5 rounded hover:bg-surface-light"><Trash2 size={12} className="text-red-400" /></button>
+                  <button className="p-1.5 rounded hover:bg-surface-light" aria-label="Delete webhook"><Trash2 size={12} className="text-red-400" /></button>
                 </div>
               </div>
             ))}

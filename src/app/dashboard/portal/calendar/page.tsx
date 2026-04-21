@@ -180,9 +180,9 @@ export default function ContentCalendarPage() {
 
       {/* Month navigation */}
       <div className="flex items-center justify-between">
-        <button onClick={prevMonth} className="btn-ghost"><ChevronLeft size={16} /></button>
+        <button onClick={prevMonth} className="btn-ghost" aria-label="Previous month"><ChevronLeft size={16} /></button>
         <h2 className="text-sm font-semibold">{monthName}</h2>
-        <button onClick={nextMonth} className="btn-ghost"><ChevronRight size={16} /></button>
+        <button onClick={nextMonth} className="btn-ghost" aria-label="Next month"><ChevronRight size={16} /></button>
       </div>
 
       {/* Calendar grid */}
