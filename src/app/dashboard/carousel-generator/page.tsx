@@ -10,6 +10,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
 
@@ -451,6 +452,10 @@ export default function CarouselGeneratorPage() {
   // Wizard state
   const [wizardOpen, setWizardOpen] = useState(false);
 
+  // Guided Mode ↔ Advanced Mode (full form + slide editor)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("carousel-generator");
+  const [guidedStep, setGuidedStep] = useState(0);
+
   // Preview scroll ref
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -619,16 +624,19 @@ export default function CarouselGeneratorPage() {
         gradient="gold"
         actions={
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setWizardOpen(true)}
-              className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/20 hover:shadow-gold/40 hover-lift transition-all"
-            >
-              <Sparkles size={13} className="animate-pulse" />
-              + New with AI
-              <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
-                Recommended
-              </span>
-            </button>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <button
+                onClick={() => setWizardOpen(true)}
+                className="relative group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/20 hover:shadow-gold/40 hover-lift transition-all"
+              >
+                <Sparkles size={13} className="animate-pulse" />
+                + New with AI
+                <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
+                  Recommended
+                </span>
+              </button>
+            )}
             {slides.length > 0 && (
               <>
                 <button
@@ -651,6 +659,170 @@ export default function CarouselGeneratorPage() {
         }
       />
 
+      {/* Guided Mode — "4-year-old friendly" */}
+      {!advancedMode && (
+        <Wizard
+          className="mb-6"
+          steps={[
+            {
+              id: "topic",
+              title: "What's your carousel about?",
+              description: "One sentence — what's the post teaching, telling, or selling?",
+              icon: <Sparkles size={18} />,
+              canProceed: topic.trim().length > 0,
+              component: (
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={topic}
+                    onChange={e => setTopic(e.target.value)}
+                    placeholder="e.g., 5 mistakes new founders make in their first year"
+                    className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+                    autoFocus
+                  />
+                  <div>
+                    <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Starter templates</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {TEMPLATES.slice(0, 5).map(t => (
+                        <button
+                          key={t.id}
+                          onClick={() => { setTopic(t.example); setTemplate(t.id); }}
+                          className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
+                        >
+                          {t.name}: {t.example.slice(0, 30)}…
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ),
+            },
+            {
+              id: "style",
+              title: "Pick a look",
+              description: "The style sets the mood — elegant, bold, fun, premium.",
+              icon: <Palette size={18} />,
+              component: (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  {STYLES.map(s => {
+                    const selected = style === s.id;
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => setStyle(s.id)}
+                        className={`text-left rounded-xl border overflow-hidden transition-all ${
+                          selected ? "border-gold ring-2 ring-gold/30" : "border-border hover:border-gold/30"
+                        }`}
+                      >
+                        <div className="h-16" style={{ background: s.preview }}>
+                          <div className="h-full flex items-center justify-center">
+                            <span className="text-xs font-bold" style={{ color: s.text }}>Aa</span>
+                          </div>
+                        </div>
+                        <div className="p-2.5 bg-surface-light">
+                          <p className="text-xs font-semibold">{s.name}</p>
+                          <p className="text-[10px] text-muted">{s.desc}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              ),
+            },
+            {
+              id: "slides",
+              title: "How many slides?",
+              description: "Most carousels do best at 6-8 slides. More than 10 loses people.",
+              icon: <LayoutGrid size={18} />,
+              component: (
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                  {[4, 6, 8, 10, 12].map(n => (
+                    <button
+                      key={n}
+                      onClick={() => setSlideCount(n)}
+                      className={`p-4 rounded-xl border text-center transition-all ${
+                        slideCount === n
+                          ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                          : "border-border hover:border-gold/30 bg-surface-light"
+                      }`}
+                    >
+                      <p className="text-2xl font-bold">{n}</p>
+                      <p className="text-[10px] text-muted">slides</p>
+                    </button>
+                  ))}
+                </div>
+              ),
+            },
+            {
+              id: "review",
+              title: "Ready to generate?",
+              description: "We'll draft all your slides now. You can tweak individual cards in Advanced mode.",
+              icon: <Wand2 size={18} />,
+              component: (
+                <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Style</p>
+                      <p className="text-xs font-semibold capitalize">{style}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Slides</p>
+                      <p className="text-xs font-semibold">{slideCount}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Template</p>
+                      <p className="text-xs font-semibold">{TEMPLATES.find(t => t.id === template)?.name || "Custom"}</p>
+                    </div>
+                  </div>
+                  <div className="pt-2 border-t border-border/50">
+                    <p className="text-[9px] uppercase tracking-wider text-muted">Topic</p>
+                    <p className="text-sm font-semibold">{topic || <span className="text-muted italic">(none)</span>}</p>
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={generating ? "Generating…" : "Generate slides"}
+          busy={generating}
+          onFinish={handleGenerate}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
+      {/* Slide preview in guided mode (after generation) */}
+      {!advancedMode && slides.length > 0 && (
+        <div className="card mb-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="section-header flex items-center gap-2">
+              <LayoutGrid size={14} className="text-gold" /> Your carousel ({slides.length} slides)
+            </h2>
+            <button
+              onClick={handleCopyAll}
+              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 transition-colors"
+            >
+              {copied ? <Check size={11} /> : <Copy size={11} />} {copied ? "Copied!" : "Copy text"}
+            </button>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            {slides.map(s => (
+              <div key={s.slideNumber} className="rounded-xl border border-border bg-surface-light p-3 aspect-square flex flex-col">
+                <span className="text-[9px] uppercase tracking-wider text-muted">Slide {s.slideNumber}</span>
+                <p className="text-sm font-bold leading-tight mt-1 line-clamp-3">{s.headline}</p>
+                <p className="text-[10px] text-muted line-clamp-4 mt-2">{s.body}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-[11px] text-muted text-center pt-2">
+            Need to edit slides or change brand colors? Flip to <span className="text-gold font-semibold">Advanced mode</span>.
+          </p>
+        </div>
+      )}
+
+      {advancedMode && (
+      <>
       {/* Rolling preview of example carousels — 1:1 Instagram-native aspect */}
       <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-5">
         <div className="absolute inset-0 pointer-events-none">
@@ -1262,6 +1434,8 @@ export default function CarouselGeneratorPage() {
           </div>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
