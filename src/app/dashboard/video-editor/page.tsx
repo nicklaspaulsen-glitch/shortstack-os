@@ -29,6 +29,7 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
+import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { ADS_PRESET } from "@/lib/video-presets/ads";
@@ -1424,6 +1425,11 @@ export default function VideoEditorPage() {
       if (!seen) setVideoWizardOpen(true);
     } catch {}
   }, []);
+
+  // Guided Mode ↔ Advanced Mode (full 6-subtab editor)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("video-editor");
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [guidedFootageSource, setGuidedFootageSource] = useState<"upload" | "record" | "ai">("upload");
   const [config, setConfig] = useState({
     type: "reel",
     title: "",
@@ -3197,10 +3203,185 @@ export default function VideoEditorPage() {
         title="AI Video Editor"
         subtitle="Script, style, caption. AI writes, GPU renders — you hit publish."
         gradient="sunset"
+        actions={<AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />}
       />
 
+      {/* Guided Mode — 5-step "4-year-old friendly" flow */}
+      {!advancedMode && (
+        <Wizard
+          steps={[
+            {
+              id: "type",
+              title: "What kind of video?",
+              description: "This sets the aspect ratio and default length.",
+              icon: <Film size={18} />,
+              component: (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+                  {VIDEO_TYPES.slice(0, 4).map(vt => {
+                    const selected = config.type === vt.id;
+                    return (
+                      <button
+                        key={vt.id}
+                        onClick={() => setConfig(prev => ({ ...prev, type: vt.id, aspect_ratio: vt.aspect, duration: vt.duration }))}
+                        className={`text-left p-4 rounded-xl border transition-all ${
+                          selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                        }`}
+                      >
+                        <div className={`w-full rounded-lg mb-2 bg-gradient-to-br from-gold/30 to-amber-400/20 flex items-center justify-center ${
+                          vt.aspect === "9:16" ? "h-20" : vt.aspect === "1:1" ? "h-16" : "h-14"
+                        }`}>
+                          <span className="text-gold">{vt.icon}</span>
+                        </div>
+                        <p className="text-xs font-bold">{vt.name}</p>
+                        <p className="text-[10px] text-muted">{vt.aspect} · ~{vt.duration}s</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              ),
+            },
+            {
+              id: "topic",
+              title: "What's it about?",
+              description: "A single sentence works. This becomes the script title and drives everything downstream.",
+              icon: <Type size={18} />,
+              canProceed: config.title.trim().length > 0,
+              component: (
+                <textarea
+                  value={config.title}
+                  onChange={e => setConfig(prev => ({ ...prev, title: e.target.value, script: e.target.value }))}
+                  placeholder="e.g., 30-second hook for my new course launch"
+                  rows={3}
+                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                  autoFocus
+                />
+              ),
+            },
+            {
+              id: "footage",
+              title: "Do you have footage?",
+              description: "No worries either way — AI can fill in with stock/b-roll.",
+              icon: <Upload size={18} />,
+              component: (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {[
+                    { id: "upload" as const, label: "Upload clips", sub: "Your own video files", icon: <Upload size={24} /> },
+                    { id: "record" as const, label: "Record now", sub: "Use your camera", icon: <Camera size={24} /> },
+                    { id: "ai" as const, label: "AI generates", sub: "Stock + b-roll + text", icon: <Sparkles size={24} /> },
+                  ].map(opt => {
+                    const selected = guidedFootageSource === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        onClick={() => setGuidedFootageSource(opt.id)}
+                        className={`p-5 rounded-xl border text-center transition-all ${
+                          selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                        }`}
+                      >
+                        <div className="w-12 h-12 rounded-full bg-gold/15 flex items-center justify-center mx-auto mb-3 text-gold">
+                          {opt.icon}
+                        </div>
+                        <p className="text-sm font-bold">{opt.label}</p>
+                        <p className="text-[10px] text-muted mt-0.5">{opt.sub}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              ),
+            },
+            {
+              id: "pack",
+              title: "Pick a creator pack",
+              description: "These are proven styles — captions, zooms, color grading tuned for each creator.",
+              icon: <Palette size={18} />,
+              optional: true,
+              component: (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  {YOUTUBER_PRESETS.slice(0, 6).map(p => {
+                    const selected = selectedYouTuberPreset === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() => applyYouTuberPreset(p)}
+                        className={`text-left rounded-xl border overflow-hidden transition-all ${
+                          selected ? "border-gold ring-2 ring-gold/30 shadow-lg shadow-gold/20" : "border-border hover:border-gold/30"
+                        }`}
+                      >
+                        <div className={`h-16 ${p.preview}`} />
+                        <div className="p-2.5 bg-surface-light">
+                          <p className="text-xs font-bold">{p.name}</p>
+                          <p className="text-[9px] text-muted line-clamp-2">{p.tagline}</p>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              ),
+            },
+            {
+              id: "review",
+              title: "Ready to generate?",
+              description: "We'll assemble the edit. Fine-tune captions, music, SFX, and scenes in Advanced mode.",
+              icon: <Wand2 size={18} />,
+              component: (
+                <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Type</p>
+                      <p className="text-xs font-semibold">{VIDEO_TYPES.find(t => t.id === config.type)?.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Aspect</p>
+                      <p className="text-xs font-semibold">{config.aspect_ratio}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Footage</p>
+                      <p className="text-xs font-semibold capitalize">{guidedFootageSource}</p>
+                    </div>
+                    <div>
+                      <p className="text-[9px] uppercase tracking-wider text-muted">Duration</p>
+                      <p className="text-xs font-semibold">{config.duration}s</p>
+                    </div>
+                  </div>
+                  <div className="pt-2 border-t border-border/50">
+                    <p className="text-[9px] uppercase tracking-wider text-muted">Topic</p>
+                    <p className="text-sm font-semibold line-clamp-2">{config.title || <span className="text-muted italic">(none)</span>}</p>
+                  </div>
+                </div>
+              ),
+            },
+          ]}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={generating ? "Rendering…" : "Generate video"}
+          busy={generating}
+          onFinish={async () => {
+            await generateVideo();
+          }}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
+      {/* Result in guided mode */}
+      {!advancedMode && result && (
+        <div className="card space-y-3">
+          <h2 className="section-header flex items-center gap-2">
+            <Film size={14} className="text-gold" /> {config.title || "Your video"}
+          </h2>
+          {result.url ? (
+            <video src={result.url} controls className="w-full rounded-xl border border-border bg-black" />
+          ) : (
+            <div className="rounded-xl border border-gold/20 bg-gold/[0.03] p-4">
+              <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-1.5">Scene plan ready</p>
+              <pre className="text-[11px] text-foreground/90 whitespace-pre-wrap font-sans leading-relaxed">{result.plan || "Plan generated — check Advanced mode to review full details."}</pre>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Landing-state rolling preview — compact strip, only while empty. */}
-      {!aiProject && (
+      {advancedMode && !aiProject && (
         <div className="relative rounded-xl overflow-hidden border border-border bg-surface-light/30 py-2 h-14">
           <div className="absolute inset-0 pointer-events-none">
             <RollingPreview
@@ -3263,6 +3444,8 @@ export default function VideoEditorPage() {
         }}
       />
 
+      {advancedMode && (
+      <>
       <div className="flex items-center justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <button
@@ -3270,7 +3453,7 @@ export default function VideoEditorPage() {
             className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold/20 to-amber-500/20 border border-gold/30 text-gold hover:from-gold/30 hover:to-amber-500/30 hover-lift flex items-center gap-1.5"
             title="Step-by-step guided creation for beginners"
           >
-            <Sparkles size={12} /> Guided Mode
+            <Sparkles size={12} /> Legacy Wizard
           </button>
           <button
             onClick={() => {
@@ -7153,6 +7336,8 @@ export default function VideoEditorPage() {
           toast.success(`Font applied: ${font.family}`);
         }}
       />
+      </>
+      )}
     </div>
   );
 }
