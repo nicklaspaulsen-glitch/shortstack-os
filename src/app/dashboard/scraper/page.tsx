@@ -1284,16 +1284,8 @@ export default function ScraperPage() {
                     const a = document.createElement("a"); a.href = url; a.download = "leads.json"; a.click();
                     toast.success("JSON downloaded");
                   }} className="btn-secondary flex items-center gap-1.5 text-[10px] py-1.5"><Download size={12} /> JSON</button>
-                  <button onClick={async () => {
-                    toast.loading("Syncing to GoHighLevel...");
-                    try {
-                      const res = await fetch("/api/ghl/sync-leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ leads: results.slice(0, 100) }) });
-                      toast.dismiss();
-                      const data = await res.json();
-                      if (data.success) toast.success(`${data.synced} leads synced to GHL!`);
-                      else toast.error(data.error || "GHL sync failed");
-                    } catch { toast.dismiss(); toast.error("Failed to sync with GHL"); }
-                  }} className="btn-primary flex items-center gap-1.5 text-[10px] py-1.5"><Send size={12} /> Push to CRM</button>
+                  {/* Push to CRM (GHL) removed Apr 21 — leads are stored natively
+                      in the `leads` table via the scraper import path. */}
                 </div>
               </div>
               {/* Results Preview Cards */}

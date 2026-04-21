@@ -52,19 +52,10 @@ export async function POST(request: NextRequest) {
     role: "client",
   });
 
-  // Link client record to this user profile
+  // Link client record to this user profile. GHL sub-account auto-creation
+  // removed Apr 21 — clients live in the native `clients` table only.
   if (client_id) {
     await supabase.from("clients").update({ profile_id: userData.id }).eq("id", client_id);
-
-    // Auto-create GHL sub-account for this client
-    const { data: client } = await supabase.from("clients").select("business_name, phone").eq("id", client_id).single();
-    if (client && process.env.GHL_AGENCY_KEY) {
-      fetch(`${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/ghl/create-subaccount`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ client_id, business_name: client.business_name, email, phone: client.phone }),
-      }).catch(() => {});
-    }
   }
 
   return NextResponse.json({ success: true, user_id: userData.id });

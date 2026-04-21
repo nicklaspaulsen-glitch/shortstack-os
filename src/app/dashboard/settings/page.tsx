@@ -46,7 +46,6 @@ interface AgentConfig {
 const INTEGRATIONS = [
   { name: "Supabase", key: "NEXT_PUBLIC_SUPABASE_URL", category: "Core" },
   { name: "Claude AI (Anthropic)", key: "ANTHROPIC_API_KEY", category: "AI" },
-  { name: "GoHighLevel", key: "GHL_API_KEY", category: "CRM" },
   { name: "Telegram", key: "TELEGRAM_BOT_TOKEN", category: "Communication" },
   { name: "Slack", key: "SLACK_BOT_TOKEN", category: "Communication" },
   { name: "Stripe", key: "STRIPE_SECRET_KEY", category: "Payments" },

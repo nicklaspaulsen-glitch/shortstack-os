@@ -144,33 +144,13 @@ export async function POST(request: NextRequest) {
     results.zernio = zernio;
   }
 
-  // 6. Auto-create GHL sub-account
-  const ghlKey = process.env.GHL_API_KEY;
-  if (ghlKey) {
-    try {
-      const ghlRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/ghl/sub-account`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Cookie": request.headers.get("cookie") || "" },
-        body: JSON.stringify({
-          client_id: client.id,
-          business_name,
-          email,
-          phone,
-          industry,
-        }),
-      });
-      const ghlData = await ghlRes.json();
-      results.ghl = ghlData.success ? { created: true, location_id: ghlData.location_id } : { created: false, error: ghlData.error };
-    } catch {
-      results.ghl = { created: false, error: "GHL connection failed" };
-    }
-  }
+  // 6. GHL sub-account creation removed Apr 21 — clients now live in the
+  // native `clients` table only. See MEMORY migration plan.
 
   // 7. Notify on Telegram
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (chatId) {
-    const ghlStatus = (results.ghl as Record<string, unknown>)?.created ? " + GHL sub-account" : "";
-    await sendTelegramMessage(chatId, `🎉 *New Client Onboarded!*\n\n*${business_name}*\nContact: ${contact_name}\nPackage: ${package_tier || "Growth"}\nMRR: $${mrr}\nServices: ${(services || []).join(", ")}${ghlStatus}`);
+    await sendTelegramMessage(chatId, `🎉 *New Client Onboarded!*\n\n*${business_name}*\nContact: ${contact_name}\nPackage: ${package_tier || "Growth"}\nMRR: $${mrr}\nServices: ${(services || []).join(", ")}`);
   }
 
   // 8. Log in trinity

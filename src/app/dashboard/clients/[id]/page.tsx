@@ -400,38 +400,6 @@ export default function ClientDetailPage() {
           {/* Telegram Bot */}
           <TelegramBotSetup clientId={id as string} client={client} onUpdate={fetchAll} />
 
-          <div className="card">
-            <h3 className="section-header">GHL Sub-Account</h3>
-            {client?.ghl_location_id ? (
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-success" />
-                <div>
-                  <p className="text-xs font-medium">Connected</p>
-                  <p className="text-[9px] text-muted font-mono">Location ID: {client.ghl_location_id}</p>
-                </div>
-              </div>
-            ) : (
-              <div>
-                <p className="text-xs text-muted mb-2">No GHL sub-account linked to this client</p>
-                <button onClick={async () => {
-                  toast.loading("Creating GHL sub-account...");
-                  try {
-                    const res = await fetch("/api/ghl/sub-account", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ client_id: id, business_name: client?.business_name, email: client?.email }),
-                    });
-                    const data = await res.json();
-                    toast.dismiss();
-                    if (data.success) { toast.success("GHL sub-account created!"); fetchAll(); }
-                    else toast.error(data.error || "Failed");
-                  } catch { toast.dismiss(); toast.error("Error"); }
-                }} className="btn-primary text-[10px] py-1.5 px-3">
-                  Create GHL Sub-Account
-                </button>
-              </div>
-            )}
-          </div>
         </div>
       )}
     </div>

@@ -3,21 +3,23 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
 
-// Initiate cold call via GoHighLevel
+// DEPRECATED — Legacy GHL cold-call endpoint.
+// This route now delegates to the native ElevenAgents caller via /api/call.
+// The GHL implementation was removed Apr 21 per MEMORY migration plan.
+// Kept in place so any existing UI that posts here continues to work.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // SECURITY: scope all lead reads to the caller's owner so a body-supplied
-  // lead_id can't reach into another tenant's data.
+  // Owner scoping — matches the native /api/call contract.
   const ownerId = await getEffectiveOwnerId(supabase, user.id);
   if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { lead_id, phone_number, business_name, campaign_id } = await request.json();
+  const { lead_id, phone_number, business_name } = await request.json();
 
-  // Plan-tier cap: mirror `/api/call` and `/api/caller/initiate` so this
-  // endpoint can't be used to bypass call_minutes limits.
+  // Plan-tier cap: mirror `/api/call` so this endpoint can't be used to bypass
+  // call_minutes limits.
   const gate = await checkLimit(ownerId, "call_minutes", 1);
   if (!gate.allowed) {
     return NextResponse.json(
@@ -26,18 +28,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const ghlKey = process.env.GHL_API_KEY;
-  if (!ghlKey) return NextResponse.json({ error: "GHL not configured" }, { status: 500 });
-
   const serviceSupabase = createServiceClient();
 
-  // Get lead data — ALWAYS scoped to the caller's owner. If the supplied
-  // lead_id doesn't belong to this owner, the lookup returns no row and we
-  // fall back to the (optional) phone_number/business_name passed in the body.
+  // Resolve phone + business name from lead_id when provided, owner-scoped.
   let phone = phone_number;
   let name = business_name || "Lead";
-  let leadIndustry = "";
-
   if (lead_id) {
     const { data: lead } = await serviceSupabase
       .from("leads")
@@ -50,67 +45,32 @@ export async function POST(request: NextRequest) {
     }
     phone = lead.phone || phone_number;
     name = lead.business_name;
-    leadIndustry = lead.industry || "";
   }
 
   if (!phone) return NextResponse.json({ error: "No phone number" }, { status: 400 });
 
+  // Delegate to the native ElevenAgents caller. /api/call handles agent
+  // resolution, phone provisioning, and webhook wiring.
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
   try {
-    // Step 1: Create or find contact in GHL
-    const searchRes = await fetch(`https://services.leadconnectorhq.com/contacts/search/duplicate?phone=${encodeURIComponent(phone)}`, {
-      headers: { Authorization: `Bearer ${ghlKey}`, Version: "2021-07-28" },
-    });
-    const searchData = await searchRes.json();
-    let contactId = searchData.contact?.id;
-
-    if (!contactId) {
-      // Create new contact
-      const createRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${ghlKey}`,
-          "Content-Type": "application/json",
-          Version: "2021-07-28",
-        },
-        body: JSON.stringify({
-          name,
-          phone,
-          tags: ["cold-call", "shortstack", leadIndustry].filter(Boolean),
-          source: "ShortStack OS Cold Caller",
-        }),
-      });
-      const createData = await createRes.json();
-      contactId = createData.contact?.id;
-    }
-
-    if (!contactId) {
-      return NextResponse.json({ error: "Failed to create GHL contact" }, { status: 500 });
-    }
-
-    // Step 2: Add to campaign/workflow if specified
-    if (campaign_id) {
-      await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/workflow/${campaign_id}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${ghlKey}`, Version: "2021-07-28" },
-      });
-    }
-
-    // Step 3: Initiate call via GHL
-    const callRes = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
+    const callRes = await fetch(`${appUrl}/api/call`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${ghlKey}`,
         "Content-Type": "application/json",
-        Version: "2021-07-28",
+        cookie: request.headers.get("cookie") || "",
       },
-      body: JSON.stringify({
-        type: "Call",
-        contactId,
-      }),
+      body: JSON.stringify({ lead_id, phone, business_name: name }),
     });
-    const callData = await callRes.json();
+    const callData = await callRes.json().catch(() => ({}));
 
-    // Update lead status — scoped to owner to prevent cross-tenant writes.
+    if (!callRes.ok) {
+      return NextResponse.json(
+        { error: callData.error || "Call delegation to ElevenAgents failed", status: callRes.status },
+        { status: callRes.status },
+      );
+    }
+
+    // Mirror the legacy success shape for any callers that expected it.
     if (lead_id) {
       await serviceSupabase
         .from("leads")
@@ -120,26 +80,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Plan-tier usage metering
-    await recordUsage(ownerId, "call_minutes", 1, { lead_id: lead_id || null, platform: "ghl_call" });
+    await recordUsage(ownerId, "call_minutes", 1, { lead_id: lead_id || null, platform: "eleven_agents_via_ghl_shim" });
 
-    // Log
     await serviceSupabase.from("trinity_log").insert({
       action_type: "lead_gen",
-      description: `GHL cold call: ${name} (${phone})`,
+      description: `Cold call (via ElevenAgents): ${name} (${phone})`,
       status: "completed",
-      result: { contactId, phone, business: name, call: callData },
+      result: { phone, business: name, delegated_to: "/api/call", response: callData },
     });
 
-    // Telegram notification
-    try {
-      const { sendTelegramMessage } = await import("@/lib/services/trinity");
-      const chatId = process.env.TELEGRAM_CHAT_ID;
-      if (chatId) {
-        await sendTelegramMessage(chatId, `📞 *Cold Call Initiated via GHL*\n${name}\n${phone}\n${leadIndustry}`);
-      }
-    } catch (err) { console.error("[ghl/call] Telegram notify failed:", err); }
-
-    return NextResponse.json({ success: true, contactId, phone, business: name });
+    return NextResponse.json({ success: true, phone, business: name, delegated: true, ...callData });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
