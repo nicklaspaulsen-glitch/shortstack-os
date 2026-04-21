@@ -22,6 +22,7 @@ import PageAI from "@/components/page-ai";
 import PromptEnhancer from "@/components/prompt-enhancer";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 
 // Example design/banner artwork used for the landing-state marquee.
 const DESIGN_PREVIEW_FALLBACK: RollingPreviewItem[] = [
@@ -482,6 +483,13 @@ export default function DesignStudioPage() {
   const [styleTransferring, setStyleTransferring] = useState(false);
   const [styleTransferStrength, setStyleTransferStrength] = useState(75);
 
+  // Guided Mode ↔ Advanced Mode
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("design");
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [guidedKind, setGuidedKind] = useState<string>("social");
+  const [guidedVibe, setGuidedVibe] = useState<string>("professional");
+  const [guidedPrompt, setGuidedPrompt] = useState<string>("");
+
   // ---------- Helper Functions ----------
   function getContrastRatio(fg: string, bg: string): number {
     const getLuminance = (hex: string) => {
@@ -689,6 +697,181 @@ export default function DesignStudioPage() {
     toast.success(`Applied: ${template.label}`);
   }
 
+  /* ─── Guided Mode: pick a design kind + vibe → generate first prompt ─── */
+  const GUIDED_KINDS: Array<{ id: string; label: string; desc: string; sectionKey: string; templateLabel: string; icon: React.ReactNode }> = [
+    { id: "logo", label: "Logo", desc: "Brand mark or wordmark", sectionKey: "logos", templateLabel: "Primary Logo", icon: <Award size={18} /> },
+    { id: "banner", label: "Banner", desc: "Website or social header", sectionKey: "banners", templateLabel: "Website Hero", icon: <Monitor size={18} /> },
+    { id: "social", label: "Social post", desc: "IG, LinkedIn, TikTok", sectionKey: "social", templateLabel: "Instagram Post", icon: <Camera size={18} /> },
+    { id: "thumbnail", label: "Thumbnail", desc: "YouTube cover art", sectionKey: "thumbnails", templateLabel: "YouTube Thumbnail", icon: <Play size={18} /> },
+  ];
+
+  const GUIDED_VIBES: Array<{ id: string; label: string; style: string; palette: string }> = [
+    { id: "professional", label: "Professional", style: "clean, corporate, trustworthy, premium typography", palette: "Professional" },
+    { id: "bold", label: "Bold", style: "high-contrast, bold, impactful, confident, energetic", palette: "Bold & Vibrant" },
+    { id: "minimal", label: "Minimal", style: "minimal, lots of white space, simple, modern, refined", palette: "Minimal Dark" },
+    { id: "luxury", label: "Luxury", style: "luxury gold, elegant, premium, sophisticated, high-end brand", palette: "Luxury Gold" },
+    { id: "playful", label: "Playful", style: "playful, vibrant, fun, approachable, warm", palette: "Neon Pop" },
+    { id: "natural", label: "Natural", style: "organic, earthy, warm, calm, rooted", palette: "Earth Tones" },
+  ];
+
+  async function handleGuidedGenerate() {
+    const prompt = guidedPrompt.trim();
+    if (!prompt) {
+      toast.error("Describe what you want to design");
+      return;
+    }
+    const kind = GUIDED_KINDS.find(k => k.id === guidedKind) || GUIDED_KINDS[0];
+    const vibe = GUIDED_VIBES.find(v => v.id === guidedVibe) || GUIDED_VIBES[0];
+    const template = TEMPLATES.find(t => t.label === kind.templateLabel);
+    const palette = COLOR_PALETTES.find(p => p.name === vibe.palette);
+
+    // Sync into Advanced state so the user can iterate in the full UI.
+    setActiveSection(kind.sectionKey);
+    setPrompts(prev => ({ ...prev, [kind.sectionKey]: prompt }));
+    if (template) {
+      setSelectedTemplate(template);
+      setDimensions({ width: template.width, height: template.height });
+    }
+    setStyle(vibe.style);
+    if (palette) setSelectedPalette(palette);
+
+    setGenerating(kind.sectionKey);
+    try {
+      const w = template?.width || dimensions.width;
+      const h = template?.height || dimensions.height;
+      const paletteStr = palette ? `Color palette: ${palette.colors.join(", ")}. ` : "";
+      const industryStyle = getIndustryStyle();
+
+      const res = await fetch("/api/content/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          description: prompt,
+          type: sectionTypeMap[kind.sectionKey] || kind.sectionKey,
+          aspect_ratio: getAspectRatio(w, h),
+          style: `${paletteStr}${industryStyle ? industryStyle + ". " : ""}${template?.style || vibe.style}`,
+          client_id: selectedClient || null,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const mjPrompts = data.prompts || [];
+        const mainPrompt = mjPrompts[0]?.prompt || data.midjourney_prompt || data.prompt || prompt;
+        const newPrompt: GeneratedPrompt = {
+          id: crypto.randomUUID(),
+          section: kind.sectionKey,
+          prompt: mainPrompt,
+          style: template?.style || vibe.style,
+          dimensions: `${w}x${h}`,
+        };
+        setGenerated(prev => [newPrompt, ...prev]);
+        if (mjPrompts.length > 1) {
+          mjPrompts.slice(1).forEach((p: { prompt: string }) => {
+            setGenerated(prev => [{
+              id: crypto.randomUUID(), section: kind.sectionKey, prompt: p.prompt,
+              style: template?.style || vibe.style,
+              dimensions: `${w}x${h}`,
+            }, ...prev]);
+          });
+        }
+        toast.success(`${mjPrompts.length || 1} prompt${(mjPrompts.length || 1) > 1 ? "s" : ""} generated!`);
+        setAdvancedMode(true);
+        setTab("create");
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        toast.error(errData.error || "Failed to generate");
+      }
+    } catch {
+      toast.error("Error connecting to AI service");
+    }
+    setGenerating(null);
+  }
+
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "kind",
+      title: "What are you designing?",
+      description: "We'll pick the right dimensions and default style for you.",
+      icon: <Palette size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+          {GUIDED_KINDS.map(k => {
+            const sel = guidedKind === k.id;
+            return (
+              <button
+                key={k.id}
+                type="button"
+                onClick={() => setGuidedKind(k.id)}
+                className={`text-left p-4 rounded-xl border transition-all ${
+                  sel
+                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                    : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <div className="text-gold mb-2">{k.icon}</div>
+                <p className="text-sm font-semibold">{k.label}</p>
+                <p className="text-[10px] text-muted mt-1">{k.desc}</p>
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "vibe",
+      title: "Pick a vibe",
+      description: "This picks a style + matching color palette — you can change both in Advanced.",
+      icon: <Wand2 size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+          {GUIDED_VIBES.map(v => {
+            const sel = guidedVibe === v.id;
+            const palette = COLOR_PALETTES.find(p => p.name === v.palette);
+            return (
+              <button
+                key={v.id}
+                type="button"
+                onClick={() => setGuidedVibe(v.id)}
+                className={`text-left p-4 rounded-xl border transition-all ${
+                  sel
+                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                    : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <p className="text-sm font-semibold">{v.label}</p>
+                {palette && (
+                  <div className="flex gap-1 mt-2">
+                    {palette.colors.map((c, i) => (
+                      <span key={i} className="w-4 h-4 rounded border border-border" style={{ background: c }} />
+                    ))}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "prompt",
+      title: "What should it show?",
+      description: "One or two sentences about the subject. AI will turn this into a Midjourney-ready prompt.",
+      icon: <Sparkles size={18} />,
+      canProceed: guidedPrompt.trim().length > 0,
+      component: (
+        <textarea
+          value={guidedPrompt}
+          onChange={e => setGuidedPrompt(e.target.value)}
+          placeholder={`e.g., "Modern dental clinic hero image with a friendly dentist and warm lighting"`}
+          rows={3}
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+          autoFocus
+        />
+      ),
+    },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -698,19 +881,37 @@ export default function DesignStudioPage() {
         gradient="ocean"
         actions={
           <>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="text-xs py-1.5 px-2 min-w-[140px] rounded-lg bg-white/10 border border-white/20 text-white">
               <option value="" className="bg-slate-800">No client</option>
               {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name} {c.industry ? `(${c.industry})` : ""}</option>)}
             </select>
-            <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
-              <ExternalLink size={12} /> Canva
-            </a>
+            {advancedMode && (
+              <a href="https://www.canva.com" target="_blank" rel="noopener noreferrer"
+                className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+                <ExternalLink size={12} /> Canva
+              </a>
+            )}
           </>
         }
       />
 
+      {/* Guided Mode — 3-step AI design prompter */}
+      {!advancedMode && (
+        <Wizard
+          steps={guidedSteps}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={generating ? "Generating…" : "Generate design"}
+          busy={!!generating}
+          onFinish={handleGuidedGenerate}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
       {/* Rolling preview of example designs */}
+      {advancedMode && (<>
       <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
@@ -2332,6 +2533,7 @@ export default function DesignStudioPage() {
           )}
         </div>
       )}
+      </>)}
 
       <PageAI pageName="Design Studio" context="AI design prompt generator for thumbnails, social posts, ads, logos, banners, infographics, presentations, and more. Generates Midjourney prompts with industry-specific styling." suggestions={["Generate a thumbnail concept for '5 Marketing Tips'", "Create an Instagram post design for a restaurant", "What colors work best for dental practice ads?", "Design a YouTube banner concept", "Create a full brand kit for a fitness studio"]} />
     </div>
