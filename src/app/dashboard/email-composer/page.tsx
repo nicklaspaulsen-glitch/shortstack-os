@@ -6,7 +6,7 @@ import {
   Image as ImageIcon, Save, Monitor, Smartphone, Code,
   Clock, Eye, AlertTriangle, CheckCircle, Copy, Type,
   Paperclip, Palette, Hash, MousePointerClick,
-  X, Plus, Calendar, Loader2, Wand2, TrendingUp
+  X, Plus, Calendar, Loader2, Wand2, TrendingUp, Users
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
@@ -14,6 +14,7 @@ import { GmailIcon, OutlookIcon } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { trackGeneration } from "@/lib/track-generation";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 
 interface SubjectVariant {
   subject: string;
@@ -81,6 +82,14 @@ export default function EmailComposerPage() {
   /* ── Creation wizard ── */
   const [wizardOpen, setWizardOpen] = useState(false);
   const [wizardSubmitting, setWizardSubmitting] = useState(false);
+
+  /* ── Guided Mode ↔ Advanced Mode ── */
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("email-composer");
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [guidedKind, setGuidedKind] = useState<"welcome" | "promo" | "follow-up" | "cold-outreach">("welcome");
+  const [guidedAudience, setGuidedAudience] = useState("");
+  const [guidedDirection, setGuidedDirection] = useState("");
+  const [guidedGenerating, setGuidedGenerating] = useState(false);
 
   async function handleAiCompose(mode: ComposeMode) {
     if (mode === "write" && !aiPrompt.trim()) {
@@ -523,6 +532,160 @@ export default function EmailComposerPage() {
     }
   }
 
+  /* ─── Guided Mode: draft an email and drop it into the composer ─── */
+  async function handleGuidedGenerate() {
+    const direction = guidedDirection.trim();
+    if (!direction) {
+      toast.error("Tell us what the email should say");
+      return;
+    }
+    setGuidedGenerating(true);
+    try {
+      const kindPhrase: Record<typeof guidedKind, string> = {
+        welcome: "welcome",
+        promo: "promotional",
+        "follow-up": "follow-up",
+        "cold-outreach": "cold outreach",
+      };
+      const prompt = `Write a ${kindPhrase[guidedKind]} email. ${
+        guidedAudience.trim() ? `Audience: ${guidedAudience.trim()}. ` : ""
+      }Direction: ${direction}`;
+      const res = await fetch("/api/emails/compose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "write",
+          prompt,
+          tone: guidedKind === "cold-outreach" ? "persuasive" : "professional",
+          audience: guidedAudience.trim() || undefined,
+          length: "medium",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data?.error || "AI write failed");
+        return;
+      }
+      const subject = (data.subject as string | undefined) || direction.split("\n")[0].slice(0, 80);
+      const body = (data.body as string | undefined) || direction;
+      setEmail(prev => ({
+        ...prev,
+        subject,
+        body,
+      }));
+      if (guidedAudience.trim()) setAiAudience(guidedAudience.trim());
+      trackGeneration({
+        category: "email",
+        title: subject.slice(0, 120) || "Email draft",
+        source_tool: "Email Composer",
+        content_preview: body.slice(0, 200),
+        metadata: { kind: guidedKind, audience: guidedAudience.trim() || undefined, wizard: true, guided: true },
+      });
+      toast.success("Email ready in the composer");
+      setAdvancedMode(true);
+      setActiveTab("compose");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Generation failed");
+    } finally {
+      setGuidedGenerating(false);
+    }
+  }
+
+  /* ─── Guided steps ─── */
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "kind",
+      title: "What kind of email?",
+      description: "Different goals, different voices — we'll pick a tone that fits.",
+      icon: <Mail size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+          {([
+            { id: "welcome" as const, label: "Welcome", desc: "First hello for new signups" },
+            { id: "promo" as const, label: "Promo", desc: "Offers, sales, limited time" },
+            { id: "follow-up" as const, label: "Follow-up", desc: "Gentle nudge or check-in" },
+            { id: "cold-outreach" as const, label: "Cold outreach", desc: "Breaking the ice" },
+          ]).map(k => {
+            const sel = guidedKind === k.id;
+            return (
+              <button
+                key={k.id}
+                type="button"
+                onClick={() => setGuidedKind(k.id)}
+                className={`text-left p-4 rounded-xl border transition-all ${
+                  sel
+                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                    : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <p className="text-sm font-semibold">{k.label}</p>
+                <p className="text-[10px] text-muted mt-1">{k.desc}</p>
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "audience-goal",
+      title: "Who's it for + the goal",
+      description: "A single line about the reader plus what you want them to do — AI takes it from there.",
+      icon: <Users size={18} />,
+      canProceed: guidedDirection.trim().length > 0,
+      component: (
+        <div className="space-y-3">
+          <div>
+            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Audience <span className="text-muted/60 normal-case">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={guidedAudience}
+              onChange={e => setGuidedAudience(e.target.value)}
+              placeholder="e.g., SaaS founders on a free trial"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              What should it say? / CTA
+            </label>
+            <textarea
+              value={guidedDirection}
+              onChange={e => setGuidedDirection(e.target.value)}
+              placeholder="Key points to cover, must-include details, what the reader should do next…"
+              rows={4}
+              className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+              autoFocus
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "review",
+      title: "Ready to draft?",
+      description: "We'll write the subject and body. You can tweak every line in Advanced mode before sending.",
+      icon: <Wand2 size={18} />,
+      component: (
+        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+          <p className="text-sm">
+            <span className="text-muted capitalize">{guidedKind} email</span>
+            {guidedAudience.trim() && (
+              <>
+                {" · "}
+                <span>for {guidedAudience.trim()}</span>
+              </>
+            )}
+          </p>
+          <p className="text-[11px] text-muted leading-relaxed whitespace-pre-wrap">
+            {guidedDirection || <span className="italic">(no direction yet)</span>}
+          </p>
+        </div>
+      ),
+    },
+  ];
+
   const TABS: { key: MainTab; label: string; icon: React.ReactNode }[] = [
     { key: "compose", label: "Compose", icon: <Mail size={14} /> },
     { key: "templates", label: "Templates", icon: <Copy size={14} /> },
@@ -541,35 +704,54 @@ export default function EmailComposerPage() {
         gradient="blue"
         actions={
           <>
-            <button
-              onClick={() => setWizardOpen(true)}
-              className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <Sparkles size={12} className="animate-pulse" />
-              New with AI
-              <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
-            </button>
-            <button
-              onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
-              className="px-3 py-1.5 rounded-lg bg-transparent border border-white/20 text-white text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
-            >
-              <Plus size={12} /> Blank
-            </button>
-            <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiWriting}>
-              {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
-            </button>
-            <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiImproving}>
-              {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
-            </button>
-            <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
-              {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
-            </button>
-            <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
-              <Send size={12} /> Send
-            </button>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <>
+                <button
+                  onClick={() => setWizardOpen(true)}
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  <Sparkles size={12} className="animate-pulse" />
+                  New with AI
+                  <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
+                </button>
+                <button
+                  onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
+                  className="px-3 py-1.5 rounded-lg bg-transparent border border-white/20 text-white text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
+                >
+                  <Plus size={12} /> Blank
+                </button>
+                <button onClick={() => { setAiMode("write"); setShowAiWrite(true); }} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiWriting}>
+                  {aiWriting ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />} AI Write
+                </button>
+                <button onClick={handleAiImprove} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={aiImproving}>
+                  {aiImproving ? <Loader2 size={12} className="animate-spin" /> : <Wand2 size={12} />} AI Improve
+                </button>
+                <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
+                  {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
+                </button>
+                <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+                  <Send size={12} /> Send
+                </button>
+              </>
+            )}
           </>
         }
       />
+
+      {/* Guided Mode — 3-step AI email drafter */}
+      {!advancedMode && (
+        <Wizard
+          steps={guidedSteps}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={guidedGenerating ? "Drafting…" : "Draft email"}
+          busy={guidedGenerating}
+          onFinish={handleGuidedGenerate}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
 
       {/* Creation Wizard */}
       <CreationWizard
@@ -589,6 +771,7 @@ export default function EmailComposerPage() {
         onComplete={handleWizardComplete}
       />
 
+      {advancedMode && (<>
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
         {TABS.map(t => (
@@ -1068,6 +1251,7 @@ export default function EmailComposerPage() {
           </div>
         </div>
       )}
+      </>)}
     </div>
   );
 }
