@@ -170,6 +170,7 @@ const navItems: NavItem[] = [
   { label: "Usage & Tokens", href: "/dashboard/usage", icon: <Zap size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Phone & Email", href: "/dashboard/phone-email", icon: <Phone size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Phone Setup", href: "/dashboard/phone-setup", icon: <Phone size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
+  { label: "Mail Setup", href: "/dashboard/mail-setup", icon: <Mail size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Domains", href: "/dashboard/domains", icon: <Link2 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Client Health", href: "/dashboard/client-health", icon: <Heart size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin"], sub: "Support" },
