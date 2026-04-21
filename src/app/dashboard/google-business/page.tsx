@@ -364,7 +364,7 @@ export default function GoogleBusinessPage() {
                   <p className="text-[10px] text-muted pl-3 border-l-2 border-[#4285F4]/20">A: {qa.answer}</p>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <input className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" placeholder="Type an answer..." />
+                    <input className="flex-1 rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-foreground" placeholder="Type an answer..." aria-label="Answer to question" />
                     <button className="px-2 py-1 rounded-lg bg-[#4285F4] text-white text-[10px] font-medium">Answer</button>
                   </div>
                 )}

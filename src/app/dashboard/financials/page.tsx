@@ -881,8 +881,8 @@ export default function FinancialsPage() {
                       <p className="text-sm font-semibold text-red-400">{formatCurrency(monthlyEquivalent(exp))}</p>
                     </div>
                     <div className="col-span-2 flex justify-end gap-1.5">
-                      <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"><Pencil size={12} /></button>
-                      <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400 transition-colors"><Trash2 size={12} /></button>
+                      <button onClick={() => openEdit(exp)} className="p-1.5 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors" aria-label="Edit expense"><Pencil size={12} /></button>
+                      <button onClick={() => deleteExpense(exp.id)} className="p-1.5 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400 transition-colors" aria-label="Delete expense"><Trash2 size={12} /></button>
                     </div>
                   </div>
                 ))}
@@ -1008,7 +1008,7 @@ export default function FinancialsPage() {
               <div className="card max-w-lg w-full p-5 space-y-3" onClick={e => e.stopPropagation()}>
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-semibold">Add Subscription</h3>
-                  <button onClick={() => setShowAddSub(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+                  <button onClick={() => setShowAddSub(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
                 </div>
                 <input list="saas-list" className="input w-full text-xs" placeholder="Tool name (e.g., Canva)" value={newSub.tool_name} onChange={e => setNewSub({...newSub, tool_name: e.target.value})} />
                 <datalist id="saas-list">

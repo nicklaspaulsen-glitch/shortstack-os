@@ -859,7 +859,7 @@ function EditMemberModal({ member, onClose, onSave }: EditMemberProps) {
       <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-3 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-bold flex items-center gap-2"><Pencil size={14} className="text-gold" /> Edit Team Member</h3>
-          <button onClick={onClose} className="text-muted hover:text-foreground"><X size={16} /></button>
+          <button onClick={onClose} className="text-muted hover:text-foreground" aria-label="Close edit dialog"><X size={16} /></button>
         </div>
 
         <div className="grid grid-cols-2 gap-2">

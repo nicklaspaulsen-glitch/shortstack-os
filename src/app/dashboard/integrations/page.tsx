@@ -996,7 +996,8 @@ function IntegrationConnectModal({ integration, currentStatus, onClose, onStatus
             </div>
           </div>
           <button onClick={onClose}
-            className="p-1 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors">
+            className="p-1 rounded-md hover:bg-surface-light text-muted hover:text-foreground transition-colors"
+            aria-label="Close integration details">
             <X size={16} />
           </button>
         </div>

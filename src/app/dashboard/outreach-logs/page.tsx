@@ -1571,6 +1571,7 @@ export default function OutreachLogsPage() {
                 <input value={nicheInput} onChange={e => setNicheInput(e.target.value)}
                   onKeyDown={e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag("scrape_niches", nicheInput); setNicheInput(""); } }}
                   placeholder="Type a niche and press Enter…"
+                  aria-label="Add scrape niche"
                   className="input w-full text-xs py-1.5" />
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {["Dentist","Med Spa","Plumber","HVAC","Roofing","Real Estate","Restaurant","Gym/Fitness","Salon/Barber","Auto Repair","Chiropractor","Lawyer","Accountant","Landscaping","Cleaning Services","Photography","Pet Services","Home Services"].filter((p: string) => !config.scrape_niches.includes(p)).slice(0, 10).map((preset: string) => (
