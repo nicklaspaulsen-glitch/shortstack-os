@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { sendEmail } from "@/lib/email";
 
 // Client Cold Outreach — Sends DMs and emails FROM client's connected accounts
-// Like Instantly.ai but built into ShortStack OS
+// Like Instantly.ai but built into ShortStack OS.
+// GHL paths (email + SMS) removed Apr 21 — email now goes through Resend,
+// SMS through Twilio. Social DMs still queued via Zernio.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -46,7 +49,9 @@ export async function POST(request: NextRequest) {
   if (!leads || leads.length === 0) return NextResponse.json({ error: "No leads to contact" }, { status: 400 });
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  const ghlKey = process.env.GHL_API_KEY;
+  const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+  const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+  const twilioFrom = process.env.TWILIO_DEFAULT_NUMBER;
   const results = { emails_sent: 0, dms_queued: 0, sms_sent: 0, errors: [] as string[] };
 
   for (const lead of leads) {
@@ -73,31 +78,27 @@ export async function POST(request: NextRequest) {
     // Send via each requested channel
     for (const channel of (channels || ["email"])) {
       try {
-        if (channel === "email" && lead.email && ghlKey) {
-          // Send cold email via GHL on behalf of client
-          if (lead.ghl_contact_id || client.ghl_contact_id) {
-            await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-              body: JSON.stringify({
-                type: "Email",
-                contactId: lead.ghl_contact_id || "",
-                subject: `${client.business_name} — Quick question`,
-                html: `<p>${message.replace(/\n/g, "<br>")}</p>`,
-                emailFrom: client.email || "growth@shortstack.work",
-              }),
-            });
-            results.emails_sent++;
-          }
+        if (channel === "email" && lead.email) {
+          // Native Resend send (GHL path removed Apr 21).
+          const sent = await sendEmail({
+            to: lead.email,
+            subject: `${client.business_name} — Quick question`,
+            html: `<p>${message.replace(/\n/g, "<br>")}</p>`,
+          });
+          if (sent) results.emails_sent++;
         }
 
-        if (channel === "sms" && lead.phone && ghlKey && lead.ghl_contact_id) {
-          await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ type: "SMS", contactId: lead.ghl_contact_id, message }),
-          });
-          results.sms_sent++;
+        if (channel === "sms" && lead.phone && twilioSid && twilioToken && twilioFrom) {
+          const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
+          const smsRes = await fetch(
+            `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+            {
+              method: "POST",
+              headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({ To: lead.phone, From: twilioFrom, Body: message }),
+            },
+          );
+          if (smsRes.ok) results.sms_sent++;
         }
 
         if ((channel === "instagram_dm" || channel === "facebook_dm") && connectedPlatforms.includes("zernio")) {

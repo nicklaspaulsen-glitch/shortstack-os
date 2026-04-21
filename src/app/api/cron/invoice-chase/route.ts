@@ -52,24 +52,9 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Send via GHL if configured
-    const ghlKey = process.env.GHL_API_KEY;
-    const locationId = process.env.GHL_LOCATION_ID;
-    if (ghlKey && locationId && client.email) {
-      try {
-        await fetch("https://services.leadconnectorhq.com/contacts/", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-          body: JSON.stringify({
-            locationId,
-            name: client.contact_name || client.business_name,
-            email: client.email,
-            tags: ["invoice-reminder"],
-            source: "ShortStack OS",
-          }),
-        });
-      } catch {}
-    }
+    // Send via native Resend (GHL path removed Apr 21). The actual reminder
+    // email is authored by /api/invoices/auto-remind — this cron only logs the
+    // chase event and updates counts.
 
     chased++;
   }

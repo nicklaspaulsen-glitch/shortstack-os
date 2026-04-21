@@ -37,7 +37,6 @@ export async function POST(request: NextRequest) {
 
   const serviceSupabase = createServiceClient();
   const apiKey = process.env.ANTHROPIC_API_KEY;
-  const ghlKey = process.env.GHL_API_KEY;
 
   // Get leads — all queries scoped to caller's owned leads to prevent cross-tenant email sends.
   let leads;
@@ -159,43 +158,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Fallback to GHL if everything else fails
-    if (!didSend && ghlKey) {
-      try {
-        const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${ghlKey}`,
-            "Content-Type": "application/json",
-            Version: "2021-07-28",
-          },
-          body: JSON.stringify({
-            name: lead.business_name,
-            email: lead.email,
-            phone: lead.phone || undefined,
-            tags: ["cold-outreach", lead.industry || "lead"],
-            source: "ShortStack OS",
-          }),
-        });
-        const contact = await contactRes.json();
-        const contactId = contact.contact?.id;
-
-        if (contactId) {
-          const emailRes = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${ghlKey}`,
-              "Content-Type": "application/json",
-              Version: "2021-07-28",
-            },
-            body: JSON.stringify({ type: "Email", contactId, subject, html: htmlBody }),
-          });
-          didSend = emailRes.ok;
-        }
-      } catch {
-        didSend = false;
-      }
-    }
+    // GHL fallback removed Apr 21 — native Resend is the only sender now.
 
     if (didSend) {
       sent++;

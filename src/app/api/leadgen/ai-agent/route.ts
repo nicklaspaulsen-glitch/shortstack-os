@@ -203,22 +203,17 @@ export async function POST(request: NextRequest) {
         } catch {}
       }
 
-      // Send cold email if we have their email
+      // Send cold email via native Resend (GHL path removed Apr 21).
       if (lead.email && (outreach_config?.send_email !== false)) {
-        const ghlKey = process.env.GHL_API_KEY;
-        if (ghlKey && lead.ghl_contact_id) {
-          await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({
-              type: "Email", contactId: lead.ghl_contact_id,
-              subject: `Quick question about ${lead.business_name}`,
-              html: `<p>${message.replace(/\n/g, "<br>")}</p><p>Best,<br>ShortStack Team</p>`,
-              emailFrom: outreach_config?.from_email || "growth@shortstack.work",
-            }),
+        try {
+          const { sendEmail } = await import("@/lib/email");
+          const sent = await sendEmail({
+            to: lead.email,
+            subject: `Quick question about ${lead.business_name}`,
+            html: `<p>${message.replace(/\n/g, "<br>")}</p><p>Best,<br>ShortStack Team</p>`,
           });
-          emailsSent++;
-        }
+          if (sent) emailsSent++;
+        } catch {}
       }
 
       // Log DM outreach

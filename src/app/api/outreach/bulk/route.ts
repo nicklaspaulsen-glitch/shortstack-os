@@ -20,8 +20,6 @@ export async function POST(request: NextRequest) {
   if (!action || !lead_ids?.length) return NextResponse.json({ error: "Missing action or lead_ids" }, { status: 400 });
 
   const serviceSupabase = createServiceClient();
-  const ghlKey = process.env.GHL_API_KEY;
-  const locationId = process.env.GHL_LOCATION_ID || "";
   let processed = 0;
 
   // Get lead details — scoped to caller's owned leads to block cross-tenant outreach.
@@ -61,18 +59,19 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // Fallback to GHL if pool send failed or no pool senders
-        if (!emailHandled && ghlKey) {
-          await fetch("https://services.leadconnectorhq.com/contacts/", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({
-              locationId, name: lead.business_name,
-              email: lead.email, tags: ["bulk-email", `tier-${tier}`],
-              source: "ShortStack OS",
-            }),
-          });
-          processed++;
+        // GHL fallback removed Apr 21 — pool senders (Resend) are the only path now.
+        if (!emailHandled) {
+          // Try the default Resend transport as a last resort when no pool sender
+          // was available.
+          try {
+            const { sendEmail } = await import("@/lib/email");
+            const emailOk = await sendEmail({
+              to: lead.email,
+              subject: `Quick question about ${lead.business_name}`,
+              html: `Hi, I came across ${lead.business_name} and wanted to reach out. We help ${lead.industry || "local"} businesses grow their client base. Would you be open to a quick chat?`,
+            });
+            if (emailOk) processed++;
+          } catch {}
         }
       } else if (action === "sms" && lead.phone && twilioSid && twilioToken) {
         // Resolve sender: rotation pool → env default
@@ -102,15 +101,17 @@ export async function POST(request: NextRequest) {
           processed++;
           if (smsPoolSender) await recordPhoneSend(serviceSupabase, smsPoolSender.id);
         }
-      } else if (action === "call" && lead.phone && ghlKey) {
-        await fetch("https://services.leadconnectorhq.com/contacts/", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-          body: JSON.stringify({
-            locationId, name: lead.business_name,
-            phone: lead.phone, tags: ["cold-call-queue", `tier-${tier}`],
-            source: "ShortStack OS",
-          }),
+      } else if (action === "call" && lead.phone) {
+        // GHL call-queue path removed Apr 21. Calls should be initiated via
+        // /api/call (ElevenAgents) per-lead. Record the intent here so bulk
+        // call actions stay observable and we can batch-dispatch later.
+        await serviceSupabase.from("outreach_log").insert({
+          platform: "call",
+          business_name: lead.business_name,
+          recipient_handle: lead.phone,
+          message_text: `Bulk call queued (tier ${tier})`,
+          status: "pending",
+          metadata: { source: "bulk_outreach", action: "call", tier },
         });
         processed++;
       } else if (action === "dm") {

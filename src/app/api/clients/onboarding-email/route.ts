@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email";
 
-// Send automated onboarding email sequence to new clients
-// 5-email sequence over 7 days
+// Send automated onboarding email sequence to new clients (5-email sequence over 7 days).
+// GHL path removed Apr 21 — emails now sent via native Resend (sendEmail helper).
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -14,7 +15,6 @@ export async function POST(request: NextRequest) {
   const { data: client } = await serviceSupabase.from("clients").select("*").eq("id", client_id).single();
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 
-  const ghlKey = process.env.GHL_API_KEY;
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   const sequences = [
@@ -54,51 +54,20 @@ export async function POST(request: NextRequest) {
     emailBody = `<p>Hi ${client.contact_name},</p><p>Welcome to Trinity! We're excited to help ${client.business_name} grow.</p><p>Log in to your portal to get started: <a href="${appUrl}/login">${appUrl.replace(/^https?:\/\//, "")}</a></p><p>Best,<br>The Trinity Team</p>`;
   }
 
-  // Send via GHL if available. Track whether the send actually succeeded so
-  // we don't return a fake success when GHL is misconfigured or errors.
+  // Send via native Resend. Track whether the send actually succeeded so we
+  // don't return a fake success when Resend/SMTP is misconfigured or errors.
   let didSend = false;
   let sendError: string | undefined;
 
-  if (!ghlKey) {
-    sendError = "GHL_API_KEY not configured";
-  } else if (!client.email) {
+  if (!client.email) {
     sendError = "Client has no email address";
   } else {
     try {
-      // Find or create GHL contact
-      const contactRes = await fetch(`https://services.leadconnectorhq.com/contacts/search/duplicate?email=${encodeURIComponent(client.email)}`, {
-        headers: { Authorization: `Bearer ${ghlKey}`, Version: "2021-07-28" },
-      });
-      const contactData = await contactRes.json();
-      let contactId = contactData.contact?.id;
-
-      if (!contactId) {
-        const createRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-          body: JSON.stringify({ name: client.contact_name, email: client.email, tags: ["client", "onboarding"] }),
-        });
-        const created = await createRes.json();
-        contactId = created.contact?.id;
-      }
-
-      if (contactId) {
-        const sendRes = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-          body: JSON.stringify({ type: "Email", contactId, subject: seq.subject, html: emailBody }),
-        });
-        if (sendRes.ok) {
-          didSend = true;
-        } else {
-          sendError = `GHL send returned HTTP ${sendRes.status}`;
-        }
-      } else {
-        sendError = "Could not resolve GHL contact id";
-      }
+      didSend = await sendEmail({ to: client.email, subject: seq.subject, html: emailBody });
+      if (!didSend) sendError = "Resend/SMTP returned false (check SMTP config)";
     } catch (err) {
-      sendError = err instanceof Error ? err.message : "GHL send failed";
-      console.error("[onboarding-email] GHL send failed:", err);
+      sendError = err instanceof Error ? err.message : "Email send failed";
+      console.error("[onboarding-email] Resend send failed:", err);
     }
   }
 

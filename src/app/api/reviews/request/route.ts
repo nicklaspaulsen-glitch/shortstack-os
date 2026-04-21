@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email";
 
-// Review & Testimonial Collection System
+// Review & Testimonial Collection System — native Resend email + Twilio SMS.
+// GHL path removed Apr 21.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -45,39 +47,39 @@ export async function POST(request: NextRequest) {
 
   const results: Record<string, boolean> = {};
 
-  // Send via email (GHL)
-  if ((method === "email" || method === "both") && client.ghl_contact_id) {
-    const ghlKey = process.env.GHL_API_KEY;
-    if (ghlKey) {
-      const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-        body: JSON.stringify({
-          type: "Email",
-          contactId: client.ghl_contact_id,
-          subject: emailContent.subject,
-          html: emailContent.body,
-          emailFrom: "growth@shortstack.work",
-        }),
+  // Send email via Resend
+  if ((method === "email" || method === "both") && client.email) {
+    try {
+      results.email = await sendEmail({
+        to: client.email,
+        subject: emailContent.subject,
+        html: emailContent.body,
       });
-      results.email = res.ok;
+    } catch {
+      results.email = false;
     }
   }
 
-  // Send via SMS (GHL)
-  if ((method === "sms" || method === "both") && client.ghl_contact_id) {
-    const ghlKey = process.env.GHL_API_KEY;
-    if (ghlKey) {
-      const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-        body: JSON.stringify({
-          type: "SMS",
-          contactId: client.ghl_contact_id,
-          message: smsContent,
-        }),
-      });
-      results.sms = res.ok;
+  // Send SMS via Twilio
+  if ((method === "sms" || method === "both") && client.phone) {
+    const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+    const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+    const twilioFrom = process.env.TWILIO_DEFAULT_NUMBER;
+    if (twilioSid && twilioToken && twilioFrom) {
+      try {
+        const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
+        const smsRes = await fetch(
+          `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+          {
+            method: "POST",
+            headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ To: client.phone, From: twilioFrom, Body: smsContent }),
+          },
+        );
+        results.sms = smsRes.ok;
+      } catch {
+        results.sms = false;
+      }
     }
   }
 
