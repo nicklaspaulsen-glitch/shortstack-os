@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 
 // Static AI-generated-style image previews (Unsplash wide crops) shown in
@@ -73,16 +74,22 @@ export default function AIStudioPage() {
     autoGenerateToken?: number;
   }>({});
 
-  // Auto-open the wizard on first visit (newbie-friendly default)
+  // Guided Mode ↔ Advanced Mode (full tool grid)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("ai-studio");
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [guidedIntent, setGuidedIntent] = useState<ToolId>("image-gen");
+  const [guidedPrompt, setGuidedPrompt] = useState("");
+
+  // Auto-open the legacy modal only on advanced-mode first visit
   useEffect(() => {
     try {
       const seen = localStorage.getItem("ss-image-wizard-seen");
-      if (!seen) {
+      if (!seen && advancedMode) {
         setWizardOpen(true);
         setActiveTool("image-gen");
       }
     } catch { /* localStorage unavailable */ }
-  }, []);
+  }, [advancedMode]);
 
   return (
     <div className="fade-in p-6 max-w-7xl mx-auto">
@@ -94,28 +101,22 @@ export default function AIStudioPage() {
         gradient="ocean"
         actions={
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                setActiveTool("image-gen");
-                setCreationWizardOpen(true);
-              }}
-              className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/20 hover:shadow-gold/40 hover-lift transition-all"
-            >
-              <Sparkles size={12} className="animate-pulse" />
-              + New with AI
-              <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
-                Recommended
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                setActiveTool("image-gen");
-                setWizardOpen(true);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-semibold hover:bg-white/20 transition-all hover-lift"
-            >
-              <Wand2 size={12} /> Guided Mode
-            </button>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <button
+                onClick={() => {
+                  setActiveTool("image-gen");
+                  setCreationWizardOpen(true);
+                }}
+                className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black text-xs font-bold shadow-lg shadow-gold/20 hover:shadow-gold/40 hover-lift transition-all"
+              >
+                <Sparkles size={12} className="animate-pulse" />
+                + New with AI
+                <span className="ml-0.5 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wider">
+                  Recommended
+                </span>
+              </button>
+            )}
             <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
               9 tools available
             </span>
@@ -123,6 +124,136 @@ export default function AIStudioPage() {
         }
       />
 
+      {/* Guided Mode — simple routing flow */}
+      {!advancedMode && (
+        <Wizard
+          className="mb-6"
+          steps={[
+            {
+              id: "intent",
+              title: "What do you want to make?",
+              description: "Pick the thing — we'll hand you the right tool with the right defaults.",
+              icon: <Sparkles size={18} />,
+              component: (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  {TOOLS.map(t => {
+                    const Icon = t.icon;
+                    const selected = guidedIntent === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => { setGuidedIntent(t.id); setActiveTool(t.id); }}
+                        className={`relative text-left p-4 rounded-xl border transition-all ${
+                          selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                        }`}
+                      >
+                        {"badge" in t && t.badge && (
+                          <span className="absolute top-2 right-2 text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400">
+                            {t.badge}
+                          </span>
+                        )}
+                        <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-2" style={{ background: `${t.color}22` }}>
+                          <Icon size={20} style={{ color: t.color }} />
+                        </div>
+                        <p className="text-sm font-bold">{t.name}</p>
+                        <p className="text-[10px] text-muted mt-0.5 line-clamp-2">{t.desc}</p>
+                      </button>
+                    );
+                  })}
+                </div>
+              ),
+            },
+            {
+              id: "prompt",
+              title: guidedIntent === "transcribe" || guidedIntent === "upscale" || guidedIntent === "remove-bg" || guidedIntent === "voice-clone" || guidedIntent === "img-to-video" || guidedIntent === "train-lora"
+                ? "Ready to upload?"
+                : "Describe what you want",
+              description: guidedIntent === "transcribe" || guidedIntent === "upscale" || guidedIntent === "remove-bg" || guidedIntent === "voice-clone" || guidedIntent === "img-to-video" || guidedIntent === "train-lora"
+                ? "We'll hand you the upload tool. You'll be able to drop files on the next screen."
+                : "One line is enough. The more detail, the better the output.",
+              icon: <TypeIcon size={18} />,
+              optional: true,
+              component: guidedIntent === "image-gen" || guidedIntent === "music-gen" || guidedIntent === "batch-gen" ? (
+                <textarea
+                  value={guidedPrompt}
+                  onChange={e => setGuidedPrompt(e.target.value)}
+                  placeholder={
+                    guidedIntent === "music-gen"
+                      ? "e.g., Chill lofi beat with warm piano and soft drums, 60 seconds"
+                      : guidedIntent === "batch-gen"
+                      ? "e.g., 10 product shots of a leather wallet on neutral backgrounds"
+                      : "e.g., A minimalist logo mockup on a black marble surface, studio lighting"
+                  }
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+                  autoFocus
+                />
+              ) : (
+                <div className="card bg-gold/[0.04] border-gold/20 text-center py-8">
+                  <Upload size={28} className="mx-auto mb-2 text-gold" />
+                  <p className="text-sm font-semibold">
+                    {TOOLS.find(t => t.id === guidedIntent)?.name} uses files — hit Finish to open the tool.
+                  </p>
+                </div>
+              ),
+            },
+            {
+              id: "go",
+              title: "Ready to go?",
+              description: "We'll take you to the tool with everything pre-filled.",
+              icon: <Wand2 size={18} />,
+              component: (
+                <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+                  <div className="flex items-center gap-2">
+                    {(() => {
+                      const t = TOOLS.find(x => x.id === guidedIntent);
+                      if (!t) return null;
+                      const Icon = t.icon;
+                      return (
+                        <>
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${t.color}22` }}>
+                            <Icon size={16} style={{ color: t.color }} />
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold">{t.name}</p>
+                            <p className="text-[10px] text-muted">{t.tag}</p>
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </div>
+                  {guidedPrompt && (
+                    <p className="text-[11px] text-muted pt-2 border-t border-border/50 line-clamp-3">
+                      <span className="text-gold font-semibold">Prompt:</span> {guidedPrompt}
+                    </p>
+                  )}
+                </div>
+              ),
+            },
+          ]}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel="Open tool"
+          onFinish={() => {
+            setActiveTool(guidedIntent);
+            if (guidedIntent === "image-gen" && guidedPrompt.trim()) {
+              setImageGenInit({
+                prompt: guidedPrompt,
+                style: "",
+                size: "1024x1024",
+                autoGenerateToken: Date.now(),
+              });
+            }
+            setAdvancedMode(true);
+            toast.success(`Opening ${TOOLS.find(t => t.id === guidedIntent)?.name}…`);
+          }}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
+      {advancedMode && (
+      <>
       {/* Rolling preview of AI-generated examples */}
       <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
         <div className="absolute inset-0 pointer-events-none">
@@ -248,6 +379,8 @@ export default function AIStudioPage() {
         {activeTool === "train-lora" && <TrainLoraTool processing={processing} setProcessing={setProcessing} />}
         {activeTool === "batch-gen" && <BatchGenTool processing={processing} setProcessing={setProcessing} />}
       </div>
+      </>
+      )}
     </div>
   );
 }
