@@ -2755,12 +2755,18 @@ export default function ThumbnailGeneratorPage() {
       .eq("action_type", "thumbnail_generated")
       .order("created_at", { ascending: false })
       .limit(20);
+    type HistoryRow = {
+      id: string;
+      description: string | null;
+      created_at: string;
+      metadata: Record<string, unknown> | null;
+    };
     setHistory(
-      (data || []).map((d: any) => ({
-        id: d.id as string,
-        description: d.description as string,
-        created_at: d.created_at as string,
-        metadata: d.metadata as Record<string, unknown>,
+      ((data || []) as HistoryRow[]).map((d) => ({
+        id: d.id,
+        description: d.description ?? "",
+        created_at: d.created_at,
+        metadata: d.metadata ?? {},
       }))
     );
   }
@@ -2780,11 +2786,18 @@ export default function ThumbnailGeneratorPage() {
       await new Promise((r) => setTimeout(r, 1500));
       try {
         const res = await fetch(`/api/thumbnail/status?job_id=${jobId}`);
+        // Auth / ownership errors — stop polling, bubble up to caller.
+        // 401/403 means the user can't see this job (stale link, session
+        // expired, or cross-tenant job id). Retrying won't help.
+        if (res.status === 401 || res.status === 403 || res.status === 404) {
+          toast.error("Can't track this job — it may belong to a different account or has expired.");
+          return null;
+        }
         const data = await res.json();
         if (data.status === "COMPLETED") return data.imageUrl || null;
         if (data.status === "FAILED") return null;
       } catch {
-        // keep polling
+        // Network error — keep polling.
       }
     }
     return null;
@@ -3020,6 +3033,24 @@ export default function ThumbnailGeneratorPage() {
       await new Promise((r) => setTimeout(r, 1000));
       try {
         const res = await fetch(`/api/thumbnail/status?job_id=${jobId}`);
+        // Auth/ownership errors: stop polling — retrying can't recover. The
+        // status route auth-checks, so 401/403 means the job belongs to
+        // another tenant (stale link) or the session expired.
+        if (res.status === 401 || res.status === 403 || res.status === 404) {
+          setResults((prev) => {
+            const updated = [...prev];
+            if (updated[index]) {
+              updated[index] = { ...updated[index], status: "FAILED" };
+            }
+            return updated;
+          });
+          toast.error(
+            res.status === 403
+              ? "Can't track this job — it belongs to a different account."
+              : "Session expired — please sign in and try again.",
+          );
+          return null;
+        }
         const data = await res.json();
         if (data.status === "COMPLETED") {
           setResults((prev) => {
@@ -3053,7 +3084,7 @@ export default function ThumbnailGeneratorPage() {
           return updated;
         });
       } catch {
-        // Network error, keep polling
+        // Transient network error — keep polling.
       }
     }
     return null; // Timed out
@@ -3630,7 +3661,23 @@ export default function ThumbnailGeneratorPage() {
         }),
       });
       if (res.status === 402) {
-        toast.error("You hit your token limit — upgrade to continue", { id: toastId, duration: 6000 });
+        // fetchWithWall already surfaced the upgrade modal with current/limit;
+        // show a concise task-specific toast with the shortfall so the user
+        // understands why *this* generation was blocked, not just the cap.
+        // Clone to avoid consuming the body that fetchWithWall may have read.
+        const payload = await res
+          .clone()
+          .json()
+          .catch(() => null) as
+          | { remaining?: number; limit?: number; current?: number }
+          | null;
+        const needed = 1000 * Math.max(1, Math.min(4, variations));
+        const remaining = payload?.remaining;
+        const msg =
+          typeof remaining === "number"
+            ? `${variations} variant${variations > 1 ? "s" : ""} would use ~${needed.toLocaleString()} tokens — you have ${remaining.toLocaleString()} left.`
+            : "You hit your token limit — upgrade to continue.";
+        toast.error(msg, { id: toastId, duration: 7000 });
         setGenerating(false);
         return;
       }
@@ -3714,9 +3761,14 @@ export default function ThumbnailGeneratorPage() {
         },
       });
       loadHistory();
-    } catch {
+    } catch (err) {
+      console.error("[thumbnail-generator] generateReal error:", err);
       toast.dismiss(toastId);
-      toast.error("Error generating thumbnails");
+      toast.error(
+        err instanceof Error && err.message
+          ? `Generation failed: ${err.message}`
+          : "Error generating thumbnails",
+      );
     }
     setGenerating(false);
   }
@@ -7352,8 +7404,7 @@ export default function ThumbnailGeneratorPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {history.map((item) => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const meta: any = item.metadata || {};
+                const meta = (item.metadata || {}) as Record<string, unknown>;
                 const styleObj = THUMBNAIL_STYLES.find(
                   (s) => s.id === (meta.style as string)
                 );
@@ -7370,13 +7421,13 @@ export default function ThumbnailGeneratorPage() {
                           {styleObj.name}
                         </span>
                       )}
-                      {meta.platform && (
+                      {typeof meta.platform === "string" && meta.platform && (
                         <span className="text-[8px] px-1.5 py-0.5 rounded bg-surface-light border border-border text-muted">
                           {PLATFORM_SIZES.find((p) => p.id === (meta.platform as string))?.name ||
                             (meta.platform as string)}
                         </span>
                       )}
-                      {meta.count && Number(meta.count) > 1 && (
+                      {typeof meta.count !== "undefined" && Number(meta.count) > 1 && (
                         <span className="text-[8px] text-muted">
                           {String(meta.count)} variations
                         </span>

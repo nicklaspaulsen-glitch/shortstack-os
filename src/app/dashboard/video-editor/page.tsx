@@ -2287,11 +2287,12 @@ export default function VideoEditorPage() {
   }
 
   function openThumbnailEditor() {
-    // Navigate to thumbnail editor (best-effort, falls back to in-app route)
+    // Open the thumbnail generator in a new tab. Route was formerly
+    // "/dashboard/thumbnail-editor" which 404s — the real page is
+    // /dashboard/thumbnail-generator.
     if (typeof window !== "undefined") {
-      window.open("/dashboard/thumbnail-editor", "_blank");
+      window.open("/dashboard/thumbnail-generator", "_blank");
     }
-    toast.success("Opening thumbnail editor...");
   }
 
   useEffect(() => {
@@ -2729,7 +2730,19 @@ export default function VideoEditorPage() {
         }),
       });
       if (res.status === 402) {
-        toast.error("You hit your AI token limit — upgrade to continue", { duration: 6000 });
+        // fetchWithWall already surfaced the upgrade modal; the toast here is
+        // a concise task-specific confirmation so the user sees why *this*
+        // generation was blocked.
+        const payload = await res
+          .clone()
+          .json()
+          .catch(() => null) as { remaining?: number } | null;
+        const remaining = payload?.remaining;
+        const msg =
+          typeof remaining === "number"
+            ? `AI token budget reached — ${remaining.toLocaleString()} tokens left. Upgrade or buy more to continue.`
+            : "You hit your AI token limit — upgrade to continue.";
+        toast.error(msg, { duration: 7000 });
         setAiGenLoading(false);
         return;
       }

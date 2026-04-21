@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   Layers, Film, Megaphone, Image as ImageIcon, Mail,
   FileText, Share2, Globe, Search, RefreshCw,
-  Calendar, TrendingUp, Eye, Copy, RotateCcw,
+  Calendar, TrendingUp, Copy,
   Trash2, Loader, Sparkles, Clock
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -108,10 +108,12 @@ export default function GenerationsPage() {
     toast.success("Copied to clipboard");
   };
 
+  // Local-only hide — the /api/generations endpoint has no DELETE route yet,
+  // so this simply filters the current client list. Refresh restores the item.
   const deleteGeneration = async (id: string) => {
     setGenerations(prev => prev.filter(g => g.id !== id));
-    setTotal(prev => prev - 1);
-    toast.success("Generation removed");
+    setTotal(prev => Math.max(0, prev - 1));
+    toast.success("Hidden from list");
   };
 
   const hasMore = page * limit < total;
@@ -226,33 +228,21 @@ export default function GenerationsPage() {
                     <p className="text-[9px] text-muted mt-1">{timeAgo(gen.created_at)}</p>
                   </div>
 
-                  {/* Actions */}
+                  {/* Actions — preview/re-gen require per-tool routes that
+                      don't exist yet, so only ship the working Copy + Hide
+                      actions for launch. */}
                   <div className="shrink-0 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-all">
-                    <button
-                      onClick={() => toast.success("Opening preview...")}
-                      className="p-1.5 rounded-lg hover:bg-white/10 text-muted hover:text-white transition-all"
-                      title="View"
-                    >
-                      <Eye size={13} />
-                    </button>
                     <button
                       onClick={() => copyContent(gen)}
                       className="p-1.5 rounded-lg hover:bg-white/10 text-muted hover:text-white transition-all"
-                      title="Copy"
+                      title="Copy content"
                     >
                       <Copy size={13} />
                     </button>
                     <button
-                      onClick={() => toast.success("Re-generating...")}
-                      className="p-1.5 rounded-lg hover:bg-white/10 text-muted hover:text-gold transition-all"
-                      title="Re-generate"
-                    >
-                      <RotateCcw size={13} />
-                    </button>
-                    <button
                       onClick={() => deleteGeneration(gen.id)}
                       className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted hover:text-red-400 transition-all"
-                      title="Delete"
+                      title="Hide from list (local only)"
                     >
                       <Trash2 size={13} />
                     </button>

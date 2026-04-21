@@ -247,7 +247,7 @@ export default function OutreachLogsPage() {
         setTotalPages(data.totalPages || 1);
         if (data.stats) setStats(data.stats);
       }
-    } catch { /* ignore */ }
+    } catch (err) { console.error("[OutreachLogs] fetchEntries:", err); }
     setLoading(false);
   }, [page, pageSize, platformFilter, statusFilter, typeFilter, search, dateFrom, dateTo]);
 
@@ -308,7 +308,7 @@ export default function OutreachLogsPage() {
               metadata: data.metadata || {},
             });
           }
-        } catch { /* ignore */ }
+        } catch (err) { console.error("[OutreachLogs] call conversation fetch:", err); }
         setDetailLoading(false);
       }
     }
@@ -323,7 +323,7 @@ export default function OutreachLogsPage() {
           const threadData = await threadRes.json();
           setThreadEntries((threadData.entries || []).filter((e: OutreachEntry) => e.id !== entry.id));
         }
-      } catch { /* ignore */ }
+      } catch (err) { console.error("[OutreachLogs] email thread fetch:", err); }
     }
   }
 
@@ -352,7 +352,7 @@ export default function OutreachLogsPage() {
         const data = await res.json();
         setProvNumbers(data.numbers || []);
       }
-    } catch { /* ignore */ }
+    } catch (err) { console.error("[OutreachLogs] fetchProvisionedNumbers:", err); }
     setProvLoading(false);
   }
 
@@ -418,13 +418,16 @@ export default function OutreachLogsPage() {
       });
       setSelectedIds(new Set());
       fetchEntries();
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error("[OutreachLogs] handleBulkDelete:", err);
+      toast.error("Bulk delete failed");
+    }
     setBulkLoading(false);
   }
 
   async function handleBulkOutreach(action: string, _platform?: string) {
     const leadIds = entries.filter(e => selectedIds.has(e.id) && e.lead_id).map(e => e.lead_id);
-    if (!leadIds.length) return alert("No linked leads found in selection");
+    if (!leadIds.length) { toast.error("No linked leads found in selection"); return; }
     setBulkLoading(true);
     try {
       await fetch("/api/outreach/bulk", {
@@ -435,7 +438,10 @@ export default function OutreachLogsPage() {
       setSelectedIds(new Set());
       setShowDmPicker(false);
       fetchEntries();
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error("[OutreachLogs] handleBulkOutreach:", err);
+      toast.error("Bulk outreach failed");
+    }
     setBulkLoading(false);
   }
 
@@ -448,7 +454,10 @@ export default function OutreachLogsPage() {
         body: JSON.stringify(config),
       });
       toast.success("Configuration saved");
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.error("[OutreachLogs] saveConfig:", err);
+      toast.error("Failed to save configuration");
+    }
     setConfigSaving(false);
   }
 
