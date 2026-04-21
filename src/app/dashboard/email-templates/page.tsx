@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { MailPlus } from "lucide-react";
+import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 
 type AiTemplateType =
   | "welcome"
@@ -272,10 +273,22 @@ export default function EmailTemplatesPage() {
                   <span className={`text-[9px] px-1.5 py-0.5 rounded ${categoryColors[selectedTemplate.category] || ""}`}>{selectedTemplate.category}</span>
                   <span className="text-[9px] text-muted">v{selectedTemplate.version}</span>
                 </div>
-                <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)}
-                  className="input w-full text-sm font-medium" placeholder="Subject line..." />
-                <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)}
-                  rows={16} className="input w-full text-xs font-mono resize-none leading-relaxed" />
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[9px] text-muted uppercase tracking-wider">Subject</label>
+                    <AIEnhanceButton value={editedSubject} onResult={setEditedSubject} context="email subject line" variant="inline" />
+                  </div>
+                  <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)}
+                    className="input w-full text-sm font-medium" placeholder="Subject line..." />
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[9px] text-muted uppercase tracking-wider">Body</label>
+                    <AIEnhanceButton value={editedBody} onResult={setEditedBody} context="email body copy" variant="inline" />
+                  </div>
+                  <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)}
+                    rows={16} className="input w-full text-xs font-mono resize-none leading-relaxed" />
+                </div>
                 <div className="flex gap-2">
                   <button className="btn-primary text-xs flex items-center gap-1.5"><Save size={12} /> Save</button>
                   <button className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Duplicate</button>
@@ -440,7 +453,10 @@ export default function EmailTemplatesPage() {
               </div>
 
               <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Goal / Description</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[10px] text-muted uppercase tracking-wider">Goal / Description</label>
+                  <AIEnhanceButton value={aiPrompt} onResult={setAiPrompt} context="email body copy" variant="inline" />
+                </div>
                 <textarea value={aiPrompt} onChange={e => setAiPrompt(e.target.value)}
                   className="input w-full text-xs h-20 resize-none" placeholder="e.g. Re-engage dental practices that stopped opening our emails. Reference a case study, offer a free audit, book a call." />
               </div>
@@ -485,7 +501,10 @@ export default function EmailTemplatesPage() {
               </div>
               <div className="space-y-2">
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Subject</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] text-muted uppercase tracking-wider">Subject</label>
+                    <AIEnhanceButton value={editedSubject} onResult={setEditedSubject} context="email subject line" variant="inline" />
+                  </div>
                   <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)} className="input w-full text-xs" />
                 </div>
                 <div>
@@ -493,7 +512,10 @@ export default function EmailTemplatesPage() {
                   <p className="text-[10px] text-muted">{aiGenerated.preheader}</p>
                 </div>
                 <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Body</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-[10px] text-muted uppercase tracking-wider">Body</label>
+                    <AIEnhanceButton value={editedBody} onResult={setEditedBody} context="email body copy" variant="inline" />
+                  </div>
                   <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs font-mono resize-none" />
                 </div>
                 {aiGenerated.merge_tags.length > 0 && (
@@ -605,11 +627,17 @@ export default function EmailTemplatesPage() {
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-3">
               <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Subject Line</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[10px] text-muted uppercase tracking-wider">Subject Line</label>
+                  <AIEnhanceButton value={editedSubject} onResult={setEditedSubject} context="email subject line" variant="inline" />
+                </div>
                 <input value={editedSubject} onChange={e => setEditedSubject(e.target.value)} className="input w-full text-xs" />
               </div>
               <div>
-                <label className="text-[10px] text-muted uppercase tracking-wider mb-1 block">Email Body</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[10px] text-muted uppercase tracking-wider">Email Body</label>
+                  <AIEnhanceButton value={editedBody} onResult={setEditedBody} context="email body copy" variant="inline" />
+                </div>
                 <textarea value={editedBody} onChange={e => setEditedBody(e.target.value)} rows={12} className="input w-full text-xs resize-none font-mono" />
               </div>
             </div>
