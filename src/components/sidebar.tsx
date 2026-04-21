@@ -152,6 +152,7 @@ const navItems: NavItem[] = [
   { label: "Apps", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], sub: "Workflows" },
   { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Workflows" },
+  { label: "Triggers", href: "/dashboard/triggers", icon: <Zap size={16} />, roles: ["admin"], sub: "Workflows" },
   { label: "Automations", href: "/dashboard/automations", icon: <RotateCcw size={16} />, roles: ["admin"], sub: "Workflows" },
   { label: "WhatsApp", href: "/dashboard/whatsapp", icon: <MessageSquare size={16} />, roles: ["admin"], sub: "Channels" },
   { label: "Webhooks", href: "/dashboard/webhooks", icon: <Webhook size={16} />, roles: ["admin"], sub: "Channels" },
