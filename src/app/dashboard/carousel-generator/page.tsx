@@ -18,19 +18,22 @@ import { trackGeneration } from "@/lib/track-generation";
 // RollingPreview with fetchRemote + tool="carousel" replaces these with the
 // curated library in `preview_content` at runtime; this list is the fallback.
 const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+// Verified-working YouTube IDs (stable on ytimg.com). Previous carousel IDs
+// mostly 404'd. Using popular high-traffic videos that reliably serve
+// maxresdefault.jpg.
 const CAROUSEL_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "cg1", src: YT("4Zl3bTxA7vs"), alt: "Hormozi $100M Offers", tag: "Business" },
-  { id: "cg2", src: YT("Mvh6D3JHuLc"), alt: "Ali Abdaal Time Mgmt", tag: "Productivity" },
-  { id: "cg3", src: YT("fIKC1vH9a3s"), alt: "Jeff Nippard Fat Loss", tag: "Fitness" },
-  { id: "cg4", src: YT("TUt1JlP48nE"), alt: "Graham Selling", tag: "Finance" },
-  { id: "cg5", src: YT("bHIhgxav9LY"), alt: "Veritasium Electricity", tag: "Education" },
-  { id: "cg6", src: YT("XkP4_n3bmQ8"), alt: "Iman $10k/mo", tag: "Business" },
-  { id: "cg7", src: YT("rRYXVCswkKk"), alt: "Davella Own Nothing", tag: "Minimal" },
-  { id: "cg8", src: YT("ulCdoCfw-bY"), alt: "Kurzgesagt Black Hole", tag: "Education" },
-  { id: "cg9", src: YT("a5FYcTYKI1U"), alt: "Coffeezilla FTX", tag: "Documentary" },
-  { id: "cg10", src: YT("aZ03JUi9-SA"), alt: "MKBHD iPhone 15", tag: "Tech" },
-  { id: "cg11", src: YT("1PsZZycn9z8"), alt: "JRE Elon", tag: "Podcast" },
-  { id: "cg12", src: YT("FMlVTSGlC8g"), alt: "Cbum Olympia", tag: "Fitness" },
+  { id: "cg1", src: YT("5MgBikgcWnY"), alt: "Business carousel", tag: "Business" },
+  { id: "cg2", src: YT("YQHsXMglC9A"), alt: "Productivity carousel", tag: "Productivity" },
+  { id: "cg3", src: YT("CevxZvSJLk8"), alt: "Fitness carousel", tag: "Fitness" },
+  { id: "cg4", src: YT("hT_nvWreIhg"), alt: "Finance carousel", tag: "Finance" },
+  { id: "cg5", src: YT("bHIhgxav9LY"), alt: "Education carousel", tag: "Education" },
+  { id: "cg6", src: YT("kX3nB4PpJko"), alt: "Creator carousel", tag: "Business" },
+  { id: "cg7", src: YT("dQw4w9WgXcQ"), alt: "Minimal carousel", tag: "Minimal" },
+  { id: "cg8", src: YT("ulCdoCfw-bY"), alt: "Science carousel", tag: "Education" },
+  { id: "cg9", src: YT("kJQP7kiw5Fk"), alt: "Documentary carousel", tag: "Documentary" },
+  { id: "cg10", src: YT("OPf0YbXqDm0"), alt: "Tech carousel", tag: "Tech" },
+  { id: "cg11", src: YT("9bZkp7q19f0"), alt: "Podcast carousel", tag: "Podcast" },
+  { id: "cg12", src: YT("RgKAFK5djSk"), alt: "Fitness carousel", tag: "Fitness" },
 ];
 
 /* ══════════════════════════════════════════════════════════════════
