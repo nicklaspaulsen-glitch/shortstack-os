@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
@@ -470,7 +470,10 @@ export default function CRMPage() {
         toast.success(`${action === "email" ? "Email sent" : action === "sms" ? "SMS sent" : "Call initiated"}!`);
         fetchLeads();
       } else toast.error(data.error || "Failed to send");
-    } catch { toast.error(`Error with ${action}`); }
+    } catch (err) {
+      console.error("[CRM] sendAction error:", err);
+      toast.error(`Error with ${action}`);
+    }
     setActionLoading(null);
   }
 
@@ -494,7 +497,7 @@ export default function CRMPage() {
             body: JSON.stringify({ lead_id: lead.id, phone: lead.phone!, business_name: lead.business_name, industry: lead.industry || "" }) });
           const data = await res.json();
           if (data.success) success++;
-        } catch { /* continue */ }
+        } catch (err) { console.error("[CRM] bulk call error:", err); }
       }
     } else {
       // Email and SMS endpoints support batch via lead_ids array
@@ -504,7 +507,7 @@ export default function CRMPage() {
           body: JSON.stringify({ lead_ids: valid.map(l => l.id) }) });
         const data = await res.json();
         success = data.sent || 0;
-      } catch { /* continue */ }
+      } catch (err) { console.error("[CRM] bulk email/sms error:", err); }
     }
     if (action === "email") setEmailCredits(p => p - success);
     toast.success(`${success}/${valid.length} ${action}s completed`, { id: tid });
@@ -521,7 +524,10 @@ export default function CRMPage() {
       if (error) { toast.error("Delete failed", { id: tid }); return; }
       toast.success(`Deleted ${selectedIds.size} leads`, { id: tid });
       setSelectedIds(new Set()); fetchLeads();
-    } catch { toast.error("Delete error", { id: tid }); }
+    } catch (err) {
+      console.error("[CRM] bulkDelete error:", err);
+      toast.error("Delete error", { id: tid });
+    }
   }
 
   async function bulkUpdateStatus(newStatus: string) {
@@ -533,7 +539,10 @@ export default function CRMPage() {
       if (error) { toast.error("Update failed", { id: tid }); return; }
       toast.success(`Updated ${selectedIds.size} leads to "${newStatus}"`, { id: tid });
       setShowBulkStatusMenu(false); setSelectedIds(new Set()); fetchLeads();
-    } catch { toast.error("Update error", { id: tid }); }
+    } catch (err) {
+      console.error("[CRM] bulkUpdateStatus error:", err);
+      toast.error("Update error", { id: tid });
+    }
   }
 
   async function updateLeadStatus(leadId: string, newStatus: string) {
@@ -542,7 +551,10 @@ export default function CRMPage() {
       if (error) { toast.error("Update failed"); return; }
       toast.success(`Status → ${newStatus}`);
       setInlineStatusId(null); fetchLeads();
-    } catch { toast.error("Update error"); }
+    } catch (err) {
+      console.error("[CRM] updateLeadStatus error:", err);
+      toast.error("Update error");
+    }
   }
 
   function addTag(leadId: string, tagId: string) {
@@ -748,7 +760,10 @@ export default function CRMPage() {
                 const data = await res.json();
                 if (data.success) { toast.success(`Imported ${data.imported} leads`, { id: tid }); fetchLeads(); }
                 else toast.error(data.error || "Import failed", { id: tid });
-              } catch { toast.error("Import error", { id: tid }); }
+              } catch (err) {
+                console.error("[CRM] CSV import error:", err);
+                toast.error("Import error", { id: tid });
+              }
               e.target.value = "";
             }} />
           </label>
@@ -1567,9 +1582,9 @@ export default function CRMPage() {
             </div>
             <div className="px-5 py-3 border-t border-border bg-surface-light/30 flex items-center justify-between">
               <span className="text-[9px] text-muted">{automations.filter(r => r.enabled).length}/{automations.length} rules active</span>
-              <button onClick={() => { toast.success("Automation settings saved"); setShowAutomation(false); }}
+              <button onClick={() => { toast("Automation rules are local-only — persistence coming soon"); setShowAutomation(false); }}
                 className="text-[10px] px-4 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold-light transition-all">
-                Save Changes
+                Close
               </button>
             </div>
           </div>
@@ -1636,5 +1651,3 @@ export default function CRMPage() {
   );
 }
 
-// Need React import for React.Fragment in table rows
-import React from "react";
