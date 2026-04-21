@@ -5,12 +5,14 @@ import {
   Globe, Search, Loader, CheckCircle, XCircle, ExternalLink,
   ShieldCheck, Plus, RefreshCw, Link2, Copy, Trash2,
   AlertTriangle, Edit3, AlertCircle, Mail, MailCheck, MailWarning,
+  ArrowUpRight, Info, Sparkles,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { VercelIcon, GoDaddyIcon } from "@/components/ui/platform-icons";
+import { computeMonthlyPrice, computeYearlyPrice } from "@/lib/domain-pricing";
 
 interface WebsiteDomain {
   id: string;
@@ -53,6 +55,13 @@ interface ProjectRef {
   custom_domain: string | null;
 }
 
+interface UsageSnapshot {
+  plan_tier: string;
+  usage: Record<string, number>;
+  limits: Record<string, number | "unlimited">;
+  remaining: Record<string, number | "unlimited">;
+}
+
 const STATUS_BADGE: Record<string, string> = {
   pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/30",
   pending_payment: "bg-amber-500/10 text-amber-400 border-amber-500/30",
@@ -71,6 +80,8 @@ export default function DomainsPage() {
   const [domains, setDomains] = useState<WebsiteDomain[]>([]);
   const [projects, setProjects] = useState<ProjectRef[]>([]);
   const [loading, setLoading] = useState(true);
+  const [usage, setUsage] = useState<UsageSnapshot | null>(null);
+  const [purchasingDomain, setPurchasingDomain] = useState<string | null>(null);
 
   // search UI
   const [query, setQuery] = useState("");
@@ -81,6 +92,17 @@ export default function DomainsPage() {
   const [dnsOpen, setDnsOpen] = useState<string | null>(null);
   const [dnsRecords, setDnsRecords] = useState<DnsRecord[]>([]);
   const [dnsLoading, setDnsLoading] = useState(false);
+
+  const loadUsage = useCallback(async () => {
+    try {
+      const res = await fetch("/api/usage/current", { cache: "no-store" });
+      if (!res.ok) return;
+      const data = (await res.json()) as UsageSnapshot;
+      setUsage(data);
+    } catch {
+      // silent — quota chip simply won't render
+    }
+  }, []);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -93,7 +115,7 @@ export default function DomainsPage() {
     setLoading(false);
   }, [supabase]);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => { loadData(); loadUsage(); }, [loadData, loadUsage]);
 
   // Handle Stripe redirect after successful checkout
   useEffect(() => {
@@ -102,13 +124,49 @@ export default function DomainsPage() {
     const purchase = params.get("purchase");
     const domain = params.get("domain");
     if (purchase === "success" && domain) {
-      toast.success(`Payment confirmed! Setting up ${domain}...`, { duration: 6000 });
+      toast.success(`Payment confirmed! Setting up ${domain}…`, { duration: 6000 });
       // Clean the URL
       window.history.replaceState({}, "", "/dashboard/domains");
-      // Give the webhook a moment to process, then reload
-      setTimeout(() => loadData(), 3000);
+      // Give the webhook a moment to process the GoDaddy purchase + Vercel
+      // attach, then reload and offer to kick off mail setup immediately.
+      setTimeout(() => {
+        loadData();
+        toast(
+          (t) => (
+            <div className="flex items-start gap-2">
+              <div className="flex-1 text-[12px]">
+                <p className="font-semibold text-foreground">
+                  Next: set up email sending for {domain}
+                </p>
+                <p className="text-muted mt-0.5">
+                  One click to write Resend DKIM/SPF to GoDaddy — then your client can
+                  send from anything@{domain}.
+                </p>
+                <div className="mt-2 flex gap-2">
+                  <button
+                    onClick={() => {
+                      toast.dismiss(t.id);
+                      window.location.href = `/dashboard/mail-setup?domain=${encodeURIComponent(domain)}`;
+                    }}
+                    className="px-3 py-1 rounded-md bg-gold text-black text-[11px] font-semibold"
+                  >
+                    Set up mail
+                  </button>
+                  <button
+                    onClick={() => toast.dismiss(t.id)}
+                    className="px-3 py-1 rounded-md border border-border text-muted text-[11px]"
+                  >
+                    Later
+                  </button>
+                </div>
+              </div>
+            </div>
+          ),
+          { duration: 12000, icon: <Mail size={16} className="text-blue-400" /> },
+        );
+      }, 3000);
     } else if (purchase === "cancelled") {
-      toast("Purchase cancelled. No charge made.", { icon: "↩️" });
+      toast("Purchase cancelled. No charge made.", { icon: "↩" });
       window.history.replaceState({}, "", "/dashboard/domains");
     }
   }, [loadData]);
@@ -144,6 +202,8 @@ export default function DomainsPage() {
     billingCycle: "monthly" | "yearly" = "monthly",
     basePrice?: number,
   ) {
+    const rowKey = `${domain}:${billingCycle}`;
+    setPurchasingDomain(rowKey);
     const toastId = toast.loading("Creating secure checkout...");
     try {
       const res = await fetch("/api/websites/domains/checkout", {
@@ -161,19 +221,28 @@ export default function DomainsPage() {
         // Redirect to Stripe Checkout — on success, webhook fires GoDaddy
         // purchase + Vercel attach + DNS config automatically.
         window.location.href = data.url;
-      } else if (data.missing_env) {
+        // Don't clear spinner — the page is navigating away
+        return;
+      }
+      if (data.missing_env) {
         toast.error(`Stripe not set up: missing ${data.missing_env.join(", ")}`);
       } else {
-        toast.error(data.error || "Checkout failed");
+        // Surface GoDaddy-API-style errors with more context when they come back
+        const detail = typeof data.error === "string" ? data.error : "Checkout failed";
+        toast.error(detail, { duration: 7000 });
       }
-    } catch {
+    } catch (err) {
       toast.dismiss(toastId);
-      toast.error("Checkout failed");
+      toast.error(
+        err instanceof Error ? `Checkout failed: ${err.message}` : "Checkout failed — network error",
+      );
+    } finally {
+      setPurchasingDomain(null);
     }
   }
 
   async function retryAutoConfigure(domain: WebsiteDomain) {
-    const toastId = toast.loading("Configuring domain...");
+    const toastId = toast.loading("Configuring domain…");
     try {
       const res = await fetch("/api/websites/domains/auto-configure", {
         method: "POST",
@@ -191,11 +260,19 @@ export default function DomainsPage() {
         await loadData();
       } else {
         const errorStep = data?.steps?.find((s: { status: string }) => s.status === "error");
-        toast.error(errorStep?.detail || data?.error || "Auto-configure failed");
+        const msg =
+          errorStep?.detail ||
+          data?.error ||
+          `Auto-configure failed (HTTP ${res.status}) — check GoDaddy credentials or try again in a minute.`;
+        toast.error(msg, { duration: 8000 });
       }
-    } catch {
+    } catch (err) {
       toast.dismiss(toastId);
-      toast.error("Auto-configure failed");
+      toast.error(
+        err instanceof Error
+          ? `Auto-configure failed: ${err.message}`
+          : "Auto-configure failed — network error",
+      );
     }
   }
 
@@ -313,6 +390,9 @@ export default function DomainsPage() {
     toast.success("Loaded Vercel DNS template — click Save to apply");
   }
 
+  const planTierLabel = usage?.plan_tier || "—";
+  const domainsOwned = domains.length;
+
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -321,13 +401,43 @@ export default function DomainsPage() {
         subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."
         gradient="ocean"
         actions={
-          <div className="flex items-center gap-1.5 text-[10px] text-white/80 bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
-            <GoDaddyIcon size={12} /> GoDaddy
-            <span className="opacity-40">·</span>
-            <VercelIcon size={12} /> Vercel
+          <div className="flex items-center gap-2">
+            {usage && (
+              <div className="flex items-center gap-1.5 text-[10px] text-white/85 bg-white/10 border border-white/20 px-2.5 py-1.5 rounded-lg">
+                <Globe size={11} />
+                <span>
+                  <span className="font-semibold">{domainsOwned}</span>
+                  <span className="opacity-70"> owned</span>
+                  <span className="opacity-60"> · {planTierLabel}</span>
+                </span>
+              </div>
+            )}
+            <div className="flex items-center gap-1.5 text-[10px] text-white/80 bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
+              <GoDaddyIcon size={12} /> GoDaddy
+              <span className="opacity-40">·</span>
+              <VercelIcon size={12} /> Vercel
+            </div>
           </div>
         }
       />
+
+      {/* Who-pays clarity banner — agencies pass domain costs to clients, so
+          make it unambiguous on a page where a miscommunication = a chargeback. */}
+      <div className="flex flex-wrap items-start gap-2 rounded-xl border border-blue-500/20 bg-blue-500/5 p-3 text-[11px] text-blue-200">
+        <Info size={13} className="mt-0.5 shrink-0 text-blue-300" />
+        <div className="flex-1 min-w-0">
+          <span className="font-semibold text-blue-100">Who pays?</span>{" "}
+          <span>
+            Domain purchases charge <span className="font-semibold">your</span> Stripe-linked card.
+            Most agencies rebill the client (monthly: our yearly-retail price divided by 12 + $4
+            ops fee; yearly: same with a 20% discount). Adjust the markup in{" "}
+            <code className="px-1 py-0.5 rounded bg-blue-500/10 text-[10px]">
+              src/lib/domain-pricing.ts
+            </code>
+            .
+          </span>
+        </div>
+      </div>
 
       {/* ── Domain search ────────────────────────────────────────────── */}
       <div className="card">
@@ -351,9 +461,14 @@ export default function DomainsPage() {
         {results.length > 0 && (
           <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
             {results.map(r => {
-              // Monthly = (base * 1.35 / 12) + $4 ops fee; yearly = 20% off monthly*12
-              const monthly = r.price ? Math.max(9, Math.round(r.price * 1.35 / 12 + 4)) : 9;
-              const yearly = Math.round(monthly * 12 * 0.8);
+              // Use shared pricing helpers so the buttons match the checkout
+              // price exactly (previously used hand-rolled math that could drift).
+              const base = r.price || 12.99;
+              const monthly = computeMonthlyPrice(base);
+              const yearly = computeYearlyPrice(monthly);
+              const rowMonthlyLoading = purchasingDomain === `${r.domain}:monthly`;
+              const rowYearlyLoading = purchasingDomain === `${r.domain}:yearly`;
+              const anyRowLoading = rowMonthlyLoading || rowYearlyLoading;
               return (
                 <div key={r.domain} className="p-3 rounded-xl border border-border bg-surface-light">
                   <div className="flex items-center justify-between mb-2">
@@ -376,23 +491,48 @@ export default function DomainsPage() {
                     </div>
                   </div>
                   {r.available === true && (
-                    <div className="grid grid-cols-2 gap-1.5">
-                      <button
-                        onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
-                        className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-gold/40 hover:bg-white/5 flex flex-col items-center"
-                      >
-                        <span className="font-bold">${monthly}/mo</span>
-                        <span className="text-[9px] text-muted">Monthly</span>
-                      </button>
-                      <button
-                        onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
-                        className="relative text-[10px] px-2 py-2 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-black font-bold flex flex-col items-center hover:shadow-lg hover:shadow-amber-400/30"
-                      >
-                        <span className="absolute -top-1.5 right-1 text-[8px] bg-emerald-500 text-white px-1 py-0.5 rounded-full font-bold">Save 20%</span>
-                        <span>${yearly}/yr</span>
-                        <span className="text-[9px] opacity-80">Yearly</span>
-                      </button>
-                    </div>
+                    <>
+                      {/* Clear pricing breakdown BEFORE commit — shows wholesale
+                          vs what-user-pays so there are no surprises at Stripe
+                          checkout. */}
+                      <div className="mb-2 px-2 py-1.5 rounded-md bg-background/40 text-[9px] text-muted leading-relaxed">
+                        Wholesale: ${base.toFixed(2)}/yr · Your price:{" "}
+                        <span className="text-foreground font-semibold">${monthly}/mo</span> or{" "}
+                        <span className="text-foreground font-semibold">${yearly}/yr</span> ·
+                        Includes registration, SSL, DNS, hosting. Renews automatically.
+                      </div>
+                      <div className="grid grid-cols-2 gap-1.5">
+                        <button
+                          onClick={() => purchaseDomain(r.domain, "monthly", r.price || undefined)}
+                          disabled={anyRowLoading}
+                          className="text-[10px] px-2 py-2 rounded-lg border border-border text-foreground hover:border-gold/40 hover:bg-white/5 flex flex-col items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {rowMonthlyLoading ? (
+                            <Loader size={12} className="animate-spin my-1" />
+                          ) : (
+                            <>
+                              <span className="font-bold">${monthly}/mo</span>
+                              <span className="text-[9px] text-muted">Monthly</span>
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => purchaseDomain(r.domain, "yearly", r.price || undefined)}
+                          disabled={anyRowLoading}
+                          className="relative text-[10px] px-2 py-2 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 text-black font-bold flex flex-col items-center hover:shadow-lg hover:shadow-amber-400/30 disabled:opacity-60 disabled:cursor-not-allowed"
+                        >
+                          {rowYearlyLoading ? (
+                            <Loader size={12} className="animate-spin my-1" />
+                          ) : (
+                            <>
+                              <span className="absolute -top-1.5 right-1 text-[8px] bg-emerald-500 text-white px-1 py-0.5 rounded-full font-bold">Save 20%</span>
+                              <span>${yearly}/yr</span>
+                              <span className="text-[9px] opacity-80">Yearly</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </>
                   )}
                 </div>
               );
@@ -533,15 +673,58 @@ export default function DomainsPage() {
 
                 {/* Resend mail-status hints */}
                 {d.resend_status === "verified" && (
-                  <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-300 flex items-center gap-2">
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-green-500/5 border border-green-500/20 text-[10px] text-green-300 flex items-center gap-2 flex-wrap">
                     <MailCheck size={11} />
                     <span>Client can now send from <span className="font-mono">anything@{d.domain}</span></span>
+                    <a
+                      href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
+                      className="ml-auto inline-flex items-center gap-1 text-green-200 hover:text-green-100"
+                    >
+                      Open in Mail Setup <ArrowUpRight size={10} />
+                    </a>
+                  </div>
+                )}
+                {/* When mail is set up but still verifying, cross-link to the
+                    dedicated /dashboard/mail-setup page so the user can
+                    copy-paste DNS records or trigger a re-verify. */}
+                {(d.resend_status === "verifying" || d.resend_status === "pending") && (
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-blue-500/5 border border-blue-500/20 text-[10px] text-blue-200 flex items-center gap-2 flex-wrap">
+                    <Mail size={11} />
+                    <span>DNS records are propagating — this usually takes a few minutes.</span>
+                    <a
+                      href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
+                      className="ml-auto inline-flex items-center gap-1 text-blue-100 hover:text-white"
+                    >
+                      View records <ArrowUpRight size={10} />
+                    </a>
                   </div>
                 )}
                 {d.resend_status === "failed" && d.resend_last_error && (
                   <div className="mt-2 px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/20 text-[10px] text-red-300 flex items-start gap-2">
                     <MailWarning size={11} className="mt-0.5 shrink-0" />
-                    <span className="break-all">{d.resend_last_error}</span>
+                    <span className="break-all flex-1">{d.resend_last_error}</span>
+                    <a
+                      href={`/dashboard/mail-setup?domain=${encodeURIComponent(d.domain)}`}
+                      className="shrink-0 inline-flex items-center gap-1 text-red-200 hover:text-red-100"
+                    >
+                      Debug <ArrowUpRight size={10} />
+                    </a>
+                  </div>
+                )}
+                {/* No mail yet — gentle nudge since this is the "agency flow" win */}
+                {!d.resend_status && (d.status === "active" || d.status === "dns_configured" || d.status === "purchased") && (
+                  <div className="mt-2 px-3 py-2 rounded-lg bg-gold/5 border border-gold/20 text-[10px] text-gold flex items-center gap-2 flex-wrap">
+                    <Sparkles size={11} />
+                    <span>
+                      Send marketing email from{" "}
+                      <span className="font-mono">hello@{d.domain}</span>? Takes ~1 minute.
+                    </span>
+                    <button
+                      onClick={() => setupMail(d)}
+                      className="ml-auto inline-flex items-center gap-1 font-semibold hover:underline"
+                    >
+                      Set up now <ArrowUpRight size={10} />
+                    </button>
                   </div>
                 )}
 
@@ -623,10 +806,17 @@ export default function DomainsPage() {
         </h3>
         <ul className="text-[10px] text-muted space-y-1 list-disc list-inside">
           <li>Domains are registered under your ShortStack GoDaddy customer account.</li>
-          <li>You (the client) own the domain — we just process the purchase.</li>
+          <li>You (the agency) own the registration until you transfer it to the client.</li>
           <li>Use DNS records above to point your domain to Vercel (A: 76.76.21.21, CNAME: cname.vercel-dns.com).</li>
           <li>SSL is auto-provisioned by Vercel once DNS resolves.</li>
           <li>Transfer out any time via the GoDaddy dashboard using the auth code.</li>
+          <li>
+            After purchase →{" "}
+            <a href="/dashboard/mail-setup" className="text-gold hover:underline">
+              Mail Setup
+            </a>{" "}
+            writes Resend DKIM/SPF so the client can send email from their own domain.
+          </li>
         </ul>
       </div>
     </div>

@@ -29,6 +29,9 @@ import {
   MessageSquare,
   Globe,
   Sparkles,
+  ArrowUpRight,
+  Users,
+  Settings,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -46,6 +49,13 @@ interface AvailableNumber {
   phone: string;
   locality: string;
   region: string;
+}
+
+interface UsageSnapshot {
+  plan_tier: string;
+  usage: Record<string, number>;
+  limits: Record<string, number | "unlimited">;
+  remaining: Record<string, number | "unlimited">;
 }
 
 // Common country codes for the picker
@@ -76,14 +86,19 @@ export default function PhoneSetupPage() {
   const [loadingNumbers, setLoadingNumbers] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState<AvailableNumber | null>(null);
   const [buying, setBuying] = useState(false);
+  const [buyingStage, setBuyingStage] = useState<
+    "idle" | "purchasing" | "importing" | "agent" | "saving"
+  >("idle");
   const [purchaseResult, setPurchaseResult] = useState<{
     phone_number: string;
     twilio_sid: string;
     eleven_agent_id: string | null;
   } | null>(null);
   const [testSending, setTestSending] = useState(false);
+  const [usage, setUsage] = useState<UsageSnapshot | null>(null);
+  const [atLimit, setAtLimit] = useState(false);
 
-  // Fetch agency-owned clients on mount
+  // Fetch agency-owned clients + current usage on mount
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -98,6 +113,20 @@ export default function PhoneSetupPage() {
         console.error("[phone-setup] fetch clients failed:", err);
       } finally {
         if (!cancelled) setLoadingClients(false);
+      }
+    })();
+    (async () => {
+      try {
+        const res = await fetch("/api/usage/current", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = (await res.json()) as UsageSnapshot;
+        if (cancelled) return;
+        setUsage(data);
+        const used = data.usage?.phone_numbers ?? 0;
+        const limit = data.limits?.phone_numbers;
+        if (typeof limit === "number" && used >= limit) setAtLimit(true);
+      } catch {
+        // Non-fatal — header quota just won't render
       }
     })();
     return () => {
@@ -132,6 +161,13 @@ export default function PhoneSetupPage() {
   async function provision() {
     if (!selectedClient || !selectedNumber) return;
     setBuying(true);
+    setBuyingStage("purchasing");
+    // Fake-step the stage indicator so the user sees progress during the
+    // 2-3s backend pipeline (Twilio purchase → ElevenLabs import → agent).
+    const stageTimers: ReturnType<typeof setTimeout>[] = [];
+    stageTimers.push(setTimeout(() => setBuyingStage("importing"), 1200));
+    stageTimers.push(setTimeout(() => setBuyingStage("agent"), 2400));
+    stageTimers.push(setTimeout(() => setBuyingStage("saving"), 3600));
     try {
       const res = await fetch("/api/twilio/provision", {
         method: "POST",
@@ -145,12 +181,32 @@ export default function PhoneSetupPage() {
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
-        toast.error(data.error || `Purchase failed (${res.status})`);
         if (res.status === 402) {
-          toast.error("You've hit your plan's phone number cap. Upgrade at /dashboard/upgrade.", {
+          // Plan limit hit — flip the page into upgrade CTA mode instead of
+          // firing a toast that can be missed.
+          setAtLimit(true);
+          if (typeof data.current === "number" && typeof data.limit === "number") {
+            setUsage((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    usage: { ...prev.usage, phone_numbers: data.current },
+                    limits: { ...prev.limits, phone_numbers: data.limit },
+                  }
+                : {
+                    plan_tier: data.plan_tier || "Starter",
+                    usage: { phone_numbers: data.current },
+                    limits: { phone_numbers: data.limit },
+                    remaining: { phone_numbers: 0 },
+                  },
+            );
+          }
+          toast.error("You've hit your plan's phone number cap. Upgrade to provision more.", {
             duration: 6000,
           });
+          return;
         }
+        toast.error(data.error || `Purchase failed (${res.status})`);
         return;
       }
       setPurchaseResult({
@@ -160,10 +216,28 @@ export default function PhoneSetupPage() {
       });
       setStep(4);
       toast.success(`Phone number ${data.phone_number} is live!`);
+      // Refresh quota after successful purchase so the header reflects new use
+      void refreshUsage();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Purchase failed");
     } finally {
+      stageTimers.forEach(clearTimeout);
       setBuying(false);
+      setBuyingStage("idle");
+    }
+  }
+
+  async function refreshUsage() {
+    try {
+      const res = await fetch("/api/usage/current", { cache: "no-store" });
+      if (!res.ok) return;
+      const data = (await res.json()) as UsageSnapshot;
+      setUsage(data);
+      const used = data.usage?.phone_numbers ?? 0;
+      const limit = data.limits?.phone_numbers;
+      setAtLimit(typeof limit === "number" && used >= limit);
+    } catch {
+      // silent
     }
   }
 
@@ -200,15 +274,92 @@ export default function PhoneSetupPage() {
   const canProceedStep1 = !!selectedClient;
   const canProceedStep2 = !!selectedNumber;
 
+  const phoneUsed = usage?.usage?.phone_numbers ?? 0;
+  const phoneLimitRaw = usage?.limits?.phone_numbers;
+  const phoneLimitDisplay =
+    phoneLimitRaw === "unlimited"
+      ? "∞"
+      : typeof phoneLimitRaw === "number"
+        ? phoneLimitRaw
+        : "—";
+  const planTierLabel = usage?.plan_tier || "Starter";
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
         title="Phone Setup"
         subtitle="Buy a Twilio phone number for your client. AI receptionist + SMS + voice — all wired in one click."
         icon={<Phone size={20} />}
+        actions={
+          usage ? (
+            <div className="flex items-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-2.5 py-1.5 text-[10px] text-white/85">
+              <Phone size={11} />
+              <span>
+                <span className="font-semibold">{phoneUsed}</span>
+                <span className="opacity-70"> / {phoneLimitDisplay}</span>
+                <span className="opacity-60"> numbers · {planTierLabel}</span>
+              </span>
+            </div>
+          ) : undefined
+        }
       />
 
-      <div className="mx-auto max-w-4xl px-6 pb-10">
+      <div className="mx-auto max-w-4xl px-6 pb-10 pt-4">
+        {/* Quota / agency-pays hint — always visible under the hero */}
+        <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border/40 bg-surface-light/20 p-3 text-[11px] text-muted">
+          <div className="flex items-center gap-1.5 text-[11px] text-foreground/80">
+            <Sparkles size={12} className="text-gold" />
+            <span>
+              You&apos;ve provisioned{" "}
+              <span className="font-semibold text-foreground">{phoneUsed}</span> of{" "}
+              <span className="font-semibold text-foreground">{phoneLimitDisplay}</span> numbers on
+              your <span className="font-semibold text-foreground">{planTierLabel}</span> plan.
+            </span>
+          </div>
+          <span className="opacity-40">·</span>
+          <span>
+            ~$1/mo per number is billed to <span className="font-semibold">your</span> Twilio
+            account — rebill clients however you like.
+          </span>
+        </div>
+
+        {/* At-limit: replace wizard with upgrade card so the user never wanders
+            into the wizard only to fail on the final step. */}
+        {atLimit && step !== 4 && (
+          <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-6">
+            <div className="mb-2 flex items-center gap-2">
+              <AlertTriangle size={18} className="text-amber-400" />
+              <h2 className="text-base font-semibold">
+                You&apos;ve hit your {planTierLabel} plan&apos;s phone-number cap
+              </h2>
+            </div>
+            <p className="mb-4 text-sm text-muted">
+              You&apos;re using <span className="font-semibold text-foreground">{phoneUsed}</span>{" "}
+              of <span className="font-semibold text-foreground">{phoneLimitDisplay}</span>{" "}
+              numbers. Upgrade to a higher tier to provision another, or release an existing
+              number from{" "}
+              <a href="/dashboard/phone-email" className="text-gold hover:underline">
+                Phone &amp; Email
+              </a>
+              .
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <a
+                href="/dashboard/upgrade"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90"
+              >
+                <ArrowUpRight size={14} /> See plans
+              </a>
+              <a
+                href="/dashboard/phone-email"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 px-4 py-2 text-sm text-muted transition hover:text-foreground"
+              >
+                <Settings size={14} /> Manage existing numbers
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* Progress bar */}
         <div className="mb-6 flex items-center gap-2">
           {[1, 2, 3, 4].map((n) => {
@@ -253,10 +404,20 @@ export default function PhoneSetupPage() {
                 <Loader size={14} className="animate-spin" /> Loading your clients…
               </div>
             ) : clients.length === 0 ? (
-              <div className="rounded-lg border border-dashed border-border/50 p-6 text-center text-sm text-muted">
-                No clients yet.{" "}
-                <a href="/dashboard/clients" className="text-gold hover:underline">
-                  Add one first →
+              <div className="rounded-lg border border-dashed border-border/50 bg-background/30 p-8 text-center">
+                <Users size={28} className="mx-auto mb-3 text-muted/40" />
+                <p className="mb-1 text-sm font-semibold text-foreground">
+                  You need to add a client first
+                </p>
+                <p className="mb-4 text-[12px] text-muted">
+                  Phone numbers are attached to a specific client so calls + SMS route
+                  correctly. Add a client, then come back here.
+                </p>
+                <a
+                  href="/dashboard/clients"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-xs font-semibold text-black transition hover:bg-gold/90"
+                >
+                  <ArrowRight size={12} /> Go to Clients
                 </a>
               </div>
             ) : (
@@ -448,6 +609,38 @@ export default function PhoneSetupPage() {
               </p>
             </div>
 
+            {/* Live progress during the 2-3s Twilio → ElevenLabs pipeline */}
+            {buying && (
+              <div className="mb-5 rounded-lg border border-gold/30 bg-gold/5 p-4">
+                <div className="mb-3 flex items-center gap-2 text-[12px] font-semibold text-gold">
+                  <Loader size={13} className="animate-spin" /> Provisioning your number —
+                  hang tight, this takes 2-3 seconds
+                </div>
+                <div className="space-y-1.5 text-[11px] text-muted">
+                  <PipelineStep
+                    label="Purchasing from Twilio"
+                    active={buyingStage === "purchasing"}
+                    done={["importing", "agent", "saving"].includes(buyingStage)}
+                  />
+                  <PipelineStep
+                    label="Importing to ElevenLabs"
+                    active={buyingStage === "importing"}
+                    done={["agent", "saving"].includes(buyingStage)}
+                  />
+                  <PipelineStep
+                    label="Creating AI receptionist agent"
+                    active={buyingStage === "agent"}
+                    done={buyingStage === "saving"}
+                  />
+                  <PipelineStep
+                    label="Wiring SMS + voice webhooks"
+                    active={buyingStage === "saving"}
+                    done={false}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="flex justify-between">
               <button
                 onClick={() => setStep(2)}
@@ -530,6 +723,12 @@ export default function PhoneSetupPage() {
                   </>
                 )}
               </button>
+              <a
+                href="/dashboard/phone-email"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border/60 bg-surface-light/60 px-4 py-2 text-sm font-semibold text-foreground transition hover:bg-surface-light"
+              >
+                <Settings size={14} /> Manage this number
+              </a>
               <button
                 onClick={() => {
                   setStep(1);
@@ -538,10 +737,13 @@ export default function PhoneSetupPage() {
                   setAvailableNumbers([]);
                   setAreaCode("");
                   setPurchaseResult(null);
+                  void refreshUsage();
                 }}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light"
+                disabled={atLimit}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-surface-light/80 px-4 py-2 text-sm font-semibold transition hover:bg-surface-light disabled:cursor-not-allowed disabled:opacity-50"
+                title={atLimit ? "You've hit your plan's phone-number cap" : undefined}
               >
-                Provision another
+                <Sparkles size={14} /> Provision another
               </button>
               <a
                 href="/dashboard/eleven-agents"
@@ -550,9 +752,44 @@ export default function PhoneSetupPage() {
                 Customise the AI agent →
               </a>
             </div>
+
+            {/* Next-step nudge — connect this number to a real inbox + outbound */}
+            <div className="mt-5 rounded-lg border border-border/40 bg-background/40 p-3 text-[11px] text-muted">
+              <span className="font-semibold text-foreground">Next step:</span> assign a sender
+              identity and compose your first broadcast from{" "}
+              <a href="/dashboard/phone-email" className="text-gold hover:underline">
+                Phone &amp; Email
+              </a>
+              .
+            </div>
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function PipelineStep({ label, active, done }: { label: string; active: boolean; done: boolean }) {
+  return (
+    <div className="flex items-center gap-2">
+      {done ? (
+        <CheckCircle2 size={12} className="text-emerald-400" />
+      ) : active ? (
+        <Loader size={12} className="animate-spin text-gold" />
+      ) : (
+        <span className="inline-block h-[10px] w-[10px] rounded-full border border-border/60" />
+      )}
+      <span
+        className={
+          done
+            ? "text-emerald-300"
+            : active
+              ? "text-foreground"
+              : "text-muted opacity-60"
+        }
+      >
+        {label}
+      </span>
     </div>
   );
 }
