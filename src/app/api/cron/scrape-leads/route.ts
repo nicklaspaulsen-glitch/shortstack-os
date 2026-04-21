@@ -163,7 +163,7 @@ export async function GET(request: NextRequest) {
             }
 
             // Insert lead
-            const { data: newLead, error: insertError } = await supabase
+            const { error: insertError } = await supabase
               .from("leads")
               .insert({
                 ...lead,

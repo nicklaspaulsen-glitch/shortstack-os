@@ -6,7 +6,7 @@ import {
   Palette, Layout, Trash2, Wand2, Briefcase, Users, Store,
   MonitorSmartphone, UtensilsCrossed, Home, Building2, Target,
   Camera, GraduationCap, Newspaper, RefreshCw, CheckCircle,
-  Zap, Link2, ShoppingBag, ShieldCheck, Megaphone, Clock,
+  Link2, ShoppingBag, ShieldCheck, Megaphone, Clock,
   Crown, X, Share2, DollarSign, BarChart3, FlaskConical,
   EyeOff, Check, Rocket, Calendar, Monitor, Tablet, Smartphone,
   TrendingUp, ArrowRight,
