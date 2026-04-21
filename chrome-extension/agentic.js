@@ -1,37 +1,66 @@
-/* ShortStack OS — Agentic Content Script
+/* ShortStack OS — Agentic Content Script (v2)
  *
  * Foundational browser-control primitives exposed to the background
  * service worker (and through it, to the ShortStack backend over the
- * extension-bridge WebSocket).
+ * extension-bridge HTTPS long-poll transport).
  *
- * Design:
- *   - Command-handler map keyed by action name (`getDom`, `click`,
- *     `type`, `screenshot`, `focus`, `scrollTo`, `getSelection`,
- *     `getFormValues`, `keypress`, `getMeta`).
- *   - Each handler returns a plain object that can be JSON-serialized
- *     back across the message bus.
- *   - All handlers are best-effort — if a selector doesn't match, we
- *     return { ok: false, error } rather than throw.
- *   - Screenshot is handled by the background (requires
- *     chrome.tabs.captureVisibleTab) so we just acknowledge + let the
- *     background worker do the capture.
+ * v2 additions on top of the original 10 handlers:
+ *   - waitForSelector    (async DOM readiness polling)
+ *   - waitForNavigation  (URL/readyState change detection on this frame)
+ *   - execPlan           (sequential multi-step plan with fail-fast)
+ *   - Optional `frameSelector` on click/type/focus/keypress/scrollTo to
+ *     descend into a same-origin iframe before acting.
+ *   - Error recovery: when click/type fails to find the target, we return
+ *     a fresh interactive snapshot so the caller can re-plan.
  *
- * This script runs on <all_urls> alongside content.js. It registers a
- * second chrome.runtime.onMessage listener with a namespaced `type` of
- * "SS_AGENTIC" so it never clashes with the legacy EXTRACT_PAGE flow.
+ * Cross-origin iframes still require background-side frameId routing
+ * (bridge.js handles this side); same-origin iframes are driven entirely
+ * from this content script via the `frameSelector` option.
  */
 (() => {
   if (window.__shortstackAgenticLoaded) return;
   window.__shortstackAgenticLoaded = true;
 
   /* ── Selector utilities ── */
-  function $find(selector) {
+  function $find(selector, root) {
     if (!selector || typeof selector !== "string") return null;
+    const scope = root || document;
     try {
-      return document.querySelector(selector);
+      return scope.querySelector(selector);
     } catch (e) {
       return null;
     }
+  }
+
+  /**
+   * Resolve a selector inside an optional iframe. For same-origin frames
+   * we drill into contentDocument; for cross-origin we bail out with an
+   * error that signals the bridge to re-route via frameId.
+   */
+  function resolveRoot(frameSelector) {
+    if (!frameSelector) return { root: document };
+    const frameEl = $find(frameSelector);
+    if (!frameEl) return { error: "No iframe for selector: " + frameSelector };
+    if (frameEl.tagName !== "IFRAME" && frameEl.tagName !== "FRAME") {
+      return { error: "Element is not a frame: " + frameSelector };
+    }
+    let doc;
+    try {
+      doc = frameEl.contentDocument;
+    } catch (e) {
+      return { error: "cross_origin_frame", frame: frameSelector };
+    }
+    if (!doc) return { error: "cross_origin_frame", frame: frameSelector };
+    return { root: doc, frame: frameEl };
+  }
+
+  function isVisible(el) {
+    if (!el || el.nodeType !== 1) return false;
+    const rect = el.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return false;
+    const cs = getComputedStyle(el);
+    if (cs.display === "none" || cs.visibility === "hidden" || Number(cs.opacity) === 0) return false;
+    return true;
   }
 
   function describeElement(el) {
@@ -87,7 +116,10 @@
    * selector the agent can feed back to `click` / `type` / `focus`.
    */
   function getInteractive(args = {}) {
-    const { limit = 100 } = args;
+    const { limit = 100, frameSelector } = args;
+    const r = resolveRoot(frameSelector);
+    if (r.error) return { ok: false, error: r.error, frame: r.frame };
+    const root = r.root;
     const selectors = [
       "a[href]",
       "button",
@@ -103,7 +135,7 @@
     const seen = new Set();
     const out = [];
     for (const sel of selectors) {
-      const nodes = document.querySelectorAll(sel);
+      const nodes = root.querySelectorAll(sel);
       for (const el of nodes) {
         if (seen.has(el)) continue;
         seen.add(el);
@@ -147,14 +179,33 @@
     return parts.join(" > ");
   }
 
+  /* ── Recovery snapshot ──
+   * Returned alongside errors when a click/type/focus couldn't find its
+   * target, so the caller can re-plan without a round-trip.
+   */
+  function recoverySnapshot() {
+    const inv = getInteractive({ limit: 40 });
+    return {
+      url: location.href,
+      title: document.title,
+      readyState: document.readyState,
+      interactive: inv.items || [],
+    };
+  }
+
   /* ── Click ── */
   function click(args = {}) {
-    const { selector, button = "left" } = args;
-    const el = $find(selector);
-    if (!el) return { ok: false, error: `No element for selector: ${selector}` };
+    const { selector, button = "left", frameSelector } = args;
+    const r = resolveRoot(frameSelector);
+    if (r.error) return { ok: false, error: r.error, frame: r.frame, recovery: recoverySnapshot() };
+    const el = $find(selector, r.root);
+    if (!el) return { ok: false, error: "No element for selector: " + selector, recovery: recoverySnapshot() };
     try {
       el.scrollIntoView({ block: "center", behavior: "instant" });
       const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) {
+        return { ok: false, error: "Element is zero-sized / not visible", recovery: recoverySnapshot() };
+      }
       const evtInit = {
         bubbles: true,
         cancelable: true,
@@ -168,15 +219,17 @@
       el.dispatchEvent(new MouseEvent("click", evtInit));
       return { ok: true, clicked: describeElement(el) };
     } catch (e) {
-      return { ok: false, error: String(e) };
+      return { ok: false, error: String(e), recovery: recoverySnapshot() };
     }
   }
 
   /* ── Type ── */
   function type(args = {}) {
-    const { selector, text = "", replace = false } = args;
-    const el = selector ? $find(selector) : document.activeElement;
-    if (!el) return { ok: false, error: "No target element for type()" };
+    const { selector, text = "", replace = false, frameSelector } = args;
+    const r = resolveRoot(frameSelector);
+    if (r.error) return { ok: false, error: r.error, frame: r.frame, recovery: recoverySnapshot() };
+    const el = selector ? $find(selector, r.root) : document.activeElement;
+    if (!el) return { ok: false, error: "No target element for type()", recovery: recoverySnapshot() };
     try {
       el.focus();
       if ("value" in el) {
@@ -194,29 +247,33 @@
         else el.textContent = (el.textContent || "") + text;
         el.dispatchEvent(new InputEvent("input", { bubbles: true, data: text }));
       } else {
-        return { ok: false, error: "Element isn't an input/textarea/contenteditable" };
+        return { ok: false, error: "Element isn't an input/textarea/contenteditable", recovery: recoverySnapshot() };
       }
       return { ok: true, value: el.value ?? el.textContent };
     } catch (e) {
-      return { ok: false, error: String(e) };
+      return { ok: false, error: String(e), recovery: recoverySnapshot() };
     }
   }
 
   /* ── Focus ── */
   function focus(args = {}) {
-    const { selector } = args;
-    const el = $find(selector);
-    if (!el) return { ok: false, error: `No element for selector: ${selector}` };
+    const { selector, frameSelector } = args;
+    const r = resolveRoot(frameSelector);
+    if (r.error) return { ok: false, error: r.error, frame: r.frame };
+    const el = $find(selector, r.root);
+    if (!el) return { ok: false, error: "No element for selector: " + selector, recovery: recoverySnapshot() };
     el.focus();
     return { ok: true };
   }
 
   /* ── Scroll ── */
   function scrollTo(args = {}) {
-    const { selector, x, y, behavior = "instant" } = args;
+    const { selector, x, y, behavior = "instant", frameSelector } = args;
+    const r = resolveRoot(frameSelector);
+    if (r.error) return { ok: false, error: r.error, frame: r.frame };
     if (selector) {
-      const el = $find(selector);
-      if (!el) return { ok: false, error: `No element for selector: ${selector}` };
+      const el = $find(selector, r.root);
+      if (!el) return { ok: false, error: "No element for selector: " + selector };
       el.scrollIntoView({ block: "center", behavior });
       return { ok: true, scrolledTo: selector };
     }
@@ -224,14 +281,12 @@
     return { ok: true, x: window.scrollX, y: window.scrollY };
   }
 
-  /* ── Keyboard shortcut ──
-   * Synthesize a keydown/keyup on the focused (or target) element. Real
-   * hotkey simulation across OS shortcuts requires the debugger API —
-   * we scaffold the hook here, covering basic app shortcuts.
-   */
+  /* ── Keyboard shortcut ── */
   function keypress(args = {}) {
-    const { selector, key, code, ctrlKey = false, shiftKey = false, altKey = false, metaKey = false } = args;
-    const el = selector ? $find(selector) : (document.activeElement || document.body);
+    const { selector, key, code, ctrlKey = false, shiftKey = false, altKey = false, metaKey = false, frameSelector } = args;
+    const r = resolveRoot(frameSelector);
+    if (r.error) return { ok: false, error: r.error, frame: r.frame };
+    const el = selector ? $find(selector, r.root) : (document.activeElement || document.body);
     if (!el) return { ok: false, error: "No target for keypress" };
     const init = { key, code: code || key, bubbles: true, cancelable: true, ctrlKey, shiftKey, altKey, metaKey };
     el.dispatchEvent(new KeyboardEvent("keydown", init));
@@ -259,12 +314,12 @@
   function getFormValues() {
     const out = [];
     document.querySelectorAll("input, textarea, select").forEach((el) => {
-      const type = (el.type || el.tagName).toLowerCase();
+      const t = (el.type || el.tagName).toLowerCase();
       out.push({
         selector: buildSelector(el),
         name: el.name || el.id || "",
-        type,
-        value: type === "password" ? "[masked]" : (el.value || ""),
+        type: t,
+        value: t === "password" ? "[masked]" : (el.value || ""),
         placeholder: el.placeholder || "",
         required: !!el.required,
       });
@@ -291,6 +346,101 @@
     };
   }
 
+  /* ── waitForSelector ──
+   * Poll up to `timeout` ms for a selector to exist AND be visible.
+   * Default timeout: 10s. Default poll interval: 100ms.
+   */
+  function waitForSelector(args = {}) {
+    const { selector, timeout = 10000, interval = 100, requireVisible = true, frameSelector } = args;
+    if (!selector) return Promise.resolve({ ok: false, error: "Missing selector" });
+    const start = Date.now();
+    return new Promise((resolve) => {
+      const tick = () => {
+        const r = resolveRoot(frameSelector);
+        if (r.error && r.error !== "cross_origin_frame") {
+          return resolve({ ok: false, error: r.error });
+        }
+        const root = r.root || document;
+        const el = $find(selector, root);
+        if (el && (!requireVisible || isVisible(el))) {
+          return resolve({ ok: true, waitedMs: Date.now() - start, element: describeElement(el) });
+        }
+        if (Date.now() - start >= timeout) {
+          return resolve({ ok: false, error: "waitForSelector timed out after " + timeout + "ms", selector, recovery: recoverySnapshot() });
+        }
+        setTimeout(tick, interval);
+      };
+      tick();
+    });
+  }
+
+  /* ── waitForNavigation ──
+   * Wait for either the URL to change from the baseline or for the
+   * document to transition to complete. Background-side listener in
+   * bridge.js provides a stronger signal for cross-origin navigations.
+   */
+  function waitForNavigation(args = {}) {
+    const { timeout = 15000, interval = 150, waitForLoadState = "complete" } = args;
+    const start = Date.now();
+    const startUrl = location.href;
+    return new Promise((resolve) => {
+      const tick = () => {
+        const urlChanged = location.href !== startUrl;
+        const readyOk = waitForLoadState === "any" || document.readyState === waitForLoadState || document.readyState === "complete";
+        if (urlChanged && readyOk) {
+          return resolve({ ok: true, waitedMs: Date.now() - start, url: location.href, readyState: document.readyState });
+        }
+        if (Date.now() - start >= timeout) {
+          return resolve({
+            ok: false,
+            error: "waitForNavigation timed out after " + timeout + "ms",
+            url: location.href,
+            readyState: document.readyState,
+            urlChanged,
+          });
+        }
+        setTimeout(tick, interval);
+      };
+      tick();
+    });
+  }
+
+  /* ── execPlan ──
+   * Run a sequence of agentic steps in order. On any failure, short-circuit
+   * and return per-step results up to and including the failure. Each step
+   * supports `{ action, args, optional }` where `optional: true` lets a
+   * single-step failure continue instead of aborting the plan.
+   */
+  async function execPlan(args = {}) {
+    const { steps = [], stopOnError = true } = args;
+    if (!Array.isArray(steps) || steps.length === 0) {
+      return { ok: false, error: "execPlan requires steps[]" };
+    }
+    const results = [];
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i] || {};
+      const { action, args: stepArgs = {}, optional = false } = step;
+      const handler = HANDLERS[action];
+      if (!handler) {
+        const res = { ok: false, error: "Unknown action in step " + i + ": " + action };
+        results.push({ step: i, action, ...res });
+        if (stopOnError && !optional) return { ok: false, failedAt: i, results };
+        continue;
+      }
+      let res;
+      try {
+        res = await Promise.resolve(handler(stepArgs));
+      } catch (e) {
+        res = { ok: false, error: String(e) };
+      }
+      results.push({ step: i, action, ...res });
+      if (!res.ok && stopOnError && !optional) {
+        return { ok: false, failedAt: i, results };
+      }
+    }
+    return { ok: true, steps: results.length, results };
+  }
+
   /* ── Handler registry ── */
   const HANDLERS = {
     getDom,
@@ -303,6 +453,9 @@
     getSelection,
     getFormValues,
     getMeta,
+    waitForSelector,
+    waitForNavigation,
+    execPlan,
   };
 
   /* ── Message bridge ──
@@ -327,5 +480,5 @@
   });
 
   // Mark the page so the ShortStack backend can detect agentic capability
-  document.documentElement.setAttribute("data-shortstack-agentic", "1");
+  document.documentElement.setAttribute("data-shortstack-agentic", "2");
 })();

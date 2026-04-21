@@ -34,7 +34,24 @@ const API_BASE_DEFAULT = "https://app.shortstack.work";
 const RECONNECT_BASE_MS = 2000;
 const RECONNECT_MAX_MS = 60000;
 const HEARTBEAT_MS = 25000;
-const EXTENSION_VERSION = "1.1.0";
+const EXTENSION_VERSION = "1.2.0";
+
+/* ── Rate limit config (v2) ──
+ * Token bucket: refill at 30 tokens/min (0.5/sec), max burst 10.
+ * Per-user. If the bucket is empty the command is rejected with
+ * { error: "rate_limited", retryAfterMs }.
+ */
+const RATE_LIMIT_PER_MIN = 30;
+const RATE_LIMIT_BURST = 10;
+const RATE_LIMIT_REFILL_PER_MS = RATE_LIMIT_PER_MIN / 60000;
+
+/* Actions the allowlist/blocklist does NOT apply to — these are either
+ * bridge introspection or host-level operations that don't touch page
+ * content. */
+const HOST_INDEPENDENT_ACTIONS = new Set([
+  "getBridgeStatus",
+  "listTabs",
+]);
 
 const bridgeState = {
   status: "disconnected", // disconnected | connecting | connected | error
@@ -48,6 +65,12 @@ const bridgeState = {
   userId: null,
   pollAbort: null,
   pollActive: false,
+  /* Rate-limit buckets keyed by userId. Service-worker restarts drop the
+   * map, which is fine — a user can't meaningfully exceed the limit
+   * across restarts faster than they could fresh. */
+  rateBuckets: new Map(),
+  /* Debugger attached tabs so we don't double-attach for coord clicks. */
+  debuggerAttached: new Set(),
 };
 
 function setBridgeStatus(status, extra = {}) {
@@ -69,7 +92,12 @@ function setBridgeStatus(status, extra = {}) {
 }
 
 async function getBridgeConfig() {
-  const sync = await chrome.storage.sync.get(["bridgeUrl", "bridgeEnabled"]);
+  const sync = await chrome.storage.sync.get([
+    "bridgeUrl",
+    "bridgeEnabled",
+    "agenticAllowlist",
+    "agenticBlocklist",
+  ]);
   const local = await chrome.storage.local.get(["ss_access_token"]);
   // bridgeUrl still accepted for backwards-compat, but we only use its
   // origin (the WS protocol is no longer meaningful).
@@ -83,6 +111,8 @@ async function getBridgeConfig() {
     apiBase,
     enabled: sync.bridgeEnabled !== false, // default on
     token: local.ss_access_token || "",
+    allowlist: Array.isArray(sync.agenticAllowlist) ? sync.agenticAllowlist : [],
+    blocklist: Array.isArray(sync.agenticBlocklist) ? sync.agenticBlocklist : [],
   };
 }
 
@@ -253,15 +283,91 @@ async function ackToServer(body) {
   }
 }
 
+/* ── Rate limiting (token bucket) ──
+ * Buckets keyed by userId. Returns { ok: true } if the command may proceed,
+ * or { ok: false, retryAfterMs } when the user has exceeded the limit.
+ */
+function checkRateLimit(userId) {
+  const key = userId || "anon";
+  const now = Date.now();
+  let bucket = bridgeState.rateBuckets.get(key);
+  if (!bucket) {
+    bucket = { tokens: RATE_LIMIT_BURST, lastRefill: now };
+    bridgeState.rateBuckets.set(key, bucket);
+  }
+  // Refill
+  const elapsed = now - bucket.lastRefill;
+  if (elapsed > 0) {
+    bucket.tokens = Math.min(RATE_LIMIT_BURST, bucket.tokens + elapsed * RATE_LIMIT_REFILL_PER_MS);
+    bucket.lastRefill = now;
+  }
+  if (bucket.tokens >= 1) {
+    bucket.tokens -= 1;
+    return { ok: true, remaining: Math.floor(bucket.tokens) };
+  }
+  const retryAfterMs = Math.ceil((1 - bucket.tokens) / RATE_LIMIT_REFILL_PER_MS);
+  return { ok: false, retryAfterMs };
+}
+
+/* ── Host allowlist / blocklist ── */
+function hostFromUrl(url) {
+  try { return new URL(url).host; } catch { return ""; }
+}
+
+function hostMatches(host, pattern) {
+  if (!host || !pattern) return false;
+  if (pattern === host) return true;
+  // Wildcard support: "*.example.com" matches "foo.example.com" and root.
+  if (pattern.startsWith("*.")) {
+    const bare = pattern.slice(2);
+    return host === bare || host.endsWith("." + bare);
+  }
+  return false;
+}
+
+async function checkHostPolicy(action) {
+  if (HOST_INDEPENDENT_ACTIONS.has(action)) return { ok: true, host: null };
+  const { allowlist, blocklist } = await getBridgeConfig();
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+  if (!tab) return { ok: false, error: "no_active_tab" };
+  const host = hostFromUrl(tab.url || "");
+  if (blocklist.some((p) => hostMatches(host, p))) {
+    return { ok: false, error: "host_blocked", host };
+  }
+  if (allowlist.length > 0 && !allowlist.some((p) => hostMatches(host, p))) {
+    return { ok: false, error: "host_not_allowed", host };
+  }
+  return { ok: true, host };
+}
+
 /* ── Server command dispatch ── */
 async function handleServerCommand(cmd) {
   const { id, target, action, params } = cmd;
+
+  // Rate limit first — cheap and before any IO.
+  const rl = checkRateLimit(bridgeState.userId);
+  if (!rl.ok) {
+    await ackToServer({ type: "result", id, ok: false, error: "rate_limited", retryAfterMs: rl.retryAfterMs });
+    return;
+  }
+
+  // Host policy check for anything that touches the active tab.
+  if (target !== "bg" || !HOST_INDEPENDENT_ACTIONS.has(action)) {
+    const policy = await checkHostPolicy(action);
+    if (!policy.ok) {
+      await ackToServer({ type: "result", id, ok: false, error: policy.error, host: policy.host });
+      return;
+    }
+  }
+
   try {
     let data;
     if (target === "bg") {
       data = await handleBackgroundAction(action, params || {});
     } else {
-      data = await sendToActiveTab({ type: "SS_AGENTIC", action, args: params || {} });
+      const frameId = params && typeof params.frameId === "number" ? params.frameId : undefined;
+      data = await sendToActiveTab({ type: "SS_AGENTIC", action, args: params || {} }, frameId);
     }
     await ackToServer({ type: "result", id, ok: true, data });
   } catch (e) {
@@ -277,44 +383,248 @@ async function emitBridgeEvent(kind, data) {
 
 async function handleBackgroundAction(action, args) {
   switch (action) {
-    case "screenshot": {
-      return new Promise((resolve, reject) => {
-        chrome.tabs.captureVisibleTab(null, { format: args.format || "png" }, (dataUrl) => {
-          if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
-          else resolve({ ok: true, dataUrl });
-        });
-      });
-    }
-    case "listTabs": {
-      const tabs = await chrome.tabs.query({});
-      return {
-        ok: true,
-        tabs: tabs.map((t) => ({ id: t.id, url: t.url, title: t.title, active: t.active, windowId: t.windowId })),
-      };
-    }
-    case "navigate": {
-      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-      const tab = tabs[0];
-      if (!tab) throw new Error("No active tab");
-      await chrome.tabs.update(tab.id, { url: args.url });
-      return { ok: true, tabId: tab.id, url: args.url };
-    }
+    case "screenshot":        return bgScreenshot(args);
+    case "listTabs":          return bgListTabs();
+    case "navigate":          return bgNavigate(args);
+    case "waitForNavigation": return bgWaitForNavigation(args);
+    case "coordClick":        return bgCoordClick(args);
     case "getBridgeStatus":
       return { ok: true, status: bridgeState.status, lastConnectedAt: bridgeState.lastConnectedAt };
     default:
-      throw new Error(`Unknown bg action: ${action}`);
+      throw new Error("Unknown bg action: " + action);
   }
 }
 
-function sendToActiveTab(message) {
+async function bgListTabs() {
+  const tabs = await chrome.tabs.query({});
+  return {
+    ok: true,
+    tabs: tabs.map((t) => ({ id: t.id, url: t.url, title: t.title, active: t.active, windowId: t.windowId })),
+  };
+}
+
+async function bgNavigate(args) {
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+  if (!tab) throw new Error("No active tab");
+  await chrome.tabs.update(tab.id, { url: args.url });
+  return { ok: true, tabId: tab.id, url: args.url };
+}
+
+/* ── Screenshot (with optional highlight) ──
+ * If `args.highlight` is a selector, we first fetch the element's
+ * on-screen rect from the content script, then composite a red rectangle
+ * onto the captured PNG using OffscreenCanvas. Returns
+ * { dataUrl, highlighted: rect }.
+ */
+async function bgScreenshot(args) {
+  const opts = args || {};
+  const format = opts.format || "png";
+  const baseDataUrl = await new Promise((resolve, reject) => {
+    chrome.tabs.captureVisibleTab(null, { format }, (dataUrl) => {
+      if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
+      else resolve(dataUrl);
+    });
+  });
+
+  if (!opts.highlight) {
+    return { ok: true, dataUrl: baseDataUrl };
+  }
+
+  let rectInfo = null;
+  // Preferred: small scripting.executeScript to get rect + devicePixelRatio
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const tab = tabs[0];
+    if (tab) {
+      const results = await chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        args: [opts.highlight],
+        func: (sel) => {
+          try {
+            const el = document.querySelector(sel);
+            if (!el) return null;
+            const r = el.getBoundingClientRect();
+            return { rect: { x: r.x, y: r.y, w: r.width, h: r.height }, dpr: window.devicePixelRatio || 1 };
+          } catch (_) { return null; }
+        },
+      });
+      rectInfo = (results && results[0] && results[0].result) || null;
+    }
+  } catch (_) { /* fall through */ }
+
+  if (!rectInfo) {
+    return { ok: true, dataUrl: baseDataUrl, highlighted: null, warning: "highlight_selector_not_found" };
+  }
+  try {
+    const annotated = await annotateDataUrl(baseDataUrl, rectInfo.rect, rectInfo.dpr || 1);
+    return { ok: true, dataUrl: annotated, highlighted: rectInfo.rect };
+  } catch (e) {
+    return { ok: true, dataUrl: baseDataUrl, highlighted: rectInfo.rect, warning: "annotate_failed: " + e };
+  }
+}
+
+/* Composite a red rectangle over the captured PNG using OffscreenCanvas.
+ * Service workers have OffscreenCanvas + createImageBitmap, so no DOM
+ * needed. */
+async function annotateDataUrl(dataUrl, rect, dpr) {
+  const scale = dpr || 1;
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  const bmp = await createImageBitmap(blob);
+  const canvas = new OffscreenCanvas(bmp.width, bmp.height);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(bmp, 0, 0);
+  ctx.strokeStyle = "#ff3b3b";
+  ctx.lineWidth = Math.max(3, Math.floor(3 * scale));
+  const x = rect.x * scale;
+  const y = rect.y * scale;
+  const w = rect.w * scale;
+  const h = rect.h * scale;
+  ctx.strokeRect(x, y, w, h);
+  ctx.fillStyle = "rgba(255, 59, 59, 0.15)";
+  ctx.fillRect(x, y, w, h);
+  const outBlob = await canvas.convertToBlob({ type: "image/png" });
+  return await blobToDataUrl(outBlob);
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+}
+
+/* ── waitForNavigation (background) ──
+ * Stronger than the content-script variant — listens to
+ * chrome.webNavigation.onCompleted on the active tab and resolves as
+ * soon as a top-frame navigation finishes. Returns the final URL.
+ */
+async function bgWaitForNavigation(args) {
+  const opts = args || {};
+  const timeout = typeof opts.timeout === "number" ? opts.timeout : 15000;
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+  if (!tab) throw new Error("No active tab");
+  const tabId = tab.id;
+  const startUrl = tab.url;
+
+  return new Promise((resolve) => {
+    let done = false;
+    const timer = setTimeout(() => {
+      if (done) return;
+      done = true;
+      try { chrome.webNavigation.onCompleted.removeListener(listener); } catch (_) {}
+      resolve({ ok: false, error: "waitForNavigation timed out", timeoutMs: timeout, startUrl });
+    }, timeout);
+    const listener = (details) => {
+      if (details.tabId !== tabId || details.frameId !== 0) return;
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      try { chrome.webNavigation.onCompleted.removeListener(listener); } catch (_) {}
+      resolve({ ok: true, url: details.url, startUrl, navigated: details.url !== startUrl });
+    };
+    try {
+      chrome.webNavigation.onCompleted.addListener(listener);
+    } catch (e) {
+      done = true;
+      clearTimeout(timer);
+      resolve({ ok: false, error: "webNavigation not available: " + String(e) });
+    }
+  });
+}
+
+/* ── coordClick ──
+ * Real mouse event at (x, y) via chrome.debugger protocol. Useful for
+ * canvas apps (Figma, Miro, games) that ignore synthetic DOM events.
+ * Requires the optional `debugger` permission.
+ */
+async function bgCoordClick(args) {
+  const opts = args || {};
+  const x = opts.x;
+  const y = opts.y;
+  const button = opts.button || "left";
+  const clickCount = opts.clickCount || 1;
+  if (typeof x !== "number" || typeof y !== "number") {
+    return { ok: false, error: "coordClick requires numeric x/y" };
+  }
+  const granted = await new Promise((res) => {
+    chrome.permissions.contains({ permissions: ["debugger"] }, (ok) => res(!!ok));
+  });
+  if (!granted) {
+    return {
+      ok: false,
+      error: "debugger_permission_required",
+      hint: "Call chrome.permissions.request({permissions:['debugger']}) via the extension popup before running coordClick.",
+    };
+  }
+  const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+  const tab = tabs[0];
+  if (!tab) return { ok: false, error: "No active tab" };
+  const target = { tabId: tab.id };
+
+  if (!bridgeState.debuggerAttached.has(tab.id)) {
+    await new Promise((res, rej) => {
+      chrome.debugger.attach(target, "1.3", () => {
+        if (chrome.runtime.lastError) rej(new Error(chrome.runtime.lastError.message));
+        else res();
+      });
+    });
+    bridgeState.debuggerAttached.add(tab.id);
+  }
+
+  const btn = button === "right" ? "right" : button === "middle" ? "middle" : "left";
+  try {
+    await sendDebugger(target, "Input.dispatchMouseEvent", { type: "mouseMoved", x, y, button: "none" });
+    await sendDebugger(target, "Input.dispatchMouseEvent", { type: "mousePressed", x, y, button: btn, clickCount });
+    await sendDebugger(target, "Input.dispatchMouseEvent", { type: "mouseReleased", x, y, button: btn, clickCount });
+    return { ok: true, x, y, button: btn };
+  } catch (e) {
+    return { ok: false, error: String(e) };
+  }
+}
+
+function sendDebugger(target, method, params) {
+  return new Promise((resolve, reject) => {
+    chrome.debugger.sendCommand(target, method, params, (result) => {
+      if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
+      else resolve(result);
+    });
+  });
+}
+
+// Detach debugger when the user manually closes DevTools or we lose a tab.
+try {
+  chrome.debugger.onDetach.addListener((source) => {
+    if (source && typeof source.tabId === "number") {
+      bridgeState.debuggerAttached.delete(source.tabId);
+    }
+  });
+} catch (_) { /* not available in some test contexts */ }
+
+/* ── Active-tab message helper ──
+ * Supports an optional frameId so the bridge can route commands into a
+ * specific (potentially cross-origin) nested frame instead of the top
+ * frame. chrome.tabs.sendMessage's `frameId` option delivers only to
+ * that frame's content scripts.
+ */
+function sendToActiveTab(message, frameId) {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const tab = tabs[0];
       if (!tab) return reject(new Error("No active tab"));
-      chrome.tabs.sendMessage(tab.id, message, (res) => {
+      const cb = (res) => {
         if (chrome.runtime.lastError) return reject(new Error(chrome.runtime.lastError.message));
         resolve(res);
-      });
+      };
+      if (typeof frameId === "number") {
+        chrome.tabs.sendMessage(tab.id, message, { frameId }, cb);
+      } else {
+        chrome.tabs.sendMessage(tab.id, message, cb);
+      }
     });
   });
 }
@@ -340,4 +650,9 @@ self.ShortStackBridge = {
   state: getBridgeState,
   sendToActiveTab,
   emitEvent: emitBridgeEvent,
+  // v2 helpers exported so popup / tests can exercise them without a
+  // long-poll round trip.
+  _handleServerCommand: handleServerCommand,
+  _checkRateLimit: checkRateLimit,
+  _checkHostPolicy: checkHostPolicy,
 };

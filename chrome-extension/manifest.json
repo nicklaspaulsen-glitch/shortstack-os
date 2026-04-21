@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ShortStack OS — Quick Actions",
   "description": "Add leads, create posts, and take agentic actions from any webpage",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "permissions": [
     "activeTab",
     "storage",
@@ -10,7 +10,8 @@
     "notifications",
     "alarms",
     "tabs",
-    "scripting"
+    "scripting",
+    "webNavigation"
   ],
   "optional_permissions": ["debugger"],
   "host_permissions": [
@@ -35,9 +36,16 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["api.js", "content.js", "agentic.js"],
+      "js": ["api.js", "content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["agentic.js"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
     }
   ],
   "icons": {
