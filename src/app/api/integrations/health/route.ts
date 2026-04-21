@@ -110,6 +110,29 @@ async function checkTwilio(): Promise<HealthResult> {
   return { id: "twilio", status: "error", detail: `Twilio returned HTTP ${status || "timeout"}` };
 }
 
+async function checkStripe(): Promise<HealthResult> {
+  const missing = missingEnv(["STRIPE_SECRET_KEY"]);
+  if (missing.length) return { id: "stripe", status: "not_configured", missing };
+  const { ok, status } = await probe("https://api.stripe.com/v1/balance", {
+    headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+  });
+  if (ok) return { id: "stripe", status: "connected" };
+  return { id: "stripe", status: "error", detail: `Stripe returned HTTP ${status || "timeout"}` };
+}
+
+async function checkStripeConnect(): Promise<HealthResult> {
+  // Stripe Connect uses the same platform key — we just verify the Connect
+  // API is accessible. The per-agency connected account status is tracked
+  // separately in agency_stripe_accounts.
+  const missing = missingEnv(["STRIPE_SECRET_KEY"]);
+  if (missing.length) return { id: "stripe_connect", status: "not_configured", missing };
+  const { ok, status } = await probe("https://api.stripe.com/v1/accounts?limit=1", {
+    headers: { Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}` },
+  });
+  if (ok) return { id: "stripe_connect", status: "connected" };
+  return { id: "stripe_connect", status: "error", detail: `Stripe Connect returned HTTP ${status || "timeout"}` };
+}
+
 async function checkNotion(): Promise<HealthResult> {
   const missing = missingEnv(["NOTION_API_KEY"]);
   if (missing.length) return { id: "notion", status: "not_configured", missing };
@@ -133,6 +156,8 @@ async function check(id: string): Promise<HealthResult> {
     case "email_marketing": return checkEmailProvider();
     case "twilio": return checkTwilio();
     case "notion": return checkNotion();
+    case "stripe": return checkStripe();
+    case "stripe_connect": return checkStripeConnect();
     default: return { id, status: "not_configured", detail: "Unknown integration" };
   }
 }
@@ -151,6 +176,7 @@ export async function GET(request: NextRequest) {
   const results = await Promise.all([
     checkGoogleAds(), checkGoogleBusiness(), checkCalendly(), checkWhatsApp(),
     checkEmailProvider(), checkTwilio(), checkNotion(),
+    checkStripe(), checkStripeConnect(),
   ]);
   return NextResponse.json({ success: true, results });
 }

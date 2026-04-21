@@ -17,6 +17,11 @@ import {
 import PageHero from "@/components/ui/page-hero";
 
 // Real brand logos as inline SVGs
+const StripeLogo = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M13.479 9.883c-1.626-.604-2.512-1.067-2.512-1.803 0-.622.511-.977 1.423-.977 1.667 0 3.379.642 4.558 1.221l.666-4.111c-.935-.446-2.847-1.177-5.49-1.177-1.87 0-3.425.489-4.536 1.401-1.155.955-1.754 2.334-1.754 4.003 0 3.022 1.847 4.312 4.848 5.403 1.936.688 2.579 1.177 2.579 1.934 0 .733-.629 1.155-1.762 1.155-1.443 0-3.818-.71-5.38-1.622l-.672 4.157c1.335.756 3.801 1.533 6.356 1.533 1.976 0 3.624-.467 4.735-1.355 1.245-.988 1.889-2.445 1.889-4.336 0-3.091-1.889-4.38-4.948-5.426z"/>
+  </svg>
+);
 const FacebookLogo = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
 );
@@ -763,6 +768,31 @@ const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
     envKeys: ["NOTION_API_KEY"],
     docsUrl: "https://developers.notion.com",
     instructions: "Create an internal integration at https://notion.so/my-integrations → copy the Internal Integration Secret → add as NOTION_API_KEY. Share the databases you want accessible with the integration.",
+  },
+  {
+    id: "stripe",
+    name: "Stripe (Platform)",
+    icon: <StripeLogo />,
+    color: "text-[#635BFF]",
+    bg: "from-[#635BFF]/10 to-[#635BFF]/5 border-[#635BFF]/20",
+    description: "Subscription billing for ShortStack plans",
+    endpoint: "/api/billing/checkout",
+    envKeys: ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"],
+    docsUrl: "https://stripe.com/docs/api",
+    instructions: "Platform billing: users pay Trinity for their ShortStack subscription (Starter/Growth/Pro/Business/Unlimited). Set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Vercel env vars. The /api/billing/webhook endpoint listens for checkout.session.completed, customer.subscription.updated, invoice.payment_failed.",
+  },
+  {
+    id: "stripe_connect",
+    name: "Stripe Connect",
+    icon: <StripeLogo />,
+    color: "text-[#635BFF]",
+    bg: "from-[#635BFF]/10 to-[#635BFF]/5 border-[#635BFF]/20",
+    description: "Charge YOUR clients — money goes to your bank",
+    endpoint: "/api/integrations/stripe-connect/status",
+    envKeys: ["STRIPE_SECRET_KEY"],
+    docsUrl: "https://stripe.com/docs/connect",
+    instructions: "Onboard your agency's connected account at /api/integrations/stripe-connect/onboard — clients pay YOU via /api/clients/[id]/invoices or /api/clients/[id]/payment-links, money flows to your Stripe balance (minus ShortStack's platform fee).",
+    oauthPath: "/api/integrations/stripe-connect/onboard",
   },
 ];
 
