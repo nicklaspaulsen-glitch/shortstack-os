@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity, Search, Download, CheckCircle, AlertTriangle,
   Clock, Settings,
@@ -27,12 +27,15 @@ interface AuditEntry {
 
 interface SecurityAlert {
   id: string;
-  type: "failed_login" | "permission_change" | "data_export" | "suspicious_ip" | "api_key_used";
+  alert_type: "suspicious_login" | "exfil_attempt" | "auth_failure" | "permission_escalation";
   severity: "critical" | "high" | "medium" | "low";
-  message: string;
-  user: string;
-  timestamp: string;
+  title: string;
+  description: string | null;
+  ip_address: string | null;
+  user_agent: string | null;
   resolved: boolean;
+  resolved_at: string | null;
+  created_at: string;
 }
 
 const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; color: string }> = {
@@ -45,13 +48,6 @@ const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; 
   config: { icon: <Settings size={11} />, label: "Config Change", color: "text-amber-400" },
 };
 
-// TODO: Load from /api/audit-log once backend is wired.
-// These start empty; the UI renders an empty state until real entries exist.
-const INITIAL_ENTRIES: AuditEntry[] = [];
-
-// TODO: Load from /api/security-alerts once backend is wired.
-const INITIAL_ALERTS: SecurityAlert[] = [];
-
 const SEVERITY_STYLES: Record<string, string> = {
   critical: "bg-red-500/10 text-red-400 border-red-500/20",
   high: "bg-orange-500/10 text-orange-400 border-orange-500/20",
@@ -61,10 +57,28 @@ const SEVERITY_STYLES: Record<string, string> = {
 
 const ACTION_FILTERS: ActionType[] = ["login", "create", "update", "delete", "export", "send", "config"];
 
+// Map server action_type / metadata.label to the UI ActionType enum.
+function mapActionLabel(raw: string): ActionType {
+  const lower = raw.toLowerCase();
+  if (lower === "login") return "login";
+  if (lower === "delete") return "delete";
+  if (lower === "update" || lower === "permission_change") return "update";
+  if (lower === "export") return "export";
+  if (lower === "send" || lower === "email_campaign" || lower === "sms_campaign") return "send";
+  if (lower === "config" || lower === "admin_action") return "config";
+  if (lower === "create") return "create";
+  return "update";
+}
+
+function avatarFor(name: string): string {
+  return name.split(/\s|[_.@]/).filter(Boolean).slice(0, 2).map(s => s[0]?.toUpperCase() ?? "").join("") || "?";
+}
+
 export default function AuditPage() {
   const [tab, setTab] = useState<AuditTab>("trail");
-  const [entries] = useState(INITIAL_ENTRIES);
-  const [alerts, setAlerts] = useState(INITIAL_ALERTS);
+  const [entries, setEntries] = useState<AuditEntry[]>([]);
+  const [alerts, setAlerts] = useState<SecurityAlert[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [actionFilter, setActionFilter] = useState<ActionType | "all">("all");
   const [userFilter, setUserFilter] = useState("all");
@@ -72,6 +86,57 @@ export default function AuditPage() {
   const [expandedEntry, setExpandedEntry] = useState<string | null>(null);
   const [showSensitiveOnly, setShowSensitiveOnly] = useState(false);
   const [retentionDays, setRetentionDays] = useState(90);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setLoading(true);
+      try {
+        const [logRes, alertsRes] = await Promise.all([
+          fetch("/api/audit-log?page_size=200").then(r => r.ok ? r.json() : { entries: [] }),
+          fetch("/api/security-alerts").then(r => r.ok ? r.json() : { alerts: [] }),
+        ]);
+        if (cancelled) return;
+
+        const mapped: AuditEntry[] = (logRes.entries ?? []).map((e: {
+          id: string;
+          timestamp: string;
+          action: string;
+          description: string;
+          resource: string;
+          status: string;
+          ip: string | null;
+          sensitive: boolean;
+          user_email: string | null;
+        }) => {
+          const userName = e.user_email || "system";
+          const statusNorm: "success" | "failed" | "warning" =
+            e.status === "failed" || e.status === "error" ? "failed"
+            : e.status === "warning" || e.status === "queued" ? "warning"
+            : "success";
+          return {
+            id: e.id,
+            timestamp: e.timestamp,
+            user: userName,
+            userAvatar: avatarFor(userName),
+            action: mapActionLabel(e.action),
+            resource: e.resource || "trinity",
+            details: e.description,
+            ip: e.ip || "",
+            status: statusNorm,
+            sensitive: Boolean(e.sensitive),
+          };
+        });
+        setEntries(mapped);
+        setAlerts(alertsRes.alerts ?? []);
+      } catch (err) {
+        console.error("Audit load failed:", err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const uniqueUsers = Array.from(new Set(entries.map(e => e.user)));
 
@@ -84,7 +149,8 @@ export default function AuditPage() {
       return e.user.toLowerCase().includes(q) || e.details.toLowerCase().includes(q) || e.resource.toLowerCase().includes(q);
     }
     if (dateFilter === "today") return e.timestamp.startsWith(new Date().toISOString().slice(0, 10));
-    if (dateFilter === "7d") return true;
+    if (dateFilter === "7d") return Date.now() - new Date(e.timestamp).getTime() < 7 * 86400000;
+    if (dateFilter === "30d") return Date.now() - new Date(e.timestamp).getTime() < 30 * 86400000;
     return true;
   });
 
@@ -95,6 +161,21 @@ export default function AuditPage() {
     sensitive: entries.filter(e => e.sensitive).length,
     unresolvedAlerts: alerts.filter(a => !a.resolved).length,
   };
+
+  async function resolveAlert(id: string) {
+    try {
+      const res = await fetch("/api/security-alerts", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, resolved: true }),
+      });
+      if (res.ok) {
+        setAlerts(prev => prev.map(a => a.id === id ? { ...a, resolved: true, resolved_at: new Date().toISOString() } : a));
+      }
+    } catch (err) {
+      console.error("Resolve failed:", err);
+    }
+  }
 
   function exportCSV() {
     const csv = "Timestamp,User,Action,Resource,Details,IP,Status\n" +
@@ -231,7 +312,7 @@ export default function AuditPage() {
                 {filtered.length === 0 && (
                   <tr><td colSpan={7} className="text-center py-12">
                     <Activity size={28} className="mx-auto mb-2 text-muted/30" />
-                    <p className="text-sm text-muted">No audit entries match your filters.</p>
+                    <p className="text-sm text-muted">{loading ? "Loading audit entries..." : "No audit entries yet."}</p>
                   </td></tr>
                 )}
                 {filtered.map(entry => {
@@ -339,7 +420,7 @@ export default function AuditPage() {
               {alerts.filter(a => !a.resolved).length === 0 && (
                 <div className="text-center py-8">
                   <CheckCircle size={24} className="mx-auto mb-2 text-emerald-400" />
-                  <p className="text-xs text-muted">All alerts resolved. System secure.</p>
+                  <p className="text-xs text-muted">{loading ? "Loading alerts..." : "All alerts resolved. System secure."}</p>
                 </div>
               )}
               {alerts.filter(a => !a.resolved).map(alert => (
@@ -349,13 +430,18 @@ export default function AuditPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
                         <span className="text-[9px] uppercase font-bold">{alert.severity}</span>
-                        <span className="text-[9px] opacity-60">{alert.timestamp}</span>
+                        <span className="text-[9px] opacity-60">{new Date(alert.created_at).toLocaleString()}</span>
                       </div>
-                      <p className="text-[11px] font-medium">{alert.message}</p>
-                      <p className="text-[9px] opacity-60 mt-0.5">User: {alert.user}</p>
+                      <p className="text-[11px] font-medium">{alert.title}</p>
+                      {alert.description && (
+                        <p className="text-[10px] opacity-80 mt-0.5">{alert.description}</p>
+                      )}
+                      {alert.ip_address && (
+                        <p className="text-[9px] opacity-60 mt-0.5">IP: {alert.ip_address}</p>
+                      )}
                     </div>
                     <button
-                      onClick={() => setAlerts(prev => prev.map(a => a.id === alert.id ? { ...a, resolved: true } : a))}
+                      onClick={() => resolveAlert(alert.id)}
                       className="text-[9px] px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-colors font-medium shrink-0">
                       Resolve
                     </button>
@@ -369,13 +455,16 @@ export default function AuditPage() {
           <div className="card">
             <h2 className="section-header flex items-center gap-2"><CheckCircle size={13} className="text-emerald-400" /> Resolved Alerts</h2>
             <div className="space-y-2">
+              {alerts.filter(a => a.resolved).length === 0 && (
+                <p className="text-xs text-muted text-center py-6">No resolved alerts yet.</p>
+              )}
               {alerts.filter(a => a.resolved).map(alert => (
                 <div key={alert.id} className="p-3 rounded-lg bg-surface-light border border-border">
                   <div className="flex items-center gap-3">
                     <CheckCircle size={12} className="text-emerald-400 shrink-0" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] font-medium">{alert.message}</p>
-                      <p className="text-[9px] text-muted">{alert.timestamp} &middot; {alert.user}</p>
+                      <p className="text-[10px] font-medium">{alert.title}</p>
+                      <p className="text-[9px] text-muted">{new Date(alert.created_at).toLocaleString()}</p>
                     </div>
                     <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium ${SEVERITY_STYLES[alert.severity]}`}>{alert.severity}</span>
                   </div>

@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "@/lib/auth-context";
 import {
   Store, Search, Star, Download, CheckCircle, Shield, X,
   ExternalLink, Settings, Trash2,
   Code2, BookOpen, Upload, Loader,
   Zap, MessageSquare, BarChart3, Brain,
-  Link2, Megaphone,
+  Link2, Megaphone, Puzzle,
   Users,
   // Rename `Image` → `ImageIcon` so the jsx-a11y/alt-text rule doesn't treat
   // the lucide icon as an HTML <img> element.
@@ -61,9 +61,69 @@ const CATEGORIES: { key: Category; label: string; icon: React.ReactNode }[] = [
   { key: "integrations", label: "Integrations", icon: <Link2 size={14} /> },
 ];
 
-// ── Plugin catalog ──
+// ── Plugin catalog loader helpers ──
+//
+// The catalog now comes from `/api/marketplace/plugins`; `MarketplacePage`
+// stores the live catalog in state (`pluginCatalog`).
 
-const PLUGIN_CATALOG: Plugin[] = [];
+function normalizeCategory(c: string | null | undefined): Category {
+  const v = (c ?? "").toLowerCase();
+  if (["crm", "marketing", "analytics", "ai", "automation", "communication", "integrations"].includes(v)) {
+    return v as Category;
+  }
+  return "integrations";
+}
+
+function iconForCategory(category: Category): { icon: React.ReactNode; color: string } {
+  switch (category) {
+    case "crm": return { icon: <Users size={22} />, color: "#F59E0B" };
+    case "marketing": return { icon: <Megaphone size={22} />, color: "#EC4899" };
+    case "analytics": return { icon: <BarChart3 size={22} />, color: "#3B82F6" };
+    case "ai": return { icon: <Brain size={22} />, color: "#A78BFA" };
+    case "automation": return { icon: <Zap size={22} />, color: "#10B981" };
+    case "communication": return { icon: <MessageSquare size={22} />, color: "#06B6D4" };
+    default: return { icon: <Puzzle size={22} />, color: "#D4AF37" };
+  }
+}
+
+function buildPluginFromRow(row: {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  category: string | null;
+  price_monthly: number | string;
+  created_at: string;
+}): Plugin {
+  const cat = normalizeCategory(row.category);
+  const { icon, color } = iconForCategory(cat);
+  const price = Number(row.price_monthly ?? 0);
+  const desc = row.description ?? "";
+  const updated = row.created_at?.slice(0, 10) ?? "";
+  return {
+    id: row.id,
+    name: row.name,
+    author: "ShortStack",
+    description: desc,
+    longDescription: desc,
+    icon,
+    iconColor: color,
+    category: cat,
+    price,
+    rating: 4.5,
+    installs: 0,
+    verified: true,
+    tags: [cat, row.slug],
+    features: [],
+    changelog: [{ version: "1.0.0", date: updated, notes: "Initial release" }],
+    requirements: [],
+    screenshots: [],
+    reviews: [],
+    settings: [],
+    version: "1.0.0",
+    updatedAt: updated,
+  };
+}
 
 // ── Helper functions ──
 
@@ -98,17 +158,43 @@ export default function MarketplacePage() {
   const [viewTab, setViewTab] = useState<ViewTab>("browse");
   const [selectedPlugin, setSelectedPlugin] = useState<Plugin | null>(null);
   const [detailTab, setDetailTab] = useState<"overview" | "reviews" | "changelog" | "settings">("overview");
-  // TODO: Load installed plugin IDs from /api/marketplace/installed once backend is wired.
-  // Starts empty — users install plugins from the catalog when we ship real plugin data.
+  const [pluginCatalog, setPluginCatalog] = useState<Plugin[]>([]);
   const [installedIds, setInstalledIds] = useState<Set<string>>(new Set());
   const [enabledIds, setEnabledIds] = useState<Set<string>>(new Set());
   const [installing, setInstalling] = useState<string | null>(null);
   const [confirmUninstall, setConfirmUninstall] = useState<string | null>(null);
 
+  // Load catalog + installs from the real backend
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const [cat, ins] = await Promise.all([
+          fetch("/api/marketplace/plugins").then(r => r.ok ? r.json() : { plugins: [] }),
+          fetch("/api/marketplace/installs").then(r => r.ok ? r.json() : { installs: [] }),
+        ]);
+        if (cancelled) return;
+        setPluginCatalog((cat.plugins ?? []).map(buildPluginFromRow));
+
+        const installedPluginIds = new Set<string>();
+        const enabledPluginIds = new Set<string>();
+        for (const row of (ins.installs ?? [])) {
+          installedPluginIds.add(row.plugin_id);
+          if (row.status === "active") enabledPluginIds.add(row.plugin_id);
+        }
+        setInstalledIds(installedPluginIds);
+        setEnabledIds(enabledPluginIds);
+      } catch (err) {
+        console.error("Marketplace load failed:", err);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   // ── Filtered and sorted plugins ──
 
   const filteredPlugins = useMemo(() => {
-    let list = [...PLUGIN_CATALOG];
+    let list = [...pluginCatalog];
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -142,20 +228,22 @@ export default function MarketplacePage() {
     }
 
     return list;
-  }, [search, category, sortBy, viewTab, installedIds]);
+  }, [pluginCatalog, search, category, sortBy, viewTab, installedIds]);
 
   // ── Actions ──
 
   const handleInstall = async (pluginId: string) => {
-    // TODO: Wire to real /api/marketplace/install endpoint.
-    // For now the plugin catalog is empty, so this path is unreachable; the
-    // setTimeout just simulates the UI's installing state until the API exists.
     setInstalling(pluginId);
     try {
-      await new Promise((r) => setTimeout(r, 1200));
+      const res = await fetch("/api/marketplace/installs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plugin_id: pluginId }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setInstalledIds((prev) => new Set([...Array.from(prev), pluginId]));
       setEnabledIds((prev) => new Set([...Array.from(prev), pluginId]));
-      const plugin = PLUGIN_CATALOG.find((p) => p.id === pluginId);
+      const plugin = pluginCatalog.find((p) => p.id === pluginId);
       toast.success(`${plugin?.name ?? "Plugin"} installed successfully`);
     } catch (err) {
       console.error("Plugin install failed:", err);
@@ -165,7 +253,17 @@ export default function MarketplacePage() {
     }
   };
 
-  const handleUninstall = (pluginId: string) => {
+  const handleUninstall = async (pluginId: string) => {
+    try {
+      const res = await fetch(`/api/marketplace/installs?plugin_id=${encodeURIComponent(pluginId)}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    } catch (err) {
+      console.error("Plugin uninstall failed:", err);
+      toast.error("Failed to uninstall plugin");
+      return;
+    }
     setInstalledIds((prev) => {
       const next = new Set(prev);
       next.delete(pluginId);
@@ -177,7 +275,7 @@ export default function MarketplacePage() {
       return next;
     });
     setConfirmUninstall(null);
-    const plugin = PLUGIN_CATALOG.find((p) => p.id === pluginId);
+    const plugin = pluginCatalog.find((p) => p.id === pluginId);
     toast.success(`${plugin?.name ?? "Plugin"} uninstalled`);
   };
 
@@ -301,10 +399,10 @@ export default function MarketplacePage() {
           <span className="font-semibold text-white">{filteredPlugins.length}</span> plugins found
         </div>
         <div className="text-sm text-muted">
-          <span className="font-semibold text-white">{PLUGIN_CATALOG.filter((p) => p.price === 0).length}</span> free
+          <span className="font-semibold text-white">{pluginCatalog.filter((p) => p.price === 0).length}</span> free
         </div>
         <div className="text-sm text-muted">
-          <span className="font-semibold text-white">{PLUGIN_CATALOG.filter((p) => p.verified).length}</span> verified
+          <span className="font-semibold text-white">{pluginCatalog.filter((p) => p.verified).length}</span> verified
         </div>
       </div>
 
