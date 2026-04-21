@@ -9,6 +9,7 @@ import {
   RefreshCw, Bell, Layers, GitBranch, Loader, ChevronLeft, ChevronRight as ChevronRightIcon,
   X, FileSpreadsheet, Check
 } from "lucide-react";
+import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import Link from "next/link";
 
@@ -452,13 +453,13 @@ export default function LeadEnginePage() {
       if (!res.ok) throw new Error("Failed to fetch leads for export");
       const data = await res.json();
       const allLeads: Lead[] = data.leads || [];
-      if (allLeads.length === 0) { alert("No leads to export."); return; }
+      if (allLeads.length === 0) { toast.error("No leads to export."); return; }
       const csv = buildExportCSV(allLeads);
       const date = new Date().toISOString().split("T")[0];
       downloadCSV(csv, `leads-export-${date}.csv`);
     } catch (err) {
       console.error("Export failed:", err);
-      alert("Export failed. Check console for details.");
+      toast.error("Export failed. Check console for details.");
     } finally {
       setExporting(false);
     }
@@ -627,10 +628,24 @@ export default function LeadEnginePage() {
                   <div className="col-span-2 text-muted truncate">
                     {[lead.city, lead.state].filter(Boolean).join(", ") || "---"}
                   </div>
-                  <div className="flex items-center justify-center gap-1">
-                    <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><Phone size={10} /></button>
-                    <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><Mail size={10} /></button>
-                    <button className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"><MessageSquare size={10} /></button>
+                  <div className="flex items-center justify-center gap-1" onClick={(e) => e.stopPropagation()}>
+                    <a
+                      href={lead.phone ? `tel:${lead.phone}` : undefined}
+                      onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
+                      className={`p-1 rounded hover:bg-white/5 text-muted hover:text-gold ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
+                      title={lead.phone || "No phone"}
+                    ><Phone size={10} /></a>
+                    <a
+                      href={lead.email ? `mailto:${lead.email}` : undefined}
+                      onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
+                      className={`p-1 rounded hover:bg-white/5 text-muted hover:text-gold ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
+                      title={lead.email || "No email"}
+                    ><Mail size={10} /></a>
+                    <Link
+                      href="/dashboard/dm-controller"
+                      className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"
+                      title="DM via DM Controller"
+                    ><MessageSquare size={10} /></Link>
                   </div>
                 </div>
                 {/* Engagement Timeline */}
@@ -763,7 +778,7 @@ export default function LeadEnginePage() {
                         <span className="font-semibold">{lead.business_name}</span>
                         <span className="text-muted">Score: {lead.lead_score}</span>
                       </div>
-                      <button className="text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold">Contact Now</button>
+                      <Link href={`/dashboard/crm?leadId=${lead.id}`} className="text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold hover:bg-gold/20">Open in CRM</Link>
                     </div>
                   ))}
                 </div>
@@ -837,7 +852,10 @@ export default function LeadEnginePage() {
             <h3 className="text-sm font-semibold flex items-center gap-2">
               <Zap size={14} className="text-gold" /> Lead Enrichment Panel
             </h3>
-            <button className="btn-primary text-xs flex items-center gap-1.5"><RefreshCw size={12} /> Enrich All Missing</button>
+            <button
+              onClick={() => toast("Bulk enrichment coming soon — needs API")}
+              className="btn-primary text-xs flex items-center gap-1.5"
+            ><RefreshCw size={12} /> Enrich All Missing</button>
           </div>
           <div className="grid grid-cols-4 gap-3 mb-4">
             {[
@@ -876,7 +894,10 @@ export default function LeadEnginePage() {
                     <span className={lead.phone ? "text-green-400" : "text-red-400"}>{lead.phone ? "Phone" : "No phone"}</span>
                     <span className={lead.website ? "text-green-400" : "text-red-400"}>{lead.website ? "Website" : "No site"}</span>
                   </div>
-                  <button className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20">Enrich</button>
+                  <button
+                    onClick={() => toast("Per-lead enrichment coming soon — needs API")}
+                    className="text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20"
+                  >Enrich</button>
                 </div>
               </div>
             ))}
@@ -939,7 +960,10 @@ export default function LeadEnginePage() {
               </div>
               <div className="flex gap-2">
                 <input value={tagInput} onChange={e => setTagInput(e.target.value)} className="input flex-1 text-xs" placeholder="Create new tag..." />
-                <button className="btn-primary text-xs px-3">Add</button>
+                <button
+                  onClick={() => toast("Custom tags coming soon — needs API")}
+                  className="btn-primary text-xs px-3"
+                >Add</button>
               </div>
             </div>
             {/* Hot Lead Alerts Config */}
