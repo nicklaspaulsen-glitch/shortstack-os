@@ -20,6 +20,7 @@ import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import { trackGeneration } from "@/lib/track-generation";
+import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 
 // Example "phone mockup" script cards used in the landing state marquee.
 // Each card shows 2-3 lines of a sample script opener — just enough to
@@ -1493,7 +1494,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
                   className="input w-full text-xs" placeholder="e.g., no time, don't know what to post, not getting engagement" />
               </div>
               <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Viral Reference (remix existing content)</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-[9px] text-muted uppercase tracking-wider">Viral Reference (remix existing content)</label>
+                  <AIEnhanceButton value={config.viral_reference} onResult={next => setConfig({ ...config, viral_reference: next })} context="short-form video concept" variant="inline" />
+                </div>
                 <textarea value={config.viral_reference} onChange={e => setConfig({ ...config, viral_reference: e.target.value })}
                   className="input w-full h-14 text-xs" placeholder="Paste a viral video concept, hook, or transcript to remix with your own angle..." />
               </div>
@@ -2558,7 +2562,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
       {tab === "tools" && (
         <div className="space-y-4">
           <div className="card p-4">
-            <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Type size={13} className="text-gold" /> Tone Analyzer</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold flex items-center gap-1.5"><Type size={13} className="text-gold" /> Tone Analyzer</p>
+              <AIEnhanceButton value={toneAnalysisText} onResult={setToneAnalysisText} context="video script section" variant="inline" />
+            </div>
             <textarea value={toneAnalysisText} onChange={e => setToneAnalysisText(e.target.value)} className="input w-full h-24 text-xs mb-3" placeholder="Paste your script text here to analyze tone, readability, and sentiment..." />
             <button onClick={() => {
               if (!toneAnalysisText.trim()) { toast.error("Enter text to analyze"); return; }
@@ -2590,7 +2597,13 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Search size={13} className="text-gold" /> SEO Script Optimizer</p>
             <div className="space-y-3">
               <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Target Keyword</label><input value={seoKeyword} onChange={e => setSeoKeyword(e.target.value)} className="input w-full text-xs" placeholder="e.g., dental marketing tips" /></div>
-              <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Script / Caption Content</label><textarea value={seoContent} onChange={e => setSeoContent(e.target.value)} className="input w-full h-20 text-xs" placeholder="Paste your script or caption text..." /></div>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-[10px] text-muted uppercase tracking-wider font-semibold">Script / Caption Content</label>
+                  <AIEnhanceButton value={seoContent} onResult={setSeoContent} context="video script section" variant="inline" />
+                </div>
+                <textarea value={seoContent} onChange={e => setSeoContent(e.target.value)} className="input w-full h-20 text-xs" placeholder="Paste your script or caption text..." />
+              </div>
               <button onClick={() => toast.success("SEO analysis complete (demo)")} className="btn-primary text-xs flex items-center gap-1.5"><TrendingUp size={12} /> Optimize for SEO</button>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                 {[{ label: "Keyword Density", value: seoKeyword ? "2.4%" : "---" }, { label: "Title Optimized", value: "Yes" }, { label: "CTA Present", value: "Yes" }, { label: "Hashtag Relevance", value: "High" }].map(m => (
@@ -2635,7 +2648,11 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           <div className="card p-4">
             <p className="text-xs font-semibold mb-3 flex items-center gap-1.5"><Volume2 size={13} className="text-gold" /> Voice-Over Preview</p>
             <div className="space-y-3">
-              <div><label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Script Text</label>
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-[10px] text-muted uppercase tracking-wider font-semibold">Script Text</label>
+                  <AIEnhanceButton value={voiceoverText || (script?.script?.sections?.map(s => s.dialogue).join("\n\n") || "")} onResult={setVoiceoverText} context="video script section" variant="inline" />
+                </div>
                 <textarea value={voiceoverText || (script?.script?.sections?.map(s => s.dialogue).join("\n\n") || "")} onChange={e => setVoiceoverText(e.target.value)} className="input w-full h-32 text-xs" placeholder="Enter or paste your script text for voice-over preview..." />
               </div>
               <div className="grid grid-cols-2 gap-3">
