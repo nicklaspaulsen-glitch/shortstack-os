@@ -27,6 +27,7 @@ import toast from "react-hot-toast";
 import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
+import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 import {
   InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon, XTwitterIcon,
   ThreadsIcon, PinterestIcon, YouTubeShortsIcon,
@@ -1079,7 +1080,10 @@ export default function SocialManagerPage() {
             </div>
 
             <div>
-              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider font-semibold">Topics to Cover</label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="block text-[10px] text-muted uppercase tracking-wider font-semibold">Topics to Cover</label>
+                <AIEnhanceButton value={weekConfig.topics} onResult={next => setWeekConfig({ ...weekConfig, topics: next })} context="social media post caption" variant="inline" />
+              </div>
               <textarea value={weekConfig.topics}
                 onChange={e => setWeekConfig({ ...weekConfig, topics: e.target.value })}
                 className="input w-full h-20 text-xs"
@@ -1252,6 +1256,9 @@ export default function SocialManagerPage() {
                     <p className="text-[10px] text-muted">Paste a post and generate versions for every platform</p>
                   </div>
                 </div>
+                <div className="flex justify-end">
+                  <AIEnhanceButton value={repurposeInput} onResult={setRepurposeInput} context="social media post caption" variant="pill" />
+                </div>
                 <textarea value={repurposeInput} onChange={e => setRepurposeInput(e.target.value)}
                   className="input w-full h-24 text-xs" placeholder="Paste your original post content here..." />
                 <button onClick={() => {
@@ -1309,6 +1316,9 @@ export default function SocialManagerPage() {
                     <p className="text-[10px] text-muted">Generate two caption variants to test which performs better</p>
                   </div>
                 </div>
+                <div className="flex justify-end">
+                  <AIEnhanceButton value={abTestInput} onResult={setAbTestInput} context="social media post caption" variant="pill" />
+                </div>
                 <textarea value={abTestInput} onChange={e => setAbTestInput(e.target.value)}
                   className="input w-full h-20 text-xs" placeholder="Describe what your post is about (e.g., 'New product launch for organic skincare line')..." />
                 <button onClick={() => {
@@ -1361,6 +1371,9 @@ export default function SocialManagerPage() {
                     <h2 className="text-sm font-semibold">Viral Score Predictor</h2>
                     <p className="text-[10px] text-muted">AI rates your content 1-100 on virality potential</p>
                   </div>
+                </div>
+                <div className="flex justify-end">
+                  <AIEnhanceButton value={viralInput} onResult={setViralInput} context="social media post caption" variant="pill" />
                 </div>
                 <textarea value={viralInput} onChange={e => setViralInput(e.target.value)}
                   className="input w-full h-20 text-xs" placeholder="Paste your caption or describe your content idea..." />
@@ -1440,6 +1453,9 @@ export default function SocialManagerPage() {
                     <h2 className="text-sm font-semibold">Bio Optimizer</h2>
                     <p className="text-[10px] text-muted">AI-powered social media bio generator for maximum impact</p>
                   </div>
+                </div>
+                <div className="flex justify-end">
+                  <AIEnhanceButton value={bioInput} onResult={setBioInput} context="social media post caption" variant="pill" />
                 </div>
                 <textarea value={bioInput} onChange={e => setBioInput(e.target.value)}
                   className="input w-full h-20 text-xs" placeholder="Describe your business, niche, and what makes you unique..." />
