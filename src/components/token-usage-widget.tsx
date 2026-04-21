@@ -149,9 +149,9 @@ export default function TokenUsageWidget() {
   return (
     <Draggable
       dragAnywhere
-      defaultX={typeof window !== "undefined" ? window.innerWidth - 360 : 0}
-      defaultY={typeof window !== "undefined" ? window.innerHeight - 70 : 0}
-      storageKey="token_widget"
+      defaultX={typeof window !== "undefined" ? window.innerWidth - 366 : 0}
+      defaultY={typeof window !== "undefined" ? window.innerHeight - 80 : 0}
+      storageKey="token_widget_v2"
     >
     <div
       className="select-none"

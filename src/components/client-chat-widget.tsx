@@ -86,7 +86,12 @@ export default function ClientChatWidget() {
   if (!isOpen) {
     const unreadCount = messages.filter(m => m.role === "assistant").length - 1; // excluding the initial greeting; could be wired to real unread later
     return (
-      <Draggable defaultX={typeof window !== "undefined" ? window.innerWidth - 80 : 1000} defaultY={typeof window !== "undefined" ? window.innerHeight - 80 : 700} storageKey="chat_bubble">
+      <Draggable
+        dragAnywhere
+        defaultX={typeof window !== "undefined" ? window.innerWidth - 438 : 800}
+        defaultY={typeof window !== "undefined" ? window.innerHeight - 80 : 700}
+        storageKey="chat_bubble_v2"
+      >
         <button
           onClick={() => setIsOpen(true)}
           aria-label="Open Trinity AI chat"

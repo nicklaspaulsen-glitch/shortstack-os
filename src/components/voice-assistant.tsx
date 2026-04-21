@@ -274,9 +274,9 @@ export default function VoiceAssistant() {
     return (
       <Draggable
         dragAnywhere
-        defaultX={typeof window !== "undefined" ? window.innerWidth - 180 : 0}
+        defaultX={typeof window !== "undefined" ? window.innerWidth - 170 : 0}
         defaultY={typeof window !== "undefined" ? window.innerHeight - 80 : 0}
-        storageKey="voice_pill"
+        storageKey="voice_pill_v2"
       >
         <button onClick={() => setIsOpen(true)}
           className="bg-gradient-to-r from-gold-dark to-gold px-4 py-2.5 rounded-full shadow-lg shadow-gold/20 flex items-center gap-2 hover:scale-105 transition-all active:scale-95 group">
