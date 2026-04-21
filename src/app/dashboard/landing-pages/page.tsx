@@ -1126,7 +1126,7 @@ export default function LandingPagesPage() {
                 <label className="text-xs text-muted mb-1.5 block font-medium">Key Benefits</label>
                 <div className="flex gap-2 mb-2">
                   <input value={benefitInput} onChange={e => setBenefitInput(e.target.value)} onKeyDown={e => e.key === "Enter" && addBenefit()} placeholder="Add a benefit and press Enter" className="flex-1 bg-surface-light border border-border rounded-lg px-4 py-2.5 text-sm text-white focus:border-gold focus:outline-none transition-colors" />
-                  <button onClick={addBenefit} className="px-3 py-2 bg-surface-light border border-border rounded-lg hover:border-gold transition-colors">
+                  <button onClick={addBenefit} className="px-3 py-2 bg-surface-light border border-border rounded-lg hover:border-gold transition-colors" aria-label="Add benefit">
                     <Plus className="w-4 h-4 text-muted" />
                   </button>
                 </div>
@@ -1134,7 +1134,7 @@ export default function LandingPagesPage() {
                   {bizInfo.benefits.map((b, i) => (
                     <span key={i} className="flex items-center gap-1.5 px-3 py-1.5 bg-gold/10 text-gold rounded-full text-xs font-medium">
                       {b}
-                      <button onClick={() => removeBenefit(i)}><X className="w-3 h-3" /></button>
+                      <button onClick={() => removeBenefit(i)} aria-label={`Remove benefit ${b}`}><X className="w-3 h-3" /></button>
                     </span>
                   ))}
                 </div>

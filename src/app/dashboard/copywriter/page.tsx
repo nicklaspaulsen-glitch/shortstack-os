@@ -671,6 +671,7 @@ export default function CopywriterPage() {
             placeholder={`e.g., ${activeType.id === "email" ? "Welcome sequence for SaaS onboarding" : activeType.id === "ad" ? "Local gym offering 30-day free trial" : "How to start a successful newsletter in 2026"}`}
             className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
             autoFocus
+            aria-label="Topic"
           />
           <div>
             <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
@@ -682,6 +683,7 @@ export default function CopywriterPage() {
               onChange={e => setAudience(e.target.value)}
               placeholder="e.g., SaaS founders, busy moms, first-time home buyers"
               className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+              aria-label="Target audience"
             />
           </div>
         </div>
@@ -1198,7 +1200,7 @@ export default function CopywriterPage() {
                 {TEMPLATES.length} templates
               </span>
             </div>
-            <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground transition-colors">
+            <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close templates">
               <X size={16} />
             </button>
           </div>
@@ -1246,7 +1248,7 @@ export default function CopywriterPage() {
               <Clock size={16} className="text-gold" />
               <h2 className="text-sm font-bold text-foreground">Recent Generations</h2>
             </div>
-            <button onClick={() => setShowHistory(false)} className="text-muted hover:text-foreground transition-colors">
+            <button onClick={() => setShowHistory(false)} className="text-muted hover:text-foreground transition-colors" aria-label="Close history">
               <X size={16} />
             </button>
           </div>

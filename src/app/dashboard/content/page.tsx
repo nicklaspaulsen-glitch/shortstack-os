@@ -628,7 +628,7 @@ export default function ContentPage() {
                       </span>
                     )}
                   </div>
-                  <button onClick={() => removeDropItem(item.id)} className="text-muted hover:text-danger transition-colors">
+                  <button onClick={() => removeDropItem(item.id)} className="text-muted hover:text-danger transition-colors" aria-label="Remove item">
                     <X size={14} />
                   </button>
                 </div>

@@ -843,10 +843,10 @@ function WorkflowBuilderInner() {
 
         <div className="w-px h-5 bg-border mx-1" />
 
-        <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Undo (Ctrl+Z)">
+        <button onClick={undo} disabled={!canUndo} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Undo (Ctrl+Z)" aria-label="Undo (Ctrl+Z)">
           <Undo2 size={14} />
         </button>
-        <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Redo (Ctrl+Shift+Z)">
+        <button onClick={redo} disabled={!canRedo} className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors disabled:opacity-30 disabled:cursor-not-allowed" title="Redo (Ctrl+Shift+Z)" aria-label="Redo (Ctrl+Shift+Z)">
           <Redo2 size={14} />
         </button>
 

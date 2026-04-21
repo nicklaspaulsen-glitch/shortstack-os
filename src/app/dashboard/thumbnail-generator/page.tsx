@@ -5227,8 +5227,8 @@ export default function ThumbnailGeneratorPage() {
             {/* ── Export Presets ── */}
             <FeaturePanel id="exportPresets" icon={<Save size={13} className="text-gold" />} title="Export Presets" badge={`${savedPresets.length}`}>
               <div className="flex gap-1.5 mb-3">
-                <input value={newPresetName} onChange={(e) => setNewPresetName(e.target.value)} className="input flex-1 text-[10px]" placeholder="Preset name..." />
-                <button onClick={saveCurrentPreset} className="text-[9px] px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold font-semibold hover:bg-gold/10 transition-all">
+                <input value={newPresetName} onChange={(e) => setNewPresetName(e.target.value)} className="input flex-1 text-[10px]" placeholder="Preset name..." aria-label="Preset name" />
+                <button onClick={saveCurrentPreset} className="text-[9px] px-3 py-1.5 rounded-lg border border-gold/30 bg-gold/[0.05] text-gold font-semibold hover:bg-gold/10 transition-all" aria-label="Save current preset">
                   <Save size={12} />
                 </button>
               </div>

@@ -779,7 +779,7 @@ export default function ContentLibraryPage() {
           <div className="card max-w-lg w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
-              <button onClick={() => setPreviewAsset(null)} className="text-muted hover:text-white"><X size={16} /></button>
+              <button onClick={() => setPreviewAsset(null)} className="text-muted hover:text-white" aria-label="Close asset preview"><X size={16} /></button>
             </div>
             <div className={`w-full aspect-video rounded-lg mb-4 flex items-center justify-center overflow-hidden ${TYPE_BG[previewAsset.type]}`}>
               {previewAsset.type === "image" && previewAsset.url ? (

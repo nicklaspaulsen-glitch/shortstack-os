@@ -430,14 +430,14 @@ export default function CalendarPage() {
         <>
           {/* Week Navigation */}
           <div className="flex items-center justify-between">
-            <button onClick={prevWeek} className="btn-ghost p-2"><ChevronLeft size={16} /></button>
+            <button onClick={prevWeek} className="btn-ghost p-2" aria-label="Previous week"><ChevronLeft size={16} /></button>
             <div className="flex items-center gap-3">
               <span className="text-sm font-semibold">
                 {weekDays[0].toLocaleDateString("en-US", { month: "short", day: "numeric" })} — {weekDays[6].toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
               </span>
               <button onClick={goToday} className="btn-secondary text-[10px] px-2 py-0.5">Today</button>
             </div>
-            <button onClick={nextWeek} className="btn-ghost p-2"><ChevronRight size={16} /></button>
+            <button onClick={nextWeek} className="btn-ghost p-2" aria-label="Next week"><ChevronRight size={16} /></button>
           </div>
 
           {/* Month View */}
@@ -707,7 +707,7 @@ export default function CalendarPage() {
           <div className="bg-surface rounded-2xl border border-border w-full max-w-lg p-5 space-y-3" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Event</h3>
-              <button onClick={() => setShowCreate(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+              <button onClick={() => setShowCreate(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
             </div>
 
             <div>

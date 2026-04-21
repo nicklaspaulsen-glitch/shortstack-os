@@ -117,9 +117,10 @@ export default function ClientSupportPage() {
             <input
               type="text" value={input} onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
+              aria-label="Support message"
               className="input flex-1 text-xs" disabled={loading}
             />
-            <button type="submit" disabled={!input.trim() || loading} className="btn-primary px-3 disabled:opacity-30">
+            <button type="submit" disabled={!input.trim() || loading} className="btn-primary px-3 disabled:opacity-30" aria-label="Send message">
               <Send size={13} />
             </button>
           </form>
