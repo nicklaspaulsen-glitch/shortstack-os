@@ -18,6 +18,7 @@ import {
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import { trackGeneration } from "@/lib/track-generation";
 
 // Example "phone mockup" script cards used in the landing state marquee.
@@ -254,6 +255,10 @@ export default function ScriptLabPage() {
   const [clients, setClients] = useState<Array<{ id: string; business_name: string; industry: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
   const [tab, setTab] = useState<"generate" | "research" | "trending" | "results" | "history" | "templates" | "tools" | "voiceover" | "approval">("generate");
+
+  // Guided Mode ↔ Advanced Mode (full tabbed workspace)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("script-lab");
+  const [guidedStep, setGuidedStep] = useState(0);
   const supabase = createClient();
 
   const [config, setConfig] = useState({
@@ -1138,6 +1143,124 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
   const activeScript = batchScripts.length > 0 ? batchScripts[activeBatchIndex] : script;
   const topicPresets = TOPIC_PRESETS[config.industry_preset] || TOPIC_PRESETS.general;
 
+  // ── Guided steps (Guided Mode) ───────────────────────────────────
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "topic",
+      title: "What's the video about?",
+      description: "One sentence is plenty. Specific topics get much better scripts than vague ones.",
+      icon: <Sparkles size={18} />,
+      canProceed: config.topic.trim().length > 0,
+      component: (
+        <div className="space-y-3">
+          <input
+            type="text"
+            value={config.topic}
+            onChange={e => setConfig(prev => ({ ...prev, topic: e.target.value }))}
+            placeholder="e.g., How to land your first freelance client without cold outreach"
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+            autoFocus
+          />
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Quick starters</p>
+            <div className="flex flex-wrap gap-1.5">
+              {topicPresets.slice(0, 4).map((p: string, i: number) => (
+                <button
+                  key={i}
+                  onClick={() => setConfig(prev => ({ ...prev, topic: p }))}
+                  className="text-[10px] text-muted hover:text-foreground bg-surface-light hover:bg-gold/10 hover:border-gold/30 px-2.5 py-1 rounded-full border border-border/50 transition-all"
+                >
+                  {p.slice(0, 40)}…
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "type",
+      title: "What kind of script?",
+      description: "This sets the length and pacing — short-form hooks hard, long-form unfolds slower.",
+      icon: <Film size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+          {SCRIPT_TYPES.slice(0, 6).map(st => {
+            const selected = config.script_type === st.id;
+            return (
+              <button
+                key={st.id}
+                onClick={() => setConfig(prev => ({ ...prev, script_type: st.id }))}
+                className={`text-left p-3 rounded-xl border transition-all ${
+                  selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-gold">{st.icon}</span>
+                  <p className="text-xs font-semibold">{st.name}</p>
+                </div>
+                <p className="text-[10px] text-muted">{st.desc}</p>
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "framework",
+      title: "Pick a framework",
+      description: "Proven structures that keep viewers watching. Pick one — we'll apply it automatically.",
+      icon: <Target size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+          {FRAMEWORKS.slice(0, 6).map(fw => {
+            const selected = config.framework === fw.id;
+            return (
+              <button
+                key={fw.id}
+                onClick={() => setConfig(prev => ({ ...prev, framework: fw.id }))}
+                className={`text-left p-3 rounded-xl border transition-all ${
+                  selected ? "border-gold bg-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <p className={`text-xs font-bold ${fw.color}`}>{fw.name}</p>
+                <p className="text-[10px] text-muted mt-0.5">{fw.desc}</p>
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "review",
+      title: "Ready for the AI?",
+      description: "Hit the button and we'll write the script. Each tab above unlocks advanced research, voice-over, and approval flows.",
+      icon: <Wand2 size={18} />,
+      component: (
+        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <p className="text-[9px] uppercase tracking-wider text-muted">Topic</p>
+              <p className="text-xs font-semibold">{config.topic || <span className="text-muted italic">(none)</span>}</p>
+            </div>
+            <div>
+              <p className="text-[9px] uppercase tracking-wider text-muted">Script type</p>
+              <p className="text-xs font-semibold">{SCRIPT_TYPES.find(t => t.id === config.script_type)?.name}</p>
+            </div>
+            <div>
+              <p className="text-[9px] uppercase tracking-wider text-muted">Framework</p>
+              <p className="text-xs font-semibold">{FRAMEWORKS.find(f => f.id === config.framework)?.name}</p>
+            </div>
+            <div>
+              <p className="text-[9px] uppercase tracking-wider text-muted">Platform</p>
+              <p className="text-xs font-semibold capitalize">{config.platform}</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -1146,21 +1269,84 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
         subtitle="AI scripts with viral research & frameworks."
         gradient="ocean"
         actions={
-          <select value={selectedClient} onChange={e => {
-            setSelectedClient(e.target.value);
-            const client = clients.find(c => c.id === e.target.value);
-            if (client?.industry) {
-              const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
-              if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
-            }
-          }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-white/10 border border-white/20 text-white">
-            <option value="" className="bg-slate-800">No client</option>
-            {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name}</option>)}
-          </select>
+          <>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            <select value={selectedClient} onChange={e => {
+              setSelectedClient(e.target.value);
+              const client = clients.find(c => c.id === e.target.value);
+              if (client?.industry) {
+                const matchedPreset = Object.keys(TOPIC_PRESETS).find(k => client.industry.toLowerCase().includes(k));
+                if (matchedPreset) setConfig(prev => ({ ...prev, industry_preset: matchedPreset }));
+              }
+            }} className="text-xs py-1.5 px-2 min-w-[160px] rounded-lg bg-white/10 border border-white/20 text-white">
+              <option value="" className="bg-slate-800">No client</option>
+              {clients.map(c => <option key={c.id} value={c.id} className="bg-slate-800">{c.business_name}</option>)}
+            </select>
+          </>
         }
       />
 
+      {/* Guided Mode — "4-year-old friendly" flow */}
+      {!advancedMode && (
+        <>
+          <Wizard
+            steps={guidedSteps}
+            activeIdx={guidedStep}
+            onStepChange={setGuidedStep}
+            finishLabel={generating ? "Writing…" : "Generate script"}
+            busy={generating}
+            onFinish={async () => {
+              await generateScript();
+            }}
+            onCancel={() => setAdvancedMode(true)}
+            cancelLabel="Advanced mode"
+          />
+          {activeScript && (
+            <div className="card space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 className="section-header flex items-center gap-2">
+                  <CheckCircle size={14} className="text-success" /> {activeScript.title}
+                </h2>
+                <button
+                  onClick={() => {
+                    const full = [
+                      activeScript.hook.text,
+                      ...activeScript.script.sections.map(s => `[${s.name}] ${s.dialogue}`),
+                      activeScript.cta.text,
+                    ].join("\n\n");
+                    navigator.clipboard.writeText(full);
+                    toast.success("Copied!");
+                  }}
+                  className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 transition-colors"
+                >
+                  <Copy size={11} /> Copy script
+                </button>
+              </div>
+              <div className="space-y-3 text-sm">
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-1">Hook</p>
+                  <p className="leading-relaxed">{activeScript.hook.text}</p>
+                </div>
+                {activeScript.script.sections.map((section, i) => (
+                  <div key={i}>
+                    <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-1">
+                      {section.name} <span className="text-muted">· {section.duration}</span>
+                    </p>
+                    <p className="whitespace-pre-wrap leading-relaxed">{section.dialogue}</p>
+                  </div>
+                ))}
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-gold font-semibold mb-1">Call to action</p>
+                  <p className="leading-relaxed">{activeScript.cta.text}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
       {/* Rolling preview of example scripts — phone-mockup style text cards */}
+      {advancedMode && (
       <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
@@ -1185,8 +1371,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </p>
         </div>
       </div>
+      )}
 
       {/* Tabs */}
+      {advancedMode && (
       <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
         {([
           { id: "generate" as const, label: "Generator", icon: Sparkles },
@@ -1209,7 +1397,10 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
           </button>
         ))}
       </div>
+      )}
 
+      {advancedMode && (
+      <>
       {/* Generate Tab */}
       {tab === "generate" && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -2720,6 +2911,8 @@ ${script.ab_variations ? `<h2>A/B Hook Variations</h2>${script.ab_variations.map
             </div>
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );
