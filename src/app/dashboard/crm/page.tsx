@@ -315,6 +315,79 @@ export default function CRMPage() {
     } finally { setLoading(false); }
   }
 
+  // Rehydrate all persisted CRM settings (previously useState-only).
+  async function fetchCrmSettings() {
+    try {
+      const [automationsRes, tagsRes, notesRes, followUpsRes, segmentsRes] = await Promise.all([
+        fetch("/api/crm/automations").then(r => r.ok ? r.json() : { success: false }),
+        fetch("/api/crm/tags").then(r => r.ok ? r.json() : { success: false }),
+        fetch("/api/crm/notes").then(r => r.ok ? r.json() : { success: false }),
+        fetch("/api/crm/follow-ups").then(r => r.ok ? r.json() : { success: false }),
+        fetch("/api/crm/segments").then(r => r.ok ? r.json() : { success: false }),
+      ]);
+
+      if (automationsRes.success && Array.isArray(automationsRes.automations)) {
+        const mapped: AutomationRule[] = (automationsRes.automations as Array<{
+          id: string; name: string; is_active: boolean;
+          trigger: { type?: string; delay?: number } | null;
+          actions: Array<{ type?: string; message?: string }> | null;
+        }>).map(row => {
+          const firstAction = Array.isArray(row.actions) ? row.actions[0] : null;
+          return {
+            id: row.id,
+            name: row.name,
+            trigger: (row.trigger?.type as AutomationTrigger) || "new_lead",
+            action: (firstAction?.type as AutomationAction) || "send_sms",
+            enabled: row.is_active,
+            message: firstAction?.message,
+            delay: row.trigger?.delay,
+          };
+        });
+        setAutomations(mapped);
+      }
+
+      if (tagsRes.success && Array.isArray(tagsRes.tags)) {
+        const grouped: Record<string, string[]> = {};
+        const idx: TagRowIndex = {};
+        (tagsRes.tags as Array<{ id: string; lead_id: string; tag: string }>).forEach(t => {
+          if (!grouped[t.lead_id]) grouped[t.lead_id] = [];
+          grouped[t.lead_id].push(t.tag);
+          idx[`${t.lead_id}:${t.tag}`] = t.id;
+        });
+        setLeadTags(grouped);
+        setTagRowIds(idx);
+      }
+
+      if (notesRes.success && Array.isArray(notesRes.notes)) {
+        const grouped: Record<string, LeadNote[]> = {};
+        (notesRes.notes as Array<{ id: string; lead_id: string; body: string; created_at: string }>).forEach(n => {
+          if (!grouped[n.lead_id]) grouped[n.lead_id] = [];
+          grouped[n.lead_id].push({ id: n.id, text: n.body, created: n.created_at });
+        });
+        setLeadNotes(grouped);
+      }
+
+      if (followUpsRes.success && Array.isArray(followUpsRes.follow_ups)) {
+        setFollowUps((followUpsRes.follow_ups as Array<{
+          id: string; lead_id: string; scheduled_for: string; message: string | null;
+        }>).map(f => ({
+          id: f.id,
+          leadId: f.lead_id,
+          date: f.scheduled_for,
+          note: f.message || "Follow up",
+        })));
+      }
+
+      if (segmentsRes.success && Array.isArray(segmentsRes.segments)) {
+        setSavedSegments((segmentsRes.segments as Array<{
+          id: string; name: string; filters: FilterState;
+        }>).map(s => ({ id: s.id, name: s.name, filters: s.filters || DEFAULT_FILTERS })));
+      }
+    } catch (err) {
+      console.error("[CRM] fetchCrmSettings error:", err);
+    }
+  }
+
   // ── Computed data ──
   const statusCounts = useMemo(() => {
     const c: Record<string, number> = { all: leads.length, new: 0, contacted: 0, replied: 0, booked: 0, converted: 0 };
@@ -553,29 +626,90 @@ export default function CRMPage() {
     }
   }
 
-  function addTag(leadId: string, tagId: string) {
+  async function addTag(leadId: string, tagId: string) {
+    const prevTags = leadTags;
+    const prevIndex = tagRowIds;
     setLeadTags(prev => {
       const tags = prev[leadId] || [];
       if (tags.includes(tagId)) return prev;
       return { ...prev, [leadId]: [...tags, tagId] };
     });
+    try {
+      const res = await fetch("/api/crm/tags", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead_id: leadId, tag: tagId }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to add tag");
+      const newRow = data.tag as { id: string } | undefined;
+      if (newRow?.id) setTagRowIds(prev => ({ ...prev, [`${leadId}:${tagId}`]: newRow.id }));
+    } catch (err) {
+      console.error("[CRM] addTag error:", err);
+      toast.error("Failed to add tag");
+      setLeadTags(prevTags);
+      setTagRowIds(prevIndex);
+    }
   }
 
-  function removeTag(leadId: string, tagId: string) {
+  async function removeTag(leadId: string, tagId: string) {
+    const rowId = tagRowIds[`${leadId}:${tagId}`];
+    const prevTags = leadTags;
+    const prevIndex = tagRowIds;
     setLeadTags(prev => ({ ...prev, [leadId]: (prev[leadId] || []).filter(t => t !== tagId) }));
+    setTagRowIds(prev => { const n = { ...prev }; delete n[`${leadId}:${tagId}`]; return n; });
+    if (!rowId) return;
+    try {
+      const res = await fetch(`/api/crm/tags/${rowId}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to remove tag");
+    } catch (err) {
+      console.error("[CRM] removeTag error:", err);
+      toast.error("Failed to remove tag");
+      setLeadTags(prevTags);
+      setTagRowIds(prevIndex);
+    }
   }
 
-  function addNote(leadId: string) {
+  async function addNote(leadId: string) {
     if (!noteInput.trim()) return;
-    const note: LeadNote = { id: `n-${Date.now()}`, text: noteInput, created: new Date().toISOString() };
-    setLeadNotes(prev => ({ ...prev, [leadId]: [note, ...(prev[leadId] || [])] }));
+    const body = noteInput;
     setNoteInput("");
-    toast.success("Note added");
+    try {
+      const res = await fetch("/api/crm/notes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead_id: leadId, body }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to save note");
+      const saved = data.note as { id: string; body: string; created_at: string };
+      const note: LeadNote = { id: saved.id, text: saved.body, created: saved.created_at };
+      setLeadNotes(prev => ({ ...prev, [leadId]: [note, ...(prev[leadId] || [])] }));
+      toast.success("Note added");
+    } catch (err) {
+      console.error("[CRM] addNote error:", err);
+      toast.error("Failed to save note");
+      setNoteInput(body);
+    }
   }
 
-  function addFollowUp(leadId: string, date: string, note: string) {
-    setFollowUps(prev => [...prev, { leadId, date, note }]);
-    toast.success("Follow-up scheduled");
+  async function addFollowUp(leadId: string, date: string, note: string) {
+    try {
+      const res = await fetch("/api/crm/follow-ups", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lead_id: leadId, scheduled_for: new Date(date).toISOString(), message: note }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to schedule");
+      const saved = data.follow_up as { id: string; scheduled_for: string };
+      setFollowUps(prev => [...prev, { id: saved.id, leadId, date: saved.scheduled_for, note }]);
+      toast.success("Follow-up scheduled");
+    } catch (err) {
+      console.error("[CRM] addFollowUp error:", err);
+      toast.error("Failed to schedule follow-up");
+    }
   }
 
   function exportCSV() {
@@ -599,17 +733,140 @@ export default function CRMPage() {
     toast.success(`Exported ${rows.length} leads`);
   }
 
-  function saveSegment() {
+  async function saveSegment() {
     if (!newSegmentName.trim()) return;
-    const seg: SavedSegment = { id: `seg-${Date.now()}`, name: newSegmentName, filters: { ...filters } };
-    setSavedSegments(prev => [...prev, seg]);
-    setNewSegmentName(""); setShowSegmentSave(false);
-    toast.success(`Segment "${seg.name}" saved`);
+    const name = newSegmentName;
+    const currentFilters = { ...filters };
+    try {
+      const res = await fetch("/api/crm/segments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, filters: currentFilters, lead_count: filtered.length }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to save");
+      const saved = data.segment as { id: string; name: string; filters: FilterState };
+      setSavedSegments(prev => [...prev, { id: saved.id, name: saved.name, filters: saved.filters || currentFilters }]);
+      setNewSegmentName(""); setShowSegmentSave(false);
+      toast.success(`Segment "${saved.name}" saved`);
+    } catch (err) {
+      console.error("[CRM] saveSegment error:", err);
+      toast.error("Failed to save segment");
+    }
+  }
+
+  async function deleteSegment(id: string) {
+    const prev = savedSegments;
+    setSavedSegments(s => s.filter(x => x.id !== id));
+    try {
+      const res = await fetch(`/api/crm/segments?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to delete");
+    } catch (err) {
+      console.error("[CRM] deleteSegment error:", err);
+      toast.error("Failed to delete segment");
+      setSavedSegments(prev);
+    }
   }
 
   function loadSegment(seg: SavedSegment) {
     setFilters(seg.filters);
     toast.success(`Loaded "${seg.name}"`);
+  }
+
+  // Persist automation rules. Server-shaped UUIDs get PATCHed; brand-new local
+  // ones get POSTed and swap their id for the server's UUID.
+  async function persistAutomations() {
+    try {
+      const results = await Promise.all(
+        automations.map(async (rule) => {
+          const payload = {
+            name: rule.name,
+            trigger: { type: rule.trigger, delay: rule.delay ?? 0 },
+            actions: [{ type: rule.action, message: rule.message ?? "" }],
+            is_active: rule.enabled,
+          };
+          const isServerId = /^[0-9a-f-]{36}$/i.test(rule.id);
+          if (isServerId) {
+            const res = await fetch(`/api/crm/automations/${rule.id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            return res.json();
+          } else {
+            const res = await fetch("/api/crm/automations", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const data = await res.json();
+            if (data.success && data.automation) {
+              setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, id: data.automation.id } : r));
+            }
+            return data;
+          }
+        })
+      );
+      const failed = results.filter(r => !r.success).length;
+      if (failed > 0) toast.error(`${failed} automation(s) failed to save`);
+      else toast.success("Automations saved");
+    } catch (err) {
+      console.error("[CRM] persistAutomations error:", err);
+      toast.error("Failed to save automations");
+    }
+  }
+
+  async function toggleAutomation(id: string) {
+    const target = automations.find(r => r.id === id);
+    if (!target) return;
+    const next = !target.enabled;
+    setAutomations(prev => prev.map(r => r.id === id ? { ...r, enabled: next } : r));
+    const isServerId = /^[0-9a-f-]{36}$/i.test(id);
+    if (!isServerId) return;
+    try {
+      const res = await fetch(`/api/crm/automations/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ is_active: next }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to toggle");
+    } catch (err) {
+      console.error("[CRM] toggleAutomation error:", err);
+      toast.error("Failed to toggle automation");
+      setAutomations(prev => prev.map(r => r.id === id ? { ...r, enabled: !next } : r));
+    }
+  }
+
+  function addAutomation() {
+    const localId = `local-${Date.now()}`;
+    setAutomations(prev => [...prev, {
+      id: localId,
+      name: "New Automation",
+      trigger: "new_lead",
+      action: "send_sms",
+      enabled: true,
+      message: "",
+      delay: 0,
+    }]);
+    setEditingAutomationId(localId);
+  }
+
+  async function deleteAutomation(id: string) {
+    const prev = automations;
+    setAutomations(a => a.filter(r => r.id !== id));
+    const isServerId = /^[0-9a-f-]{36}$/i.test(id);
+    if (!isServerId) return;
+    try {
+      const res = await fetch(`/api/crm/automations/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || "Failed to delete");
+    } catch (err) {
+      console.error("[CRM] deleteAutomation error:", err);
+      toast.error("Failed to delete automation");
+      setAutomations(prev);
+    }
   }
 
   // ── Density styles ──
@@ -780,7 +1037,7 @@ export default function CRMPage() {
             <button key={seg.id} onClick={() => loadSegment(seg)}
               className="text-[8px] px-2 py-1 rounded-full border border-border bg-surface-light hover:border-gold/20 hover:text-gold transition-all whitespace-nowrap flex items-center gap-1">
               {seg.name}
-              <span role="button" onClick={(e) => { e.stopPropagation(); setSavedSegments(prev => prev.filter(s => s.id !== seg.id)); }}
+              <span role="button" onClick={(e) => { e.stopPropagation(); deleteSegment(seg.id); }}
                 className="hover:text-red-400 cursor-pointer"><X size={7} /></span>
             </button>
           ))}
@@ -1534,6 +1791,9 @@ export default function CRMPage() {
               <button onClick={() => setShowAutomation(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
             </div>
             <div className="p-5 overflow-y-auto max-h-[60vh] space-y-3">
+              {automations.length === 0 && (
+                <p className="text-xs text-muted text-center py-8">No automations yet. Click &ldquo;+ New Rule&rdquo; to add one.</p>
+              )}
               {automations.map(rule => {
                 const triggerLabels: Record<string, string> = {
                   new_lead: "When new lead arrives", no_reply_2d: "No reply after 2 days",
@@ -1550,39 +1810,98 @@ export default function CRMPage() {
                 };
                 const action = actionLabels[rule.action];
                 const ActionIcon = action.icon;
+                const isEditing = editingAutomationId === rule.id;
                 return (
                   <div key={rule.id} className={`rounded-xl border p-4 transition-all ${rule.enabled ? "border-gold/20 bg-gold/5" : "border-border bg-surface-light/50 opacity-60"}`}>
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
                         <ActionIcon size={14} className={action.color} />
-                        <span className="text-xs font-semibold">{rule.name}</span>
+                        {isEditing ? (
+                          <input value={rule.name}
+                            onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, name: e.target.value } : r))}
+                            className="input text-xs px-2 py-1 flex-1" autoFocus />
+                        ) : (
+                          <span className="text-xs font-semibold truncate">{rule.name}</span>
+                        )}
                       </div>
-                      <button onClick={() => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, enabled: !r.enabled } : r))}
-                        className={`w-8 h-4 rounded-full transition-all relative ${rule.enabled ? "bg-gold" : "bg-surface-light"}`}>
-                        <div className={`absolute w-3 h-3 rounded-full bg-white top-0.5 transition-all ${rule.enabled ? "left-4.5" : "left-0.5"}`}
-                          style={{ left: rule.enabled ? "18px" : "2px" }} />
-                      </button>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <button onClick={() => setEditingAutomationId(isEditing ? null : rule.id)}
+                          className="text-[9px] text-muted hover:text-gold">
+                          {isEditing ? "Done" : "Edit"}
+                        </button>
+                        <button onClick={() => deleteAutomation(rule.id)}
+                          className="text-[9px] text-muted hover:text-red-400">
+                          <Trash2 size={11} />
+                        </button>
+                        <button onClick={() => toggleAutomation(rule.id)}
+                          className={`w-8 h-4 rounded-full transition-all relative ${rule.enabled ? "bg-gold" : "bg-surface-light"}`}>
+                          <div className="absolute w-3 h-3 rounded-full bg-white top-0.5 transition-all"
+                            style={{ left: rule.enabled ? "18px" : "2px" }} />
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-[10px] text-muted">
-                      <span className="flex items-center gap-1"><Timer size={10} /> {triggerLabels[rule.trigger]}</span>
-                      <ArrowRight size={10} />
-                      <span className={`flex items-center gap-1 ${action.color}`}>{action.label}</span>
-                    </div>
-                    {rule.message && (
-                      <p className="text-[9px] text-muted mt-2 p-2 rounded-lg bg-surface-light/50 border border-border/50 italic">
-                        &ldquo;{rule.message}&rdquo;
-                      </p>
+                    {isEditing ? (
+                      <div className="space-y-2 mt-2">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Trigger</label>
+                            <select value={rule.trigger}
+                              onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, trigger: e.target.value as AutomationTrigger } : r))}
+                              className="input text-[10px] w-full py-1">
+                              {Object.entries(triggerLabels).map(([v, lbl]) => <option key={v} value={v}>{lbl}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Action</label>
+                            <select value={rule.action}
+                              onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, action: e.target.value as AutomationAction } : r))}
+                              className="input text-[10px] w-full py-1">
+                              {Object.entries(actionLabels).map(([v, o]) => <option key={v} value={v}>{o.label}</option>)}
+                            </select>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Message (optional)</label>
+                          <textarea value={rule.message ?? ""}
+                            onChange={e => setAutomations(prev => prev.map(r => r.id === rule.id ? { ...r, message: e.target.value } : r))}
+                            placeholder="Use {{name}}, {{business}} as placeholders"
+                            className="input text-[10px] w-full py-1 min-h-[60px]" />
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-2 text-[10px] text-muted">
+                          <span className="flex items-center gap-1"><Timer size={10} /> {triggerLabels[rule.trigger]}</span>
+                          <ArrowRight size={10} />
+                          <span className={`flex items-center gap-1 ${action.color}`}>{action.label}</span>
+                        </div>
+                        {rule.message && (
+                          <p className="text-[9px] text-muted mt-2 p-2 rounded-lg bg-surface-light/50 border border-border/50 italic">
+                            &ldquo;{rule.message}&rdquo;
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
                 );
               })}
+              <button onClick={addAutomation}
+                className="w-full text-[10px] py-2 rounded-xl border border-dashed border-border text-muted hover:text-gold hover:border-gold/20 transition-all flex items-center justify-center gap-1">
+                <Plus size={11} /> New Rule
+              </button>
             </div>
             <div className="px-5 py-3 border-t border-border bg-surface-light/30 flex items-center justify-between">
               <span className="text-[9px] text-muted">{automations.filter(r => r.enabled).length}/{automations.length} rules active</span>
-              <button onClick={() => { toast("Automation rules are local-only — persistence coming soon"); setShowAutomation(false); }}
-                className="text-[10px] px-4 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold-light transition-all">
-                Close
-              </button>
+              <div className="flex items-center gap-2">
+                <button onClick={() => { setShowAutomation(false); setEditingAutomationId(null); }}
+                  className="text-[10px] px-4 py-1.5 rounded-lg border border-border text-muted hover:text-foreground transition-all">
+                  Cancel
+                </button>
+                <button onClick={async () => { await persistAutomations(); setEditingAutomationId(null); setShowAutomation(false); }}
+                  className="text-[10px] px-4 py-1.5 rounded-lg bg-gold text-black font-medium hover:bg-gold-light transition-all">
+                  Save Changes
+                </button>
+              </div>
             </div>
           </div>
         </div>
