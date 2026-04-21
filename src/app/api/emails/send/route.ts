@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
     client_id,
     template_type,
     from_name,
+    from_email,
     reply_to,
     provider,
   } = await request.json();
@@ -121,7 +122,15 @@ export async function POST(request: NextRequest) {
   // If the HTTP path fails or the key isn't available, fall back to SMTP.
   if (!sent) {
     const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
-    const fromEmail = process.env.SMTP_FROM || "growth@mail.shortstack.work";
+    // Use the caller-provided from_email if it looks like a valid email;
+    // otherwise fall back to the env default. Guards against injection via
+    // malformed headers — only a simple single-email form is accepted.
+    const emailRe = /^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/;
+    const callerFromEmail =
+      typeof from_email === "string" && emailRe.test(from_email.trim())
+        ? from_email.trim()
+        : null;
+    const fromEmail = callerFromEmail || process.env.SMTP_FROM || "growth@mail.shortstack.work";
     const fromDisplay = typeof from_name === "string" && from_name.trim()
       ? `${from_name.trim()} <${fromEmail}>`
       : fromEmail;

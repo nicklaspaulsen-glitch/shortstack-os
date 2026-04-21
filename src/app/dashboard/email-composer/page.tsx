@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   Mail, Send, Sparkles, Bold, Italic, Link2, List,
   Image as ImageIcon, Save, Monitor, Smartphone, Code,
   Clock, Eye, AlertTriangle, CheckCircle, Copy, Type,
   Paperclip, Palette, Hash, MousePointerClick,
-  X, Plus, Calendar, Loader2, Wand2, TrendingUp, Users
+  X, Plus, Calendar, Loader2, Wand2, TrendingUp, Users,
+  Info
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
@@ -60,9 +62,47 @@ export default function EmailComposerPage() {
     subject: "",
     body: "",
     fromName: "",
+    fromEmail: "",
     replyTo: "",
   });
-  const [provider, setProvider] = useState<"gmail" | "outlook" | "smtp">("gmail");
+  // SMTP is the default — it's the recommended path (branded Resend send).
+  // Gmail/Outlook require the user to have connected a personal OAuth account.
+  const [provider, setProvider] = useState<"gmail" | "outlook" | "smtp">("smtp");
+
+  // OAuth connection state for Gmail/Outlook — used to gate the send with a
+  // "Connect X" CTA instead of silently failing.
+  const [connectedProviders, setConnectedProviders] = useState<{
+    gmail: boolean;
+    outlook: boolean;
+  }>({ gmail: false, outlook: false });
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/social/connect", { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        const accounts: Array<{ platform?: string; is_active?: boolean }> = data?.accounts || [];
+        const hasActive = (plat: string) =>
+          accounts.some(a =>
+            typeof a.platform === "string" &&
+            a.platform.toLowerCase() === plat &&
+            a.is_active !== false,
+          );
+        if (!cancelled) {
+          setConnectedProviders({
+            gmail: hasActive("gmail"),
+            outlook: hasActive("outlook"),
+          });
+        }
+      } catch {
+        // Best-effort — if we can't resolve connection state we still show the
+        // CTA (safer to prompt than to let a send silently fail).
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   /* ── AI state ── */
   const [showAiWrite, setShowAiWrite] = useState(false);
@@ -119,6 +159,23 @@ export default function EmailComposerPage() {
       toast.error("Write a body first");
       return;
     }
+    // Block sends via Gmail/Outlook when the user hasn't connected OAuth —
+    // the API would accept the request but the personal-inbox path would
+    // silently fall through to SMTP, which is surprising. Surface the real
+    // missing step instead.
+    if (provider === "gmail" && !connectedProviders.gmail) {
+      toast.error("Connect Gmail first to send from your personal inbox");
+      return;
+    }
+    if (provider === "outlook" && !connectedProviders.outlook) {
+      toast.error("Connect Outlook first to send from your personal inbox");
+      return;
+    }
+    const fromEmailTrimmed = email.fromEmail.trim();
+    if (fromEmailTrimmed && !isValidEmail(fromEmailTrimmed)) {
+      toast.error("From email looks invalid");
+      return;
+    }
 
     const setter = testMode ? setSendingTest : setSending;
     setter(true);
@@ -139,6 +196,7 @@ export default function EmailComposerPage() {
           body: htmlBody,
           provider,
           from_name: email.fromName.trim() || undefined,
+          from_email: fromEmailTrimmed || undefined,
           reply_to: email.replyTo.trim() || undefined,
           test_mode: testMode,
         }),
@@ -797,7 +855,7 @@ export default function EmailComposerPage() {
                   <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
                 </button>
                 <button
-                  onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
+                  onClick={() => { setEmail({ to: "", subject: "", body: "", fromName: email.fromName, fromEmail: email.fromEmail, replyTo: email.replyTo }); setActiveTab("compose"); toast.success("Blank email ready"); }}
                   className="px-3 py-1.5 rounded-lg bg-transparent border border-white/20 text-white text-xs font-medium hover:bg-white/10 transition-all flex items-center gap-1.5"
                 >
                   <Plus size={12} /> Blank
@@ -875,21 +933,76 @@ export default function EmailComposerPage() {
             <div className="card space-y-2">
               {/* Email Provider Selector */}
               <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Send via</label>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <label className="text-[9px] text-muted uppercase tracking-wider">Send via</label>
+                  <span
+                    className="inline-flex text-muted/70 hover:text-gold cursor-help"
+                    title="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
+                    aria-label="SMTP = brand blasts, Gmail/Outlook = personal 1:1s"
+                  >
+                    <Info size={10} />
+                  </span>
+                </div>
                 <div className="flex gap-1.5">
                   {([
+                    { id: "smtp" as const, label: "SMTP", icon: <Mail size={12} /> },
                     { id: "gmail" as const, label: "Gmail", icon: <GmailIcon size={14} /> },
                     { id: "outlook" as const, label: "Outlook", icon: <OutlookIcon size={14} /> },
-                    { id: "smtp" as const, label: "SMTP", icon: <Mail size={12} /> },
                   ]).map(p => (
                     <button key={p.id} onClick={() => setProvider(p.id)}
                       className={`flex-1 text-[10px] py-1.5 rounded-lg border capitalize transition-all flex items-center justify-center gap-1.5 ${
                         provider === p.id ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted"
                       }`}>
                       {p.icon} {p.label}
+                      {p.id === "smtp" && (
+                        <span className="ml-1 text-[7px] uppercase font-semibold tracking-wide px-1 py-px rounded bg-gold/20 text-gold border border-gold/30">
+                          Recommended
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
+                {/* Contextual help per provider — explains WHY you'd pick each one */}
+                <p className="text-[9px] text-muted mt-1.5 leading-relaxed">
+                  {provider === "smtp" && (
+                    "Branded send via your verified domain. Best for most outreach. Tracking, webhooks, unlimited volume."
+                  )}
+                  {provider === "gmail" && (
+                    "Send from your personal Gmail. Best for 1:1 personal replies. Requires Google OAuth connection."
+                  )}
+                  {provider === "outlook" && (
+                    "Send from your personal Outlook. Best for 1:1 personal replies. Requires Microsoft OAuth connection."
+                  )}
+                </p>
+                {/* OAuth-gating CTA — if Gmail/Outlook is picked but not connected,
+                    show a "Connect" link to /dashboard/integrations instead of
+                    letting the send silently fall through. */}
+                {provider === "gmail" && !connectedProviders.gmail && (
+                  <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
+                    <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
+                      <AlertTriangle size={10} /> Gmail isn't connected yet — the send will fail.
+                    </p>
+                    <Link
+                      href="/dashboard/integrations"
+                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
+                    >
+                      Connect Gmail
+                    </Link>
+                  </div>
+                )}
+                {provider === "outlook" && !connectedProviders.outlook && (
+                  <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
+                    <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
+                      <AlertTriangle size={10} /> Outlook isn't connected yet — the send will fail.
+                    </p>
+                    <Link
+                      href="/dashboard/integrations"
+                      className="text-[10px] px-2 py-1 rounded-md bg-amber-400/15 border border-amber-400/30 text-amber-300 hover:bg-amber-400/25 transition-all font-semibold"
+                    >
+                      Connect Outlook
+                    </Link>
+                  </div>
+                )}
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
@@ -897,13 +1010,30 @@ export default function EmailComposerPage() {
                   <input value={email.to} onChange={e => setEmail({ ...email, to: e.target.value })} className="input w-full text-xs" placeholder="Recipient email or select from list..." />
                 </div>
                 <div>
-                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From</label>
-                  <input value={email.fromName} onChange={e => setEmail({ ...email, fromName: e.target.value })} className="input w-full text-xs" />
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From name</label>
+                  <input
+                    value={email.fromName}
+                    onChange={e => setEmail({ ...email, fromName: e.target.value })}
+                    className="input w-full text-xs"
+                    placeholder="e.g. Nicklas at ShortStack"
+                  />
                 </div>
               </div>
-              <div>
-                <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Reply-To</label>
-                <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="input w-full text-xs" />
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">From email</label>
+                  <input
+                    type="email"
+                    value={email.fromEmail}
+                    onChange={e => setEmail({ ...email, fromEmail: e.target.value })}
+                    className="input w-full text-xs"
+                    placeholder="growth@yourdomain.com (uses verified domain if blank)"
+                  />
+                </div>
+                <div>
+                  <label className="text-[9px] text-muted uppercase tracking-wider block mb-1">Reply-To</label>
+                  <input value={email.replyTo} onChange={e => setEmail({ ...email, replyTo: e.target.value })} className="input w-full text-xs" placeholder="replies@yourdomain.com" />
+                </div>
               </div>
             </div>
 
@@ -1170,7 +1300,7 @@ export default function EmailComposerPage() {
               </div>
               <div className="p-6">
                 <p className="text-sm font-semibold text-white mb-1">{email.subject || "No subject"}</p>
-                <p className="text-[10px] text-muted mb-4">From: {email.fromName} &lt;{email.replyTo}&gt;</p>
+                <p className="text-[10px] text-muted mb-4">From: {email.fromName} &lt;{email.fromEmail || email.replyTo}&gt;</p>
                 <div className="text-sm text-white/80 leading-relaxed whitespace-pre-wrap">
                   {email.body.replace(/\{first_name\}/g, "John").replace(/\{business_name\}/g, "Bright Smile Dental").replace(/\{industry\}/g, "dental").replace(/\{company\}/g, "ShortStack").replace(/\{city\}/g, "Miami")}
                 </div>
