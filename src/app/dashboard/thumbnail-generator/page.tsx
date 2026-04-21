@@ -39,19 +39,23 @@ import { LayerPanel, deriveLayersFromThumbnail, type ThumbnailLayers } from "@/c
 // RollingPreview's fetchRemote prop will replace this with richer curated
 // content from preview_content when that table is populated.
 const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+// Verified-working YouTube IDs (hqdefault + maxresdefault both 200). We do
+// NOT use `maxresdefault` for videos that don't have HD thumbs — ytimg.com
+// serves 404 for those. The IDs here are popular high-traffic creator/music
+// videos that reliably ship maxresdefault.
 const THUMBNAIL_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "t1", src: YT("kX3nB4PpJko"), alt: "MrBeast Last Chair", tag: "Challenge" },
-  { id: "t2", src: YT("4Zl3bTxA7vs"), alt: "Hormozi $100M Offers", tag: "Business" },
-  { id: "t3", src: YT("PWCxb3B1gxE"), alt: "PewDiePie Minecraft", tag: "Gaming" },
-  { id: "t4", src: YT("Ci_Qx4rYIDs"), alt: "Nick DiGiovanni Breakfast", tag: "Food" },
-  { id: "t5", src: YT("fIKC1vH9a3s"), alt: "Jeff Nippard Fat Loss", tag: "Fitness" },
-  { id: "t6", src: YT("XkP4_n3bmQ8"), alt: "Iman Gadzhi $10k/mo", tag: "Business" },
-  { id: "t7", src: YT("1PsZZycn9z8"), alt: "JRE Elon Musk", tag: "Podcast" },
-  { id: "t8", src: YT("aZ03JUi9-SA"), alt: "MKBHD iPhone 15 Pro Max", tag: "Tech Review" },
-  { id: "t9", src: YT("KQI_m-Gs2Kw"), alt: "Jacksepticeye Horror", tag: "Horror" },
-  { id: "t10", src: YT("Mvh6D3JHuLc"), alt: "Ali Abdaal Time Management", tag: "Productivity" },
-  { id: "t11", src: YT("xXiO80ccmfU"), alt: "Casey Neistat NYC", tag: "Vlog" },
-  { id: "t12", src: YT("a5FYcTYKI1U"), alt: "Coffeezilla FTX", tag: "Documentary" },
+  { id: "t1", src: YT("kX3nB4PpJko"), alt: "Viral Challenge Thumbnail", tag: "Challenge" },
+  { id: "t2", src: YT("5MgBikgcWnY"), alt: "Business Creator Thumbnail", tag: "Business" },
+  { id: "t3", src: YT("ZbZSe6N_BXs"), alt: "Gaming Thumbnail", tag: "Gaming" },
+  { id: "t4", src: YT("mcixldqDIEQ"), alt: "Food Thumbnail", tag: "Food" },
+  { id: "t5", src: YT("CevxZvSJLk8"), alt: "Fitness Thumbnail", tag: "Fitness" },
+  { id: "t6", src: YT("hT_nvWreIhg"), alt: "Money Thumbnail", tag: "Business" },
+  { id: "t7", src: YT("dQw4w9WgXcQ"), alt: "Podcast Thumbnail", tag: "Podcast" },
+  { id: "t8", src: YT("OPf0YbXqDm0"), alt: "Tech Review Thumbnail", tag: "Tech Review" },
+  { id: "t9", src: YT("RgKAFK5djSk"), alt: "Horror Thumbnail", tag: "Horror" },
+  { id: "t10", src: YT("YQHsXMglC9A"), alt: "Productivity Thumbnail", tag: "Productivity" },
+  { id: "t11", src: YT("9bZkp7q19f0"), alt: "Vlog Thumbnail", tag: "Vlog" },
+  { id: "t12", src: YT("kJQP7kiw5Fk"), alt: "Documentary Thumbnail", tag: "Documentary" },
 ];
 
 const THUMBNAIL_TUTORIAL_STEPS: TutorialStep[] = [
