@@ -25,6 +25,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { X, Zap } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
+import Draggable from "@/components/ui/draggable";
 
 interface TokenData {
   plan: string;
@@ -146,8 +147,14 @@ export default function TokenUsageWidget() {
   );
 
   return (
+    <Draggable
+      dragAnywhere
+      defaultX={typeof window !== "undefined" ? window.innerWidth - 360 : 0}
+      defaultY={typeof window !== "undefined" ? window.innerHeight - 70 : 0}
+      storageKey="token_widget"
+    >
     <div
-      className="fixed bottom-6 right-6 z-40 select-none"
+      className="select-none"
       style={{ pointerEvents: "auto" }}
     >
       {/* Expanded breakdown on hover */}
@@ -288,5 +295,6 @@ export default function TokenUsageWidget() {
         </button>
       </Link>
     </div>
+    </Draggable>
   );
 }
