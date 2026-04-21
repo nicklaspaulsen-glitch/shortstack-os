@@ -110,6 +110,15 @@ export interface AdvancedToggleProps {
 /**
  * Small pill-style toggle that lets power users flip the creation page from
  * Guided Mode (the wizard) to Advanced Mode (the existing full form).
+ *
+ * Visual contract:
+ *   - Sits in the top-right of a <PageHero> over a dark gradient background
+ *   - Uses opaque / backdrop-blurred surfaces so the hero's radial glows
+ *     do not bleed through the pill (previous 15% gold made the pill look
+ *     orange/amber/clipped on sunset & purple heroes).
+ *   - Always shrink-0 so a tight parent flex row can't truncate it.
+ *   - `relative z-20` puts it above the hero's z-10 content layer and above
+ *     the glow layer so it never visually merges with the gradient.
  */
 export function AdvancedToggle({
   value,
@@ -122,10 +131,11 @@ export function AdvancedToggle({
       type="button"
       onClick={() => onChange(!value)}
       aria-pressed={value}
-      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
+      data-advanced-toggle
+      className={`relative z-20 shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-[11px] font-semibold border backdrop-blur-sm transition-all whitespace-nowrap ${
         value
-          ? "bg-gold/15 text-gold border-gold/30 shadow-sm shadow-gold/10"
-          : "bg-surface-light text-muted border-border hover:text-foreground hover:border-gold/30"
+          ? "bg-gold text-black border-gold shadow-sm shadow-gold/30 hover:shadow-gold/50"
+          : "bg-black/30 text-white border-white/25 hover:bg-black/40 hover:border-white/40"
       } ${className}`}
       title={value ? "Click to return to the guided wizard" : "Click for full control"}
     >
@@ -133,7 +143,7 @@ export function AdvancedToggle({
       <span>{label}</span>
       <span
         className={`relative inline-block w-7 h-3.5 rounded-full transition-colors ${
-          value ? "bg-gold" : "bg-border"
+          value ? "bg-black/30" : "bg-white/25"
         }`}
         aria-hidden
       >

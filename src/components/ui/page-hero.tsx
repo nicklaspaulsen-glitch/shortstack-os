@@ -172,7 +172,10 @@ export default function PageHero({
           </div>
         </div>
         {actions && (
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          // `relative z-20` keeps the actions above the radial glow layer so
+          // translucent pills (like AdvancedToggle) don't appear clipped by
+          // the orange/amber glow bleed at the hero's top-right corner.
+          <div className="relative z-20 flex flex-wrap items-center justify-end gap-2 shrink-0 max-w-full">
             {actions}
           </div>
         )}
