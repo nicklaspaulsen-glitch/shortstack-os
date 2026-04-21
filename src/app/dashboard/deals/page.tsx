@@ -8,6 +8,7 @@ import {
   ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
   Calendar, ArrowRight, Shield, Loader2, CreditCard
 } from "lucide-react";
+import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 
 type MainTab = "pipeline" | "forecast" | "analysis" | "scoring" | "templates" | "commission";
@@ -490,7 +491,11 @@ export default function DealsPage() {
                   { name: "Project-Based Agreement", pages: 5 },
                   { name: "NDA / Confidentiality", pages: 2 },
                 ].map((t, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer">
+                  <div
+                    key={i}
+                    onClick={() => toast("Contract templates coming soon — needs API")}
+                    className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer"
+                  >
                     <div className="flex items-center gap-2">
                       <FileText size={14} className="text-muted" />
                       <div>
@@ -521,10 +526,17 @@ export default function DealsPage() {
                 </div>
                 <div className="flex flex-wrap gap-1.5">
                   {["Content", "Ads", "SEO", "Web", "Email", "AI"].map(s => (
-                    <button key={s} className="text-[9px] px-2 py-1 rounded border border-border hover:border-gold/20 hover:bg-gold/5 text-muted hover:text-gold transition-all">{s}</button>
+                    <button
+                      key={s}
+                      onClick={() => toast(`${s} service selection coming soon — needs proposal builder`)}
+                      className="text-[9px] px-2 py-1 rounded border border-border hover:border-gold/20 hover:bg-gold/5 text-muted hover:text-gold transition-all"
+                    >{s}</button>
                   ))}
                 </div>
-                <button className="btn-primary w-full text-xs flex items-center justify-center gap-1.5">
+                <button
+                  onClick={() => toast("Proposal PDF generation coming soon — needs API")}
+                  className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
+                >
                   <Zap size={12} /> Generate Proposal PDF
                 </button>
               </div>
