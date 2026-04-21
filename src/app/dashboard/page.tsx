@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuth } from "@/lib/auth-context";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import {
@@ -18,20 +19,24 @@ import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import UsageNudgeBanner from "@/components/billing/usage-nudge-banner";
-import RecentGenerations from "@/components/dashboard/recent-generations";
-import JumpBackIn from "@/components/dashboard/jump-back-in";
 import TodaysPriority from "@/components/dashboard/todays-priority";
-import QuickCreateFab from "@/components/dashboard/quick-create-fab";
-import DowntimeBanner from "@/components/dashboard/downtime-banner";
-import OutreachAccounts from "@/components/dashboard/outreach-accounts";
-import PersonalizedMetrics from "@/components/dashboard/personalized-metrics";
-import AiRecommender from "@/components/dashboard/ai-recommender";
 import TrinityOrb from "@/components/dashboard/trinity-orb";
 import {
   useFocusMode,
   FocusModeToggle,
   CommandPaletteHint,
 } from "@/components/dashboard/focus-mode-toggle";
+
+// Lazy-load below-the-fold widgets — none of these are visible on first paint
+// (user must scroll past hero + Trinity orb + priority card to see them).
+// Keeps the critical path lean instead of eagerly importing ~3KLOC of widget code.
+const RecentGenerations = dynamic(() => import("@/components/dashboard/recent-generations"), { ssr: false });
+const JumpBackIn = dynamic(() => import("@/components/dashboard/jump-back-in"), { ssr: false });
+const QuickCreateFab = dynamic(() => import("@/components/dashboard/quick-create-fab"), { ssr: false });
+const DowntimeBanner = dynamic(() => import("@/components/dashboard/downtime-banner"), { ssr: false });
+const OutreachAccounts = dynamic(() => import("@/components/dashboard/outreach-accounts"), { ssr: false });
+const PersonalizedMetrics = dynamic(() => import("@/components/dashboard/personalized-metrics"), { ssr: false });
+const AiRecommender = dynamic(() => import("@/components/dashboard/ai-recommender"), { ssr: false });
 
 interface DashboardStats {
   leadsToday: number;
@@ -105,7 +110,24 @@ export default function DashboardPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Memoized aggregate math — re-runs only when the source arrays change,
+  // not on every re-render (focus toggle, input keystroke, etc.).
+  // NOTE: must sit above the early returns below so hooks stay in stable order.
+  const { pipelineTotal, pipelineMax } = useMemo(() => ({
+    pipelineTotal: pipeline.new + pipeline.called + pipeline.replied + pipeline.booked + pipeline.converted,
+    pipelineMax: Math.max(pipeline.new, pipeline.called, pipeline.replied, pipeline.booked, pipeline.converted, 1),
+  }), [pipeline]);
+  const { workingAgents, errorAgents } = useMemo(() => {
+    let working = 0, error = 0;
+    for (const a of agentStatuses) {
+      if (a.status === "working") working++;
+      else if (a.status === "error") error++;
+    }
+    return { workingAgents: working, errorAgents: error };
+  }, [agentStatuses]);
+
   async function fetchDashboardData() {
+    // Critical path — dashboard-data drives everything above the fold.
     try {
       // Fetch all dashboard data from server-side API route.
       // Server-side auth (cookie-based) is reliable — client-side
@@ -126,16 +148,19 @@ export default function DashboardPage() {
       setDashboardLoading(false);
     }
 
-    // Fetch recent autopilot activity (non-blocking).
-    // Failure here is non-fatal for the dashboard, so we log and continue.
-    try {
-      const apRes = await fetch("/api/autopilot/recent");
-      if (apRes.ok) {
-        const apData = await apRes.json();
-        setAutopilotClients(apData.clients || []);
-      }
-    } catch (err) {
-      console.warn("Autopilot recent fetch failed:", err);
+    // Defer non-critical autopilot fetch — it feeds a widget that's far below
+    // the fold, so pushing it out of the critical path lets the browser paint
+    // and become interactive sooner.
+    const runDeferred = () => {
+      fetch("/api/autopilot/recent")
+        .then(r => (r.ok ? r.json() : null))
+        .then(data => { if (data) setAutopilotClients(data.clients || []); })
+        .catch(err => { console.warn("Autopilot recent fetch failed:", err); });
+    };
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      (window as typeof window & { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(runDeferred);
+    } else {
+      setTimeout(runDeferred, 300);
     }
   }
 
@@ -191,13 +216,8 @@ export default function DashboardPage() {
     }
   }
 
-  const pipelineTotal = pipeline.new + pipeline.called + pipeline.replied + pipeline.booked + pipeline.converted;
-  const pipelineMax = Math.max(pipeline.new, pipeline.called, pipeline.replied, pipeline.booked, pipeline.converted, 1);
-  const workingAgents = agentStatuses.filter(a => a.status === "working").length;
-  const errorAgents = agentStatuses.filter(a => a.status === "error").length;
-
   return (
-    <div className="fade-in space-y-5 max-w-[1400px] mx-auto">
+    <div className="fade-in space-y-3 max-w-[1400px] mx-auto">
       {/* ─── Upgrade nudge (Starter only, >70% usage) ──────────── */}
       <UsageNudgeBanner planTier={profile?.plan_tier} />
 

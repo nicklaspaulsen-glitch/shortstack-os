@@ -21,6 +21,7 @@ import Modal from "@/components/ui/modal";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
 import toast from "react-hot-toast";
+import ErrorBoundary from "@/components/error-boundary";
 
 /* ─── static data ─── */
 const PLATFORMS: Array<{ id: string; name: string; icon: React.ReactNode; description: string; disabled?: boolean; apify?: boolean }> = [
@@ -609,7 +610,8 @@ export default function ScraperPage() {
   ];
 
   return (
-    <div className="fade-in space-y-6">
+    <div className="fade-in space-y-4">
+      <ErrorBoundary section="Lead Finder">
       {/* Hero Header */}
       <PageHero
         icon={<Search size={22} />}
@@ -737,11 +739,11 @@ export default function ScraperPage() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-border pb-0">
+      {/* Tabs (sticky) */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 border-b border-border pb-0">
         {TABS.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-medium rounded-t-lg transition-all ${tab === t.id ? "bg-surface-light border border-b-0 border-border text-gold" : "text-muted hover:text-foreground"}`}>
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-medium rounded-t-lg transition-all ${tab === t.id ? "bg-surface-light border border-b-0 border-border text-gold" : "text-muted hover:text-foreground"}`}>
             {t.icon} {t.label}
           </button>
         ))}
@@ -791,7 +793,7 @@ export default function ScraperPage() {
 
       {/* ─── SEARCH TAB ─── */}
       {tab === "search" && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Left - Platforms + Filters */}
           <div className="space-y-4">
             <div className="card">
@@ -1863,6 +1865,7 @@ export default function ScraperPage() {
           </div>
         </Modal>
       )}
+      </ErrorBoundary>
     </div>
   );
 }

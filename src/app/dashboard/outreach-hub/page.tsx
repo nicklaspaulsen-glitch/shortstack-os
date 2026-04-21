@@ -23,6 +23,7 @@ import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { useQuotaWall } from "@/components/billing/quota-wall";
+import ErrorBoundary from "@/components/error-boundary";
 
 /* ── Types ── */
 type MainTab = "campaigns" | "sequences" | "templates" | "analytics" | "settings";
@@ -487,12 +488,12 @@ export default function OutreachHubPage() {
   const [templateSubTab, setTemplateSubTab] = useState<TemplateSubTab>("calls");
   const [saving, setSaving] = useState(false);
 
-  /* ── Explainer collapse (persists per-browser) ── */
-  const [explainerOpen, setExplainerOpen] = useState<boolean>(true);
+  /* ── Explainer collapse (persists per-browser; collapsed by default) ── */
+  const [explainerOpen, setExplainerOpen] = useState<boolean>(false);
   useEffect(() => {
     try {
       const stored = localStorage.getItem("outreach_explainer_open");
-      if (stored === "0") setExplainerOpen(false);
+      if (stored === "1") setExplainerOpen(true);
     } catch {}
   }, []);
   function toggleExplainer() {
@@ -756,6 +757,7 @@ export default function OutreachHubPage() {
 
   return (
     <div className="fade-in space-y-4">
+      <ErrorBoundary section="Outreach Hub">
       {/* ── Hero Header ── */}
       <PageHero
         icon={<Send size={22} />}
@@ -875,11 +877,11 @@ export default function OutreachHubPage() {
         )}
       </div>
 
-      {/* ── Tabs ── */}
-      <div className="flex gap-1 bg-surface rounded-xl p-1 overflow-x-auto">
+      {/* ── Tabs (sticky) ── */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 bg-surface rounded-xl p-1 overflow-x-auto">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setTab(t.key)}
-            className={`px-4 py-2.5 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
+            className={`px-4 py-2 text-xs rounded-lg flex items-center gap-2 transition-all whitespace-nowrap ${
               tab === t.key ? "bg-gold text-black font-medium" : "text-muted hover:text-foreground"
             }`}>
             {t.icon} {t.label}
@@ -1972,6 +1974,7 @@ export default function OutreachHubPage() {
 
       <PageAI pageName="Outreach Hub" context="outreach campaigns, lead finder, B2B/B2C targeting, sequence builder, cold call scripts, SMS templates, email templates, social DM templates, AI settings, analytics, campaign management, industry targeting"
         suggestions={["Help me create a restaurant outreach campaign", "What sequence works best for B2B?", "Generate 5 SMS follow-up variations", "What tone works best for LinkedIn DMs?"]} />
+      </ErrorBoundary>
     </div>
   );
 }

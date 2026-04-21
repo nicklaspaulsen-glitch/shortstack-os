@@ -1,4 +1,5 @@
 "use client";
+// CRM settings tab now persists to Supabase (automations, tags, notes, follow-ups, segments).
 
 import React, { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -21,6 +22,7 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import PageAI from "@/components/page-ai";
 import { InstagramIcon, FacebookIcon, LinkedInIcon, TikTokIcon } from "@/components/ui/platform-icons";
+import ErrorBoundary from "@/components/error-boundary";
 
 /* ═══════════════════════════════════════════════════════════════════
    TYPES
@@ -66,7 +68,8 @@ interface CRMLead {
 
 interface LeadNote { id: string; text: string; created: string }
 interface LeadTag { id: string; label: string; color: string }
-interface FollowUp { leadId: string; date: string; note: string }
+interface FollowUp { id?: string; leadId: string; date: string; note: string }
+type TagRowIndex = Record<string, string>
 interface AutomationRule {
   id: string;
   name: string;
@@ -142,16 +145,6 @@ const AVAILABLE_TAGS: LeadTag[] = [
   { id: "high-value", label: "High Value", color: "pink" },
   { id: "needs-nurture", label: "Needs Nurture", color: "cyan" },
   { id: "competitor-client", label: "Competitor Client", color: "red" },
-];
-
-const DEFAULT_AUTOMATIONS: AutomationRule[] = [
-  { id: "a1", name: "Welcome SMS on New Lead", trigger: "new_lead", action: "send_sms", enabled: true, message: "Hi {{name}}, thanks for your interest! We'd love to learn more about {{business}}. When's a good time to chat?", delay: 0 },
-  { id: "a2", name: "Follow-up Email (2 days no reply)", trigger: "no_reply_2d", action: "send_email", enabled: true, message: "Just following up on our previous message. We have some ideas that could help {{business}} grow.", delay: 2 },
-  { id: "a3", name: "AI Cold Call (5 days no reply)", trigger: "no_reply_5d", action: "ai_call", enabled: false, message: "Pitch: Help {{business}} get more customers through digital marketing.", delay: 5 },
-  { id: "a4", name: "Thank You SMS After Reply", trigger: "after_reply", action: "send_sms", enabled: true, message: "Thanks for getting back to us, {{name}}! Looking forward to working with {{business}}.", delay: 0 },
-  { id: "a5", name: "Confirmation After Booking", trigger: "after_booking", action: "send_email", enabled: true, message: "Your meeting is confirmed! We'll send a calendar invite shortly.", delay: 0 },
-  { id: "a6", name: "Tag Hot Leads on Reply", trigger: "after_reply", action: "add_tag", enabled: true, delay: 0 },
-  { id: "a7", name: "Notify Team on Booking", trigger: "after_booking", action: "notify", enabled: true, delay: 0 },
 ];
 
 const DEFAULT_FILTERS: FilterState = {
@@ -263,26 +256,29 @@ export default function CRMPage() {
   const [inlineStatusId, setInlineStatusId] = useState<string | null>(null);
 
   // ── Data state ──
-  const [emailCredits, setEmailCredits] = useState(250);
+  // Previously useState-only and lost on reload. Now each persists via
+  // /api/crm/<resource> and is rehydrated by fetchCrmSettings() on mount.
+  const [emailCredits, setEmailCredits] = useState(0);
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [columns, setColumns] = useState<ColumnConfig[]>(DEFAULT_COLUMNS);
-  const [automations, setAutomations] = useState<AutomationRule[]>(DEFAULT_AUTOMATIONS);
+  const [automations, setAutomations] = useState<AutomationRule[]>([]);
   const [leadTags, setLeadTags] = useState<Record<string, string[]>>({});
+  const [tagRowIds, setTagRowIds] = useState<TagRowIndex>({});
   const [leadNotes, setLeadNotes] = useState<Record<string, LeadNote[]>>({});
   const [followUps, setFollowUps] = useState<FollowUp[]>([]);
-  const [savedSegments, setSavedSegments] = useState<SavedSegment[]>([
-    { id: "s1", name: "Hot Leads", filters: { ...DEFAULT_FILTERS, scoreMin: 70 } },
-    { id: "s2", name: "Needs Follow-up", filters: { ...DEFAULT_FILTERS, isStale: true } },
-    { id: "s3", name: "Has Email & Phone", filters: { ...DEFAULT_FILTERS, hasPhone: true, hasEmail: true } },
-  ]);
+  const [savedSegments, setSavedSegments] = useState<SavedSegment[]>([]);
   const [newSegmentName, setNewSegmentName] = useState("");
   const [noteInput, setNoteInput] = useState("");
+  const [editingAutomationId, setEditingAutomationId] = useState<string | null>(null);
 
   const detailPanelRef = useRef<HTMLDivElement>(null);
 
   // ── Data fetching ──
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchLeads(); }, [managedClientId]);
+  // Rehydrate persisted CRM settings on mount (was useState-only before).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchCrmSettings(); }, []);
   useEffect(() => { setPage(0); }, [activeTab, search, sortBy, filters]);
 
   async function fetchLeads() {
@@ -627,6 +623,7 @@ export default function CRMPage() {
 
   return (
     <div className="fade-in space-y-3">
+      <ErrorBoundary section="CRM">
       <PageHero
         icon={<Users size={22} />}
         title="CRM"
@@ -688,8 +685,8 @@ export default function CRMPage() {
         )}
       </div>
 
-      {/* ── Header Row ── */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
+      {/* ── Header Row (sticky toolbar) ── */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex items-center justify-between flex-wrap gap-2 py-2 -mx-1 px-1">
         <div className="flex items-center gap-2 flex-wrap">
           {hasActiveFilters && (
             <span className="text-[8px] px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 flex items-center gap-1">
@@ -1647,6 +1644,7 @@ export default function CRMPage() {
           "Analyze my conversion rate and suggest improvements",
         ]}
       />
+      </ErrorBoundary>
     </div>
   );
 }

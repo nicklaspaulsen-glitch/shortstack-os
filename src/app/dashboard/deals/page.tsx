@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import CollapsibleStats from "@/components/ui/collapsible-stats";
 
 type MainTab = "pipeline" | "forecast" | "analysis" | "scoring" | "templates" | "commission";
 
@@ -154,7 +155,7 @@ export default function DealsPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="fade-in space-y-3">
       <PageHero
         icon={<CreditCard size={28} />}
         title="Deals Pipeline"
@@ -167,26 +168,43 @@ export default function DealsPage() {
         }
       />
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-        {[
-          { label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={12} />, color: "text-gold" },
-          { label: "Weighted", value: formatCurrency(Math.round(weightedPipeline)), icon: <Target size={12} />, color: "text-purple-400" },
-          { label: "Won", value: formatCurrency(wonValue), icon: <CheckCircle size={12} />, color: "text-green-400" },
-          { label: "Lost", value: formatCurrency(lostValue), icon: <TrendingDown size={12} />, color: "text-red-400" },
-          { label: "Win Rate", value: `${winRate}%`, icon: <Award size={12} />, color: "text-blue-400" },
-          { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-gold" },
-        ].map((stat, i) => (
-          <div key={i} className="card text-center p-3">
-            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
-            <p className="text-lg font-bold">{stat.value}</p>
-            <p className="text-[9px] text-muted">{stat.label}</p>
-          </div>
-        ))}
-      </div>
+      {/* Stats Row — collapsible (state persists) */}
+      <CollapsibleStats
+        storageKey="deals"
+        icon={<BarChart3 size={14} className="text-gold" />}
+        title="Deal Stats"
+        summary={
+          <>
+            <span>Pipe <span className="text-gold font-semibold">{formatCurrency(totalPipeline)}</span></span>
+            <span className="opacity-30">·</span>
+            <span>Won <span className="text-green-400 font-semibold">{formatCurrency(wonValue)}</span></span>
+            <span className="opacity-30">·</span>
+            <span>Win <span className="text-blue-400 font-semibold">{winRate}%</span></span>
+            <span className="opacity-30">·</span>
+            <span>Avg <span className="text-gold font-semibold">{formatCurrency(avgDealSize)}</span></span>
+          </>
+        }
+      >
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+          {[
+            { label: "Pipeline Value", value: formatCurrency(totalPipeline), icon: <DollarSign size={12} />, color: "text-gold" },
+            { label: "Weighted", value: formatCurrency(Math.round(weightedPipeline)), icon: <Target size={12} />, color: "text-purple-400" },
+            { label: "Won", value: formatCurrency(wonValue), icon: <CheckCircle size={12} />, color: "text-green-400" },
+            { label: "Lost", value: formatCurrency(lostValue), icon: <TrendingDown size={12} />, color: "text-red-400" },
+            { label: "Win Rate", value: `${winRate}%`, icon: <Award size={12} />, color: "text-blue-400" },
+            { label: "Avg Deal", value: formatCurrency(avgDealSize), icon: <BarChart3 size={12} />, color: "text-gold" },
+          ].map((stat, i) => (
+            <div key={i} className="card text-center p-3">
+              <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+              <p className="text-lg font-bold">{stat.value}</p>
+              <p className="text-[9px] text-muted">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </CollapsibleStats>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+      {/* Tabs (sticky) */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${

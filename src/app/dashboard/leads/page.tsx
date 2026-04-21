@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import CollapsibleStats from "@/components/ui/collapsible-stats";
 import Link from "next/link";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
@@ -484,7 +485,7 @@ export default function LeadEnginePage() {
   ];
 
   return (
-    <div className="fade-in space-y-6">
+    <div className="fade-in space-y-4">
       {/* Modals */}
       {showImportModal && <ImportCSVModal onClose={() => setShowImportModal(false)} onSuccess={fetchLeads} />}
       {showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}
@@ -510,26 +511,45 @@ export default function LeadEnginePage() {
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
-        {[
-          { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-gold" },
-          { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
-          { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
-          { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
-          { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
-          { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
-        ].map((stat, i) => (
-          <div key={i} className="card text-center p-3">
-            <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
-            <p className="text-lg font-bold">{stat.value}</p>
-            <p className="text-[9px] text-muted">{stat.label}</p>
-          </div>
-        ))}
-      </div>
+      {/* Stats — collapsible (state persists) */}
+      <CollapsibleStats
+        storageKey="leads"
+        icon={<BarChart3 size={14} className="text-gold" />}
+        title="Lead Stats"
+        summary={
+          <>
+            <span><span className="text-foreground font-semibold">{totalLeads}</span> total</span>
+            <span className="opacity-30">·</span>
+            <span><span className="text-red-400 font-semibold">{hotLeads}</span> hot</span>
+            <span className="opacity-30">·</span>
+            <span><span className="text-green-400 font-semibold">{qualifiedLeads}</span> qualified</span>
+            <span className="opacity-30">·</span>
+            <span><span className="text-purple-400 font-semibold">{convertedLeads}</span> converted</span>
+            <span className="opacity-30">·</span>
+            <span>Conv <span className="text-gold font-semibold">{totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%</span></span>
+          </>
+        }
+      >
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+          {[
+            { label: "Total Leads", value: totalLeads, icon: <Users size={12} />, color: "text-gold" },
+            { label: "Hot Leads", value: hotLeads, icon: <Flame size={12} />, color: "text-red-400" },
+            { label: "Qualified", value: qualifiedLeads, icon: <CheckCircle size={12} />, color: "text-green-400" },
+            { label: "Converted", value: convertedLeads, icon: <Star size={12} />, color: "text-purple-400" },
+            { label: "Avg Score", value: totalLeads > 0 ? Math.round(leads.reduce((s, l) => s + (l.lead_score ?? 0), 0) / leads.length || 0) : 0, icon: <Target size={12} />, color: "text-blue-400" },
+            { label: "Conv Rate", value: `${totalLeads > 0 ? Math.round((convertedLeads / totalLeads) * 100) : 0}%`, icon: <TrendingUp size={12} />, color: "text-gold" },
+          ].map((stat, i) => (
+            <div key={i} className="card text-center p-3">
+              <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center bg-white/5 ${stat.color}`}>{stat.icon}</div>
+              <p className="text-lg font-bold">{stat.value}</p>
+              <p className="text-[9px] text-muted">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </CollapsibleStats>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
+      {/* Tabs (sticky) */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveTab(t.key)}
             className={`px-4 py-2 text-xs rounded-md flex items-center gap-2 whitespace-nowrap transition-all ${
@@ -540,9 +560,9 @@ export default function LeadEnginePage() {
 
       {/* ===== ALL LEADS TAB ===== */}
       {activeTab === "leads" && (
-        <div className="space-y-4">
-          {/* Filters */}
-          <div className="flex flex-wrap gap-3">
+        <div className="space-y-3">
+          {/* Filters (sticky) */}
+          <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex flex-wrap gap-2 py-2">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
               <input type="text" placeholder="Search leads..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="input w-full pl-9 text-xs" />
@@ -593,7 +613,7 @@ export default function LeadEnginePage() {
             {!loading && leads.map(lead => (
               <div key={lead.id}>
                 <div onClick={() => setExpandedLead(expandedLead === lead.id ? null : lead.id)}
-                  className="grid grid-cols-12 items-center py-2.5 px-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer text-[10px]">
+                  className="grid grid-cols-12 items-center py-1.5 px-3 rounded-lg bg-surface-light border border-border hover:border-gold/10 transition-all cursor-pointer text-[10px]">
                   <div className="col-span-3">
                     <p className="text-xs font-semibold">{lead.business_name}</p>
                     <p className="text-[9px] text-muted">{lead.industry || "Unknown"} | {lead.city || "N/A"}</p>

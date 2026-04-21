@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 
 // --- Types for new features ---
@@ -104,11 +105,16 @@ export default function ClientsPage() {
     }
   }
 
-  const activeClients = clients.filter((c) => c.is_active);
-  const totalMRR = activeClients.reduce((sum, c) => sum + (c.mrr || 0), 0);
-  const avgHealth = activeClients.length > 0
-    ? Math.round(activeClients.reduce((sum, c) => sum + c.health_score, 0) / activeClients.length)
-    : 0;
+  // Memoize — these aggregates ran on every re-render otherwise (every
+  // keystroke in filter inputs, every hover state change, etc.).
+  const { activeClients, totalMRR, avgHealth } = useMemo(() => {
+    const active = clients.filter((c) => c.is_active);
+    const mrr = active.reduce((sum, c) => sum + (c.mrr || 0), 0);
+    const health = active.length > 0
+      ? Math.round(active.reduce((sum, c) => sum + c.health_score, 0) / active.length)
+      : 0;
+    return { activeClients: active, totalMRR: mrr, avgHealth: health };
+  }, [clients]);
 
   // --- Feature 1: Client Health Score helper ---
   const getHealthColor = (score: number) => {
@@ -434,7 +440,7 @@ export default function ClientsPage() {
   if (loading) return <PageLoading />;
 
   return (
-    <div className="fade-in space-y-6">
+    <div className="fade-in space-y-4">
       <PageHero
         icon={<Users size={22} />}
         title="Client Portal"
@@ -448,16 +454,33 @@ export default function ClientsPage() {
         }
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Active Clients" value={activeClients.length} icon={<Users size={18} />} />
-        <StatCard label="Total MRR" value={formatCurrency(totalMRR)} icon={<DollarSign size={18} />} />
-        <StatCard label="Avg Health Score" value={`${avgHealth}%`} icon={<Heart size={18} />} changeType={avgHealth > 75 ? "positive" : avgHealth > 50 ? "neutral" : "negative"} />
-        <StatCard label="Active Contracts" value={contracts.filter((c) => c.status === "signed").length} icon={<FileText size={18} />} />
-      </div>
+      {/* Stats — collapsible (state persists) */}
+      <CollapsibleStats
+        storageKey="clients"
+        icon={<Users size={14} className="text-gold" />}
+        title="Client Stats"
+        summary={
+          <>
+            <span><span className="text-foreground font-semibold">{activeClients.length}</span> active</span>
+            <span className="opacity-30">·</span>
+            <span>MRR <span className="text-gold font-semibold">{formatCurrency(totalMRR)}</span></span>
+            <span className="opacity-30">·</span>
+            <span>Health <span className={avgHealth > 75 ? "text-success font-semibold" : avgHealth > 50 ? "text-warning font-semibold" : "text-danger font-semibold"}>{avgHealth}%</span></span>
+            <span className="opacity-30">·</span>
+            <span><span className="text-foreground font-semibold">{contracts.filter((c) => c.status === "signed").length}</span> contracts</span>
+          </>
+        }
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <StatCard label="Active Clients" value={activeClients.length} icon={<Users size={18} />} />
+          <StatCard label="Total MRR" value={formatCurrency(totalMRR)} icon={<DollarSign size={18} />} />
+          <StatCard label="Avg Health Score" value={`${avgHealth}%`} icon={<Heart size={18} />} changeType={avgHealth > 75 ? "positive" : avgHealth > 50 ? "neutral" : "negative"} />
+          <StatCard label="Active Contracts" value={contracts.filter((c) => c.status === "signed").length} icon={<FileText size={18} />} />
+        </div>
+      </CollapsibleStats>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
+      {/* Tabs (sticky) */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 bg-surface rounded-lg p-1 w-fit">
         {(["clients", "contracts", "invoices", "billing"] as const).map((t) => (
           <button
             key={t}

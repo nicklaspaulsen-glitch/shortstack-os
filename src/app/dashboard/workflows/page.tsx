@@ -104,7 +104,18 @@ export default function WorkflowsPage() {
   const [sharedWorkflows] = useState<{ id: string; name: string; author: string; downloads: number; rating: number }[]>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); fetchN8n(); }, []);
+  useEffect(() => { fetchData(); }, []);
+  // n8n workflows live on a non-default tab — lazy-fetch the first time
+  // the user clicks into the n8n tab so it doesn't block the default
+  // Builder tab's paint.
+  const [n8nFetched, setN8nFetched] = useState(false);
+  useEffect(() => {
+    if (tab === "n8n" && !n8nFetched) {
+      setN8nFetched(true);
+      fetchN8n();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, n8nFetched]);
 
   async function fetchN8n() {
     setN8nLoading(true);
@@ -326,7 +337,7 @@ export default function WorkflowsPage() {
   ];
 
   return (
-    <div className="fade-in space-y-5">
+    <div className="fade-in space-y-3">
       <PageHero
         icon={<Zap size={28} />}
         title="Workflows"
@@ -353,8 +364,8 @@ export default function WorkflowsPage() {
       <AiWorkflowGenModal open={showAiGen} onClose={() => setShowAiGen(false)} />
 
 
-      {/* Tabs */}
-      <div className="flex gap-1 overflow-x-auto border-b border-border pb-0">
+      {/* Tabs (sticky) */}
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 overflow-x-auto border-b border-border pb-0">
         {([
           { id: "builder" as const, label: "Builder", icon: Zap },
           { id: "presets" as const, label: `Presets (${WORKFLOW_PRESETS.length})`, icon: BookOpen },
@@ -718,8 +729,9 @@ export default function WorkflowsPage() {
                 placeholder="Describe a workflow, ask to modify, or say 'run it'..."
                 className="input flex-1 text-xs"
                 disabled={agentThinking}
+                aria-label="Workflow agent prompt"
               />
-              <button type="submit" disabled={!agentInput.trim() || agentThinking} className="btn-primary text-xs px-4 disabled:opacity-30">
+              <button type="submit" disabled={!agentInput.trim() || agentThinking} className="btn-primary text-xs px-4 disabled:opacity-30" aria-label="Send message to workflow agent">
                 <Send size={13} />
               </button>
             </form>
