@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { limitsForTier, normalizePlanTier } from "@/lib/plan-limits";
 import {
   anthropic,
   MODEL_HAIKU,
@@ -196,7 +197,30 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  const duration = Math.max(15, Math.min(60, Number(body.duration) || ADS_PRESET.default_duration));
+  // ── Tier-based video length cap (per-render ceiling, not monthly) ──
+  // Shape matches other 402 responses ({ current, limit, plan_tier }).
+  // Checked BEFORE the internal 60s clamp so the user sees a clear
+  // "upgrade" message rather than a silent truncation.
+  const requestedDuration = Number(body.duration) || ADS_PRESET.default_duration;
+  const planTierKey = normalizePlanTier(profile?.plan_tier as string | null | undefined);
+  const { max_video_seconds: maxVideoSeconds } = limitsForTier(planTierKey);
+  if (Number.isFinite(maxVideoSeconds) && requestedDuration > maxVideoSeconds) {
+    return NextResponse.json(
+      {
+        ok: false,
+        success: false,
+        error: `Video length ${requestedDuration}s exceeds ${planTierKey} plan cap (${maxVideoSeconds}s). Upgrade to continue.`,
+        resource: "video_seconds",
+        current: requestedDuration,
+        limit: maxVideoSeconds,
+        plan_tier: planTierKey,
+        remaining: 0,
+      },
+      { status: 402 },
+    );
+  }
+
+  const duration = Math.max(15, Math.min(60, requestedDuration));
   const clientId = typeof body.client_id === "string" ? body.client_id : null;
 
   // ── Step A: script ─────────────────────────────────────────────────

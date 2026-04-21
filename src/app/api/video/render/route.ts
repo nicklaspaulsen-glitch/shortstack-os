@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { limitsForTier, normalizePlanTier } from "@/lib/plan-limits";
 
 // ── VIDEO STYLE PROMPT SYSTEM ──
 // Optimized for social media viral content, cinematic quality, platform-specific aesthetics
@@ -179,6 +180,28 @@ export async function POST(request: NextRequest) {
     plan_only,
     music_mood,
   } = await request.json();
+
+  // ── Tier-based video length cap (per-render ceiling, not monthly) ──
+  // Matches the shape of other checkLimit 402 responses
+  // ({ current, limit, plan_tier }) so the existing quota-wall client code
+  // can surface it uniformly. Not a monthly counter, so no recordUsage.
+  const planTier = normalizePlanTier(profile?.plan_tier as string | null | undefined);
+  const { max_video_seconds: maxVideoSeconds } = limitsForTier(planTier);
+  const requestedSeconds = Math.max(0, Number(duration) || 0);
+  if (Number.isFinite(maxVideoSeconds) && requestedSeconds > maxVideoSeconds) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Video length ${requestedSeconds}s exceeds ${planTier} plan cap (${maxVideoSeconds}s). Upgrade to continue.`,
+        resource: "video_seconds",
+        current: requestedSeconds,
+        limit: maxVideoSeconds,
+        plan_tier: planTier,
+        remaining: 0,
+      },
+      { status: 402 },
+    );
+  }
 
   // Track which upstream services we actually *tried* (i.e. were configured
   // and returned a response), and the last error message from a failed call.

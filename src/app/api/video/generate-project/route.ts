@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { limitsForTier, normalizePlanTier } from "@/lib/plan-limits";
 import crypto from "crypto";
 import {
   anthropic,
@@ -276,6 +277,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: "duration_seconds must be positive" },
       { status: 400 }
+    );
+  }
+
+  // ── Tier-based video length cap (per-render ceiling, not monthly) ──
+  // Shape matches other 402 responses ({ current, limit, plan_tier }).
+  const planTierKey = normalizePlanTier(profile?.plan_tier as string | null | undefined);
+  const { max_video_seconds: maxVideoSeconds } = limitsForTier(planTierKey);
+  if (Number.isFinite(maxVideoSeconds) && duration > maxVideoSeconds) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Video length ${duration}s exceeds ${planTierKey} plan cap (${maxVideoSeconds}s). Upgrade to continue.`,
+        resource: "video_seconds",
+        current: duration,
+        limit: maxVideoSeconds,
+        plan_tier: planTierKey,
+        remaining: 0,
+      },
+      { status: 402 },
     );
   }
 

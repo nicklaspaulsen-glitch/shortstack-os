@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Film, Sparkles, Loader, Play, Download,
   Clock, Monitor, Zap, Layers, RefreshCw,
-  Wand2, Palette, Camera, Music, Type
+  Wand2, Palette, Camera, Music, Type, Lock
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PromptEnhancer from "@/components/prompt-enhancer";
@@ -14,6 +15,11 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
+import {
+  limitsForTier,
+  formatVideoDuration,
+  tierForVideoSeconds,
+} from "@/lib/plan-limits";
 
 // Static fallback — real AI-video showcase thumbs from ytimg.com (public CDN).
 // Used only when the preview_content table is unreachable. RollingPreview with
@@ -92,7 +98,7 @@ interface GenerationResult {
 }
 
 export default function AIVideoPage() {
-  useAuth();
+  const { profile } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("9:16");
   const [numFrames, setNumFrames] = useState(24);
@@ -100,6 +106,33 @@ export default function AIVideoPage() {
   const [generating, setGenerating] = useState(false);
   const [results, setResults] = useState<GenerationResult[]>([]);
   const [progress, setProgress] = useState(0);
+
+  // ── Tier-based max video length ──
+  // Cap is per-job (not monthly). 24fps → 1 second = 24 frames.
+  const planTier = profile?.plan_tier ?? "Starter";
+  const tierLimits = limitsForTier(planTier);
+  const maxSeconds = tierLimits.max_video_seconds;
+  const maxFrames = Number.isFinite(maxSeconds)
+    ? Math.max(24, Math.floor(maxSeconds * 24))
+    : Number.POSITIVE_INFINITY;
+
+  // Keep numFrames within the user's tier cap whenever the tier changes.
+  useEffect(() => {
+    if (Number.isFinite(maxFrames) && numFrames > maxFrames) {
+      setNumFrames(maxFrames);
+    }
+  }, [maxFrames, numFrames]);
+
+  // Next tier that *would* unlock more — used in the upgrade lock CTA.
+  const nextTier = Number.isFinite(maxSeconds)
+    ? tierForVideoSeconds(maxSeconds + 1)
+    : null;
+  const nextTierLabel =
+    nextTier
+      ? `${nextTier} — ${formatVideoDuration(
+          limitsForTier(nextTier).max_video_seconds,
+        )}`
+      : null;
 
   // Guided wizard (legacy modal — still accessible from PageHero button)
   const [wizardOpen, setWizardOpen] = useState(false);
@@ -185,30 +218,51 @@ export default function AIVideoPage() {
     {
       id: "duration",
       title: "How long?",
-      description: "Longer clips take more GPU time. 3 seconds is the sweet spot.",
+      description: `Longer clips take more GPU time. 3 seconds is the sweet spot. Your plan (${planTier}) supports up to ${formatVideoDuration(maxSeconds)}.`,
       icon: <Clock size={18} />,
       component: (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {[
-            { f: 24, label: "1s", sub: "Fastest", emoji: "⚡" },
-            { f: 48, label: "2s", sub: "Quick", emoji: "🎯" },
-            { f: 72, label: "3s", sub: "Recommended", emoji: "⭐" },
-            { f: 120, label: "5s", sub: "Max quality", emoji: "💎" },
-          ].map(opt => (
-            <button
-              key={opt.f}
-              onClick={() => setNumFrames(opt.f)}
-              className={`p-3 rounded-xl border transition-all text-center ${
-                numFrames === opt.f
-                  ? "border-gold bg-gold/10"
-                  : "border-border hover:border-gold/30 bg-surface-light"
-              }`}
+        <div className="space-y-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            {[
+              { f: 24, label: "1s", sub: "Fastest", emoji: "⚡" },
+              { f: 48, label: "2s", sub: "Quick", emoji: "🎯" },
+              { f: 72, label: "3s", sub: "Recommended", emoji: "⭐" },
+              { f: 120, label: "5s", sub: "Max quality", emoji: "💎" },
+            ].map(opt => {
+              const locked = opt.f > maxFrames;
+              return (
+                <button
+                  key={opt.f}
+                  onClick={() => !locked && setNumFrames(opt.f)}
+                  disabled={locked}
+                  className={`p-3 rounded-xl border transition-all text-center relative ${
+                    locked
+                      ? "border-gold/30 bg-surface-light/40 opacity-60 cursor-not-allowed"
+                      : numFrames === opt.f
+                        ? "border-gold bg-gold/10"
+                        : "border-border hover:border-gold/30 bg-surface-light"
+                  }`}
+                >
+                  {locked && (
+                    <span className="absolute top-1 right-1">
+                      <Lock size={10} className="text-gold" />
+                    </span>
+                  )}
+                  <div className="text-xl mb-1">{opt.emoji}</div>
+                  <p className="text-sm font-bold">{opt.label}</p>
+                  <p className="text-[9px] text-muted">{opt.sub}</p>
+                </button>
+              );
+            })}
+          </div>
+          {nextTierLabel && (
+            <Link
+              href="/dashboard/upgrade"
+              className="flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
             >
-              <div className="text-xl mb-1">{opt.emoji}</div>
-              <p className="text-sm font-bold">{opt.label}</p>
-              <p className="text-[9px] text-muted">{opt.sub}</p>
-            </button>
-          ))}
+              <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
+            </Link>
+          )}
         </div>
       ),
     },
@@ -243,6 +297,15 @@ export default function AIVideoPage() {
 
   async function generateVideo() {
     if (!prompt.trim()) { toast.error("Enter a video description"); return; }
+    // Client-side tier cap guard. Server re-validates (402) — this is just
+    // the fast-fail so the user doesn't spin for 10 seconds first.
+    const requestedSeconds = Math.round((numFrames / 24) * 30);
+    if (Number.isFinite(maxSeconds) && requestedSeconds > maxSeconds) {
+      toast.error(
+        `Your ${planTier} plan caps videos at ${formatVideoDuration(maxSeconds)}. Upgrade to unlock longer videos.`,
+      );
+      return;
+    }
     setGenerating(true);
     setProgress(0);
 
@@ -283,7 +346,14 @@ export default function AIVideoPage() {
 
       const data = await res.json();
       console.log("[ai-video] /api/video/render response:", data);
-      if (data.success && data.url) {
+      if (res.status === 402) {
+        // Tier cap hit server-side. Shape: { current, limit, plan_tier, resource }
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
+        toast.error(
+          data.error ||
+            `Plan limit hit (${data.plan_tier}: ${data.current}/${data.limit}). Upgrade to continue.`,
+        );
+      } else if (data.success && data.url) {
         setResults(prev => prev.map(r => r.id === id ? { ...r, status: "completed", url: data.url } : r));
         toast.success("Video generated!");
       } else if (data.plan) {
@@ -393,7 +463,7 @@ export default function AIVideoPage() {
     {
       id: "duration",
       title: "Duration",
-      description: "Higgsfield works best at 2-6 seconds. Longer clips cost more GPU time.",
+      description: `Higgsfield works best at 2-6 seconds. Your ${planTier} plan caps at ${formatVideoDuration(maxSeconds)}.`,
       icon: <Clock size={16} />,
       field: {
         type: "choice-cards",
@@ -403,7 +473,7 @@ export default function AIVideoPage() {
           { value: "72", label: "3 seconds", description: "72 frames · Balanced", emoji: "🎯" },
           { value: "120", label: "5 seconds", description: "120 frames · Standard", emoji: "⭐" },
           { value: "144", label: "6 seconds", description: "144 frames · Max quality", emoji: "💎" },
-        ],
+        ].filter(opt => parseInt(opt.value, 10) <= maxFrames),
       },
     },
     {
@@ -579,10 +649,22 @@ export default function AIVideoPage() {
             {/* Frames & Guidance */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Frames</label>
+                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">
+                  Frames
+                  <span className="ml-1 text-muted/70 normal-case tracking-normal">
+                    (max {Number.isFinite(maxFrames) ? maxFrames : "∞"} · {formatVideoDuration(maxSeconds)})
+                  </span>
+                </label>
                 <input
-                  type="number" min={8} max={72} value={numFrames}
-                  onChange={e => setNumFrames(parseInt(e.target.value) || 24)}
+                  type="number"
+                  min={8}
+                  max={Number.isFinite(maxFrames) ? maxFrames : undefined}
+                  value={numFrames}
+                  onChange={e => {
+                    const raw = parseInt(e.target.value) || 24;
+                    const capped = Number.isFinite(maxFrames) ? Math.min(raw, maxFrames) : raw;
+                    setNumFrames(capped);
+                  }}
                   className="input w-full text-xs"
                 />
                 <p className="text-[8px] text-muted mt-0.5">~{(numFrames / 24).toFixed(1)}s at 24fps</p>
@@ -597,6 +679,14 @@ export default function AIVideoPage() {
                 <p className="text-[8px] text-muted mt-0.5">Higher = more prompt adherence</p>
               </div>
             </div>
+            {nextTierLabel && (
+              <Link
+                href="/dashboard/upgrade"
+                className="flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
+              >
+                <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
+              </Link>
+            )}
           </div>
 
           {/* Generate */}

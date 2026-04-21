@@ -4,6 +4,12 @@ import { useState, useEffect, useRef, type ReactNode } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { useManagedClient } from "@/lib/use-managed-client";
+import Link from "next/link";
+import {
+  limitsForTier,
+  formatVideoDuration,
+  tierForVideoSeconds,
+} from "@/lib/plan-limits";
 import {
   Film, Sparkles, Loader, Play, Copy, Download,
   Clock, Camera, Monitor, Zap, Music, Type, Wand2,
@@ -19,7 +25,7 @@ import {
   VolumeX, Waves, ChevronDown, ChevronRight,
   Loader2,
   Cloud, Briefcase, Heart, Headphones, Guitar, Crown, Disc3,
-  Activity,
+  Activity, Lock,
   type LucideIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -1251,6 +1257,20 @@ export default function VideoEditorPage() {
   const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
   const [selectedClient, setSelectedClient] = useState("");
   const supabase = createClient();
+
+  // ── Tier-based max video length (per-render, not monthly) ──
+  const planTier = profile?.plan_tier ?? "Starter";
+  const videoTierLimits = limitsForTier(planTier);
+  const maxVideoSeconds = videoTierLimits.max_video_seconds;
+  const nextVideoTier = Number.isFinite(maxVideoSeconds)
+    ? tierForVideoSeconds(maxVideoSeconds + 1)
+    : null;
+  const nextVideoTierLabel =
+    nextVideoTier
+      ? `${nextVideoTier} — ${formatVideoDuration(
+          limitsForTier(nextVideoTier).max_video_seconds,
+        )}`
+      : null;
 
   // ─── Adobe-Premiere-style multi-track timeline state ──────────────
   // Seeded from result.storyboard when one becomes available.
@@ -3108,7 +3128,7 @@ export default function VideoEditorPage() {
     {
       id: "duration",
       title: "How long should it be?",
-      description: "Shorter videos have higher completion rates. 15-30s is the sweet spot for social.",
+      description: `Shorter videos have higher completion rates. 15-30s is the sweet spot for social. Your ${planTier} plan caps at ${formatVideoDuration(maxVideoSeconds)}.`,
       icon: <Sparkles size={16} />,
       field: {
         type: "choice-cards",
@@ -3120,7 +3140,9 @@ export default function VideoEditorPage() {
           { value: "90", label: "1.5 minutes", description: "Longer narrative", emoji: "📖" },
           { value: "180", label: "3 minutes", description: "Deep dive", emoji: "🔍" },
           { value: "600", label: "10 minutes", description: "Full YouTube video", emoji: "🎥" },
-        ],
+        ].filter(opt =>
+          !Number.isFinite(maxVideoSeconds) || parseInt(opt.value, 10) <= maxVideoSeconds,
+        ),
       },
     },
     {
@@ -6259,9 +6281,24 @@ export default function VideoEditorPage() {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration (sec)</label>
-                  <input type="number" min={5} max={300} value={config.duration}
-                    onChange={e => setConfig({ ...config, duration: parseInt(e.target.value) || 30 })}
+                  <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">
+                    Duration (sec)
+                    <span className="ml-1 text-muted/70 normal-case tracking-normal">
+                      (max {formatVideoDuration(maxVideoSeconds)})
+                    </span>
+                  </label>
+                  <input
+                    type="number"
+                    min={5}
+                    max={Number.isFinite(maxVideoSeconds) ? maxVideoSeconds : undefined}
+                    value={config.duration}
+                    onChange={e => {
+                      const raw = parseInt(e.target.value) || 30;
+                      const capped = Number.isFinite(maxVideoSeconds)
+                        ? Math.min(raw, maxVideoSeconds)
+                        : raw;
+                      setConfig({ ...config, duration: capped });
+                    }}
                     className="input w-full text-xs" />
                 </div>
                 <div>
@@ -6280,6 +6317,14 @@ export default function VideoEditorPage() {
                     className="input w-full text-xs" placeholder="#C9A84C, #1a1a1a" />
                 </div>
               </div>
+              {nextVideoTierLabel && (
+                <Link
+                  href="/dashboard/upgrade"
+                  className="mt-2 flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
+                >
+                  <Lock size={10} /> Upgrade to unlock longer videos ({nextVideoTierLabel})
+                </Link>
+              )}
             </div>
 
             {/* AI Options */}
@@ -7049,20 +7094,48 @@ export default function VideoEditorPage() {
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div>
-              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration</label>
+              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">
+                Duration
+                <span className="ml-1 text-muted/70 normal-case tracking-normal">
+                  (max {formatVideoDuration(maxVideoSeconds)})
+                </span>
+              </label>
               <select
                 value={aiGenDuration}
-                onChange={e => setAiGenDuration(parseInt(e.target.value, 10))}
+                onChange={e => {
+                  const raw = parseInt(e.target.value, 10);
+                  const capped = Number.isFinite(maxVideoSeconds)
+                    ? Math.min(raw, maxVideoSeconds)
+                    : raw;
+                  setAiGenDuration(capped);
+                }}
                 className="input w-full text-xs"
               >
-                <option value={30}>30 seconds</option>
-                <option value={60}>60 seconds</option>
-                <option value={90}>90 seconds</option>
-                <option value={180}>3 minutes</option>
-                <option value={300}>5 minutes</option>
-                <option value={600}>10 minutes</option>
-                <option value={900}>15 minutes</option>
+                {[
+                  { v: 30, label: "30 seconds" },
+                  { v: 60, label: "60 seconds" },
+                  { v: 90, label: "90 seconds" },
+                  { v: 180, label: "3 minutes" },
+                  { v: 300, label: "5 minutes" },
+                  { v: 600, label: "10 minutes" },
+                  { v: 900, label: "15 minutes" },
+                ].map(opt => {
+                  const locked = Number.isFinite(maxVideoSeconds) && opt.v > maxVideoSeconds;
+                  return (
+                    <option key={opt.v} value={opt.v} disabled={locked}>
+                      {locked ? `🔒 ${opt.label} — upgrade` : opt.label}
+                    </option>
+                  );
+                })}
               </select>
+              {nextVideoTierLabel && (
+                <Link
+                  href="/dashboard/upgrade"
+                  className="mt-1 flex items-center gap-1 text-[9px] text-gold hover:text-amber-400"
+                >
+                  <Lock size={9} /> Upgrade for longer ({nextVideoTierLabel})
+                </Link>
+              )}
             </div>
             <div>
               <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Style Preset</label>
@@ -7135,17 +7208,45 @@ export default function VideoEditorPage() {
             />
           </div>
           <div>
-            <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Duration</label>
+            <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">
+              Duration
+              <span className="ml-1 text-muted/70 normal-case tracking-normal">
+                (max {formatVideoDuration(maxVideoSeconds)})
+              </span>
+            </label>
             <select
               value={adsGenDuration}
-              onChange={e => setAdsGenDuration(parseInt(e.target.value, 10))}
+              onChange={e => {
+                const raw = parseInt(e.target.value, 10);
+                const capped = Number.isFinite(maxVideoSeconds)
+                  ? Math.min(raw, maxVideoSeconds)
+                  : raw;
+                setAdsGenDuration(capped);
+              }}
               className="input w-full text-xs"
             >
-              <option value={15}>15 seconds</option>
-              <option value={30}>30 seconds (recommended)</option>
-              <option value={45}>45 seconds</option>
-              <option value={60}>60 seconds</option>
+              {[
+                { v: 15, label: "15 seconds" },
+                { v: 30, label: "30 seconds (recommended)" },
+                { v: 45, label: "45 seconds" },
+                { v: 60, label: "60 seconds" },
+              ].map(opt => {
+                const locked = Number.isFinite(maxVideoSeconds) && opt.v > maxVideoSeconds;
+                return (
+                  <option key={opt.v} value={opt.v} disabled={locked}>
+                    {locked ? `🔒 ${opt.label} — upgrade` : opt.label}
+                  </option>
+                );
+              })}
             </select>
+            {nextVideoTierLabel && (
+              <Link
+                href="/dashboard/upgrade"
+                className="mt-1 flex items-center gap-1 text-[9px] text-gold hover:text-amber-400"
+              >
+                <Lock size={9} /> Upgrade for longer ({nextVideoTierLabel})
+              </Link>
+            )}
           </div>
           <div className="flex gap-2 pt-2">
             <button

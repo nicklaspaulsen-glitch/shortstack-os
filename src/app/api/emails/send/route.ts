@@ -4,9 +4,10 @@ import { requireOwnedClient } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
 import { sendEmail } from "@/lib/email";
 
-// Send emails via GHL's email system or direct SMTP.
+// Send emails via Resend (HTTP API preferred, SMTP fallback).
 // Returns 4xx/5xx on actual failure so the UI can toast a real error
 // (previously returned 200 { success: false } which the UI read as success).
+// GHL path removed Apr 21 — native Resend is the primary + only sender now.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -81,44 +82,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Try GHL first if the client has a ghl_contact_id, then fall back to
-  // direct SMTP via sendEmail(). Both paths must actually SUCCEED for
-  // `sent` to become true — no more fake-success.
-  const ghlKey = process.env.GHL_API_KEY;
   let sent = false;
   let failureReason = "";
 
-  if (ghlKey && client_id) {
-    const { data: client } = await supabase
-      .from("clients")
-      .select("ghl_contact_id")
-      .eq("id", client_id)
-      .eq("profile_id", ownerId)
-      .single();
-    if (client?.ghl_contact_id) {
-      const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${ghlKey}`,
-          "Content-Type": "application/json",
-          Version: "2021-07-28",
-        },
-        body: JSON.stringify({
-          type: "Email",
-          contactId: client.ghl_contact_id,
-          subject: emailSubject,
-          html: emailBody,
-          emailFrom: "growth@shortstack.work",
-        }),
-      });
-      sent = res.ok;
-      if (!sent) failureReason = `GHL returned ${res.status}`;
-    }
-  }
-
-  // Fallback to direct send via Resend. Prefer the Resend HTTP API so we
-  // can attach the `shortstack_user_id` tag — the webhook uses that tag to
-  // resolve owner for open/click events (see /api/webhooks/resend).
+  // Send via Resend. Prefer the Resend HTTP API so we can attach the
+  // `shortstack_user_id` tag — the webhook uses that tag to resolve owner
+  // for open/click events (see /api/webhooks/resend).
   // If the HTTP path fails or the key isn't available, fall back to SMTP.
   //
   // NOTE on Resend tags: the Resend API accepts `tags: [{name, value}]` on
@@ -126,70 +95,69 @@ export async function POST(request: NextRequest) {
   // `{shortstack_user_id: "abc", ...}`. The webhook route normalizes both
   // shapes; here we keep the array form that the send API expects.
   let resendEmailId: string | null = null;
-  if (!sent) {
-    const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
-    // Use the caller-provided from_email if it looks like a valid email;
-    // otherwise fall back to the env default. Guards against injection via
-    // malformed headers — only a simple single-email form is accepted.
-    const emailRe = /^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/;
-    const callerFromEmail =
-      typeof from_email === "string" && emailRe.test(from_email.trim())
-        ? from_email.trim()
-        : null;
-    const fromEmail = callerFromEmail || process.env.SMTP_FROM || "growth@mail.shortstack.work";
-    const fromDisplay = typeof from_name === "string" && from_name.trim()
-      ? `${from_name.trim()} <${fromEmail}>`
-      : fromEmail;
+  const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
 
-    if (resendKey) {
-      try {
-        const resendRes = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${resendKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            from: fromDisplay,
-            to: [to],
-            subject: emailSubject,
-            html: emailBody,
-            reply_to: typeof reply_to === "string" && reply_to.trim() ? reply_to.trim() : undefined,
-            tags: [
-              { name: "shortstack_user_id", value: ownerId },
-              { name: "source", value: "email_composer" },
-              ...(provider ? [{ name: "provider", value: String(provider).slice(0, 32) }] : []),
-            ],
-          }),
-        });
-        if (resendRes.ok) {
-          sent = true;
-          // Capture the Resend email_id so the webhook can resolve owner
-          // from it if tags get stripped on certain event types. Failures
-          // to parse are non-fatal — the tag path still works normally.
-          try {
-            const resendJson = (await resendRes.json()) as { id?: string };
-            resendEmailId = typeof resendJson?.id === "string" ? resendJson.id : null;
-          } catch {
-            resendEmailId = null;
-          }
-        } else {
-          const errBody = await resendRes.text().catch(() => "");
-          failureReason = `Resend API ${resendRes.status}: ${errBody.slice(0, 200) || "send failed"}`;
+  // Use the caller-provided from_email if it looks like a valid email;
+  // otherwise fall back to the env default. Guards against injection via
+  // malformed headers — only a simple single-email form is accepted.
+  const emailRe = /^[^\s@<>,]+@[^\s@<>,]+\.[^\s@<>,]+$/;
+  const callerFromEmail =
+    typeof from_email === "string" && emailRe.test(from_email.trim())
+      ? from_email.trim()
+      : null;
+  const fromEmail = callerFromEmail || process.env.SMTP_FROM || "growth@mail.shortstack.work";
+  const fromDisplay = typeof from_name === "string" && from_name.trim()
+    ? `${from_name.trim()} <${fromEmail}>`
+    : fromEmail;
+
+  if (resendKey) {
+    try {
+      const resendRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: fromDisplay,
+          to: [to],
+          subject: emailSubject,
+          html: emailBody,
+          reply_to: typeof reply_to === "string" && reply_to.trim() ? reply_to.trim() : undefined,
+          tags: [
+            { name: "shortstack_user_id", value: ownerId },
+            { name: "source", value: "email_composer" },
+            ...(provider ? [{ name: "provider", value: String(provider).slice(0, 32) }] : []),
+          ],
+        }),
+      });
+      if (resendRes.ok) {
+        sent = true;
+        // Capture the Resend email_id so the webhook can resolve owner
+        // from it if tags get stripped on certain event types. Failures
+        // to parse are non-fatal — the tag path still works normally.
+        try {
+          const resendJson = (await resendRes.json()) as { id?: string };
+          resendEmailId = typeof resendJson?.id === "string" ? resendJson.id : null;
+        } catch {
+          resendEmailId = null;
         }
-      } catch (err) {
-        failureReason = err instanceof Error ? err.message : "Resend HTTP request failed";
+      } else {
+        const errBody = await resendRes.text().catch(() => "");
+        failureReason = `Resend API ${resendRes.status}: ${errBody.slice(0, 200) || "send failed"}`;
       }
+    } catch (err) {
+      failureReason = err instanceof Error ? err.message : "Resend HTTP request failed";
     }
+  }
 
-    // SMTP fallback if Resend HTTP path was unavailable or failed
-    if (!sent) {
-      try {
-        sent = await sendEmail({ to, subject: emailSubject, html: emailBody });
-        if (!sent) failureReason = failureReason || "SMTP send returned false";
-      } catch (err) {
-        failureReason = err instanceof Error ? err.message : "SMTP send failed";
-      }
+  // SMTP fallback if Resend HTTP path was unavailable or failed
+  if (!sent) {
+    try {
+      sent = await sendEmail({ to, subject: emailSubject, html: emailBody });
+      if (!sent) failureReason = failureReason || "SMTP send returned false";
+    } catch (err) {
+      failureReason = err instanceof Error ? err.message : "SMTP send failed";
     }
   }
 
@@ -217,7 +185,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: failureReason || "Email delivery failed — no GHL contact and SMTP fallback errored.",
+        error: failureReason || "Email delivery failed — Resend HTTP send and SMTP fallback both errored.",
       },
       { status: 502 },
     );
