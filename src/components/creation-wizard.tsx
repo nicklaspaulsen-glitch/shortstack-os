@@ -11,6 +11,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Check, Sparkles, X, Zap, Image as ImageIcon, Type, Palette, Film, Music, Wand2, RefreshCw } from "lucide-react";
 import { mergeNonEmpty } from "@/lib/merge-patch";
+import { EmojiIcon } from "@/lib/ui/emoji-icon-map";
 
 /* ── Types ───────────────────────────────────────────────────────────── */
 
@@ -449,32 +450,56 @@ function FieldRenderer({
 
     case "choice-cards":
       return (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {(field.options || []).map(opt => {
             const selected = value === opt.value;
             return (
               <button
                 key={opt.value}
                 onClick={() => onChange(opt.value)}
-                className={`relative text-left p-3 rounded-xl border transition-all hover-lift ${
-                  selected ? "border-gold bg-gold/10 shadow-lg shadow-gold/10" : "border-border hover:border-gold/30 bg-surface-light"
+                className={`group relative text-left p-3.5 rounded-xl border bg-surface-light/50 backdrop-blur-sm transition-all duration-200 hover:translate-y-[-2px] ${
+                  selected
+                    ? "border-gold/70 bg-gold/[0.08] shadow-[0_4px_20px_-4px_rgba(218,165,32,0.35)] ring-1 ring-gold/40"
+                    : "border-border hover:border-gold/40 hover:shadow-md"
                 }`}
               >
-                {opt.preview && (
-                  <div className={`h-14 rounded-lg mb-2 ${opt.preview}`} />
+                {/* subtle gold-gradient border glow on hover, only when unselected */}
+                {!selected && (
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-gold/10 via-transparent to-transparent"
+                    aria-hidden
+                  />
                 )}
-                <div className="flex items-start gap-1.5">
-                  {opt.emoji && <span className="text-sm">{opt.emoji}</span>}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold truncate">{opt.label}</p>
+                {opt.preview && (
+                  <div className={`relative h-14 rounded-lg mb-2.5 ${opt.preview}`} />
+                )}
+                <div className="relative flex items-start gap-2.5">
+                  {/* 40×40 gold-tinted square with a lucide icon (or Sparkles fallback) */}
+                  {(opt.emoji || opt.icon) && (
+                    <div
+                      className={`w-10 h-10 shrink-0 rounded-lg flex items-center justify-center transition-colors ${
+                        selected
+                          ? "bg-gold/20 text-gold"
+                          : "bg-gold/[0.08] text-gold/85 group-hover:bg-gold/15 group-hover:text-gold"
+                      }`}
+                    >
+                      {opt.icon ? opt.icon : <EmojiIcon emoji={opt.emoji} size={18} strokeWidth={1.75} />}
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0 pt-0.5">
+                    <p className="text-[13px] leading-snug font-medium text-foreground tracking-tight truncate">
+                      {opt.label}
+                    </p>
                     {opt.description && (
-                      <p className="text-[9px] text-muted line-clamp-2 mt-0.5">{opt.description}</p>
+                      <p className="text-[10px] text-muted line-clamp-2 mt-1 leading-snug">
+                        {opt.description}
+                      </p>
                     )}
                   </div>
                 </div>
                 {selected && (
-                  <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-gold flex items-center justify-center">
-                    <Check size={9} className="text-black" />
+                  <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-gold flex items-center justify-center shadow-sm shadow-gold/30">
+                    <Check size={9} className="text-black" strokeWidth={3} />
                   </div>
                 )}
               </button>
@@ -504,7 +529,7 @@ function FieldRenderer({
                     : "bg-surface-light border-border text-muted hover:text-foreground"
                 }`}
               >
-                {opt.emoji && <span>{opt.emoji}</span>}
+                {opt.emoji && <EmojiIcon emoji={opt.emoji} size={11} strokeWidth={1.75} />}
                 {opt.label}
                 {selected && <Check size={10} />}
               </button>
