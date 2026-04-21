@@ -582,7 +582,7 @@ export default function Sidebar() {
           const displayName = wlOverride ? wl.company_name! : BRAND.product_name;
           const subtext = wlOverride ? null : `by ${BRAND.company_name}`;
           const logoSrc = wlOverride
-            ? (wl.logo_url || "/icons/shortstack-logo.png")
+            ? (wl.logo_url || "/icons/shortstack-logo.svg")
             : BRAND.logo_svg;
 
           if (collapsed) {

@@ -14,7 +14,7 @@ export interface WhiteLabelConfig {
 
 const DEFAULTS: WhiteLabelConfig = {
   company_name: "ShortStack",
-  logo_url: "/icons/shortstack-logo.png",
+  logo_url: "/icons/shortstack-logo.svg",
   primary_color: "#C9A84C",
   accent_color: "#B8942F",
   favicon_url: null,

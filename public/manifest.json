@@ -15,9 +15,9 @@
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/shortstack-logo.png",
+      "src": "/icons/shortstack-logo.svg",
       "sizes": "any",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any"
     }
   ]

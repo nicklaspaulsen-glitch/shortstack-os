@@ -55,7 +55,7 @@ export default function PublicBookingPage() {
       <div className="w-full max-w-lg">
         {/* Header */}
         <div className="text-center mb-8">
-          <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={40} height={40} className="mx-auto mb-3" />
+          <Image src="/icons/shortstack-logo.svg" alt="ShortStack" width={40} height={40} className="mx-auto mb-3" />
           <h1 className="text-xl font-bold text-white">Book a Free Strategy Call</h1>
           <p className="text-sm text-gray-400 mt-1">30-minute video call to discuss your marketing goals</p>
         </div>

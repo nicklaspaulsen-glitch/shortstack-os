@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ShortStack — primary brand mark (2026 refresh).
+  Concept: stacked rectangles with a slight horizontal offset.
+  Three gold bars of decreasing width evoke "short + stack" directly,
+  signalling an agency operating system built on a clean foundation.
+
+  Palette:
+    Primary gold  #C9A84C  (solid, no gradient — works on both dark and light)
+  Works on dark (#06080c) and light (#FAFAF7) backgrounds.
+  For single-colour contexts (print, embossing, dark watermarks) use
+  shortstack-logo-mono.svg.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="ShortStack">
+  <title>ShortStack</title>
+  <!-- Bottom bar — widest, sits "below" -->
+  <rect x="10" y="42" width="44" height="10" rx="3" fill="#C9A84C" opacity="0.55"/>
+  <!-- Middle bar — offset right -->
+  <rect x="14" y="27" width="38" height="10" rx="3" fill="#C9A84C" opacity="0.78"/>
+  <!-- Top bar — narrowest, offset further right, full opacity -->
+  <rect x="18" y="12" width="32" height="10" rx="3" fill="#C9A84C"/>
+</svg>

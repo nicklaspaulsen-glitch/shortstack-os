@@ -297,7 +297,7 @@ export default function VoiceAssistant() {
       <div className="bg-gradient-to-r from-gold-dark/20 to-gold/10 px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 bg-gold/20 rounded-full flex items-center justify-center relative">
-            <Image src="/icons/shortstack-logo.png" alt="Assistant" width={20} height={20} />
+            <Image src="/icons/shortstack-logo.svg" alt="Assistant" width={20} height={20} />
             {isSpeaking && <div className="absolute inset-0 rounded-full border-2 border-gold animate-ping" />}
           </div>
           <div>

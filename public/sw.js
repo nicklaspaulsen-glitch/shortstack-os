@@ -1,9 +1,9 @@
-const CACHE_NAME = "shortstack-os-v3";
+const CACHE_NAME = "shortstack-os-v4";
 const OFFLINE_URL = "/dashboard";
 
 // Only cache truly static assets — NOT pages or JS bundles
 const PRECACHE_URLS = [
-  "/icons/shortstack-logo.png",
+  "/icons/shortstack-logo.svg",
   "/manifest.json",
 ];
 

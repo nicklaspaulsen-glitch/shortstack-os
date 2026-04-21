@@ -164,7 +164,7 @@ export default function ClientChatWidget() {
       <div className="bg-surface-light px-4 py-3 flex items-center justify-between border-b border-border">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-gold/10 rounded-full flex items-center justify-center">
-            <Image src="/icons/shortstack-logo.png" alt="Trinity" width={20} height={20} />
+            <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={20} height={20} />
           </div>
           <div>
             <p className="text-sm font-medium text-foreground">Trinity AI</p>

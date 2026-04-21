@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ShortStack — monochrome variant.
+  Uses currentColor so it inherits from the surrounding text colour.
+  Ideal for: email signatures, print, dark-on-light watermarks, anywhere
+  a single-colour mark reads better than the gold primary.
+
+  Usage: <img src="/icons/shortstack-logo-mono.svg" style="color: #000" />
+  or inline with fill="currentColor" in React.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="ShortStack">
+  <title>ShortStack</title>
+  <rect x="10" y="42" width="44" height="10" rx="3" fill="currentColor" opacity="0.55"/>
+  <rect x="14" y="27" width="38" height="10" rx="3" fill="currentColor" opacity="0.78"/>
+  <rect x="18" y="12" width="32" height="10" rx="3" fill="currentColor"/>
+</svg>

@@ -77,6 +77,8 @@ const goldBtn = `
 
 export async function sendWelcomeEmail(email: string, name: string, planTier?: string) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  // Email clients render SVG inconsistently — keep PNG for email rendering.
+  // The PNG will be regenerated from the new SVG in a follow-up asset pass.
   const logoUrl = `${appUrl}/icons/shortstack-logo.png`;
 
   const planBadge = planTier

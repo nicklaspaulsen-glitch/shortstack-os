@@ -46,7 +46,7 @@ export default function ClientSetupPage() {
   const steps = [
     // Step 0: Welcome
     <div key="welcome" className="text-center space-y-6">
-      <Image src="/icons/shortstack-logo.png" alt="Trinity" width={80} height={80} className="mx-auto" />
+      <Image src="/icons/shortstack-logo.svg" alt="Trinity" width={80} height={80} className="mx-auto" />
       <div>
         <h1 className="text-3xl font-bold text-gold">Welcome aboard</h1>
         <p className="text-muted mt-2 max-w-md mx-auto">

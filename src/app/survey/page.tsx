@@ -33,7 +33,7 @@ export default function SurveyPage() {
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: "#0b0d12" }}>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Image src="/icons/shortstack-logo.png" alt="ShortStack" width={36} height={36} className="mx-auto mb-3" />
+          <Image src="/icons/shortstack-logo.svg" alt="ShortStack" width={36} height={36} className="mx-auto mb-3" />
           <h1 className="text-lg font-bold text-white">How are we doing?</h1>
           <p className="text-sm text-gray-400 mt-1">Your feedback helps us improve</p>
         </div>
