@@ -980,7 +980,7 @@ export default function EmailComposerPage() {
                 {provider === "gmail" && !connectedProviders.gmail && (
                   <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
                     <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
-                      <AlertTriangle size={10} /> Gmail isn't connected yet — the send will fail.
+                      <AlertTriangle size={10} /> Gmail isn&apos;t connected yet — the send will fail.
                     </p>
                     <Link
                       href="/dashboard/integrations"
@@ -993,7 +993,7 @@ export default function EmailComposerPage() {
                 {provider === "outlook" && !connectedProviders.outlook && (
                   <div className="mt-2 flex items-center justify-between gap-2 p-2 rounded-lg border border-amber-400/30 bg-amber-400/5">
                     <p className="text-[10px] text-amber-400 flex items-center gap-1.5">
-                      <AlertTriangle size={10} /> Outlook isn't connected yet — the send will fail.
+                      <AlertTriangle size={10} /> Outlook isn&apos;t connected yet — the send will fail.
                     </p>
                     <Link
                       href="/dashboard/integrations"
