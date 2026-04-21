@@ -49,13 +49,52 @@ function LoginForm() {
       if (isSignUp) {
         // Sign up as "admin" when coming from pricing page, otherwise "client"
         const role = planParam ? "admin" : "client";
-        const { error } = await supabase.auth.signUp({
+        const { error: signUpErr } = await supabase.auth.signUp({
           email, password,
           options: { data: { full_name: fullName, role } },
         });
-        if (error) throw error;
-        toast.success("Account created! You can now sign in.");
-        setIsSignUp(false);
+        if (signUpErr) throw signUpErr;
+
+        // Immediately sign them in with the same credentials. Supabase auto-
+        // signs-in when email confirmation is off, but calling explicitly
+        // handles BOTH configurations uniformly.
+        const { error: signInErr } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (signInErr) {
+          // Usually means email confirmation IS enabled. Tell user to check
+          // their email, then they can sign in manually.
+          toast.success("Account created! Check your email to confirm, then sign in.");
+          setIsSignUp(false);
+          return;
+        }
+
+        // Signed in. If they picked a plan from pricing, fire Stripe checkout
+        // immediately so they don't have to click through a second time.
+        if (planParam && planConfig) {
+          toast.loading("Redirecting to checkout...");
+          const res = await fetch("/api/billing/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              plan_tier: planParam,
+              billing_cycle: billingParam === "annual" || billingParam === "yearly" ? "yearly" : "monthly",
+            }),
+          });
+          const data = await res.json();
+          const redirectUrl = data.url || data.checkout_url;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+            return;
+          }
+          toast.dismiss();
+          toast.error(data.error || "Checkout setup failed — subscribe from Settings.");
+        }
+        // No plan selected, or checkout setup failed → land on dashboard
+        router.push("/dashboard");
+        router.refresh();
+        return;
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
