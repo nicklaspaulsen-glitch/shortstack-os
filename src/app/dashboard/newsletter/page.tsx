@@ -15,6 +15,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
+import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 
 // Example newsletter "template covers" shown in the landing-state marquee.
 // Mix of image covers (tall portrait-ish 4:5 to feel like email previews).
@@ -490,14 +491,19 @@ export default function NewsletterPage() {
       icon: <FileText size={18} />,
       canProceed: guidedTopic.trim().length > 0,
       component: (
-        <textarea
-          value={guidedTopic}
-          onChange={e => setGuidedTopic(e.target.value)}
-          placeholder={`e.g., "${new Date().toLocaleString("default", { month: "long" })} round-up: new features, 2 client wins, and what's coming next"`}
-          rows={3}
-          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
-          autoFocus
-        />
+        <div className="space-y-2">
+          <div className="flex justify-end">
+            <AIEnhanceButton value={guidedTopic} onResult={setGuidedTopic} context="newsletter body copy" variant="pill" />
+          </div>
+          <textarea
+            value={guidedTopic}
+            onChange={e => setGuidedTopic(e.target.value)}
+            placeholder={`e.g., "${new Date().toLocaleString("default", { month: "long" })} round-up: new features, 2 client wins, and what's coming next"`}
+            rows={3}
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+            autoFocus
+          />
+        </div>
       ),
     },
     {
@@ -667,18 +673,24 @@ export default function NewsletterPage() {
           {/* Main editor */}
           <div className="lg:col-span-2 space-y-3">
             {/* Subject line */}
-            <div className="relative">
-              <input
-                value={subject} onChange={e => setSubject(e.target.value)}
-                className="input w-full text-sm font-medium pr-24"
-                placeholder="Newsletter subject line..."
-              />
-              <button
-                onClick={generateSubjectLines}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1"
-              >
-                {aiLoading === "subject" ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
-              </button>
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-[9px] text-muted uppercase tracking-wider">Subject</label>
+                <AIEnhanceButton value={subject} onResult={setSubject} context="newsletter subject line" variant="inline" />
+              </div>
+              <div className="relative">
+                <input
+                  value={subject} onChange={e => setSubject(e.target.value)}
+                  className="input w-full text-sm font-medium pr-24"
+                  placeholder="Newsletter subject line..."
+                />
+                <button
+                  onClick={generateSubjectLines}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-[9px] px-2 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1"
+                >
+                  {aiLoading === "subject" ? <Loader2 size={9} className="animate-spin" /> : <Sparkles size={9} />} AI Ideas
+                </button>
+              </div>
             </div>
 
             {/* AI subject suggestions */}
@@ -758,6 +770,10 @@ export default function NewsletterPage() {
 
                   {block.type === "text" && (
                     <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[9px] text-muted uppercase tracking-wider">Body</label>
+                        <AIEnhanceButton value={block.content.body} onResult={next => updateBlockContent(block.id, "body", next)} context="newsletter body copy" variant="inline" />
+                      </div>
                       <textarea
                         value={block.content.body}
                         onChange={e => updateBlockContent(block.id, "body", e.target.value)}
