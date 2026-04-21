@@ -39,6 +39,7 @@ function LoginForm() {
   const [resetSent, setResetSent] = useState(false);
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
   const supabase = createClient();
 
@@ -47,6 +48,24 @@ function LoginForm() {
     setLoading(true);
     try {
       if (isSignUp) {
+        // Force a plan to be selected BEFORE signup — otherwise users sneak
+        // in with the default "Starter" tier without paying. If they landed
+        // on /login without a ?plan= param and toggled to Sign Up, bounce
+        // them to /pricing to pick first.
+        if (!planParam) {
+          toast("Pick a plan first — you'll be sent straight to checkout after signup.", { icon: "👉" });
+          router.push("/pricing");
+          setLoading(false);
+          return;
+        }
+
+        // Password-confirmation check — must match exactly.
+        if (password !== confirmPassword) {
+          toast.error("Passwords don't match.");
+          setLoading(false);
+          return;
+        }
+
         // Sign up as "admin" when coming from pricing page, otherwise "client"
         const role = planParam ? "admin" : "client";
         const { error: signUpErr } = await supabase.auth.signUp({
@@ -267,6 +286,31 @@ function LoginForm() {
                 </button>
               </div>
             </div>
+
+            {/* Confirm password — signup only */}
+            {isSignUp && (
+              <div>
+                <label className="block text-[10px] text-muted mb-1.5 uppercase tracking-wider font-medium">Confirm Password</label>
+                <div className="relative">
+                  <Lock size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="input w-full text-sm pl-9 pr-10"
+                    placeholder="Re-enter password"
+                    required={isSignUp}
+                    minLength={6}
+                  />
+                </div>
+                {confirmPassword && password !== confirmPassword && (
+                  <p className="mt-1 text-[10px] text-red-400">Passwords don&apos;t match</p>
+                )}
+                {confirmPassword && password === confirmPassword && password.length >= 6 && (
+                  <p className="mt-1 text-[10px] text-emerald-400">✓ Passwords match</p>
+                )}
+              </div>
+            )}
 
             <button type="submit" disabled={loading}
               className="btn-primary w-full text-sm disabled:opacity-50 flex items-center justify-center gap-2">
