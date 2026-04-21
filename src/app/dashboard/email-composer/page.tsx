@@ -91,6 +91,87 @@ export default function EmailComposerPage() {
   const [guidedDirection, setGuidedDirection] = useState("");
   const [guidedGenerating, setGuidedGenerating] = useState(false);
 
+  /* ── Send state ── */
+  const [sending, setSending] = useState(false);
+  const [sendingTest, setSendingTest] = useState(false);
+
+  function isValidEmail(value: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  }
+
+  async function handleSend(opts?: { testMode?: boolean }) {
+    const testMode = opts?.testMode ?? false;
+    const toAddress = email.to.trim();
+
+    if (!toAddress) {
+      toast.error("Add a recipient email first");
+      return;
+    }
+    if (!isValidEmail(toAddress)) {
+      toast.error("Recipient email looks invalid");
+      return;
+    }
+    if (!email.subject.trim()) {
+      toast.error("Subject is required");
+      return;
+    }
+    if (!email.body.trim()) {
+      toast.error("Write a body first");
+      return;
+    }
+
+    const setter = testMode ? setSendingTest : setSending;
+    setter(true);
+    try {
+      const htmlBody = email.body.includes("<") && email.body.includes(">")
+        ? email.body
+        : `<div style="font-family:sans-serif;white-space:pre-wrap;">${email.body
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")}</div>`;
+
+      const res = await fetch("/api/emails/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: toAddress,
+          subject: email.subject.trim(),
+          body: htmlBody,
+          provider,
+          from_name: email.fromName.trim() || undefined,
+          reply_to: email.replyTo.trim() || undefined,
+          test_mode: testMode,
+        }),
+      });
+
+      let data: { success?: boolean; error?: string; subject?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // non-JSON response
+      }
+
+      if (!res.ok || data.success === false) {
+        const msg = data.error || `Send failed (HTTP ${res.status})`;
+        toast.error(msg);
+        return;
+      }
+
+      toast.success(testMode ? "Test email sent" : "Email sent");
+      trackGeneration({
+        category: "email",
+        title: email.subject.slice(0, 120) || "Email sent",
+        source_tool: "Email Composer",
+        content_preview: email.body.slice(0, 200),
+        metadata: { sent: true, provider, test: testMode },
+      });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Network error — email not sent");
+    } finally {
+      setter(false);
+    }
+  }
+
   async function handleAiCompose(mode: ComposeMode) {
     if (mode === "write" && !aiPrompt.trim()) {
       toast.error("Describe what you want to write");
@@ -730,8 +811,12 @@ export default function EmailComposerPage() {
                 <button onClick={handleGenerateSubjectVariants} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5" disabled={loadingVariants}>
                   {loadingVariants ? <Loader2 size={12} className="animate-spin" /> : <TrendingUp size={12} />} Subject Variants
                 </button>
-                <button className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
-                  <Send size={12} /> Send
+                <button
+                  onClick={() => handleSend()}
+                  disabled={sending}
+                  className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />} {sending ? "Sending..." : "Send"}
                 </button>
               </>
             )}
@@ -950,9 +1035,36 @@ export default function EmailComposerPage() {
                 </span>
               </div>
               <div className="flex gap-2">
-                <button className="btn-ghost text-xs flex items-center gap-1"><Save size={12} /> Draft</button>
-                <button className="btn-secondary text-xs flex items-center gap-1"><Send size={12} /> Test Send</button>
-                <button className="btn-primary text-xs flex items-center gap-1"><Send size={12} /> Send</button>
+                <button
+                  onClick={() => {
+                    try {
+                      const key = "email-composer-draft";
+                      localStorage.setItem(key, JSON.stringify({ ...email, provider, savedAt: Date.now() }));
+                      toast.success("Draft saved locally");
+                    } catch {
+                      toast.error("Couldn't save draft");
+                    }
+                  }}
+                  className="btn-ghost text-xs flex items-center gap-1"
+                >
+                  <Save size={12} /> Draft
+                </button>
+                <button
+                  onClick={() => handleSend({ testMode: true })}
+                  disabled={sendingTest || sending}
+                  className="btn-secondary text-xs flex items-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {sendingTest ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                  {sendingTest ? "Sending..." : "Test Send"}
+                </button>
+                <button
+                  onClick={() => handleSend()}
+                  disabled={sending || sendingTest}
+                  className="btn-primary text-xs flex items-center gap-1 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                  {sending ? "Sending..." : "Send"}
+                </button>
               </div>
             </div>
           </div>
@@ -1141,7 +1253,20 @@ export default function EmailComposerPage() {
                     <option>Europe/Stockholm (CET)</option>
                   </select>
                 </div>
-                <button className="btn-primary w-full text-xs flex items-center justify-center gap-1.5">
+                <button
+                  onClick={() => {
+                    if (!scheduledTime) {
+                      toast.error("Pick a date & time first");
+                      return;
+                    }
+                    if (!email.to.trim() || !email.subject.trim() || !email.body.trim()) {
+                      toast.error("Fill recipient, subject, and body first");
+                      return;
+                    }
+                    toast.success("Scheduling arrives soon — send now for instant delivery");
+                  }}
+                  className="btn-primary w-full text-xs flex items-center justify-center gap-1.5"
+                >
                   <Clock size={12} /> Schedule Email
                 </button>
               </div>

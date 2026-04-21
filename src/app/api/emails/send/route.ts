@@ -12,10 +12,25 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { to, subject, body, client_id, template_type } = await request.json();
+  const {
+    to,
+    subject,
+    body,
+    client_id,
+    template_type,
+    from_name,
+    reply_to,
+    provider,
+  } = await request.json();
 
   if (!to || typeof to !== "string") {
     return NextResponse.json({ error: "to (recipient email) required" }, { status: 400 });
+  }
+  // Minimal format guard — the composer validates client-side, but an
+  // empty "to" or malformed value here would 400 SMTP anyway; return
+  // a helpful error instead of a generic 502.
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to.trim())) {
+    return NextResponse.json({ error: "to (recipient email) is not a valid email address" }, { status: 400 });
   }
 
   // Verify the caller owns the client before sending email on their behalf.
@@ -100,13 +115,57 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Fallback to direct SMTP via central Resend.
+  // Fallback to direct send via Resend. Prefer the Resend HTTP API so we
+  // can attach the `shortstack_user_id` tag — the webhook uses that tag to
+  // resolve owner for open/click events (see /api/webhooks/resend:126-130).
+  // If the HTTP path fails or the key isn't available, fall back to SMTP.
   if (!sent) {
-    try {
-      sent = await sendEmail({ to, subject: emailSubject, html: emailBody });
-      if (!sent) failureReason = failureReason || "SMTP send returned false";
-    } catch (err) {
-      failureReason = err instanceof Error ? err.message : "SMTP send failed";
+    const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
+    const fromEmail = process.env.SMTP_FROM || "growth@mail.shortstack.work";
+    const fromDisplay = typeof from_name === "string" && from_name.trim()
+      ? `${from_name.trim()} <${fromEmail}>`
+      : fromEmail;
+
+    if (resendKey) {
+      try {
+        const resendRes = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${resendKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: fromDisplay,
+            to: [to],
+            subject: emailSubject,
+            html: emailBody,
+            reply_to: typeof reply_to === "string" && reply_to.trim() ? reply_to.trim() : undefined,
+            tags: [
+              { name: "shortstack_user_id", value: ownerId },
+              { name: "source", value: "email_composer" },
+              ...(provider ? [{ name: "provider", value: String(provider).slice(0, 32) }] : []),
+            ],
+          }),
+        });
+        if (resendRes.ok) {
+          sent = true;
+        } else {
+          const errBody = await resendRes.text().catch(() => "");
+          failureReason = `Resend API ${resendRes.status}: ${errBody.slice(0, 200) || "send failed"}`;
+        }
+      } catch (err) {
+        failureReason = err instanceof Error ? err.message : "Resend HTTP request failed";
+      }
+    }
+
+    // SMTP fallback if Resend HTTP path was unavailable or failed
+    if (!sent) {
+      try {
+        sent = await sendEmail({ to, subject: emailSubject, html: emailBody });
+        if (!sent) failureReason = failureReason || "SMTP send returned false";
+      } catch (err) {
+        failureReason = err instanceof Error ? err.message : "SMTP send failed";
+      }
     }
   }
 

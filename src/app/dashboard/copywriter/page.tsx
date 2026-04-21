@@ -550,8 +550,12 @@ export default function CopywriterPage() {
         });
         toast.success("Content generated!");
       }
-    } catch {
-      // Network error: fall back to mock
+    } catch (err) {
+      // Network error: show toast but still fall back to mock so the user
+      // can keep working. Previously this was fully silent which made
+      // outages look like success.
+      const msg = err instanceof Error ? err.message : "Network error";
+      toast.error(`AI request failed (${msg}) — showing sample content`);
       await new Promise(r => setTimeout(r, 2000));
       const mockContent = generateMockContent(contentType, topic, tone, audience, keywords, wordCount);
       setOutput(mockContent);
@@ -1010,7 +1014,11 @@ export default function CopywriterPage() {
         });
         toast.success("Content generated!");
       }
-    } catch {
+    } catch (err) {
+      // Surface the error so outages don't look like silent success; still
+      // fall back to sample content so the user can continue.
+      const msg = err instanceof Error ? err.message : "Network error";
+      toast.error(`AI request failed (${msg}) — showing sample content`);
       await new Promise(r => setTimeout(r, 1200));
       const mockContent = generateMockContent(chosenType, chosenTopic, chosenTone, audience, chosenKeywords, wc);
       setOutput(mockContent);

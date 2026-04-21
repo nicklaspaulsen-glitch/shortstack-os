@@ -486,8 +486,8 @@ export default function ScriptLabPage() {
       } else {
         toast.error("Failed to generate", { id: toastId });
       }
-    } catch {
-      toast.error("Error generating script", { id: toastId });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error generating script", { id: toastId });
     } finally {
       setGenerating(false);
     }
@@ -516,8 +516,8 @@ export default function ScriptLabPage() {
       } else {
         toast.error("Rewrite failed", { id: toastId });
       }
-    } catch {
-      toast.error("Error", { id: toastId });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Rewrite error", { id: toastId });
     }
     setRewriting(false);
   }
@@ -561,8 +561,8 @@ export default function ScriptLabPage() {
       } else {
         toast.error(data.error || "Storyboard generation failed", { id: toastId });
       }
-    } catch {
-      toast.error("Error generating storyboard", { id: toastId });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error generating storyboard", { id: toastId });
     } finally {
       setGeneratingStoryboard(false);
     }
@@ -656,8 +656,8 @@ export default function ScriptLabPage() {
       } else {
         toast.error(data.error || "Research failed", { id: toastId });
       }
-    } catch {
-      toast.error("Error", { id: toastId });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Research error", { id: toastId });
     } finally {
       setResearching(false);
     }

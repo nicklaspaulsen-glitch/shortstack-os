@@ -183,22 +183,24 @@ export default function ContentLibraryPage() {
   const fetchAssets = useCallback(async () => {
     try {
       const res = await fetch("/api/content-library");
-      if (!res.ok) throw new Error("Failed to load assets");
+      if (!res.ok) throw new Error(`Failed to load assets (HTTP ${res.status})`);
       const json = await res.json();
       setAssets((json.assets || []).map((a: DbAsset) => dbAssetToView(a)));
-    } catch {
-      // Silently handle — empty state is fine
+    } catch (err) {
+      console.warn("[content-library] fetchAssets failed:", err);
+      // Empty state is better UX than a toast on first paint, but log so
+      // real outages are debuggable.
     }
   }, []);
 
   const fetchCollections = useCallback(async () => {
     try {
       const res = await fetch("/api/content-library/collections");
-      if (!res.ok) throw new Error("Failed to load collections");
+      if (!res.ok) throw new Error(`Failed to load collections (HTTP ${res.status})`);
       const json = await res.json();
       setCollections((json.collections || []).map((c: DbCollection) => dbCollectionToView(c)));
-    } catch {
-      // Silently handle
+    } catch (err) {
+      console.warn("[content-library] fetchCollections failed:", err);
     }
   }, []);
 
@@ -355,8 +357,9 @@ export default function ContentLibraryPage() {
   };
 
   const toggleStar = (id: string) => {
+    // `starred` is client-only until the content_assets table adds a column;
+    // don't claim "Updated" since nothing is persisted to the server yet.
     setAssets(prev => prev.map(a => a.id === id ? { ...a, starred: !a.starred } : a));
-    toast.success("Updated");
   };
 
   // ── Bulk actions ──

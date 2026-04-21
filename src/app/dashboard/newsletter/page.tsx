@@ -280,8 +280,8 @@ export default function NewsletterPage() {
       } else {
         toast.error(data.error || "Failed to generate content");
       }
-    } catch {
-      toast.error("Failed to connect to AI");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to connect to AI");
     }
     setAiLoading(null);
   };
@@ -350,14 +350,10 @@ export default function NewsletterPage() {
       } else {
         toast.error(data.error || "Send failed");
       }
-    } catch {
-      // Demo fallback
-      const list = RECIPIENT_LISTS.find(l => l.id === recipientList);
-      if (sendMode === "schedule") {
-        toast.success(`Newsletter scheduled for ${scheduleDate} to ${list?.count || 0} recipients`);
-      } else {
-        toast.success(`Newsletter sent to ${list?.count || 0} recipients!`);
-      }
+    } catch (err) {
+      // Don't fake success on network errors — the user needs to know the
+      // send never happened. Surface the real error so they can retry.
+      toast.error(err instanceof Error ? err.message : "Network error — newsletter was NOT sent");
     }
     setSending(false);
   };

@@ -520,8 +520,11 @@ export default function CarouselGeneratorPage() {
           return;
         }
       }
-    } catch {
-      // API failed, fall through to mock
+    } catch (err) {
+      // API failed — let the user know and fall through to mock so they
+      // can still see sample output instead of a blank screen.
+      const msg = err instanceof Error ? err.message : "Network error";
+      toast.error(`AI generation failed (${msg}) — showing sample slides`);
     }
 
     // Fallback: mock generation with realistic delay

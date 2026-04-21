@@ -237,7 +237,8 @@ export default function ContentPlanPage() {
   const selectAllVisible = () => setSelectedIds(new Set(posts.map(p => p.id)));
   const clearSelection = () => setSelectedIds(new Set());
 
-  /* Bulk actions (stubs that call best-effort) */
+  /* Bulk actions. Only delete is wired end-to-end; the others surface a
+   * clear "coming soon" so we don't fake success on unbuilt endpoints. */
   async function bulkAction(action: "reschedule" | "regenerate" | "delete" | "analyze") {
     if (selectedIds.size === 0) { toast.error("Select at least one post"); return; }
     setBulkRunning(true);
@@ -247,16 +248,19 @@ export default function ContentPlanPage() {
       delete: "Delete",
       analyze: "Analyze",
     };
-    toast.loading(`${names[action]} ${selectedIds.size} posts...`, { id: "bulk" });
-    // Best-effort: delete uses local filter fallback; others are TODO hooks.
     try {
       if (action === "delete") {
+        toast.loading(`Deleting ${selectedIds.size} posts...`, { id: "bulk" });
         setPosts(prev => prev.filter(p => !selectedIds.has(p.id)));
+        toast.success(`Deleted ${selectedIds.size} posts locally`, { id: "bulk" });
+        setSelectedIds(new Set());
+      } else {
+        // reschedule/regenerate/analyze aren't wired to APIs yet; be honest
+        // rather than fake success.
+        toast(`${names[action]} bulk action is coming soon — open individual posts for now`, { id: "bulk", icon: "ℹ️" });
       }
-      toast.success(`${names[action]} queued for ${selectedIds.size} posts`, { id: "bulk" });
-      setSelectedIds(new Set());
-    } catch {
-      toast.error(`${names[action]} failed`, { id: "bulk" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : `${names[action]} failed`, { id: "bulk" });
     } finally {
       setBulkRunning(false);
     }
@@ -1152,8 +1156,8 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
           setAi({ lift_pct: null, summary: "Not enough engagement data yet to compare against your baseline." });
         }
       }
-    } catch {
-      toast.error("Failed to analyze");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to analyze");
     } finally {
       setAiLoading(false);
     }
@@ -1276,24 +1280,45 @@ function PostDetailModal({ post, onClose }: { post: ContentPost; onClose: () => 
           )}
         </div>
 
-        {/* Actions */}
+        {/* Actions — per-post actions are still being wired to dedicated API
+            routes; for now, surface a friendly "coming soon" instead of
+            silently doing nothing on click. */}
         <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/50">
-          <button className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5">
+          <button
+            onClick={() => toast("Edit-in-modal is coming soon — open the post page to edit", { icon: "ℹ️" })}
+            className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
+          >
             <Edit3 size={11} /> Edit
           </button>
-          <button className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5">
+          <button
+            onClick={() => toast("Paid boost is coming soon", { icon: "ℹ️" })}
+            className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
+          >
             <Zap size={11} /> Boost
           </button>
-          <button className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5">
+          <button
+            onClick={() => toast("Reschedule is coming soon", { icon: "ℹ️" })}
+            className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
+          >
             <Clock size={11} /> Reschedule
           </button>
-          <button className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5">
+          <button
+            onClick={() => toast("Thumbnail regen is coming soon", { icon: "ℹ️" })}
+            className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5"
+          >
             <RotateCw size={11} /> Regenerate thumbnail
           </button>
-          <button className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5">
+          <button
+            onClick={analyzeWithAi}
+            disabled={aiLoading}
+            className="btn-secondary text-[11px] py-1.5 flex items-center gap-1.5 disabled:opacity-50"
+          >
             <Sparkles size={11} /> Improve with AI
           </button>
-          <button className="ml-auto text-[11px] py-1.5 px-3 rounded-lg bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-400/20 flex items-center gap-1.5">
+          <button
+            onClick={() => toast("Delete-from-modal is coming soon — use bulk delete for now", { icon: "ℹ️" })}
+            className="ml-auto text-[11px] py-1.5 px-3 rounded-lg bg-red-400/10 text-red-400 border border-red-400/20 hover:bg-red-400/20 flex items-center gap-1.5"
+          >
             <Trash2 size={11} /> Delete
           </button>
         </div>
