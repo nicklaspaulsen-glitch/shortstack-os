@@ -13,6 +13,7 @@ const notifications = require("./notifications");
 const trayEnhancer = require("./tray-enhancer");
 const watchers = require("./watchers");
 const protocol = require("./protocol");
+const screenRecorder = require("./screen-recorder");
 
 /**
  * Install all desktop-only features.
@@ -32,6 +33,7 @@ const protocol = require("./protocol");
  * @param {boolean} [context.features.tray=true]
  * @param {boolean} [context.features.watchers=true]
  * @param {boolean} [context.features.protocol=true]
+ * @param {boolean} [context.features.screenRecorder=true]
  */
 function install(context = {}) {
   const features = Object.assign({
@@ -40,6 +42,7 @@ function install(context = {}) {
     tray: true,
     watchers: true,
     protocol: true,
+    screenRecorder: true,
   }, context.features || {});
 
   const results = {};
@@ -95,6 +98,16 @@ function install(context = {}) {
     }
   }
 
+  // 6. Screen recorder — registers its own global hotkey (Ctrl+Shift+R)
+  //    and IPC surface. Hidden BrowserWindow handles MediaRecorder.
+  if (features.screenRecorder) {
+    try {
+      results.screenRecorder = screenRecorder.install(context);
+    } catch (err) {
+      results.screenRecorder = { ok: false, error: String(err?.message || err) };
+    }
+  }
+
   // Single diagnostic IPC for the renderer to inspect what landed.
   try {
     const { ipcMain } = require("electron");
@@ -116,4 +129,5 @@ module.exports = {
   trayEnhancer,
   watchers,
   protocol,
+  screenRecorder,
 };

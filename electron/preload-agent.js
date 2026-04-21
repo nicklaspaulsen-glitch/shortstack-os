@@ -91,4 +91,19 @@ contextBridge.exposeInMainWorld("ssDesktop", {
     ipcRenderer.on("desktop:quick-note", handler);
     return () => ipcRenderer.removeListener("desktop:quick-note", handler);
   },
+
+  // ── Screen recording ─────────────────────────────────────────
+  // Returns a promise resolving with { ok, path } while the recording is
+  // in progress; call stopRecording() to finalize. The hotkey Ctrl+Shift+R
+  // is always active even when no UI invokes these methods.
+  startRecording: (opts) => ipcRenderer.invoke("screenRecorder:start", opts || {}),
+  stopRecording: () => ipcRenderer.invoke("screenRecorder:stop"),
+  toggleRecording: () => ipcRenderer.invoke("screenRecorder:toggle"),
+  recordingStatus: () => ipcRenderer.invoke("screenRecorder:status"),
+  listRecordingSources: () => ipcRenderer.invoke("screenRecorder:list-sources"),
+  onRecordingSaved: (callback) => {
+    const handler = (_, data) => callback(data);
+    ipcRenderer.on("desktop:recording-saved", handler);
+    return () => ipcRenderer.removeListener("desktop:recording-saved", handler);
+  },
 });
