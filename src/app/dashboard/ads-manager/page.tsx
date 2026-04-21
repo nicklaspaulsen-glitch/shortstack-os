@@ -134,7 +134,8 @@ const DEFAULT_RULES: AutopilotRule[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// Mock daily chart data
+// Daily chart data — empty until a /api/ads-manager/daily-series route ships.
+// Chart renders blank bars when DAILY_DATA is empty (intended placeholder).
 // ---------------------------------------------------------------------------
 const DAILY_DATA: { date: string; spend: number; conversions: number }[] = [];
 
