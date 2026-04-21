@@ -33,6 +33,40 @@ const TokenUsageWidget = dynamic(() => import("@/components/token-usage-widget")
 const CLIENT_ALLOWED_PREFIXES = ["/dashboard/portal", "/dashboard/community"];
 const CLIENT_DEFAULT = "/dashboard/portal";
 
+// ── Subscription paywall ──
+// Agency owners (role === "admin") MUST have an active Stripe subscription
+// OR a Founder-tier bypass to access the dashboard. Clients / team_members
+// are exempt (their agency pays for them). Routes on this list are always
+// allowed even without an active sub — upgrade page, billing page,
+// pricing, and logout flows.
+const PAYWALL_EXEMPT_ROUTES = [
+  "/dashboard/upgrade",
+  "/dashboard/billing",
+  "/dashboard/pricing",
+];
+const INTERNAL_BYPASS_TIERS = ["Founder"];
+const PAID_TIERS = ["Starter", "Growth", "Pro", "Business", "Unlimited"];
+
+function requiresPaywallRedirect(
+  pathname: string,
+  role: string,
+  planTier: string | null | undefined,
+  subscriptionStatus: string | null | undefined,
+): boolean {
+  if (role !== "admin") return false; // only gate agency owners
+  if (PAYWALL_EXEMPT_ROUTES.some((p) => pathname === p || pathname.startsWith(p + "/"))) {
+    return false;
+  }
+  if (planTier && INTERNAL_BYPASS_TIERS.includes(planTier)) return false; // Founder bypass
+  const isActiveSub =
+    subscriptionStatus === "active" || subscriptionStatus === "trialing";
+  const hasPaidTier = !!planTier && PAID_TIERS.includes(planTier);
+  // Must have BOTH a paid tier AND an active subscription. This is what
+  // closes the "signed up but never paid" hole — plan_tier="unpaid" always
+  // fails; a stale "Starter" without subscription_status also fails.
+  return !(hasPaidTier && isActiveSub);
+}
+
 const TEAM_MEMBER_BLOCKED: string[] = [
   "/dashboard/analytics",
   "/dashboard/reports",
@@ -97,8 +131,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const role = profile.role;
     if (!isRouteAllowed(pathname, role)) {
       router.replace(getDefaultRoute(role));
+      return;
     }
-  }, [pathname, profile?.role, loading, router]);
+    // Paywall — admins (agency owners) must have an active subscription.
+    // Clients / team_members are exempt — their agency owner is the payer.
+    const planTier = (profile as { plan_tier?: string } | null)?.plan_tier;
+    const subStatus = (profile as { subscription_status?: string } | null)?.subscription_status;
+    if (requiresPaywallRedirect(pathname, role, planTier, subStatus)) {
+      toast("Pick a plan to unlock the dashboard.", { icon: "🔒" });
+      router.replace("/dashboard/upgrade");
+    }
+  }, [pathname, profile, loading, router]);
 
   // Dismiss any lingering toasts when the user navigates between pages.
   // Prevents stale errors from one page (e.g. "Invalid time value" on Events)
@@ -145,6 +188,23 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // If we have a profile and the current route is not allowed, don't render
   // the page content while the redirect is in progress
   if (profile?.role && pathname && !isRouteAllowed(pathname, profile.role)) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
+      </div>
+    );
+  }
+  // Paywall spinner — don't flash dashboard content while redirecting to
+  // /dashboard/upgrade for unpaid admins.
+  if (
+    profile?.role && pathname &&
+    requiresPaywallRedirect(
+      pathname,
+      profile.role,
+      (profile as { plan_tier?: string } | null)?.plan_tier,
+      (profile as { subscription_status?: string } | null)?.subscription_status,
+    )
+  ) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-6 h-6 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
