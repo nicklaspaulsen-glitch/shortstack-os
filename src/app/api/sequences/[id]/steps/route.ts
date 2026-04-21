@@ -76,7 +76,10 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
 
   const incoming = Array.isArray(body.steps) ? body.steps : [];
-  for (const [i, s] of incoming.entries()) {
+  // Classic index loop rather than Array.prototype.entries() — tsc's
+  // default target doesn't enable downlevel iteration for ArrayIterator.
+  for (let i = 0; i < incoming.length; i++) {
+    const s = incoming[i];
     if (!s.channel || !VALID_CHANNELS.has(s.channel)) {
       return NextResponse.json(
         { error: `steps[${i}].channel must be one of email|sms|call|dm|wait` },
