@@ -6,6 +6,11 @@
  *
  * Caller defines steps (id, title, description, field type, options).
  * Wizard handles navigation, progress, preview, and submit.
+ *
+ * Choice-card rendering note: option `emoji` values are mapped to Lucide
+ * icons via `@/lib/ui/emoji-icon-map` and rendered in a gold-tinted 40x40
+ * square at the top-left of each card. Raw emoji are never rendered — the
+ * fallback is <Sparkles/>. See also <EmojiIcon/> for the helper.
  */
 
 import { useState, useEffect } from "react";
