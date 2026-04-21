@@ -34,9 +34,7 @@ import CreationWalkthrough, { type WalkthroughStep, type WalkthroughStepStatus }
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
-import PageHero from "@/components/ui/page-hero";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
-import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { ADS_PRESET } from "@/lib/video-presets/ads";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
@@ -103,29 +101,6 @@ function resolveCaptionStyleForApi(uiId: string | undefined): string {
   if (!uiId) return "clean-sans";
   return CAPTION_STYLE_UI_TO_API[uiId] || uiId; // already-valid ids pass through
 }
-
-// Real ad / brand / product thumbnails served from ytimg.com (public CDN).
-// RollingPreview with fetchRemote + tool="video_editor" swaps these for the
-// curated library in `preview_content` at runtime; this list is the fallback
-// if that table is unreachable.
-const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
-// Verified-working YouTube IDs (stable on ytimg.com). Previous list pointed at
-// made-up/retired IDs that all 404'd; these are popular videos that reliably
-// serve maxresdefault.jpg.
-const VIDEO_EDITOR_PREVIEW_ITEMS: RollingPreviewItem[] = [
-  { id: "ve1", src: YT("tQ0yjYUFKAE"), alt: "Dollar Shave Club style ad", tag: "DTC" },
-  { id: "ve2", src: YT("uYPbbksJxIg"), alt: "Oatly style brand ad", tag: "Brand" },
-  { id: "ve3", src: YT("JxS5E-kZc2s"), alt: "Dove style ad", tag: "Ad" },
-  { id: "ve4", src: YT("u4ZoJKF_VuA"), alt: "Red Bull style action spot", tag: "Action" },
-  { id: "ve5", src: YT("L_LUpnjgPso"), alt: "Airbnb style lifestyle ad", tag: "Lifestyle" },
-  { id: "ve6", src: YT("kX3nB4PpJko"), alt: "Creator edit", tag: "Creator" },
-  { id: "ve7", src: YT("M7FIvfx5J10"), alt: "Auto cinematic", tag: "Auto" },
-  { id: "ve8", src: YT("4NRXx6U8ABQ"), alt: "Product reveal", tag: "Product" },
-  { id: "ve9", src: YT("9bZkp7q19f0"), alt: "Music video edit", tag: "Music" },
-  { id: "ve10", src: YT("OPf0YbXqDm0"), alt: "Music video ad", tag: "Music" },
-  { id: "ve11", src: YT("RgKAFK5djSk"), alt: "Film style edit", tag: "Film" },
-  { id: "ve12", src: YT("hT_nvWreIhg"), alt: "Cinematic mood edit", tag: "Cinematic" },
-];
 
 /* ──────────────────── AI API TYPES ──────────────────── */
 
@@ -3236,13 +3211,19 @@ export default function VideoEditorPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Film size={22} />}
-        title="AI Video Editor"
-        subtitle="Script, style, caption. AI writes, GPU renders — you hit publish."
-        gradient="sunset"
-        actions={<AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />}
-      />
+      {/* Minimal top bar — chrome fades into the background */}
+      <div className="flex items-center justify-between gap-4 px-1 pt-1">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold/20 to-amber-500/10 border border-gold/20 flex items-center justify-center text-gold shrink-0">
+            <Film size={16} />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-base font-semibold tracking-tight truncate">Video Editor</h1>
+            <p className="text-[10px] text-muted truncate">AI writes the script, GPU renders the cuts</p>
+          </div>
+        </div>
+        <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+      </div>
 
       {/* Guided Mode — 5-step "4-year-old friendly" flow */}
       {!advancedMode && (
@@ -3418,24 +3399,56 @@ export default function VideoEditorPage() {
         </div>
       )}
 
-      {/* Landing-state rolling preview — compact strip, only while empty. */}
+      {/* Higgsfield-inspired cinematic hero */}
       {advancedMode && !aiProject && (
-        <div className="relative rounded-xl overflow-hidden border border-border bg-surface-light/30 py-2 h-14">
-          <div className="absolute inset-0 pointer-events-none">
-            <RollingPreview
-              items={VIDEO_EDITOR_PREVIEW_ITEMS}
-              rows={1}
-              aspectRatio="9:16"
-              opacity={0.35}
-              speed="medium"
-              fetchRemote
-              tool="video_editor"
-            />
-          </div>
-          <div className="relative text-center px-4">
-            <p className="text-[10px] uppercase tracking-widest text-gold/80 font-semibold">
-              Example ad library — describe a product below to generate a full ad
-            </p>
+        <div className="hf-canvas rounded-3xl p-7 sm:p-9 relative overflow-hidden">
+          <textarea
+            value={config.title}
+            onChange={e => setConfig(prev => ({ ...prev, title: e.target.value, script: e.target.value }))}
+            placeholder="Describe your scene..."
+            className="hf-prompt"
+            style={{ minHeight: 180 }}
+          />
+
+          <div className="mt-6 flex items-end justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                onClick={() => setVideoWizardOpen(true)}
+                className="text-[11px] px-3 py-2 rounded-lg border border-white/10 bg-white/[0.03] text-white/60 hover:text-white/90 hover:border-white/20 flex items-center gap-1.5 transition-all"
+                title="Step-by-step guided wizard"
+              >
+                <Sparkles size={11} strokeWidth={1.5} /> Guided
+              </button>
+              <button
+                onClick={() => setAdsGenOpen(true)}
+                type="button"
+                className="text-[11px] px-3 py-2 rounded-lg border border-red-400/25 bg-red-500/5 text-red-200/80 hover:text-red-100 hover:border-red-400/45 hover:bg-red-500/10 flex items-center gap-1.5 transition-all"
+                title="Paste a product description to get a complete ad video"
+              >
+                <Megaphone size={11} strokeWidth={1.5} /> Full ad from description
+              </button>
+              <select
+                value={selectedClient}
+                onChange={e => setSelectedClient(e.target.value)}
+                className="text-[11px] py-2 px-2.5 rounded-lg border border-white/10 bg-white/[0.03] text-white/60 min-w-[140px] focus:outline-none focus:border-white/25"
+              >
+                <option value="">No client</option>
+                {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
+              </select>
+            </div>
+
+            <button
+              onClick={() => {
+                console.log("[video-editor] Generate with AI clicked, opening modal");
+                setAiGenOpen(true);
+              }}
+              type="button"
+              className="hf-generate flex items-center gap-2.5"
+              title="Generate a full video project with AI"
+            >
+              <Sparkles size={18} strokeWidth={2.25} />
+              <span>Generate</span>
+            </button>
           </div>
         </div>
       )}
@@ -3484,41 +3497,6 @@ export default function VideoEditorPage() {
 
       {advancedMode && (
       <>
-      <div className="flex items-center justify-end flex-wrap gap-3">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setVideoWizardOpen(true)}
-            className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-gold/20 to-amber-500/20 border border-gold/30 text-gold hover:from-gold/30 hover:to-amber-500/30 hover-lift flex items-center gap-1.5"
-            title="Step-by-step guided creation for beginners"
-          >
-            <Sparkles size={12} /> Legacy Wizard
-          </button>
-          <button
-            onClick={() => {
-              console.log("[video-editor] Generate with AI clicked, opening modal");
-              setAiGenOpen(true);
-            }}
-            type="button"
-            className="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5"
-            title="Generate a full video project with AI — script, captions, shotlist, and editor settings"
-          >
-            <Sparkles size={14} /> Generate with AI
-          </button>
-          <button
-            onClick={() => setAdsGenOpen(true)}
-            type="button"
-            className="text-xs px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-500/90 to-amber-500/90 text-white hover:from-red-500 hover:to-amber-500 hover-lift flex items-center gap-1.5 border border-red-400/50"
-            title="Paste a product description → get a complete ad video ready to render"
-          >
-            <Megaphone size={14} /> Generate Full Ad from Description
-          </button>
-          <select value={selectedClient} onChange={e => setSelectedClient(e.target.value)} className="input text-xs py-1.5 min-w-[140px]">
-            <option value="">No client</option>
-            {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
-          </select>
-        </div>
-      </div>
-
       {/* Tabs */}
       <div className="tab-group w-fit">
         {(["create", "storyboard", "templates", "assets", "export"] as const).map(t => (
@@ -4437,8 +4415,8 @@ export default function VideoEditorPage() {
               <CollapsiblePanel
                 id="smart"
                 icon={<Brain size={13} className="text-gold" />}
-                title="Smart Editing Features"
-                desc="AI-powered one-click editing shortcuts"
+                title="Smart editing"
+                desc="One-click shortcuts"
                 open={openPanels.smart}
                 onToggle={() => togglePanel("smart")}
                 badge={(

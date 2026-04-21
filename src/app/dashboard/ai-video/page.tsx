@@ -3,78 +3,20 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  Film, Sparkles, Loader, Play, Download,
-  Clock, Monitor, Zap, Layers, RefreshCw,
-  Wand2, Palette, Camera, Music, Type, Lock
+  Film, Sparkles, Play, Download,
+  Clock, Monitor, Zap, Layers,
+  Wand2, Palette, Camera, Music, Type, Lock,
+  ChevronDown, ChevronRight, AlertCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import PromptEnhancer from "@/components/prompt-enhancer";
 import { useAuth } from "@/lib/auth-context";
-import PageHero from "@/components/ui/page-hero";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
-import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
-import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 import {
   limitsForTier,
   formatVideoDuration,
   tierForVideoSeconds,
 } from "@/lib/plan-limits";
-
-// Static fallback — real AI-video showcase thumbs from ytimg.com (public CDN).
-// Used only when the preview_content table is unreachable. RollingPreview with
-// fetchRemote+tool="ai_video" is the primary source and will replace this.
-const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
-// Verified-working YouTube IDs (stable on ytimg.com). Previous AI-video IDs
-// mostly 404'd — most of those showcase videos are gone from YouTube.
-// Using popular high-traffic videos that reliably serve maxresdefault.jpg.
-const AI_VIDEO_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "v1", src: YT("_9LX9HSQkWo"), alt: "AI video showcase", tag: "AI Video" },
-  { id: "v2", src: YT("HK6y8DAPN_0"), alt: "AI video showcase", tag: "AI Video" },
-  { id: "v3", src: YT("LXb3EKWsInQ"), alt: "Nature 4K", tag: "Nature" },
-  { id: "v4", src: YT("z9Ul9ccDOqE"), alt: "Macro footage", tag: "Macro" },
-  { id: "v5", src: YT("ulCdoCfw-bY"), alt: "Space visual", tag: "Abstract" },
-  { id: "v6", src: YT("bHIhgxav9LY"), alt: "Science visual", tag: "Science" },
-  { id: "v7", src: YT("dQw4w9WgXcQ"), alt: "Music video", tag: "Music" },
-  { id: "v8", src: YT("kJQP7kiw5Fk"), alt: "Cinematic outdoor", tag: "Cinematic" },
-  { id: "v9", src: YT("OPf0YbXqDm0"), alt: "Performance clip", tag: "Performance" },
-  { id: "v10", src: YT("9bZkp7q19f0"), alt: "Dance cinematic", tag: "Motion" },
-  { id: "v11", src: YT("CevxZvSJLk8"), alt: "Nature macro", tag: "Nature" },
-  { id: "v12", src: YT("YQHsXMglC9A"), alt: "Atmospheric", tag: "Moody" },
-];
-
-const AI_VIDEO_TUTORIAL_STEPS: TutorialStep[] = [
-  {
-    number: 1,
-    title: "Describe your scene",
-    description: "Paint a picture with words — subject, lighting, camera, mood. The richer the prompt, the sharper the render.",
-    icon: Type,
-  },
-  {
-    number: 2,
-    title: "Pick style + aspect ratio",
-    description: "Cinematic, anime, vintage, dreamy — match the vibe to the platform (9:16 for Reels, 16:9 for YouTube).",
-    icon: Palette,
-  },
-  {
-    number: 3,
-    title: "Dial in frames & guidance",
-    description: "24 frames = 1s at 24fps. Higher guidance = stricter prompt adherence. Most clips nail it at 72 frames + 7.5.",
-    icon: Sparkles,
-  },
-  {
-    number: 4,
-    title: "Hit Generate → review → download",
-    description: "Your clip renders on RunPod GPU. If GPU is offline, you'll get a scene plan you can use elsewhere.",
-    icon: Play,
-  },
-];
-
-const ASPECT_RATIOS = [
-  { id: "16:9", label: "16:9 Landscape", icon: <Monitor size={12} /> },
-  { id: "9:16", label: "9:16 Vertical", icon: <Film size={12} /> },
-  { id: "1:1", label: "1:1 Square", icon: <Layers size={12} /> },
-];
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -87,6 +29,24 @@ const PROMPT_IDEAS = [
   "Colorful paint splashing in slow motion against white background",
 ];
 
+// Icon-first model picker — all backed by the same Higgsfield/RunPod pipeline.
+// Changing the "style" here adjusts the downstream prompt enhancement, it does
+// NOT change the actual model endpoint (that still goes through /api/video/render).
+const MODELS = [
+  { id: "cinematic", name: "Cinematic", sub: "Film-like grade", icon: Film },
+  { id: "realistic", name: "Realistic", sub: "Documentary", icon: Camera },
+  { id: "animated", name: "Animated", sub: "3D / Pixar", icon: Palette },
+  { id: "anime", name: "Anime", sub: "Japanese", icon: Sparkles },
+  { id: "vintage", name: "Vintage", sub: "Film grain", icon: Layers },
+  { id: "dreamy", name: "Dreamy", sub: "Soft, ethereal", icon: Wand2 },
+];
+
+const ASPECTS = [
+  { id: "9:16", label: "Vertical", w: 36, h: 60 },
+  { id: "16:9", label: "Landscape", w: 64, h: 36 },
+  { id: "1:1", label: "Square", w: 48, h: 48 },
+];
+
 interface GenerationResult {
   id: string;
   prompt: string;
@@ -94,21 +54,45 @@ interface GenerationResult {
   url?: string;
   plan?: string;
   aspect_ratio: string;
+  style?: string;
   created_at: string;
+}
+
+/** Progress ring — premium replacement for a text "generating..." */
+function ProgressRing({ progress, size = 20 }: { progress: number; size?: number }) {
+  const r = (size - 4) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c - (Math.max(0, Math.min(100, progress)) / 100) * c;
+  return (
+    <div className="hf-ring" style={{ width: size, height: size }}>
+      <svg viewBox={`0 0 ${size} ${size}`}>
+        <circle cx={size / 2} cy={size / 2} r={r} className="hf-ring-track" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          className="hf-ring-progress"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+        />
+      </svg>
+    </div>
+  );
 }
 
 export default function AIVideoPage() {
   const { profile } = useAuth();
   const [prompt, setPrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("9:16");
-  const [numFrames, setNumFrames] = useState(24);
+  const [style, setStyle] = useState("cinematic");
+  const [numFrames, setNumFrames] = useState(72);
   const [guidanceScale, setGuidanceScale] = useState(7.5);
   const [generating, setGenerating] = useState(false);
   const [results, setResults] = useState<GenerationResult[]>([]);
   const [progress, setProgress] = useState(0);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
 
-  // ── Tier-based max video length ──
-  // Cap is per-job (not monthly). 24fps → 1 second = 24 frames.
+  // ── Tier-based max video length (preserved from original) ──
   const planTier = profile?.plan_tier ?? "Starter";
   const tierLimits = limitsForTier(planTier);
   const maxSeconds = tierLimits.max_video_seconds;
@@ -116,14 +100,12 @@ export default function AIVideoPage() {
     ? Math.max(24, Math.floor(maxSeconds * 24))
     : Number.POSITIVE_INFINITY;
 
-  // Keep numFrames within the user's tier cap whenever the tier changes.
   useEffect(() => {
     if (Number.isFinite(maxFrames) && numFrames > maxFrames) {
       setNumFrames(maxFrames);
     }
   }, [maxFrames, numFrames]);
 
-  // Next tier that *would* unlock more — used in the upgrade lock CTA.
   const nextTier = Number.isFinite(maxSeconds)
     ? tierForVideoSeconds(maxSeconds + 1)
     : null;
@@ -134,7 +116,7 @@ export default function AIVideoPage() {
         )}`
       : null;
 
-  // Guided wizard (legacy modal — still accessible from PageHero button)
+  // Guided wizard (legacy modal — still accessible to preserve existing flow)
   const [wizardOpen, setWizardOpen] = useState(false);
   useEffect(() => {
     try {
@@ -143,7 +125,7 @@ export default function AIVideoPage() {
     } catch {}
   }, []);
 
-  // Guided Mode (in-page wizard) ↔ Advanced Mode (original controls)
+  // Guided Mode (in-page wizard) ↔ Advanced Mode (Higgsfield-style hero)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("ai-video");
   const [guidedStep, setGuidedStep] = useState(0);
 
@@ -188,11 +170,7 @@ export default function AIVideoPage() {
       icon: <Monitor size={18} />,
       component: (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            { id: "9:16", label: "Vertical", sub: "TikTok, Reels, Shorts", emoji: "📱", box: "h-20 w-12" },
-            { id: "16:9", label: "Landscape", sub: "YouTube, web", emoji: "🖥️", box: "h-12 w-20" },
-            { id: "1:1", label: "Square", sub: "Instagram feed", emoji: "⬜", box: "h-16 w-16" },
-          ].map(ar => (
+          {ASPECTS.map(ar => (
             <button
               key={ar.id}
               onClick={() => setAspectRatio(ar.id)}
@@ -202,13 +180,14 @@ export default function AIVideoPage() {
                   : "border-border hover:border-gold/30 bg-surface-light"
               }`}
             >
-              <div className={`${ar.box} rounded-md bg-gradient-to-br from-gold/30 to-amber-400/20 border border-gold/20 flex items-center justify-center text-lg`}>
-                {ar.emoji}
-              </div>
-              <div>
+              <div
+                className="hf-aspect-frame"
+                style={{ width: ar.w, height: ar.h }}
+                data-active={aspectRatio === ar.id}
+              />
+              <div className="text-center">
                 <p className="text-sm font-semibold">{ar.id}</p>
                 <p className="text-[10px] text-muted">{ar.label}</p>
-                <p className="text-[9px] text-muted/70">{ar.sub}</p>
               </div>
             </button>
           ))}
@@ -224,10 +203,10 @@ export default function AIVideoPage() {
         <div className="space-y-2">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             {[
-              { f: 24, label: "1s", sub: "Fastest", emoji: "⚡" },
-              { f: 48, label: "2s", sub: "Quick", emoji: "🎯" },
-              { f: 72, label: "3s", sub: "Recommended", emoji: "⭐" },
-              { f: 120, label: "5s", sub: "Max quality", emoji: "💎" },
+              { f: 24, label: "1s", sub: "Fastest" },
+              { f: 48, label: "2s", sub: "Quick" },
+              { f: 72, label: "3s", sub: "Recommended" },
+              { f: 120, label: "5s", sub: "Max quality" },
             ].map(opt => {
               const locked = opt.f > maxFrames;
               return (
@@ -248,7 +227,6 @@ export default function AIVideoPage() {
                       <Lock size={10} className="text-gold" />
                     </span>
                   )}
-                  <div className="text-xl mb-1">{opt.emoji}</div>
                   <p className="text-sm font-bold">{opt.label}</p>
                   <p className="text-[9px] text-muted">{opt.sub}</p>
                 </button>
@@ -295,86 +273,7 @@ export default function AIVideoPage() {
     },
   ];
 
-  async function generateVideo() {
-    if (!prompt.trim()) { toast.error("Enter a video description"); return; }
-    // Client-side tier cap guard. Server re-validates (402) — this is just
-    // the fast-fail so the user doesn't spin for 10 seconds first.
-    const requestedSeconds = Math.round((numFrames / 24) * 30);
-    if (Number.isFinite(maxSeconds) && requestedSeconds > maxSeconds) {
-      toast.error(
-        `Your ${planTier} plan caps videos at ${formatVideoDuration(maxSeconds)}. Upgrade to unlock longer videos.`,
-      );
-      return;
-    }
-    setGenerating(true);
-    setProgress(0);
-
-    const progressInterval = setInterval(() => {
-      setProgress(prev => Math.min(prev + Math.random() * 5, 90));
-    }, 1000);
-
-    const id = crypto.randomUUID();
-    setResults(prev => [{
-      id, prompt, status: "generating", aspect_ratio: aspectRatio,
-      created_at: new Date().toISOString(),
-    }, ...prev]);
-
-    try {
-      const res = await fetch("/api/video/render", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: prompt.slice(0, 50),
-          script: prompt,
-          type: aspectRatio === "9:16" ? "reel" : aspectRatio === "1:1" ? "ad" : "youtube",
-          aspect_ratio: aspectRatio,
-          duration: Math.round(numFrames / 24 * 30),
-          style: "cinematic",
-          music_mood: "none",
-          caption_style: "none",
-          include_voiceover: false,
-          include_cta: false,
-          target_platform: "instagram",
-          higgsfield_mode: true,
-          num_frames: numFrames,
-          guidance_scale: guidanceScale,
-        }),
-      });
-
-      clearInterval(progressInterval);
-      setProgress(100);
-
-      const data = await res.json();
-      console.log("[ai-video] /api/video/render response:", data);
-      if (res.status === 402) {
-        // Tier cap hit server-side. Shape: { current, limit, plan_tier, resource }
-        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
-        toast.error(
-          data.error ||
-            `Plan limit hit (${data.plan_tier}: ${data.current}/${data.limit}). Upgrade to continue.`,
-        );
-      } else if (data.success && data.url) {
-        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "completed", url: data.url } : r));
-        toast.success("Video generated!");
-      } else if (data.plan) {
-        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "plan", plan: data.plan } : r));
-        toast.success("Video plan created (GPU endpoint not configured — showing scene plan)");
-      } else {
-        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
-        const attemptedMsg = Array.isArray(data.attempted) && data.attempted.length > 0
-          ? `Video render failed. Tried: ${data.attempted.join(", ")}`
-          : (data.error || "Generation failed");
-        toast.error(attemptedMsg);
-      }
-    } catch (err) {
-      console.error("[ai-video] generateVideo error:", err);
-      clearInterval(progressInterval);
-      setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
-      toast.error("Connection error");
-    }
-    setGenerating(false);
-  }
-
+  // Legacy wizard config preserved — same API shape as before
   const videoGenWizardSteps: WizardStep[] = [
     {
       id: "what",
@@ -392,14 +291,12 @@ export default function AIVideoPage() {
         type: "choice-cards",
         key: "style",
         options: [
-          { value: "cinematic", label: "Cinematic", description: "Film-like, dramatic lighting", emoji: "🎬", preview: "bg-gradient-to-br from-orange-500/40 to-teal-500/40" },
-          { value: "realistic", label: "Realistic", description: "Natural, documentary feel", emoji: "📷", preview: "bg-gradient-to-br from-stone-500/40 to-slate-500/40" },
-          { value: "animated", label: "Animated", description: "3D animation, Pixar-like", emoji: "🎨", preview: "bg-gradient-to-br from-pink-500/40 to-purple-500/40" },
-          { value: "anime", label: "Anime", description: "Japanese animation style", emoji: "🌸", preview: "bg-gradient-to-br from-rose-400/40 to-indigo-500/40" },
-          { value: "vintage", label: "Vintage", description: "Film grain, retro colors", emoji: "📼", preview: "bg-gradient-to-br from-amber-500/40 to-red-700/40" },
-          { value: "futuristic", label: "Futuristic", description: "Neon, cyberpunk", emoji: "🤖", preview: "bg-gradient-to-br from-cyan-500/40 to-purple-700/40" },
-          { value: "dreamy", label: "Dreamy", description: "Soft, ethereal", emoji: "☁️", preview: "bg-gradient-to-br from-pink-300/40 to-blue-300/40" },
-          { value: "dark", label: "Dark/Moody", description: "Low-key, dramatic", emoji: "🌑", preview: "bg-gradient-to-br from-slate-900 to-red-900/40" },
+          { value: "cinematic", label: "Cinematic", description: "Film-like, dramatic lighting", preview: "bg-gradient-to-br from-orange-500/40 to-teal-500/40" },
+          { value: "realistic", label: "Realistic", description: "Natural, documentary feel", preview: "bg-gradient-to-br from-stone-500/40 to-slate-500/40" },
+          { value: "animated", label: "Animated", description: "3D animation, Pixar-like", preview: "bg-gradient-to-br from-pink-500/40 to-purple-500/40" },
+          { value: "anime", label: "Anime", description: "Japanese animation style", preview: "bg-gradient-to-br from-rose-400/40 to-indigo-500/40" },
+          { value: "vintage", label: "Vintage", description: "Film grain, retro colors", preview: "bg-gradient-to-br from-amber-500/40 to-red-700/40" },
+          { value: "dreamy", label: "Dreamy", description: "Soft, ethereal", preview: "bg-gradient-to-br from-pink-300/40 to-blue-300/40" },
         ],
       },
     },
@@ -412,51 +309,9 @@ export default function AIVideoPage() {
         type: "choice-cards",
         key: "aspectRatio",
         options: [
-          { value: "9:16", label: "9:16 Vertical", description: "TikTok, Reels, Shorts", emoji: "📱" },
-          { value: "16:9", label: "16:9 Landscape", description: "YouTube, web", emoji: "🖥️" },
-          { value: "1:1", label: "1:1 Square", description: "Instagram feed", emoji: "⬜" },
-        ],
-      },
-    },
-    {
-      id: "camera",
-      title: "Camera movement",
-      description: "How should the camera move? Static works for most product shots.",
-      icon: <Camera size={16} />,
-      field: {
-        type: "choice-cards",
-        key: "camera",
-        optional: true,
-        options: [
-          { value: "static", label: "Static", description: "Camera doesn't move", emoji: "📷" },
-          { value: "pan", label: "Pan", description: "Horizontal sweep", emoji: "↔️" },
-          { value: "zoom_in", label: "Zoom In", description: "Slowly approaches subject", emoji: "🔍" },
-          { value: "zoom_out", label: "Zoom Out", description: "Pulls back reveal", emoji: "🔭" },
-          { value: "orbit", label: "Orbit", description: "Circles around subject", emoji: "🌀" },
-          { value: "tracking", label: "Tracking", description: "Follows subject", emoji: "🏃" },
-          { value: "crane", label: "Crane Up", description: "Rises dramatically", emoji: "⬆️" },
-          { value: "dolly", label: "Dolly In", description: "Slow push forward", emoji: "🚄" },
-        ],
-      },
-    },
-    {
-      id: "mood",
-      title: "Mood & energy",
-      description: "Sets the emotional tone.",
-      icon: <Sparkles size={16} />,
-      field: {
-        type: "chip-select",
-        key: "mood",
-        optional: true,
-        options: [
-          { value: "epic", label: "Epic", emoji: "🎭" },
-          { value: "calm", label: "Calm", emoji: "🧘" },
-          { value: "energetic", label: "Energetic", emoji: "⚡" },
-          { value: "mysterious", label: "Mysterious", emoji: "🔮" },
-          { value: "warm", label: "Warm", emoji: "☀️" },
-          { value: "cold", label: "Cold", emoji: "❄️" },
-          { value: "happy", label: "Happy", emoji: "😊" },
-          { value: "melancholic", label: "Melancholic", emoji: "🌧️" },
+          { value: "9:16", label: "9:16 Vertical", description: "TikTok, Reels, Shorts" },
+          { value: "16:9", label: "16:9 Landscape", description: "YouTube, web" },
+          { value: "1:1", label: "1:1 Square", description: "Instagram feed" },
         ],
       },
     },
@@ -469,30 +324,11 @@ export default function AIVideoPage() {
         type: "choice-cards",
         key: "duration",
         options: [
-          { value: "48", label: "2 seconds", description: "48 frames · Fast & cheap", emoji: "⚡" },
-          { value: "72", label: "3 seconds", description: "72 frames · Balanced", emoji: "🎯" },
-          { value: "120", label: "5 seconds", description: "120 frames · Standard", emoji: "⭐" },
-          { value: "144", label: "6 seconds", description: "144 frames · Max quality", emoji: "💎" },
+          { value: "48", label: "2 seconds", description: "48 frames · Fast & cheap" },
+          { value: "72", label: "3 seconds", description: "72 frames · Balanced" },
+          { value: "120", label: "5 seconds", description: "120 frames · Standard" },
+          { value: "144", label: "6 seconds", description: "144 frames · Max quality" },
         ].filter(opt => parseInt(opt.value, 10) <= maxFrames),
-      },
-    },
-    {
-      id: "enhancements",
-      title: "AI enhancements (optional)",
-      description: "Toggle extras that improve quality but add render time.",
-      icon: <Wand2 size={16} />,
-      field: {
-        type: "chip-select",
-        key: "enhancements",
-        optional: true,
-        options: [
-          { value: "upscale", label: "4K Upscale", emoji: "🔍" },
-          { value: "motion_smooth", label: "Motion Smoothing", emoji: "✨" },
-          { value: "face_enhance", label: "Face Enhance", emoji: "👤" },
-          { value: "color_grade", label: "Cinematic Grade", emoji: "🎨" },
-          { value: "denoise", label: "Denoise", emoji: "🧹" },
-          { value: "stabilize", label: "Stabilize", emoji: "📐" },
-        ],
       },
     },
     {
@@ -507,38 +343,111 @@ export default function AIVideoPage() {
         placeholder: "No music",
         options: [
           { value: "none", label: "No music" },
-          { value: "cinematic", label: "🎬 Cinematic orchestral" },
-          { value: "epic", label: "🥁 Epic trailer" },
-          { value: "upbeat", label: "⚡ Upbeat electronic" },
-          { value: "chill", label: "🎧 Chill lo-fi" },
-          { value: "ambient", label: "🌊 Ambient atmospheric" },
-          { value: "hip_hop", label: "🎤 Hip-hop beat" },
-          { value: "rock", label: "🎸 Rock" },
-          { value: "piano", label: "🎹 Solo piano" },
-          { value: "emotional", label: "💖 Emotional strings" },
+          { value: "cinematic", label: "Cinematic orchestral" },
+          { value: "epic", label: "Epic trailer" },
+          { value: "upbeat", label: "Upbeat electronic" },
+          { value: "chill", label: "Chill lo-fi" },
+          { value: "ambient", label: "Ambient atmospheric" },
+          { value: "emotional", label: "Emotional strings" },
         ],
       },
     },
   ];
 
+  async function generateVideo() {
+    if (!prompt.trim()) { toast.error("Enter a video description"); return; }
+    // Client-side tier cap guard (preserved). Server re-validates (402).
+    const requestedSeconds = Math.round((numFrames / 24) * 30);
+    if (Number.isFinite(maxSeconds) && requestedSeconds > maxSeconds) {
+      toast.error(
+        `Your ${planTier} plan caps videos at ${formatVideoDuration(maxSeconds)}. Upgrade to unlock longer videos.`,
+      );
+      return;
+    }
+    setGenerating(true);
+    setProgress(0);
+
+    const progressInterval = setInterval(() => {
+      setProgress(prev => Math.min(prev + Math.random() * 5, 90));
+    }, 1000);
+
+    const id = crypto.randomUUID();
+    setResults(prev => [{
+      id, prompt, status: "generating", aspect_ratio: aspectRatio, style,
+      created_at: new Date().toISOString(),
+    }, ...prev]);
+
+    try {
+      const res = await fetch("/api/video/render", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: prompt.slice(0, 50),
+          script: prompt,
+          type: aspectRatio === "9:16" ? "reel" : aspectRatio === "1:1" ? "ad" : "youtube",
+          aspect_ratio: aspectRatio,
+          duration: Math.round(numFrames / 24 * 30),
+          style,
+          music_mood: "none",
+          caption_style: "none",
+          include_voiceover: false,
+          include_cta: false,
+          target_platform: "instagram",
+          higgsfield_mode: true,
+          num_frames: numFrames,
+          guidance_scale: guidanceScale,
+        }),
+      });
+
+      clearInterval(progressInterval);
+      setProgress(100);
+
+      const data = await res.json();
+      if (res.status === 402) {
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
+        toast.error(
+          data.error ||
+            `Plan limit hit (${data.plan_tier}: ${data.current}/${data.limit}). Upgrade to continue.`,
+        );
+      } else if (data.success && data.url) {
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "completed", url: data.url } : r));
+        toast.success("Video generated");
+      } else if (data.plan) {
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "plan", plan: data.plan } : r));
+        toast.success("Video plan created");
+      } else {
+        setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
+        const attemptedMsg = Array.isArray(data.attempted) && data.attempted.length > 0
+          ? `Video render failed. Tried: ${data.attempted.join(", ")}`
+          : (data.error || "Generation failed");
+        toast.error(attemptedMsg);
+      }
+    } catch (err) {
+      console.error("[ai-video] generateVideo error:", err);
+      clearInterval(progressInterval);
+      setResults(prev => prev.map(r => r.id === id ? { ...r, status: "failed" } : r));
+      toast.error("Connection error");
+    }
+    setGenerating(false);
+  }
+
   return (
     <div className="fade-in space-y-5">
-      <PageHero
-        icon={<Film size={28} />}
-        title="AI Video Generation"
-        subtitle="Text-to-video powered by Higgsfield on RunPod GPU."
-        gradient="purple"
-        actions={
-          <>
-            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
-            <span className="text-[10px] text-white bg-white/10 border border-white/20 px-2 py-1 rounded-lg flex items-center gap-1">
-              <Zap size={9} /> GPU Serverless
-            </span>
-          </>
-        }
-      />
+      {/* Minimal top bar — no marketing chrome. Just mode toggle + subtle title. */}
+      <div className="flex items-center justify-between gap-4 px-1 pt-1">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gold/20 to-amber-500/10 border border-gold/20 flex items-center justify-center text-gold shrink-0">
+            <Film size={16} />
+          </div>
+          <div className="min-w-0">
+            <h1 className="text-base font-semibold tracking-tight truncate">AI Video</h1>
+            <p className="text-[10px] text-muted truncate">Text → rendered clip · {planTier}</p>
+          </div>
+        </div>
+        <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+      </div>
 
-      {/* Guided Mode — the "4-year-old friendly" path */}
+      {/* Guided Mode — preserved untouched for beginners */}
       {!advancedMode && (
         <Wizard
           steps={guidedSteps}
@@ -546,291 +455,271 @@ export default function AIVideoPage() {
           onStepChange={setGuidedStep}
           finishLabel={generating ? "Generating…" : "Generate video"}
           busy={generating}
-          onFinish={async () => {
-            await generateVideo();
-          }}
+          onFinish={async () => { await generateVideo(); }}
           onCancel={() => setAdvancedMode(true)}
           cancelLabel="Advanced mode"
         />
       )}
 
-      {/* Step-by-step guided wizard */}
+      {/* Legacy modal wizard — preserved for first-run users */}
       <CreationWizard
         open={wizardOpen}
         title="Create Your AI Video"
         subtitle="Step-by-step — describe, pick style, hit generate."
         icon={<Film size={18} />}
         submitLabel="Apply & Generate"
-        initialData={{ prompt, style: "cinematic", aspectRatio, duration: String(numFrames) }}
+        initialData={{ prompt, style, aspectRatio, duration: String(numFrames) }}
         steps={videoGenWizardSteps}
         onClose={() => {
           setWizardOpen(false);
           try { localStorage.setItem("ss-aivideo-wizard-seen", "1"); } catch {}
         }}
         onComplete={async (data) => {
-          // Build an enhanced prompt from the selections
           const parts: string[] = [];
           if (data.prompt) parts.push(data.prompt as string);
-          if (data.style) parts.push(`${data.style} style`);
-          if (data.camera && data.camera !== "static") parts.push(`${(data.camera as string).replace("_", " ")} camera`);
-          if (Array.isArray(data.mood) && data.mood.length > 0) parts.push((data.mood as string[]).join(", ") + " mood");
-          if (Array.isArray(data.enhancements) && data.enhancements.length > 0) parts.push(`with ${(data.enhancements as string[]).join(", ")}`);
-
+          if (data.style) {
+            parts.push(`${data.style} style`);
+            setStyle(data.style as string);
+          }
           const finalPrompt = parts.join(", ");
           setPrompt(finalPrompt);
           if (data.aspectRatio) setAspectRatio(data.aspectRatio as string);
           if (data.duration) setNumFrames(parseInt(data.duration as string));
-
           setWizardOpen(false);
           try { localStorage.setItem("ss-aivideo-wizard-seen", "1"); } catch {}
-          toast.success("Settings applied! Click Generate to create your video.");
+          toast.success("Settings applied. Click Generate to render.");
         }}
       />
 
+      {/* ─────────────── ADVANCED: Higgsfield-style cinematic hero ─────────────── */}
       {advancedMode && (
-      <div className="grid grid-cols-1 lg:grid-cols-7 gap-5">
-        {/* Left — Controls */}
-        <div className="lg:col-span-3 space-y-4">
-          <div className="card space-y-3">
-            <h2 className="section-header">Video Description</h2>
-            <PromptEnhancer
+        <>
+          {/* HERO — huge prompt, dominant generate CTA, minimal chrome */}
+          <div className="hf-canvas rounded-3xl p-8 sm:p-10 relative overflow-hidden">
+            {/* Prompt textarea — the real star */}
+            <textarea
               value={prompt}
-              onChange={setPrompt}
-              type="video"
-              placeholder="Describe the video you want to generate..."
-              rows={4}
+              onChange={e => setPrompt(e.target.value)}
+              placeholder="Describe your scene..."
+              className="hf-prompt"
+              autoFocus
             />
 
-            {/* Quick prompts */}
-            <div>
-              <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5">Try these</p>
-              <div className="flex flex-wrap gap-1.5">
+            {/* Inspiration chips — low-key, tucked under the prompt */}
+            {!prompt && (
+              <div className="mt-4 flex flex-wrap gap-1.5">
                 {PROMPT_IDEAS.slice(0, 4).map((idea, i) => (
                   <button
                     key={i}
                     onClick={() => setPrompt(idea)}
-                    className="text-[8px] text-muted hover:text-foreground bg-surface-light/50 hover:bg-surface-light px-2 py-1 rounded-md border border-border/30 transition-all truncate max-w-[200px]"
+                    className="text-[10px] text-white/40 hover:text-white/80 px-2.5 py-1 rounded-full border border-white/8 hover:border-white/20 transition-all"
                   >
-                    {idea.slice(0, 50)}...
+                    {idea.slice(0, 48)}…
                   </button>
                 ))}
               </div>
-            </div>
-          </div>
+            )}
 
-          {/* Settings */}
-          <div className="card space-y-3">
-            <h2 className="section-header">Settings</h2>
+            {/* Bottom rail — model picker + aspect picker + generate button */}
+            <div className="mt-7 flex items-end justify-between flex-wrap gap-5">
+              <div className="flex items-end gap-5 flex-wrap">
+                {/* Model picker — icon-first, compact */}
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-white/35 mb-1.5 font-medium">Style</p>
+                  <div className="flex gap-1.5">
+                    {MODELS.map(m => {
+                      const Icon = m.icon;
+                      return (
+                        <button
+                          key={m.id}
+                          onClick={() => setStyle(m.id)}
+                          className="hf-tile min-w-[68px]"
+                          data-active={style === m.id}
+                          title={`${m.name} — ${m.sub}`}
+                        >
+                          <Icon size={15} strokeWidth={1.5} />
+                          <div className="text-center leading-tight">
+                            <p className="text-[10px] font-medium">{m.name}</p>
+                            <p className="text-[8.5px] opacity-60">{m.sub}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
 
-            {/* Aspect ratio */}
-            <div>
-              <label className="block text-[9px] text-muted uppercase tracking-wider mb-1.5">Aspect Ratio</label>
-              <div className="grid grid-cols-3 gap-2">
-                {ASPECT_RATIOS.map(ar => (
-                  <button
-                    key={ar.id}
-                    onClick={() => setAspectRatio(ar.id)}
-                    className={`p-2.5 rounded-xl border text-center transition-all ${
-                      aspectRatio === ar.id
-                        ? "border-gold/30 bg-gold/[0.05]"
-                        : "border-border hover:border-gold/15"
-                    }`}
-                  >
-                    <div className="flex items-center justify-center gap-1.5 mb-0.5">
-                      {ar.icon}
-                      <span className="text-[10px] font-semibold">{ar.id}</span>
-                    </div>
-                    <p className="text-[8px] text-muted">{ar.label}</p>
-                  </button>
-                ))}
+                {/* Aspect picker — visual mini frames */}
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-white/35 mb-1.5 font-medium">Aspect</p>
+                  <div className="flex gap-1.5">
+                    {ASPECTS.map(ar => (
+                      <button
+                        key={ar.id}
+                        onClick={() => setAspectRatio(ar.id)}
+                        className="hf-tile min-w-[68px]"
+                        data-active={aspectRatio === ar.id}
+                        title={`${ar.id} ${ar.label}`}
+                      >
+                        <div
+                          className="hf-aspect-frame flex items-center justify-center"
+                          style={{
+                            width: Math.min(ar.w, 28),
+                            height: Math.min(ar.h, 28),
+                          }}
+                        />
+                        <p className="text-[10px] font-medium">{ar.id}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Frames & Guidance */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">
-                  Frames
-                  <span className="ml-1 text-muted/70 normal-case tracking-normal">
-                    (max {Number.isFinite(maxFrames) ? maxFrames : "∞"} · {formatVideoDuration(maxSeconds)})
-                  </span>
-                </label>
-                <input
-                  type="number"
-                  min={8}
-                  max={Number.isFinite(maxFrames) ? maxFrames : undefined}
-                  value={numFrames}
-                  onChange={e => {
-                    const raw = parseInt(e.target.value) || 24;
-                    const capped = Number.isFinite(maxFrames) ? Math.min(raw, maxFrames) : raw;
-                    setNumFrames(capped);
-                  }}
-                  className="input w-full text-xs"
-                />
-                <p className="text-[8px] text-muted mt-0.5">~{(numFrames / 24).toFixed(1)}s at 24fps</p>
-              </div>
-              <div>
-                <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Guidance Scale</label>
-                <input
-                  type="number" min={1} max={20} step={0.5} value={guidanceScale}
-                  onChange={e => setGuidanceScale(parseFloat(e.target.value) || 7.5)}
-                  className="input w-full text-xs"
-                />
-                <p className="text-[8px] text-muted mt-0.5">Higher = more prompt adherence</p>
-              </div>
-            </div>
-            {nextTierLabel && (
-              <Link
-                href="/dashboard/upgrade"
-                className="flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
+              {/* Generate — big, gold, pulsing */}
+              <button
+                onClick={generateVideo}
+                disabled={generating || !prompt.trim()}
+                className="hf-generate flex items-center gap-2.5 shrink-0"
               >
-                <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
-              </Link>
-            )}
-          </div>
-
-          {/* Generate */}
-          <button
-            onClick={generateVideo}
-            disabled={generating || !prompt.trim()}
-            className="btn-primary w-full flex items-center justify-center gap-2 text-sm disabled:opacity-50"
-          >
-            {generating ? (
-              <>
-                <Loader size={16} className="animate-spin" />
-                Generating... {Math.round(progress)}%
-              </>
-            ) : (
-              <>
-                <Sparkles size={16} />
-                Generate Video
-              </>
-            )}
-          </button>
-
-          {generating && (
-            <div className="w-full bg-surface-light rounded-full h-1.5 overflow-hidden">
-              <div
-                className="h-full bg-gold rounded-full transition-all duration-500"
-                style={{ width: `${progress}%` }}
-              />
+                {generating ? (
+                  <>
+                    <ProgressRing progress={progress} size={18} />
+                    <span>{Math.round(progress)}%</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={18} strokeWidth={2.25} />
+                    <span>Generate</span>
+                  </>
+                )}
+              </button>
             </div>
-          )}
-
-          {/* Setup notice */}
-          <div className="card border-gold/10 bg-gold/[0.02]">
-            <h3 className="text-[10px] font-semibold flex items-center gap-1.5 mb-1">
-              <Zap size={10} className="text-gold" /> GPU Setup
-            </h3>
-            <p className="text-[9px] text-muted">
-              Requires <code className="text-[8px] bg-surface-light px-1 py-0.5 rounded">HIGGSFIELD_URL</code> and{" "}
-              <code className="text-[8px] bg-surface-light px-1 py-0.5 rounded">RUNPOD_API_KEY</code> environment
-              variables. Without them, the system generates video plans instead of rendering.
-            </p>
           </div>
-        </div>
 
-        {/* Right — Results */}
-        <div className="lg:col-span-4 space-y-4">
+          {/* Advanced settings — collapsed by default, hover/click to expand */}
+          <div>
+            <button
+              onClick={() => setAdvancedOpen(v => !v)}
+              className="flex items-center gap-1.5 text-[11px] text-white/45 hover:text-white/80 transition-colors px-1"
+            >
+              {advancedOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+              Advanced settings
+              <span className="text-white/25 ml-1">
+                · {(numFrames / 24).toFixed(1)}s · guidance {guidanceScale}
+              </span>
+            </button>
+            {advancedOpen && (
+              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 rounded-2xl border border-white/5 bg-white/[0.015]">
+                <div>
+                  <label className="block text-[9px] text-white/35 uppercase tracking-[0.16em] mb-1.5">
+                    Frames
+                    <span className="normal-case tracking-normal ml-1 text-white/25">
+                      (max {Number.isFinite(maxFrames) ? maxFrames : "∞"})
+                    </span>
+                  </label>
+                  <input
+                    type="number"
+                    min={8}
+                    max={Number.isFinite(maxFrames) ? maxFrames : undefined}
+                    value={numFrames}
+                    onChange={e => {
+                      const raw = parseInt(e.target.value) || 24;
+                      const capped = Number.isFinite(maxFrames) ? Math.min(raw, maxFrames) : raw;
+                      setNumFrames(capped);
+                    }}
+                    className="input w-full text-xs bg-black/40 border-white/10"
+                  />
+                  <p className="text-[9px] text-white/30 mt-1">~{(numFrames / 24).toFixed(1)}s @ 24fps</p>
+                </div>
+                <div>
+                  <label className="block text-[9px] text-white/35 uppercase tracking-[0.16em] mb-1.5">Guidance scale</label>
+                  <input
+                    type="number" min={1} max={20} step={0.5} value={guidanceScale}
+                    onChange={e => setGuidanceScale(parseFloat(e.target.value) || 7.5)}
+                    className="input w-full text-xs bg-black/40 border-white/10"
+                  />
+                  <p className="text-[9px] text-white/30 mt-1">Higher = stricter prompt adherence</p>
+                </div>
+                {nextTierLabel && (
+                  <Link
+                    href="/dashboard/upgrade"
+                    className="col-span-full flex items-center justify-center gap-1.5 text-[10px] text-gold hover:text-amber-400 py-1.5 rounded-lg border border-gold/20 bg-gold/[0.04] transition-all"
+                  >
+                    <Lock size={10} /> Upgrade to unlock longer videos ({nextTierLabel})
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* GALLERY — fullbleed thumbs, no card chrome */}
           {results.length === 0 ? (
-            <div className="relative card-static overflow-hidden py-16 text-center">
-              {/* Rolling preview — pulls real AI video showcases from preview_content */}
-              <div className="absolute inset-0 pointer-events-none">
-                <RollingPreview
-                  items={AI_VIDEO_PREVIEW_FALLBACK}
-                  rows={2}
-                  aspectRatio="16:9"
-                  opacity={0.25}
-                  speed="medium"
-                  fetchRemote
-                  tool="ai_video"
-                />
-              </div>
-              {/* Foreground content */}
-              <div className="relative flex flex-col items-center">
-                <div className="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm">
-                  <Film size={28} className="text-gold" />
-                </div>
-                <h3 className="text-sm font-semibold mb-1">No videos yet</h3>
-                <p className="text-xs text-muted max-w-xs">
-                  Describe a scene and click Generate to create AI-powered video clips.
-                </p>
-                <div className="grid grid-cols-2 gap-3 mt-6 max-w-sm">
-                  <div className="p-3 rounded-xl border border-border bg-surface/80 backdrop-blur-sm text-center">
-                    <Film size={16} className="text-gold mx-auto mb-1" />
-                    <p className="text-[10px] font-semibold">Text to Video</p>
-                    <p className="text-[8px] text-muted">Describe any scene</p>
-                  </div>
-                  <div className="p-3 rounded-xl border border-border bg-surface/80 backdrop-blur-sm text-center">
-                    <RefreshCw size={16} className="text-gold mx-auto mb-1" />
-                    <p className="text-[10px] font-semibold">Open Source</p>
-                    <p className="text-[8px] text-muted">No per-video fees</p>
-                  </div>
-                </div>
-              </div>
+            <div className="text-center py-16 text-white/30">
+              <Film size={28} strokeWidth={1} className="mx-auto mb-3 opacity-50" />
+              <p className="text-sm font-light">Your generations will appear here.</p>
             </div>
           ) : (
-            <div className="space-y-3">
-              {results.map(result => (
-                <div key={result.id} className="card">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium mb-1 line-clamp-2">{result.prompt}</p>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{result.aspect_ratio}</span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {results.map(result => {
+                const isVertical = result.aspect_ratio === "9:16";
+                const isSquare = result.aspect_ratio === "1:1";
+                const aspectClass = isVertical ? "aspect-[9/16]" : isSquare ? "aspect-square" : "aspect-video";
+                return (
+                  <div key={result.id} className={`hf-thumb ${aspectClass} group`}>
+                    {result.url ? (
+                      <video src={result.url} muted loop playsInline onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => e.currentTarget.pause()} />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black">
                         {result.status === "generating" && (
-                          <span className="text-[8px] text-gold flex items-center gap-1">
-                            <Loader size={8} className="animate-spin" /> Generating...
-                          </span>
-                        )}
-                        {result.status === "completed" && (
-                          <span className="text-[8px] text-success flex items-center gap-1">
-                            <Play size={8} /> Ready
-                          </span>
+                          <div className="flex flex-col items-center gap-2 text-white/60">
+                            <ProgressRing progress={progress} size={28} />
+                            <p className="text-[10px] font-light">{Math.round(progress)}%</p>
+                          </div>
                         )}
                         {result.status === "plan" && (
-                          <span className="text-[8px] text-gold flex items-center gap-1">
-                            <Sparkles size={8} /> Plan Ready
-                          </span>
+                          <div className="text-center px-3 text-white/70">
+                            <Sparkles size={16} className="mx-auto mb-1.5 text-gold/70" />
+                            <p className="text-[10px] font-light">Plan ready</p>
+                          </div>
                         )}
                         {result.status === "failed" && (
-                          <span className="text-[8px] text-danger">Failed</span>
+                          <div className="text-center px-3 text-red-300/70">
+                            <AlertCircle size={16} className="mx-auto mb-1.5" />
+                            <p className="text-[10px] font-light">Failed</p>
+                          </div>
                         )}
-                        <span className="text-[8px] text-muted flex items-center gap-1">
-                          <Clock size={8} /> {new Date(result.created_at).toLocaleTimeString()}
-                        </span>
+                      </div>
+                    )}
+                    <div className="hf-thumb-meta">
+                      <p className="line-clamp-2 leading-tight">{result.prompt}</p>
+                      <div className="flex items-center justify-between mt-1 text-[9px] text-white/55">
+                        <span>{result.aspect_ratio} · {result.style || "cinematic"}</span>
+                        {result.url && (
+                          <a
+                            href={result.url}
+                            download
+                            className="flex items-center gap-1 hover:text-white transition-colors"
+                            onClick={e => e.stopPropagation()}
+                          >
+                            <Download size={10} /> Save
+                          </a>
+                        )}
                       </div>
                     </div>
-                    {result.url && (
-                      <a href={result.url} download className="btn-secondary text-[10px] flex items-center gap-1">
-                        <Download size={10} /> Download
-                      </a>
+                    {result.plan && (
+                      <details className="absolute inset-x-0 bottom-0 p-3 bg-black/95 text-white/80 text-[10px] max-h-[70%] overflow-y-auto">
+                        <summary className="cursor-pointer text-gold font-semibold mb-1">Scene plan</summary>
+                        <pre className="whitespace-pre-wrap font-sans leading-snug mt-1.5">{result.plan}</pre>
+                      </details>
                     )}
                   </div>
-                  {result.url && (
-                    <div className="mt-3 rounded-xl overflow-hidden bg-black aspect-video">
-                      <video src={result.url} controls className="w-full h-full object-contain" />
-                    </div>
-                  )}
-                  {result.plan && (
-                    <div className="mt-3 rounded-xl border border-gold/20 bg-gold/[0.03] p-3">
-                      <p className="text-[9px] text-gold uppercase tracking-wider mb-1.5 font-semibold">
-                        AI-Generated Video Plan
-                      </p>
-                      <pre className="text-[10px] text-foreground/90 whitespace-pre-wrap font-sans leading-relaxed">
-                        {result.plan}
-                      </pre>
-                    </div>
-                  )}
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
-        </div>
-      </div>
+        </>
       )}
 
-      {/* Result preview shown in guided mode too (once generated) */}
+      {/* Guided-mode result preview (preserved) */}
       {!advancedMode && results.length > 0 && (
         <div className="space-y-3">
           <h2 className="section-header flex items-center gap-2">
@@ -845,7 +734,7 @@ export default function AIVideoPage() {
                     <span className="text-[8px] bg-surface-light text-muted px-1.5 py-0.5 rounded">{result.aspect_ratio}</span>
                     {result.status === "generating" && (
                       <span className="text-[8px] text-gold flex items-center gap-1">
-                        <Loader size={8} className="animate-spin" /> Generating…
+                        <ProgressRing progress={progress} size={10} /> {Math.round(progress)}%
                       </span>
                     )}
                     {result.status === "completed" && (
@@ -874,14 +763,15 @@ export default function AIVideoPage() {
         </div>
       )}
 
-      {/* How to use it — tutorial walkthrough */}
-      <TutorialSection
-        title="How to use it"
-        subtitle="Four steps from idea to rendered clip."
-        steps={AI_VIDEO_TUTORIAL_STEPS}
-        columns={4}
-        collapsible
-      />
+      {/* Setup / GPU env note — small, at the bottom, easy to miss */}
+      {advancedMode && (
+        <div className="flex items-center gap-2 text-[9px] text-white/25 px-1">
+          <Zap size={10} />
+          <span>
+            GPU rendering requires <code className="text-white/45 bg-white/5 px-1 py-0.5 rounded">HIGGSFIELD_URL</code> + <code className="text-white/45 bg-white/5 px-1 py-0.5 rounded">RUNPOD_API_KEY</code>. Without them, you&apos;ll get a scene plan instead.
+          </span>
+        </div>
+      )}
     </div>
   );
 }
