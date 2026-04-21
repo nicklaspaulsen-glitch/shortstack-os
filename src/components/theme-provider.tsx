@@ -18,7 +18,11 @@ const THEMES: Record<string, { bg: string; surface: string; surfaceLight: string
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    const saved = localStorage.getItem("ss-theme") || "nordic";
+    // Default to "midnight" (dark) so new signups land in a properly
+    // themed UI. "nordic" (light cream) was the original default but it
+    // fights with our hardcoded-dark sidebar and creates a jarring split:
+    // dark chrome + cream content. Dark is the brand intent.
+    const saved = localStorage.getItem("ss-theme") || "midnight";
     applyTheme(saved);
 
     // Hydrate data-theme attribute for CSS variable dark mode overrides

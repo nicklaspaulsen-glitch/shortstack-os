@@ -18,6 +18,25 @@
 :root {
   --wl-primary: initial;
   --wl-accent: initial;
+
+  /* Dark theme baseline — matches the "midnight" theme in ThemeProvider.
+   * Set at :root so SSR'd HTML doesn't flash white before hydration.
+   * ThemeProvider overrides these at runtime if the user picked a
+   * different theme. */
+  --color-background: #06080c;
+  --color-surface: #0c1017;
+  --color-surface-light: #131923;
+  --color-border: #1e2a3a;
+  --color-accent: #C9A84C;
+  --color-text: #e2e8f0;
+  --color-muted: #64748b;
+  --color-background-rgb: 6 8 12;
+  --color-surface-rgb: 12 16 23;
+  --color-surface-light-rgb: 19 25 35;
+  --color-border-rgb: 30 42 58;
+  --color-accent-rgb: 201 168 76;
+  --color-text-rgb: 226 232 240;
+  --color-muted-rgb: 100 116 139;
 }
 
 html {
