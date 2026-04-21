@@ -82,10 +82,13 @@ export default function SettingsPage() {
   const rerender = () => forceRender(n => n + 1);
   const supabase = createClient();
 
-  // API Keys
-  // TODO: fetch from API
+  // API Keys — loaded from /api/settings/api-keys on mount; POST/DELETE write
+  // through to the api_keys table via the same route.
   const [apiKeys, setApiKeys] = useState<Array<{ id: string; name: string; key: string; created: string; last_used: string; status: string }>>([]);
   const [newKeyName, setNewKeyName] = useState("");
+  const [apiKeysLoading, setApiKeysLoading] = useState(false);
+  const [generatingKey, setGeneratingKey] = useState(false);
+  const [justCreatedKey, setJustCreatedKey] = useState<string | null>(null);
 
   // White-label
   const [whiteLabel, setWhiteLabel] = useState({
@@ -233,6 +236,25 @@ export default function SettingsPage() {
   useEffect(() => { if (typeof window !== "undefined") safeSet("ss-workspace", JSON.stringify(workspace)); }, [workspace]);
   useEffect(() => { if (typeof window !== "undefined") safeSet("ss-privacy", JSON.stringify(privacy)); }, [privacy]);
   useEffect(() => { if (typeof window !== "undefined") safeSet("ss-backup", JSON.stringify(backup)); }, [backup]);
+
+  // Load API keys when that tab opens — hits /api/settings/api-keys which
+  // reads the api_keys table (hashed keys, never returns the raw secret
+  // after creation).
+  useEffect(() => {
+    if (tab !== "api_keys") return;
+    setApiKeysLoading(true);
+    (async () => {
+      try {
+        const res = await fetch("/api/settings/api-keys");
+        if (res.ok) {
+          const data = await res.json();
+          setApiKeys(data.keys || []);
+        }
+      } finally {
+        setApiKeysLoading(false);
+      }
+    })();
+  }, [tab]);
 
   // Load usage limits when that tab opens
   useEffect(() => {
@@ -1872,9 +1894,30 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div className="card">
             <h3 className="section-header">API Keys</h3>
-            <p className="text-xs text-muted mb-4">Manage your API keys for external integrations. Keep these secret.</p>
+            <p className="text-xs text-muted mb-4">Manage your API keys for external integrations. The full secret is shown ONCE at creation — copy it immediately.</p>
+
+            {justCreatedKey && (
+              <div className="mb-4 p-3 border border-gold/40 bg-gold/10 rounded-lg">
+                <p className="text-xs font-semibold text-gold mb-1">Your new API key — copy it now:</p>
+                <div className="flex items-center gap-2">
+                  <code className="flex-1 text-xs font-mono p-2 bg-surface rounded overflow-x-auto">{justCreatedKey}</code>
+                  <button
+                    onClick={() => { navigator.clipboard.writeText(justCreatedKey); toast.success("Copied"); }}
+                    className="btn-secondary text-xs"
+                  >Copy</button>
+                  <button
+                    onClick={() => setJustCreatedKey(null)}
+                    className="text-xs text-muted hover:underline"
+                  >Dismiss</button>
+                </div>
+                <p className="text-[10px] text-muted mt-1">This key won&apos;t be shown again.</p>
+              </div>
+            )}
+
             <div className="space-y-2 mb-4">
-              {apiKeys.length === 0 ? (
+              {apiKeysLoading ? (
+                <div className="text-center py-8 text-muted text-sm">Loading keys…</div>
+              ) : apiKeys.length === 0 ? (
                 <div className="text-center py-8 text-muted">
                   <Key size={24} className="mx-auto mb-2 opacity-40" />
                   <p className="text-sm">No API keys yet</p>
@@ -1884,18 +1927,60 @@ export default function SettingsPage() {
                   <div>
                     <p className="text-sm font-medium">{k.name}</p>
                     <p className="text-xs font-mono text-muted">{k.key}</p>
-                    <p className="text-[10px] text-muted">Created: {k.created} | Last used: {k.last_used}</p>
+                    <p className="text-[10px] text-muted">Created: {new Date(k.created).toLocaleDateString()} | Last used: {k.last_used === "Never" ? "Never" : new Date(k.last_used).toLocaleDateString()}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <StatusBadge status={k.status} />
-                    <button onClick={() => { setApiKeys(prev => prev.filter(x => x.id !== k.id)); toast.success("Key revoked"); }} className="text-xs text-danger hover:underline">Revoke</button>
+                    <button
+                      onClick={async () => {
+                        if (!confirm("Revoke this key? Any integration using it will stop working immediately.")) return;
+                        const res = await fetch(`/api/settings/api-keys?id=${encodeURIComponent(k.id)}`, { method: "DELETE" });
+                        if (res.ok) {
+                          setApiKeys(prev => prev.filter(x => x.id !== k.id));
+                          toast.success("Key revoked");
+                        } else {
+                          const data = await res.json().catch(() => ({}));
+                          toast.error(data.error || "Failed to revoke");
+                        }
+                      }}
+                      className="text-xs text-danger hover:underline"
+                    >Revoke</button>
                   </div>
                 </div>
               ))}
             </div>
             <div className="flex gap-2">
               <input value={newKeyName} onChange={e => setNewKeyName(e.target.value)} placeholder="Key name..." className="input flex-1 text-sm" />
-              <button onClick={() => { if (!newKeyName) { toast.error("Enter a name"); return; } setApiKeys(prev => [...prev, { id: `ak_${Date.now()}`, name: newKeyName, key: `ss_live_${Math.random().toString(36).slice(2, 14)}`, created: "2026-04-14", last_used: "Never", status: "active" }]); setNewKeyName(""); toast.success("Key generated"); }} className="btn-primary text-xs">Generate Key</button>
+              <button
+                disabled={generatingKey}
+                onClick={async () => {
+                  if (!newKeyName.trim()) { toast.error("Enter a name"); return; }
+                  setGeneratingKey(true);
+                  try {
+                    const res = await fetch("/api/settings/api-keys", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ name: newKeyName.trim() }),
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                      setJustCreatedKey(data.key);
+                      // Keep UI masked key in the list (never store the raw key in state)
+                      setApiKeys(prev => [
+                        { id: data.id, name: data.name, key: `${data.key_prefix}${"•".repeat(20)}`, created: data.created, last_used: "Never", status: "active" },
+                        ...prev,
+                      ]);
+                      setNewKeyName("");
+                      toast.success("Key generated");
+                    } else {
+                      toast.error(data.error || "Failed to generate");
+                    }
+                  } finally {
+                    setGeneratingKey(false);
+                  }
+                }}
+                className="btn-primary text-xs disabled:opacity-50"
+              >{generatingKey ? "Generating..." : "Generate Key"}</button>
             </div>
           </div>
         </div>
