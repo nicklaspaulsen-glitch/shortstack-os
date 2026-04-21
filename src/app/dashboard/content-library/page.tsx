@@ -611,12 +611,12 @@ export default function ContentLibraryPage() {
               className="input text-xs w-28"
               onKeyDown={e => e.key === "Enter" && bulkTag()}
             />
-            <button onClick={bulkTag} className="btn-ghost text-xs"><Tag size={12} /></button>
+            <button onClick={bulkTag} className="btn-ghost text-xs" aria-label="Apply tag to selected assets"><Tag size={12} /></button>
           </div>
           <button onClick={bulkDelete} className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1">
             <Trash2 size={12} /> Delete
           </button>
-          <button onClick={() => setSelectedAssets(new Set())} className="text-xs text-muted hover:text-white">
+          <button onClick={() => setSelectedAssets(new Set())} className="text-xs text-muted hover:text-white" aria-label="Clear selection">
             <X size={14} />
           </button>
         </div>

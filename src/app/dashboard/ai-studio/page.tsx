@@ -1181,7 +1181,7 @@ function VoiceCloneTool({ processing, setProcessing }: ToolProps) {
                 <div key={i} className="flex items-center gap-1 bg-surface-light border border-border rounded-lg px-2 py-1 text-[10px] text-foreground">
                   <FileAudio size={10} className="text-orange-400" />
                   <span className="truncate max-w-[120px]">{f.name}</span>
-                  <button onClick={() => setVoiceFiles(prev => prev.filter((_, j) => j !== i))} className="text-muted hover:text-red-400">
+                  <button onClick={() => setVoiceFiles(prev => prev.filter((_, j) => j !== i))} className="text-muted hover:text-red-400" aria-label={`Remove ${f.name}`}>
                     <X size={10} />
                   </button>
                 </div>
@@ -1304,7 +1304,8 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={imagePreviews[i]} alt={`Training sample ${i + 1}`} className="w-full h-full object-cover" />
                   <button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))}
-                    className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white flex items-center justify-center">
+                    className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white flex items-center justify-center"
+                    aria-label={`Remove training sample ${i + 1}`}>
                     <X size={8} />
                   </button>
                 </div>
@@ -1410,7 +1411,7 @@ function BatchGenTool({ processing, setProcessing }: ToolProps) {
                   className="flex-1 text-xs bg-surface-light border border-border rounded-lg px-3 py-2 text-foreground" />
                 {prompts.length > 1 && (
                   <button onClick={() => setPrompts(prev => prev.filter((_, j) => j !== i))}
-                    className="text-muted hover:text-red-400"><X size={12} /></button>
+                    className="text-muted hover:text-red-400" aria-label={`Remove prompt ${i + 1}`}><X size={12} /></button>
                 )}
               </div>
             ))}
