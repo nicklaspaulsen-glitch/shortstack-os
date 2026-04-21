@@ -21,6 +21,7 @@ const VALID_TYPES = [
   "appointment_booked",
   "pipeline_stage_changed",
   "webhook_received",
+  "voice_call_completed",
   "schedule",
   "manual",
 ];

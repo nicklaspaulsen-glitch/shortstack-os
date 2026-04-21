@@ -98,12 +98,24 @@ export async function POST(request: NextRequest) {
           Authorization: `Basic ${auth}`,
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams({
-          PhoneNumber: number.phone_number,
-          SmsUrl: `${baseUrl}/api/twilio/sms-webhook?client_id=${client_id}`,
-          VoiceUrl: `${baseUrl}/api/twilio/voice-webhook?client_id=${client_id}`,
-          FriendlyName: `ShortStack - ${clientName}`,
-        }),
+        body: (() => {
+          const params = new URLSearchParams({
+            PhoneNumber: number.phone_number,
+            SmsUrl: `${baseUrl}/api/twilio/sms-webhook?client_id=${client_id}`,
+            VoiceUrl: `${baseUrl}/api/twilio/voice-webhook?client_id=${client_id}`,
+            FriendlyName: `ShortStack - ${clientName}`,
+            // Lifecycle status → voice_calls upsert + Haiku classification +
+            // voice_call_completed workflow trigger live here.
+            StatusCallback: `${baseUrl}/api/twilio/voice-status-callback?client_id=${client_id}`,
+            StatusCallbackMethod: "POST",
+          });
+          // Twilio supports repeating StatusCallbackEvent keys for each phase.
+          params.append("StatusCallbackEvent", "initiated");
+          params.append("StatusCallbackEvent", "ringing");
+          params.append("StatusCallbackEvent", "answered");
+          params.append("StatusCallbackEvent", "completed");
+          return params;
+        })(),
       }
     );
 

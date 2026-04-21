@@ -30,6 +30,7 @@ const VALID_TRIGGER_TYPES: TriggerType[] = [
   "appointment_booked",
   "pipeline_stage_changed",
   "webhook_received",
+  "voice_call_completed",
   "schedule",
   "manual",
 ];

@@ -127,6 +127,24 @@ export async function fireTrigger(
     matchedTriggers.push(t);
   }
 
+  // Also fan out to the simpler `crm_automations` table. Those rows hold
+  // `trigger` + `actions` jsonb, not a full workflow graph, so they need a
+  // separate (lighter) dispatcher. Fire-and-forget — we don't block the main
+  // trigger-dispatch return on it.
+  try {
+    const { fireCrmAutomations } = await import("./crm-automation-dispatch");
+    void fireCrmAutomations({
+      supabase,
+      ownerId: userId,
+      event: triggerType,
+      payload,
+    }).catch((err) =>
+      console.error("[trigger-dispatch] crm dispatch error:", err),
+    );
+  } catch (err) {
+    console.error("[trigger-dispatch] failed to load crm dispatch:", err);
+  }
+
   if (matchedTriggers.length === 0) {
     return { matched: 0, trigger_ids: [], skipped };
   }

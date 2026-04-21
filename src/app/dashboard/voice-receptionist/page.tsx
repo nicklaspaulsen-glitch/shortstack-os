@@ -54,7 +54,15 @@ import EmptyState from "@/components/ui/empty-state";
 // Types
 // ───────────────────────────────────────────────────────────────────
 
-type CallOutcome = "booked" | "qualified" | "spam" | "missed" | "other";
+type CallOutcome =
+  | "booked"
+  | "qualified"
+  | "unqualified"
+  | "spam"
+  | "missed"
+  | "dropped"
+  | "pending"
+  | "other";
 
 interface CallRow {
   id: string;
@@ -64,6 +72,36 @@ interface CallRow {
   outcome: CallOutcome;
   transcriptPreview: string;
   crmLink?: string | null;
+}
+
+// Server row from /api/voice-calls
+interface VoiceCallRow {
+  id: string;
+  twilio_call_sid: string | null;
+  from_number: string | null;
+  to_number: string | null;
+  direction: string | null;
+  duration_seconds: number | null;
+  status: string | null;
+  outcome: string | null;
+  transcript: string | null;
+  recording_url: string | null;
+  started_at: string | null;
+  ended_at: string | null;
+  created_at: string | null;
+  client_id: string | null;
+}
+
+interface VoiceCallsListResponse {
+  ok: boolean;
+  calls: VoiceCallRow[];
+  total: number;
+  stats: {
+    handled: number;
+    booked: number;
+    qualified: number;
+    avg_duration_seconds: number;
+  };
 }
 
 interface ElevenVoice {
@@ -210,6 +248,12 @@ function outcomeMeta(outcome: CallOutcome): {
         className: "bg-sky-500/15 text-sky-300",
         icon: UserCheck,
       };
+    case "unqualified":
+      return {
+        label: "Unqualified",
+        className: "bg-slate-500/15 text-slate-300",
+        icon: PhoneCall,
+      };
     case "spam":
       return {
         label: "Spam",
@@ -222,6 +266,18 @@ function outcomeMeta(outcome: CallOutcome): {
         className: "bg-amber-500/15 text-amber-300",
         icon: AlertCircle,
       };
+    case "dropped":
+      return {
+        label: "Dropped",
+        className: "bg-amber-500/15 text-amber-300",
+        icon: AlertCircle,
+      };
+    case "pending":
+      return {
+        label: "Pending",
+        className: "bg-muted/20 text-muted",
+        icon: Clock,
+      };
     default:
       return {
         label: "Other",
@@ -229,6 +285,41 @@ function outcomeMeta(outcome: CallOutcome): {
         icon: PhoneCall,
       };
   }
+}
+
+// Real voice_calls row → UI CallRow
+function voiceCallToCallRow(v: VoiceCallRow): CallRow {
+  const outcomeRaw = (v.outcome || "pending") as string;
+  const valid: CallOutcome[] = [
+    "booked",
+    "qualified",
+    "unqualified",
+    "spam",
+    "missed",
+    "dropped",
+    "pending",
+    "other",
+  ];
+  const outcome = (valid as string[]).includes(outcomeRaw)
+    ? (outcomeRaw as CallOutcome)
+    : "other";
+  const transcript = (v.transcript || "").trim();
+  return {
+    id: v.id,
+    caller: v.from_number || "Unknown caller",
+    startedAt: v.started_at || v.created_at || new Date().toISOString(),
+    durationSec: v.duration_seconds || 0,
+    outcome,
+    transcriptPreview:
+      transcript.length > 0
+        ? transcript.slice(0, 280) + (transcript.length > 280 ? "…" : "")
+        : v.recording_url
+          ? "Recording available — transcript still processing."
+          : v.status === "completed"
+            ? "No transcript captured for this call."
+            : "Call in progress…",
+    crmLink: v.client_id ? `/dashboard/clients/${v.client_id}` : null,
+  };
 }
 
 /**
@@ -274,6 +365,10 @@ export default function VoiceReceptionistPage() {
   const [agents, setAgents] = useState<ElevenAgent[]>([]);
   const [calls, setCalls] = useState<CallRow[]>([]);
   const [liveBackend, setLiveBackend] = useState(false);
+  const [usingRealCalls, setUsingRealCalls] = useState(false);
+  const [serverStats, setServerStats] = useState<
+    VoiceCallsListResponse["stats"] | null
+  >(null);
   const [config, setConfig] = useState<AgentConfig>(DEFAULT_CONFIG);
   const [savingConfig, setSavingConfig] = useState(false);
   const [creatingAgent, setCreatingAgent] = useState(false);
@@ -338,27 +433,49 @@ export default function VoiceReceptionistPage() {
       /* no-op */
     }
 
-    // 4. Call log — real conversations if ElevenLabs key is set, else demo
+    // 4. Call log — prefer the authoritative voice_calls table (real Twilio
+    //    events + Haiku-classified outcomes). Fall back to ElevenLabs
+    //    conversations list, then to demo data.
+    let gotRealRows = false;
     try {
-      const res = await fetch("/api/eleven-agents/calls", { cache: "no-store" });
+      const res = await fetch("/api/voice-calls?limit=50", { cache: "no-store" });
       if (res.ok) {
-        const data = await res.json();
-        const convos = Array.isArray(data.conversations)
-          ? (data.conversations as ElevenConversation[])
-          : [];
-        if (convos.length > 0) {
-          setCalls(convos.map(convoToCallRow));
+        const data = (await res.json()) as VoiceCallsListResponse;
+        if (Array.isArray(data.calls) && data.calls.length > 0) {
+          setCalls(data.calls.map(voiceCallToCallRow));
+          setServerStats(data.stats || null);
           backendLive = true;
-        } else {
-          // No live calls — hydrate demo list (persist so the first-run user
-          // sees data; a follow-up session uses the same data).
-          loadDemoCalls();
+          gotRealRows = true;
+        } else if (data.stats) {
+          setServerStats(data.stats);
         }
-      } else {
-        loadDemoCalls();
       }
     } catch {
-      loadDemoCalls();
+      /* fall through */
+    }
+    setUsingRealCalls(gotRealRows);
+
+    if (!gotRealRows) {
+      // No voice_calls rows yet — try the ElevenLabs fallback (matches
+      // previous behaviour), then demo data.
+      let gotFromEleven = false;
+      try {
+        const res = await fetch("/api/eleven-agents/calls", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          const convos = Array.isArray(data.conversations)
+            ? (data.conversations as ElevenConversation[])
+            : [];
+          if (convos.length > 0) {
+            setCalls(convos.map(convoToCallRow));
+            backendLive = true;
+            gotFromEleven = true;
+          }
+        }
+      } catch {
+        /* fall through to demo */
+      }
+      if (!gotFromEleven) loadDemoCalls();
     }
 
     setLiveBackend(backendLive);
@@ -442,8 +559,18 @@ export default function VoiceReceptionistPage() {
     }
   }
 
-  // ── Derived stats (from whatever calls are in state) ─────────────
+  // ── Derived stats ────────────────────────────────────────────────
+  // Prefer authoritative server stats (over the entire voice_calls history,
+  // not just the current page). Fall back to computing from state for demo /
+  // ElevenLabs-only modes.
   const stats = useMemo(() => {
+    if (usingRealCalls && serverStats) {
+      return {
+        handled: serverStats.handled,
+        booked: serverStats.booked,
+        avgDuration: serverStats.avg_duration_seconds,
+      };
+    }
     if (calls.length === 0) {
       return { handled: 0, booked: 0, avgDuration: 0 };
     }
@@ -453,7 +580,7 @@ export default function VoiceReceptionistPage() {
     const avgDuration =
       totalDuration > 0 ? Math.round(totalDuration / calls.length) : 0;
     return { handled, booked, avgDuration };
-  }, [calls]);
+  }, [calls, usingRealCalls, serverStats]);
 
   // ── Call-minutes quota pulled from /api/usage/current ────────────
   const callQuota = useMemo(() => {
@@ -483,22 +610,28 @@ export default function VoiceReceptionistPage() {
       />
 
       <div className="mx-auto max-w-6xl space-y-6 px-6 pb-10 pt-6">
-        {/* Beta honesty banner — shown unless the ElevenLabs + Twilio path is fully wired */}
-        {!liveBackend && (
+        {/* Beta honesty banner — shown until the first real call lands in
+            voice_calls. Agent setup + Twilio webhook + Haiku classifier are
+            all live; the banner just explains why the log is still empty on
+            first run. */}
+        {!usingRealCalls && (
           <div className="flex items-start gap-3 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4">
             <AlertCircle size={18} className="mt-0.5 shrink-0 text-amber-400" />
             <div className="text-[12px] leading-relaxed">
               <p className="font-semibold text-amber-300">
-                Beta — live call data backend is not fully wired yet
+                {liveBackend
+                  ? "No real calls yet — showing sample data"
+                  : "Beta — live call data backend is not fully wired yet"}
               </p>
               <p className="mt-1 text-muted">
-                The call log below shows sample calls so you can see the shape of the
-                dashboard. The agent-setup form is fully live: it creates a real agent on
-                ElevenLabs via{" "}
+                Inbound calls are now logged live into your{" "}
                 <code className="rounded bg-black/40 px-1 py-0.5 text-[10.5px]">
-                  /api/eleven-agents
-                </code>
-                . Hooking each inbound call into the log table ships next.
+                  voice_calls
+                </code>{" "}
+                table via the Twilio voice-webhook. Once your receptionist
+                picks up its first call, it&apos;ll replace the sample rows
+                below — with a Claude-classified outcome (booked / qualified /
+                unqualified / spam), caller number, duration, and transcript.
                 {backendNote && (
                   <span className="mt-1 block text-[11px] text-muted/80">
                     ({backendNote})
