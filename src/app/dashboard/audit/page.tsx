@@ -45,9 +45,12 @@ const ACTION_STYLES: Record<ActionType, { icon: React.ReactNode; label: string; 
   config: { icon: <Settings size={11} />, label: "Config Change", color: "text-amber-400" },
 };
 
-const MOCK_ENTRIES: AuditEntry[] = [];
+// TODO: Load from /api/audit-log once backend is wired.
+// These start empty; the UI renders an empty state until real entries exist.
+const INITIAL_ENTRIES: AuditEntry[] = [];
 
-const MOCK_ALERTS: SecurityAlert[] = [];
+// TODO: Load from /api/security-alerts once backend is wired.
+const INITIAL_ALERTS: SecurityAlert[] = [];
 
 const SEVERITY_STYLES: Record<string, string> = {
   critical: "bg-red-500/10 text-red-400 border-red-500/20",
@@ -60,8 +63,8 @@ const ACTION_FILTERS: ActionType[] = ["login", "create", "update", "delete", "ex
 
 export default function AuditPage() {
   const [tab, setTab] = useState<AuditTab>("trail");
-  const [entries] = useState(MOCK_ENTRIES);
-  const [alerts] = useState(MOCK_ALERTS);
+  const [entries] = useState(INITIAL_ENTRIES);
+  const [alerts, setAlerts] = useState(INITIAL_ALERTS);
   const [searchQuery, setSearchQuery] = useState("");
   const [actionFilter, setActionFilter] = useState<ActionType | "all">("all");
   const [userFilter, setUserFilter] = useState("all");
@@ -283,7 +286,10 @@ export default function AuditPage() {
                   <h3 className="text-xs font-bold flex items-center gap-2">
                     <span className={style.color}>{style.icon}</span> Action Details
                   </h3>
-                  <button onClick={() => setExpandedEntry(null)} className="text-muted hover:text-foreground"><X size={14} /></button>
+                  <button
+                    onClick={() => setExpandedEntry(null)}
+                    aria-label="Close detail"
+                    className="text-muted hover:text-foreground"><X size={14} /></button>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <div className="p-2.5 rounded-lg bg-surface-light border border-border">
@@ -348,7 +354,9 @@ export default function AuditPage() {
                       <p className="text-[11px] font-medium">{alert.message}</p>
                       <p className="text-[9px] opacity-60 mt-0.5">User: {alert.user}</p>
                     </div>
-                    <button className="text-[9px] px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-colors font-medium shrink-0">
+                    <button
+                      onClick={() => setAlerts(prev => prev.map(a => a.id === alert.id ? { ...a, resolved: true } : a))}
+                      className="text-[9px] px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 transition-colors font-medium shrink-0">
                       Resolve
                     </button>
                   </div>
@@ -448,7 +456,10 @@ export default function AuditPage() {
                 </div>
                 <div className="p-3 rounded-lg bg-surface-light border border-border">
                   <p className="text-[9px] text-muted uppercase">Storage Used</p>
-                  <p className="text-lg font-bold text-blue-400 mt-0.5">2.4 MB</p>
+                  {/* Rough estimate: ~200 bytes/entry; exact size comes from backend once wired. */}
+                  <p className="text-lg font-bold text-blue-400 mt-0.5">
+                    {entries.length > 0 ? `${(entries.length * 0.2).toFixed(1)} KB` : "0 KB"}
+                  </p>
                 </div>
                 <div className="p-3 rounded-lg bg-surface-light border border-border">
                   <p className="text-[9px] text-muted uppercase">Archived</p>
@@ -524,7 +535,17 @@ export default function AuditPage() {
             </div>
             <div className="flex gap-2">
               <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5"><Download size={12} /> Export</button>
-              <button className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Copy to Clipboard</button>
+              <button
+                onClick={async () => {
+                  const csv = "Timestamp,User,Action,Resource,Details,IP,Status\n" +
+                    filtered.map(e => `"${e.timestamp}","${e.user}","${e.action}","${e.resource}","${e.details}","${e.ip}","${e.status}"`).join("\n");
+                  try {
+                    await navigator.clipboard.writeText(csv);
+                  } catch (err) {
+                    console.error("Copy to clipboard failed:", err);
+                  }
+                }}
+                className="btn-secondary text-xs flex items-center gap-1.5"><Copy size={12} /> Copy to Clipboard</button>
             </div>
           </div>
         </div>

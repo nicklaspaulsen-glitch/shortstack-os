@@ -98,8 +98,9 @@ export default function GettingStartedPage() {
         .eq("key", "telegram_bot_token")
         .single();
       if (settings?.value) done.add("telegram");
-    } catch {
-      // If some queries fail, that's fine — just show what we can
+    } catch (err) {
+      // Partial failure is fine — just surface a debug log.
+      console.warn("Onboarding progress check partial failure:", err);
     }
 
     // Also merge any manual overrides from localStorage
@@ -109,7 +110,10 @@ export default function GettingStartedPage() {
         const manual = JSON.parse(saved) as string[];
         manual.forEach(id => done.add(id));
       }
-    } catch { /* ignore */ }
+    } catch (err) {
+      // Malformed localStorage; safe to ignore.
+      console.warn("Failed to parse saved onboarding state:", err);
+    }
 
     setCompleted(done);
     setLoading(false);
@@ -170,7 +174,10 @@ export default function GettingStartedPage() {
                   isCurrent ? "bg-gold/[0.03] border-gold/15" :
                   "bg-surface-light border-border"
                 }`}>
-                <button onClick={() => toggleStep(step.id)} className="shrink-0">
+                <button
+                  onClick={() => toggleStep(step.id)}
+                  aria-label={done ? `Mark "${step.title}" as not done` : `Mark "${step.title}" as done`}
+                  className="shrink-0">
                   {done
                     ? <CheckCircle size={20} className="text-success" />
                     : <Circle size={20} className={isCurrent ? "text-gold" : "text-gray-600"} />

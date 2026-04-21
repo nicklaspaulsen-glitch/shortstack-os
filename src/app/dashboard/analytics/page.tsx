@@ -61,19 +61,23 @@ export default function AnalyticsPage() {
   }, []);
 
   async function fetchActivityFeed() {
-    const fiveMinAgo = new Date(Date.now() - 5 * 60000).toISOString();
-    const [
-      { data: newLeads },
-      { data: newContent },
-    ] = await Promise.all([
-      supabase.from("leads").select("id, business_name, scraped_at").gte("scraped_at", fiveMinAgo).order("scraped_at", { ascending: false }).limit(10),
-      supabase.from("content_calendar").select("id, title, updated_at").gte("updated_at", fiveMinAgo).order("updated_at", { ascending: false }).limit(5),
-    ]);
-    const items: ActivityItem[] = [];
-    (newLeads || []).forEach((l: Record<string, string>) => items.push({ id: `lead-${l.id}`, type: "lead", message: `New lead: ${l.business_name}`, time: l.scraped_at }));
-    (newContent || []).forEach((c: Record<string, string>) => items.push({ id: `post-${c.id}`, type: "post", message: `Content updated: ${c.title}`, time: c.updated_at }));
-    items.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
-    setActivityFeed(items.slice(0, 15));
+    try {
+      const fiveMinAgo = new Date(Date.now() - 5 * 60000).toISOString();
+      const [
+        { data: newLeads },
+        { data: newContent },
+      ] = await Promise.all([
+        supabase.from("leads").select("id, business_name, scraped_at").gte("scraped_at", fiveMinAgo).order("scraped_at", { ascending: false }).limit(10),
+        supabase.from("content_calendar").select("id, title, updated_at").gte("updated_at", fiveMinAgo).order("updated_at", { ascending: false }).limit(5),
+      ]);
+      const items: ActivityItem[] = [];
+      (newLeads || []).forEach((l: Record<string, string>) => items.push({ id: `lead-${l.id}`, type: "lead", message: `New lead: ${l.business_name}`, time: l.scraped_at }));
+      (newContent || []).forEach((c: Record<string, string>) => items.push({ id: `post-${c.id}`, type: "post", message: `Content updated: ${c.title}`, time: c.updated_at }));
+      items.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+      setActivityFeed(items.slice(0, 15));
+    } catch (err) {
+      console.warn("Activity feed fetch failed:", err);
+    }
   }
 
   function getDateRange() {
@@ -86,6 +90,7 @@ export default function AnalyticsPage() {
   }
 
   async function fetchAnalytics() {
+    try {
     const now = new Date();
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
     const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
@@ -170,6 +175,9 @@ export default function AnalyticsPage() {
 
     // Revenue data (populated from real invoices when available)
     setRevenueByMonth([]);
+    } catch (err) {
+      console.error("Analytics fetch failed:", err);
+    }
   }
 
   const leadGrowth = stats.leadsLastMonth > 0
@@ -190,7 +198,12 @@ export default function AnalyticsPage() {
       ? mrrValues.slice(1).reduce((s, v, i) => s + (v - mrrValues[i]) / (mrrValues[i] || 1), 0) / (mrrValues.length - 1)
       : 0.05;
     const lastMRR = mrrValues[mrrValues.length - 1] || stats.totalMRR;
-    const months = ["May", "Jun", "Jul"];
+    // Generate next 3 months dynamically rather than hardcoding names.
+    const nowForecast = new Date();
+    const months = Array.from({ length: 3 }, (_, i) => {
+      const d = new Date(nowForecast.getFullYear(), nowForecast.getMonth() + i + 1, 1);
+      return d.toLocaleString("en-US", { month: "short" });
+    });
     return months.map((month, i) => ({
       month,
       projected: Math.round(lastMRR * Math.pow(1 + avgGrowth, i + 1)),

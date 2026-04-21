@@ -38,13 +38,15 @@ const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label:
   api: { icon: <Globe size={12} />, color: "text-indigo-400", label: "API" },
 };
 
-const MOCK_LOGS: LogEntry[] = [];
+// TODO: Load from /api/activity-log once the feed endpoint is wired.
+// The UI renders an empty state until real log entries exist.
+const INITIAL_LOGS: LogEntry[] = [];
 
 const USERS = ["All"];
 
 export default function ActivityLogPage() {
   const [tab, setTab] = useState<ActivityTab>("feed");
-  const [logs] = useState(MOCK_LOGS);
+  const [logs] = useState(INITIAL_LOGS);
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [userFilter, setUserFilter] = useState("All");
@@ -81,8 +83,9 @@ export default function ActivityLogPage() {
   const userActivity: Record<string, number> = {};
   logs.forEach(l => { userActivity[l.user] = (userActivity[l.user] || 0) + 1; });
 
-  // Suspicious activity
-  const suspicious = logs.filter(l => l.action === "failed_login" || (l.type === "login" && l.ip === "195.22.44.88"));
+  // Suspicious activity: any failed_login action.
+  // TODO: Wire a proper IP allowlist/blocklist once backend is ready.
+  const suspicious = logs.filter(l => l.action === "failed_login");
 
   const TABS: { id: ActivityTab; label: string; icon: React.ReactNode }[] = [
     { id: "feed", label: "Activity Feed", icon: <Activity size={13} /> },
@@ -105,7 +108,19 @@ export default function ActivityLogPage() {
               <div className={`w-2 h-2 rounded-full ${isLive ? "bg-emerald-300 animate-pulse" : "bg-white/40"}`} />
               {isLive ? "Live" : "Paused"}
             </button>
-            <button className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
+            <button
+              onClick={() => {
+                const csv = "Timestamp,User,Type,Action,Entity,Details,IP\n" +
+                  filtered.map(l => `"${l.timestamp}","${l.user}","${l.type}","${l.action}","${l.entity}","${l.details}","${l.ip}"`).join("\n");
+                const blob = new Blob([csv], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `activity-log-${new Date().toISOString().slice(0, 10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Download size={12} /> Export Log</button>
           </>
         }
       />

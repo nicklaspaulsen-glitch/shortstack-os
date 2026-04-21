@@ -304,8 +304,8 @@ export default function CommunityPage() {
       const res = await fetch(`/api/community/comments?post_id=${postId}`);
       const data = await res.json();
       setPostComments(prev => ({ ...prev, [postId]: data.comments || [] }));
-    } catch {
-      // silent
+    } catch (err) {
+      console.error("Failed to load comments:", err);
     } finally {
       setCommentsLoading(prev => ({ ...prev, [postId]: false }));
     }
@@ -327,9 +327,12 @@ export default function CommunityPage() {
         setCommentInputs(prev => ({ ...prev, [postId]: "" }));
         setReplyingTo(null);
         setPosts(prev => prev.map(p => p.id === postId ? { ...p, comments_count: (p.comments_count || 0) + 1 } : p));
+      } else {
+        toast.error(data.error || "Failed to post comment");
       }
-    } catch {
-      // silent
+    } catch (err) {
+      console.error("Failed to post comment:", err);
+      toast.error("Failed to post comment");
     }
   }
 
@@ -384,7 +387,9 @@ export default function CommunityPage() {
           setBookmarkedPosts(new Set(d.bookmarks.map((b: { post_id: string }) => b.post_id)));
         }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.warn("Bookmark load failed:", err);
+      });
   }, []);
 
   /* ---- Fetch posts ---- */
@@ -416,8 +421,8 @@ export default function CommunityPage() {
       const res = await fetch("/api/community/events");
       const data = await res.json();
       setEvents(Array.isArray(data.events) ? data.events : []);
-    } catch {
-      // silent
+    } catch (err) {
+      console.warn("Events fetch failed:", err);
     } finally {
       setEventsLoading(false);
     }
@@ -499,8 +504,8 @@ export default function CommunityPage() {
       const res = await fetch("/api/community/polls");
       const data = await res.json();
       setPolls(Array.isArray(data.polls) ? data.polls : []);
-    } catch {
-      // silent
+    } catch (err) {
+      console.warn("Polls fetch failed:", err);
     } finally {
       setPollsLoading(false);
     }
@@ -558,8 +563,8 @@ export default function CommunityPage() {
       const res = await fetch("/api/community/resources");
       const data = await res.json();
       setResources(Array.isArray(data.resources) ? data.resources : []);
-    } catch {
-      // silent
+    } catch (err) {
+      console.warn("Resources fetch failed:", err);
     } finally {
       setResourcesLoading(false);
     }
@@ -604,8 +609,9 @@ export default function CommunityPage() {
         const data = await res.json();
         setResources(prev => prev.map(r => r.id === resource.id ? { ...r, downloads: data.downloads ?? r.downloads + 1 } : r));
       }
-    } catch {
-      // silent — the URL still opened
+    } catch (err) {
+      // Non-fatal: URL already opened, just counter failed to increment.
+      console.warn("Resource download counter failed:", err);
     }
   }
 

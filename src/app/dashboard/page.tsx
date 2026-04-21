@@ -126,14 +126,17 @@ export default function DashboardPage() {
       setDashboardLoading(false);
     }
 
-    // Fetch recent autopilot activity (non-blocking)
+    // Fetch recent autopilot activity (non-blocking).
+    // Failure here is non-fatal for the dashboard, so we log and continue.
     try {
       const apRes = await fetch("/api/autopilot/recent");
       if (apRes.ok) {
         const apData = await apRes.json();
         setAutopilotClients(apData.clients || []);
       }
-    } catch {}
+    } catch (err) {
+      console.warn("Autopilot recent fetch failed:", err);
+    }
   }
 
   if (profile?.role === "client") {
@@ -157,25 +160,35 @@ export default function DashboardPage() {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: commandInput }),
       });
+      if (!res.ok) throw new Error(`Trinity chat ${res.status}`);
       const data = await res.json();
       toast.success(data.reply || "Done!", { duration: 5000 });
-    } catch { toast.error("Command failed"); }
+    } catch (err) {
+      console.error("Trinity command failed:", err);
+      toast.error("Command failed");
+    }
     setCommandInput("");
     setCommandLoading(false);
   }
 
   async function triggerQuickAction(action: string) {
-    toast.loading("Running...");
+    // Use the toastId returned by toast.loading so we only dismiss *this* toast,
+    // not every other toast on screen.
+    const toastId = toast.loading("Running...");
     try {
       const res = await fetch("/api/quick-actions", {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action }),
       });
-      toast.dismiss();
+      toast.dismiss(toastId);
       const data = await res.json();
       if (data.success) toast.success(data.results?.join("\n") || "Done!");
       else toast.error(data.error || "Failed");
-    } catch { toast.dismiss(); toast.error("Error"); }
+    } catch (err) {
+      console.error(`Quick action ${action} failed:`, err);
+      toast.dismiss(toastId);
+      toast.error("Error");
+    }
   }
 
   const pipelineTotal = pipeline.new + pipeline.called + pipeline.replied + pipeline.booked + pipeline.converted;

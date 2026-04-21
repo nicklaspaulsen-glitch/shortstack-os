@@ -85,7 +85,9 @@ export default function BrandVoicePage() {
         const parsed = JSON.parse(raw) as VoiceProfile[];
         if (Array.isArray(parsed) && parsed.length > 0) setProfiles(parsed);
       }
-    } catch { /* ignore parse errors */ }
+    } catch (err) {
+      console.warn("Brand voice localStorage restore failed:", err);
+    }
   }, []);
 
   // Auto-save profiles to localStorage
@@ -236,7 +238,10 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
       const data = await res.json();
       if (data.text) { setter(data.text); toast.success("Enhanced!"); }
       else toast.error("AI enhancement failed");
-    } catch { toast.error("AI enhancement failed"); }
+    } catch (err) {
+      console.error("AI text enhancement failed:", err);
+      toast.error("AI enhancement failed");
+    }
     setEnhancing(null);
   };
 
@@ -286,7 +291,8 @@ ${profile.samples.map((s, i) => `${i + 1}. "${s}"`).join("\n")}`;
                 try {
                   await saveProfiles(profiles);
                   toast.success("Brand voice profiles saved");
-                } catch {
+                } catch (err) {
+                  console.error("Manual brand voice save failed:", err);
                   toast.error("Save failed");
                 }
                 setSavingManual(false);

@@ -174,7 +174,8 @@ function LoginForm() {
       } else {
         toast.error(data.error || "Failed to send reset email");
       }
-    } catch {
+    } catch (err) {
+      console.error("Password reset request failed:", err);
       toast.error("Connection error");
     }
     setLoading(false);

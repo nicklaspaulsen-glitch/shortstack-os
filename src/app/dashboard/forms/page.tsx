@@ -157,7 +157,8 @@ const TEMPLATES = [
   ]},
 ];
 
-const MOCK_SUBMISSIONS: FormSubmission[] = [];
+// TODO: Load real submissions from /api/forms/submissions once backend is wired.
+const INITIAL_SUBMISSIONS: FormSubmission[] = [];
 
 export default function FormsPage() {
   const [tab, setTab] = useState<FormTab>("builder");
@@ -354,7 +355,7 @@ export default function FormsPage() {
     return `<iframe src="${origin}/forms/embed/${activeForm.id}" width="100%" height="600" frameborder="0" style="border:none;border-radius:12px;"></iframe>`;
   }
 
-  const totalSubmissions = MOCK_SUBMISSIONS.length;
+  const totalSubmissions = INITIAL_SUBMISSIONS.length;
   const avgCompletionRate = forms.length > 0 ? Math.round(forms.reduce((s, f) => s + (f.views > 0 ? (f.completions / f.views) * 100 : 0), 0) / forms.length) : 0;
 
   const TABS: { id: FormTab; label: string; icon: React.ReactNode }[] = [
@@ -679,7 +680,7 @@ export default function FormsPage() {
             <h2 className="section-header mb-0">Recent Submissions</h2>
             <button className="btn-secondary text-xs flex items-center gap-1.5"><Download size={12} /> Export CSV</button>
           </div>
-          {MOCK_SUBMISSIONS.length === 0 ? (
+          {INITIAL_SUBMISSIONS.length === 0 ? (
             <EmptyState
               icon={<MessageSquare size={24} />}
               title="No Submissions Yet"
@@ -689,7 +690,7 @@ export default function FormsPage() {
             />
           ) : (
             <div className="space-y-2">
-              {MOCK_SUBMISSIONS.map(sub => (
+              {INITIAL_SUBMISSIONS.map(sub => (
                 <div key={sub.id} className="card p-4">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">

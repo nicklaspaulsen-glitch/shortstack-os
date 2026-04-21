@@ -37,12 +37,19 @@ interface ClientHealth {
   revenue_trend: number[];
 }
 
-const MOCK_CLIENTS: ClientHealth[] = [];
+// TODO: Load real client health data from /api/clients once the health model lands.
+const INITIAL_CLIENTS: ClientHealth[] = [];
 
-const HEALTH_HISTORY = [
-  { month: "Nov", avg: 0 }, { month: "Dec", avg: 0 }, { month: "Jan", avg: 0 },
-  { month: "Feb", avg: 0 }, { month: "Mar", avg: 0 }, { month: "Apr", avg: 0 },
-];
+// Generate the last 6 months dynamically so the chart rolls forward with the calendar.
+const HEALTH_HISTORY = (() => {
+  const out: { month: string; avg: number }[] = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    out.push({ month: d.toLocaleString("en-US", { month: "short" }), avg: 0 });
+  }
+  return out;
+})();
 
 const HEALTH_ALERTS: { id: string; client: string; type: string; message: string; time: string }[] = [];
 
@@ -84,7 +91,7 @@ const RECOMMENDATIONS: Record<string, string[]> = {
 /* ------------------------------------------------------------------ */
 
 export default function ClientHealthPage() {
-  const [clients] = useState<ClientHealth[]>(MOCK_CLIENTS);
+  const [clients] = useState<ClientHealth[]>(INITIAL_CLIENTS);
   const [filter, setFilter] = useState<"all" | "healthy" | "warning" | "critical">("all");
   const [sort, setSort] = useState<"health" | "mrr" | "name">("health");
   const [activeTab, setActiveTab] = useState<"overview" | "algorithm" | "alerts" | "nps" | "history">("overview");
@@ -130,7 +137,9 @@ export default function ClientHealthPage() {
   const criticalCount = clients.filter(c => c.health_score < 50).length;
   const healthyCount = clients.filter(c => c.health_score >= 75).length;
   const warningCount = clients.filter(c => c.health_score >= 50 && c.health_score < 75).length;
-  const avgNPS = (clients.reduce((s, c) => s + c.nps, 0) / clients.length).toFixed(1);
+  const avgNPS = clients.length > 0
+    ? (clients.reduce((s, c) => s + c.nps, 0) / clients.length).toFixed(1)
+    : "0.0";
   const atRiskMRR = clients.filter(c => c.health_score < 50).reduce((s, c) => s + c.mrr, 0);
 
   const tabs = [
@@ -158,9 +167,10 @@ export default function ClientHealthPage() {
             <span className="text-[9px] text-muted uppercase tracking-wider">Avg Health</span>
           </div>
           <p className={`text-2xl font-bold font-mono ${getHealthColor(avgHealth)}`}>{avgHealth}%</p>
+          {/* TODO: Compute month-over-month delta once we store a daily average snapshot. */}
           <div className="flex items-center gap-1 mt-1">
-            <ArrowUpRight size={10} className="text-green-400" />
-            <span className="text-[9px] text-green-400">+3% vs last month</span>
+            <Clock size={10} className="text-muted" />
+            <span className="text-[9px] text-muted">Live score</span>
           </div>
         </div>
         <div className="card p-4">

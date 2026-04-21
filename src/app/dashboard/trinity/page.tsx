@@ -21,11 +21,13 @@ interface AgentStatus {
   successRate: number;
 }
 
-const MOCK_AGENTS: AgentStatus[] = [];
+// TODO: Load live agent status / outputs / history from the Trinity orchestrator
+// API once endpoints are wired. Until then the UI shows empty states.
+const INITIAL_AGENTS: AgentStatus[] = [];
 
-const MOCK_OUTPUTS: Array<{ id: string; agent: string; type: string; preview: string; quality: number; time: string }> = [];
+const INITIAL_OUTPUTS: Array<{ id: string; agent: string; type: string; preview: string; quality: number; time: string }> = [];
 
-const MOCK_HISTORY: Array<{ id: string; action: string; status: string; agent: string; time: string }> = [];
+const INITIAL_HISTORY: Array<{ id: string; action: string; status: string; agent: string; time: string }> = [];
 
 const TABS = ["Chat", "Dashboard", "Agents", "Outputs", "Queue", "Cost", "Quality", "Fallback", "History", "Analytics"] as const;
 type Tab = typeof TABS[number];
@@ -36,7 +38,8 @@ const FALLBACK_CHAIN = [
   { primary: "Supabase", fallback: "Local cache", trigger: "Connection timeout" },
 ];
 
-const MOCK_QUEUE: Array<{ id: string; task: string; priority: string; agent: string; eta: string }> = [];
+// TODO: Load queued Trinity tasks from /api/trinity/queue once available.
+const INITIAL_QUEUE: Array<{ id: string; task: string; priority: string; agent: string; eta: string }> = [];
 
 export default function TrinityPage() {
   const [tab, setTab] = useState<Tab>("Chat");
@@ -67,7 +70,8 @@ export default function TrinityPage() {
         content: data.reply || "I processed that command. Check the action log for details.",
         timestamp: new Date(),
       }]);
-    } catch {
+    } catch (err) {
+      console.error("Trinity chat failed:", err);
       setMessages(prev => [...prev, {
         role: "assistant",
         content: "Sorry, I encountered an error processing that.",
@@ -152,20 +156,20 @@ export default function TrinityPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="card p-3 text-center">
               <p className="text-[9px] text-muted uppercase">Total Agents</p>
-              <p className="text-xl font-bold text-gold">{MOCK_AGENTS.length}</p>
+              <p className="text-xl font-bold text-gold">{INITIAL_AGENTS.length}</p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[9px] text-muted uppercase">Active Now</p>
-              <p className="text-xl font-bold text-emerald-400">{MOCK_AGENTS.filter(a => a.status === "active").length}</p>
+              <p className="text-xl font-bold text-emerald-400">{INITIAL_AGENTS.filter(a => a.status === "active").length}</p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[9px] text-muted uppercase">Actions Today</p>
-              <p className="text-xl font-bold text-foreground">{MOCK_AGENTS.reduce((s, a) => s + a.actionsToday, 0)}</p>
+              <p className="text-xl font-bold text-foreground">{INITIAL_AGENTS.reduce((s, a) => s + a.actionsToday, 0)}</p>
             </div>
             <div className="card p-3 text-center">
               <p className="text-[9px] text-muted uppercase">Errors</p>
-              <p className={`text-xl font-bold ${MOCK_AGENTS.filter(a => a.status === "error").length > 0 ? "text-red-400" : "text-emerald-400"}`}>
-                {MOCK_AGENTS.filter(a => a.status === "error").length}
+              <p className={`text-xl font-bold ${INITIAL_AGENTS.filter(a => a.status === "error").length > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                {INITIAL_AGENTS.filter(a => a.status === "error").length}
               </p>
             </div>
           </div>
@@ -193,7 +197,7 @@ export default function TrinityPage() {
         <div className="card">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Shield size={14} className="text-gold" /> Agent Status Grid</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {MOCK_AGENTS.map(a => (
+            {INITIAL_AGENTS.map(a => (
               <div key={a.name} className={`p-3 rounded-xl border ${
                 a.status === "error" ? "border-red-500/15 bg-red-500/5" : a.status === "active" ? "border-emerald-500/10 bg-emerald-500/5" : "border-border bg-surface-light"
               }`}>
@@ -217,7 +221,7 @@ export default function TrinityPage() {
         <div className="card">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Eye size={14} className="text-gold" /> Combined Output Viewer</h2>
           <div className="space-y-2">
-            {MOCK_OUTPUTS.map(o => (
+            {INITIAL_OUTPUTS.map(o => (
               <div key={o.id} className="p-3 rounded-xl bg-surface-light border border-border">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-[10px] font-semibold text-gold">{o.agent}</span>
@@ -244,7 +248,7 @@ export default function TrinityPage() {
         <div className="card">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Layers size={14} className="text-gold" /> Unified Task Queue</h2>
           <div className="space-y-2">
-            {MOCK_QUEUE.map(q => (
+            {INITIAL_QUEUE.map(q => (
               <div key={q.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-light border border-border">
                 <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-bold uppercase ${
                   q.priority === "high" ? "bg-red-500/10 text-red-400" : q.priority === "medium" ? "bg-gold/10 text-gold" : "bg-blue-500/10 text-blue-400"
@@ -271,15 +275,20 @@ export default function TrinityPage() {
           <div className="card">
             <h3 className="text-xs font-bold mb-3">Cost by Agent</h3>
             <div className="space-y-2">
-              {MOCK_AGENTS.slice(0, 5).map(a => (
-                <div key={a.name} className="flex items-center gap-3">
-                  <span className="text-[10px] w-28 shrink-0">{a.name}</span>
-                  <div className="flex-1 h-2 rounded-full bg-surface-light">
-                    <div className="h-2 rounded-full bg-gold" style={{ width: `${Math.random() * 60 + 20}%` }} />
+              {INITIAL_AGENTS.length === 0 ? (
+                <p className="text-xs text-muted text-center py-4">No agent cost data yet.</p>
+              ) : (
+                INITIAL_AGENTS.slice(0, 5).map(a => (
+                  <div key={a.name} className="flex items-center gap-3">
+                    <span className="text-[10px] w-28 shrink-0">{a.name}</span>
+                    <div className="flex-1 h-2 rounded-full bg-surface-light">
+                      {/* TODO: Wire to real per-agent cost once /api/trinity/cost exists. */}
+                      <div className="h-2 rounded-full bg-gold" style={{ width: "0%" }} />
+                    </div>
+                    <span className="text-[10px] font-mono text-gold w-12 text-right">$0.00</span>
                   </div>
-                  <span className="text-[10px] font-mono text-gold w-12 text-right">${(Math.random() * 2 + 0.5).toFixed(2)}</span>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -290,7 +299,7 @@ export default function TrinityPage() {
         <div className="card">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><Star size={14} className="text-gold" /> Quality Comparison</h2>
           <div className="space-y-2">
-            {MOCK_AGENTS.map(a => (
+            {INITIAL_AGENTS.map(a => (
               <div key={a.name} className="flex items-center gap-3 p-2.5 rounded-lg bg-surface-light border border-border">
                 <span className="text-[10px] w-28 shrink-0 font-medium">{a.name}</span>
                 <div className="flex-1 h-2 rounded-full bg-surface">
@@ -327,7 +336,7 @@ export default function TrinityPage() {
         <div className="card">
           <h2 className="text-sm font-bold flex items-center gap-2 mb-3"><History size={14} className="text-gold" /> Action History</h2>
           <div className="space-y-1.5">
-            {MOCK_HISTORY.map(h => (
+            {INITIAL_HISTORY.map(h => (
               <div key={h.id} className="flex items-center gap-3 p-3 rounded-lg bg-surface-light border border-border">
                 {h.status === "success" ? <CheckCircle size={12} className="text-emerald-400 shrink-0" /> : <XCircle size={12} className="text-red-400 shrink-0" />}
                 <div className="flex-1 min-w-0">

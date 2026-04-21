@@ -51,6 +51,9 @@ export default function BrandKitPage() {
   const [brand, setBrand] = useState<BrandData | null>(null);
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(null);
+  // `generating` is retained so the preset cards can flip into a loading state
+  // once the /api/brand-generate endpoint lands.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [generating, setGenerating] = useState(false);
   const [showExportMenu, setShowExportMenu] = useState(false);
   const [savingManual, setSavingManual] = useState(false);
@@ -70,7 +73,9 @@ export default function BrandKitPage() {
       }
       const rawUrl = localStorage.getItem("ss_brand_kit_url");
       if (rawUrl) setUrl(rawUrl);
-    } catch { /* ignore */ }
+    } catch (err) {
+      console.warn("Brand kit localStorage restore failed:", err);
+    }
   }, []);
 
   // Auto-save brand kit state to localStorage
@@ -121,7 +126,8 @@ export default function BrandKitPage() {
       } else {
         toast.error(data.error || "Failed to extract brand data");
       }
-    } catch {
+    } catch (err) {
+      console.error("Brand scrape failed:", err);
       toast.error("Network error — check the URL and try again");
     }
     setLoading(false);
@@ -141,13 +147,10 @@ export default function BrandKitPage() {
   }
 
   function generateFromPreset(presetId: string) {
+    // TODO: Wire to real /api/brand-generate endpoint that renders assets.
+    // For now show an honest message instead of a fake-success toast.
     setSelectedPreset(presetId);
-    setGenerating(true);
-    // Simulate generation — in production this would call an AI API
-    setTimeout(() => {
-      setGenerating(false);
-      toast.success("Generation complete! Check your Content Library.");
-    }, 3000);
+    toast("Brand asset generation ships with the next AI update.", { icon: "info" });
   }
 
   function exportAsJSON() {
@@ -335,7 +338,8 @@ export default function BrandKitPage() {
                 try {
                   await saveBrandKit({ url, brand });
                   toast.success("Brand kit saved");
-                } catch {
+                } catch (err) {
+                  console.error("Manual brand save failed:", err);
                   toast.error("Save failed");
                 }
                 setSavingManual(false);

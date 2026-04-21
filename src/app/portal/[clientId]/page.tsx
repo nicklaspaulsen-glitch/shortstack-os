@@ -31,7 +31,13 @@ import {
 import toast from "react-hot-toast";
 
 /* ══════════════════════════════════════════════════════════════════
-   MOCK DATA — scoped by clientId in a real implementation
+   DEMO DATA — this is the client-facing portal preview.
+   TODO: Fetch each section from /api/portal/[clientId]/* once the real
+   portal endpoints ship (projects, reports, deliverables, activity,
+   notifications). Until then these constants render a demo experience
+   so agencies can show prospects what the portal looks like.
+   Button handlers below intentionally return toast-only feedback; the
+   backing actions will be wired once the real data layer lands.
    ══════════════════════════════════════════════════════════════════ */
 
 const MOCK_CLIENT = {
@@ -160,7 +166,10 @@ export default function ClientPortalDashboard({
     }
   }, [chatOpen]);
 
-  /* ── Send chat message ── */
+  /* ── Send chat message ──
+     TODO: Wire to a real /api/portal/chat endpoint once it ships.
+     For now we pick a canned response from AI_RESPONSES so the UX still
+     demos cleanly without pretending to be a live LLM. */
   function handleSendMessage() {
     const text = chatInput.trim();
     if (!text) return;
@@ -169,7 +178,6 @@ export default function ClientPortalDashboard({
     setChatInput("");
     setChatTyping(true);
 
-    // Simulate AI response
     setTimeout(() => {
       const response =
         AI_RESPONSES[Math.floor(Math.random() * AI_RESPONSES.length)];
@@ -261,6 +269,7 @@ export default function ClientPortalDashboard({
         <div className="relative">
           <button
             onClick={() => setNotificationsOpen(!notificationsOpen)}
+            aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
             className="relative p-2.5 rounded-xl bg-surface border border-border hover:border-gold/30 transition-all"
           >
             <Bell size={18} className="text-muted" />
@@ -689,6 +698,7 @@ export default function ClientPortalDashboard({
       {/* Chat toggle button */}
       <button
         onClick={() => setChatOpen(!chatOpen)}
+        aria-label={chatOpen ? "Close assistant" : "Open assistant"}
         className={`fixed bottom-6 right-6 z-40 p-3.5 rounded-2xl shadow-elevated transition-all duration-300 ${
           chatOpen
             ? "bg-surface border border-border text-muted hover:text-foreground scale-90"
@@ -736,6 +746,7 @@ export default function ClientPortalDashboard({
             </div>
             <button
               onClick={() => setChatOpen(false)}
+              aria-label="Close assistant"
               className="p-1.5 rounded-lg text-muted hover:text-foreground hover:bg-surface-light transition-colors"
             >
               <X size={14} />

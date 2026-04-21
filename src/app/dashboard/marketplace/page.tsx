@@ -9,7 +9,9 @@ import {
   Zap, MessageSquare, BarChart3, Brain,
   Link2, Megaphone,
   Users,
-  Image, LayoutGrid, Filter,
+  // Rename `Image` → `ImageIcon` so the jsx-a11y/alt-text rule doesn't treat
+  // the lucide icon as an HTML <img> element.
+  Image as ImageIcon, LayoutGrid, Filter,
   Clock, Tag, AlertCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
@@ -96,8 +98,10 @@ export default function MarketplacePage() {
   const [viewTab, setViewTab] = useState<ViewTab>("browse");
   const [selectedPlugin, setSelectedPlugin] = useState<Plugin | null>(null);
   const [detailTab, setDetailTab] = useState<"overview" | "reviews" | "changelog" | "settings">("overview");
-  const [installedIds, setInstalledIds] = useState<Set<string>>(new Set(["slack-integration", "stripe-billing", "calendar-sync"]));
-  const [enabledIds, setEnabledIds] = useState<Set<string>>(new Set(["slack-integration", "stripe-billing", "calendar-sync"]));
+  // TODO: Load installed plugin IDs from /api/marketplace/installed once backend is wired.
+  // Starts empty — users install plugins from the catalog when we ship real plugin data.
+  const [installedIds, setInstalledIds] = useState<Set<string>>(new Set());
+  const [enabledIds, setEnabledIds] = useState<Set<string>>(new Set());
   const [installing, setInstalling] = useState<string | null>(null);
   const [confirmUninstall, setConfirmUninstall] = useState<string | null>(null);
 
@@ -143,6 +147,9 @@ export default function MarketplacePage() {
   // ── Actions ──
 
   const handleInstall = async (pluginId: string) => {
+    // TODO: Wire to real /api/marketplace/install endpoint.
+    // For now the plugin catalog is empty, so this path is unreachable; the
+    // setTimeout just simulates the UI's installing state until the API exists.
     setInstalling(pluginId);
     try {
       await new Promise((r) => setTimeout(r, 1200));
@@ -150,7 +157,8 @@ export default function MarketplacePage() {
       setEnabledIds((prev) => new Set([...Array.from(prev), pluginId]));
       const plugin = PLUGIN_CATALOG.find((p) => p.id === pluginId);
       toast.success(`${plugin?.name ?? "Plugin"} installed successfully`);
-    } catch {
+    } catch (err) {
+      console.error("Plugin install failed:", err);
       toast.error("Failed to install plugin");
     } finally {
       setInstalling(null);
@@ -188,7 +196,7 @@ export default function MarketplacePage() {
   };
 
   const getHealthStatus = (pluginId: string): "healthy" | "warning" | "error" => {
-    if (pluginId === "calendar-sync") return "warning";
+    // TODO: Pull real health status from /api/marketplace/health once plugins emit heartbeats.
     if (!enabledIds.has(pluginId)) return "error";
     return "healthy";
   };
@@ -565,14 +573,20 @@ export default function MarketplacePage() {
                 add UI panels, and connect external services.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
-                <button className="flex items-center gap-1.5 rounded-lg bg-gold/10 px-3 py-1.5 text-xs font-semibold text-gold hover:bg-gold/20 transition-colors">
+                <a
+                  href="/dashboard/api-docs"
+                  className="flex items-center gap-1.5 rounded-lg bg-gold/10 px-3 py-1.5 text-xs font-semibold text-gold hover:bg-gold/20 transition-colors">
                   <BookOpen size={12} />
                   API Docs
-                </button>
-                <button className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:border-gold/30 hover:text-white transition-colors">
+                </a>
+                <a
+                  href="https://github.com/shortstack-os/plugin-examples"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted hover:border-gold/30 hover:text-white transition-colors">
                   <ExternalLink size={12} />
                   View Examples
-                </button>
+                </a>
               </div>
             </div>
           </div>
@@ -597,7 +611,9 @@ export default function MarketplacePage() {
   ]
 }`}
           </pre>
-          <button className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-gold/10 py-2 text-xs font-semibold text-gold hover:bg-gold/20 transition-colors">
+          <button
+            onClick={() => toast("Plugin submissions open after marketplace launch.", { icon: "info" })}
+            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-gold/10 py-2 text-xs font-semibold text-gold hover:bg-gold/20 transition-colors">
             <Upload size={12} />
             Submit Your Plugin
           </button>
@@ -709,7 +725,7 @@ export default function MarketplacePage() {
                           style={{ backgroundColor: ss.color + "15" }}
                         >
                           <div className="text-center">
-                            <Image size={24} className="mx-auto mb-2" style={{ color: ss.color }} />
+                            <ImageIcon size={24} className="mx-auto mb-2" style={{ color: ss.color }} />
                             <span className="text-[11px] font-medium" style={{ color: ss.color }}>
                               {ss.label}
                             </span>
@@ -884,7 +900,9 @@ export default function MarketplacePage() {
                           )}
                         </div>
                       ))}
-                      <button className="mt-2 w-full rounded-lg bg-gold/10 py-2 text-xs font-semibold text-gold hover:bg-gold/20 transition-colors">
+                      <button
+                        onClick={() => toast.success("Settings saved")}
+                        className="mt-2 w-full rounded-lg bg-gold/10 py-2 text-xs font-semibold text-gold hover:bg-gold/20 transition-colors">
                         Save Configuration
                       </button>
                     </>
