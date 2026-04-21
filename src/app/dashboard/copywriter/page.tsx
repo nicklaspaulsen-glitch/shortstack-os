@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import { Pen } from "lucide-react";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
 
@@ -476,8 +477,12 @@ export default function CopywriterPage() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [savedItems, setSavedItems] = useState<Set<string>>(new Set());
 
-  // Creation wizard state
+  // Creation wizard state (legacy modal — kept for power users)
   const [wizardOpen, setWizardOpen] = useState(false);
+
+  // Guided Mode (in-page wizard) ↔ Advanced Mode (original controls)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("copywriter");
+  const [guidedStep, setGuidedStep] = useState(0);
 
   // ── Generate content ─────────────────────────────────────────────
   const handleGenerate = useCallback(async () => {
@@ -610,6 +615,132 @@ export default function CopywriterPage() {
   }, []);
 
   const activeType = CONTENT_TYPES.find(t => t.id === contentType)!;
+
+  // ── In-page guided steps (new Wizard) ────────────────────────────
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "type",
+      title: "What are you writing?",
+      description: "Pick the format — we'll tailor the writing style.",
+      icon: <FileText size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+          {CONTENT_TYPES.map(ct => {
+            const Icon = ct.icon;
+            const selected = contentType === ct.id;
+            return (
+              <button
+                key={ct.id}
+                onClick={() => setContentType(ct.id)}
+                className={`relative text-left p-4 rounded-xl border transition-all ${
+                  selected
+                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                    : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <Icon size={20} style={{ color: selected ? undefined : ct.color }} className={selected ? "text-gold" : ""} />
+                <p className="text-sm font-semibold mt-2">{ct.label}</p>
+                <p className="text-[10px] text-muted line-clamp-2 mt-0.5">{ct.description}</p>
+                {selected && (
+                  <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-gold flex items-center justify-center">
+                    <CheckCircle size={10} className="text-black" />
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "topic",
+      title: "What's it about?",
+      description: "A single sentence is fine. Be specific — \"morning skincare routine for oily skin\" beats \"skincare\".",
+      icon: <Sparkles size={18} />,
+      canProceed: topic.trim().length > 0,
+      component: (
+        <div className="space-y-3">
+          <input
+            type="text"
+            value={topic}
+            onChange={e => setTopic(e.target.value)}
+            placeholder={`e.g., ${activeType.id === "email" ? "Welcome sequence for SaaS onboarding" : activeType.id === "ad" ? "Local gym offering 30-day free trial" : "How to start a successful newsletter in 2026"}`}
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+            autoFocus
+          />
+          <div>
+            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Who&apos;s it for? <span className="text-muted/60 normal-case">(optional but helps)</span>
+            </label>
+            <input
+              type="text"
+              value={audience}
+              onChange={e => setAudience(e.target.value)}
+              placeholder="e.g., SaaS founders, busy moms, first-time home buyers"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "tone",
+      title: "Pick a voice",
+      description: "This controls the vibe — formal vs. playful, calm vs. punchy.",
+      icon: <Type size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+          {TONES.map(t => {
+            const selected = tone === t.id;
+            const preview: Record<Tone, string> = {
+              professional: "Clear, trustworthy, on-brand.",
+              casual: "Like texting a friend.",
+              witty: "Clever turns of phrase.",
+              bold: "Short. Strong. Direct.",
+            };
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTone(t.id)}
+                className={`text-left p-4 rounded-xl border transition-all ${
+                  selected
+                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                    : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <p className="text-sm font-semibold capitalize">{t.label}</p>
+                <p className="text-[10px] text-muted mt-1">{preview[t.id]}</p>
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "review",
+      title: "Ready to write?",
+      description: "We'll generate your copy now. Come back and tweak in Advanced mode if you need more control.",
+      icon: <Wand2 size={18} />,
+      component: (
+        <div className="space-y-3">
+          <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+            <div className="flex items-center gap-2">
+              <activeType.icon size={16} style={{ color: activeType.color }} />
+              <p className="text-sm font-semibold">{activeType.label}</p>
+              <span className="text-[10px] text-muted">· {tone} tone</span>
+            </div>
+            <p className="text-sm leading-relaxed">{topic || <span className="text-muted italic">(no topic yet)</span>}</p>
+            {audience && (
+              <p className="text-[11px] text-muted">For: <span className="text-foreground">{audience}</span></p>
+            )}
+          </div>
+          <p className="text-[11px] text-muted text-center">
+            Need keywords, length control, or templates? Flip to <span className="text-gold font-semibold">Advanced mode</span> at the top.
+          </p>
+        </div>
+      ),
+    },
+  ];
 
   // ── Wizard steps ─────────────────────────────────────────────────
   const wizardSteps: WizardStep[] = [
@@ -916,74 +1047,118 @@ export default function CopywriterPage() {
         gradient="purple"
         actions={
           <>
-            <button
-              onClick={() => setWizardOpen(true)}
-              className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
-            >
-              <Sparkles size={13} className="animate-pulse" />
-              New with AI
-              <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
-            </button>
-            <button
-              onClick={() => {
-                setOutput("");
-                setTopic("");
-                setKeywords("");
-                toast.success("Blank canvas ready");
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-white/20 text-white hover:bg-white/10 transition-all"
-            >
-              <Plus size={13} />
-              Blank
-            </button>
-            <button
-              onClick={() => setShowTemplates(!showTemplates)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
-            >
-              <Layers size={13} />
-              Templates
-            </button>
-            <button
-              onClick={() => setShowHistory(!showHistory)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
-            >
-              <Clock size={13} />
-              History
-              {history.length > 0 && (
-                <span className="ml-1 text-[9px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-semibold">
-                  {history.length}
-                </span>
-              )}
-            </button>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <>
+                <button
+                  onClick={() => setWizardOpen(true)}
+                  className="relative group flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-gradient-to-r from-gold to-amber-500 text-black shadow-lg shadow-gold/30 hover:shadow-gold/50 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  <Sparkles size={13} className="animate-pulse" />
+                  New with AI
+                  <span className="ml-1 text-[8px] uppercase bg-black/20 px-1.5 py-0.5 rounded-full font-semibold tracking-wide">Recommended</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setOutput("");
+                    setTopic("");
+                    setKeywords("");
+                    toast.success("Blank canvas ready");
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-transparent border border-white/20 text-white hover:bg-white/10 transition-all"
+                >
+                  <Plus size={13} />
+                  Blank
+                </button>
+                <button
+                  onClick={() => setShowTemplates(!showTemplates)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
+                >
+                  <Layers size={13} />
+                  Templates
+                </button>
+                <button
+                  onClick={() => setShowHistory(!showHistory)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
+                >
+                  <Clock size={13} />
+                  History
+                  {history.length > 0 && (
+                    <span className="ml-1 text-[9px] bg-white/20 text-white px-1.5 py-0.5 rounded-full font-semibold">
+                      {history.length}
+                    </span>
+                  )}
+                </button>
+              </>
+            )}
           </>
         }
       />
 
+      {/* Guided Mode — the "4-year-old friendly" path */}
+      {!advancedMode && (
+        <Wizard
+          className="mb-6"
+          steps={guidedSteps}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={generating ? "Writing…" : "Generate copy"}
+          busy={generating}
+          onFinish={async () => {
+            await handleGenerate();
+          }}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
+      {/* Output preview shown in guided mode once generated */}
+      {!advancedMode && output && (
+        <div className="card mb-6 space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="section-header flex items-center gap-2">
+              <CheckCircle size={14} className="text-success" /> Your copy is ready
+            </h2>
+            <button
+              onClick={copyToClipboard}
+              className="flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-lg bg-gold/10 text-gold hover:bg-gold/20 transition-colors"
+            >
+              <Copy size={11} /> Copy
+            </button>
+          </div>
+          <div className="rounded-xl bg-surface-light border border-border p-4 max-h-[420px] overflow-y-auto">
+            <pre className="text-xs text-foreground whitespace-pre-wrap font-sans leading-relaxed">{output}</pre>
+          </div>
+        </div>
+      )}
+
       {/* Rolling preview of example copywriter outputs */}
-      <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
-        <div className="absolute inset-0 pointer-events-none">
-          <RollingPreview
-            items={COPYWRITER_PREVIEW_FALLBACK}
-            variant="text"
-            rows={2}
-            aspectRatio="16:9"
-            opacity={0.55}
-            speed="medium"
-          />
+      {advancedMode && (
+        <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6 mb-6">
+          <div className="absolute inset-0 pointer-events-none">
+            <RollingPreview
+              items={COPYWRITER_PREVIEW_FALLBACK}
+              variant="text"
+              rows={2}
+              aspectRatio="16:9"
+              opacity={0.55}
+              speed="medium"
+            />
+          </div>
+          <div className="relative text-center px-4">
+            <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
+              Example copy library
+            </p>
+            <h3 className="text-lg font-bold text-foreground mt-1">
+              Every angle, every tone, every funnel stage
+            </h3>
+            <p className="text-xs text-muted max-w-md mx-auto mt-1">
+              Subject lines, ad headlines, landing heros — pick a template or
+              start blank. ShortStack writes in your brand voice automatically.
+            </p>
+          </div>
         </div>
-        <div className="relative text-center px-4">
-          <p className="text-[11px] uppercase tracking-widest text-gold/80 font-semibold">
-            Example copy library
-          </p>
-          <h3 className="text-lg font-bold text-foreground mt-1">
-            Every angle, every tone, every funnel stage
-          </h3>
-          <p className="text-xs text-muted max-w-md mx-auto mt-1">
-            Subject lines, ad headlines, landing heros — pick a template or
-            start blank. ShortStack writes in your brand voice automatically.
-          </p>
-        </div>
-      </div>
+      )}
 
       {/* Creation Wizard */}
       <CreationWizard
@@ -1121,6 +1296,7 @@ export default function CopywriterPage() {
         </div>
       )}
 
+      {advancedMode && (
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Left Column - Input Form */}
         <div className="lg:col-span-2 space-y-5">
@@ -1511,6 +1687,7 @@ export default function CopywriterPage() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
