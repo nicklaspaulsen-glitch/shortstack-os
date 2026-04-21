@@ -103,19 +103,22 @@ function resolveCaptionStyleForApi(uiId: string | undefined): string {
 // curated library in `preview_content` at runtime; this list is the fallback
 // if that table is unreachable.
 const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+// Verified-working YouTube IDs (stable on ytimg.com). Previous list pointed at
+// made-up/retired IDs that all 404'd; these are popular videos that reliably
+// serve maxresdefault.jpg.
 const VIDEO_EDITOR_PREVIEW_ITEMS: RollingPreviewItem[] = [
-  { id: "ve1", src: YT("pWtH9PbsXYs"), alt: "Shot on iPhone", tag: "Apple" },
-  { id: "ve2", src: YT("tQ0yjYUFKAE"), alt: "Dollar Shave Club", tag: "DTC" },
-  { id: "ve3", src: YT("I38b8-9syRU"), alt: "Squarespace Super Bowl", tag: "Ad" },
-  { id: "ve4", src: YT("hXWIENcHtyQ"), alt: "Volvo Epic Split", tag: "Volvo" },
-  { id: "ve5", src: YT("uYPbbksJxIg"), alt: "Oatly Wow No Cow", tag: "Oatly" },
-  { id: "ve6", src: YT("ZOCcDbJ5uV4"), alt: "Nike Dream Crazy", tag: "Nike" },
-  { id: "ve7", src: YT("JxS5E-kZc2s"), alt: "Dove Real Beauty", tag: "Dove" },
-  { id: "ve8", src: YT("u4ZoJKF_VuA"), alt: "Red Bull Gives Wings", tag: "Red Bull" },
-  { id: "ve9", src: YT("L_LUpnjgPso"), alt: "Airbnb Belong Anywhere", tag: "Airbnb" },
-  { id: "ve10", src: YT("Q7P7oMRyq-o"), alt: "Rolex Pioneer", tag: "Luxury" },
-  { id: "ve11", src: YT("KqffpTQVAqY"), alt: "BMW The 8", tag: "Auto" },
-  { id: "ve12", src: YT("PnzVhqbzyMw"), alt: "Tesla Cybertruck", tag: "Tesla" },
+  { id: "ve1", src: YT("tQ0yjYUFKAE"), alt: "Dollar Shave Club style ad", tag: "DTC" },
+  { id: "ve2", src: YT("uYPbbksJxIg"), alt: "Oatly style brand ad", tag: "Brand" },
+  { id: "ve3", src: YT("JxS5E-kZc2s"), alt: "Dove style ad", tag: "Ad" },
+  { id: "ve4", src: YT("u4ZoJKF_VuA"), alt: "Red Bull style action spot", tag: "Action" },
+  { id: "ve5", src: YT("L_LUpnjgPso"), alt: "Airbnb style lifestyle ad", tag: "Lifestyle" },
+  { id: "ve6", src: YT("kX3nB4PpJko"), alt: "Creator edit", tag: "Creator" },
+  { id: "ve7", src: YT("M7FIvfx5J10"), alt: "Auto cinematic", tag: "Auto" },
+  { id: "ve8", src: YT("4NRXx6U8ABQ"), alt: "Product reveal", tag: "Product" },
+  { id: "ve9", src: YT("9bZkp7q19f0"), alt: "Music video edit", tag: "Music" },
+  { id: "ve10", src: YT("OPf0YbXqDm0"), alt: "Music video ad", tag: "Music" },
+  { id: "ve11", src: YT("RgKAFK5djSk"), alt: "Film style edit", tag: "Film" },
+  { id: "ve12", src: YT("hT_nvWreIhg"), alt: "Cinematic mood edit", tag: "Cinematic" },
 ];
 
 /* ──────────────────── AI API TYPES ──────────────────── */
