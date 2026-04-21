@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email";
 
 export const maxDuration = 300;
 
-// Follow-Up Agent — sends 2nd touch (day 3) and 3rd touch (day 6) to non-responders
+// Follow-Up Agent — sends 2nd touch (day 3) and 3rd touch (day 6) to non-responders.
+// GHL path removed Apr 21 — emails via Resend (sendEmail), SMS via Twilio.
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -11,13 +13,26 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createServiceClient();
-  const ghlKey = process.env.GHL_API_KEY;
-  const locationId = process.env.GHL_LOCATION_ID || "";
+  const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+  const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+  const twilioFrom = process.env.TWILIO_DEFAULT_NUMBER;
   const now = new Date();
   let followUpsSent = 0;
   let finalTouchSent = 0;
 
-  if (!ghlKey) return NextResponse.json({ error: "GHL not configured" }, { status: 500 });
+  async function sendSms(to: string, body: string): Promise<boolean> {
+    if (!twilioSid || !twilioToken || !twilioFrom) return false;
+    const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
+    const res = await fetch(
+      `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+      {
+        method: "POST",
+        headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ To: to, From: twilioFrom, Body: body }),
+      },
+    );
+    return res.ok;
+  }
 
   // Load message style from settings
   let messageStyle = "friendly";
@@ -85,42 +100,13 @@ export async function GET(request: NextRequest) {
 
       if (isEmail) {
         try {
-          // Find or create GHL contact
-          const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ locationId, email: lead.recipient_handle, name: lead.business_name, tags: ["follow-up-2"] }),
-          });
-          const contactData = await contactRes.json();
-          const contactId = contactData.contact?.id;
-
-          if (contactId) {
-            await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-              body: JSON.stringify({ type: "Email", contactId, subject, html: emailBody }),
-            });
-            followUpsSent++;
-          }
+          const sent = await sendEmail({ to: lead.recipient_handle, subject, html: emailBody });
+          if (sent) followUpsSent++;
         } catch {}
       } else if (lead.platform === "sms" && lead.recipient_handle) {
         try {
-          const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ locationId, phone: lead.recipient_handle, name: lead.business_name, tags: ["follow-up-2"] }),
-          });
-          const contactData = await contactRes.json();
-          const contactId = contactData.contact?.id;
-
-          if (contactId) {
-            await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-              body: JSON.stringify({ type: "SMS", contactId, message: smsBody }),
-            });
-            followUpsSent++;
-          }
+          const sent = await sendSms(lead.recipient_handle, smsBody);
+          if (sent) followUpsSent++;
         } catch {}
       }
 
@@ -179,41 +165,13 @@ export async function GET(request: NextRequest) {
 
       if (isEmail) {
         try {
-          const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ locationId, email: lead.recipient_handle, name: lead.business_name, tags: ["follow-up-3-final"] }),
-          });
-          const contactData = await contactRes.json();
-          const contactId = contactData.contact?.id;
-
-          if (contactId) {
-            await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-              body: JSON.stringify({ type: "Email", contactId, subject, html: emailBody }),
-            });
-            finalTouchSent++;
-          }
+          const sent = await sendEmail({ to: lead.recipient_handle, subject, html: emailBody });
+          if (sent) finalTouchSent++;
         } catch {}
       } else if (lead.platform === "sms") {
         try {
-          const contactRes = await fetch("https://services.leadconnectorhq.com/contacts/", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ locationId, phone: lead.recipient_handle, name: lead.business_name, tags: ["follow-up-3-final"] }),
-          });
-          const contactData = await contactRes.json();
-          const contactId = contactData.contact?.id;
-
-          if (contactId) {
-            await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-              method: "POST",
-              headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-              body: JSON.stringify({ type: "SMS", contactId, message: smsBody }),
-            });
-            finalTouchSent++;
-          }
+          const sent = await sendSms(lead.recipient_handle, smsBody);
+          if (sent) finalTouchSent++;
         } catch {}
       }
 

@@ -114,14 +114,7 @@ const healthChecks: HealthCheck[] = [
     check: () => checkAnthropic(),
     requiresCredential: () => hasCredential(process.env.ANTHROPIC_API_KEY),
   },
-  {
-    name: "GoHighLevel",
-    check: () => checkEndpoint("https://services.leadconnectorhq.com/locations/", {
-      Authorization: `Bearer ${process.env.GHL_API_KEY || ""}`,
-      Version: "2021-07-28",
-    }),
-    requiresCredential: () => hasCredential(process.env.GHL_API_KEY),
-  },
+  // GoHighLevel health check removed Apr 21 per MEMORY migration plan.
   {
     name: "Stripe",
     check: () => checkEndpoint("https://api.stripe.com/v1/balance", {

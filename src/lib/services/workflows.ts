@@ -36,15 +36,23 @@ const WORKFLOW_ACTIONS: Record<string, {
   },
   send_sms: {
     name: "Send SMS",
-    description: "Send an SMS via GHL",
+    description: "Send an SMS via Twilio",
     execute: async (params) => {
-      const apiKey = process.env.GHL_API_KEY;
-      if (!apiKey) return { error: "GHL not configured" };
-      const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-        body: JSON.stringify({ type: "SMS", contactId: params.contact_id, message: params.message }),
-      });
+      const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+      const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+      const twilioFrom = process.env.TWILIO_DEFAULT_NUMBER;
+      if (!twilioSid || !twilioToken || !twilioFrom) return { error: "Twilio not configured" };
+      const to = params.to || params.phone || params.contact_id;
+      if (!to) return { error: "No recipient phone number provided (set params.to)" };
+      const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
+      const res = await fetch(
+        `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+        {
+          method: "POST",
+          headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ To: to, From: twilioFrom, Body: params.message || "" }),
+        },
+      );
       return { sent: res.ok, status: res.status };
     },
   },
@@ -212,18 +220,14 @@ const WORKFLOW_ACTIONS: Record<string, {
       return { waited: params.minutes + " minutes" };
     },
   },
+  // ghl_add_tag removed Apr 21 per MEMORY migration plan. The action still
+  // resolves so workflows referencing it don't crash — it's now a no-op that
+  // records the tag intent in trinity_log only.
   ghl_add_tag: {
-    name: "Add GHL Tag",
-    description: "Add a tag to a contact in GoHighLevel",
+    name: "Add Tag (deprecated)",
+    description: "No-op — GHL tagging has been sunset. Kept for backwards compatibility.",
     execute: async (params) => {
-      const apiKey = process.env.GHL_API_KEY;
-      if (!apiKey) return { error: "GHL not configured" };
-      const res = await fetch(`https://services.leadconnectorhq.com/contacts/${params.contact_id}/tags`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-        body: JSON.stringify({ tags: [params.tag] }),
-      });
-      return { tagged: res.ok };
+      return { tagged: false, deprecated: true, note: "GHL tagging removed — consider a native lead/client tag column", tag: params.tag };
     },
   },
 };

@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { sendEmail } from "@/lib/email";
 
 export const maxDuration = 300;
 
+// Daily outreach cron — emails via Resend, SMS via Twilio, DMs via Meta/IG Graph.
+// GHL path removed Apr 21 per MEMORY migration plan.
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -10,18 +13,15 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createServiceClient();
-  const ghlKey = process.env.GHL_API_KEY;
-  const locationId = process.env.GHL_LOCATION_ID || "";
+  const twilioSid = process.env.TWILIO_ACCOUNT_SID;
+  const twilioToken = process.env.TWILIO_AUTH_TOKEN;
+  const twilioFrom = process.env.TWILIO_DEFAULT_NUMBER;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   let emailsSent = 0;
   let smsSent = 0;
   let callsQueued = 0;
   let igDmsSent = 0;
   let fbDmsSent = 0;
-
-  if (!ghlKey) {
-    return NextResponse.json({ error: "GHL not configured" }, { status: 500 });
-  }
 
   // Load agent settings from DB (set via Agent Controls page)
   let emailLimit = 20;
@@ -106,21 +106,8 @@ export async function GET(request: NextRequest) {
     fbDmLimit = Math.round(fbDmLimit * goalMultiplier);
   }
 
-  // Helper: create or find GHL contact
-  async function getOrCreateContact(lead: { business_name: string; email?: string | null; phone?: string | null }) {
-    try {
-      const res = await fetch("https://services.leadconnectorhq.com/contacts/", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-        body: JSON.stringify({ locationId, name: lead.business_name, email: lead.email || undefined, phone: lead.phone || undefined, tags: ["cold-outreach", "shortstack-os"], source: "ShortStack OS" }),
-      });
-      const data = await res.json();
-      return data.contact?.id || null;
-    } catch { return null; }
-  }
-
   // ═══════════════════════════════════════
-  // 1. COLD EMAILS
+  // 1. COLD EMAILS — native Resend (sendEmail helper)
   // ═══════════════════════════════════════
   const { data: emailLeads } = await supabase
     .from("leads")
@@ -135,18 +122,11 @@ export async function GET(request: NextRequest) {
       const subject = `Quick question about ${lead.business_name}`;
       const body = `Hi,<br><br>I came across <b>${lead.business_name}</b> and noticed you might benefit from better online visibility.<br><br>We help ${lead.industry || "local"} businesses get more clients through social media, ads, and SEO.<br><br>Would you be open to a quick 10-minute call this week?<br><br>Best,<br>The ShortStack Team`;
 
-      const contactId = await getOrCreateContact(lead);
       let delivered = false;
-      if (contactId) {
-        try {
-          const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ type: "Email", contactId, subject, html: body }),
-          });
-          if (res.ok) { emailsSent++; delivered = true; }
-        } catch {}
-      }
+      try {
+        delivered = await sendEmail({ to: lead.email!, subject, html: body });
+        if (delivered) emailsSent++;
+      } catch {}
 
       await supabase.from("outreach_log").insert({ lead_id: lead.id, platform: "email", business_name: lead.business_name, recipient_handle: lead.email, message_text: `Subject: ${subject}`, status: delivered ? "sent" : "failed" });
       if (delivered) await supabase.from("leads").update({ status: "contacted" }).eq("id", lead.id).in("status", ["new"]);
@@ -155,7 +135,7 @@ export async function GET(request: NextRequest) {
   }
 
   // ═══════════════════════════════════════
-  // 2. COLD SMS
+  // 2. COLD SMS — native Twilio
   // ═══════════════════════════════════════
   // Dedup: skip leads that received SMS in the last 48h
   const smsCutoff = new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString();
@@ -178,15 +158,18 @@ export async function GET(request: NextRequest) {
     const smsPromises = smsLeads.map(async (lead) => {
       const smsText = `Hi! I came across ${lead.business_name} and wanted to reach out. We help ${lead.industry || "local"} businesses get more clients through digital marketing. Would you be open to a quick chat? - ShortStack Team`;
 
-      const contactId = await getOrCreateContact(lead);
       let delivered = false;
-      if (contactId) {
+      if (twilioSid && twilioToken && twilioFrom && lead.phone) {
         try {
-          const res = await fetch("https://services.leadconnectorhq.com/conversations/messages", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ type: "SMS", contactId, message: smsText }),
-          });
+          const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
+          const res = await fetch(
+            `https://api.twilio.com/2010-04-01/Accounts/${twilioSid}/Messages.json`,
+            {
+              method: "POST",
+              headers: { Authorization: `Basic ${auth}`, "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({ To: lead.phone, From: twilioFrom, Body: smsText }),
+            },
+          );
           if (res.ok) { smsSent++; delivered = true; }
         } catch {}
       }
@@ -197,7 +180,9 @@ export async function GET(request: NextRequest) {
   }
 
   // ═══════════════════════════════════════
-  // 3. COLD CALLS via GHL
+  // 3. COLD CALLS — queue for ElevenAgents (native) by logging call intent.
+  // A separate dispatcher or the /api/call endpoint initiates the actual call.
+  // GHL call-queue tagging removed Apr 21.
   // ═══════════════════════════════════════
   const { data: callLeads } = await supabase
     .from("leads")
@@ -207,20 +192,17 @@ export async function GET(request: NextRequest) {
     .limit(callLimit);
 
   if (callLeads) {
-    // Create contacts in GHL (they'll be called via GHL workflow)
     for (const lead of callLeads) {
-      const contactId = await getOrCreateContact(lead);
-      if (contactId) {
-        // Tag for calling workflow
-        try {
-          await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/tags`, {
-            method: "POST",
-            headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-            body: JSON.stringify({ tags: ["cold-call-queue"] }),
-          });
-          callsQueued++;
-        } catch {}
-      }
+      await supabase.from("outreach_log").insert({
+        lead_id: lead.id,
+        platform: "call",
+        business_name: lead.business_name,
+        recipient_handle: lead.phone,
+        message_text: "Cold-call queued (ElevenAgents)",
+        status: "pending",
+        metadata: { source: "cron_outreach" },
+      });
+      callsQueued++;
     }
   }
 
@@ -323,17 +305,8 @@ export async function GET(request: NextRequest) {
             }
           } catch {}
 
-          // Also create/tag contact in GHL for tracking
-          const contactId = await getOrCreateContact({ business_name: lead.business_name });
-          if (contactId) {
-            try {
-              await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/tags`, {
-                method: "POST",
-                headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-                body: JSON.stringify({ tags: ["ig-dm-sent"] }),
-              });
-            } catch {}
-          }
+          // GHL tag tracking removed Apr 21 — outreach_log row above is the
+          // record of truth for this send.
         }
       }
     }
@@ -405,17 +378,7 @@ export async function GET(request: NextRequest) {
             }
           } catch {}
 
-          // Tag in GHL
-          const contactId = await getOrCreateContact({ business_name: lead.business_name });
-          if (contactId) {
-            try {
-              await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/tags`, {
-                method: "POST",
-                headers: { Authorization: `Bearer ${ghlKey}`, "Content-Type": "application/json", Version: "2021-07-28" },
-                body: JSON.stringify({ tags: ["fb-dm-sent"] }),
-              });
-            } catch {}
-          }
+          // GHL tag tracking removed Apr 21.
         }
       }
     }

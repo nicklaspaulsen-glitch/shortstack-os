@@ -36,17 +36,16 @@ export async function POST(_request: NextRequest, { params }: { params: { agentI
       return "Lead Engine reset — ready to scrape";
     },
     "outreach": async () => {
-      // Test GHL connectivity
-      const key = process.env.GHL_API_KEY;
-      if (!key) return "GHL API key not configured";
-      try {
-        const res = await fetch("https://services.leadconnectorhq.com/locations/search", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", "Version": "2021-07-28" },
-          body: JSON.stringify({ companyId: process.env.GHL_COMPANY_ID || "" }),
-        });
-        return res.ok ? "Outreach Agent reconnected to GHL" : "GHL connection issue — check API key";
-      } catch { return "GHL unreachable"; }
+      // Native outreach health: verify Resend + Twilio credentials exist.
+      // GHL connectivity check removed Apr 21.
+      const hasResend = Boolean(process.env.SMTP_PASS || process.env.RESEND_API_KEY);
+      const hasTwilio = Boolean(
+        process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_DEFAULT_NUMBER,
+      );
+      if (!hasResend && !hasTwilio) return "No outreach providers configured (Resend + Twilio both missing)";
+      if (!hasResend) return "Resend/SMTP not configured — emails disabled";
+      if (!hasTwilio) return "Twilio not configured — SMS disabled";
+      return "Outreach Agent reset — Resend + Twilio ready";
     },
     "content": async () => {
       const key = process.env.ANTHROPIC_API_KEY;

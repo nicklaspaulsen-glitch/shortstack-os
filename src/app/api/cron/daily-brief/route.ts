@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
-import { runDailyColdCalls } from "@/lib/services/cold-calling";
 import { monitorClientFolders } from "@/lib/services/google-drive-monitor";
 import { anyRoutineActive } from "@/lib/telegram/should-send-routine";
 
@@ -69,25 +68,13 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Run AI cold calling via GHL
-  const coldCallResults = await runDailyColdCalls(supabase, 50);
-
+  // GHL-backed AI cold calling removed Apr 21 — calls now initiated per-lead
+  // via /api/call (ElevenAgents). Daily brief reports booked/closed counts only.
   brief += `
 
-📞 *AI Cold Calling (GHL)*
-• ${coldCallResults.totalQueued} calls queued today
+📞 *AI Cold Calling (ElevenAgents)*
 • ${callsBooked || 0} appointments booked
 • ${newDeals || 0} deals closed`;
-
-  if (coldCallResults.leads.length > 0) {
-    brief += `\n\n📋 *Called Today:*`;
-    for (const lead of coldCallResults.leads.slice(0, 10)) {
-      brief += `\n• ${lead.business} (${lead.phone})`;
-    }
-    if (coldCallResults.leads.length > 10) {
-      brief += `\n• ...and ${coldCallResults.leads.length - 10} more`;
-    }
-  }
 
   brief += `
 

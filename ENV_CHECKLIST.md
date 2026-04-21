@@ -13,12 +13,16 @@
 - [ ] `ANTHROPIC_API_KEY` — Anthropic Claude API key (used across content generation, agents, outreach, reports, and more)
 - [ ] `OPENAI_API_KEY` — OpenAI API key (agent generation, health check)
 
-## GoHighLevel (GHL)
+## GoHighLevel (GHL) — DEPRECATED Apr 21
 
-- [ ] `GHL_API_KEY` — GHL API key (CRM, outreach, email, calls, follow-ups)
-- [ ] `GHL_LOCATION_ID` — GHL location ID
-- [ ] `GHL_COMPANY_ID` — GHL company ID (sub-account creation)
-- [ ] `GHL_AGENCY_KEY` — GHL agency-level API key (sub-account provisioning)
+Code no longer reads these env vars. Safe to remove from Vercel at your
+convenience — keep them set only if a legacy webhook still posts to
+`/api/webhooks/ghl` with `GHL_WEBHOOK_SECRET`.
+
+- [x] ~~`GHL_API_KEY`~~ — replaced by Resend (email), Twilio (SMS), ElevenAgents (calls)
+- [x] ~~`GHL_LOCATION_ID`~~
+- [x] ~~`GHL_COMPANY_ID`~~
+- [x] ~~`GHL_AGENCY_KEY`~~
 
 ## Telegram
 

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { scrapeGooglePlaces, scrapeFacebookBusinessPages, scrapeWebsiteForEmail, scrapeWebsiteForSocials, TARGET_INDUSTRIES, TARGET_CITIES } from "@/lib/services/lead-scraper";
-import { importLeadToGHL } from "@/lib/services/ghl";
 
 export const maxDuration = 300; // 5 minutes
 
@@ -179,19 +178,8 @@ export async function GET(request: NextRequest) {
               continue;
             }
 
-            // Import to GHL
-            const { contactId, success } = await importLeadToGHL(lead);
-            if (success && newLead) {
-              await supabase
-                .from("leads")
-                .update({
-                  ghl_contact_id: contactId,
-                  ghl_sync_status: "synced",
-                  ghl_synced_at: new Date().toISOString(),
-                })
-                .eq("id", newLead.id);
-            }
-
+            // GHL lead import removed Apr 21 — leads live in the native `leads`
+            // table only (already inserted above).
             totalImported++;
             scraped++;
           }
