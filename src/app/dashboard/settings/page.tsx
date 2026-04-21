@@ -17,6 +17,7 @@ import AutoSaveIndicator from "@/components/ui/auto-save-indicator";
 import SidebarCustomizerFull from "@/components/settings/sidebar-customizer-full";
 import InlineSocialConnect from "@/components/inline-social-connect";
 import AgencyStripeConnect from "@/components/settings/agency-stripe-connect";
+import ErrorBoundary from "@/components/error-boundary";
 
 type Tab =
   | "general" | "agents" | "integrations" | "automation" | "notifications"
@@ -769,6 +770,7 @@ export default function SettingsPage() {
 
   return (
     <div className="fade-in space-y-6">
+      <ErrorBoundary section="Settings">
       <AutoSaveIndicator status={autoSaveStatus} lastSavedAt={autoSaveAt} error={autoSaveError} />
       <PageHero
         icon={<Settings size={28} />}
@@ -2927,6 +2929,7 @@ export default function SettingsPage() {
           </div>
         )}
       </Modal>
+      </ErrorBoundary>
     </div>
   );
 }

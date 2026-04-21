@@ -169,15 +169,27 @@ export default function ContentPlanPage() {
   const [wizardGenerating, setWizardGenerating] = useState(false);
 
   // Load clients for the Guided-mode picker (best effort — empty list is OK).
+  // Deferred to idle time — the wizard picker is hidden in the default advanced
+  // view, so delaying this past first paint is safe.
   useEffect(() => {
-    const supabase = createClient();
-    supabase
-      .from("clients")
-      .select("id, business_name")
-      .eq("is_active", true)
-      .then(({ data }: { data: Array<{ id: string; business_name: string }> | null }) => {
-        setClients(data || []);
-      });
+    const load = () => {
+      const supabase = createClient();
+      supabase
+        .from("clients")
+        .select("id, business_name")
+        .eq("is_active", true)
+        .then(({ data }: { data: Array<{ id: string; business_name: string }> | null }) => {
+          setClients(data || []);
+        });
+    };
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = (window as typeof window & { requestIdleCallback: (cb: () => void) => number }).requestIdleCallback(load);
+      return () => {
+        (window as typeof window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id);
+      };
+    }
+    const t = setTimeout(load, 300);
+    return () => clearTimeout(t);
   }, []);
 
   /* Load content */
@@ -224,7 +236,19 @@ export default function ContentPlanPage() {
   }, []);
 
   useEffect(() => { loadPosts(); }, [loadPosts]);
-  useEffect(() => { loadInsights(); }, [loadInsights]);
+  // Defer insights — they feed the AI sidebar below the fold. Letting the posts
+  // grid render first is a much faster perceived paint.
+  useEffect(() => {
+    const run = () => { loadInsights(); };
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      const id = (window as typeof window & { requestIdleCallback: (cb: () => void) => number }).requestIdleCallback(run);
+      return () => {
+        (window as typeof window & { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id);
+      };
+    }
+    const t = setTimeout(run, 300);
+    return () => clearTimeout(t);
+  }, [loadInsights]);
 
   /* Selection helpers */
   const toggleSelect = (id: string) => {

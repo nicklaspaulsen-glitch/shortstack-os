@@ -11,6 +11,23 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     console.error("[GlobalError]", error);
+    if (typeof window === "undefined") return;
+    // Fire-and-forget auto-report to trinity_log.
+    fetch("/api/errors/report", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        error: error.message,
+        stack: error.stack ?? null,
+        digest: error.digest ?? null,
+        pathname: window.location.pathname,
+        userAgent: navigator.userAgent,
+        section: "root",
+        manual: false,
+      }),
+    }).catch(() => {
+      /* best-effort */
+    });
   }, [error]);
 
   return (

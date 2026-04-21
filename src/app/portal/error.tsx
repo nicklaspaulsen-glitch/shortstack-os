@@ -5,14 +5,11 @@ import Link from "next/link";
 import { AlertTriangle, RefreshCw, Home, Send } from "lucide-react";
 
 /**
- * Next.js App Router error boundary for the `/dashboard/*` segment.
- * Catches uncaught render errors in any dashboard route and renders a
- * branded fallback instead of crashing the whole app.
- *
- * Auto-reports to /api/errors/report and offers the user reset, reload,
- * navigate-home, and manual-report options.
+ * Next.js App Router error boundary for the `/portal/*` segment.
+ * Catches uncaught render errors in any client portal route and renders
+ * a branded fallback instead of crashing the whole app.
  */
-export default function DashboardError({
+export default function PortalError({
   error,
   reset,
 }: {
@@ -23,9 +20,8 @@ export default function DashboardError({
   const [reported, setReported] = useState(false);
 
   useEffect(() => {
-    console.error("[DashboardError]", error);
+    console.error("[PortalError]", error);
     if (typeof window === "undefined") return;
-    // Fire-and-forget auto-report.
     fetch("/api/errors/report", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -35,7 +31,7 @@ export default function DashboardError({
         digest: error.digest ?? null,
         pathname: window.location.pathname,
         userAgent: navigator.userAgent,
-        section: "dashboard",
+        section: "portal",
         manual: false,
       }),
     }).catch(() => {
@@ -56,7 +52,7 @@ export default function DashboardError({
           digest: error.digest ?? null,
           pathname: window.location.pathname,
           userAgent: navigator.userAgent,
-          section: "dashboard",
+          section: "portal",
           manual: true,
         }),
       });
@@ -81,7 +77,7 @@ export default function DashboardError({
           Something went wrong on this page
         </h2>
         <p className="text-xs text-muted mb-4">
-          This section crashed &mdash; the rest of the dashboard is still working.
+          This page crashed — the rest of the portal is still working.
         </p>
 
         {isDev && error.message && (
@@ -108,11 +104,11 @@ export default function DashboardError({
             Reload page
           </button>
           <Link
-            href="/dashboard"
+            href="/"
             className="btn-secondary text-xs py-2 px-4 flex items-center gap-1.5"
           >
             <Home size={12} />
-            Dashboard home
+            Home
           </Link>
           <button
             onClick={handleReport}
