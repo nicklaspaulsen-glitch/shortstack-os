@@ -106,4 +106,23 @@ contextBridge.exposeInMainWorld("ssDesktop", {
     ipcRenderer.on("desktop:recording-saved", handler);
     return () => ipcRenderer.removeListener("desktop:recording-saved", handler);
   },
+
+  // ── Voice memo / audio recorder ──────────────────────────────
+  // recordVoiceMemo() returns a promise resolving when the user stops
+  // (via hotkey, tray, or a subsequent stopVoiceMemo() call).
+  recordVoiceMemo: () => ipcRenderer.invoke("audioRecorder:record"),
+  startVoiceMemo: () => ipcRenderer.invoke("audioRecorder:start"),
+  stopVoiceMemo: () => ipcRenderer.invoke("audioRecorder:stop"),
+  toggleVoiceMemo: () => ipcRenderer.invoke("audioRecorder:toggle"),
+  voiceMemoStatus: () => ipcRenderer.invoke("audioRecorder:status"),
+  onVoiceMemoSaved: (callback) => {
+    const handler = (_, data) => callback(data);
+    ipcRenderer.on("desktop:voice-memo-saved", handler);
+    return () => ipcRenderer.removeListener("desktop:voice-memo-saved", handler);
+  },
+  onVoiceMemoTranscribed: (callback) => {
+    const handler = (_, data) => callback(data);
+    ipcRenderer.on("desktop:voice-memo-transcribed", handler);
+    return () => ipcRenderer.removeListener("desktop:voice-memo-transcribed", handler);
+  },
 });

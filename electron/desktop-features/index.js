@@ -14,6 +14,7 @@ const trayEnhancer = require("./tray-enhancer");
 const watchers = require("./watchers");
 const protocol = require("./protocol");
 const screenRecorder = require("./screen-recorder");
+const audioRecorder = require("./audio-recorder");
 
 /**
  * Install all desktop-only features.
@@ -34,6 +35,7 @@ const screenRecorder = require("./screen-recorder");
  * @param {boolean} [context.features.watchers=true]
  * @param {boolean} [context.features.protocol=true]
  * @param {boolean} [context.features.screenRecorder=true]
+ * @param {boolean} [context.features.audioRecorder=true]
  */
 function install(context = {}) {
   const features = Object.assign({
@@ -43,6 +45,7 @@ function install(context = {}) {
     watchers: true,
     protocol: true,
     screenRecorder: true,
+    audioRecorder: true,
   }, context.features || {});
 
   const results = {};
@@ -108,6 +111,20 @@ function install(context = {}) {
     }
   }
 
+  // 7. Audio / voice-memo recorder — Ctrl+Shift+V hotkey, subtle tray
+  //    tooltip pulse while capture is live. Needs trayEnhancer for the
+  //    pulse; safe if tray is disabled (the pulse is a no-op).
+  if (features.audioRecorder) {
+    try {
+      // Expose tray-enhancer so audio-recorder can call getTray() for
+      // the pulse indicator without re-requiring the module.
+      context.trayEnhancer = trayEnhancer;
+      results.audioRecorder = audioRecorder.install(context);
+    } catch (err) {
+      results.audioRecorder = { ok: false, error: String(err?.message || err) };
+    }
+  }
+
   // Single diagnostic IPC for the renderer to inspect what landed.
   try {
     const { ipcMain } = require("electron");
@@ -130,4 +147,5 @@ module.exports = {
   watchers,
   protocol,
   screenRecorder,
+  audioRecorder,
 };
