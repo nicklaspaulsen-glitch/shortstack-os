@@ -677,17 +677,18 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
   ];
 
   async function handleSubmit() {
-    if (!form.business_name || !form.industry) return;
+    // Every field is optional. Use sensible fallbacks so we can still
+    // create the client row even if the user skipped everything.
     setSubmitting(true);
 
     // Create client record
     const { data: newClient, error } = await supabase.from("clients").insert({
-      business_name: form.business_name,
-      contact_name: form.contact_name,
-      email: form.email,
+      business_name: form.business_name || "New Client",
+      contact_name: form.contact_name || "",
+      email: form.email || "",
       phone: form.phone || null,
       website: form.website || null,
-      industry: form.industry,
+      industry: form.industry || "unspecified",
       profile_id: profileId,
       is_active: true,
       health_score: 100,
@@ -778,20 +779,45 @@ function ClientSelfOnboarding({ profileId, profileEmail, profileName, onComplete
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between">
+      <div className="flex items-center justify-between gap-2">
         <button onClick={() => setStep(Math.max(0, step - 1))} disabled={step === 0}
           className="btn-secondary text-xs disabled:opacity-30">Back</button>
-        {step < steps.length - 1 ? (
-          <button onClick={() => setStep(step + 1)}
-            disabled={step === 0 && (!form.business_name || !form.industry)}
-            className="btn-primary text-xs disabled:opacity-50">Next</button>
-        ) : (
-          <button onClick={handleSubmit} disabled={submitting || !form.business_name}
-            className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
-            {submitting ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
-            {submitting ? "Setting up..." : "Create My Profile"}
-          </button>
-        )}
+
+        <div className="flex items-center gap-2">
+          {/* Skip — advance one step without filling anything in. Hidden on
+              the final step where "Create My Profile" is the action. */}
+          {step < steps.length - 1 && (
+            <button
+              onClick={() => setStep(step + 1)}
+              className="text-[11px] text-muted hover:text-foreground transition-colors px-3 py-2 font-medium"
+            >
+              Skip
+            </button>
+          )}
+          {/* Skip everything — jump straight to submit with whatever
+              partial info the user filled in. Always available from
+              step 1 onward. */}
+          {step > 0 && step < steps.length - 1 && (
+            <button
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="text-[11px] text-muted hover:text-gold transition-colors px-3 py-2"
+              title="Skip the rest and create your profile now"
+            >
+              Skip to finish
+            </button>
+          )}
+          {step < steps.length - 1 ? (
+            <button onClick={() => setStep(step + 1)}
+              className="btn-primary text-xs">Next</button>
+          ) : (
+            <button onClick={handleSubmit} disabled={submitting}
+              className="btn-primary text-xs flex items-center gap-1.5 disabled:opacity-50">
+              {submitting ? <Loader size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              {submitting ? "Setting up..." : "Create My Profile"}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
