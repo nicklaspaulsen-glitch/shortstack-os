@@ -10,10 +10,11 @@ import {
   Layout, Megaphone, BookOpen,
   Briefcase, Gift, Zap, Copy, Check, X,
   ArrowUp, ArrowDown, Loader2,
-  Newspaper,
+  Newspaper, Wand2, FileText,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 
 // Example newsletter "template covers" shown in the landing-state marquee.
 // Mix of image covers (tall portrait-ish 4:5 to feel like email previews).
@@ -204,6 +205,14 @@ export default function NewsletterPage() {
 
   /* sending */
   const [sending, setSending] = useState(false);
+
+  /* Guided Mode ↔ Advanced Mode */
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("newsletter");
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [guidedTopic, setGuidedTopic] = useState("");
+  const [guidedLength, setGuidedLength] = useState<"short" | "medium" | "long">("medium");
+  const [guidedTone, setGuidedTone] = useState<"professional" | "casual" | "witty" | "bold">("professional");
+  const [guidedGenerating, setGuidedGenerating] = useState(false);
 
   /* ─── block operations ─── */
   const addBlock = (type: ContentBlock["type"]) => {
@@ -406,6 +415,174 @@ export default function NewsletterPage() {
     return labels[type];
   }
 
+  /* ─── Guided Mode: generate a newsletter draft and drop it into the builder ─── */
+  async function handleGuidedGenerate() {
+    const topic = guidedTopic.trim();
+    if (!topic) {
+      toast.error("What's the newsletter about?");
+      return;
+    }
+    setGuidedGenerating(true);
+    try {
+      const res = await fetch("/api/newsletter/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "full_draft",
+          context: topic,
+          tone: guidedTone,
+          audience: "subscribers",
+        }),
+      });
+      const data = await res.json();
+      if (!data?.success || !data?.result) {
+        toast.error(data?.error || "Generation failed");
+        return;
+      }
+      const result = data.result as {
+        subject?: string;
+        headline?: string;
+        sections?: Array<{ heading?: string; content?: string }>;
+        cta_text?: string;
+        cta_url?: string;
+      };
+
+      const header = defaultBlock("header");
+      const hero = defaultBlock("hero");
+      hero.content.headline = result.headline || topic;
+      hero.content.subheadline = `A ${guidedTone} newsletter for subscribers.`;
+      const sectionBlocks: ContentBlock[] = (result.sections || [])
+        .slice(0, guidedLength === "short" ? 1 : guidedLength === "long" ? 4 : 2)
+        .flatMap(s => {
+          const blocks: ContentBlock[] = [];
+          if (s.heading) {
+            blocks.push({ ...defaultBlock("text"), content: { body: `## ${s.heading}` } });
+          }
+          if (s.content) {
+            const plain = s.content.replace(/<[^>]+>/g, "").trim();
+            blocks.push({ ...defaultBlock("text"), content: { body: plain } });
+          }
+          return blocks;
+        });
+      const ctaBlock = {
+        ...defaultBlock("button"),
+        content: { label: result.cta_text || "Read more", url: result.cta_url || "#", color: "#C9A84C" },
+      };
+      const footer = defaultBlock("footer");
+      setBlocks([header, hero, ...sectionBlocks, ctaBlock, footer]);
+      setSubject(result.subject || result.headline || topic);
+      toast.success("Newsletter draft ready");
+      setAdvancedMode(true);
+      setActiveTab("builder");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Generation failed");
+    } finally {
+      setGuidedGenerating(false);
+    }
+  }
+
+  /* ─── Guided steps ─── */
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "topic",
+      title: "What's the newsletter about?",
+      description: "One sentence is fine — the monthly update, a product launch, a round-up of wins.",
+      icon: <FileText size={18} />,
+      canProceed: guidedTopic.trim().length > 0,
+      component: (
+        <textarea
+          value={guidedTopic}
+          onChange={e => setGuidedTopic(e.target.value)}
+          placeholder={`e.g., "${new Date().toLocaleString("default", { month: "long" })} round-up: new features, 2 client wins, and what's coming next"`}
+          rows={3}
+          className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+          autoFocus
+        />
+      ),
+    },
+    {
+      id: "styling",
+      title: "Length and tone",
+      description: "Shorter reads better; longer drafts give subscribers more to chew on.",
+      icon: <Type size={18} />,
+      component: (
+        <div className="space-y-4">
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Length</p>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                { id: "short" as const, label: "Short", desc: "1 section" },
+                { id: "medium" as const, label: "Medium", desc: "2 sections" },
+                { id: "long" as const, label: "Long", desc: "3–4 sections" },
+              ]).map(l => {
+                const sel = guidedLength === l.id;
+                return (
+                  <button
+                    key={l.id}
+                    type="button"
+                    onClick={() => setGuidedLength(l.id)}
+                    className={`p-3 rounded-xl border text-center transition-all ${
+                      sel
+                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
+                        : "border-border hover:border-gold/30 bg-surface-light"
+                    }`}
+                  >
+                    <p className="text-sm font-semibold">{l.label}</p>
+                    <p className="text-[10px] text-muted mt-0.5">{l.desc}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Tone</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {([
+                { id: "professional" as const, label: "Professional" },
+                { id: "casual" as const, label: "Casual" },
+                { id: "witty" as const, label: "Witty" },
+                { id: "bold" as const, label: "Bold" },
+              ]).map(t => {
+                const sel = guidedTone === t.id;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => setGuidedTone(t.id)}
+                    className={`p-3 rounded-xl border text-sm font-semibold transition-all ${
+                      sel
+                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
+                        : "border-border hover:border-gold/30 bg-surface-light"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "review",
+      title: "Ready to draft?",
+      description: "We'll write the subject, headline, and section copy. You'll be able to tweak every block in the builder.",
+      icon: <Wand2 size={18} />,
+      component: (
+        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+          <p className="text-sm">
+            <span className="text-muted">Topic: </span>
+            <span className="font-semibold">{guidedTopic || <span className="italic text-muted">(none)</span>}</span>
+          </p>
+          <p className="text-[11px] text-muted capitalize">
+            {guidedLength} · {guidedTone}
+          </p>
+        </div>
+      ),
+    },
+  ];
+
   /* ═════════ RENDER ═════════ */
   return (
     <div className="fade-in space-y-5">
@@ -416,18 +593,38 @@ export default function NewsletterPage() {
         gradient="sunset"
         actions={
           <>
-            <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
-              <Eye size={12} /> Preview
-            </button>
-            <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
-              {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-              {sendMode === "schedule" ? "Schedule" : "Send"}
-            </button>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <>
+                <button onClick={() => setActiveTab("preview")} className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+                  <Eye size={12} /> Preview
+                </button>
+                <button onClick={handleSend} disabled={sending} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+                  {sending ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
+                  {sendMode === "schedule" ? "Schedule" : "Send"}
+                </button>
+              </>
+            )}
           </>
         }
       />
 
+      {/* Guided Mode — 3-step AI newsletter drafter */}
+      {!advancedMode && (
+        <Wizard
+          steps={guidedSteps}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={guidedGenerating ? "Drafting…" : "Draft newsletter"}
+          busy={guidedGenerating}
+          onFinish={handleGuidedGenerate}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
       {/* Rolling preview of example newsletter templates */}
+      {advancedMode && (
       <div className="relative rounded-2xl overflow-hidden border border-border bg-surface-light/30 py-6">
         <div className="absolute inset-0 pointer-events-none">
           <RollingPreview
@@ -451,7 +648,9 @@ export default function NewsletterPage() {
           </p>
         </div>
       </div>
+      )}
 
+      {advancedMode && (<>
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 overflow-x-auto">
         {TABS.map(t => (
@@ -1038,6 +1237,7 @@ export default function NewsletterPage() {
           )}
         </div>
       )}
+      </>)}
     </div>
   );
 }
