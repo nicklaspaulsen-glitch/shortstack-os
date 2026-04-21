@@ -250,6 +250,15 @@ export default function RollingPreview({
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Hide the whole tile if the image 404s — prevents the
+                      // stock "broken-image" browser icon from showing in
+                      // the marquee. Parent div uses bg-surface so the gap
+                      // reads as a deliberate spacer, not a missing asset.
+                      const img = e.currentTarget;
+                      const tile = img.closest<HTMLDivElement>(".rolling-preview-tile");
+                      if (tile) tile.style.display = "none";
+                    }}
                   />
                   {item.tag && (
                     <span className="absolute bottom-1.5 left-1.5 text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-black/70 text-gold border border-gold/30 opacity-0 group-hover:opacity-100 transition-opacity">
