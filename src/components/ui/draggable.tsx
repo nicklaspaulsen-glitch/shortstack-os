@@ -7,9 +7,16 @@ interface DraggableProps {
   defaultX?: number;
   defaultY?: number;
   storageKey?: string;
+  /**
+   * When true, drags start even if the pointerdown target is a button/input/etc.
+   * A click-capture guard then swallows the trailing click if a drag actually
+   * moved, so the underlying button's onClick doesn't fire at drag-end.
+   * Use for wrappers around a single clickable element (e.g. a floating pill).
+   */
+  dragAnywhere?: boolean;
 }
 
-export default function Draggable({ children, defaultX, defaultY, storageKey }: DraggableProps) {
+export default function Draggable({ children, defaultX, defaultY, storageKey, dragAnywhere }: DraggableProps) {
   const [pos, setPos] = useState({ x: defaultX ?? 0, y: defaultY ?? 0 });
   const posRef = useRef(pos);
   const dragging = useRef(false);
@@ -42,9 +49,13 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
   useEffect(() => { posRef.current = pos; }, [pos]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    // Don't drag if clicking buttons/inputs inside
-    const target = e.target as HTMLElement;
-    if (target.closest("button, input, a, textarea, select")) return;
+    // Don't drag if clicking buttons/inputs inside — unless the whole wrapper
+    // IS a clickable control (dragAnywhere), in which case we let the drag
+    // start and rely on onClickCapture to swallow the click if moved.
+    if (!dragAnywhere) {
+      const target = e.target as HTMLElement;
+      if (target.closest("button, input, a, textarea, select")) return;
+    }
 
     dragging.current = true;
     hasMoved.current = false;
@@ -55,6 +66,17 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
 
     // Capture pointer for smooth dragging even outside element
     (e.target as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const handleClickCapture = (e: React.MouseEvent) => {
+    // If a drag actually moved, swallow the trailing click so the underlying
+    // button's onClick doesn't fire (otherwise the panel opens every time
+    // the user finishes dragging the pill).
+    if (hasMoved.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      hasMoved.current = false;
+    }
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -88,6 +110,7 @@ export default function Draggable({ children, defaultX, defaultY, storageKey }: 
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
+      onClickCapture={handleClickCapture}
       style={{
         position: "fixed",
         left: pos.x,
