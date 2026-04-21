@@ -131,7 +131,36 @@ export async function POST(request: NextRequest) {
   }
   console.log(`[billing/checkout] using ${resolvedFrom} for ${tierKey} ${cycle}`);
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin || "https://shortstack-os.vercel.app";
+  // Resolve baseUrl safely. Stripe rejects success_url/cancel_url with
+  // "Not a valid URL" if the URL doesn't start with http(s):// and have a
+  // proper hostname. Try env → request origin → default, and validate
+  // every fallback so we never hand Stripe something broken.
+  let baseUrl = "";
+  const candidates = [
+    process.env.NEXT_PUBLIC_APP_URL,
+    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+    (() => {
+      try { return new URL(request.url).origin; } catch { return null; }
+    })(),
+    "https://app.shortstack.work",
+    "https://shortstack-os.vercel.app",
+  ];
+  for (const c of candidates) {
+    if (!c) continue;
+    try {
+      const u = new URL(c.startsWith("http") ? c : `https://${c}`);
+      if (u.protocol === "http:" || u.protocol === "https:") {
+        baseUrl = u.origin;
+        break;
+      }
+    } catch { /* next */ }
+  }
+  if (!baseUrl) {
+    return NextResponse.json(
+      { error: "Server couldn't resolve a valid base URL for Stripe redirects. Set NEXT_PUBLIC_APP_URL in Vercel env." },
+      { status: 500 },
+    );
+  }
 
   try {
     // Get or create Stripe customer for this agency owner
