@@ -6,7 +6,7 @@ import {
   AlertTriangle, ImageDown, Trash2, RotateCw, RefreshCw,
   BarChart3, Clock, CheckCircle, XCircle, Edit3, Eye,
   MessageSquare, Heart, Share2, Zap, ChevronLeft, ChevronRight,
-  Loader2, Filter, ThumbsUp, ThumbsDown,
+  Loader2, Filter, ThumbsUp, ThumbsDown, Users, Target, Wand2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
@@ -18,6 +18,8 @@ import {
   XTwitterIcon, YouTubeIcon,
 } from "@/components/ui/platform-icons";
 import InlineSocialConnect from "@/components/inline-social-connect";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
+import { createClient } from "@/lib/supabase/client";
 
 /* ──────────────── Types ──────────────── */
 
@@ -153,6 +155,31 @@ export default function ContentPlanPage() {
     return new Date(d.getFullYear(), d.getMonth(), 1);
   });
 
+  // Guided Mode ↔ Advanced Mode (advanced = the full dashboard view below)
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("content-plan");
+  const [guidedStep, setGuidedStep] = useState(0);
+
+  // Guided wizard form state
+  const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
+  const [wizardClientId, setWizardClientId] = useState<string>("");
+  const [wizardGoal, setWizardGoal] = useState<"awareness" | "leads" | "sales" | "launch">("awareness");
+  const [wizardDuration, setWizardDuration] = useState<7 | 30 | 90>(7);
+  const [wizardPostsPerWeek, setWizardPostsPerWeek] = useState<number>(3);
+  const [wizardPlatforms, setWizardPlatforms] = useState<string[]>(["instagram", "tiktok", "linkedin"]);
+  const [wizardGenerating, setWizardGenerating] = useState(false);
+
+  // Load clients for the Guided-mode picker (best effort — empty list is OK).
+  useEffect(() => {
+    const supabase = createClient();
+    supabase
+      .from("clients")
+      .select("id, business_name")
+      .eq("is_active", true)
+      .then(({ data }: { data: Array<{ id: string; business_name: string }> | null }) => {
+        setClients(data || []);
+      });
+  }, []);
+
   /* Load content */
   const loadPosts = useCallback(async () => {
     setLoading(true);
@@ -235,6 +262,220 @@ export default function ContentPlanPage() {
     }
   }
 
+  /* Guided-mode: generate a content plan via auto-generate (fill_gap fallback) */
+  const handleGuidedGenerate = useCallback(async () => {
+    setWizardGenerating(true);
+    try {
+      const res = await fetch("/api/content-plan/auto-generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assets: [],
+          platforms: wizardPlatforms,
+          days: wizardDuration,
+          client_id: wizardClientId || null,
+          posts_per_week: wizardPostsPerWeek,
+          fill_gap: true,
+          goal: wizardGoal,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        toast.error(err?.error || "Couldn't generate content plan");
+        return;
+      }
+      toast.success("Content plan generated");
+      // Switch to the full dashboard so the user can see their new plan
+      setAdvancedMode(true);
+      loadPosts();
+      loadInsights();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Generation failed");
+    } finally {
+      setWizardGenerating(false);
+    }
+  }, [wizardPlatforms, wizardDuration, wizardClientId, wizardPostsPerWeek, wizardGoal, setAdvancedMode, loadPosts, loadInsights]);
+
+  /* In-page guided steps */
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "client",
+      title: "Which client is this for?",
+      description: "Plans get scoped to a single client so the calendar stays tidy. Leave blank to plan for yourself.",
+      icon: <Users size={18} />,
+      component: (
+        <div className="space-y-2.5">
+          <button
+            type="button"
+            onClick={() => setWizardClientId("")}
+            className={`w-full text-left p-3.5 rounded-xl border transition-all ${
+              wizardClientId === ""
+                ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                : "border-border hover:border-gold/30 bg-surface-light"
+            }`}
+          >
+            <p className="text-sm font-semibold">No client (plan for yourself)</p>
+            <p className="text-[10px] text-muted mt-0.5">Posts won&apos;t be linked to a client profile.</p>
+          </button>
+          {clients.length === 0 ? (
+            <p className="text-[11px] text-muted text-center py-4">
+              No clients yet. Add one from the Clients page to scope plans to them.
+            </p>
+          ) : (
+            clients.map(c => {
+              const selected = wizardClientId === c.id;
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setWizardClientId(c.id)}
+                  className={`w-full text-left p-3.5 rounded-xl border transition-all ${
+                    selected
+                      ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                      : "border-border hover:border-gold/30 bg-surface-light"
+                  }`}
+                >
+                  <p className="text-sm font-semibold">{c.business_name}</p>
+                </button>
+              );
+            })
+          )}
+        </div>
+      ),
+    },
+    {
+      id: "goal",
+      title: "What's the goal + how long?",
+      description: "Pick the outcome you want — we'll shape the mix of hooks, CTAs, and formats to match.",
+      icon: <Target size={18} />,
+      component: (
+        <div className="space-y-4">
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Goal</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {([
+                { id: "awareness" as const, label: "Awareness" },
+                { id: "leads" as const, label: "Leads" },
+                { id: "sales" as const, label: "Sales" },
+                { id: "launch" as const, label: "Launch" },
+              ]).map(g => {
+                const sel = wizardGoal === g.id;
+                return (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => setWizardGoal(g.id)}
+                    className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
+                      sel
+                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
+                        : "border-border hover:border-gold/30 bg-surface-light"
+                    }`}
+                  >
+                    {g.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Duration</p>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                { id: 7 as const, label: "1 week" },
+                { id: 30 as const, label: "1 month" },
+                { id: 90 as const, label: "1 quarter" },
+              ]).map(d => {
+                const sel = wizardDuration === d.id;
+                return (
+                  <button
+                    key={d.id}
+                    type="button"
+                    onClick={() => setWizardDuration(d.id)}
+                    className={`p-3 rounded-xl border text-center text-sm font-semibold transition-all ${
+                      sel
+                        ? "border-gold bg-gold/10 text-gold shadow-lg shadow-gold/10"
+                        : "border-border hover:border-gold/30 bg-surface-light"
+                    }`}
+                  >
+                    {d.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Posts per week (per platform)</p>
+            <input
+              type="range"
+              min={1}
+              max={7}
+              value={wizardPostsPerWeek}
+              onChange={e => setWizardPostsPerWeek(parseInt(e.target.value, 10) || 3)}
+              className="w-full accent-gold"
+            />
+            <p className="text-[11px] text-muted mt-1">{wizardPostsPerWeek}× per week</p>
+          </div>
+          <div>
+            <p className="text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">Platforms</p>
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
+              {["instagram", "tiktok", "youtube", "linkedin", "facebook", "twitter"].map(p => {
+                const sel = wizardPlatforms.includes(p);
+                return (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() =>
+                      setWizardPlatforms(prev =>
+                        prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]
+                      )
+                    }
+                    className={`p-2 rounded-lg border text-[11px] font-medium capitalize transition-all ${
+                      sel
+                        ? "border-gold bg-gold/10 text-gold"
+                        : "border-border text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      ),
+      canProceed: wizardPlatforms.length > 0,
+    },
+    {
+      id: "review",
+      title: "Ready to generate?",
+      description: "We'll draft a full calendar of posts across the selected platforms. You can edit every post in Advanced mode.",
+      icon: <Wand2 size={18} />,
+      component: (
+        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+          <div className="flex items-center gap-2 text-sm">
+            <Target size={14} className="text-gold" />
+            <span className="font-semibold capitalize">{wizardGoal}</span>
+            <span className="text-muted">·</span>
+            <span>{wizardDuration === 7 ? "1 week" : wizardDuration === 30 ? "1 month" : "1 quarter"}</span>
+            <span className="text-muted">·</span>
+            <span>{wizardPostsPerWeek}× per week</span>
+          </div>
+          <div className="text-[11px] text-muted">
+            Platforms: <span className="text-foreground capitalize">{wizardPlatforms.join(", ") || "(none)"}</span>
+          </div>
+          {wizardClientId && (
+            <div className="text-[11px] text-muted">
+              Client:{" "}
+              <span className="text-foreground">
+                {clients.find(c => c.id === wizardClientId)?.business_name || "—"}
+              </span>
+            </div>
+          )}
+        </div>
+      ),
+    },
+  ];
+
   /* Filtered posts */
   const filteredPosts = useMemo(() => posts, [posts]);
 
@@ -261,15 +502,35 @@ export default function ContentPlanPage() {
         subtitle="All your content across every platform, in one view."
         gradient="purple"
         actions={
-          <button
-            onClick={() => { loadPosts(); loadInsights(); }}
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all"
-          >
-            <RefreshCw size={12} /> Refresh
-          </button>
+          <>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <button
+                onClick={() => { loadPosts(); loadInsights(); }}
+                className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all"
+              >
+                <RefreshCw size={12} /> Refresh
+              </button>
+            )}
+          </>
         }
       />
 
+      {/* Guided Mode — the 3-step content plan builder */}
+      {!advancedMode && (
+        <Wizard
+          steps={guidedSteps}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={wizardGenerating ? "Generating…" : "Generate content plan"}
+          busy={wizardGenerating}
+          onFinish={handleGuidedGenerate}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
+      {advancedMode && (
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_320px] gap-5">
         {/* ── LEFT: Main column ───────────────────────────── */}
         <div className="space-y-4 min-w-0">
@@ -522,6 +783,7 @@ export default function ContentPlanPage() {
           </InsightSection>
         </aside>
       </div>
+      )}
 
       {/* Post Detail Modal */}
       {selectedPost && (
