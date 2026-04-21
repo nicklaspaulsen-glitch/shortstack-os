@@ -438,20 +438,10 @@ export default function ScraperPage() {
 
   function enrichLeads() {
     if (selectedLeads.size === 0) { toast.error("Select leads to enrich"); return; }
-    setEnriching(true);
-    toast.loading(`Enriching ${selectedLeads.size} leads (${enrichmentType})...`);
-    setTimeout(() => {
-      setResults(prev => prev.map((lead, i) => {
-        if (!selectedLeads.has(i)) return lead;
-        if (enrichmentType === "contact") return { ...lead, email: lead.email || `info@${lead.business_name.toLowerCase().replace(/\s+/g, "")}.com`, phone: lead.phone || "(555) 000-" + String(Math.floor(1000 + Math.random() * 9000)) };
-        if (enrichmentType === "tech") return { ...lead, tech_stack: TECH_STACKS[Math.floor(Math.random() * TECH_STACKS.length)] };
-        if (enrichmentType === "decision_maker") return { ...lead, decision_maker: "John Smith", decision_maker_title: "Owner / CEO", decision_maker_email: `john@${lead.business_name.toLowerCase().replace(/\s+/g, "")}.com`, decision_maker_linkedin: "https://linkedin.com/in/example" };
-        return lead;
-      }));
-      toast.dismiss();
-      toast.success(`Enriched ${selectedLeads.size} leads`);
-      setEnriching(false);
-    }, 1500);
+    // Previously this function generated fake emails/phones/decision-makers via
+    // Math.random() — produced bogus data that polluted the CRM. Stubbed out
+    // until a real enrichment provider (Clearbit / Hunter / Apollo) is wired up.
+    toast("Lead enrichment coming soon — needs API integration (Clearbit/Hunter)");
   }
 
   async function openPushToCampaign() {
