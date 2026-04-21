@@ -33,6 +33,16 @@ try {
   console.warn("[shortstack] automation-handlers unavailable:", err?.message);
 }
 
+// ── Desktop-only features module (global hotkeys, enhanced tray, native
+// notifications, filesystem / clipboard watchers, shortstack:// protocol).
+// All additive — failures here never block app launch.
+let desktopFeatures = null;
+try {
+  desktopFeatures = require("./desktop-features");
+} catch (err) {
+  console.warn("[shortstack] desktop-features unavailable:", err?.message);
+}
+
 let mainWindow;
 let splashWindow;
 let agentWindow;
@@ -1109,6 +1119,35 @@ if (!gotTheLock) {
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) createSplash();
     });
+
+    // Install desktop-only features after app is ready. The base
+    // createMainWindow() still creates its own simple tray; the enhancer
+    // below destroys + replaces it with a rich one once the main window
+    // exists. Until then the hotkeys, notifications, watchers, and the
+    // `shortstack://` protocol handler are all active.
+    if (desktopFeatures && typeof desktopFeatures.install === "function") {
+      try {
+        const summary = desktopFeatures.install({
+          getMainWindow: () => mainWindow,
+          getAgentWindow: () => agentWindow,
+          createAgentWindow,
+          createMainWindow,
+          getLicense,
+          appUrl: APP_URL,
+          version: APP_VERSION,
+          // Lazy getter — the basic tray is built inside createMainWindow,
+          // which runs after this install call. tray-enhancer reads this
+          // later when replacing the tray.
+          get existingTray() { return tray; },
+        });
+        console.log(
+          "[shortstack] desktop-features installed:",
+          Object.keys(summary || {}).join(", ")
+        );
+      } catch (err) {
+        console.warn("[shortstack] desktop-features install failed:", err?.message);
+      }
+    }
   });
 
   app.on("window-all-closed", () => {

@@ -46,3 +46,49 @@ contextBridge.exposeInMainWorld("ssAutomation", {
     return () => ipcRenderer.removeListener("embedded-browser:navigate", handler);
   },
 });
+
+// ── Desktop-only features bridge ────────────────────────────────
+// Exposed to the Next.js dashboard running inside the Electron shell.
+// Detect presence at runtime with `typeof window.ssDesktop !== 'undefined'`
+// to branch between web and desktop UX — the web dashboard will have
+// `ssDesktop === undefined`, the desktop shell will have the full API.
+contextBridge.exposeInMainWorld("ssDesktop", {
+  // ── Feature discovery ────────────────────────────────────────
+  isDesktop: true,
+  featuresStatus: () => ipcRenderer.invoke("desktop:features-status"),
+
+  // ── Native notifications ─────────────────────────────────────
+  // opts: { title, body, subtitle?, silent?, urgency?, onClickRoute?, meta? }
+  notify: (opts) => ipcRenderer.invoke("desktop:notify", opts),
+  // preset kinds: 'leadScraped', 'emailOpened', 'adAlert', 'agentReply'
+  notifyPreset: (kind, payload) => ipcRenderer.invoke("desktop:notify-preset", kind, payload),
+  notificationLog: () => ipcRenderer.invoke("desktop:notification-log"),
+
+  // ── Tray control ─────────────────────────────────────────────
+  setUnread: (count) => ipcRenderer.invoke("desktop:tray-set-unread", count),
+  setCurrentClient: (label) => ipcRenderer.invoke("desktop:tray-set-client", label),
+
+  // ── Watchers ─────────────────────────────────────────────────
+  openDropbox: () => ipcRenderer.invoke("desktop:open-dropbox"),
+  watchersStatus: () => ipcRenderer.invoke("desktop:watchers-status"),
+  toggleWatcher: (which, value) => ipcRenderer.invoke("desktop:watchers-toggle", which, value),
+  drainIntentQueue: () => ipcRenderer.invoke("desktop:drain-intent-queue"),
+
+  // ── Protocol / deep links ────────────────────────────────────
+  consumeDeepLink: () => ipcRenderer.invoke("desktop:consume-deep-link"),
+  openDeepLink: (url) => ipcRenderer.invoke("desktop:open-deep-link", url),
+
+  // ── Streams from the main process ────────────────────────────
+  // fires when a hotkey screenshot / dropbox file / clipboard image arrives
+  onAssetIntent: (callback) => {
+    const handler = (_, data) => callback(data);
+    ipcRenderer.on("desktop:asset-intent", handler);
+    return () => ipcRenderer.removeListener("desktop:asset-intent", handler);
+  },
+  // fires when the user saves a Quick Note via the hotkey popup
+  onQuickNote: (callback) => {
+    const handler = (_, data) => callback(data);
+    ipcRenderer.on("desktop:quick-note", handler);
+    return () => ipcRenderer.removeListener("desktop:quick-note", handler);
+  },
+});
