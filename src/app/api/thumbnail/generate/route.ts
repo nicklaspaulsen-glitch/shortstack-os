@@ -2,6 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getStyleById } from "@/lib/thumbnail-styles";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
+
+// Average FLUX/SDXL render consumes roughly this many "tokens" in the
+// plan-tier budget. Tuned against observed RunPod usage — a Starter plan
+// (250k tokens/mo) gets ~250 single-image generations before hitting the
+// cap, which matches the rough infra-cost breakeven.
+const THUMBNAIL_TOKEN_COST = 1000;
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -212,6 +220,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. Without this a
+    // Starter-plan user could queue unlimited RunPod jobs and drain the
+    // GPU budget; the cost breakeven in LIMITS_BY_TIER assumes tokens
+    // are metered.
+    const variationCount = Math.max(1, Math.min(4, Number(variations) || 1));
+    const estimatedTokens = THUMBNAIL_TOKEN_COST * variationCount;
+    const ownerId = (await getEffectiveOwnerId(authSupabase, user.id)) || user.id;
+    const gate = await checkLimit(ownerId, "tokens", estimatedTokens);
+    if (!gate.allowed) {
+      return NextResponse.json(
+        {
+          error: gate.reason || "Monthly token budget reached for your plan.",
+          current: gate.current,
+          limit: gate.limit,
+          plan_tier: gate.plan_tier,
+          remaining: gate.remaining,
+        },
+        { status: 402 },
+      );
+    }
+
     const fluxUrl = process.env.RUNPOD_FLUX_URL;
     const sdxlUrl = process.env.RUNPOD_SDXL_URL;
     const runpodKey = process.env.RUNPOD_API_KEY;
@@ -415,6 +444,18 @@ export async function POST(request: NextRequest) {
       });
     } catch {
       // Non-critical — don't fail the request
+    }
+
+    // Plan-tier usage metering — record ACTUAL variation count that queued
+    // successfully. Not every variation may have made it to the queue, so
+    // we meter on `thumbnails.length`, not the requested `count`.
+    if (thumbnails.length > 0) {
+      await recordUsage(
+        ownerId,
+        "tokens",
+        THUMBNAIL_TOKEN_COST * thumbnails.length,
+        { kind: "thumbnail_generate", count: thumbnails.length },
+      );
     }
 
     return NextResponse.json({

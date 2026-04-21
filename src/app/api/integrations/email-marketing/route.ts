@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId, requireOwnedClient } from "@/lib/security/require-owned-client";
+import { checkLimit, recordUsage } from "@/lib/usage-limits";
 
 // Email Marketing Integration — supports both Mailchimp and Resend
 // Mailchimp: MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX (e.g., us21)
@@ -156,6 +158,20 @@ export async function POST(request: NextRequest) {
 
   const { action, client_id, ...params } = await request.json();
 
+  // Resolve the effective owner up front so we can plan-gate send_email
+  // (bug-hunt-apr20-v2 HIGH #13 — this route previously bypassed the
+  // monthly emails cap entirely). Verify client ownership when one is
+  // supplied so the audit log entry below can't be written on another
+  // tenant's client_id.
+  let ownerId = user.id;
+  if (client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    ownerId = ctx.ownerId;
+  } else {
+    ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  }
+
   try {
     if (action === "add_contact") {
       const { list_id, email, first_name, last_name, tags } = params;
@@ -184,7 +200,30 @@ export async function POST(request: NextRequest) {
     if (action === "send_email" && provider === "resend") {
       const { to, subject, html } = params;
       if (!to || !subject) return NextResponse.json({ error: "to and subject required" }, { status: 400 });
+
+      // Basic recipient validation so the route can't be used to spam via
+      // the shared SMTP_FROM domain with arbitrary body-supplied strings.
+      if (typeof to !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
+        return NextResponse.json({ error: "Invalid recipient email" }, { status: 400 });
+      }
+
+      const gate = await checkLimit(ownerId, "emails", 1);
+      if (!gate.allowed) {
+        return NextResponse.json(
+          {
+            error: gate.reason || "Monthly email limit reached for your plan.",
+            current: gate.current,
+            limit: gate.limit,
+            plan_tier: gate.plan_tier,
+            remaining: gate.remaining,
+          },
+          { status: 402 },
+        );
+      }
+
       const result = await resendSendEmail(to, subject, html || "<p>Hello</p>");
+
+      await recordUsage(ownerId, "emails", 1, { client_id: client_id || null, platform: "resend" });
 
       if (client_id) {
         await supabase.from("trinity_log").insert({
