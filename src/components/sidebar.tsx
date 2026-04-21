@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
 import { BRAND } from "@/lib/brand-config";
+import DesktopIndicator from "@/components/desktop-indicator";
 import type { LucideIcon } from "lucide-react";
 import {
   Pin,
@@ -919,6 +920,8 @@ export default function Sidebar() {
           <LogOut size={14} />
           {!collapsed && <span>Sign Out</span>}
         </button>
+        {/* Desktop-app indicator — only renders inside the Electron shell */}
+        <DesktopIndicator collapsed={collapsed} />
         {/* White label: Powered by footer */}
         {wl.show_powered_by && !collapsed && (wl.company_name && wl.company_name !== "ShortStack") && (
           <div className="text-center pt-1">

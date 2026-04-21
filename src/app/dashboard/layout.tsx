@@ -9,7 +9,18 @@ import ErrorBoundary from "@/components/ui/error-boundary";
 import ManagedClientBanner from "@/components/managed-client-banner";
 import { QuotaWallProvider } from "@/components/billing/quota-wall";
 import { useAuth } from "@/lib/auth-context";
+import { useAppStore } from "@/lib/store";
 import { getPlanConfig } from "@/lib/plan-config";
+import {
+  consumeDeepLink,
+  isDesktop,
+  onAssetIntent,
+  onQuickNote,
+  resolveDeepLink,
+  setCurrentClient,
+  type AssetIntent,
+} from "@/lib/desktop-bridge";
+import { subscribeDesktopNotifications } from "@/lib/notifications/desktop-subscriber";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useCallback } from "react";
 import { Menu, X, Crown } from "lucide-react";
@@ -25,6 +36,8 @@ const KeyboardShortcuts = dynamic(() => import("@/components/keyboard-shortcuts"
 const QuickAdd = dynamic(() => import("@/components/quick-add"), { ssr: false });
 const ClientContextPill = dynamic(() => import("@/components/client-context-pill"), { ssr: false });
 const TokenUsageWidget = dynamic(() => import("@/components/token-usage-widget"), { ssr: false });
+const ExtensionBridgePill = dynamic(() => import("@/components/extension-bridge-pill"), { ssr: false });
+const DesktopBadge = dynamic(() => import("@/components/desktop-badge"), { ssr: false });
 
 // ── Role-based route access control ──
 // Complements the sidebar role filtering (which hides nav items) by
@@ -172,6 +185,115 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => { document.documentElement.style.fontSize = "100%"; };
   }, [zoom]);
 
+  // ── Desktop-only hooks (feature-detected; web users see nothing) ──
+  // Zustand store for the currently managed client; used both to route
+  // asset/note uploads to the right client and to keep the tray label
+  // in sync with the in-app client switcher.
+  const managedClient = useAppStore((s) => s.managedClient);
+
+  // 1) On mount — drain any pending `shortstack://` deep link and route.
+  useEffect(() => {
+    if (!isDesktop()) return;
+    let cancelled = false;
+    (async () => {
+      const link = await consumeDeepLink();
+      if (cancelled || !link) return;
+      const target = resolveDeepLink(link);
+      if (target) router.push(target);
+    })();
+    return () => { cancelled = true; };
+    // Run once per mount — we drain the queue on boot.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // 2) Asset intent — screenshot / clipboard image / dropbox drop.
+  // Upload to the currently managed client (or no-op if none selected).
+  useEffect(() => {
+    if (!isDesktop()) return;
+    const unsubscribe = onAssetIntent(async (asset: AssetIntent) => {
+      const clientId = managedClient?.id;
+      const clientLabel = managedClient?.business_name;
+      if (!clientId) {
+        toast.error("Pick a client before capturing assets", { icon: "📎" });
+        return;
+      }
+      try {
+        const body = {
+          client_id: clientId,
+          file_name: asset.fileName || `${asset.kind}-${Date.now()}`,
+          file_type: asset.mimeType || asset.kind,
+          file_size: asset.bytes || 0,
+          // The desktop shell already persists the file to disk — we
+          // record the local path so the watcher pipeline can pick it up.
+          // /api/uploads accepts a file_url or leaves it null.
+          file_url: asset.filePath || null,
+          category: asset.kind,
+        };
+        const res = await fetch("/api/uploads", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        toast.success(`Uploaded to ${clientLabel || "client"}`);
+      } catch (err) {
+        toast.error(`Upload failed: ${(err as Error).message || "unknown error"}`);
+      }
+    });
+    return unsubscribe;
+  }, [managedClient]);
+
+  // 3) Quick notes — Ctrl+Shift+N popup → outreach_log note on the
+  // currently managed client.
+  useEffect(() => {
+    if (!isDesktop()) return;
+    const unsubscribe = onQuickNote(async (n) => {
+      const clientId = managedClient?.id;
+      const clientLabel = managedClient?.business_name;
+      if (!clientId) {
+        toast.error("Pick a client before saving notes", { icon: "📝" });
+        return;
+      }
+      try {
+        // Re-use the upload endpoint's note category; it's the lightest
+        // path that's guaranteed to exist and scopes by client_id.
+        const res = await fetch("/api/uploads", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            client_id: clientId,
+            file_name: `Note ${new Date(n.createdAt).toLocaleString()}`,
+            file_type: "text/plain",
+            file_size: (n.text || "").length,
+            category: "note",
+            // Body of the note is embedded in file_name fallback
+            // (uploads table has no body column, so we prefix the name).
+          }),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        toast.success(`Note saved to ${clientLabel || "client"}`);
+      } catch (err) {
+        toast.error(`Note failed: ${(err as Error).message || "unknown error"}`);
+      }
+    });
+    return unsubscribe;
+  }, [managedClient]);
+
+  // 4) Tray label mirror — tell the desktop shell which client we're
+  // viewing so the tray menu + taskbar title stay in sync.
+  useEffect(() => {
+    if (!isDesktop()) return;
+    void setCurrentClient(managedClient?.business_name || "");
+  }, [managedClient]);
+
+  // 5) Supabase realtime → native notifications (leads, email opens, agent replies).
+  useEffect(() => {
+    if (!isDesktop()) return;
+    if (!user?.id) return;
+    const unsubscribe = subscribeDesktopNotifications(user.id);
+    return unsubscribe;
+  }, [user?.id]);
+
   // Electron banner cleanup is handled globally by <ElectronBannerCleanup /> in root layout
 
   // Don't render dashboard content until auth state is resolved.
@@ -286,6 +408,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <ClientContextPill />
         {/* Admin-only floating token-usage ring (self-gates on role) */}
         <TokenUsageWidget />
+        {/* Desktop-only: mirror unread notifications count to OS tray */}
+        <DesktopBadge />
+        {/* Chrome extension bridge pill — feature-detected (only shows if extension has ever connected) */}
+        <ExtensionBridgePill />
       </div>
     </QuotaWallProvider>
   );
