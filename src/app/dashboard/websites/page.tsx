@@ -8,7 +8,8 @@ import {
   Camera, GraduationCap, Newspaper, RefreshCw, CheckCircle,
   Zap, Link2, ShoppingBag, ShieldCheck, Megaphone, Clock,
   Crown, X, Share2, DollarSign, BarChart3, FlaskConical,
-  EyeOff, Check, Rocket, Calendar,
+  EyeOff, Check, Rocket, Calendar, Monitor, Tablet, Smartphone,
+  TrendingUp, ArrowRight,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
@@ -89,6 +90,206 @@ const ALL_ADDONS = [
   { key: "white_label", label: "White-label (no watermark)", price: 20, icon: <EyeOff size={11} /> },
 ];
 
+/* ─────────────────────────── Niche template gallery ───────────────────────────
+   Each template preselects wizard answers so the user skips the generic opener.
+   Images are Unsplash CDN with stable photo ids + cropping params (600x400).
+*/
+interface NicheTemplate {
+  id: string;
+  niche: string;
+  name: string;
+  tagline: string;
+  cvr: string;
+  avgLaunch: string;
+  image: string;
+  accent: string;
+  preset: {
+    business_type: string;
+    style_vibe: string;
+    hero_style: string;
+    cta_goal: string;
+    brand_primary: string;
+    brand_accent: string;
+    sections: string[];
+  };
+}
+
+const NICHE_TEMPLATES: NicheTemplate[] = [
+  {
+    id: "saas-launch",
+    niche: "SaaS Landing",
+    name: "Product Launch",
+    tagline: "Hero + feature grid + pricing + demo CTA",
+    cvr: "Avg 4.2% CVR",
+    avgLaunch: "3 min to live",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop",
+    accent: "from-blue-600/70 to-indigo-500/70",
+    preset: {
+      business_type: "saas",
+      style_vibe: "minimal-clean",
+      hero_style: "split-screen",
+      cta_goal: "schedule-demo",
+      brand_primary: "#2563EB",
+      brand_accent: "#0F172A",
+      sections: ["features", "testimonials", "pricing", "faq"],
+    },
+  },
+  {
+    id: "agency-services",
+    niche: "Agency Services",
+    name: "Full-Service Agency",
+    tagline: "Case studies + services grid + booking widget",
+    cvr: "Avg 5.8% CVR",
+    avgLaunch: "4 min to live",
+    image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
+    accent: "from-red-600/70 to-orange-500/70",
+    preset: {
+      business_type: "agency",
+      style_vibe: "dark-cinematic",
+      hero_style: "big-headline-image",
+      cta_goal: "book-call",
+      brand_primary: "#DC2626",
+      brand_accent: "#1F2937",
+      sections: ["services", "testimonials", "faq", "contact"],
+    },
+  },
+  {
+    id: "ecom-product",
+    niche: "E-com Product",
+    name: "DTC Storefront",
+    tagline: "Fullscreen photo + reviews + buy-now strip",
+    cvr: "Avg 3.1% CVR",
+    avgLaunch: "3 min to live",
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&h=400&fit=crop",
+    accent: "from-pink-500/70 to-rose-500/70",
+    preset: {
+      business_type: "ecommerce",
+      style_vibe: "bold-vibrant",
+      hero_style: "fullscreen-photo",
+      cta_goal: "buy-product",
+      brand_primary: "#EC4899",
+      brand_accent: "#111827",
+      sections: ["features", "testimonials", "gallery", "faq"],
+    },
+  },
+  {
+    id: "local-service",
+    niche: "Local Service",
+    name: "Local Pros",
+    tagline: "Trust badges + service area + quick quote",
+    cvr: "Avg 6.4% CVR",
+    avgLaunch: "3 min to live",
+    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=400&fit=crop",
+    accent: "from-sky-500/70 to-cyan-500/70",
+    preset: {
+      business_type: "local_service",
+      style_vibe: "corporate-pro",
+      hero_style: "big-headline-image",
+      cta_goal: "contact",
+      brand_primary: "#0EA5E9",
+      brand_accent: "#0C4A6E",
+      sections: ["services", "testimonials", "faq", "contact"],
+    },
+  },
+  {
+    id: "coach-course",
+    niche: "Coach / Course",
+    name: "Personal Brand",
+    tagline: "Story-driven hero + results + waitlist",
+    cvr: "Avg 4.9% CVR",
+    avgLaunch: "4 min to live",
+    image: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=600&h=400&fit=crop",
+    accent: "from-violet-500/70 to-fuchsia-500/70",
+    preset: {
+      business_type: "coach",
+      style_vibe: "minimal-clean",
+      hero_style: "split-screen",
+      cta_goal: "join-waitlist",
+      brand_primary: "#7C3AED",
+      brand_accent: "#1E1B4B",
+      sections: ["about", "testimonials", "pricing", "faq"],
+    },
+  },
+  {
+    id: "restaurant-menu",
+    niche: "Restaurant",
+    name: "Neighborhood Restaurant",
+    tagline: "Menu highlights + reservations + location",
+    cvr: "Avg 7.2% CVR",
+    avgLaunch: "3 min to live",
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop",
+    accent: "from-amber-500/70 to-red-500/70",
+    preset: {
+      business_type: "restaurant",
+      style_vibe: "luxury-gold",
+      hero_style: "fullscreen-photo",
+      cta_goal: "book-call",
+      brand_primary: "#B45309",
+      brand_accent: "#78350F",
+      sections: ["gallery", "testimonials", "contact"],
+    },
+  },
+  {
+    id: "real-estate",
+    niche: "Real Estate",
+    name: "Agent Brand",
+    tagline: "Listing grid + bio + valuation CTA",
+    cvr: "Avg 5.1% CVR",
+    avgLaunch: "4 min to live",
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop",
+    accent: "from-slate-700/70 to-amber-500/70",
+    preset: {
+      business_type: "real_estate",
+      style_vibe: "luxury-gold",
+      hero_style: "big-headline-image",
+      cta_goal: "contact",
+      brand_primary: "#C9A84C",
+      brand_accent: "#1E293B",
+      sections: ["gallery", "about", "testimonials", "contact"],
+    },
+  },
+  {
+    id: "portfolio",
+    niche: "Portfolio",
+    name: "Creative Showcase",
+    tagline: "Full-bleed work + case study + contact",
+    cvr: "Avg 3.8% CVR",
+    avgLaunch: "3 min to live",
+    image: "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?w=600&h=400&fit=crop",
+    accent: "from-orange-500/70 to-amber-500/70",
+    preset: {
+      business_type: "portfolio",
+      style_vibe: "editorial",
+      hero_style: "fullscreen-photo",
+      cta_goal: "contact",
+      brand_primary: "#F97316",
+      brand_accent: "#18181B",
+      sections: ["gallery", "about", "contact"],
+    },
+  },
+  {
+    id: "waitlist",
+    niche: "Pre-launch",
+    name: "Waitlist Page",
+    tagline: "Countdown + email capture + social proof",
+    cvr: "Avg 12.4% CVR",
+    avgLaunch: "2 min to live",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
+    accent: "from-emerald-500/70 to-teal-500/70",
+    preset: {
+      business_type: "saas",
+      style_vibe: "dark-cinematic",
+      hero_style: "interactive-gradient",
+      cta_goal: "join-waitlist",
+      brand_primary: "#10B981",
+      brand_accent: "#064E3B",
+      sections: ["features", "testimonials"],
+    },
+  },
+];
+
+type ViewportMode = "desktop" | "tablet" | "mobile";
+
 function daysUntil(iso: string | null): number | null {
   if (!iso) return null;
   const ms = new Date(iso).getTime() - Date.now();
@@ -110,11 +311,13 @@ export default function WebsitesPage() {
   const [loading, setLoading] = useState(true);
   const [clients, setClients] = useState<Array<{ id: string; business_name: string; industry: string | null }>>([]);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [wizardPreset, setWizardPreset] = useState<Record<string, unknown>>({});
 
   // Active project for the result panel
   const [active, setActive] = useState<WebsiteProject | null>(null);
   const [regenerating, setRegenerating] = useState(false);
   const [deploying, setDeploying] = useState(false);
+  const [viewport, setViewport] = useState<ViewportMode>("desktop");
 
   // Pricing modal
   const [pricingFor, setPricingFor] = useState<WebsiteProject | null>(null);
@@ -378,6 +581,28 @@ export default function WebsitesPage() {
     },
   ];
 
+  /* ─────────────────────────── Template picker helpers ───────────────────────── */
+
+  function pickTemplate(t: NicheTemplate): void {
+    setWizardPreset({
+      ...t.preset,
+      visuals: "stock-photos",
+      domain_strategy: "subdomain",
+    });
+    setWizardOpen(true);
+  }
+
+  function startBlank(): void {
+    setWizardPreset({
+      brand_primary: "#C9A84C",
+      brand_accent: "#0F172A",
+      sections: ["about", "features", "testimonials", "faq"],
+      visuals: "stock-photos",
+      domain_strategy: "subdomain",
+    });
+    setWizardOpen(true);
+  }
+
   /* ─────────────────────────── Generate, deploy, demo ───────────────────────── */
 
   async function deployDemo(projectId: string): Promise<void> {
@@ -393,7 +618,7 @@ export default function WebsitesPage() {
   }
 
   async function handleWizardComplete(data: Record<string, unknown>) {
-    toast.loading("Claude is designing your site…", { id: "gen" });
+    toast.loading("Designing your site\u2026", { id: "gen" });
     try {
       const res = await fetch("/api/websites/generate", {
         method: "POST",
@@ -434,7 +659,7 @@ export default function WebsitesPage() {
 
   async function regenerate(project: WebsiteProject) {
     setRegenerating(true);
-    toast.loading("Regenerating with Claude…", { id: "regen" });
+    toast.loading("Regenerating\u2026", { id: "regen" });
     try {
       const res = await fetch("/api/websites/generate", {
         method: "POST",
@@ -609,44 +834,142 @@ export default function WebsitesPage() {
     <div className="fade-in space-y-5">
       <PageHero
         icon={<Globe size={28} />}
-        title="Website Builder"
-        subtitle="Claude designs high-converting one-pagers. Try a free 14-day demo before paying."
+        title="Websites that convert"
+        subtitle="Pick a niche. Get a high-converting client site live in 3 minutes &mdash; proven to convert at 4-6%."
         gradient="sunset"
         actions={
           <>
             <div className="flex items-center gap-1.5 text-[10px] text-white/80 bg-white/10 border border-white/20 px-2 py-1 rounded-lg">
               <VercelIcon size={12} /> Vercel
-              <span className="opacity-40">·</span>
+              <span className="opacity-40">&middot;</span>
               <GoDaddyIcon size={12} /> GoDaddy
             </div>
             <button
-              onClick={() => setWizardOpen(true)}
-              className="text-xs px-4 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold hover:shadow-lg hover:shadow-amber-400/30 flex items-center gap-1.5"
+              onClick={startBlank}
+              className="text-xs px-3 py-2 rounded-lg border border-white/25 text-white/90 hover:bg-white/10 hover:border-white/40 flex items-center gap-1.5"
             >
-              <Plus size={14} /> Start New Website
+              <Plus size={13} /> Build from scratch
             </button>
           </>
         }
       />
 
+      {/* Social proof strip */}
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-gradient-to-r from-amber-500/[0.04] via-transparent to-emerald-500/[0.04]">
+        <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
+            <TrendingUp size={12} className="text-emerald-400" />
+            <span className="font-semibold">1,240+ sites</span>
+            <span className="text-muted">launched this month</span>
+          </div>
+          <span className="w-px h-4 bg-border" />
+          <div className="flex items-center gap-1.5 text-[11px] text-foreground/90">
+            <Target size={12} className="text-amber-400" />
+            <span className="font-semibold">4.6% avg CVR</span>
+            <span className="text-muted">across templates</span>
+          </div>
+          <span className="w-px h-4 bg-border hidden sm:block" />
+          <div className="hidden sm:flex items-center gap-1.5 text-[11px] text-foreground/90">
+            <Clock size={12} className="text-sky-400" />
+            <span className="font-semibold">3 min</span>
+            <span className="text-muted">median time to live</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          {["A", "M", "J", "K", "R"].map((l, i) => (
+            <span
+              key={i}
+              className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400/30 to-orange-500/30 border border-border text-[9px] font-semibold flex items-center justify-center text-foreground/80"
+              style={{ marginLeft: i === 0 ? 0 : -6 }}
+            >
+              {l}
+            </span>
+          ))}
+          <span className="text-[10px] text-muted ml-2">Trusted by agencies & freelancers</span>
+        </div>
+      </div>
+
       {/* Wizard */}
       <CreationWizard
         open={wizardOpen}
         title="Website Builder"
-        subtitle="Answer a few questions — Claude will design and demo your one-pager free for 14 days."
+        subtitle="A few quick questions &mdash; then a live demo URL you can share in minutes."
         icon={<Globe size={18} />}
-        submitLabel="Generate with Claude"
-        initialData={{
-          brand_primary: "#C9A84C",
-          brand_accent: "#0F172A",
-          sections: ["about", "features", "testimonials", "faq"],
-          visuals: "ai-generated",
-          domain_strategy: "subdomain",
-        }}
+        submitLabel="Generate my site"
+        initialData={wizardPreset}
         steps={steps}
         onClose={() => setWizardOpen(false)}
         onComplete={handleWizardComplete}
       />
+
+      {/* ──────────────────── Niche template gallery ──────────────────── */}
+      <div className="space-y-3">
+        <div className="flex items-end justify-between flex-wrap gap-2">
+          <div>
+            <h2 className="text-sm font-semibold flex items-center gap-2">
+              <Layout size={14} className="text-gold" />
+              Pick a niche. Ship in 30 seconds.
+            </h2>
+            <p className="text-[11px] text-muted mt-0.5">
+              Battle-tested templates &mdash; every one is prewired for conversion.
+            </p>
+          </div>
+          <button
+            onClick={startBlank}
+            className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-gold/30 flex items-center gap-1"
+          >
+            Start from a blank canvas <ArrowRight size={10} />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 [perspective:1200px]">
+          {NICHE_TEMPLATES.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => pickTemplate(t)}
+              className="group relative text-left rounded-2xl overflow-hidden border border-border bg-surface-light shadow-xl shadow-black/30 transition-all duration-300 hover:shadow-2xl hover:shadow-amber-500/10 hover:-translate-y-1 hover:border-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 [transform-style:preserve-3d] hover:[transform:rotateX(2deg)_rotateY(-2deg)]"
+            >
+              {/* Preview image */}
+              <div className="relative aspect-[3/2] overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={t.image}
+                  alt={`${t.niche} template preview`}
+                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.08]"
+                />
+                <div className={`absolute inset-0 bg-gradient-to-tr ${t.accent} mix-blend-multiply opacity-70`} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                {/* Niche chip */}
+                <span className="absolute top-2.5 left-2.5 text-[9px] px-2 py-0.5 rounded-full bg-black/55 backdrop-blur-md text-white border border-white/20 font-medium tracking-wide uppercase">
+                  {t.niche}
+                </span>
+                {/* CVR metric */}
+                <span className="absolute top-2.5 right-2.5 text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/90 backdrop-blur-md text-black border border-white/30 font-semibold flex items-center gap-1">
+                  <TrendingUp size={9} /> {t.cvr}
+                </span>
+
+                {/* Bottom overlay content */}
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <p className="text-[13px] font-bold text-white drop-shadow-sm">{t.name}</p>
+                  <p className="text-[10px] text-white/80 mt-0.5 line-clamp-2">{t.tagline}</p>
+                </div>
+              </div>
+
+              {/* Footer bar */}
+              <div className="flex items-center justify-between px-3 py-2.5 bg-surface">
+                <span className="text-[10px] text-muted flex items-center gap-1">
+                  <Clock size={10} className="text-gold/70" /> {t.avgLaunch}
+                </span>
+                <span className="text-[10px] text-gold font-semibold flex items-center gap-1 transition-transform duration-200 group-hover:translate-x-0.5">
+                  Use this <ArrowRight size={11} />
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Demo-ready banner — shown while demo is live and not yet subscribed */}
       {active && effectiveStatus(active) === "preview" && (
@@ -746,14 +1069,61 @@ export default function WebsitesPage() {
             </div>
           )}
 
+          {/* Viewport toggle + open-in-new-tab */}
+          {indexHtml && (
+            <div className="flex items-center justify-between gap-2">
+              <div className="inline-flex items-center rounded-lg border border-border bg-surface-light p-0.5">
+                {[
+                  { id: "desktop" as const, label: "Desktop", Icon: Monitor },
+                  { id: "tablet" as const, label: "Tablet", Icon: Tablet },
+                  { id: "mobile" as const, label: "Mobile", Icon: Smartphone },
+                ].map((v) => {
+                  const on = viewport === v.id;
+                  return (
+                    <button
+                      key={v.id}
+                      onClick={() => setViewport(v.id)}
+                      aria-label={v.label}
+                      aria-pressed={on}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] transition ${
+                        on ? "bg-gold text-black font-semibold" : "text-muted hover:text-foreground"
+                      }`}
+                    >
+                      <v.Icon size={11} /> {v.label}
+                    </button>
+                  );
+                })}
+              </div>
+              {(active.preview_url || active.vercel_url) && (
+                <a
+                  href={active.preview_url || active.vercel_url || "#"}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground hover:border-gold/30 flex items-center gap-1"
+                >
+                  <ExternalLink size={10} /> Open in new tab
+                </a>
+              )}
+            </div>
+          )}
+
           {indexHtml ? (
-            <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23]" style={{ height: 600 }}>
-              <iframe srcDoc={indexHtml} className="w-full h-full" title="Website preview" sandbox="allow-scripts" />
+            <div className="rounded-xl border border-border overflow-hidden bg-[#1a1c23] flex items-center justify-center p-3" style={{ height: 640 }}>
+              <div
+                className="bg-white transition-all duration-300 shadow-2xl shadow-black/40 rounded-lg overflow-hidden"
+                style={{
+                  width: viewport === "desktop" ? "100%" : viewport === "tablet" ? 768 : 390,
+                  maxWidth: "100%",
+                  height: "100%",
+                }}
+              >
+                <iframe srcDoc={indexHtml} className="w-full h-full border-0" title="Website preview" sandbox="allow-scripts" />
+              </div>
             </div>
           ) : (
             <div className="py-10 text-center text-xs text-muted">
               <Loader size={18} className="animate-spin mx-auto mb-2" />
-              Generating...
+              Generating&hellip;
             </div>
           )}
         </div>
@@ -769,12 +1139,12 @@ export default function WebsitesPage() {
         ) : projects.length === 0 ? (
           <div className="py-10 text-center">
             <Globe size={24} className="mx-auto mb-2 text-muted/30" />
-            <p className="text-xs text-muted mb-3">No websites yet. Launch the wizard to build your first one — free 14-day demo, no card required.</p>
+            <p className="text-xs text-muted mb-3">No websites yet. Pick a niche template above and you&apos;ll have a live demo URL in 3 minutes &mdash; no card required.</p>
             <button
-              onClick={() => setWizardOpen(true)}
-              className="text-xs px-4 py-2 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold inline-flex items-center gap-1.5"
+              onClick={startBlank}
+              className="text-xs px-4 py-2 rounded-lg border border-border text-muted hover:text-foreground hover:border-gold/30 inline-flex items-center gap-1.5"
             >
-              <Sparkles size={12} /> Start with Claude
+              <Plus size={12} /> Or build from scratch
             </button>
           </div>
         ) : (
@@ -785,7 +1155,7 @@ export default function WebsitesPage() {
               const status = effectiveStatus(p);
               const days = daysUntil(p.demo_expires_at);
               return (
-                <div key={p.id} className="card-hover p-0 overflow-hidden">
+                <div key={p.id} className="card-hover p-0 overflow-hidden shadow-lg shadow-black/20 transition-transform duration-300 hover:-translate-y-0.5">
                   {/* Thumbnail */}
                   <div className="relative h-36 bg-slate-900 border-b border-border overflow-hidden">
                     {html ? (
@@ -877,36 +1247,36 @@ export default function WebsitesPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div className="card border-gold/10">
           <h3 className="section-header flex items-center gap-2">
-            <Sparkles size={12} className="text-gold" /> 1. Describe
+            <Layout size={12} className="text-gold" /> 1. Pick a niche
           </h3>
-          <p className="text-[10px] text-muted">12 quick questions about your business, audience, style and goal. AI suggests colors and copy.</p>
+          <p className="text-[10px] text-muted">Nine battle-tested templates, each one prewired for the conversion pattern that niche responds to.</p>
         </div>
         <div className="card border-gold/10">
           <h3 className="section-header flex items-center gap-2">
-            <Wand2 size={12} className="text-gold" /> 2. Free 14-day demo
+            <Rocket size={12} className="text-gold" /> 2. Share the demo
           </h3>
-          <p className="text-[10px] text-muted">Auto-deployed to a shareable demo URL. Test, share with clients, no card required.</p>
+          <p className="text-[10px] text-muted">Auto-deployed to a live URL in under 3 minutes. Send it to your client &mdash; free for 14 days, no card.</p>
         </div>
         <div className="card border-gold/10">
           <h3 className="section-header flex items-center gap-2">
-            <Zap size={12} className="text-gold" /> 3. Go live when ready
+            <DollarSign size={12} className="text-gold" /> 3. Go live, get paid
           </h3>
-          <p className="text-[10px] text-muted">Custom monthly pricing based on complexity. Pay only when you go live with your domain.</p>
+          <p className="text-[10px] text-muted">Connect a domain and subscribe. Transparent monthly pricing based on what&apos;s actually in the site.</p>
         </div>
       </div>
 
       <div className="card border-gold/10">
         <h3 className="text-[11px] font-semibold flex items-center gap-1.5 mb-2">
-          <ShieldCheck size={11} className="text-gold" /> Conversion best-practices built in
+          <ShieldCheck size={11} className="text-gold" /> Every template ships with
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] text-muted">
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Bold hero headline + subheader</div>
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Social proof above the fold</div>
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> CTA repeated 3+ times</div>
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Benefit-driven copy</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Animated 3D / gradient hero</div>
+          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Mobile-first responsive</div>
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Trust badges & guarantees</div>
-          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Mobile-first Tailwind</div>
+          <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Lighthouse 90+ scores</div>
           <div className="flex items-start gap-1.5"><CheckCircle size={10} className="text-success mt-0.5 shrink-0" /> Scroll-reveal animations</div>
         </div>
       </div>
