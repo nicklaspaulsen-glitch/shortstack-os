@@ -215,6 +215,58 @@ body {
 .ss-status.connected { background: #34d399; box-shadow: 0 0 6px #34d39966; }
 .ss-status.disconnected { background: #ef4444; box-shadow: 0 0 6px #ef444466; }
 
+/* Bridge pill */
+.ss-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ss-bridge-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 6px;
+  background: #141420;
+  border: 1px solid #1e1e2a;
+  border-radius: 12px;
+  font-size: 10px;
+  color: #888;
+  transition: border-color 0.2s, background 0.2s;
+}
+.ss-bridge-pill:hover { border-color: #2a2a36; background: #171722; }
+.ss-bridge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #555;
+  transition: background 0.25s, box-shadow 0.25s;
+}
+.ss-bridge-dot.connecting { background: #f59e0b; box-shadow: 0 0 4px #f59e0b88; animation: bridgePulse 1.1s infinite; }
+.ss-bridge-dot.connected { background: #34d399; box-shadow: 0 0 4px #34d39988; }
+.ss-bridge-dot.error { background: #ef4444; box-shadow: 0 0 4px #ef444488; }
+.ss-bridge-label { letter-spacing: 0.3px; }
+.ss-bridge-pill.connected .ss-bridge-label { color: #34d399; }
+.ss-bridge-pill.connecting .ss-bridge-label { color: #f59e0b; }
+.ss-bridge-pill.error .ss-bridge-label { color: #ef4444; }
+.ss-bridge-toggle {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 1;
+}
+.ss-bridge-toggle::before { content: "\25CF"; font-size: 8px; }
+.ss-bridge-pill.connected .ss-bridge-toggle::before { content: "\2715"; }
+.ss-bridge-pill.connected .ss-bridge-toggle { color: #34d399; }
+.ss-bridge-toggle:hover { color: #C9A84C; }
+
+@keyframes bridgePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 /* Auth gate */
 .ss-auth {
   text-align: center;

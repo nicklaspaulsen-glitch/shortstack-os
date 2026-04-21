@@ -94,7 +94,68 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadActivity();
   await initChat();
   await initSuggestions();
+  initBridgePill();
 });
+
+/* ── Bridge status pill ── */
+async function initBridgePill() {
+  const toggle = document.getElementById("bridgeToggle");
+  if (toggle) {
+    toggle.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      const state = await msg("bridgeStatus");
+      if (state?.data?.status === "connected" || state?.data?.status === "connecting") {
+        await msg("bridgeDisconnect");
+      } else {
+        await msg("bridgeConnect");
+      }
+      refreshBridgePill();
+    });
+  }
+  // Listen for live status pushes from the background
+  chrome.runtime.onMessage.addListener((m) => {
+    if (m?.type === "SS_BRIDGE_STATUS") applyBridgeStatus(m.status, m.error);
+  });
+  refreshBridgePill();
+  // Poll every 3s while the popup is open as a safety net
+  setInterval(refreshBridgePill, 3000);
+}
+
+async function refreshBridgePill() {
+  try {
+    const res = await msg("bridgeStatus");
+    const s = res?.data?.status || "disconnected";
+    applyBridgeStatus(s, res?.data?.error);
+  } catch (_) { /* ignore */ }
+}
+
+function applyBridgeStatus(status, error) {
+  const pill = document.getElementById("bridgePill");
+  const dot = document.getElementById("bridgeDot");
+  const label = document.getElementById("bridgeLabel");
+  if (!pill || !dot || !label) return;
+  pill.classList.remove("connected", "connecting", "error");
+  dot.classList.remove("connected", "connecting", "error");
+  if (status === "connected") {
+    pill.classList.add("connected");
+    dot.classList.add("connected");
+    label.textContent = "Connected";
+    pill.title = "Connected to ShortStack — click X to disconnect";
+  } else if (status === "connecting") {
+    pill.classList.add("connecting");
+    dot.classList.add("connecting");
+    label.textContent = "Connecting";
+    pill.title = "Connecting to ShortStack bridge...";
+  } else if (status === "error") {
+    pill.classList.add("error");
+    dot.classList.add("error");
+    label.textContent = "Bridge";
+    pill.title = error ? `Bridge error: ${error}` : "Bridge error";
+  } else {
+    label.textContent = "Bridge";
+    pill.title = error ? `Bridge offline: ${error}` : "Bridge offline — click to connect";
+  }
+}
 
 /* ── View Switching ── */
 function showMain() {

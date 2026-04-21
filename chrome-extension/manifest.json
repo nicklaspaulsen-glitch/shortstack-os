@@ -1,10 +1,23 @@
 {
   "manifest_version": 3,
   "name": "ShortStack OS — Quick Actions",
-  "description": "Add leads, create posts, and take actions from any webpage",
-  "version": "1.0.0",
-  "permissions": ["activeTab", "storage", "contextMenus", "notifications", "alarms", "tabs"],
-  "host_permissions": ["https://app.shortstack.work/*", "https://*.shortstack.app/*"],
+  "description": "Add leads, create posts, and take agentic actions from any webpage",
+  "version": "1.1.0",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus",
+    "notifications",
+    "alarms",
+    "tabs",
+    "scripting"
+  ],
+  "optional_permissions": ["debugger"],
+  "host_permissions": [
+    "https://app.shortstack.work/*",
+    "https://*.shortstack.app/*",
+    "wss://app.shortstack.work/*"
+  ],
   "externally_connectable": {
     "matches": ["https://app.shortstack.work/*", "https://*.shortstack.app/*"]
   },
@@ -22,7 +35,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["api.js", "content.js"],
+      "js": ["api.js", "content.js", "agentic.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }

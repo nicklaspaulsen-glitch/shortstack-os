@@ -1,5 +1,5 @@
 /* ShortStack OS — Background Service Worker */
-importScripts("api.js");
+importScripts("api.js", "bridge.js");
 
 const AUTH_PAGE = "https://app.shortstack.work/extension-auth";
 
@@ -9,7 +9,12 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({ id: "ss-create-post", title: "Create Post from Selection", contexts: ["selection"] });
   chrome.contextMenus.create({ id: "ss-summarize", title: "Summarize Selection", contexts: ["selection"] });
   chrome.alarms.create("check-notifications", { periodInMinutes: 5 });
+  // Kick off the bridge on install/update (no-op if unauthenticated)
+  try { self.ShortStackBridge?.connect(); } catch (_) {}
 });
+
+/* ── Bridge startup: attempt connection when the worker spins up ── */
+try { self.ShortStackBridge?.connect(); } catch (_) {}
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const text = info.selectionText || "";
@@ -46,9 +51,24 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
         case "checkAuth":    result = await checkAuth(); break;
         case "startLogin":   result = await startLogin(); break;
         case "logout":       result = await logout(); break;
+
+        /* ── Bridge controls ── */
+        case "bridgeConnect":    result = await bridgeConnect(); break;
+        case "bridgeDisconnect": result = await bridgeDisconnect(); break;
+        case "bridgeStatus":     result = bridgeStatus(); break;
+
+        /* ── Agentic passthrough ── routes directly to the active tab's
+         * content-script agentic.js. Lets the popup / injected UIs test
+         * commands without needing a WebSocket round-trip. */
+        case "agentic": {
+          const activeRes = await forwardAgentic(msg.data || {});
+          result = activeRes;
+          break;
+        }
+
         default: result = { error: "Unknown action" };
       }
-      if (!["getActivity", "checkAuth", "startLogin", "logout"].includes(msg.action)) {
+      if (!["getActivity", "checkAuth", "startLogin", "logout", "bridgeStatus"].includes(msg.action)) {
         logActivity(msg.action, msg.label || "");
       }
       sendResponse({ ok: true, data: result });
@@ -127,5 +147,54 @@ async function logout() {
     "ss_expires_at",
     "ss_user",
   ]);
+  // Drop the bridge too — its token is stale now
+  try { self.ShortStackBridge?.disconnect(); } catch (_) {}
   return { ok: true };
 }
+
+/* ── Bridge control wrappers ── */
+async function bridgeConnect() {
+  await self.ShortStackBridge?.connect();
+  return self.ShortStackBridge?.state() || { status: "unavailable" };
+}
+
+async function bridgeDisconnect() {
+  self.ShortStackBridge?.disconnect();
+  return self.ShortStackBridge?.state() || { status: "unavailable" };
+}
+
+function bridgeStatus() {
+  return self.ShortStackBridge?.state() || { status: "unavailable" };
+}
+
+/* ── Agentic passthrough ──
+ * Forwards { action, args } to the active tab's content script via the
+ * SS_AGENTIC message type. Keeps the popup decoupled from the
+ * command-registry in agentic.js.
+ */
+function forwardAgentic({ action, args }) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const tab = tabs[0];
+      if (!tab) return reject(new Error("No active tab"));
+      chrome.tabs.sendMessage(tab.id, { type: "SS_AGENTIC", action, args: args || {} }, (res) => {
+        if (chrome.runtime.lastError) return reject(new Error(chrome.runtime.lastError.message));
+        resolve(res);
+      });
+    });
+  });
+}
+
+/* ── Auto-reconnect bridge when auth token lands via the handshake ── */
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local") return;
+  if (changes.ss_access_token) {
+    const newVal = changes.ss_access_token.newValue;
+    if (newVal) {
+      // Newly authenticated — fire up the bridge
+      try { self.ShortStackBridge?.connect(); } catch (_) {}
+    } else {
+      try { self.ShortStackBridge?.disconnect(); } catch (_) {}
+    }
+  }
+});
