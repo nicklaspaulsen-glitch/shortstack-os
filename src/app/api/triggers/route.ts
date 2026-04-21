@@ -25,7 +25,7 @@ const VALID_TYPES = [
   "manual",
 ];
 
-async function resolveOwner(request: NextRequest): Promise<
+async function resolveOwner(): Promise<
   | { ownerId: string; service: ReturnType<typeof createServiceClient> }
   | { error: string; status: number }
 > {
@@ -38,7 +38,7 @@ async function resolveOwner(request: NextRequest): Promise<
 }
 
 export async function GET(request: NextRequest) {
-  const ctx = await resolveOwner(request);
+  const ctx = await resolveOwner();
   if ("error" in ctx) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
 
   const workflowId = request.nextUrl.searchParams.get("workflow_id");
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const ctx = await resolveOwner(request);
+  const ctx = await resolveOwner();
   if ("error" in ctx) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
 
   const body = await request.json().catch(() => ({}));
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const ctx = await resolveOwner(request);
+  const ctx = await resolveOwner();
   if ("error" in ctx) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
 
   const body = await request.json().catch(() => ({}));
@@ -130,7 +130,7 @@ export async function PATCH(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const ctx = await resolveOwner(request);
+  const ctx = await resolveOwner();
   if ("error" in ctx) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
 
   const id = request.nextUrl.searchParams.get("id");
