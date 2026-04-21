@@ -141,7 +141,7 @@ export default function AdsPage() {
       const res = await fetch("/api/ads/autopilot");
       const data = await res.json();
       setAutopilotConfig(data.config || {});
-    } catch { /* silent */ }
+    } catch (err) { console.error("[Ads] fetchAutopilotConfig:", err); }
     // Also get client MRR data
     const { data: cl } = await supabase.from("clients").select("id, mrr").eq("is_active", true);
     const mrrMap: Record<string, number> = {};
@@ -291,7 +291,7 @@ export default function AdsPage() {
       const res = await fetch("/api/ads/actions");
       const data = await res.json();
       setActions(data.actions || []);
-    } catch { /* silent */ }
+    } catch (err) { console.error("[Ads] fetchActions:", err); }
     setLoadingActions(false);
   }
 
