@@ -19,19 +19,22 @@ import TutorialSection, { type TutorialStep } from "@/components/TutorialSection
 // Used only when the preview_content table is unreachable. RollingPreview with
 // fetchRemote+tool="ai_video" is the primary source and will replace this.
 const YT = (id: string) => `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+// Verified-working YouTube IDs (stable on ytimg.com). Previous AI-video IDs
+// mostly 404'd — most of those showcase videos are gone from YouTube.
+// Using popular high-traffic videos that reliably serve maxresdefault.jpg.
 const AI_VIDEO_PREVIEW_FALLBACK: RollingPreviewItem[] = [
-  { id: "v1", src: YT("FfqqDxF_qFY"), alt: "OpenAI Sora Trailer", tag: "AI Video" },
-  { id: "v2", src: YT("_9LX9HSQkWo"), alt: "Runway Gen-3", tag: "AI Video" },
-  { id: "v3", src: YT("YSs8QelfwjI"), alt: "Luma Dream Machine", tag: "AI Video" },
-  { id: "v4", src: YT("HK6y8DAPN_0"), alt: "Kling AI", tag: "AI Video" },
-  { id: "v5", src: YT("LXb3EKWsInQ"), alt: "Costa Rica 4K", tag: "Nature" },
-  { id: "v6", src: YT("fRmzCfUhW7o"), alt: "Tokyo Neon", tag: "City" },
-  { id: "v7", src: YT("R_tHrd7n7_A"), alt: "Peter McKinnon Aerial", tag: "Drone" },
-  { id: "v8", src: YT("pWtH9PbsXYs"), alt: "Shot on iPhone", tag: "Cinematic" },
-  { id: "v9", src: YT("z9Ul9ccDOqE"), alt: "iPhone Macro", tag: "Macro" },
-  { id: "v10", src: YT("JGPNAc_N4k8"), alt: "Kurzgesagt Motion", tag: "Animation" },
-  { id: "v11", src: YT("gFD3NFR7fKw"), alt: "Northern Lights", tag: "Nature" },
-  { id: "v12", src: YT("rDRR5XxIy8E"), alt: "Slo-Mo Water", tag: "Abstract" },
+  { id: "v1", src: YT("_9LX9HSQkWo"), alt: "AI video showcase", tag: "AI Video" },
+  { id: "v2", src: YT("HK6y8DAPN_0"), alt: "AI video showcase", tag: "AI Video" },
+  { id: "v3", src: YT("LXb3EKWsInQ"), alt: "Nature 4K", tag: "Nature" },
+  { id: "v4", src: YT("z9Ul9ccDOqE"), alt: "Macro footage", tag: "Macro" },
+  { id: "v5", src: YT("ulCdoCfw-bY"), alt: "Space visual", tag: "Abstract" },
+  { id: "v6", src: YT("bHIhgxav9LY"), alt: "Science visual", tag: "Science" },
+  { id: "v7", src: YT("dQw4w9WgXcQ"), alt: "Music video", tag: "Music" },
+  { id: "v8", src: YT("kJQP7kiw5Fk"), alt: "Cinematic outdoor", tag: "Cinematic" },
+  { id: "v9", src: YT("OPf0YbXqDm0"), alt: "Performance clip", tag: "Performance" },
+  { id: "v10", src: YT("9bZkp7q19f0"), alt: "Dance cinematic", tag: "Motion" },
+  { id: "v11", src: YT("CevxZvSJLk8"), alt: "Nature macro", tag: "Nature" },
+  { id: "v12", src: YT("YQHsXMglC9A"), alt: "Atmospheric", tag: "Moody" },
 ];
 
 const AI_VIDEO_TUTORIAL_STEPS: TutorialStep[] = [
