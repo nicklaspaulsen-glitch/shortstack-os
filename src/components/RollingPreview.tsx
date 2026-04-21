@@ -17,7 +17,7 @@
  * no rehosting.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 export interface RollingPreviewItem {
@@ -165,7 +165,36 @@ export default function RollingPreview({
     };
   }, [fetchRemote, tool, remoteKind, minRemoteRows]);
 
-  const sourceItems = remoteItems && remoteItems.length >= minRemoteRows ? remoteItems : items;
+  const rawSourceItems = remoteItems && remoteItems.length >= minRemoteRows ? remoteItems : items;
+
+  // For image variant, only include items with a non-empty src. Items
+  // without a valid src would render as empty `bg-surface` placeholder
+  // cards (or the browser's broken-image icon) and look like dead tiles.
+  const sourceItems = useMemo(() => {
+    if (variant === "text") return rawSourceItems;
+    return (rawSourceItems || []).filter(
+      (it) => typeof it.src === "string" && it.src.length > 0,
+    );
+  }, [rawSourceItems, variant]);
+
+  // Track which image URLs have successfully loaded. Tiles whose image
+  // hasn't loaded yet (or whose URL is dead) stay hidden — this prevents
+  // the browser's stock "broken-image" placeholder icon from flashing
+  // behind the empty state, which looked like the tile was a dead
+  // placeholder card to users.
+  const [loadedSrcs, setLoadedSrcs] = useState<Set<string>>(() => new Set());
+  const [failedSrcs, setFailedSrcs] = useState<Set<string>>(() => new Set());
+
+  // Reset load-tracking whenever the source list changes (e.g. remote
+  // rows arrive from Supabase after initial mount).
+  const lastSourceRef = useRef<RollingPreviewItem[] | null>(null);
+  useEffect(() => {
+    if (lastSourceRef.current !== sourceItems) {
+      lastSourceRef.current = sourceItems;
+      setLoadedSrcs(new Set());
+      setFailedSrcs(new Set());
+    }
+  }, [sourceItems]);
 
   // Duplicate the list to make the CSS loop seamless. Memoised so React
   // doesn't rebuild the DOM each render.
@@ -238,26 +267,47 @@ export default function RollingPreview({
                   </div>
                 );
               }
+              // Only render tiles whose image has successfully loaded.
+              // This avoids two failure modes the user was seeing:
+              //   1. The browser's stock "broken-image" icon showing for
+              //      tiles with dead src URLs (read by users as gray
+              //      placeholder cards with a three-dot icon).
+              //   2. Empty `bg-surface` tiles flashing while images were
+              //      still loading behind the empty state overlay.
+              const src = item.src as string; // filtered above for image variant
+              if (failedSrcs.has(src)) return null;
+              const hasLoaded = loadedSrcs.has(src);
               return (
                 <div
                   key={tileKey}
-                  className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border bg-surface pointer-events-auto`}
+                  className={`rolling-preview-tile group relative flex-shrink-0 ${tileWidth} ${aspectClass} rounded-lg overflow-hidden border border-border pointer-events-auto transition-opacity duration-500 ${hasLoaded ? "opacity-100 bg-surface" : "opacity-0"}`}
+                  aria-hidden={!hasLoaded}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={item.src}
+                    src={src}
                     alt={item.alt || "preview"}
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // Hide the whole tile if the image 404s — prevents the
-                      // stock "broken-image" browser icon from showing in
-                      // the marquee. Parent div uses bg-surface so the gap
-                      // reads as a deliberate spacer, not a missing asset.
-                      const img = e.currentTarget;
-                      const tile = img.closest<HTMLDivElement>(".rolling-preview-tile");
-                      if (tile) tile.style.display = "none";
+                    onLoad={() => {
+                      setLoadedSrcs((prev) => {
+                        if (prev.has(src)) return prev;
+                        const next = new Set(prev);
+                        next.add(src);
+                        return next;
+                      });
+                    }}
+                    onError={() => {
+                      // Track failed URLs so both copies of the looped
+                      // list hide together — prevents the broken-image
+                      // icon from flashing in either copy.
+                      setFailedSrcs((prev) => {
+                        if (prev.has(src)) return prev;
+                        const next = new Set(prev);
+                        next.add(src);
+                        return next;
+                      });
                     }}
                   />
                   {item.tag && (
