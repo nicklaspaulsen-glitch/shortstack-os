@@ -16,7 +16,11 @@ import crypto from "crypto";
 //     from: "agency@domain.com",
 //     to: ["recipient@..."],
 //     subject: "...",
-//     tags: [{ name, value }],
+//     // IMPORTANT: Resend delivers tags in the webhook payload as an
+//     // OBJECT MAP, not the `[{name,value}]` array you POST on send:
+//     //   tags: { shortstack_user_id: "abc", source: "email_composer" }
+//     // See normalizeTags() below — we accept both shapes defensively.
+//     tags: { [key]: string },
 //     click?: { link, timestamp },
 //     ...
 //   }
@@ -84,6 +88,18 @@ function timingSafeEqual(a: string, b: string): boolean {
   }
 }
 
+// Resend's webhook payload delivers `tags` in different shapes depending
+// on the path (API vs dashboard). Observed shapes:
+//   1. Object map:           { shortstack_user_id: "abc", source: "x" }
+//   2. Array of pairs:       [{ name: "shortstack_user_id", value: "abc" }]
+//   3. Array of {key,value}: [{ key: "shortstack_user_id", value: "abc" }]
+// We accept anything and normalize to a plain Record<string, string>.
+type ResendTagsRaw =
+  | Record<string, string | number | boolean | null | undefined>
+  | Array<{ name?: string; key?: string; value?: string }>
+  | undefined
+  | null;
+
 interface ResendEvent {
   type: string;
   created_at?: string;
@@ -92,10 +108,36 @@ interface ResendEvent {
     from?: string;
     to?: string[] | string;
     subject?: string;
-    tags?: Array<{ name: string; value: string }>;
+    tags?: ResendTagsRaw;
+    headers?: ResendTagsRaw;
     click?: { link: string; timestamp: string };
     [key: string]: unknown;
   };
+}
+
+/** Normalize Resend tags into a plain { name: value } record regardless of
+ *  the wire shape. Returns an empty object if tags is missing/garbage. */
+function normalizeTags(tags: ResendTagsRaw): Record<string, string> {
+  if (!tags) return {};
+  if (Array.isArray(tags)) {
+    const out: Record<string, string> = {};
+    for (const t of tags) {
+      if (!t || typeof t !== "object") continue;
+      const name = typeof t.name === "string" ? t.name : typeof t.key === "string" ? t.key : null;
+      const value = typeof t.value === "string" ? t.value : null;
+      if (name && value) out[name] = value;
+    }
+    return out;
+  }
+  if (typeof tags === "object") {
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(tags)) {
+      if (v == null) continue;
+      out[k] = String(v);
+    }
+    return out;
+  }
+  return {};
 }
 
 /** Look up the agency owner by the `from` address. Uses the domain
@@ -122,11 +164,35 @@ async function resolveOwnerFromFrom(
 }
 
 /** Pull our custom `shortstack_user_id` tag if the sender set one when
- *  dispatching the email. Most reliable resolution method. */
-function resolveOwnerFromTags(tags: Array<{ name: string; value: string }> | undefined): string | null {
-  if (!tags || !Array.isArray(tags)) return null;
-  const tag = tags.find((t) => t.name === "shortstack_user_id" || t.name === "user_id");
-  return tag?.value || null;
+ *  dispatching the email. Most reliable resolution method. Works across
+ *  both the array and object-map wire shapes (see normalizeTags). */
+function resolveOwnerFromTags(tags: Record<string, string>): string | null {
+  return tags.shortstack_user_id || tags.user_id || null;
+}
+
+/** Fallback: look up the email send row in trinity_log by the Resend
+ *  email_id and pull `shortstack_user_id` from its `result` JSON. Used
+ *  only when tags are absent from the webhook payload entirely (e.g.
+ *  dashboard-initiated sends, or if Resend ever drops tags on certain
+ *  event types). */
+async function resolveOwnerFromEmailId(
+  supabase: ReturnType<typeof createServiceClient>,
+  emailId: string | undefined,
+): Promise<string | null> {
+  if (!emailId) return null;
+  try {
+    const { data } = await supabase
+      .from("trinity_log")
+      .select("result")
+      .eq("action_type", "email_campaign")
+      .contains("result", { resend_email_id: emailId })
+      .limit(1)
+      .maybeSingle();
+    const result = (data as { result?: { shortstack_user_id?: string } } | null)?.result;
+    return result?.shortstack_user_id ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -171,19 +237,39 @@ export async function POST(request: NextRequest) {
 
   const triggerType = RESEND_TO_TRIGGER[event.type];
 
-  // Resolve the agency owner whose email this was. Try the custom
-  // shortstack_user_id tag first (most reliable — our send routes
-  // should set it), then fall back to matching the `from` domain
-  // against agency_mail_domains.
-  const ownerFromTags = resolveOwnerFromTags(event.data.tags);
+  // Normalize tags once — Resend sends them as an object map in the
+  // webhook payload, not as the {name,value} array we pass on send.
+  const tags = normalizeTags(event.data.tags);
+
+  // Resolve the agency owner whose email this was. Preference order:
+  //   1. `shortstack_user_id` tag (most reliable — our send route sets it)
+  //   2. `from` domain match against agency_mail_domains
+  //   3. Lookup by Resend email_id in our own trinity_log send row
+  // (3) catches the case where Resend ever strips tags off an event type
+  // we care about, or for emails sent from the Resend dashboard that
+  // still reference an email_id we logged.
+  const ownerFromTags = resolveOwnerFromTags(tags);
   const ownerFromDomain = ownerFromTags
     ? null
     : await resolveOwnerFromFrom(supabase, event.data.from);
-  const ownerId = ownerFromTags || ownerFromDomain;
+  const ownerFromEmailId =
+    ownerFromTags || ownerFromDomain
+      ? null
+      : await resolveOwnerFromEmailId(supabase, event.data.email_id);
+  const ownerId = ownerFromTags || ownerFromDomain || ownerFromEmailId;
+
+  const ownerResolution = ownerFromTags
+    ? "tag"
+    : ownerFromDomain
+    ? "domain"
+    : ownerFromEmailId
+    ? "email_id_lookup"
+    : "none";
 
   // Audit log — every event, regardless of whether a trigger fires.
   // Lets the user see "email.bounced" events etc. even without a
-  // dedicated trigger for them.
+  // dedicated trigger for them. `raw_tags` is included so future shape
+  // changes on Resend's side are debuggable without another redeploy.
   await supabase.from("trinity_log").insert({
     user_id: ownerId,
     agent: "resend-webhook",
@@ -197,7 +283,9 @@ export async function POST(request: NextRequest) {
       to: event.data.to,
       subject: event.data.subject,
       click: event.data.click,
-      owner_resolution: ownerFromTags ? "tag" : ownerFromDomain ? "domain" : "none",
+      owner_resolution: ownerResolution,
+      raw_tags: event.data.tags ?? null,
+      normalized_tags: tags,
     },
   });
 
@@ -215,10 +303,15 @@ export async function POST(request: NextRequest) {
         click_link: event.data.click?.link,
         click_timestamp: event.data.click?.timestamp,
         // Pass through any `campaign_id` tag so filters can match on it.
-        campaign_id: event.data.tags?.find((t) => t.name === "campaign_id")?.value,
+        campaign_id: tags.campaign_id,
       },
     }).catch((err) => console.error("[resend-webhook] fireTrigger failed:", err));
   }
 
-  return NextResponse.json({ ok: true, event_type: event.type, fired: !!(triggerType && ownerId) });
+  return NextResponse.json({
+    ok: true,
+    event_type: event.type,
+    fired: !!(triggerType && ownerId),
+    owner_resolution: ownerResolution,
+  });
 }

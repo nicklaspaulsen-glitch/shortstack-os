@@ -118,8 +118,14 @@ export async function POST(request: NextRequest) {
 
   // Fallback to direct send via Resend. Prefer the Resend HTTP API so we
   // can attach the `shortstack_user_id` tag — the webhook uses that tag to
-  // resolve owner for open/click events (see /api/webhooks/resend:126-130).
+  // resolve owner for open/click events (see /api/webhooks/resend).
   // If the HTTP path fails or the key isn't available, fall back to SMTP.
+  //
+  // NOTE on Resend tags: the Resend API accepts `tags: [{name, value}]` on
+  // send, but the webhook payload DELIVERS tags as an object map
+  // `{shortstack_user_id: "abc", ...}`. The webhook route normalizes both
+  // shapes; here we keep the array form that the send API expects.
+  let resendEmailId: string | null = null;
   if (!sent) {
     const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
     // Use the caller-provided from_email if it looks like a valid email;
@@ -158,6 +164,15 @@ export async function POST(request: NextRequest) {
         });
         if (resendRes.ok) {
           sent = true;
+          // Capture the Resend email_id so the webhook can resolve owner
+          // from it if tags get stripped on certain event types. Failures
+          // to parse are non-fatal — the tag path still works normally.
+          try {
+            const resendJson = (await resendRes.json()) as { id?: string };
+            resendEmailId = typeof resendJson?.id === "string" ? resendJson.id : null;
+          } catch {
+            resendEmailId = null;
+          }
         } else {
           const errBody = await resendRes.text().catch(() => "");
           failureReason = `Resend API ${resendRes.status}: ${errBody.slice(0, 200) || "send failed"}`;
@@ -178,13 +193,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Log the email
+  // Log the email. `resend_email_id` + `shortstack_user_id` let the resend
+  // webhook route look this row up by email_id and resolve the owner when
+  // tags aren't present on the webhook payload (fallback path).
   await supabase.from("trinity_log").insert({
     action_type: "email_campaign",
     description: `Email sent to ${to}: "${emailSubject}"`,
     client_id: client_id || null,
     status: sent ? "completed" : "failed",
-    result: { to, subject: emailSubject, sent, template_type, failure_reason: failureReason || null },
+    result: {
+      to,
+      subject: emailSubject,
+      sent,
+      template_type,
+      failure_reason: failureReason || null,
+      resend_email_id: resendEmailId,
+      shortstack_user_id: ownerId,
+    },
     completed_at: new Date().toISOString(),
   });
 
