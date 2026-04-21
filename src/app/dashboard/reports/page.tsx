@@ -643,6 +643,8 @@ export default function ReportsPage() {
                     <button
                       onClick={() => setExpandedReport(expandedReport === report.id ? null : report.id)}
                       className="w-full flex items-center justify-between px-4 py-3 hover:bg-surface-light transition-colors"
+                      aria-expanded={expandedReport === report.id}
+                      aria-controls={`report-${report.id}-content`}
                     >
                       <div className="flex items-center gap-3">
                         <div className={`w-1.5 h-1.5 rounded-full ${report.result?.type === "monthly_report" ? "bg-info" : "bg-gold"}`} />
@@ -664,7 +666,7 @@ export default function ReportsPage() {
                     </button>
 
                     {expandedReport === report.id && report.result?.report && (
-                      <div className="px-4 pb-4 border-t border-border/20">
+                      <div id={`report-${report.id}-content`} className="px-4 pb-4 border-t border-border/20">
                         <pre className="whitespace-pre-wrap text-[11px] text-foreground leading-relaxed font-sans mt-3 bg-surface-light rounded-xl p-3 max-h-[300px] overflow-y-auto">
                           {report.result.report}
                         </pre>

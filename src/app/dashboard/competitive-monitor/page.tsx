@@ -475,13 +475,18 @@ export default function CompetitiveMonitorPage() {
 
                       {/* Expandable diff */}
                       {(change.beforeText || change.afterText) && (
-                        <button onClick={() => setExpandedChange(isExpanded ? null : change.id)} className="flex items-center gap-1 text-[10px] text-gold mt-2 hover:underline">
+                        <button
+                          onClick={() => setExpandedChange(isExpanded ? null : change.id)}
+                          className="flex items-center gap-1 text-[10px] text-gold mt-2 hover:underline"
+                          aria-expanded={isExpanded}
+                          aria-controls={`competitor-change-${change.id}`}
+                        >
                           {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                           {isExpanded ? "Hide" : "View"} before/after
                         </button>
                       )}
                       {isExpanded && change.beforeText && change.afterText && (
-                        <div className="mt-2 grid grid-cols-2 gap-2">
+                        <div id={`competitor-change-${change.id}`} className="mt-2 grid grid-cols-2 gap-2">
                           <div className="p-3 bg-red-500/5 border border-red-500/10 rounded-lg">
                             <div className="text-[10px] text-red-400 font-medium mb-1.5">Before</div>
                             <pre className="text-[11px] text-muted whitespace-pre-wrap font-mono">{change.beforeText}</pre>
