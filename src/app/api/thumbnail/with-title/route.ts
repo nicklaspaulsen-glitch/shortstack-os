@@ -189,8 +189,11 @@ export async function POST(request: NextRequest) {
 
   // Plan-tier token gate — bug-hunt-apr20-v2 HIGH #12. This route also
   // hits Claude Haiku for title/prompt gen, so the gate protects both
-  // surfaces.
-  const gate = await checkLimit(ownerId, "tokens", THUMBNAIL_TOKEN_COST);
+  // surfaces. Gate on the FULL estimated cost (variants can be 1-4) so we
+  // don't approve a request only to blow the budget on the multiplied
+  // FLUX jobs.
+  const estimatedTokens = THUMBNAIL_TOKEN_COST * variantCount;
+  const gate = await checkLimit(ownerId, "tokens", estimatedTokens);
   if (!gate.allowed) {
     return NextResponse.json(
       {
@@ -320,7 +323,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  await recordUsage(ownerId, "tokens", THUMBNAIL_TOKEN_COST, { kind: "thumbnail_with_title" });
+  // Meter on actual inserted-row count so partial failures don't double-
+  // charge the plan budget. Matches the pattern in generate / generate-
+  // variants.
+  if (insertedRows.length > 0) {
+    await recordUsage(
+      ownerId,
+      "tokens",
+      THUMBNAIL_TOKEN_COST * insertedRows.length,
+      { kind: "thumbnail_with_title", count: insertedRows.length },
+    );
+  }
 
   const firstRow = insertedRows[0] as { id: string; job_id: string };
 
