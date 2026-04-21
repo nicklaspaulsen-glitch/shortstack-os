@@ -16,6 +16,7 @@ import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import { LayoutTemplate } from "lucide-react";
 import PageAI from "@/components/page-ai";
+import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -219,6 +220,15 @@ export default function LandingPagesPage() {
   /* ── faq accordion ── */
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  /* ── Guided Mode ↔ Advanced Mode ── */
+  const [advancedMode, setAdvancedMode] = useAdvancedMode("landing-pages");
+  const [guidedStep, setGuidedStep] = useState(0);
+  const [guidedOffer, setGuidedOffer] = useState("");
+  const [guidedAudience, setGuidedAudience] = useState("");
+  const [guidedTemplate, setGuidedTemplate] = useState<string>("saas");
+  const [guidedHeadline, setGuidedHeadline] = useState("");
+  const [guidedSubhead, setGuidedSubhead] = useState("");
+
   const previewRef = useRef<HTMLDivElement>(null);
 
   /* ── helpers ── */
@@ -340,6 +350,233 @@ export default function LandingPagesPage() {
     if (tpl) toast.success(`Template "${tpl.name}" selected`);
     setStep(3);
   };
+
+  /* ─── Guided Mode: feed wizard state into bizInfo + call the same generate route ─── */
+  async function handleGuidedGenerate() {
+    const offer = guidedOffer.trim();
+    if (!offer) {
+      toast.error("Tell us what you're selling");
+      return;
+    }
+    const tpl = TEMPLATES.find(t => t.id === guidedTemplate);
+    setBizInfo(prev => ({
+      ...prev,
+      // Business name/industry defaults derive from the offer so the generate
+      // API has enough to chew on. User can refine everything in Advanced.
+      name: prev.name || offer.split(/[-.,–—:]/)[0].trim().slice(0, 60) || "Your Brand",
+      industry: prev.industry || (tpl?.name || "SaaS"),
+      description: prev.description || offer,
+      tagline: guidedHeadline.trim() || prev.tagline || offer.slice(0, 80),
+      targetAudience: guidedAudience.trim() || prev.targetAudience,
+    }));
+    setSelectedTemplate(guidedTemplate);
+    setStep(3);
+
+    setGenerating(true);
+    toast.loading("AI is generating your landing page...", { id: "gen" });
+    try {
+      const res = await fetch("/api/landing-pages/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          business_type: tpl?.name || "SaaS",
+          product_or_service: offer,
+          target_audience: guidedAudience.trim() || "small business owners",
+          value_proposition: guidedHeadline.trim() || undefined,
+          template_style: guidedTemplate || "saas",
+          include_sections: ["features", "benefits", "testimonials", "faq", "pricing"],
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Generation failed", { id: "gen" });
+        return;
+      }
+      const c = defaultContent();
+      c.hero.headline = guidedHeadline.trim() || data.headline || offer;
+      c.hero.subheadline = guidedSubhead.trim() || data.subheadline || c.hero.subheadline;
+      c.hero.cta_text = data.hero_cta || "Get Started";
+      c.hero.cta_url = "#";
+      c.footer.copyright = `\u00a9 2026 ${guidedHeadline.trim() || offer}. All rights reserved.`;
+
+      interface ApiSection { type: string; heading?: string; content: unknown }
+      const apiSections: ApiSection[] = Array.isArray(data.sections) ? data.sections : [];
+      for (const sec of apiSections) {
+        if (sec.type === "features" && Array.isArray(sec.content)) {
+          c.features = (sec.content as Array<{ name?: string; title?: string; description?: string; icon?: string }>).slice(0, 6).map(f => ({
+            icon: f.icon || "Zap",
+            title: f.name || f.title || "Feature",
+            description: f.description || "",
+          }));
+        }
+        if (sec.type === "testimonials" && Array.isArray(sec.content)) {
+          c.testimonials = (sec.content as Array<{ name?: string; company?: string; quote?: string; role?: string }>).slice(0, 6).map(t => ({
+            name: t.name || "", company: t.company || "", quote: t.quote || "", role: t.role || "",
+          }));
+        }
+        if (sec.type === "faq" && Array.isArray(sec.content)) {
+          c.faq = (sec.content as Array<{ question?: string; answer?: string }>).slice(0, 8).map(f => ({
+            question: f.question || "", answer: f.answer || "",
+          }));
+        }
+        if (sec.type === "pricing") {
+          const tiersRaw = Array.isArray(sec.content)
+            ? (sec.content as Array<{ name?: string; price?: string; period?: string; features?: string[]; highlighted?: boolean }>)
+            : Array.isArray((sec.content as { tiers?: unknown[] })?.tiers)
+              ? ((sec.content as { tiers: Array<{ name?: string; price?: string; period?: string; features?: string[]; highlighted?: boolean }> }).tiers)
+              : [];
+          if (tiersRaw.length > 0) {
+            c.pricing = tiersRaw.slice(0, 3).map((tier) => ({
+              name: tier.name || "Plan",
+              price: tier.price || "$0",
+              period: tier.period || "/month",
+              features: Array.isArray(tier.features) ? tier.features : [],
+              highlighted: Boolean(tier.highlighted),
+            }));
+          }
+        }
+      }
+      setContent(c);
+      toast.success("Landing page generated!", { id: "gen" });
+      setAdvancedMode(true);
+      setMainTab("create");
+      setStep(3);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Generation failed", { id: "gen" });
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  /* ─── Guided steps ─── */
+  const guidedSteps: WizardStepDef[] = [
+    {
+      id: "offer",
+      title: "What are you selling?",
+      description: "One or two sentences — product, service, membership, even a newsletter signup.",
+      icon: <Sparkles size={18} />,
+      canProceed: guidedOffer.trim().length > 0,
+      component: (
+        <div className="space-y-3">
+          <textarea
+            value={guidedOffer}
+            onChange={e => setGuidedOffer(e.target.value)}
+            placeholder="e.g., A booking platform that cuts dental practice no-shows by 40% using text-message reminders"
+            rows={3}
+            className="w-full px-4 py-3 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all resize-none"
+            autoFocus
+          />
+          <div>
+            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Who&apos;s it for? <span className="text-muted/60 normal-case">(optional)</span>
+            </label>
+            <input
+              type="text"
+              value={guidedAudience}
+              onChange={e => setGuidedAudience(e.target.value)}
+              placeholder="e.g., Solo dental practice owners, independent yoga studios"
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "template",
+      title: "Pick a template",
+      description: "This sets the structure — sections and overall vibe. You can change colour & copy after.",
+      icon: <Layout size={18} />,
+      component: (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+          {TEMPLATES.map(tpl => {
+            const sel = guidedTemplate === tpl.id;
+            const Icon = tpl.icon;
+            return (
+              <button
+                key={tpl.id}
+                type="button"
+                onClick={() => setGuidedTemplate(tpl.id)}
+                className={`text-left p-3 rounded-xl border transition-all ${
+                  sel
+                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
+                    : "border-border hover:border-gold/30 bg-surface-light"
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon className="w-4 h-4" style={{ color: tpl.color }} />
+                  <p className="text-sm font-semibold">{tpl.name}</p>
+                </div>
+                <p className="text-[10px] text-muted leading-relaxed">{tpl.desc}</p>
+              </button>
+            );
+          })}
+        </div>
+      ),
+    },
+    {
+      id: "hero",
+      title: "Headline + subheadline",
+      description: "Leave blank and AI will write them. Fill them in if you want to lock the hook.",
+      icon: <Pencil size={18} />,
+      optional: true,
+      component: (
+        <div className="space-y-3">
+          <div>
+            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Headline
+            </label>
+            <input
+              type="text"
+              value={guidedHeadline}
+              onChange={e => setGuidedHeadline(e.target.value)}
+              placeholder="e.g., Book every chair. Stop losing 40% of appointments."
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+            />
+          </div>
+          <div>
+            <label className="block text-[10px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+              Subheadline
+            </label>
+            <input
+              type="text"
+              value={guidedSubhead}
+              onChange={e => setGuidedSubhead(e.target.value)}
+              placeholder="e.g., Text reminders that actually get read. 14-day free trial, no card."
+              className="w-full px-4 py-2.5 rounded-xl bg-surface-light border border-border text-sm focus:outline-none focus:border-gold/50 focus:ring-2 focus:ring-gold/20 transition-all"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "review",
+      title: "Ready to generate?",
+      description: "We'll write features, testimonials, FAQ, and pricing to match. You can edit every section in Advanced.",
+      icon: <Rocket size={18} />,
+      component: (
+        <div className="card bg-gold/[0.04] border-gold/20 space-y-2">
+          <p className="text-sm leading-relaxed">
+            <span className="text-muted">Offer: </span>
+            <span className="font-semibold">{guidedOffer || <span className="italic text-muted">(none)</span>}</span>
+          </p>
+          <p className="text-[11px] text-muted">
+            Template: <span className="text-foreground">{TEMPLATES.find(t => t.id === guidedTemplate)?.name || "—"}</span>
+          </p>
+          {guidedAudience && (
+            <p className="text-[11px] text-muted">
+              For: <span className="text-foreground">{guidedAudience}</span>
+            </p>
+          )}
+          {(guidedHeadline || guidedSubhead) && (
+            <p className="text-[11px] text-muted">
+              {guidedHeadline && <span className="block text-foreground font-semibold">{guidedHeadline}</span>}
+              {guidedSubhead && <span className="block">{guidedSubhead}</span>}
+            </p>
+          )}
+        </div>
+      ),
+    },
+  ];
 
   const handleRegenSection = async (key: SectionKey) => {
     const sectionMap: Partial<Record<SectionKey, "features" | "testimonials" | "faq" | "pricing" | "about">> = {
@@ -763,12 +1000,32 @@ export default function LandingPagesPage() {
         subtitle="High-converting pages with AI-powered content."
         gradient="green"
         actions={
-          <button onClick={() => { setStep(1); setMainTab("create"); }} className="px-4 py-2 rounded-lg bg-white/15 border border-white/25 text-white text-sm font-semibold hover:bg-white/25 transition-colors flex items-center gap-2">
-            <Plus className="w-4 h-4" /> New Page
-          </button>
+          <>
+            <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            {advancedMode && (
+              <button onClick={() => { setStep(1); setMainTab("create"); }} className="px-4 py-2 rounded-lg bg-white/15 border border-white/25 text-white text-sm font-semibold hover:bg-white/25 transition-colors flex items-center gap-2">
+                <Plus className="w-4 h-4" /> New Page
+              </button>
+            )}
+          </>
         }
       />
 
+      {/* Guided Mode — 4-step AI landing page builder */}
+      {!advancedMode && (
+        <Wizard
+          steps={guidedSteps}
+          activeIdx={guidedStep}
+          onStepChange={setGuidedStep}
+          finishLabel={generating ? "Generating…" : "Generate landing page"}
+          busy={generating}
+          onFinish={handleGuidedGenerate}
+          onCancel={() => setAdvancedMode(true)}
+          cancelLabel="Advanced mode"
+        />
+      )}
+
+      {advancedMode && (<>
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 border border-border">
         {([
@@ -1288,6 +1545,7 @@ export default function LandingPagesPage() {
           </div>
         </div>
       )}
+      </>)}
 
       {/* ═══ PAGE AI ASSISTANT ═══ */}
       <PageAI
