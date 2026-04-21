@@ -1121,8 +1121,11 @@ function BrollTile({
   onDragStart: (e: React.DragEvent) => void;
 }) {
   const vref = useRef<HTMLVideoElement | null>(null);
+  const [videoBroken, setVideoBroken] = useState(false);
+  const [imgBroken, setImgBroken] = useState(false);
 
   const onEnter = () => {
+    if (videoBroken) return;
     if (vref.current) {
       vref.current.currentTime = 0;
       void vref.current.play().catch(() => {});
@@ -1134,6 +1137,10 @@ function BrollTile({
     }
   };
 
+  const showVideo = Boolean(candidate.preview_url) && !videoBroken;
+  const showImg =
+    !showVideo && Boolean(candidate.thumbnail_url) && !imgBroken;
+
   return (
     <div
       draggable
@@ -1144,7 +1151,7 @@ function BrollTile({
       className="group relative rounded-md border border-border/50 bg-surface-light/30 p-1.5 hover:border-gold/40 transition cursor-grab active:cursor-grabbing"
     >
       <div className="aspect-video rounded overflow-hidden bg-black relative">
-        {candidate.preview_url ? (
+        {showVideo ? (
           <video
             ref={vref}
             src={candidate.preview_url}
@@ -1153,13 +1160,15 @@ function BrollTile({
             playsInline
             loop
             preload="metadata"
+            onError={() => setVideoBroken(true)}
             className="h-full w-full object-cover"
           />
-        ) : candidate.thumbnail_url ? (
+        ) : showImg ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={candidate.thumbnail_url}
             alt={candidate.label}
+            onError={() => setImgBroken(true)}
             className="h-full w-full object-cover"
           />
         ) : (
@@ -1591,7 +1600,15 @@ function AudioRow({
   function toggle() {
     if (error) return;
     if (!audioRef.current) {
-      const a = new Audio(url);
+      // Route cross-origin URLs through /api/audio-proxy — SoundJay and many
+      // archive.org nodes don't set Access-Control-Allow-Origin, so a direct
+      // <audio src> load fails silently in the browser. The proxy forwards
+      // the stream with `ACAO: *` so previews actually play.
+      // Same-origin / relative URLs pass through untouched.
+      const proxied = url.startsWith("http")
+        ? `/api/audio-proxy?url=${encodeURIComponent(url)}`
+        : url;
+      const a = new Audio(proxied);
       a.onended = () => setPlaying(false);
       a.onerror = () => {
         setError(true);
