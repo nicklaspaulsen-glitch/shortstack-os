@@ -386,7 +386,7 @@ export default function ApiDocsPage() {
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
             <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-              className="input w-full text-xs py-2.5 pl-9" placeholder="Search endpoints by path or description..." />
+              className="input w-full text-xs py-2.5 pl-9" placeholder="Search endpoints by path or description..." aria-label="Search API endpoints" />
           </div>
 
           {/* Method Legend */}

@@ -261,7 +261,7 @@ export default function SMSTemplatesPage() {
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search templates..." />
+              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search templates..." aria-label="Search SMS templates" />
             </div>
             <div className="flex gap-1.5 flex-wrap">
               {categories.map(c => (

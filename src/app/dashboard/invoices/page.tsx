@@ -178,7 +178,7 @@ export default function InvoicesPage() {
           <div className="flex items-center gap-3 flex-wrap">
             <div className="relative flex-1 min-w-[200px]">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search invoices..." />
+              <input value={search} onChange={e => setSearch(e.target.value)} className="input w-full pl-9 text-xs" placeholder="Search invoices..." aria-label="Search invoices" />
             </div>
             <div className="flex gap-1.5">
               {(["all", "sent", "paid", "overdue", "draft"] as const).map(f => (

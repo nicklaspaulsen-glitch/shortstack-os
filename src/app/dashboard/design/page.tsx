@@ -1873,7 +1873,7 @@ export default function DesignStudioPage() {
               </div>
 
               <input value={iconSearch} onChange={e => setIconSearch(e.target.value)}
-                className="input text-xs py-2 w-full" placeholder="Search icons (e.g., chart, heart, star)..." />
+                className="input text-xs py-2 w-full" placeholder="Search icons (e.g., chart, heart, star)..." aria-label="Search icons" />
 
               <div className="flex flex-wrap gap-1.5">
                 {ICON_CATEGORIES.map(cat => (

@@ -296,7 +296,7 @@ export default function TeamPage() {
             <div className="relative flex-1 min-w-[200px]">
               <Search size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted/50" />
               <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="input w-full text-xs pl-8" placeholder="Search members..." />
+                className="input w-full text-xs pl-8" placeholder="Search members..." aria-label="Search team members" />
             </div>
             <div className="flex gap-1 bg-surface rounded-lg p-0.5">
               <button onClick={() => setRoleFilter("all")} className={`px-2 py-1 rounded-md text-[9px] font-medium ${roleFilter === "all" ? "bg-gold/20 text-gold" : "text-muted"}`}>All</button>

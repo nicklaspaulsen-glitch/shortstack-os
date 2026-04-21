@@ -160,6 +160,7 @@ export default function GenerationsPage() {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search generations..."
+          aria-label="Search generations"
           className="input text-xs pl-9 w-full"
         />
       </div>

@@ -690,6 +690,7 @@ export default function AdsManagerPage() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search campaigns..."
+                aria-label="Search campaigns"
                 className="w-full pl-8 pr-3 py-2 bg-card border border-border rounded-lg text-xs text-foreground placeholder:text-muted focus:border-gold/40 focus:outline-none transition"
               />
             </div>

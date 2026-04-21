@@ -2315,7 +2315,7 @@ export default function SocialManagerPage() {
               <p className="text-[10px] text-muted mb-3">Search for micro-influencers by niche to collaborate with</p>
               <div className="flex gap-2 mb-4">
                 <input value={influencerNiche} onChange={e => setInfluencerNiche(e.target.value)}
-                  className="input text-xs flex-1" placeholder="Search by niche (e.g., fitness, tech, food)..." />
+                  className="input text-xs flex-1" placeholder="Search by niche (e.g., fitness, tech, food)..." aria-label="Search influencers by niche" />
                 <button onClick={() => toast.success("Searching influencers...")}
                   className="btn-primary text-xs flex items-center gap-1.5"><Search size={12} /> Search</button>
               </div>
