@@ -17,7 +17,8 @@
     "electron": "electron .",
     "electron:build": "electron-builder --win",
     "desktop": "electron .",
-    "bot": "node scripts/discord-bot.js"
+    "bot": "node scripts/discord-bot.js",
+    "icons": "tsx scripts/regenerate-icons.ts"
   },
   "build": {
     "appId": "com.shortstack.os",
