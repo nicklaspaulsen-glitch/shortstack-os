@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { Smartphone } from "lucide-react";
+import AIEnhanceButton from "@/components/ui/ai-enhance-button";
 
 type SmsIntent = "reminder" | "promo" | "confirmation" | "welcome" | "winback" | "abandon_cart" | "appointment" | "custom";
 
@@ -289,6 +290,10 @@ export default function SMSTemplatesPage() {
                   <option value="Referral">Referral</option>
                 </select>
               </div>
+              <div className="flex items-center justify-between">
+                <label className="text-[9px] text-muted uppercase tracking-wider">Message</label>
+                <AIEnhanceButton value={newTemplate.body} onResult={next => setNewTemplate({ ...newTemplate, body: next })} context="SMS message" variant="inline" />
+              </div>
               <div className="relative">
                 <textarea value={newTemplate.body} onChange={e => setNewTemplate({ ...newTemplate, body: e.target.value })} className="input w-full h-20 text-xs" placeholder="SMS body..." />
                 <button onClick={() => setShowEmoji(!showEmoji)} className="absolute right-2 bottom-2 text-muted hover:text-gold"><Smile size={14} /></button>
@@ -357,9 +362,14 @@ export default function SMSTemplatesPage() {
                 </div>
 
                 {editing === template.id ? (
-                  <textarea value={template.body} onChange={e => {
-                    setTemplates(prev => prev.map(t => t.id === template.id ? { ...t, body: e.target.value } : t));
-                  }} className="input w-full h-20 text-xs" />
+                  <div className="space-y-1">
+                    <div className="flex justify-end">
+                      <AIEnhanceButton value={template.body} onResult={next => setTemplates(prev => prev.map(t => t.id === template.id ? { ...t, body: next } : t))} context="SMS message" variant="inline" />
+                    </div>
+                    <textarea value={template.body} onChange={e => {
+                      setTemplates(prev => prev.map(t => t.id === template.id ? { ...t, body: e.target.value } : t));
+                    }} className="input w-full h-20 text-xs" />
+                  </div>
                 ) : (
                   <p className="text-[11px] text-muted leading-relaxed">{template.body}</p>
                 )}
