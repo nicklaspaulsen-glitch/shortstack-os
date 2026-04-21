@@ -350,7 +350,9 @@ export default function OnboardPage() {
   }
 
   const canProceed = (): boolean => {
-    if (step === 1) return form.business_name.trim().length > 0 && form.email.trim().length > 0;
+    // Every field in onboarding is optional — the user can breeze through
+    // without filling anything in. Required fields block the "can I just
+    // see the product" flow which is the worst UX gate in a SaaS.
     return true;
   };
 
@@ -921,9 +923,9 @@ export default function OnboardPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {[
-                    { key: "business_name", label: "Business Name *", placeholder: "Acme Corp", icon: Building2 },
-                    { key: "contact_name", label: "Contact Name", placeholder: "John Smith", icon: Users },
-                    { key: "email", label: "Email *", placeholder: "john@acme.com", icon: Mail },
+                    { key: "business_name", label: "Business Name", placeholder: "Acme Corp (optional)", icon: Building2 },
+                    { key: "contact_name", label: "Contact Name", placeholder: "John Smith (optional)", icon: Users },
+                    { key: "email", label: "Email", placeholder: "john@acme.com (optional)", icon: Mail },
                     { key: "phone", label: "Phone", placeholder: "+1 (555) 123-4567", icon: Phone },
                     { key: "website", label: "Website", placeholder: "https://acme.com", icon: Globe },
                   ].map(field => (
@@ -1378,23 +1380,29 @@ export default function OnboardPage() {
             </button>
 
             <div className="flex items-center gap-2">
-              {step === 5 && (
-                <button onClick={() => setStep(step + 1)}
-                  className="text-[11px] text-muted hover:text-gold transition-colors px-3 py-2 font-medium">
-                  Skip for now
+              {/* Per-step skip — jump past THIS step without filling it in.
+                  Hidden on welcome (step 0) and on the final review step. */}
+              {step > 0 && step < STEP_META.length - 1 && (
+                <button
+                  onClick={() => setStep(step + 1)}
+                  className="text-[11px] text-muted hover:text-foreground transition-colors px-3 py-2 font-medium"
+                  title="Skip this step — come back later from Settings"
+                >
+                  Skip this step
                 </button>
               )}
-              {step > 0 && step < STEP_META.length - 1 && step !== 5 && (
+              {/* Jump straight to the final review from any mid-step. */}
+              {step > 0 && step < STEP_META.length - 2 && (
                 <button onClick={() => setStep(STEP_META.length - 1)}
                   className="text-[10px] text-muted hover:text-foreground transition-colors px-3 py-2">
-                  Skip to Review
+                  Skip to end
                 </button>
               )}
 
               {step < STEP_META.length - 1 ? (
                 <button onClick={() => canProceed() && setStep(step + 1)} disabled={!canProceed()}
                   className="flex items-center gap-2 px-5 py-2.5 bg-gold text-black rounded-lg text-sm font-semibold hover:bg-gold/90 disabled:opacity-40 transition-all">
-                  Save & Continue <ArrowRight size={14} />
+                  Next <ArrowRight size={14} />
                 </button>
               ) : (
                 <div className="flex flex-col items-end gap-1">
