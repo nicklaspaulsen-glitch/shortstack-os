@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import FAQ from "@/components/landing/faq";
 import FeaturesOverview from "@/components/landing/features-overview";
 import FinalCTA from "@/components/landing/final-cta";
@@ -13,6 +14,73 @@ import ReplaceStack from "@/components/landing/replace-stack";
 import Testimonials from "@/components/landing/testimonials";
 import TrustBar from "@/components/landing/trust-bar";
 import WhoItsFor from "@/components/landing/who-its-for";
+
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+
+export const metadata: Metadata = {
+  title: "Trinity — the AI operating system for agencies — ShortStack",
+  description: "Scrape leads, automate outreach, manage clients, create content, and scale revenue — all from one AI-powered agency operating system built for modern teams.",
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    url: SITE_URL,
+    title: "Trinity — the AI operating system for agencies — ShortStack",
+    description: "Scrape leads, automate outreach, manage clients, create content, and scale revenue — all from one AI-powered agency operating system.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "ShortStack — Agency Operating System" }],
+    type: "website",
+    siteName: "ShortStack",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trinity — the AI operating system for agencies — ShortStack",
+    description: "Scrape leads, automate outreach, manage clients, and scale revenue from one AI-powered platform.",
+    images: ["/og-image.png"],
+  },
+  robots: { index: true, follow: true },
+};
+
+/**
+ * Structured data for the marketing landing.
+ * Organization + SoftwareApplication (Product) + WebSite graph.
+ */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "ShortStack",
+      url: SITE_URL,
+      logo: `${SITE_URL}/icons/shortstack-logo.png`,
+      description: "ShortStack builds Trinity, the AI operating system for modern digital marketing agencies.",
+      sameAs: [],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "ShortStack",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      inLanguage: "en-US",
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${SITE_URL}/#product`,
+      name: "Trinity",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web, macOS, Windows",
+      description: "Trinity is the all-in-one AI operating system for digital marketing agencies — lead generation, outreach, CRM, content, and client portals.",
+      url: SITE_URL,
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "USD",
+        price: "49",
+        url: `${SITE_URL}/pricing`,
+      },
+    },
+  ],
+};
 
 /**
  * Public landing page (/).
@@ -36,6 +104,11 @@ import WhoItsFor from "@/components/landing/who-its-for";
 export default function LandingPage() {
   return (
     <div className="min-h-screen" style={{ background: "#0b0d12" }}>
+      {/* JSON-LD structured data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       {/* Global landing-only CSS (animations + scoped dark theme) */}
       <style>{`
         @keyframes float {

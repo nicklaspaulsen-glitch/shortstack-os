@@ -1,14 +1,27 @@
 import type { MetadataRoute } from "next";
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/dashboard/", "/api/", "/survey"],
+        disallow: [
+          "/dashboard/",
+          "/dashboard",
+          "/api/",
+          "/admin/",
+          "/portal/",
+          "/survey/",
+          "/survey",
+          "/extension-auth/",
+          "/auth/",
+        ],
       },
     ],
-    sitemap: "https://shortstack-os.vercel.app/sitemap.xml",
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

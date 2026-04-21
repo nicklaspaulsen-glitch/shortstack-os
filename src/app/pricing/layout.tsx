@@ -1,8 +1,27 @@
 import type { Metadata } from "next";
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Pricing",
-  description: "Choose the right Trinity plan for your agency. Starter, Growth, and Enterprise tiers with AI-powered lead generation, outreach, and client management.",
+  title: "Pricing — ShortStack",
+  description: "Simple, transparent pricing for Trinity. Starter, Growth, and Enterprise plans — AI lead generation, outreach, CRM, and client portals built in.",
+  alternates: { canonical: `${SITE_URL}/pricing` },
+  openGraph: {
+    title: "Pricing — ShortStack",
+    description: "Simple, transparent pricing for Trinity. Starter, Growth, and Enterprise plans for modern agencies.",
+    url: `${SITE_URL}/pricing`,
+    siteName: "ShortStack",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "ShortStack pricing" }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pricing — ShortStack",
+    description: "Simple, transparent pricing for Trinity. Starter, Growth, Enterprise.",
+    images: ["/og-image.png"],
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function PricingLayout({ children }: { children: React.ReactNode }) {

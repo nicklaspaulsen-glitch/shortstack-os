@@ -9,14 +9,25 @@ import SFXProvider from "@/components/sfx-provider";
 import ThemeProvider from "@/components/theme-provider";
 import { CookieConsent } from "@/components/cookie-consent";
 
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+const OG_IMAGE = "/og-image.png";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Trinity · by ShortStack",
-    template: "%s | Trinity",
+    default: "Trinity — the AI operating system for agencies — ShortStack",
+    template: "%s — ShortStack",
   },
-  description: "The all-in-one operating system for digital marketing agencies. Scrape leads, automate outreach, manage clients, create content, and scale revenue — all powered by AI.",
+  description: "Trinity is the all-in-one AI operating system for modern agencies. Scrape leads, automate outreach, manage clients, and scale revenue from one place.",
   keywords: ["agency management", "marketing automation", "lead generation", "CRM", "AI outreach", "digital marketing", "client portal", "agency OS"],
-  icons: { icon: "/trinity-logo.svg", apple: "/trinity-logo.svg" },
+  icons: {
+    icon: [
+      { url: "/icons/shortstack-logo.ico", sizes: "any" },
+      { url: "/icons/shortstack-logo.svg", type: "image/svg+xml" },
+    ],
+    apple: "/icons/shortstack-logo.png",
+    shortcut: "/icons/shortstack-logo.ico",
+  },
   manifest: "/manifest.json",
   themeColor: "#0b0d12",
   appleWebApp: {
@@ -27,14 +38,18 @@ export const metadata: Metadata = {
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   openGraph: {
     type: "website",
-    siteName: "Trinity",
-    title: "Trinity · by ShortStack",
-    description: "The all-in-one operating system for digital marketing agencies. Scrape leads, automate outreach, manage clients, and scale revenue.",
+    siteName: "ShortStack",
+    title: "Trinity — the AI operating system for agencies — ShortStack",
+    description: "The all-in-one AI operating system for modern agencies. Scrape leads, automate outreach, manage clients, and scale revenue from one place.",
+    url: SITE_URL,
+    locale: "en_US",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "ShortStack — Agency Operating System" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Trinity · by ShortStack",
-    description: "The all-in-one operating system for digital marketing agencies.",
+    title: "Trinity — the AI operating system for agencies — ShortStack",
+    description: "The all-in-one AI operating system for modern agencies.",
+    images: [OG_IMAGE],
   },
   robots: {
     index: true,
