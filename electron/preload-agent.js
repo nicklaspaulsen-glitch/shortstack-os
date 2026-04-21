@@ -125,4 +125,19 @@ contextBridge.exposeInMainWorld("ssDesktop", {
     ipcRenderer.on("desktop:voice-memo-transcribed", handler);
     return () => ipcRenderer.removeListener("desktop:voice-memo-transcribed", handler);
   },
+
+  // ── Offline cache (SQLite scaffold + JSON fallback) ──────────
+  // Renderer calls offlineQuery() when the live fetch fails so the UI
+  // can show cached data with an "Offline — reading cache" banner.
+  // isOnline() returns the latest reachability state (Electron net +
+  // heartbeat probe). syncCache() forces an immediate resync.
+  offlineQuery: (table, opts = {}) => ipcRenderer.invoke("offlineCache:query", table, opts),
+  isOnline: () => ipcRenderer.invoke("offlineCache:is-online"),
+  syncCache: () => ipcRenderer.invoke("offlineCache:sync"),
+  cacheStatus: () => ipcRenderer.invoke("offlineCache:status"),
+  onCacheSynced: (callback) => {
+    const handler = (_, data) => callback(data);
+    ipcRenderer.on("desktop:cache-synced", handler);
+    return () => ipcRenderer.removeListener("desktop:cache-synced", handler);
+  },
 });

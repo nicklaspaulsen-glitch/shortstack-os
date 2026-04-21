@@ -15,6 +15,7 @@ const watchers = require("./watchers");
 const protocol = require("./protocol");
 const screenRecorder = require("./screen-recorder");
 const audioRecorder = require("./audio-recorder");
+const offlineCache = require("./offline-cache");
 
 /**
  * Install all desktop-only features.
@@ -36,6 +37,7 @@ const audioRecorder = require("./audio-recorder");
  * @param {boolean} [context.features.protocol=true]
  * @param {boolean} [context.features.screenRecorder=true]
  * @param {boolean} [context.features.audioRecorder=true]
+ * @param {boolean} [context.features.offlineCache=true]
  */
 function install(context = {}) {
   const features = Object.assign({
@@ -46,6 +48,7 @@ function install(context = {}) {
     protocol: true,
     screenRecorder: true,
     audioRecorder: true,
+    offlineCache: true,
   }, context.features || {});
 
   const results = {};
@@ -125,6 +128,16 @@ function install(context = {}) {
     }
   }
 
+  // 8. Offline cache — SQLite-backed (or JSON-fallback) mirror of recent
+  //    Supabase rows. Boots sync in background, then re-syncs every 5 min.
+  if (features.offlineCache) {
+    try {
+      results.offlineCache = offlineCache.install(context);
+    } catch (err) {
+      results.offlineCache = { ok: false, error: String(err?.message || err) };
+    }
+  }
+
   // Single diagnostic IPC for the renderer to inspect what landed.
   try {
     const { ipcMain } = require("electron");
@@ -148,4 +161,5 @@ module.exports = {
   protocol,
   screenRecorder,
   audioRecorder,
+  offlineCache,
 };

@@ -1133,6 +1133,11 @@ if (!gotTheLock) {
           createAgentWindow,
           createMainWindow,
           getLicense,
+          // Offline-cache uses this to authenticate sync calls against the
+          // web app's REST endpoints. Returns null when the user hasn't
+          // logged in yet — cache will sync anonymously / be skipped until
+          // auth lands.
+          getAgentSession: () => agentSession,
           appUrl: APP_URL,
           version: APP_VERSION,
           // Lazy getter — the basic tray is built inside createMainWindow,
