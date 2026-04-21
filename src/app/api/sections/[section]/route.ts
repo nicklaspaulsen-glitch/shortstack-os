@@ -361,13 +361,14 @@ export async function GET(
       }
       stats.team_members = teamMembers;
 
-      // Workspaces (table may not exist yet — graceful null)
+      // Workspaces — owner scoped via profile_id
       let workspaces: number | null = null;
       try {
         const { count } = await service
           .from("workspaces")
           .select("*", { count: "exact", head: true })
-          .eq("user_id", ownerId);
+          .eq("profile_id", ownerId)
+          .eq("is_active", true);
         workspaces = count ?? 0;
       } catch {
         workspaces = null;
@@ -447,13 +448,14 @@ export async function GET(
       }
       stats.webhooks_live = webhooks;
 
-      // API keys issued (table may not exist — graceful null)
+      // API keys issued (only count non-revoked)
       let apiKeys: number | null = null;
       try {
         const { count } = await service
           .from("api_keys")
           .select("*", { count: "exact", head: true })
-          .eq("user_id", ownerId);
+          .eq("user_id", ownerId)
+          .is("revoked_at", null);
         apiKeys = count ?? 0;
       } catch {
         apiKeys = null;
