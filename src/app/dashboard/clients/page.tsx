@@ -68,6 +68,8 @@ export default function ClientsPage() {
   const [filterTag, setFilterTag] = useState("");
   const [filterMrrMin, setFilterMrrMin] = useState("");
   const [filterMrrMax, setFilterMrrMax] = useState("");
+  // Quick activity chips: "recent" = touched in last 7d, "stale" = no touch in 30d
+  const [activityFilter, setActivityFilter] = useState<"all" | "recent" | "stale">("all");
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [compareClients, setCompareClients] = useState<string[]>([]);
   const [hoveredClient, setHoveredClient] = useState<string | null>(null);
@@ -81,22 +83,34 @@ export default function ClientsPage() {
   async function fetchData() {
     try {
       setLoading(true);
-      const [
-        { data: clientsData, error: clientsErr },
-        { data: contractsData, error: contractsErr },
-        { data: invoicesData, error: invoicesErr },
-      ] = await Promise.all([
-        supabase.from("clients").select("*").order("created_at", { ascending: false }),
+      // Fetch clients via the authenticated server API route.
+      // Browser-side supabase queries sometimes race with the access token
+      // hydration in auth-context, which caused the list to render empty
+      // when the user was actually scoped to rows owned by their profile.
+      // The server route reads the session from cookies and scopes by the
+      // effective agency owner — so it works reliably on first mount.
+      const [clientsRes, contractsRes, invoicesRes] = await Promise.all([
+        fetch("/api/clients", { cache: "no-store" }),
         supabase.from("contracts").select("*").order("created_at", { ascending: false }),
         supabase.from("invoices").select("*").order("created_at", { ascending: false }),
       ]);
-      if (clientsErr || contractsErr || invoicesErr) {
-        console.error("[Clients] fetchData error:", clientsErr || contractsErr || invoicesErr);
+
+      let clientsData: Client[] = [];
+      if (clientsRes.ok) {
+        const json = await clientsRes.json();
+        clientsData = json.clients || [];
+      } else {
+        console.error("[Clients] /api/clients failed:", clientsRes.status);
+        toast.error("Couldn't load clients — try refreshing.");
+      }
+
+      if (contractsRes.error || invoicesRes.error) {
+        console.error("[Clients] fetchData error:", contractsRes.error || invoicesRes.error);
         toast.error("Couldn't load some client data — try refreshing.");
       }
-      setClients(clientsData || []);
-      setContracts(contractsData || []);
-      setInvoices(invoicesData || []);
+      setClients(clientsData);
+      setContracts(contractsRes.data || []);
+      setInvoices(invoicesRes.data || []);
     } catch (err) {
       console.error("[Clients] fetchData error:", err);
       toast.error("Failed to load clients — try refreshing.");
@@ -115,6 +129,25 @@ export default function ClientsPage() {
       : 0;
     return { activeClients: active, totalMRR: mrr, avgHealth: health };
   }, [clients]);
+
+  // --- Client status pill (derived) ---
+  // Maps a client's real state to one of 4 buckets the table visualises
+  // with a color bar + pill: active, paused, churned, trial.
+  type LifecycleStatus = "active" | "paused" | "churned" | "trial";
+  const getLifecycleStatus = useCallback((c: Client): LifecycleStatus => {
+    const rec = c as Client & { cancelled_at?: string | null };
+    if (rec.cancelled_at) return "churned";
+    if (!c.is_active) return "paused";
+    // "trial" if no paid subscription AND contract not yet signed
+    if (!c.stripe_subscription_id && c.contract_status !== "signed") return "trial";
+    return "active";
+  }, []);
+  const STATUS_STYLES: Record<LifecycleStatus, { bar: string; pill: string; label: string }> = {
+    active:  { bar: "bg-success", pill: "bg-success/10 text-success border-success/30", label: "Active" },
+    paused:  { bar: "bg-warning", pill: "bg-warning/10 text-warning border-warning/30", label: "Paused" },
+    churned: { bar: "bg-danger",  pill: "bg-danger/10 text-danger border-danger/30",   label: "Churned" },
+    trial:   { bar: "bg-info",    pill: "bg-info/10 text-info border-info/30",         label: "Trial" },
+  };
 
   // --- Feature 1: Client Health Score helper ---
   const getHealthColor = (score: number) => {
@@ -223,14 +256,33 @@ export default function ClientsPage() {
   const handleBulkAction = useCallback(async (action: string) => {
     const count = selectedClients.size;
     if (count === 0) { toast.error("No clients selected"); return; }
+    const selected = clients.filter(c => selectedClients.has(c.id));
     switch (action) {
       case "export":
-        handleExportCSV(clients.filter(c => selectedClients.has(c.id)));
+        handleExportCSV(selected);
         setSelectedClients(new Set());
         break;
       case "tag":
         toast(`Open a client's tag menu to tag them (${count} selected).`, { icon: "💡" });
         break;
+      case "email": {
+        const emails = selected.map(c => c.email).filter(Boolean);
+        if (emails.length === 0) { toast.error("No emails on selected clients"); return; }
+        // mailto: with a BCC list is the reliable cross-client path here —
+        // no extra backend/ESP integration required to get bulk compose.
+        window.location.href = `mailto:?bcc=${encodeURIComponent(emails.join(","))}`;
+        toast.success(`Opening mail draft for ${emails.length} client${emails.length === 1 ? "" : "s"}`);
+        break;
+      }
+      case "sms": {
+        const phones = selected.map(c => c.phone).filter((p): p is string => !!p);
+        if (phones.length === 0) { toast.error("No phone numbers on selected clients"); return; }
+        // sms: URIs: multi-recipient support is spotty on desktop. Copy the
+        // list so the user can paste it into their preferred channel.
+        await navigator.clipboard.writeText(phones.join(", "));
+        toast.success(`Copied ${phones.length} phone number${phones.length === 1 ? "" : "s"} to clipboard`);
+        break;
+      }
       case "deactivate": {
         if (!confirm(`Deactivate ${count} client${count === 1 ? "" : "s"}? They'll be marked inactive but not deleted.`)) return;
         const ids = Array.from(selectedClients);
@@ -243,6 +295,22 @@ export default function ClientsPage() {
           return;
         }
         toast.success(`${count} client${count === 1 ? "" : "s"} deactivated`);
+        setSelectedClients(new Set());
+        fetchData();
+        break;
+      }
+      case "delete": {
+        if (!confirm(`Delete ${count} client${count === 1 ? "" : "s"}? This cannot be undone.`)) return;
+        const ids = Array.from(selectedClients);
+        const { error } = await supabase
+          .from("clients")
+          .delete()
+          .in("id", ids);
+        if (error) {
+          toast.error(error.message || "Failed to delete clients");
+          return;
+        }
+        toast.success(`${count} client${count === 1 ? "" : "s"} deleted`);
         setSelectedClients(new Set());
         fetchData();
         break;
@@ -282,11 +350,27 @@ export default function ClientsPage() {
     return Array.from(set);
   }, [clientTags]);
 
+  // Pull the most recent timestamp we have for each client (for "last activity" sort/filter).
+  // updated_at is written whenever a row is mutated; fall back to created_at.
+  const getLastActivity = useCallback((c: Client) => {
+    const rec = c as Client & { updated_at?: string | null };
+    return new Date(rec.updated_at || c.created_at || 0).getTime();
+  }, []);
+
   const filteredAndSortedClients = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    const now = Date.now();
+    const WEEK = 7 * 86400 * 1000;
+    const MONTH = 30 * 86400 * 1000;
+
     const result = clients.filter((c) => {
-      // Text search
-      if (searchQuery && !c.business_name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-          !c.contact_name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      // Fuzzy text search across name, contact, email, phone, company/industry
+      if (q) {
+        const hay = [
+          c.business_name, c.contact_name, c.email, c.phone || "", c.industry || "", c.website || "",
+        ].join(" ").toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
       // Status filter
       if (filterStatus === "active" && !c.is_active) return false;
       if (filterStatus === "inactive" && c.is_active) return false;
@@ -300,6 +384,13 @@ export default function ClientsPage() {
         const tags = clientTags[c.id] || [];
         if (!tags.find(t => t.label === filterTag)) return false;
       }
+      // Activity chip filter
+      if (activityFilter !== "all") {
+        const last = getLastActivity(c);
+        const age = now - last;
+        if (activityFilter === "recent" && age > WEEK) return false;
+        if (activityFilter === "stale" && age < MONTH) return false;
+      }
       return true;
     });
 
@@ -311,13 +402,13 @@ export default function ClientsPage() {
         case "mrr": cmp = (a.mrr || 0) - (b.mrr || 0); break;
         case "health_score": cmp = a.health_score - b.health_score; break;
         case "created_at": cmp = new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime(); break;
-        case "last_activity": cmp = new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime(); break;
+        case "last_activity": cmp = getLastActivity(a) - getLastActivity(b); break;
       }
       return sortDir === "desc" ? -cmp : cmp;
     });
 
     return result;
-  }, [clients, searchQuery, filterStatus, filterIndustry, filterMrrMin, filterMrrMax, filterTag, clientTags, sortField, sortDir]);
+  }, [clients, searchQuery, filterStatus, filterIndustry, filterMrrMin, filterMrrMax, filterTag, clientTags, sortField, sortDir, activityFilter, getLastActivity]);
 
   // Keep backward compat alias
   const filteredClients = filteredAndSortedClients;
@@ -528,6 +619,7 @@ export default function ClientsPage() {
                 { field: "mrr" as SortField, label: "MRR" },
                 { field: "health_score" as SortField, label: "Health" },
                 { field: "created_at" as SortField, label: "Joined" },
+                { field: "last_activity" as SortField, label: "Activity" },
               ]).map(s => (
                 <button key={s.field} onClick={() => handleSort(s.field)}
                   className={`px-2 py-1 text-[10px] rounded-md transition-all flex items-center gap-0.5 ${
@@ -566,6 +658,28 @@ export default function ClientsPage() {
                 <Columns size={14} /> Compare ({compareClients.length})
               </button>
             )}
+          </div>
+
+          {/* Activity quick-filter chips */}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <span className="text-[10px] text-muted">Quick:</span>
+            {([
+              { key: "all" as const, label: "All", color: "bg-surface text-muted" },
+              { key: "recent" as const, label: "Active this week", color: "bg-success/10 text-success border-success/30" },
+              { key: "stale" as const, label: "Stale >30d", color: "bg-warning/10 text-warning border-warning/30" },
+            ]).map(chip => (
+              <button
+                key={chip.key}
+                onClick={() => setActivityFilter(chip.key)}
+                className={`text-[10px] px-2 py-1 rounded-full border transition-all ${
+                  activityFilter === chip.key
+                    ? chip.color + " border"
+                    : "bg-surface text-muted border-border hover:border-gold/30"
+                }`}
+              >
+                {chip.label}
+              </button>
+            ))}
           </div>
 
           {/* Feature 9: Advanced Filters Panel */}
@@ -622,17 +736,26 @@ export default function ClientsPage() {
 
           {/* Feature 4: Bulk Actions Bar */}
           {selectedClients.size > 0 && (
-            <div className="card p-2.5 flex items-center gap-3 bg-gold/5 border-gold/20">
+            <div className="card p-2.5 flex items-center gap-3 bg-gold/5 border-gold/20 flex-wrap">
               <span className="text-xs font-medium">{selectedClients.size} selected</span>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <button onClick={() => handleBulkAction("email")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
+                  <Mail size={10} /> Email
+                </button>
+                <button onClick={() => handleBulkAction("sms")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
+                  <Phone size={10} /> SMS
+                </button>
                 <button onClick={() => handleBulkAction("export")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
-                  <Download size={10} /> Export Selected
+                  <Download size={10} /> Export
                 </button>
                 <button onClick={() => handleBulkAction("tag")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1">
                   <Tag size={10} /> Bulk Tag
                 </button>
-                <button onClick={() => handleBulkAction("deactivate")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1 text-danger">
+                <button onClick={() => handleBulkAction("deactivate")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1 text-warning">
                   <XCircle size={10} /> Deactivate
+                </button>
+                <button onClick={() => handleBulkAction("delete")} className="btn-secondary text-[10px] px-2 py-1 flex items-center gap-1 text-danger">
+                  <XCircle size={10} /> Delete
                 </button>
               </div>
               <button onClick={() => setSelectedClients(new Set())} className="text-[10px] text-muted hover:text-foreground ml-auto">
@@ -653,7 +776,14 @@ export default function ClientsPage() {
             const nextAction = getNextAction(c);
             const tags = clientTags[c.id] || [];
 
-            const accentClass = c.health_score > 75 ? "card-accent-green" : c.health_score > 50 ? "card-accent-warning" : "card-accent-danger";
+            const status = getLifecycleStatus(c);
+            const statusStyles = STATUS_STYLES[status];
+            // Border accent follows the lifecycle status so the card and table tell the same story
+            const accentClass =
+              status === "active"  ? "card-accent-green"   :
+              status === "paused"  ? "card-accent-warning" :
+              status === "churned" ? "card-accent-danger"  :
+              "card-accent-gold"; // trial
             return (
               <div key={c.id} className={`card card-accent ${accentClass} p-4 hover:border-gold/30 transition-all cursor-pointer group relative`}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
@@ -688,7 +818,12 @@ export default function ClientsPage() {
                     {c.health_score}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm truncate">{c.business_name}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="font-medium text-sm truncate">{c.business_name}</p>
+                      <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-medium border ${statusStyles.pill}`}>
+                        {statusStyles.label}
+                      </span>
+                    </div>
                     <p className="text-[10px] text-muted">{c.contact_name}</p>
                   </div>
                 </div>
@@ -806,24 +941,33 @@ export default function ClientsPage() {
                   </button>
                 </div>
               )},
-              { key: "business_name", label: "Business", render: (c: Client) => (
-                <div className="flex items-center gap-2">
-                  {/* Feature 1: Health indicator dot */}
-                  <div className={`w-2.5 h-2.5 rounded-full shrink-0 ${getHealthBg(c.health_score)}`}
-                    title={getHealthLabel(c.health_score)} />
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <p className="font-medium">{c.business_name}</p>
-                      {/* Feature 3: Tags inline */}
-                      {(clientTags[c.id] || []).map(t => (
-                        <span key={t.label} className="text-[8px] px-1 py-0 rounded-full font-medium"
-                          style={{ background: t.color + "18", color: t.color }}>{t.label}</span>
-                      ))}
+              { key: "business_name", label: "Business", render: (c: Client) => {
+                const status = getLifecycleStatus(c);
+                const styles = STATUS_STYLES[status];
+                return (
+                  <div className="flex items-stretch gap-2">
+                    {/* Status-colored left bar (acts as the "row" accent since DataTable rows don't support className per-row) */}
+                    <div className={`w-1 rounded-full shrink-0 ${styles.bar}`} title={styles.label} />
+                    {/* Feature 1: Health indicator dot */}
+                    <div className={`w-2.5 h-2.5 rounded-full shrink-0 mt-1.5 ${getHealthBg(c.health_score)}`}
+                      title={getHealthLabel(c.health_score)} />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <p className="font-medium">{c.business_name}</p>
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-medium border ${styles.pill}`}>
+                          {styles.label}
+                        </span>
+                        {/* Feature 3: Tags inline */}
+                        {(clientTags[c.id] || []).map(t => (
+                          <span key={t.label} className="text-[8px] px-1 py-0 rounded-full font-medium"
+                            style={{ background: t.color + "18", color: t.color }}>{t.label}</span>
+                        ))}
+                      </div>
+                      <p className="text-xs text-muted">{c.contact_name}</p>
                     </div>
-                    <p className="text-xs text-muted">{c.contact_name}</p>
                   </div>
-                </div>
-              )},
+                );
+              }},
               { key: "services", label: "Services", render: (c: Client) => (
                 <div className="flex flex-wrap gap-1">
                   {(c.services || []).slice(0, 3).map((s, i) => (
