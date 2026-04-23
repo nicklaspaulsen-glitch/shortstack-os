@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Download,
   Monitor,
@@ -15,26 +15,46 @@ import {
   CheckCircle2,
   ExternalLink,
   Terminal,
+  AlertTriangle,
+  Mail,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
 /**
  * Desktop download page — offers the Electron native app for Windows, macOS, Linux.
- * The actual installers are built via `npm run electron:build` (electron-builder NSIS).
- * Until a public release exists, these links point to the GitHub releases page.
+ *
+ * Strategy:
+ *   - Each download button calls `/api/desktop/download/<platform>` which 302s to
+ *     the real installer (either `/downloads/*` on Vercel, or an external R2 URL
+ *     if `DESKTOP_DOWNLOAD_BASE_URL` is configured).
+ *   - On mount we fetch `/api/desktop/manifest` to render real size / version /
+ *     "last updated" metadata. If the manifest is unavailable we show a friendly
+ *     "contact support" fallback instead of a 404.
+ *   - `postbuild:electron` npm script copies `dist-electron/*.exe` to
+ *     `public/downloads/` and writes the manifest.
  */
 
-const CURRENT_VERSION = "1.4.0";
+const FALLBACK_VERSION = "1.4.0";
 const GH_RELEASES = "https://github.com/shortstack/shortstack-os/releases/latest";
-// Placeholder paths served out of /public/downloads. Replace these once
-// electron-builder outputs land on the CDN / release page.
-const DOWNLOAD_PATHS = {
-  windows: "/downloads/ShortStack-OS-Setup.exe",
-  mac: "/downloads/ShortStack-OS.dmg",
-  linux: "/downloads/ShortStack-OS.AppImage",
-} as const;
+const SUPPORT_MAILTO =
+  "mailto:support@shortstack.dev?subject=Desktop%20app%20download%20unavailable";
 
 type Platform = "windows" | "mac" | "linux";
+
+interface ManifestFile {
+  file: string;
+  size: number;
+  sha512: string | null;
+}
+
+interface Manifest {
+  available: boolean;
+  base: string;
+  version?: string;
+  updated?: string;
+  files?: Partial<Record<Platform, ManifestFile | null>>;
+  reason?: string;
+}
 
 interface PlatformCard {
   id: Platform;
@@ -42,7 +62,6 @@ interface PlatformCard {
   subtitle: string;
   icon: React.ReactNode;
   fileNote: string;
-  href: string;
   accent: string;
 }
 
@@ -53,7 +72,6 @@ const PLATFORMS: PlatformCard[] = [
     subtitle: "Windows 10 & 11 (x64)",
     icon: <Monitor size={26} />,
     fileNote: ".exe NSIS installer",
-    href: DOWNLOAD_PATHS.windows,
     accent: "#60A5FA",
   },
   {
@@ -62,7 +80,6 @@ const PLATFORMS: PlatformCard[] = [
     subtitle: "macOS 11+ (Intel & Apple Silicon)",
     icon: <Laptop size={26} />,
     fileNote: ".dmg disk image",
-    href: DOWNLOAD_PATHS.mac,
     accent: "#E2E8F0",
   },
   {
@@ -71,7 +88,6 @@ const PLATFORMS: PlatformCard[] = [
     subtitle: "Ubuntu, Fedora, Arch & more",
     icon: <Terminal size={26} />,
     fileNote: ".AppImage portable",
-    href: DOWNLOAD_PATHS.linux,
     accent: "#FBBF24",
   },
 ];
@@ -85,15 +101,54 @@ const FEATURES = [
   { icon: <Shield size={16} />, title: "Sandboxed agent runtime", desc: "Local tool execution is gated by workspace + command filters." },
 ];
 
+function formatBytes(bytes: number | undefined): string | null {
+  if (!bytes || bytes <= 0) return null;
+  const mb = bytes / (1024 * 1024);
+  if (mb >= 1024) return `${(mb / 1024).toFixed(2)} GB`;
+  return `${mb.toFixed(1)} MB`;
+}
+
+function formatDate(iso: string | undefined): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
 export default function DownloadDesktopPage() {
-  const [detectedOS] = useState<Platform | null>(() => {
+  const [manifest, setManifest] = useState<Manifest | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const detectedOS = useMemo<Platform | null>(() => {
     if (typeof window === "undefined") return null;
     const ua = navigator.userAgent.toLowerCase();
     if (ua.includes("win")) return "windows";
     if (ua.includes("mac")) return "mac";
     if (ua.includes("linux")) return "linux";
     return null;
-  });
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/desktop/manifest")
+      .then((r) => r.json())
+      .then((m: Manifest) => {
+        if (!cancelled) setManifest(m);
+      })
+      .catch(() => {
+        if (!cancelled) setManifest({ available: false, base: "/downloads" });
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const version = manifest?.version || FALLBACK_VERSION;
+  const updatedStr = formatDate(manifest?.updated);
+  const isAvailable = Boolean(manifest?.available);
 
   return (
     <div className="space-y-6 pb-10">
@@ -115,14 +170,49 @@ export default function DownloadDesktopPage() {
         }
       />
 
+      {/* ── Unavailable banner (graceful fallback) ───────────────── */}
+      {!loading && !isAvailable && (
+        <div className="flex items-start gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4">
+          <AlertTriangle size={18} className="shrink-0 mt-0.5 text-amber-400" />
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-semibold text-amber-200">
+              Installer temporarily unavailable
+            </div>
+            <div className="text-xs text-amber-100/80 mt-0.5">
+              Our desktop installer is currently being staged. You can still grab it from
+              GitHub releases, or email support and we&apos;ll send a direct link.
+            </div>
+            <div className="flex flex-wrap items-center gap-2 mt-2.5">
+              <a
+                href={GH_RELEASES}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-amber-500/20 hover:bg-amber-500/30 text-amber-100 border border-amber-500/30"
+              >
+                GitHub releases <ExternalLink size={11} />
+              </a>
+              <a
+                href={SUPPORT_MAILTO}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md bg-white/5 hover:bg-white/10 text-foreground border border-border"
+              >
+                <Mail size={11} /> Contact support
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Download cards ────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {PLATFORMS.map((p) => {
           const isRecommended = detectedOS === p.id;
+          const entry = manifest?.files?.[p.id] ?? null;
+          const size = formatBytes(entry?.size);
+          const href = `/api/desktop/download/${p.id}`;
           return (
             <a
               key={p.id}
-              href={p.href}
+              href={href}
               download
               className={`group relative rounded-2xl border p-5 transition-all hover:scale-[1.01] ${
                 isRecommended
@@ -154,9 +244,12 @@ export default function DownloadDesktopPage() {
               </div>
               <div className="text-lg font-semibold text-foreground mb-0.5">{p.title}</div>
               <div className="text-xs text-muted mb-3">{p.subtitle}</div>
-              <div className="text-[11px] text-muted-light mb-4">{p.fileNote}</div>
+              <div className="text-[11px] text-muted-light mb-4">
+                {p.fileNote}
+                {size ? ` · ${size}` : ""}
+              </div>
               <div className="flex items-center justify-between pt-3 border-t border-border">
-                <span className="text-[11px] text-muted">v{CURRENT_VERSION}</span>
+                <span className="text-[11px] text-muted">v{version}</span>
                 <span className="text-xs font-medium text-gold group-hover:underline">
                   Download
                 </span>
@@ -206,8 +299,14 @@ export default function DownloadDesktopPage() {
           <Keyboard size={14} className="text-gold" />
           <span>
             Current version{" "}
-            <span className="font-mono font-semibold text-foreground">v{CURRENT_VERSION}</span>{" "}
-            &middot; Built with Electron &amp; electron-builder
+            <span className="font-mono font-semibold text-foreground">v{version}</span>
+            {updatedStr ? (
+              <>
+                {" · Updated "}
+                <span className="text-foreground">{updatedStr}</span>
+              </>
+            ) : null}
+            {" · Built with Electron & electron-builder"}
           </span>
         </div>
         <a

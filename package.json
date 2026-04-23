@@ -16,6 +16,7 @@
     "e2e:headed": "playwright test --headed",
     "electron": "electron .",
     "electron:build": "electron-builder --win",
+    "postbuild:electron": "node scripts/postbuild-electron.mjs",
     "desktop": "electron .",
     "bot": "node scripts/discord-bot.js",
     "icons": "tsx scripts/regenerate-icons.ts"

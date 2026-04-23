@@ -1,0 +1,13 @@
+{
+  "version": "1.4.0",
+  "updated": "2026-04-13T18:37:30.806Z",
+  "files": {
+    "windows": {
+      "file": "ShortStack-OS-Setup.exe",
+      "size": 177239499,
+      "sha512": "MHfF6tj8lLvNjxgWSBiPg2/fuSmwtZzLQ9ba5Ug7XHpnk2de0CHoTKpXvW0lhD/pGctxj1E1PK6Bn9w82clUvg=="
+    },
+    "mac": null,
+    "linux": null
+  }
+}

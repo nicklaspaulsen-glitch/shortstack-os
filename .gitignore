@@ -52,3 +52,13 @@ supabase/.temp/
 # Windows path-encoded tsc-out junk (from Windows path escaping bug)
 C:Claudetsc-*.txt
 
+# Desktop installers (too big for Vercel — host on Cloudflare R2 / GitHub Releases)
+# Keep manifest.json + README tracked so the page has metadata + docs.
+public/downloads/*.exe
+public/downloads/*.dmg
+public/downloads/*.AppImage
+public/downloads/*.zip
+!public/downloads/shortstack-extension.zip
+!public/downloads/manifest.json
+!public/downloads/README.md
+
