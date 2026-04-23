@@ -439,6 +439,25 @@ export default function DomainsPage() {
         </div>
       </div>
 
+      {/* Domain-as-Hub promo — surface the one-click brand launch flow from
+          the main domains page. Sits above the search so the "buy the
+          domain → launch the brand" loop is discoverable. */}
+      <a
+        href="/dashboard/domains/hub-setup"
+        className="card block bg-gradient-to-br from-gold/10 to-amber-500/5 border-gold/30 hover:border-gold/50 transition"
+      >
+        <div className="flex items-center gap-3">
+          <Sparkles size={18} className="text-gold shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold">One-click brand launch</p>
+            <p className="text-[10px] text-muted mt-0.5">
+              Provision email, phone, website, portal, and chat widget on your domain in one flow.
+            </p>
+          </div>
+          <ArrowUpRight size={14} className="text-gold shrink-0" />
+        </div>
+      </a>
+
       {/* ── Domain search ────────────────────────────────────────────── */}
       <div className="card">
         <h2 className="section-header flex items-center gap-2">
