@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import SafeThumb from "@/components/safe-thumb";
 
 // Sample content-piece tiles shown in the Content Library landing state.
 const CONTENT_LIBRARY_PREVIEW_FALLBACK: RollingPreviewItem[] = [
@@ -667,8 +668,13 @@ export default function ContentLibraryPage() {
                 className={`w-full aspect-square rounded-lg mb-2 flex items-center justify-center overflow-hidden ${TYPE_BG[asset.type]}`}
               >
                 {asset.type === "image" && asset.thumbnail ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={asset.thumbnail} alt={asset.name} className="w-full h-full object-cover rounded-lg" />
+                  <SafeThumb
+                    src={asset.thumbnail}
+                    alt={asset.name}
+                    className="w-full h-full object-cover rounded-lg"
+                    wrapperClassName="w-full h-full rounded-lg"
+                    fallback={<>{TYPE_ICON[asset.type]}</>}
+                  />
                 ) : (
                   TYPE_ICON[asset.type]
                 )}
@@ -783,8 +789,12 @@ export default function ContentLibraryPage() {
             </div>
             <div className={`w-full aspect-video rounded-lg mb-4 flex items-center justify-center overflow-hidden ${TYPE_BG[previewAsset.type]}`}>
               {previewAsset.type === "image" && previewAsset.url ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={previewAsset.url} alt={previewAsset.name} className="w-full h-full object-contain" />
+                <SafeThumb
+                  src={previewAsset.url}
+                  alt={previewAsset.name}
+                  className="w-full h-full object-contain"
+                  wrapperClassName="w-full h-full"
+                />
               ) : (
                 <div className="text-center">
                   <div className="scale-[3] mb-6">{TYPE_ICON[previewAsset.type]}</div>

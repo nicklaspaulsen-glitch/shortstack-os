@@ -60,6 +60,7 @@ import {
   type PresetDropPayload,
 } from "@/components/video-editor/preset-picker-panel";
 import FootageBadge, { type FootageType } from "@/components/video-editor/footage-badge";
+import SafeThumb from "@/components/safe-thumb";
 
 // UI caption-style id → server-accepted id. Server accepts only 6 styles
 // (see src/app/api/video/auto-edit/captions/route.ts:36-43). Everything else
@@ -5685,7 +5686,13 @@ export default function VideoEditorPage() {
                         <div key={i} className="p-2 rounded-lg border border-border flex items-center gap-2">
                           <div className="w-10 h-10 rounded bg-surface-light flex items-center justify-center flex-shrink-0">
                             {f.type.startsWith("image/") ? (
-                              <img src={f.preview} alt={f.name} className="w-10 h-10 object-cover rounded" />
+                              <SafeThumb
+                                src={f.preview}
+                                alt={f.name}
+                                className="w-10 h-10 object-cover rounded"
+                                wrapperClassName="w-10 h-10 rounded"
+                                fallback={<ImageIcon size={12} className="text-muted" />}
+                              />
                             ) : f.type.startsWith("video/") ? (
                               <Film size={12} className="text-gold" />
                             ) : (
@@ -6206,7 +6213,17 @@ export default function VideoEditorPage() {
                     {referenceFiles.map((f, i) => (
                       <div key={i} className="relative group">
                         {f.type.startsWith("image/") ? (
-                          <img src={f.preview} alt={f.name} className="w-14 h-14 object-cover rounded-lg border border-border" />
+                          <SafeThumb
+                            src={f.preview}
+                            alt={f.name}
+                            className="w-14 h-14 object-cover rounded-lg border border-border"
+                            wrapperClassName="w-14 h-14 rounded-lg border border-border"
+                            fallback={
+                              <div className="w-14 h-14 bg-surface-light rounded-lg border border-border flex items-center justify-center">
+                                <ImageIcon size={14} className="text-muted" />
+                              </div>
+                            }
+                          />
                         ) : (
                           <div className="w-14 h-14 bg-surface-light rounded-lg border border-border flex flex-col items-center justify-center">
                             {f.type.startsWith("video/") ? <Film size={14} className="text-gold mb-0.5" /> :

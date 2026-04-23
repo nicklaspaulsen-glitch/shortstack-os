@@ -28,6 +28,7 @@ import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import SafeThumb from "@/components/safe-thumb";
 import TutorialSection, { type TutorialStep } from "@/components/TutorialSection";
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 import { POPULAR_FONTS, loadGoogleFont, preloadGoogleFonts } from "@/lib/asset-catalog";
@@ -3184,8 +3185,12 @@ export default function ThumbnailGeneratorPage() {
               {results.slice(0, 3).map((r, i) => (
                 <div key={i} className="aspect-video rounded bg-surface-light border border-border overflow-hidden flex items-center justify-center">
                   {r.imageUrl ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={r.imageUrl} alt="" className="w-full h-full object-cover" />
+                    <SafeThumb
+                      src={r.imageUrl}
+                      alt=""
+                      wrapperClassName="w-full h-full"
+                      fallback={<span className="text-[9px] text-muted">{r.status || "..."}</span>}
+                    />
                   ) : (
                     <span className="text-[9px] text-muted">{r.status || "..."}</span>
                   )}
@@ -3328,8 +3333,12 @@ export default function ThumbnailGeneratorPage() {
               {results.slice(0, 3).map((r, i) => (
                 <div key={i} className="aspect-video rounded bg-surface-light border border-border overflow-hidden flex items-center justify-center">
                   {r.imageUrl ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={r.imageUrl} alt="" className="w-full h-full object-cover" />
+                    <SafeThumb
+                      src={r.imageUrl}
+                      alt=""
+                      wrapperClassName="w-full h-full"
+                      fallback={<span className="text-[9px] text-muted">polishing</span>}
+                    />
                   ) : (
                     <span className="text-[9px] text-muted">polishing</span>
                   )}
@@ -4415,8 +4424,17 @@ export default function ThumbnailGeneratorPage() {
             {results.slice(0, 4).map(r => (
               <div key={r.id} className="rounded-xl overflow-hidden border border-border bg-surface-light">
                 {r.imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.imageUrl} alt="Generated thumbnail" className="w-full aspect-video object-cover" />
+                  <SafeThumb
+                    src={r.imageUrl}
+                    alt="Generated thumbnail"
+                    className="w-full aspect-video object-cover"
+                    wrapperClassName="w-full"
+                    fallback={
+                      <div className={`w-full aspect-video bg-gradient-to-br ${r.gradient || "from-slate-700 to-slate-900"} flex items-center justify-center`}>
+                        <p className="text-sm font-black text-white drop-shadow-lg px-4 text-center line-clamp-3">{r.prompt}</p>
+                      </div>
+                    }
+                  />
                 ) : (
                   <div className={`w-full aspect-video bg-gradient-to-br ${r.gradient || "from-slate-700 to-slate-900"} flex items-center justify-center`}>
                     <p className="text-sm font-black text-white drop-shadow-lg px-4 text-center line-clamp-3">{r.prompt}</p>
@@ -5329,10 +5347,10 @@ export default function ThumbnailGeneratorPage() {
                       >
                         {/* Real generated image */}
                         {isComplete && thumb.imageUrl && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
+                          <SafeThumb
                             src={thumb.imageUrl}
                             alt={thumb.prompt}
+                            wrapperClassName="absolute inset-0"
                             className="w-full h-full object-cover"
                           />
                         )}
@@ -5774,8 +5792,17 @@ export default function ThumbnailGeneratorPage() {
                       </div>
                     )}
                     {v.imageUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={v.imageUrl} alt={v.variant_label || ""} className="w-full aspect-video object-cover" />
+                      <SafeThumb
+                        src={v.imageUrl}
+                        alt={v.variant_label || ""}
+                        className="w-full aspect-video object-cover"
+                        wrapperClassName="w-full"
+                        fallback={
+                          <div className="w-full aspect-video flex items-center justify-center bg-white/5 text-[10px] text-danger">
+                            <XCircle size={14} className="mr-1" /> Failed
+                          </div>
+                        }
+                      />
                     ) : v.status === "failed" ? (
                       <div className="w-full aspect-video flex items-center justify-center bg-white/5 text-[10px] text-danger">
                         <XCircle size={14} className="mr-1" /> Failed

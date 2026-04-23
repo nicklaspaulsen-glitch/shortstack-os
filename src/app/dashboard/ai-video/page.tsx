@@ -11,6 +11,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
+import SafeThumb from "@/components/safe-thumb";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import {
   limitsForTier,
@@ -666,7 +667,21 @@ export default function AIVideoPage() {
                 return (
                   <div key={result.id} className={`hf-thumb ${aspectClass} group`}>
                     {result.url ? (
-                      <video src={result.url} muted loop playsInline onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => e.currentTarget.pause()} />
+                      <SafeThumb
+                        src={result.url}
+                        kind="video"
+                        hoverPlay
+                        wrapperClassName="w-full h-full"
+                        className="w-full h-full object-cover"
+                        fallback={
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black text-red-300/70">
+                            <div className="text-center px-3">
+                              <AlertCircle size={16} className="mx-auto mb-1.5" />
+                              <p className="text-[10px] font-light">Failed to load</p>
+                            </div>
+                          </div>
+                        }
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-black via-zinc-950 to-black">
                         {result.status === "generating" && (
@@ -755,7 +770,15 @@ export default function AIVideoPage() {
               </div>
               {result.url && (
                 <div className="mt-3 rounded-xl overflow-hidden bg-black aspect-video">
-                  <video src={result.url} controls className="w-full h-full object-contain" />
+                  <SafeThumb
+                    src={result.url}
+                    kind="video"
+                    controls
+                    muted={false}
+                    loop={false}
+                    wrapperClassName="w-full h-full"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
               )}
             </div>

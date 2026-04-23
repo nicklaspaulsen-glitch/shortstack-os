@@ -14,6 +14,7 @@ import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
+import SafeThumb from "@/components/safe-thumb";
 
 // Static AI-generated-style image previews (Unsplash wide crops) shown in
 // the marquee on the AI Studio landing state when nothing has been
@@ -324,8 +325,13 @@ export default function AIStudioPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {wizardImages.map((img, i) => (
               <a key={i} href={img.url} target="_blank" rel="noopener noreferrer" className="block bg-black rounded-lg overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.url} alt={`Wizard ${i + 1}`} className="w-full" style={{ aspectRatio: `${img.width} / ${img.height}` }} />
+                <SafeThumb
+                  src={img.url}
+                  alt={`Wizard ${i + 1}`}
+                  className="w-full"
+                  style={{ aspectRatio: `${img.width} / ${img.height}` }}
+                  wrapperClassName="w-full"
+                />
               </a>
             ))}
           </div>
@@ -676,8 +682,12 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
             <div className="text-center space-y-2">
               {images.map((img, i) => (
                 <div key={i}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img} alt={`Generated ${i + 1}`} className="max-h-[300px] mx-auto rounded-lg" />
+                  <SafeThumb
+                    src={img}
+                    alt={`Generated ${i + 1}`}
+                    className="max-h-[300px] mx-auto rounded-lg"
+                    wrapperClassName="inline-block"
+                  />
                   <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
                     className="inline-flex items-center gap-1 mt-1 text-[10px] text-indigo-400 hover:underline">
                     <Download size={10} /> Download
@@ -1301,8 +1311,12 @@ function TrainLoraTool({ processing, setProcessing }: ToolProps) {
             <div className="flex flex-wrap gap-1.5">
               {images.map((img, i) => (
                 <div key={i} className="relative w-12 h-12 rounded-lg overflow-hidden bg-surface-light">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={imagePreviews[i]} alt={`Training sample ${i + 1}`} className="w-full h-full object-cover" />
+                  <SafeThumb
+                    src={imagePreviews[i]}
+                    alt={`Training sample ${i + 1}`}
+                    className="w-full h-full object-cover"
+                    wrapperClassName="w-full h-full"
+                  />
                   <button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))}
                     className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white flex items-center justify-center"
                     aria-label={`Remove training sample ${i + 1}`}>
