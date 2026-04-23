@@ -19,6 +19,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
 import type { LucideIcon } from "lucide-react";
@@ -32,6 +33,7 @@ import {
   Lock,
   ArrowLeft,
   Zap,
+  Play,
 } from "lucide-react";
 
 type Status = "ok" | "configured" | "missing" | "error";
@@ -54,7 +56,13 @@ interface StatusGroup {
 interface StatusResponse {
   success: boolean;
   groups: StatusGroup[];
-  summary: { blockers: number; warnings: number; ready_to_launch: boolean };
+  summary: {
+    blockers: number;
+    warnings: number;
+    ready_to_launch: boolean;
+    cron_probes_stale?: boolean;
+    cron_probes_last_run?: string | null;
+  };
   checked_at: string;
 }
 
@@ -71,6 +79,7 @@ export default function SystemStatusPage() {
   const [data, setData] = useState<StatusResponse | null>(null);
   const [fetchState, setFetchState] = useState<"loading" | "ok" | "forbidden" | "error">("loading");
   const [refreshing, setRefreshing] = useState(false);
+  const [runningProbes, setRunningProbes] = useState(false);
 
   const load = useCallback(async () => {
     setRefreshing(true);
@@ -93,6 +102,31 @@ export default function SystemStatusPage() {
       setRefreshing(false);
     }
   }, []);
+
+  // Admin-only: kicks the /api/cron/health-check sweep on demand so the
+  // Live Probes group reflects current reality instead of waiting for the
+  // next 30-minute cron tick.
+  const runProbes = useCallback(async () => {
+    setRunningProbes(true);
+    const t = toast.loading("Running all probes… this can take ~30s");
+    try {
+      const res = await fetch("/api/system-status/run-probes", { method: "POST" });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(`Probe sweep failed: ${json?.error || `HTTP ${res.status}`}`, { id: t });
+        return;
+      }
+      const checked = typeof json?.checked === "number" ? json.checked : "?";
+      const skipped = typeof json?.skipped === "number" ? json.skipped : "?";
+      toast.success(`Probes done — checked ${checked}, skipped ${skipped}`, { id: t });
+      // Refetch so Live Probes group reflects the new data
+      await load();
+    } catch (err) {
+      toast.error(`Probe sweep threw: ${String(err)}`, { id: t });
+    } finally {
+      setRunningProbes(false);
+    }
+  }, [load]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -164,14 +198,25 @@ export default function SystemStatusPage() {
         gradient={bannerGradient}
         eyebrow="Admin · Launch readiness"
         actions={
-          <button
-            onClick={load}
-            disabled={refreshing}
-            className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white/90 hover:bg-white/20 disabled:opacity-50"
-          >
-            <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
-            {refreshing ? "Checking…" : "Re-check"}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={runProbes}
+              disabled={runningProbes || refreshing}
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/15 border border-white/30 text-white/95 hover:bg-white/25 disabled:opacity-50 font-medium"
+              title="Invoke the cron health-check sweep now instead of waiting 30 minutes"
+            >
+              <Play size={12} className={runningProbes ? "animate-pulse" : ""} />
+              {runningProbes ? "Running probes…" : "Run All Probes Now"}
+            </button>
+            <button
+              onClick={load}
+              disabled={refreshing || runningProbes}
+              className="inline-flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl bg-white/10 border border-white/20 text-white/90 hover:bg-white/20 disabled:opacity-50"
+            >
+              <RefreshCw size={12} className={refreshing ? "animate-spin" : ""} />
+              {refreshing ? "Checking…" : "Re-check"}
+            </button>
+          </div>
         }
       />
 

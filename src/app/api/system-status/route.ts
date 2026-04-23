@@ -255,6 +255,63 @@ function checkAppOrigin(): CheckResult {
     : { id: "app_url", label: "App origin URL", status: "configured", critical: true, detail: process.env.NEXT_PUBLIC_APP_URL };
 }
 
+// ── Cron-populated live probes (from system_health table) ──────────
+// The /api/cron/health-check route runs every 30 min and upserts rows into
+// `system_health` with real reachability data. We surface those here so
+// admins see actual provider uptime, not just "env present?" checks.
+async function loadCronProbes(supabase: ReturnType<typeof createServerSupabase>): Promise<{
+  checks: CheckResult[];
+  stale: boolean;
+  last_run_at: string | null;
+}> {
+  try {
+    const { data: rows } = await supabase
+      .from("system_health")
+      .select("integration_name, status, last_check_at, error_message, response_time_ms")
+      .order("last_check_at", { ascending: false });
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return { checks: [], stale: false, last_run_at: null };
+    }
+
+    const mostRecent = rows[0]?.last_check_at as string | null;
+    const stale = mostRecent
+      ? Date.now() - new Date(mostRecent).getTime() > 90 * 60 * 1000 // >90 min = stale
+      : true;
+
+    const checks: CheckResult[] = rows.map(r => {
+      const rawStatus = (r.status as string | null) ?? "unknown";
+      let status: Status;
+      let detail: string | undefined;
+      if (rawStatus === "healthy") {
+        status = "ok";
+        detail = r.response_time_ms ? `${r.response_time_ms}ms response` : undefined;
+      } else if (rawStatus === "degraded") {
+        status = "error";
+        detail = r.error_message || "Provider responded but with an issue";
+      } else if (rawStatus === "down") {
+        status = "error";
+        detail = r.error_message || "Provider unreachable";
+      } else {
+        // "unknown" = not configured → show as missing so it's grouped correctly
+        status = "missing";
+        detail = r.error_message || "Not configured";
+      }
+      return {
+        id: `probe_${String(r.integration_name).toLowerCase().replace(/\W+/g, "_")}`,
+        label: String(r.integration_name),
+        status,
+        detail,
+        critical: false, // live probes are informational; env checks are authoritative for launch-blocking
+      };
+    });
+
+    return { checks, stale, last_run_at: mostRecent };
+  } catch {
+    return { checks: [], stale: false, last_run_at: null };
+  }
+}
+
 // ── Group assembler ────────────────────────────────────────────────
 export async function GET() {
   const supabase = createServerSupabase();
@@ -272,11 +329,12 @@ export async function GET() {
   }
 
   // Run live probes in parallel
-  const [supa, anthropic, stripe, runpod] = await Promise.all([
+  const [supa, anthropic, stripe, runpod, cronProbes] = await Promise.all([
     checkSupabase(),
     checkAnthropic(),
     checkStripe(),
     checkRunpodFlux(),
+    loadCronProbes(supabase),
   ]);
 
   const groups: StatusGroup[] = [
@@ -306,7 +364,30 @@ export async function GET() {
     },
   ];
 
-  // Summary: launch-blocking issues
+  // Append cron-populated live probes as their own group
+  if (cronProbes.checks.length > 0) {
+    const staleDetail = cronProbes.stale && cronProbes.last_run_at
+      ? `Last probe run was ${new Date(cronProbes.last_run_at).toLocaleString()} — data may be stale. Click "Run probes now" to refresh.`
+      : undefined;
+    groups.push({
+      category: cronProbes.stale
+        ? "Live Integration Probes (STALE — last run > 90m ago)"
+        : "Live Integration Probes",
+      checks: staleDetail
+        ? [{
+            id: "probe_staleness_warning",
+            label: "Probe freshness",
+            status: "error",
+            detail: staleDetail,
+            critical: false,
+          }, ...cronProbes.checks]
+        : cronProbes.checks,
+    });
+  }
+
+  // Summary: launch-blocking issues. Live probes are informational only
+  // (they're integrations, not Trinity-core systems), so only critical:true
+  // rows count as blockers.
   const blockers: CheckResult[] = [];
   const warnings: CheckResult[] = [];
   for (const g of groups) {
@@ -323,6 +404,8 @@ export async function GET() {
       blockers: blockers.length,
       warnings: warnings.length,
       ready_to_launch: blockers.length === 0,
+      cron_probes_stale: cronProbes.stale,
+      cron_probes_last_run: cronProbes.last_run_at,
     },
     checked_at: new Date().toISOString(),
   });

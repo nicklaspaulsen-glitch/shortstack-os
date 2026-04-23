@@ -20,13 +20,15 @@ export async function GET() {
 
   const services: ServiceStatus[] = [];
 
-  // Check system_health table for any active issues
+  // Check system_health table for any active issues.
+  // Column is `last_check_at` (see system_health schema) — the old code queried
+  // `last_check` which silently returned no rows inside the try/catch.
   try {
     const { data: healthRecords } = await supabase
       .from("system_health")
-      .select("integration_name, status, last_check, error_message")
+      .select("integration_name, status, last_check_at, error_message")
       .in("status", ["degraded", "down", "error"])
-      .order("last_check", { ascending: false })
+      .order("last_check_at", { ascending: false })
       .limit(15);
 
     if (Array.isArray(healthRecords)) {
@@ -36,7 +38,7 @@ export async function GET() {
           label: formatLabel(h.integration_name),
           status: h.status === "down" || h.status === "error" ? "down" : "degraded",
           message: h.error_message || undefined,
-          last_check: h.last_check,
+          last_check: h.last_check_at,
         });
       }
     }
