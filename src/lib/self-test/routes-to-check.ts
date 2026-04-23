@@ -1,0 +1,314 @@
+/**
+ * Tier-1 self-test route fixtures.
+ *
+ * The nightly cron (`/api/cron/self-test`) iterates this list, hits each route
+ * with the fixture payload, asserts response status + optional shape, and logs
+ * the result into `self_test_results`.
+ *
+ * ─── GUARDRAIL ───
+ * NOTHING IN THIS LIST MAY CAUSE REAL-WORLD SIDE EFFECTS.
+ *   • Outbound email → must target `test@example.com` (Resend bounces silently)
+ *   • Outbound SMS   → must target `+15005550006` (Twilio magic no-charge number)
+ *   • Stripe charges → must use test-mode idempotency keys only; never live-mode
+ *   • LLM calls      → fine to hit (metered), but keep prompts ≤ ~50 tokens
+ *
+ * If a route would fire a real action, either (a) mark it GET-only, (b) use
+ * the sentinel emails/phones above, or (c) set `skip_in_self_test: true`.
+ *
+ * ─── EXPECTED-STATUS SEMANTICS ───
+ * `expected_status` can be a single number or an array. The check passes if
+ * `actual_status` matches one of them. Many endpoints that require real auth
+ * should return 401 here (the cron runs with service-role token in
+ * `SELF_TEST_USER_ID`'s context; unauth'd routes shouldn't be touched).
+ *
+ * `expected_shape` (optional) is a set of top-level keys we expect on the JSON
+ * response body. Presence-check only, no type validation.
+ */
+
+export interface SelfTestCheck {
+  /** Path under the origin, e.g. `/api/health`. No query string unless needed. */
+  path: string;
+  /** HTTP method. Defaults to GET if omitted. */
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  /** JSON body for POST/PUT/PATCH. */
+  body?: unknown;
+  /** Expected status or list of acceptable statuses. */
+  expected_status: number | number[];
+  /** Optional: top-level keys we expect on the response JSON. */
+  expected_shape?: string[];
+  /** If true, sends the service-role bearer token. Default false. */
+  auth_bearer?: boolean;
+  /** Human-readable note for the dashboard. */
+  note?: string;
+  /** If true, skip this check entirely (kept for doc / quick-disable). */
+  skip_in_self_test?: boolean;
+  /** Custom per-check timeout (ms). Default 10_000. */
+  timeout_ms?: number;
+}
+
+// Sentinel values. DO NOT change without checking provider docs first.
+export const SELF_TEST_SENTINEL_EMAIL = "test@example.com";
+export const SELF_TEST_SENTINEL_PHONE = "+15005550006"; // Twilio magic "no-charge" test number
+export const SELF_TEST_DUMMY_JOB_ID = "00000000-0000-0000-0000-000000000000";
+
+export const ROUTES_TO_CHECK: SelfTestCheck[] = [
+  // ── Public / unauth health endpoints ─────────────────────────────────────
+  {
+    path: "/api/health",
+    expected_status: [200, 503],
+    expected_shape: ["status", "timestamp", "checks"],
+    note: "Public uptime probe. 503 is acceptable (degraded ≠ broken).",
+  },
+  {
+    path: "/api/health-check",
+    expected_status: [200, 401, 404],
+    note: "Alternate health endpoint (if present).",
+  },
+
+  // ── Auth-gated list endpoints (authed via SELF_TEST_USER_ID) ─────────────
+  {
+    path: "/api/clients",
+    auth_bearer: true,
+    expected_status: 200,
+    note: "GET returns array (may be empty).",
+  },
+  {
+    path: "/api/leads",
+    auth_bearer: true,
+    expected_status: 200,
+  },
+  {
+    path: "/api/deals",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/content",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/content-library",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/content-plan",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/campaigns",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/conversations",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/triggers/list",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/workflows",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/sequences",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/crm",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/analytics",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/insights",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/notifications",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/reports",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/reviews",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/domains",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/invoices",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/profile",
+    auth_bearer: true,
+    expected_status: [200, 401],
+  },
+  {
+    path: "/api/profiles",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/settings",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/billing",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/usage",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/system-status",
+    auth_bearer: true,
+    expected_status: [200, 403],
+    note: "Admin-only; test user isn't always admin. 403 is fine.",
+  },
+
+  // ── POST endpoints with benign / sentinel payloads ───────────────────────
+  {
+    path: "/api/trinity/chat",
+    method: "POST",
+    auth_bearer: true,
+    body: {
+      message: "self-test ping — please respond with only 'ok'",
+      stream: false,
+    },
+    expected_status: [200, 401, 404],
+    note: "LLM call — short prompt, token cost minimal.",
+    timeout_ms: 25_000,
+  },
+  {
+    path: "/api/emails/send",
+    method: "POST",
+    auth_bearer: true,
+    body: {
+      to: SELF_TEST_SENTINEL_EMAIL,
+      subject: "self-test (ignore)",
+      html: "<p>self-test probe — do not reply</p>",
+      _self_test: true,
+    },
+    expected_status: [200, 400, 401, 422],
+    expected_shape: ["email_id"],
+    note: `Routed to ${SELF_TEST_SENTINEL_EMAIL} — Resend accepts + silently drops.`,
+  },
+  {
+    path: "/api/sms/send",
+    method: "POST",
+    auth_bearer: true,
+    body: {
+      to: SELF_TEST_SENTINEL_PHONE,
+      body: "self-test",
+      _self_test: true,
+    },
+    expected_status: [200, 400, 401, 404],
+    note: `Twilio magic number ${SELF_TEST_SENTINEL_PHONE} — no charge.`,
+  },
+  {
+    path: "/api/ai/generate",
+    method: "POST",
+    auth_bearer: true,
+    body: { prompt: "ping", max_tokens: 5 },
+    expected_status: [200, 400, 401, 404],
+    timeout_ms: 25_000,
+  },
+  {
+    path: "/api/copywriter",
+    method: "POST",
+    auth_bearer: true,
+    body: { prompt: "self-test", max_tokens: 5 },
+    expected_status: [200, 400, 401, 404],
+    timeout_ms: 25_000,
+  },
+  {
+    path: "/api/search",
+    method: "POST",
+    auth_bearer: true,
+    body: { query: "self-test" },
+    expected_status: [200, 400, 401, 404],
+  },
+
+  // ── Endpoints that SHOULD return an error for our fixture inputs ─────────
+  {
+    path: `/api/thumbnail/status?job_id=${SELF_TEST_DUMMY_JOB_ID}`,
+    expected_status: [404, 200, 401],
+    note: "Dummy job_id → expect 404 (or gracefully 200 with status=not_found).",
+  },
+  {
+    path: "/api/webhooks/resend",
+    method: "POST",
+    body: {}, // empty payload
+    expected_status: [400, 401, 403],
+    note: "Empty payload — should reject with 400.",
+  },
+  {
+    path: "/api/webhooks/stripe",
+    method: "POST",
+    body: {},
+    expected_status: [400, 401, 403],
+    note: "No stripe-signature header — must reject.",
+  },
+  {
+    path: "/api/webhooks/twilio",
+    method: "POST",
+    body: {},
+    expected_status: [400, 401, 403, 404],
+  },
+
+  // ── Admin / ops endpoints ────────────────────────────────────────────────
+  {
+    path: "/api/admin/self-test/latest",
+    auth_bearer: true,
+    expected_status: [200, 401, 403],
+    note: "Self-read — our own dashboard API.",
+  },
+  {
+    path: "/api/audit-log",
+    auth_bearer: true,
+    expected_status: [200, 401, 403, 404],
+  },
+
+  // ── Integration presence pings (no payload, just liveness) ───────────────
+  {
+    path: "/api/integrations",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+  {
+    path: "/api/oauth/status",
+    auth_bearer: true,
+    expected_status: [200, 401, 404],
+  },
+];
+
+/** Total count helper for the dashboard. */
+export const SELF_TEST_ROUTE_COUNT = ROUTES_TO_CHECK.filter((r) => !r.skip_in_self_test).length;

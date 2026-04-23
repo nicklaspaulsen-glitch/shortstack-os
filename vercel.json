@@ -108,6 +108,10 @@
     {
       "path": "/api/cron/run-sequences",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/self-test",
+      "schedule": "15 3 * * *"
     }
   ]
 }
