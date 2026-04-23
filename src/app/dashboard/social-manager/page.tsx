@@ -395,7 +395,7 @@ export default function SocialManagerPage() {
     <div className="fade-in space-y-5">
       {/* Hero Header */}
       <PageHero
-        icon={<Bot size={22} />}
+        icon={<Share2 size={22} />}
         title="Social Manager"
         subtitle="Post everywhere at once. AI plans, writes, and schedules for you."
         gradient="purple"

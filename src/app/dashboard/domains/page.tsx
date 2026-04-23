@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import {
-  Globe, Search, Loader, CheckCircle, XCircle, ExternalLink,
-  ShieldCheck, Plus, RefreshCw, Link2, Copy, Trash2,
+  Globe, Globe2, Search, Loader, CheckCircle, XCircle, ExternalLink,
+  ShieldCheck, Plus, RefreshCw, Copy, Trash2,
   AlertTriangle, Edit3, AlertCircle, Mail, MailCheck, MailWarning,
   ArrowUpRight, Info, Sparkles,
 } from "lucide-react";
@@ -396,7 +396,7 @@ export default function DomainsPage() {
   return (
     <div className="fade-in space-y-5">
       <PageHero
-        icon={<Link2 size={28} />}
+        icon={<Globe2 size={28} />}
         title="Domains"
         subtitle="Search, buy & manage domains via GoDaddy. Connect them to your Vercel deployments."
         gradient="ocean"

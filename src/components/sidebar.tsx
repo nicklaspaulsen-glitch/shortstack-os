@@ -18,6 +18,8 @@ import {
   Users,
   Film,
   Bot,
+  Share2,
+  Globe2,
   Activity,
   LayoutDashboard,
   LogOut,
@@ -135,7 +137,7 @@ const navItems: NavItem[] = [
   { label: "Landing Pages", href: "/dashboard/landing-pages", icon: <LayoutTemplate size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Forms", href: "/dashboard/forms", icon: <ClipboardCheck size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Surveys", href: "/dashboard/surveys", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Brand & Web" },
-  { label: "Social Manager", href: "/dashboard/social-manager", icon: <Bot size={16} />, roles: ["admin", "team_member"], sub: "Social" },
+  { label: "Social Manager", href: "/dashboard/social-manager", icon: <Share2 size={16} />, roles: ["admin", "team_member"], sub: "Social" },
   { label: "Content Plan", href: "/dashboard/content-plan", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Social" },
 
   // ── Visual (image, video, design) ──
@@ -173,7 +175,7 @@ const navItems: NavItem[] = [
   { label: "Phone & Email", href: "/dashboard/phone-email", icon: <Phone size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Phone Setup", href: "/dashboard/phone-setup", icon: <Phone size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Mail Setup", href: "/dashboard/mail-setup", icon: <Mail size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
-  { label: "Domains", href: "/dashboard/domains", icon: <Link2 size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "Domains", href: "/dashboard/domains", icon: <Globe2 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Client Health", href: "/dashboard/client-health", icon: <Heart size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Tickets", href: "/dashboard/tickets", icon: <LifeBuoy size={16} />, roles: ["admin"], sub: "Support" },
