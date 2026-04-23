@@ -19,7 +19,8 @@
     "postbuild:electron": "node scripts/postbuild-electron.mjs",
     "desktop": "electron .",
     "bot": "node scripts/discord-bot.js",
-    "icons": "tsx scripts/regenerate-icons.ts"
+    "icons": "tsx scripts/regenerate-icons.ts",
+    "apply-logo": "node scripts/apply-logo.mjs"
   },
   "build": {
     "appId": "com.shortstack.os",
