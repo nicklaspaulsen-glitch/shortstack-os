@@ -90,11 +90,32 @@ export default function ClientUploadsPage() {
       if (!clientData) { setLoading(false); return; }
       setClientId(clientData.id);
 
-      const res = await fetch(`/api/uploads?client_id=${clientData.id}`);
-      const data = await res.json();
-      setUploads(data.uploads || []);
+      const [legacyRes, portalRes] = await Promise.all([
+        fetch(`/api/uploads?client_id=${clientData.id}`),
+        fetch(`/api/portal/uploads`),
+      ]);
+      const data = await legacyRes.json();
       setPublished(data.published || []);
       setContent(data.content || []);
+
+      // Prefer portal_uploads (new flow) — merge with legacy client_uploads
+      const portalData = await portalRes.json().catch(() => ({ uploads: [] }));
+      const portalMapped: ClientUpload[] = (portalData.uploads || []).map(
+        (u: { id: string; file_name: string; content_type: string | null; file_size_bytes: number; signed_url: string | null; uploaded_at: string }) => ({
+          id: u.id,
+          file_name: u.file_name,
+          file_type: (u.content_type || "").split("/")[1] || "bin",
+          file_size: u.file_size_bytes,
+          file_url: u.signed_url,
+          category: (u.content_type || "").startsWith("image") ? "image"
+            : (u.content_type || "").startsWith("video") ? "video"
+            : (u.content_type || "").startsWith("audio") ? "audio"
+            : "general",
+          status: "uploaded",
+          created_at: u.uploaded_at,
+        }),
+      );
+      setUploads([...portalMapped, ...(data.uploads || [])]);
 
       // Fetch Zernio profiles
       if (clientData.zernio_profile_id) {
@@ -127,36 +148,22 @@ export default function ClientUploadsPage() {
         toast.error(`${file.name} is too large (max ${maxUploadLabel})`);
         continue;
       }
+      if (file.size > 100 * 1024 * 1024) {
+        toast.error(`${file.name} exceeds 100 MB portal limit`);
+        continue;
+      }
       try {
-        const ext = file.name.split(".").pop() || "bin";
-        const path = `clients/${clientId}/${Date.now()}-${file.name}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from("client-uploads")
-          .upload(path, file, { contentType: file.type });
-
-        if (uploadError) {
-          toast.error(`Upload failed: ${file.name}`);
+        const form = new FormData();
+        form.append("file", file);
+        const res = await fetch("/api/portal/uploads", {
+          method: "POST",
+          body: form,
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: "Upload failed" }));
+          toast.error(`${file.name}: ${err.error || "Upload failed"}`);
           continue;
         }
-
-        const { data: urlData } = supabase.storage
-          .from("client-uploads")
-          .getPublicUrl(path);
-
-        await fetch("/api/uploads", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            client_id: clientId,
-            file_name: file.name,
-            file_type: ext,
-            file_size: file.size,
-            file_url: urlData.publicUrl,
-            category: getFileCategory(file.type),
-          }),
-        });
-
         toast.success(`Uploaded: ${file.name}`);
       } catch {
         toast.error(`Error uploading: ${file.name}`);

@@ -6,10 +6,16 @@ import { createClient } from "@/lib/supabase/client";
 import { ContentCalendarEntry } from "@/lib/types";
 import {
   Calendar, ChevronLeft, ChevronRight, Plus, Sparkles, Loader,
-  Camera, Film, Globe, Send
+  Camera, Film, Globe, Send, Phone, Video, ExternalLink, CheckCircle
 } from "lucide-react";
 import Modal from "@/components/ui/modal";
 import toast from "react-hot-toast";
+
+interface BookingSlot {
+  start: string;
+  end: string;
+  label: string;
+}
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
@@ -31,6 +37,14 @@ export default function ContentCalendarPage() {
   const [generating, setGenerating] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [showAddPost, setShowAddPost] = useState(false);
+  const [showBookCall, setShowBookCall] = useState(false);
+  const [slots, setSlots] = useState<BookingSlot[]>([]);
+  const [slotsLoading, setSlotsLoading] = useState(false);
+  const [booking, setBooking] = useState<string | null>(null);
+  const [bookingProvider, setBookingProvider] = useState<string>("native");
+  const [bookingNotes, setBookingNotes] = useState("");
+  const [confirmedBooking, setConfirmedBooking] = useState<{ label: string; meet_url: string | null } | null>(null);
+  const [fallbackEmbedUrl, setFallbackEmbedUrl] = useState<string | null>(null);
   const supabase = createClient();
 
   useEffect(() => {
@@ -112,6 +126,49 @@ export default function ContentCalendarPage() {
     setGenerating(false);
   }
 
+  async function openBookCall() {
+    setShowBookCall(true);
+    setConfirmedBooking(null);
+    setSlotsLoading(true);
+    try {
+      const res = await fetch(`/api/portal/book-call?duration=30`);
+      const data = await res.json();
+      setSlots(data.slots || []);
+      setBookingProvider(data.provider || "native");
+      setFallbackEmbedUrl(data.fallback_embed_url || null);
+    } catch {
+      toast.error("Failed to load available slots");
+    }
+    setSlotsLoading(false);
+  }
+
+  async function bookSlot(slot: BookingSlot) {
+    setBooking(slot.start);
+    try {
+      const res = await fetch("/api/portal/book-call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          start_iso: slot.start,
+          duration: 30,
+          notes: bookingNotes,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Booking failed" }));
+        toast.error(err.error || "Booking failed");
+      } else {
+        const data = await res.json();
+        toast.success("Call booked!");
+        setConfirmedBooking({ label: slot.label, meet_url: data.meet_url });
+        fetchCalendar();
+      }
+    } catch {
+      toast.error("Booking failed");
+    }
+    setBooking(null);
+  }
+
   async function addPost(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!clientId || !selectedDay) return;
@@ -172,6 +229,9 @@ export default function ContentCalendarPage() {
           <p className="text-xs text-muted mt-0.5">Plan, schedule, and track your content</p>
         </div>
         <div className="flex items-center gap-2">
+          <button onClick={openBookCall} className="btn-secondary text-xs flex items-center gap-1.5">
+            <Phone size={12} /> Book a call
+          </button>
           <button onClick={() => setShowAIPlan(true)} className="btn-primary text-xs flex items-center gap-1.5">
             <Sparkles size={12} /> AI Plan
           </button>
@@ -290,6 +350,82 @@ export default function ContentCalendarPage() {
             </button>
           </div>
         </div>
+      </Modal>
+
+      {/* Book a Call Modal */}
+      <Modal isOpen={showBookCall} onClose={() => { setShowBookCall(false); setConfirmedBooking(null); setBookingNotes(""); }} title="Book a call with your agency" size="md">
+        {confirmedBooking ? (
+          <div className="space-y-3 text-center py-4">
+            <div className="w-12 h-12 bg-success/10 rounded-2xl flex items-center justify-center mx-auto">
+              <CheckCircle size={24} className="text-success" />
+            </div>
+            <h3 className="text-sm font-semibold">You are booked</h3>
+            <p className="text-xs text-muted">{confirmedBooking.label}</p>
+            {confirmedBooking.meet_url && (
+              <a href={confirmedBooking.meet_url} target="_blank" rel="noopener noreferrer"
+                className="btn-primary text-xs inline-flex items-center gap-1.5">
+                <Video size={12} /> Join Google Meet
+              </a>
+            )}
+            <p className="text-[10px] text-muted">A confirmation has been sent to your agency.</p>
+          </div>
+        ) : fallbackEmbedUrl && slots.length === 0 ? (
+          <div className="space-y-3">
+            <p className="text-xs text-muted">Book a call via our calendar:</p>
+            <a href={fallbackEmbedUrl} target="_blank" rel="noopener noreferrer" className="btn-primary text-xs inline-flex items-center gap-1.5">
+              <ExternalLink size={12} /> Open booking page
+            </a>
+            <iframe src={fallbackEmbedUrl} className="w-full h-96 rounded-lg border border-border" />
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 p-2.5 bg-gold/[0.05] rounded-lg border border-gold/15">
+              <Calendar size={16} className="text-gold shrink-0" />
+              <p className="text-[10px] text-muted">
+                Pick a 30-minute slot. {bookingProvider === "google_calendar"
+                  ? "You'll receive a Google Meet link."
+                  : "Your agency will confirm via email."}
+              </p>
+            </div>
+            <div>
+              <label className="block text-[10px] text-muted mb-1 uppercase tracking-wider">Notes (optional)</label>
+              <textarea
+                value={bookingNotes}
+                onChange={(e) => setBookingNotes(e.target.value)}
+                placeholder="Anything we should prepare for the call?"
+                className="input w-full h-16 text-xs"
+              />
+            </div>
+            {slotsLoading ? (
+              <div className="py-8 flex justify-center">
+                <Loader size={20} className="animate-spin text-gold" />
+              </div>
+            ) : slots.length === 0 ? (
+              <p className="text-xs text-muted text-center py-6">No slots available in the next 2 weeks. Contact your agency directly.</p>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 max-h-80 overflow-auto">
+                {slots.map((slot) => (
+                  <button
+                    key={slot.start}
+                    onClick={() => bookSlot(slot)}
+                    disabled={!!booking}
+                    className={`text-left p-2.5 rounded-lg border text-[10px] transition-all disabled:opacity-50 ${
+                      booking === slot.start
+                        ? "border-gold bg-gold/10"
+                        : "border-border hover:border-gold/30 hover:bg-surface-light"
+                    }`}
+                  >
+                    {booking === slot.start ? (
+                      <span className="flex items-center gap-1.5"><Loader size={10} className="animate-spin" /> Booking...</span>
+                    ) : (
+                      slot.label
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </Modal>
 
       {/* Add Post Modal */}

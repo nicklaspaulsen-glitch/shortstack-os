@@ -67,6 +67,22 @@ export default function ClientContentPage() {
                 </div>
                 <p className="text-xs font-medium mb-1">{c.title}</p>
                 {c.scheduled_at && <p className="text-[9px] text-muted mb-2">{formatDate(c.scheduled_at)}</p>}
+                {(c.status === "published" || c.status === "approved_for_publish") && (
+                  <button onClick={async () => {
+                    const note = prompt(`Request a revision on "${c.title}". What needs to change?`);
+                    if (!note) return;
+                    const priority = confirm("Mark this as urgent?") ? "urgent" : "normal";
+                    const res = await fetch("/api/portal/revisions", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ content_item_id: c.id, revision_notes: note, priority }),
+                    });
+                    if (res.ok) { toast.success("Revision request sent!"); fetchContent(); }
+                    else { const err = await res.json().catch(() => ({ error: "Failed" })); toast.error(err.error || "Failed"); }
+                  }} className="w-full text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors mt-1">
+                    <MessageSquare size={10} /> Request revision
+                  </button>
+                )}
                 {c.status === "ready_to_publish" && (
                   <div className="flex gap-1.5 pt-1 border-t border-border">
                     <button onClick={async () => {
@@ -79,15 +95,23 @@ export default function ClientContentPage() {
                     <button onClick={async () => {
                       const note = prompt("What changes do you need?");
                       if (!note) return;
-                      await supabase.from("trinity_log").insert({
-                        agent: "content",
-                        action_type: "custom",
-                        description: `Content revision: "${c.title}" — "${note}"`,
-                        client_id: null,
-                        status: "pending",
-                        result: { type: "client_request", category: "revision", message: note },
+                      const priority = confirm("Mark this as urgent?") ? "urgent" : "normal";
+                      const res = await fetch("/api/portal/revisions", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          content_item_id: c.id,
+                          revision_notes: note,
+                          priority,
+                        }),
                       });
-                      toast.success("Revision request sent!");
+                      if (res.ok) {
+                        toast.success("Revision request sent!");
+                        fetchContent();
+                      } else {
+                        const err = await res.json().catch(() => ({ error: "Failed" }));
+                        toast.error(err.error || "Failed to send revision");
+                      }
                     }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors">
                       <MessageSquare size={10} /> Changes
                     </button>
