@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { parseTrinityMessage, executeTrinityCommand, sendTelegramMessage, cleanupOldTelegramMessages } from "@/lib/services/trinity";
+import { upsertInboundMessage } from "@/lib/conversations";
 
 export async function POST(request: NextRequest) {
   // Validate Telegram webhook secret token if configured
@@ -29,11 +30,34 @@ export async function POST(request: NextRequest) {
   const text = (message.text as string).trim();
   const supabase = createServiceClient();
 
-  // Only respond to authorized chat IDs
+  // ── Unified Conversations: log every inbound Telegram message ──
+  // Resolve owner via TELEGRAM_OWNER_USER_ID (set per-agency), else fall
+  // back to the single-admin install. Unauthorized chats still hit the
+  // early-return below — we only log messages from the allowed chat.
+  const ownerUserId = process.env.TELEGRAM_OWNER_USER_ID || null;
   const allowedChatId = process.env.TELEGRAM_CHAT_ID;
+
   if (allowedChatId && chatId !== allowedChatId) {
     await sendTelegramMessage(chatId, "Unauthorized. Contact ShortStack admin.");
     return NextResponse.json({ ok: true });
+  }
+
+  // Commands begin with "/" — don't log those as conversational messages.
+  if (ownerUserId && !text.startsWith("/")) {
+    const fromUser = message.from as Record<string, unknown> | undefined;
+    const handle =
+      (fromUser?.username as string | undefined) ||
+      (fromUser?.first_name as string | undefined) ||
+      chatId;
+    await upsertInboundMessage({
+      supabase,
+      userId: ownerUserId,
+      channel: "telegram",
+      externalThreadId: chatId,
+      fromIdentifier: handle,
+      body: text,
+      externalMessageId: String(message.message_id ?? ""),
+    }).catch((e) => console.error("[telegram-webhook] conv upsert failed:", e));
   }
 
   // === BUILT-IN COMMANDS ===

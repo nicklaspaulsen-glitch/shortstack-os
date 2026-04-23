@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel } from "@/lib/conversations";
 import crypto from "crypto";
 
-// Twilio SMS webhook — receives inbound SMS to client numbers
-// Routes by client_id query param set during provisioning
+// Twilio SMS + WhatsApp webhook — receives inbound messages to client numbers.
+// Routes by client_id query param set during provisioning. WhatsApp messages
+// arrive with "whatsapp:+14155551234" prefix on From/To — we detect that
+// and upsert as channel='whatsapp'. Otherwise channel='sms'.
 // TODO: Add rate limiting in production to prevent webhook flooding
 
 function validateTwilioSignature(
@@ -60,27 +63,51 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Detect WhatsApp by the "whatsapp:" prefix on the From number.
+  const isWhatsApp = (from || "").startsWith("whatsapp:");
+  const channel = isWhatsApp ? "whatsapp" : "sms";
+  const cleanFrom = isWhatsApp ? from.replace(/^whatsapp:/, "") : from;
+  const cleanTo = isWhatsApp ? to.replace(/^whatsapp:/, "") : to;
+
   // Log inbound message
   if (clientId) {
     await supabase.from("outreach_log").insert({
-      platform: "sms",
-      business_name: from,
-      recipient_handle: to,
+      platform: channel,
+      business_name: cleanFrom,
+      recipient_handle: cleanTo,
       message_text: body,
       status: "replied",
       sent_at: new Date().toISOString(),
-      metadata: { direction: "inbound", client_id: clientId, from, to },
+      metadata: { direction: "inbound", client_id: clientId, from, to, channel },
     });
 
     // Check if this matches a lead and update status
     const { data: lead } = await supabase
       .from("leads")
       .select("id")
-      .eq("phone", from)
+      .eq("phone", cleanFrom)
       .single();
 
     if (lead) {
       await supabase.from("leads").update({ status: "replied" }).eq("id", lead.id);
+    }
+
+    // ── Unified Conversations: upsert + insert inbound message ──
+    // Resolve the agency owner by matching the Twilio number (To) to a client.
+    const ownerId = await resolveUserIdForChannel(supabase, channel, { clientPhoneTo: cleanTo });
+    if (ownerId) {
+      const contactId = await findContactByIdentifier(supabase, ownerId, cleanFrom);
+      await upsertInboundMessage({
+        supabase,
+        userId: ownerId,
+        channel,
+        externalThreadId: cleanFrom, // one thread per phone number
+        fromIdentifier: cleanFrom,
+        toIdentifier: cleanTo,
+        body,
+        externalMessageId: formData.get("MessageSid") as string | null ?? undefined,
+        contactId,
+      });
     }
 
     // Telegram notification
