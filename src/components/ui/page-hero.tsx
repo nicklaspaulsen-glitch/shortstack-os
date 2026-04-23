@@ -135,9 +135,25 @@ export default function PageHero({
         </svg>
       )}
 
-      {/* Content */}
-      <div className="relative z-10 px-6 py-6 sm:px-8 sm:py-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div className="flex items-start gap-4 min-w-0">
+      {/* Content
+       *
+       * Layout notes — why this row is structured exactly this way:
+       * 1. Outer wrapper uses `md:items-start` (not items-center) so a long
+       *    title on the left never vertically pushes the actions out of the
+       *    top-right corner. Actions sit at the top-right where users expect
+       *    the AdvancedToggle pill to live — even when the title wraps to
+       *    two lines or the subtitle is long.
+       * 2. The left (title) div gets `flex-1 min-w-0` so it claims its share
+       *    of the row and truncates/wraps its own content instead of growing
+       *    past the right edge and pushing the actions into the parent's
+       *    `overflow-hidden` clip zone. Without `flex-1` the title's intrinsic
+       *    width wins and the actions get shoved off-screen or clipped by the
+       *    rounded-2xl overflow-hidden on the outer card.
+       * 3. The right (actions) div uses `shrink-0` + `flex-wrap` + `ml-auto`
+       *    so it never shrinks below its content but can wrap its own children
+       *    to a second row instead of overflowing horizontally. */}
+      <div className="relative z-10 px-6 py-6 sm:px-8 sm:py-8 flex flex-col md:flex-row md:items-start justify-between gap-5">
+        <div className="flex items-start gap-4 min-w-0 flex-1">
           {icon && (
             <div
               className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
@@ -175,7 +191,18 @@ export default function PageHero({
           // `relative z-20` keeps the actions above the radial glow layer so
           // translucent pills (like AdvancedToggle) don't appear clipped by
           // the orange/amber glow bleed at the hero's top-right corner.
-          <div className="relative z-20 flex flex-wrap items-center justify-end gap-2 shrink-0 max-w-full">
+          //
+          // `shrink-0` + `flex-wrap` ensures actions never get compressed by
+          // the title on the left; when they overflow they wrap to a second
+          // row inside the hero, visible, instead of being clipped by the
+          // outer card's `overflow-hidden rounded-2xl`.
+          //
+          // `md:ml-auto` pushes the actions to the right on row layout,
+          // redundant with `justify-between` on the parent but kept explicit
+          // so consumers who nest another flex wrapper (e.g. a raw
+          // `<div className="flex items-center gap-2">` around actions) still
+          // get the correct right-alignment behavior.
+          <div className="relative z-20 flex flex-wrap items-center justify-end gap-2 shrink-0 max-w-full md:ml-auto">
             {actions}
           </div>
         )}

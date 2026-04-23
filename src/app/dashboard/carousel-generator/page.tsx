@@ -629,7 +629,7 @@ export default function CarouselGeneratorPage() {
         subtitle="Create scroll-stopping Instagram & LinkedIn carousels."
         gradient="gold"
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
               <button

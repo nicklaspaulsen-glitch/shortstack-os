@@ -4211,7 +4211,7 @@ export default function ThumbnailGeneratorPage() {
         subtitle="Thumbnails that get clicked. AI picks colors, fonts, and faces that pop."
         gradient="ocean"
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-end gap-2">
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
             {advancedMode && (
               <button
