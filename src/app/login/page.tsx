@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -26,6 +26,10 @@ function LoginForm() {
   // starting with "/" to prevent open redirects.
   const redirectRaw = searchParams?.get("redirect") ?? null;
   const redirectParam = redirectRaw && redirectRaw.startsWith("/") && !redirectRaw.startsWith("//") ? redirectRaw : null;
+  // Referral attribution — ?ref=ABC123 gets stashed in a cookie so it
+  // survives Stripe Checkout round-trips and later `/api/referrals/claim`
+  // reads it to set `profiles.referred_by_user_id`. First-touch wins.
+  const refParam = searchParams?.get("ref") ?? null;
   const selectedPlan = planParam
     ? (planParam.charAt(0).toUpperCase() + planParam.slice(1).toLowerCase()) as PlanTier
     : null;
@@ -42,6 +46,19 @@ function LoginForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const router = useRouter();
   const supabase = createClient();
+
+  // Persist ?ref= code across navigations (e.g. Stripe Checkout round-trip).
+  // First-touch attribution: only write the cookie if none exists yet.
+  useEffect(() => {
+    if (!refParam) return;
+    const cleaned = refParam.toString().trim().toUpperCase().replace(/^SS-/, "");
+    if (!/^[A-Z0-9]{4,12}$/.test(cleaned)) return;
+    const already = document.cookie.split("; ").some(c => c.startsWith("ss_ref="));
+    if (already) return;
+    // 90-day cookie — more than enough for a signup that stalls for weeks.
+    const maxAge = 60 * 60 * 24 * 90;
+    document.cookie = `ss_ref=${cleaned}; path=/; max-age=${maxAge}; samesite=lax`;
+  }, [refParam]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +105,14 @@ function LoginForm() {
           setIsSignUp(false);
           return;
         }
+
+        // Claim referral attribution — reads ss_ref cookie server-side and
+        // writes profiles.referred_by_user_id. Intentionally fire-and-forget:
+        // a failure here MUST NOT block the signup → checkout flow. Server
+        // route is idempotent (first-touch wins) so retrying later is safe.
+        try {
+          void fetch("/api/referrals/claim", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+        } catch { /* ignore */ }
 
         // Signed in. If they picked a plan from pricing, fire Stripe checkout
         // immediately so they don't have to click through a second time.

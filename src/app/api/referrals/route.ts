@@ -1,117 +1,112 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { generateReferralCode } from "@/lib/referral-code";
+import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
+import { getCommissionRate } from "@/lib/referral-commission";
 
-function generateReferralCode(): string {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let code = "SS-";
-  for (let i = 0; i < 6; i++) {
-    code += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return code;
-}
-
-// GET — Load referral code + stats for the current user
+/**
+ * GET /api/referrals/me (routed here via /api/referrals)
+ *
+ * Returns the signed-in user's referral code + summary stats. The code is
+ * lazily generated on first visit if the profile doesn't have one yet —
+ * this is the main path because we don't want to backfill every existing
+ * row up-front.
+ */
 export async function GET() {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Get or create referral code
-  const { data: profile } = await supabase
+  // Load current profile
+  const { data: profile, error: profileErr } = await supabase
     .from("profiles")
-    .select("referral_code")
+    .select("referral_code, plan_tier")
     .eq("id", user.id)
     .single();
+  if (profileErr) {
+    return NextResponse.json({ error: profileErr.message }, { status: 500 });
+  }
 
-  let referralCode = profile?.referral_code;
+  let referralCode: string | null = profile?.referral_code ?? null;
 
+  // Lazy-generate on first visit. Retry up to 5 times in the (very rare)
+  // event of a unique-index collision.
   if (!referralCode) {
-    // Generate and save a new code
-    referralCode = generateReferralCode();
-    // Try up to 3 times in case of collision
-    for (let i = 0; i < 3; i++) {
-      const { error } = await supabase
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const candidate = generateReferralCode();
+      const { error: updErr } = await supabase
         .from("profiles")
-        .update({ referral_code: referralCode })
+        .update({ referral_code: candidate })
         .eq("id", user.id);
-      if (!error) break;
-      referralCode = generateReferralCode();
+      if (!updErr) {
+        referralCode = candidate;
+        break;
+      }
+      // If it's a unique-violation, loop and try another code.
+      if (!/duplicate|unique/i.test(updErr.message)) {
+        return NextResponse.json({ error: updErr.message }, { status: 500 });
+      }
+    }
+    if (!referralCode) {
+      return NextResponse.json(
+        { error: "Could not allocate referral code after 5 tries" },
+        { status: 500 },
+      );
     }
   }
 
-  // Get referral stats
-  const { data: referrals } = await supabase
-    .from("referrals")
-    .select("id, referred_name, referred_email, status, commission_earned, created_at")
-    .eq("referrer_id", user.id)
-    .order("created_at", { ascending: false });
+  // Referred users (for totals — full list is at /api/referrals/list)
+  const { data: referees } = await supabase
+    .from("profiles")
+    .select("id, plan_tier, subscription_status")
+    .eq("referred_by_user_id", user.id);
 
-  const stats = {
-    total: referrals?.length || 0,
-    pending: referrals?.filter(r => r.status === "pending").length || 0,
-    signed_up: referrals?.filter(r => r.status === "signed_up").length || 0,
-    converted: referrals?.filter(r => r.status === "converted").length || 0,
-    total_earned: referrals?.reduce((sum, r) => sum + (r.commission_earned || 0), 0) || 0,
-  };
+  const totalReferrals = referees?.length ?? 0;
+  const activeSubs = (referees ?? []).filter(
+    r => r.subscription_status === "active" || r.subscription_status === "trialing",
+  ).length;
+
+  // Earnings — sum of paid_at IS NOT NULL rows
+  const { data: payouts } = await supabase
+    .from("referral_payouts")
+    .select("amount_cents, paid_at, month_start")
+    .eq("referrer_user_id", user.id);
+
+  const totalEarnedCents = (payouts ?? [])
+    .filter(p => p.paid_at)
+    .reduce((sum, p) => sum + (p.amount_cents ?? 0), 0);
+
+  const pendingPayoutCents = (payouts ?? [])
+    .filter(p => !p.paid_at)
+    .reduce((sum, p) => sum + (p.amount_cents ?? 0), 0);
+
+  // This-month earnings (paid OR pending, from the current calendar month)
+  const now = new Date();
+  const monthStartISO = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-01`;
+  const thisMonthCents = (payouts ?? [])
+    .filter(p => p.month_start === monthStartISO)
+    .reduce((sum, p) => sum + (p.amount_cents ?? 0), 0);
+
+  // Projected monthly recurring earnings from active subs — useful for the
+  // "what's this worth to me" feel-good number.
+  const projectedMonthlyCents = (referees ?? [])
+    .filter(r => r.subscription_status === "active" || r.subscription_status === "trialing")
+    .reduce((sum, r) => {
+      const tier = (r.plan_tier && isValidPlanTier(r.plan_tier) ? r.plan_tier : "Starter") as PlanTier;
+      const price = PLAN_TIERS[tier]?.price_monthly ?? 0;
+      return sum + Math.round(price * 100 * getCommissionRate(tier));
+    }, 0);
 
   return NextResponse.json({
     referral_code: referralCode,
-    stats,
-    referrals: referrals || [],
+    share_url: `https://shortstack.work/login?ref=${referralCode}`,
+    stats: {
+      total_referrals: totalReferrals,
+      active_subs: activeSubs,
+      total_earned_cents: totalEarnedCents,
+      pending_payout_cents: pendingPayoutCents,
+      this_month_cents: thisMonthCents,
+      projected_monthly_cents: projectedMonthlyCents,
+    },
   });
-}
-
-// POST — Submit a new referral
-export async function POST(request: NextRequest) {
-  const supabase = createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const { referred_name, referred_email, referred_phone } = await request.json();
-
-  if (!referred_name || !referred_email) {
-    return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
-  }
-
-  // Check for duplicate
-  const { data: existing } = await supabase
-    .from("referrals")
-    .select("id")
-    .eq("referrer_id", user.id)
-    .eq("referred_email", referred_email.toLowerCase().trim())
-    .limit(1);
-
-  if (existing && existing.length > 0) {
-    return NextResponse.json({ error: "You've already referred this email" }, { status: 409 });
-  }
-
-  // Determine commission rate based on total referrals
-  const { count } = await supabase
-    .from("referrals")
-    .select("*", { count: "exact", head: true })
-    .eq("referrer_id", user.id);
-
-  const totalReferrals = count || 0;
-  let commissionRate = 10;
-  if (totalReferrals >= 10) commissionRate = 20;
-  else if (totalReferrals >= 3) commissionRate = 15;
-
-  const { data: referral, error } = await supabase
-    .from("referrals")
-    .insert({
-      referrer_id: user.id,
-      referred_name: referred_name.trim(),
-      referred_email: referred_email.toLowerCase().trim(),
-      referred_phone: referred_phone?.trim() || null,
-      commission_rate: commissionRate,
-      status: "pending",
-    })
-    .select("id")
-    .single();
-
-  if (error) {
-    return NextResponse.json({ error: "Failed to create referral" }, { status: 500 });
-  }
-
-  return NextResponse.json({ success: true, id: referral.id });
 }

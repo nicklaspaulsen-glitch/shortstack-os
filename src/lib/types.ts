@@ -15,6 +15,7 @@ export interface Profile {
   country: string | null;
   timezone: string;
   referral_code: string | null;
+  referred_by_user_id: string | null;
   is_active: boolean;
   created_at: string;
   updated_at: string;
