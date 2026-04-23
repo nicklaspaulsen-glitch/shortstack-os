@@ -20,6 +20,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import SocialConnect from "@/components/social-connect";
 import ClientBillingPanel from "@/components/clients/client-billing-panel";
+import SmartManageOverlay from "@/components/clients/smart-manage-overlay";
 
 export default function ClientDetailPage() {
   const params = useParams();
@@ -33,6 +34,7 @@ export default function ClientDetailPage() {
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [aiActions, setAiActions] = useState<Array<Record<string, unknown>>>([]);
   const [loading, setLoading] = useState(true);
+  const [smartManageOpen, setSmartManageOpen] = useState(false);
   const [tab, setTab] = useState<"overview" | "content" | "ads" | "tasks" | "billing" | "payments" | "access">("overview");
   const [pageAccess, setPageAccess] = useState<Record<string, boolean>>({
     portal: true, content: true, billing: true, reports: true, socials: true,
@@ -109,12 +111,27 @@ export default function ClientDetailPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => setSmartManageOpen(true)}
+            className="text-[10px] px-2.5 py-1 rounded-full bg-gold text-background font-bold flex items-center gap-1 hover:bg-gold/90 transition-colors"
+            aria-label="Open Smart Manage"
+          >
+            <Sparkles size={10} /> Manage
+          </button>
           <span className={`text-[9px] px-2 py-0.5 rounded-full ${client.is_active ? "bg-success/10 text-success" : "bg-danger/10 text-danger"}`}>
             {client.is_active ? "Active" : "Inactive"}
           </span>
           <span className="text-[9px] text-muted">{client.package_tier || "Standard"} · ${client.mrr}/mo</span>
         </div>
       </div>
+
+      {/* Smart Manage overlay — Trinity-suggested one-click actions. */}
+      <SmartManageOverlay
+        clientId={client.id}
+        clientName={client.business_name}
+        isOpen={smartManageOpen}
+        onClose={() => setSmartManageOpen(false)}
+      />
 
       {/* Header */}
       <div className="flex items-center gap-4">
