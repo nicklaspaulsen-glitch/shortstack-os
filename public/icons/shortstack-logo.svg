@@ -1,22 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ShortStack — primary brand mark (2026 refresh).
-  Concept: stacked rectangles with a slight horizontal offset.
-  Three gold bars of decreasing width evoke "short + stack" directly,
-  signalling an agency operating system built on a clean foundation.
+  ShortStack mandala mark (2026 refresh) — clean vector.
 
-  Palette:
-    Primary gold  #C9A84C  (solid, no gradient — works on both dark and light)
-  Works on dark (#06080c) and light (#FAFAF7) backgrounds.
-  For single-colour contexts (print, embossing, dark watermarks) use
-  shortstack-logo-mono.svg.
+  Structure, center-out:
+    1. Central stacked-bars monogram (brand primary).
+    2. Inner ring: 8-point starburst of triangular rays.
+    3. Mid ring: 16 stepped "gear-tooth" wedges that echo the
+       maze-like bands in the concept artwork.
+    4. Outer ring: thin rim with 32 notches.
+
+  All geometry is 8-fold or 16-fold symmetric so it scales
+  cleanly from 16×16 up to the 1024×1024 installer icon.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="ShortStack">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="ShortStack">
   <title>ShortStack</title>
-  <!-- Bottom bar — widest, sits "below" -->
-  <rect x="10" y="42" width="44" height="10" rx="3" fill="#C9A84C" opacity="0.55"/>
-  <!-- Middle bar — offset right -->
-  <rect x="14" y="27" width="38" height="10" rx="3" fill="#C9A84C" opacity="0.78"/>
-  <!-- Top bar — narrowest, offset further right, full opacity -->
-  <rect x="18" y="12" width="32" height="10" rx="3" fill="#C9A84C"/>
+  <defs>
+    <linearGradient id="ss-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E4C876"/>
+      <stop offset="55%" stop-color="#C9A84C"/>
+      <stop offset="100%" stop-color="#8A6F2F"/>
+    </linearGradient>
+    <radialGradient id="ss-core" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#1a1410"/>
+      <stop offset="100%" stop-color="#06080c"/>
+    </radialGradient>
+    <g id="ss-wedge">
+      <path d="M -6 -102 L 6 -102 L 8 -92 L 4 -86 L 4 -78 L -4 -78 L -4 -86 L -8 -92 Z" fill="url(#ss-gold)"/>
+    </g>
+    <g id="ss-ray">
+      <path d="M 0 -70 L 7 -44 L 0 -48 L -7 -44 Z" fill="url(#ss-gold)"/>
+    </g>
+    <g id="ss-notch">
+      <rect x="-1.2" y="-118" width="2.4" height="6" rx="0.6" fill="#C9A84C"/>
+    </g>
+  </defs>
+
+  <g transform="translate(128 128)">
+    <circle r="118" fill="none" stroke="#C9A84C" stroke-opacity="0.55" stroke-width="1.2"/>
+    <circle r="108" fill="none" stroke="#C9A84C" stroke-opacity="0.35" stroke-width="0.8"/>
+
+    <g opacity="0.75">
+      <use href="#ss-notch" transform="rotate(0)"/><use href="#ss-notch" transform="rotate(11.25)"/><use href="#ss-notch" transform="rotate(22.5)"/><use href="#ss-notch" transform="rotate(33.75)"/>
+      <use href="#ss-notch" transform="rotate(45)"/><use href="#ss-notch" transform="rotate(56.25)"/><use href="#ss-notch" transform="rotate(67.5)"/><use href="#ss-notch" transform="rotate(78.75)"/>
+      <use href="#ss-notch" transform="rotate(90)"/><use href="#ss-notch" transform="rotate(101.25)"/><use href="#ss-notch" transform="rotate(112.5)"/><use href="#ss-notch" transform="rotate(123.75)"/>
+      <use href="#ss-notch" transform="rotate(135)"/><use href="#ss-notch" transform="rotate(146.25)"/><use href="#ss-notch" transform="rotate(157.5)"/><use href="#ss-notch" transform="rotate(168.75)"/>
+      <use href="#ss-notch" transform="rotate(180)"/><use href="#ss-notch" transform="rotate(191.25)"/><use href="#ss-notch" transform="rotate(202.5)"/><use href="#ss-notch" transform="rotate(213.75)"/>
+      <use href="#ss-notch" transform="rotate(225)"/><use href="#ss-notch" transform="rotate(236.25)"/><use href="#ss-notch" transform="rotate(247.5)"/><use href="#ss-notch" transform="rotate(258.75)"/>
+      <use href="#ss-notch" transform="rotate(270)"/><use href="#ss-notch" transform="rotate(281.25)"/><use href="#ss-notch" transform="rotate(292.5)"/><use href="#ss-notch" transform="rotate(303.75)"/>
+      <use href="#ss-notch" transform="rotate(315)"/><use href="#ss-notch" transform="rotate(326.25)"/><use href="#ss-notch" transform="rotate(337.5)"/><use href="#ss-notch" transform="rotate(348.75)"/>
+    </g>
+
+    <g>
+      <use href="#ss-wedge" transform="rotate(0)"/><use href="#ss-wedge" transform="rotate(22.5)"/><use href="#ss-wedge" transform="rotate(45)"/><use href="#ss-wedge" transform="rotate(67.5)"/>
+      <use href="#ss-wedge" transform="rotate(90)"/><use href="#ss-wedge" transform="rotate(112.5)"/><use href="#ss-wedge" transform="rotate(135)"/><use href="#ss-wedge" transform="rotate(157.5)"/>
+      <use href="#ss-wedge" transform="rotate(180)"/><use href="#ss-wedge" transform="rotate(202.5)"/><use href="#ss-wedge" transform="rotate(225)"/><use href="#ss-wedge" transform="rotate(247.5)"/>
+      <use href="#ss-wedge" transform="rotate(270)"/><use href="#ss-wedge" transform="rotate(292.5)"/><use href="#ss-wedge" transform="rotate(315)"/><use href="#ss-wedge" transform="rotate(337.5)"/>
+    </g>
+
+    <circle r="72" fill="none" stroke="#C9A84C" stroke-opacity="0.4" stroke-width="1"/>
+
+    <g>
+      <use href="#ss-ray" transform="rotate(0)"/><use href="#ss-ray" transform="rotate(45)"/><use href="#ss-ray" transform="rotate(90)"/><use href="#ss-ray" transform="rotate(135)"/>
+      <use href="#ss-ray" transform="rotate(180)"/><use href="#ss-ray" transform="rotate(225)"/><use href="#ss-ray" transform="rotate(270)"/><use href="#ss-ray" transform="rotate(315)"/>
+    </g>
+
+    <circle r="42" fill="url(#ss-core)" stroke="#C9A84C" stroke-opacity="0.7" stroke-width="1.5"/>
+
+    <g transform="translate(-28 -22)">
+      <rect x="0"  y="30" width="56" height="11" rx="3" fill="#C9A84C" opacity="0.55"/>
+      <rect x="4"  y="15" width="48" height="11" rx="3" fill="#C9A84C" opacity="0.80"/>
+      <rect x="8"  y="0"  width="40" height="11" rx="3" fill="#C9A84C"/>
+    </g>
+  </g>
 </svg>
