@@ -182,6 +182,7 @@ const navItems: NavItem[] = [
   { label: "Reviews", href: "/dashboard/reviews", icon: <Star size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Tickets", href: "/dashboard/tickets", icon: <LifeBuoy size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Referrals", href: "/dashboard/referrals", icon: <Gift size={16} />, roles: ["admin"], sub: "Support" },
+  { label: "Hire a Human", href: "/dashboard/hire", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Support" },
   { label: "ROI Calculator", href: "/dashboard/roi-calculator", icon: <Calculator size={16} />, roles: ["admin"], sub: "Support" },
   { label: "Monitor", href: "/dashboard/monitor", icon: <Activity size={16} />, roles: ["admin"], sub: "Tools" },
   { label: "Reports Gen", href: "/dashboard/report-generator", icon: <FileBarChart2 size={16} />, roles: ["admin"], sub: "Tools" },

@@ -27,6 +27,7 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { useQuotaWall } from "@/components/billing/quota-wall";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
+import HireHumanLink from "@/components/hire-human-link";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import SafeThumb from "@/components/safe-thumb";
@@ -4342,6 +4343,7 @@ export default function ThumbnailGeneratorPage() {
                 <Sparkles size={12} /> Legacy Wizard
               </button>
             )}
+            <HireHumanLink category="thumbnail_artist" title={prompt || textOverlay} size="xs" />
             <span className="text-[10px] text-white/70 uppercase tracking-wider font-medium">
               {displayWidth} x {displayHeight}
             </span>

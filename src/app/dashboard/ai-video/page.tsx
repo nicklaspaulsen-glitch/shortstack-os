@@ -21,6 +21,7 @@ import {
   tierForVideoSeconds,
 } from "@/lib/plan-limits";
 import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
+import HireHumanLink from "@/components/hire-human-link";
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -599,6 +600,9 @@ export default function AIVideoPage() {
                   </>
                 )}
               </button>
+            </div>
+            <div className="mt-2 flex justify-end">
+              <HireHumanLink category="video_editor" title={prompt} size="xs" />
             </div>
           </div>
 

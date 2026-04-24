@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import HireHumanLink from "@/components/hire-human-link";
 import { Pen } from "lucide-react";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -1044,6 +1045,7 @@ export default function CopywriterPage() {
         actions={
           <>
             <AdvancedToggle value={advancedMode} onChange={setAdvancedMode} />
+            <HireHumanLink category="copywriter" title={topic} size="xs" />
             {advancedMode && (
               <>
                 <button
