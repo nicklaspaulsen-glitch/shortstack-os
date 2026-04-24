@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { createClient } from "@/lib/supabase/client";
 import { Client } from "@/lib/types";
@@ -18,6 +19,51 @@ import SidebarCustomizerFull from "@/components/settings/sidebar-customizer-full
 import InlineSocialConnect from "@/components/inline-social-connect";
 import AgencyStripeConnect from "@/components/settings/agency-stripe-connect";
 import ErrorBoundary from "@/components/error-boundary";
+
+// ── Lazy-loaded settings section components ──────────────────────────────
+// Account (general) tab is eagerly imported — it's the default landing tab.
+import AccountSettings from "@/components/settings/AccountSettings";
+
+function SettingsTabSkeleton() {
+  return (
+    <div className="space-y-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="card">
+          <div className="h-4 w-32 bg-surface-light rounded animate-pulse mb-3" />
+          <div className="space-y-2">
+            <div className="h-8 bg-surface-light rounded animate-pulse" />
+            <div className="h-8 bg-surface-light rounded animate-pulse w-3/4" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+const BillingSettings = dynamic(
+  () => import("@/components/settings/BillingSettings"),
+  { ssr: false, loading: () => <SettingsTabSkeleton /> },
+);
+const IntegrationsSettings = dynamic(
+  () => import("@/components/settings/IntegrationsSettings"),
+  { ssr: false, loading: () => <SettingsTabSkeleton /> },
+);
+const NotificationSettings = dynamic(
+  () => import("@/components/settings/NotificationSettings"),
+  { ssr: false, loading: () => <SettingsTabSkeleton /> },
+);
+const WhiteLabelSettings = dynamic(
+  () => import("@/components/settings/WhiteLabelSettings"),
+  { ssr: false, loading: () => <SettingsTabSkeleton /> },
+);
+const AgentSettings = dynamic(
+  () => import("@/components/settings/AgentSettings"),
+  { ssr: false, loading: () => <SettingsTabSkeleton /> },
+);
+const SecuritySettings = dynamic(
+  () => import("@/components/settings/SecuritySettings"),
+  { ssr: false, loading: () => <SettingsTabSkeleton /> },
+);
 
 type Tab =
   | "general" | "agents" | "integrations" | "automation" | "notifications"
@@ -787,855 +833,40 @@ export default function SettingsPage() {
         ))}
       </div>
 
-      {/* General Tab */}
+      {/* General Tab — AccountSettings is eagerly loaded (default tab) */}
       {tab === "general" && (
-        <div className="space-y-4 max-w-2xl">
-          {/* Profile — Nickname & Avatar */}
-          <div className="card" id="profile-section">
-            <h2 className="section-header flex items-center gap-2">
-              <User size={14} className="text-gold" /> Profile
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Customize how you appear in the sidebar and across the app</p>
-            <div className="flex items-start gap-4">
-              <div className="relative group">
-                {profile?.avatar_url ? (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={profile.avatar_url} alt="" className="w-16 h-16 rounded-xl object-cover border border-border" />
-                ) : (
-                  <div className="w-16 h-16 rounded-xl bg-gold/10 border border-border flex items-center justify-center">
-                    <span className="text-gold text-xl font-bold">{(profile?.nickname || profile?.full_name)?.charAt(0) || "?"}</span>
-                  </div>
-                )}
-                <label className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-xl opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
-                  <Camera size={16} className="text-white" />
-                  <input type="file" accept="image/png,image/jpeg,image/webp,image/gif" className="hidden" onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file || !profile) return;
-                    if (file.size > 2 * 1024 * 1024) { toast.error("Image must be under 2 MB"); return; }
-                    toast.loading("Uploading avatar...");
-                    try {
-                      const formData = new FormData();
-                      formData.append("file", file);
-                      const res = await fetch("/api/profile/avatar", { method: "POST", body: formData });
-                      toast.dismiss();
-                      if (!res.ok) {
-                        const err = await res.json();
-                        toast.error(err.error || "Upload failed");
-                        return;
-                      }
-                      await refreshProfile();
-                      toast.success("Avatar updated");
-                    } catch (err) {
-                      toast.dismiss();
-                      console.error("Avatar upload exception:", err);
-                      toast.error("Upload failed — try a smaller image");
-                    }
-                  }} />
-                </label>
-              </div>
-              <div className="flex-1 space-y-2">
-                <div>
-                  <label className="text-[10px] text-muted uppercase tracking-wider block mb-1">Display Name</label>
-                  <input
-                    type="text"
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
-                    placeholder={profile?.full_name || "Your name"}
-                    className="input w-full text-xs"
-                  />
-                  <p className="text-[9px] text-muted/70 mt-1 flex items-center gap-1">
-                    <CheckCircle2 size={8} /> Auto-saves as you type
-                  </p>
-                </div>
-                <div className="pt-2 border-t border-border/30 flex items-center gap-2">
-                  <span className="text-[9px] text-muted/60">or save manually</span>
-                  <button
-                    disabled={savingProfile}
-                    onClick={async () => {
-                      if (!profile) return;
-                      setSavingProfile(true);
-                      try {
-                        const res = await fetch("/api/profile", {
-                          method: "PATCH",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ nickname }),
-                        });
-                        if (res.ok) {
-                          await refreshProfile();
-                          toast.success("Profile updated");
-                        } else {
-                          toast.error("Failed to save");
-                        }
-                      } catch {
-                        toast.error("Connection error");
-                      }
-                      setSavingProfile(false);
-                    }}
-                    className="btn-secondary text-[10px] px-3 py-1 flex items-center gap-1"
-                  >
-                    <Save size={10} /> {savingProfile ? "Saving..." : "Save"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Subscription — agency plan management */}
-          {profile?.role === "admin" && (
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2">
-                <CreditCard size={14} className="text-gold" /> Subscription
-              </h2>
-              <p className="text-[10px] text-muted mb-3">Manage your Trinity plan</p>
-              {(() => {
-                const plan = getPlanConfig(profile?.plan_tier);
-                return (
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: `${plan.color}18` }}>
-                        <Zap size={14} style={{ color: plan.color }} />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-semibold">{plan.badge_label} Plan</span>
-                          <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider"
-                            style={{ background: `${plan.color}18`, color: plan.color, boxShadow: `0 0 6px ${plan.glow}` }}>
-                            Active
-                          </span>
-                        </div>
-                        <p className="text-[10px] text-muted mt-0.5">
-                          ${plan.price_monthly.toLocaleString("en-US")}/mo
-                          {plan.max_clients === -1 ? " — Unlimited clients" : ` — Up to ${plan.max_clients} clients`}
-                        </p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={async () => {
-                        // Founder plan is free ($0/mo) — no Stripe customer exists and
-                        // there's literally nothing to manage. Send users to Pricing to
-                        // pick a paid plan instead of hitting a dead "No Stripe customer
-                        // found" error from the billing portal endpoint.
-                        if (plan.price_monthly === 0) {
-                          toast.success("Founder plan is free — nothing to manage. Browse paid plans instead.");
-                          window.location.href = "/dashboard/pricing";
-                          return;
-                        }
-                        const res = await fetch("/api/billing/portal", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ self: true }),
-                        });
-                        const data = await res.json();
-                        if (data.portal_url) {
-                          window.open(data.portal_url, "_blank");
-                        } else if (res.status === 404) {
-                          // No Stripe customer yet — point user to Pricing to subscribe.
-                          toast("No active subscription yet — pick a plan to get started.", { icon: "ℹ" });
-                          window.location.href = "/dashboard/pricing";
-                        } else {
-                          toast.error(data.error || "Could not open billing portal");
-                        }
-                      }}
-                      className="btn-secondary text-[10px] px-3 py-1.5 flex items-center gap-1"
-                    >
-                      {plan.price_monthly === 0 ? "Change Plan" : "Manage"} <ExternalLink size={9} />
-                    </button>
-                  </div>
-                );
-              })()}
-            </div>
-          )}
-
-          {/* Desktop App Settings — only show in Electron */}
-          {typeof window !== "undefined" && !!(window as unknown as { electronAPI?: unknown }).electronAPI && (
-            <div className="card">
-              <h2 className="section-header flex items-center gap-2">
-                <Monitor size={14} className="text-gold" /> Desktop App
-              </h2>
-              <p className="text-[10px] text-muted mb-3">Settings for the Trinity desktop application</p>
-              <div className="space-y-2">
-                {[
-                  { key: "ss_auto_startup", label: "Auto-Start on Login", desc: "Launch Trinity when your computer starts" },
-                  { key: "ss_auto_update", label: "Auto-Update", desc: "Automatically check for and apply updates" },
-                ].map(setting => {
-                  const isEnabled = typeof window !== "undefined" && safeGet(setting.key) === "true";
-                  return (
-                    <div key={setting.key} className="flex items-center justify-between p-3 rounded-lg bg-surface-light border border-border">
-                      <div>
-                        <p className="text-xs font-medium">{setting.label}</p>
-                        <p className="text-[10px] text-muted">{setting.desc}</p>
-                      </div>
-                      <button onClick={() => {
-                        const next = !isEnabled;
-                        safeSet(setting.key, next ? "true" : "false");
-                        toast.success(`${setting.label} ${next ? "enabled" : "disabled"}`);
-                      }}
-                        className={`w-10 h-5 rounded-full transition-colors ${isEnabled ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                        <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${isEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Display & Zoom */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Settings size={14} className="text-gold" /> Display
-            </h2>
-            <div className="space-y-3">
-              {/* Zoom / FOV */}
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <div>
-                    <p className="text-xs font-medium">Interface Zoom</p>
-                    <p className="text-[10px] text-muted">Make everything smaller or larger</p>
-                  </div>
-                  <span className="text-xs font-mono text-gold">{typeof window !== "undefined" ? Math.round((parseFloat(document.documentElement.style.zoom || "1")) * 100) : 100}%</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => { document.documentElement.style.zoom = "0.75"; safeSet("ss-zoom", "0.75"); rerender(); toast.success("Zoom: 75%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.75" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>75%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "0.85"; safeSet("ss-zoom", "0.85"); rerender(); toast.success("Zoom: 85%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.85" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>85%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "0.9"; safeSet("ss-zoom", "0.9"); rerender(); toast.success("Zoom: 90%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "0.9" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>90%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "1"; safeSet("ss-zoom", "1"); rerender(); toast.success("Zoom: 100%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${!safeGet("ss-zoom") || safeGet("ss-zoom") === "1" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>100%</button>
-                  <button onClick={() => { document.documentElement.style.zoom = "1.1"; safeSet("ss-zoom", "1.1"); rerender(); toast.success("Zoom: 110%"); }}
-                    className={`text-[10px] px-2.5 py-1 rounded-lg border transition-all ${safeGet("ss-zoom") === "1.1" ? "border-gold/30 bg-gold/10 text-gold" : "border-border text-muted hover:text-foreground"}`}>110%</button>
-                </div>
-              </div>
-
-              {/* Sidebar compact */}
-              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                <div>
-                  <p className="text-xs font-medium">Compact Sidebar</p>
-                  <p className="text-[10px] text-muted">Collapse sidebar to icons only</p>
-                </div>
-                <button onClick={() => {
-                  const current = safeGet("ss-sidebar-collapsed") === "true";
-                  safeSet("ss-sidebar-collapsed", String(!current));
-                  toast.success(current ? "Sidebar expanded" : "Sidebar collapsed");
-                  window.dispatchEvent(new Event("storage"));
-                }}
-                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-sidebar-collapsed") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-sidebar-collapsed") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
-                </button>
-              </div>
-
-              {/* Dark Mode */}
-              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                <div>
-                  <p className="text-xs font-medium">Dark Mode</p>
-                  <p className="text-[10px] text-muted">Switch between light and dark appearance</p>
-                </div>
-                <button onClick={() => {
-                  const currentTheme = safeGet("ss-theme") || "nordic";
-                  const isCurrentlyLight = currentTheme === "nordic" || currentTheme === "light";
-                  const newTheme = isCurrentlyLight ? "midnight" : "nordic";
-                  safeSet("ss-theme", newTheme);
-                  applyTheme(newTheme);
-                  rerender();
-                  toast.success(isCurrentlyLight ? "Dark mode enabled" : "Light mode enabled");
-                }}
-                  className={`w-10 h-5 rounded-full transition-all ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${(() => { const t = safeGet("ss-theme") || "nordic"; return t !== "nordic" && t !== "light"; })() ? "translate-x-5" : "translate-x-0.5"}`} />
-                </button>
-              </div>
-
-              {/* Animations */}
-              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                <div>
-                  <p className="text-xs font-medium">Animations</p>
-                  <p className="text-[10px] text-muted">Card hover effects, transitions, fades</p>
-                </div>
-                <button onClick={() => {
-                  const current = safeGet("ss-animations") === "false";
-                  safeSet("ss-animations", String(current));
-                  if (!current) document.documentElement.classList.add("reduce-motion");
-                  else document.documentElement.classList.remove("reduce-motion");
-                  toast.success(current ? "Animations enabled" : "Animations disabled");
-                }}
-                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-animations") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-animations") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Sound Effects */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              {sfxEnabled ? <Volume2 size={14} className="text-gold" /> : <VolumeX size={14} className="text-muted" />}
-              Sound Effects
-            </h2>
-            <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-              <div>
-                <p className="text-xs font-medium">UI Sound Effects</p>
-                <p className="text-[10px] text-muted">Click sounds, notifications, success/error tones</p>
-              </div>
-              <button onClick={toggleSfx}
-                className={`w-10 h-5 rounded-full transition-all ${sfxEnabled ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${sfxEnabled ? "translate-x-5" : "translate-x-0.5"}`} />
-              </button>
-            </div>
-          </div>
-
-          {/* Widget Visibility */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Bot size={14} className="text-gold" /> Floating Widgets
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Show or hide the floating assistant bubbles. You can also drag them to any position.</p>
-            <div className="space-y-2">
-              {[
-                { key: "hide_voice_bubble", label: "Voice Assistant Bubble", desc: "The 'Hey Nicklas' gold bubble" },
-                { key: "hide_chat_bubble", label: "Chat Widget Bubble", desc: "The chat icon in the corner" },
-              ].map(widget => {
-                const isHidden = typeof window !== "undefined" && localStorage.getItem(widget.key) === "true";
-                return (
-                  <div key={widget.key} className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                    <div>
-                      <p className="text-xs font-medium">{widget.label}</p>
-                      <p className="text-[10px] text-muted">{widget.desc}</p>
-                    </div>
-                    <button onClick={() => {
-                      const next = !isHidden;
-                      localStorage.setItem(widget.key, next ? "true" : "false");
-                      toast.success(next ? `${widget.label} hidden — refresh to apply` : `${widget.label} visible — refresh to apply`);
-                    }}
-                      className={`w-10 h-5 rounded-full transition-all ${!isHidden ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                      <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${!isHidden ? "translate-x-5" : "translate-x-0.5"}`} />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Theme — 10 presets */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Palette size={14} className="text-gold" /> Color Theme
-            </h2>
-            <p className="text-[10px] text-muted mb-3">10 color schemes to match your style</p>
-            <div className="grid grid-cols-5 gap-2">
-              {[
-                { id: "nordic", name: "Nordic", bg: "#FAFAF7", surface: "#FFFFFF", accent: "#C9A84C", text: "#374151", desc: "Default" },
-                { id: "midnight", name: "Midnight", bg: "#08090e", surface: "#10121a", accent: "#C9A84C", text: "#e8eaed", desc: "Dark" },
-                { id: "light", name: "Light", bg: "#f8fafc", surface: "#ffffff", accent: "#C9A84C", text: "#0f172a", desc: "Clean" },
-                { id: "ocean", name: "Ocean", bg: "#0a1628", surface: "#0f1d32", accent: "#38bdf8", text: "#e2e8f0", desc: "Blue" },
-                { id: "ember", name: "Ember", bg: "#120a08", surface: "#1a100c", accent: "#f97316", text: "#e2e8f0", desc: "Warm" },
-                { id: "forest", name: "Forest", bg: "#071008", surface: "#0d1a10", accent: "#22c55e", text: "#e2e8f0", desc: "Green" },
-                { id: "purple", name: "Purple", bg: "#0e0812", surface: "#16101e", accent: "#a855f7", text: "#e8e0f0", desc: "Violet" },
-                { id: "rose", name: "Rose", bg: "#120810", surface: "#1c0e18", accent: "#f43f5e", text: "#f0e0e8", desc: "Pink" },
-                { id: "arctic", name: "Arctic", bg: "#0a0f14", surface: "#10171e", accent: "#06b6d4", text: "#e0eaf0", desc: "Cyan" },
-                { id: "noir", name: "Noir", bg: "#050505", surface: "#0e0e0e", accent: "#ffffff", text: "#d0d0d0", desc: "B&W" },
-                { id: "sunset", name: "Sunset", bg: "#100808", surface: "#1a0e0e", accent: "#fb923c", text: "#f0e8e0", desc: "Orange" },
-              ].map(theme => {
-                const currentTheme = typeof window !== "undefined" ? safeGet("ss-theme") || "nordic" : "nordic";
-                const isActive = currentTheme === theme.id;
-                return (
-                  <button key={theme.id} onClick={() => {
-                    safeSet("ss-theme", theme.id);
-                    applyTheme(theme.id);
-                    rerender();
-                    toast.success(`${theme.name} theme applied`);
-                  }}
-                    className={`p-2.5 rounded-lg border transition-all text-center ${
-                      isActive ? "border-gold/40 ring-2 ring-gold/20 bg-surface-light" : "border-border hover:border-gold/30"
-                    }`}
-                  >
-                    <div className="flex items-center justify-center gap-0.5 mb-1.5">
-                      <div className="w-4 h-4 rounded-full border border-border" style={{ background: theme.bg }} />
-                      <div className="w-4 h-4 rounded-full border border-border" style={{ background: theme.accent }} />
-                    </div>
-                    <p className="text-[9px] font-bold">{theme.name}</p>
-                    {isActive && <p className="text-[7px] text-gold mt-0.5">Active</p>}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Layout Options */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Settings size={14} className="text-gold" /> Layout & Density
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Customize how compact or spacious the interface feels</p>
-            <div className="space-y-4">
-              {/* Sidebar Style */}
-              <div>
-                <p className="text-xs font-medium mb-2">Sidebar Style</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: "default", name: "Full", desc: "Icons + labels" },
-                    { id: "compact", name: "Compact", desc: "Narrower sidebar" },
-                    { id: "icons", name: "Icons Only", desc: "Collapsed view" },
-                  ].map(style => {
-                    const current = safeGet("ss-sidebar") || "default";
-                    return (
-                      <button key={style.id} onClick={() => {
-                        safeSet("ss-sidebar", style.id);
-                        rerender();
-                        toast.success(`${style.name} sidebar applied`);
-                      }}
-                        className={`p-3 rounded-lg border text-center transition-all ${
-                          current === style.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"
-                        }`}>
-                        <p className="text-[10px] font-bold">{style.name}</p>
-                        <p className="text-[8px] text-muted">{style.desc}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Font Size */}
-              <div>
-                <p className="text-xs font-medium mb-2">Font Size</p>
-                <div className="grid grid-cols-4 gap-2">
-                  {[
-                    { id: "small", name: "Small", size: "13px" },
-                    { id: "default", name: "Default", size: "14px" },
-                    { id: "large", name: "Large", size: "15px" },
-                    { id: "xl", name: "Extra Large", size: "16px" },
-                  ].map(fs => {
-                    const current = safeGet("ss-fontsize") || "default";
-                    return (
-                      <button key={fs.id} onClick={() => {
-                        safeSet("ss-fontsize", fs.id);
-                        document.body.style.fontSize = fs.size;
-                        rerender();
-                        toast.success(`Font size: ${fs.name}`);
-                      }}
-                        className={`p-2.5 rounded-lg border text-center transition-all ${
-                          current === fs.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"
-                        }`}>
-                        <p style={{ fontSize: fs.size }} className="font-bold">Aa</p>
-                        <p className="text-[8px] text-muted">{fs.name}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Card Style */}
-              <div>
-                <p className="text-xs font-medium mb-2">Card Style</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: "default", name: "Rounded", desc: "Soft corners" },
-                    { id: "sharp", name: "Sharp", desc: "Square corners" },
-                    { id: "bordered", name: "Bordered", desc: "Visible borders" },
-                  ].map(cs => {
-                    const current = safeGet("ss-cardstyle") || "default";
-                    return (
-                      <button key={cs.id} onClick={() => {
-                        safeSet("ss-cardstyle", cs.id);
-                        rerender();
-                        toast.success(`${cs.name} cards applied`);
-                      }}
-                        className={`p-3 rounded-lg border text-center transition-all ${
-                          current === cs.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"
-                        }`}>
-                        <p className="text-[10px] font-bold">{cs.name}</p>
-                        <p className="text-[8px] text-muted">{cs.desc}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Custom Domain — buy through us, zero manual DNS */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Globe size={14} className="text-gold" /> Custom Domain
-            </h2>
-            <p className="text-[10px] text-muted mb-3">
-              Get a custom domain in one click. Pay monthly or yearly — we buy it,
-              set up DNS, and wire SSL automatically. Zero registrar logins.
-            </p>
-            <div className="rounded-lg bg-gradient-to-br from-gold/[0.06] to-transparent border border-gold/20 p-4">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gold/15 border border-gold/30 flex items-center justify-center shrink-0">
-                  <Globe size={18} className="text-gold" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-foreground mb-1">Buy a domain through Trinity</p>
-                  <p className="text-[10px] text-muted mb-3">
-                    Search, purchase, and deploy in under 2 minutes. Includes SSL,
-                    DNS, and hosting. Cancel anytime.
-                  </p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <a
-                      href="/dashboard/domains"
-                      className="text-[10px] px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-black font-bold flex items-center gap-1 hover:shadow-lg hover:shadow-amber-400/30"
-                    >
-                      <Sparkles size={11} /> Buy a domain
-                    </a>
-                    <span className="text-[9px] text-muted">From ~$9/mo · 20% off yearly</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <p className="text-[9px] text-muted/60 mt-2">
-              Already own a domain? You can also point an existing one in the{" "}
-              <a href="/dashboard/domains" className="text-gold hover:underline">Domains</a> tab.
-            </p>
-          </div>
-
-          {/* Data & Cleanup */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Zap size={14} className="text-gold" /> Data Management
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Manage your data, exports, and automatic cleanup</p>
-            <div className="space-y-2">
-              {/* Auto-delete stale leads */}
-              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                <div>
-                  <p className="text-xs font-medium">Auto-Delete Stale Leads</p>
-                  <p className="text-[10px] text-muted">Remove leads not contacted within 2 days</p>
-                </div>
-                <button onClick={() => {
-                  const current = safeGet("ss-auto-cleanup") !== "false";
-                  safeSet("ss-auto-cleanup", String(!current));
-                  rerender();
-                  toast.success(!current ? "Auto-cleanup enabled" : "Auto-cleanup disabled");
-                }}
-                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-auto-cleanup") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-auto-cleanup") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
-                </button>
-              </div>
-              {/* Default page size */}
-              <div>
-                <p className="text-xs font-medium mb-2">CRM Page Size</p>
-                <div className="grid grid-cols-4 gap-2">
-                  {[
-                    { id: "25", name: "25" },
-                    { id: "50", name: "50" },
-                    { id: "100", name: "100" },
-                    { id: "200", name: "200" },
-                  ].map(ps => {
-                    const current = safeGet("ss-pagesize") || "50";
-                    return (
-                      <button key={ps.id} onClick={() => { safeSet("ss-pagesize", ps.id); rerender(); toast.success(`Page size: ${ps.name}`); }}
-                        className={`p-2 rounded-lg border text-center transition-all ${current === ps.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"}`}>
-                        <p className="text-[10px] font-bold">{ps.name}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              {/* Manual cleanup */}
-              <button onClick={async () => {
-                toast.loading("Cleaning up stale leads...");
-                try {
-                  const res = await fetch("/api/leads/cleanup", { method: "POST" });
-                  const data = await res.json();
-                  toast.dismiss();
-                  toast.success(`Cleaned ${data.deleted || 0} stale leads`);
-                } catch { toast.dismiss(); toast.error("Cleanup failed"); }
-              }}
-                className="w-full text-[10px] py-2 rounded-lg border border-danger/20 bg-danger/5 text-danger hover:bg-danger/10 transition-all">
-                Run Manual Cleanup Now
-              </button>
-            </div>
-          </div>
-
-          {/* Keyboard Shortcuts */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Settings size={14} className="text-gold" /> Keyboard Shortcuts
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Navigate faster with these shortcuts</p>
-            <div className="space-y-1">
-              {[
-                { keys: "Ctrl + K", desc: "Open command palette" },
-                { keys: "Ctrl + /", desc: "Open AI assistant" },
-                { keys: "Ctrl + B", desc: "Toggle sidebar" },
-                { keys: "Ctrl + Scroll", desc: "Zoom in/out" },
-                { keys: "Ctrl + Shift + N", desc: "Quick add (lead, client, task)" },
-                { keys: "Esc", desc: "Close modals & menus" },
-              ].map(s => (
-                <div key={s.keys} className="flex items-center justify-between py-1.5 px-2.5 rounded-lg hover:bg-surface-light transition-colors">
-                  <span className="text-[10px] text-muted">{s.desc}</span>
-                  <kbd className="text-[9px] font-mono px-2 py-0.5 rounded bg-surface-light border border-border text-foreground">{s.keys}</kbd>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Default AI Behavior */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Bot size={14} className="text-gold" /> Default AI Behavior
-            </h2>
-            <p className="text-[10px] text-muted mb-3">Global defaults for how AI operates across the platform</p>
-            <div className="space-y-3">
-              <div>
-                <p className="text-xs font-medium mb-2">AI Response Tone</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { id: "professional", name: "Professional", desc: "Formal & polished" },
-                    { id: "friendly", name: "Friendly", desc: "Warm & approachable" },
-                    { id: "direct", name: "Direct", desc: "Short & to the point" },
-                  ].map(t => {
-                    const current = safeGet("ss-ai-tone") || "professional";
-                    return (
-                      <button key={t.id} onClick={() => { safeSet("ss-ai-tone", t.id); rerender(); toast.success(`AI tone: ${t.name}`); }}
-                        className={`p-2.5 rounded-lg border text-center transition-all ${current === t.id ? "border-gold/40 ring-2 ring-gold/20 bg-gold/10" : "border-border"}`}>
-                        <p className="text-[10px] font-bold">{t.name}</p>
-                        <p className="text-[8px] text-muted">{t.desc}</p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                <div>
-                  <p className="text-xs font-medium">Auto-Draft Outreach</p>
-                  <p className="text-[10px] text-muted">AI pre-writes emails/DMs for new leads</p>
-                </div>
-                <button onClick={() => {
-                  const current = safeGet("ss-auto-draft") === "true";
-                  safeSet("ss-auto-draft", String(!current));
-                  rerender();
-                  toast.success(!current ? "Auto-draft enabled" : "Auto-draft disabled");
-                }}
-                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-auto-draft") === "true" ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-auto-draft") === "true" ? "translate-x-5" : "translate-x-0.5"}`} />
-                </button>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border">
-                <div>
-                  <p className="text-xs font-medium">AI Suggestions</p>
-                  <p className="text-[10px] text-muted">Show AI tips and recommendations across pages</p>
-                </div>
-                <button onClick={() => {
-                  const current = safeGet("ss-ai-suggestions") !== "false";
-                  safeSet("ss-ai-suggestions", String(!current));
-                  rerender();
-                  toast.success(!current ? "AI suggestions enabled" : "AI suggestions disabled");
-                }}
-                  className={`w-10 h-5 rounded-full transition-all ${safeGet("ss-ai-suggestions") !== "false" ? "bg-gold" : "bg-surface-light border border-border"}`}>
-                  <div className={`w-4 h-4 rounded-full bg-white shadow transition-transform ${safeGet("ss-ai-suggestions") !== "false" ? "translate-x-5" : "translate-x-0.5"}`} />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Version Info */}
-          <div className="card">
-            <h2 className="section-header flex items-center gap-2">
-              <Info size={14} className="text-gold" /> About
-            </h2>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-xs text-muted">Version</span>
-                <span className="text-xs font-mono text-gold">v1.2.0</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-xs text-muted">Build</span>
-                <span className="text-xs font-mono text-muted">2026.04.06</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-xs text-muted">Platform</span>
-                <span className="text-xs font-mono text-muted">Next.js + Supabase + Claude AI</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-xs text-muted">License</span>
-                <span className="text-xs font-mono text-success">Enterprise</span>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <span className="text-xs text-muted">Support</span>
-                <span className="text-xs text-gold">growth@shortstack.work</span>
-              </div>
-            </div>
-          </div>
-
-          {/* White Label link */}
-          <div className="card">
-            <h2 className="section-header">Customization</h2>
-            <a href="/dashboard/settings/white-label" className="flex items-center justify-between p-3 bg-surface-light rounded-lg border border-border hover:border-gold/15 transition-colors">
-              <div>
-                <p className="text-xs font-medium">White-Label Branding</p>
-                <p className="text-[10px] text-muted">Customize logo, colors, and branding for clients</p>
-              </div>
-              <span className="text-gold text-xs">Configure</span>
-            </a>
-          </div>
-        </div>
+        <AccountSettings
+          profile={profile}
+          nickname={nickname}
+          setNickname={setNickname}
+          savingProfile={savingProfile}
+          setSavingProfile={setSavingProfile}
+          refreshProfile={refreshProfile}
+          sfxEnabled={sfxEnabled}
+          toggleSfx={toggleSfx}
+          forceRerender={rerender}
+        />
       )}
 
-      {/* AI Agents Tab */}
+      {/* AI Agents Tab — lazy */}
       {tab === "agents" && (
-        <div className="space-y-4">
-          <div className="card bg-gold/5 border-gold/20">
-            <p className="text-sm">Configure AI agents for each client. Control what the AI does automatically — outreach, cold calling, content, publishing.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {agentConfigs.map(config => (
-              <div key={config.client_id} className="card-hover">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-medium">{config.client_name}</h3>
-                  <button onClick={() => setEditingAgent(config)} className="text-gold text-xs hover:text-gold-light">Configure</button>
-                </div>
-                <div className="space-y-2 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-muted">DM Outreach</span>
-                    <StatusBadge status={config.outreach_enabled ? "active" : "paused"} />
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted">Cold Calling</span>
-                    <StatusBadge status={config.cold_calling_enabled ? "active" : "paused"} />
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted">Content Gen</span>
-                    <StatusBadge status={config.content_generation_enabled ? "active" : "paused"} />
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted">Auto Publish</span>
-                    <StatusBadge status={config.auto_publish_enabled ? "active" : "paused"} />
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted">AI Model</span>
-                    <span className="text-gold">{config.ai_model.split("-").slice(-2).join(" ")}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {agentConfigs.length === 0 && (
-              <div className="col-span-full text-center py-8 text-muted">
-                No clients yet. Add clients first, then configure their AI agents.
-              </div>
-            )}
-          </div>
-
-          {/* Global AI Settings */}
-          <div className="card mt-6">
-            <h3 className="section-header">Global AI Settings</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <label className="block text-xs text-muted mb-1">Default AI Model</label>
-                <select className="input w-full text-sm">
-                  <option value="claude-sonnet-4-6">Claude Sonnet 4.6 (Best)</option>
-                  <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fast)</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs text-muted mb-1">Daily DM Target</label>
-                <input type="number" defaultValue={80} className="input w-full text-sm" />
-              </div>
-              <div>
-                <label className="block text-xs text-muted mb-1">Daily Call Target</label>
-                <input type="number" defaultValue={50} className="input w-full text-sm" />
-              </div>
-              <div>
-                <label className="block text-xs text-muted mb-1">Outreach Time (CET)</label>
-                <input type="time" defaultValue="09:00" className="input w-full text-sm" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <AgentSettings
+          agentConfigs={agentConfigs}
+          editingAgent={editingAgent}
+          setEditingAgent={setEditingAgent}
+          saveAgentConfig={saveAgentConfig}
+        />
       )}
 
-      {/* Integrations Tab */}
+      {/* Integrations Tab — lazy */}
       {tab === "integrations" && (
-        <div className="space-y-4">
-          {/* Connected Social Accounts via Zernio */}
-          <div>
-            <h3 className="text-xs text-muted uppercase tracking-wider mb-2">Connected Social Accounts</h3>
-            {socialLoading ? (
-              <div className="card p-6 text-center">
-                <Loader2 size={16} className="animate-spin mx-auto text-muted" />
-              </div>
-            ) : socialAccounts.filter(a => a.is_active).length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {socialAccounts.filter(a => a.is_active).map(account => (
-                  <div key={account.id} className="card-hover p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2.5">
-                        <span className={`w-2 h-2 rounded-full ${
-                          account.status === "active" ? "bg-emerald-400" :
-                          account.status === "expired" ? "bg-red-400" : "bg-zinc-500"
-                        }`} />
-                        <div>
-                          <p className="font-medium text-sm capitalize flex items-center gap-1.5">
-                            {account.platform}
-                            {account.status === "expired" && (
-                              <span className="text-[9px] bg-red-500/10 text-red-400 px-1.5 py-0.5 rounded-full font-normal">expired</span>
-                            )}
-                          </p>
-                          <p className="text-xs text-muted">{account.account_name || "Connected"}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <StatusBadge status={account.status === "active" ? "active" : account.status === "expired" ? "error" : "inactive"} />
-                        <button
-                          onClick={() => disconnectSocialAccount(account)}
-                          disabled={disconnectingSocial === account.id}
-                          className="text-xs text-red-400 hover:text-red-300 transition-colors px-2 py-1 rounded hover:bg-red-500/10 disabled:opacity-50"
-                          title="Disconnect account">
-                          {disconnectingSocial === account.id ? (
-                            <Loader2 size={12} className="animate-spin" />
-                          ) : (
-                            <XCircle size={14} />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                    {account.token_expires_at && (
-                      <p className="text-[10px] text-muted mt-2">
-                        Token expires: {new Date(account.token_expires_at).toLocaleDateString()}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="card p-6">
-                <Globe size={20} className="mx-auto mb-2 text-muted/30" />
-                <p className="text-xs text-muted mb-3 text-center">No social accounts connected</p>
-                <InlineSocialConnect
-                  platforms={["instagram", "facebook", "linkedin", "tiktok"]}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Service Integrations */}
-          {["Core", "AI", "CRM", "Communication", "Payments", "Social", "APIs", "Domains", "Voice AI", "Automation", "Publishing"].map(category => {
-            const items = INTEGRATIONS.filter(i => i.category === category);
-            if (items.length === 0) return null;
-            return (
-              <div key={category}>
-                <h3 className="text-xs text-muted uppercase tracking-wider mb-2">{category}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {items.map(integration => {
-                    const health = healthData.find(h => h.integration_name === integration.name);
-                    return (
-                      <div key={integration.name} className="card-hover p-4 flex items-center justify-between">
-                        <div>
-                          <p className="font-medium text-sm">{integration.name}</p>
-                          <p className="text-xs text-muted">{integration.key}</p>
-                        </div>
-                        <StatusBadge status={health?.status || "unknown"} />
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <IntegrationsSettings
+          socialAccounts={socialAccounts}
+          socialLoading={socialLoading}
+          disconnectingSocial={disconnectingSocial}
+          healthData={healthData}
+          disconnectSocialAccount={disconnectSocialAccount}
+        />
       )}
 
       {/* Automation Tab */}
@@ -1757,137 +988,20 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* Notifications Tab */}
-      {tab === "notifications" && (
-        <div className="space-y-4">
-          <div className="card">
-            <h3 className="section-header">Telegram Notifications</h3>
-            <div className="space-y-3 text-sm">
-              {[
-                { event: "Daily morning brief", enabled: true },
-                { event: "Call booked from cold call", enabled: true },
-                { event: "DM reply received", enabled: true },
-                { event: "New deal closed", enabled: true },
-                { event: "Content published", enabled: true },
-                { event: "System integration down", enabled: true },
-                { event: "New client onboarded", enabled: true },
-                { event: "Invoice paid", enabled: true },
-                { event: "Trinity action completed", enabled: true },
-              ].map((n, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-border0 last:border-0">
-                  <span>{n.event}</span>
-                  <span className={n.enabled ? "text-success" : "text-muted"}>{n.enabled ? "On" : "Off"}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* Notifications Tab — lazy */}
+      {tab === "notifications" && <NotificationSettings />}
 
-          <div className="card">
-            <h3 className="section-header">Slack Notifications</h3>
-            <p className="text-sm text-muted">Same events sent to #shortstack-alerts channel in Slack</p>
-          </div>
-        </div>
-      )}
-
-      {/* Billing Tab */}
+      {/* Billing Tab — lazy */}
       {tab === "billing" && (
-        <div className="space-y-4">
-          <div className="card">
-            <h3 className="section-header">Current Plan</h3>
-            <div className="flex items-center justify-between p-4 bg-gold/5 border border-gold/20 rounded-xl flex-wrap gap-3">
-              <div>
-                <p className="text-lg font-bold" style={{ color: getPlanConfig(profile?.plan_tier).color }}>{getPlanConfig(profile?.plan_tier).badge_label}</p>
-                <p className="text-xs text-muted">${getPlanConfig(profile?.plan_tier).price_monthly}/month</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <a href="/dashboard/pricing" className="btn-primary text-xs flex items-center gap-1">
-                  <Zap size={11} /> Change Plan
-                </a>
-                <button onClick={openBillingPortal} disabled={portalLoading} className="btn-secondary text-xs flex items-center gap-1">
-                  {portalLoading ? <Loader2 size={11} className="animate-spin" /> : <ExternalLink size={11} />}
-                  Manage in Stripe
-                </button>
-              </div>
-            </div>
-            <p className="text-[10px] text-muted mt-2 flex items-center gap-1">
-              <Shield size={9} /> Use &quot;Change Plan&quot; for upgrades/downgrades. &quot;Manage in Stripe&quot; to view invoices, update card, or cancel.
-            </p>
-          </div>
-
-          {/* Cancel Subscription — Danger Zone */}
-          <div className="card border-red-500/20 bg-red-500/[0.02]">
-            <div className="flex items-start gap-3">
-              <AlertTriangle size={14} className="text-red-400 shrink-0 mt-0.5" />
-              <div className="flex-1">
-                <h3 className="text-sm font-semibold text-red-400">Cancel Subscription</h3>
-                <p className="text-[10px] text-muted mt-0.5">
-                  Stop billing at the end of the current period. You keep access until then.
-                </p>
-              </div>
-              <button onClick={openBillingPortal} disabled={portalLoading} className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 flex items-center gap-1.5">
-                {portalLoading ? <Loader2 size={11} className="animate-spin" /> : <XCircle size={11} />}
-                Cancel via Stripe
-              </button>
-            </div>
-          </div>
-
-          {/* Agency Stripe Connect — separate from Trinity subscription above.
-              Lets agencies connect their OWN Stripe account to bill clients. */}
-          <AgencyStripeConnect />
-          <div className="card">
-            <h3 className="section-header">Usage This Month</h3>
-            {!planUsageLoaded ? (
-              <div className="flex items-center gap-2 text-xs text-muted py-6 justify-center">
-                <Loader2 size={12} className="animate-spin" /> Loading usage...
-              </div>
-            ) : (
-              <PlanUsageWidget planUsage={planUsage} />
-            )}
-          </div>
-          <div className="card">
-            <h3 className="section-header">Payment Method</h3>
-            {paymentLoading ? (
-              <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border animate-pulse">
-                <div className="w-5 h-5 bg-white/10 rounded" />
-                <div className="flex-1 space-y-1.5">
-                  <div className="h-3 w-32 bg-white/10 rounded" />
-                  <div className="h-2 w-20 bg-white/10 rounded" />
-                </div>
-              </div>
-            ) : paymentMethod ? (
-              <div className="flex items-center gap-3 p-3 bg-surface-light/50 rounded-lg border border-border">
-                <CreditCard size={20} className="text-gold" />
-                <div>
-                  <p className="text-sm font-medium capitalize">{paymentMethod.brand} ending in {paymentMethod.last4}</p>
-                  <p className="text-xs text-muted">Expires {String(paymentMethod.exp_month).padStart(2, "0")}/{paymentMethod.exp_year}</p>
-                </div>
-                <button
-                  onClick={openBillingPortal}
-                  disabled={portalLoading}
-                  className="ml-auto text-xs text-gold hover:underline flex items-center gap-1 disabled:opacity-50"
-                >
-                  {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <ExternalLink size={10} />}
-                  Update
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-between p-3 bg-surface-light/50 rounded-lg border border-border">
-                <div className="flex items-center gap-3">
-                  <CreditCard size={20} className="text-muted" />
-                  <p className="text-sm text-muted">No payment method on file</p>
-                </div>
-                <button
-                  onClick={openBillingPortal}
-                  disabled={portalLoading}
-                  className="text-xs bg-gold/10 text-gold border border-gold/20 px-3 py-1.5 rounded-lg hover:bg-gold/20 transition flex items-center gap-1 disabled:opacity-50"
-                >
-                  {portalLoading ? <Loader2 size={10} className="animate-spin" /> : <Plus size={10} />}
-                  Add Payment Method
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        <BillingSettings
+          profile={profile}
+          planUsage={planUsage}
+          planUsageLoaded={planUsageLoaded}
+          paymentMethod={paymentMethod}
+          paymentLoading={paymentLoading}
+          portalLoading={portalLoading}
+          openBillingPortal={openBillingPortal}
+        />
       )}
 
       {/* API Keys Tab */}
@@ -1987,8 +1101,8 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* White Label Tab */}
-      {tab === "white_label" && (<WhiteLabelTabContent whiteLabel={whiteLabel} setWhiteLabel={setWhiteLabel} wlSaving={wlSaving} setWlSaving={setWlSaving} />)}
+      {/* White Label Tab — lazy */}
+      {tab === "white_label" && (<WhiteLabelSettings whiteLabel={whiteLabel} setWhiteLabel={setWhiteLabel} wlSaving={wlSaving} setWlSaving={setWlSaving} />)}
 
       {/* SMTP Tab */}
       {tab === "smtp" && (
@@ -2215,37 +1329,13 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* Security Tab */}
+      {/* Security Tab — lazy */}
       {tab === "security" && (
-        <div className="space-y-4">
-          <div className="card">
-            <h3 className="section-header">Two-Factor Authentication</h3>
-            <div className="flex items-center justify-between p-4 bg-surface-light/50 rounded-lg border border-border">
-              <div><p className="text-sm font-medium">2FA via Authenticator App</p><p className="text-xs text-muted">{twoFA ? "Enabled and protecting your account" : "Not enabled - we recommend enabling 2FA"}</p></div>
-              <button onClick={() => { setTwoFA(!twoFA); toast.success(twoFA ? "2FA disabled" : "2FA enabled"); }} className={`px-3 py-1.5 rounded text-xs ${twoFA ? "bg-danger/10 text-danger border border-danger/20" : "bg-success/10 text-success border border-success/20"}`}>{twoFA ? "Disable" : "Enable"}</button>
-            </div>
-          </div>
-          <div className="card">
-            <h3 className="section-header">Active Sessions</h3>
-            <div className="space-y-2">
-              {sessions.length === 0 ? (
-                <div className="text-center py-8 text-muted">
-                  <Shield size={24} className="mx-auto mb-2 opacity-40" />
-                  <p className="text-sm">No active sessions yet</p>
-                </div>
-              ) : sessions.map((s, i) => (
-                <div key={i} className="flex items-center justify-between p-3 border border-border rounded-lg">
-                  <div><p className="text-sm font-medium">{s.device} {s.current && <span className="text-[9px] bg-success/10 text-success px-1.5 py-0.5 rounded-full ml-1">Current</span>}</p><p className="text-xs text-muted">IP: {s.ip} | Last active: {new Date(s.last_active).toLocaleString()}</p></div>
-                  {!s.current && <button className="text-xs text-danger hover:underline">Revoke</button>}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="card">
-            <h3 className="section-header">Password</h3>
-            <button onClick={() => toast.success("Password reset email sent")} className="btn-secondary text-xs flex items-center gap-2"><Lock size={14} /> Change Password</button>
-          </div>
-        </div>
+        <SecuritySettings
+          twoFA={twoFA}
+          setTwoFA={setTwoFA}
+          sessions={sessions}
+        />
       )}
 
       {/* Import/Export Tab */}
@@ -2850,85 +1940,6 @@ export default function SettingsPage() {
         </div>
       )}
 
-      {/* Edit Agent Modal */}
-      <Modal isOpen={!!editingAgent} onClose={() => setEditingAgent(null)} title={`Configure AI Agent — ${editingAgent?.client_name}`} size="xl">
-        {editingAgent && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-muted mb-1">AI Model</label>
-                <select value={editingAgent.ai_model} onChange={e => setEditingAgent({ ...editingAgent, ai_model: e.target.value })} className="input w-full">
-                  <option value="claude-sonnet-4-6">Claude Sonnet 4.6 (Best quality)</option>
-                  <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fastest)</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm text-muted mb-1">Brand Voice</label>
-                <input value={editingAgent.brand_voice} onChange={e => setEditingAgent({ ...editingAgent, brand_voice: e.target.value })} className="input w-full" placeholder="e.g., professional, casual, energetic" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.outreach_enabled} onChange={e => setEditingAgent({ ...editingAgent, outreach_enabled: e.target.checked })} className="accent-gold" />
-                <span className="text-sm">DM Outreach</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.cold_calling_enabled} onChange={e => setEditingAgent({ ...editingAgent, cold_calling_enabled: e.target.checked })} className="accent-gold" />
-                <span className="text-sm">Cold Calling</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.content_generation_enabled} onChange={e => setEditingAgent({ ...editingAgent, content_generation_enabled: e.target.checked })} className="accent-gold" />
-                <span className="text-sm">Content Gen</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" checked={editingAgent.auto_publish_enabled} onChange={e => setEditingAgent({ ...editingAgent, auto_publish_enabled: e.target.checked })} className="accent-gold" />
-                <span className="text-sm">Auto Publish</span>
-              </label>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-muted mb-1">Daily DM Limit</label>
-                <input type="number" value={editingAgent.daily_dm_limit} onChange={e => setEditingAgent({ ...editingAgent, daily_dm_limit: parseInt(e.target.value) })} className="input w-full" />
-              </div>
-              <div>
-                <label className="block text-sm text-muted mb-1">Daily Call Limit</label>
-                <input type="number" value={editingAgent.daily_call_limit} onChange={e => setEditingAgent({ ...editingAgent, daily_call_limit: parseInt(e.target.value) })} className="input w-full" />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm text-muted mb-1">Outreach Platforms</label>
-              <div className="flex gap-3">
-                {["instagram", "linkedin", "facebook", "tiktok"].map(p => (
-                  <label key={p} className="flex items-center gap-1.5 cursor-pointer">
-                    <input type="checkbox" checked={editingAgent.outreach_platforms.includes(p)} onChange={e => {
-                      const platforms = e.target.checked
-                        ? [...editingAgent.outreach_platforms, p]
-                        : editingAgent.outreach_platforms.filter(x => x !== p);
-                      setEditingAgent({ ...editingAgent, outreach_platforms: platforms });
-                    }} className="accent-gold" />
-                    <span className="text-sm capitalize">{p}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm text-muted mb-1">Custom Instructions for AI</label>
-              <textarea value={editingAgent.custom_instructions} onChange={e => setEditingAgent({ ...editingAgent, custom_instructions: e.target.value })} className="input w-full h-24" placeholder="e.g., Always mention their Google reviews when reaching out. Focus on their weak social media presence." />
-            </div>
-
-            <div className="flex justify-end gap-3 pt-4 border-t border-border">
-              <button onClick={() => setEditingAgent(null)} className="btn-secondary">Cancel</button>
-              <button onClick={() => saveAgentConfig(editingAgent)} className="btn-primary flex items-center gap-2">
-                <Save size={16} /> Save Configuration
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
       </ErrorBoundary>
     </div>
   );
