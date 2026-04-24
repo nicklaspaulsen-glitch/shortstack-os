@@ -18,15 +18,17 @@ const GOLD_LIGHT = "#e4c876";
 
 type FeedbackType = "bug" | "feature" | "praise" | "question";
 
+type LucideLike = React.ComponentType<{ size?: number | string; className?: string }>;
+
 const TYPE_OPTIONS: Array<{
   value: FeedbackType;
   label: string;
-  Icon: React.ComponentType<{ size?: number }>;
+  Icon: LucideLike;
 }> = [
-  { value: "bug", label: "Bug", Icon: Bug },
-  { value: "feature", label: "Feature Request", Icon: Sparkles },
-  { value: "praise", label: "Praise", Icon: Heart },
-  { value: "question", label: "Question", Icon: HelpCircle },
+  { value: "bug", label: "Bug", Icon: Bug as LucideLike },
+  { value: "feature", label: "Feature Request", Icon: Sparkles as LucideLike },
+  { value: "praise", label: "Praise", Icon: Heart as LucideLike },
+  { value: "question", label: "Question", Icon: HelpCircle as LucideLike },
 ];
 
 function ConfettiBurst() {
