@@ -45,14 +45,7 @@ import HistoryPanel from "@/components/thumbnail-editor/history-panel";
 
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
-declare global {
-  interface Window {
-    electron?: {
-      openFilePicker?: () => Promise<string | null>;
-      readFileDataUrl?: (path: string) => Promise<string>;
-    };
-  }
-}
+// Shape comes from the shared ambient declaration at src/types/electron.d.ts.
 
 export default function ThumbnailEditorProPage() {
   // Two separate reducers — one for editor state, one wrapping it for

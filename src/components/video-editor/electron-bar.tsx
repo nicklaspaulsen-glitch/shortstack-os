@@ -12,17 +12,9 @@ import { useEffect, useState } from "react";
 import { FolderOpen, Cpu, Download, Zap } from "lucide-react";
 import toast from "react-hot-toast";
 
-interface ElectronApi {
-  openFiles?: () => Promise<string[]>;
-  renderLocal?: (composition: unknown) => Promise<{ ok: boolean; path?: string; error?: string }>;
-  gpuAvailable?: () => Promise<boolean>;
-}
-
-declare global {
-  interface Window {
-    electron?: ElectronApi;
-  }
-}
+// ElectronApi + window.electron live in src/types/electron.d.ts — one canonical
+// shape so TS doesn't reject conflicting inline `declare global` blocks. Every
+// method is optional; we guard with `window.electron?.foo` at every call site.
 
 export interface ElectronBarProps {
   onFilesImported?: (paths: string[]) => void;
