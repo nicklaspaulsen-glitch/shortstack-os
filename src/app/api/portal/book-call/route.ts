@@ -22,6 +22,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { assignBookingToMember } from "@/lib/calendar/round-robin";
 
 const DEFAULT_DURATION_MIN = 30;
 const LOOKAHEAD_DAYS = 14;
@@ -282,7 +283,13 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  let body: { start_iso?: string; duration?: number; title?: string; notes?: string };
+  let body: {
+    start_iso?: string;
+    duration?: number;
+    title?: string;
+    notes?: string;
+    team_id?: string | null;
+  };
   try {
     body = await req.json();
   } catch {
@@ -304,6 +311,43 @@ export async function POST(req: NextRequest) {
   const end = new Date(start.getTime() + duration * 60000);
   const service = createServiceClient();
 
+  // Team round-robin routing (optional; falls back to single-user when team_id absent)
+  let assignedUserId: string | null = null;
+  let assignedTeamId: string | null = null;
+  let assignedTeamMemberName: string | null = null;
+  if (body.team_id) {
+    const { data: team } = await service
+      .from("booking_teams")
+      .select("id, owner_user_id, name, active")
+      .eq("id", body.team_id)
+      .maybeSingle();
+    if (team && team.owner_user_id === ctx.ownerId && team.active) {
+      const assignment = await assignBookingToMember({
+        service,
+        teamId: body.team_id,
+        slotStart: start,
+        slotEnd: end,
+      });
+      if (assignment) {
+        assignedUserId = assignment.userId;
+        assignedTeamId = body.team_id;
+        const { data: repProfile } = await service
+          .from("profiles")
+          .select("full_name, email")
+          .eq("id", assignment.userId)
+          .maybeSingle();
+        assignedTeamMemberName =
+          repProfile?.full_name || repProfile?.email || null;
+      } else {
+        return NextResponse.json(
+          { error: "No team member is available for that slot", code: "NO_REP_AVAILABLE" },
+          { status: 409 },
+        );
+      }
+    }
+  }
+
+  const bookingHolderId = assignedUserId || ctx.ownerId;
   const title =
     body.title?.trim() ||
     `Call with ${ctx.client.business_name || ctx.client.contact_name || "client"}`;
@@ -327,20 +371,27 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Insert native calendar event
+  // Insert native calendar event (owner-scoped; assigned_user_id + booking_team_id when routed)
   const { data: event, error: evError } = await service
     .from("calendar_events")
     .insert({
       user_id: ctx.ownerId,
       title,
       client: ctx.client.business_name || ctx.client.contact_name || null,
-      team_member: ctx.ownerName || "",
+      team_member: assignedTeamMemberName || ctx.ownerName || "",
       date: dateStr,
       time: timeStr,
       duration: String(duration),
       category: "call",
       type: "video",
       recurring: false,
+      booking_team_id: assignedTeamId,
+      assigned_user_id: bookingHolderId,
+      booked_via: "portal",
+      booking_status: "confirmed",
+      client_id: ctx.client.id,
+      client_contact_name: ctx.client.contact_name,
+      client_contact_email: ctx.client.email,
     })
     .select()
     .single();
