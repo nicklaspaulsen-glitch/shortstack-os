@@ -15,12 +15,14 @@ import {
   X,
   ChevronRight,
   LogOut,
+  BookOpen,
 } from "lucide-react";
 
 /* ── Navigation items for the client portal ── */
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard, segment: "" },
   { label: "Projects", icon: FolderKanban, segment: "/projects" },
+  { label: "Courses", icon: BookOpen, segment: "/courses" },
   { label: "Reports", icon: BarChart3, segment: "/reports" },
   { label: "Messages", icon: MessageSquare, segment: "/messages", badge: 3 },
   { label: "Documents", icon: FileText, segment: "/documents" },
