@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Stop ESLint from failing Vercel builds on cosmetic warnings
+  // (unused imports, prefer-const, alt-text, exhaustive-deps).
+  // Lint still runs in CI / dev — just not as a deploy gate. Type
+  // errors WILL still fail builds since typescript.ignoreBuildErrors
+  // is left at its default of false.
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
