@@ -120,6 +120,18 @@
     {
       "path": "/api/cron/review-requests",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/scope-creep",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron/project-health",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-reports",
+      "schedule": "0 9 * * 1"
     }
   ]
 }
