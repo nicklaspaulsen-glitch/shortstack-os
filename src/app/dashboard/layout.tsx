@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { AnimatePresence, motion } from "framer-motion";
 import { SkipToContent } from "@/components/a11y/SkipToContent";
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
@@ -394,10 +395,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Managed client banner */}
           <ManagedClientBanner />
 
-          {/* Page content */}
+          {/* Page content — wrapped in AnimatePresence for soft page transitions. */}
           <div className="p-4 lg:p-6 pb-24">
             <ErrorBoundary>
-              {children}
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={pathname}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {children}
+                </motion.div>
+              </AnimatePresence>
             </ErrorBoundary>
           </div>
         </main>

@@ -10,7 +10,9 @@ import {
   Target, Edit3, Type as TypeIcon, Ratio, Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 import ImageWizard from "@/components/image-wizard";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
@@ -130,7 +132,7 @@ export default function AIStudioPage() {
   }, []);
 
   return (
-    <div className="fade-in p-6 max-w-7xl mx-auto">
+    <MotionPage className="p-6 max-w-7xl mx-auto">
       <PageHero
         className="mb-6"
         icon={<Sparkles size={28} />}
@@ -376,13 +378,23 @@ export default function AIStudioPage() {
       )}
 
       {/* Tool grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <motion.div
+        className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"
+        initial="hidden"
+        animate="visible"
+        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+      >
         {TOOLS.map(tool => {
           const Icon = tool.icon;
           const active = activeTool === tool.id;
           return (
-            <button
+            <motion.button
               key={tool.id}
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+              }}
+              whileHover={{ y: -3 }}
               onClick={() => setActiveTool(tool.id)}
               className={`relative text-left p-3 rounded-xl border transition-all ${
                 active
@@ -405,10 +417,10 @@ export default function AIStudioPage() {
               <span className="inline-block mt-1.5 text-[8px] font-mono px-1.5 py-0.5 rounded bg-surface-light text-muted">
                 {tool.tag}
               </span>
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* Active tool panel */}
       <div className="bg-surface border border-border rounded-2xl p-5">
@@ -424,7 +436,7 @@ export default function AIStudioPage() {
       </div>
       </>
       )}
-    </div>
+    </MotionPage>
   );
 }
 

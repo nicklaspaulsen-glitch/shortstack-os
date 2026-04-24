@@ -13,7 +13,9 @@ import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend
 } from "recharts";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
+import { MotionPage } from "@/components/motion/motion-page";
 
 const CHART_COLORS = ["#C9A84C", "#38bdf8", "#10b981", "#f43f5e", "#f59e0b", "#8b5cf6"];
 
@@ -345,7 +347,7 @@ export default function AnalyticsPage() {
   };
 
   return (
-    <div className="fade-in space-y-5">
+    <MotionPage className="space-y-5">
       {/* Hero Header */}
       <PageHero
         icon={<BarChart3 size={22} />}
@@ -382,17 +384,35 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Key metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
-        <StatCard label="Total Leads" value={stats.totalLeads.toLocaleString()} icon={<Zap size={14} />}
-          change={leadGrowth > 0 ? `+${leadGrowth}%` : `${leadGrowth}%`} changeType={leadGrowth >= 0 ? "positive" : "negative"} />
-        <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={14} />} changeType="positive" />
-        <StatCard label="Active Clients" value={stats.activeClients} icon={<Users size={14} />}
-          change={`${stats.totalClients} total`} />
-        <StatCard label="DMs Sent" value={stats.dmsSent} icon={<MessageSquare size={14} />}
-          change={`${replyRate}% reply rate`} changeType={replyRate >= 5 ? "positive" : "neutral"} />
-        <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={14} />} />
-        <StatCard label="Content" value={stats.contentPublished} icon={<Film size={14} />} change="published" />
-      </div>
+      <motion.div
+        className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2.5"
+        initial="hidden"
+        animate="visible"
+        variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
+      >
+        {[
+          { node: <StatCard label="Total Leads" value={stats.totalLeads.toLocaleString()} icon={<Zap size={14} />}
+            change={leadGrowth > 0 ? `+${leadGrowth}%` : `${leadGrowth}%`} changeType={leadGrowth >= 0 ? "positive" : "negative"} /> },
+          { node: <StatCard label="MRR" value={formatCurrency(stats.totalMRR)} icon={<DollarSign size={14} />} changeType="positive" /> },
+          { node: <StatCard label="Active Clients" value={stats.activeClients} icon={<Users size={14} />}
+            change={`${stats.totalClients} total`} /> },
+          { node: <StatCard label="DMs Sent" value={stats.dmsSent} icon={<MessageSquare size={14} />}
+            change={`${replyRate}% reply rate`} changeType={replyRate >= 5 ? "positive" : "neutral"} /> },
+          { node: <StatCard label="Calls Booked" value={stats.callsBooked} icon={<Phone size={14} />} /> },
+          { node: <StatCard label="Content" value={stats.contentPublished} icon={<Film size={14} />} change="published" /> },
+        ].map((c, i) => (
+          <motion.div
+            key={i}
+            variants={{
+              hidden: { opacity: 0, y: 16 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+            }}
+            whileHover={{ y: -3 }}
+          >
+            {c.node}
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Charts row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -1021,6 +1041,6 @@ export default function AnalyticsPage() {
           )}
         </div>
       </div>
-    </div>
+    </MotionPage>
   );
 }

@@ -19,6 +19,8 @@ import {
   ThumbsUp, GitBranch, Star, ChevronRight, X
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+import { MotionPage } from "@/components/motion/motion-page";
 
 type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal" | "pipeline" | "analytics" | "seo";
 
@@ -520,7 +522,7 @@ export default function ContentPage() {
   if (loading && tab === "scripts") return <PageLoading />;
 
   return (
-    <div className="fade-in space-y-6">
+    <MotionPage className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="page-header mb-0">Content AI Agent</h1>
@@ -1244,20 +1246,33 @@ export default function ContentPage() {
           {/* Analytics Tab */}
           {tab === "analytics" && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <motion.div
+                className="grid grid-cols-2 md:grid-cols-4 gap-3"
+                initial="hidden"
+                animate="visible"
+                variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
+              >
                 {[
                   { label: "Total Content", value: contentAnalytics.total_pieces, icon: <FileText size={16} />, color: "text-gold" },
                   { label: "Published This Month", value: contentAnalytics.published_this_month, icon: <Check size={16} />, color: "text-success" },
                   { label: "Avg Engagement", value: contentAnalytics.avg_engagement, icon: <TrendingUp size={16} />, color: "text-info" },
                   { label: "AI Enhanced", value: `${contentAnalytics.ai_enhanced}%`, icon: <Sparkles size={16} />, color: "text-purple-400" },
                 ].map(stat => (
-                  <div key={stat.label} className="card text-center p-4">
+                  <motion.div
+                    key={stat.label}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] } },
+                    }}
+                    whileHover={{ y: -3 }}
+                    className="card text-center p-4"
+                  >
                     <div className={`${stat.color} mx-auto mb-2`}>{stat.icon}</div>
                     <p className="text-xl font-bold">{stat.value}</p>
                     <p className="text-[10px] text-muted">{stat.label}</p>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
               <div className="card">
                 <h3 className="text-sm font-medium mb-3">Content by Type</h3>
                 <div className="grid grid-cols-4 gap-3">
@@ -1517,6 +1532,6 @@ export default function ContentPage() {
           </div>
         )}
       </Modal>
-    </div>
+    </MotionPage>
   );
 }

@@ -18,9 +18,11 @@ import {
   Clock, CheckCircle, XCircle, StickyNote, Columns
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { MotionPage } from "@/components/motion/motion-page";
 
 // --- Types for new features ---
 type ClientTag = { label: string; color: string };
@@ -531,7 +533,7 @@ export default function ClientsPage() {
   if (loading) return <PageLoading />;
 
   return (
-    <div className="fade-in space-y-4">
+    <MotionPage className="space-y-4">
       <PageHero
         icon={<Users size={22} />}
         title="Client Portal"
@@ -768,7 +770,12 @@ export default function ClientsPage() {
 
       {/* Feature 15: Card View */}
       {tab === "clients" && viewMode === "card" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
+        >
           {filteredClients.map(c => {
             const revenue = getClientRevenue(c.id);
             const contractInfo = getContractStatus(c.id);
@@ -785,7 +792,12 @@ export default function ClientsPage() {
               status === "churned" ? "card-accent-danger"  :
               "card-accent-gold"; // trial
             return (
-              <div key={c.id} className={`card card-accent ${accentClass} p-4 hover:border-gold/30 transition-all cursor-pointer group relative`}
+              <motion.div key={c.id} className={`card card-accent ${accentClass} p-4 hover:border-gold/30 transition-all cursor-pointer group relative`}
+                variants={{
+                  hidden: { opacity: 0, y: 16 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+                }}
+                whileHover={{ y: -4 }}
                 onClick={() => router.push(`/dashboard/clients/${c.id}`)}
                 onMouseEnter={() => setHoveredClient(c.id)}
                 onMouseLeave={() => setHoveredClient(null)}>
@@ -900,7 +912,7 @@ export default function ClientsPage() {
                     </button>
                   </div>
                 )}
-              </div>
+              </motion.div>
             );
           })}
           {filteredClients.length === 0 && (
@@ -917,7 +929,7 @@ export default function ClientsPage() {
               />
             </div>
           )}
-        </div>
+        </motion.div>
       )}
 
       {/* Enhanced Table View */}
@@ -1692,6 +1704,6 @@ export default function ClientsPage() {
           </div>
         </div>
       </Modal>
-    </div>
+    </MotionPage>
   );
 }
