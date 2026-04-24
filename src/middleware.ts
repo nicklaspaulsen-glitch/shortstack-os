@@ -24,7 +24,11 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/style-preview") ||
     path.startsWith("/sound-preview") ||
     path.startsWith("/privacy") ||
-    path.startsWith("/terms")
+    path.startsWith("/terms") ||
+    // Chat widget API is loaded from customer domains with no session cookie.
+    // Auth happens via the public widget token (chat_widgets.token). CORS is
+    // handled inside the route handlers themselves.
+    path.startsWith("/api/widget")
   ) {
     return NextResponse.next();
   }
@@ -46,11 +50,12 @@ export const config = {
      * - api/telegram (Telegram bot webhooks)
      * - api/twilio/sms-webhook (Twilio inbound SMS webhook)
      * - api/discord/webhook (Discord interaction webhook)
+     * - api/widget (public chat-widget API called from customer sites)
      * - tiktok*.txt, .well-known (domain verification)
      *
      * NOTE: api/agents is NOT excluded — those routes must do their own
      * auth checks. Excluding them would leave sensitive AI endpoints open.
      */
-    "/((?!_next/static|_next/image|favicon\\.ico|icons|api/cron|api/webhooks|api/billing/webhook|api/health|api/tts|api/app|api/license|api/oauth|api/telegram|api/twilio/sms-webhook|api/twilio/voice-webhook|api/discord/webhook|tiktok.*\\.txt|manifest\\.json|\\.well-known).*)",
+    "/((?!_next/static|_next/image|favicon\\.ico|icons|api/cron|api/webhooks|api/billing/webhook|api/health|api/tts|api/app|api/license|api/oauth|api/telegram|api/twilio/sms-webhook|api/twilio/voice-webhook|api/discord/webhook|api/widget|tiktok.*\\.txt|manifest\\.json|\\.well-known).*)",
   ],
 };
