@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
 import {
   smartCrop,
@@ -162,6 +163,15 @@ export async function POST(request: NextRequest) {
   if (!imageUrl) {
     return NextResponse.json(
       { ok: false, error: "image_url is required" },
+      { status: 400 },
+    );
+  }
+
+  // SSRF guard — see src/lib/security/ssrf.ts for the full block-list.
+  const ssrfErr = checkFetchUrl(imageUrl);
+  if (ssrfErr) {
+    return NextResponse.json(
+      { ok: false, error: `image_url rejected: ${ssrfErr}` },
       { status: 400 },
     );
   }

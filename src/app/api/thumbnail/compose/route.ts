@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { checkFetchUrl } from "@/lib/security/ssrf";
 import sharp from "sharp";
 import crypto from "crypto";
 import fs from "fs";
@@ -390,6 +391,19 @@ export async function POST(request: NextRequest) {
 
   if (!body.config || typeof body.config !== "object") {
     return NextResponse.json({ error: "config is required" }, { status: 400 });
+  }
+
+  // SSRF guard on both user-supplied image URLs.
+  for (const u of [body.background_image_url, body.face_image_url]) {
+    if (typeof u === "string" && u.length > 0) {
+      const err = checkFetchUrl(u);
+      if (err) {
+        return NextResponse.json(
+          { error: `Image URL rejected: ${err}` },
+          { status: 400 },
+        );
+      }
+    }
   }
 
   const width = Math.max(64, Math.min(3840, body.config.size?.width ?? 1280));
