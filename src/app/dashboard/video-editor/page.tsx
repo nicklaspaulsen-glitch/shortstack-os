@@ -6699,7 +6699,7 @@ export default function VideoEditorPage() {
               </h3>
               {proEditorMode ? (
                 <div className="mt-2" style={{ height: "72vh" }}>
-                  <PremiereEditor compositionId={result?.project_id || undefined} />
+                  <PremiereEditor compositionId={result?.render_id || undefined} />
                 </div>
               ) : (<>
 
