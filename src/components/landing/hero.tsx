@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ArrowRight, ChevronRight, Shield, Sparkles } from "lucide-react";
 import { BRAND } from "@/lib/brand-config";
+
+// Heavy (R3F + three) — pulled in only on the client, off the critical path.
+const Hero3DScene = dynamic(() => import("./hero-3d-scene"), { ssr: false });
 
 /**
  * Hero section: badge, headline, subhead, CTAs, and mock dashboard preview.
@@ -16,6 +20,9 @@ export default function Hero() {
 
   return (
     <section className="relative pt-32 pb-20 md:pt-44 md:pb-32 px-6 overflow-hidden">
+      {/* 3D R3F scene — sits behind everything, pointer-events disabled inside */}
+      <Hero3DScene />
+
       {/* Background glow effects */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] pointer-events-none"

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AnimatedFeatureGrid from "@/components/landing/animated-feature-grid";
 import FAQ from "@/components/landing/faq";
 import FeaturesOverview from "@/components/landing/features-overview";
 import FinalCTA from "@/components/landing/final-cta";
@@ -11,6 +12,7 @@ import OriginStory from "@/components/landing/origin-story";
 import PainPoints from "@/components/landing/pain-points";
 import PricingPreview from "@/components/landing/pricing-preview";
 import ReplaceStack from "@/components/landing/replace-stack";
+import ScreenshotCarousel from "@/components/landing/screenshot-carousel";
 import Testimonials from "@/components/landing/testimonials";
 import TrustBar from "@/components/landing/trust-bar";
 import WhoItsFor from "@/components/landing/who-its-for";
@@ -154,6 +156,8 @@ export default function LandingPage() {
       <LandingNav />
       <Hero />
       <TrustBar />
+      <ScreenshotCarousel />
+      <AnimatedFeatureGrid />
       <PainPoints />
       <OriginStory />
       <FeaturesOverview />
