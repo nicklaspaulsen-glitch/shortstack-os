@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   Mic, ImagePlus, Scissors, Film, Music, Volume2, Layers, Sparkles,
   Upload, Download, Play, Loader, X,
   Wand2, Zap, Copy, Palette, AlertTriangle,
   ArrowUpRight, FileAudio, Brain,
-  Target, Edit3, Type as TypeIcon, Ratio
+  Target, Edit3, Type as TypeIcon, Ratio, Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
@@ -15,6 +16,8 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import SafeThumb from "@/components/safe-thumb";
+import { createClient } from "@/lib/supabase/client";
+import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 
 // Static AI-generated-style image previews (Unsplash wide crops) shown in
 // the marquee on the AI Studio landing state when nothing has been
@@ -60,6 +63,7 @@ const TOOLS = [
 type ToolId = typeof TOOLS[number]["id"];
 
 export default function AIStudioPage() {
+  const supabaseMain = useMemo(() => createClient(), []);
   const [activeTool, setActiveTool] = useState<ToolId>("transcribe");
   const [processing, setProcessing] = useState(false);
   const [history, setHistory] = useState<JobResult[]>([]);
@@ -91,6 +95,39 @@ export default function AIStudioPage() {
       }
     } catch { /* localStorage unavailable */ }
   }, [advancedMode]);
+
+  // ── Handoff consumer — ?handoff= opens the image-gen tool in edit mode ──
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const hid = params.get("handoff");
+    if (!hid) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const { loadHandoff: loadH } = await import("@/lib/ai-handoff");
+        const h = await loadH(supabaseMain, hid);
+        if (!h || cancelled) return;
+        const p = h.payload as { imageUrl?: string; prompt?: string; style?: string; size?: string };
+        setActiveTool("image-gen");
+        if (p.prompt || p.style || p.size) {
+          setImageGenInit({
+            prompt: p.prompt,
+            style: p.style,
+            size: p.size,
+          });
+        }
+        toast.success("Image loaded — adjust settings and regenerate");
+        const u = new URL(window.location.href);
+        u.searchParams.delete("handoff");
+        window.history.replaceState(null, "", u.toString());
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Failed to load edit data");
+      }
+    })();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="fade-in p-6 max-w-7xl mx-auto">
@@ -521,6 +558,9 @@ interface ImageGenInit {
 }
 
 function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { initial?: ImageGenInit }) {
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+  const [handoffingIdx, setHandoffingIdx] = useState<number | null>(null);
   const [prompt, setPrompt] = useState(initial?.prompt || "");
   const [style, setStyle] = useState(initial?.style || "");
   const [size, setSize] = useState(initial?.size || "1024x1024");
@@ -688,10 +728,37 @@ function ImageGenTool({ processing, setProcessing, initial }: ToolProps & { init
                     className="max-h-[300px] mx-auto rounded-lg"
                     wrapperClassName="inline-block"
                   />
-                  <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
-                    className="inline-flex items-center gap-1 mt-1 text-[10px] text-indigo-400 hover:underline">
-                    <Download size={10} /> Download
-                  </a>
+                  <div className="flex items-center justify-center gap-3 mt-1">
+                    <a href={img} target="_blank" rel="noopener noreferrer" download={`generated-${i + 1}.png`}
+                      className="inline-flex items-center gap-1 text-[10px] text-indigo-400 hover:underline">
+                      <Download size={10} /> Download
+                    </a>
+                    <button
+                      disabled={handoffingIdx === i}
+                      onClick={async () => {
+                        setHandoffingIdx(i);
+                        try {
+                          const id = await createHandoff(supabase, {
+                            imageUrl: img,
+                            prompt,
+                            style,
+                            size,
+                          });
+                          router.push(handoffUrl(id, "/dashboard/ai-studio"));
+                        } catch (err) {
+                          toast.error(err instanceof Error ? err.message : "Handoff failed");
+                        } finally {
+                          setHandoffingIdx(null);
+                        }
+                      }}
+                      className="inline-flex items-center gap-1 text-[10px] text-indigo-400 hover:underline disabled:opacity-40"
+                    >
+                      {handoffingIdx === i
+                        ? <Loader2 size={10} className="animate-spin" />
+                        : <Edit3 size={10} />}
+                      Open in Studio
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

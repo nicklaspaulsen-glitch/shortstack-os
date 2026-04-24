@@ -1873,6 +1873,58 @@ export default function ThumbnailGeneratorPage() {
     });
   }, [results]);
 
+  // ── Handoff consumer — pre-populate layer/style state from ?handoff= param ──
+  useEffect(() => {
+    const hid = searchParams?.get("handoff");
+    if (!hid) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const h = await loadHandoff(supabase, hid);
+        if (!h || cancelled) return;
+        const p = h.payload as {
+          imageUrl?: string;
+          layers?: ThumbnailLayers;
+          style?: string;
+          colorTheme?: string;
+          textOverlay?: string;
+        };
+        if (p.style) setStyle(p.style);
+        if (p.colorTheme) setColorTheme(p.colorTheme);
+        if (p.textOverlay) setTextOverlay(p.textOverlay);
+        if (p.imageUrl && p.layers) {
+          // Inject as a synthetic completed result so the layer panel opens
+          const syntheticId = `handoff-${Date.now()}`;
+          setResults([{
+            id: syntheticId,
+            status: "COMPLETED",
+            imageUrl: p.imageUrl,
+            style: p.style ?? "",
+            colorTheme: p.colorTheme ?? "",
+            textOverlay: p.textOverlay ?? "",
+            prompt: "",
+            platform: "youtube",
+            mood: "",
+            faces: [],
+            width: 1280,
+            height: 720,
+            createdAt: new Date().toISOString(),
+          }]);
+          setLayersByThumb((prev) => ({ ...prev, [syntheticId]: p.layers as ThumbnailLayers }));
+        }
+        toast.success("Loaded for editing");
+        // Clean URL param
+        const u = new URL(window.location.href);
+        u.searchParams.delete("handoff");
+        window.history.replaceState(null, "", u.toString());
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Failed to load edit data");
+      }
+    })();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Seed a Timeline project for each thumbnail from its layer state.
   // Each layer becomes a clip on its own track so creators can time-sequence
   // the layer reveal animation (background → subject → text → effects).

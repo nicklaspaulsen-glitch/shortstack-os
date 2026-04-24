@@ -1425,6 +1425,7 @@ export default function VideoEditorPage() {
     } catch {}
   }, []);
 
+
   // Guided Mode ↔ Advanced Mode (full 6-subtab editor)
   const [advancedMode, setAdvancedMode] = useAdvancedMode("video-editor");
   const [guidedStep, setGuidedStep] = useState(0);
@@ -1444,6 +1445,50 @@ export default function VideoEditorPage() {
     brand_colors: "",
     target_platform: "instagram",
   });
+
+  // ── Handoff consumer — reads ?handoff= on mount, merges AI-generated clip ──
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const hid = params.get("handoff");
+    if (!hid) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const { loadHandoff } = await import("@/lib/ai-handoff");
+        const h = await loadHandoff(supabase, hid);
+        if (!h || cancelled) return;
+        const p = h.payload as {
+          clipUrl?: string;
+          prompt?: string;
+          aspect_ratio?: string;
+          style?: string;
+        };
+        if (p.clipUrl) {
+          setResult({
+            source: "ai-video-handoff",
+            url: p.clipUrl,
+          });
+        }
+        setConfig(prev => ({
+          ...prev,
+          ...(p.prompt ? { script: p.prompt } : {}),
+          ...(p.aspect_ratio ? { aspect_ratio: p.aspect_ratio } : {}),
+          ...(p.style ? { style: p.style } : {}),
+        }));
+        setAdvancedMode(true);
+        setTab("storyboard");
+        toast.success("Clip loaded — ready to edit");
+        const u = new URL(window.location.href);
+        u.searchParams.delete("handoff");
+        window.history.replaceState(null, "", u.toString());
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Failed to load clip");
+      }
+    })();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // --- New feature states ---
   const [createSubTab, setCreateSubTab] = useState<"editor" | "scene-builder" | "ai-script" | "audio-mixer" | "advanced" | "smart">("editor");

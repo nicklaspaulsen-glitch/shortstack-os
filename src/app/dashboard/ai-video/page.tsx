@@ -1,15 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Film, Sparkles, Play, Download,
   Clock, Monitor, Zap, Layers,
   Wand2, Palette, Camera, Music, Type, Lock,
-  ChevronDown, ChevronRight, AlertCircle,
+  ChevronDown, ChevronRight, AlertCircle, Edit3, Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
+import { createClient } from "@/lib/supabase/client";
 import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import SafeThumb from "@/components/safe-thumb";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
@@ -18,6 +20,7 @@ import {
   formatVideoDuration,
   tierForVideoSeconds,
 } from "@/lib/plan-limits";
+import { createHandoff, handoffUrl } from "@/lib/ai-handoff";
 
 const PROMPT_IDEAS = [
   "A golden retriever running through a field of sunflowers at sunset, cinematic lighting",
@@ -83,6 +86,9 @@ function ProgressRing({ progress, size = 20 }: { progress: number; size?: number
 
 export default function AIVideoPage() {
   const { profile } = useAuth();
+  const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+  const [handoffingId, setHandoffingId] = useState<string | null>(null);
   const [prompt, setPrompt] = useState("");
   const [aspectRatio, setAspectRatio] = useState("9:16");
   const [style, setStyle] = useState("cinematic");
@@ -709,14 +715,42 @@ export default function AIVideoPage() {
                       <div className="flex items-center justify-between mt-1 text-[9px] text-white/55">
                         <span>{result.aspect_ratio} · {result.style || "cinematic"}</span>
                         {result.url && (
-                          <a
-                            href={result.url}
-                            download
-                            className="flex items-center gap-1 hover:text-white transition-colors"
-                            onClick={e => e.stopPropagation()}
-                          >
-                            <Download size={10} /> Save
-                          </a>
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={result.url}
+                              download
+                              className="flex items-center gap-1 hover:text-white transition-colors"
+                              onClick={e => e.stopPropagation()}
+                            >
+                              <Download size={10} /> Save
+                            </a>
+                            <button
+                              disabled={handoffingId === result.id}
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                setHandoffingId(result.id);
+                                try {
+                                  const id = await createHandoff(supabase, {
+                                    clipUrl: result.url,
+                                    prompt: result.prompt,
+                                    aspect_ratio: result.aspect_ratio,
+                                    style: result.style,
+                                  });
+                                  router.push(handoffUrl(id, "/dashboard/video-editor"));
+                                } catch (err) {
+                                  toast.error(err instanceof Error ? err.message : "Handoff failed");
+                                } finally {
+                                  setHandoffingId(null);
+                                }
+                              }}
+                              className="flex items-center gap-1 hover:text-white transition-colors disabled:opacity-40"
+                            >
+                              {handoffingId === result.id
+                                ? <Loader2 size={10} className="animate-spin" />
+                                : <Edit3 size={10} />}
+                              Edit
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -763,9 +797,36 @@ export default function AIVideoPage() {
                   </div>
                 </div>
                 {result.url && (
-                  <a href={result.url} download className="btn-secondary text-[10px] flex items-center gap-1">
-                    <Download size={10} /> Download
-                  </a>
+                  <div className="flex items-center gap-2">
+                    <a href={result.url} download className="btn-secondary text-[10px] flex items-center gap-1">
+                      <Download size={10} /> Download
+                    </a>
+                    <button
+                      disabled={handoffingId === result.id}
+                      onClick={async () => {
+                        setHandoffingId(result.id);
+                        try {
+                          const id = await createHandoff(supabase, {
+                            clipUrl: result.url,
+                            prompt: result.prompt,
+                            aspect_ratio: result.aspect_ratio,
+                            style: result.style,
+                          });
+                          router.push(handoffUrl(id, "/dashboard/video-editor"));
+                        } catch (err) {
+                          toast.error(err instanceof Error ? err.message : "Handoff failed");
+                        } finally {
+                          setHandoffingId(null);
+                        }
+                      }}
+                      className="btn-secondary text-[10px] flex items-center gap-1"
+                    >
+                      {handoffingId === result.id
+                        ? <Loader2 size={10} className="animate-spin" />
+                        : <Edit3 size={10} />}
+                      Edit in Video Editor
+                    </button>
+                  </div>
                 )}
               </div>
               {result.url && (

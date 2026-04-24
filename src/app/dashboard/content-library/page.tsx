@@ -6,7 +6,8 @@ import {
   FolderOpen, Upload, Search, Grid, List, Image as ImageIcon,
   Video, Music, FileText, File, Palette, Tag, Trash2, Eye,
   Download, X, Layers, Star, Copy,
-  CheckSquare, Square, FolderPlus, ArrowUpDown, Loader
+  CheckSquare, Square, FolderPlus, ArrowUpDown, Loader,
+  Edit3, Save, Loader2,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
@@ -168,6 +169,8 @@ export default function ContentLibraryPage() {
   const [collectionFilter, setCollectionFilter] = useState("all");
   const [selectedAssets, setSelectedAssets] = useState<Set<string>>(new Set());
   const [previewAsset, setPreviewAsset] = useState<Asset | null>(null);
+  const [editText, setEditText] = useState<string | null>(null); // null = not editing
+  const [savingEdit, setSavingEdit] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [showNewCollection, setShowNewCollection] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState("");
@@ -284,6 +287,30 @@ export default function ContentLibraryPage() {
       }
     } catch {
       toast.error("Failed to update tags");
+    }
+  };
+
+  const saveEditedContent = async (id: string, name: string) => {
+    setSavingEdit(true);
+    try {
+      const res = await fetch("/api/content-library", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, name }),
+      });
+      if (!res.ok) throw new Error();
+      const json = await res.json();
+      if (json.asset) {
+        const updated = dbAssetToView(json.asset);
+        setAssets(prev => prev.map(a => a.id === id ? updated : a));
+        setPreviewAsset(updated);
+      }
+      toast.success("Saved");
+      setEditText(null);
+    } catch {
+      toast.error("Failed to save");
+    } finally {
+      setSavingEdit(false);
     }
   };
 
@@ -781,11 +808,11 @@ export default function ContentLibraryPage() {
 
       {/* Preview Modal */}
       {previewAsset && (
-        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => setPreviewAsset(null)}>
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" onClick={() => { setPreviewAsset(null); setEditText(null); }}>
           <div className="card max-w-lg w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold">{previewAsset.name}</h3>
-              <button onClick={() => setPreviewAsset(null)} className="text-muted hover:text-white" aria-label="Close asset preview"><X size={16} /></button>
+              <button onClick={() => { setPreviewAsset(null); setEditText(null); }} className="text-muted hover:text-white" aria-label="Close asset preview"><X size={16} /></button>
             </div>
             <div className={`w-full aspect-video rounded-lg mb-4 flex items-center justify-center overflow-hidden ${TYPE_BG[previewAsset.type]}`}>
               {previewAsset.type === "image" && previewAsset.url ? (
@@ -828,6 +855,40 @@ export default function ContentLibraryPage() {
                     <span key={t} className="px-2 py-0.5 rounded-full bg-white/10 text-[10px]">{t}</span>
                   ))}
                 </div>
+              </div>
+            )}
+            {/* Inline edit for document/text assets (AI-generated posts/captions) */}
+            {(previewAsset.type === "document" || previewAsset.type === "template") && (
+              <div className="mb-3">
+                {editText === null ? (
+                  <button
+                    onClick={() => setEditText(previewAsset.name)}
+                    className="btn-ghost text-xs flex items-center gap-1 text-gold"
+                  >
+                    <Edit3 size={12} /> Edit content
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <textarea
+                      value={editText}
+                      onChange={e => setEditText(e.target.value)}
+                      rows={4}
+                      className="w-full px-3 py-2 rounded-lg bg-surface-light border border-border text-xs text-foreground resize-y focus:outline-none focus:border-gold/50"
+                      autoFocus
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        disabled={savingEdit}
+                        onClick={() => saveEditedContent(previewAsset.id, editText)}
+                        className="btn-primary text-xs flex items-center gap-1"
+                      >
+                        {savingEdit ? <Loader2 size={12} className="animate-spin" /> : <Save size={12} />}
+                        Save
+                      </button>
+                      <button onClick={() => setEditText(null)} className="btn-ghost text-xs">Cancel</button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
             <div className="flex gap-2">
