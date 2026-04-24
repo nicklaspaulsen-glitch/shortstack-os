@@ -61,6 +61,7 @@ import {
 } from "@/components/video-editor/preset-picker-panel";
 import FootageBadge, { type FootageType } from "@/components/video-editor/footage-badge";
 import SafeThumb from "@/components/safe-thumb";
+import { PremiereEditor } from "@/components/video-editor/premiere-editor";
 
 // UI caption-style id → server-accepted id. Server accepts only 6 styles
 // (see src/app/api/video/auto-edit/captions/route.ts:36-43). Everything else
@@ -1260,6 +1261,8 @@ export default function VideoEditorPage() {
   const [timelinePlayhead, setTimelinePlayhead] = useState(0);
   const [timelinePlaying, setTimelinePlaying] = useState(false);
   const lastSeededResultRef = useRef<string | null>(null);
+  // Pro mode: swap the legacy timeline card for the Premiere-style NLE.
+  const [proEditorMode, setProEditorMode] = useState(false);
 
   // ─── Preset Picker sidebar state ─────────────────────────────────────
   const [showPresetPicker, setShowPresetPicker] = useState(false);
@@ -6660,12 +6663,27 @@ export default function VideoEditorPage() {
 
             {/* ─── Adobe-Premiere-style multi-track timeline ─────────
              *  Shown once we have either a storyboard or a rendered URL.
-             *  Before that, it renders empty rails (harmless). */}
+             *  Before that, it renders empty rails (harmless).
+             *  "Pro" toggle swaps to the new Premiere-style NLE. */}
             <div className="card">
               <h3 className="section-header flex items-center gap-2">
                 <Film size={12} className="text-gold" /> Timeline
-                <span className="text-[8px] text-muted font-normal">multi-track editor</span>
+                <span className="text-[8px] text-muted font-normal">
+                  {proEditorMode ? "Premiere Pro NLE" : "multi-track editor"}
+                </span>
                 <span className="flex-1" />
+                <button
+                  type="button"
+                  onClick={() => setProEditorMode((v) => !v)}
+                  className={`flex items-center gap-1 rounded border px-2 py-0.5 text-[9px] transition ${
+                    proEditorMode
+                      ? "border-rose-500/50 bg-rose-500/10 text-rose-300"
+                      : "border-border text-muted hover:text-foreground"
+                  }`}
+                  title="Toggle Premiere-Pro-style NLE"
+                >
+                  <Sparkles size={9} /> Pro Mode
+                </button>
                 <button
                   type="button"
                   onClick={() => setShowPresetPicker((v) => !v)}
@@ -6679,6 +6697,12 @@ export default function VideoEditorPage() {
                   <Wand2 size={9} /> Presets <span className="text-[7px]">⌘K</span>
                 </button>
               </h3>
+              {proEditorMode ? (
+                <div className="mt-2" style={{ height: "72vh" }}>
+                  <PremiereEditor compositionId={result?.project_id || undefined} />
+                </div>
+              ) : (<>
+
               <VideoTimeline
                 project={timelineProject}
                 onProjectChange={setTimelineProject}
@@ -6790,6 +6814,7 @@ export default function VideoEditorPage() {
                   setTimelineSuggestions((s) => s.filter((x) => x.id !== sug.id));
                 }}
               />
+              </>)}
             </div>
 
           </div>
