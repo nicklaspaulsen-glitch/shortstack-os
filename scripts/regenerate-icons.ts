@@ -10,7 +10,10 @@
  *   - public/icons/shortstack-logo.png         (1024x1024 — Electron main / tray)
  *   - public/icons/shortstack-logo-1024.png    (1024x1024 — explicit-size copy)
  *   - public/icons/shortstack-logo.ico         (multi-size: 16/32/48/64/128/256)
- *   - public/favicon.ico                       (16/32/48 — browser tab)
+ *   - public/favicon.ico                       (16/32/48 — public fallback)
+ *   - src/app/favicon.ico                      (16/32/48/64/128/256 — App Router
+ *                                               takes priority over public/favicon.ico
+ *                                               per Next.js 14 file convention)
  *   - public/og-image.png                      (1200x630 — social preview w/ wordmark)
  *   - public/icons/email-logo.png              (200x200 — email client fallback)
  *
@@ -39,6 +42,7 @@ const REPO_ROOT = path.resolve(__dirname, "..");
 const SVG_PATH = path.join(REPO_ROOT, "public", "icons", "shortstack-logo.svg");
 const ICONS_DIR = path.join(REPO_ROOT, "public", "icons");
 const PUBLIC_DIR = path.join(REPO_ROOT, "public");
+const APP_DIR = path.join(REPO_ROOT, "src", "app");
 
 const BRAND_GOLD = "#C9A84C";
 const BRAND_BG_DARK = "#06080c";
@@ -173,6 +177,12 @@ async function main(): Promise<void> {
     {
       label: `favicon.ico (${FAVICON_SIZES.join("/")})`,
       run: () => writeIco(path.join(PUBLIC_DIR, "favicon.ico"), svgBuffer, FAVICON_SIZES),
+    },
+    {
+      // src/app/favicon.ico overrides public/favicon.ico in the App Router, so
+      // we need to write BOTH or browsers keep serving the stale app-router copy.
+      label: `src/app/favicon.ico (${MAIN_ICO_SIZES.join("/")})`,
+      run: () => writeIco(path.join(APP_DIR, "favicon.ico"), svgBuffer, MAIN_ICO_SIZES),
     },
     {
       label: "og-image.png (1200x630)",
