@@ -1819,6 +1819,14 @@ export default function ThumbnailGeneratorPage() {
   const [colorTheme, setColorTheme] = useState("red_black");
   const [mood, setMood] = useState("Dramatic");
   const [variations, setVariations] = useState(1);
+  // ── AI model backend selector ───────────────────────────────────
+  // "auto"    → server picks FLUX if RUNPOD_FLUX_URL is set, else legacy
+  // "flux"    → force FLUX.1-dev on RunPod (best quality, non-commercial)
+  // "current" → force legacy ComfyUI+SDXL workflow (always commercial-safe)
+  // See src/lib/ai/flux-client.ts for license + cost notes.
+  const [modelChoice, setModelChoice] = useState<"auto" | "flux" | "current">(
+    "auto",
+  );
 
   // Guided wizard state — shows step-by-step creation for newbies
   const [wizardOpen, setWizardOpen] = useState(false);
@@ -3779,6 +3787,9 @@ export default function ThumbnailGeneratorPage() {
           mood,
           variations,
           reference_images: referenceImages,
+          // Honour UI dropdown — server falls back to THUMBNAIL_MODEL env
+          // when value is "auto" / absent.
+          model: modelChoice,
         }),
       });
       if (res.status === 402) {
@@ -4897,6 +4908,54 @@ export default function ThumbnailGeneratorPage() {
                   );
                 })}
               </div>
+            </div>
+
+            {/* AI Model Backend */}
+            <div className="card">
+              <h2 className="section-header flex items-center gap-2">
+                <Cpu size={13} className="text-gold" /> AI Model
+                <span
+                  className="ml-auto text-[9px] text-muted normal-case"
+                  title={
+                    modelChoice === "flux"
+                      ? "FLUX.1-dev: ~$0.008/image on A100 RunPod. 12B params, top quality. NON-COMMERCIAL license — use FLUX.1-schnell (Apache-2.0) for monetised output. Set FLUX_VARIANT=schnell in env."
+                      : modelChoice === "current"
+                        ? "Legacy SDXL/ComfyUI workflow: ~$0.005/image. Commercial-safe."
+                        : "Auto: server picks FLUX when RUNPOD_FLUX_URL is set, else legacy."
+                  }
+                >
+                  hover for cost / license
+                </span>
+              </h2>
+              <div className="relative">
+                <select
+                  value={modelChoice}
+                  onChange={(e) =>
+                    setModelChoice(e.target.value as "auto" | "flux" | "current")
+                  }
+                  className="input w-full text-xs appearance-none pr-8"
+                >
+                  <option value="auto">Auto (server default)</option>
+                  <option value="flux">
+                    FLUX.1-dev — best quality (non-commercial license)
+                  </option>
+                  <option value="current">
+                    Current (SDXL, commercial-safe)
+                  </option>
+                </select>
+                <ChevronDown
+                  size={14}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
+                />
+              </div>
+              {modelChoice === "flux" && (
+                <p className="text-[9px] text-yellow-500/80 mt-1.5 leading-snug">
+                  <AlertTriangle size={9} className="inline mr-1 -mt-0.5" />
+                  FLUX.1-dev is licensed for non-commercial use only. For
+                  monetised output, set <code>FLUX_VARIANT=schnell</code>
+                  {" "}in env (Apache-2.0).
+                </p>
+              )}
             </div>
 
             {/* Platform / Size */}
