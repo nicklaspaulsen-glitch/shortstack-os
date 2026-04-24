@@ -97,6 +97,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   // ── Core ──
+  { label: "Projects", href: "/dashboard/projects", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"] },
   { label: "Inbox", href: "/dashboard/inbox", icon: <Inbox size={16} />, roles: ["admin", "team_member"] },
   { label: "Generations", href: "/dashboard/generations", icon: <Sparkles size={16} />, roles: ["admin", "team_member"] },
   { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={16} />, roles: ["admin", "team_member"] },
@@ -168,7 +169,7 @@ const navItems: NavItem[] = [
   { label: "Workspaces", href: "/dashboard/workspaces", icon: <Building2 size={16} />, roles: ["admin"], section: "Manage", sub: "Business" },
   { label: "Team", href: "/dashboard/team", icon: <UsersRound size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Production", href: "/dashboard/production", icon: <Kanban size={16} />, roles: ["admin", "team_member"], sub: "Business" },
-  { label: "Projects", href: "/dashboard/projects", icon: <Kanban size={16} />, roles: ["admin", "team_member"], sub: "Business" },
+  { label: "Project Boards", href: "/dashboard/project-boards", icon: <Kanban size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Invoices", href: "/dashboard/invoices", icon: <Receipt size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Billing", href: "/dashboard/billing", icon: <CreditCard size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
