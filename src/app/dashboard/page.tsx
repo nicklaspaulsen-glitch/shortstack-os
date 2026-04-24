@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { PageSkeleton } from "@/components/ui/skeleton";
 import UsageNudgeBanner from "@/components/billing/usage-nudge-banner";
 import TodaysPriority from "@/components/dashboard/todays-priority";
 import TrinityOrb from "@/components/dashboard/trinity-orb";
@@ -168,13 +169,7 @@ export default function DashboardPage() {
     return <ClientDashboard />;
   }
 
-  if (dashboardLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader size={20} className="animate-spin text-gold" />
-      </div>
-    );
-  }
+  if (dashboardLoading) return <PageSkeleton />;
 
   async function handleCommand(e: React.FormEvent) {
     e.preventDefault();

@@ -28,6 +28,7 @@ import PageAI from "@/components/page-ai";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
+import { PageSkeleton } from "@/components/ui/skeleton";
 import {
   InstagramIcon, FacebookIcon, TikTokIcon, LinkedInIcon, XTwitterIcon,
   ThreadsIcon, PinterestIcon, YouTubeShortsIcon,
@@ -385,11 +386,7 @@ export default function SocialManagerPage() {
   const currentClient = clients.find(c => c.id === selectedClient);
   const isAutopilot = !!autopilotConfig.enabled;
 
-  if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <Loader size={20} className="animate-spin text-gold" />
-    </div>
-  );
+  if (loading) return <PageSkeleton />;
 
   return (
     <div className="fade-in space-y-5">
@@ -397,7 +394,7 @@ export default function SocialManagerPage() {
       <PageHero
         icon={<Share2 size={22} />}
         title="Social Manager"
-        subtitle="Post everywhere at once. AI plans, writes, and schedules for you."
+        subtitle="Post to every platform at once — AI plans the calendar, writes captions, and schedules everything. You just approve."
         gradient="purple"
       />
       <div className="flex items-center justify-end flex-wrap gap-3">

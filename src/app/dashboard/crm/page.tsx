@@ -884,7 +884,7 @@ export default function CRMPage() {
       <PageHero
         icon={<Users size={22} />}
         title="CRM"
-        subtitle="Track leads, manage contacts, and close deals with AI assistance."
+        subtitle="Your full contact database — track leads, log activity, score prospects, and close deals with AI-powered enrichment and bulk actions."
         gradient="blue"
       />
       {/* ── Stats Dashboard ── */}

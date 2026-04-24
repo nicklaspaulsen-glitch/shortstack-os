@@ -758,7 +758,7 @@ export default function CommunityPage() {
       <PageHero
         icon={<Users size={28} />}
         title="Community"
-        subtitle="Discussions, resources & events for Trinity."
+        subtitle="Connect with other agency owners — share wins, ask questions, discover resources, and RSVP to live events."
         gradient="purple"
         actions={
           <button onClick={() => openQuickAction("new-post")} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/20 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">

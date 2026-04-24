@@ -416,7 +416,7 @@ export default function WorkflowsPage() {
                     <button onClick={() => runWorkflow(previewWorkflow)} className="btn-primary text-xs py-1.5 flex items-center gap-1">
                       <Play size={12} /> Execute
                     </button>
-                    <button onClick={() => setPreviewWorkflow(null)} className="btn-ghost text-xs">
+                    <button onClick={() => setPreviewWorkflow(null)} aria-label="Dismiss workflow preview" className="btn-ghost text-xs">
                       <Trash2 size={13} />
                     </button>
                   </div>
@@ -641,7 +641,7 @@ export default function WorkflowsPage() {
                   {clients.map(c => <option key={c.id} value={c.id}>{c.business_name}</option>)}
                 </select>
                 {agentChat.length > 0 && (
-                  <button onClick={() => setAgentChat([])} className="btn-ghost text-[10px]">
+                  <button onClick={() => setAgentChat([])} aria-label="Clear agent chat history" className="btn-ghost text-[10px]">
                     <RotateCcw size={12} />
                   </button>
                 )}
@@ -797,6 +797,7 @@ export default function WorkflowsPage() {
                       <Eye size={9} /> Edit in n8n
                     </a>
                     <button onClick={() => deleteN8nWorkflow(w.id)}
+                      aria-label={`Delete workflow: ${w.name}`}
                       className="btn-ghost text-[9px] py-1 px-2 text-danger hover:text-danger">
                       <Trash2 size={9} />
                     </button>
@@ -1005,7 +1006,7 @@ export default function WorkflowsPage() {
                 <div className="flex items-center gap-2">
                   <StatusBadge status={w.status} />
                   {w.workflow?.steps && (
-                    <button onClick={() => { setPreviewWorkflow(w.workflow); setTab("builder"); }} className="btn-ghost text-[10px]">
+                    <button onClick={() => { setPreviewWorkflow(w.workflow); setTab("builder"); }} aria-label={`Preview workflow: ${w.workflow?.name || "Workflow"}`} className="btn-ghost text-[10px]">
                       <Eye size={12} />
                     </button>
                   )}

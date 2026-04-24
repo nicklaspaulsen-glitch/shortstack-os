@@ -1092,6 +1092,7 @@ export default function OutreachHubPage() {
                     {campaign.status === "active" ? <><Pause size={10} /> Pause</> : <><Play size={10} /> Start</>}
                   </button>
                   <button onClick={() => deleteCampaign(campaign.id)}
+                    aria-label={`Delete campaign: ${campaign.name}`}
                     className="text-[10px] px-2 py-1.5 rounded-lg border border-red-500/20 text-red-400 hover:bg-red-500/10">
                     <Trash2 size={10} />
                   </button>
@@ -1261,6 +1262,7 @@ export default function OutreachHubPage() {
                     </select>
                   </div>
                   <button onClick={() => setCustomSteps(prev => prev.filter((_, i) => i !== idx))}
+                    aria-label="Remove this step"
                     className="p-1 hover:bg-red-500/10 rounded mt-3">
                     <Trash2 size={12} className="text-muted hover:text-red-400" />
                   </button>

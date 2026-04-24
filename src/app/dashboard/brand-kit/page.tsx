@@ -266,7 +266,7 @@ export default function BrandKitPage() {
       <PageHero
         icon={<Palette size={28} />}
         title="Brand Kit"
-        subtitle="Extract colors, fonts & logos from any URL."
+        subtitle="Build your agency's brand identity — extract colors, fonts & logos from any URL, then auto-apply them across all client assets."
         gradient="purple"
         actions={
           brand ? (

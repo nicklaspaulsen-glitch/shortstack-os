@@ -1025,6 +1025,7 @@ export default function WebsitesPage() {
               <button
                 onClick={() => regenerate(active)}
                 disabled={regenerating}
+                aria-label="Regenerate website"
                 className="text-[10px] px-3 py-1.5 rounded-lg border border-border text-muted hover:text-foreground flex items-center gap-1 disabled:opacity-50"
               >
                 {regenerating ? <Loader size={10} className="animate-spin" /> : <RefreshCw size={10} />}
@@ -1231,7 +1232,7 @@ export default function WebsitesPage() {
                           </span>
                         )}
                       </div>
-                      <button onClick={() => deleteProject(p.id)} className="p-1 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400">
+                      <button onClick={() => deleteProject(p.id)} aria-label={`Delete ${p.name}`} className="p-1 rounded-md hover:bg-red-500/10 text-muted hover:text-red-400">
                         <Trash2 size={10} />
                       </button>
                     </div>
