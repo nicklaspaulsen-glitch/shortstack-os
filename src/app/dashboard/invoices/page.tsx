@@ -7,7 +7,7 @@ import {
   CreditCard, Plus, Send, Clock, CheckCircle, AlertTriangle,
   FileText, RefreshCw,
   BarChart3, Globe, Copy, ChevronRight,
-  X, Search, Zap, ArrowRight
+  X, Search, Zap, ArrowRight, Sparkles
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
@@ -133,10 +133,18 @@ export default function InvoicesPage() {
         subtitle={`${invoicesData.length} invoices — track payments, reminders, and recurring billing.`}
         gradient="green"
         actions={
-          <button onClick={() => setActiveTab("builder")}
-            className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all">
-            <Plus size={12} /> New Invoice
-          </button>
+          <div className="flex gap-2">
+            <Link
+              href="/dashboard/invoices/new"
+              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gold text-black font-medium hover:bg-gold/90 transition-all"
+            >
+              <Sparkles size={12} /> AI Smart Invoice
+            </Link>
+            <button onClick={() => setActiveTab("builder")}
+              className="text-xs flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white font-medium hover:bg-white/25 transition-all">
+              <Plus size={12} /> New Invoice
+            </button>
+          </div>
         }
       />
 
@@ -238,7 +246,8 @@ export default function InvoicesPage() {
                         <span className={`text-[9px] px-2 py-0.5 rounded-full ${
                           inv.status === "paid" ? "bg-green-400/10 text-green-400" :
                           isOverdue ? "bg-red-400/10 text-red-400" :
-                          inv.status === "draft" ? "bg-white/5 text-muted" :
+                          inv.status === "draft" ? "bg-white/10 text-muted border border-white/10" :
+                          inv.status === "sent" ? "bg-blue-400/10 text-blue-400" :
                           "bg-yellow-400/10 text-yellow-400"
                         }`}>{isOverdue ? "overdue" : inv.status}</span>
                         <ChevronRight size={14} className="text-muted" />
