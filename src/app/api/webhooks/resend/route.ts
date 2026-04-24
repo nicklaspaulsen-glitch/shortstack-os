@@ -210,10 +210,21 @@ export async function POST(request: NextRequest) {
       console.warn("[resend-webhook] signature verification failed");
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
-  } else {
+  } else if (process.env.NODE_ENV === "development") {
+    // Dev-only bypass — makes local testing without the Svix secret bearable.
+    // Production MUST have RESEND_WEBHOOK_SECRET set or we reject the request
+    // outright; fail-open here would let anyone forge email events and fire
+    // arbitrary workflow triggers.
     console.warn(
-      "[resend-webhook] RESEND_WEBHOOK_SECRET not set — accepting unsigned events. " +
-        "Add the signing secret from resend.com/webhooks to secure this endpoint.",
+      "[resend-webhook] RESEND_WEBHOOK_SECRET missing in development — accepting unsigned.",
+    );
+  } else {
+    console.error(
+      "[resend-webhook] RESEND_WEBHOOK_SECRET not set in production — rejecting request.",
+    );
+    return NextResponse.json(
+      { error: "Webhook secret not configured" },
+      { status: 503 },
     );
   }
 
