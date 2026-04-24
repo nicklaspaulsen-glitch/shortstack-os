@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -33,6 +34,9 @@ import TutorialSection, { type TutorialStep } from "@/components/TutorialSection
 import { THUMBNAIL_PRESETS, THUMBNAIL_PRESET_CATEGORIES } from "@/lib/presets";
 import { POPULAR_FONTS, loadGoogleFont, preloadGoogleFonts } from "@/lib/asset-catalog";
 import { LayerPanel, deriveLayersFromThumbnail, type ThumbnailLayers } from "@/components/thumbnail/layer-panel";
+import { createHandoff, loadHandoff, handoffUrl } from "@/lib/ai-handoff";
+import { Timeline as SharedTimeline } from "@/components/timeline";
+import type { TimelineProject, TimelineClip } from "@/components/timeline";
 
 // Static fallback thumbnails — real viral YouTube thumbnails served from
 // ytimg.com (public CDN, no rehosting). Only used when both the user's
@@ -1762,7 +1766,10 @@ function FaceAvatar({
 
 export default function ThumbnailGeneratorPage() {
   useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = useMemo(() => createClient(), []);
+  const [handoffingThumb, setHandoffingThumb] = useState<string | null>(null);
   const { fetchWithWall } = useQuotaWall();
 
   // Rolling preview items — try DB first, fall back to static list.
@@ -1842,6 +1849,10 @@ export default function ThumbnailGeneratorPage() {
   const [layersByThumb, setLayersByThumb] = useState<Record<string, ThumbnailLayers>>({});
   const [regeneratingLayers, setRegeneratingLayers] = useState<Record<string, boolean>>({});
 
+  // Per-thumbnail timeline state — maps layer animations onto a Timeline.
+  // Keyed by thumbnail.id.  Seeded from layersByThumb when layers appear.
+  const [timelinesByThumb, setTimelinesByThumb] = useState<Record<string, TimelineProject>>({});
+
   // Seed layer state when results change (only for thumbs we haven't seen).
   useEffect(() => {
     setLayersByThumb((prev) => {
@@ -1861,6 +1872,55 @@ export default function ThumbnailGeneratorPage() {
       return changed ? next : prev;
     });
   }, [results]);
+
+  // Seed a Timeline project for each thumbnail from its layer state.
+  // Each layer becomes a clip on its own track so creators can time-sequence
+  // the layer reveal animation (background → subject → text → effects).
+  useEffect(() => {
+    setTimelinesByThumb((prev) => {
+      const next = { ...prev };
+      let changed = false;
+      for (const [thumbId, layers] of Object.entries(layersByThumb)) {
+        if (next[thumbId]) continue; // don't clobber user edits
+        const clips: TimelineClip[] = [];
+        let cursor = 0;
+        const STEP = 500; // 500 ms stagger per layer
+
+        // Background layer
+        clips.push({ id: `${thumbId}-bg`, trackId: "bg", start: 0, duration: 3000, label: layers.background?.name || "Background", color: layers.background?.colors?.[0] ?? "#334155" });
+        cursor += STEP;
+
+        // Subject layer
+        if (layers.subject) {
+          clips.push({ id: `${thumbId}-subj`, trackId: "subj", start: cursor, duration: 3000 - cursor, label: layers.subject.label || "Subject", color: "#60A5FA" });
+        }
+        cursor += STEP;
+
+        // Text overlays
+        (layers.texts ?? []).forEach((t, i) => {
+          clips.push({ id: `${thumbId}-text-${t.id}`, trackId: `text${i}`, start: cursor + i * STEP, duration: 3000 - cursor - i * STEP, label: t.text.slice(0, 24), color: t.color || "#FFFFFF" });
+        });
+        cursor += (layers.texts?.length ?? 0) * STEP;
+
+        // Effects
+        const activeEffects = (layers.effects ?? []).filter((e) => e.enabled);
+        activeEffects.forEach((e, i) => {
+          clips.push({ id: `${thumbId}-fx-${e.id}`, trackId: `fx${i}`, start: cursor + i * (STEP / 2), duration: 3000 - cursor - i * (STEP / 2), label: e.label, color: "#F59E0B" });
+        });
+
+        const tracks = [
+          { id: "bg",   label: "Background", kind: "video"   as const, accent: "#334155" },
+          { id: "subj", label: "Subject",     kind: "video"   as const, accent: "#60A5FA" },
+          ...(layers.texts ?? []).map((_, i) => ({ id: `text${i}`, label: `Text ${i + 1}`, kind: "caption" as const, accent: "#A855F7" })),
+          ...activeEffects.map((_, i) => ({ id: `fx${i}`, label: `Effect ${i + 1}`, kind: "effect" as const, accent: "#F59E0B" })),
+        ];
+
+        next[thumbId] = { duration: 3000, tracks, clips };
+        changed = true;
+      }
+      return changed ? next : prev;
+    });
+  }, [layersByThumb]);
 
   const regenerateWithLayerEdits = async (thumbId: string, instruction: string) => {
     const thumb = results.find((r) => r.id === thumbId);
@@ -5511,10 +5571,32 @@ export default function ThumbnailGeneratorPage() {
                           <RefreshCw size={12} /> Regenerate
                         </button>
                         <button
-                          onClick={() => toast("Edit feature coming soon")}
-                          className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground"
+                          disabled={!isComplete || handoffingThumb === thumb.id}
+                          onClick={async () => {
+                            if (!isComplete || !thumb.imageUrl) return;
+                            setHandoffingThumb(thumb.id);
+                            try {
+                              const layers = layersByThumb[thumb.id];
+                              const id = await createHandoff(supabase, {
+                                imageUrl: thumb.imageUrl,
+                                layers,
+                                style: thumb.style,
+                                colorTheme: thumb.colorTheme,
+                                textOverlay: thumb.textOverlay,
+                              });
+                              router.push(handoffUrl(id, "/dashboard/thumbnail-generator"));
+                            } catch (err) {
+                              toast.error(err instanceof Error ? err.message : "Handoff failed");
+                            } finally {
+                              setHandoffingThumb(null);
+                            }
+                          }}
+                          className="flex-1 flex items-center justify-center gap-1.5 text-[10px] font-medium py-1.5 rounded-lg border border-border hover:border-gold/20 hover:bg-gold/[0.03] transition-all text-muted hover:text-foreground disabled:opacity-40"
                         >
-                          <Edit3 size={12} /> Edit
+                          {handoffingThumb === thumb.id
+                            ? <Loader2 size={12} className="animate-spin" />
+                            : <Edit3 size={12} />}
+                          Edit in Generator
                         </button>
                       </div>
 
@@ -5532,6 +5614,28 @@ export default function ThumbnailGeneratorPage() {
                             }
                             regenerating={!!regeneratingLayers[thumb.id]}
                             defaultCollapsed={results.length > 1}
+                          />
+                        </div>
+                      )}
+
+                      {/* Layer Animation Timeline — sequence layer reveals.
+                          Each thumbnail layer becomes a clip on its own track.
+                          Features: drag-reorder, trim handles, playhead,
+                          zoom +/-, snap, multi-select + Delete, undo/redo. */}
+                      {isComplete && timelinesByThumb[thumb.id] && (
+                        <div className="mt-3">
+                          <p className="text-[9px] text-muted uppercase tracking-wider mb-1.5 font-semibold">
+                            Layer animation timeline
+                          </p>
+                          <SharedTimeline
+                            project={timelinesByThumb[thumb.id]}
+                            onChange={(next) =>
+                              setTimelinesByThumb((prev) => ({ ...prev, [thumb.id]: next }))
+                            }
+                            initialPxPerMs={0.08}
+                            minPxPerMs={0.04}
+                            maxPxPerMs={0.4}
+                            testId={`thumb-timeline-${thumb.id}`}
                           />
                         </div>
                       )}
