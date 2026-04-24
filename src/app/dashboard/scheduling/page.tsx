@@ -11,6 +11,7 @@ import {
 import EmptyState from "@/components/empty-state";
 import PageHero from "@/components/ui/page-hero";
 import { ZoomIcon, CalendlyIcon, GoogleIcon } from "@/components/ui/platform-icons";
+import { PageSkeleton } from "@/components/ui/skeleton";
 
 /** Pick a small brand icon for a meeting location_type value. */
 function LocationIcon({ type, size = 10 }: { type: string; size?: number }) {
@@ -273,11 +274,7 @@ export default function SchedulingPage() {
   ];
 
   if (loading) {
-    return (
-      <div className="fade-in flex items-center justify-center h-64">
-        <Loader2 size={24} className="animate-spin text-gold" />
-      </div>
-    );
+    return <PageSkeleton />;
   }
 
   return (
@@ -285,7 +282,7 @@ export default function SchedulingPage() {
       <PageHero
         icon={<Calendar size={28} />}
         title="AI Smart Scheduler"
-        subtitle="Intelligent scheduling with AI conflict detection."
+        subtitle="Intelligent booking pages with AI conflict detection, smart availability, and client prep cards — share a link, skip the back-and-forth."
         gradient="blue"
         actions={
           <>
@@ -363,7 +360,7 @@ export default function SchedulingPage() {
                             className={`text-[9px] px-2 py-0.5 rounded-full ${mt.active ? "bg-emerald-400/10 text-emerald-400" : "bg-red-400/10 text-red-400"}`}>
                             {mt.active ? "Active" : "Inactive"}
                           </button>
-                          <button onClick={() => setEditingType(editingType === mt.id ? null : mt.id)} className="btn-ghost p-1">
+                          <button onClick={() => setEditingType(editingType === mt.id ? null : mt.id)} className="btn-ghost p-1" aria-label="Edit meeting type">
                             <Edit3 size={10} className="text-muted" />
                           </button>
                         </div>
@@ -1093,7 +1090,7 @@ export default function SchedulingPage() {
           <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Link2 size={14} className="text-gold" /> Booking Link Generator</h3>
-              <button onClick={() => setShowLinkGen(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+              <button onClick={() => setShowLinkGen(false)} className="text-muted hover:text-foreground" aria-label="Close link generator"><X size={16} /></button>
             </div>
             {meetingTypes.filter(m => m.active).length === 0 ? (
               <p className="text-xs text-muted text-center py-4">No active meeting types. Create one first.</p>
@@ -1131,7 +1128,7 @@ export default function SchedulingPage() {
           <div className="bg-surface rounded-2xl border border-border w-full max-w-md p-5 space-y-4" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold flex items-center gap-2"><Plus size={14} className="text-gold" /> New Meeting Type</h3>
-              <button onClick={() => setShowCreateModal(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
+              <button onClick={() => setShowCreateModal(false)} className="text-muted hover:text-foreground" aria-label="Close dialog"><X size={16} /></button>
             </div>
 
             <div className="space-y-3">

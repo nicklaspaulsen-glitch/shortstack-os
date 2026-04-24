@@ -10,6 +10,7 @@ import {
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { GoogleIcon, OutlookIcon } from "@/components/ui/platform-icons";
+import { TableSkeleton } from "@/components/ui/skeleton";
 import toast from "react-hot-toast";
 
 type ViewMode = "month" | "week" | "day";
@@ -306,19 +307,19 @@ export default function CalendarPage() {
       <PageHero
         icon={<Calendar size={22} />}
         title="Calendar"
-        subtitle="Schedule appointments, calls, and meetings. AI avoids conflicts automatically."
+        subtitle="Schedule appointments, calls, and meetings. Sync with Google or Outlook — AI detects conflicts automatically."
         gradient="gold"
+        actions={
+          <>
+            <button onClick={() => setShowFilters(!showFilters)} aria-label="Toggle calendar filters" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5">
+              <Filter size={12} /> Filters
+            </button>
+            <button onClick={() => setShowCreate(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
+              <Plus size={12} /> New Event
+            </button>
+          </>
+        }
       />
-      <div className="flex items-center justify-end flex-wrap gap-3">
-        <div className="flex items-center gap-2">
-          <button onClick={() => setShowFilters(!showFilters)} className="btn-secondary text-xs flex items-center gap-1.5">
-            <Filter size={12} /> Filters
-          </button>
-          <button onClick={() => setShowCreate(true)} className="btn-primary text-xs flex items-center gap-1.5">
-            <Plus size={12} /> New Event
-          </button>
-        </div>
-      </div>
 
       {/* Tabs */}
       <div className="flex gap-1 bg-surface rounded-lg p-1 w-fit">
@@ -334,9 +335,8 @@ export default function CalendarPage() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 size={24} className="animate-spin text-gold" />
-          <span className="ml-2 text-sm text-muted">Loading events...</span>
+        <div className="space-y-3">
+          <TableSkeleton rows={4} />
         </div>
       )}
 
@@ -594,8 +594,8 @@ export default function CalendarPage() {
                         </div>
                       </div>
                       <div className="flex gap-1 shrink-0">
-                        <button onClick={() => confirmEvent(evt.id)} title="Mark complete" className="p-1.5 rounded-md hover:bg-emerald-500/10 text-emerald-500/60 hover:text-emerald-500 transition-colors"><Check size={12} /></button>
-                        <button onClick={() => declineEvent(evt.id)} title="Remove" className="p-1.5 rounded-md hover:bg-red-500/10 text-red-500/60 hover:text-red-500 transition-colors"><X size={12} /></button>
+                        <button onClick={() => confirmEvent(evt.id)} title="Mark complete" aria-label="Mark complete" className="p-1.5 rounded-md hover:bg-emerald-500/10 text-emerald-500/60 hover:text-emerald-500 transition-colors"><Check size={12} /></button>
+                        <button onClick={() => declineEvent(evt.id)} title="Remove" aria-label="Remove event" className="p-1.5 rounded-md hover:bg-red-500/10 text-red-500/60 hover:text-red-500 transition-colors"><X size={12} /></button>
                       </div>
                     </div>
                   ))}

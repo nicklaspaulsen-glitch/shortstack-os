@@ -371,7 +371,7 @@ export default function FormsPage() {
       <PageHero
         icon={<ClipboardCheck size={28} />}
         title="Form Builder"
-        subtitle="Lead capture forms that flow into CRM."
+        subtitle="Build lead capture forms with a drag-drop editor or AI — embed anywhere and see submissions flow directly into CRM."
         gradient="blue"
         actions={
           <>
@@ -503,7 +503,7 @@ export default function FormsPage() {
                 const updated = { ...activeForm, name: e.target.value };
                 setActiveForm(updated);
                 setForms(prev => prev.map(f => f.id === updated.id ? updated : f));
-              }} className="input w-full mb-3" placeholder="Form name" />
+              }} className="input w-full mb-3" placeholder="Form name" aria-label="Form name" />
 
               {/* Fields with drag order */}
               <div className="space-y-2 mb-3">
@@ -511,12 +511,12 @@ export default function FormsPage() {
                   <div key={field.id} className="p-2.5 rounded-lg bg-surface-light border border-border">
                     <div className="flex items-center gap-2">
                       <div className="flex flex-col gap-0.5">
-                        <button onClick={() => moveField(field.id, "up")} className="text-muted hover:text-foreground"><ChevronUp size={10} /></button>
-                        <button onClick={() => moveField(field.id, "down")} className="text-muted hover:text-foreground"><ChevronDown size={10} /></button>
+                        <button onClick={() => moveField(field.id, "up")} className="text-muted hover:text-foreground" aria-label="Move field up"><ChevronUp size={10} /></button>
+                        <button onClick={() => moveField(field.id, "down")} className="text-muted hover:text-foreground" aria-label="Move field down"><ChevronDown size={10} /></button>
                       </div>
                       <span className="text-muted">{FIELD_TYPES.find(t => t.type === field.type)?.icon}</span>
                       <input value={field.label} onChange={e => updateField(field.id, "label", e.target.value)}
-                        className="flex-1 bg-transparent text-xs outline-none font-medium" />
+                        className="flex-1 bg-transparent text-xs outline-none font-medium" aria-label="Field label" />
                       <span className="text-[8px] text-muted px-1.5 py-0.5 rounded bg-surface">{field.type}</span>
                       <button onClick={() => updateField(field.id, "required", !field.required)}
                         className={`text-[8px] px-1.5 py-0.5 rounded ${field.required ? "bg-gold/10 text-gold" : "text-muted"}`}>
@@ -526,7 +526,7 @@ export default function FormsPage() {
                         className="text-muted hover:text-gold p-1" title="Regenerate label / placeholder">
                         {regenFieldId === field.id ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       </button>
-                      <button onClick={() => removeField(field.id)} className="text-muted hover:text-red-400 p-1"><Trash2 size={10} /></button>
+                      <button onClick={() => removeField(field.id)} className="text-muted hover:text-red-400 p-1" aria-label="Remove field"><Trash2 size={10} /></button>
                     </div>
                     {field.type === "select" && field.options && (
                       <div className="mt-2 ml-8">

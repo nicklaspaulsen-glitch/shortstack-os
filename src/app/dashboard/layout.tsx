@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { SkipToContent } from "@/components/a11y/SkipToContent";
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
 import ClientSwitcher from "@/components/client-switcher";
@@ -336,6 +337,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <QuotaWallProvider>
+      <SkipToContent />
       <div className="flex min-h-screen bg-background">
 
         {/* Desktop sidebar */}
@@ -357,7 +359,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         )}
 
-        <main className="flex-1 lg:ml-56 min-w-0 overflow-x-hidden">
+        <main id="main" className="flex-1 lg:ml-56 min-w-0 overflow-x-hidden">
           {/* Header */}
           <div className="sticky top-0 z-30 border-b border-border electron-drag topbar-shadow"
             style={{ background: "color-mix(in srgb, var(--color-background) 85%, transparent)", backdropFilter: "blur(16px) saturate(1.2)" }}>

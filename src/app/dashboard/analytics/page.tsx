@@ -368,10 +368,10 @@ export default function AnalyticsPage() {
           {dateRange === "custom" && (
             <div className="flex items-center gap-1.5">
               <input type="date" value={customStart} onChange={e => setCustomStart(e.target.value)}
-                className="input text-[10px] px-2 py-1 w-28" />
+                className="input text-[10px] px-2 py-1 w-28" aria-label="Start date" />
               <span className="text-muted text-[10px]">to</span>
               <input type="date" value={customEnd} onChange={e => setCustomEnd(e.target.value)}
-                className="input text-[10px] px-2 py-1 w-28" />
+                className="input text-[10px] px-2 py-1 w-28" aria-label="End date" />
             </div>
           )}
           {/* Feature 13: Export */}

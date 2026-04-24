@@ -152,10 +152,10 @@ function TemplateCard({ template, onChange, onDelete, context }: {
           {template.variables.length > 0 && (
             <span className="text-[8px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400">{template.variables.length} vars</span>
           )}
-          <button onClick={e => { e.stopPropagation(); copyContent(); }} className="p-1 hover:bg-white/5 rounded">
+          <button onClick={e => { e.stopPropagation(); copyContent(); }} className="p-1 hover:bg-white/5 rounded" aria-label="Copy template">
             {copied ? <Check size={10} className="text-green-400" /> : <Copy size={10} className="text-muted" />}
           </button>
-          <button onClick={e => { e.stopPropagation(); onDelete(); }} className="p-1 hover:bg-red-500/10 rounded">
+          <button onClick={e => { e.stopPropagation(); onDelete(); }} className="p-1 hover:bg-red-500/10 rounded" aria-label="Delete template">
             <Trash2 size={10} className="text-muted hover:text-red-400" />
           </button>
           {expanded ? <ChevronUp size={12} className="text-muted" /> : <ChevronDown size={12} className="text-muted" />}

@@ -948,7 +948,7 @@ export default function CRMPage() {
           {hasActiveFilters && (
             <span className="text-[8px] px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20 flex items-center gap-1">
               <Filter size={8} /> Filtered
-              <button onClick={() => setFilters(DEFAULT_FILTERS)} className="hover:text-red-400"><X size={8} /></button>
+              <button onClick={() => setFilters(DEFAULT_FILTERS)} className="hover:text-red-400" aria-label="Clear filters"><X size={8} /></button>
             </span>
           )}
         </div>
@@ -1067,7 +1067,7 @@ export default function CRMPage() {
             <span className="text-xs font-bold flex items-center gap-2"><Filter size={12} className="text-gold" /> Advanced Filters</span>
             <div className="flex items-center gap-2">
               <button onClick={() => setFilters(DEFAULT_FILTERS)} className="text-[9px] text-muted hover:text-foreground">Reset All</button>
-              <button onClick={() => setShowFilters(false)} className="text-muted hover:text-foreground"><X size={14} /></button>
+              <button onClick={() => setShowFilters(false)} className="text-muted hover:text-foreground" aria-label="Close filters"><X size={14} /></button>
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -1153,10 +1153,10 @@ export default function CRMPage() {
                 <div className="flex items-center gap-2">
                   <input type="range" min={0} max={5} step={0.5} value={filters.ratingMin}
                     onChange={e => setFilters(prev => ({ ...prev, ratingMin: parseFloat(e.target.value) }))}
-                    className="flex-1 h-1 accent-gold" />
+                    className="flex-1 h-1 accent-gold" aria-label="Minimum rating" />
                   <input type="range" min={0} max={5} step={0.5} value={filters.ratingMax}
                     onChange={e => setFilters(prev => ({ ...prev, ratingMax: parseFloat(e.target.value) }))}
-                    className="flex-1 h-1 accent-gold" />
+                    className="flex-1 h-1 accent-gold" aria-label="Maximum rating" />
                 </div>
               </div>
               <div>
@@ -1164,20 +1164,20 @@ export default function CRMPage() {
                 <div className="flex items-center gap-2">
                   <input type="range" min={0} max={100} step={5} value={filters.scoreMin}
                     onChange={e => setFilters(prev => ({ ...prev, scoreMin: parseInt(e.target.value) }))}
-                    className="flex-1 h-1 accent-gold" />
+                    className="flex-1 h-1 accent-gold" aria-label="Minimum lead score" />
                   <input type="range" min={0} max={100} step={5} value={filters.scoreMax}
                     onChange={e => setFilters(prev => ({ ...prev, scoreMax: parseInt(e.target.value) }))}
-                    className="flex-1 h-1 accent-gold" />
+                    className="flex-1 h-1 accent-gold" aria-label="Maximum lead score" />
                 </div>
               </div>
               <div>
                 <label className="text-[9px] text-muted uppercase tracking-wider font-semibold block mb-1">Date Range</label>
                 <div className="flex items-center gap-1">
                   <input type="date" value={filters.dateFrom} onChange={e => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
-                    className="input text-[9px] px-1.5 py-1 flex-1" />
+                    className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter from date" />
                   <span className="text-[8px] text-muted">to</span>
                   <input type="date" value={filters.dateTo} onChange={e => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
-                    className="input text-[9px] px-1.5 py-1 flex-1" />
+                    className="input text-[9px] px-1.5 py-1 flex-1" aria-label="Filter to date" />
                 </div>
               </div>
               {/* Tags filter */}
@@ -1205,8 +1205,9 @@ export default function CRMPage() {
           <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
           <input value={search} onChange={e => setSearch(e.target.value)}
             placeholder="Search name, industry, city, email, phone..."
-            className="input w-full text-[10px] pl-8 py-1.5" />
-          {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2"><X size={11} className="text-muted hover:text-foreground" /></button>}
+            className="input w-full text-[10px] pl-8 py-1.5"
+            aria-label="Search leads" />
+          {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2" aria-label="Clear search"><X size={11} className="text-muted hover:text-foreground" /></button>}
         </div>
         <div className="relative">
           <button onClick={() => setShowSortMenu(!showSortMenu)} className="btn-ghost text-[9px] flex items-center gap-1 py-1.5">
@@ -1266,7 +1267,7 @@ export default function CRMPage() {
               </div>
               <button onClick={bulkDelete} className="text-[8px] px-2 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all flex items-center gap-1"><Trash2 size={9} /> Delete</button>
             </div>
-            <button onClick={() => { setSelectedIds(new Set()); setShowBulkStatusMenu(false); }} className="text-[8px] text-muted hover:text-foreground ml-auto"><X size={10} /></button>
+            <button onClick={() => { setSelectedIds(new Set()); setShowBulkStatusMenu(false); }} className="text-[8px] text-muted hover:text-foreground ml-auto" aria-label="Clear selection"><X size={10} /></button>
           </>
         ) : (
           <span className="text-[9px] text-muted flex items-center gap-1"><Zap size={9} /> Select leads for bulk actions</span>
@@ -1544,9 +1545,9 @@ export default function CRMPage() {
                     <div className="flex items-center justify-between pt-1 border-t border-border/50">
                       <span className={`text-[8px] px-2 py-0.5 rounded-full border ${STATUS_COLORS[lead.status] || STATUS_COLORS.new}`}>{lead.status}</span>
                       <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
-                        <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-gold/10 text-gold hover:bg-gold/20 disabled:opacity-30"><Mail size={9} /></button>
-                        <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone} className="p-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30"><MessageSquare size={9} /></button>
-                        <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30"><Phone size={9} /></button>
+                        <button onClick={() => sendAction(lead, "email")} disabled={!lead.email} className="p-1 rounded bg-gold/10 text-gold hover:bg-gold/20 disabled:opacity-30" aria-label="Send email"><Mail size={9} /></button>
+                        <button onClick={() => sendAction(lead, "sms")} disabled={!lead.phone} className="p-1 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 disabled:opacity-30" aria-label="Send SMS"><MessageSquare size={9} /></button>
+                        <button onClick={() => sendAction(lead, "call")} disabled={!lead.phone} className="p-1 rounded bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-30" aria-label="Call lead"><Phone size={9} /></button>
                       </div>
                     </div>
                   </div>
@@ -1644,7 +1645,7 @@ export default function CRMPage() {
           <div ref={detailPanelRef} className="w-[350px] shrink-0 card p-0 overflow-hidden sticky top-4 max-h-[calc(100vh-120px)] overflow-y-auto hidden xl:block">
             <div className="px-4 py-3 border-b border-border bg-surface-light/50 flex items-center justify-between">
               <h3 className="text-xs font-bold truncate">{detailLead.business_name}</h3>
-              <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground"><X size={14} /></button>
+              <button onClick={() => setDetailLeadId(null)} className="text-muted hover:text-foreground" aria-label="Close detail panel"><X size={14} /></button>
             </div>
             <div className="p-4 space-y-4">
               {/* Score */}
@@ -1697,7 +1698,7 @@ export default function CRMPage() {
                     return (
                       <span key={tagId} className={`text-[8px] px-1.5 py-0.5 rounded-full border ${getTagStyle(tag.color)} flex items-center gap-0.5`}>
                         {tag.label}
-                        <button onClick={() => removeTag(detailLead.id, tagId)} className="hover:text-red-400"><X size={7} /></button>
+                        <button onClick={() => removeTag(detailLead.id, tagId)} className="hover:text-red-400" aria-label="Remove tag"><X size={7} /></button>
                       </span>
                     );
                   })}

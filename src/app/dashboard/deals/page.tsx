@@ -8,6 +8,7 @@ import {
   ChevronRight, Star, Zap, AlertTriangle, CheckCircle,
   Calendar, ArrowRight, Shield, Loader2, CreditCard
 } from "lucide-react";
+import { TableSkeleton } from "@/components/ui/skeleton";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
@@ -159,7 +160,7 @@ export default function DealsPage() {
       <PageHero
         icon={<CreditCard size={28} />}
         title="Deals Pipeline"
-        subtitle="Track deals from prospect to close with AI scoring."
+        subtitle="Track deals from prospect to close with AI scoring, drag-drop kanban, revenue forecasting, and commission tracking."
         gradient="green"
         actions={
           <button onClick={() => setShowCreateModal(!showCreateModal)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5">
@@ -220,9 +221,9 @@ export default function DealsPage() {
         <div className="card border-gold/10 p-4 space-y-3">
           <h3 className="text-sm font-semibold">Quick Create Deal</h3>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-            <input value={dealForm.title} onChange={e => setDealForm({...dealForm, title: e.target.value})} className="input text-xs" placeholder="Deal title" />
-            <input value={dealForm.company} onChange={e => setDealForm({...dealForm, company: e.target.value})} className="input text-xs" placeholder="Company name" />
-            <input type="number" value={dealForm.amount} onChange={e => setDealForm({...dealForm, amount: e.target.value})} className="input text-xs" placeholder="Amount" />
+            <input value={dealForm.title} onChange={e => setDealForm({...dealForm, title: e.target.value})} className="input text-xs" placeholder="Deal title" aria-label="Deal title" />
+            <input value={dealForm.company} onChange={e => setDealForm({...dealForm, company: e.target.value})} className="input text-xs" placeholder="Company name" aria-label="Company name" />
+            <input type="number" value={dealForm.amount} onChange={e => setDealForm({...dealForm, amount: e.target.value})} className="input text-xs" placeholder="Amount" aria-label="Deal amount" />
             <select value={dealForm.stage} onChange={e => setDealForm({...dealForm, stage: e.target.value})} className="input text-xs">
               {STAGES.filter(s => !s.key.startsWith("closed")).map(s => <option key={s.key} value={s.key}>{s.label}</option>)}
             </select>
@@ -238,9 +239,7 @@ export default function DealsPage() {
       {activeTab === "pipeline" && (
         <div className="space-y-4">
           {loading && (
-            <div className="flex items-center justify-center py-12 gap-2 text-muted">
-              <Loader2 size={16} className="animate-spin" /> Loading deals...
-            </div>
+            <TableSkeleton rows={3} />
           )}
           {/* Kanban */}
           {!loading && (
@@ -296,6 +295,7 @@ export default function DealsPage() {
                                 </button>
                               ))}
                               <button
+                                aria-label={`Delete deal: ${deal.title}`}
                                 onClick={(e) => { e.stopPropagation(); handleDelete(deal.id); }}
                                 className="text-[7px] px-1.5 py-0.5 rounded bg-red-400/10 text-red-400 border border-red-400/20">
                                 Delete
