@@ -15,7 +15,7 @@ import type { CaseStudy, CaseStudyAsset, CaseStudyMetric } from "@/lib/showcase/
 export default function ShowcaseEditPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const id = params.id;
+  const id = params?.id ?? "";
 
   const [cs, setCs] = useState<CaseStudy | null>(null);
   const [assets, setAssets] = useState<CaseStudyAsset[]>([]);

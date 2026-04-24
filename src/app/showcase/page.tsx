@@ -62,7 +62,7 @@ export default async function PublicShowcaseIndex({
             {industries.size > 0 && (
               <div className="flex flex-wrap gap-2">
                 <Link href="/showcase" className={`px-3 py-1 rounded-full border ${!searchParams.industry ? "border-white text-white" : "border-white/20 text-white/60"}`}>All industries</Link>
-                {[...industries].sort().map((t) => (
+                {Array.from(industries).sort().map((t) => (
                   <Link
                     key={t}
                     href={`/showcase?industry=${encodeURIComponent(t)}`}
@@ -76,7 +76,7 @@ export default async function PublicShowcaseIndex({
             {services.size > 0 && (
               <div className="flex flex-wrap gap-2">
                 <Link href="/showcase" className={`px-3 py-1 rounded-full border ${!searchParams.service ? "border-white text-white" : "border-white/20 text-white/60"}`}>All services</Link>
-                {[...services].sort().map((t) => (
+                {Array.from(services).sort().map((t) => (
                   <Link
                     key={t}
                     href={`/showcase?service=${encodeURIComponent(t)}`}

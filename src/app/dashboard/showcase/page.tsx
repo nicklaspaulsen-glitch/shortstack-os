@@ -45,7 +45,7 @@ export default function ShowcaseListPage() {
       for (const t of c.industry_tags || []) i.add(t);
       for (const t of c.service_tags || []) s.add(t);
     }
-    return { industries: [...i].sort(), services: [...s].sort() };
+    return { industries: Array.from(i).sort(), services: Array.from(s).sort() };
   }, [items]);
 
   async function remove(id: string) {
