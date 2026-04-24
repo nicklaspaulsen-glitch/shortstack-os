@@ -150,8 +150,8 @@ export default function ChatClient() {
 
   // Load from URL on mount / on change.
   useEffect(() => {
-    const ch = sp.get("channel");
-    const th = sp.get("thread");
+    const ch = sp?.get("channel") ?? null;
+    const th = sp?.get("thread") ?? null;
     if (ch && ch !== activeChannelId) setActiveChannelId(ch);
     if (th !== threadRootId) setThreadRootId(th);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,7 +178,7 @@ export default function ChatClient() {
       const list = (json.channels || []) as ChannelListItem[];
       setChannels(list);
       // Auto-seed defaults on cold start (no channels + user is agency owner).
-      if (list.length === 0 && !sp.get("channel")) {
+      if (list.length === 0 && !sp?.get("channel")) {
         await fetch("/api/chat/seed-defaults", { method: "POST" });
         const r2 = await fetch("/api/chat/channels", { cache: "no-store" });
         const j2 = await r2.json();
@@ -212,7 +212,7 @@ export default function ChatClient() {
 
   // Pick first channel if none selected after channels load.
   useEffect(() => {
-    if (!activeChannelId && channels.length > 0 && !sp.get("channel") && !mentionsView) {
+    if (!activeChannelId && channels.length > 0 && !sp?.get("channel") && !mentionsView) {
       const first = channels[0].id;
       setActiveChannelId(first);
       updateUrl(first, null);
@@ -311,7 +311,6 @@ export default function ChatClient() {
     const channel = supabase
       .channel(`chat:${activeChannelId}`)
       .on(
-        // @ts-expect-error realtime event union narrows at runtime
         "postgres_changes",
         {
           event: "*",
@@ -325,7 +324,6 @@ export default function ChatClient() {
         },
       )
       .on(
-        // @ts-expect-error realtime event union narrows at runtime
         "postgres_changes",
         { event: "*", schema: "public", table: "message_reactions" },
         () => {

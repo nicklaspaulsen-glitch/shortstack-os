@@ -53,7 +53,7 @@ export async function parseMentions(
   ];
 
   const matched = new Set<string>();
-  for (const h of handles) {
+  for (const h of Array.from(handles)) {
     for (const p of candidates) {
       const emailLocal = p.email ? p.email.split("@")[0].toLowerCase() : "";
       const nameTokens = (p.full_name || "").toLowerCase().split(/\s+/).filter(Boolean);
