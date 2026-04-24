@@ -4,6 +4,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { getStyleById } from "@/lib/thumbnail-styles";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { resolveThumbnailModelId } from "@/lib/ai/flux-client";
 
 // Average FLUX/SDXL render consumes roughly this many "tokens" in the
 // plan-tier budget. Tuned against observed RunPod usage — a Starter plan
@@ -211,7 +212,20 @@ export async function POST(request: NextRequest) {
       mood,
       faces,
       variations,
-    } = body;
+      // Optional per-request override: "flux" | "current" | "auto".
+      // UI dropdown sends this; env THUMBNAIL_MODEL is the fallback.
+      model: requestedModel,
+    } = body as {
+      prompt?: string;
+      style?: string;
+      platform?: string;
+      textOverlay?: string;
+      colorTheme?: string;
+      mood?: string;
+      faces?: string[];
+      variations?: number;
+      model?: string;
+    };
 
     if (!prompt) {
       return NextResponse.json(
@@ -244,12 +258,35 @@ export async function POST(request: NextRequest) {
     const fluxUrl = process.env.RUNPOD_FLUX_URL;
     const sdxlUrl = process.env.RUNPOD_SDXL_URL;
     const runpodKey = process.env.RUNPOD_API_KEY;
-    const useFlux = !!fluxUrl; // Prefer FLUX.1-dev when available
+
+    // ── Model routing (THUMBNAIL_MODEL env + per-request override) ──
+    // • "flux"    → always use FLUX (fails if RUNPOD_FLUX_URL missing)
+    // • "current" → always use legacy ComfyUI+SDXL workflow
+    // • "auto"    → FLUX if configured, else legacy (DEFAULT)
+    const envMode = (process.env.THUMBNAIL_MODEL || "auto").toLowerCase();
+    const uiMode = (requestedModel || "").toLowerCase();
+    const resolvedMode =
+      uiMode === "flux" || uiMode === "current" || uiMode === "auto"
+        ? uiMode
+        : envMode;
+    let useFlux: boolean;
+    if (resolvedMode === "flux") useFlux = true;
+    else if (resolvedMode === "current") useFlux = false;
+    else useFlux = !!fluxUrl;
+
+    // Active model id used for metadata tagging + client-side display.
+    const activeModelId = useFlux ? resolveThumbnailModelId() : "legacy";
 
     if ((!fluxUrl && !sdxlUrl) || !runpodKey) {
       return NextResponse.json(
         { error: "Image generation service not configured" },
         { status: 503 }
+      );
+    }
+    if (resolvedMode === "flux" && !fluxUrl) {
+      return NextResponse.json(
+        { error: "FLUX requested but RUNPOD_FLUX_URL is not configured" },
+        { status: 503 },
       );
     }
 
@@ -422,6 +459,10 @@ export async function POST(request: NextRequest) {
       height: dims.height,
       genWidth,
       genHeight,
+      // Which image backend ran this job — "flux-dev", "flux-schnell",
+      // or "legacy". UI displays it; downstream writers can persist it
+      // on generated_images.model.
+      model: activeModelId,
       createdAt: new Date().toISOString(),
     }));
 
@@ -430,7 +471,7 @@ export async function POST(request: NextRequest) {
       const supabase = createClient(supabaseUrl, supabaseKey);
       await supabase.from("trinity_log").insert({
         type: "thumbnail_generate",
-        message: `Generated ${count} thumbnail job(s): ${style} / ${platform}`,
+        message: `Generated ${count} thumbnail job(s): ${style} / ${platform} [${activeModelId}]`,
         metadata: {
           prompt: fullPrompt,
           style,
@@ -439,6 +480,8 @@ export async function POST(request: NextRequest) {
           colorTheme,
           faces,
           count,
+          model: activeModelId,
+          thumbnail_model_mode: resolvedMode,
           job_ids: thumbnails.map((t) => t.job_id),
         },
       });
@@ -461,7 +504,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       thumbnails,
-      message: `Queued ${count} thumbnail${count > 1 ? "s" : ""} for generation`,
+      model: activeModelId,
+      mode: resolvedMode,
+      message: `Queued ${count} thumbnail${count > 1 ? "s" : ""} for generation (${activeModelId})`,
       poll_url: "/api/thumbnail/status",
     });
   } catch (err) {
