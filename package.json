@@ -78,6 +78,7 @@
     "@xyflow/react": "^12.10.2",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "hyperframes": "^0.4.22",
     "lucide-react": "^1.7.0",
     "next": "14.2.35",
     "node-cron": "^4.2.1",
