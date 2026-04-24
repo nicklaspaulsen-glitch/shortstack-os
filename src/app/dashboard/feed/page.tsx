@@ -133,7 +133,7 @@ export default function FeedPage() {
           ) : (
             <div className="space-y-3">
               {events.map((e) => (
-                <ActivityCard key={e.id} event={e} onChange={refresh} />
+                <ActivityCard key={e.id} event={e} />
               ))}
               {!done && (
                 <div ref={sentinelRef} className="flex justify-center py-6">

@@ -103,7 +103,7 @@ export default function FeedEventDetailPage() {
         </div>
       ) : (
         <>
-          <ActivityCard event={event} onChange={load} />
+          <ActivityCard event={event} />
 
           {/* Thread */}
           <section className="mt-6 space-y-3">
