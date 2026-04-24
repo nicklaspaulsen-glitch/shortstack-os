@@ -7,6 +7,17 @@ import {
   mapTwilioStatus,
 } from "@/lib/services/voice-calls";
 
+// XML-escape dynamic values before interpolating into TwiML to prevent
+// injection via client.businessName or inbound From/To strings.
+function xmlEscape(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 // Twilio Voice webhook — handles inbound calls to client numbers.
 //
 // Fires on the very first leg of a Twilio voice call (the VoiceUrl). We:
@@ -109,8 +120,8 @@ export async function POST(request: NextRequest) {
       return new NextResponse(
         `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="alice">Thank you for calling ${client.businessName || "us"}. Please hold while we connect you.</Say>
-  <Dial callerId="${to || ""}">${client.phone}</Dial>
+  <Say voice="alice">Thank you for calling ${xmlEscape(client.businessName || "us")}. Please hold while we connect you.</Say>
+  <Dial callerId="${xmlEscape(to || "")}">${xmlEscape(client.phone)}</Dial>
 </Response>`,
         { headers: { "Content-Type": "text/xml" } },
       );

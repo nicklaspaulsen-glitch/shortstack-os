@@ -4,13 +4,17 @@ import { parseTrinityMessage, executeTrinityCommand, sendTelegramMessage, cleanu
 import { upsertInboundMessage } from "@/lib/conversations";
 
 export async function POST(request: NextRequest) {
-  // Validate Telegram webhook secret token if configured
+  // Validate Telegram webhook secret token. Fail-closed: if the secret isn't
+  // configured, reject (so a misconfigured deploy doesn't silently accept
+  // arbitrary POSTs). Rejections are `{ ok: true }` so Telegram doesn't retry.
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  if (webhookSecret) {
-    const token = request.headers.get("x-telegram-bot-api-secret-token");
-    if (token !== webhookSecret) {
-      return NextResponse.json({ ok: true }); // Silent rejection
-    }
+  if (!webhookSecret) {
+    console.error("[webhooks/telegram] TELEGRAM_WEBHOOK_SECRET is not set — rejecting request. Configure the secret in Vercel env.");
+    return NextResponse.json({ ok: true });
+  }
+  const token = request.headers.get("x-telegram-bot-api-secret-token");
+  if (token !== webhookSecret) {
+    return NextResponse.json({ ok: true }); // Silent rejection — bad signature
   }
 
   let body: Record<string, unknown>;

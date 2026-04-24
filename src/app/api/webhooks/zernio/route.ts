@@ -31,7 +31,10 @@ export const maxDuration = 15;
 
 function verifyZernioSignature(raw: string, signature: string | null): boolean {
   const secret = process.env.ZERNIO_WEBHOOK_SECRET;
-  if (!secret) return true; // unconfigured → accept (dev)
+  if (!secret) {
+    console.error("[webhooks/zernio] ZERNIO_WEBHOOK_SECRET is not set — rejecting request. Configure the secret in Vercel env.");
+    return false; // fail-closed
+  }
   if (!signature) return false;
   const expected = crypto.createHmac("sha256", secret).update(raw).digest("hex");
   try {
