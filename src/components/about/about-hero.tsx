@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 const GOLD = "#c8a855";
@@ -7,6 +8,19 @@ const GOLD = "#c8a855";
 export default function AboutHero() {
   return (
     <section className="relative pt-32 pb-16 md:pt-44 md:pb-24 px-6 overflow-hidden">
+      {/* Subtle Unsplash atmospheric backdrop for warmth */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.12] mix-blend-lighten">
+        <Image
+          src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=2000&q=70"
+          alt=""
+          fill
+          priority={false}
+          loading="lazy"
+          aria-hidden="true"
+          className="object-cover"
+          sizes="100vw"
+        />
+      </div>
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
