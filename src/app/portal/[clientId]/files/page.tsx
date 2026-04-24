@@ -83,7 +83,7 @@ export default function PortalFilesPage() {
   const params = useParams<{ clientId: string }>();
   const searchParams = useSearchParams();
   const router = useRouter();
-  const clientId = params.clientId;
+  const clientId = params?.clientId || "";
 
   const [files, setFiles] = useState<FileRow[]>([]);
   const [loading, setLoading] = useState(true);
