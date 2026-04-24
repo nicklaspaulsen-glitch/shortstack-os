@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { emitEventAsync } from "@/lib/activity/emit";
 
 /*
   Table: ai_output_handoffs
@@ -54,6 +56,23 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Activity feed — fire-and-forget, extract lightweight preview from payload.
+  const payloadObj = body.payload && typeof body.payload === "object" ? (body.payload as Record<string, unknown>) : {};
+  const preview: Record<string, unknown> = { kind };
+  if (typeof payloadObj.title === "string") preview.title = payloadObj.title;
+  if (typeof payloadObj.thumbnail_url === "string") preview.thumbnail_url = payloadObj.thumbnail_url;
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  emitEventAsync({
+    orgId: ownerId,
+    actorId: user.id,
+    eventType: "asset_created",
+    subjectType: "ai_output_handoff",
+    subjectId: data.id,
+    subjectPreview: preview,
+    visibility: "org",
+  });
+
   return NextResponse.json({ id: data.id });
 }
 

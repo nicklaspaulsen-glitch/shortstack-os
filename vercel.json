@@ -120,6 +120,10 @@
     {
       "path": "/api/cron/review-requests",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/feed-weekly-digest",
+      "schedule": "0 16 * * 5"
     }
   ]
 }

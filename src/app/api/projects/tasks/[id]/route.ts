@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { emitEventAsync } from "@/lib/activity/emit";
 
 const ALLOWED_STATUS = ["backlog", "todo", "in_progress", "review", "done"] as const;
 const ALLOWED_PRIORITY = ["low", "medium", "high", "urgent"] as const;
@@ -94,6 +95,33 @@ export async function PATCH(
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Activity feed — emit task_completed when status flips TO done, otherwise
+  // emit task_assigned if an assignee was newly set. Fire-and-forget.
+  if (typeof updates.status === "string" && updates.status === "done" && existing.status !== "done") {
+    emitEventAsync({
+      orgId: ownerId,
+      actorId: user.id,
+      eventType: "task_completed",
+      subjectType: "project_task",
+      subjectId: params.id,
+      subjectPreview: { title: data.title },
+      projectId: existing.board_id,
+      visibility: "org",
+    });
+  } else if (typeof updates.assignee_profile_id === "string" && updates.assignee_profile_id) {
+    emitEventAsync({
+      orgId: ownerId,
+      actorId: user.id,
+      eventType: "task_assigned",
+      subjectType: "project_task",
+      subjectId: params.id,
+      subjectPreview: { title: data.title, assignee: updates.assignee_profile_id },
+      projectId: existing.board_id,
+      visibility: "org",
+    });
+  }
+
   return NextResponse.json({ task: data });
 }
 

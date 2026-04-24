@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { emitEventAsync } from "@/lib/activity/emit";
 
 // GET /api/projects/boards — list all boards owned by caller (team_members
 // resolve to parent agency). Optional ?client_id=xxx filter.
@@ -76,5 +77,18 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Activity feed — fire and forget; never blocks the response.
+  emitEventAsync({
+    orgId: ownerId,
+    actorId: user.id,
+    eventType: "project_launched",
+    subjectType: "project_board",
+    subjectId: data.id,
+    subjectPreview: { title: data.name, icon: data.icon, color: data.color },
+    projectId: data.id,
+    visibility: "org",
+  });
+
   return NextResponse.json({ board: data }, { status: 201 });
 }
