@@ -493,4 +493,4 @@ void Trash2;
 void Copy;
 void MoreHorizontal;
 void Square;
-void GroupLayer;
+// GroupLayer is an imported type; referenced in component signatures only.
