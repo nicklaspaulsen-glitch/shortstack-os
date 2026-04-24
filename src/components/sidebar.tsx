@@ -122,6 +122,7 @@ const navItems: NavItem[] = [
   { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Scheduling", href: "/dashboard/scheduling", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
+  { label: "Courses", href: "/dashboard/courses", icon: <BookOpen size={16} />, roles: ["admin"], sub: "Membership" },
 
   // ── Create (content production) ──
   { label: "AI Copywriter", href: "/dashboard/copywriter", icon: <Pen size={16} />, roles: ["admin", "team_member"], section: "Create", sub: "Writing" },
@@ -135,6 +136,7 @@ const navItems: NavItem[] = [
   { label: "Content Library", href: "/dashboard/content-library", icon: <FolderOpen size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Landing Pages", href: "/dashboard/landing-pages", icon: <LayoutTemplate size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
+  { label: "Funnels", href: "/dashboard/funnels", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Brand & Web" },
   { label: "Forms", href: "/dashboard/forms", icon: <ClipboardCheck size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Surveys", href: "/dashboard/surveys", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Brand & Web" },
   { label: "Social Manager", href: "/dashboard/social-manager", icon: <Share2 size={16} />, roles: ["admin", "team_member"], sub: "Social" },
