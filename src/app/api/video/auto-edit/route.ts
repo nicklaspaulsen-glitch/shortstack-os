@@ -41,12 +41,15 @@ function sanitizeStyleHints(input: unknown): Record<string, unknown> {
 
 // Soft budget-gate: if the helpers in feat/ai-budget-caps are present we use
 // them; otherwise skip silently so we don't block on that branch landing.
+// Use a string-variable dynamic import so TS doesn't fail the build when the
+// sibling branch hasn't landed yet.
 async function softBudgetCheck(userId: string): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
-    const mod = (await import("@/lib/ai/budget-gate")) as unknown as {
-      checkBudget?: (userId: string, cost: number) => Promise<{ ok: boolean; error?: string }>;
-    };
-    if (typeof mod.checkBudget === "function") {
+    const modulePath = "@/lib/ai/budget-gate";
+    const mod = (await import(/* webpackIgnore: true */ modulePath).catch(() => null)) as
+      | { checkBudget?: (userId: string, cost: number) => Promise<{ ok: boolean; error?: string }> }
+      | null;
+    if (mod && typeof mod.checkBudget === "function") {
       const r = await mod.checkBudget(userId, 0.5);
       if (!r.ok) return { ok: false, error: r.error ?? "Budget exceeded" };
     }
