@@ -32,7 +32,13 @@ import {
   Users,
   ArrowUpRight,
   Loader2,
+  CreditCard,
+  ShieldCheck,
+  AlertTriangle,
+  Play,
+  ExternalLink,
 } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 
 // Brand icons — inline SVG because lucide-react dropped the brand marks in
 // v0.344+. These are the official simple-icons glyphs; they scale cleanly
@@ -103,6 +109,33 @@ interface LeaderboardResponse {
   total_referrers: number;
 }
 
+interface ConnectStatus {
+  connected: boolean;
+  account_id: string | null;
+  account_id_last4?: string;
+  chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  country?: string | null;
+  onboardingUrl?: string;
+}
+
+interface PayoutRun {
+  id: string;
+  started_at: string;
+  finished_at: string | null;
+  triggered_by: string;
+  payouts_total: number;
+  payouts_paid: number;
+  payouts_failed: number;
+  payouts_skipped: number;
+  amount_cents: number;
+  error_text: string | null;
+  notes: string | null;
+}
+
+type TabKey = "overview" | "admin_payouts";
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function fmtCents(cents: number): string {
   return `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -120,6 +153,9 @@ const SHARE_BLURB = "I've been using ShortStack to run my agency on autopilot �
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 export default function ReferralsPage() {
+  const { profile } = useAuth();
+  const isAdmin = profile?.role === "admin";
+  const [tab, setTab] = useState<TabKey>("overview");
   const [me, setMe] = useState<MeResponse | null>(null);
   const [meLoading, setMeLoading] = useState(true);
   const [referrals, setReferrals] = useState<ReferralRow[]>([]);
@@ -128,6 +164,12 @@ export default function ReferralsPage() {
   const [leaderboardLoading, setLeaderboardLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [regenLoading, setRegenLoading] = useState(false);
+  const [connect, setConnect] = useState<ConnectStatus | null>(null);
+  const [connectLoading, setConnectLoading] = useState(true);
+  const [connectBusy, setConnectBusy] = useState(false);
+  const [payoutRuns, setPayoutRuns] = useState<PayoutRun[]>([]);
+  const [payoutRunsLoading, setPayoutRunsLoading] = useState(false);
+  const [runNowBusy, setRunNowBusy] = useState(false);
 
   const loadMe = useCallback(async () => {
     try {
@@ -168,11 +210,59 @@ export default function ReferralsPage() {
     }
   }, []);
 
+  const loadConnect = useCallback(async () => {
+    try {
+      const res = await fetch("/api/billing/connect-onboarding", { cache: "no-store" });
+      if (!res.ok) throw new Error(`connect-onboarding ${res.status}`);
+      const data = (await res.json()) as ConnectStatus;
+      setConnect(data);
+    } catch (err) {
+      console.error("[referrals] connect status fetch failed:", err);
+    } finally {
+      setConnectLoading(false);
+    }
+  }, []);
+
+  const loadPayoutRuns = useCallback(async () => {
+    if (!isAdmin) return;
+    setPayoutRunsLoading(true);
+    try {
+      const res = await fetch("/api/admin/payout-runs", { cache: "no-store" });
+      if (!res.ok) throw new Error(`payout-runs ${res.status}`);
+      const data = (await res.json()) as { runs: PayoutRun[] };
+      setPayoutRuns(data.runs || []);
+    } catch (err) {
+      console.error("[referrals] payout runs fetch failed:", err);
+    } finally {
+      setPayoutRunsLoading(false);
+    }
+  }, [isAdmin]);
+
   useEffect(() => {
     void loadMe();
     void loadReferrals();
     void loadLeaderboard();
-  }, [loadMe, loadReferrals, loadLeaderboard]);
+    void loadConnect();
+  }, [loadMe, loadReferrals, loadLeaderboard, loadConnect]);
+
+  useEffect(() => {
+    if (tab === "admin_payouts" && isAdmin) {
+      void loadPayoutRuns();
+    }
+  }, [tab, isAdmin, loadPayoutRuns]);
+
+  // After returning from Stripe onboarding the URL will have ?payouts_connected=1.
+  // Re-fetch status + clean the URL so a refresh doesn't repeat the flow.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("payouts_connected") === "1" || url.searchParams.get("payouts_refresh") === "1") {
+      url.searchParams.delete("payouts_connected");
+      url.searchParams.delete("payouts_refresh");
+      window.history.replaceState({}, "", url.toString());
+      void loadConnect();
+    }
+  }, [loadConnect]);
 
   const handleCopy = useCallback(async () => {
     if (!me?.share_url) return;
@@ -185,6 +275,72 @@ export default function ReferralsPage() {
       toast.error("Couldn't copy — select and copy manually");
     }
   }, [me?.share_url]);
+
+  const handleConnectPayouts = useCallback(async () => {
+    if (connectBusy) return;
+    setConnectBusy(true);
+    try {
+      const res = await fetch("/api/billing/connect-onboarding", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        toast.error(data.error || "Couldn't start Stripe onboarding");
+        return;
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Network error");
+    } finally {
+      setConnectBusy(false);
+    }
+  }, [connectBusy]);
+
+  const handleRunPayoutsNow = useCallback(async () => {
+    if (runNowBusy) return;
+    // Store CRON_SECRET locally so admin doesn't paste it every time.
+    const storageKey = "referral_payouts_cron_secret";
+    let secret = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
+    if (!secret) {
+      secret = typeof window !== "undefined"
+        ? window.prompt("Paste CRON_SECRET (stored locally for next time):")
+        : null;
+      if (!secret) return;
+      try { localStorage.setItem(storageKey, secret); } catch { /* ignore */ }
+    }
+    if (!window.confirm("Run the monthly referral payout now? This will transfer real money to connected accounts.")) {
+      return;
+    }
+    setRunNowBusy(true);
+    const t = toast.loading("Running payouts…");
+    try {
+      const res = await fetch("/api/cron/referral-payouts", {
+        method: "POST",
+        headers: { authorization: `Bearer ${secret}` },
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        if (res.status === 401) {
+          try { localStorage.removeItem(storageKey); } catch { /* ignore */ }
+          toast.error("CRON_SECRET rejected — cleared cache, try again.", { id: t });
+        } else {
+          toast.error(`Run failed: ${json.error || `HTTP ${res.status}`}`, { id: t });
+        }
+        return;
+      }
+      if (json.skipped) {
+        toast.success(`Skipped: ${json.reason}`, { id: t });
+      } else {
+        toast.success(
+          `Done · ${json.paidUsers ?? 0} paid · ${json.failedUsers ?? 0} failed · ${json.skippedUsers ?? 0} skipped`,
+          { id: t },
+        );
+      }
+      await loadPayoutRuns();
+    } catch (err) {
+      toast.error(`Run threw: ${String(err).slice(0, 80)}`, { id: t });
+    } finally {
+      setRunNowBusy(false);
+    }
+  }, [runNowBusy, loadPayoutRuns]);
 
   const handleRegen = useCallback(async () => {
     if (regenLoading) return;
@@ -230,6 +386,102 @@ export default function ReferralsPage() {
         subtitle="Share your link. Earn 10–30% monthly commission for 12 months on every referral."
         gradient="purple"
       />
+
+      {/* ─── Tabs (only show when admin — regular users just see overview) ─ */}
+      {isAdmin && (
+        <div className="flex items-center gap-1 border-b border-border">
+          <TabButton active={tab === "overview"} onClick={() => setTab("overview")}>
+            Overview
+          </TabButton>
+          <TabButton active={tab === "admin_payouts"} onClick={() => setTab("admin_payouts")}>
+            <span className="inline-flex items-center gap-1.5">
+              <ShieldCheck size={12} /> Payouts
+              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-purple-500/15 text-purple-300">
+                Admin
+              </span>
+            </span>
+          </TabButton>
+        </div>
+      )}
+
+      {tab === "admin_payouts" && isAdmin ? (
+        <AdminPayoutsTab
+          runs={payoutRuns}
+          loading={payoutRunsLoading}
+          onRefresh={loadPayoutRuns}
+          onRunNow={handleRunPayoutsNow}
+          runNowBusy={runNowBusy}
+        />
+      ) : (
+        <>
+      {/* ─── Setup Payouts panel (only when user can't receive payouts yet) ─ */}
+      {!connectLoading && connect && !connect.payoutsEnabled && (
+        <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
+          <div className="flex items-start gap-3 flex-wrap">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/25 flex items-center justify-center shrink-0">
+              <CreditCard size={18} className="text-amber-400" />
+            </div>
+            <div className="flex-1 min-w-[220px]">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="text-sm font-bold text-foreground">Set up payouts</h3>
+                {connect.connected && connect.detailsSubmitted && !connect.payoutsEnabled && (
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300">
+                    Review in progress
+                  </span>
+                )}
+                {connect.connected && !connect.detailsSubmitted && (
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300">
+                    Setup incomplete
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-muted mt-1 max-w-xl">
+                {connect.connected
+                  ? "Finish your Stripe Connect onboarding so the monthly payout run can send your commissions. Takes about 2 minutes."
+                  : "Connect a Stripe account to receive your commission payouts. We use Stripe Connect Express — the same system most marketplaces run on. Takes about 2 minutes."}
+              </p>
+              <div className="flex items-center gap-2 flex-wrap mt-3">
+                <button
+                  onClick={handleConnectPayouts}
+                  disabled={connectBusy}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 text-neutral-950 text-xs font-bold hover:bg-amber-400 transition-colors disabled:opacity-60"
+                >
+                  {connectBusy ? <Loader2 size={12} className="animate-spin" /> : <CreditCard size={12} />}
+                  {connect.connected ? "Continue setup" : "Connect Stripe account"}
+                </button>
+                {connect.onboardingUrl && connect.connected && (
+                  <span className="text-[10px] text-muted">Opens Stripe in a new tab</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ─── Payouts enabled: show connected state ─────────────────────── */}
+      {!connectLoading && connect && connect.payoutsEnabled && (
+        <section className="rounded-2xl border border-emerald-500/25 bg-emerald-500/5 p-4 flex items-start gap-3 flex-wrap">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center shrink-0">
+            <Check size={14} className="text-emerald-400" />
+          </div>
+          <div className="flex-1 min-w-[220px]">
+            <div className="text-xs font-bold text-foreground">Payouts enabled</div>
+            <div className="text-[11px] text-muted mt-0.5">
+              Stripe Connect account <code className="bg-surface/60 px-1 rounded">···{connect.account_id_last4}</code>
+              {connect.country && <> · {connect.country.toUpperCase()}</>}
+            </div>
+          </div>
+          <a
+            href="https://dashboard.stripe.com/"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-emerald-500/10 hover:text-emerald-300 transition-colors shrink-0"
+          >
+            <ExternalLink size={12} />
+            Stripe dashboard
+          </a>
+        </section>
+      )}
 
       {/* ─── Hero: code + share link + social buttons ──────────────── */}
       <section
@@ -535,15 +787,165 @@ export default function ReferralsPage() {
             <li>Payouts run on the 1st of each month via Stripe Connect. Minimum $10 payout.</li>
           </ul>
         </div>
-        <a
-          href="/dashboard/settings"
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-purple-500/10 hover:text-purple-300 transition-colors shrink-0"
+        <button
+          onClick={handleConnectPayouts}
+          disabled={connectBusy}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-light text-foreground text-xs font-medium border border-border hover:bg-purple-500/10 hover:text-purple-300 transition-colors shrink-0 disabled:opacity-60"
         >
-          <ArrowUpRight size={12} />
-          Connect payout
-        </a>
+          {connectBusy ? <Loader2 size={12} className="animate-spin" /> : <ArrowUpRight size={12} />}
+          {connect?.payoutsEnabled ? "Manage payout" : "Connect payout"}
+        </button>
       </div>
+        </>
+      )}
     </div>
+  );
+}
+
+// ── Admin Payouts Tab ────────────────────────────────────────────────────────
+
+function AdminPayoutsTab({
+  runs,
+  loading,
+  onRefresh,
+  onRunNow,
+  runNowBusy,
+}: {
+  runs: PayoutRun[];
+  loading: boolean;
+  onRefresh: () => void | Promise<void>;
+  onRunNow: () => void | Promise<void>;
+  runNowBusy: boolean;
+}) {
+  return (
+    <section className="space-y-5">
+      <div className="rounded-2xl border border-border bg-surface p-5 flex items-start gap-3 flex-wrap">
+        <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
+          <ShieldCheck size={18} className="text-purple-300" />
+        </div>
+        <div className="flex-1 min-w-[220px]">
+          <h2 className="text-sm font-bold text-foreground">Monthly payout runs</h2>
+          <p className="text-[11px] text-muted mt-0.5 max-w-xl">
+            The referral-payouts cron fires on the 1st of each month at 00:00 UTC.
+            This view shows the last 20 invocations. Use "Run now" to trigger a
+            manual run — requires the CRON_SECRET. Set DISABLE_AUTO_PAYOUTS=true
+            in Vercel to pause the scheduled run.
+          </p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => void onRefresh()}
+            disabled={loading}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border border-border bg-surface-light text-foreground hover:bg-surface disabled:opacity-60"
+          >
+            <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
+            Refresh
+          </button>
+          <button
+            onClick={() => void onRunNow()}
+            disabled={runNowBusy}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold border border-purple-500/40 bg-purple-500/15 text-purple-200 hover:bg-purple-500/25 disabled:opacity-60"
+          >
+            <Play size={12} className={runNowBusy ? "animate-pulse" : ""} />
+            {runNowBusy ? "Running…" : "Run now"}
+          </button>
+        </div>
+      </div>
+
+      <div className="rounded-2xl border border-border bg-surface overflow-hidden">
+        {loading && runs.length === 0 ? (
+          <div className="p-5 space-y-2">
+            <div className="h-10 animate-pulse rounded bg-surface-light" />
+            <div className="h-10 animate-pulse rounded bg-surface-light" />
+            <div className="h-10 animate-pulse rounded bg-surface-light" />
+          </div>
+        ) : runs.length === 0 ? (
+          <div className="p-8 text-center">
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-surface-light border border-border flex items-center justify-center mb-3">
+              <AlertTriangle size={18} className="text-muted" />
+            </div>
+            <p className="text-sm font-medium text-foreground mb-1">No runs yet</p>
+            <p className="text-xs text-muted max-w-xs mx-auto">
+              Click "Run now" above, or wait for the 1st-of-month cron to fire.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border bg-surface-light/30">
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Started</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Trigger</th>
+                  <th className="text-right px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Paid</th>
+                  <th className="text-right px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Failed</th>
+                  <th className="text-right px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Skipped</th>
+                  <th className="text-right px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Amount</th>
+                  <th className="text-left px-4 py-2.5 text-[10px] font-semibold uppercase tracking-wider text-muted">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {runs.map((r) => (
+                  <tr key={r.id} className="border-b border-border last:border-0 hover:bg-surface-light/20 transition-colors">
+                    <td className="px-4 py-3 text-xs text-foreground whitespace-nowrap">
+                      {new Date(r.started_at).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                          r.triggered_by === "manual"
+                            ? "bg-purple-500/15 text-purple-300"
+                            : "bg-surface-light text-muted"
+                        }`}
+                      >
+                        {r.triggered_by}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-xs text-emerald-300 font-semibold text-right">{r.payouts_paid}</td>
+                    <td className="px-4 py-3 text-xs text-right">
+                      {r.payouts_failed > 0 ? (
+                        <span className="text-danger font-semibold">{r.payouts_failed}</span>
+                      ) : (
+                        <span className="text-muted">0</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-xs text-muted text-right">{r.payouts_skipped}</td>
+                    <td className="px-4 py-3 text-xs text-foreground font-semibold text-right whitespace-nowrap">
+                      ${(r.amount_cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </td>
+                    <td className="px-4 py-3 text-[11px] text-muted max-w-[260px] truncate" title={r.notes || r.error_text || ""}>
+                      {r.error_text ? <span className="text-danger">{r.error_text}</span> : r.notes || "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function TabButton({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-4 py-2 text-xs font-semibold border-b-2 -mb-px transition-colors ${
+        active
+          ? "border-purple-400 text-purple-200"
+          : "border-transparent text-muted hover:text-foreground"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
 
