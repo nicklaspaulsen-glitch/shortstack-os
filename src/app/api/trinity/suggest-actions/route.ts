@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
-import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { safeJsonParse } from "@/lib/ai/claude-helpers";
+import { sendCached, MODEL_HAIKU } from "@/lib/ai/claude-client";
 import {
   SMART_MANAGE_ACTIONS,
   SMART_MANAGE_ACTION_TYPES,
@@ -190,13 +191,17 @@ Return the JSON array now.`;
 
   if (process.env.ANTHROPIC_API_KEY) {
     try {
-      const response = await anthropic.messages.create({
+      // Cache the 15-action catalog + schema rules — identical across
+      // every Smart Manage call for every client. 90% off on cache hits.
+      const result = await sendCached({
         model: MODEL_HAIKU,
-        max_tokens: 1200,
+        maxTokens: 1200,
         system: systemPrompt,
-        messages: [{ role: "user", content: userPrompt }],
+        userMessage: userPrompt,
+        endpoint: "smart-manage/suggest-actions",
+        userId: user.id,
       });
-      rawResponse = getResponseText(response);
+      rawResponse = result.text;
       const parsed = safeJsonParse<SuggestedAction[]>(rawResponse);
       if (Array.isArray(parsed)) {
         suggestions = parsed;

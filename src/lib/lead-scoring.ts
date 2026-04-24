@@ -1,4 +1,5 @@
 import { anthropic, MODEL_HAIKU, safeJsonParse, getResponseText } from "@/lib/ai/claude-helpers";
+import { sendCached, submitBatch } from "@/lib/ai/claude-client";
 
 export interface Lead {
   id: string;
@@ -115,15 +116,9 @@ function heuristicScore(lead: Lead): ScoreResult {
   };
 }
 
-export async function scoreLead(lead: Lead): Promise<ScoreResult> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
-  if (!apiKey) {
-    return heuristicScore(lead);
-  }
-
+function leadToInfo(lead: Lead): Record<string, unknown> {
   const hasSocial = !!(lead.instagram_url || lead.facebook_url || lead.linkedin_url);
-
-  const leadInfo = {
+  return {
     business_name: lead.business_name,
     industry: lead.industry || "unknown",
     city: lead.city,
@@ -136,54 +131,157 @@ export async function scoreLead(lead: Lead): Promise<ScoreResult> {
     review_count: lead.review_count,
     source: lead.source,
   };
+}
 
-  try {
-    const response = await anthropic.messages.create({
-      model: MODEL_HAIKU,
-      max_tokens: 400,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: `Score this lead:\n${JSON.stringify(leadInfo, null, 2)}`,
-        },
-      ],
-    });
+function sanitizeResult(parsed: unknown, lead: Lead): ScoreResult | null {
+  if (!parsed || typeof parsed !== "object") return null;
+  const p = parsed as Partial<ScoreResult>;
+  if (typeof p.score !== "number") return null;
 
-    const text = getResponseText(response);
-    const parsed = safeJsonParse<ScoreResult>(text);
+  const breakdown: ScoreBreakdown = {
+    fit: Math.min(25, Math.max(0, p.breakdown?.fit ?? 0)),
+    intent: Math.min(25, Math.max(0, p.breakdown?.intent ?? 0)),
+    urgency: Math.min(25, Math.max(0, p.breakdown?.urgency ?? 0)),
+    data_quality: Math.min(25, Math.max(0, p.breakdown?.data_quality ?? 0)),
+  };
+  const score = Math.min(100, Math.max(0, p.score));
 
-    if (!parsed || typeof parsed.score !== "number") {
-      return heuristicScore(lead);
-    }
+  const validActions: RecommendedAction[] = ["call_now", "email_first", "nurture", "skip"];
+  const recommended_action: RecommendedAction = validActions.includes(p.recommended_action as RecommendedAction)
+    ? (p.recommended_action as RecommendedAction)
+    : score >= 70 && lead.phone
+      ? "call_now"
+      : score >= 50 && lead.email
+        ? "email_first"
+        : score >= 30
+          ? "nurture"
+          : "skip";
 
-    // Clamp all values
-    const breakdown: ScoreBreakdown = {
-      fit: Math.min(25, Math.max(0, parsed.breakdown?.fit ?? 0)),
-      intent: Math.min(25, Math.max(0, parsed.breakdown?.intent ?? 0)),
-      urgency: Math.min(25, Math.max(0, parsed.breakdown?.urgency ?? 0)),
-      data_quality: Math.min(25, Math.max(0, parsed.breakdown?.data_quality ?? 0)),
-    };
-    const score = Math.min(100, Math.max(0, parsed.score));
+  return {
+    score,
+    breakdown,
+    reasoning: p.reasoning || "AI-scored.",
+    recommended_action,
+  };
+}
 
-    const validActions: RecommendedAction[] = ["call_now", "email_first", "nurture", "skip"];
-    const recommended_action: RecommendedAction = validActions.includes(parsed.recommended_action)
-      ? parsed.recommended_action
-      : score >= 70 && lead.phone
-        ? "call_now"
-        : score >= 50 && lead.email
-          ? "email_first"
-          : score >= 30
-            ? "nurture"
-            : "skip";
-
-    return {
-      score,
-      breakdown,
-      reasoning: parsed.reasoning || "AI-scored.",
-      recommended_action,
-    };
-  } catch {
+/**
+ * Score a single lead synchronously (on-demand).
+ * Uses prompt caching — the SYSTEM_PROMPT is stable across every call.
+ */
+export async function scoreLead(lead: Lead): Promise<ScoreResult> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
     return heuristicScore(lead);
   }
+
+  try {
+    // Prefer the cached path for automatic cost savings + usage logging.
+    const result = await sendCached({
+      model: MODEL_HAIKU,
+      maxTokens: 400,
+      system: SYSTEM_PROMPT,
+      userMessage: `Score this lead:\n${JSON.stringify(leadToInfo(lead), null, 2)}`,
+      endpoint: "lead-scoring/synchronous",
+    });
+    const parsed = safeJsonParse<ScoreResult>(result.text);
+    const scored = sanitizeResult(parsed, lead);
+    return scored || heuristicScore(lead);
+  } catch {
+    // Last-resort: uncached raw SDK call (matches legacy behavior).
+    try {
+      const response = await anthropic.messages.create({
+        model: MODEL_HAIKU,
+        max_tokens: 400,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: "user",
+            content: `Score this lead:\n${JSON.stringify(leadToInfo(lead), null, 2)}`,
+          },
+        ],
+      });
+      const text = getResponseText(response);
+      const parsed = safeJsonParse<ScoreResult>(text);
+      return sanitizeResult(parsed, lead) || heuristicScore(lead);
+    } catch {
+      return heuristicScore(lead);
+    }
+  }
+}
+
+/**
+ * Submit a batch of leads for scoring in one Message Batches API call.
+ * Used by /api/cron/score-leads for the nightly sweep (50% discount).
+ */
+export async function submitLeadScoringBatch(
+  leads: Lead[],
+): Promise<{
+  batch_id: string;
+  item_count: number;
+  fallback_synchronous: boolean;
+  inline_results?: Array<{ lead_id: string; score: ScoreResult }>;
+}> {
+  if (leads.length === 0) {
+    return { batch_id: "", item_count: 0, fallback_synchronous: true };
+  }
+
+  const items = leads.map((lead) => ({
+    custom_id: `lead:${lead.id}`,
+    system: SYSTEM_PROMPT,
+    userMessage: `Score this lead:\n${JSON.stringify(leadToInfo(lead), null, 2)}`,
+    maxTokens: 400,
+  }));
+
+  const result = await submitBatch({
+    model: MODEL_HAIKU,
+    endpoint: "lead-scoring/batch",
+    items,
+  });
+
+  // If kill-switch is on, submitBatch already ran each lead synchronously.
+  if (result.fallback_synchronous && result.synchronous_results) {
+    const inline = result.synchronous_results
+      .map((r) => {
+        const leadId = r.custom_id.replace(/^lead:/, "");
+        const lead = leads.find((l) => l.id === leadId);
+        if (!lead) return null;
+        const parsed = safeJsonParse<ScoreResult>(r.text);
+        const score = sanitizeResult(parsed, lead) || heuristicScore(lead);
+        return { lead_id: leadId, score };
+      })
+      .filter((x): x is { lead_id: string; score: ScoreResult } => x !== null);
+    return {
+      batch_id: "",
+      item_count: leads.length,
+      fallback_synchronous: true,
+      inline_results: inline,
+    };
+  }
+
+  return { batch_id: result.batch_id, item_count: result.item_count, fallback_synchronous: false };
+}
+
+/**
+ * Given { custom_id, text } tuples from a completed lead-scoring batch,
+ * parse each into a ScoreResult and return the list for caller to persist.
+ */
+export function parseLeadScoringResults(
+  results: Array<{ custom_id: string; text: string | null }>,
+  leadsIndex: Record<string, Lead>,
+): Array<{ lead_id: string; score: ScoreResult }> {
+  const out: Array<{ lead_id: string; score: ScoreResult }> = [];
+  for (const r of results) {
+    const leadId = r.custom_id.replace(/^lead:/, "");
+    const lead = leadsIndex[leadId];
+    if (!lead) continue;
+    if (!r.text) {
+      out.push({ lead_id: leadId, score: heuristicScore(lead) });
+      continue;
+    }
+    const parsed = safeJsonParse<ScoreResult>(r.text);
+    const score = sanitizeResult(parsed, lead) || heuristicScore(lead);
+    out.push({ lead_id: leadId, score });
+  }
+  return out;
 }
