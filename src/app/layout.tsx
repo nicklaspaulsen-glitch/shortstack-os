@@ -8,6 +8,7 @@ import ElectronBannerCleanup from "@/components/electron-banner-cleanup";
 import SFXProvider from "@/components/sfx-provider";
 import ThemeProvider from "@/components/theme-provider";
 import { CookieConsent } from "@/components/cookie-consent";
+import FeedbackButton from "@/components/feedback-button";
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
 const OG_IMAGE = "/og-image.png";
@@ -82,6 +83,7 @@ export default function RootLayout({
           <PWARegister />
           <ElectronBannerCleanup />
           <CookieConsent />
+          <FeedbackButton />
           <Toaster
             position="top-right"
             toastOptions={{
