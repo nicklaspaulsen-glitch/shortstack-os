@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyOAuthState, canUserWriteForClient } from "@/lib/oauth-state";
 
 // Meta OAuth callback — exchange code for access token and save
 export async function GET(request: NextRequest) {
@@ -13,8 +14,27 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=denied`);
   }
 
-  let state: { client_id: string; platform: string } = { client_id: "", platform: "facebook" };
-  try { state = JSON.parse(stateStr || "{}"); } catch {}
+  // Verify HMAC-signed state AND that the currently-authenticated user is
+  // the same one that initiated the flow AND owns the target client_id.
+  const state = verifyOAuthState(stateStr);
+  if (!state) {
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=invalid_state`);
+  }
+
+  const sessionClient = createServerSupabase();
+  const { data: { user: sessionUser } } = await sessionClient.auth.getUser();
+  if (!sessionUser || sessionUser.id !== state.uid) {
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=session_mismatch`);
+  }
+
+  const allowedForClient = await canUserWriteForClient(
+    sessionClient as unknown as Parameters<typeof canUserWriteForClient>[0],
+    sessionUser.id,
+    state.client_id,
+  );
+  if (!allowedForClient) {
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=forbidden`);
+  }
 
   const appId = process.env.META_APP_ID;
   const appSecret = process.env.META_APP_SECRET;

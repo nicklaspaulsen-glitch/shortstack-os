@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { fireTrigger } from "@/lib/workflows/trigger-dispatch";
+import { rateLimit } from "@/lib/rate-limit";
+
+function clientIp(request: NextRequest): string {
+  return (
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || request.headers.get("x-real-ip")
+    || "unknown"
+  );
+}
 
 // POST — receive form submissions from embedded forms and create leads
 export async function POST(request: NextRequest) {
+  // Rate-limit: 1/sec per IP + 60/hour per IP. Prevents DB bloat and
+  // Telegram-spam abuse. Bots that want to flood will hit the hourly cap fast.
+  const ip = clientIp(request);
+  const perSecond = rateLimit(`forms-submit:sec:${ip}`, 1, 1_000);
+  const perHour = rateLimit(`forms-submit:hour:${ip}`, 60, 60 * 60 * 1000);
+  if (!perSecond.allowed || !perHour.allowed) {
+    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+  }
+
   const contentType = request.headers.get("content-type") || "";
   let data: Record<string, string>;
 
@@ -13,6 +31,12 @@ export async function POST(request: NextRequest) {
     formData.forEach((value, key) => { data[key] = String(value); });
   } else {
     data = await request.json();
+  }
+
+  // Honeypot: legitimate forms should leave this hidden field empty.
+  // Bots fill every field they see; we silently 200 them and drop.
+  if (data.website || data.honey_pot) {
+    return NextResponse.json({ success: true });
   }
 
   const supabase = createServiceClient();

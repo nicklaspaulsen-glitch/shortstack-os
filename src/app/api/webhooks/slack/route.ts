@@ -20,7 +20,10 @@ export const maxDuration = 15;
 
 function verifySlackSignature(request: NextRequest, rawBody: string): boolean {
   const secret = process.env.SLACK_SIGNING_SECRET;
-  if (!secret) return true; // no secret configured → accept (dev)
+  if (!secret) {
+    console.error("[webhooks/slack] SLACK_SIGNING_SECRET is not set — rejecting request. Configure the secret in Vercel env.");
+    return false; // fail-closed
+  }
   const ts = request.headers.get("x-slack-request-timestamp");
   const sig = request.headers.get("x-slack-signature");
   if (!ts || !sig) return false;

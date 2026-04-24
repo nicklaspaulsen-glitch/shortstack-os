@@ -23,18 +23,24 @@ import { fireTrigger } from "@/lib/workflows/trigger-dispatch";
 // ── Twilio signature validation ────────────────────────────────────
 // Shape of validation matches the one in sms-webhook: build data string from
 // URL + sorted POST params, HMAC-SHA1 with auth token, constant-time compare.
-// When TWILIO_AUTH_TOKEN isn't set, we log a warning and continue (return true)
-// so local dev and preview envs still work — production should always have it.
+// Fails closed in production when TWILIO_AUTH_TOKEN is missing; only allows
+// the dev bypass when NODE_ENV is explicitly "development".
 export function validateTwilioSignature(
   request: NextRequest,
   body: URLSearchParams,
 ): boolean {
   const authToken = process.env.TWILIO_AUTH_TOKEN;
   if (!authToken) {
-    console.warn(
-      "[voice-webhook] TWILIO_AUTH_TOKEN missing — skipping signature validation.",
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "[voice-webhook] TWILIO_AUTH_TOKEN missing in development — skipping signature validation.",
+      );
+      return true;
+    }
+    console.error(
+      "[voice-webhook] TWILIO_AUTH_TOKEN missing — rejecting request. Set TWILIO_AUTH_TOKEN in Vercel env.",
     );
-    return true;
+    return false;
   }
 
   const signature = request.headers.get("x-twilio-signature");

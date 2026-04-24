@@ -24,7 +24,10 @@ export const maxDuration = 15;
 
 function verifyRelaySignature(raw: string, signature: string | null): boolean {
   const secret = process.env.DISCORD_DM_RELAY_SECRET;
-  if (!secret) return true; // unconfigured → accept (dev)
+  if (!secret) {
+    console.error("[webhooks/discord] DISCORD_DM_RELAY_SECRET is not set — rejecting request. Configure the secret in Vercel env.");
+    return false; // fail-closed
+  }
   if (!signature) return false;
   const expected = crypto.createHmac("sha256", secret).update(raw).digest("hex");
   try {
