@@ -1,0 +1,19 @@
+{
+  "name": "hyperframes-worker",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RunPod-hosted render shim: accepts HTML compositions, runs `hyperframes render`, uploads to Supabase Storage, posts back to ShortStack.",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.101.1",
+    "express": "^4.19.2",
+    "hyperframes": "^0.4.22"
+  }
+}
