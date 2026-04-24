@@ -143,6 +143,13 @@ export default function ManageHubPage() {
           icon: Heart,
         },
         {
+          slug: "client-files",
+          label: "Client Files",
+          description: "Every file dropped by your clients — portal or cloud drive.",
+          href: "/dashboard/client-files",
+          icon: Download,
+        },
+        {
           slug: "reviews",
           label: "Reviews",
           description: "Collect and respond to public reviews.",

@@ -21,6 +21,7 @@ const TRACKED_PATHS = [
   "/dashboard/content-plan",
   "/dashboard/discord",
   "/dashboard/community",
+  "/dashboard/client-files",
 ] as const;
 
 type TrackedPath = (typeof TRACKED_PATHS)[number];
@@ -291,6 +292,17 @@ async function resolveUnreadCount(
         service
           .from("community_posts")
           .select("id", { count: "exact", head: true })
+          .gte("created_at", since),
+      );
+    }
+
+    case "/dashboard/client-files": {
+      if (ownedClientIds.length === 0) return 0;
+      return safeCount(
+        service
+          .from("client_files")
+          .select("id", { count: "exact", head: true })
+          .in("client_id", ownedClientIds)
           .gte("created_at", since),
       );
     }
