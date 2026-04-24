@@ -88,7 +88,7 @@ export const AGENTS: AgentDef[] = [
     zone: "leadgen",
     emoji: "🎯",
     role: "Scrapes and scores prospects.",
-    href: "/dashboard/lead-engine",
+    href: "/dashboard/leads",
     offset: { x: 0.2, y: 0.3 },
   },
   {
@@ -98,7 +98,7 @@ export const AGENTS: AgentDef[] = [
     zone: "leadgen",
     emoji: "📨",
     role: "Sends cold DMs, tracks replies.",
-    href: "/dashboard/outreach",
+    href: "/dashboard/outreach-hub",
     offset: { x: 0.55, y: 0.25 },
   },
   {
@@ -212,7 +212,7 @@ export const AGENTS: AgentDef[] = [
     zone: "comms",
     emoji: "💭",
     role: "Site-embedded visitor bot.",
-    href: "/dashboard/chat-widget",
+    // No standalone page yet — drawer shows data panel but no Open button.
     offset: { x: 0.25, y: 0.7 },
   },
   {

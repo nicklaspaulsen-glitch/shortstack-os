@@ -42,9 +42,14 @@ function formatTs(seconds: number): string {
 }
 
 export default function MeetingDetailPage() {
+  // `useParams()` is typed as `Params | null` under Next.js 14's strict
+  // navigation types even though a route inside [id]/ is guaranteed to
+  // have one. Fall back to "" so the component types cleanly; all downstream
+  // fetches just 404 in the unreachable null case and the existing
+  // error-toast path handles it.
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const id = params.id;
+  const id = params?.id ?? "";
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [meeting, setMeeting] = useState<MeetingDetail | null>(null);
