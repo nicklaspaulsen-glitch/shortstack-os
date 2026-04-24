@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { PageSkeleton } from "@/components/ui/skeleton";
@@ -286,39 +287,67 @@ export default function DashboardPage() {
       <TodaysPriority />
 
       {/* ─── Primary Metrics ──────────────────────────────────────── */}
-      {!focus && <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 stagger-fade">
-        <MetricCard
-          label="Monthly Revenue"
-          value={formatCurrency(stats.totalMRR)}
-          sub={`${stats.activeClients} active client${stats.activeClients !== 1 ? "s" : ""}`}
-          icon={<DollarSign size={18} />}
-          trend={stats.totalMRR > 0 ? "up" : undefined}
-          accent="gold"
-        />
-        <MetricCard
-          label="Leads Today"
-          value={stats.leadsToday.toString()}
-          sub={`${stats.totalLeads.toLocaleString()} total`}
-          icon={<Target size={18} />}
-          trend={stats.leadsToday > 0 ? "up" : undefined}
-          accent="emerald"
-        />
-        <MetricCard
-          label="Outreach Sent"
-          value={stats.dmsSentToday.toString()}
-          sub={`${stats.repliesThisWeek} replies this week`}
-          icon={<Send size={18} />}
-          accent="blue"
-        />
-        <MetricCard
-          label="Deals Won"
-          value={stats.dealsWon.toString()}
-          sub={stats.totalRevenue > 0 ? formatCurrency(stats.totalRevenue) + " total" : "No deals closed yet"}
-          icon={<Briefcase size={18} />}
-          trend={stats.dealsWon > 0 ? "up" : undefined}
-          accent="purple"
-        />
-      </div>}
+      {!focus && (
+        <motion.div
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3"
+          initial="hidden"
+          animate="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07 } } }}
+        >
+          {[
+            {
+              label: "Monthly Revenue",
+              value: formatCurrency(stats.totalMRR),
+              sub: `${stats.activeClients} active client${stats.activeClients !== 1 ? "s" : ""}`,
+              icon: <DollarSign size={18} />,
+              trend: stats.totalMRR > 0 ? "up" as const : undefined,
+              accent: "gold" as const,
+            },
+            {
+              label: "Leads Today",
+              value: stats.leadsToday.toString(),
+              sub: `${stats.totalLeads.toLocaleString()} total`,
+              icon: <Target size={18} />,
+              trend: stats.leadsToday > 0 ? "up" as const : undefined,
+              accent: "emerald" as const,
+            },
+            {
+              label: "Outreach Sent",
+              value: stats.dmsSentToday.toString(),
+              sub: `${stats.repliesThisWeek} replies this week`,
+              icon: <Send size={18} />,
+              accent: "blue" as const,
+            },
+            {
+              label: "Deals Won",
+              value: stats.dealsWon.toString(),
+              sub: stats.totalRevenue > 0 ? formatCurrency(stats.totalRevenue) + " total" : "No deals closed yet",
+              icon: <Briefcase size={18} />,
+              trend: stats.dealsWon > 0 ? "up" as const : undefined,
+              accent: "purple" as const,
+            },
+          ].map((m) => (
+            <motion.div
+              key={m.label}
+              variants={{
+                hidden: { opacity: 0, y: 18 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+              }}
+              whileHover={{ y: -4 }}
+              transition={{ type: "tween", duration: 0.2 }}
+            >
+              <MetricCard
+                label={m.label}
+                value={m.value}
+                sub={m.sub}
+                icon={m.icon}
+                trend={m.trend}
+                accent={m.accent}
+              />
+            </motion.div>
+          ))}
+        </motion.div>
+      )}
 
       {/* ─── Quick Actions ────────────────────────────────────────── */}
       {!focus && <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
