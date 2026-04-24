@@ -13,8 +13,16 @@ import toast from "react-hot-toast";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import Link from "next/link";
+import PageHero from "@/components/ui/page-hero";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
+
+interface ScoreBreakdown {
+  fit: number;
+  intent: number;
+  urgency: number;
+  data_quality: number;
+}
 
 interface Lead {
   id: string;
@@ -34,6 +42,11 @@ interface Lead {
   scraped_at: string | null;
   source_url: string | null;
   category: string | null;
+  // AI score columns
+  score: number | null;
+  score_breakdown: ScoreBreakdown | null;
+  score_reasoning: string | null;
+  score_computed_at: string | null;
 }
 
 // ---- CSV helpers ----
@@ -395,6 +408,58 @@ function AddLeadModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: 
   );
 }
 
+// ====================== SCORE BADGE ======================
+function ScoreBadge({ score, onClick }: { score: number | null; onClick?: () => void }) {
+  if (score === null) {
+    return (
+      <button
+        onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+        className="text-[9px] px-2 py-0.5 rounded bg-white/5 text-muted hover:bg-gold/10 hover:text-gold border border-dashed border-border transition-all"
+        title="Score this lead with AI"
+      >
+        Score
+      </button>
+    );
+  }
+  const color = score >= 70 ? "text-green-400" : score >= 30 ? "text-yellow-400" : "text-red-400";
+  const bg = score >= 70 ? "bg-green-400/10" : score >= 30 ? "bg-yellow-400/10" : "bg-red-400/10";
+  const dot = score >= 70 ? "bg-green-400" : score >= 30 ? "bg-yellow-400" : "bg-red-400";
+  return (
+    <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded ${bg} ${color}`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
+      {score}
+    </span>
+  );
+}
+
+// ====================== SCORE BREAKDOWN BARS ======================
+function ScoreBreakdownBars({ breakdown }: { breakdown: ScoreBreakdown }) {
+  const items = [
+    { label: "Fit", value: breakdown.fit, max: 25, color: "bg-blue-400" },
+    { label: "Intent", value: breakdown.intent, max: 25, color: "bg-purple-400" },
+    { label: "Urgency", value: breakdown.urgency, max: 25, color: "bg-orange-400" },
+    { label: "Data Quality", value: breakdown.data_quality, max: 25, color: "bg-green-400" },
+  ];
+  return (
+    <div className="space-y-2">
+      {items.map((item) => (
+        <div key={item.label}>
+          <div className="flex justify-between text-[9px] mb-0.5">
+            <span className="text-muted">{item.label}</span>
+            <span className="font-semibold">{item.value}/{item.max}</span>
+          </div>
+          <div className="w-full bg-surface-light rounded-full h-1.5">
+            <div
+              className={`${item.color} rounded-full h-1.5 transition-all`}
+              style={{ width: `${(item.value / item.max) * 100}%` }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ====================== MAIN PAGE ======================
 export default function LeadEnginePage() {
   const [activeTab, setActiveTab] = useState<MainTab>("leads");
@@ -404,6 +469,9 @@ export default function LeadEnginePage() {
   const [tagInput, setTagInput] = useState("");
   const [hotAlerts, setHotAlerts] = useState(true);
   const [expandedLead, setExpandedLead] = useState<string | null>(null);
+  const [sortByScore, setSortByScore] = useState(false);
+  const [highPriorityOnly, setHighPriorityOnly] = useState(false);
+  const [scoringLeads, setScoringLeads] = useState<Set<string>>(new Set());
 
   // Modal state
   const [showImportModal, setShowImportModal] = useState(false);
@@ -428,14 +496,58 @@ export default function LeadEnginePage() {
       const res = await fetch(`/api/leads?${params}`);
       if (!res.ok) throw new Error(`API ${res.status}`);
       const data = await res.json();
-      setLeads(data.leads || []);
+      let fetched: Lead[] = data.leads || [];
+
+      // Client-side: sort by score descending if toggle is on
+      if (sortByScore) {
+        fetched = [...fetched].sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+      }
+
+      // Client-side: filter to 70+ scores if chip is active
+      if (highPriorityOnly) {
+        fetched = fetched.filter((l) => (l.score ?? 0) >= 70);
+      }
+
+      setLeads(fetched);
       setTotalCount(data.total || 0);
     } catch (err) {
       console.error("Failed to fetch leads:", err);
     } finally {
       setLoading(false);
     }
-  }, [page, searchQuery, statusFilter, industryFilter]);
+  }, [page, searchQuery, statusFilter, industryFilter, sortByScore, highPriorityOnly]);
+
+  async function scoreOneLead(lead: Lead) {
+    setScoringLeads((s) => new Set(s).add(lead.id));
+    try {
+      const res = await fetch(`/api/leads/${lead.id}/score`, { method: "POST" });
+      if (!res.ok) throw new Error("Scoring failed");
+      const data = await res.json();
+      // Optimistically update the lead in state
+      setLeads((prev) =>
+        prev.map((l) =>
+          l.id === lead.id
+            ? {
+                ...l,
+                score: data.score,
+                score_breakdown: data.breakdown,
+                score_reasoning: data.reasoning,
+                score_computed_at: new Date().toISOString(),
+              }
+            : l
+        )
+      );
+      toast.success(`Scored: ${data.score}/100`);
+    } catch {
+      toast.error("Scoring failed");
+    } finally {
+      setScoringLeads((s) => {
+        const next = new Set(s);
+        next.delete(lead.id);
+        return next;
+      });
+    }
+  }
 
   useEffect(() => {
     fetchLeads();
@@ -444,7 +556,7 @@ export default function LeadEnginePage() {
   // Reset to page 1 when filters change
   useEffect(() => {
     setPage(1);
-  }, [searchQuery, statusFilter, industryFilter]);
+  }, [searchQuery, statusFilter, industryFilter, sortByScore, highPriorityOnly]);
 
   // Export handler — fetches ALL leads, builds CSV, triggers download
   async function handleExport() {
@@ -491,25 +603,22 @@ export default function LeadEnginePage() {
       {showAddModal && <AddLeadModal onClose={() => setShowAddModal(false)} onSuccess={fetchLeads} />}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-3">
-            <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-              <Zap size={24} className="text-gold" />
-            </div>
-            Lead Engine
-          </h1>
-          <p className="text-muted text-sm">Automated lead scoring, routing, enrichment & nurture</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={() => setShowImportModal(true)} className="btn-secondary text-xs flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
-          <button onClick={handleExport} disabled={exporting} className="btn-secondary text-xs flex items-center gap-1.5">
-            {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
-            {exporting ? "Exporting..." : "Export"}
-          </button>
-          <button onClick={() => setShowAddModal(true)} className="btn-primary text-xs flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
-        </div>
-      </div>
+      <PageHero
+        icon={<Zap size={28} />}
+        title="Lead Engine"
+        subtitle="Automated lead scoring, routing, enrichment & nurture — build and convert your pipeline."
+        gradient="gold"
+        actions={
+          <>
+            <button onClick={() => setShowImportModal(true)} aria-label="Import leads from CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5"><Upload size={12} /> Import CSV</button>
+            <button onClick={handleExport} disabled={exporting} aria-label="Export leads to CSV" className="px-3 py-1.5 rounded-lg bg-white/10 border border-white/20 text-white text-xs font-medium hover:bg-white/20 transition-all flex items-center gap-1.5 disabled:opacity-50">
+              {exporting ? <Loader size={12} className="animate-spin" /> : <Download size={12} />}
+              {exporting ? "Exporting..." : "Export"}
+            </button>
+            <button onClick={() => setShowAddModal(true)} className="px-3 py-1.5 rounded-lg bg-white/15 border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-all flex items-center gap-1.5"><UserPlus size={12} /> Add Lead</button>
+          </>
+        }
+      />
 
       {/* Stats — collapsible (state persists) */}
       <CollapsibleStats
@@ -579,6 +688,28 @@ export default function LeadEnginePage() {
               <option value="">All Industries</option>
               {industries.map(i => <option key={i} value={i}>{i}</option>)}
             </select>
+            {/* High-priority filter chip */}
+            <button
+              onClick={() => setHighPriorityOnly(v => !v)}
+              className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                highPriorityOnly
+                  ? "bg-green-400/10 border-green-400/30 text-green-400"
+                  : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+              }`}
+            >
+              <Flame size={11} /> High priority (70+)
+            </button>
+            {/* Sort by score toggle */}
+            <button
+              onClick={() => setSortByScore(v => !v)}
+              className={`text-xs px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 ${
+                sortByScore
+                  ? "bg-gold/10 border-gold/30 text-gold"
+                  : "border-border text-muted hover:border-gold/20 hover:text-foreground"
+              }`}
+            >
+              <Target size={11} /> Sort by score
+            </button>
           </div>
 
           {/* Lead Table */}
@@ -587,7 +718,9 @@ export default function LeadEnginePage() {
               <span className="col-span-3">Business</span>
               <span className="col-span-2">Contact</span>
               <span>Source</span>
-              <span className="text-center">Score</span>
+              <span className="text-center flex items-center justify-center gap-1">
+                <Target size={9} /> AI Score
+              </span>
               <span>Status</span>
               <span className="text-center">Rating</span>
               <span className="col-span-2">Location</span>
@@ -623,8 +756,12 @@ export default function LeadEnginePage() {
                     <p className="text-muted flex items-center gap-1"><Phone size={9} /> {lead.phone || "---"}</p>
                   </div>
                   <span className="text-muted">{lead.source || "---"}</span>
-                  <div className="text-center">
-                    <span className={`font-bold ${(lead.lead_score ?? 0) >= 80 ? "text-green-400" : (lead.lead_score ?? 0) >= 50 ? "text-yellow-400" : "text-red-400"}`}>{lead.lead_score ?? "—"}</span>
+                  <div className="text-center flex items-center justify-center">
+                    {scoringLeads.has(lead.id) ? (
+                      <Loader size={12} className="animate-spin text-gold" />
+                    ) : (
+                      <ScoreBadge score={lead.score} onClick={() => scoreOneLead(lead)} />
+                    )}
                   </div>
                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full w-fit ${
                     lead.status === "converted" ? "bg-purple-400/10 text-purple-400" :
@@ -652,29 +789,67 @@ export default function LeadEnginePage() {
                     <a
                       href={lead.phone ? `tel:${lead.phone}` : undefined}
                       onClick={(e) => { if (!lead.phone) { e.preventDefault(); toast.error("No phone number"); } }}
+                      aria-label={lead.phone ? `Call ${lead.business_name}` : "No phone number"}
                       className={`p-1 rounded hover:bg-white/5 text-muted hover:text-gold ${!lead.phone ? "opacity-40 cursor-not-allowed" : ""}`}
                       title={lead.phone || "No phone"}
                     ><Phone size={10} /></a>
                     <a
                       href={lead.email ? `mailto:${lead.email}` : undefined}
                       onClick={(e) => { if (!lead.email) { e.preventDefault(); toast.error("No email"); } }}
+                      aria-label={lead.email ? `Email ${lead.business_name}` : "No email address"}
                       className={`p-1 rounded hover:bg-white/5 text-muted hover:text-gold ${!lead.email ? "opacity-40 cursor-not-allowed" : ""}`}
                       title={lead.email || "No email"}
                     ><Mail size={10} /></a>
                     <Link
                       href="/dashboard/dm-controller"
+                      aria-label={`Send DM to ${lead.business_name}`}
                       className="p-1 rounded hover:bg-white/5 text-muted hover:text-gold"
                       title="DM via DM Controller"
                     ><MessageSquare size={10} /></Link>
                   </div>
                 </div>
-                {/* Engagement Timeline */}
+                {/* Expanded drawer — score breakdown + qualification */}
                 {expandedLead === lead.id && (
-                  <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border">
-                    <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><Clock size={10} /> Engagement Timeline</h4>
-                    <div className="text-center py-4 text-muted text-[9px]">No engagement data yet.</div>
+                  <div className="ml-4 mt-2 mb-3 p-3 rounded-lg bg-surface border border-border space-y-3">
+                    {/* AI Score Breakdown */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="text-[10px] font-semibold flex items-center gap-1.5">
+                          <Target size={10} className="text-gold" /> AI Score Breakdown
+                        </h4>
+                        {lead.score !== null ? (
+                          <span className="text-[9px] text-muted">
+                            Total: <span className="font-bold text-foreground">{lead.score}/100</span>
+                          </span>
+                        ) : (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); scoreOneLead(lead); }}
+                            disabled={scoringLeads.has(lead.id)}
+                            className="text-[9px] px-2.5 py-1 rounded bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center gap-1 disabled:opacity-50"
+                          >
+                            {scoringLeads.has(lead.id) ? <Loader size={9} className="animate-spin" /> : <Zap size={9} />}
+                            Score now
+                          </button>
+                        )}
+                      </div>
+                      {lead.score_breakdown ? (
+                        <ScoreBreakdownBars breakdown={lead.score_breakdown} />
+                      ) : (
+                        <p className="text-[9px] text-muted italic">No AI score yet — click &ldquo;Score now&rdquo; above.</p>
+                      )}
+                      {lead.score_reasoning && (
+                        <p className="text-[9px] text-muted mt-2 italic">{lead.score_reasoning}</p>
+                      )}
+                    </div>
+
+                    {/* Engagement Timeline */}
+                    <div className="pt-2 border-t border-border">
+                      <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><Clock size={10} /> Engagement Timeline</h4>
+                      <div className="text-center py-3 text-muted text-[9px]">No engagement data yet.</div>
+                    </div>
+
                     {/* Qualification Checklist */}
-                    <div className="mt-3 pt-3 border-t border-border">
+                    <div className="pt-2 border-t border-border">
                       <h4 className="text-[10px] font-semibold mb-2 flex items-center gap-1.5"><CheckCircle size={10} /> Qualification Checklist</h4>
                       <div className="grid grid-cols-2 gap-1">
                         {[
@@ -683,7 +858,7 @@ export default function LeadEnginePage() {
                           { item: "Website found", check: !!lead.website },
                           { item: "Rating 4.0+", check: (lead.google_rating ?? 0) >= 4.0 },
                           { item: "Has address", check: !!lead.address },
-                          { item: "Score 70+", check: (lead.lead_score ?? 0) >= 70 },
+                          { item: "AI Score 70+", check: (lead.score ?? 0) >= 70 },
                         ].map((q, i) => (
                           <div key={i} className="flex items-center gap-1.5 text-[9px]">
                             {q.check ? <CheckCircle size={9} className="text-green-400" /> : <div className="w-2.5 h-2.5 rounded border border-muted" />}

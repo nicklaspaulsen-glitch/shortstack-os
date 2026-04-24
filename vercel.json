@@ -112,6 +112,14 @@
     {
       "path": "/api/cron/self-test",
       "schedule": "15 3 * * *"
+    },
+    {
+      "path": "/api/cron/score-leads",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/cron/review-requests",
+      "schedule": "*/15 * * * *"
     }
   ]
 }
