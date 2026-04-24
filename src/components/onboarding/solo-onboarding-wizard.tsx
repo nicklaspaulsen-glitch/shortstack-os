@@ -18,13 +18,17 @@ import {
   CheckCircle2,
   Layers,
   Target,
+  type LucideIcon,
 } from "lucide-react";
 import WebsiteScraper from "@/components/ui/website-scraper";
 import SidebarCustomizer from "@/components/onboarding/sidebar-customizer";
 import { USER_TYPES, UserType, getUserTypeMeta } from "@/lib/user-types";
 
 /* ─── Icon lookup for user-type cards ──────────────────────────────── */
-const ICONS: Record<string, React.ElementType> = {
+// Typed as LucideIcon (not React.ElementType) so the `|| Sparkles` fallback
+// below doesn't collapse JSX prop inference to `never` — same fix as the
+// sibling /dashboard/onboard/page.tsx module.
+const ICONS: Record<string, LucideIcon> = {
   Building2,
   Video,
   Home,
