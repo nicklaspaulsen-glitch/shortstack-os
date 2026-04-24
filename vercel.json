@@ -120,6 +120,10 @@
     {
       "path": "/api/cron/review-requests",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/process-batches",
+      "schedule": "*/10 * * * *"
     }
   ]
 }
