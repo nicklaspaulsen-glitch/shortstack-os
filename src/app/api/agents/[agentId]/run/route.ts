@@ -2,14 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 /**
- * POST /api/agents/:name/run
+ * POST /api/agents/:agentId/run
  * Kicks off an agent run manually. Inserts an `agent_runs` row in the
  * "running" state, then (for now) flips it to success with a synthetic
- * summary. Wire real agent handlers here by switching on `name`.
+ * summary. Wire real agent handlers here by switching on the agent id
+ * (kept as `name` locally because `agent_runs.agent_name` is the column).
+ *
+ * Param is named `agentId` so this segment can coexist as a sibling of
+ * /api/agents/[agentId]/health and /api/agents/[agentId]/repair under
+ * Next.js's one-slug-name-per-tree-level rule.
  */
 export async function POST(
   _req: NextRequest,
-  { params }: { params: { name: string } },
+  { params }: { params: { agentId: string } },
 ) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -24,7 +29,7 @@ export async function POST(
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const name = params.name;
+  const name = params.agentId;
   if (!name) return NextResponse.json({ error: "agent name required" }, { status: 400 });
 
   const startedAt = new Date().toISOString();
