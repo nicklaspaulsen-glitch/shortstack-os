@@ -10,6 +10,7 @@ import {
   Building2, Target, Users, Plus, X,
   CheckCircle2, Layout, Zap, BookOpen, Loader2,
   Video, Home, GraduationCap, ShoppingBag,
+  type LucideIcon,
 } from "lucide-react";
 import { PLAN_TIERS, type PlanTier } from "@/lib/plan-config";
 import PageHero from "@/components/ui/page-hero";
@@ -21,7 +22,11 @@ import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 /* ================================================================== */
 /*  Icon lookup for user-type cards                                    */
 /* ================================================================== */
-const USER_TYPE_ICONS: Record<string, React.ElementType> = {
+// Typed as LucideIcon (not React.ElementType) so the union with `|| Sparkles`
+// fallback below doesn't collapse JSX prop inference to `never` — TS was
+// rejecting `<Icon size={18} />` with "number is not assignable to never"
+// when the union was heterogeneous.
+const USER_TYPE_ICONS: Record<string, LucideIcon> = {
   Building2, Video, Home, GraduationCap, ShoppingBag, Rocket, Briefcase, Sparkles,
 };
 
