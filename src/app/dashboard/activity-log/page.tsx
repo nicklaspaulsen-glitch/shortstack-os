@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Activity, Search, Zap, Users, Mail, Globe, Bot,
   CreditCard, BarChart3, Shield, Download,
   AlertTriangle, Eye, Key,
   Settings, ChevronRight,
-  ClipboardList,
+  ClipboardList, Loader2,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 
@@ -38,21 +38,96 @@ const TYPE_CONFIG: Record<string, { icon: React.ReactNode; color: string; label:
   api: { icon: <Globe size={12} />, color: "text-indigo-400", label: "API" },
 };
 
-// TODO: Load from /api/activity-log once the feed endpoint is wired.
-// The UI renders an empty state until real log entries exist.
-const INITIAL_LOGS: LogEntry[] = [];
+// Map the action_type enum values coming from /api/audit-log onto the
+// frontend's icon/color config keys so the feed renders consistently.
+const ACTION_TYPE_TO_CATEGORY: Record<string, keyof typeof TYPE_CONFIG> = {
+  lead_gen: "lead_gen",
+  email_campaign: "outreach",
+  sms_campaign: "outreach",
+  social_setup: "content",
+  website: "content",
+  chatbot: "automation",
+  ai_receptionist: "automation",
+  automation: "automation",
+  discord: "system",
+  custom: "system",
+};
 
-const USERS = ["All"];
+interface AuditApiEntry {
+  id: string;
+  timestamp: string;
+  action: string;
+  action_type: string | null;
+  description: string;
+  resource: string;
+  status: string;
+  ip: string | null;
+  user_agent: string | null;
+  sensitive: boolean;
+  user_email: string | null;
+}
+
+function mapAuditToLog(entry: AuditApiEntry): LogEntry {
+  const category = ACTION_TYPE_TO_CATEGORY[entry.action_type ?? ""] ?? "system";
+  return {
+    id: entry.id,
+    user: entry.user_email || "System",
+    type: category,
+    action: entry.action || entry.action_type || "custom",
+    entity: entry.resource || "trinity",
+    entityId: entry.id.slice(0, 8),
+    details: entry.description,
+    timestamp: entry.timestamp,
+    ip: entry.ip || "—",
+  };
+}
 
 export default function ActivityLogPage() {
   const [tab, setTab] = useState<ActivityTab>("feed");
-  const [logs] = useState(INITIAL_LOGS);
+  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [userFilter, setUserFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("all");
   const [expandedLog, setExpandedLog] = useState<string | null>(null);
   const [isLive, setIsLive] = useState(true);
+
+  // Pull the live feed from /api/audit-log. Refreshes every 20s while "Live"
+  // is on — cheap enough to poll given the PK+profile index on trinity_log
+  // and the 200-row page cap.
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchLogs = async () => {
+      try {
+        const res = await fetch("/api/audit-log?page_size=200", { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        if (cancelled) return;
+        const entries: AuditApiEntry[] = Array.isArray(json.entries) ? json.entries : [];
+        setLogs(entries.map(mapAuditToLog));
+        setLoadError(null);
+      } catch (err) {
+        if (!cancelled) setLoadError(err instanceof Error ? err.message : "Failed to load");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchLogs();
+    if (!isLive) return () => { cancelled = true; };
+
+    const interval = setInterval(fetchLogs, 20_000);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [isLive]);
+
+  // Derived user list — always "All" first, then every user we've seen.
+  const USERS = ["All", ...Array.from(new Set(logs.map(l => l.user))).filter(u => u !== "All")];
 
   const types = ["all", ...Object.keys(TYPE_CONFIG)];
 
@@ -186,7 +261,17 @@ export default function ActivityLogPage() {
 
           {/* Activity Feed */}
           <div className="space-y-1">
-            {filtered.length === 0 ? (
+            {loading ? (
+              <div className="card text-center py-12">
+                <Loader2 size={24} className="mx-auto mb-2 text-muted/50 animate-spin" />
+                <p className="text-xs text-muted">Loading activity…</p>
+              </div>
+            ) : loadError ? (
+              <div className="card text-center py-12">
+                <AlertTriangle size={24} className="mx-auto mb-2 text-red-400/60" />
+                <p className="text-xs text-red-400">Failed to load activity: {loadError}</p>
+              </div>
+            ) : filtered.length === 0 ? (
               <div className="card text-center py-12"><Activity size={24} className="mx-auto mb-2 text-muted/30" /><p className="text-xs text-muted">No activity found</p></div>
             ) : (
               filtered.map(log => {
