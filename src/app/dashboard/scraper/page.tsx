@@ -22,6 +22,7 @@ import InlineSocialConnect from "@/components/inline-social-connect";
 import { Lightbulb, Megaphone, Loader2, ChevronsRight } from "lucide-react";
 import toast from "react-hot-toast";
 import ErrorBoundary from "@/components/error-boundary";
+import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 
 /* ─── static data ─── */
 const PLATFORMS: Array<{ id: string; name: string; icon: React.ReactNode; description: string; disabled?: boolean; apify?: boolean }> = [
@@ -798,19 +799,22 @@ export default function ScraperPage() {
           <div className="space-y-4">
             <div className="card">
               <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Globe size={14} className="text-gold" /> Platforms</h3>
-              <div className="space-y-2">
-                {PLATFORMS.map(p => (
-                  <button key={p.id} onClick={() => !p.disabled && togglePlatform(p.id)} disabled={p.disabled}
-                    className={`w-full p-3 rounded-lg border text-left transition-all flex items-center gap-3 ${selectedPlatforms.includes(p.id) ? "border-gold bg-gold/10" : p.disabled ? "border-border opacity-30 cursor-not-allowed" : "border-border hover:border-gold/30"}`}>
-                    <span className="shrink-0">{p.icon}</span>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium flex items-center gap-1.5">{p.name}{p.apify && <span className="text-[8px] bg-gold/15 text-gold px-1.5 py-0.5 rounded-full font-medium uppercase tracking-wider">Apify</span>}</p>
-                      <p className="text-[10px] text-muted">{p.description}</p>
-                    </div>
-                    {selectedPlatforms.includes(p.id) && <div className="w-3 h-3 bg-gold rounded-full" />}
-                  </button>
-                ))}
-              </div>
+              <ChoiceCards
+                columns={2}
+                size="sm"
+                multi
+                value={selectedPlatforms}
+                onChange={(ids) => setSelectedPlatforms(ids as string[])}
+                ariaLabel="Lead scraping platforms"
+                items={PLATFORMS.map((p): ChoiceCardItem => ({
+                  id: p.id,
+                  title: p.name,
+                  description: p.description,
+                  icon: p.icon,
+                  disabled: p.disabled,
+                  badge: p.apify ? "Apify" : undefined,
+                }))}
+              />
             </div>
             <div className="card">
               <h3 className="text-sm font-medium mb-3 flex items-center gap-2"><Hash size={14} className="text-gold" /> Results per search</h3>

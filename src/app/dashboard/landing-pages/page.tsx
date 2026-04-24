@@ -18,6 +18,7 @@ import { LayoutTemplate } from "lucide-react";
 import PageAI from "@/components/page-ai";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import AIEnhanceButton from "@/components/ui/ai-enhance-button";
+import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 
 /* ══════════════════════════════════════════════════════════════════
    TYPES
@@ -491,30 +492,22 @@ export default function LandingPagesPage() {
       description: "This sets the structure — sections and overall vibe. You can change colour & copy after.",
       icon: <Layout size={18} />,
       component: (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-          {TEMPLATES.map(tpl => {
-            const sel = guidedTemplate === tpl.id;
+        <ChoiceCards
+          columns={4}
+          size="sm"
+          value={guidedTemplate}
+          onChange={(id) => setGuidedTemplate(id as string)}
+          ariaLabel="Landing page template"
+          items={TEMPLATES.map((tpl): ChoiceCardItem => {
             const Icon = tpl.icon;
-            return (
-              <button
-                key={tpl.id}
-                type="button"
-                onClick={() => setGuidedTemplate(tpl.id)}
-                className={`text-left p-3 rounded-xl border transition-all ${
-                  sel
-                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                    : "border-border hover:border-gold/30 bg-surface-light"
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <Icon className="w-4 h-4" style={{ color: tpl.color }} />
-                  <p className="text-sm font-semibold">{tpl.name}</p>
-                </div>
-                <p className="text-[10px] text-muted leading-relaxed">{tpl.desc}</p>
-              </button>
-            );
+            return {
+              id: tpl.id,
+              title: tpl.name,
+              description: tpl.desc,
+              icon: <Icon size={16} style={{ color: tpl.color }} />,
+            };
           })}
-        </div>
+        />
       ),
     },
     {

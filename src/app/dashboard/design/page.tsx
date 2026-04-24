@@ -23,6 +23,7 @@ import PromptEnhancer from "@/components/prompt-enhancer";
 import PageHero from "@/components/ui/page-hero";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
+import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 
 // Example design/banner artwork used for the landing-state marquee.
 const DESIGN_PREVIEW_FALLBACK: RollingPreviewItem[] = [
@@ -795,27 +796,19 @@ export default function DesignStudioPage() {
       description: "We'll pick the right dimensions and default style for you.",
       icon: <Palette size={18} />,
       component: (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-          {GUIDED_KINDS.map(k => {
-            const sel = guidedKind === k.id;
-            return (
-              <button
-                key={k.id}
-                type="button"
-                onClick={() => setGuidedKind(k.id)}
-                className={`text-left p-4 rounded-xl border transition-all ${
-                  sel
-                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                    : "border-border hover:border-gold/30 bg-surface-light"
-                }`}
-              >
-                <div className="text-gold mb-2">{k.icon}</div>
-                <p className="text-sm font-semibold">{k.label}</p>
-                <p className="text-[10px] text-muted mt-1">{k.desc}</p>
-              </button>
-            );
-          })}
-        </div>
+        <ChoiceCards
+          columns={4}
+          size="md"
+          value={guidedKind}
+          onChange={(id) => setGuidedKind(id as string)}
+          ariaLabel="Design type"
+          items={GUIDED_KINDS.map((k): ChoiceCardItem => ({
+            id: k.id,
+            title: k.label,
+            description: k.desc,
+            icon: k.icon,
+          }))}
+        />
       ),
     },
     {
@@ -824,33 +817,18 @@ export default function DesignStudioPage() {
       description: "This picks a style + matching color palette — you can change both in Advanced.",
       icon: <Wand2 size={18} />,
       component: (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-          {GUIDED_VIBES.map(v => {
-            const sel = guidedVibe === v.id;
-            const palette = COLOR_PALETTES.find(p => p.name === v.palette);
-            return (
-              <button
-                key={v.id}
-                type="button"
-                onClick={() => setGuidedVibe(v.id)}
-                className={`text-left p-4 rounded-xl border transition-all ${
-                  sel
-                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                    : "border-border hover:border-gold/30 bg-surface-light"
-                }`}
-              >
-                <p className="text-sm font-semibold">{v.label}</p>
-                {palette && (
-                  <div className="flex gap-1 mt-2">
-                    {palette.colors.map((c, i) => (
-                      <span key={i} className="w-4 h-4 rounded border border-border" style={{ background: c }} />
-                    ))}
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        <ChoiceCards
+          columns={3}
+          size="md"
+          value={guidedVibe}
+          onChange={(id) => setGuidedVibe(id as string)}
+          ariaLabel="Design vibe"
+          items={GUIDED_VIBES.map((v): ChoiceCardItem => ({
+            id: v.id,
+            title: v.label,
+            description: v.style,
+          }))}
+        />
       ),
     },
     {

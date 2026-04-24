@@ -16,6 +16,7 @@ import PageHero from "@/components/ui/page-hero";
 import SoloOnboardingWizard from "@/components/onboarding/solo-onboarding-wizard";
 import { USER_TYPES, UserType } from "@/lib/user-types";
 import toast from "react-hot-toast";
+import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 
 /* ================================================================== */
 /*  Icon lookup for user-type cards                                    */
@@ -457,24 +458,22 @@ export default function OnboardPage() {
             <h2 className="text-2xl font-bold mb-1">What best describes you?</h2>
             <p className="text-sm text-muted">Pick one — you can change it later in Settings.</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {USER_TYPES.map((t) => {
+          <ChoiceCards
+            columns={4}
+            size="md"
+            value={null}
+            onChange={(id) => setUserType(id as UserType)}
+            ariaLabel="What best describes you?"
+            items={USER_TYPES.map((t): ChoiceCardItem => {
               const Icon = USER_TYPE_ICONS[t.iconKey] || Sparkles;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => setUserType(t.id)}
-                  className="relative text-left p-4 rounded-2xl border border-[var(--color-border)] bg-surface-light hover:border-gold/40 hover:-translate-y-0.5 transition-all"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-gold/10 text-gold flex items-center justify-center mb-3">
-                    <Icon size={18} />
-                  </div>
-                  <p className="text-sm font-semibold text-foreground mb-0.5">{t.label}</p>
-                  <p className="text-[11px] text-muted leading-snug">{t.description}</p>
-                </button>
-              );
+              return {
+                id: t.id,
+                title: t.label,
+                description: t.description,
+                icon: <Icon size={18} />,
+              };
             })}
-          </div>
+          />
         </div>
       </div>
     );
@@ -761,27 +760,19 @@ export default function OnboardPage() {
             </div>
             <button onClick={() => setShowTemplates(false)} className="text-muted hover:text-foreground"><X size={16} /></button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-            {ONBOARD_TEMPLATES.map(tpl => (
-              <button key={tpl.id}
-                onClick={() => { setSelectedTemplate(tpl.id); setShowTemplates(false); }}
-                className={`p-4 rounded-xl border text-left transition-all hover:border-gold/30 ${
-                  selectedTemplate === tpl.id ? "border-gold bg-gold/5" : "border-[var(--color-border)] bg-[var(--color-surface)]"
-                }`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold">{tpl.name}</span>
-                  {tpl.popular && (
-                    <span className="text-[7px] px-1.5 py-0.5 bg-gold/10 text-gold rounded-full font-semibold">Popular</span>
-                  )}
-                </div>
-                <p className="text-[10px] text-muted mb-2">{tpl.description}</p>
-                <div className="flex items-center justify-between text-[9px] text-muted">
-                  <span>{tpl.steps} steps</span>
-                  <span>{tpl.industry}</span>
-                </div>
-              </button>
-            ))}
-          </div>
+          <ChoiceCards
+            columns={4}
+            size="md"
+            value={selectedTemplate}
+            onChange={(id) => { setSelectedTemplate(id as string); setShowTemplates(false); }}
+            ariaLabel="Onboarding Templates"
+            items={ONBOARD_TEMPLATES.map((tpl): ChoiceCardItem => ({
+              id: tpl.id,
+              title: tpl.name,
+              description: `${tpl.description} · ${tpl.steps} steps · ${tpl.industry}`,
+              badge: tpl.popular ? "Popular" : undefined,
+            }))}
+          />
         </div>
       )}
 
@@ -901,27 +892,18 @@ export default function OnboardPage() {
                 {/* Select package to start */}
                 <div>
                   <p className="text-sm font-semibold mb-3 flex items-center gap-2"><Crown size={14} className="text-gold" /> Choose a Package</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-                    {PACKAGES.map(pkg => (
-                      <button key={pkg.name}
-                        onClick={() => updateForm("package_tier", pkg.name)}
-                        className={`p-4 rounded-xl border text-left transition-all ${
-                          form.package_tier === pkg.name ? "border-gold bg-gold/5" : "border-[var(--color-border)] hover:border-gold/30"
-                        }`}>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-sm font-bold">{pkg.name}</span>
-                          <span className="text-lg font-bold" style={{ color: pkg.color }}>{pkg.price}<span className="text-[9px] text-muted font-normal">/mo</span></span>
-                        </div>
-                        <ul className="space-y-1 mt-2">
-                          {pkg.features.map((f, fi) => (
-                            <li key={fi} className="text-[10px] text-muted flex items-center gap-1.5">
-                              <Check size={8} className="text-gold shrink-0" /> {f}
-                            </li>
-                          ))}
-                        </ul>
-                      </button>
-                    ))}
-                  </div>
+                  <ChoiceCards
+                    columns={3}
+                    size="md"
+                    value={form.package_tier}
+                    onChange={(id) => updateForm("package_tier", id as string)}
+                    ariaLabel="Choose a Package"
+                    items={PACKAGES.map((pkg): ChoiceCardItem => ({
+                      id: pkg.name,
+                      title: pkg.name,
+                      description: `${pkg.price}/mo · ${pkg.features[0]}`,
+                    }))}
+                  />
                 </div>
 
                 {/* FAQ */}

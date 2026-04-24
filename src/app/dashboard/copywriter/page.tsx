@@ -15,6 +15,7 @@ import CreationWizard, { type WizardStep } from "@/components/creation-wizard";
 import { Wizard, AdvancedToggle, useAdvancedMode, type WizardStepDef } from "@/components/ui/wizard";
 import RollingPreview, { type RollingPreviewItem } from "@/components/RollingPreview";
 import { trackGeneration } from "@/lib/track-generation";
+import ChoiceCards, { type ChoiceCardItem } from "@/components/ui/choice-cards";
 
 // Fake-screenshot text cards used as the rolling marquee on the copywriter
 // landing state. Each card = one example of the kind of copy this tool
@@ -628,32 +629,22 @@ export default function CopywriterPage() {
       description: "Pick the format — we'll tailor the writing style.",
       icon: <FileText size={18} />,
       component: (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
-          {CONTENT_TYPES.map(ct => {
+        <ChoiceCards
+          columns={3}
+          size="md"
+          value={contentType}
+          onChange={(id) => setContentType(id as ContentType)}
+          ariaLabel="Content type"
+          items={CONTENT_TYPES.map((ct): ChoiceCardItem => {
             const Icon = ct.icon;
-            const selected = contentType === ct.id;
-            return (
-              <button
-                key={ct.id}
-                onClick={() => setContentType(ct.id)}
-                className={`relative text-left p-4 rounded-xl border transition-all ${
-                  selected
-                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                    : "border-border hover:border-gold/30 bg-surface-light"
-                }`}
-              >
-                <Icon size={20} style={{ color: selected ? undefined : ct.color }} className={selected ? "text-gold" : ""} />
-                <p className="text-sm font-semibold mt-2">{ct.label}</p>
-                <p className="text-[10px] text-muted line-clamp-2 mt-0.5">{ct.description}</p>
-                {selected && (
-                  <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-gold flex items-center justify-center">
-                    <CheckCircle size={10} className="text-black" />
-                  </div>
-                )}
-              </button>
-            );
+            return {
+              id: ct.id,
+              title: ct.label,
+              description: ct.description,
+              icon: <Icon size={18} />,
+            };
           })}
-        </div>
+        />
       ),
     },
     {
@@ -695,31 +686,26 @@ export default function CopywriterPage() {
       description: "This controls the vibe — formal vs. playful, calm vs. punchy.",
       icon: <Type size={18} />,
       component: (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-          {TONES.map(t => {
-            const selected = tone === t.id;
-            const preview: Record<Tone, string> = {
+        <ChoiceCards
+          columns={4}
+          size="md"
+          value={tone}
+          onChange={(id) => setTone(id as Tone)}
+          ariaLabel="Voice tone"
+          items={TONES.map((t): ChoiceCardItem => {
+            const toneDesc: Record<Tone, string> = {
               professional: "Clear, trustworthy, on-brand.",
               casual: "Like texting a friend.",
               witty: "Clever turns of phrase.",
               bold: "Short. Strong. Direct.",
             };
-            return (
-              <button
-                key={t.id}
-                onClick={() => setTone(t.id)}
-                className={`text-left p-4 rounded-xl border transition-all ${
-                  selected
-                    ? "border-gold bg-gold/10 shadow-lg shadow-gold/10"
-                    : "border-border hover:border-gold/30 bg-surface-light"
-                }`}
-              >
-                <p className="text-sm font-semibold capitalize">{t.label}</p>
-                <p className="text-[10px] text-muted mt-1">{preview[t.id]}</p>
-              </button>
-            );
+            return {
+              id: t.id,
+              title: t.label,
+              description: toneDesc[t.id],
+            };
           })}
-        </div>
+        />
       ),
     },
     {
