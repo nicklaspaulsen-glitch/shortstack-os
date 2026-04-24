@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { recordMentions } from "@/lib/community/mentions";
 
 // GET ?post_id=xxx — fetch comments for a post (threaded)
 export async function GET(req: NextRequest) {
@@ -59,6 +60,28 @@ export async function POST(req: NextRequest) {
     if (p) {
       await supabase.from("community_posts").update({ comments_count: (p.comments_count || 0) + 1 }).eq("id", post_id);
     }
+  }
+
+  // Resolve @mentions and notify mentioned users. Best-effort — never blocks
+  // the comment insert from succeeding.
+  try {
+    const { data: parentPost } = await supabase
+      .from("community_posts")
+      .select("title")
+      .eq("id", post_id)
+      .maybeSingle();
+    await recordMentions({
+      supabase,
+      authorId: user.id,
+      authorName: profile?.nickname || profile?.full_name || "Someone",
+      body: content,
+      commentId: data?.id ?? null,
+      postId: post_id,
+      link: `/dashboard/community/${post_id}`,
+      context: parentPost?.title || undefined,
+    });
+  } catch {
+    /* ignore — mentions are optional */
   }
 
   return NextResponse.json({ success: true, comment: data });
