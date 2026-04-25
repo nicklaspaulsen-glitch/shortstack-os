@@ -82,6 +82,7 @@ import {
   Download,
   ShieldCheck,
   ArrowUpRight,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -113,7 +114,9 @@ const navItems: NavItem[] = [
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessagesSquare size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Sequences", href: "/dashboard/sequences", icon: <ListOrdered size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
+  { label: "Lead Sources", href: "/dashboard/lead-sources", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "CRM", href: "/dashboard/crm", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
+  { label: "Tags", href: "/dashboard/tags", icon: <Layers size={16} />, roles: ["admin"], sub: "Pipeline" },
   { label: "Deals", href: "/dashboard/deals", icon: <CreditCard size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileCheck size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
   { label: "Forecast", href: "/dashboard/forecast", icon: <TrendingUp size={16} />, roles: ["admin"], sub: "Pipeline" },
@@ -121,6 +124,7 @@ const navItems: NavItem[] = [
   { label: "Ads Manager", href: "/dashboard/ads-manager", icon: <Target size={16} />, roles: ["admin"], sub: "Pipeline" },
   { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Scheduling", href: "/dashboard/scheduling", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
+  { label: "Meetings", href: "/dashboard/meetings", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Courses", href: "/dashboard/courses", icon: <BookOpen size={16} />, roles: ["admin"], sub: "Membership" },
 
@@ -155,6 +159,7 @@ const navItems: NavItem[] = [
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI" },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"], sub: "AI" },
   { label: "Agent Room", href: "/dashboard/agent-room", icon: <UsersRound size={16} />, roles: ["admin", "team_member"], sub: "AI" },
+  { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <SlidersHorizontal size={16} />, roles: ["admin"], sub: "AI" },
   { label: "Apps", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], sub: "Workflows" },
   { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Workflows" },
@@ -172,6 +177,8 @@ const navItems: NavItem[] = [
   { label: "Projects", href: "/dashboard/projects", icon: <Kanban size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Invoices", href: "/dashboard/invoices", icon: <Receipt size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "Invoice Templates", href: "/dashboard/invoice-templates", icon: <FileText size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "White Label", href: "/dashboard/white-label", icon: <Palette size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Billing", href: "/dashboard/billing", icon: <CreditCard size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Usage & Tokens", href: "/dashboard/usage", icon: <Zap size={16} />, roles: ["admin", "team_member"], sub: "Business" },

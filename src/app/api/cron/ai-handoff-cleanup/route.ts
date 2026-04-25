@@ -10,13 +10,8 @@ export const maxDuration = 30;
   the table churns fast — running daily keeps it from ballooning if a user
   rage-clicks "Edit" hundreds of times and never finishes the flow.
 
-  Idempotent.
-
-  ── ORPHAN HANDLER STATUS (Apr 27 audit) ──
-  This route is NOT currently scheduled in vercel.json. Either:
-    (a) Schedule it (e.g. "0 3 * * *" — daily at 03:00 UTC), OR
-    (b) Delete this file if the table truly doesn't grow that fast.
-  Until one of those happens, the route is callable but never auto-invoked.
+  Schedule: "0 3 * * *" — daily at 03:00 UTC (set in vercel.json Apr 27).
+  Idempotent — safe to manually re-trigger.
 */
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");

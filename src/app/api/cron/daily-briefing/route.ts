@@ -14,16 +14,8 @@ export const maxDuration = 120;
  * Telegram summary for the agency owner; this one generates per-admin
  * briefings stored in the DB.
  *
- * Auth: requires `Authorization: Bearer <CRON_SECRET>` header, matching
- * the existing cron pattern used by /api/cron/daily-brief etc.
- *
- * ── ORPHAN HANDLER STATUS (Apr 27 audit) ──
- * The comment below originally said "Configured in vercel.json to run at
- * 07:00 UTC" but the entry was never actually added. Either:
- *   (a) Schedule it in vercel.json (recommended: "0 7 * * *"), OR
- *   (b) Delete this route if the per-admin briefing feature is shelved.
- * Until one of those happens, daily_briefings rows only get created via
- * the on-demand /api/briefing/generate POST.
+ * Schedule: "0 7 * * *" — daily at 07:00 UTC (set in vercel.json Apr 27).
+ * Auth: requires `Authorization: Bearer <CRON_SECRET>` header.
  */
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get("authorization");

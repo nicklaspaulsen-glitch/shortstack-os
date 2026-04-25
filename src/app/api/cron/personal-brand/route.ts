@@ -2,18 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { generatePersonalBrandIdeas } from "@/lib/services/content-ai";
 
-// Originally intended to run every Sunday at 09:00 CET — generates a fresh
-// batch of long-form + short-form personal brand content ideas via the
-// generatePersonalBrandIdeas() service and inserts them into the
-// personal_brand_ideas table.
+// Generates a fresh batch of long-form + short-form personal brand content
+// ideas via the generatePersonalBrandIdeas() service and inserts them into
+// the personal_brand_ideas table.
 //
-// ── ORPHAN HANDLER STATUS (Apr 27 audit) ──
-// NOT currently scheduled in vercel.json. Either:
-//   (a) Schedule it (e.g. "0 8 * * 0" — Sunday 08:00 UTC = 09:00 CET), OR
-//   (b) Delete this route if the personal-brand-ideas batch feature is
-//       generated on-demand instead.
-// Until one of those happens, personal_brand_ideas only get populated via
-// manual invocation.
+// Schedule: "0 8 * * 0" — every Sunday 08:00 UTC = 09:00 CET (set in
+// vercel.json Apr 27).
 export const maxDuration = 120;
 
 export async function GET(request: NextRequest) {
