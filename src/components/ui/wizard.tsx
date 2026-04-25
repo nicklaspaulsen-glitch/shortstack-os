@@ -160,18 +160,33 @@ export function AdvancedToggle({
 /**
  * Convenience hook — advanced-mode preference, persisted per page key.
  *
- * Defaults to false (guided). On first visit we store the preference lazily
- * so SSR is stable. `pageKey` must be unique per page (e.g. "thumbnail").
+ * Defaults to false (guided). `pageKey` must be unique per page
+ * (e.g. "thumbnail").
+ *
+ * The previous implementation initialised `false` at first render and then
+ * read localStorage in a `useEffect`. That meant on every page load — even
+ * when the user had Advanced mode saved as ON — the toggle would render in
+ * the OFF position for ~16 ms, then visibly slide to ON once the effect
+ * fired. From the user's POV the thumb looked like it was *swiping in the
+ * wrong direction on load* (you expect the toggle to already be in its
+ * persisted position; instead it animated INTO that position).
+ *
+ * Fix: read localStorage synchronously in the useState lazy initializer so
+ * the first client-side render already has the persisted value. SSR still
+ * renders `false` (no localStorage on the server) — that produces a
+ * hydration warning the first paint after navigation, which Next.js
+ * auto-reconciles. Acceptable trade-off for a non-security pref.
  */
 export function useAdvancedMode(pageKey: string): [boolean, (v: boolean) => void] {
   const storageKey = `ss-wizard-advanced-${pageKey}`;
-  const [val, setVal] = useState(false);
-  useEffect(() => {
+  const [val, setVal] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
     try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved === "1") setVal(true);
-    } catch {}
-  }, [storageKey]);
+      return localStorage.getItem(storageKey) === "1";
+    } catch {
+      return false;
+    }
+  });
   const setAndPersist = useCallback(
     (next: boolean) => {
       setVal(next);
