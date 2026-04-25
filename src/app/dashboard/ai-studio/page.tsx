@@ -67,6 +67,12 @@ type ToolId = typeof TOOLS[number]["id"];
 export default function AIStudioPage() {
   const supabaseMain = useMemo(() => createClient(), []);
   const [activeTool, setActiveTool] = useState<ToolId>("transcribe");
+  // Ref on the active-tool panel — used by the tile grid to scroll the
+  // panel into view when the user picks a tile. Without this, clicks on
+  // tiles look dead because the tool panel is rendered far below the
+  // grid (off-screen by ~600 px) and the active-tile gold border is
+  // subtle, so users see "nothing happened" on click.
+  const toolPanelRef = useRef<HTMLDivElement>(null);
   const [processing, setProcessing] = useState(false);
   const [history, setHistory] = useState<JobResult[]>([]);
   const [wizardOpen, setWizardOpen] = useState(false);
@@ -395,10 +401,25 @@ export default function AIStudioPage() {
                 visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
               }}
               whileHover={{ y: -3 }}
-              onClick={() => setActiveTool(tool.id)}
+              onClick={() => {
+                setActiveTool(tool.id);
+                // Scroll the tool panel into view so users actually see
+                // their click "do" something. setTimeout(0) lets React
+                // commit the new panel render first, then we scroll.
+                setTimeout(() => {
+                  toolPanelRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }, 0);
+              }}
               className={`relative text-left p-3 rounded-xl border transition-all ${
+                // Active state was border-gold/30 + bg-gold/[0.04] — too
+                // subtle to read as "you picked this". Bumped to a full
+                // gold border + 2x ring + denser bg so the active tile
+                // visibly pops out of the grid on click.
                 active
-                  ? "border-gold/30 bg-gold/[0.04]"
+                  ? "border-gold ring-2 ring-gold/40 bg-gold/[0.12] shadow-lg shadow-gold/10"
                   : "border-border bg-surface hover:bg-surface-light"
               }`}
             >
@@ -422,8 +443,14 @@ export default function AIStudioPage() {
         })}
       </motion.div>
 
-      {/* Active tool panel */}
-      <div className="bg-surface border border-border rounded-2xl p-5">
+      {/* Active tool panel — ref'd by the tile-click handler so the
+          page auto-scrolls here when the user picks a different tool.
+          The scroll-margin-top keeps a comfortable gap below the
+          sticky-ish nav after the smooth scroll lands. */}
+      <div
+        ref={toolPanelRef}
+        className="bg-surface border border-border rounded-2xl p-5 scroll-mt-6"
+      >
         {activeTool === "transcribe" && <TranscribeTool processing={processing} setProcessing={setProcessing} history={history} setHistory={setHistory} />}
         {activeTool === "image-gen" && <ImageGenTool processing={processing} setProcessing={setProcessing} initial={imageGenInit} />}
         {activeTool === "upscale" && <UpscaleTool processing={processing} setProcessing={setProcessing} />}
