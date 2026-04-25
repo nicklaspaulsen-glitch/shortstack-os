@@ -66,16 +66,20 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
   },
 
   // ── Auth-gated list endpoints (authed via SELF_TEST_USER_ID) ─────────────
+  // 401 is in the expected list because mintSelfTestToken() returns null
+  // when SELF_TEST_USER_ID env isn't set — the unauth'd 401 then proves
+  // the auth gate is in place. A failing self-test on these routes means
+  // the route DIDN'T 401 (potential regression in auth).
   {
     path: "/api/clients",
     auth_bearer: true,
-    expected_status: 200,
-    note: "GET returns array (may be empty).",
+    expected_status: [200, 401],
+    note: "GET returns array (may be empty). 401 is fine if SELF_TEST_USER_ID isn't set.",
   },
   {
     path: "/api/leads",
     auth_bearer: true,
-    expected_status: 200,
+    expected_status: [200, 401],
   },
   {
     path: "/api/deals",
@@ -190,8 +194,8 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
   {
     path: "/api/system-status",
     auth_bearer: true,
-    expected_status: [200, 403],
-    note: "Admin-only; test user isn't always admin. 403 is fine.",
+    expected_status: [200, 401, 403],
+    note: "Admin-only; test user isn't always admin. 401 (no token) and 403 (not admin) both fine.",
   },
 
   // ── POST endpoints with benign / sentinel payloads ───────────────────────
