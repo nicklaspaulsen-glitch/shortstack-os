@@ -23,6 +23,7 @@ import { PageSkeleton } from "@/components/ui/skeleton";
 import UsageNudgeBanner from "@/components/billing/usage-nudge-banner";
 import TodaysPriority from "@/components/dashboard/todays-priority";
 import TrinityOrb from "@/components/dashboard/trinity-orb";
+import AiToday from "@/components/dashboard/ai-today";
 import {
   useFocusMode,
   FocusModeToggle,
@@ -285,6 +286,9 @@ export default function DashboardPage() {
 
       {/* ─── Today's Priority (always visible — heart of focus mode) ─ */}
       <TodaysPriority />
+
+      {/* ─── AI Today — top 3 AI-suggested actions ──────────────────── */}
+      {!focus && <AiToday />}
 
       {/* ─── Primary Metrics ──────────────────────────────────────── */}
       {!focus && (
