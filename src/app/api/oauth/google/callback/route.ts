@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyOAuthState } from "@/lib/oauth-state";
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
@@ -9,8 +10,21 @@ export async function GET(request: NextRequest) {
 
   if (error || !code) return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=denied`);
 
-  let state: { client_id: string; platform: string } = { client_id: "", platform: "youtube" };
-  try { state = JSON.parse(stateStr || "{}"); } catch {}
+  // SECURITY: state must be a valid HMAC-signed payload issued by /api/oauth/google
+  // (rejects forged or replayed state). The signed payload includes the user.id
+  // that initiated the flow — we re-check that the current session matches so an
+  // attacker can't complete a half-finished flow on a victim's behalf.
+  const verified = verifyOAuthState(stateStr);
+  if (!verified) {
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=invalid_state`);
+  }
+  const supabaseAuth = createServerSupabase();
+  const { data: { user } } = await supabaseAuth.auth.getUser();
+  if (!user || user.id !== verified.uid) {
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=auth_mismatch`);
+  }
+
+  const state = { client_id: verified.client_id, platform: verified.platform };
 
   try {
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
