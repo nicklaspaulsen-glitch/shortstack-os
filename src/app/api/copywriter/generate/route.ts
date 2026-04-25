@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic, MODEL_HAIKU } from "@/lib/ai/claude-helpers";
 
-const anthropic = new Anthropic();
-const MODEL = "claude-haiku-4-5-20251001";
+const MODEL = MODEL_HAIKU;
 
 // Content type definitions for system prompts
 const CONTENT_TYPE_CONFIG: Record<

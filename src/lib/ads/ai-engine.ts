@@ -1,8 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic, MODEL_HAIKU } from "@/lib/ai/claude-helpers";
 import type { Campaign, Client } from "@/lib/types";
 
-const anthropic = new Anthropic();
-const MODEL = "claude-haiku-4-5-20251001";
+const MODEL = MODEL_HAIKU;
 
 // ---------------------------------------------------------------------------
 // 1. analyzeCampaign -- AI Campaign Optimizer

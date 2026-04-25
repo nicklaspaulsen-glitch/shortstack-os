@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 import { createServerSupabase } from "@/lib/supabase/server";
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
+import { anthropic } from "@/lib/ai/claude-helpers";
 
 const SYSTEM_PROMPTS: Record<string, string> = {
   thumbnail: `You are a world-class thumbnail designer. Take the user's rough description and transform it into a vivid, specific visual prompt optimized for AI image generation. Include:
