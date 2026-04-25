@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 // AI generative fill — user draws a selection, sends a prompt, we inpaint
 // the selection region. Calls FLUX inpaint on RunPod when configured;
 // falls back to a 202 with a placeholder gradient in dev / offline mode.
 //
 // Kill-switch: FEATURE_AI_FILL=false disables the route entirely.
-// Secret: RUNPOD_FLUX_SECRET is checked against the Authorization header
-// that the FLUX RunPod worker expects (matches Sprint 4 pattern).
+// Secret: RUNPOD_FLUX_SECRET is the OUTBOUND auth to RunPod, NOT inbound
+// auth. Inbound auth is enforced by Supabase session below — without it,
+// the route was open to anonymous traffic and would burn AI credits on
+// every drive-by hit (bug-hunt round 4, Apr 27).
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,6 +30,15 @@ export async function POST(req: NextRequest) {
       { error: "AI fill is disabled by feature flag." },
       { status: 503 },
     );
+  }
+
+  // Auth gate — burns Anthropic + RunPod credits per call, must require login.
+  const supabase = createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let body: AIFillBody;

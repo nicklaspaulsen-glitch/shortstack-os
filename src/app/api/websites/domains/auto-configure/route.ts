@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { setupResendMailForDomain } from "../mail-setup/route";
+import crypto from "crypto";
 
 /**
  * Auto-configure a purchased domain:
@@ -15,8 +16,15 @@ import { setupResendMailForDomain } from "../mail-setup/route";
  *
  * Body: { domain: string, project_id?: string, user_id?: string }
  *
- * Service-role writes are used when invoked with a non-session bearer (webhook),
- * otherwise normal RLS-scoped writes.
+ * AUTH (Apr 27 — bug-hunt round 4):
+ * The previous version accepted user_id from the body with NO auth check,
+ * which meant any anonymous caller could trigger GoDaddy domain purchases
+ * + Vercel domain attachments + DNS rewrites against any user's profile.
+ * Now requires EITHER:
+ *   1. A Supabase session where auth.uid() === body.user_id, or
+ *   2. An `Authorization: Bearer <WEBHOOK_SECRET>` header (the internal
+ *      Stripe webhook path uses this; same secret as /api/webhooks/inbound).
+ * Anything else gets 401.
  */
 
 export async function POST(request: NextRequest) {
@@ -29,6 +37,39 @@ export async function POST(request: NextRequest) {
 
   if (!domain || !user_id) {
     return NextResponse.json({ error: "domain and user_id required" }, { status: 400 });
+  }
+
+  // ── Auth gate ────────────────────────────────────────────────────────
+  // Path A: bearer-token from internal caller (e.g. Stripe webhook)
+  const authHeader = request.headers.get("authorization") || "";
+  const webhookSecret = process.env.WEBHOOK_SECRET || "";
+  let bearerOk = false;
+  if (webhookSecret && authHeader.startsWith("Bearer ")) {
+    const provided = authHeader.slice(7).trim();
+    try {
+      bearerOk =
+        provided.length === webhookSecret.length &&
+        crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(webhookSecret));
+    } catch {
+      bearerOk = false;
+    }
+  }
+
+  // Path B: Supabase session that owns user_id
+  let sessionOk = false;
+  if (!bearerOk) {
+    const authClient = createServerSupabase();
+    const {
+      data: { user },
+    } = await authClient.auth.getUser();
+    sessionOk = !!user && user.id === user_id;
+  }
+
+  if (!bearerOk && !sessionOk) {
+    return NextResponse.json(
+      { error: "Unauthorized — requires owning session or Bearer WEBHOOK_SECRET" },
+      { status: 401 },
+    );
   }
 
   // Service client so the webhook path can write without a user session

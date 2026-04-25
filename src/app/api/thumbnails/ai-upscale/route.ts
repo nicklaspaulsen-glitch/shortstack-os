@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 // AI upscale — pushes the current canvas (or a selection) through the
 // RunPod ESRGAN / upscale worker. Falls back to a CSS-scaled placeholder
 // in dev so the UI flow can be dogfooded without infrastructure.
+// Requires Supabase session — see ai-fill route for rationale.
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +20,15 @@ export async function POST(req: NextRequest) {
       { error: "AI upscale is disabled by feature flag." },
       { status: 503 },
     );
+  }
+
+  // Auth gate — burns RunPod credits per call.
+  const supabase = createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let body: AIUpscaleBody;

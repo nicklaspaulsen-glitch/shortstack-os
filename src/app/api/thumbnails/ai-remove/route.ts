@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 // AI erase (background / object removal). Functionally identical to
 // ai-fill but sends an "erase" prompt so the worker inpaints with a
 // context-aware fill instead of re-generating to prompt text. Kept
 // as a separate route so the UI and the billing layer can tell them
-// apart.
+// apart. Requires Supabase session — see ai-fill route for rationale.
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,6 +24,15 @@ export async function POST(req: NextRequest) {
       { error: "AI erase is disabled by feature flag." },
       { status: 503 },
     );
+  }
+
+  // Auth gate — burns RunPod credits per call.
+  const supabase = createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   let body: AIRemoveBody;
