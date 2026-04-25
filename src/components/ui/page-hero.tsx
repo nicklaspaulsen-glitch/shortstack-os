@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { BRAND } from "@/lib/brand-config";
 
 export type HeroGradient = "gold" | "blue" | "purple" | "green" | "sunset" | "ocean";
@@ -19,6 +20,11 @@ interface PageHeroProps {
   pattern?: boolean;
   /** Optional small badge/pill shown above the title */
   eyebrow?: ReactNode;
+  /** Drop the floating decorative sparkle particles. They're on by default
+   *  for the gold/sunset/ocean/purple gradients (premium-feel surfaces) and
+   *  disabled for green/blue (tools surfaces). Pass `false` to suppress on
+   *  any page where the sparkles compete with content. */
+  sparkles?: boolean;
   className?: string;
 }
 
@@ -79,6 +85,33 @@ const GRADIENT_PRESETS: Record<HeroGradient, { bg: string; glowA: string; glowB:
   },
 };
 
+/** Gradients where decorative floating sparkles look good. The "tools"
+ *  gradients (green/blue) are deliberately quieter — sparkles there
+ *  compete with status chips and CTAs. */
+const SPARKLE_DEFAULT: Record<HeroGradient, boolean> = {
+  gold: true,
+  sunset: true,
+  ocean: true,
+  purple: true,
+  green: false,
+  blue: false,
+};
+
+// Pre-computed sparkle positions so SSR + first client render match (no
+// hydration mismatch from Math.random). Using deterministic placements
+// also lets us tune the look once instead of leaving "fairness" to the
+// RNG. Each entry is %x, %y, size px, animation-delay seconds.
+const SPARKLES: Array<{ x: number; y: number; size: number; delay: number; duration: number }> = [
+  { x: 8, y: 18, size: 4, delay: 0, duration: 7 },
+  { x: 22, y: 72, size: 3, delay: 1.2, duration: 9 },
+  { x: 35, y: 30, size: 5, delay: 2.4, duration: 6 },
+  { x: 48, y: 80, size: 3, delay: 0.8, duration: 8 },
+  { x: 60, y: 22, size: 4, delay: 3.6, duration: 7 },
+  { x: 72, y: 65, size: 3, delay: 1.6, duration: 9 },
+  { x: 85, y: 35, size: 4, delay: 2.8, duration: 6 },
+  { x: 92, y: 78, size: 3, delay: 0.4, duration: 8 },
+];
+
 export default function PageHero({
   title,
   subtitle,
@@ -87,10 +120,14 @@ export default function PageHero({
   actions,
   pattern = true,
   eyebrow,
+  sparkles,
   className = "",
 }: PageHeroProps) {
   const g = GRADIENT_PRESETS[gradient];
   const patternId = `hero-dots-${gradient}`;
+  const reduceMotion = useReducedMotion();
+  // Caller can override default per-gradient sparkle behavior with `sparkles`.
+  const showSparkles = sparkles ?? SPARKLE_DEFAULT[gradient];
 
   return (
     <div
@@ -103,14 +140,30 @@ export default function PageHero({
           "0 10px 28px -8px rgba(0,0,0,0.5)",
       }}
     >
-      {/* Radial glow accents */}
-      <div
+      {/* Radial glow accents — slow-orbit motion so the hero feels alive
+       *  but never distracting. Honours prefers-reduced-motion: when set,
+       *  the glows render statically (no animate prop kicks in). The orbit
+       *  is very low-amplitude (~24 px) at a 14–18 s period — readable as
+       *  ambient breathing, not as movement competing with content. */}
+      <motion.div
         className="pointer-events-none absolute -top-20 -right-20 w-[320px] h-[320px] rounded-full blur-3xl"
         style={{ background: `radial-gradient(circle, ${g.glowA} 0%, transparent 65%)` }}
+        animate={
+          reduceMotion
+            ? undefined
+            : { x: [0, -18, 8, -10, 0], y: [0, 12, -6, 14, 0] }
+        }
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div
+      <motion.div
         className="pointer-events-none absolute -bottom-20 -left-20 w-[260px] h-[260px] rounded-full blur-3xl"
         style={{ background: `radial-gradient(circle, ${g.glowB} 0%, transparent 65%)` }}
+        animate={
+          reduceMotion
+            ? undefined
+            : { x: [0, 16, -8, 10, 0], y: [0, -10, 6, -14, 0] }
+        }
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
       />
 
       {/* Inset vignette */}
@@ -135,6 +188,39 @@ export default function PageHero({
         </svg>
       )}
 
+      {/* Decorative floating sparkles — disabled when prefers-reduced-motion
+       *  is set. Static positions (deterministic) so SSR matches first paint
+       *  with no hydration warning. Each sparkle pulses opacity + drifts a
+       *  tiny vertical amount on its own delay so the field feels organic. */}
+      {showSparkles && !reduceMotion && (
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
+          {SPARKLES.map((s, i) => (
+            <motion.span
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                left: `${s.x}%`,
+                top: `${s.y}%`,
+                width: s.size,
+                height: s.size,
+                background: g.accent,
+                boxShadow: `0 0 ${s.size * 2}px ${g.accent}`,
+              }}
+              animate={{
+                opacity: [0.25, 0.7, 0.25],
+                y: [0, -6, 0],
+              }}
+              transition={{
+                duration: s.duration,
+                delay: s.delay,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Content
        *
        * Layout notes — why this row is structured exactly this way:
@@ -151,8 +237,17 @@ export default function PageHero({
        *    rounded-2xl overflow-hidden on the outer card.
        * 3. The right (actions) div uses `shrink-0` + `flex-wrap` + `ml-auto`
        *    so it never shrinks below its content but can wrap its own children
-       *    to a second row instead of overflowing horizontally. */}
-      <div className="relative z-10 px-6 py-6 sm:px-8 sm:py-8 flex flex-col md:flex-row md:items-start justify-between gap-5">
+       *    to a second row instead of overflowing horizontally.
+       * 4. The whole content block fades in + slides up on mount via
+       *    framer-motion. Subtle (12 px slide, 0.4 s) — the page feels
+       *    composed-into-place rather than slammed in. Still respects
+       *    prefers-reduced-motion. */}
+      <motion.div
+        className="relative z-10 px-6 py-6 sm:px-8 sm:py-8 flex flex-col md:flex-row md:items-start justify-between gap-5"
+        initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      >
         <div className="flex items-start gap-4 min-w-0 flex-1">
           {icon && (
             <div
@@ -206,7 +301,7 @@ export default function PageHero({
             {actions}
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }
