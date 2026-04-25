@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 // POST: Validate + activate a license key from the desktop app
 export async function POST(request: NextRequest) {
@@ -48,6 +46,7 @@ export async function POST(request: NextRequest) {
   // If subscription-based, verify with Stripe
   if (license.stripe_subscription_id) {
     try {
+      const stripe = getStripe();
       const sub = await stripe.subscriptions.retrieve(license.stripe_subscription_id);
       if (sub.status !== "active" && sub.status !== "trialing") {
         await supabase.from("licenses").update({ status: "expired" }).eq("id", license.id);

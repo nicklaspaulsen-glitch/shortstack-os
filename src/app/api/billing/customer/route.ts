@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { type Stripe } from "stripe";
+import { getStripe } from "@/lib/stripe/client";
 
 // Create or sync a Stripe customer for a client
 export async function POST(request: NextRequest) {
@@ -20,6 +19,8 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
+
+  const stripe = getStripe();
 
   // Already has a Stripe customer
   if (client.stripe_customer_id) {

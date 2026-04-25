@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
+import { getStripe } from "@/lib/stripe/client";
 import { computeMonthlyPrice, computeYearlyPrice } from "@/lib/domain-pricing";
 
 /**
@@ -14,8 +14,6 @@ import { computeMonthlyPrice, computeYearlyPrice } from "@/lib/domain-pricing";
  * Body: { domain, billing_cycle: "monthly"|"yearly", project_id?, base_price? }
  * Returns: { url } — redirect the browser here to start checkout
  */
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -56,6 +54,7 @@ export async function POST(request: NextRequest) {
     || "https://shortstack-os.vercel.app";
 
   try {
+    const stripe = getStripe();
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],

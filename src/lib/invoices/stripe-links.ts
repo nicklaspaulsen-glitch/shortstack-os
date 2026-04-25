@@ -5,7 +5,7 @@
  * intentionally create a fresh Price + Product for each invoice rather than
  * reusing a catalog item, because invoice totals are bespoke.
  */
-import Stripe from "stripe";
+import { getStripe } from "@/lib/stripe/client";
 
 export function hasStripeKey(): boolean {
   return Boolean(process.env.STRIPE_SECRET_KEY);
@@ -31,7 +31,7 @@ export async function createInvoicePaymentLink(args: CreateInvoiceLinkArgs): Pro
     throw new Error("Invoice total must be at least 50 cents");
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const stripe = getStripe();
   const currency = (args.currency || "usd").toLowerCase();
 
   const product = await stripe.products.create({

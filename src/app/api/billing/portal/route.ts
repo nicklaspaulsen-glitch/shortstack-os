@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 // Create a Stripe Billing Portal session for a client to manage their subscription
 // Clients can: update payment method, view invoices, cancel subscription
@@ -56,6 +54,7 @@ export async function POST(request: NextRequest) {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
 
   try {
+    const stripe = getStripe();
     const session = await stripe.billingPortal.sessions.create({
       customer: stripeCustomerId,
       return_url: `${baseUrl}${returnPath}`,

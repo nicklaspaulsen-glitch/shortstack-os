@@ -10,9 +10,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -33,6 +31,7 @@ export async function GET(request: NextRequest) {
   if (!user) return redirectBack("stripe_connect_error=unauthorized");
 
   try {
+    const stripe = getStripe();
     const account = await stripe.accounts.retrieve(accountId);
 
     // Sanity check: the account we're upserting must have been created by

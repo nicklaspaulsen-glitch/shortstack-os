@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 /**
  * Extend a demo by 7 days for $2 (one-time charge).
@@ -55,6 +53,7 @@ export async function POST(
 
   // Real Stripe one-time checkout for $2
   try {
+    const stripe = getStripe();
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
