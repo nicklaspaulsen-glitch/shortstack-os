@@ -8,7 +8,7 @@ export async function GET() {
 
   // Delete all Supabase auth cookies (including chunked ones)
   const allCookies = cookieStore.getAll();
-  const response = NextResponse.redirect(new URL("/login", process.env.NEXT_PUBLIC_SITE_URL || "https://shortstack-os.vercel.app"));
+  const response = NextResponse.redirect(new URL("/login", process.env.NEXT_PUBLIC_SITE_URL || "https://app.shortstack.work"));
 
   for (const cookie of allCookies) {
     if (cookie.name.includes("supabase") || cookie.name.startsWith("sb-")) {

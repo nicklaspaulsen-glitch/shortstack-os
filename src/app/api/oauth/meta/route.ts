@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
   const appId = process.env.META_APP_ID;
   if (!appId) return NextResponse.json({ error: "Meta App ID not configured" }, { status: 500 });
 
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/oauth/meta/callback`;
+  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/api/oauth/meta/callback`;
 
   // Scopes for Facebook Login for Business
   const scopes = [

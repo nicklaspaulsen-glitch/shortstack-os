@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const appId = process.env.TIKTOK_ADS_APP_ID || process.env.TIKTOK_CLIENT_KEY;
   if (!appId) return NextResponse.json({ error: "TikTok Ads App ID not configured" }, { status: 500 });
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const redirectUri = `${baseUrl}/api/oauth/tiktok-ads/callback`;
   const state = JSON.stringify({ client_id: clientId });
 

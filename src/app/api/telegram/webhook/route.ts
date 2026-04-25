@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
 // Telegram Webhook — receive messages from Telegram and execute commands
-// Set this up: https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://shortstack-os.vercel.app/api/telegram/webhook&secret_token=YOUR_SECRET
+// Set this up: https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://app.shortstack.work/api/telegram/webhook&secret_token=YOUR_SECRET
 export async function POST(request: NextRequest) {
   // Validate Telegram webhook secret token if configured
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
@@ -106,7 +106,7 @@ If the user's message contains action words (call, email, scrape, send, outreach
   }
 
   // Detect TRIGGER commands from AI response or user text
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const cronSecret = process.env.CRON_SECRET;
   const combined = (text + " " + reply).toLowerCase();
 

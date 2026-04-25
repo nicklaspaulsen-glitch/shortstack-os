@@ -17,7 +17,7 @@ import Testimonials from "@/components/landing/testimonials";
 import TrustBar from "@/components/landing/trust-bar";
 import WhoItsFor from "@/components/landing/who-its-for";
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
 export const metadata: Metadata = {
   title: "Trinity — the AI operating system for agencies — ShortStack",

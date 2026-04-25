@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "No Stripe customer found" }, { status: 404 });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   try {
     const stripe = getStripe();

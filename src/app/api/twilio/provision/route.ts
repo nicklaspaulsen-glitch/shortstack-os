@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Twilio not configured. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN." }, { status: 500 });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const auth = Buffer.from(`${twilioSid}:${twilioToken}`).toString("base64");
   const serviceSupabase = createServiceClient();
 

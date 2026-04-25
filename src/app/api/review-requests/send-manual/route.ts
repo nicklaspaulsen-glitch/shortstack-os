@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     .replace(/\{\{review_url\}\}/g, config.review_url)
     .replace(/\{\{business_name\}\}/g, businessName);
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   let dispatchOk = false;
   let dispatchError: string | null = null;
 

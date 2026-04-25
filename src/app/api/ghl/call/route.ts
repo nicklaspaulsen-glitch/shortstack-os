@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
   // Delegate to the native ElevenAgents caller. /api/call handles agent
   // resolution, phone provisioning, and webhook wiring.
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   try {
     const callRes = await fetch(`${appUrl}/api/call`, {
       method: "POST",

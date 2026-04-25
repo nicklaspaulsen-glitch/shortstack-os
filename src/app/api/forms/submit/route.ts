@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
   if (redirectUrl) {
     try {
       const parsed = new URL(redirectUrl);
-      const appHost = new URL(process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app").hostname;
+      const appHost = new URL(process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work").hostname;
       // Only allow redirects to our own domain
       if (parsed.hostname === appHost || parsed.hostname.endsWith(`.${appHost}`)) {
         return NextResponse.redirect(redirectUrl);

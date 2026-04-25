@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
   let emailBody = body;
 
   if (template_type && !body) {
-    const genRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/emails/generate`, {
+    const genRes = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/api/emails/generate`, {
       method: "POST",
       headers: { "Content-Type": "application/json", cookie: request.headers.get("cookie") || "" },
       body: JSON.stringify({ template_type, client_name: to }),

@@ -46,7 +46,7 @@ export function buildDiscordInstallUrl(opts: DiscordInstallUrlOptions): string |
   const baseUrl =
     opts.baseUrl ||
     process.env.NEXT_PUBLIC_APP_URL ||
-    "https://shortstack-os.vercel.app";
+    "https://app.shortstack.work";
 
   const redirectPath = opts.redirectPath || "/api/integrations/discord/callback";
   const redirectUri = `${baseUrl}${redirectPath}`;

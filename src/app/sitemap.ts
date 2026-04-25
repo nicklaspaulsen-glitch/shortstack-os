@@ -8,7 +8,7 @@ import type { MetadataRoute } from "next";
  * deliberately excluded.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const now = new Date();
 
   return [

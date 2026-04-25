@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const clientKey = process.env.TIKTOK_CLIENT_KEY;
   if (!clientKey) return NextResponse.json({ error: "TikTok client key not configured" }, { status: 500 });
 
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/oauth/tiktok/callback`;
+  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/api/oauth/tiktok/callback`;
   const state = JSON.stringify({ client_id: clientId });
 
   const scopes = "user.info.basic,video.list,video.upload,video.publish";

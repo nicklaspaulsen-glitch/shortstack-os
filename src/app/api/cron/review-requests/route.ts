@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createServiceClient();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   // ── 1. Find completed events in the last 24 hours ──────────────
   // calendar_events stores date (DATE) and time (TEXT 'HH:MM').

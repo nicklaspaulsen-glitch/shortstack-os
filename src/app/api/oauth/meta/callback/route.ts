@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const stateStr = request.nextUrl.searchParams.get("state");
   const error = request.nextUrl.searchParams.get("error");
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   if (error || !code) {
     return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=denied`);

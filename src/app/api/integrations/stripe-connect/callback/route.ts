@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
     new URL(request.url).origin ||
-    "https://shortstack-os.vercel.app";
+    "https://app.shortstack.work";
 
   const redirectBack = (suffix: string) =>
     NextResponse.redirect(`${baseUrl}/dashboard/settings?${suffix}`);

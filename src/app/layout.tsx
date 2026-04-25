@@ -10,7 +10,7 @@ import ThemeProvider from "@/components/theme-provider";
 import { CookieConsent } from "@/components/cookie-consent";
 import FeedbackButton from "@/components/feedback-button";
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 const OG_IMAGE = "/og-image.png";
 
 export const metadata: Metadata = {

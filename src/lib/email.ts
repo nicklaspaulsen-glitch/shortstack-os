@@ -76,7 +76,7 @@ const goldBtn = `
 `;
 
 export async function sendWelcomeEmail(email: string, name: string, planTier?: string) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   // Email clients render SVG inconsistently — keep PNG for email rendering.
   // The PNG will be regenerated from the new SVG in a follow-up asset pass.
   const logoUrl = `${appUrl}/icons/shortstack-logo.png`;
@@ -176,7 +176,7 @@ export async function sendUsageWarningEmail(
   planTier: string,
   usagePercent: number
 ) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   return sendEmail({
     to: email,
@@ -225,7 +225,7 @@ export async function sendInvoiceEmail(
 }
 
 export async function sendPaymentFailedEmail(email: string, clientName: string) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   return sendEmail({
     to: email,

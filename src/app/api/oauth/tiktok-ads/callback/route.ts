@@ -13,7 +13,7 @@ import {
 export async function GET(request: NextRequest) {
   const authCode = request.nextUrl.searchParams.get("auth_code") || request.nextUrl.searchParams.get("code");
   const stateStr = request.nextUrl.searchParams.get("state");
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   if (!authCode) {
     return NextResponse.redirect(uiRedirectOnError("tiktok_ads", "denied"));

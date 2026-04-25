@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No bot token provided" }, { status: 400 });
     }
 
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
     const webhookUrl = `${baseUrl}/api/telegram/webhook`;
     const secretToken = process.env.TELEGRAM_WEBHOOK_SECRET;
 

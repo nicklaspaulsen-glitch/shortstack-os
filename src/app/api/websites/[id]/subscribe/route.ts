@@ -70,7 +70,7 @@ export async function POST(
     .eq("id", user.id)
     .single();
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const successUrl = `${baseUrl}/dashboard/websites?subscribed=${project.id}`;
   const cancelUrl = `${baseUrl}/dashboard/websites?cancelled=${project.id}`;
 

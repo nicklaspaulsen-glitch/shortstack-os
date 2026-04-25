@@ -6,7 +6,7 @@ import { getStripe } from "@/lib/stripe/client";
 
 // Unified Stripe Webhook — handles client billing events
 // Register this at: https://dashboard.stripe.com/webhooks
-// URL: https://shortstack-os.vercel.app/api/billing/webhook
+// URL: https://app.shortstack.work/api/billing/webhook
 // Events: invoice.paid, invoice.payment_failed, customer.subscription.created,
 //         customer.subscription.updated, customer.subscription.deleted,
 //         checkout.session.completed
@@ -543,7 +543,7 @@ export async function POST(request: NextRequest) {
 
           // Fire the auto-configure endpoint — does GoDaddy purchase + Vercel
           // attach + DNS config. Best-effort; status is tracked on the row.
-          const origin = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+          const origin = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
           fetch(`${origin}/api/websites/domains/auto-configure`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

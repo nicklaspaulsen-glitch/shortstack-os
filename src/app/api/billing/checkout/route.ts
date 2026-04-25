@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
       try { return new URL(request.url).origin; } catch { return null; }
     })(),
     "https://app.shortstack.work",
-    "https://shortstack-os.vercel.app",
+    "https://app.shortstack.work",
   ];
   for (const c of candidates) {
     if (!c) continue;

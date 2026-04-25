@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
   // Set webhook to point to our client-bot endpoint, passing secret_token so
   // Telegram will forward it to us on each POST.
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const webhookUrl = `${baseUrl}/api/telegram/client-bot?client_id=${client_id}`;
 
   const whRes = await fetch(`https://api.telegram.org/bot${bot_token}/setWebhook`, {

@@ -8,7 +8,7 @@ import StackRow from "@/components/about/stack-row";
 import Milestones from "@/components/about/milestones";
 import AboutContact from "@/components/about/about-contact";
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
 export const metadata: Metadata = {
   title: "About ShortStack — the team behind Trinity",

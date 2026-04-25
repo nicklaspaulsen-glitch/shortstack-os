@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
   // Derive a success/cancel URL from the request
   const origin = request.headers.get("origin")
     || process.env.NEXT_PUBLIC_APP_URL
-    || "https://shortstack-os.vercel.app";
+    || "https://app.shortstack.work";
 
   try {
     const stripe = getStripe();

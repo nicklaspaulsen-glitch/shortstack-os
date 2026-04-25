@@ -5,7 +5,7 @@
  *
  * Register at: https://dashboard.stripe.com/webhooks → select "Events on
  * Connected accounts" → add endpoint URL:
- *   https://shortstack-os.vercel.app/api/webhooks/stripe-connect
+ *   https://app.shortstack.work/api/webhooks/stripe-connect
  *
  * Events of interest:
  *   invoice.paid         — mark client_invoices paid

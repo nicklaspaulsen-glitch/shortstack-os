@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   const guildIdParam = params.get("guild_id");
   const error = params.get("error");
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const redirectBack = (suffix: string) =>
     NextResponse.redirect(`${baseUrl}/dashboard/integrations?${suffix}`);
 

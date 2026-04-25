@@ -54,7 +54,7 @@ export async function POST(
   // Real Stripe one-time checkout for $2
   try {
     const stripe = getStripe();
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],

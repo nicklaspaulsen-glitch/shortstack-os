@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const googleClientId = process.env.GOOGLE_CLIENT_ID;
   if (!googleClientId) return NextResponse.json({ error: "Google Client ID not configured" }, { status: 500 });
 
-  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/api/oauth/google/callback`;
+  const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/api/oauth/google/callback`;
   const state = JSON.stringify({ client_id: clientId, platform });
 
   const scopeMap: Record<string, string> = {

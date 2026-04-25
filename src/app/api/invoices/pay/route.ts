@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   }
   if (invoice.status === "paid") return NextResponse.json({ error: "Already paid" }, { status: 400 });
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   try {
     const stripe = getStripe();

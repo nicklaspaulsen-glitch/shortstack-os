@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
 export const metadata: Metadata = {
   title: "Sign in to Trinity — ShortStack",

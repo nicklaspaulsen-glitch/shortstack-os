@@ -96,7 +96,7 @@ ${totalReplied > 5 ? "🔥 Great day for replies!" : totalSent >= 60 ? "✅ Outr
   }
 
   // Also trigger DM outreach and health check in the background
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   const cronSecret = process.env.CRON_SECRET;
   fetch(`${baseUrl}/api/cron/outreach`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});
   fetch(`${baseUrl}/api/cron/health-check`, { headers: { authorization: `Bearer ${cronSecret}` } }).catch(() => {});

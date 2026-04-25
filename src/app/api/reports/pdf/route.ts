@@ -449,7 +449,7 @@ export async function POST(request: NextRequest) {
   let emailError: string | null = null;
   if (email_to_client && client.email) {
     try {
-      const base = process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+      const base = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
       const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
       const brandName = branding.brandName || "ShortStack";
       const fromDisplay = `${brandName} <${process.env.SMTP_FROM || "growth@mail.shortstack.work"}>`;

@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
     new URL(request.url).origin ||
-    "https://shortstack-os.vercel.app";
+    "https://app.shortstack.work";
 
   try {
     const stripe = getStripe();
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest) {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ||
     new URL(request.url).origin ||
-    "https://shortstack-os.vercel.app";
+    "https://app.shortstack.work";
   // Redirect back to the settings page — the UI there will offer to re-initiate onboarding.
   return NextResponse.redirect(
     `${baseUrl}/dashboard/settings?stripe_connect=retry`,

@@ -60,8 +60,8 @@ export async function POST(request: NextRequest) {
         metadata: { license_key: licenseKey, tier },
       },
       metadata: { license_key: licenseKey, tier, email },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/dashboard/settings?license=${licenseKey}&activated=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/dashboard/settings?cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/dashboard/settings?license=${licenseKey}&activated=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/dashboard/settings?cancelled=true`,
     });
 
     // Pre-create the license in DB (pending until webhook confirms payment)

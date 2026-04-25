@@ -11,7 +11,7 @@ export type AdPlatform = (typeof AD_PLATFORMS)[number];
  * Base URL for the app (used to build redirect URIs and UI redirects).
  */
 export function getBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+  return process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 }
 
 /**

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   }
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+    process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   const stripe = getStripe();
 

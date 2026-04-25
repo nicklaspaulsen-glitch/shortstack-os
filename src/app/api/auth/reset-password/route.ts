@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
   // Fire-and-forget: never leak whether the email exists in the user table.
   await supabase.auth.resetPasswordForEmail(normalizedEmail, {
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app"}/login?reset=true`,
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work"}/login?reset=true`,
   });
 
   // Always return a generic success so callers can't enumerate valid emails.
