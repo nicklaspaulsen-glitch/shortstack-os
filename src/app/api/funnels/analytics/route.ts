@@ -41,13 +41,46 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `event_type must be one of: ${validEvents.join(", ")}` }, { status: 400 });
   }
 
+  // Cap metadata payload to prevent storage abuse — anyone can hit this endpoint
+  // and dump arbitrary JSON into funnel_analytics.metadata. 4KB serialized is
+  // generous for legitimate UTM tags / referrer / device info; pure spam gets cut.
+  let metadataString: string;
+  try {
+    metadataString = JSON.stringify(metadata ?? {});
+  } catch {
+    return NextResponse.json({ error: "metadata must be JSON-serializable" }, { status: 400 });
+  }
+  if (metadataString.length > 4096) {
+    return NextResponse.json({ error: "metadata payload exceeds 4KB" }, { status: 413 });
+  }
+
   // Use service client since this is a public endpoint
   const supabase = createServiceClient();
+
+  // Verify the funnel actually exists (and is published — drafts shouldn't
+  // collect analytics). Without this an attacker can flood funnel_analytics
+  // with rows for non-existent or other-tenant funnel UUIDs, polluting
+  // dashboards and burning row count.
+  const { data: funnel } = await supabase
+    .from("funnels")
+    .select("id, is_published")
+    .eq("id", funnel_id)
+    .maybeSingle();
+  if (!funnel) {
+    return NextResponse.json({ error: "Funnel not found" }, { status: 404 });
+  }
+  if (funnel.is_published === false) {
+    return NextResponse.json({ error: "Funnel not published" }, { status: 404 });
+  }
+
+  // Cap visitor_id length defensively (UUIDs are 36 chars; legitimate values
+  // are short identifiers, not free-form strings).
+  const safeVisitorId = typeof visitor_id === "string" ? visitor_id.slice(0, 128) : null;
 
   const { error } = await supabase.from("funnel_analytics").insert({
     funnel_id,
     step_id: step_id ?? null,
-    visitor_id: visitor_id ?? null,
+    visitor_id: safeVisitorId,
     event_type,
     metadata,
   });

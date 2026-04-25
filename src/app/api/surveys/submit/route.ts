@@ -1,7 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
+// Simple in-memory rate limiter mirroring the funnels/analytics pattern
+// (IP -> [timestamps] sliding window). Public endpoint, so this caps the
+// damage from a flood of forged survey submissions trying to spam the
+// trinity_log activity feed.
+const rateLimitMap = new Map<string, number[]>();
+const WINDOW_MS = 60_000; // 1 minute
+const MAX_REQUESTS = 20;
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (rateLimitMap.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
+  timestamps.push(now);
+  rateLimitMap.set(ip, timestamps);
+  return timestamps.length > MAX_REQUESTS;
+}
+
 export async function POST(request: NextRequest) {
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    request.headers.get("x-real-ip") ??
+    "unknown";
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+  }
+
   const { score, feedback, client_id } = await request.json();
 
   // Validate NPS score is a number between 0-10
@@ -13,6 +37,21 @@ export async function POST(request: NextRequest) {
   const sanitizedFeedback = typeof feedback === "string" ? feedback.substring(0, 2000) : null;
 
   const supabase = createServiceClient();
+
+  // If client_id is supplied, verify the client actually exists. Without
+  // this an attacker can spam trinity_log with NPS rows pointing at any
+  // arbitrary UUID, polluting the activity feed of unrelated tenants.
+  // Anonymous submissions (no client_id) still allowed for public NPS forms.
+  if (client_id) {
+    const { data: client } = await supabase
+      .from("clients")
+      .select("id")
+      .eq("id", client_id)
+      .maybeSingle();
+    if (!client) {
+      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    }
+  }
 
   await supabase.from("trinity_log").insert({
     agent: "analytics",
