@@ -34,6 +34,9 @@ convenience — keep them set only if a legacy webhook still posts to
 - [ ] `STRIPE_SECRET_KEY` — Stripe secret key (invoices, subscriptions, license validation)
 - [ ] `STRIPE_WEBHOOK_SECRET` — Stripe webhook signing secret
 - [ ] `STRIPE_BILLING_WEBHOOK_SECRET` — Stripe billing-specific webhook secret (optional, falls back to `STRIPE_WEBHOOK_SECRET`)
+- [ ] `STRIPE_PRICE_STARTER` — Stripe price ID for Starter tier (optional override; defaults to hardcoded prod ID in `/api/license/checkout`)
+- [ ] `STRIPE_PRICE_GROWTH` — Stripe price ID for Growth tier (optional override)
+- [ ] `STRIPE_PRICE_ENTERPRISE` — Stripe price ID for Enterprise tier (optional override)
 
 ## Social Media — Meta / Facebook / Instagram
 
