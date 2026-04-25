@@ -203,6 +203,7 @@ const navItems: NavItem[] = [
 
   // ── Client Portal ──
   { label: "Overview", href: "/dashboard/portal", icon: <LayoutDashboard size={16} />, roles: ["client"] },
+  { label: "Agency Room", href: "/dashboard/portal/agency-room", icon: <Users size={16} />, roles: ["client"] },
   { label: "Lead Engine", href: "/dashboard/portal/leads", icon: <Sparkles size={16} />, roles: ["client"], section: "Grow" },
   { label: "Outreach", href: "/dashboard/portal/outreach", icon: <Send size={16} />, roles: ["client"] },
   { label: "Socials", href: "/dashboard/portal/socials", icon: <Link2 size={16} />, roles: ["client"] },
