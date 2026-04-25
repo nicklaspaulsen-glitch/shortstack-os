@@ -33,17 +33,37 @@ export function getAccessToken(): string | null {
   return _accessToken;
 }
 
+// Build-time / SSG placeholder values. The SDK only rejects empty strings
+// and undefined for url/anon-key — any non-empty values pass the check.
+// We never *use* this client (it's constructed during prerender but data
+// queries only fire in client-side useEffect/event handlers), so a
+// connection to an invalid host never happens. If somehow a query did
+// fire against this stub it would surface a clean "fetch failed" rather
+// than crashing the entire Next.js build.
+const SSG_PLACEHOLDER_URL = "https://placeholder.supabase.co";
+const SSG_PLACEHOLDER_KEY = "placeholder-anon-key";
+
 /**
  * Get the singleton cookie-based browser client.
  * Used for AUTH operations and as fallback for data queries.
  * Always returns the exact same instance to avoid multiple GoTrueClient warnings.
+ *
+ * SSG/prerender resilience: if NEXT_PUBLIC_SUPABASE_URL or _ANON_KEY are
+ * missing (Preview deploys without those env vars set, fresh setup, etc),
+ * we return an ephemeral non-cached stub instead of crashing the build.
+ * The real client gets constructed (and cached) the first time the env
+ * vars are available — typically the first hydration tick in the browser.
  */
 function getBrowserClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    // SSG-time fallback. Don't cache — env vars may become available later
+    // (e.g. when the same module is reused at runtime with a different env).
+    return createBrowserClient(SSG_PLACEHOLDER_URL, SSG_PLACEHOLDER_KEY);
+  }
   if (!_browserClient) {
-    _browserClient = createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    _browserClient = createBrowserClient(url, key);
   }
   return _browserClient;
 }
