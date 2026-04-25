@@ -3,22 +3,32 @@
 /**
  * Voice Receptionist — 24/7 AI phone agent that answers, qualifies, and books.
  *
- * Beta MVP. Wires up real routes where they exist, falls back to localStorage
- * demo data + a beta banner where they don't. Backs onto:
+ * Production-wired (Apr 27): the full pipeline is live —
+ *   Twilio inbound → /api/twilio/voice-webhook (validates X-Twilio-Signature,
+ *     resolves the owning client, upserts voice_calls row, returns TwiML
+ *     <Connect><Stream> to ElevenLabs ConvAI when client.eleven_agent_id is set)
+ *   → ElevenLabs ConvAI handles the conversation
+ *   → /api/twilio/voice-status-callback updates duration + completed status
+ *   → /api/webhooks/elevenlabs receives conversation_ended (HMAC-SHA256
+ *     verified), updates voice_calls outcome + transcript, logs to trinity_log.
+ *
+ * UI backs onto:
  *   - /api/usage/current               → plan-tier call_minutes quota bar
+ *   - /api/voice-calls                 → authoritative call log (Twilio + ElevenLabs)
  *   - /api/eleven-agents               → list/create ElevenLabs ConvAI agents
  *   - /api/eleven-agents/voices        → pick a voice for the agent
- *   - /api/eleven-agents/calls         → list recent conversations (where API key set)
+ *   - /api/eleven-agents/calls         → ElevenLabs-side conversation list (fallback)
  *
  * Sections:
  *   1. Overview + stat cards (calls handled / booked / avg duration)
  *   2. Agent setup card — voice pick, greeting, hours, transfer rules
- *   3. Call log table — live from ElevenLabs if available, else localStorage demo
+ *   3. Call log table — live from voice_calls; falls back to ElevenLabs API; demo data last
  *   4. Calendar integration panel — link to /dashboard/calendar
  *   5. Quota indicator — call_minutes used/limit this month
  *
- * When an existing route is missing (e.g. voice-clone upload), the UI shows a
- * clear "Coming soon" chip rather than ghost buttons.
+ * Demo-data banner only shows when the user hasn't set up ElevenLabs OR
+ * hasn't received a call yet. Once a real call lands in voice_calls the
+ * banner self-dismisses.
  */
 
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -621,17 +631,19 @@ export default function VoiceReceptionistPage() {
               <p className="font-semibold text-amber-300">
                 {liveBackend
                   ? "No real calls yet — showing sample data"
-                  : "Beta — live call data backend is not fully wired yet"}
+                  : "Connect ElevenLabs + a Twilio number to start tracking real calls"}
               </p>
               <p className="mt-1 text-muted">
-                Inbound calls are now logged live into your{" "}
+                The pipeline is fully wired — Twilio voice-webhook,
+                ElevenLabs ConvAI bridge, status callback, and the
+                conversation-ended webhook all log straight into your{" "}
                 <code className="rounded bg-black/40 px-1 py-0.5 text-[10.5px]">
                   voice_calls
                 </code>{" "}
-                table via the Twilio voice-webhook. Once your receptionist
-                picks up its first call, it&apos;ll replace the sample rows
-                below — with a Claude-classified outcome (booked / qualified /
-                unqualified / spam), caller number, duration, and transcript.
+                table. Once your receptionist picks up its first inbound call,
+                it&apos;ll replace the sample rows below with the
+                AI-classified outcome (booked / qualified / unqualified /
+                spam), caller number, duration, and transcript.
                 {backendNote && (
                   <span className="mt-1 block text-[11px] text-muted/80">
                     ({backendNote})
