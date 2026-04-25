@@ -1,23 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { verifyOAuthState } from "@/lib/oauth-state";
 
 /**
  * Discord OAuth callback for public Trinity bot installs.
  *
  * Discord redirects here with:
- *   ?code=<auth_code>&state=<user_id>&guild_id=<guild_id>&permissions=<bitfield>
+ *   ?code=<auth_code>&state=<signed-payload>&guild_id=<guild_id>&permissions=<bitfield>
  *
  * Flow:
- *   1. Exchange the auth code for an access/refresh token.
- *   2. Fetch the Discord user (identify scope) and their guilds list.
- *   3. Pick the guild that was just installed into (guild_id from query).
- *   4. Upsert a row into discord_integrations keyed on (user_id, guild_id).
- *   5. Redirect back to /dashboard/integrations?discord=connected.
+ *   1. Verify the HMAC-signed state — rejects forged URLs that could
+ *      otherwise stash an attacker-controlled guild against a victim's
+ *      user_id.
+ *   2. Exchange the auth code for an access/refresh token.
+ *   3. Fetch the Discord user (identify scope) and their guilds list.
+ *   4. Pick the guild that was just installed into (guild_id from query).
+ *   5. Upsert a row into discord_integrations keyed on (user_id, guild_id).
+ *   6. Redirect back to /dashboard/integrations?discord=connected.
+ *
+ * SECURITY (Apr 27): state is now HMAC-signed by /lib/discord-install-url.ts.
+ * Prior to this fix, state was a raw user_id which let anyone with a
+ * known victim profile_id craft a Discord install URL that would link
+ * an attacker-owned guild to the victim's tenant on completion.
  */
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const code = params.get("code");
-  const state = params.get("state"); // profile_id we sent
+  const stateStr = params.get("state");
   const guildIdParam = params.get("guild_id");
   const error = params.get("error");
 
@@ -26,7 +35,11 @@ export async function GET(request: NextRequest) {
     NextResponse.redirect(`${baseUrl}/dashboard/integrations?${suffix}`);
 
   if (error) return redirectBack(`discord_error=${encodeURIComponent(error)}`);
-  if (!code || !state) return redirectBack("discord_error=missing_params");
+  if (!code || !stateStr) return redirectBack("discord_error=missing_params");
+
+  const verified = verifyOAuthState(stateStr);
+  if (!verified) return redirectBack("discord_error=invalid_state");
+  const userId = verified.uid;
 
   const clientId =
     process.env.DISCORD_CLIENT_ID ||
@@ -113,7 +126,7 @@ export async function GET(request: NextRequest) {
       .from("discord_integrations")
       .upsert(
         {
-          user_id: state,
+          user_id: userId,
           guild_id: guild.id,
           guild_name: guild.name,
           icon_hash: guild.icon || null,
