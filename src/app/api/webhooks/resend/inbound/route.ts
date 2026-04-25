@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel } from "@/lib/conversations";
 
@@ -19,9 +20,47 @@ import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel 
 //
 // Or configure Resend's inbound-email webhook (when available) to the
 // same URL — we accept both shapes below.
+//
+// AUTH (defense-in-depth, Apr 27 2026)
+// Provider-agnostic shared-secret check, since this route can sit behind any
+// of Postmark / CloudMailin / Resend-future inbound. Configure the upstream
+// to send `Authorization: Bearer <WEBHOOK_SECRET>`, and set `WEBHOOK_SECRET`
+// in Vercel env. Reuses the existing generic `WEBHOOK_SECRET` (already in
+// `.env.example`, already used by `/api/webhooks/inbound` and the GHL route)
+// so Nicklas doesn't need to manage another secret.
+// Without the env var the route falls open in dev / preview deploys
+// (logs a warning) and fails closed in production with 503 — same pattern
+// as the main Resend webhook.
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
+
+// Constant-time comparison of two strings. Returns false on length mismatch
+// (timingSafeEqual throws otherwise) and on any allocation/timing error.
+function timingSafeStringEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  try {
+    return crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
+  } catch {
+    return false;
+  }
+}
+
+// Verify the shared-secret bearer token in the Authorization header.
+// Returns:
+//   "ok"        — secret configured + matched, proceed
+//   "missing"   — env var missing → behavior depends on NODE_ENV
+//   "invalid"   — env var set but Authorization header doesn't match
+function verifyInboundAuth(request: NextRequest): "ok" | "missing" | "invalid" {
+  const expected = process.env.WEBHOOK_SECRET || "";
+  if (!expected) return "missing";
+
+  const auth = request.headers.get("authorization") || "";
+  // Accept both "Bearer <token>" and bare "<token>" — some MX providers
+  // (cough CloudMailin) don't prefix.
+  const provided = auth.startsWith("Bearer ") ? auth.slice(7).trim() : auth.trim();
+  return timingSafeStringEqual(provided, expected) ? "ok" : "invalid";
+}
 
 interface InboundEmail {
   from?: string;
@@ -36,6 +75,28 @@ interface InboundEmail {
 }
 
 export async function POST(request: NextRequest) {
+  // Auth gate — verify shared-secret bearer token before doing any work.
+  const authResult = verifyInboundAuth(request);
+  if (authResult === "invalid") {
+    console.warn("[inbound-webhook] bearer token mismatch — rejecting");
+    return NextResponse.json({ error: "Invalid bearer token" }, { status: 401 });
+  }
+  if (authResult === "missing") {
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        "[inbound-webhook] WEBHOOK_SECRET missing in development — accepting unsigned post.",
+      );
+    } else {
+      console.error(
+        "[inbound-webhook] WEBHOOK_SECRET missing in production — rejecting request.",
+      );
+      return NextResponse.json(
+        { error: "Webhook secret not configured" },
+        { status: 503 },
+      );
+    }
+  }
+
   const supabase = createServiceClient();
   let payload: Record<string, unknown>;
   try {
