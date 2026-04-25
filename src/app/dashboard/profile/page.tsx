@@ -7,6 +7,7 @@ import {
   User, Save, Loader, Camera, Key, AtSign, Check, X, AlertCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
+import PageHero from "@/components/ui/page-hero";
 
 export default function ProfilePage() {
   const { profile, refreshProfile } = useAuth();
@@ -143,12 +144,12 @@ export default function ProfilePage() {
 
   return (
     <div className="fade-in space-y-5 max-w-2xl">
-      <div>
-        <h1 className="page-header mb-0 flex items-center gap-2">
-          <User size={18} className="text-gold" /> Profile
-        </h1>
-        <p className="text-xs text-muted mt-0.5">Manage your account and identity</p>
-      </div>
+      <PageHero
+        icon={<User size={22} />}
+        title="Profile"
+        subtitle="Manage your account and identity."
+        gradient="gold"
+      />
 
       {/* Avatar + Identity Card */}
       <div className="card">
