@@ -124,8 +124,69 @@ After push, watch the Vercel build:
 2. Poll deployment state every 30s until READY or ERROR (max 8 min)
 3. If ERROR → fetch build log, identify the type-error / runtime-error, fix surgically, push again, loop back to step 1
 4. If READY → also check `get_runtime_logs` last 5 min, level=error,fatal — no new errors should be logged
+5. **Auto-rollback**: if runtime error rate >2% in 5 min after READY (compared to pre-deploy baseline), the protocol's auto-revert kicks in:
+   `git revert HEAD && git push origin main`
+   See `.claude/scripts/agent-rollback-watch.sh` for the policy doc.
 
 The final report includes the deploy state. If the deploy errored and we couldn't fix it autonomously after 1 attempt, report that as part of the final ship message instead of looping forever.
+
+### Phase 6 — Telegram approval gate (optional, opt-in)
+
+If the user said "approve from phone" or task is high-risk, before pushing:
+- Run `bash .claude/scripts/agent-telegram-approve.sh "<summary>" "<diff stat>"`
+- Wait for `APPROVE` / `REJECT` / `TIMEOUT` / `ERROR` line on stdout
+- Only push on `APPROVE`. Anything else → leave commit unpushed, surface the reason in the final report.
+
+### Phase 7 — record the learning
+
+After every SHIP (and every codex-catch the user calls out), append a row to `docs/AGENT_LEARNINGS.md` so future runs can pre-check the pattern. Format:
+
+```
+**YYYY-MM-DD — <commit-hash> — <bug-class>**
+
+**Symptom**: ...
+**Why Sonnet missed**: ...
+**Codex catch round**: ...
+**Fix pattern**: ...
+**Pre-check on future runs**: <regex / heuristic>
+```
+
+Before round 1 of any future /agent run, scan `docs/AGENT_LEARNINGS.md`'s pre-check column and run those greps as part of the initial scan. This catches recurring patterns BEFORE codex has to review them.
+
+## Disagreement detector
+
+When Opus and codex give CONFLICTING advice, **DO NOT silently pick one**. Flag it explicitly to the user.
+
+Triggers:
+- Opus says "ship" but codex says "hold" (or vice versa) on the same patch
+- Opus's plan picks one approach, codex's review insists on a different approach
+- Opus identifies bug X, codex identifies bug Y, neither sees the other
+
+When detected, output a `DISAGREEMENT` block in the final report:
+
+```
+⚠️ MODEL DISAGREEMENT
+Opus says: <position>
+Codex says: <position>
+Sonnet's call: <which one I'm picking + why>
+Confidence: low — recommend human eyes on this commit
+```
+
+Genuine disagreements between the models almost always indicate a real ambiguity. Surfacing them lets the user weigh in instead of one model's opinion winning silently.
+
+## Codex cache
+
+To avoid burning tokens on duplicate prompts (especially in long /agent sessions where the same patch gets reviewed multiple times), route codex calls through `.claude/scripts/agent-codex-cache.sh`:
+
+```bash
+bash .claude/scripts/agent-codex-cache.sh "<prompt>"
+```
+
+Cache hits print `[CACHE-HIT <hash>]` as the first line. Token cost in the final report subtracts cached calls.
+
+## Pre-flight: read AGENT_LEARNINGS.md before round 1
+
+Before sending the first patch to codex, scan `docs/AGENT_LEARNINGS.md` for `Pre-check on future runs` rows. Run each grep against the staged diff. If any match, surface them inline in the round-1 prompt to codex so the review is sharper from the start.
 
 ## Token-saving rules
 
