@@ -6,6 +6,7 @@ import {
   BarChart3, Shield, ArrowRight,
   Layers, Star, Eye
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 interface ChatMessage {
   role: "user" | "assistant";
@@ -172,15 +173,12 @@ export default function TrinityPage() {
   return (
     <div className="fade-in space-y-5">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gold/10 rounded-xl flex items-center justify-center">
-            <Bot size={24} className="text-gold" />
-          </div>
-          <div>
-            <h1 className="page-header mb-0">Trinity AI</h1>
-            <p className="text-muted text-xs">Trinity autonomous AI agent -- chat, orchestrate, and monitor</p>
-          </div>
-        </div>
+        <PageHero
+          icon={<Bot size={22} />}
+          title="Trinity AI"
+          subtitle="Trinity autonomous AI agent — chat, orchestrate, and monitor."
+          gradient="gold"
+        />
       </div>
 
       {/* Tabs */}

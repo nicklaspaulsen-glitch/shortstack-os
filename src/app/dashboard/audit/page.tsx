@@ -8,6 +8,7 @@ import {
   LogIn, Pencil, Trash2,
   Mail, UserPlus, AlertCircle, X, Copy
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 type AuditTab = "trail" | "security" | "retention" | "export";
 type ActionType = "login" | "create" | "update" | "delete" | "export" | "send" | "config";
@@ -195,18 +196,17 @@ export default function AuditPage() {
 
   return (
     <div className="fade-in space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Activity size={18} className="text-gold" /> Audit Log
-          </h1>
-          <p className="text-xs text-muted mt-0.5">Comprehensive log of all user actions in the system</p>
-        </div>
-        <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
-          <Download size={12} /> Export CSV
-        </button>
-      </div>
+      <PageHero
+        icon={<Activity size={22} />}
+        title="Audit Log"
+        subtitle="Comprehensive log of all user actions in the system."
+        gradient="gold"
+        actions={
+          <button onClick={exportCSV} className="btn-primary text-xs flex items-center gap-1.5">
+            <Download size={12} /> Export CSV
+          </button>
+        }
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2.5">

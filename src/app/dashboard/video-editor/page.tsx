@@ -3488,7 +3488,6 @@ export default function VideoEditorPage() {
 
             <button
               onClick={() => {
-                console.log("[video-editor] Generate with AI clicked, opening modal");
                 setAiGenOpen(true);
               }}
               type="button"

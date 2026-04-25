@@ -18,6 +18,7 @@ import {
   AlertTriangle, Zap, TrendingUp, Shield, Layers, Loader,
   ThumbsUp, GitBranch, Star, ChevronRight, X
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
@@ -523,15 +524,17 @@ export default function ContentPage() {
 
   return (
     <MotionPage className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0">Content AI Agent</h1>
-          <p className="text-muted text-sm">Scripts, requests, publishing & personal brand</p>
-        </div>
-        <button onClick={() => setShowGenerateModal(true)} className="btn-primary flex items-center gap-2">
-          <Sparkles size={16} /> Generate Script
-        </button>
-      </div>
+      <PageHero
+        icon={<Sparkles size={22} />}
+        title="Content AI Agent"
+        subtitle="Scripts, requests, publishing & personal brand."
+        gradient="purple"
+        actions={
+          <button onClick={() => setShowGenerateModal(true)} className="btn-primary flex items-center gap-2">
+            <Sparkles size={16} /> Generate Script
+          </button>
+        }
+      />
 
       {/* ── Drop & Go ───────────────────────────────────────────── */}
       <div className="card border border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">

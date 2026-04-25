@@ -7,6 +7,7 @@ import {
   Shield, Zap, Calendar, AlertTriangle,
   CheckCircle, Target, Activity
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/empty-state";
 
 interface CompetitorProfile {
@@ -81,14 +82,12 @@ export default function CompetitorPage() {
 
   return (
     <div className="fade-in space-y-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="page-header mb-0 flex items-center gap-2">
-            <Crosshair size={18} className="text-gold" /> Competitor Intelligence
-          </h1>
-          <p className="text-xs text-muted mt-0.5">{competitors.length} competitors tracked &middot; AI-powered analysis</p>
-        </div>
-      </div>
+      <PageHero
+        icon={<Crosshair size={22} />}
+        title="Competitor Intelligence"
+        subtitle={`${competitors.length} competitors tracked — AI-powered analysis.`}
+        gradient="purple"
+      />
 
       {/* Tabs */}
       <div className="flex gap-1 overflow-x-auto">
