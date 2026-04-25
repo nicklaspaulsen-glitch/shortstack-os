@@ -12,6 +12,7 @@ import {
 import toast from "react-hot-toast";
 import { MetaIcon, GoogleAdsIcon, TikTokIcon } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
+import ZernioConnectPanel from "@/components/ads-manager/zernio-connect-panel";
 
 function getAdBrandIcon(platformId: string, size = 20): React.ReactNode {
   if (platformId === "meta_ads") return <MetaIcon size={size} />;
@@ -28,7 +29,7 @@ function getAdBrandIcon(platformId: string, size = 20): React.ReactNode {
 // budgets, creatives, and audience targeting across all connected ad accounts.
 // ---------------------------------------------------------------------------
 
-type Tab = "overview" | "campaigns" | "creatives" | "audiences" | "autopilot";
+type Tab = "overview" | "campaigns" | "creatives" | "audiences" | "autopilot" | "connect";
 
 interface Campaign {
   id: string;
@@ -450,6 +451,7 @@ export default function AdsManagerPage() {
     { key: "creatives", label: "Creatives", icon: <ImageIcon size={14} /> },
     { key: "audiences", label: "Audiences", icon: <Users size={14} /> },
     { key: "autopilot", label: "AI Autopilot", icon: <Bot size={14} /> },
+    { key: "connect", label: "Connect (Zernio)", icon: <Zap size={14} /> },
   ];
 
   return (
@@ -1436,6 +1438,19 @@ export default function AdsManagerPage() {
               })}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ── CONNECT TAB ── */}
+      {tab === "connect" && (
+        <div className="bg-card border border-border rounded-xl p-5">
+          <div className="flex items-center gap-2 mb-5">
+            <Zap size={14} className="text-gold" />
+            <h3 className="text-sm font-semibold text-foreground">
+              Connect ad accounts via Zernio
+            </h3>
+          </div>
+          <ZernioConnectPanel />
         </div>
       )}
     </div>

@@ -23,10 +23,16 @@ export async function GET(request: NextRequest) {
   const now = new Date();
   const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
+  // NB: calendar_events has no `status` column (verified Apr 26 — was the
+  // root cause of the cron 500'ing every 15 min, ~16% of total error rate).
+  // Don't filter by status here. The eventEnd + delay_minutes gate at the
+  // bottom of the loop already enforces "only send for events that have
+  // actually ended". This means we look at MORE events per run but the
+  // dispatch logic still only sends for the right ones, AND we no longer
+  // 500 on a column that doesn't exist.
   const { data: events, error: eventsErr } = await supabase
     .from("calendar_events")
     .select("id, user_id, client, date, time, duration, title")
-    .eq("status", "completed")
     .gte("date", since.toISOString().split("T")[0])
     .lte("date", now.toISOString().split("T")[0]);
 
