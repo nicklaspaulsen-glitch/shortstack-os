@@ -14,9 +14,39 @@
  * ────────────────────────────────────────────────────────────────*/
 
 import { useState } from "react";
-import { Sparkles, Scissors, Captions as CaptionsIcon, Bot, Loader2 } from "lucide-react";
+import {
+  Sparkles,
+  Scissors,
+  Captions as CaptionsIcon,
+  Bot,
+  Loader2,
+  Film,
+  AlertTriangle,
+  Info,
+  Zap,
+  Award,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import type { EditorState, EditorAction, Clip } from "@/lib/video-editor/types";
+
+interface DirectorBrief {
+  hook_assessment: string;
+  pacing_notes: Array<{ at_seconds: number; note: string; severity: "info" | "warn" | "important" }>;
+  suggested_cuts: Array<{ at_seconds: number; why: string }>;
+  suggested_inserts: Array<{
+    at_seconds: number;
+    kind: "b_roll" | "text_overlay" | "transition" | "sfx";
+    why: string;
+  }>;
+  overall_grade: "A" | "B" | "C" | "D" | "F";
+  overall_summary: string;
+}
+
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
 
 export interface AiPanelProps {
   state: EditorState;
@@ -55,7 +85,53 @@ async function safePost<T>(url: string, body: unknown): Promise<T | { __offline:
 
 export function AiPanel({ state, dispatch }: AiPanelProps) {
   const [intent, setIntent] = useState("");
-  const [busy, setBusy] = useState<"silence" | "captions" | "intent" | null>(null);
+  const [busy, setBusy] = useState<"silence" | "captions" | "intent" | "director" | null>(null);
+  const [directorBrief, setDirectorBrief] = useState<DirectorBrief | null>(null);
+
+  const onDirectorBrief = async () => {
+    if (state.clips.length === 0) {
+      toast.error("Add some clips first");
+      return;
+    }
+    setBusy("director");
+    setDirectorBrief(null);
+    const id = toast.loading("AI Director reviewing the cut…");
+    try {
+      // Compute total duration as the max end-time across all clips
+      const totalDuration = state.clips.reduce(
+        (max, c) => Math.max(max, (c.start ?? 0) + (c.duration ?? 0)),
+        0,
+      );
+      const payload = {
+        clips: state.clips.map((c) => ({
+          id: c.id,
+          kind: state.tracks.find((t) => t.id === c.trackId)?.kind || "video",
+          start: c.start ?? 0,
+          duration: c.duration ?? 0,
+          label: c.name || c.kind,
+        })),
+        total_duration: totalDuration,
+        intent: "engage and retain viewers through the full runtime",
+        target_platform: "youtube",
+      };
+      const res = await fetch("/api/video/auto-edit/director", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Error ${res.status}`);
+      }
+      const brief = (await res.json()) as DirectorBrief;
+      setDirectorBrief(brief);
+      toast.success(`Director brief ready · grade ${brief.overall_grade}`, { id });
+    } catch (err) {
+      toast.error(`Director failed: ${(err as Error).message}`, { id });
+    } finally {
+      setBusy(null);
+    }
+  };
 
   const selectedClip = state.clips.find((c) => state.selection.includes(c.id)) || state.clips[0];
 
@@ -199,6 +275,30 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
           <BtnIcon k="captions" />
         </button>
 
+        <button
+          type="button"
+          disabled={busy !== null}
+          onClick={onDirectorBrief}
+          className="w-full flex items-center gap-2 rounded-md border px-3 py-2 disabled:opacity-50"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(168,85,247,0.10), rgba(168,85,247,0.04))",
+            borderColor: "rgba(168,85,247,0.30)",
+            color: "#e9d5ff",
+          }}
+        >
+          <Film size={12} />
+          <span className="flex-1 text-left">AI Director review</span>
+          <BtnIcon k="director" />
+        </button>
+
+        {directorBrief && (
+          <DirectorBriefDisplay
+            brief={directorBrief}
+            onClose={() => setDirectorBrief(null)}
+          />
+        )}
+
         <div className="space-y-2 pt-2 border-t border-neutral-800">
           <label className="text-[11px] text-neutral-400 flex items-center gap-1">
             <Bot size={11} /> Describe what you want
@@ -227,5 +327,157 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
         </p>
       </div>
     </aside>
+  );
+}
+
+function DirectorBriefDisplay({
+  brief,
+  onClose,
+}: {
+  brief: DirectorBrief;
+  onClose: () => void;
+}) {
+  const gradeColor =
+    brief.overall_grade === "A"
+      ? "#10b981"
+      : brief.overall_grade === "B"
+      ? "#22c55e"
+      : brief.overall_grade === "C"
+      ? "#c8a855"
+      : "#ef4444";
+  return (
+    <div
+      className="rounded-md p-3 space-y-3"
+      style={{
+        background: "rgba(168,85,247,0.04)",
+        border: "1px solid rgba(168,85,247,0.20)",
+      }}
+    >
+      <div className="flex items-start gap-3">
+        <div
+          className="w-10 h-10 rounded-md flex items-center justify-center shrink-0"
+          style={{
+            background: `${gradeColor}18`,
+            border: `1px solid ${gradeColor}40`,
+          }}
+        >
+          <Award size={16} style={{ color: gradeColor }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-[11px] font-bold text-purple-200">
+              Director Brief
+            </span>
+            <span
+              className="text-[9.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded"
+              style={{ background: `${gradeColor}24`, color: gradeColor }}
+            >
+              Grade {brief.overall_grade}
+            </span>
+            <button
+              type="button"
+              onClick={onClose}
+              className="ml-auto text-[10px] text-neutral-500 hover:text-neutral-200"
+            >
+              Close
+            </button>
+          </div>
+          <p className="text-[11px] text-neutral-300 leading-relaxed">
+            {brief.overall_summary}
+          </p>
+        </div>
+      </div>
+
+      <div className="rounded-md p-2.5" style={{ background: "rgba(0,0,0,0.25)" }}>
+        <p className="text-[9.5px] uppercase tracking-wider text-neutral-500 mb-1">
+          Hook
+        </p>
+        <p className="text-[11px] text-neutral-200">{brief.hook_assessment}</p>
+      </div>
+
+      {brief.pacing_notes.length > 0 && (
+        <div>
+          <p className="text-[9.5px] uppercase tracking-wider text-neutral-500 mb-1.5">
+            Pacing
+          </p>
+          <div className="space-y-1">
+            {brief.pacing_notes.map((p, i) => {
+              const Icon =
+                p.severity === "important"
+                  ? AlertTriangle
+                  : p.severity === "warn"
+                  ? Zap
+                  : Info;
+              const color =
+                p.severity === "important"
+                  ? "#fca5a5"
+                  : p.severity === "warn"
+                  ? "#fcd34d"
+                  : "#94a3b8";
+              return (
+                <div
+                  key={i}
+                  className="flex items-start gap-2 text-[10.5px] text-neutral-300 leading-relaxed"
+                >
+                  <Icon size={10} style={{ color }} className="mt-0.5 shrink-0" />
+                  <span className="font-mono text-[9.5px] text-neutral-500 shrink-0 mt-0.5">
+                    {formatTime(p.at_seconds)}
+                  </span>
+                  <span className="flex-1">{p.note}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {brief.suggested_cuts.length > 0 && (
+        <div>
+          <p className="text-[9.5px] uppercase tracking-wider text-neutral-500 mb-1.5">
+            Cuts to make
+          </p>
+          <div className="space-y-1">
+            {brief.suggested_cuts.map((c, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-2 text-[10.5px] text-neutral-300 leading-relaxed"
+              >
+                <Scissors size={10} className="text-rose-300 mt-0.5 shrink-0" />
+                <span className="font-mono text-[9.5px] text-neutral-500 shrink-0 mt-0.5">
+                  {formatTime(c.at_seconds)}
+                </span>
+                <span className="flex-1">{c.why}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {brief.suggested_inserts.length > 0 && (
+        <div>
+          <p className="text-[9.5px] uppercase tracking-wider text-neutral-500 mb-1.5">
+            Add
+          </p>
+          <div className="space-y-1">
+            {brief.suggested_inserts.map((s, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-2 text-[10.5px] text-neutral-300 leading-relaxed"
+              >
+                <Sparkles size={10} className="text-amber-300 mt-0.5 shrink-0" />
+                <span className="font-mono text-[9.5px] text-neutral-500 shrink-0 mt-0.5">
+                  {formatTime(s.at_seconds)}
+                </span>
+                <span className="flex-1">
+                  <span className="text-amber-300 font-semibold">{s.kind.replace("_", " ")}</span>
+                  {" — "}
+                  {s.why}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
