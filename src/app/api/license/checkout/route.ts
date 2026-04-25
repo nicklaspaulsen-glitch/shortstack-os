@@ -4,10 +4,14 @@ import { type Stripe } from "stripe";
 import { getStripe } from "@/lib/stripe/client";
 import crypto from "crypto";
 
+// Stripe price IDs for license tiers. Hardcoded prod values are kept as
+// fallbacks so existing deploys keep working with no env change, but they
+// can be overridden per-environment via STRIPE_PRICE_* envs (e.g. point
+// staging at test-mode price IDs without a code deploy).
 const PRICE_MAP: Record<string, string> = {
-  starter: "price_1TJ0DEBk5Rfdf2oOfoZOfain",
-  growth: "price_1TJ0DFBk5Rfdf2oOfnMEtM6o",
-  enterprise: "price_1TJ0DFBk5Rfdf2oOoVf51J0J",
+  starter: process.env.STRIPE_PRICE_STARTER || "price_1TJ0DEBk5Rfdf2oOfoZOfain",
+  growth: process.env.STRIPE_PRICE_GROWTH || "price_1TJ0DFBk5Rfdf2oOfnMEtM6o",
+  enterprise: process.env.STRIPE_PRICE_ENTERPRISE || "price_1TJ0DFBk5Rfdf2oOoVf51J0J",
 };
 
 function generateLicenseKey(): string {
