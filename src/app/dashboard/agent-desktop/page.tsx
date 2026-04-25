@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import { Monitor, RefreshCw, Activity, AlertTriangle, CheckCircle, XCircle, Clock } from "lucide-react";
 import Link from "next/link";
+import { getPlatformIcon } from "@/components/ui/platform-icons";
 
 interface AgentService {
   id: string;
@@ -135,7 +136,13 @@ export default function AgentDesktopPage() {
             <div key={agent.id} className="card-premium p-5 flex flex-col gap-3">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0">
-                  <Activity className="w-4 h-4 text-blue-400 shrink-0" />
+                  {/* Brand icon for the integration. getPlatformIcon
+                      normalizes input like "Claude (Anthropic)" /
+                      "GoHighLevel" / "ElevenLabs" and falls back to a
+                      colored letter tile when no brand match exists. */}
+                  <span className="shrink-0 inline-flex">
+                    {getPlatformIcon(agent.integration_name, 22)}
+                  </span>
                   <span className="font-semibold text-white text-sm truncate">{agent.integration_name}</span>
                 </div>
                 <StatusChip status={agent.status} />

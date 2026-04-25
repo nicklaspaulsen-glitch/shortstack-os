@@ -549,25 +549,176 @@ export function GoDaddyIcon({ size = 18, className }: IconProps) {
   );
 }
 
-/** Utility: get platform icon by string ID */
+/* ============================================================== */
+/*  AI / Compute Providers                                         */
+/* ============================================================== */
+
+export function AnthropicIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#CC785C"/>
+      <path d="M9.2 6h2.4l3.2 12h-2.3l-.7-2.6h-3l-.7 2.6H6L9.2 6zm.5 7.5h2.2l-1.1-4.3-1.1 4.3z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function OpenAIIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <path d="M18.5 11.4c.3-.9.2-1.9-.3-2.7a3.3 3.3 0 00-3.6-1.6 3.4 3.4 0 00-2.6-1.1c-1.5 0-2.8 1-3.2 2.4-1 .2-1.8.8-2.3 1.7-.8 1.3-.6 3 .4 4.1-.3.9-.2 1.9.3 2.7a3.3 3.3 0 003.6 1.6c.7.7 1.6 1.1 2.6 1.1 1.5 0 2.8-1 3.2-2.4 1-.2 1.8-.8 2.3-1.7.8-1.3.6-3-.4-4.1zm-5 6.8c-.6 0-1.2-.2-1.7-.6l.1-.1 2.8-1.6c.2-.1.2-.3.2-.4v-3.9l1.2.7v3.3c0 1.4-1.1 2.6-2.6 2.6zm-5.4-2.3a2.5 2.5 0 01-.3-1.7l.1.1 2.8 1.6c.2.1.4.1.5 0l3.4-2v1.4l-2.9 1.6c-1.2.7-2.7.3-3.6-1zm-.7-6c.3-.5.7-.9 1.3-1.1V12c0 .2.1.4.2.4l3.4 1.9-1.2.7-2.8-1.6c-1.2-.7-1.7-2.2-.9-3.5zm9.5 2.2L13.5 10l1.2-.7 2.8 1.6c1.2.7 1.7 2.2.9 3.5-.3.5-.7.9-1.3 1.1V12c0-.2-.1-.4-.2-.4z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function ElevenLabsIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <rect x="8" y="6" width="2.5" height="12" fill="#fff"/>
+      <rect x="13.5" y="6" width="2.5" height="12" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Backend / Infrastructure                                       */
+/* ============================================================== */
+
+export function SupabaseIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#1F1F1F"/>
+      <path d="M12.5 4l-7 10h5.5v6l7-10H12.5V4z" fill="#3ECF8E"/>
+    </svg>
+  );
+}
+
+export function RunPodIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#673AB7"/>
+      <path d="M13 4l-7 11h5l-2 5 8-12h-5l1-4z" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  CRM / SaaS Marketing Platforms                                 */
+/* ============================================================== */
+
+export function GoHighLevelIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#FF7426"/>
+      <text x="12" y="15.6" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="8.5" fontWeight="900" fill="#fff">GHL</text>
+    </svg>
+  );
+}
+
+export function AyrshareIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#3B82F6"/>
+      <path d="M7 18l5-12 5 12h-2.2l-1-2.5h-3.6L9.2 18H7zm3.7-4h2.6L12 10.6 10.7 14z" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Voice / SMS / Email Providers                                  */
+/* ============================================================== */
+
+export function ResendIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#000"/>
+      <path d="M7 8h5.5c2 0 3.5 1.1 3.5 2.8 0 1.3-.8 2.2-2.1 2.6L17 17h-2.5l-2-3.4H9V17H7V8zm2 1.8v2.3h3.5c.9 0 1.5-.4 1.5-1.1 0-.7-.6-1.2-1.5-1.2H9z" fill="#fff"/>
+    </svg>
+  );
+}
+
+export function TwilioIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill="#F22F46"/>
+      <circle cx="9" cy="9" r="1.7" fill="#fff"/>
+      <circle cx="15" cy="9" r="1.7" fill="#fff"/>
+      <circle cx="9" cy="15" r="1.7" fill="#fff"/>
+      <circle cx="15" cy="15" r="1.7" fill="#fff"/>
+    </svg>
+  );
+}
+
+/* ============================================================== */
+/*  Smart fallback for unknown platforms                           */
+/* ============================================================== */
+
+/**
+ * Generic platform icon — colored square with the platform name's
+ * first letter. Used by getPlatformIcon() when no brand icon matches,
+ * so an unknown platform doesn't render as a misleading Google logo.
+ *
+ * The hue is derived deterministically from the name so the same
+ * platform always gets the same color across reloads.
+ */
+export function GenericPlatformIcon({ name, size = 18, className }: { name: string; size?: number; className?: string }) {
+  const trimmed = (name || "").trim();
+  const letter = (trimmed.charAt(0) || "?").toUpperCase();
+  let h = 0;
+  for (let i = 0; i < trimmed.length; i++) {
+    h = ((h << 5) - h) + trimmed.charCodeAt(i);
+    h |= 0;
+  }
+  const hue = Math.abs(h) % 360;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <rect width="24" height="24" rx="5" fill={`hsl(${hue}, 55%, 38%)`}/>
+      <text x="12" y="16" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="700" fill="#fff">{letter}</text>
+    </svg>
+  );
+}
+
+/**
+ * Utility: get platform icon by string ID.
+ *
+ * Accepts loose input like "Claude (Anthropic)", "GoHighLevel",
+ * "ElevenLabs", etc. — normalizes by lowercasing, stripping the parens
+ * group, and collapsing non-alphanumerics to underscores. Falls back to
+ * <GenericPlatformIcon name=...> for unknown platforms (no longer
+ * misleads users with a Google logo).
+ */
 export function getPlatformIcon(platform: string, size = 18): React.ReactNode {
+  const normalized = (platform || "")
+    .toLowerCase()
+    .replace(/\s*\(.*?\)\s*/g, "")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+
   const map: Record<string, React.ReactNode> = {
-    // Original
+    // Search / Maps / Local
     google_maps: <GoogleMapsIcon size={size} />,
     google: <GoogleIcon size={size} />,
-    facebook: <FacebookIcon size={size} />,
-    instagram: <InstagramIcon size={size} />,
-    tiktok: <TikTokIcon size={size} />,
-    linkedin: <LinkedInIcon size={size} />,
-    youtube: <YouTubeIcon size={size} />,
     yelp: <YelpIcon size={size} />,
     tripadvisor: <TripAdvisorIcon size={size} />,
     trustpilot: <TrustpilotIcon size={size} />,
     yellow_pages: <YellowPagesIcon size={size} />,
     indeed: <IndeedIcon size={size} />,
+    // Social
+    facebook: <FacebookIcon size={size} />,
+    instagram: <InstagramIcon size={size} />,
+    tiktok: <TikTokIcon size={size} />,
+    linkedin: <LinkedInIcon size={size} />,
+    youtube: <YouTubeIcon size={size} />,
+    youtube_shorts: <YouTubeShortsIcon size={size} />,
+    pinterest: <PinterestIcon size={size} />,
+    snapchat: <SnapchatIcon size={size} />,
+    reddit: <RedditIcon size={size} />,
+    twitch: <TwitchIcon size={size} />,
+    spotify: <SpotifyIcon size={size} />,
+    apple_music: <AppleMusicIcon size={size} />,
     x_twitter: <XTwitterIcon size={size} />,
-    meta_ads: <MetaIcon size={size} />,
-    tiktok_ads: <TikTokIcon size={size} />,
+    threads: <ThreadsIcon size={size} />,
     // Messaging / Chat
     whatsapp: <WhatsAppIcon size={size} />,
     discord: <DiscordIcon size={size} />,
@@ -577,37 +728,49 @@ export function getPlatformIcon(platform: string, size = 18): React.ReactNode {
     // Email / Productivity
     gmail: <GmailIcon size={size} />,
     outlook: <OutlookIcon size={size} />,
+    resend: <ResendIcon size={size} />,
+    // Voice / SMS
+    twilio: <TwilioIcon size={size} />,
     // Payments / Commerce
     stripe: <StripeIcon size={size} />,
     paypal: <PayPalIcon size={size} />,
     shopify: <ShopifyIcon size={size} />,
     square: <SquareIcon size={size} />,
+    amazon: <AmazonIcon size={size} />,
+    woocommerce: <WooCommerceIcon size={size} />,
+    wordpress: <WordPressIcon size={size} />,
     // Marketing / Automation
     zapier: <ZapierIcon size={size} />,
     mailchimp: <MailchimpIcon size={size} />,
     hubspot: <HubspotIcon size={size} />,
     salesforce: <SalesforceIcon size={size} />,
+    ayrshare: <AyrshareIcon size={size} />,
+    // CRM
+    gohighlevel: <GoHighLevelIcon size={size} />,
+    ghl: <GoHighLevelIcon size={size} />,
     // Design / Creative
     canva: <CanvaIcon size={size} />,
     figma: <FigmaIcon size={size} />,
     zoom: <ZoomIcon size={size} />,
     calendly: <CalendlyIcon size={size} />,
-    // Social / Video
-    youtube_shorts: <YouTubeShortsIcon size={size} />,
-    pinterest: <PinterestIcon size={size} />,
-    snapchat: <SnapchatIcon size={size} />,
-    reddit: <RedditIcon size={size} />,
-    twitch: <TwitchIcon size={size} />,
-    spotify: <SpotifyIcon size={size} />,
-    apple_music: <AppleMusicIcon size={size} />,
-    // Commerce / E-commerce
-    amazon: <AmazonIcon size={size} />,
-    woocommerce: <WooCommerceIcon size={size} />,
-    wordpress: <WordPressIcon size={size} />,
     // Advertising Platforms
     google_ads: <GoogleAdsIcon size={size} />,
     meta: <MetaIcon size={size} />,
-    threads: <ThreadsIcon size={size} />,
+    meta_ads: <MetaIcon size={size} />,
+    tiktok_ads: <TikTokIcon size={size} />,
+    // AI providers
+    anthropic: <AnthropicIcon size={size} />,
+    claude: <AnthropicIcon size={size} />,
+    openai: <OpenAIIcon size={size} />,
+    elevenlabs: <ElevenLabsIcon size={size} />,
+    eleven_labs: <ElevenLabsIcon size={size} />,
+    elevenagents: <ElevenLabsIcon size={size} />,
+    // Infra
+    supabase: <SupabaseIcon size={size} />,
+    runpod: <RunPodIcon size={size} />,
+    vercel: <VercelIcon size={size} />,
+    // Hosting / Domains
+    godaddy: <GoDaddyIcon size={size} />,
   };
-  return map[platform.toLowerCase()] || <GoogleIcon size={size} />;
+  return map[normalized] || <GenericPlatformIcon name={platform} size={size} />;
 }
