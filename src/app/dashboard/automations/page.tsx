@@ -115,7 +115,7 @@ export default function AutomationsPage() {
         gradient="gold"
         actions={
           <Link
-            href="/dashboard/workflows/new"
+            href="/dashboard/workflow-builder"
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors border border-white/20"
           >
             <Plus size={15} /> New Automation
@@ -165,7 +165,7 @@ export default function AutomationsPage() {
           </p>
           {!search && (
             <Link
-              href="/dashboard/workflows/new"
+              href="/dashboard/workflow-builder"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 text-sm font-medium transition-colors"
             >
               <Plus size={14} /> Create your first automation

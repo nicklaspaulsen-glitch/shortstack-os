@@ -26,6 +26,18 @@ export function hasOpenAIKey(): boolean {
   return Boolean(process.env.OPENAI_API_KEY);
 }
 
+// Lazy singleton — see CLAUDE.md "Module-level SDK init is BANNED" rule.
+// Constructed on first use, cached for the lifetime of the lambda.
+let _openai: OpenAI | null = null;
+function getOpenAIClient(): OpenAI {
+  if (!_openai) {
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) throw new Error("OPENAI_API_KEY not configured");
+    _openai = new OpenAI({ apiKey });
+  }
+  return _openai;
+}
+
 /**
  * Transcribe an audio file (Blob/File/Buffer) using Whisper's verbose_json
  * response format so we get per-segment timestamps. Speaker labels are not
@@ -41,7 +53,9 @@ export async function transcribeAudio(
     throw new Error("OPENAI_API_KEY not configured");
   }
 
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  // Lazy singleton — same pattern as lib/stripe/client.ts and the shared
+  // anthropic instance. Avoids constructing a fresh client on every call.
+  const client = getOpenAIClient();
 
   // OpenAI's SDK expects a `File`. If we were given a Blob, wrap it.
   const toUpload: File =

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/ai/claude-helpers";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
@@ -181,8 +182,7 @@ ${sectionInstructions}
 Format each section with a clear header line (## Section Name). Keep it professional, data-driven, and actionable. Under 600 words total. Use plain text formatting.`;
 
   try {
-    const anthropic = new Anthropic({ apiKey });
-
+    // Shared singleton — see CLAUDE.md "Module-level SDK init is BANNED" rule.
     const response = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1200,

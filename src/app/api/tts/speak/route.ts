@@ -266,7 +266,7 @@ export async function POST(request: NextRequest) {
           : await synthesizeViaElevenLabs(text, overrideVoice);
 
     if (result.ok) {
-      console.log(`[tts] served via ${provider} (${result.audio.byteLength} bytes)`);
+      console.warn(`[tts] served via ${provider} (${result.audio.byteLength} bytes)`);
       return new NextResponse(result.audio, {
         status: 200,
         headers: {
