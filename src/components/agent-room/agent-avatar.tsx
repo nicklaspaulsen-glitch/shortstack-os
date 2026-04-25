@@ -25,10 +25,14 @@ const STATUS_STYLE: Record<AgentStatus, {
     label: "Recent",
   },
   idle: {
-    ring: "ring-white/15",
+    // Bumped from ring-white/15 → ring-white/35 because at 15% the ring
+    // basically dissolved into the dark room canvas — Nicklas reported
+    // the avatars looked "missing" entirely on first glance. This is
+    // visible without being loud.
+    ring: "ring-white/35",
     badge: "bg-white/10 text-white/70",
     glow: "",
-    dot: "bg-white/30",
+    dot: "bg-white/45",
     label: "Idle",
   },
   error: {
@@ -103,9 +107,12 @@ export default function AgentAvatar({ agent, status, x, y, onClick, selected }: 
           />
         )}
 
-        {/* Avatar bubble */}
+        {/* Avatar bubble. Background bumped from slate-900/85 →
+            slate-800/95 so the bubble actually pops against the dark
+            room canvas (which is itself bg-slate-900→slate-950→black).
+            Emojis are now legible even on the calmer idle status. */}
         <div
-          className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-900/85 border border-white/10 backdrop-blur ring-2 ${
+          className={`relative w-12 h-12 md:w-14 md:h-14 rounded-full bg-slate-800/95 border border-white/15 backdrop-blur ring-2 ${
             s.ring
           } ${s.glow} flex items-center justify-center text-[22px] md:text-[26px] transition-all duration-200 group-hover:scale-110 ${
             selected ? "ring-4 ring-offset-2 ring-offset-slate-950 ring-gold" : ""
