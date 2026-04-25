@@ -32,6 +32,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
+import MailboxPlanner from "@/components/mail-setup/mailbox-planner";
 
 interface DnsRecord {
   type: string;
@@ -64,6 +65,25 @@ export default function MailSetupPage() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [newDomain, setNewDomain] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Clients for the MailboxPlanner — used to scope which mailboxes belong
+  // to which client (matches the GHL-style "for which client" requirement).
+  const [clients, setClients] = useState<Array<{ id: string; business_name: string }>>([]);
+  useEffect(() => {
+    fetch("/api/clients")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.clients) {
+          setClients(
+            (data.clients as Array<{ id: string; business_name: string }>).map((c) => ({
+              id: c.id,
+              business_name: c.business_name,
+            })),
+          );
+        }
+      })
+      .catch(() => { /* silent — planner shows "no clients" state */ });
+  }, []);
 
   const loadDomains = useCallback(async () => {
     try {
@@ -191,7 +211,13 @@ export default function MailSetupPage() {
         icon={<Mail size={20} />}
       />
 
-      <div className="mx-auto max-w-5xl px-6 pb-10">
+      <div className="mx-auto max-w-5xl px-6 pb-10 space-y-6">
+        {/* Mailbox Planner — GHL-style mailbox catalog with cost preview.
+            Per Apr 26 user ask: "showing which mails there is out there
+            and forming out details to get the thing they want and what
+            client it is for and what they have to pay for it". */}
+        {mode === "list" && <MailboxPlanner clients={clients} />}
+
         {mode === "list" ? (
           // ───────────── LIST VIEW ─────────────
           <>

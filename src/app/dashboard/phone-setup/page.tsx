@@ -36,6 +36,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
+import PlanPickerCard from "@/components/phone-setup/plan-picker-card";
 
 interface Client {
   id: string;
@@ -304,7 +305,13 @@ export default function PhoneSetupPage() {
         }
       />
 
-      <div className="mx-auto max-w-4xl px-6 pb-10 pt-4">
+      <div className="mx-auto max-w-4xl px-6 pb-10 pt-4 space-y-4">
+        {/* Plan picker card — GHL-style plan summary + per-number cost
+            preview. Per Apr 26 user ask: "what they have to pay for it
+            and how to set everything up". Sits above the existing
+            wizard so users see the cost BEFORE running the buy flow. */}
+        <PlanPickerCard />
+
         {/* Quota / agency-pays hint — always visible under the hero */}
         <div className="mb-4 flex flex-wrap items-start gap-3 rounded-xl border border-border/40 bg-surface-light/20 p-3 text-[11px] text-muted">
           <div className="flex items-center gap-1.5 text-[11px] text-foreground/80">
