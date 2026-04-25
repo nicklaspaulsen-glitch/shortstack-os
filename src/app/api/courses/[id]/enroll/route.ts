@@ -50,6 +50,18 @@ export async function POST(request: NextRequest, { params }: Params) {
   const body = await request.json() as { client_id?: string; expires_at?: string };
   if (!body.client_id) return NextResponse.json({ error: "client_id is required" }, { status: 400 });
 
+  // Verify the caller's tenant owns the target client_id. Without this check
+  // an authenticated agency could enroll any client (including from another
+  // agency) into one of their own courses — polluting cross-tenant data.
+  const { data: client } = await supabase
+    .from("clients")
+    .select("id, profile_id")
+    .eq("id", body.client_id)
+    .maybeSingle();
+  if (!client || client.profile_id !== ownerId) {
+    return NextResponse.json({ error: "client_id not found in your workspace" }, { status: 404 });
+  }
+
   const { data, error } = await supabase
     .from("course_enrollments")
     .upsert({
