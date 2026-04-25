@@ -3,10 +3,24 @@ import { createServerSupabase } from "@/lib/supabase/server";
 
 // n8n Workflow Creator — AI designs and deploys workflows to n8n
 // Set N8N_BASE_URL and N8N_API_KEY in env vars
+//
+// SECURITY (Apr 26): role-gated to match /api/n8n/workflows/* siblings.
+// AI-generated workflows still hit a shared n8n instance — clients
+// shouldn't be able to deploy nodes/connections there.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Fail-closed on missing profile.
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!profile || profile.role === "client") {
+    return NextResponse.json({ error: "Operators only" }, { status: 403 });
+  }
 
   const { description, client_id } = await request.json();
 

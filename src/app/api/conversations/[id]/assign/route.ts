@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // POST /api/conversations/:id/assign
 // Body: { assigned_to_user_id: string | null }
@@ -17,11 +18,40 @@ export async function POST(
     return NextResponse.json({ error: "assigned_to_user_id must be UUID or null" }, { status: 400 });
   }
 
-  const { error } = await supabase
+  // Defense in depth: scope to the agency owner. team_members get resolved
+  // to their parent_agency_id so they can still operate on the agency's
+  // conversations. Conversations rows are keyed by the OWNER user_id,
+  // matching the upsertInboundMessage write path.
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+
+  // Verify the assignee is in the caller's team (owner OR team_member of
+  // this agency, NOT a client). Otherwise an authed user could assign a
+  // conversation to an arbitrary UUID outside their tenant — or to a
+  // client profile that happens to share parent_agency_id.
+  if (assigned_to_user_id !== null) {
+    const isOwnerSelfAssign = assigned_to_user_id === ownerId;
+    if (!isOwnerSelfAssign) {
+      const { data: member } = await supabase
+        .from("profiles")
+        .select("id, role, parent_agency_id")
+        .eq("id", assigned_to_user_id)
+        .maybeSingle();
+      const isTeamMember =
+        !!member &&
+        member.role === "team_member" &&
+        member.parent_agency_id === ownerId;
+      if (!isTeamMember) {
+        return NextResponse.json({ error: "Assignee is not in your team" }, { status: 400 });
+      }
+    }
+  }
+  const { error, count } = await supabase
     .from("conversations")
-    .update({ assigned_to_user_id })
-    .eq("id", params.id);
+    .update({ assigned_to_user_id }, { count: "exact" })
+    .eq("id", params.id)
+    .eq("user_id", ownerId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!count) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

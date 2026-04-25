@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 const ALLOWED = new Set(["open", "snoozed", "closed", "archived"]);
 
@@ -18,11 +19,16 @@ export async function POST(
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
-  const { error } = await supabase
+  // Defense in depth: scope to the agency owner. team_members get resolved
+  // to their parent_agency_id (matches conversations table owner key).
+  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  const { error, count } = await supabase
     .from("conversations")
-    .update({ status })
-    .eq("id", params.id);
+    .update({ status }, { count: "exact" })
+    .eq("id", params.id)
+    .eq("user_id", ownerId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (!count) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

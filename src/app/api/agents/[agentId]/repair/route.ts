@@ -1,29 +1,74 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-// Repair an agent — clears error state, retries last failed action, refreshes tokens
+// Repair an agent — clears error state, retries last failed action, refreshes tokens.
+//
+// SECURITY (Apr 26): role-gated AND scoped to the caller's tenant. Pre-fix
+// this route would mark the 5 newest error rows for an agent across the
+// WHOLE trinity_log table — i.e. cross-tenant write of audit log status.
+//
+// Note: trinity_log is mixed-keyed across this codebase — some inserts
+// write `user_id`, others write `profile_id`. We resolve the effective
+// owner once (handles team_members) then filter by EITHER column so
+// genuine error rows aren't missed by the scoping.
 export async function POST(_request: NextRequest, { params }: { params: { agentId: string } }) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Role gate — clients should never repair agents. Fail-closed on missing
+  // profile (otherwise users without a row would slip through).
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, parent_agency_id")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!profile || profile.role === "client") {
+    return NextResponse.json({ error: "Operators only" }, { status: 403 });
+  }
+
+  // team_members operate on their parent agency's audit logs.
+  const ownerId =
+    profile.role === "team_member" && profile.parent_agency_id
+      ? profile.parent_agency_id
+      : user.id;
+
   const agentId = params.agentId;
   const repairs: string[] = [];
 
-  // 1. Clear recent error logs by marking them as "repaired"
+  // 1. Clear recent error logs — marked as "repaired".
+  //
+  // Tenant scoping uses a single nested PostgREST boolean expression so
+  // there's exactly one `or=` query param on the wire. Two chained
+  // .or() calls would add two separate `or=` params, which PostgREST
+  // documents as AND'd top-level filters but the supabase-js builder
+  // can collapse during chaining edge cases — codex flagged this in
+  // round-2 review. Single nested expression is unambiguous.
+  //
+  // Logical shape:
+  //   (user_id = ownerId OR profile_id = ownerId)
+  //     AND
+  //   (agent = agentId OR action_type = agentId)
+  //     AND status = 'error'
+  const tenantFilter = `or(user_id.eq.${ownerId},profile_id.eq.${ownerId})`;
+  const agentFilter = `or(agent.eq.${agentId},action_type.eq.${agentId})`;
   const { data: errorLogs } = await supabase
     .from("trinity_log")
     .select("id")
-    .or(`agent.eq.${agentId},action_type.eq.${agentId}`)
+    .or(`and(${tenantFilter},${agentFilter})`)
     .eq("status", "error")
     .order("created_at", { ascending: false })
     .limit(5);
 
   if (errorLogs && errorLogs.length > 0) {
+    // Defense in depth: even though the SELECT was tenant-scoped, the
+    // UPDATE re-applies the same tenant filter so a race between two
+    // concurrent repair requests can't cross tenants.
     await supabase
       .from("trinity_log")
       .update({ status: "repaired" })
-      .in("id", errorLogs.map(l => l.id));
+      .in("id", errorLogs.map(l => l.id))
+      .or(`user_id.eq.${ownerId},profile_id.eq.${ownerId}`);
     repairs.push(`Cleared ${errorLogs.length} error logs`);
   }
 
@@ -75,8 +120,11 @@ export async function POST(_request: NextRequest, { params }: { params: { agentI
     repairs.push(result);
   }
 
-  // 3. Log the repair
+  // 3. Log the repair — stamp BOTH ownership keys so future tenant-scoped
+  // queries hit the row regardless of which column they filter on.
   await supabase.from("trinity_log").insert({
+    user_id: ownerId,
+    profile_id: ownerId,
     agent: agentId,
     action_type: agentId,
     description: `Agent repaired: ${repairs.join(", ")}`,
