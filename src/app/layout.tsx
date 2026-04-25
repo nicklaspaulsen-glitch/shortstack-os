@@ -22,12 +22,15 @@ export const metadata: Metadata = {
   description: "Trinity is the all-in-one AI operating system for modern agencies. Scrape leads, automate outreach, manage clients, and scale revenue from one place.",
   keywords: ["agency management", "marketing automation", "lead generation", "CRM", "AI outreach", "digital marketing", "client portal", "agency OS"],
   icons: {
+    // ?v=2 cache-buster — browsers aggressively cache favicons across deploys.
+    // Bump this when the mandala source changes so users get the new icon
+    // without needing to clear cache manually.
     icon: [
-      { url: "/icons/shortstack-logo.ico", sizes: "any" },
-      { url: "/icons/shortstack-logo.svg", type: "image/svg+xml" },
+      { url: "/icons/shortstack-logo.ico?v=2", sizes: "any" },
+      { url: "/icons/shortstack-logo.svg?v=2", type: "image/svg+xml" },
     ],
-    apple: "/icons/shortstack-logo.png",
-    shortcut: "/icons/shortstack-logo.ico",
+    apple: "/icons/shortstack-logo.png?v=2",
+    shortcut: "/icons/shortstack-logo.ico?v=2",
   },
   manifest: "/manifest.json",
   themeColor: "#0b0d12",
