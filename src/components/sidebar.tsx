@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, LayoutGroup } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
@@ -531,7 +532,14 @@ export default function Sidebar() {
           </span>
           <span className="truncate flex-1">{label}</span>
           {unreadCount > 0 && <UnreadBadge count={unreadCount} />}
-          {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
+          {isActive && (
+            <motion.div
+              layoutId="sidebar-active-accent"
+              className="absolute -left-px top-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]"
+              style={{ y: "-50%" }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            />
+          )}
         </Link>
       </div>
     );
@@ -560,7 +568,14 @@ export default function Sidebar() {
             {customIcon || item.icon}
             {unreadCount > 0 && <UnreadDotMini />}
           </span>
-          {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
+          {isActive && (
+            <motion.div
+              layoutId="sidebar-active-accent"
+              className="absolute -left-px top-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]"
+              style={{ y: "-50%" }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            />
+          )}
         </Link>
         {hoveredItem === item.href && (
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">

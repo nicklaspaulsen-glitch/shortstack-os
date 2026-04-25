@@ -4,7 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { AGENTS, ZONES, absolutePosition, type AgentDef } from "./roster";
 import AgentAvatar, { type AgentStatus } from "./agent-avatar";
 import AgentDrawer from "./agent-drawer";
-import { RefreshCw, Loader2 } from "lucide-react";
+import { RefreshCw, Loader2, Box, Square } from "lucide-react";
+
+// Isometric office mode tilt — Opus's spec was 55deg/-45deg, but at full
+// strength agents read as too compressed. 38deg/-22deg gives the "office
+// floor" feeling without sacrificing avatar legibility.
+const ROOM_ROT_X = 38;
+const ROOM_ROT_Z = -22;
 
 interface RunInfo {
   id: string;
@@ -44,6 +50,22 @@ export default function RoomCanvas() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<AgentDef | null>(null);
+  // 3D office mode (Opus's "Isometric tilted floor" idea — Apr 26).
+  // Persisted per session. Initialize to "office" on both server and
+  // first client render to avoid hydration mismatch — re-hydrate from
+  // sessionStorage in an effect after mount.
+  const [view, setView] = useState<"office" | "flat">("office");
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem("agent-room-view");
+      if (stored === "flat" || stored === "office") setView(stored);
+    } catch { /* private mode etc */ }
+  }, []);
+  const setViewMode = (v: "office" | "flat") => {
+    setView(v);
+    try { sessionStorage.setItem("agent-room-view", v); } catch { /* private mode etc */ }
+  };
+  const isOffice = view === "office";
 
   useEffect(() => {
     let cancelled = false;
@@ -125,11 +147,54 @@ export default function RoomCanvas() {
         </div>
       </div>
 
-      {/* Room */}
+      {/* Room — perspective wrapper holds the tilt; inner room is the floor.
+          In flat mode wrappers are passthrough (rotation is 0/0). */}
       <div
         className="relative w-full rounded-2xl border border-white/10 overflow-hidden bg-gradient-to-br from-slate-900 via-slate-950 to-black"
-        style={{ aspectRatio: "16 / 9", minHeight: 520 }}
+        style={{
+          aspectRatio: "16 / 9",
+          minHeight: 520,
+          perspective: isOffice ? "1400px" : "none",
+          perspectiveOrigin: "50% 30%",
+        }}
       >
+        {/* Office mode toggle */}
+        <div
+          className="absolute top-3 right-3 z-30 flex gap-1 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10 p-1"
+        >
+          <button
+            type="button"
+            onClick={() => setViewMode("office")}
+            className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold transition ${
+              isOffice ? "bg-white/12 text-white" : "text-white/50 hover:text-white/80"
+            }`}
+            title="Isometric office view"
+          >
+            <Box size={10} /> Office
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode("flat")}
+            className={`flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold transition ${
+              !isOffice ? "bg-white/12 text-white" : "text-white/50 hover:text-white/80"
+            }`}
+            title="Flat top-down view"
+          >
+            <Square size={10} /> Flat
+          </button>
+        </div>
+
+        {/* Tilted floor — receives the actual rotation. Children counter-rotate
+            so faces stay readable. */}
+        <div
+          className="absolute inset-0 transition-transform duration-700 ease-out"
+          style={{
+            transformStyle: "preserve-3d",
+            transform: isOffice
+              ? `rotateX(${ROOM_ROT_X}deg) rotateZ(${ROOM_ROT_Z}deg)`
+              : "none",
+          }}
+        >
         {/* Floor grid */}
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none"
@@ -165,21 +230,82 @@ export default function RoomCanvas() {
           </div>
         ))}
 
-        {/* Agents */}
+        {/* Agents — counter-rotated when in office mode so faces stay
+            facing the camera. Each avatar gets a tiny lift (translateZ)
+            so it sits above the floor plane like a desk worker not a
+            paper cutout. */}
         {AGENTS.map(agent => {
           const pos = absolutePosition(agent);
           return (
-            <AgentAvatar
+            <div
               key={agent.id}
-              agent={agent}
-              status={statusByAgent[agent.id]}
-              x={pos.x}
-              y={pos.y}
-              onClick={() => setSelected(agent)}
-              selected={selected?.id === agent.id}
-            />
+              className="absolute transition-transform duration-700 ease-out"
+              style={{
+                left: 0,
+                top: 0,
+                width: 0,
+                height: 0,
+                transformStyle: "preserve-3d",
+                transform: isOffice
+                  ? `translateZ(24px) rotateZ(${-ROOM_ROT_Z}deg) rotateX(${-ROOM_ROT_X}deg)`
+                  : "none",
+                transformOrigin: `${pos.x}% ${pos.y}%`,
+                pointerEvents: "auto",
+              }}
+            >
+              <AgentAvatar
+                agent={agent}
+                status={statusByAgent[agent.id]}
+                x={pos.x}
+                y={pos.y}
+                onClick={() => setSelected(agent)}
+                selected={selected?.id === agent.id}
+              />
+            </div>
           );
         })}
+
+        {/* Ambient floor light pools — only in office mode. Three soft
+            radial gradients positioned at zone clusters that pulse very
+            slowly. Reads as overhead lights on the office floor. */}
+        {isOffice && (
+          <>
+            <div
+              className="absolute pointer-events-none rounded-full opacity-30"
+              style={{
+                width: "30%",
+                height: "40%",
+                left: "20%",
+                top: "20%",
+                background:
+                  "radial-gradient(circle, rgba(200,168,85,0.18) 0%, transparent 70%)",
+                filter: "blur(40px)",
+                animation: "office-light-pulse 8s ease-in-out infinite",
+              }}
+            />
+            <div
+              className="absolute pointer-events-none rounded-full opacity-30"
+              style={{
+                width: "30%",
+                height: "40%",
+                left: "55%",
+                top: "45%",
+                background:
+                  "radial-gradient(circle, rgba(99,102,241,0.16) 0%, transparent 70%)",
+                filter: "blur(40px)",
+                animation: "office-light-pulse 11s ease-in-out infinite 2s",
+              }}
+            />
+          </>
+        )}
+        </div>{/* end tilted floor */}
+
+        <style jsx>{`
+          @keyframes office-light-pulse {
+            0%, 100% { opacity: 0.18; transform: scale(1); }
+            50% { opacity: 0.36; transform: scale(1.1); }
+          }
+        `}</style>
       </div>
 
       {/* Drawer */}
