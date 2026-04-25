@@ -1,10 +1,38 @@
 ---
-description: "Hybrid Opus+GPT-5 agent — runs Claude Opus 4.7 and GPT-5 (via codex CLI) together with token-tight direct-DM protocol. Use for hard tasks where you want both models reasoning together. Writes a per-task transcript to /tmp so the conversation is replayable."
+description: "Hybrid Opus+GPT-5 agent — runs Claude Opus 4.7 and GPT-5 (via codex CLI) together with token-tight direct-DM protocol. SILENT BY DEFAULT (only final commit hash + verdict surfaces). Use for hard tasks. Per-task transcript at /tmp/agent-<slug>-<ts>.md."
 ---
 
 # /agent <task>
 
 A "model" you can pick that's actually two models in lockstep: **Claude Opus 4.7** as the strategist + writer, **GPT-5** (via codex CLI) as the adversarial reviewer. Output protocol: **direct DMs only** — no preamble, no fluff, terse exchanges, structured signals.
+
+## Silent mode (default) — saves your context tokens
+
+By default, only ONE message surfaces in the user's CC chat — the final ship report. All round-by-round chatter (Opus picks target, codex review verdict, fix iterations) goes to a transcript file at `/tmp/agent-<slug>-<ts>.md` and is referenced by path in the final report. The user can `cat` it if they want detail.
+
+The final message includes:
+- ✅/❌ ship/hold verdict
+- Commit hash + branch
+- Files touched (count + top 3)
+- Bugs caught by codex per round (count)
+- Token cost estimate
+- Path to full transcript
+- Vercel deploy state (if push triggered a build)
+
+**To override** and show round-by-round in chat: prefix the task with `verbose:` — e.g. `/agent verbose: find every CRITICAL bug`.
+
+## Auto-routing — invoke without typing /agent
+
+Per the project's `CLAUDE.md` skill-routing rules, certain trigger phrases now auto-invoke this command:
+
+| User says | Auto-invokes |
+|---|---|
+| "find every bug" / "find every CRITICAL" / "deep bug hunt" | `/agent` |
+| "fix this hard refactor" / "I'm stuck on" / "second opinion on" | `/agent` |
+| "harden X" / "audit X for security" | `/agent` |
+| "review my diff" / "code review" | `/review` (single-model) |
+
+If unsure, ask the user "should I run this through /agent (codex+opus loop) or single-model?" before starting.
 
 This is different from `/dual-plan` which is a one-shot plan-and-merge. `/agent` is a loop until ship-or-bust:
 
@@ -83,7 +111,21 @@ NITS: <optional small wins, max 2>"
 
 If verdict is `hold`: read GPT-5's blockers, fix each one, re-send the smaller delta to GPT-5 (don't re-send the whole patch every round — saves tokens). Continue until verdict is `ship`.
 
-If verdict is `ship`: commit + push.
+If verdict is `ship`: pre-flight + commit + push + watch.
+
+### Phase 5 — pre-flight + post-deploy verify
+
+Before pushing, run these in parallel:
+- `git diff --stat` — sanity-check the size
+- Check for accidentally-staged secrets (grep for `STRIPE_SECRET_KEY`, `ANTHROPIC_API_KEY`, etc with non-empty values in the diff)
+
+After push, watch the Vercel build:
+1. Read the latest deployment via the Vercel MCP, branch=main
+2. Poll deployment state every 30s until READY or ERROR (max 8 min)
+3. If ERROR → fetch build log, identify the type-error / runtime-error, fix surgically, push again, loop back to step 1
+4. If READY → also check `get_runtime_logs` last 5 min, level=error,fatal — no new errors should be logged
+
+The final report includes the deploy state. If the deploy errored and we couldn't fix it autonomously after 1 attempt, report that as part of the final ship message instead of looping forever.
 
 ## Token-saving rules
 
