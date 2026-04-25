@@ -42,6 +42,7 @@ import LayersPanel from "@/components/thumbnail-editor/layers-panel";
 import TopBar from "@/components/thumbnail-editor/top-bar";
 import AIFillDialog from "@/components/thumbnail-editor/ai-fill-dialog";
 import HistoryPanel from "@/components/thumbnail-editor/history-panel";
+import AiFirstStarter from "@/components/thumbnail-editor/ai-first-starter";
 
 // Electron hint — the preload script sets window.electron. We check for
 // truthy at runtime to decide whether to show the native picker.
@@ -65,6 +66,12 @@ export default function ThumbnailEditorProPage() {
   const [textToLayerOpen, setTextToLayerOpen] = useState(false);
   const [aiBusy, setAIBusy] = useState(false);
   const [hasElectron, setHasElectron] = useState(false);
+  // AI-first starter — overlay shown when canvas is empty and user hasn't
+  // explicitly skipped (Pikzel-AI-style entry per apr27 backlog).
+  const [aiStarterSkipped, setAiStarterSkipped] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem("thumbnail-ai-starter-skipped") === "1";
+  });
 
   useEffect(() => {
     setHasElectron(typeof window !== "undefined" && !!window.electron);
@@ -688,6 +695,36 @@ export default function ThumbnailEditorProPage() {
 
       {/* HistoryState is consumed by HistoryPanel, no extra surface */}
       <HistoryTypeGuard history={history} />
+
+      {/* AI-first starter overlay — shows when canvas is empty + not skipped.
+          Per the apr27 backlog Pikzel-AI request: "user describes what they
+          want → AI generates → ONLY THEN does the editor surface for
+          refinement". User can skip to use the traditional blank canvas. */}
+      {state.layers.length === 0 && !aiStarterSkipped && (
+        <AiFirstStarter
+          width={state.canvasWidth}
+          height={state.canvasHeight}
+          onPickThumbnail={(imageUrl) => {
+            const layer = createImageLayer(imageUrl, {
+              x: 0,
+              y: 0,
+              width: state.canvasWidth,
+              height: state.canvasHeight,
+              name: "AI starter",
+            });
+            commit({ type: "ADD_LAYER", layer }, "AI thumbnail starter");
+            toast.success("Thumbnail loaded — refine in the editor");
+          }}
+          onSkip={() => {
+            setAiStarterSkipped(true);
+            try {
+              sessionStorage.setItem("thumbnail-ai-starter-skipped", "1");
+            } catch {
+              /* private mode etc — fine */
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
