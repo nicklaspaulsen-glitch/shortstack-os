@@ -97,20 +97,26 @@ export function AiPanel({ state, dispatch }: AiPanelProps) {
     setDirectorBrief(null);
     const id = toast.loading("AI Director reviewing the cut…");
     try {
-      // Compute total duration as the max end-time across all clips
-      const totalDuration = state.clips.reduce(
+      // Clip start/duration are in MILLISECONDS — the API expects seconds
+      // for human-readable timestamps in the AI output.
+      const totalDurationMs = state.clips.reduce(
         (max, c) => Math.max(max, (c.start ?? 0) + (c.duration ?? 0)),
         0,
       );
       const payload = {
-        clips: state.clips.map((c) => ({
-          id: c.id,
-          kind: state.tracks.find((t) => t.id === c.trackId)?.kind || "video",
-          start: c.start ?? 0,
-          duration: c.duration ?? 0,
-          label: c.name || c.kind,
-        })),
-        total_duration: totalDuration,
+        clips: state.clips.map((c) => {
+          const trackKind =
+            state.tracks.find((t) => t.id === c.trackId)?.kind || "video";
+          return {
+            id: c.id,
+            kind: trackKind,
+            // Convert ms → seconds for the AI brief
+            start: (c.start ?? 0) / 1000,
+            duration: (c.duration ?? 0) / 1000,
+            label: c.label || trackKind,
+          };
+        }),
+        total_duration: totalDurationMs / 1000,
         intent: "engage and retain viewers through the full runtime",
         target_platform: "youtube",
       };
