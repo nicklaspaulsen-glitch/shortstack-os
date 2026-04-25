@@ -19,6 +19,7 @@ import {
 import { WORKFLOW_PRESETS, WORKFLOW_CATEGORIES, type WorkflowPreset } from "@/lib/workflow-presets";
 import toast from "react-hot-toast";
 import { TelegramIcon, SlackIcon } from "@/components/ui/platform-icons";
+import AiWorkflowHero from "@/components/workflows/ai-workflow-hero";
 
 interface WorkflowStep {
   id: string;
@@ -363,6 +364,16 @@ export default function WorkflowsPage() {
       {/* AI Generator Modal */}
       <AiWorkflowGenModal open={showAiGen} onClose={() => setShowAiGen(false)} />
 
+      {/* AI Workflow Hero — natural-language workflow designer at the top.
+          Per Apr 26 ask: "massively improve workflows tab to have more
+          options like GHL and features and AI stuff". The Hero replaces
+          a hidden "Generate with AI" button with a hero panel that
+          surfaces the AI design flow as the primary way to build
+          workflows. */}
+      <AiWorkflowHero
+        clients={clients}
+        onPreview={(wf) => setPreviewWorkflow(wf)}
+      />
 
       {/* Tabs (sticky) */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 overflow-x-auto border-b border-border pb-0">
