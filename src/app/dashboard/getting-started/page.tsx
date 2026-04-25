@@ -9,6 +9,7 @@ import {
   Users, Zap, Bot, Globe, CreditCard, Settings,
   MessageSquare, Mail, Loader, Crown, Monitor
 } from "lucide-react";
+import PageHero from "@/components/ui/page-hero";
 
 interface Step {
   id: string;
@@ -134,12 +135,12 @@ export default function GettingStartedPage() {
 
   return (
     <div className="fade-in space-y-5 max-w-2xl">
-      <div>
-        <h1 className="page-header mb-0 flex items-center gap-2">
-          <Rocket size={18} className="text-gold" /> Getting Started
-        </h1>
-        <p className="text-xs text-muted mt-0.5">Complete these steps to set up your agency OS</p>
-      </div>
+      <PageHero
+        icon={<Rocket size={22} />}
+        title="Getting Started"
+        subtitle="Complete these steps to set up your agency OS."
+        gradient="gold"
+      />
 
       {/* Progress */}
       <div className="card border-gold/10">
