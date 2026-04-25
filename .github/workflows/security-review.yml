@@ -1,0 +1,31 @@
+name: Claude Security Review
+
+permissions:
+  pull-requests: write    # Needed for leaving PR comments
+  contents: read
+  security-events: write  # For uploading SARIF artifacts
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for diff-aware scanning
+
+      - name: Run Claude Code Security Review
+        uses: anthropics/claude-code-security-review@main
+        with:
+          comment-pr: 'true'
+          upload-results: 'true'
+          claudecode-timeout: '20'
+          # Skip large or generated dirs that produce noise
+          exclude-directories: 'node_modules,.next,dist,build,coverage,public,supabase/migrations'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
