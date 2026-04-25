@@ -57,6 +57,7 @@ import {
 import toast from "react-hot-toast";
 import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
+import FirstCallWizard from "@/components/voice-receptionist/first-call-wizard";
 import StatCard from "@/components/ui/stat-card";
 import EmptyState from "@/components/ui/empty-state";
 
@@ -620,6 +621,11 @@ export default function VoiceReceptionistPage() {
       />
 
       <div className="mx-auto max-w-6xl space-y-6 px-6 pb-10 pt-6">
+        {/* First-call setup wizard — self-hides once a client is fully
+            wired (twilio_phone_number + eleven_agent_id both set) and the
+            user has explicitly dismissed it. */}
+        <FirstCallWizard />
+
         {/* Beta honesty banner — shown until the first real call lands in
             voice_calls. Agent setup + Twilio webhook + Haiku classifier are
             all live; the banner just explains why the log is still empty on
