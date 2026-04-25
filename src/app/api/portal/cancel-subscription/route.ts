@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 // POST — Cancel subscription + schedule account deletion (30 day grace)
 export async function POST(req: NextRequest) {
@@ -27,6 +25,7 @@ export async function POST(req: NextRequest) {
   // Try to cancel active Stripe subscription(s)
   if (client?.stripe_customer_id) {
     try {
+      const stripe = getStripe();
       const subs = await stripe.subscriptions.list({
         customer: client.stripe_customer_id,
         status: "active",

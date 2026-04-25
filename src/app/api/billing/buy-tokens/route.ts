@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 const TOKEN_PACKS: Record<string, { tokens: number; price: number }> = {
   "100k": { tokens: 100_000, price: 19 },
@@ -35,6 +33,8 @@ export async function POST(request: NextRequest) {
 
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL || "https://shortstack-os.vercel.app";
+
+  const stripe = getStripe();
 
   // Ensure the user has (or gets) a Stripe customer id.
   const { data: profile } = await supabase

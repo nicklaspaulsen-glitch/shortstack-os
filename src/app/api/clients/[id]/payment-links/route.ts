@@ -18,9 +18,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { verifyClientAccess } from "@/lib/verify-client-access";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 async function requireConnectedAccount(
   supabase: ReturnType<typeof createServerSupabase>,
@@ -119,6 +117,7 @@ export async function POST(
   const connectOpts = { stripeAccount: account.stripe_account_id };
 
   try {
+    const stripe = getStripe();
     // Create a fresh Product + Price on the connected account for each link.
     // Reusing a Price across links is fine but gets messy with different
     // amounts — per-link Products keeps things simple and auditable.

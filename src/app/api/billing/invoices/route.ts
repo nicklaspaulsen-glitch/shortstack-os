@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 /**
  * GET /api/billing/invoices
@@ -55,6 +53,7 @@ export async function GET(_request: NextRequest) {
   }
 
   try {
+    const stripe = getStripe();
     const list = await stripe.invoices.list({
       customer: customerId,
       limit: 20,

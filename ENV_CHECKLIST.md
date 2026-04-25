@@ -152,7 +152,7 @@ convenience — keep them set only if a legacy webhook still posts to
 
 - [ ] `ZAPIER_WEBHOOK_URL` — Zapier webhook URL
 - [ ] `MAKE_API_KEY` — Make.com webhook/API key
-- [ ] `WEBHOOK_SECRET` — Generic inbound webhook secret (falls back to `CRON_SECRET`)
+- [ ] `WEBHOOK_SECRET` — Generic inbound webhook bearer-token secret. Required in production for `/api/webhooks/inbound`, `/api/webhooks/resend/inbound`, and as a fallback for `/api/webhooks/ghl`. Routes return 503 in production if missing, 401 if Authorization header doesn't match. Dev deploys log a warning and accept unsigned. Rotate with `openssl rand -hex 32`.
 
 ## Misc / Client-Side
 

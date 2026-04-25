@@ -11,9 +11,7 @@
 
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 export async function POST() {
   const supabase = createServerSupabase();
@@ -41,6 +39,7 @@ export async function POST() {
     }
 
     // Express accounts — generate a short-lived login link.
+    const stripe = getStripe();
     const link = await stripe.accounts.createLoginLink(account.stripe_account_id);
     return NextResponse.json({ url: link.url });
   } catch (err) {

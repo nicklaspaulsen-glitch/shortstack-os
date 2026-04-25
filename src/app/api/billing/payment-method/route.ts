@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 // GET — fetch the default payment method for the logged-in user
 export async function GET() {
@@ -24,6 +22,7 @@ export async function GET() {
   }
 
   try {
+    const stripe = getStripe();
     // List payment methods on the customer
     const methods = await stripe.paymentMethods.list({
       customer: customerId,

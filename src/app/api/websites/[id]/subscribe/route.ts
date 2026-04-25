@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 /**
  * Create a Stripe Checkout subscription for a generated website.
@@ -131,6 +129,7 @@ export async function POST(
 
   // ── Real Stripe Checkout ─────────────────────────────────────────────
   try {
+    const stripe = getStripe();
     let customerId = profile?.stripe_customer_id;
     if (!customerId) {
       const customer = await stripe.customers.create({

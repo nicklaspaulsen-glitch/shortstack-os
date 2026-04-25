@@ -17,9 +17,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
@@ -32,6 +30,7 @@ export async function POST(request: NextRequest) {
     "https://shortstack-os.vercel.app";
 
   try {
+    const stripe = getStripe();
     // If the user already has a connected account, re-generate the onboarding
     // link for it instead of creating a new one (prevents orphaned accounts).
     const { data: existing } = await supabase

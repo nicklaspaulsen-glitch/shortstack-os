@@ -36,9 +36,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { PLAN_TIERS, PlanTier } from "@/lib/plan-config";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 // Plan tiers that are valid for self-checkout (Founder is internal-only,
 // Growth is still supported as a legacy tier).
@@ -163,6 +161,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    const stripe = getStripe();
     // Get or create Stripe customer for this agency owner
     const { data: profile } = await supabase
       .from("profiles")

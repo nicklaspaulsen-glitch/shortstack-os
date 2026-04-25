@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
-import Stripe from "stripe";
+import { type Stripe } from "stripe";
+import { getStripe } from "@/lib/stripe/client";
 import crypto from "crypto";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 const PRICE_MAP: Record<string, string> = {
   starter: "price_1TJ0DEBk5Rfdf2oOfoZOfain",
@@ -40,6 +39,7 @@ export async function POST(request: NextRequest) {
   const licenseKey = generateLicenseKey();
 
   try {
+    const stripe = getStripe();
     // Create or find Stripe customer
     const customers = await stripe.customers.list({ email, limit: 1 });
     let customer: Stripe.Customer;

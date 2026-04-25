@@ -8,12 +8,7 @@ import {
   type StyleCategory,
 } from "@/lib/thumbnail-styles";
 import type Anthropic from "@anthropic-ai/sdk";
-import Stripe from "stripe";
-
-// Stripe client — used by create_payment_link + send_invoice tools. All
-// operations go through { stripeAccount } so they live on the agency's
-// connected Stripe, never Trinity's platform.
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+import { getStripe } from "@/lib/stripe/client";
 
 // Trinity can fire up to 4 Claude calls + a synthesis call in one request.
 // Default 10s Hobby limit is too tight; bump to 60s (max for Pro).
@@ -818,6 +813,10 @@ interface ToolResult {
 
 async function runTool(name: string, input: Record<string, unknown>, ctx: ToolCtx): Promise<ToolResult> {
   const db = createServiceClient();
+  // Lazy-init Stripe — used by create_payment_link, send_invoice, create_invoice tools.
+  // Constructed inside the handler so build-time env-collection doesn't trip on
+  // a missing STRIPE_SECRET_KEY. Tools that need it will surface the error.
+  const stripe = getStripe();
 
   try {
     switch (name) {
