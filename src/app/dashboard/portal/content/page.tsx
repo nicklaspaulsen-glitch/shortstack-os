@@ -7,15 +7,28 @@ import { ContentCalendarEntry, ContentScript } from "@/lib/types";
 import StatusBadge from "@/components/ui/status-badge";
 import { PageLoading } from "@/components/ui/loading";
 import EmptyState from "@/components/ui/empty-state";
+import Modal from "@/components/ui/modal";
 import { formatDate } from "@/lib/utils";
-import { Film, Calendar, Download, CheckCircle, MessageSquare } from "lucide-react";
+import { Film, Calendar, Download, CheckCircle, MessageSquare, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
+
+type RevisionMode = "request" | "changes";
+
+interface RevisionTarget {
+  contentId: string;
+  contentTitle: string;
+  mode: RevisionMode;
+}
 
 export default function ClientContentPage() {
   const { profile } = useAuth();
   const [calendar, setCalendar] = useState<ContentCalendarEntry[]>([]);
   const [scripts, setScripts] = useState<ContentScript[]>([]);
   const [loading, setLoading] = useState(true);
+  const [revisionTarget, setRevisionTarget] = useState<RevisionTarget | null>(null);
+  const [revisionNote, setRevisionNote] = useState("");
+  const [revisionUrgent, setRevisionUrgent] = useState(false);
+  const [submittingRevision, setSubmittingRevision] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -43,7 +56,59 @@ export default function ClientContentPage() {
     }
   }
 
+  function openRevisionModal(contentId: string, contentTitle: string, mode: RevisionMode) {
+    setRevisionTarget({ contentId, contentTitle, mode });
+    setRevisionNote("");
+    setRevisionUrgent(false);
+  }
+
+  function closeRevisionModal() {
+    setRevisionTarget(null);
+    setRevisionNote("");
+    setRevisionUrgent(false);
+  }
+
+  async function submitRevision() {
+    if (!revisionTarget) return;
+    const note = revisionNote.trim();
+    if (!note) {
+      toast.error("Please describe what needs to change");
+      return;
+    }
+    setSubmittingRevision(true);
+    try {
+      const res = await fetch("/api/portal/revisions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content_item_id: revisionTarget.contentId,
+          revision_notes: note,
+          priority: revisionUrgent ? "urgent" : "normal",
+        }),
+      });
+      if (res.ok) {
+        toast.success("Revision request sent!");
+        closeRevisionModal();
+        fetchContent();
+      } else {
+        const err = await res.json().catch(() => ({ error: "Failed" }));
+        toast.error(err.error || "Failed to send revision");
+      }
+    } catch {
+      toast.error("Network error. Please try again.");
+    } finally {
+      setSubmittingRevision(false);
+    }
+  }
+
   if (loading) return <PageLoading />;
+
+  const modalTitle = revisionTarget?.mode === "request"
+    ? `Request a revision on "${revisionTarget.contentTitle}"`
+    : "Request changes";
+  const modalDescription = revisionTarget?.mode === "request"
+    ? "Tell us what needs to change. We'll get on it and re-publish once ready."
+    : "Describe the changes you'd like before this gets published.";
 
   return (
     <div className="fade-in space-y-5">
@@ -68,18 +133,10 @@ export default function ClientContentPage() {
                 <p className="text-xs font-medium mb-1">{c.title}</p>
                 {c.scheduled_at && <p className="text-[9px] text-muted mb-2">{formatDate(c.scheduled_at)}</p>}
                 {(c.status === "published" || c.status === "approved_for_publish") && (
-                  <button onClick={async () => {
-                    const note = prompt(`Request a revision on "${c.title}". What needs to change?`);
-                    if (!note) return;
-                    const priority = confirm("Mark this as urgent?") ? "urgent" : "normal";
-                    const res = await fetch("/api/portal/revisions", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ content_item_id: c.id, revision_notes: note, priority }),
-                    });
-                    if (res.ok) { toast.success("Revision request sent!"); fetchContent(); }
-                    else { const err = await res.json().catch(() => ({ error: "Failed" })); toast.error(err.error || "Failed"); }
-                  }} className="w-full text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors mt-1">
+                  <button
+                    onClick={() => openRevisionModal(c.id, c.title, "request")}
+                    className="w-full text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors mt-1"
+                  >
                     <MessageSquare size={10} /> Request revision
                   </button>
                 )}
@@ -92,27 +149,10 @@ export default function ClientContentPage() {
                     }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-success/10 text-success hover:bg-success/20 transition-colors">
                       <CheckCircle size={10} /> Approve
                     </button>
-                    <button onClick={async () => {
-                      const note = prompt("What changes do you need?");
-                      if (!note) return;
-                      const priority = confirm("Mark this as urgent?") ? "urgent" : "normal";
-                      const res = await fetch("/api/portal/revisions", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          content_item_id: c.id,
-                          revision_notes: note,
-                          priority,
-                        }),
-                      });
-                      if (res.ok) {
-                        toast.success("Revision request sent!");
-                        fetchContent();
-                      } else {
-                        const err = await res.json().catch(() => ({ error: "Failed" }));
-                        toast.error(err.error || "Failed to send revision");
-                      }
-                    }} className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors">
+                    <button
+                      onClick={() => openRevisionModal(c.id, c.title, "changes")}
+                      className="flex-1 text-[9px] py-1 rounded flex items-center justify-center gap-1 bg-warning/10 text-warning hover:bg-warning/20 transition-colors"
+                    >
                       <MessageSquare size={10} /> Changes
                     </button>
                   </div>
@@ -146,6 +186,60 @@ export default function ClientContentPage() {
           </div>
         </div>
       )}
+
+      {/* Revision modal — replaces window.prompt + window.confirm */}
+      <Modal
+        isOpen={revisionTarget !== null}
+        onClose={() => {
+          if (!submittingRevision) closeRevisionModal();
+        }}
+        title={modalTitle}
+        size="md"
+      >
+        <p className="text-xs text-muted mb-4">{modalDescription}</p>
+        <label className="block text-[11px] font-medium text-muted mb-1.5">
+          What needs to change?
+        </label>
+        <textarea
+          value={revisionNote}
+          onChange={(e) => setRevisionNote(e.target.value)}
+          placeholder="e.g. Replace the headline, tighten the script, swap the CTA..."
+          rows={5}
+          autoFocus
+          disabled={submittingRevision}
+          className="w-full text-xs border border-border/60 bg-surface-light/40 rounded-lg px-3 py-2.5 resize-none focus:outline-none focus:border-gold/60"
+        />
+        <label className="mt-4 flex items-center gap-2 text-xs text-foreground cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={revisionUrgent}
+            onChange={(e) => setRevisionUrgent(e.target.checked)}
+            disabled={submittingRevision}
+            className="h-3.5 w-3.5 rounded border-border/60 bg-surface-light/40 accent-warning"
+          />
+          <span className="inline-flex items-center gap-1.5">
+            <AlertTriangle size={12} className="text-warning" />
+            Mark this as urgent
+          </span>
+        </label>
+        <div className="mt-5 flex items-center justify-end gap-2">
+          <button
+            onClick={closeRevisionModal}
+            disabled={submittingRevision}
+            className="text-xs px-4 py-2 rounded-lg text-muted hover:text-foreground transition-colors disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={submitRevision}
+            disabled={submittingRevision || !revisionNote.trim()}
+            className="text-xs px-4 py-2 rounded-lg bg-gold text-black font-semibold hover:bg-gold/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
+          >
+            <MessageSquare size={12} />
+            {submittingRevision ? "Sending..." : "Send revision"}
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }
