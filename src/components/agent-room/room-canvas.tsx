@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { AGENTS, ZONES, absolutePosition, type AgentDef } from "./roster";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { AGENTS, ZONES, type AgentDef } from "./roster";
 import AgentAvatar, { type AgentStatus } from "./agent-avatar";
 import AgentDrawer from "./agent-drawer";
-import { RefreshCw, Loader2, Box, Square } from "lucide-react";
+import { useAgentPositions } from "./use-agent-positions";
+import { RefreshCw, Loader2, Box, Square, RotateCcw } from "lucide-react";
 
 // Isometric office mode tilt — Opus's spec was 55deg/-45deg, but at full
 // strength agents read as too compressed. 38deg/-22deg gives the "office
@@ -50,6 +51,35 @@ export default function RoomCanvas() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<AgentDef | null>(null);
+
+  // Drag positions — in-memory + localStorage persistence.
+  const { getPosition, setPosition, resetPositions } = useAgentPositions(AGENTS);
+
+  // Ref to the room floor div so we can read its pixel dimensions for drag→% conversion.
+  const roomRef = useRef<HTMLDivElement>(null);
+  const [roomSize, setRoomSize] = useState({ w: 0, h: 0 });
+  useEffect(() => {
+    const el = roomRef.current;
+    if (!el) return;
+    const obs = new ResizeObserver(entries => {
+      const rect = entries[0]?.contentRect;
+      if (rect) setRoomSize({ w: rect.width, h: rect.height });
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const handleAvatarDragEnd = useCallback(
+    (id: string, dxPct: number, dyPct: number) => {
+      const current = getPosition(id);
+      const PADDING = 2; // % clearance from room edge
+      setPosition(id, {
+        x: Math.min(100 - PADDING, Math.max(PADDING, current.x + dxPct)),
+        y: Math.min(100 - PADDING, Math.max(PADDING, current.y + dyPct)),
+      });
+    },
+    [getPosition, setPosition]
+  );
   // 3D office mode (Opus's "Isometric tilted floor" idea — Apr 26).
   // Persisted per session. Initialize to "office" on both server and
   // first client render to avoid hydration mismatch — re-hydrate from
@@ -158,7 +188,7 @@ export default function RoomCanvas() {
           perspectiveOrigin: "50% 30%",
         }}
       >
-        {/* Office mode toggle */}
+        {/* Office mode toggle + reset layout */}
         <div
           className="absolute top-3 right-3 z-30 flex gap-1 rounded-lg bg-black/40 backdrop-blur-sm border border-white/10 p-1"
         >
@@ -182,11 +212,21 @@ export default function RoomCanvas() {
           >
             <Square size={10} /> Flat
           </button>
+          <div className="w-px bg-white/10 mx-0.5" />
+          <button
+            type="button"
+            onClick={resetPositions}
+            className="flex items-center gap-1 px-2 py-1 rounded text-[10px] font-semibold text-white/50 hover:text-white/80 transition"
+            title="Reset agent positions"
+          >
+            <RotateCcw size={10} /> Reset
+          </button>
         </div>
 
         {/* Tilted floor — receives the actual rotation. Children counter-rotate
-            so faces stay readable. */}
+            so faces stay readable. roomRef lets us convert px drag deltas → %. */}
         <div
+          ref={roomRef}
           className="absolute inset-0 transition-transform duration-700 ease-out"
           style={{
             transformStyle: "preserve-3d",
@@ -235,7 +275,7 @@ export default function RoomCanvas() {
             so it sits above the floor plane like a desk worker not a
             paper cutout. */}
         {AGENTS.map(agent => {
-          const pos = absolutePosition(agent);
+          const pos = getPosition(agent.id);
           return (
             <div
               key={agent.id}
@@ -259,6 +299,9 @@ export default function RoomCanvas() {
                 x={pos.x}
                 y={pos.y}
                 onClick={() => setSelected(agent)}
+                onDragEnd={handleAvatarDragEnd}
+                containerWidth={roomSize.w}
+                containerHeight={roomSize.h}
                 selected={selected?.id === agent.id}
               />
             </div>

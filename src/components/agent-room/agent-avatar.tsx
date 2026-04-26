@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type PanInfo } from "framer-motion";
+import { useRef } from "react";
 import type { AgentDef } from "./roster";
 
 export type AgentStatus = "live" | "recent" | "idle" | "error" | "disabled";
@@ -57,13 +58,28 @@ interface Props {
   x: number; // % of container
   y: number;
   onClick: () => void;
+  /** Called when the user finishes dragging. Delta values are in % of container. */
+  onDragEnd?: (id: string, deltaXPct: number, deltaYPct: number) => void;
+  /** px dimensions of the room container — needed to convert px drag delta → % */
+  containerWidth?: number;
+  containerHeight?: number;
   selected?: boolean;
 }
 
 // Small drifting avatar. Uses translate(-50%, -50%) so the x/y percentage
 // represents the avatar's center. The whole thing is absolute-positioned
 // by the parent room canvas.
-export default function AgentAvatar({ agent, status, x, y, onClick, selected }: Props) {
+export default function AgentAvatar({
+  agent,
+  status,
+  x,
+  y,
+  onClick,
+  onDragEnd,
+  containerWidth = 0,
+  containerHeight = 0,
+  selected,
+}: Props) {
   const s = STATUS_STYLE[status];
   // Pseudo-random drift per agent id so the room feels alive but each
   // avatar animates distinctly. Seeded from the id so it stays stable
@@ -73,13 +89,50 @@ export default function AgentAvatar({ agent, status, x, y, onClick, selected }: 
   const driftY = ((seed >> 3) % 40) / 10 - 2;
   const delay = ((seed >> 7) % 50) / 10;    // 0 .. 5 s
 
+  // Track whether the pointer moved enough to be a drag (vs a click).
+  const isDraggingRef = useRef(false);
+
+  const handleDragStart = () => {
+    isDraggingRef.current = false;
+  };
+
+  const handleDrag = (_: PointerEvent, info: PanInfo) => {
+    if (Math.abs(info.offset.x) > 4 || Math.abs(info.offset.y) > 4) {
+      isDraggingRef.current = true;
+    }
+  };
+
+  const handleDragEnd = (_: PointerEvent, info: PanInfo) => {
+    if (!isDraggingRef.current || !onDragEnd) return;
+    const dxPct = containerWidth > 0 ? (info.offset.x / containerWidth) * 100 : 0;
+    const dyPct = containerHeight > 0 ? (info.offset.y / containerHeight) * 100 : 0;
+    onDragEnd(agent.id, dxPct, dyPct);
+  };
+
+  const handleClick = () => {
+    // Only fire onClick when the pointer didn't travel (i.e. it's a tap, not a drag).
+    if (!isDraggingRef.current) onClick();
+  };
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
+    <motion.div
+      drag
+      dragMomentum={false}
+      dragElastic={0.08}
+      // Reset drag offset after dragEnd — the committed position is baked
+      // into x/y props so the drag origin snaps back to zero.
+      dragConstraints={{ left: 0, top: 0, right: 0, bottom: 0 }}
+      onDragStart={handleDragStart}
+      onDrag={handleDrag}
+      onDragEnd={handleDragEnd}
+      onClick={handleClick}
       aria-label={`${agent.name} — ${s.label}`}
-      className="absolute group -translate-x-1/2 -translate-y-1/2 focus:outline-none"
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onClick(); }}
+      className="absolute group -translate-x-1/2 -translate-y-1/2 cursor-grab active:cursor-grabbing focus:outline-none"
       style={{ left: `${x}%`, top: `${y}%` }}
+      whileDrag={{ scale: 1.15, zIndex: 50, cursor: "grabbing" }}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.5 }}
@@ -95,7 +148,7 @@ export default function AgentAvatar({ agent, status, x, y, onClick, selected }: 
           x: { duration: 6, repeat: Infinity, ease: "easeInOut", delay },
           y: { duration: 7, repeat: Infinity, ease: "easeInOut", delay },
         }}
-        className="relative"
+        className="relative pointer-events-none"
       >
         {/* Halo pulse — only when live/error so idle avatars are calm */}
         {(status === "live" || status === "error") && (
@@ -135,7 +188,7 @@ export default function AgentAvatar({ agent, status, x, y, onClick, selected }: 
           </div>
         </div>
       </motion.div>
-    </button>
+    </motion.div>
   );
 }
 
