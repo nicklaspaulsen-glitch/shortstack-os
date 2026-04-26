@@ -16,7 +16,8 @@
  *   R2_PUBLIC_URL         https://cdn.shortstack.cloud
  */
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 let _r2: S3Client | null = null;
 
@@ -117,6 +118,32 @@ export async function deleteFromR2(key: string): Promise<void> {
       Bucket: bucket,
       Key: key,
     }),
+  );
+}
+
+/** Default TTL for presigned GET URLs (1 hour). */
+export const SIGNED_URL_TTL_SECONDS = 3600;
+
+/**
+ * Generate a presigned GET URL for an R2 object.
+ * The URL expires after `ttlSeconds` (default 1 hour), restoring the
+ * same access boundary that Supabase `createSignedUrl` provided.
+ *
+ * @param key        Object key inside the bucket (no leading slash).
+ * @param ttlSeconds Expiry in seconds (default: SIGNED_URL_TTL_SECONDS = 3600).
+ * @returns          A time-limited presigned HTTPS URL.
+ */
+export async function getR2SignedGetUrl(
+  key: string,
+  ttlSeconds: number = SIGNED_URL_TTL_SECONDS,
+): Promise<string> {
+  const r2 = getR2();
+  const bucket = getBucketName();
+
+  return getSignedUrl(
+    r2,
+    new GetObjectCommand({ Bucket: bucket, Key: key }),
+    { expiresIn: ttlSeconds },
   );
 }
 

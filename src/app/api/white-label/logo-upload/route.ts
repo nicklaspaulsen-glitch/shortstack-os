@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
-import { verifySniffedMime } from "@/lib/server/file-sniff";
+import { sniffMimeType, verifySniffedMime } from "@/lib/server/file-sniff";
 import { uploadToR2, deleteFromR2, r2KeyFromPublicUrl } from "@/lib/server/r2-client";
 
 export const maxDuration = 30;
@@ -80,7 +80,6 @@ export async function POST(req: Request) {
    * from declared (e.g. JPG mislabelled as PNG), we normalize the storage
    * extension + contentType to the sniffed type to avoid misleading paths.
    */
-  const { sniffMimeType } = await import("@/lib/server/file-sniff");
   const sniffError = await verifySniffedMime(buffer, ALLOWED_TYPES, file.type);
   if (sniffError) {
     return NextResponse.json({ error: sniffError }, { status: 400 });

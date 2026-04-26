@@ -3,7 +3,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { verifySniffedMime } from "@/lib/server/file-sniff";
 import { ALLOWED_GENERAL_UPLOADS } from "@/lib/file-types";
-import { uploadToR2 } from "@/lib/server/r2-client";
+import { uploadToR2, deleteFromR2, r2KeyFromPublicUrl } from "@/lib/server/r2-client";
 
 /*
   Table: content_assets
@@ -176,10 +176,36 @@ export async function DELETE(req: NextRequest) {
 
   if (!asset) return NextResponse.json({ error: "Asset not found" }, { status: 404 });
 
-  // Extract storage path from the public URL
-  const urlParts = asset.file_url.split("/content-assets/");
-  if (urlParts.length === 2) {
-    await service.storage.from("content-assets").remove([urlParts[1]]);
+  // Delete from R2 first (before DB row) so we never leave an unreachable DB
+  // record pointing to a live CDN object. If R2 returns 404 the object is
+  // already gone — continue to DB delete. Non-404 R2 errors are surfaced as
+  // 500 and the DB row is left intact (prevents dangling references).
+  const r2Key = r2KeyFromPublicUrl(asset.file_url);
+  if (r2Key) {
+    // R2-backed asset: delete from R2 first.
+    try {
+      await deleteFromR2(r2Key);
+    } catch (r2Err: unknown) {
+      const msg = r2Err instanceof Error ? r2Err.message : String(r2Err);
+      // S3 404 → object already gone, safe to proceed.
+      const is404 =
+        (r2Err instanceof Error && r2Err.name === "NoSuchKey") ||
+        msg.includes("NoSuchKey") ||
+        msg.includes("404");
+      if (!is404) {
+        console.error("[content-library] R2 delete error:", msg);
+        return NextResponse.json(
+          { error: `Storage delete failed: ${msg}` },
+          { status: 500 },
+        );
+      }
+    }
+  } else {
+    // Legacy Supabase Storage URL — best-effort delete from old bucket.
+    const urlParts = asset.file_url.split("/content-assets/");
+    if (urlParts.length === 2) {
+      await service.storage.from("content-assets").remove([urlParts[1]]);
+    }
   }
 
   const { error } = await service

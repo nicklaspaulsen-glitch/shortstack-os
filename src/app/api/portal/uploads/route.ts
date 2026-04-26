@@ -19,12 +19,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { verifySniffedMime } from "@/lib/server/file-sniff";
 import { ALLOWED_GENERAL_UPLOADS } from "@/lib/file-types";
-import { uploadToR2 } from "@/lib/server/r2-client";
+import { uploadToR2, getR2SignedGetUrl, SIGNED_URL_TTL_SECONDS } from "@/lib/server/r2-client";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
-// SIGNED_URL_TTL_SECONDS retained for backward-compat reference; R2 CDN URLs
-// are public and do not expire, but the field is kept in the API response shape.
-const SIGNED_URL_TTL_SECONDS = 3600; // eslint-disable-line @typescript-eslint/no-unused-vars
+// SIGNED_URL_TTL_SECONDS is imported from r2-client and used for presigned GET
+// URL expiry on both the GET listing and POST upload response.
 const BUCKET = "portal-files";
 
 async function resolvePortalClient(userId: string) {
@@ -54,15 +53,25 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // R2 public CDN: construct URL directly from the stored key.
-  // Old Supabase rows (file_path starting with a user UUID and no "portal/"
-  // prefix) will produce a cdn.shortstack.cloud URL that won't resolve —
-  // those are grandfathered rows and are expected to be migrated separately.
-  const r2PublicBase = (process.env.R2_PUBLIC_URL || "").replace(/\/$/, "");
-  const withUrls = (uploads || []).map((u) => ({
-    ...u,
-    signed_url: r2PublicBase ? `${r2PublicBase}/${u.file_path}` : null,
-  }));
+  // Generate presigned GET URLs (1-hour TTL) for each upload, restoring the
+  // same access boundary that Supabase createSignedUrl provided. Public CDN
+  // URLs are permanently readable once leaked; presigned URLs expire.
+  // Old Supabase rows (file_path without "portal/" prefix) won't resolve as
+  // R2 keys — they get null signed_url and are expected to be migrated.
+  const withUrls = await Promise.all(
+    (uploads || []).map(async (u) => {
+      let signedUrl: string | null = null;
+      // Only issue presigned URLs for R2-keyed rows (portal/ prefix).
+      if (u.file_path?.startsWith("portal/")) {
+        try {
+          signedUrl = await getR2SignedGetUrl(u.file_path, SIGNED_URL_TTL_SECONDS);
+        } catch (e) {
+          console.warn("[portal uploads] presign failed for", u.file_path, e);
+        }
+      }
+      return { ...u, signed_url: signedUrl };
+    }),
+  );
 
   return NextResponse.json({ uploads: withUrls });
 }
@@ -171,9 +180,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  // R2 objects on the public CDN are directly accessible — no signed URL needed.
-  // We expose cdnUrl as signed_url for backwards-compat with the client.
-  const signed = { signedUrl: cdnUrl };
+  // Generate a presigned GET URL (1-hour TTL) for immediate preview.
+  // This mirrors the old Supabase createSignedUrl behaviour and avoids
+  // exposing a permanently-accessible public CDN URL in the API response.
+  let signedUrl: string | null = null;
+  try {
+    signedUrl = await getR2SignedGetUrl(r2Key, SIGNED_URL_TTL_SECONDS);
+  } catch (e) {
+    console.warn("[portal uploads] post-upload presign failed:", e);
+  }
+  const signed = { signedUrl: signedUrl ?? cdnUrl };
 
   // Trinity log entry
   await service.from("trinity_log").insert({
