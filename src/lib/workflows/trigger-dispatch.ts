@@ -33,6 +33,7 @@ export type TriggerType =
   | "tag_added"
   | "tag_removed"
   | "appointment_booked"
+  | "appointment_completed"
   | "pipeline_stage_changed"
   | "webhook_received"
   | "voice_call_completed"
