@@ -7,16 +7,18 @@ import { createClient } from "@/lib/supabase/client";
 import {
   Link2, Globe, Loader, Check, Unlink, LogIn, Shield, Clock, AlertCircle,
   MessageSquare, Mail, Phone, ExternalLink, Zap, RefreshCw,
-  X, Key, Settings2, ArrowUpRight, Copy, Bot, Bell, Sparkles, Terminal
+  X, Key, Settings2, ArrowUpRight, Copy, Bot, Bell, Sparkles, Terminal,
+  CreditCard, Megaphone, Wrench, Search, Filter, Plug
 } from "lucide-react";
 import { CardSkeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {
   CalendlyIcon, WhatsAppIcon, NotionIcon, GoogleAdsIcon, GoogleMapsIcon,
-  InstagramIcon, TikTokIcon, YouTubeIcon, FacebookIcon, LinkedInIcon,
+  TikTokIcon, FacebookIcon, GoogleIcon,
 } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
+import StatCard from "@/components/ui/stat-card";
 
 // Real brand logos as inline SVGs
 const StripeLogo = () => (
@@ -68,7 +70,21 @@ interface SocialAccount {
   metadata: Record<string, unknown>;
 }
 
-const PLATFORMS = [
+type SocialTier = "available" | "coming_soon";
+
+interface SocialPlatform {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  color: string;
+  bg: string;
+  description: string;
+  supportsDM: boolean;
+  tier: SocialTier;
+}
+
+const PLATFORMS: SocialPlatform[] = [
+  // ----- Available now via Zernio -----
   {
     id: "facebook",
     name: "Facebook",
@@ -77,6 +93,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#1877F2]/10 to-[#1877F2]/5 border-[#1877F2]/20",
     description: "Post content, manage ads, view page insights",
     supportsDM: true,
+    tier: "available",
   },
   {
     id: "instagram",
@@ -86,6 +103,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#E4405F]/10 to-[#833AB4]/10 border-[#E4405F]/20",
     description: "Publish posts & reels, view analytics, manage DMs",
     supportsDM: true,
+    tier: "available",
   },
   {
     id: "tiktok",
@@ -95,6 +113,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-white/5 to-[#FE2C55]/5 border-white/15",
     description: "Upload videos, track views, manage ad campaigns",
     supportsDM: false,
+    tier: "available",
   },
   {
     id: "linkedin",
@@ -104,6 +123,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#0A66C2]/10 to-[#0A66C2]/5 border-[#0A66C2]/20",
     description: "Share posts, manage company page, B2B networking",
     supportsDM: true,
+    tier: "available",
   },
   {
     id: "youtube",
@@ -113,6 +133,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#FF0000]/10 to-[#FF0000]/5 border-[#FF0000]/20",
     description: "Upload videos, view channel analytics, manage playlists",
     supportsDM: false,
+    tier: "available",
   },
   {
     id: "twitter",
@@ -122,6 +143,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-white/5 to-white/[0.02] border-white/15",
     description: "Post tweets, track engagement, manage replies",
     supportsDM: true,
+    tier: "available",
   },
   {
     id: "pinterest",
@@ -131,7 +153,9 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#E60023]/10 to-[#E60023]/5 border-[#E60023]/20",
     description: "Create pins, manage boards, drive traffic",
     supportsDM: true,
+    tier: "available",
   },
+  // ----- Coming soon via Zernio (Zernio doesn't expose posting APIs yet) -----
   {
     id: "snapchat",
     name: "Snapchat",
@@ -140,6 +164,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#FFFC00]/10 to-[#FFFC00]/5 border-[#FFFC00]/20",
     description: "Manage ads, stories, spotlight content",
     supportsDM: true,
+    tier: "coming_soon",
   },
   {
     id: "reddit",
@@ -149,6 +174,7 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#FF4500]/10 to-[#FF4500]/5 border-[#FF4500]/20",
     description: "Post content, manage communities, track engagement",
     supportsDM: true,
+    tier: "coming_soon",
   },
   {
     id: "tumblr",
@@ -158,15 +184,17 @@ const PLATFORMS = [
     bg: "bg-gradient-to-br from-[#36465D]/10 to-[#36465D]/5 border-[#36465D]/20",
     description: "Publish posts, manage blogs, share multimedia",
     supportsDM: false,
+    tier: "coming_soon",
   },
   {
-    id: "google_business",
+    id: "google_business_social",
     name: "Google Business",
     icon: <GoogleBusinessLogo />,
     color: "text-[#4285F4]",
     bg: "bg-gradient-to-br from-[#4285F4]/10 to-[#34A853]/10 border-[#4285F4]/20",
-    description: "Manage reviews, update business info, local SEO",
+    description: "Reviews + local posts (full setup in Productivity below)",
     supportsDM: false,
+    tier: "coming_soon",
   },
 ];
 
@@ -455,47 +483,100 @@ function SocialAccountsPage() {
       {/* Trinity Discord Bot (public) */}
       <TrinityDiscordInstallCard />
 
-      {/* Connect platforms */}
-      {!loading && <div>
-        <h2 className="section-header">{connectedIds.length > 0 ? "Connect More" : "Connect Your Accounts"}</h2>
-        <p className="text-[10px] text-muted mb-3">Click to connect via Zernio — unified OAuth for 14+ social platforms with DM support on 7</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {PLATFORMS.filter(p => !connectedIds.includes(p.id)).map(platform => (
-            <button
-              key={platform.id}
-              onClick={() => connectViaZernio(platform.id)}
-              disabled={connecting === platform.id}
-              className={`text-left rounded-xl p-4 border border-border bg-surface hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[1px] transition-all group disabled:opacity-60 disabled:pointer-events-none`}
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface-light border border-border group-hover:border-gold/20 transition-colors">
-                  <span className="text-muted group-hover:text-foreground transition-colors">{platform.icon}</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-xs font-semibold">{platform.name}</p>
-                    {platform.supportsDM && (
-                      <span className="text-[8px] text-gold bg-gold/10 px-1 py-0.5 rounded font-medium">DM</span>
-                    )}
-                  </div>
-                  <p className="text-[10px] text-muted">{platform.description}</p>
+      {/* Social Channels — split into "Available now" and "Coming soon via Zernio" */}
+      {!loading && (() => {
+        const availableNow = PLATFORMS.filter(p => p.tier === "available" && !connectedIds.includes(p.id));
+        const comingSoonSocial = PLATFORMS.filter(p => p.tier === "coming_soon");
+        return (
+          <div className="space-y-5">
+            {availableNow.length > 0 && (
+              <div>
+                <h2 className="section-header flex items-center gap-2">
+                  <Globe size={14} className="text-gold" /> Social Channels
+                  <span className="text-[10px] font-normal text-muted ml-1">Available now</span>
+                </h2>
+                <p className="text-[10px] text-muted mb-3">
+                  Click to connect via Zernio — unified OAuth, DM-enabled platforms tagged.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {availableNow.map(platform => (
+                    <button
+                      key={platform.id}
+                      onClick={() => connectViaZernio(platform.id)}
+                      disabled={connecting === platform.id}
+                      className="text-left rounded-xl p-4 border border-border bg-surface hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[1px] transition-all group disabled:opacity-60 disabled:pointer-events-none"
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface-light border border-border group-hover:border-gold/20 transition-colors">
+                          <span className="text-muted group-hover:text-foreground transition-colors">{platform.icon}</span>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-semibold">{platform.name}</p>
+                            {platform.supportsDM && (
+                              <span className="text-[8px] text-gold bg-gold/10 px-1 py-0.5 rounded font-medium">DM</span>
+                            )}
+                          </div>
+                          <p className="text-[10px] text-muted">{platform.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 mt-1">
+                        {connecting === platform.id ? (
+                          <span className="text-[10px] text-[#C9A84C] font-medium flex items-center gap-1">
+                            <Loader size={10} className="animate-spin" /> Connecting...
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-[#C9A84C] font-medium flex items-center gap-1">
+                            <LogIn size={10} /> Connect via Zernio
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="flex items-center gap-3 mt-1">
-                {connecting === platform.id ? (
-                  <span className="text-[10px] text-[#C9A84C] font-medium flex items-center gap-1">
-                    <Loader size={10} className="animate-spin" /> Connecting...
+            )}
+
+            {comingSoonSocial.length > 0 && (
+              <div>
+                <h2 className="section-header flex items-center gap-2">
+                  <Clock size={14} className="text-muted" /> Coming soon via Zernio
+                  <span className="text-[10px] font-normal text-muted ml-1">
+                    Posting support pending — connect later
                   </span>
-                ) : (
-                  <span className="text-[10px] text-[#C9A84C] font-medium flex items-center gap-1">
-                    <LogIn size={10} /> Connect via Zernio
-                  </span>
-                )}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {comingSoonSocial.map(platform => (
+                    <div
+                      key={platform.id}
+                      className="rounded-xl p-4 border border-dashed border-border/50 bg-surface/40 opacity-70 cursor-not-allowed"
+                      title="Coming soon — Zernio doesn't yet expose posting APIs for this platform"
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-11 h-11 rounded-xl flex items-center justify-center bg-surface-light/50 border border-border/40">
+                          <span className="text-muted">{platform.icon}</span>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <p className="text-xs font-semibold text-muted">{platform.name}</p>
+                            <span className="text-[8px] text-muted bg-surface-light px-1 py-0.5 rounded font-medium">SOON</span>
+                          </div>
+                          <p className="text-[10px] text-muted/70">{platform.description}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 mt-1">
+                        <span className="text-[10px] text-muted/70 font-medium flex items-center gap-1">
+                          <Clock size={10} /> Pending Zernio support
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </button>
-          ))}
-        </div>
-      </div>}
+            )}
+          </div>
+        );
+      })()}
 
       {/* No client warning -- only for clients, not admins */}
       {!clientId && profile?.role === "client" && (
@@ -669,6 +750,13 @@ function TrinityDiscordInstallCard() {
 
 const VERCEL_ENV_URL = "https://vercel.com/growth-9598s-projects/shortstack-os/settings/environment-variables";
 
+type IntegrationGroup =
+  | "payments"
+  | "communications"
+  | "marketing_ads"
+  | "productivity"
+  | "lead_data";
+
 type BusinessIntegration = {
   id: string;
   name: string;
@@ -682,9 +770,131 @@ type BusinessIntegration = {
   instructions: string;
   /** OAuth path (hits /api/oauth/...) when client_id creds are already in env */
   oauthPath?: string;
+  /** Which group/category this integration belongs to */
+  group: IntegrationGroup;
+  /** When true, the card is shown but disabled with a "Coming soon" badge */
+  comingSoon?: boolean;
+  /** Optional "NEW" badge for newly-added integrations */
+  isNew?: boolean;
 };
 
+const INTEGRATION_GROUPS: Array<{
+  id: IntegrationGroup;
+  label: string;
+  description: string;
+  icon: React.ReactNode;
+  accent: string;
+}> = [
+  {
+    id: "payments",
+    label: "Payments",
+    description: "Accept money — your subscriptions and your client invoices",
+    icon: <CreditCard size={14} />,
+    accent: "text-[#635BFF]",
+  },
+  {
+    id: "communications",
+    label: "Communications",
+    description: "Reach leads and clients across email, SMS, voice, and chat",
+    icon: <MessageSquare size={14} />,
+    accent: "text-[#25D366]",
+  },
+  {
+    id: "marketing_ads",
+    label: "Marketing & Ads",
+    description: "Run paid campaigns across the major ad networks",
+    icon: <Megaphone size={14} />,
+    accent: "text-[#4285F4]",
+  },
+  {
+    id: "productivity",
+    label: "Productivity & Workspace",
+    description: "Calendar, Drive, scheduling, docs, and local SEO surfaces",
+    icon: <Wrench size={14} />,
+    accent: "text-[#34A853]",
+  },
+  {
+    id: "lead_data",
+    label: "Lead Gen & Data",
+    description: "Scrapers, enrichment, and prospecting infrastructure",
+    icon: <Search size={14} />,
+    accent: "text-[#FF9900]",
+  },
+];
+
 const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
+  // ----- Payments -----
+  {
+    id: "stripe",
+    name: "Stripe (Platform)",
+    icon: <StripeLogo />,
+    color: "text-[#635BFF]",
+    bg: "from-[#635BFF]/10 to-[#635BFF]/5 border-[#635BFF]/20",
+    description: "Billing for ShortStack subscriptions",
+    endpoint: "/api/billing/checkout",
+    envKeys: ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"],
+    docsUrl: "https://stripe.com/docs/api",
+    instructions: "Platform billing: users pay Trinity for their ShortStack subscription (Starter/Growth/Pro/Business/Unlimited). Set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Vercel env vars. The /api/billing/webhook endpoint listens for checkout.session.completed, customer.subscription.updated, invoice.payment_failed.",
+    group: "payments",
+  },
+  {
+    id: "stripe_connect",
+    name: "Stripe Connect",
+    icon: <StripeLogo />,
+    color: "text-[#635BFF]",
+    bg: "from-[#635BFF]/10 to-[#635BFF]/5 border-[#635BFF]/20",
+    description: "Agency-to-client payouts — money goes to your bank",
+    endpoint: "/api/integrations/stripe-connect/status",
+    envKeys: ["STRIPE_SECRET_KEY"],
+    docsUrl: "https://stripe.com/docs/connect",
+    instructions: "Onboard your agency's connected account at /api/integrations/stripe-connect/onboard — clients pay YOU via /api/clients/[id]/invoices or /api/clients/[id]/payment-links, money flows to your Stripe balance (minus ShortStack's platform fee).",
+    oauthPath: "/api/integrations/stripe-connect/onboard",
+    group: "payments",
+  },
+
+  // ----- Communications -----
+  {
+    id: "email_marketing",
+    name: "Resend",
+    icon: <Mail size={16} />,
+    color: "text-white",
+    bg: "from-white/10 to-white/5 border-white/20",
+    description: "Transactional email + audiences",
+    endpoint: "/api/integrations/email-marketing",
+    envKeys: ["SMTP_PASS"],
+    docsUrl: "https://resend.com/docs",
+    instructions: "Resend SMTP is wired via SMTP_HOST/USER/PASS/FROM. If you want API-backed features (audiences, contact lists), SMTP_PASS doubles as the API key — or set RESEND_API_KEY separately.",
+    group: "communications",
+  },
+  {
+    id: "twilio",
+    name: "Twilio",
+    icon: <Phone size={16} />,
+    color: "text-[#F22F46]",
+    bg: "from-[#F22F46]/10 to-[#F22F46]/5 border-[#F22F46]/20",
+    description: "SMS, voice, WhatsApp number provisioning",
+    endpoint: "/api/integrations/twilio",
+    envKeys: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
+    docsUrl: "https://www.twilio.com/docs",
+    instructions: "Grab your Account SID and Auth Token from https://console.twilio.com → add as TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN. Also set TWILIO_PHONE_NUMBER for outbound.",
+    group: "communications",
+  },
+  {
+    id: "whatsapp",
+    name: "WhatsApp Business",
+    icon: <WhatsAppIcon size={20} />,
+    color: "text-[#25D366]",
+    bg: "from-[#25D366]/10 to-[#25D366]/5 border-[#25D366]/20",
+    description: "Chat with leads and clients",
+    endpoint: "/api/integrations/whatsapp",
+    envKeys: ["WHATSAPP_ACCESS_TOKEN", "WHATSAPP_PHONE_NUMBER_ID"],
+    docsUrl: "https://developers.facebook.com/docs/whatsapp/cloud-api",
+    instructions: "Set up WhatsApp Business in Meta for Developers → get WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID → paste both into Vercel env vars.",
+    oauthPath: "/api/oauth/meta",
+    group: "communications",
+  },
+
+  // ----- Marketing & Ads -----
   {
     id: "google_ads",
     name: "Google Ads",
@@ -697,6 +907,51 @@ const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
     docsUrl: "https://developers.google.com/google-ads/api/docs/start",
     instructions: "Get a developer token at https://ads.google.com/aw/apicenter → paste into Vercel env vars as GOOGLE_ADS_DEVELOPER_TOKEN. You also need GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET from Google Cloud Console.",
     oauthPath: "/api/oauth/google-ads",
+    group: "marketing_ads",
+  },
+  {
+    id: "meta_ads",
+    name: "Meta Ads (via Nango)",
+    icon: <FacebookIcon size={20} />,
+    color: "text-[#1877F2]",
+    bg: "from-[#1877F2]/10 to-[#1877F2]/5 border-[#1877F2]/20",
+    description: "Facebook + Instagram ad campaigns",
+    endpoint: "/api/integrations/meta-ads",
+    envKeys: ["NANGO_SECRET_KEY", "NANGO_META_ADS_INTEGRATION_ID"],
+    docsUrl: "https://docs.nango.dev/integrations/all/facebook",
+    instructions: "Meta Ads will land via Nango — pending integration approval. Once shipped, agencies will OAuth their Meta business account and Trinity can pull spend, ROAS, and creative metrics.",
+    group: "marketing_ads",
+    comingSoon: true,
+  },
+  {
+    id: "tiktok_ads",
+    name: "TikTok Ads",
+    icon: <TikTokIcon size={20} />,
+    color: "text-white",
+    bg: "from-white/5 to-[#FE2C55]/5 border-white/15",
+    description: "TikTok ad campaigns and analytics",
+    endpoint: "/api/integrations/tiktok-ads",
+    envKeys: ["TIKTOK_ADS_APP_ID", "TIKTOK_ADS_SECRET"],
+    docsUrl: "https://business-api.tiktok.com",
+    instructions: "Pending TikTok Marketing API approval. Once granted, Trinity will OAuth into ad accounts and pull spend, conversions, and creative metrics alongside Google + Meta.",
+    group: "marketing_ads",
+    comingSoon: true,
+  },
+
+  // ----- Productivity & Workspace -----
+  {
+    id: "google_workspace",
+    name: "Google Workspace",
+    icon: <GoogleIcon size={20} />,
+    color: "text-[#4285F4]",
+    bg: "from-[#4285F4]/10 to-[#EA4335]/5 border-[#4285F4]/20",
+    description: "Calendar, Drive, Gmail — via Nango google-zanb",
+    endpoint: "/api/integrations/google-workspace",
+    envKeys: ["NANGO_SECRET_KEY"],
+    docsUrl: "https://docs.nango.dev/integrations/all/google",
+    instructions: "Connects via Nango's google-zanb integration. The agency-level OAuth grants read/write to Calendar, Drive, and Gmail. Set NANGO_SECRET_KEY in Vercel env vars and use /api/integrations/google-workspace to initiate the OAuth handshake.",
+    oauthPath: "/api/integrations/google-workspace/connect",
+    group: "productivity",
   },
   {
     id: "google_business",
@@ -704,12 +959,13 @@ const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
     icon: <GoogleMapsIcon size={20} />,
     color: "text-[#34A853]",
     bg: "from-[#34A853]/10 to-[#4285F4]/5 border-[#34A853]/20",
-    description: "Review management, local posts, business insights",
+    description: "Reviews, local posts, business insights",
     endpoint: "/api/integrations/google-business",
     envKeys: ["GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET"],
     docsUrl: "https://developers.google.com/my-business",
     instructions: "Enable the Business Profile API in Google Cloud Console → create OAuth 2.0 credentials → add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to Vercel env vars.",
     oauthPath: "/api/oauth/google",
+    group: "productivity",
   },
   {
     id: "calendly",
@@ -722,43 +978,7 @@ const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
     envKeys: ["CALENDLY_API_TOKEN"],
     docsUrl: "https://developer.calendly.com",
     instructions: "Get your personal access token at https://calendly.com/integrations/api_webhooks → add as CALENDLY_API_TOKEN in Vercel env vars.",
-  },
-  {
-    id: "whatsapp",
-    name: "WhatsApp Business",
-    icon: <WhatsAppIcon size={20} />,
-    color: "text-[#25D366]",
-    bg: "from-[#25D366]/10 to-[#25D366]/5 border-[#25D366]/20",
-    description: "Send messages, templates, media to clients",
-    endpoint: "/api/integrations/whatsapp",
-    envKeys: ["WHATSAPP_ACCESS_TOKEN", "WHATSAPP_PHONE_NUMBER_ID"],
-    docsUrl: "https://developers.facebook.com/docs/whatsapp/cloud-api",
-    instructions: "Set up WhatsApp Business in Meta for Developers → get WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID → paste both into Vercel env vars.",
-    oauthPath: "/api/oauth/meta",
-  },
-  {
-    id: "email_marketing",
-    name: "Resend",
-    icon: <Mail size={16} />,
-    color: "text-white",
-    bg: "from-white/10 to-white/5 border-white/20",
-    description: "Transactional email + audiences",
-    endpoint: "/api/integrations/email-marketing",
-    envKeys: ["SMTP_PASS"],
-    docsUrl: "https://resend.com/docs",
-    instructions: "Resend SMTP is wired via SMTP_HOST/USER/PASS/FROM. If you want API-backed features (audiences, contact lists), SMTP_PASS doubles as the API key — or set RESEND_API_KEY separately.",
-  },
-  {
-    id: "twilio",
-    name: "Twilio",
-    icon: <Phone size={16} />,
-    color: "text-[#F22F46]",
-    bg: "from-[#F22F46]/10 to-[#F22F46]/5 border-[#F22F46]/20",
-    description: "SMS messaging, voice calls, phone numbers",
-    endpoint: "/api/integrations/twilio",
-    envKeys: ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN"],
-    docsUrl: "https://www.twilio.com/docs",
-    instructions: "Grab your Account SID and Auth Token from https://console.twilio.com → add as TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN. Also set TWILIO_PHONE_NUMBER for outbound.",
+    group: "productivity",
   },
   {
     id: "notion",
@@ -771,91 +991,23 @@ const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
     envKeys: ["NOTION_API_KEY"],
     docsUrl: "https://developers.notion.com",
     instructions: "Create an internal integration at https://notion.so/my-integrations → copy the Internal Integration Secret → add as NOTION_API_KEY. Share the databases you want accessible with the integration.",
+    group: "productivity",
   },
+
+  // ----- Lead Gen & Data -----
   {
-    id: "stripe",
-    name: "Stripe (Platform)",
-    icon: <StripeLogo />,
-    color: "text-[#635BFF]",
-    bg: "from-[#635BFF]/10 to-[#635BFF]/5 border-[#635BFF]/20",
-    description: "Subscription billing for ShortStack plans",
-    endpoint: "/api/billing/checkout",
-    envKeys: ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"],
-    docsUrl: "https://stripe.com/docs/api",
-    instructions: "Platform billing: users pay Trinity for their ShortStack subscription (Starter/Growth/Pro/Business/Unlimited). Set STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET in Vercel env vars. The /api/billing/webhook endpoint listens for checkout.session.completed, customer.subscription.updated, invoice.payment_failed.",
-  },
-  {
-    id: "stripe_connect",
-    name: "Stripe Connect",
-    icon: <StripeLogo />,
-    color: "text-[#635BFF]",
-    bg: "from-[#635BFF]/10 to-[#635BFF]/5 border-[#635BFF]/20",
-    description: "Charge YOUR clients — money goes to your bank",
-    endpoint: "/api/integrations/stripe-connect/status",
-    envKeys: ["STRIPE_SECRET_KEY"],
-    docsUrl: "https://stripe.com/docs/connect",
-    instructions: "Onboard your agency's connected account at /api/integrations/stripe-connect/onboard — clients pay YOU via /api/clients/[id]/invoices or /api/clients/[id]/payment-links, money flows to your Stripe balance (minus ShortStack's platform fee).",
-    oauthPath: "/api/integrations/stripe-connect/onboard",
-  },
-  {
-    id: "social_instagram",
-    name: "Instagram (via Zernio)",
-    icon: <InstagramIcon size={20} />,
-    color: "text-[#E4405F]",
-    bg: "from-[#E4405F]/10 to-[#833AB4]/10 border-[#E4405F]/20",
-    description: "Publish posts & reels, view analytics, manage DMs",
-    endpoint: "/api/integrations/health?id=social_instagram",
-    envKeys: ["ZERNIO_API_KEY"],
-    docsUrl: "https://zernio.com/dashboard",
-    instructions: "Connect your Instagram account at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
-  },
-  {
-    id: "social_tiktok",
-    name: "TikTok (via Zernio)",
-    icon: <TikTokIcon size={20} />,
-    color: "text-white",
-    bg: "from-white/5 to-[#FE2C55]/5 border-white/15",
-    description: "Upload videos, track views, manage ad campaigns",
-    endpoint: "/api/integrations/health?id=social_tiktok",
-    envKeys: ["ZERNIO_API_KEY"],
-    docsUrl: "https://zernio.com/dashboard",
-    instructions: "Connect your TikTok account at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
-  },
-  {
-    id: "social_youtube",
-    name: "YouTube (via Zernio)",
-    icon: <YouTubeIcon size={20} />,
-    color: "text-[#FF0000]",
-    bg: "from-[#FF0000]/10 to-[#FF0000]/5 border-[#FF0000]/20",
-    description: "Upload videos, view channel analytics, manage playlists",
-    endpoint: "/api/integrations/health?id=social_youtube",
-    envKeys: ["ZERNIO_API_KEY"],
-    docsUrl: "https://zernio.com/dashboard",
-    instructions: "Connect your YouTube channel at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
-  },
-  {
-    id: "social_facebook",
-    name: "Facebook (via Zernio)",
-    icon: <FacebookIcon size={20} />,
-    color: "text-[#1877F2]",
-    bg: "from-[#1877F2]/10 to-[#1877F2]/5 border-[#1877F2]/20",
-    description: "Post content, manage ads, view page insights",
-    endpoint: "/api/integrations/health?id=social_facebook",
-    envKeys: ["ZERNIO_API_KEY"],
-    docsUrl: "https://zernio.com/dashboard",
-    instructions: "Connect your Facebook page at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
-  },
-  {
-    id: "social_linkedin",
-    name: "LinkedIn (via Zernio)",
-    icon: <LinkedInIcon size={20} />,
-    color: "text-[#0A66C2]",
-    bg: "from-[#0A66C2]/10 to-[#0A66C2]/5 border-[#0A66C2]/20",
-    description: "Share posts, manage company page, B2B networking",
-    endpoint: "/api/integrations/health?id=social_linkedin",
-    envKeys: ["ZERNIO_API_KEY"],
-    docsUrl: "https://zernio.com/dashboard",
-    instructions: "Connect your LinkedIn profile or company page at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
+    id: "apify",
+    name: "Apify",
+    icon: <Search size={16} />,
+    color: "text-[#FF9900]",
+    bg: "from-[#FF9900]/10 to-[#FF9900]/5 border-[#FF9900]/20",
+    description: "Web scrapers, lead enrichment, contact discovery",
+    endpoint: "/api/integrations/apify",
+    envKeys: ["APIFY_API_TOKEN"],
+    docsUrl: "https://docs.apify.com",
+    instructions: "Create an account at https://console.apify.com → Settings → Integrations → copy your API token → add as APIFY_API_TOKEN in Vercel env vars. Trinity can then trigger ready-made actors for Google Maps, LinkedIn, Yellow Pages, and more.",
+    group: "lead_data",
+    isNew: true,
   },
 ];
 
@@ -868,10 +1020,13 @@ interface HealthResult {
   missing?: string[];
 }
 
+type StatusFilter = "all" | "connected" | "not_connected" | "coming_soon";
+
 function BusinessIntegrations() {
   const [statuses, setStatuses] = useState<Record<string, HealthResult>>({});
   const [activeModal, setActiveModal] = useState<BusinessIntegration | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [filter, setFilter] = useState<StatusFilter>("all");
 
   async function loadHealth() {
     setRefreshing(true);
@@ -883,6 +1038,12 @@ function BusinessIntegrations() {
       const data = await res.json();
       const next: Record<string, HealthResult> = {};
       (data.results || []).forEach((r: HealthResult) => { next[r.id] = r; });
+      // Backfill any integration whose endpoint isn't registered yet
+      // (e.g. brand-new + coming-soon entries) so the card shows
+      // "Not configured" instead of staying stuck on "checking".
+      BUSINESS_INTEGRATIONS.forEach(i => {
+        if (!next[i.id]) next[i.id] = { id: i.id, status: "not_configured" };
+      });
       setStatuses(next);
     } catch {
       const fallback: Record<string, HealthResult> = {};
@@ -895,87 +1056,150 @@ function BusinessIntegrations() {
 
   useEffect(() => { loadHealth(); }, []);
 
-  const configured = Object.values(statuses).filter(s => s.status === "connected").length;
+  // Filter helpers
+  function matchesFilter(i: BusinessIntegration): boolean {
+    const s = statuses[i.id]?.status;
+    if (filter === "all") return true;
+    if (filter === "connected") return s === "connected" && !i.comingSoon;
+    if (filter === "coming_soon") return !!i.comingSoon;
+    if (filter === "not_connected") return !i.comingSoon && s !== "connected";
+    return true;
+  }
+
+  // Stats
+  const totalAvailable = BUSINESS_INTEGRATIONS.filter(i => !i.comingSoon).length;
+  const connectedCount = BUSINESS_INTEGRATIONS.filter(i =>
+    !i.comingSoon && statuses[i.id]?.status === "connected"
+  ).length;
+  const comingSoonCount = BUSINESS_INTEGRATIONS.filter(i => i.comingSoon).length;
+  const errorCount = BUSINESS_INTEGRATIONS.filter(i =>
+    !i.comingSoon && statuses[i.id]?.status === "error"
+  ).length;
+
+  const connectedIntegrations = BUSINESS_INTEGRATIONS.filter(i =>
+    !i.comingSoon && statuses[i.id]?.status === "connected"
+  );
+
+  const filteredByGroup = (groupId: IntegrationGroup) =>
+    BUSINESS_INTEGRATIONS.filter(i => i.group === groupId && matchesFilter(i));
+
+  const filterOptions: Array<{ id: StatusFilter; label: string; count: number }> = [
+    { id: "all", label: "All", count: BUSINESS_INTEGRATIONS.length },
+    { id: "connected", label: "Connected", count: connectedCount },
+    { id: "not_connected", label: "Not connected", count: totalAvailable - connectedCount },
+    { id: "coming_soon", label: "Coming soon", count: comingSoonCount },
+  ];
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-3">
+    <div className="space-y-5">
+      {/* Section header */}
+      <div className="flex items-center justify-between">
         <h2 className="section-header mb-0 flex items-center gap-2">
           <Zap size={14} className="text-gold" /> Business Integrations
         </h2>
-        <div className="flex items-center gap-2">
+        <button
+          onClick={loadHealth}
+          disabled={refreshing}
+          className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground transition-colors disabled:opacity-50"
+          title="Re-check all integrations"
+        >
+          <RefreshCw size={10} className={refreshing ? "animate-spin" : ""} />
+          Re-check
+        </button>
+      </div>
+
+      {/* Stats row */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StatCard
+          label="Connected"
+          value={connectedCount}
+          icon={<Check size={14} />}
+          changeType={connectedCount > 0 ? "positive" : "neutral"}
+        />
+        <StatCard
+          label="Available"
+          value={totalAvailable}
+          icon={<Plug size={14} />}
+        />
+        <StatCard
+          label="Needs attention"
+          value={errorCount}
+          icon={<AlertCircle size={14} />}
+          changeType={errorCount > 0 ? "negative" : "neutral"}
+        />
+        <StatCard
+          label="Coming soon"
+          value={comingSoonCount}
+          icon={<Clock size={14} />}
+        />
+      </div>
+
+      {/* Filter toggle */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <Filter size={12} className="text-muted" />
+        <span className="text-[10px] text-muted uppercase tracking-wider font-medium">Filter</span>
+        {filterOptions.map(opt => (
           <button
-            onClick={loadHealth}
-            disabled={refreshing}
-            className="flex items-center gap-1 text-[10px] text-muted hover:text-foreground transition-colors disabled:opacity-50"
-            title="Re-check all integrations"
+            key={opt.id}
+            onClick={() => setFilter(opt.id)}
+            className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
+              filter === opt.id
+                ? "bg-gold/15 border-gold/40 text-[#C9A84C] font-semibold"
+                : "bg-surface-light border-border/60 text-muted hover:text-foreground hover:border-border"
+            }`}
           >
-            <RefreshCw size={10} className={refreshing ? "animate-spin" : ""} />
-            Re-check
+            {opt.label}
+            <span className="ml-1.5 text-[9px] text-muted/70">{opt.count}</span>
           </button>
-          <span className="text-[10px] text-muted">{configured}/{BUSINESS_INTEGRATIONS.length} configured</span>
+        ))}
+      </div>
+
+      {/* Connected (top — at-a-glance summary, only when "all" is active) */}
+      {filter === "all" && connectedIntegrations.length > 0 && (
+        <div>
+          <h3 className="section-header flex items-center gap-2">
+            <Check size={13} className="text-success" /> Connected
+            <span className="text-[10px] font-normal text-muted ml-1">
+              {connectedIntegrations.length} live
+            </span>
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {connectedIntegrations.map(integration => (
+              <IntegrationCard
+                key={`connected-${integration.id}`}
+                integration={integration}
+                health={statuses[integration.id]}
+                onClick={() => setActiveModal(integration)}
+              />
+            ))}
+          </div>
         </div>
-      </div>
-      <p className="text-[10px] text-muted mb-3">Connect business tools via API keys or OAuth. Status reflects live reachability &mdash; keys present and the provider responded.</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {BUSINESS_INTEGRATIONS.map(integration => {
-          const health = statuses[integration.id] || { id: integration.id, status: "checking" as HealthStatus };
-          return (
-            <div key={integration.id}
-              className={`rounded-xl p-4 border bg-gradient-to-br ${integration.bg} relative overflow-hidden flex flex-col gap-2.5`}>
-              <div className="absolute top-0 right-0 w-16 h-16 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2" />
-              <div className="relative">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2.5">
-                    <span className={integration.color}>{integration.icon}</span>
-                    <div>
-                      <p className="text-xs font-semibold">{integration.name}</p>
-                      <p className="text-[9px] text-muted">{integration.description}</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between mt-1">
-                  <div className="flex items-center gap-1">
-                    {health.status === "checking" ? (
-                      <span className="text-[9px] text-muted flex items-center gap-1"><Loader size={8} className="animate-spin" /> Checking...</span>
-                    ) : health.status === "connected" ? (
-                      <span className="text-[9px] text-success flex items-center gap-1 bg-success/10 px-1.5 py-0.5 rounded" title={health.detail}><Check size={8} /> Connected</span>
-                    ) : health.status === "error" ? (
-                      <span className="text-[9px] text-warning flex items-center gap-1 bg-warning/10 px-1.5 py-0.5 rounded" title={health.detail}><AlertCircle size={8} /> Unreachable</span>
-                    ) : (
-                      <span className="text-[9px] text-muted flex items-center gap-1 bg-surface-light px-1.5 py-0.5 rounded"><AlertCircle size={8} /> Not configured</span>
-                    )}
-                  </div>
-                  <a href={integration.docsUrl} target="_blank" rel="noopener noreferrer"
-                    className="text-[10px] text-muted hover:text-foreground flex items-center gap-0.5">
-                    <ExternalLink size={9} /> Docs
-                  </a>
-                </div>
-              </div>
-              <div className="relative flex items-center gap-2 pt-1">
-                {health.status === "connected" ? (
-                  <button
-                    onClick={() => setActiveModal(integration)}
-                    className="flex-1 flex items-center justify-center gap-1 text-[10px] text-muted hover:text-foreground bg-surface/40 hover:bg-surface border border-border/60 px-2 py-1.5 rounded transition-colors"
-                  >
-                    <Settings2 size={10} /> Manage
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => setActiveModal(integration)}
-                    className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium text-[#C9A84C] hover:text-[#d4b85c] bg-gold/10 hover:bg-gold/15 border border-gold/25 px-2 py-1.5 rounded transition-colors"
-                  >
-                    <LogIn size={10} /> Connect
-                  </button>
-                )}
-              </div>
-              <span className="relative text-[8px] text-muted/60 font-mono truncate" title={integration.envKeys.join(", ")}>
-                {integration.envKeys.join(", ")}
-              </span>
+      )}
+
+      {/* Grouped sections */}
+      {INTEGRATION_GROUPS.map(group => {
+        const items = filteredByGroup(group.id);
+        if (items.length === 0) return null;
+        return (
+          <div key={group.id}>
+            <h3 className="section-header flex items-center gap-2">
+              <span className={group.accent}>{group.icon}</span>
+              {group.label}
+              <span className="text-[10px] font-normal text-muted ml-1">{group.description}</span>
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {items.map(integration => (
+                <IntegrationCard
+                  key={integration.id}
+                  integration={integration}
+                  health={statuses[integration.id]}
+                  onClick={() => !integration.comingSoon && setActiveModal(integration)}
+                />
+              ))}
             </div>
-          );
-        })}
-      </div>
+          </div>
+        );
+      })}
 
       {activeModal && (
         <IntegrationConnectModal
@@ -985,6 +1209,107 @@ function BusinessIntegrations() {
           onStatusChange={(result) => setStatuses(prev => ({ ...prev, [activeModal.id]: result }))}
         />
       )}
+    </div>
+  );
+}
+
+interface IntegrationCardProps {
+  integration: BusinessIntegration;
+  health: HealthResult | undefined;
+  onClick: () => void;
+}
+
+function IntegrationCard({ integration, health, onClick }: IntegrationCardProps) {
+  const status: HealthStatus = integration.comingSoon
+    ? "not_configured"
+    : (health?.status || "checking");
+  const isConnected = status === "connected" && !integration.comingSoon;
+  const isError = status === "error" && !integration.comingSoon;
+
+  // Visual treatment for coming-soon: muted, dashed border, no hover lift.
+  const baseClasses = integration.comingSoon
+    ? "rounded-xl p-4 border border-dashed border-border/40 bg-surface/30 opacity-60 cursor-not-allowed flex flex-col gap-2.5 relative overflow-hidden"
+    : `rounded-xl p-4 border bg-gradient-to-br ${integration.bg} relative overflow-hidden flex flex-col gap-2.5 hover:shadow-card-hover hover:-translate-y-[1px] transition-all`;
+
+  return (
+    <div className={baseClasses}>
+      <div className="absolute top-0 right-0 w-16 h-16 bg-white/[0.02] rounded-full -translate-y-1/2 translate-x-1/2" />
+
+      {/* Top-right status badge — easier to scan than bottom placement */}
+      <div className="absolute top-2.5 right-2.5 z-[1]">
+        {integration.comingSoon ? (
+          <span className="text-[9px] text-muted bg-surface-light/80 border border-border/40 px-1.5 py-0.5 rounded-full flex items-center gap-1">
+            <Clock size={8} /> Coming soon
+          </span>
+        ) : status === "checking" ? (
+          <span className="text-[9px] text-muted bg-surface-light/80 px-1.5 py-0.5 rounded-full flex items-center gap-1">
+            <Loader size={8} className="animate-spin" />
+          </span>
+        ) : isConnected ? (
+          <span className="text-[9px] text-success bg-success/15 border border-success/30 px-1.5 py-0.5 rounded-full flex items-center gap-1" title={health?.detail}>
+            <Check size={8} /> Connected
+          </span>
+        ) : isError ? (
+          <span className="text-[9px] text-warning bg-warning/15 border border-warning/30 px-1.5 py-0.5 rounded-full flex items-center gap-1" title={health?.detail}>
+            <AlertCircle size={8} /> Unreachable
+          </span>
+        ) : (
+          <span className="text-[9px] text-muted bg-surface-light/80 border border-border/40 px-1.5 py-0.5 rounded-full flex items-center gap-1">
+            <AlertCircle size={8} /> Not configured
+          </span>
+        )}
+      </div>
+
+      <div className="relative pr-20">
+        <div className="flex items-center gap-2.5 mb-1">
+          <span className={integration.color}>{integration.icon}</span>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <p className="text-xs font-semibold truncate">{integration.name}</p>
+            {integration.isNew && (
+              <span className="text-[8px] text-gold bg-gold/10 border border-gold/30 px-1 py-0.5 rounded font-bold uppercase tracking-wide shrink-0">
+                New
+              </span>
+            )}
+          </div>
+        </div>
+        <p className="text-[10px] text-muted">{integration.description}</p>
+      </div>
+
+      <div className="relative flex items-center gap-2 pt-1">
+        {integration.comingSoon ? (
+          <span className="flex-1 text-center text-[10px] text-muted/70 italic">
+            Available soon
+          </span>
+        ) : isConnected ? (
+          <button
+            onClick={onClick}
+            className="flex-1 flex items-center justify-center gap-1 text-[10px] text-muted hover:text-foreground bg-surface/40 hover:bg-surface border border-border/60 px-2 py-1.5 rounded transition-colors"
+          >
+            <Settings2 size={10} /> Manage
+          </button>
+        ) : (
+          <button
+            onClick={onClick}
+            className="flex-1 flex items-center justify-center gap-1 text-[10px] font-medium text-[#C9A84C] hover:text-[#d4b85c] bg-gold/10 hover:bg-gold/15 border border-gold/25 px-2 py-1.5 rounded transition-colors"
+          >
+            <LogIn size={10} /> Connect
+          </button>
+        )}
+        <a
+          href={integration.docsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[10px] text-muted hover:text-foreground flex items-center gap-0.5 px-1.5 py-1.5"
+          onClick={(e) => e.stopPropagation()}
+          aria-label={`${integration.name} documentation`}
+        >
+          <ExternalLink size={10} />
+        </a>
+      </div>
+
+      <span className="relative text-[8px] text-muted/60 font-mono truncate" title={integration.envKeys.join(", ")}>
+        {integration.envKeys.join(", ")}
+      </span>
     </div>
   );
 }
