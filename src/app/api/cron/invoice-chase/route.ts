@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 
-export const maxDuration = 60;
+export const maxDuration = 30;
 
 // Runs daily at 11 AM — auto-sends invoice reminders for overdue payments
 export async function GET(request: NextRequest) {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendTelegramMessage } from "@/lib/services/trinity";
 
-export const maxDuration = 60;
+export const maxDuration = 30;
 
 // Runs every 10-30 min via Vercel Cron to check for due reminders
 export async function GET(request: NextRequest) {
