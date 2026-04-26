@@ -171,7 +171,7 @@ function checkCron(): CheckResult {
 
 // ── Content generation ─────────────────────────────────────────────
 async function checkRunpodFlux(): Promise<CheckResult> {
-  const missing = missingEnv(["RUNPOD_FLUX_ENDPOINT_ID", "RUNPOD_API_KEY"]);
+  const missing = missingEnv(["RUNPOD_FLUX_URL", "RUNPOD_API_KEY"]);
   if (missing.length) return {
     id: "runpod_flux", label: "RunPod FLUX (images)", status: "missing",
     missing, critical: false,
