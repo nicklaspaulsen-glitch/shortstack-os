@@ -19,9 +19,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { verifySniffedMime } from "@/lib/server/file-sniff";
 import { ALLOWED_GENERAL_UPLOADS } from "@/lib/file-types";
+import { uploadToR2, getR2SignedGetUrl, SIGNED_URL_TTL_SECONDS } from "@/lib/server/r2-client";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
-const SIGNED_URL_TTL_SECONDS = 3600;
+// SIGNED_URL_TTL_SECONDS is imported from r2-client and used for presigned GET
+// URL expiry on both the GET listing and POST upload response.
 const BUCKET = "portal-files";
 
 async function resolvePortalClient(userId: string) {
@@ -51,13 +53,23 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Attach signed URLs
+  // Generate presigned GET URLs (1-hour TTL) for each upload, restoring the
+  // same access boundary that Supabase createSignedUrl provided. Public CDN
+  // URLs are permanently readable once leaked; presigned URLs expire.
+  // Old Supabase rows (file_path without "portal/" prefix) won't resolve as
+  // R2 keys — they get null signed_url and are expected to be migrated.
   const withUrls = await Promise.all(
     (uploads || []).map(async (u) => {
-      const { data: signed } = await service.storage
-        .from(BUCKET)
-        .createSignedUrl(u.file_path, SIGNED_URL_TTL_SECONDS);
-      return { ...u, signed_url: signed?.signedUrl || null };
+      let signedUrl: string | null = null;
+      // Only issue presigned URLs for R2-keyed rows (portal/ prefix).
+      if (u.file_path?.startsWith("portal/")) {
+        try {
+          signedUrl = await getR2SignedGetUrl(u.file_path, SIGNED_URL_TTL_SECONDS);
+        } catch (e) {
+          console.warn("[portal uploads] presign failed for", u.file_path, e);
+        }
+      }
+      return { ...u, signed_url: signedUrl };
     }),
   );
 
@@ -119,32 +131,34 @@ export async function POST(req: NextRequest) {
 
   const service = createServiceClient();
   const safeName = uploaded.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const path = `${user.id}/${client.id}/${Date.now()}-${safeName}`;
+  // R2 key: portal/{portal_user_id}/{client_id}/{ts}-{safeName}
+  // The same value is stored in portal_uploads.file_path so existing GET
+  // signed-URL logic keeps working (the column now holds an R2 key, not a
+  // Supabase path, but the shape is identical for DB storage purposes).
+  const r2Key = `portal/${user.id}/${client.id}/${Date.now()}-${safeName}`;
   const buffer = Buffer.from(await uploaded.arrayBuffer());
 
   /*
    * DEFENSE LAYER 2 — server-side magic-byte MIME sniffing.
-   * Layer 1 (client-side) validates file.type + extension.
+   * Layer 1 (above) validates file.type against the allowlist.
    * Layer 2 (here) reads the actual bytes to detect spoofed Content-Type.
    * Text/unsniffable formats (CSV, TXT, SVG) return null from the sniff
    * and are passed through — layer 1 already covered them.
+   * Buffer is created once and passed to both sniff + upload.
    */
   const sniffError = await verifySniffedMime(buffer, ALLOWED_GENERAL_UPLOADS, uploaded.type);
   if (sniffError) {
     return NextResponse.json({ error: sniffError }, { status: 400 });
   }
 
-  const { error: storageError } = await service.storage
-    .from(BUCKET)
-    .upload(path, buffer, {
-      contentType: uploaded.type || "application/octet-stream",
-      upsert: false,
-    });
-
-  if (storageError) {
-    console.error("[portal uploads] storage error:", storageError);
+  let cdnUrl: string;
+  try {
+    cdnUrl = await uploadToR2(r2Key, buffer, uploaded.type);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[portal uploads] R2 upload error:", msg);
     return NextResponse.json(
-      { error: `Storage upload failed: ${storageError.message}` },
+      { error: `Storage upload failed: ${msg}` },
       { status: 500 },
     );
   }
@@ -154,7 +168,7 @@ export async function POST(req: NextRequest) {
     .insert({
       portal_user_id: user.id,
       client_id: client.id,
-      file_path: path,
+      file_path: r2Key,
       file_name: uploaded.name,
       file_size_bytes: uploaded.size,
       content_type: uploaded.type || null,
@@ -163,14 +177,19 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (insertError) {
-    // Best-effort cleanup of orphan storage object
-    await service.storage.from(BUCKET).remove([path]);
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
-  const { data: signed } = await service.storage
-    .from(BUCKET)
-    .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
+  // Generate a presigned GET URL (1-hour TTL) for immediate preview.
+  // This mirrors the old Supabase createSignedUrl behaviour and avoids
+  // exposing a permanently-accessible public CDN URL in the API response.
+  let signedUrl: string | null = null;
+  try {
+    signedUrl = await getR2SignedGetUrl(r2Key, SIGNED_URL_TTL_SECONDS);
+  } catch (e) {
+    console.warn("[portal uploads] post-upload presign failed:", e);
+  }
+  const signed = { signedUrl: signedUrl ?? cdnUrl };
 
   // Trinity log entry
   await service.from("trinity_log").insert({

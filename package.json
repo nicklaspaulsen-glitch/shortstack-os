@@ -75,6 +75,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
+    "@aws-sdk/client-s3": "^3.1037.0",
+    "@aws-sdk/s3-request-presigner": "^3.1037.0",
     "@react-three/drei": "9.114.3",
     "@react-three/fiber": "8.17.10",
     "@stripe/stripe-js": "^9.0.1",

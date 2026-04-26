@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
-import { verifySniffedMime } from "@/lib/server/file-sniff";
+import { sniffMimeType, verifySniffedMime } from "@/lib/server/file-sniff";
+import { uploadToR2, deleteFromR2, r2KeyFromPublicUrl } from "@/lib/server/r2-client";
 
 export const maxDuration = 30;
 
@@ -10,15 +11,16 @@ export const maxDuration = 30;
 // caught the mismatch.
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"];
 const MAX_BYTES = 2 * 1024 * 1024; // 2 MB
-const BUCKET = "white-label-assets";
 
 /**
  * POST /api/white-label/logo-upload
  * ----------------------------------
  * Accepts a multipart/form-data upload with a single field "logo".
- * Validates type (png/jpeg/svg) and size (≤2 MB).
- * Uploads to the public Supabase Storage bucket `white-label-assets` and
- * returns a public URL the caller can save to white_label_config.logo_url.
+ * Validates type (png/jpeg/svg/webp) and size (≤2 MB).
+ * Uploads to Cloudflare R2 under key `white-label/{user_id}/logo.{ext}` and
+ * returns a cdn.shortstack.cloud URL the caller saves to white_label_config.logo_url.
+ * Appends `?v={ts}` for cache-busting after logo replacement.
+ * Best-effort deletes the previously stored logo when the extension changes.
  *
  * Logs the action in trinity_log (action_type = "custom",
  * metadata.kind = "white_label_logo_upload").
@@ -62,28 +64,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "File is empty" }, { status: 400 });
   }
 
-  // Service client for Storage (bypasses RLS, needed to ensure bucket exists)
   const service = createServiceClient();
 
-  // Ensure the bucket exists (create as public if it doesn't).
-  // Storage admin operations are available on the service client.
-  try {
-    const { data: buckets } = await service.storage.listBuckets();
-    const exists = Array.isArray(buckets) && buckets.some((b: { name: string }) => b.name === BUCKET);
-    if (!exists) {
-      await service.storage.createBucket(BUCKET, {
-        public: true,
-        fileSizeLimit: MAX_BYTES,
-        allowedMimeTypes: ALLOWED_TYPES,
-      });
-    }
-  } catch (err) {
-    // Non-fatal — if the bucket already exists / can't be listed, the upload
-    // attempt below will surface a precise error.
-    console.warn("[white-label/logo-upload] bucket check warning:", err);
-  }
-
-  // Build deterministic per-user path so re-uploads overwrite cleanly.
+  // Read file bytes once — shared between sniff + upload.
   const buffer = Buffer.from(await file.arrayBuffer());
 
   /*
@@ -93,20 +76,16 @@ export async function POST(req: Request) {
    * SVG is text-based and returns null from the sniff; it is passed through
    * since the declared-type check above already accepted/rejected it.
    *
-   * Codex round-1 follow-up: when the sniff returns a real MIME that's
-   * in the allowlist but DIFFERENT from declared (e.g. user uploads a
-   * JPG mislabelled as PNG), normalize storage extension + contentType
-   * to the SNIFFED type so the file isn't stored under a misleading
-   * path/header.
+   * When the sniff returns a real MIME that is in the allowlist but differs
+   * from declared (e.g. JPG mislabelled as PNG), we normalize the storage
+   * extension + contentType to the sniffed type to avoid misleading paths.
    */
-  const { sniffMimeType } = await import("@/lib/server/file-sniff");
   const sniffError = await verifySniffedMime(buffer, ALLOWED_TYPES, file.type);
   if (sniffError) {
     return NextResponse.json({ error: sniffError }, { status: 400 });
   }
   const sniffed = await sniffMimeType(buffer);
-  // Use sniffed MIME when it's allowlisted; fall back to declared
-  // (necessary for SVG which is unsniffable).
+  // Use sniffed MIME when allowlisted; fall back to declared (SVG is unsniffable).
   const effectiveMime =
     sniffed && (ALLOWED_TYPES as string[]).includes(sniffed) ? sniffed : file.type;
 
@@ -117,28 +96,49 @@ export async function POST(req: Request) {
     "image/svg+xml": "svg",
   };
   const ext = extByMime[effectiveMime] || "bin";
-  const path = `${user.id}/logo.${ext}`;
+  // Deterministic key — overwriting the same key is R2's "upsert" equivalent.
+  const r2Key = `white-label/${user.id}/logo.${ext}`;
 
-  // Upload to the white-label bucket (upsert to allow re-upload).
-  const { error: uploadErr } = await service.storage
-    .from(BUCKET)
-    .upload(path, buffer, {
-      upsert: true,
-      contentType: effectiveMime,
-      cacheControl: "3600",
-    });
+  // Best-effort delete of the previous logo if it was already on R2.
+  // We look up the existing logo_url from white_label_config and derive the
+  // old key. A different extension (e.g. old PNG → new JPEG) means a stale
+  // object would otherwise linger in the bucket.
+  try {
+    const { data: existing } = await service
+      .from("white_label_config")
+      .select("logo_url")
+      .eq("user_id", user.id)
+      .maybeSingle();
 
-  if (uploadErr) {
-    console.error("[white-label/logo-upload] upload error:", uploadErr);
-    return NextResponse.json(
-      { error: "Failed to upload logo to storage", detail: uploadErr.message },
-      { status: 500 }
-    );
+    if (existing?.logo_url) {
+      const oldKey = r2KeyFromPublicUrl(existing.logo_url);
+      if (oldKey && oldKey !== r2Key) {
+        // Fire-and-forget — a delete failure must not block the upload.
+        void deleteFromR2(oldKey).catch((e: unknown) => {
+          console.warn("[white-label/logo-upload] old logo delete failed:", e);
+        });
+      }
+    }
+  } catch (e: unknown) {
+    // Non-fatal — proceed with upload regardless.
+    console.warn("[white-label/logo-upload] existing logo lookup failed:", e);
   }
 
-  // Public URL (bucket is public, so this is directly accessible)
-  const { data: urlData } = service.storage.from(BUCKET).getPublicUrl(path);
-  const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+  // Upload to R2. The deterministic key means this is idempotent on retry.
+  let publicUrl: string;
+  try {
+    const cdnUrl = await uploadToR2(r2Key, buffer, effectiveMime);
+    // Append cache-bust query param so the browser doesn't serve the old logo
+    // from its HTTP cache after a replace.
+    publicUrl = `${cdnUrl}?v=${Date.now()}`;
+  } catch (err: unknown) {
+    const detail = err instanceof Error ? err.message : String(err);
+    console.error("[white-label/logo-upload] R2 upload error:", detail);
+    return NextResponse.json(
+      { error: "Failed to upload logo to storage", detail },
+      { status: 500 },
+    );
+  }
 
   // Log to trinity_log (action_type "custom", metadata describes the kind)
   void service.from("trinity_log").insert({
@@ -152,8 +152,7 @@ export async function POST(req: Request) {
       file_name: file.name,
       file_type: file.type,
       file_size: file.size,
-      bucket: BUCKET,
-      path,
+      r2_key: r2Key,
     },
   });
 
@@ -161,8 +160,7 @@ export async function POST(req: Request) {
     success: true,
     logo_url: publicUrl,
     public_url: publicUrl,
-    bucket: BUCKET,
-    path,
+    r2_key: r2Key,
     size: file.size,
     type: file.type,
   });
