@@ -73,7 +73,17 @@ export async function POST(request: NextRequest) {
     })
     .join("\n");
 
-  const prompt = `You are a senior video director + producer reviewing a rough cut. Be specific, opinionated, and concise. Reason like Casey Neistat editing a vlog — pace, hook, B-roll, where it sags.
+  // Sub-task 5: AI Director — improved system prompt with pro-director pacing rules.
+  // Adds explicit hook-in-3s, retention-cut-every-7s, audio-ducking, B-roll-on-claims rules.
+  const prompt = `You are a senior video director + producer reviewing a rough cut. Think like a pro — Casey Neistat pace, MrBeast retention, Hormozi clarity.
+
+Director principles to apply:
+- Hook must land in the first 3 seconds or viewers scroll past.
+- Pattern interrupt every 6-8 seconds to fight retention drop (cut, B-roll, text pop, SFX).
+- Audio duck music under dialogue; raise it on transitions and pauses.
+- Place B-roll on every key claim or statistic — talking-head alone loses attention fast.
+- Outro call-to-action must appear in the final 20% of the runtime.
+- Dead air over 1.5s is a cut opportunity.
 
 Editor's intent: ${intent}
 Target platform: ${targetPlatform}
@@ -85,7 +95,7 @@ ${timeline}
 Produce a strategic edit brief. Return ONLY a valid JSON object — no markdown fences — matching this shape:
 
 {
-  "hook_assessment": "<1-2 sentence read on whether the first 3-5 seconds will retain a viewer>",
+  "hook_assessment": "<1-2 sentence read on whether the first 3 seconds will hook; cite exact timestamp if it misses>",
   "pacing_notes": [
     { "at_seconds": 0, "note": "...", "severity": "info" | "warn" | "important" }
   ],
@@ -96,16 +106,16 @@ Produce a strategic edit brief. Return ONLY a valid JSON object — no markdown 
     { "at_seconds": 0, "kind": "b_roll" | "text_overlay" | "transition" | "sfx", "why": "..." }
   ],
   "overall_grade": "A" | "B" | "C" | "D" | "F",
-  "overall_summary": "<2-3 sentences — would this perform on ${targetPlatform}, what's the #1 fix>"
+  "overall_summary": "<2-3 sentences — would this perform on ${targetPlatform}; single most important fix>"
 }
 
 Rules:
-  - 3-5 pacing_notes total — only the most important
-  - 2-4 suggested_cuts max
-  - 2-4 suggested_inserts max
-  - Be specific with seconds (use the timeline above)
-  - severity="important" only for things that would tank retention
-  - Don't sugarcoat — if the cut is rough, say so`;
+  - 3-5 pacing_notes total — flag every dead zone or pacing gap > 7s without a pattern interrupt
+  - 2-4 suggested_cuts max — cut dead air and redundant intros first
+  - 2-4 suggested_inserts max — prefer b_roll inserts on key claims
+  - Use exact seconds from the timeline; vague timestamps are useless
+  - severity="important" when the flaw would tank the first-30s retention
+  - Don't sugarcoat — if the hook misses, say so and where`;
 
   try {
     const response = await anthropic.messages.create({

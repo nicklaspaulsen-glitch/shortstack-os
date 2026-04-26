@@ -9,6 +9,7 @@ import {
   MessageSquare, Mail, Phone, ExternalLink, Zap, RefreshCw,
   X, Key, Settings2, ArrowUpRight, Copy, Bot, Bell, Sparkles, Terminal
 } from "lucide-react";
+import { CardSkeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {
@@ -348,12 +349,6 @@ function SocialAccountsPage() {
 
   const connectedIds = accounts.filter(a => a.is_active).map(a => a.platform);
 
-  if (loading) return (
-    <div className="flex items-center justify-center py-20">
-      <Loader size={20} className="animate-spin text-gold" />
-    </div>
-  );
-
   return (
     <div className="fade-in space-y-5">
       <PageHero
@@ -382,8 +377,15 @@ function SocialAccountsPage() {
         }
       />
 
+      {/* Loading skeleton — keeps PageHero visible */}
+      {loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => <CardSkeleton key={i} />)}
+        </div>
+      )}
+
       {/* Connected accounts */}
-      {accounts.filter(a => a.is_active).length > 0 && (
+      {!loading && accounts.filter(a => a.is_active).length > 0 && (
         <div>
           <h2 className="section-header">Active Connections</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -453,7 +455,7 @@ function SocialAccountsPage() {
       <TrinityDiscordInstallCard />
 
       {/* Connect platforms */}
-      <div>
+      {!loading && <div>
         <h2 className="section-header">{connectedIds.length > 0 ? "Connect More" : "Connect Your Accounts"}</h2>
         <p className="text-[10px] text-muted mb-3">Click to connect via Zernio — unified OAuth for 14+ social platforms with DM support on 7</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -492,7 +494,7 @@ function SocialAccountsPage() {
             </button>
           ))}
         </div>
-      </div>
+      </div>}
 
       {/* No client warning -- only for clients, not admins */}
       {!clientId && profile?.role === "client" && (

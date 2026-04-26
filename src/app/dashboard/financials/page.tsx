@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { StripeIcon, PayPalIcon, SquareIcon } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
 import { EmptyState } from "@/components/ui/empty-state-illustration";
+import { StatSkeleton } from "@/components/ui/skeleton";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -521,7 +522,13 @@ export default function FinancialsPage() {
       {/* OVERVIEW TAB                                                        */}
       {/* ================================================================== */}
 
-      {activeTab === "overview" && (
+      {activeTab === "overview" && loading && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+          {Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)}
+        </div>
+      )}
+
+      {activeTab === "overview" && !loading && (
         <>
           {/* Key Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">

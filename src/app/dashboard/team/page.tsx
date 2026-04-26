@@ -12,6 +12,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
+import { TableSkeleton } from "@/components/ui/skeleton";
 
 type TeamTab = "members" | "permissions" | "roles" | "activity" | "capacity";
 
@@ -123,8 +124,10 @@ export default function TeamPage() {
   });
   const [creating, setCreating] = useState(false);
   const [editingMember, setEditingMember] = useState<RealMember | null>(null);
+  const [membersLoading, setMembersLoading] = useState(true);
 
   async function loadRealMembers() {
+    setMembersLoading(true);
     try {
       const res = await fetch("/api/team");
       if (res.ok) {
@@ -136,6 +139,8 @@ export default function TeamPage() {
     } catch (err) {
       console.error("[team] loadRealMembers failed:", err);
       toast.error("Couldn't load team members");
+    } finally {
+      setMembersLoading(false);
     }
   }
 
@@ -585,7 +590,9 @@ export default function TeamPage() {
       )}
 
       {/* ═══ REAL TEAM MEMBERS SECTION ═══ */}
-      {tab === "members" && realMembers.length > 0 && (
+      {tab === "members" && membersLoading && <TableSkeleton rows={4} />}
+
+      {tab === "members" && !membersLoading && realMembers.length > 0 && (
         <div className="card mt-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="section-header flex items-center gap-2 mb-0">

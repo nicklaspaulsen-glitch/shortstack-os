@@ -3597,7 +3597,7 @@ export default function VideoEditorPage() {
                       key={scene.id}
                       draggable
                       onDragStart={() => handleSceneDragStart(scene.id)}
-                      onDragOver={(e) => e.preventDefault()}
+                      onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                       onDrop={() => handleSceneDrop(scene.id)}
                       className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-grab active:cursor-grabbing ${
                         draggedScene === scene.id ? "border-gold/40 bg-gold/5 opacity-60" : "border-border hover:border-gold/20"
@@ -6701,6 +6701,31 @@ export default function VideoEditorPage() {
                   <PremiereEditor compositionId={result?.render_id || undefined} />
                 </div>
               ) : (<>
+
+              {/* Sub-task 4: Plan-gated timeline length banner.
+                  Shows when the timeline duration exceeds the user's tier cap.
+                  maxVideoSeconds comes from LIMITS_BY_TIER[planTier].max_video_seconds.
+                  Renders above the timeline rail so the user sees it immediately. */}
+              {Number.isFinite(maxVideoSeconds) && timelineProject.duration / 1000 > maxVideoSeconds && (
+                <div className="mb-2 flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-300">
+                  <Lock size={12} className="shrink-0 text-amber-400" />
+                  <span>
+                    Your <strong>{planTier}</strong> plan caps renders at{" "}
+                    <strong>{formatVideoDuration(maxVideoSeconds)}</strong>.
+                    Timeline is{" "}
+                    <strong>{Math.round(timelineProject.duration / 1000)}s</strong> —
+                    only the first {formatVideoDuration(maxVideoSeconds)} will export.
+                  </span>
+                  {nextVideoTierLabel && (
+                    <Link
+                      href="/dashboard/billing"
+                      className="ml-auto shrink-0 rounded px-2 py-0.5 text-[10px] font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/30 transition-colors"
+                    >
+                      Upgrade → {nextVideoTierLabel}
+                    </Link>
+                  )}
+                </div>
+              )}
 
               <VideoTimeline
                 project={timelineProject}
