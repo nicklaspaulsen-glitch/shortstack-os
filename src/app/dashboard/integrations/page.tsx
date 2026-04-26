@@ -306,8 +306,15 @@ function SocialAccountsPage() {
   }
 
   async function connectViaZernio(platformId: string) {
+    // Pre-flight: surface visible feedback for every early-return path so the
+    // button never silently fails. Previously: missing clientId, missing
+    // oauth_url, or a non-2xx without an error string all swallowed the click.
     if (!clientId) {
-      toast.error("No client profile found");
+      toast.error(
+        clients.length === 0
+          ? "Create a client first, then come back to connect their accounts."
+          : "Pick a client from the dropdown above, then click Connect again."
+      );
       return;
     }
     setConnecting(platformId);
@@ -321,14 +328,32 @@ function SocialAccountsPage() {
           callback_url: `${window.location.origin}/dashboard/integrations?connected=${platformId}`,
         }),
       });
-      const data = await res.json();
+      let data: { oauth_url?: string; error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // Non-JSON body (e.g. 502 HTML) — fall through to the generic
+        // error toast below so the user still gets feedback.
+      }
       if (data.oauth_url) {
         window.location.href = data.oauth_url;
-      } else if (data.error) {
-        toast.error(data.error);
+        return;
       }
-    } catch {
-      toast.error("Failed to initiate connection");
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+      // Server returned without an oauth_url AND without an error string —
+      // treat as misconfigured / not-yet-shipped Zernio integration so the
+      // button never looks dead.
+      toast.error(
+        res.ok
+          ? `${platformId} connection isn't available yet — Zernio hasn't returned an OAuth URL for this platform.`
+          : `Connection failed (${res.status}) — please try again or contact support.`
+      );
+    } catch (err) {
+      console.warn("[IntegrationsPage] connectViaZernio failed:", err);
+      toast.error("Failed to initiate connection — please try again");
     } finally {
       setConnecting(null);
     }
@@ -461,12 +486,18 @@ function SocialAccountsPage() {
                       </span>
                       <div className="flex items-center gap-2">
                         {!isZernio && (
-                          <button onClick={() => connectViaZernio(account.platform)}
+                          <button
+                            type="button"
+                            onClick={() => connectViaZernio(account.platform)}
+                            aria-label={`Upgrade ${account.account_name} to Zernio OAuth`}
                             className="text-[10px] text-[#C9A84C] hover:text-[#d4b85c] flex items-center gap-0.5 transition-colors">
                             <LogIn size={10} /> Upgrade to Zernio
                           </button>
                         )}
-                        <button onClick={() => disconnect(account)}
+                        <button
+                          type="button"
+                          onClick={() => disconnect(account)}
+                          aria-label={`Disconnect ${account.account_name}`}
                           className="text-[10px] text-muted hover:text-danger flex items-center gap-0.5 transition-colors">
                           <Unlink size={10} /> Remove
                         </button>
@@ -502,8 +533,10 @@ function SocialAccountsPage() {
                   {availableNow.map(platform => (
                     <button
                       key={platform.id}
+                      type="button"
                       onClick={() => connectViaZernio(platform.id)}
                       disabled={connecting === platform.id}
+                      aria-label={`Connect ${platform.name} via Zernio`}
                       className="text-left rounded-xl p-4 border border-border bg-surface hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[1px] transition-all group disabled:opacity-60 disabled:pointer-events-none"
                     >
                       <div className="flex items-center gap-3 mb-2">
@@ -547,9 +580,13 @@ function SocialAccountsPage() {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {comingSoonSocial.map(platform => (
-                    <div
+                    <button
                       key={platform.id}
-                      className="rounded-xl p-4 border border-dashed border-border/50 bg-surface/40 opacity-70 cursor-not-allowed"
+                      type="button"
+                      aria-disabled="true"
+                      aria-label={`${platform.name} coming soon`}
+                      onClick={() => toast(`${platform.name} isn't available yet — Zernio hasn't shipped posting APIs for this platform.`, { icon: "ℹ️" })}
+                      className="text-left w-full rounded-xl p-4 border border-dashed border-border/50 bg-surface/40 opacity-70 cursor-not-allowed"
                       title="Coming soon — Zernio doesn't yet expose posting APIs for this platform"
                     >
                       <div className="flex items-center gap-3 mb-2">
@@ -569,7 +606,7 @@ function SocialAccountsPage() {
                           <Clock size={10} /> Pending Zernio support
                         </span>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -651,14 +688,27 @@ function TrinityDiscordInstallCard() {
     setInstalling(true);
     try {
       const res = await fetch("/api/integrations/discord/install-url");
-      const data = await res.json();
+      let data: { install_url?: string; error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // Non-JSON body — fall through to the generic error toast.
+      }
       if (data.install_url) {
         window.location.href = data.install_url;
-      } else {
-        toast.error(data.error || "Discord bot not configured");
+        return;
       }
-    } catch {
-      toast.error("Failed to start install");
+      // Surface a visible error for every non-success path so the button
+      // never silently fails.
+      toast.error(
+        data.error ||
+        (res.ok
+          ? "Discord bot not configured — contact your admin to enable it."
+          : `Discord install failed (${res.status}) — please try again.`)
+      );
+    } catch (err) {
+      console.warn("[TrinityDiscordInstallCard] startInstall failed:", err);
+      toast.error("Failed to start install — please try again");
     } finally {
       setInstalling(false);
     }
@@ -699,8 +749,10 @@ function TrinityDiscordInstallCard() {
             </div>
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={startInstall}
                 disabled={installing}
+                aria-label="Add Trinity bot to your Discord server"
                 className="inline-flex items-center gap-2 text-xs bg-[#5865F2] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#4752C4] disabled:opacity-60"
               >
                 {installing ? <Loader size={12} className="animate-spin" /> : <LogIn size={12} />}
@@ -1022,7 +1074,18 @@ interface HealthResult {
 
 type StatusFilter = "all" | "connected" | "not_connected" | "coming_soon";
 
+/**
+ * Platform admin = Trinity-internal staff (founder/admin) who own the env-var
+ * setup workflow. Agency owners and team_members are shown a customer-facing
+ * flow (OAuth or "contact your admin") instead of the dev-style paste-the-key UI.
+ */
+function isPlatformAdminRole(role: string | null | undefined): boolean {
+  return role === "admin" || role === "founder";
+}
+
 function BusinessIntegrations() {
+  const { profile } = useAuth();
+  const isPlatformAdmin = isPlatformAdminRole(profile?.role);
   const [statuses, setStatuses] = useState<Record<string, HealthResult>>({});
   const [activeModal, setActiveModal] = useState<BusinessIntegration | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -1205,6 +1268,7 @@ function BusinessIntegrations() {
         <IntegrationConnectModal
           integration={activeModal}
           currentStatus={statuses[activeModal.id]}
+          isPlatformAdmin={isPlatformAdmin}
           onClose={() => setActiveModal(null)}
           onStatusChange={(result) => setStatuses(prev => ({ ...prev, [activeModal.id]: result }))}
         />
@@ -1317,12 +1381,20 @@ function IntegrationCard({ integration, health, onClick }: IntegrationCardProps)
 interface IntegrationConnectModalProps {
   integration: BusinessIntegration;
   currentStatus?: HealthResult;
+  /**
+   * True only for Trinity platform staff (admin/founder). Controls whether
+   * the dev-flavored env-var setup UI is shown vs. the customer-facing
+   * OAuth / "contact admin" flow for agency owners and team members.
+   */
+  isPlatformAdmin: boolean;
   onClose: () => void;
   onStatusChange: (result: HealthResult) => void;
 }
 
-function IntegrationConnectModal({ integration, currentStatus, onClose, onStatusChange }: IntegrationConnectModalProps) {
+function IntegrationConnectModal({ integration, currentStatus, isPlatformAdmin, onClose, onStatusChange }: IntegrationConnectModalProps) {
   const [testing, setTesting] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const hasOAuth = Boolean(integration.oauthPath);
 
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -1391,7 +1463,7 @@ function IntegrationConnectModal({ integration, currentStatus, onClose, onStatus
         </div>
 
         <div className="p-5 space-y-4">
-          {/* Status banner */}
+          {/* Status banner — copy adapts to viewer role */}
           <div className={`rounded-lg border p-3 text-[11px] ${
             isConnected ? "border-success/30 bg-success/5 text-success" :
             hasError ? "border-warning/30 bg-warning/5 text-warning" :
@@ -1404,82 +1476,166 @@ function IntegrationConnectModal({ integration, currentStatus, onClose, onStatus
               <div>
                 {isConnected && <span><strong>Connected.</strong> {currentStatus?.detail || `${integration.name} is reachable with the current credentials.`}</span>}
                 {hasError && <span><strong>Keys present but provider rejected.</strong> {currentStatus?.detail}</span>}
-                {!isConnected && !hasError && <span>Add the environment variables below to enable {integration.name}.</span>}
+                {!isConnected && !hasError && (
+                  isPlatformAdmin
+                    ? <span>Add the environment variables below to enable {integration.name}.</span>
+                    : hasOAuth
+                      ? <span>Connect your {integration.name} account with one click via OAuth.</span>
+                      : <span>{integration.name} isn&apos;t enabled yet on this workspace. Reach out to your platform admin to switch it on.</span>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Required env vars */}
-          <div>
-            <p className="text-[11px] font-semibold mb-2 flex items-center gap-1.5 text-foreground">
-              <Key size={11} className="text-gold" /> Required environment variables
-            </p>
-            <div className="space-y-1.5">
-              {integration.envKeys.map(key => (
-                <div key={key} className="flex items-center gap-2 bg-surface-light border border-border/60 rounded-md px-2.5 py-1.5">
-                  <code className="text-[11px] font-mono text-foreground flex-1">{key}</code>
+          {/* Customer-facing path (agency owners + team members): OAuth-first */}
+          {/* if available, else point them at admin support. Hides the dev-style */}
+          {/* env-var paste UI entirely from non-admin viewers. */}
+          {!isPlatformAdmin && (
+            <div className="flex flex-col gap-2 pt-1">
+              {hasOAuth ? (
+                <>
                   <button
-                    onClick={() => copyEnvKey(key)}
-                    className="text-muted hover:text-foreground transition-colors"
-                    title="Copy env var name"
+                    type="button"
+                    onClick={startOAuth}
+                    aria-label={`Connect ${integration.name} with OAuth`}
+                    className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-white bg-gradient-to-br from-[#C9A84C] to-[#b3932f] hover:from-[#d4b85c] hover:to-[#C9A84C] px-3 py-2 rounded-lg border border-gold/40 transition-all"
+                    title="OAuth requires selecting a client in Connected Accounts"
                   >
-                    <Copy size={11} />
+                    <LogIn size={12} /> Connect with OAuth
+                  </button>
+                  <a
+                    href={integration.docsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                  >
+                    <ExternalLink size={11} /> Learn more about {integration.name}
+                  </a>
+                </>
+              ) : (
+                <>
+                  <div className="rounded-lg border border-border/60 bg-surface-light/60 p-3 text-[11px] text-muted leading-relaxed">
+                    This integration is configured at the platform level by your Trinity admin. If you need it enabled for your workspace, contact your agency owner or Trinity support.
+                  </div>
+                  <a
+                    href={integration.docsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                  >
+                    <ExternalLink size={11} /> Learn more about {integration.name}
+                  </a>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Admin-only env-var setup. The dev-style paste UI lives behind a */}
+          {/* toggle when OAuth is the recommended path so the customer-friendly */}
+          {/* action stays primary for the agency owner's own first-time setup. */}
+          {isPlatformAdmin && (
+            <>
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] text-muted uppercase tracking-wider font-medium flex items-center gap-1.5">
+                  <Shield size={10} className="text-gold" /> Admin setup &mdash; clients won&apos;t see this
+                </p>
+                {hasOAuth && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAdvanced(v => !v)}
+                    className="text-[10px] text-muted hover:text-foreground transition-colors underline-offset-2 hover:underline"
+                  >
+                    {showAdvanced ? "Hide manual setup" : "Manual setup (advanced)"}
+                  </button>
+                )}
+              </div>
+
+              {/* OAuth shortcut for admins on integrations that support it */}
+              {hasOAuth && (
+                <div className="flex flex-col gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={startOAuth}
+                    aria-label={`Connect ${integration.name} with OAuth`}
+                    className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-white bg-gradient-to-br from-[#C9A84C] to-[#b3932f] hover:from-[#d4b85c] hover:to-[#C9A84C] px-3 py-2 rounded-lg border border-gold/40 transition-all"
+                    title="OAuth requires selecting a client in Connected Accounts"
+                  >
+                    <LogIn size={12} /> Connect with OAuth (per-client)
                   </button>
                 </div>
-              ))}
-            </div>
-          </div>
+              )}
 
-          {/* Instructions */}
-          <div>
-            <p className="text-[11px] font-semibold mb-1.5 text-foreground">How to get these</p>
-            <p className="text-[11px] text-muted leading-relaxed whitespace-pre-line">{integration.instructions}</p>
-          </div>
+              {(!hasOAuth || showAdvanced) && (
+                <>
+                  {/* Required env vars */}
+                  <div>
+                    <p className="text-[11px] font-semibold mb-2 flex items-center gap-1.5 text-foreground">
+                      <Key size={11} className="text-gold" /> Required environment variables
+                    </p>
+                    <div className="space-y-1.5">
+                      {integration.envKeys.map(key => (
+                        <div key={key} className="flex items-center gap-2 bg-surface-light border border-border/60 rounded-md px-2.5 py-1.5">
+                          <code className="text-[11px] font-mono text-foreground flex-1">{key}</code>
+                          <button
+                            type="button"
+                            onClick={() => copyEnvKey(key)}
+                            className="text-muted hover:text-foreground transition-colors"
+                            title="Copy env var name"
+                            aria-label={`Copy ${key}`}
+                          >
+                            <Copy size={11} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col gap-2 pt-1">
-            {integration.oauthPath && (
-              <button
-                onClick={startOAuth}
-                className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-white bg-gradient-to-br from-[#C9A84C] to-[#b3932f] hover:from-[#d4b85c] hover:to-[#C9A84C] px-3 py-2 rounded-lg border border-gold/40 transition-all"
-                title="OAuth requires selecting a client in Connected Accounts"
-              >
-                <LogIn size={12} /> Connect with OAuth (per-client)
-              </button>
-            )}
+                  {/* Instructions */}
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5 text-foreground">How to get these</p>
+                    <p className="text-[11px] text-muted leading-relaxed whitespace-pre-line">{integration.instructions}</p>
+                  </div>
 
-            <div className="flex gap-2">
-              <a
-                href={VERCEL_ENV_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
-              >
-                <ArrowUpRight size={12} /> Open Vercel Settings
-              </a>
-              <a
-                href={integration.docsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
-              >
-                <ExternalLink size={11} /> Docs
-              </a>
-            </div>
+                  {/* Admin action buttons */}
+                  <div className="flex flex-col gap-2 pt-1">
+                    <div className="flex gap-2">
+                      <a
+                        href={VERCEL_ENV_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                      >
+                        <ArrowUpRight size={12} /> Open Vercel Settings
+                      </a>
+                      <a
+                        href={integration.docsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                      >
+                        <ExternalLink size={11} /> Docs
+                      </a>
+                    </div>
 
-            <button
-              onClick={testConnection}
-              disabled={testing}
-              className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-gold/30 px-3 py-2 rounded-lg transition-colors disabled:opacity-60 disabled:pointer-events-none"
-            >
-              {testing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} className="text-gold" />}
-              {testing ? "Testing..." : "Test connection"}
-            </button>
-          </div>
+                    <button
+                      type="button"
+                      onClick={testConnection}
+                      disabled={testing}
+                      aria-label={`Test ${integration.name} connection`}
+                      className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-gold/30 px-3 py-2 rounded-lg transition-colors disabled:opacity-60 disabled:pointer-events-none"
+                    >
+                      {testing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} className="text-gold" />}
+                      {testing ? "Testing..." : "Test connection"}
+                    </button>
+                  </div>
 
-          <p className="text-[10px] text-muted/70 pt-1 border-t border-border/30">
-            After adding env vars in Vercel, redeploy your app (or wait for the next build). Then click <strong className="text-foreground">Test connection</strong> above.
-          </p>
+                  <p className="text-[10px] text-muted/70 pt-1 border-t border-border/30">
+                    After adding env vars in Vercel, redeploy your app (or wait for the next build). Then click <strong className="text-foreground">Test connection</strong> above.
+                  </p>
+                </>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
