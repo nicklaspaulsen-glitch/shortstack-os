@@ -36,7 +36,7 @@ export async function generateDailyBriefing(
     { data: systemDown },
   ] = await Promise.all([
     supabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId).gte("scraped_at", since),
-    supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "published").gte("published_at", since),
+    supabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("status", "published").gte("published_at", since),
     supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).gte("created_at", since),
     supabase.from("deals").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "won").gte("closed_at", since),
     supabase.from("clients").select("mrr").eq("profile_id", ownerId).eq("is_active", true),

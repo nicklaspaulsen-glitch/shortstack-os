@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from("trinity_log")
     .select("id, action_type, description, status, agent, created_at, metadata", { count: "exact" })
-    .eq("user_id", user.id)
+    .eq("profile_id", user.id)
     .order("created_at", { ascending: false })
     .range(from, to);
 
