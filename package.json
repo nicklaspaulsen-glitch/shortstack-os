@@ -85,6 +85,7 @@
     "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
+    "@twilio/voice-sdk": "^2.18.2",
     "@xyflow/react": "^12.10.2",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -109,6 +110,7 @@
     "stripe": "^22.0.0",
     "three": "0.167.1",
     "tweetnacl": "^1.0.3",
+    "twilio": "^6.0.0",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
