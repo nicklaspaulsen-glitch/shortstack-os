@@ -15,7 +15,7 @@ import { SIZE_PRESETS } from "@/lib/design/types";
 
 export default function DesignStudioPage() {
   const searchParams = useSearchParams();
-  const designId = searchParams.get("id");
+  const designId = searchParams?.get("id") ?? null;
 
   const loadDesign = useDesignStore((s) => s.loadDesign);
   const design = useDesignStore((s) => s.design);
