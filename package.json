@@ -109,6 +109,7 @@
     "stripe": "^22.0.0",
     "three": "0.167.1",
     "tweetnacl": "^1.0.3",
+    "twilio": "^6.0.0",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
