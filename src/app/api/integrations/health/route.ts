@@ -78,8 +78,10 @@ async function checkWhatsApp(): Promise<HealthResult> {
 }
 
 async function checkEmailProvider(): Promise<HealthResult> {
-  // email-marketing supports Mailchimp OR Resend — check whichever is set
-  const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
+  // email-marketing supports Mailchimp OR Resend — check whichever is set.
+  // NOTE: SMTP_PASS is the SMTP relay password — it is NOT a Resend API key.
+  // Use RESEND_API_KEY exclusively for Resend REST API calls.
+  const resendKey = process.env.RESEND_API_KEY;
   if (resendKey) {
     const { ok, status } = await probe("https://api.resend.com/domains", {
       headers: { Authorization: `Bearer ${resendKey}` },
@@ -95,7 +97,7 @@ async function checkEmailProvider(): Promise<HealthResult> {
     if (ok) return { id: "email_marketing", status: "connected" };
     return { id: "email_marketing", status: "error", detail: `Mailchimp returned HTTP ${status || "timeout"}` };
   }
-  return { id: "email_marketing", status: "not_configured", missing: ["SMTP_PASS"] };
+  return { id: "email_marketing", status: "not_configured", missing: ["RESEND_API_KEY"] };
 }
 
 async function checkTwilio(): Promise<HealthResult> {
@@ -146,6 +148,76 @@ async function checkNotion(): Promise<HealthResult> {
   return { id: "notion", status: "error", detail: `Notion returned HTTP ${status || "timeout"}` };
 }
 
+// ── Social platforms via Zernio ───────────────────────────────────────────────
+// LinkedIn, Instagram, TikTok, YouTube, and Facebook/Meta posting all flow
+// through Zernio. There are no direct env vars for these platforms; accounts
+// are connected inside the Zernio dashboard (https://zernio.com/dashboard).
+//
+// This probe checks Zernio reachability and lists which platforms have at least
+// one connected profile. Each per-platform entry maps to an account in the
+// /profiles response rather than a raw env var.
+//
+// TikTok Ads and Google Ads are NOT included here — those are direct
+// integrations with their own env vars (see checkGoogleAds above).
+const ZERNIO_SOCIAL_PLATFORMS = ["instagram", "tiktok", "youtube", "facebook", "linkedin"] as const;
+type ZernioSocialPlatform = (typeof ZERNIO_SOCIAL_PLATFORMS)[number];
+
+async function checkZernioSocial(
+  only?: ZernioSocialPlatform[],
+): Promise<HealthResult[]> {
+  const platforms = only ?? [...ZERNIO_SOCIAL_PLATFORMS];
+  const apiKey = process.env.ZERNIO_API_KEY;
+  if (!apiKey) {
+    // Zernio not configured — all requested platforms are unknown
+    return platforms.map(platform => ({
+      id: `social_${platform}`,
+      status: "not_configured" as Status,
+      detail: "Configure Zernio (ZERNIO_API_KEY) to connect social accounts",
+      missing: ["ZERNIO_API_KEY"],
+    }));
+  }
+
+  // Probe Zernio /profiles to discover connected platform accounts.
+  // Uses the same base URL as src/lib/services/zernio.ts.
+  const { ok, status, body } = await probe("https://api.zernio.com/v1/profiles", {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!ok) {
+    // Zernio itself unreachable — surface an error for all requested platforms
+    return platforms.map(platform => ({
+      id: `social_${platform}`,
+      status: "error" as Status,
+      detail: `Zernio returned HTTP ${status || "timeout"} — check https://zernio.com/dashboard`,
+    }));
+  }
+
+  // Build set of platforms that have at least one active profile
+  const profiles = (Array.isArray(body)
+    ? body
+    : (body as Record<string, unknown>)?.profiles ?? []) as Array<{ platform?: string; status?: string }>;
+
+  const connectedPlatforms = new Set<string>(
+    profiles
+      .filter(p => p.platform && p.status !== "disconnected")
+      .map(p => (p.platform as string).toLowerCase())
+  );
+
+  return platforms.map((platform: ZernioSocialPlatform) => {
+    const connected = connectedPlatforms.has(platform);
+    return {
+      id: `social_${platform}`,
+      status: (connected ? "connected" : "not_configured") as Status,
+      detail: connected
+        ? "Connected via Zernio"
+        : "Not connected — add account at https://zernio.com/dashboard",
+    };
+  });
+}
+
 // Per-integration single check (used by "Test connection" button)
 async function check(id: string): Promise<HealthResult> {
   switch (id) {
@@ -158,6 +230,18 @@ async function check(id: string): Promise<HealthResult> {
     case "notion": return checkNotion();
     case "stripe": return checkStripe();
     case "stripe_connect": return checkStripeConnect();
+    case "social_instagram":
+    case "social_tiktok":
+    case "social_youtube":
+    case "social_facebook":
+    case "social_linkedin": {
+      // Single-platform "Test connection" click — skip the full fanout and
+      // return only the requested platform to avoid exercising the Zernio
+      // API for all 5 accounts unnecessarily.
+      const platform = id.replace("social_", "") as ZernioSocialPlatform;
+      const results = await checkZernioSocial([platform]);
+      return results.find(r => r.id === id) ?? { id, status: "not_configured", detail: "Unknown social platform" };
+    }
     default: return { id, status: "not_configured", detail: "Unknown integration" };
   }
 }
@@ -167,16 +251,28 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profile?.role !== "admin" && profile?.role !== "founder") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const only = request.nextUrl.searchParams.get("id");
   if (only) {
     const result = await check(only);
     return NextResponse.json({ success: true, result });
   }
 
-  const results = await Promise.all([
+  const [zernioSocials, ...rest] = await Promise.all([
+    checkZernioSocial(),
     checkGoogleAds(), checkGoogleBusiness(), checkCalendly(), checkWhatsApp(),
     checkEmailProvider(), checkTwilio(), checkNotion(),
     checkStripe(), checkStripeConnect(),
   ]);
+  const results = [...zernioSocials, ...rest];
   return NextResponse.json({ success: true, results });
 }

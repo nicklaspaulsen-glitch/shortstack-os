@@ -62,7 +62,17 @@ async function checkSupabase(): Promise<CheckResult> {
     missing, critical: true,
     docs_url: "https://supabase.com/dashboard",
   };
-  const { ok, status } = await probe(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/?apikey=${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`);
+  // Supabase REST v1 requires both `apikey` header and `Authorization: Bearer`
+  // header — the legacy ?apikey= query-string approach returns 401 on newer instances.
+  const { ok, status } = await probe(
+    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`,
+    {
+      headers: {
+        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+      },
+    }
+  );
   return ok
     ? { id: "supabase", label: "Supabase (database)", status: "ok", critical: true }
     : { id: "supabase", label: "Supabase (database)", status: "error", detail: `REST API returned HTTP ${status || "timeout"}`, critical: true };
@@ -161,7 +171,7 @@ function checkCron(): CheckResult {
 
 // ── Content generation ─────────────────────────────────────────────
 async function checkRunpodFlux(): Promise<CheckResult> {
-  const missing = missingEnv(["RUNPOD_FLUX_ENDPOINT_ID", "RUNPOD_API_KEY"]);
+  const missing = missingEnv(["RUNPOD_FLUX_URL", "RUNPOD_API_KEY"]);
   if (missing.length) return {
     id: "runpod_flux", label: "RunPod FLUX (images)", status: "missing",
     missing, critical: false,
@@ -324,7 +334,7 @@ export async function GET() {
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profile?.role !== "admin") {
+  if (profile?.role !== "admin" && profile?.role !== "founder") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
