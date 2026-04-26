@@ -28,19 +28,9 @@
 
 import { Nango } from "@nangohq/node";
 
-/** Standard Nango integration IDs in this codebase.
- *
- *  These mirror the integration keys configured in the Nango dashboard. Keep
- *  them centralized so route handlers, UI, and the connections table all use
- *  the same string. */
-export const NANGO_INTEGRATIONS = {
-  GOOGLE_ADS: "google-zanb",
-  FACEBOOK: "facebook",
-  APIFY: "apify",
-} as const;
-
-export type NangoIntegrationId =
-  (typeof NANGO_INTEGRATIONS)[keyof typeof NANGO_INTEGRATIONS];
+// Re-export shared constants so existing server-side imports from this
+// module keep working. Client components must import from ./shared instead.
+export { NANGO_INTEGRATIONS, type NangoIntegrationId } from "./shared";
 
 /** Error class for Nango-related failures. Wraps the underlying axios/SDK
  *  error so callers don't need to depend on Nango internals. */
