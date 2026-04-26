@@ -13,7 +13,8 @@ import { CardSkeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import {
-  CalendlyIcon, WhatsAppIcon, NotionIcon, GoogleAdsIcon, GoogleMapsIcon
+  CalendlyIcon, WhatsAppIcon, NotionIcon, GoogleAdsIcon, GoogleMapsIcon,
+  InstagramIcon, TikTokIcon, YouTubeIcon, FacebookIcon, LinkedInIcon,
 } from "@/components/ui/platform-icons";
 import PageHero from "@/components/ui/page-hero";
 
@@ -795,6 +796,66 @@ const BUSINESS_INTEGRATIONS: BusinessIntegration[] = [
     docsUrl: "https://stripe.com/docs/connect",
     instructions: "Onboard your agency's connected account at /api/integrations/stripe-connect/onboard — clients pay YOU via /api/clients/[id]/invoices or /api/clients/[id]/payment-links, money flows to your Stripe balance (minus ShortStack's platform fee).",
     oauthPath: "/api/integrations/stripe-connect/onboard",
+  },
+  {
+    id: "social_instagram",
+    name: "Instagram (via Zernio)",
+    icon: <InstagramIcon size={20} />,
+    color: "text-[#E4405F]",
+    bg: "from-[#E4405F]/10 to-[#833AB4]/10 border-[#E4405F]/20",
+    description: "Publish posts & reels, view analytics, manage DMs",
+    endpoint: "/api/integrations/health?id=social_instagram",
+    envKeys: ["ZERNIO_API_KEY"],
+    docsUrl: "https://zernio.com/dashboard",
+    instructions: "Connect your Instagram account at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
+  },
+  {
+    id: "social_tiktok",
+    name: "TikTok (via Zernio)",
+    icon: <TikTokIcon size={20} />,
+    color: "text-white",
+    bg: "from-white/5 to-[#FE2C55]/5 border-white/15",
+    description: "Upload videos, track views, manage ad campaigns",
+    endpoint: "/api/integrations/health?id=social_tiktok",
+    envKeys: ["ZERNIO_API_KEY"],
+    docsUrl: "https://zernio.com/dashboard",
+    instructions: "Connect your TikTok account at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
+  },
+  {
+    id: "social_youtube",
+    name: "YouTube (via Zernio)",
+    icon: <YouTubeIcon size={20} />,
+    color: "text-[#FF0000]",
+    bg: "from-[#FF0000]/10 to-[#FF0000]/5 border-[#FF0000]/20",
+    description: "Upload videos, view channel analytics, manage playlists",
+    endpoint: "/api/integrations/health?id=social_youtube",
+    envKeys: ["ZERNIO_API_KEY"],
+    docsUrl: "https://zernio.com/dashboard",
+    instructions: "Connect your YouTube channel at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
+  },
+  {
+    id: "social_facebook",
+    name: "Facebook (via Zernio)",
+    icon: <FacebookIcon size={20} />,
+    color: "text-[#1877F2]",
+    bg: "from-[#1877F2]/10 to-[#1877F2]/5 border-[#1877F2]/20",
+    description: "Post content, manage ads, view page insights",
+    endpoint: "/api/integrations/health?id=social_facebook",
+    envKeys: ["ZERNIO_API_KEY"],
+    docsUrl: "https://zernio.com/dashboard",
+    instructions: "Connect your Facebook page at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
+  },
+  {
+    id: "social_linkedin",
+    name: "LinkedIn (via Zernio)",
+    icon: <LinkedInIcon size={20} />,
+    color: "text-[#0A66C2]",
+    bg: "from-[#0A66C2]/10 to-[#0A66C2]/5 border-[#0A66C2]/20",
+    description: "Share posts, manage company page, B2B networking",
+    endpoint: "/api/integrations/health?id=social_linkedin",
+    envKeys: ["ZERNIO_API_KEY"],
+    docsUrl: "https://zernio.com/dashboard",
+    instructions: "Connect your LinkedIn profile or company page at https://zernio.com/dashboard. Add ZERNIO_API_KEY to Vercel env vars to enable the Zernio integration.",
   },
 ];
 

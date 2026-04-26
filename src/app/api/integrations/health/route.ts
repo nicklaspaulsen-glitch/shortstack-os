@@ -162,11 +162,14 @@ async function checkNotion(): Promise<HealthResult> {
 const ZERNIO_SOCIAL_PLATFORMS = ["instagram", "tiktok", "youtube", "facebook", "linkedin"] as const;
 type ZernioSocialPlatform = (typeof ZERNIO_SOCIAL_PLATFORMS)[number];
 
-async function checkZernioSocial(): Promise<HealthResult[]> {
+async function checkZernioSocial(
+  only?: ZernioSocialPlatform[],
+): Promise<HealthResult[]> {
+  const platforms = only ?? [...ZERNIO_SOCIAL_PLATFORMS];
   const apiKey = process.env.ZERNIO_API_KEY;
   if (!apiKey) {
-    // Zernio not configured — all social platforms are unknown
-    return ZERNIO_SOCIAL_PLATFORMS.map(platform => ({
+    // Zernio not configured — all requested platforms are unknown
+    return platforms.map(platform => ({
       id: `social_${platform}`,
       status: "not_configured" as Status,
       detail: "Configure Zernio (ZERNIO_API_KEY) to connect social accounts",
@@ -184,8 +187,8 @@ async function checkZernioSocial(): Promise<HealthResult[]> {
   });
 
   if (!ok) {
-    // Zernio itself unreachable — surface a single error for all socials
-    return ZERNIO_SOCIAL_PLATFORMS.map(platform => ({
+    // Zernio itself unreachable — surface an error for all requested platforms
+    return platforms.map(platform => ({
       id: `social_${platform}`,
       status: "error" as Status,
       detail: `Zernio returned HTTP ${status || "timeout"} — check https://zernio.com/dashboard`,
@@ -203,7 +206,7 @@ async function checkZernioSocial(): Promise<HealthResult[]> {
       .map(p => (p.platform as string).toLowerCase())
   );
 
-  return ZERNIO_SOCIAL_PLATFORMS.map((platform: ZernioSocialPlatform) => {
+  return platforms.map((platform: ZernioSocialPlatform) => {
     const connected = connectedPlatforms.has(platform);
     return {
       id: `social_${platform}`,
@@ -232,7 +235,11 @@ async function check(id: string): Promise<HealthResult> {
     case "social_youtube":
     case "social_facebook":
     case "social_linkedin": {
-      const results = await checkZernioSocial();
+      // Single-platform "Test connection" click — skip the full fanout and
+      // return only the requested platform to avoid exercising the Zernio
+      // API for all 5 accounts unnecessarily.
+      const platform = id.replace("social_", "") as ZernioSocialPlatform;
+      const results = await checkZernioSocial([platform]);
       return results.find(r => r.id === id) ?? { id, status: "not_configured", detail: "Unknown social platform" };
     }
     default: return { id, status: "not_configured", detail: "Unknown integration" };
@@ -243,6 +250,16 @@ export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  if (profile?.role !== "admin" && profile?.role !== "founder") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const only = request.nextUrl.searchParams.get("id");
   if (only) {
