@@ -150,7 +150,7 @@ const navItems: NavItem[] = [
   // ── Visual (image, video, design) ──
   { label: "Thumbnails", href: "/dashboard/thumbnail-generator", icon: <ImageIcon size={16} />, roles: ["admin", "team_member"], section: "Visual", sub: "Image" },
   { label: "AI Studio", href: "/dashboard/ai-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], sub: "Image" },
-  { label: "Design Studio", href: "/dashboard/design", icon: <PenTool size={16} />, roles: ["admin", "team_member"], sub: "Image" },
+  { label: "Design Studio", href: "/dashboard/design-studio", icon: <PenTool size={16} />, roles: ["admin", "team_member"], sub: "Image" },
   { label: "Carousel Gen", href: "/dashboard/carousel-generator", icon: <Layers size={16} />, roles: ["admin", "team_member"], sub: "Image" },
   { label: "Video Editor", href: "/dashboard/video-editor", icon: <Film size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
   { label: "Preset Library", href: "/dashboard/video-editor/library", icon: <LayoutTemplate size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Video" },
