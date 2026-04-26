@@ -41,10 +41,16 @@ export async function POST(request: NextRequest) {
 
   if (!botToken) return NextResponse.json({ ok: true });
 
-  // Only respond to authorized chat IDs to prevent unauthorized command execution
+  // Fail-closed chat-ID check — if env var is missing, reject all messages.
+  // Fail-open here would let any Telegram user who knows the bot token + webhook
+  // secret read agency-wide aggregates (MRR, client list, pipeline stats).
   const allowedChatId = process.env.TELEGRAM_CHAT_ID;
-  if (allowedChatId && chatId !== allowedChatId) {
-    return NextResponse.json({ ok: true }); // Silent ignore
+  if (!allowedChatId) {
+    console.warn("[telegram/webhook] TELEGRAM_CHAT_ID not set — rejecting all messages (would have leaked agency data)");
+    return NextResponse.json({ ok: true }, { status: 200 });
+  }
+  if (String(chatId) !== allowedChatId) {
+    return NextResponse.json({ ok: true }, { status: 200 }); // Silent ignore
   }
 
   // Claim the update before any DB reads or AI calls. update_id is Telegram's
