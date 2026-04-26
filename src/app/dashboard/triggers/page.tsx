@@ -131,6 +131,13 @@ const TRIGGER_CATALOG: TriggerMeta[] = [
     tint: "text-green-300 bg-green-500/15",
   },
   {
+    id: "appointment_completed",
+    label: "Appointment completed",
+    description: "An appointment finished — auto-trigger review request, follow-up email, etc.",
+    icon: CalendarCheck,
+    tint: "text-emerald-300 bg-emerald-500/15",
+  },
+  {
     id: "pipeline_stage_changed",
     label: "Pipeline stage changed",
     description: "A deal moved from one stage to another.",

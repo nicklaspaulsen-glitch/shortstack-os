@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import PageHero from "@/components/ui/page-hero";
+import { useAuth } from "@/lib/auth-context";
 
 interface TrinityIntegration {
   id: string;
@@ -66,6 +67,8 @@ const dailyActivity = [
 ];
 
 export default function DiscordPage() {
+  const { profile } = useAuth();
+  const isPlatformAdmin = profile?.role === "admin" || profile?.role === "founder";
   const [activeTab, setActiveTab] = useState<Tab>("Install");
   const [selectedServer, setSelectedServer] = useState(mockServers[0]?.id ?? "");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -428,27 +431,29 @@ export default function DiscordPage() {
             </ol>
           </div>
 
-          {/* Env vars */}
-          <div className="card p-4 border-warning/30 bg-warning/5">
-            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-              <AlertTriangle size={14} className="text-warning" /> Required env vars (set in Vercel)
-            </h3>
-            <ul className="space-y-1 text-[11px] font-mono">
-              <li><code className="text-foreground">DISCORD_CLIENT_ID</code> <span className="text-muted">— app ID from the Discord Developer Portal</span></li>
-              <li><code className="text-foreground">DISCORD_CLIENT_SECRET</code> <span className="text-muted">— app secret (server-side only)</span></li>
-              <li><code className="text-foreground">DISCORD_BOT_TOKEN</code> <span className="text-muted">— bot token, used for bot-level API calls</span></li>
-              <li><code className="text-foreground">DISCORD_PUBLIC_KEY</code> <span className="text-muted">— for verifying interaction webhook signatures</span></li>
-              <li><code className="text-foreground">NEXT_PUBLIC_APP_URL</code> <span className="text-muted">— your app&apos;s public URL, used for the OAuth redirect</span></li>
-            </ul>
-            <a
-              href="https://discord.com/developers/applications"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 mt-3 text-[11px] text-gold hover:underline"
-            >
-              <ExternalLink size={11} /> Open Discord Developer Portal
-            </a>
-          </div>
+          {/* Env vars — Trinity-internal admin/founder only. Clients should not see this. */}
+          {isPlatformAdmin && (
+            <div className="card p-4 border-warning/30 bg-warning/5">
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
+                <AlertTriangle size={14} className="text-warning" /> Required env vars (set in Vercel)
+              </h3>
+              <ul className="space-y-1 text-[11px] font-mono">
+                <li><code className="text-foreground">DISCORD_CLIENT_ID</code> <span className="text-muted">— app ID from the Discord Developer Portal</span></li>
+                <li><code className="text-foreground">DISCORD_CLIENT_SECRET</code> <span className="text-muted">— app secret (server-side only)</span></li>
+                <li><code className="text-foreground">DISCORD_BOT_TOKEN</code> <span className="text-muted">— bot token, used for bot-level API calls</span></li>
+                <li><code className="text-foreground">DISCORD_PUBLIC_KEY</code> <span className="text-muted">— for verifying interaction webhook signatures</span></li>
+                <li><code className="text-foreground">NEXT_PUBLIC_APP_URL</code> <span className="text-muted">— your app&apos;s public URL, used for the OAuth redirect</span></li>
+              </ul>
+              <a
+                href="https://discord.com/developers/applications"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 mt-3 text-[11px] text-gold hover:underline"
+              >
+                <ExternalLink size={11} /> Open Discord Developer Portal
+              </a>
+            </div>
+          )}
         </div>
       )}
 

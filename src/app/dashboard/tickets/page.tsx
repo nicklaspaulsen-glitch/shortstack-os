@@ -1,492 +1,213 @@
 "use client";
 
 /**
- * Tickets — shared inbox / support desk.
+ * Contact Support — honest landing page that points users to real support
+ * channels (email, scheduled call, Discord community).
  *
- * MVP ship: no backend yet. Tickets are stored in localStorage so the
- * page feels alive (open / comment / close). Next pass will wire to a
- * real `tickets` + `ticket_messages` schema with email intake; the beta
- * banner makes that clear.
+ * Replaced the previous localStorage-only "tickets" prototype: tickets were
+ * stored in browser storage, so they vanished on cache clear, never reached
+ * the team, and felt like a fake backend. The proper ticketing system (email
+ * intake + SLA timers + team assignment) is on the roadmap, but until that
+ * ships we route users to channels we actually monitor.
  */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   LifeBuoy,
-  Plus,
-  Trash2,
-  ArrowLeft,
+  Mail,
+  Calendar,
+  MessageCircle,
+  ArrowRight,
   Clock,
-  CheckCircle2,
-  Loader,
-  AlertTriangle,
-  Inbox,
-  User,
+  Sparkles,
 } from "lucide-react";
-import toast from "react-hot-toast";
-import { useAuth } from "@/lib/auth-context";
 import PageHero from "@/components/ui/page-hero";
-import EmptyState from "@/components/ui/empty-state";
 
-interface Ticket {
-  id: string;
-  subject: string;
-  requester: string;
-  requester_email: string;
-  body: string;
-  priority: "low" | "normal" | "high" | "urgent";
-  status: "open" | "in_progress" | "resolved";
-  created_at: string;
-  updated_at: string;
+const SUPPORT_EMAIL = "support@shortstack.work";
+// Replace with the real Calendly link once configured. Falls back to mailto.
+const SUPPORT_SCHEDULE_URL = "https://calendly.com/shortstack-support/30min";
+const DISCORD_COMMUNITY_URL = "https://discord.gg/shortstack";
+
+interface SupportChannel {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  responseTime: string;
+  cta: string;
+  href: string;
+  external?: boolean;
+  accent: string;
 }
 
-const STORAGE_KEY = "ss_tickets_v1";
+const SUPPORT_CHANNELS: SupportChannel[] = [
+  {
+    icon: <Mail size={22} />,
+    title: "Email support",
+    description:
+      "Best for detailed questions, screenshots, and anything that needs a written paper trail. We reply Mon–Fri.",
+    responseTime: "Reply within 1 business day",
+    cta: "Email us",
+    href: `mailto:${SUPPORT_EMAIL}?subject=ShortStack%20support%20request`,
+    external: true,
+    accent: "gold",
+  },
+  {
+    icon: <Calendar size={22} />,
+    title: "Schedule a call",
+    description:
+      "Walk through a workflow on a 30-minute screenshare. Best for onboarding, integrations, and complex issues.",
+    responseTime: "Same-week availability",
+    cta: "Book a time",
+    href: SUPPORT_SCHEDULE_URL,
+    external: true,
+    accent: "blue",
+  },
+  {
+    icon: <MessageCircle size={22} />,
+    title: "Discord community",
+    description:
+      "Quick questions, share what you built, and chat with other agency owners using ShortStack day-to-day.",
+    responseTime: "Active during US business hours",
+    cta: "Join the server",
+    href: DISCORD_COMMUNITY_URL,
+    external: true,
+    accent: "purple",
+  },
+];
 
-const STATUS_STYLES: Record<Ticket["status"], { label: string; tint: string }> = {
-  open: { label: "Open", tint: "bg-amber-500/15 text-amber-300" },
-  in_progress: { label: "In progress", tint: "bg-sky-500/15 text-sky-300" },
-  resolved: { label: "Resolved", tint: "bg-emerald-500/15 text-emerald-300" },
+const ACCENT_STYLES: Record<string, { ring: string; iconBg: string; iconText: string; cta: string }> = {
+  gold: {
+    ring: "border-gold/30 hover:border-gold/60 hover:shadow-[0_0_0_1px_rgba(212,175,55,0.18)]",
+    iconBg: "bg-gold/10",
+    iconText: "text-gold",
+    cta: "bg-gold text-black hover:bg-gold/90",
+  },
+  blue: {
+    ring: "border-sky-500/30 hover:border-sky-500/60 hover:shadow-[0_0_0_1px_rgba(14,165,233,0.18)]",
+    iconBg: "bg-sky-500/10",
+    iconText: "text-sky-300",
+    cta: "bg-sky-500 text-white hover:bg-sky-500/90",
+  },
+  purple: {
+    ring: "border-purple-500/30 hover:border-purple-500/60 hover:shadow-[0_0_0_1px_rgba(168,85,247,0.18)]",
+    iconBg: "bg-purple-500/10",
+    iconText: "text-purple-300",
+    cta: "bg-purple-500 text-white hover:bg-purple-500/90",
+  },
 };
 
-const PRIORITY_STYLES: Record<Ticket["priority"], { label: string; tint: string }> = {
-  low: { label: "Low", tint: "bg-muted/20 text-muted" },
-  normal: { label: "Normal", tint: "bg-slate-500/15 text-slate-300" },
-  high: { label: "High", tint: "bg-orange-500/15 text-orange-300" },
-  urgent: { label: "Urgent", tint: "bg-rose-500/15 text-rose-300" },
-};
-
-export default function TicketsPage() {
-  useAuth();
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showNew, setShowNew] = useState(false);
-  const [filter, setFilter] = useState<"all" | Ticket["status"]>("all");
-
-  const load = useCallback(() => {
-    try {
-      const raw = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
-      setTickets(raw ? (JSON.parse(raw) as Ticket[]) : []);
-    } catch {
-      setTickets([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    load();
-  }, [load]);
-
-  const persist = (next: Ticket[]) => {
-    setTickets(next);
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-    } catch {
-      /* quota — ignore */
-    }
-  };
-
-  function remove(id: string) {
-    if (!window.confirm("Delete this ticket? History will be lost.")) return;
-    persist(tickets.filter((t) => t.id !== id));
-    toast.success("Ticket deleted");
-  }
-
-  function advance(id: string) {
-    const now = new Date().toISOString();
-    persist(
-      tickets.map((t) => {
-        if (t.id !== id) return t;
-        const next: Ticket["status"] =
-          t.status === "open"
-            ? "in_progress"
-            : t.status === "in_progress"
-              ? "resolved"
-              : "resolved";
-        return { ...t, status: next, updated_at: now };
-      }),
-    );
-    toast.success("Ticket advanced");
-  }
-
-  const filtered = useMemo(() => {
-    const base = filter === "all" ? tickets : tickets.filter((t) => t.status === filter);
-    // Urgent and high bubble up; then by recency.
-    const priorityOrder: Record<Ticket["priority"], number> = {
-      urgent: 0,
-      high: 1,
-      normal: 2,
-      low: 3,
-    };
-    return [...base].sort((a, b) => {
-      if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
-        return priorityOrder[a.priority] - priorityOrder[b.priority];
-      }
-      return b.updated_at.localeCompare(a.updated_at);
-    });
-  }, [tickets, filter]);
-
-  const stats = useMemo(() => {
-    const open = tickets.filter((t) => t.status === "open").length;
-    const inProg = tickets.filter((t) => t.status === "in_progress").length;
-    const resolved = tickets.filter((t) => t.status === "resolved").length;
-    const urgent = tickets.filter(
-      (t) => t.priority === "urgent" && t.status !== "resolved",
-    ).length;
-    return { open, inProg, resolved, urgent };
-  }, [tickets]);
-
+export default function ContactSupportPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <PageHero
-        title="Support Tickets"
-        subtitle="Shared inbox for client support — open, triage, resolve. SLA timers and email intake coming next."
+        title="Contact Support"
+        subtitle="Pick the channel that fits the question — every one is monitored by a real human."
         icon={<LifeBuoy size={20} />}
         gradient="blue"
       />
 
-      <div className="mx-auto max-w-5xl space-y-5 px-6 pb-10 pt-5">
-        {/* Beta banner */}
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 text-[12px] text-amber-200">
-          <span className="font-semibold">Beta:</span> tickets are stored locally on this
-          device. Email intake, SLA timers, and team assignment land next sprint.
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div className="card">
-            <p className="text-[10px] uppercase tracking-wider text-muted">Open</p>
-            <p className="mt-1 text-2xl font-bold text-amber-300">{stats.open}</p>
-          </div>
-          <div className="card">
-            <p className="text-[10px] uppercase tracking-wider text-muted">In progress</p>
-            <p className="mt-1 text-2xl font-bold text-sky-300">{stats.inProg}</p>
-          </div>
-          <div className="card">
-            <p className="text-[10px] uppercase tracking-wider text-muted">Resolved</p>
-            <p className="mt-1 text-2xl font-bold text-emerald-300">{stats.resolved}</p>
-          </div>
-          <div className="card">
-            <p className="text-[10px] uppercase tracking-wider text-muted">Urgent</p>
-            <p className="mt-1 text-2xl font-bold text-rose-300">{stats.urgent}</p>
-          </div>
-        </div>
-
-        {/* Toolbar */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex gap-1">
-            {(["all", "open", "in_progress", "resolved"] as const).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
-                  filter === f
-                    ? "bg-gold/20 text-gold"
-                    : "bg-surface-light/40 text-muted hover:text-foreground"
-                }`}
+      <div className="mx-auto max-w-5xl space-y-6 px-6 pb-12 pt-5">
+        {/* Three support channels */}
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          {SUPPORT_CHANNELS.map((channel) => {
+            const accent = ACCENT_STYLES[channel.accent];
+            return (
+              <a
+                key={channel.title}
+                href={channel.href}
+                target={channel.external ? "_blank" : undefined}
+                rel={channel.external ? "noopener noreferrer" : undefined}
+                className={`flex flex-col rounded-2xl border bg-surface-light/20 p-5 transition ${accent.ring}`}
               >
-                {f === "all" ? "All" : f === "in_progress" ? "In progress" : f.charAt(0).toUpperCase() + f.slice(1)}
-              </button>
-            ))}
-          </div>
-          <button
-            onClick={() => setShowNew(true)}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black transition hover:bg-gold/90"
-          >
-            <Plus size={14} /> New ticket
-          </button>
+                <div
+                  className={`mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl ${accent.iconBg} ${accent.iconText}`}
+                >
+                  {channel.icon}
+                </div>
+                <h3 className="text-base font-semibold text-foreground">
+                  {channel.title}
+                </h3>
+                <p className="mt-1.5 flex-1 text-[13px] leading-relaxed text-muted">
+                  {channel.description}
+                </p>
+                <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-muted">
+                  <Clock size={11} /> {channel.responseTime}
+                </p>
+                <span
+                  className={`mt-4 inline-flex items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition ${accent.cta}`}
+                >
+                  {channel.cta} <ArrowRight size={14} />
+                </span>
+              </a>
+            );
+          })}
         </div>
 
-        {/* Create form */}
-        {showNew && (
-          <NewTicketForm
-            onClose={() => setShowNew(false)}
-            onCreated={(t) => {
-              persist([t, ...tickets]);
-              setShowNew(false);
-              toast.success("Ticket opened");
-            }}
-          />
-        )}
-
-        {/* List */}
-        {loading ? (
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <Loader size={14} className="animate-spin" /> Loading…
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="card">
-            <EmptyState
-              icon={<Inbox size={36} />}
-              title={tickets.length === 0 ? "Inbox zero" : "No tickets match this filter"}
-              description={
-                tickets.length === 0
-                  ? "No support tickets yet. When a client needs help, open one here to track it to resolution."
-                  : "Try a different filter, or open a new ticket."
-              }
-              action={
-                tickets.length === 0 ? (
-                  <button
-                    onClick={() => setShowNew(true)}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-2 text-sm font-semibold text-black"
+        {/* Self-serve helpers */}
+        <div className="rounded-2xl border border-border/40 bg-surface-light/15 p-5">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/10 text-gold">
+              <Sparkles size={18} />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-semibold text-foreground">
+                Try these first — most answers are in the product
+              </h3>
+              <p className="mt-1 text-[12px] text-muted">
+                Faster than waiting on a reply. If none of these solve it, hit
+                a channel above and we&apos;ll dig in.
+              </p>
+              <ul className="mt-3 grid grid-cols-1 gap-1.5 text-[12px] sm:grid-cols-2">
+                <li>
+                  <Link
+                    href="/dashboard/integrations"
+                    className="text-gold underline-offset-2 hover:underline"
                   >
-                    <Plus size={14} /> Open first ticket
-                  </button>
-                ) : null
-              }
-            />
+                    Integrations status
+                  </Link>{" "}
+                  <span className="text-muted">— check for red dots first</span>
+                </li>
+                <li>
+                  <Link
+                    href="/dashboard/usage"
+                    className="text-gold underline-offset-2 hover:underline"
+                  >
+                    Token usage
+                  </Link>{" "}
+                  <span className="text-muted">— if AI features look stuck</span>
+                </li>
+                <li>
+                  <Link
+                    href="/dashboard/inbox"
+                    className="text-gold underline-offset-2 hover:underline"
+                  >
+                    Unified inbox
+                  </Link>{" "}
+                  <span className="text-muted">— for missing client messages</span>
+                </li>
+                <li>
+                  <Link
+                    href="/dashboard/pricing"
+                    className="text-gold underline-offset-2 hover:underline"
+                  >
+                    Plans &amp; billing
+                  </Link>{" "}
+                  <span className="text-muted">— upgrade or change plan</span>
+                </li>
+              </ul>
+            </div>
           </div>
-        ) : (
-          <div className="space-y-2">
-            {filtered.map((t) => (
-              <TicketCard
-                key={t.id}
-                ticket={t}
-                onDelete={() => remove(t.id)}
-                onAdvance={() => advance(t.id)}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Help */}
-        <div className="mt-8 rounded-xl border border-border/40 bg-background/40 p-5 text-[12px] text-muted">
-          <p className="mb-2 font-semibold text-foreground">Coming soon</p>
-          <ul className="ml-4 list-disc space-y-1">
-            <li>Email intake — a dedicated inbox address auto-creates tickets</li>
-            <li>SLA timers per plan with auto-escalation</li>
-            <li>Team assignment and internal notes</li>
-            <li>
-              Related:{" "}
-              <Link href="/dashboard/inbox" className="text-gold underline">
-                Inbox
-              </Link>
-              {" · "}
-              <Link href="/dashboard/clients" className="text-gold underline">
-                Clients
-              </Link>
-            </li>
-          </ul>
         </div>
-      </div>
-    </div>
-  );
-}
 
-/* ─────────────────────────────────────────────────────────────── */
-/* Ticket row                                                      */
-/* ─────────────────────────────────────────────────────────────── */
-
-function TicketCard({
-  ticket,
-  onDelete,
-  onAdvance,
-}: {
-  ticket: Ticket;
-  onDelete: () => void;
-  onAdvance: () => void;
-}) {
-  const statusStyle = STATUS_STYLES[ticket.status];
-  const priorityStyle = PRIORITY_STYLES[ticket.priority];
-  const nextAction =
-    ticket.status === "open"
-      ? "Start"
-      : ticket.status === "in_progress"
-        ? "Resolve"
-        : null;
-
-  return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/20 transition hover:border-gold/40">
-      <div className="flex items-start gap-3 p-4">
-        <div
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${
-            ticket.priority === "urgent"
-              ? "bg-rose-500/15 text-rose-300"
-              : "bg-sky-500/15 text-sky-300"
-          }`}
-        >
-          {ticket.priority === "urgent" ? (
-            <AlertTriangle size={16} />
-          ) : (
-            <LifeBuoy size={16} />
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="truncate text-sm font-semibold">{ticket.subject}</p>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${statusStyle.tint}`}
-            >
-              {statusStyle.label}
-            </span>
-            <span
-              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${priorityStyle.tint}`}
-            >
-              {priorityStyle.label}
-            </span>
-          </div>
-          <p className="mt-0.5 truncate text-[11px] text-muted">
-            <User size={10} className="inline" /> {ticket.requester}
-            {ticket.requester_email ? ` · ${ticket.requester_email}` : ""} ·{" "}
-            <Clock size={10} className="inline" />{" "}
-            {new Date(ticket.created_at).toLocaleDateString()}
-          </p>
-          <p className="mt-1.5 line-clamp-2 text-[12px] leading-relaxed text-foreground/80">
-            {ticket.body}
+        {/* Honest roadmap note — sets expectations */}
+        <div className="rounded-2xl border border-border/40 bg-background/40 p-5 text-[12px] text-muted">
+          <p className="font-semibold text-foreground">On the roadmap</p>
+          <p className="mt-1">
+            A first-class in-product ticket inbox with email intake, SLA timers
+            per plan, and team assignment is in active development. Until then,
+            the channels above are the fastest way to reach us.
           </p>
         </div>
-        <div className="flex shrink-0 flex-col items-end gap-1">
-          {nextAction && (
-            <button
-              onClick={onAdvance}
-              className={`inline-flex items-center gap-1 rounded px-2.5 py-1.5 text-[11px] ${
-                ticket.status === "open"
-                  ? "bg-sky-500/15 text-sky-300 hover:bg-sky-500/25"
-                  : "bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25"
-              }`}
-            >
-              <CheckCircle2 size={11} /> {nextAction}
-            </button>
-          )}
-          <button
-            onClick={onDelete}
-            className="rounded bg-rose-500/10 px-2 py-1.5 text-rose-300 hover:bg-rose-500/20"
-            title="Delete"
-            aria-label="Delete ticket"
-          >
-            <Trash2 size={11} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────── */
-/* Create form                                                     */
-/* ─────────────────────────────────────────────────────────────── */
-
-function NewTicketForm({
-  onClose,
-  onCreated,
-}: {
-  onClose: () => void;
-  onCreated: (t: Ticket) => void;
-}) {
-  const [subject, setSubject] = useState("");
-  const [requester, setRequester] = useState("");
-  const [requesterEmail, setRequesterEmail] = useState("");
-  const [body, setBody] = useState("");
-  const [priority, setPriority] = useState<Ticket["priority"]>("normal");
-
-  const canSubmit = subject.trim() && requester.trim() && body.trim();
-
-  function submit() {
-    if (!canSubmit) return;
-    const now = new Date().toISOString();
-    const ticket: Ticket = {
-      id: `t_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-      subject: subject.trim(),
-      requester: requester.trim(),
-      requester_email: requesterEmail.trim(),
-      body: body.trim(),
-      priority,
-      status: "open",
-      created_at: now,
-      updated_at: now,
-    };
-    onCreated(ticket);
-  }
-
-  return (
-    <div className="rounded-xl border border-gold/30 bg-gold/5 p-5">
-      <div className="mb-4 flex items-center gap-2">
-        <button onClick={onClose} className="rounded p-1 text-muted hover:text-foreground" aria-label="Back to tickets list">
-          <ArrowLeft size={14} />
-        </button>
-        <h3 className="text-base font-semibold">New ticket</h3>
-      </div>
-
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <div className="sm:col-span-2">
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
-            Subject
-          </label>
-          <input
-            type="text"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            placeholder="Login not working on mobile"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
-            Requester
-          </label>
-          <input
-            type="text"
-            value={requester}
-            onChange={(e) => setRequester(e.target.value)}
-            placeholder="Jane Doe"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
-            Requester email
-          </label>
-          <input
-            type="email"
-            value={requesterEmail}
-            onChange={(e) => setRequesterEmail(e.target.value)}
-            placeholder="jane@client.com"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
-          />
-        </div>
-        <div>
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
-            Priority
-          </label>
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value as Ticket["priority"])}
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
-          >
-            <option value="low">Low</option>
-            <option value="normal">Normal</option>
-            <option value="high">High</option>
-            <option value="urgent">Urgent</option>
-          </select>
-        </div>
-        <div className="sm:col-span-2">
-          <label className="mb-0.5 block text-[10px] uppercase tracking-wider text-muted">
-            Description
-          </label>
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            rows={4}
-            placeholder="What's happening? Steps to reproduce, error messages, screenshots…"
-            className="w-full rounded-lg border border-border/50 bg-surface-light/40 px-3 py-2 text-sm"
-          />
-        </div>
-      </div>
-
-      <div className="mt-4 flex items-center justify-end gap-2">
-        <button
-          onClick={onClose}
-          className="rounded-lg px-4 py-2 text-sm text-muted hover:text-foreground"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={submit}
-          disabled={!canSubmit}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-5 py-2 text-sm font-semibold text-black transition hover:bg-gold/90 disabled:opacity-40"
-        >
-          <Plus size={14} /> Open ticket
-        </button>
       </div>
     </div>
   );

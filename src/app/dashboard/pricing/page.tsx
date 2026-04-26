@@ -12,6 +12,7 @@ import { LIMITS_BY_TIER } from "@/lib/plan-limits";
 import { formatLimit, getTierFeatures } from "@/lib/plan-display";
 import PageHero from "@/components/ui/page-hero";
 import { CreditCard } from "lucide-react";
+import toast from "react-hot-toast";
 
 // Description + icon + marketing badge are the only hand-curated bits.
 // Price, token count, client count, feature bullets — all derived from
@@ -101,19 +102,12 @@ export default function PricingPage() {
       if (redirectUrl) {
         window.location.href = redirectUrl;
       } else {
-        const msg = data.error || "Checkout failed. Please try again.";
-        if (typeof window !== "undefined") {
-          // Lightweight inline alert; toast infra may not always be loaded here.
-          alert(msg);
-        }
+        toast.error(data.error || "Checkout failed. Please try again.");
         setCheckoutLoading(null);
       }
     } catch (err) {
       // Surface the error so the user isn't stuck on a silent spinner.
-      if (typeof window !== "undefined") {
-        const msg = err instanceof Error ? err.message : "Network error. Please try again.";
-        alert(msg);
-      }
+      toast.error(err instanceof Error ? err.message : "Network error. Please try again.");
       setCheckoutLoading(null);
     }
   }

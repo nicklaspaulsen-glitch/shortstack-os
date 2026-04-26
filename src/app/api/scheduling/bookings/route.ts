@@ -180,5 +180,38 @@ export async function PATCH(request: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  // When status flips to "completed", fire the appointment_completed trigger
+  // so workflows like "send review request" can run. Fire-and-forget — do not
+  // block the booking response on workflow execution.
+  if (
+    safeUpdates.status === "completed" &&
+    data &&
+    typeof (data as { id?: string }).id === "string"
+  ) {
+    const booking = data as {
+      id: string;
+      meeting_type_id: string;
+      guest_name?: string;
+      guest_email?: string;
+      guest_phone?: string;
+      date: string;
+      time: string;
+    };
+    fireTrigger({
+      supabase: createServiceClient(),
+      userId: user.id,
+      triggerType: "appointment_completed",
+      payload: {
+        booking_id: booking.id,
+        meeting_type_id: booking.meeting_type_id,
+        guest_name: booking.guest_name,
+        guest_email: booking.guest_email,
+        guest_phone: booking.guest_phone,
+        date: booking.date,
+        time: booking.time,
+      },
+    }).catch((err) => console.error("[scheduling/bookings] fireTrigger failed:", err));
+  }
+
   return NextResponse.json({ booking: data });
 }
