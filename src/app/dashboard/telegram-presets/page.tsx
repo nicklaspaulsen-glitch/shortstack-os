@@ -5,10 +5,11 @@ import { useAuth } from "@/lib/auth-context";
 import {
   Search, Send, Edit3, Trash2, Plus, X, Loader, Eye, Save,
   MessageSquare, CheckCircle2, AlertCircle, Lock, Sparkles,
-  BarChart3, Filter,
+  BarChart3, Filter, ExternalLink,
 } from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import EmptyState from "@/components/ui/empty-state";
+import { PresetEditExamplePanel } from "@/components/ui/preset-edit-example-panel";
 import toast from "react-hot-toast";
 import { TelegramIcon } from "@/components/ui/platform-icons";
 
@@ -137,6 +138,9 @@ export default function TelegramPresetsPage() {
 
   // Preview modal (for global defaults or just peeking)
   const [previewing, setPreviewing] = useState<Preset | null>(null);
+
+  // Edit example panel
+  const [editExample, setEditExample] = useState<Preset | null>(null);
 
   // Send modal — chat_id + variable inputs
   const [sending, setSending] = useState<Preset | null>(null);
@@ -569,6 +573,13 @@ export default function TelegramPresetsPage() {
                     <Eye size={14} />
                   </button>
                   <button
+                    onClick={() => setEditExample(p)}
+                    title="Edit example"
+                    className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-gold hover:border-gold/20 transition-colors"
+                  >
+                    <ExternalLink size={14} />
+                  </button>
+                  <button
                     onClick={() => openEdit(p)}
                     title={isGlobal ? "Duplicate" : "Edit"}
                     className="p-2 rounded-lg bg-surface-light border border-border text-muted hover:text-foreground hover:border-gold/20 transition-colors"
@@ -787,6 +798,21 @@ export default function TelegramPresetsPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ═══════════ EDIT EXAMPLE PANEL ═══════════ */}
+      {editExample && (
+        <PresetEditExamplePanel
+          kind="telegram"
+          preset={{
+            id: editExample.id,
+            name: editExample.name,
+            category: editExample.category,
+            body: editExample.body,
+            variables: editExample.variables || [],
+          }}
+          onClose={() => setEditExample(null)}
+        />
       )}
 
       {/* ═══════════ SEND MODAL ═══════════ */}

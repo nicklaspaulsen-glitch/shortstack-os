@@ -140,24 +140,34 @@ NITS: <optional small wins, max 2>"
 
 **Critical**: pipe `< /dev/null` so codex doesn't hang waiting for stdin.
 
-### Phase 3b — Gemini second-opinion (high-stakes only, 2-of-3 rule)
+### Phase 3b — third-reviewer second-opinion (high-stakes only, N-of-N rule)
 
-For tasks tagged HIGH-STAKES (security fixes, payment flows, data deletion, anything with a CRITICAL audit finding) the protocol upgrades from a 2-model loop to a **2-of-3 reviewer rule**: the patch only ships if BOTH GPT-5 AND Gemini independently say SHIP.
+For tasks tagged HIGH-STAKES (security fixes, payment flows, data deletion, anything with a CRITICAL audit finding) the protocol upgrades from a 2-model loop to a **multi-reviewer rule**: the patch only ships if GPT-5 (codex) AND every configured 2nd-opinion backend independently say SHIP.
 
-Why: codex and Sonnet share some training-distribution overlap and miss correlated bug classes ~8% of runs. Gemini is sourced from a different lineage and catches different classes (notably async ordering bugs and SQL-injection-by-template). Adding it as a third reviewer gates every high-stakes ship behind two independent passes.
+Why: codex and Sonnet share some training-distribution overlap and miss correlated bug classes ~8% of runs. A third reviewer from a DIFFERENT lineage (Qwen3-Coder via OpenRouter, DeepSeek-V3, Gemini, etc.) catches different classes — notably async-ordering bugs and SQL-injection-by-template. Adding it as a gate raises every high-stakes ship over two independent passes.
 
 Implementation — only fires when `STAKES=HIGH` is set on the /agent invocation OR when the task description includes any of: "security", "payment", "delete", "CRITICAL", "IDOR".
 
 ```bash
-# Gemini via the project's benchmark-models skill (runs in parallel with codex)
-bash .claude/scripts/agent-gemini-review.sh "<patch path>" > /tmp/agent-gemini-out.txt
-# Output format mirrors codex: VERDICT: ship | hold + ISSUES bullets.
+# Multi-backend reviewer; tries every configured backend in parallel.
+bash .claude/scripts/agent-third-reviewer.sh "<patch path>" > /tmp/agent-third-out.txt
+# Output format mirrors codex: VERDICT: ship | hold | skip + ISSUES bullets.
 ```
 
+Backends (set ANY to enable; ALL configured must SHIP for the multi-reviewer gate to clear):
+
+| Env var | Provider | Model default | Why pick this |
+|---|---|---|---|
+| `OPENROUTER_API_KEY` | openrouter.ai | `qwen/qwen3-coder` (override via `OPENROUTER_MODEL`) | One key, 200+ models, no regional issues |
+| `DEEPSEEK_API_KEY` | platform.deepseek.com | `deepseek-chat` (override via `DEEPSEEK_MODEL`) | Cheapest by 10× ($0.14/1M), code-strong, China-trained |
+| `GEMINI_API_KEY` | aistudio.google.com | `gemini-2.5-pro` | Region-restricted (EU users often hit "Available regions" wall) |
+
 Combine the verdicts:
-- BOTH ship → proceed to Phase 4 ship.
-- One ships, one holds → treat as HOLD; merge both review's blockers, fix, loop.
-- BOTH hold → REJECT (the patch is in worse shape than the loop can fix). Surface to user.
+- All configured ship → proceed to Phase 4.
+- Any HOLD → treat as HOLD; merge all reviewers' blockers, fix, loop.
+- All errored / unavailable → script returns `VERDICT: skip`; orchestrator falls back to single-reviewer mode and **flags the skip in the final report** so the user knows the multi-reviewer gate didn't actually fire.
+
+The script does NOT fail-open on SHIP when no backend is configured — that would defeat the second-opinion guarantee.
 
 For non-high-stakes tasks (refactors, UX polish, perf tweaks) skip Phase 3b — the GPT-5 review alone is sufficient.
 

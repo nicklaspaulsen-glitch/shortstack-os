@@ -5,16 +5,16 @@
  * music track in the video-editor's preset bank before using it in a project.
  *
  * Tabs: Fonts | Transitions | Effects | SFX | Music
- * - Fonts: live-renders each font family so you see the real letterforms.
- * - Transitions: static card; the editor itself actually runs the transition.
- * - Effects: static card with paramHints so you see what's tunable.
- * - SFX / Music: HTML5 <audio> preview with play/pause + copy-id.
+ * - Search/filter bar on every tab (live, no submit).
+ * - Shimmer skeleton while loading.
+ * - SVG placeholder fallback for missing thumbnails.
+ * - "Edit example" panel opens on any card click.
+ * - Empty state with "Reset filters" CTA when nothing matches.
  */
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Search,
   Play,
   Pause,
   Copy,
@@ -25,6 +25,7 @@ import {
   Type as TypeIcon,
   Volume2,
   ArrowLeft,
+  ExternalLink,
 } from "lucide-react";
 import {
   FONTS_LIBRARY,
@@ -36,8 +37,16 @@ import {
   type Transition,
   type VideoEffect,
 } from "@/lib/video-presets";
+import { PresetSearchFilterBar } from "@/components/ui/preset-search-filter-bar";
+import { PresetEmptyState } from "@/components/ui/preset-empty-state";
+import { PresetGridSkeleton, AudioListSkeleton } from "@/components/ui/preset-tile-skeleton";
+import { PresetEditExamplePanel } from "@/components/ui/preset-edit-example-panel";
 
 type Tab = "fonts" | "transitions" | "effects" | "sfx" | "music";
+
+// ── Simulated loading state (presets are static; we still show skeleton on
+//    first mount so the UX feels consistent with dynamic pages).
+const SKELETON_DURATION_MS = 400;
 
 export default function PresetLibraryPage() {
   const router = useRouter();
@@ -45,6 +54,18 @@ export default function PresetLibraryPage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Edit example panel
+  const [editFont, setEditFont] = useState<Font | null>(null);
+  const [editTransition, setEditTransition] = useState<Transition | null>(null);
+  const [editEffect, setEditEffect] = useState<VideoEffect | null>(null);
+
+  // Simulate first-load skeleton
+  useEffect(() => {
+    const t = setTimeout(() => setLoading(false), SKELETON_DURATION_MS);
+    return () => clearTimeout(t);
+  }, []);
 
   function copyId(id: string) {
     try {
@@ -61,6 +82,18 @@ export default function PresetLibraryPage() {
     setQuery("");
     setCategory("all");
   }, [tab]);
+
+  function resetFilters() {
+    setQuery("");
+    setCategory("all");
+  }
+
+  const totalPresets =
+    FONTS_LIBRARY.length +
+    TRANSITIONS_LIBRARY.length +
+    EFFECTS_LIBRARY.length +
+    SFX_LIBRARY.length +
+    MUSIC_LIBRARY.length;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -80,16 +113,8 @@ export default function PresetLibraryPage() {
               dropping it into a project.
             </p>
           </div>
-
           <div className="flex items-center gap-2 text-xs text-muted">
-            <span>
-              {FONTS_LIBRARY.length +
-                TRANSITIONS_LIBRARY.length +
-                EFFECTS_LIBRARY.length +
-                SFX_LIBRARY.length +
-                MUSIC_LIBRARY.length}{" "}
-              presets
-            </span>
+            <span>{totalPresets} presets</span>
           </div>
         </div>
 
@@ -137,70 +162,133 @@ export default function PresetLibraryPage() {
           />
         </div>
 
-        {/* Search */}
-        <div className="mb-4 flex items-center gap-3">
-          <div className="relative flex-1">
-            <Search
-              size={13}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-            />
-            <input
-              type="search"
-              placeholder={`Search ${tab}…`}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="input w-full pl-9 text-sm"
-            />
-          </div>
+        {/* Shared search + filter bar */}
+        <div className="mb-4">
+          <PresetSearchFilterBar
+            query={query}
+            onQueryChange={setQuery}
+            placeholder={`Search ${tab}…`}
+          />
         </div>
 
-        {/* Tab body */}
-        {tab === "fonts" && (
-          <FontsTab
-            query={query}
-            category={category}
-            setCategory={setCategory}
-            copiedId={copiedId}
-            onCopy={copyId}
-          />
-        )}
-        {tab === "transitions" && (
-          <TransitionsTab
-            query={query}
-            category={category}
-            setCategory={setCategory}
-            copiedId={copiedId}
-            onCopy={copyId}
-          />
-        )}
-        {tab === "effects" && (
-          <EffectsTab
-            query={query}
-            category={category}
-            setCategory={setCategory}
-            copiedId={copiedId}
-            onCopy={copyId}
-          />
-        )}
-        {tab === "sfx" && (
-          <SfxTab
-            query={query}
-            category={category}
-            setCategory={setCategory}
-            copiedId={copiedId}
-            onCopy={copyId}
-          />
-        )}
-        {tab === "music" && (
-          <MusicTab
-            query={query}
-            category={category}
-            setCategory={setCategory}
-            copiedId={copiedId}
-            onCopy={copyId}
-          />
+        {/* Tab bodies */}
+        {loading ? (
+          tab === "sfx" || tab === "music" ? (
+            <AudioListSkeleton count={9} />
+          ) : (
+            <PresetGridSkeleton count={9} />
+          )
+        ) : (
+          <>
+            {tab === "fonts" && (
+              <FontsTab
+                query={query}
+                category={category}
+                setCategory={setCategory}
+                copiedId={copiedId}
+                onCopy={copyId}
+                onEdit={setEditFont}
+                onReset={resetFilters}
+              />
+            )}
+            {tab === "transitions" && (
+              <TransitionsTab
+                query={query}
+                category={category}
+                setCategory={setCategory}
+                copiedId={copiedId}
+                onCopy={copyId}
+                onEdit={setEditTransition}
+                onReset={resetFilters}
+              />
+            )}
+            {tab === "effects" && (
+              <EffectsTab
+                query={query}
+                category={category}
+                setCategory={setCategory}
+                copiedId={copiedId}
+                onCopy={copyId}
+                onEdit={setEditEffect}
+                onReset={resetFilters}
+              />
+            )}
+            {tab === "sfx" && (
+              <SfxTab
+                query={query}
+                category={category}
+                setCategory={setCategory}
+                copiedId={copiedId}
+                onCopy={copyId}
+                onReset={resetFilters}
+              />
+            )}
+            {tab === "music" && (
+              <MusicTab
+                query={query}
+                category={category}
+                setCategory={setCategory}
+                copiedId={copiedId}
+                onCopy={copyId}
+                onReset={resetFilters}
+              />
+            )}
+          </>
         )}
       </div>
+
+      {/* Edit example panels */}
+      {editFont && (
+        <PresetEditExamplePanel
+          kind="video"
+          preset={{
+            id: editFont.id,
+            name: editFont.family,
+            category: editFont.category,
+            style: editFont.category,
+            duration: 30,
+            aspect_ratio: "16:9",
+            music_mood: "chill",
+            caption_style: "word_highlight",
+            target_platform: "instagram",
+          }}
+          onClose={() => setEditFont(null)}
+        />
+      )}
+      {editTransition && (
+        <PresetEditExamplePanel
+          kind="video"
+          preset={{
+            id: editTransition.id,
+            name: editTransition.name,
+            category: editTransition.category,
+            style: editTransition.category,
+            duration: editTransition.duration_ms / 1000,
+            aspect_ratio: "9:16",
+            music_mood: "upbeat",
+            caption_style: "none",
+            target_platform: "tiktok",
+          }}
+          onClose={() => setEditTransition(null)}
+        />
+      )}
+      {editEffect && (
+        <PresetEditExamplePanel
+          kind="video"
+          preset={{
+            id: editEffect.id,
+            name: editEffect.name,
+            category: editEffect.category,
+            style: editEffect.category,
+            duration: 15,
+            aspect_ratio: "9:16",
+            music_mood: "dramatic",
+            caption_style: "none",
+            target_platform: "instagram",
+          }}
+          onClose={() => setEditEffect(null)}
+        />
+      )}
     </div>
   );
 }
@@ -262,8 +350,8 @@ function CategoryChips({
         onClick={() => onChange("all")}
         className={`rounded-full px-2.5 py-1 text-[11px] transition ${
           active === "all"
-            ? "bg-white text-black"
-            : "bg-surface-light/60 text-muted hover:text-foreground"
+            ? "bg-gold/20 text-gold border border-gold/30"
+            : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
         }`}
       >
         All
@@ -274,8 +362,8 @@ function CategoryChips({
           onClick={() => onChange(c)}
           className={`rounded-full px-2.5 py-1 text-[11px] transition ${
             active === c
-              ? "bg-white text-black"
-              : "bg-surface-light/60 text-muted hover:text-foreground"
+              ? "bg-gold/20 text-gold border border-gold/30"
+              : "bg-surface-light/60 text-muted hover:text-foreground border border-transparent"
           }`}
         >
           {c}
@@ -293,12 +381,16 @@ function FontsTab({
   setCategory,
   copiedId,
   onCopy,
+  onEdit,
+  onReset,
 }: {
   query: string;
   category: string;
   setCategory: (c: string) => void;
   copiedId: string | null;
   onCopy: (id: string) => void;
+  onEdit: (f: Font) => void;
+  onReset: () => void;
 }) {
   const categories = useMemo(
     () => Array.from(new Set(FONTS_LIBRARY.map((f) => f.category))).sort(),
@@ -322,7 +414,6 @@ function FontsTab({
     const existing = new Set(
       Array.from(document.styleSheets).map((s) => s.href || ""),
     );
-    const added: HTMLLinkElement[] = [];
     for (const f of filtered) {
       if (existing.has(f.url)) continue;
       const link = document.createElement("link");
@@ -330,32 +421,27 @@ function FontsTab({
       link.href = f.url;
       link.crossOrigin = "anonymous";
       document.head.appendChild(link);
-      added.push(link);
     }
-    return () => {
-      // Leave loaded fonts in place — tearing them down would make other
-      // mounts flicker. They're tiny (<5KB each) and cached.
-    };
   }, [filtered]);
 
   return (
     <>
-      <CategoryChips
-        categories={categories}
-        active={category}
-        onChange={setCategory}
-      />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((f) => (
-          <FontCard
-            key={f.id}
-            font={f}
-            copied={copiedId === f.id}
-            onCopy={() => onCopy(f.id)}
-          />
-        ))}
-      </div>
-      {filtered.length === 0 && <EmptyHint label="fonts" />}
+      <CategoryChips categories={categories} active={category} onChange={setCategory} />
+      {filtered.length === 0 ? (
+        <PresetEmptyState onReset={onReset} label="fonts" />
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((f) => (
+            <FontCard
+              key={f.id}
+              font={f}
+              copied={copiedId === f.id}
+              onCopy={() => onCopy(f.id)}
+              onEdit={() => onEdit(f)}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -364,13 +450,15 @@ function FontCard({
   font,
   copied,
   onCopy,
+  onEdit,
 }: {
   font: Font;
   copied: boolean;
   onCopy: () => void;
+  onEdit: () => void;
 }) {
   return (
-    <div className="rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-gold/40">
+    <div className="group rounded-lg border border-border/50 bg-surface-light/30 p-3 transition hover:border-gold/40">
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{font.family}</p>
@@ -378,13 +466,22 @@ function FontCard({
             {font.category} · {font.weight.join("/")}
           </p>
         </div>
-        <button
-          onClick={onCopy}
-          className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-foreground"
-          title="Copy font id"
-        >
-          {copied ? <Check size={12} /> : <Copy size={12} />}
-        </button>
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={onEdit}
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-gold transition"
+            title="Edit example"
+          >
+            <ExternalLink size={12} />
+          </button>
+          <button
+            onClick={onCopy}
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-foreground transition"
+            title="Copy font id"
+          >
+            {copied ? <Check size={12} /> : <Copy size={12} />}
+          </button>
+        </div>
       </div>
       <p
         className="truncate text-2xl leading-tight"
@@ -394,10 +491,7 @@ function FontCard({
       </p>
       <div className="mt-2 flex flex-wrap gap-1">
         {font.useCases.slice(0, 3).map((u) => (
-          <span
-            key={u}
-            className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-muted"
-          >
+          <span key={u} className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-muted">
             {u}
           </span>
         ))}
@@ -414,16 +508,19 @@ function TransitionsTab({
   setCategory,
   copiedId,
   onCopy,
+  onEdit,
+  onReset,
 }: {
   query: string;
   category: string;
   setCategory: (c: string) => void;
   copiedId: string | null;
   onCopy: (id: string) => void;
+  onEdit: (t: Transition) => void;
+  onReset: () => void;
 }) {
   const categories = useMemo(
-    () =>
-      Array.from(new Set(TRANSITIONS_LIBRARY.map((t) => t.category))).sort(),
+    () => Array.from(new Set(TRANSITIONS_LIBRARY.map((t) => t.category))).sort(),
     [],
   );
   const filtered = useMemo(() => {
@@ -441,22 +538,22 @@ function TransitionsTab({
 
   return (
     <>
-      <CategoryChips
-        categories={categories}
-        active={category}
-        onChange={setCategory}
-      />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filtered.map((t) => (
-          <TransitionCard
-            key={t.id}
-            transition={t}
-            copied={copiedId === t.id}
-            onCopy={() => onCopy(t.id)}
-          />
-        ))}
-      </div>
-      {filtered.length === 0 && <EmptyHint label="transitions" />}
+      <CategoryChips categories={categories} active={category} onChange={setCategory} />
+      {filtered.length === 0 ? (
+        <PresetEmptyState onReset={onReset} label="transitions" />
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((t) => (
+            <TransitionCard
+              key={t.id}
+              transition={t}
+              copied={copiedId === t.id}
+              onCopy={() => onCopy(t.id)}
+              onEdit={() => onEdit(t)}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -465,13 +562,14 @@ function TransitionCard({
   transition,
   copied,
   onCopy,
+  onEdit,
 }: {
   transition: Transition;
   copied: boolean;
   onCopy: () => void;
+  onEdit: () => void;
 }) {
   const [playing, setPlaying] = useState(false);
-  // Re-trigger animation on click by toggling a key.
   const [k, setK] = useState(0);
 
   function runDemo() {
@@ -480,29 +578,17 @@ function TransitionCard({
     window.setTimeout(() => setPlaying(false), transition.duration_ms + 200);
   }
 
-  // Lightweight CSS preview — not the real compositor effect, just a hint of
-  // the motion class. Works best for cut/fade/slide/zoom/rotate; other
-  // categories get the generic "pulse" preview.
   const animClass = useMemo(() => {
     switch (transition.category) {
-      case "fade":
-        return "animate-[fade_700ms_ease]";
-      case "slide":
-        return "animate-[slideIn_700ms_ease]";
-      case "zoom":
-        return "animate-[zoomIn_600ms_ease]";
-      case "rotate":
-        return "animate-[spin_700ms_ease]";
-      case "whip":
-        return "animate-[slideIn_300ms_ease-out]";
-      case "glitch":
-        return "animate-[glitch_450ms_steps(6)]";
-      case "masking":
-        return "animate-[zoomIn_700ms_ease-out]";
-      case "3d":
-        return "animate-[spin_900ms_ease]";
-      default:
-        return "animate-[pulse_600ms_ease]";
+      case "fade": return "animate-[fade_700ms_ease]";
+      case "slide": return "animate-[slideIn_700ms_ease]";
+      case "zoom": return "animate-[zoomIn_600ms_ease]";
+      case "rotate": return "animate-[spin_700ms_ease]";
+      case "whip": return "animate-[slideIn_300ms_ease-out]";
+      case "glitch": return "animate-[glitch_450ms_steps(6)]";
+      case "masking": return "animate-[zoomIn_700ms_ease-out]";
+      case "3d": return "animate-[spin_900ms_ease]";
+      default: return "animate-[pulse_600ms_ease]";
     }
   }, [transition.category]);
 
@@ -515,16 +601,24 @@ function TransitionCard({
             {transition.category} · {transition.duration_ms}ms
           </p>
         </div>
-        <button
-          onClick={onCopy}
-          className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-foreground"
-          title="Copy transition id"
-        >
-          {copied ? <Check size={12} /> : <Copy size={12} />}
-        </button>
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={onEdit}
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-gold transition"
+            title="Edit example"
+          >
+            <ExternalLink size={12} />
+          </button>
+          <button
+            onClick={onCopy}
+            className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-foreground"
+            title="Copy transition id"
+          >
+            {copied ? <Check size={12} /> : <Copy size={12} />}
+          </button>
+        </div>
       </div>
 
-      {/* Demo box */}
       <button
         onClick={runDemo}
         className="group relative mb-2 flex aspect-video w-full items-center justify-center overflow-hidden rounded-md bg-gradient-to-br from-[#1F2937] to-[#0F172A] text-[10px] text-muted"
@@ -555,12 +649,16 @@ function EffectsTab({
   setCategory,
   copiedId,
   onCopy,
+  onEdit,
+  onReset,
 }: {
   query: string;
   category: string;
   setCategory: (c: string) => void;
   copiedId: string | null;
   onCopy: (id: string) => void;
+  onEdit: (e: VideoEffect) => void;
+  onReset: () => void;
 }) {
   const categories = useMemo(
     () => Array.from(new Set(EFFECTS_LIBRARY.map((e) => e.category))).sort(),
@@ -581,22 +679,22 @@ function EffectsTab({
 
   return (
     <>
-      <CategoryChips
-        categories={categories}
-        active={category}
-        onChange={setCategory}
-      />
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((e) => (
-          <EffectCard
-            key={e.id}
-            effect={e}
-            copied={copiedId === e.id}
-            onCopy={() => onCopy(e.id)}
-          />
-        ))}
-      </div>
-      {filtered.length === 0 && <EmptyHint label="effects" />}
+      <CategoryChips categories={categories} active={category} onChange={setCategory} />
+      {filtered.length === 0 ? (
+        <PresetEmptyState onReset={onReset} label="effects" />
+      ) : (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((e) => (
+            <EffectCard
+              key={e.id}
+              effect={e}
+              copied={copiedId === e.id}
+              onCopy={() => onCopy(e.id)}
+              onEdit={() => onEdit(e)}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -605,26 +703,21 @@ function EffectCard({
   effect,
   copied,
   onCopy,
+  onEdit,
 }: {
   effect: VideoEffect;
   copied: boolean;
   onCopy: () => void;
+  onEdit: () => void;
 }) {
-  // Lightweight CSS preview per category.
   const previewStyle: React.CSSProperties = useMemo(() => {
     switch (effect.category) {
-      case "color":
-        return { filter: "saturate(1.3) contrast(1.15)" };
-      case "filter":
-        return { filter: "sepia(0.5) contrast(1.1)" };
-      case "distortion":
-        return { filter: "blur(2px) hue-rotate(25deg)" };
-      case "stylize":
-        return { filter: "saturate(2) contrast(1.3)" };
-      case "motion":
-        return { animation: "pulse 1.5s ease-in-out infinite" };
-      default:
-        return {};
+      case "color": return { filter: "saturate(1.3) contrast(1.15)" };
+      case "filter": return { filter: "sepia(0.5) contrast(1.1)" };
+      case "distortion": return { filter: "blur(2px) hue-rotate(25deg)" };
+      case "stylize": return { filter: "saturate(2) contrast(1.3)" };
+      case "motion": return { animation: "pulse 1.5s ease-in-out infinite" };
+      default: return {};
     }
   }, [effect.category]);
 
@@ -633,17 +726,24 @@ function EffectCard({
       <div className="mb-2 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-xs font-semibold">{effect.name}</p>
-          <p className="text-[10px] uppercase tracking-wide text-muted">
-            {effect.category}
-          </p>
+          <p className="text-[10px] uppercase tracking-wide text-muted">{effect.category}</p>
         </div>
-        <button
-          onClick={onCopy}
-          className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-foreground"
-          title="Copy effect id"
-        >
-          {copied ? <Check size={12} /> : <Copy size={12} />}
-        </button>
+        <div className="flex items-center gap-1 shrink-0">
+          <button
+            onClick={onEdit}
+            className="rounded bg-surface-light/80 p-1 text-muted hover:text-gold transition"
+            title="Edit example"
+          >
+            <ExternalLink size={12} />
+          </button>
+          <button
+            onClick={onCopy}
+            className="shrink-0 rounded bg-surface-light/80 p-1 text-muted hover:text-foreground"
+            title="Copy effect id"
+          >
+            {copied ? <Check size={12} /> : <Copy size={12} />}
+          </button>
+        </div>
       </div>
 
       <div
@@ -684,12 +784,14 @@ function SfxTab({
   setCategory,
   copiedId,
   onCopy,
+  onReset,
 }: {
   query: string;
   category: string;
   setCategory: (c: string) => void;
   copiedId: string | null;
   onCopy: (id: string) => void;
+  onReset: () => void;
 }) {
   const categories = useMemo(
     () => Array.from(new Set(SFX_LIBRARY.map((s) => s.category))).sort(),
@@ -710,26 +812,25 @@ function SfxTab({
 
   return (
     <>
-      <CategoryChips
-        categories={categories}
-        active={category}
-        onChange={setCategory}
-      />
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((s) => (
-          <AudioCard
-            key={s.id}
-            id={s.id}
-            url={s.url}
-            title={s.name}
-            sub={`${s.category} · ${(s.duration_ms / 1000).toFixed(1)}s`}
-            tags={s.tags}
-            copied={copiedId === s.id}
-            onCopy={() => onCopy(s.id)}
-          />
-        ))}
-      </div>
-      {filtered.length === 0 && <EmptyHint label="SFX" />}
+      <CategoryChips categories={categories} active={category} onChange={setCategory} />
+      {filtered.length === 0 ? (
+        <PresetEmptyState onReset={onReset} label="SFX" />
+      ) : (
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((s) => (
+            <AudioCard
+              key={s.id}
+              id={s.id}
+              url={s.url}
+              title={s.name}
+              sub={`${s.category} · ${(s.duration_ms / 1000).toFixed(1)}s`}
+              tags={s.tags}
+              copied={copiedId === s.id}
+              onCopy={() => onCopy(s.id)}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -742,12 +843,14 @@ function MusicTab({
   setCategory,
   copiedId,
   onCopy,
+  onReset,
 }: {
   query: string;
   category: string;
   setCategory: (c: string) => void;
   copiedId: string | null;
   onCopy: (id: string) => void;
+  onReset: () => void;
 }) {
   const categories = useMemo(
     () => Array.from(new Set(MUSIC_LIBRARY.map((m) => m.mood))).sort(),
@@ -769,26 +872,25 @@ function MusicTab({
 
   return (
     <>
-      <CategoryChips
-        categories={categories}
-        active={category}
-        onChange={setCategory}
-      />
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((m) => (
-          <AudioCard
-            key={m.id}
-            id={m.id}
-            url={m.url}
-            title={m.title}
-            sub={`${m.mood} · ${m.genre} · ${m.bpm} BPM · ${Math.floor(m.duration_sec / 60)}:${String(m.duration_sec % 60).padStart(2, "0")}`}
-            tags={[m.artist, `energy ${m.energy}/10`, ...(m.keyPreferredFor || [])]}
-            copied={copiedId === m.id}
-            onCopy={() => onCopy(m.id)}
-          />
-        ))}
-      </div>
-      {filtered.length === 0 && <EmptyHint label="tracks" />}
+      <CategoryChips categories={categories} active={category} onChange={setCategory} />
+      {filtered.length === 0 ? (
+        <PresetEmptyState onReset={onReset} label="tracks" />
+      ) : (
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((m) => (
+            <AudioCard
+              key={m.id}
+              id={m.id}
+              url={m.url}
+              title={m.title}
+              sub={`${m.mood} · ${m.genre} · ${m.bpm} BPM · ${Math.floor(m.duration_sec / 60)}:${String(m.duration_sec % 60).padStart(2, "0")}`}
+              tags={[m.artist, `energy ${m.energy}/10`, ...(m.keyPreferredFor || [])]}
+              copied={copiedId === m.id}
+              onCopy={() => onCopy(m.id)}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 }
@@ -796,6 +898,7 @@ function MusicTab({
 /* ─────────────────────────── Audio card (SFX + Music) ─────────────────────────── */
 
 function AudioCard({
+  id,
   url,
   title,
   sub,
@@ -816,7 +919,6 @@ function AudioCard({
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // Cleanup on unmount
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -827,9 +929,6 @@ function AudioCard({
 
   function toggle() {
     if (!audioRef.current) {
-      // Route external audio through our CORS-safe proxy so SoundJay /
-      // archive.org / etc. play in the browser. Same-origin URLs
-      // (including relative) pass through directly.
       const proxied = url.startsWith("http")
         ? `/api/audio-proxy?url=${encodeURIComponent(url)}`
         : url;
@@ -878,10 +977,7 @@ function AudioCard({
         {tags.length > 0 && (
           <div className="mt-1 flex flex-wrap gap-1">
             {tags.slice(0, 3).map((t, i) => (
-              <span
-                key={i}
-                className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-muted"
-              >
+              <span key={i} className="rounded bg-surface-light px-1.5 py-0.5 text-[9px] text-muted">
                 {t}
               </span>
             ))}
@@ -889,7 +985,7 @@ function AudioCard({
         )}
         {error && (
           <p className="mt-1 text-[9px] text-red-400">
-            Preview URL is a placeholder — replace with real Pixabay/Freesound URL.
+            Preview URL is a placeholder — replace with real audio URL.
           </p>
         )}
       </div>
@@ -900,16 +996,6 @@ function AudioCard({
       >
         {copied ? <Check size={12} /> : <Copy size={12} />}
       </button>
-    </div>
-  );
-}
-
-/* ─────────────────────────── Empty hint ─────────────────────────── */
-
-function EmptyHint({ label }: { label: string }) {
-  return (
-    <div className="rounded-lg border border-dashed border-border/40 p-8 text-center text-xs text-muted">
-      No {label} match that search.
     </div>
   );
 }

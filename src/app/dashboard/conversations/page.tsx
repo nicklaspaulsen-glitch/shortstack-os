@@ -49,6 +49,7 @@ import {
   Globe,
   Loader2,
   Circle,
+  ChevronLeft,
 } from "lucide-react";
 
 // ── Types ────────────────────────────────────────────────────────────
@@ -141,6 +142,13 @@ export default function ConversationsPage() {
   const [filter, setFilter] = useState<FilterKey>("all");
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  /*
+   * codex round-1: mobile single-pane stacked layout.
+   * On md- screens only one of "list" or "thread" is shown at a time.
+   * Selecting a conversation flips to "thread"; back button flips to "list".
+   * On md+ the original 3-pane flex layout is preserved via Tailwind responsive classes.
+   */
+  const [mobileView, setMobileView] = useState<"list" | "thread">("list");
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingThread, setLoadingThread] = useState(false);
@@ -375,8 +383,8 @@ export default function ConversationsPage() {
 
   return (
     <div className="flex h-[calc(100vh-4rem)] bg-[#0b0d12] text-white">
-      {/* ── LEFT: conversation list ── */}
-      <aside className="w-[320px] flex-shrink-0 border-r border-white/5 flex flex-col">
+      {/* ── LEFT: conversation list — hidden on mobile when viewing a thread ── */}
+      <aside className={`${mobileView === "thread" ? "hidden" : "flex"} md:flex w-full md:w-80 lg:w-96 flex-shrink-0 border-r border-white/5 flex-col`}>
         <div className="p-4 border-b border-white/5">
           <h1 className="text-lg font-semibold mb-3 flex items-center gap-2">
             <Inbox size={18} className="text-amber-400" />
@@ -435,15 +443,18 @@ export default function ConversationsPage() {
                 key={c.id}
                 c={c}
                 active={c.id === selectedId}
-                onClick={() => setSelectedId(c.id)}
+                onClick={() => {
+                  setSelectedId(c.id);
+                  setMobileView("thread");
+                }}
               />
             ))
           )}
         </div>
       </aside>
 
-      {/* ── MIDDLE: thread ── */}
-      <main className="flex-1 flex flex-col min-w-0">
+      {/* ── MIDDLE: thread — hidden on mobile when showing the list ── */}
+      <main className={`${mobileView === "list" ? "hidden" : "flex"} md:flex flex-1 flex-col min-w-0`}>
         {!selected ? (
           <div className="flex-1 flex items-center justify-center text-white/40 text-sm">
             Select a conversation to view
@@ -454,6 +465,14 @@ export default function ConversationsPage() {
             <header className="px-5 py-3 border-b border-white/5 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
+                  {/* Back button — mobile only */}
+                  <button
+                    className="flex md:hidden items-center gap-1 text-white/60 hover:text-white mr-1"
+                    onClick={() => setMobileView("list")}
+                    aria-label="Back to conversations"
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
                   <ChannelPill channel={selected.channel} />
                   <span className="font-medium truncate">
                     {selected.contact?.business_name ||
@@ -555,9 +574,9 @@ export default function ConversationsPage() {
         )}
       </main>
 
-      {/* ── RIGHT: contact + actions ── */}
+      {/* ── RIGHT: contact + actions — desktop only ── */}
       {selected && (
-        <aside className="w-[280px] flex-shrink-0 border-l border-white/5 overflow-y-auto">
+        <aside className="hidden md:block w-[280px] flex-shrink-0 border-l border-white/5 overflow-y-auto">
           <ContactPanel conversation={selected} contact={contact} onStatus={(s) => setStatus(selected.id, s)} />
         </aside>
       )}

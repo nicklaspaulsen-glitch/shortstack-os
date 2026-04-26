@@ -9,8 +9,8 @@ import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
-import { PageLoading } from "@/components/ui/loading";
-import EmptyState from "@/components/ui/empty-state";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { formatDate, formatDateTime } from "@/lib/utils";
 import {
   Film, FileText, Inbox, Upload, User, Sparkles, Calendar,
@@ -535,7 +535,17 @@ export default function ContentPage() {
     { key: "seo", label: "SEO & Quality", icon: <Search size={16} /> },
   ];
 
-  if (loading && tab === "scripts") return <PageLoading />;
+  if (loading && tab === "scripts") return (
+    <div className="space-y-4">
+      <PageHero
+        icon={<Sparkles size={22} />}
+        title="Content Studio"
+        subtitle="Scripts, publishing queue, and your personal brand content."
+        gradient="purple"
+      />
+      <TableSkeleton rows={6} />
+    </div>
+  );
 
   return (
     <MotionPage className="space-y-6">
@@ -978,7 +988,7 @@ export default function ContentPage() {
         ))}
       </div>
 
-      {loading ? <PageLoading /> : (
+      {loading ? <TableSkeleton rows={6} /> : (
         <>
           {/* Scripts */}
           {tab === "scripts" && (
@@ -1107,7 +1117,7 @@ export default function ContentPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {personalIdeas.filter((i) => i.idea_type === "long_form").length === 0 ? (
-                    <EmptyState title="No long-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
+                    <EmptyState type="no-content" title="No long-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
                   ) : (
                     personalIdeas.filter((i) => i.idea_type === "long_form").map((idea) => (
                       <div key={idea.id} className="card-hover">
@@ -1146,7 +1156,7 @@ export default function ContentPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                   {personalIdeas.filter((i) => i.idea_type === "short_form").length === 0 ? (
-                    <EmptyState title="No short-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
+                    <EmptyState type="no-content" title="No short-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
                   ) : (
                     personalIdeas.filter((i) => i.idea_type === "short_form").map((idea) => (
                       <div key={idea.id} className="card-hover p-4">

@@ -481,7 +481,8 @@ export default function CalendarPage() {
 
           {/* Week View */}
           {viewMode === "week" && (
-            <div className="grid grid-cols-7 gap-2">
+            <div className="overflow-x-auto lg:overflow-x-visible">
+            <div className="grid grid-cols-7 gap-2 min-w-[560px] lg:min-w-0">
               {weekDays.map(day => {
                 const dateStr = day.toISOString().split("T")[0];
                 const dayAppts = filteredEvents.filter(a => a.date === dateStr);
@@ -524,6 +525,7 @@ export default function CalendarPage() {
                   </div>
                 );
               })}
+            </div>
             </div>
           )}
 

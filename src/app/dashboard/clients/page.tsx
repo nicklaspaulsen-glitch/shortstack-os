@@ -8,7 +8,7 @@ import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
-import { PageLoading } from "@/components/ui/loading";
+import { TableSkeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
   Users, DollarSign, FileText, Plus, Search, Heart, ArrowUpRight,
@@ -549,7 +549,17 @@ export default function ClientsPage() {
   const paidInvoices = invoices.filter(i => i.status === "paid");
   const overdueInvoices = invoices.filter(i => i.status === "overdue");
 
-  if (loading) return <PageLoading />;
+  if (loading) return (
+    <div className="space-y-4">
+      <PageHero
+        icon={<Users size={22} />}
+        title="Client Portal"
+        subtitle="Manage clients, contracts, and invoices."
+        gradient="gold"
+      />
+      <TableSkeleton rows={8} />
+    </div>
+  );
 
   return (
     <MotionPage className="space-y-4">
