@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
-import { sendEmail } from "@/lib/email";
+import { sendMessage } from "@/lib/email";
 
-// Send emails via Resend (HTTP API preferred, SMTP fallback).
-// Returns 4xx/5xx on actual failure so the UI can toast a real error
-// (previously returned 200 { success: false } which the UI read as success).
-// GHL path removed Apr 21 — native Resend is the primary + only sender now.
+// Send emails via the configured provider abstraction (Resend by default;
+// Postal or generic SMTP via EMAIL_PROVIDER env). Returns 4xx/5xx on
+// actual failure so the UI can toast a real error (previously returned
+// 200 { success: false } which the UI read as success).
+// GHL path removed Apr 21 — native provider abstraction is now primary.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
@@ -85,17 +86,15 @@ export async function POST(request: NextRequest) {
   let sent = false;
   let failureReason = "";
 
-  // Send via Resend. Prefer the Resend HTTP API so we can attach the
-  // `shortstack_user_id` tag — the webhook uses that tag to resolve owner
-  // for open/click events (see /api/webhooks/resend).
-  // If the HTTP path fails or the key isn't available, fall back to SMTP.
+  // Send via the provider abstraction. The chosen backend (Resend by default,
+  // optionally Postal or generic SMTP via EMAIL_PROVIDER env) handles tags +
+  // captures a stable messageId so the webhook can resolve owner.
   //
-  // NOTE on Resend tags: the Resend API accepts `tags: [{name, value}]` on
-  // send, but the webhook payload DELIVERS tags as an object map
-  // `{shortstack_user_id: "abc", ...}`. The webhook route normalizes both
-  // shapes; here we keep the array form that the send API expects.
+  // NOTE on tags: Resend natively supports `tags`; the abstraction layer
+  // turns them into Resend's `[{name, value}]` array. SMTP-based providers
+  // serialize them as `X-Tag-<name>` headers. The webhook normalizes both
+  // shapes (see /api/webhooks/resend) so downstream consumers don't care.
   let resendEmailId: string | null = null;
-  const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
 
   // Use the caller-provided from_email if it looks like a valid email;
   // otherwise fall back to the env default. Guards against injection via
@@ -110,55 +109,24 @@ export async function POST(request: NextRequest) {
     ? `${from_name.trim()} <${fromEmail}>`
     : fromEmail;
 
-  if (resendKey) {
-    try {
-      const resendRes = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${resendKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: fromDisplay,
-          to: [to],
-          subject: emailSubject,
-          html: emailBody,
-          reply_to: typeof reply_to === "string" && reply_to.trim() ? reply_to.trim() : undefined,
-          tags: [
-            { name: "shortstack_user_id", value: ownerId },
-            { name: "source", value: "email_composer" },
-            ...(provider ? [{ name: "provider", value: String(provider).slice(0, 32) }] : []),
-          ],
-        }),
-      });
-      if (resendRes.ok) {
-        sent = true;
-        // Capture the Resend email_id so the webhook can resolve owner
-        // from it if tags get stripped on certain event types. Failures
-        // to parse are non-fatal — the tag path still works normally.
-        try {
-          const resendJson = (await resendRes.json()) as { id?: string };
-          resendEmailId = typeof resendJson?.id === "string" ? resendJson.id : null;
-        } catch {
-          resendEmailId = null;
-        }
-      } else {
-        const errBody = await resendRes.text().catch(() => "");
-        failureReason = `Resend API ${resendRes.status}: ${errBody.slice(0, 200) || "send failed"}`;
-      }
-    } catch (err) {
-      failureReason = err instanceof Error ? err.message : "Resend HTTP request failed";
-    }
-  }
-
-  // SMTP fallback if Resend HTTP path was unavailable or failed
-  if (!sent) {
-    try {
-      sent = await sendEmail({ to, subject: emailSubject, html: emailBody });
-      if (!sent) failureReason = failureReason || "SMTP send returned false";
-    } catch (err) {
-      failureReason = err instanceof Error ? err.message : "SMTP send failed";
-    }
+  try {
+    const result = await sendMessage({
+      to,
+      from: fromDisplay,
+      subject: emailSubject,
+      html: emailBody,
+      replyTo:
+        typeof reply_to === "string" && reply_to.trim() ? reply_to.trim() : undefined,
+      tags: {
+        shortstack_user_id: ownerId,
+        source: "email_composer",
+        ...(provider ? { provider: String(provider).slice(0, 32) } : {}),
+      },
+    });
+    sent = true;
+    resendEmailId = result.messageId || null;
+  } catch (err) {
+    failureReason = err instanceof Error ? err.message : "email send failed";
   }
 
   // Log the email. `resend_email_id` + `shortstack_user_id` let the resend

@@ -151,6 +151,19 @@ convenience — keep them set only if a legacy webhook still posts to
 - [ ] `MAILCHIMP_SERVER_PREFIX` — Mailchimp server prefix (defaults to `us21`)
 - [ ] `SMTP_POOL_PASSWORD` — shared password for custom SMTP identities in the outreach sender pool
 
+### Email provider routing
+
+The app routes outbound transactional/marketing email through
+`src/lib/email/` — a provider abstraction. The active backend is
+selected at runtime by `EMAIL_PROVIDER`. Resend stays as the default; Postal is
+opt-in once the user provisions a self-hosted instance (see
+`docs/SELF_HOSTED_SMTP_POSTAL.md`).
+
+- [ ] `EMAIL_PROVIDER` — one of `resend` (default), `postal`, `smtp_generic`. Omit to use Resend.
+- [ ] `POSTAL_API_URL` — only required if `EMAIL_PROVIDER=postal`. e.g. `https://mail.shortstack.work`.
+- [ ] `POSTAL_API_KEY` — only required if `EMAIL_PROVIDER=postal`. Generated in Postal admin UI.
+- [ ] (`SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM` already documented above — `smtp_generic` reuses them.)
+
 ## Webhooks / Automation
 
 - [ ] `ZAPIER_WEBHOOK_URL` — Zapier webhook URL

@@ -1,22 +1,137 @@
 /**
- * Transactional email service.
- * Uses Resend via SMTP (nodemailer). Falls back to Telegram if SMTP is not configured.
+ * Email module — provider router + back-compat layer.
  *
- * Usage:
- *   await sendEmail({ to: "user@example.com", subject: "Welcome!", html: "<p>Hi!</p>" });
- *   await sendWelcomeEmail("user@example.com", "John");
- *   await sendUsageWarningEmail("user@example.com", "Pro", 90);
+ * ## Architecture
+ *
+ *   callers ──> sendMessage(msg)  ─┐
+ *                                  ├─> chosen provider (resolved at runtime
+ *                                  │    from EMAIL_PROVIDER env, default
+ *                                  │    "resend") with deterministic
+ *                                  │    fallback chain on unavailable
+ *                                  ▼
+ *                          ┌──────────────────┐
+ *                          │  resend / postal │
+ *                          │  smtp_generic    │
+ *                          └──────────────────┘
+ *
+ * ## Two public entry points
+ *
+ *   - `sendMessage(msg: EmailMessage)` — new structured API. Throws on
+ *     send failure (caller wraps in try/catch). Returns {messageId, provider}.
+ *
+ *   - `sendEmail(payload: LegacyEmailPayload)` — back-compat wrapper that
+ *     existing 17 callers depend on. Returns Promise<boolean> and never
+ *     throws. Internally delegates to `sendMessage`. Falls back to a
+ *     Telegram notification if every provider is unavailable.
+ *
+ * The `EMAIL_PROVIDER` env var picks the primary backend at boot time.
+ * Today it defaults to `resend`. Once the user spins up Postal on a VPS
+ * (see `docs/SELF_HOSTED_SMTP_POSTAL.md`), they flip the env var to
+ * `postal` — no code changes required.
+ *
+ * ## Fallback chain
+ *
+ *   resend       → smtp_generic
+ *   postal       → smtp_generic
+ *   smtp_generic → resend (if Resend is somehow available)
+ *
+ * The fallback only fires when the chosen provider's `available()` returns
+ * false (env vars missing). Network errors during a send DO bubble up to
+ * the caller — we don't auto-retry across providers, because half the
+ * point of an explicit choice is to maintain deliverability characteristics
+ * (warm IPs, sender reputation) tied to that backend.
  */
-
 import { BRAND } from "@/lib/brand-config";
-import nodemailer from "nodemailer";
+import type {
+  EmailMessage,
+  EmailProvider,
+  EmailProviderImpl,
+  EmailSendResult,
+} from "./provider";
+import { resendProvider } from "./providers/resend";
+import { postalProvider } from "./providers/postal";
+import { smtpGenericProvider } from "./providers/smtp-generic";
+
+export type { EmailMessage, EmailProvider, EmailSendResult } from "./provider";
+
+const PROVIDERS: Record<EmailProvider, EmailProviderImpl> = {
+  resend: resendProvider,
+  postal: postalProvider,
+  smtp_generic: smtpGenericProvider,
+};
+
+const DEFAULT_PROVIDER: EmailProvider = "resend";
+const VALID_PROVIDERS = new Set<EmailProvider>(["resend", "postal", "smtp_generic"]);
+
+function getRequestedProvider(): EmailProvider {
+  const raw = process.env.EMAIL_PROVIDER || DEFAULT_PROVIDER;
+  if (VALID_PROVIDERS.has(raw as EmailProvider)) {
+    return raw as EmailProvider;
+  }
+  console.warn(
+    `[email] EMAIL_PROVIDER="${raw}" is not recognized — falling back to "${DEFAULT_PROVIDER}"`,
+  );
+  return DEFAULT_PROVIDER;
+}
+
+function getFallback(primary: EmailProvider): EmailProviderImpl | null {
+  // Fallback order is intentional, not symmetric:
+  //   - HTTP-based providers (Resend, Postal) fall to SMTP because SMTP is
+  //     the lowest common denominator and most likely to also be set.
+  //   - SMTP falls UP to Resend so a misconfigured SMTP env in dev still
+  //     ships email if a Resend key is around.
+  if (primary === "resend") {
+    return PROVIDERS.smtp_generic.available() ? PROVIDERS.smtp_generic : null;
+  }
+  if (primary === "postal") {
+    return PROVIDERS.smtp_generic.available()
+      ? PROVIDERS.smtp_generic
+      : PROVIDERS.resend.available()
+        ? PROVIDERS.resend
+        : null;
+  }
+  // smtp_generic
+  return PROVIDERS.resend.available() ? PROVIDERS.resend : null;
+}
+
+/**
+ * Send a structured email message via the configured provider, with one
+ * level of fallback if the primary provider isn't configured. Throws on
+ * actual send failure — callers must wrap if they need a non-throwing
+ * boolean-style result (or just use the legacy `sendEmail` helper).
+ */
+export async function sendMessage(msg: EmailMessage): Promise<EmailSendResult> {
+  const requested = getRequestedProvider();
+  const primary = PROVIDERS[requested];
+
+  if (primary.available()) {
+    return primary.send(msg);
+  }
+
+  const fallback = getFallback(requested);
+  if (fallback) {
+    console.warn(
+      `[email] requested provider "${requested}" unavailable; falling back to "${fallback.name}"`,
+    );
+    return fallback.send(msg);
+  }
+
+  throw new Error(
+    `[email] provider "${requested}" unavailable and no fallback configured`,
+  );
+}
+
+// ── Back-compat layer ───────────────────────────────────────────────────
+//
+// The 17 existing callers import { sendEmail } from "@/lib/email" and rely
+// on its `Promise<boolean>` shape (true = sent, false = silent skip).
+// We keep that surface intact and route it through the new abstraction.
 
 const FROM_EMAIL = process.env.SMTP_FROM || "growth@mail.shortstack.work";
-// Sender display name pulls from brand-config so agencies that flip the
-// white-label toggle send emails from their own brand rather than Trinity.
 const FROM_NAME = BRAND.product_name;
 
-interface EmailPayload {
+/** @deprecated Prefer `sendMessage(msg)` from `@/lib/email`. */
+export interface EmailPayload {
   to: string;
   subject: string;
   html: string;
@@ -24,45 +139,44 @@ interface EmailPayload {
 }
 
 /**
- * Send a transactional email via Resend SMTP.
- * Returns true if sent, false if SMTP is not configured.
+ * Legacy entry point — preserves the original `Promise<boolean>` shape so
+ * existing call sites don't need touching. Internally routes through the
+ * new provider abstraction.
+ *
+ * Returns `false` (does not throw) when:
+ *   - no provider is configured, or
+ *   - the provider's send call throws.
+ *
+ * On the no-provider path it also pings Telegram so an operator notices
+ * — same behavior as the original implementation.
  */
 export async function sendEmail(payload: EmailPayload): Promise<boolean> {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-
-  if (!host || !user || !pass) {
-    console.warn("[email] SMTP not configured, skipping email to", payload.to);
-    await notifyTelegram(`Email not sent (no SMTP):\nTo: ${payload.to}\nSubject: ${payload.subject}`);
-    return false;
-  }
-
   try {
-    const port = Number(process.env.SMTP_PORT) || 587;
-    const transport = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465,
-      auth: { user, pass },
-    });
-
-    await transport.sendMail({
-      from: `${FROM_NAME} <${FROM_EMAIL}>`,
+    await sendMessage({
       to: payload.to,
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
       subject: payload.subject,
       html: payload.html,
       text: payload.text,
     });
-
     return true;
   } catch (err) {
-    console.error("[email] Failed to send:", err);
+    const msg = err instanceof Error ? err.message : String(err);
+    // Mirror the original module's behavior: a "no provider configured"
+    // error nudges Telegram instead of swallowing silently.
+    if (/unavailable/i.test(msg)) {
+      console.warn("[email] no provider configured, skipping send to", payload.to);
+      await notifyTelegram(
+        `Email not sent (no provider):\nTo: ${payload.to}\nSubject: ${payload.subject}`,
+      );
+    } else {
+      console.error("[email] send failed:", msg);
+    }
     return false;
   }
 }
 
-// ── Pre-built templates ─────────────────────────────────────────
+// ── Pre-built templates ─────────────────────────────────────────────────
 
 const baseStyle = `
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -75,7 +189,11 @@ const goldBtn = `
   font-weight: 600; font-size: 14px;
 `;
 
-export async function sendWelcomeEmail(email: string, name: string, planTier?: string) {
+export async function sendWelcomeEmail(
+  email: string,
+  name: string,
+  planTier?: string,
+): Promise<boolean> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
   // Email clients render SVG inconsistently — keep PNG for email rendering.
   // The PNG will be regenerated from the new SVG in a follow-up asset pass.
@@ -174,8 +292,8 @@ export async function sendWelcomeEmail(email: string, name: string, planTier?: s
 export async function sendUsageWarningEmail(
   email: string,
   planTier: string,
-  usagePercent: number
-) {
+  usagePercent: number,
+): Promise<boolean> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   return sendEmail({
@@ -203,8 +321,8 @@ export async function sendInvoiceEmail(
   email: string,
   clientName: string,
   amount: number,
-  invoiceUrl?: string
-) {
+  invoiceUrl?: string,
+): Promise<boolean> {
   return sendEmail({
     to: email,
     subject: `Invoice from ${BRAND.company_name}: $${amount.toFixed(2)}`,
@@ -224,7 +342,10 @@ export async function sendInvoiceEmail(
   });
 }
 
-export async function sendPaymentFailedEmail(email: string, clientName: string) {
+export async function sendPaymentFailedEmail(
+  email: string,
+  clientName: string,
+): Promise<boolean> {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
 
   return sendEmail({
@@ -245,9 +366,9 @@ export async function sendPaymentFailedEmail(email: string, clientName: string) 
   });
 }
 
-// ── Telegram fallback ───────────────────────────────────────────
+// ── Telegram fallback ───────────────────────────────────────────────────
 
-async function notifyTelegram(text: string) {
+async function notifyTelegram(text: string): Promise<void> {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   const botToken = process.env.TELEGRAM_BOT_TOKEN;
   if (!chatId || !botToken) return;

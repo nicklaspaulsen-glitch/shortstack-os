@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getEffectiveOwnerId, requireOwnedClient } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { sendMessage } from "@/lib/email";
 
 // Email Marketing Integration — supports both Mailchimp and Resend
 // Mailchimp: MAILCHIMP_API_KEY, MAILCHIMP_SERVER_PREFIX (e.g., us21)
 // Resend:    SMTP_PASS (the Resend API key), SMTP_FROM
+//
+// Note on send vs admin paths: list/audience management uses the Resend admin
+// API directly (resendFetch helper below). Actual outbound sends route
+// through the email-provider abstraction so they honor EMAIL_PROVIDER.
 
 function getProvider(): "mailchimp" | "resend" | null {
   if (process.env.MAILCHIMP_API_KEY) return "mailchimp";
@@ -93,17 +98,22 @@ async function resendGetLists() {
 }
 
 async function resendSendEmail(to: string, subject: string, html: string, from?: string) {
+  // Routes through the email-provider abstraction so EMAIL_PROVIDER env
+  // selects the backend (Resend default, Postal opt-in, SMTP fallback).
+  // Sender is normalized inside the abstraction when `from` is omitted.
   const fromAddr = from || process.env.SMTP_FROM || "growth@mail.shortstack.work";
-  const res = await resendFetch("/emails", {
-    method: "POST",
-    body: JSON.stringify({
+  try {
+    await sendMessage({
+      to,
       from: fromAddr,
-      to: [to],
       subject,
       html,
-    }),
-  });
-  return { success: res.ok };
+      tags: { source: "email_marketing_route" },
+    });
+    return { success: true };
+  } catch {
+    return { success: false };
+  }
 }
 
 async function resendAddContact(email: string, firstName: string, lastName: string, audienceId: string) {
