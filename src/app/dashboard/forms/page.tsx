@@ -12,6 +12,14 @@ import EmptyState from "@/components/empty-state";
 import Modal from "@/components/ui/modal";
 import PageHero from "@/components/ui/page-hero";
 import { ClipboardCheck } from "lucide-react";
+import {
+  type ConditionOperator,
+  type ConditionAction,
+  type FieldCondition,
+  type FormField,
+  evaluateCondition,
+  computeFieldVisibility,
+} from "@/lib/forms/conditional-logic";
 
 type AiFormType = "contact" | "signup" | "survey" | "booking" | "application" | "feedback" | "quote" | "custom";
 
@@ -33,80 +41,6 @@ interface AiField {
 }
 
 type FormTab = "builder" | "templates" | "submissions" | "analytics" | "settings";
-
-/**
- * Per-field conditional rule. The form renderer evaluates each rule in order
- * — multiple rules are AND-combined. The first action wins for show/hide:
- * if any rule says "hide" and matches, the field is hidden. "require" rules
- * dynamically toggle the required flag at submit-time (renderer + submit
- * handler both honor it).
- */
-type ConditionOperator = "equals" | "not_equals" | "contains" | "is_empty" | "is_not_empty";
-type ConditionAction = "show" | "hide" | "require" | "skip_section";
-
-interface FieldCondition {
-  if_field: string; // referenced field id
-  if_operator: ConditionOperator;
-  if_value?: string; // ignored when operator is is_empty / is_not_empty
-  action: ConditionAction;
-}
-
-interface FormField {
-  id: string;
-  type: "text" | "email" | "phone" | "textarea" | "select" | "number" | "checkbox" | "file" | "rating";
-  label: string;
-  placeholder: string;
-  required: boolean;
-  options?: string[];
-  /** @deprecated kept for backward compat — use `conditions` instead. */
-  condition?: { fieldId: string; value: string } | null;
-  conditions?: FieldCondition[];
-}
-
-/**
- * Returns true when the rule matches the given field-value. Used by the
- * renderer to decide visibility/requirement at submit time.
- */
-export function evaluateCondition(rule: FieldCondition, value: string | undefined): boolean {
-  const v = (value ?? "").trim();
-  switch (rule.if_operator) {
-    case "equals":
-      return v === (rule.if_value ?? "");
-    case "not_equals":
-      return v !== (rule.if_value ?? "");
-    case "contains":
-      return rule.if_value ? v.toLowerCase().includes(rule.if_value.toLowerCase()) : false;
-    case "is_empty":
-      return v === "";
-    case "is_not_empty":
-      return v !== "";
-    default:
-      return false;
-  }
-}
-
-/**
- * Compute show/required state for one field given the current form values.
- * Mirrors the runtime semantics described in the FieldCondition docstring.
- */
-export function computeFieldVisibility(
-  field: FormField,
-  values: Record<string, string>,
-  fieldsById: Record<string, FormField>,
-): { visible: boolean; required: boolean } {
-  let visible = true;
-  let required = field.required;
-  for (const rule of field.conditions || []) {
-    if (!fieldsById[rule.if_field]) continue;
-    const matches = evaluateCondition(rule, values[rule.if_field]);
-    if (!matches) continue;
-    if (rule.action === "show") visible = true;
-    else if (rule.action === "hide") visible = false;
-    else if (rule.action === "require") required = true;
-    else if (rule.action === "skip_section") visible = false;
-  }
-  return { visible, required };
-}
 
 interface LeadForm {
   id: string;
