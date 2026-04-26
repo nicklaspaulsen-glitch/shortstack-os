@@ -6,6 +6,7 @@ import { PLAN_TIERS, type PlanTier, isValidPlanTier } from "@/lib/plan-config";
 import Link from "next/link";
 import PageAI from "@/components/page-ai";
 import PageHero from "@/components/ui/page-hero";
+import toast from "react-hot-toast";
 import {
   Zap,
   TrendingUp,
@@ -206,16 +207,18 @@ export default function UsagePage() {
         return;
       }
       if (data.success) {
-        setBuySuccess(data.message || "Tokens added to your balance!");
+        const msg = data.message || "Tokens added to your balance!";
+        setBuySuccess(msg);
+        toast.success(msg);
         setSelectedPack(null);
         fetchData();
         setTimeout(() => setBuySuccess(null), 5000);
       } else {
-        alert(data.error || "Token purchase failed. Please try again.");
+        toast.error(data.error || "Token purchase failed. Please try again.");
       }
     } catch (err) {
       console.error("[usage] handleBuy error:", err);
-      alert(err instanceof Error ? err.message : "Network error. Please try again.");
+      toast.error(err instanceof Error ? err.message : "Network error. Please try again.");
     } finally {
       setBuying(false);
     }
