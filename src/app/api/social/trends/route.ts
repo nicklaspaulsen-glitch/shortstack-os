@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
-import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { safeJsonParse } from "@/lib/ai/claude-helpers";
+import { callLLM } from "@/lib/ai/llm-router";
 import { ALL_PLATFORMS, FALLBACK_HASHTAGS } from "@/lib/social-studio/constants";
 import type { ContentIdea, SocialPlatform, TrendsResponse } from "@/lib/social-studio/types";
 
@@ -98,13 +99,15 @@ export async function GET(request: NextRequest) {
   let nicheHashtags: Partial<Record<SocialPlatform, string[]>> = {};
 
   try {
-    const response = await anthropic.messages.create({
-      model: MODEL_HAIKU,
-      max_tokens: 2200,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: `Niche: ${niche}` }],
+    const response = await callLLM({
+      taskType: "generation_short",
+      systemPrompt: SYSTEM_PROMPT,
+      userPrompt: `Niche: ${niche}`,
+      maxTokens: 2200,
+      userId: user.id,
+      context: "/api/social/trends",
     });
-    const parsed = safeJsonParse<ClaudeTrendsResponse>(getResponseText(response));
+    const parsed = safeJsonParse<ClaudeTrendsResponse>(response.text);
     if (parsed) {
       if (Array.isArray(parsed.ideas) && parsed.ideas.length > 0) {
         ideas = parsed.ideas

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
-import { anthropic, MODEL_SONNET, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { safeJsonParse } from "@/lib/ai/claude-helpers";
+import { callLLM } from "@/lib/ai/llm-router";
 import { pickRecommendedTimes } from "@/lib/social-studio/time-recommender";
 import { ALL_PLATFORMS, FALLBACK_HASHTAGS } from "@/lib/social-studio/constants";
 import type {
@@ -118,16 +119,18 @@ export async function POST(request: NextRequest) {
   let analysis: ClaudeAnalysis | null = null;
 
   try {
-    const response = await anthropic.messages.create({
-      model: MODEL_SONNET,
-      max_tokens: 2400,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: buildPrompt(body) }],
+    const response = await callLLM({
+      // Caption generation across platforms — Haiku is plenty.
+      taskType: "caption_generation",
+      systemPrompt: SYSTEM_PROMPT,
+      userPrompt: buildPrompt(body),
+      maxTokens: 2400,
+      userId: user.id,
+      context: "/api/social/auto-upload",
     });
-    const raw = getResponseText(response);
-    analysis = safeJsonParse<ClaudeAnalysis>(raw);
+    analysis = safeJsonParse<ClaudeAnalysis>(response.text);
   } catch (err) {
-    console.error("[social-studio/auto-upload] claude error", err);
+    console.error("[social-studio/auto-upload] llm error", err);
     // Fall through to deterministic fallback.
   }
 

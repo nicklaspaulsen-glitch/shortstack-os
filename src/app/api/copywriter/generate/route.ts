@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
-import { anthropic, MODEL_HAIKU } from "@/lib/ai/claude-helpers";
+import { callLLM, type LLMTaskType } from "@/lib/ai/llm-router";
 
-const MODEL = MODEL_HAIKU;
+// Map content type to a router task. Long-form pieces (blog, landing) get
+// Sonnet quality; short snippets stay on Haiku-tier routing.
+const CONTENT_TYPE_TO_TASK: Record<string, LLMTaskType> = {
+  blog: "generation_long",
+  landing: "generation_long",
+  email: "generation_short",
+  social: "caption_generation",
+  product: "generation_short",
+  ad: "generation_short",
+};
 
 // Content type definitions for system prompts
 const CONTENT_TYPE_CONFIG: Record<
@@ -109,15 +118,18 @@ ${config.outputFormat}
 
 Write the content now. Make it compelling, polished, and ready for use.`;
 
-    const response = await anthropic.messages.create({
-      model: MODEL,
-      max_tokens: 4000,
-      system: systemPrompt,
-      messages: [{ role: "user", content: prompt }],
+    const taskType: LLMTaskType =
+      CONTENT_TYPE_TO_TASK[type] ?? "generation_short";
+    const response = await callLLM({
+      taskType,
+      systemPrompt,
+      userPrompt: prompt,
+      maxTokens: 4000,
+      userId: user.id,
+      context: "/api/copywriter/generate",
     });
 
-    const text =
-      response.content[0].type === "text" ? response.content[0].text : "";
+    const text = response.text;
 
     return NextResponse.json({
       success: true,
