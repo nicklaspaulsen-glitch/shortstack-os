@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId, requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // Send cold emails via Instantly.io — better deliverability than GHL
 export async function POST(request: NextRequest) {
@@ -7,19 +8,29 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { lead_ids, campaign_id, batch_size } = await request.json();
+  const { lead_ids, campaign_id, batch_size, client_id } = await request.json();
   const serviceSupabase = createServiceClient();
   const instantlyKey = process.env.INSTANTLY_API_KEY;
 
   if (!instantlyKey) return NextResponse.json({ error: "Instantly not configured" }, { status: 500 });
 
+  // Resolve effective owner — needed to scope the fallback leads query
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  // If a client_id is supplied, verify ownership before acting on it
+  if (client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   // Get leads
   let leads;
   if (lead_ids?.length > 0) {
-    const { data } = await serviceSupabase.from("leads").select("*").in("id", lead_ids);
+    const { data } = await serviceSupabase.from("leads").select("*").in("id", lead_ids).eq("user_id", ownerId);
     leads = data;
   } else {
-    const { data } = await serviceSupabase.from("leads").select("*").not("email", "is", null).eq("status", "new").limit(batch_size || 10);
+    const { data } = await serviceSupabase.from("leads").select("*").eq("user_id", ownerId).not("email", "is", null).eq("status", "new").limit(batch_size || 10);
     leads = data;
   }
 

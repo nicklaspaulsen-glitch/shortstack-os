@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Dynamic Agent Spawner — Nexus can create sub-agents on the fly
 // When a task doesn't match any existing agent, Nexus spawns a specialist
@@ -7,6 +8,10 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Resolve effective owner so agent rows are scoped to the right agency
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { task, context, spawned_by } = await request.json();
   if (!task) return NextResponse.json({ error: "Task description required" }, { status: 400 });
@@ -60,11 +65,15 @@ Return JSON only:
     return NextResponse.json({ error: "Failed to define agent" }, { status: 500 });
   }
 
-  // Check if agent with this slug already exists
+  // Check if agent with this slug already exists within this owner's namespace.
+  // Without the spawned_by filter, AI-generated slugs (e.g. "seo-helper") that
+  // collide across tenants would return another user's row, causing User B's
+  // spawn to bump User A's execution_count and return User A's agentId to User B.
   const { data: existing } = await serviceSupabase
     .from("custom_agents")
     .select("id, slug, execution_count")
     .eq("slug", agentDef.slug)
+    .eq("spawned_by", ownerId)
     .single();
 
   let agentId: string;
@@ -80,7 +89,8 @@ Return JSON only:
       })
       .eq("id", existing.id);
   } else {
-    // Save new agent definition
+    // Save new agent definition — spawned_by must be the authenticated user's id
+    // so RLS policy "custom_agents_own" (spawned_by = auth.uid()::text) works correctly.
     const { data: newAgent, error: insertErr } = await serviceSupabase
       .from("custom_agents")
       .insert({
@@ -89,7 +99,7 @@ Return JSON only:
         role: agentDef.role,
         system_prompt: agentDef.system_prompt,
         capabilities: agentDef.capabilities,
-        spawned_by: spawned_by || "nexus",
+        spawned_by: ownerId,
         parent_task: task,
         execution_count: 1,
         last_executed_at: new Date().toISOString(),
@@ -150,19 +160,24 @@ Return JSON only:
   });
 }
 
-// GET — list all custom/spawned agents
+// GET — list custom/spawned agents for the authenticated owner
 export async function GET() {
   // Auth check — only authenticated users can list agents
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Resolve effective owner — without this filter every tenant's agents
+  // were returned to any authenticated caller (cross-tenant data leak).
+  const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const supabase = createServiceClient();
 
   const { data, error } = await supabase
     .from("custom_agents")
     .select("*")
-    .eq("is_active", true)
+    .eq("spawned_by", ownerId)
     .order("execution_count", { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

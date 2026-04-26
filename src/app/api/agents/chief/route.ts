@@ -20,9 +20,8 @@ export async function POST(request: NextRequest) {
   const serviceSupabase = createServiceClient();
 
   // Gather full system context — all tenant-scoped queries filtered by ownerId.
-  // system_health and custom_agents are intentionally not filtered by owner:
-  //   system_health is a global integration-status table (no user_id column).
-  //   custom_agents scoped by user_id below.
+  // system_health is intentionally cross-tenant (global integration-status table, no user_id).
+  // custom_agents is scoped by spawned_by (not user_id) per RLS migration 20260413.
   const [
     { data: recentActions },
     { count: totalLeads },
@@ -45,7 +44,11 @@ export async function POST(request: NextRequest) {
     serviceSupabase.from("system_health").select("integration_name, status, error_message"),
     serviceSupabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "published"),
     serviceSupabase.from("trinity_log").select("description, action_type, created_at").eq("user_id", ownerId).eq("status", "failed").order("created_at", { ascending: false }).limit(10),
-    serviceSupabase.from("custom_agents").select("name, slug, role, execution_count, last_executed_at").eq("user_id", ownerId).eq("is_active", true).order("execution_count", { ascending: false }).limit(20),
+    // custom_agents uses spawned_by (not user_id) per RLS migration 20260413_agent_tables_rls.sql.
+    // Batch 1 regression: .eq("user_id", ownerId) either 500'd or returned empty rows because
+    // that column doesn't exist on custom_agents. is_active also has no confirmed column —
+    // removed to avoid silent empty results.
+    serviceSupabase.from("custom_agents").select("name, slug, role, execution_count, last_executed_at").eq("spawned_by", ownerId).order("execution_count", { ascending: false }).limit(20),
   ]);
 
   const totalMRR = (clients || []).reduce((s, c) => s + ((c as { mrr: number }).mrr || 0), 0);
