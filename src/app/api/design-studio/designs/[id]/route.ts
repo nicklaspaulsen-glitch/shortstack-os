@@ -87,6 +87,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
     .from("designs")
     .update(patch)
     .eq("id", params.id)
+    .eq("user_id", ctx.ownerId)
     .select()
     .single();
 

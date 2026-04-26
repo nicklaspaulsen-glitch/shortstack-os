@@ -5,9 +5,9 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
-import { cloneTemplateDoc, SEED_TEMPLATES } from "@/lib/design/templates";
+import { cloneTemplateDoc } from "@/lib/design/templates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -42,19 +42,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Failed to list templates" }, { status: 500 });
   }
 
-  // If no global templates exist yet, seed them (idempotent via service role)
-  if (!data?.some((t) => t.is_global)) {
-    await seedGlobalTemplates();
-    // Re-fetch
-    const { data: seeded } = await supabase
-      .from("design_templates")
-      .select("id, category, name, preview_url, is_global, owner_id, created_at")
-      .or(`is_global.eq.true,owner_id.eq.${ctx.ownerId}`)
-      .order("is_global", { ascending: false })
-      .order("created_at", { ascending: true });
-    return NextResponse.json({ data: seeded ?? [] });
-  }
-
+  // Global templates are seeded via migration (add_design_studio_seed_templates).
+  // No lazy seeding here — avoids service-role writes in user GET handlers.
   return NextResponse.json({ data: data ?? [] });
 }
 
@@ -135,23 +124,5 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ data: design }, { status: 201 });
 }
 
-// ── Seed global templates (runs once, service role) ───────────────────────────
-
-async function seedGlobalTemplates(): Promise<void> {
-  try {
-    const service = createServiceClient();
-    const rows = SEED_TEMPLATES.map((t) => ({
-      is_global: true,
-      category: t.category,
-      name: t.name,
-      doc: t.doc,
-      preview_url: null,
-    }));
-    await service
-      .from("design_templates")
-      .upsert(rows, { onConflict: "name,is_global", ignoreDuplicates: true });
-  } catch (err) {
-    // Non-fatal — templates will seed on next request
-    console.error("[design-studio/templates] seed error", err);
-  }
-}
+// Seeding moved to /api/design-studio/admin/seed-templates (founder-gated, idempotent).
+// Run once after a fresh deploy or after adding new templates to SEED_TEMPLATES.

@@ -10,6 +10,68 @@
  */
 
 import type { DesignDoc, ExportFormat, Layer, Page } from "./types";
+import { checkFetchUrl } from "@/lib/security/ssrf";
+
+// ── Image URL allowlist for SSRF protection ───────────────────────────────────
+// Only https:// URLs from these hosts are passed to Satori (which fetches them
+// server-side). A malicious PATCH could set layer.src to the cloud metadata
+// endpoint or internal services — this guard closes that vector.
+
+const ALLOWED_IMAGE_HOSTS: Array<string | RegExp> = [
+  "cdn.shortstack.cloud",
+  /^.*\.r2\.cloudflarestorage\.com$/,
+  // OpenAI / DALL-E generated images
+  "oaidalleapiprodscus.blob.core.windows.net",
+];
+
+// Supabase storage host is dynamic — derive from env at call time.
+function getSupabaseStorageHost(): string | null {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!url) return null;
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Returns true if the URL is safe to pass to Satori for server-side fetching.
+ * Requires https://, no private IPs, and hostname in the allowlist.
+ */
+function isAllowedImageUrl(src: string): boolean {
+  // First run the generic SSRF check (blocks private IPs, metadata endpoints, etc.)
+  const ssrfError = checkFetchUrl(src);
+  if (ssrfError !== null) return false;
+
+  let parsed: URL;
+  try {
+    parsed = new URL(src);
+  } catch {
+    return false;
+  }
+
+  const host = parsed.hostname.toLowerCase();
+
+  // Check static allowlist
+  for (const allowed of ALLOWED_IMAGE_HOSTS) {
+    if (typeof allowed === "string") {
+      if (host === allowed) return true;
+    } else {
+      if (allowed.test(host)) return true;
+    }
+  }
+
+  // Check dynamic Supabase storage host
+  const supabaseHost = getSupabaseStorageHost();
+  if (supabaseHost && host === supabaseHost.toLowerCase()) return true;
+
+  return false;
+}
+
+/** 1×1 transparent PNG data URL used as a placeholder for blocked/invalid src */
+const PLACEHOLDER_SRC =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
 
 export interface RenderOptions {
   pageIndex?: number;
@@ -61,8 +123,13 @@ export async function renderDesign(
     } else {
       pngBuffer = await sharpInst.png().toBuffer();
     }
-  } catch {
-    // Fallback: 1x1 transparent PNG — signals missing deps without crashing
+  } catch (err) {
+    console.error("[design-studio/render] satori failed:", err);
+    if (process.env.NODE_ENV === "production") {
+      // In production, surface the failure so the API returns 500
+      throw err;
+    }
+    // Dev fallback: 1x1 transparent PNG — signals missing deps without crashing
     pngBuffer = Buffer.from(
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
       "base64",
@@ -151,10 +218,23 @@ function buildLayerElement(layer: Layer): SatoriElement {
   }
 
   if (layer.kind === "image") {
+    // SSRF: validate layer.src before Satori fetches it server-side.
+    // Bad URLs are replaced with a transparent 1×1 placeholder so we never
+    // expose the render server to internal network endpoints.
+    const safeSrc = layer.src && isAllowedImageUrl(layer.src)
+      ? layer.src
+      : (() => {
+          console.warn(
+            "[design-studio/render] blocked disallowed image src for layer",
+            layer.id,
+          );
+          return PLACEHOLDER_SRC;
+        })();
+
     return {
       type: "img",
       props: {
-        src: layer.src,
+        src: safeSrc,
         style: {
           ...baseStyle,
           objectFit: layer.objectFit,

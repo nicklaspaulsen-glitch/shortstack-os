@@ -83,7 +83,8 @@ export async function POST(req: NextRequest) {
       await supabase
         .from("designs")
         .update({ thumbnail_url: publicUrl })
-        .eq("id", design.id);
+        .eq("id", design.id)
+        .eq("user_id", ctx.ownerId);
     }
 
     return NextResponse.json({ url: publicUrl, r2_key: r2Key, format });

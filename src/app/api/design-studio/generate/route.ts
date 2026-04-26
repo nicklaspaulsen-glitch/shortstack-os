@@ -55,8 +55,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  if (!body.prompt || typeof body.prompt !== "string" || body.prompt.trim().length === 0) {
-    return NextResponse.json({ error: "prompt is required" }, { status: 400 });
+  const PROMPT_MAX_LENGTH = 2000;
+
+  if (typeof body.prompt !== "string" || body.prompt.trim().length === 0) {
+    return NextResponse.json({ error: "prompt required" }, { status: 400 });
+  }
+  if (body.prompt.length > PROMPT_MAX_LENGTH) {
+    return NextResponse.json(
+      { error: `prompt exceeds ${PROMPT_MAX_LENGTH} chars` },
+      { status: 400 },
+    );
+  }
+  if (
+    body.negative_prompt !== undefined &&
+    (typeof body.negative_prompt !== "string" ||
+      body.negative_prompt.length > PROMPT_MAX_LENGTH)
+  ) {
+    return NextResponse.json({ error: "invalid negative_prompt" }, { status: 400 });
   }
   if (!body.design_id || typeof body.design_id !== "string") {
     return NextResponse.json({ error: "design_id is required" }, { status: 400 });
