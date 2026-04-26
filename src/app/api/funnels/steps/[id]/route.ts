@@ -59,13 +59,19 @@ export async function PUT(req: NextRequest, { params }: Params) {
     return NextResponse.json({ success: true });
   }
 
-  // Regular update
+  // Regular update — extend with public-funnel columns added in the
+  // 20260427 ghl_phase2 migration (page_doc, slug, next_step_id).
   const updates: Record<string, unknown> = {};
   if (title !== undefined) updates.title = title;
   if (step_type !== undefined) updates.step_type = step_type;
   if (page_id !== undefined) updates.page_id = page_id;
   if (sort_order !== undefined) updates.sort_order = sort_order;
   if (settings !== undefined) updates.settings = settings;
+  if (body.page_doc !== undefined) updates.page_doc = body.page_doc;
+  if (body.next_step_id !== undefined) updates.next_step_id = body.next_step_id;
+  if (body.slug !== undefined && typeof body.slug === "string") {
+    updates.slug = body.slug.toLowerCase().replace(/[^a-z0-9-]+/g, "-").slice(0, 64);
+  }
 
   const { data, error } = await supabase
     .from("funnel_steps")
