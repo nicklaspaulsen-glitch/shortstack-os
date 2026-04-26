@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
+// Edge runtime: parallel DB-count fanout, no Node-only imports. The
+// Promise.all over TRACKED_PATHS is well within Edge subrequest limits.
+export const runtime = "edge";
 export const maxDuration = 10;
 
 /**

@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
+// Edge runtime: pure DB-fanout route, no Node-only imports. Edge invocations
+// cost ~75% less per ms than Node — this route is hit on every dashboard
+// load, so the saving compounds.
+export const runtime = "edge";
+
 // Get fresh profile data (cache-busted)
 export async function GET() {
   const supabase = createServerSupabase();

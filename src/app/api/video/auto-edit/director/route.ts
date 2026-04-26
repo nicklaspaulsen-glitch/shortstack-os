@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse } from "@/lib/ai/claude-helpers";
+import { anthropic, MODEL_HAIKU, getResponseText, safeJsonParse, withCacheBreakpoint } from "@/lib/ai/claude-helpers";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 /**
@@ -75,7 +75,12 @@ export async function POST(request: NextRequest) {
 
   // Sub-task 5: AI Director — improved system prompt with pro-director pacing rules.
   // Adds explicit hook-in-3s, retention-cut-every-7s, audio-ducking, B-roll-on-claims rules.
-  const prompt = `You are a senior video director + producer reviewing a rough cut. Think like a pro — Casey Neistat pace, MrBeast retention, Hormozi clarity.
+  //
+  // System prompt (stable across all calls — cached) carries the director
+  // principles, output schema, and editorial rules. User message carries the
+  // per-call dynamic timeline. This lets every subsequent call hit the
+  // Anthropic prompt cache (0.10x input tokens).
+  const SYSTEM_PROMPT = `You are a senior video director + producer reviewing a rough cut. Think like a pro — Casey Neistat pace, MrBeast retention, Hormozi clarity.
 
 Director principles to apply:
 - Hook must land in the first 3 seconds or viewers scroll past.
@@ -84,13 +89,6 @@ Director principles to apply:
 - Place B-roll on every key claim or statistic — talking-head alone loses attention fast.
 - Outro call-to-action must appear in the final 20% of the runtime.
 - Dead air over 1.5s is a cut opportunity.
-
-Editor's intent: ${intent}
-Target platform: ${targetPlatform}
-Total runtime: ${formatTime(totalDuration)}
-
-Timeline (${clips.length} clip${clips.length === 1 ? "" : "s"}):
-${timeline}
 
 Produce a strategic edit brief. Return ONLY a valid JSON object — no markdown fences — matching this shape:
 
@@ -106,7 +104,7 @@ Produce a strategic edit brief. Return ONLY a valid JSON object — no markdown 
     { "at_seconds": 0, "kind": "b_roll" | "text_overlay" | "transition" | "sfx", "why": "..." }
   ],
   "overall_grade": "A" | "B" | "C" | "D" | "F",
-  "overall_summary": "<2-3 sentences — would this perform on ${targetPlatform}; single most important fix>"
+  "overall_summary": "<2-3 sentences — would this perform; single most important fix>"
 }
 
 Rules:
@@ -117,11 +115,19 @@ Rules:
   - severity="important" when the flaw would tank the first-30s retention
   - Don't sugarcoat — if the hook misses, say so and where`;
 
+  const userPrompt = `Editor's intent: ${intent}
+Target platform: ${targetPlatform}
+Total runtime: ${formatTime(totalDuration)}
+
+Timeline (${clips.length} clip${clips.length === 1 ? "" : "s"}):
+${timeline}`;
+
   try {
     const response = await anthropic.messages.create({
       model: MODEL_HAIKU,
       max_tokens: 1500,
-      messages: [{ role: "user", content: prompt }],
+      system: withCacheBreakpoint([{ type: "text", text: SYSTEM_PROMPT }]),
+      messages: [{ role: "user", content: userPrompt }],
     });
 
     const raw = getResponseText(response);

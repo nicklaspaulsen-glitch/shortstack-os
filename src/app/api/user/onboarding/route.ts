@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
+// Edge runtime: pure DB-write route, no Node-only imports.
+export const runtime = "edge";
 export const maxDuration = 10;
 
 const VALID_USER_TYPES = new Set([

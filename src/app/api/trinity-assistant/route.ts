@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
-import { anthropic, MODEL_HAIKU, getResponseText } from "@/lib/ai/claude-helpers";
+import { anthropic, MODEL_HAIKU, getResponseText, withCacheBreakpoint } from "@/lib/ai/claude-helpers";
 import {
   THUMBNAIL_STYLES,
   getStylesByCategory,
@@ -3563,8 +3563,11 @@ LIMITS:
     const resp = await anthropic.messages.create({
       model: MODEL_HAIKU,
       max_tokens: 2000,
-      system: systemPrompt,
-      tools: [...TOOLS, webSearchTool],
+      // Cache the (large, mostly-stable) system prompt + tools array. The
+      // user-name / current-page slots only re-cache when those change.
+      // Cache hits cost 0.10x input tokens — see withCacheBreakpoint().
+      system: withCacheBreakpoint([{ type: "text", text: systemPrompt }]),
+      tools: withCacheBreakpoint([...TOOLS, webSearchTool]),
       messages: conversation,
     });
 
@@ -3614,8 +3617,16 @@ LIMITS:
       const synth = await anthropic.messages.create({
         model: MODEL_HAIKU,
         max_tokens: 600,
-        system: systemPrompt +
-          "\n\nYou've already done the research — now give the user a short, friendly synthesis of what you found and did. Do not call any more tools.",
+        // Two-block system: the stable systemPrompt cache breakpoint reuses
+        // the prefix already cached on the main loop; the per-call synthesis
+        // tail is small enough to retokenize cheaply.
+        system: withCacheBreakpoint([
+          { type: "text", text: systemPrompt },
+          {
+            type: "text",
+            text: "\n\nYou've already done the research — now give the user a short, friendly synthesis of what you found and did. Do not call any more tools.",
+          },
+        ]),
         messages: conversation,
       });
       const synthText = synth.content

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { ALL_SIDEBAR_ITEMS } from "@/lib/user-types";
 
+// Edge runtime: pure DB read/upsert route, no Node-only imports.
+export const runtime = "edge";
 export const maxDuration = 10;
 
 /** Shape of saved preferences. All fields optional — empty = show all defaults. */
