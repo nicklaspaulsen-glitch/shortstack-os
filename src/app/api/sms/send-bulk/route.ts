@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
     .insert({
       user_id: ownerId,
       template_id: body.template_id || null,
-      recipients: normalised.map((n) => ({ to: n.to, ...n.raw })),
+      recipients: normalised.map((n) => ({ ...n.raw, to: n.to })),
       total_count: normalised.length,
       throttle_ms: throttleMs,
       status: "running",
