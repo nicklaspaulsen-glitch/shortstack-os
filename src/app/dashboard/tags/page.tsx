@@ -1,7 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Tag, Plus, Pencil, Trash2, Check, X, Loader2 } from "lucide-react";
+import Link from "next/link";
+import {
+  Tag, Plus, Pencil, Trash2, Check, X, Loader2,
+  Users, Sparkles, GitMerge, ExternalLink,
+} from "lucide-react";
 import PageHero from "@/components/ui/page-hero";
 import { TableSkeleton } from "@/components/ui/skeleton";
 import { createClient } from "@/lib/supabase/client";
@@ -13,6 +17,7 @@ interface TagRow {
   color: string;
   category: string | null;
   _leadCount: number;
+  _assetCount: number;
 }
 
 const PRESET_COLORS = [
@@ -72,6 +77,12 @@ export default function TagsPage() {
   const [editColor, setEditColor] = useState(PRESET_COLORS[0]);
   const [editCategory, setEditCategory] = useState("");
 
+  // Bulk-ops state
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [showMerge, setShowMerge] = useState(false);
+  const [mergeTarget, setMergeTarget] = useState("");
+
   const fetchTags = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -80,18 +91,30 @@ export default function TagsPage() {
       .order("name");
     if (error) { toast.error("Failed to load tags"); setLoading(false); return; }
 
-    // best-effort lead counts via leads.tags array if it exists
-    const rows: TagRow[] = (data ?? []).map((t: Omit<TagRow, "_leadCount">) => ({ ...t, _leadCount: 0 }));
+    type TagBaseRow = Omit<TagRow, "_leadCount" | "_assetCount">;
+    const rows: TagRow[] = (data as TagBaseRow[] ?? []).map((t) => ({
+      ...t,
+      _leadCount: 0,
+      _assetCount: 0,
+    }));
+
+    // Real usage counts via /api/tags/usage. Falls back to zero on failure.
     try {
-      const { data: leads } = await supabase.from("leads").select("tags_applied");
-      if (leads) {
-        const counts: Record<string, number> = {};
-        leads.forEach((l: { tags_applied?: string[] }) => {
-          (l.tags_applied ?? []).forEach((n) => { counts[n] = (counts[n] ?? 0) + 1; });
+      const res = await fetch("/api/tags/usage");
+      if (res.ok) {
+        const json = await res.json();
+        const usage = (json.usage ?? []) as Array<{ name: string; leads: number; assets: number }>;
+        const byName: Record<string, { leads: number; assets: number }> = {};
+        for (const u of usage) byName[u.name] = { leads: u.leads, assets: u.assets };
+        rows.forEach((r) => {
+          const u = byName[r.name];
+          if (u) {
+            r._leadCount = u.leads;
+            r._assetCount = u.assets;
+          }
         });
-        rows.forEach((r) => { r._leadCount = counts[r.name] ?? 0; });
       }
-    } catch { /* column may not exist */ }
+    } catch { /* non-fatal */ }
     setTags(rows);
     setLoading(false);
   }, [supabase]);
@@ -141,6 +164,65 @@ export default function TagsPage() {
     setEditColor(tag.color); setEditCategory(tag.category ?? "");
   }
 
+  function toggleSelect(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  async function handleBulkMerge() {
+    const target = mergeTarget.trim();
+    if (!target) { toast.error("Pick a target tag name"); return; }
+    const sourceNames = tags.filter((t) => selected.has(t.id) && t.name !== target).map((t) => t.name);
+    if (sourceNames.length === 0) {
+      toast.error("Select at least one source tag (different from target)");
+      return;
+    }
+    setBulkBusy(true);
+    try {
+      const res = await fetch("/api/tags/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "merge", target_name: target, source_names: sourceNames }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || "Merge failed");
+      toast.success(`Merged ${sourceNames.length} tag${sourceNames.length === 1 ? "" : "s"}`);
+      setSelected(new Set());
+      setShowMerge(false);
+      setMergeTarget("");
+      fetchTags();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Merge failed");
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
+  async function handleBulkDeleteUnused() {
+    if (!confirm("Delete every tag with zero leads and zero assets attached? This cannot be undone.")) {
+      return;
+    }
+    setBulkBusy(true);
+    try {
+      const res = await fetch("/api/tags/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "delete_unused" }),
+      });
+      const json = await res.json();
+      if (!res.ok || !json.ok) throw new Error(json.error || "Delete failed");
+      toast.success(`Deleted ${json.deleted} unused tag${json.deleted === 1 ? "" : "s"}`);
+      fetchTags();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Delete failed");
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <PageHero
@@ -149,12 +231,64 @@ export default function TagsPage() {
         icon={<Tag size={22} />}
         gradient="gold"
         actions={
-          <button onClick={() => setShowCreate((v) => !v)}
-            className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
-            <Plus size={16} /> New Tag
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={handleBulkDeleteUnused} disabled={bulkBusy}
+              className="btn-ghost flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg disabled:opacity-50"
+              title="Remove every tag that has zero usages">
+              <Sparkles size={13} /> Clean Unused
+            </button>
+            <button onClick={() => setShowCreate((v) => !v)}
+              className="btn-primary flex items-center gap-2 text-sm px-3 py-2 rounded-lg">
+              <Plus size={16} /> New Tag
+            </button>
+          </div>
         }
       />
+
+      {/* Bulk-action bar — appears when at least one tag is selected */}
+      {selected.size > 0 && (
+        <div className="card p-3 flex items-center justify-between gap-3 border border-gold/30 bg-gold/5">
+          <p className="text-xs text-white/70">
+            <span className="font-semibold text-white">{selected.size}</span> tag{selected.size === 1 ? "" : "s"} selected
+          </p>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowMerge((v) => !v)} disabled={bulkBusy}
+              className="btn-ghost flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg">
+              <GitMerge size={12} /> Merge into…
+            </button>
+            <button onClick={() => setSelected(new Set())} className="btn-ghost text-xs px-3 py-1.5 rounded-lg">
+              Clear
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showMerge && selected.size > 0 && (
+        <div className="card p-4 space-y-3 border border-gold/30">
+          <p className="text-sm font-semibold text-white">Merge {selected.size} tag{selected.size === 1 ? "" : "s"} into:</p>
+          <input
+            className="input w-full text-sm"
+            placeholder="Target tag name (existing or new)"
+            value={mergeTarget}
+            onChange={(e) => setMergeTarget(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleBulkMerge()}
+            autoFocus
+          />
+          <p className="text-[11px] text-muted">
+            Every lead currently tagged with the selected names will be re-tagged
+            with the target. The source tag rows are deleted.
+          </p>
+          <div className="flex items-center gap-2">
+            <button onClick={handleBulkMerge} disabled={bulkBusy || !mergeTarget.trim()}
+              className="btn-primary flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-lg disabled:opacity-50">
+              {bulkBusy ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />} Merge
+            </button>
+            <button onClick={() => setShowMerge(false)} className="btn-ghost text-sm px-3 py-1.5 rounded-lg">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {showCreate && (
         <div className="card p-5 space-y-4 border border-white/10">
@@ -198,16 +332,30 @@ export default function TagsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/5 text-muted text-xs">
+                <th className="px-3 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    checked={selected.size > 0 && selected.size === tags.length}
+                    onChange={() =>
+                      setSelected((prev) =>
+                        prev.size === tags.length ? new Set() : new Set(tags.map((t) => t.id)),
+                      )
+                    }
+                    className="rounded accent-gold"
+                    title="Select all"
+                  />
+                </th>
                 <th className="text-left px-4 py-3 font-medium">Tag</th>
                 <th className="text-left px-4 py-3 font-medium hidden sm:table-cell">Category</th>
-                <th className="text-left px-4 py-3 font-medium hidden md:table-cell">Leads</th>
-                <th className="px-4 py-3 w-16" />
+                <th className="text-left px-4 py-3 font-medium hidden md:table-cell">Usage</th>
+                <th className="px-4 py-3 w-24" />
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {tags.map((tag) =>
                 editId === tag.id ? (
                   <tr key={tag.id}>
+                    <td className="px-3 py-3" />
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         <ColorPicker value={editColor} onChange={setEditColor} />
@@ -235,12 +383,29 @@ export default function TagsPage() {
                   </tr>
                 ) : (
                   <tr key={tag.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="px-3 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selected.has(tag.id)}
+                        onChange={() => toggleSelect(tag.id)}
+                        className="rounded accent-gold"
+                      />
+                    </td>
                     <td className="px-4 py-3"><TagBadge tag={tag} /></td>
                     <td className="px-4 py-3 text-muted hidden sm:table-cell">{tag.category ?? "—"}</td>
                     <td className="px-4 py-3 hidden md:table-cell">
-                      {tag._leadCount > 0
-                        ? <span className="text-xs bg-white/5 px-2 py-0.5 rounded-full">{tag._leadCount}</span>
-                        : <span className="text-muted text-xs">0</span>}
+                      {tag._leadCount + tag._assetCount > 0 ? (
+                        <Link
+                          href={`/dashboard/leads?tag=${encodeURIComponent(tag.name)}`}
+                          className="inline-flex items-center gap-1 text-xs bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded-full transition-all"
+                          title={`${tag._leadCount} leads · ${tag._assetCount} assets — click to filter Leads`}
+                        >
+                          <Users size={11} /> {tag._leadCount}
+                          <ExternalLink size={10} className="opacity-50" />
+                        </Link>
+                      ) : (
+                        <span className="text-muted text-xs">0</span>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">

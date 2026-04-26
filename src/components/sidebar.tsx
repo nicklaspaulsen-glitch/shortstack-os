@@ -85,6 +85,7 @@ import {
   ShieldCheck,
   ArrowUpRight,
   SlidersHorizontal,
+  FlaskConical,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -112,6 +113,7 @@ const navItems: NavItem[] = [
   { label: "Lead Finder", href: "/dashboard/scraper", icon: <Search size={16} />, roles: ["admin", "team_member"], sub: "Leads & Outreach" },
   { label: "AI Caller", href: "/dashboard/eleven-agents", icon: <Phone size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Voice AI", href: "/dashboard/voice-receptionist", icon: <Headphones size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
+  { label: "Voicemail Drop", href: "/dashboard/voicemail-drop", icon: <Phone size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "DM Controller", href: "/dashboard/dm-controller", icon: <Send size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessagesSquare size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
@@ -143,6 +145,7 @@ const navItems: NavItem[] = [
   { label: "Websites", href: "/dashboard/websites", icon: <Globe size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Landing Pages", href: "/dashboard/landing-pages", icon: <LayoutTemplate size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Funnels", href: "/dashboard/funnels", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Brand & Web" },
+  { label: "A/B Tests", href: "/dashboard/ab-tests", icon: <FlaskConical size={16} />, roles: ["admin"], sub: "Brand & Web" },
   { label: "Forms", href: "/dashboard/forms", icon: <ClipboardCheck size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Surveys", href: "/dashboard/surveys", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Brand & Web" },
   { label: "Social Studio", href: "/dashboard/social-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], sub: "Social" },
