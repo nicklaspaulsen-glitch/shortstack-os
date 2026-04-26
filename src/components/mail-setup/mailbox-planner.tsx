@@ -27,6 +27,7 @@ import {
   Check,
   Plus,
   ArrowRight,
+  type LucideIcon,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -34,7 +35,11 @@ interface MailboxTemplate {
   prefix: string;
   label: string;
   description: string;
-  icon: React.ComponentType<{ size?: number; className?: string }>;
+  // Lucide ships icons as ForwardRefExoticComponent — using LucideIcon
+  // here matches what `import { Mail } from "lucide-react"` actually
+  // returns. The previous narrow ComponentType was failing the build
+  // (see Vercel build c4708c7).
+  icon: LucideIcon;
   popular: boolean;
   /** USD/month per mailbox */
   cost: number;
