@@ -25,7 +25,7 @@ export async function GET() {
         id: user.id,
         email: user.email || "",
         full_name: user.user_metadata?.full_name || user.email?.split("@")[0] || "",
-        role: user.user_metadata?.role || "admin",
+        role: user.user_metadata?.role || "client",
         timezone: "UTC",
         is_active: true,
       })
