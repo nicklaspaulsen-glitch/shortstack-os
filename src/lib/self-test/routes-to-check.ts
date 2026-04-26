@@ -312,6 +312,25 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     auth_bearer: true,
     expected_status: [200, 401, 404],
   },
+
+  // ── Nango integration (Google Ads — first migrated provider) ─────────────
+  // 503 acceptable when NANGO_SECRET_KEY isn't set in the test env. 401 when
+  // self-test runs unauth'd (default). 200 once the env is configured AND
+  // SELF_TEST_USER_ID has a session.
+  {
+    path: "/api/integrations/nango/connect/google-ads",
+    auth_bearer: true,
+    expected_status: [200, 401, 404, 503],
+    note: "Nango Google Ads connect prep — auth-gated; 503 if NANGO_SECRET_KEY missing.",
+  },
+  {
+    path: "/api/integrations/nango/disconnect/google-ads",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [200, 400, 401, 404, 503],
+    note: "Nango Google Ads disconnect — empty body OK; idempotent on missing connection.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
