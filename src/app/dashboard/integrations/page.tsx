@@ -306,8 +306,15 @@ function SocialAccountsPage() {
   }
 
   async function connectViaZernio(platformId: string) {
+    // Pre-flight: surface visible feedback for every early-return path so the
+    // button never silently fails. Previously: missing clientId, missing
+    // oauth_url, or a non-2xx without an error string all swallowed the click.
     if (!clientId) {
-      toast.error("No client profile found");
+      toast.error(
+        clients.length === 0
+          ? "Create a client first, then come back to connect their accounts."
+          : "Pick a client from the dropdown above, then click Connect again."
+      );
       return;
     }
     setConnecting(platformId);
@@ -321,14 +328,32 @@ function SocialAccountsPage() {
           callback_url: `${window.location.origin}/dashboard/integrations?connected=${platformId}`,
         }),
       });
-      const data = await res.json();
+      let data: { oauth_url?: string; error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // Non-JSON body (e.g. 502 HTML) — fall through to the generic
+        // error toast below so the user still gets feedback.
+      }
       if (data.oauth_url) {
         window.location.href = data.oauth_url;
-      } else if (data.error) {
-        toast.error(data.error);
+        return;
       }
-    } catch {
-      toast.error("Failed to initiate connection");
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
+      // Server returned without an oauth_url AND without an error string —
+      // treat as misconfigured / not-yet-shipped Zernio integration so the
+      // button never looks dead.
+      toast.error(
+        res.ok
+          ? `${platformId} connection isn't available yet — Zernio hasn't returned an OAuth URL for this platform.`
+          : `Connection failed (${res.status}) — please try again or contact support.`
+      );
+    } catch (err) {
+      console.warn("[IntegrationsPage] connectViaZernio failed:", err);
+      toast.error("Failed to initiate connection — please try again");
     } finally {
       setConnecting(null);
     }
