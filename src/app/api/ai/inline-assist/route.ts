@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { anthropic, MODEL_HAIKU, getResponseText } from "@/lib/ai/claude-helpers";
+import { callLLM } from "@/lib/ai/llm-router";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 /**
@@ -73,13 +73,16 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const response = await anthropic.messages.create({
-      model: MODEL_HAIKU,
-      max_tokens: maxChars ? Math.min(Math.ceil(maxChars / 3) + 50, 1024) : 600,
-      messages: [{ role: "user", content: lines.join("\n") }],
+    const response = await callLLM({
+      // Generic short polish task — Haiku-tier routing.
+      taskType: "polish_copy",
+      userPrompt: lines.join("\n"),
+      maxTokens: maxChars ? Math.min(Math.ceil(maxChars / 3) + 50, 1024) : 600,
+      userId: user.id,
+      context: "/api/ai/inline-assist",
     });
 
-    let text = getResponseText(response).trim();
+    let text = response.text.trim();
 
     // Defensive cleanup — strip leading/trailing quotes the model sometimes adds
     if (

@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
-import {
-  anthropic,
-  MODEL_HAIKU,
-  safeJsonParse,
-  getResponseText,
-} from "@/lib/ai/claude-helpers";
+import { safeJsonParse } from "@/lib/ai/claude-helpers";
+import { callLLM } from "@/lib/ai/llm-router";
 
 interface SubjectVariantsInput {
   body: string;
@@ -96,20 +92,16 @@ ${input.body}
 Return exactly ${count} variants. JSON only.`;
 
   try {
-    const response = await anthropic.messages.create({
-      model: MODEL_HAIKU,
-      max_tokens: 1500,
-      system: [
-        {
-          type: "text",
-          text: SYSTEM_PROMPT,
-          cache_control: { type: "ephemeral" },
-        },
-      ],
-      messages: [{ role: "user", content: userPrompt }],
+    const response = await callLLM({
+      taskType: "subject_line",
+      systemPrompt: SYSTEM_PROMPT,
+      userPrompt,
+      maxTokens: 1500,
+      userId: user.id,
+      context: "/api/emails/subject-variants",
     });
 
-    const text = getResponseText(response);
+    const text = response.text;
     const parsed = safeJsonParse<SubjectVariantsOutput>(text);
 
     if (!parsed || !Array.isArray(parsed.variants)) {
