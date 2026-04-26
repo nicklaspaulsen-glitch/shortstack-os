@@ -147,41 +147,12 @@ const healthChecks: HealthCheck[] = [
     requiresCredential: () => hasCredential(process.env.GOOGLE_PLACES_API_KEY),
   },
   {
-    name: "Meta/Facebook",
-    check: () => checkEndpoint(`https://graph.facebook.com/v18.0/me?access_token=${process.env.META_ACCESS_TOKEN || "test"}`),
-    requiresCredential: () => hasCredential(process.env.META_ACCESS_TOKEN),
-  },
-  {
-    name: "TikTok",
-    check: () => checkEndpoint("https://open.tiktokapis.com/v2/user/info/", {
-      Authorization: `Bearer ${process.env.TIKTOK_ACCESS_TOKEN || ""}`,
-    }),
-    requiresCredential: () => hasCredential(process.env.TIKTOK_ACCESS_TOKEN),
-  },
-  {
-    name: "YouTube",
-    check: () => checkEndpoint(`https://www.googleapis.com/youtube/v3/channels?part=id&mine=true&key=${process.env.YOUTUBE_API_KEY || "test"}`),
-    requiresCredential: () => hasCredential(process.env.YOUTUBE_API_KEY),
-  },
-  {
     name: "Google Ads",
     check: () => checkEndpoint("https://googleads.googleapis.com/v14/customers:listAccessibleCustomers", {
       Authorization: `Bearer ${process.env.GOOGLE_ADS_REFRESH_TOKEN || ""}`,
       "developer-token": process.env.GOOGLE_ADS_DEVELOPER_TOKEN || "",
     }),
     requiresCredential: () => hasCredential(process.env.GOOGLE_ADS_REFRESH_TOKEN, process.env.GOOGLE_ADS_DEVELOPER_TOKEN),
-  },
-  {
-    name: "Instagram",
-    check: () => checkEndpoint(`https://graph.facebook.com/v18.0/me/accounts?access_token=${process.env.META_ACCESS_TOKEN || "test"}`),
-    requiresCredential: () => hasCredential(process.env.META_ACCESS_TOKEN),
-  },
-  {
-    name: "LinkedIn",
-    check: () => checkEndpoint("https://api.linkedin.com/v2/me", {
-      Authorization: `Bearer ${process.env.LINKEDIN_ACCESS_TOKEN || ""}`,
-    }),
-    requiresCredential: () => hasCredential(process.env.LINKEDIN_ACCESS_TOKEN),
   },
   {
     name: "PandaDoc",
@@ -219,7 +190,10 @@ const healthChecks: HealthCheck[] = [
     requiresCredential: () => hasCredential(process.env.META_ADS_ACCESS_TOKEN),
   },
   {
-    name: "Zernio",
+    // Single probe representing all Zernio-managed social platforms
+    // (LinkedIn, Instagram, TikTok, Meta/Facebook, YouTube).
+    // Per-platform direct probes were removed — user manages these via Zernio.
+    name: "Zernio Social",
     check: () => checkEndpoint("https://api.zernio.com/v1/profiles", {
       Authorization: `Bearer ${process.env.ZERNIO_API_KEY || ""}`,
     }),

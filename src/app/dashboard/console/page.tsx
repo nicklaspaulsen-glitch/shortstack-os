@@ -1,8 +1,10 @@
 /**
- * /__/console — Hidden admin dev-tools page.
+ * /dashboard/console — Hidden admin dev-tools page.
  *
- * The double-underscore prefix signals "internal" — this route is not
- * listed in the sidebar. Auth-gated: admin or founder only.
+ * Moved from /__/console: Next.js App Router treats folders starting with
+ * underscore (including __) as private — they are excluded from URL routing
+ * and never reachable in production. The page now lives under /dashboard/console
+ * and is still auth-gated to admin/founder roles only.
  *
  * Tiles:
  *   1. Env-var presence panel
@@ -194,7 +196,7 @@ async function fetchWebhookHealth(): Promise<ProviderDedup[] | null> {
     // on the exact health panel that's supposed to surface problems.
     // Map error → null so the tile shows "Unavailable" instead.
     if (error) {
-      console.error("[__/console] webhook_health_summary RPC failed:", error.message);
+      console.error("[dashboard/console] webhook_health_summary RPC failed:", error.message);
       return null;
     }
     if (!data) return [];
@@ -323,7 +325,7 @@ export default async function AdminConsolePage() {
         title="Admin Console"
         subtitle="Internal dev-tools dashboard — env vars, DB health, errors, webhooks, and cron jobs."
         gradient="blue"
-        eyebrow="Admin · /__/console"
+        eyebrow="Admin · /dashboard/console"
         sparkles={false}
       />
 
