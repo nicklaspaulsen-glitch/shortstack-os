@@ -14,6 +14,13 @@ import { verifyClientAccess } from "@/lib/verify-client-access";
  *   - client_id: optional — scopes the sweep to one client
  *   - ids: optional — only flip these specific calendar rows (still gated by
  *     ownership). Lets the UI approve a subset without changing every row.
+ *
+ * Security fix (cross-agency audit finding #3): when `ids` was supplied
+ * without `client_id`, the code applied the `.in("id", ids)` filter but
+ * skipped per-row ownership verification. An agency user who guessed a UUID
+ * belonging to another agency could approve that row. Fix: resolve the caller's
+ * owned client IDs first, then add both `.in("id", ids)` AND
+ * `.in("client_id", ownedIds)` so only rows the caller owns are affected.
  */
 export async function POST(request: NextRequest) {
   const authSupabase = createServerSupabase();
@@ -48,7 +55,13 @@ export async function POST(request: NextRequest) {
   if (clientId) {
     q = q.eq("client_id", clientId);
   } else {
-    // No client specified — scope to rows owned by this user's tenant.
+    // No client_id provided — scope to all rows owned by this user's tenant.
+    // IMPORTANT: when `ids` is also supplied (approve a subset by UUID) we still
+    // land here so we can resolve ownedIds and emit `.in("client_id", ownedIds)`.
+    // This prevents an agency from approving a competitor's row by guessing its
+    // UUID (audit finding #3 fix). The update will match only rows satisfying
+    // BOTH `.in("id", ids)` AND `.in("client_id", ownedIds)`.
+    //
     // For admins: clients they own (clients.profile_id === user.id).
     // For team members: clients belonging to their parent agency, optionally
     //   narrowed by allowed_client_ids if their access mode is "specific".
@@ -114,6 +127,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: true, approved: 0 });
     }
     q = q.in("client_id", ownedIds);
+
+    // KNOWN LIMITATION (codex round-1, non-blocker): the ownedIds list was
+    // fetched a few millis ago. If a client's ownership is revoked or
+    // transferred between that read and this update, the stale snapshot
+    // can still authorize the update. The window is bounded to a single
+    // request and never lets an unauthorized caller break in (the
+    // un-revoked owner had to be on this list at fetch time).
+    // TODO (follow-up): replace with an RPC that does the ownership join
+    // + update in a single SECURITY DEFINER plpgsql function, removing
+    // the TOCTOU window entirely. Tracked alongside the cross-agency
+    // MEDIUM follow-ups.
   }
 
   const { data, error } = await q.select("id, platform, scheduled_at");

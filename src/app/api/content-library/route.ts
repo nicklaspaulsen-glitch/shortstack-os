@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { verifySniffedMime } from "@/lib/server/file-sniff";
+import { ALLOWED_GENERAL_UPLOADS } from "@/lib/file-types";
 
 /*
   Table: content_assets
@@ -58,6 +60,28 @@ export async function POST(req: NextRequest) {
   const file = formData.get("file") as File | null;
   if (!file) return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
+  // DEFENSE LAYER 1 — server-side declared-MIME allowlist.
+  // Codex round-1+2 catch: when the magic-byte sniff later returns null
+  // (text files, unsniffable formats), there was NO server-side fallback
+  // — a caller bypassing the UI could upload arbitrary text payloads
+  // (.html, .js, scripty SVG, etc.). The original guard accepted empty
+  // file.type which let an attacker send a payload with no Content-Type
+  // header at all. This now requires a non-empty declared MIME AND that
+  // it's in the allowlist.
+  if (
+    !file.type ||
+    !(ALLOWED_GENERAL_UPLOADS as readonly string[]).includes(file.type)
+  ) {
+    return NextResponse.json(
+      {
+        error: file.type
+          ? `Unsupported MIME type "${file.type}".`
+          : "Missing Content-Type — upload must declare a supported MIME.",
+      },
+      { status: 400 },
+    );
+  }
+
   const tags = formData.get("tags") as string | null;
   const collectionId = formData.get("collection_id") as string | null;
 
@@ -74,6 +98,18 @@ export async function POST(req: NextRequest) {
   const service = createServiceClient();
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
+
+  /*
+   * DEFENSE LAYER 2 — server-side magic-byte MIME sniffing.
+   * Layer 1 (client-side) validates file.type + extension.
+   * Layer 2 (here) reads the actual bytes to detect spoofed Content-Type.
+   * Text/unsniffable formats (CSV, TXT, SVG) return null from the sniff
+   * and are passed through — layer 1 already covered them.
+   */
+  const sniffError = await verifySniffedMime(buffer, ALLOWED_GENERAL_UPLOADS, file.type);
+  if (sniffError) {
+    return NextResponse.json({ error: sniffError }, { status: 400 });
+  }
 
   const { error: uploadError } = await service.storage
     .from("content-assets")

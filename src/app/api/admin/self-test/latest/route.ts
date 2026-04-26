@@ -1,3 +1,14 @@
+/**
+ * Security fixes (admin-route-audit.md — HIGH):
+ *
+ * 1. Role lookup moved from service client to user-scoped client (createServerSupabase).
+ *    The profile read doesn't need RLS bypass; using the service client for this
+ *    was overprivileged and obscured the RLS story.
+ *
+ * 2. Role gate now accepts both "admin" and "founder" — founders were previously
+ *    locked out of this diagnostic endpoint despite being platform owners.
+ */
+
 import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
@@ -8,27 +19,29 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
  * GET /api/admin/self-test/latest
  *   → { latest_run: { run_id, started_at, rows: [...] }, trend: [...] }
  *
- * Gated to role === "admin".
+ * Gated to role === "admin" or "founder".
  */
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  // Auth: must be a signed-in admin.
+  // Auth: must be a signed-in admin or founder.
   const authClient = createServerSupabase();
   const { data: { user } } = await authClient.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const service = createServiceClient();
-  const { data: profile } = await service
+  // Role read via user-scoped client — no RLS bypass needed for self-profile lookup.
+  const { data: profile } = await authClient
     .from("profiles")
     .select("role")
     .eq("id", user.id)
     .single();
-  if (profile?.role !== "admin") {
-    return NextResponse.json({ error: "Admin only" }, { status: 403 });
+  if (profile?.role !== "admin" && profile?.role !== "founder") {
+    return NextResponse.json({ error: "Admin or founder only" }, { status: 403 });
   }
+
+  const service = createServiceClient();
 
   // Find the most-recent run_id.
   const { data: newest } = await service

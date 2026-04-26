@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
+/**
+ * Security fix (cross-agency audit finding #2): GET was checked with an
+ * implicit allowlist but the explicit deny set was not documented, making
+ * it easy for future edits to accidentally widen access. Tightened to an
+ * explicit allowlist — any role not in READ_ROLES (including `client` and
+ * unknown/future roles) receives 403.
+ */
+
 type AllowedRole = "admin" | "founder" | "agency" | "team_member";
 const WRITE_ROLES: AllowedRole[] = ["admin", "founder"];
 const READ_ROLES: AllowedRole[] = ["admin", "founder", "agency", "team_member"];
@@ -15,12 +23,14 @@ async function getUserRole(supabase: ReturnType<typeof createServerSupabase>, us
 }
 
 // GET — load all agent settings (admin/founder/agency/team_member only)
+// Explicitly denies: client, unknown, and any future role not in READ_ROLES.
 export async function GET(_request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const role = await getUserRole(supabase, user.id);
+  // Explicit allowlist — anything not in READ_ROLES (including `client`) is denied.
   if (!role || !(READ_ROLES as string[]).includes(role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

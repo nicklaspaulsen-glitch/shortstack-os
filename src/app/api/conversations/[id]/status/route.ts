@@ -19,16 +19,31 @@ export async function POST(
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
-  // Defense in depth: scope to the agency owner. team_members get resolved
-  // to their parent_agency_id (matches conversations table owner key).
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
-  const { error, count } = await supabase
+  // Security: explicitly verify the caller's tenant owns this conversation
+  // before mutating it. Returns 404 (not 403) on mismatch to avoid leaking
+  // conversation existence — mirrors the pattern in send/route.ts (e39e9fd).
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Profile not found" }, { status: 403 });
+
+  const { data: conv } = await supabase
     .from("conversations")
-    .update({ status }, { count: "exact" })
+    .select("id, user_id")
+    .eq("id", params.id)
+    .maybeSingle();
+
+  if (!conv) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+
+  if (conv.user_id !== ownerId) {
+    console.error(`[conversations/status] access denied: conv.user_id=${conv.user_id} ownerId=${ownerId}`);
+    return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+  }
+
+  const { error } = await supabase
+    .from("conversations")
+    .update({ status })
     .eq("id", params.id)
     .eq("user_id", ownerId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  if (!count) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 /**
  * POST /api/voice-receptionist/setup
@@ -19,8 +20,16 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
  *
  * All actions verify the caller's tenant owns the client_id (matches
  * the cross-tenant defense pattern from f29606e + 0129004).
+ *
+ * Security fix (service-client-audit.md — CRITICAL):
+ *   - auth.getUser() is now called FIRST, before any service client is created.
+ *   - Ownership check uses getEffectiveOwnerId() so team_members resolve to
+ *     their parent agency (previously `client.profile_id !== user.id` locked
+ *     out all team_members).
+ *   - createServiceClient() is only called AFTER identity + ownership are confirmed.
  */
 export async function POST(request: NextRequest) {
+  // Auth first — resolve identity before touching any privileged client.
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -36,7 +45,28 @@ export async function POST(request: NextRequest) {
   const clientId = String(body.client_id);
   const action = String(body.action);
 
-  // Verify ownership
+  // Resolve effective owner so team_members are treated as their parent agency.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) {
+    return NextResponse.json({ error: "Profile not found" }, { status: 403 });
+  }
+
+  // Verify ownership via the user-scoped client (RLS enforced); only create the
+  // service client after ownership is confirmed.
+  const { data: clientCheck } = await supabase
+    .from("clients")
+    .select("id")
+    .eq("id", clientId)
+    .eq("profile_id", ownerId)
+    .maybeSingle();
+  if (!clientCheck) {
+    return NextResponse.json(
+      { error: "Client not found in your workspace" },
+      { status: 404 },
+    );
+  }
+
+  // Ownership confirmed — safe to use the service client for privileged reads/writes.
   const service = createServiceClient();
   const { data: client } = await service
     .from("clients")
@@ -45,7 +75,7 @@ export async function POST(request: NextRequest) {
     )
     .eq("id", clientId)
     .maybeSingle();
-  if (!client || client.profile_id !== user.id) {
+  if (!client) {
     return NextResponse.json(
       { error: "Client not found in your workspace" },
       { status: 404 },

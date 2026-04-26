@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { anthropic } from "@/lib/ai/claude-helpers";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export const maxDuration = 60;
 
@@ -264,10 +265,20 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  /*
+   * Security fix (service-client-audit.md — HIGH):
+   * Previously used `.eq("profile_id", user.id)` which locked out team_members
+   * (they have a different profile_id than the agency owner). Use
+   * getEffectiveOwnerId() so team_members resolve to their parent agency.
+   */
+  const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+  if (!ownerId) {
+    return NextResponse.json({ success: true, reports: [] });
+  }
   const { data: ownedClients } = await authSupabase
     .from("clients")
     .select("id")
-    .eq("profile_id", user.id);
+    .eq("profile_id", ownerId);
   const ownedIds = (ownedClients || []).map((c) => c.id);
 
   const url = new URL(request.url);

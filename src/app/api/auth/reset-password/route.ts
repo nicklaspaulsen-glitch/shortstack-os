@@ -1,32 +1,58 @@
-import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
-import { rateLimit } from "@/lib/rate-limit";
+/**
+ * Security fixes (service-client-audit.md — HIGH):
+ *
+ * 1. Replaced createServiceClient() with createServerSupabase() for the
+ *    resetPasswordForEmail call. The service-role key was overprivileged here
+ *    — password reset only needs the anon-key Supabase Auth API endpoint,
+ *    not RLS bypass capability.
+ *
+ * 2. Replaced the in-memory rate limiter (src/lib/rate-limit.ts) with the
+ *    Supabase-backed checkRateLimit() helper. The in-memory limiter reset on
+ *    every cold start, providing no meaningful protection on serverless.
+ *    The new helper writes atomically to rate_limit_buckets (service_role
+ *    access, RLS locked) so counts survive across function instances.
+ */
 
-function clientIp(request: NextRequest): string {
-  return (
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-    || request.headers.get("x-real-ip")
-    || "unknown"
-  );
-}
+import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { checkRateLimit, extractIp } from "@/lib/server/rate-limit";
 
 export async function POST(request: NextRequest) {
-  const { email } = await request.json();
+  const body = await request.json().catch(() => null);
+  const email = body?.email;
   if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
 
-  // Per-email: 3/hour. Per-IP: 10/hour. Either limit trips → 429.
   const normalizedEmail = String(email).trim().toLowerCase();
-  const ip = clientIp(request);
-  const perEmail = rateLimit(`pwdreset:email:${normalizedEmail}`, 3, 60 * 60 * 1000);
-  const perIp = rateLimit(`pwdreset:ip:${ip}`, 10, 60 * 60 * 1000);
-  if (!perEmail.allowed || !perIp.allowed) {
+  const ip = extractIp(request);
+
+  // Supabase-backed rate limits: per-email 3/min, per-IP 10/min.
+  // Service client required because rate_limit_buckets is locked to service_role.
+  const rateLimitClient = createServiceClient();
+  const [perEmail, perIp] = await Promise.all([
+    checkRateLimit(rateLimitClient, `email:${normalizedEmail}`, "pwd_reset", 3),
+    checkRateLimit(rateLimitClient, `ip:${ip}`, "pwd_reset", 10),
+  ]);
+  if (!perEmail.ok || !perIp.ok) {
+    const retryAfter = Math.max(perEmail.retryAfterSec, perIp.retryAfterSec);
+    // Codex round-3 catch: message used to say "Try again in an hour"
+    // but the limiter is per-minute. Now reflects the real Retry-After.
+    const minutes = Math.ceil(retryAfter / 60);
     return NextResponse.json(
-      { error: "Too many password reset requests. Try again in an hour." },
-      { status: 429 },
+      {
+        error:
+          retryAfter > 0
+            ? `Too many password reset requests. Try again in ${minutes <= 1 ? "a minute" : `${minutes} minutes`}.`
+            : "Too many password reset requests. Try again shortly.",
+      },
+      {
+        status: 429,
+        headers: retryAfter > 0 ? { "Retry-After": String(retryAfter) } : {},
+      },
     );
   }
 
-  const supabase = createServiceClient();
+  // Use the anon-key client — resetPasswordForEmail does not need service_role.
+  const supabase = createServerSupabase();
 
   // Fire-and-forget: never leak whether the email exists in the user table.
   await supabase.auth.resetPasswordForEmail(normalizedEmail, {

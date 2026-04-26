@@ -17,6 +17,8 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifySniffedMime } from "@/lib/server/file-sniff";
+import { ALLOWED_GENERAL_UPLOADS } from "@/lib/file-types";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
 const SIGNED_URL_TTL_SECONDS = 3600;
@@ -95,10 +97,42 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // DEFENSE LAYER 1 — server-side declared-MIME allowlist.
+  // Codex round-1+2 catch: requires NON-EMPTY declared MIME in the
+  // allowlist. The original guard accepted empty uploaded.type which let
+  // an attacker send a payload with no Content-Type at all and bypass
+  // both this layer AND the magic-byte sniff (which returns null for
+  // unsniffable text formats).
+  if (
+    !uploaded.type ||
+    !(ALLOWED_GENERAL_UPLOADS as readonly string[]).includes(uploaded.type)
+  ) {
+    return NextResponse.json(
+      {
+        error: uploaded.type
+          ? `Unsupported MIME type "${uploaded.type}".`
+          : "Missing Content-Type — upload must declare a supported MIME.",
+      },
+      { status: 400 },
+    );
+  }
+
   const service = createServiceClient();
   const safeName = uploaded.name.replace(/[^a-zA-Z0-9._-]/g, "_");
   const path = `${user.id}/${client.id}/${Date.now()}-${safeName}`;
   const buffer = Buffer.from(await uploaded.arrayBuffer());
+
+  /*
+   * DEFENSE LAYER 2 — server-side magic-byte MIME sniffing.
+   * Layer 1 (client-side) validates file.type + extension.
+   * Layer 2 (here) reads the actual bytes to detect spoofed Content-Type.
+   * Text/unsniffable formats (CSV, TXT, SVG) return null from the sniff
+   * and are passed through — layer 1 already covered them.
+   */
+  const sniffError = await verifySniffedMime(buffer, ALLOWED_GENERAL_UPLOADS, uploaded.type);
+  if (sniffError) {
+    return NextResponse.json({ error: sniffError }, { status: 400 });
+  }
 
   const { error: storageError } = await service.storage
     .from(BUCKET)

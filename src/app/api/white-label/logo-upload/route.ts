@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifySniffedMime } from "@/lib/server/file-sniff";
 
 export const maxDuration = 30;
 
@@ -84,13 +85,38 @@ export async function POST(req: Request) {
 
   // Build deterministic per-user path so re-uploads overwrite cleanly.
   const buffer = Buffer.from(await file.arrayBuffer());
+
+  /*
+   * DEFENSE LAYER 2 — server-side magic-byte MIME sniffing.
+   * Layer 1 (above) validates file.type against ALLOWED_TYPES.
+   * Layer 2 (here) reads the actual bytes to detect spoofed Content-Type.
+   * SVG is text-based and returns null from the sniff; it is passed through
+   * since the declared-type check above already accepted/rejected it.
+   *
+   * Codex round-1 follow-up: when the sniff returns a real MIME that's
+   * in the allowlist but DIFFERENT from declared (e.g. user uploads a
+   * JPG mislabelled as PNG), normalize storage extension + contentType
+   * to the SNIFFED type so the file isn't stored under a misleading
+   * path/header.
+   */
+  const { sniffMimeType } = await import("@/lib/server/file-sniff");
+  const sniffError = await verifySniffedMime(buffer, ALLOWED_TYPES, file.type);
+  if (sniffError) {
+    return NextResponse.json({ error: sniffError }, { status: 400 });
+  }
+  const sniffed = await sniffMimeType(buffer);
+  // Use sniffed MIME when it's allowlisted; fall back to declared
+  // (necessary for SVG which is unsniffable).
+  const effectiveMime =
+    sniffed && (ALLOWED_TYPES as string[]).includes(sniffed) ? sniffed : file.type;
+
   const extByMime: Record<string, string> = {
     "image/png": "png",
     "image/jpeg": "jpg",
     "image/webp": "webp",
     "image/svg+xml": "svg",
   };
-  const ext = extByMime[file.type] || "bin";
+  const ext = extByMime[effectiveMime] || "bin";
   const path = `${user.id}/logo.${ext}`;
 
   // Upload to the white-label bucket (upsert to allow re-upload).
@@ -98,7 +124,7 @@ export async function POST(req: Request) {
     .from(BUCKET)
     .upload(path, buffer, {
       upsert: true,
-      contentType: file.type,
+      contentType: effectiveMime,
       cacheControl: "3600",
     });
 

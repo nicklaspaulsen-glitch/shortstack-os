@@ -18,11 +18,24 @@ export async function POST(
     return NextResponse.json({ error: "assigned_to_user_id must be UUID or null" }, { status: 400 });
   }
 
-  // Defense in depth: scope to the agency owner. team_members get resolved
-  // to their parent_agency_id so they can still operate on the agency's
-  // conversations. Conversations rows are keyed by the OWNER user_id,
-  // matching the upsertInboundMessage write path.
-  const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+  // Security: explicitly verify the caller's tenant owns this conversation
+  // before mutating it. Returns 404 (not 403) on mismatch to avoid leaking
+  // conversation existence — mirrors the pattern in send/route.ts (e39e9fd).
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Profile not found" }, { status: 403 });
+
+  const { data: conv } = await supabase
+    .from("conversations")
+    .select("id, user_id")
+    .eq("id", params.id)
+    .maybeSingle();
+
+  if (!conv) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+
+  if (conv.user_id !== ownerId) {
+    console.error(`[conversations/assign] access denied: conv.user_id=${conv.user_id} ownerId=${ownerId}`);
+    return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+  }
 
   // Verify the assignee is in the caller's team (owner OR team_member of
   // this agency, NOT a client). Otherwise an authed user could assign a
@@ -45,13 +58,12 @@ export async function POST(
       }
     }
   }
-  const { error, count } = await supabase
+  const { error } = await supabase
     .from("conversations")
-    .update({ assigned_to_user_id }, { count: "exact" })
+    .update({ assigned_to_user_id })
     .eq("id", params.id)
     .eq("user_id", ownerId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  if (!count) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
   return NextResponse.json({ ok: true });
 }
