@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
         }
         // Filter to allowlisted columns only — prevents external callers from
         // overwriting server-controlled fields (user_id, created_at, etc.)
-        const rawFields = (data.fields || data) as Record<string, unknown>;
+        const rawFields = (data.fields ?? data) as Record<string, unknown>;
         const safeFields = filterLeadUpdateFields(rawFields);
         if (Object.keys(safeFields).length === 0) {
           return NextResponse.json({ error: "No updatable fields provided" }, { status: 400 });
@@ -131,6 +131,13 @@ export async function POST(request: NextRequest) {
       }
 
       case "deal.create": {
+        // SECURITY NOTE: This webhook uses a shared secret (no per-tenant auth).
+        // A webhook-key holder can supply arbitrary client_id/lead_id UUIDs and
+        // plant deal rows against any tenant's clients. The structural fix requires
+        // per-tenant webhook secrets (so we can bind each key to an agency_id).
+        // TODO(batch-3): add per-tenant webhook key infra and validate that
+        // client_id belongs to the key-holder's agency before writing.
+        console.warn("[webhooks/inbound] deal.create: client_id/lead_id not cross-tenant validated — shared-secret limitation");
         const { error } = await supabase.from("deals").insert({
           client_id: data.client_id || null,
           lead_id: data.lead_id || null,
@@ -165,6 +172,10 @@ export async function POST(request: NextRequest) {
       }
 
       case "note.add": {
+        // SECURITY NOTE: client_id is caller-supplied and not validated against the
+        // key-holder's tenant. Per-tenant webhook keys needed for full isolation.
+        // TODO(batch-3): validate client_id belongs to key-holder's agency before write.
+        console.warn("[webhooks/inbound] note.add: client_id not cross-tenant validated — shared-secret limitation");
         // Add note to trinity_log as a general note entry
         const { error } = await supabase.from("trinity_log").insert({
           action_type: "custom",
@@ -179,6 +190,10 @@ export async function POST(request: NextRequest) {
       }
 
       case "task.create": {
+        // SECURITY NOTE: client_id is caller-supplied and not validated against the
+        // key-holder's tenant. Per-tenant webhook keys needed for full isolation.
+        // TODO(batch-3): validate client_id belongs to key-holder's agency before write.
+        console.warn("[webhooks/inbound] task.create: client_id not cross-tenant validated — shared-secret limitation");
         const { error } = await supabase.from("trinity_log").insert({
           action_type: "automation",
           description: data.title || data.task || "Webhook task",
@@ -198,6 +213,10 @@ export async function POST(request: NextRequest) {
       }
 
       case "invoice.paid": {
+        // SECURITY NOTE: client_id is caller-supplied and not validated against the
+        // key-holder's tenant. Per-tenant webhook keys needed for full isolation.
+        // TODO(batch-3): validate client_id belongs to key-holder's agency before write.
+        console.warn("[webhooks/inbound] invoice.paid: client_id not cross-tenant validated — shared-secret limitation");
         // Log payment received
         const { error } = await supabase.from("trinity_log").insert({
           action_type: "custom",
