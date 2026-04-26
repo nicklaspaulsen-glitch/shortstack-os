@@ -1354,12 +1354,20 @@ function IntegrationCard({ integration, health, onClick }: IntegrationCardProps)
 interface IntegrationConnectModalProps {
   integration: BusinessIntegration;
   currentStatus?: HealthResult;
+  /**
+   * True only for Trinity platform staff (admin/founder). Controls whether
+   * the dev-flavored env-var setup UI is shown vs. the customer-facing
+   * OAuth / "contact admin" flow for agency owners and team members.
+   */
+  isPlatformAdmin: boolean;
   onClose: () => void;
   onStatusChange: (result: HealthResult) => void;
 }
 
-function IntegrationConnectModal({ integration, currentStatus, onClose, onStatusChange }: IntegrationConnectModalProps) {
+function IntegrationConnectModal({ integration, currentStatus, isPlatformAdmin, onClose, onStatusChange }: IntegrationConnectModalProps) {
   const [testing, setTesting] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const hasOAuth = Boolean(integration.oauthPath);
 
   useEffect(() => {
     const onEsc = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -1428,7 +1436,7 @@ function IntegrationConnectModal({ integration, currentStatus, onClose, onStatus
         </div>
 
         <div className="p-5 space-y-4">
-          {/* Status banner */}
+          {/* Status banner — copy adapts to viewer role */}
           <div className={`rounded-lg border p-3 text-[11px] ${
             isConnected ? "border-success/30 bg-success/5 text-success" :
             hasError ? "border-warning/30 bg-warning/5 text-warning" :
@@ -1441,82 +1449,166 @@ function IntegrationConnectModal({ integration, currentStatus, onClose, onStatus
               <div>
                 {isConnected && <span><strong>Connected.</strong> {currentStatus?.detail || `${integration.name} is reachable with the current credentials.`}</span>}
                 {hasError && <span><strong>Keys present but provider rejected.</strong> {currentStatus?.detail}</span>}
-                {!isConnected && !hasError && <span>Add the environment variables below to enable {integration.name}.</span>}
+                {!isConnected && !hasError && (
+                  isPlatformAdmin
+                    ? <span>Add the environment variables below to enable {integration.name}.</span>
+                    : hasOAuth
+                      ? <span>Connect your {integration.name} account with one click via OAuth.</span>
+                      : <span>{integration.name} isn&apos;t enabled yet on this workspace. Reach out to your platform admin to switch it on.</span>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Required env vars */}
-          <div>
-            <p className="text-[11px] font-semibold mb-2 flex items-center gap-1.5 text-foreground">
-              <Key size={11} className="text-gold" /> Required environment variables
-            </p>
-            <div className="space-y-1.5">
-              {integration.envKeys.map(key => (
-                <div key={key} className="flex items-center gap-2 bg-surface-light border border-border/60 rounded-md px-2.5 py-1.5">
-                  <code className="text-[11px] font-mono text-foreground flex-1">{key}</code>
+          {/* Customer-facing path (agency owners + team members): OAuth-first */}
+          {/* if available, else point them at admin support. Hides the dev-style */}
+          {/* env-var paste UI entirely from non-admin viewers. */}
+          {!isPlatformAdmin && (
+            <div className="flex flex-col gap-2 pt-1">
+              {hasOAuth ? (
+                <>
                   <button
-                    onClick={() => copyEnvKey(key)}
-                    className="text-muted hover:text-foreground transition-colors"
-                    title="Copy env var name"
+                    type="button"
+                    onClick={startOAuth}
+                    aria-label={`Connect ${integration.name} with OAuth`}
+                    className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-white bg-gradient-to-br from-[#C9A84C] to-[#b3932f] hover:from-[#d4b85c] hover:to-[#C9A84C] px-3 py-2 rounded-lg border border-gold/40 transition-all"
+                    title="OAuth requires selecting a client in Connected Accounts"
                   >
-                    <Copy size={11} />
+                    <LogIn size={12} /> Connect with OAuth
+                  </button>
+                  <a
+                    href={integration.docsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                  >
+                    <ExternalLink size={11} /> Learn more about {integration.name}
+                  </a>
+                </>
+              ) : (
+                <>
+                  <div className="rounded-lg border border-border/60 bg-surface-light/60 p-3 text-[11px] text-muted leading-relaxed">
+                    This integration is configured at the platform level by your Trinity admin. If you need it enabled for your workspace, contact your agency owner or Trinity support.
+                  </div>
+                  <a
+                    href={integration.docsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                  >
+                    <ExternalLink size={11} /> Learn more about {integration.name}
+                  </a>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* Admin-only env-var setup. The dev-style paste UI lives behind a */}
+          {/* toggle when OAuth is the recommended path so the customer-friendly */}
+          {/* action stays primary for the agency owner's own first-time setup. */}
+          {isPlatformAdmin && (
+            <>
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] text-muted uppercase tracking-wider font-medium flex items-center gap-1.5">
+                  <Shield size={10} className="text-gold" /> Admin setup &mdash; clients won&apos;t see this
+                </p>
+                {hasOAuth && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAdvanced(v => !v)}
+                    className="text-[10px] text-muted hover:text-foreground transition-colors underline-offset-2 hover:underline"
+                  >
+                    {showAdvanced ? "Hide manual setup" : "Manual setup (advanced)"}
+                  </button>
+                )}
+              </div>
+
+              {/* OAuth shortcut for admins on integrations that support it */}
+              {hasOAuth && (
+                <div className="flex flex-col gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={startOAuth}
+                    aria-label={`Connect ${integration.name} with OAuth`}
+                    className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-white bg-gradient-to-br from-[#C9A84C] to-[#b3932f] hover:from-[#d4b85c] hover:to-[#C9A84C] px-3 py-2 rounded-lg border border-gold/40 transition-all"
+                    title="OAuth requires selecting a client in Connected Accounts"
+                  >
+                    <LogIn size={12} /> Connect with OAuth (per-client)
                   </button>
                 </div>
-              ))}
-            </div>
-          </div>
+              )}
 
-          {/* Instructions */}
-          <div>
-            <p className="text-[11px] font-semibold mb-1.5 text-foreground">How to get these</p>
-            <p className="text-[11px] text-muted leading-relaxed whitespace-pre-line">{integration.instructions}</p>
-          </div>
+              {(!hasOAuth || showAdvanced) && (
+                <>
+                  {/* Required env vars */}
+                  <div>
+                    <p className="text-[11px] font-semibold mb-2 flex items-center gap-1.5 text-foreground">
+                      <Key size={11} className="text-gold" /> Required environment variables
+                    </p>
+                    <div className="space-y-1.5">
+                      {integration.envKeys.map(key => (
+                        <div key={key} className="flex items-center gap-2 bg-surface-light border border-border/60 rounded-md px-2.5 py-1.5">
+                          <code className="text-[11px] font-mono text-foreground flex-1">{key}</code>
+                          <button
+                            type="button"
+                            onClick={() => copyEnvKey(key)}
+                            className="text-muted hover:text-foreground transition-colors"
+                            title="Copy env var name"
+                            aria-label={`Copy ${key}`}
+                          >
+                            <Copy size={11} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col gap-2 pt-1">
-            {integration.oauthPath && (
-              <button
-                onClick={startOAuth}
-                className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-white bg-gradient-to-br from-[#C9A84C] to-[#b3932f] hover:from-[#d4b85c] hover:to-[#C9A84C] px-3 py-2 rounded-lg border border-gold/40 transition-all"
-                title="OAuth requires selecting a client in Connected Accounts"
-              >
-                <LogIn size={12} /> Connect with OAuth (per-client)
-              </button>
-            )}
+                  {/* Instructions */}
+                  <div>
+                    <p className="text-[11px] font-semibold mb-1.5 text-foreground">How to get these</p>
+                    <p className="text-[11px] text-muted leading-relaxed whitespace-pre-line">{integration.instructions}</p>
+                  </div>
 
-            <div className="flex gap-2">
-              <a
-                href={VERCEL_ENV_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
-              >
-                <ArrowUpRight size={12} /> Open Vercel Settings
-              </a>
-              <a
-                href={integration.docsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
-              >
-                <ExternalLink size={11} /> Docs
-              </a>
-            </div>
+                  {/* Admin action buttons */}
+                  <div className="flex flex-col gap-2 pt-1">
+                    <div className="flex gap-2">
+                      <a
+                        href={VERCEL_ENV_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                      >
+                        <ArrowUpRight size={12} /> Open Vercel Settings
+                      </a>
+                      <a
+                        href={integration.docsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1.5 text-[11px] text-muted hover:text-foreground bg-surface-light hover:bg-surface border border-border hover:border-border-light px-3 py-2 rounded-lg transition-colors"
+                      >
+                        <ExternalLink size={11} /> Docs
+                      </a>
+                    </div>
 
-            <button
-              onClick={testConnection}
-              disabled={testing}
-              className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-gold/30 px-3 py-2 rounded-lg transition-colors disabled:opacity-60 disabled:pointer-events-none"
-            >
-              {testing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} className="text-gold" />}
-              {testing ? "Testing..." : "Test connection"}
-            </button>
-          </div>
+                    <button
+                      type="button"
+                      onClick={testConnection}
+                      disabled={testing}
+                      aria-label={`Test ${integration.name} connection`}
+                      className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-foreground bg-surface-light hover:bg-surface border border-border hover:border-gold/30 px-3 py-2 rounded-lg transition-colors disabled:opacity-60 disabled:pointer-events-none"
+                    >
+                      {testing ? <Loader size={12} className="animate-spin" /> : <Zap size={12} className="text-gold" />}
+                      {testing ? "Testing..." : "Test connection"}
+                    </button>
+                  </div>
 
-          <p className="text-[10px] text-muted/70 pt-1 border-t border-border/30">
-            After adding env vars in Vercel, redeploy your app (or wait for the next build). Then click <strong className="text-foreground">Test connection</strong> above.
-          </p>
+                  <p className="text-[10px] text-muted/70 pt-1 border-t border-border/30">
+                    After adding env vars in Vercel, redeploy your app (or wait for the next build). Then click <strong className="text-foreground">Test connection</strong> above.
+                  </p>
+                </>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
