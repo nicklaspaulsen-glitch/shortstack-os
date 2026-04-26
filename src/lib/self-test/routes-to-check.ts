@@ -387,6 +387,57 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 401],
     note: "Top commenters list — 200 with empty array until Zernio webhooks land.",
   },
+
+  // ── GHL Phase 2 builders: Courses / Funnels / A/B Tests ─────────────────
+  {
+    path: "/api/courses",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Course list — owner-scoped; 401 when self-test runs unauth'd.",
+  },
+  {
+    path: "/api/courses",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Course create — title required.",
+  },
+  {
+    path: "/api/funnels",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Funnel list — owner-scoped.",
+  },
+  {
+    path: "/api/funnels",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Funnel create — name required.",
+  },
+  {
+    path: "/api/ab-tests",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "A/B test list — owner-scoped.",
+  },
+  {
+    path: "/api/ab-tests",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "A/B test create — required-field validation.",
+  },
+  {
+    path: "/api/f/__nope__/__missing__/event",
+    method: "POST",
+    body: { event_type: "view", visitor_id: "self-test" },
+    expected_status: [404, 400],
+    note: "Public funnel-event endpoint — unknown slug must 404, not 500.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
