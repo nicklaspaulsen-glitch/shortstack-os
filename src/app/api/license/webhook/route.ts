@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { type Stripe } from "stripe";
 import { getStripe } from "@/lib/stripe/client";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
 
 // Stripe webhook to handle subscription events
 export async function POST(request: NextRequest) {
@@ -21,6 +22,17 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = createServiceClient();
+
+  // CRITICAL idempotency — claim/complete model. See helper for details.
+  // A retried `checkout.session.completed` would otherwise issue a
+  // duplicate license without dedup.
+  const claim = await claimEvent(supabase, "stripe_license", event.id);
+  if (claim === "already_done") {
+    return NextResponse.json({ ok: true, deduped: true, event_id: event.id });
+  }
+  if (claim === "in_flight") {
+    return NextResponse.json({ ok: true, deduped: true, in_flight: true, event_id: event.id });
+  }
 
   switch (event.type) {
     case "checkout.session.completed": {
@@ -98,5 +110,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Mark event done so retries see status='done' and short-circuit.
+  await completeEvent(supabase, "stripe_license", event.id);
   return NextResponse.json({ received: true });
 }
