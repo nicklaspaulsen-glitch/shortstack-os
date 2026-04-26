@@ -9,9 +9,6 @@
  * v1 deliberately skips MJML for simplicity and faster TTFB on the cron
  * sender path. Upgrade to MJML in v2 for advanced layouts (multi-column,
  * responsive grids, etc.).
- *
- * Block schemas are loose by design (allow forward-compatible extra
- * fields) but typed enough that the wizard UI can produce them safely.
  */
 
 export type EmailBlockType =
