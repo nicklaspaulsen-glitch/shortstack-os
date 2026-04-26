@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
 import { anthropic, MODEL_HAIKU, getResponseText } from "@/lib/ai/claude-helpers";
 import { ALL_PLATFORMS } from "@/lib/social-studio/constants";
@@ -33,6 +34,10 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Resolve effective owner — team_members read parent agency comments.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const sinceParam = new URL(request.url).searchParams.get("since");
   const since = sinceParam
     ? new Date(sinceParam)
@@ -41,7 +46,7 @@ export async function GET(request: NextRequest) {
   const { data, error } = await supabase
     .from("social_comments")
     .select("commenter_handle, platform, text, created_at")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .gte("created_at", since.toISOString())
     .order("created_at", { ascending: false })
     .limit(2000);

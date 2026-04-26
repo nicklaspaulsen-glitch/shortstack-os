@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { ALL_PLATFORMS } from "@/lib/social-studio/constants";
 import type {
   HeatmapCell,
@@ -81,6 +82,10 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Resolve effective owner — team_members read parent agency stats.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const url = new URL(request.url);
   const clientId = url.searchParams.get("client_id");
 
@@ -91,7 +96,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from("social_posts")
     .select("id, caption, platforms, published_at, engagement_metrics")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .not("published_at", "is", null)
     .gte("published_at", since.toISOString())
     .order("published_at", { ascending: true });
