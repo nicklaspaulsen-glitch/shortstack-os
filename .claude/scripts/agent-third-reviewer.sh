@@ -138,21 +138,18 @@ decode_gemini_response() {
 }
 
 call_deepseek() {
-  # DeepSeek API is OpenAI-compatible. Default to deepseek-v4-pro (the
-  # current code-strong model; v3 / "deepseek-chat" alias may still
-  # work but v4 was rolled out April 2026). For very large patches
-  # consider deepseek-v4-flash. Override via DEEPSEEK_MODEL env.
+  # DeepSeek API is OpenAI-compatible. Default to deepseek-v4-pro.
+  # Override via DEEPSEEK_MODEL env. Uses a stricter ASCII-only encoder
+  # since DeepSeek's parser rejects bytes OpenRouter accepts.
   #
-  # DeepSeek's JSON parser rejects certain Unicode bytes that
-  # OpenRouter accepts ("invalid unicode code point at line 1 column N").
-  # We use a STRICTER ASCII-only payload encoder for this backend.
+  # IMPORTANT: payload sent via stdin (--data-binary @-) instead of -d
+  # to bypass Windows curl's command-line argument length limit
+  # (~32KB). Large patches blow past that with -d.
   local model="${DEEPSEEK_MODEL:-deepseek-v4-pro}"
-  local payload
-  payload="$(node -e '
+  local payload_file; payload_file="$(mktemp)"
+  node -e '
     const fs = require("fs");
     let prompt = fs.readFileSync(process.argv[1], "utf8");
-    // Aggressive: strip every non-ASCII char. Patches are mostly ASCII;
-    // emoji/smart-quotes in comments dont add review signal.
     prompt = prompt
       .replace(/[\uD800-\uDFFF]/g, "")
       .replace(/[^\x09\x0A\x0D\x20-\x7E]/g, "");
@@ -162,43 +159,50 @@ call_deepseek() {
       temperature: 0.1,
       max_tokens: 1024,
     }));
-  ' "$PROMPT_FILE" "$model")"
+  ' "$PROMPT_FILE" "$model" > "$payload_file"
 
   curl -sS -m 90 \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${DEEPSEEK_API_KEY}" \
     -X POST \
+    --data-binary "@$payload_file" \
     "https://api.deepseek.com/v1/chat/completions" \
-    -d "$payload" \
   | decode_openai_response
+  local rc=$?
+  rm -f "$payload_file"
+  return $rc
 }
 
 call_openrouter() {
-  # OpenRouter is OpenAI-compatible. Default model qwen/qwen3-coder
-  # (code-tuned, Alibaba lineage — different from Anthropic + OpenAI).
-  # Override via OPENROUTER_MODEL env (e.g. "google/gemini-2.5-pro" to
-  # bypass Gemini regional block via OpenRouter's US-hosted proxy).
   local model="${OPENROUTER_MODEL:-qwen/qwen3-coder}"
-  local payload; payload="$(encode_openai_payload "$model")"
+  local payload_file; payload_file="$(mktemp)"
+  encode_openai_payload "$model" > "$payload_file"
   curl -sS -m 90 \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${OPENROUTER_API_KEY}" \
     -H "HTTP-Referer: https://app.shortstack.work" \
     -H "X-Title: ShortStack /agent loop" \
     -X POST \
+    --data-binary "@$payload_file" \
     "https://openrouter.ai/api/v1/chat/completions" \
-    -d "$payload" \
   | decode_openai_response
+  local rc=$?
+  rm -f "$payload_file"
+  return $rc
 }
 
 call_gemini_curl() {
-  local payload; payload="$(encode_gemini_payload)"
+  local payload_file; payload_file="$(mktemp)"
+  encode_gemini_payload > "$payload_file"
   curl -sS -m 90 \
     -H "Content-Type: application/json" \
     -X POST \
+    --data-binary "@$payload_file" \
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}" \
-    -d "$payload" \
   | decode_gemini_response
+  local rc=$?
+  rm -f "$payload_file"
+  return $rc
 }
 
 call_gemini_cli() {
