@@ -331,6 +331,20 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 400, 401, 404, 503],
     note: "Nango Google Ads disconnect — empty body OK; idempotent on missing connection.",
   },
+  {
+    path: "/api/integrations/nango/connections",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Lists current user's Nango connections. 401 when self-test runs unauth'd; 200 with [] when authed but nothing connected.",
+  },
+  {
+    path: "/api/integrations/nango/finalize",
+    method: "POST",
+    auth_bearer: true,
+    body: {}, // empty payload — must reject as 400 (missing integrationId) or 401 (no auth)
+    expected_status: [400, 401],
+    note: "Finalize handler validates body shape — empty body must be rejected, never silently accepted.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
