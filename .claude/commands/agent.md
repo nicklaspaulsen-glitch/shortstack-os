@@ -1,10 +1,22 @@
 ---
-description: "Hybrid Opus+GPT-5 agent — runs Claude Opus 4.7 and GPT-5 (via codex CLI) together with token-tight direct-DM protocol. SILENT BY DEFAULT (only final commit hash + verdict surfaces). Use for hard tasks. Per-task transcript at /tmp/agent-<slug>-<ts>.md."
+description: "Hybrid Opus(plan) + Sonnet(code) + GPT-5(review) agent. Token-tight direct-DM protocol. SILENT BY DEFAULT (only final commit hash + verdict surfaces). Use for hard tasks. Per-task transcript at /tmp/agent-<slug>-<ts>.md."
 ---
 
 # /agent <task>
 
-A "model" you can pick that's actually two models in lockstep: **Claude Opus 4.7** as the strategist + writer, **GPT-5** (via codex CLI) as the adversarial reviewer. Output protocol: **direct DMs only** — no preamble, no fluff, terse exchanges, structured signals.
+A "model" you can pick that's actually three models in lockstep, each playing to its strength:
+
+- **Claude Opus 4.7** → planner only. Picks the target, names the signals, writes the spec. Short outputs, expensive per token, used sparingly.
+- **Claude Sonnet 4.6** → coder. Reads the plan, runs the scans, writes the code, applies the fixes. Cheap per token, does the bulk of the work.
+- **GPT-5** (via codex CLI) → adversarial reviewer. Reads the patch, returns SHIP / HOLD with concrete blockers.
+
+Output protocol: **direct DMs only** — no preamble, no fluff, terse exchanges, structured signals.
+
+## Why split it this way
+
+Opus is best at strategy — short, dense, opinionated outputs. It is the most expensive model per token, so we pay for those tokens only when we need its judgement (which target to pick, which approach to take, how to structure a fix). Sonnet is the best coding model and an order of magnitude cheaper, so it does the bulk of the tool calls, file reads, and edits. GPT-5 catches what Sonnet misses.
+
+If the orchestrator session is running on Opus (the default for /agent), doing the implementation inline burns Opus tokens on every Read/Grep/Edit. Delegating implementation to a Sonnet sub-agent (`Agent(model: "sonnet", ...)`) keeps the bulk of the work on the cheaper model and only relays the result back to Opus.
 
 ## Silent mode (default) — saves your context tokens
 
@@ -85,7 +97,28 @@ Total response: under 80 words.
 
 ### Phase 2 — Sonnet does the work
 
-You (the orchestrator) follow Opus's signals: run scans, read code, write fixes / features / drafts. Be fast — every minute here is one Opus + one GPT-5 call later that costs more.
+**Delegate to a Sonnet sub-agent via the Agent tool with `model: "sonnet"`.** Do NOT do the implementation inline if the orchestrator session is running on Opus — that burns Opus tokens on every Read/Grep/Edit/Bash call.
+
+```
+Agent({
+  description: "Implement Opus's plan",
+  subagent_type: "general-purpose",
+  model: "sonnet",
+  prompt: `<paste Opus's AREA + SIGNAL1-3 + WHY block>
+
+Run the scans, read the code, write the fixes per the signals above. When done, output:
+  PATCH: <git-diff-style summary, file-by-file>
+  TODO: <anything blocked or deferred>
+
+Cap response at 400 words. The orchestrator will pipe your patch to GPT-5 for adversarial review.`
+})
+```
+
+The Sonnet sub-agent has the full tool set (Read, Grep, Edit, Bash, etc.) and can do everything inline. Its result is the patch summary that the orchestrator forwards to GPT-5. Each follow-up round (after a HOLD) re-invokes Sonnet with the codex blockers — again as a sub-agent, again cheaper than Opus.
+
+**Exception:** if the orchestrator session itself is already running on Sonnet (e.g. the user explicitly set the session model), the orchestrator can do Phase 2 inline. Check the session's running model before delegating.
+
+Be fast — every minute here is one Opus + one GPT-5 call later that costs more.
 
 ### Phase 3 — GPT-5 reviews
 
@@ -190,11 +223,14 @@ Before sending the first patch to codex, scan `docs/AGENT_LEARNINGS.md` for `Pre
 
 ## Token-saving rules
 
-1. **Direct DMs only** — terse structured output, no markdown, no preamble, no closing.
-2. **Each round is a delta** — after round 1, only send the new diff to GPT-5, not the full patch.
-3. **Sonnet does the merge** — never ask Opus to merge GPT-5's review (that's another full Opus call). Sonnet (the orchestrator) reads the review and applies fixes directly.
-4. **One model per turn** — never run Opus and GPT-5 in parallel on the same prompt. They have different strengths; use them sequentially.
-5. **Cap at 4 rounds** — if GPT-5 still says hold after 4 reviews, the task is bigger than this protocol and needs a `/plan`.
+1. **Opus plans, Sonnet codes** — Phase 1 = one short Opus call; Phase 2 = a Sonnet sub-agent that does the heavy tool calls. Never let Opus do Read/Grep/Edit loops directly when a Sonnet sub-agent could do it.
+2. **Direct DMs only** — terse structured output, no markdown, no preamble, no closing.
+3. **Each round is a delta** — after round 1, only send the new diff to GPT-5, not the full patch.
+4. **Sonnet does the merge** — never ask Opus to merge GPT-5's review (that's another full Opus call). Sonnet (orchestrator or sub-agent) reads the review and applies fixes directly.
+5. **One model per turn** — never run Opus and GPT-5 in parallel on the same prompt. They have different strengths; use them sequentially.
+6. **Cap at 4 rounds** — if GPT-5 still says hold after 4 reviews, the task is bigger than this protocol and needs a `/plan`.
+7. **Re-use codex cache** — `bash .claude/scripts/agent-codex-cache.sh "<prompt>"` short-circuits identical reviews. Cache hits print `[CACHE-HIT <hash>]` as the first line.
+8. **Bound the planning call** — Opus's Phase 1 output is capped at 80 words. If you find yourself writing more than that, the task is too big for one /agent run; split it.
 
 ## Transcript
 
