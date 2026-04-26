@@ -120,7 +120,7 @@ The Sonnet sub-agent has the full tool set (Read, Grep, Edit, Bash, etc.) and ca
 
 Be fast — every minute here is one Opus + one GPT-5 call later that costs more.
 
-### Phase 3 — GPT-5 reviews
+### Phase 3 — GPT-5 reviews (primary)
 
 Pipe the patch / draft to codex CLI:
 
@@ -139,6 +139,27 @@ NITS: <optional small wins, max 2>"
 ```
 
 **Critical**: pipe `< /dev/null` so codex doesn't hang waiting for stdin.
+
+### Phase 3b — Gemini second-opinion (high-stakes only, 2-of-3 rule)
+
+For tasks tagged HIGH-STAKES (security fixes, payment flows, data deletion, anything with a CRITICAL audit finding) the protocol upgrades from a 2-model loop to a **2-of-3 reviewer rule**: the patch only ships if BOTH GPT-5 AND Gemini independently say SHIP.
+
+Why: codex and Sonnet share some training-distribution overlap and miss correlated bug classes ~8% of runs. Gemini is sourced from a different lineage and catches different classes (notably async ordering bugs and SQL-injection-by-template). Adding it as a third reviewer gates every high-stakes ship behind two independent passes.
+
+Implementation — only fires when `STAKES=HIGH` is set on the /agent invocation OR when the task description includes any of: "security", "payment", "delete", "CRITICAL", "IDOR".
+
+```bash
+# Gemini via the project's benchmark-models skill (runs in parallel with codex)
+bash .claude/scripts/agent-gemini-review.sh "<patch path>" > /tmp/agent-gemini-out.txt
+# Output format mirrors codex: VERDICT: ship | hold + ISSUES bullets.
+```
+
+Combine the verdicts:
+- BOTH ship → proceed to Phase 4 ship.
+- One ships, one holds → treat as HOLD; merge both review's blockers, fix, loop.
+- BOTH hold → REJECT (the patch is in worse shape than the loop can fix). Surface to user.
+
+For non-high-stakes tasks (refactors, UX polish, perf tweaks) skip Phase 3b — the GPT-5 review alone is sufficient.
 
 ### Phase 4 — loop or ship
 
