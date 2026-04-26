@@ -1,0 +1,292 @@
+# Self-Hosted SMTP via Postal — Setup & Migration Runbook
+
+> Operational guide for swapping Resend out for a self-hosted Postal mail
+> server. Code-side abstraction is already in place
+> (`src/lib/email/`); this doc is the deployment side.
+
+## Why bother
+
+| Volume / month | Resend cost | Postal cost (Hetzner CX21 + IPs) | Saving |
+|----------------|------------:|---------------------------------:|-------:|
+| 5,000          | $20         | ~$8                              | $12    |
+| 50,000         | $80         | ~$8                              | $72    |
+| 500,000        | $400        | ~$8                              | $392   |
+| 1,000,000      | $850+       | ~$8 + bandwidth                  | $800+  |
+
+Resend's free tier covers 3k/mo and the $20 tier covers 50k/mo. If we stay
+under 5k/mo, **don't bother with Postal** — the operational overhead
+isn't worth the savings.
+
+Postal pays off when:
+
+- We push past 5k/mo and want flat pricing.
+- We want full IP / domain control (private warm-up, multi-tenant
+  isolation, custom return-path).
+- We don't want a third party reading every transactional email body
+  (compliance / privacy posture).
+
+It does NOT pay off when:
+
+- We're allergic to ops work (Postal is a real mail server with real
+  failure modes — DKIM rotations, blacklist removal, etc.).
+- We expect <1k emails/day for the foreseeable future.
+- We need built-in deliverability tooling (Resend's reputation graph,
+  bounce dashboards, etc. are better out of the box).
+
+## Architecture summary
+
+The codebase already has a provider abstraction at `src/lib/email/`:
+
+```
+src/lib/email/
+  provider.ts                # EmailMessage / EmailProviderImpl contract
+  index.ts                   # Router — picks provider from EMAIL_PROVIDER env
+  providers/
+    resend.ts                # Default provider — Resend HTTP API
+    postal.ts                # Self-hosted Postal HTTP API
+    smtp-generic.ts          # nodemailer fallback (any SMTP relay)
+```
+
+Every email-sending caller in the app routes through `sendMessage(msg)`
+(or the legacy `sendEmail(payload)` back-compat wrapper). To swap
+providers, you set `EMAIL_PROVIDER=postal` in Vercel and redeploy. No
+code change.
+
+---
+
+## Step 0 — Pick a VPS
+
+Postal is heavy enough that shared hosting won't cut it. Recommended:
+
+| Provider     | Plan    | RAM | vCPU | €/mo  | Notes                                       |
+|--------------|---------|-----|------|-------|---------------------------------------------|
+| **Hetzner**  | CX21    | 4GB | 2    | €5.83 | Best price/perf, EU-only, recommended.      |
+| Vultr        | Cloud   | 4GB | 2    | $24   | Better US presence, more expensive.         |
+| DigitalOcean | Basic   | 4GB | 2    | $24   | Same tier — pick if already in DO ecosystem.|
+| Linode       | Shared  | 4GB | 2    | $24   | Same.                                        |
+
+We recommend **Hetzner CX21** in `nbg1` (Nuremberg) or `fsn1` (Falkenstein)
+for ~€6/month. Provision Ubuntu 24.04 LTS.
+
+> Postal needs port 25 open outbound. Most VPS providers block port 25 by
+> default to prevent spam — Hetzner unblocks it on request via support
+> ticket (usually granted within 24h). Vultr requires a payment-method
+> verification + ticket. AWS / GCP / Azure essentially never unblock 25
+> on shared IPs — don't bother.
+
+## Step 1 — DNS prep (do this BEFORE installing Postal)
+
+You need a **subdomain** for Postal to identify itself with — we
+recommend `mail.shortstack.work`. Reserve these DNS records on the
+authoritative DNS provider (Cloudflare or whatever you've moved to):
+
+| Record  | Name                          | Value                            | Notes                              |
+|---------|-------------------------------|----------------------------------|------------------------------------|
+| A       | `mail.shortstack.work`        | `<VPS public IPv4>`              | Postal admin UI + HTTP API.        |
+| A       | `postal-mta.shortstack.work`  | `<VPS public IPv4>`              | MTA hostname (used in Received).   |
+| MX      | `mail.shortstack.work`        | `postal-mta.shortstack.work` (priority 10) | Inbound to Postal itself. |
+| PTR     | (set on VPS provider portal)  | `postal-mta.shortstack.work`     | rDNS — MUST match HELO.            |
+
+For each domain you intend to send FROM (e.g. `shortstack.work`,
+`mail.shortstack.work`):
+
+| Record   | Name                                | Value                                                         |
+|----------|-------------------------------------|---------------------------------------------------------------|
+| TXT (SPF)| `@` or `mail`                       | `v=spf1 a mx include:postal-mta.shortstack.work ~all`         |
+| TXT (DMARC)| `_dmarc`                          | `v=DMARC1; p=quarantine; rua=mailto:postmaster@shortstack.work; aspf=s; adkim=s` |
+| TXT (DKIM)| `postal._domainkey`                | (generated by Postal during step 5)                           |
+| CNAME    | `psrp.<domain>`                     | `rp.postal-mta.shortstack.work` (return-path delegation)      |
+
+Lower TTLs to 300s for the duration of the migration so changes propagate
+quickly; raise them back to ~3600s once stable.
+
+## Step 2 — Provision the VPS
+
+```bash
+# SSH in as root after creation
+ssh root@<vps-ip>
+
+# Update + minimal hardening
+apt-get update && apt-get upgrade -y
+apt-get install -y ufw fail2ban
+ufw default deny incoming
+ufw default allow outgoing
+ufw allow 22/tcp        # SSH
+ufw allow 25/tcp        # SMTP inbound
+ufw allow 80/tcp        # HTTP (admin)
+ufw allow 443/tcp       # HTTPS (admin)
+ufw allow 587/tcp       # SMTP submission
+ufw enable
+```
+
+Set the hostname so it lines up with the rDNS:
+
+```bash
+hostnamectl set-hostname postal-mta.shortstack.work
+```
+
+## Step 3 — Install Docker + Docker Compose
+
+```bash
+apt-get install -y ca-certificates curl gnupg
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" \
+  | tee /etc/apt/sources.list.d/docker.list > /dev/null
+apt-get update
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+## Step 4 — Install Postal
+
+Postal ships an official installation helper. We use the Docker variant:
+
+```bash
+git clone https://github.com/postalserver/install /opt/postal-install
+cd /opt/postal-install
+./bin/postal bootstrap mail.shortstack.work     # generates config + secrets
+nano /opt/postal/config/postal.yml              # edit web_server.bind_address, smtp_relays, etc.
+./bin/postal initialize                         # provisions the database
+./bin/postal start                              # bring containers up
+./bin/postal make-user                          # create the admin user
+```
+
+Key fields in `postal.yml`:
+
+```yaml
+postal:
+  web_hostname: mail.shortstack.work
+  smtp_hostname: postal-mta.shortstack.work
+  use_ip_pools: true        # important for warmup buckets
+web_server:
+  bind_address: 0.0.0.0
+  port: 5000
+main_db:
+  host: postal-mariadb
+  username: postal
+  password: <random>
+message_db:
+  host: postal-mariadb
+  username: postal
+  password: <random>
+smtp_relays:
+  - hostname: 127.0.0.1
+    port: 25
+```
+
+Front the admin UI with Caddy or nginx + Let's Encrypt for HTTPS. Caddy
+example:
+
+```
+mail.shortstack.work {
+    reverse_proxy 127.0.0.1:5000
+}
+```
+
+## Step 5 — Configure the sending domain
+
+In the Postal admin UI:
+
+1. **Organizations → New** → name it `ShortStack`.
+2. **Servers → New** → name it `prod`. Pick the IP pool you provisioned.
+3. **Domains → Add** → `shortstack.work` (or `mail.shortstack.work`).
+4. Postal generates DKIM + SPF + return-path values. Copy them into
+   the DNS records you reserved in **Step 1**.
+5. Wait for DNS propagation, then click **Verify** in the Postal UI for
+   each record.
+6. Once all green, **Credentials → New API Key**. Save the key.
+
+## Step 6 — Wire ShortStack to Postal
+
+In Vercel project settings, add three environment variables:
+
+```
+POSTAL_API_URL=https://mail.shortstack.work
+POSTAL_API_KEY=<the API key from step 5.6>
+EMAIL_PROVIDER=postal
+```
+
+Trigger a Vercel redeploy. The provider router (`src/lib/email/index.ts`)
+picks up `EMAIL_PROVIDER=postal` and routes every send through Postal.
+The fallback chain (`postal → smtp_generic → none`) means a misconfigured
+Postal still gets emails out via the existing SMTP credentials.
+
+Smoke-test from the dashboard: send a test email from the email composer
+and confirm it shows up in Postal's `Messages` view.
+
+## Step 7 — IP warmup (4 weeks)
+
+Brand new IPs land in mailbox provider gray-zone reputation buckets. If
+you blast 5k/day on day one, Gmail throttles you to spam folder for
+weeks. Schedule:
+
+| Week | Daily volume | Notes                                                   |
+|------|-------------:|---------------------------------------------------------|
+| 1    | up to 50     | Mostly known-good recipients (transactional sends).     |
+| 2    | up to 200    | Add a few real customer addresses.                      |
+| 3    | up to 1,000  | Watch open rate + spam complaints daily.                |
+| 4    | up to 5,000  | If clean, ramp into normal volume.                      |
+| 5+   | full volume  |                                                         |
+
+You can rate-limit at the application layer by capping `checkLimit("emails", N)`
+in `usage-limits.ts` — but the simpler path is to keep `EMAIL_PROVIDER=resend`
+and only flip to `postal` once warmup is complete. During warmup you can
+test by overriding the env var on a single Vercel preview deploy.
+
+## Step 8 — Monitoring
+
+Set up these checks the first day Postal is live:
+
+- **Google Postmaster Tools** (`postmaster.google.com`) — verify the
+  sending domain. Watch the IP reputation graph daily for the first
+  month.
+- **MXToolbox blacklist check** — `https://mxtoolbox.com/blacklists.aspx`
+  with the VPS IP. Run weekly. If you land on Spamhaus or SORBS, follow
+  their delisting flow immediately.
+- **Postal's built-in dashboard** — `mail.shortstack.work/orgs/.../servers/...`.
+  Watch bounce rate (>5% is bad), spam complaints (>0.1% is bad).
+- **Optional: Telegram alert** — wire a cron that polls Postal's API
+  and pings `TELEGRAM_CHAT_ID` if hourly bounce rate > 3%.
+
+## Step 9 — Compliance bits
+
+Don't skip these. Resend handled them invisibly; Postal makes them your
+problem:
+
+- **`List-Unsubscribe` header** — required by Gmail/Yahoo on bulk
+  marketing email since Feb 2024. Add to `EmailMessage.tags` and have
+  `providers/postal.ts` translate it to a header. Required for any
+  send that isn't strictly 1:1 transactional.
+- **Plain-text alternative** — every HTML email should ship with a
+  `text` body. Postal will not auto-generate one.
+- **GDPR opt-out link** — every commercial email needs an unsubscribe
+  link. The PageHero / template baseStyle already has one for the
+  templated emails; verify it's there for ad-hoc sends.
+- **CAN-SPAM physical address** — your business postal address must
+  appear in marketing emails. Add to a footer template if not already.
+
+## Rollback plan
+
+If deliverability tanks, IP gets blacklisted, or Postal goes down:
+
+1. In Vercel, change `EMAIL_PROVIDER=resend` (or just delete the
+   variable — `resend` is the default).
+2. Redeploy — takes ~90 seconds.
+3. Resend resumes sending immediately.
+4. Don't delete `POSTAL_API_URL` / `POSTAL_API_KEY` — they're harmless
+   when `EMAIL_PROVIDER` isn't `postal`, and you'll want them when you
+   diagnose what went wrong.
+
+The fallback chain in `src/lib/email/index.ts` also auto-falls to
+`smtp_generic` if Postal becomes unreachable mid-deploy, so the rollback
+window is mostly insurance.
+
+## Reference
+
+- Postal docs: https://docs.postalserver.io/
+- API reference: https://github.com/postalserver/postal/blob/main/doc/api.md
+- DKIM / DMARC / SPF primer: https://www.cloudflare.com/learning/dns/dns-records/dns-spf-record/
+- Code abstraction: `src/lib/email/` in this repo.
+- Default provider router: `src/lib/email/index.ts` — see `getRequestedProvider()`.

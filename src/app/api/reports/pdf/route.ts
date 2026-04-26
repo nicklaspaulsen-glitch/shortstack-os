@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { requireOwnedClient } from "@/lib/security/require-owned-client";
+import { sendMessage } from "@/lib/email";
 import PDFDocument from "pdfkit";
 
 export const maxDuration = 60;
@@ -449,8 +450,6 @@ export async function POST(request: NextRequest) {
   let emailError: string | null = null;
   if (email_to_client && client.email) {
     try {
-      const base = process.env.NEXT_PUBLIC_APP_URL || "https://app.shortstack.work";
-      const resendKey = process.env.SMTP_PASS || process.env.RESEND_API_KEY;
       const brandName = branding.brandName || "ShortStack";
       const fromDisplay = `${brandName} <${process.env.SMTP_FROM || "growth@mail.shortstack.work"}>`;
       const subject = `${brandName} — Performance Report (${dFrom.toLocaleDateString()} – ${dTo.toLocaleDateString()})`;
@@ -463,47 +462,26 @@ export async function POST(request: NextRequest) {
           ${branding.whiteLabelActive ? brandName : "ShortStack OS"}
         </p>`;
 
-      if (resendKey) {
-        const res = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${resendKey}`,
-            "Content-Type": "application/json",
+      // Single send path through the provider abstraction. Backend choice
+      // (Resend/Postal/SMTP) is determined by EMAIL_PROVIDER env at runtime.
+      // PDF attachment is supported on every provider in the abstraction.
+      await sendMessage({
+        to: client.email,
+        from: fromDisplay,
+        subject,
+        html,
+        attachments: [
+          {
+            filename: `${client.business_name.replace(/[^a-zA-Z0-9-]/g, "_")}_report.pdf`,
+            content: pdfBuffer,
           },
-          body: JSON.stringify({
-            from: fromDisplay,
-            to: [client.email],
-            subject,
-            html,
-            attachments: [
-              {
-                filename: `${client.business_name.replace(/[^a-zA-Z0-9-]/g, "_")}_report.pdf`,
-                content: pdfBuffer.toString("base64"),
-              },
-            ],
-            tags: [
-              { name: "shortstack_user_id", value: user.id },
-              { name: "source", value: "report_generator" },
-            ],
-          }),
-        });
-        emailed = res.ok;
-        if (!res.ok) emailError = `Resend ${res.status}`;
-      } else {
-        // Fallback: send via the existing /api/emails/send (no attachment support) — at least notify
-        const res = await fetch(`${base}/api/emails/send`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json", cookie: request.headers.get("cookie") || "" },
-          body: JSON.stringify({
-            to: client.email,
-            subject,
-            body: `${html}<p><a href="${signed.signedUrl}">Download the PDF</a> (link expires in 7 days).</p>`,
-            client_id,
-          }),
-        });
-        emailed = res.ok;
-        if (!res.ok) emailError = `Fallback email ${res.status}`;
-      }
+        ],
+        tags: {
+          shortstack_user_id: user.id,
+          source: "report_generator",
+        },
+      });
+      emailed = true;
     } catch (err) {
       emailError = err instanceof Error ? err.message : "email send failed";
     }
