@@ -3,7 +3,11 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 
 export const maxDuration = 30;
 
-const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/svg+xml"];
+// Mirror of src/lib/file-types.ts ALLOWED_LOGO. WebP added in the drag-drop
+// fix sweep (commit pending) — this server route lagged behind the UI
+// validation, so WebP uploads were 400'ing post-validation. Codex round-1
+// caught the mismatch.
+const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/svg+xml", "image/webp"];
 const MAX_BYTES = 2 * 1024 * 1024; // 2 MB
 const BUCKET = "white-label-assets";
 
@@ -41,7 +45,7 @@ export async function POST(req: Request) {
   // Validate type
   if (!ALLOWED_TYPES.includes(file.type)) {
     return NextResponse.json(
-      { error: `Unsupported file type "${file.type}". Allowed: PNG, JPEG, SVG.` },
+      { error: `Unsupported file type "${file.type}". Allowed: PNG, JPEG, WebP, SVG.` },
       { status: 400 }
     );
   }
@@ -80,11 +84,13 @@ export async function POST(req: Request) {
 
   // Build deterministic per-user path so re-uploads overwrite cleanly.
   const buffer = Buffer.from(await file.arrayBuffer());
-  const ext = file.type === "image/png"
-    ? "png"
-    : file.type === "image/jpeg"
-      ? "jpg"
-      : "svg";
+  const extByMime: Record<string, string> = {
+    "image/png": "png",
+    "image/jpeg": "jpg",
+    "image/webp": "webp",
+    "image/svg+xml": "svg",
+  };
+  const ext = extByMime[file.type] || "bin";
   const path = `${user.id}/logo.${ext}`;
 
   // Upload to the white-label bucket (upsert to allow re-upload).

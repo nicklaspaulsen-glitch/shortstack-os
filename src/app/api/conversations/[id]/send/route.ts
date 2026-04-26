@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { insertOutboundMessage } from "@/lib/conversations";
 import { sendEmail } from "@/lib/email";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // POST /api/conversations/:id/send
 // Dispatches an outbound reply on the conversation's native channel, then
@@ -16,19 +17,26 @@ export async function POST(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Profile not found" }, { status: 403 });
+
   const { body, subject, attachments } = await request.json();
   if (!body || typeof body !== "string") {
     return NextResponse.json({ error: "body is required" }, { status: 400 });
   }
 
-  // Fetch conversation via RLS — will return nothing if not owned.
   const { data: conv } = await supabase
     .from("conversations")
-    .select("id, channel, external_thread_id, contact_id")
+    .select("id, channel, external_thread_id, contact_id, user_id")
     .eq("id", params.id)
     .maybeSingle();
 
   if (!conv) return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+
+  if (conv.user_id !== ownerId) {
+    console.error(`[conversations/send] access denied: conv.user_id=${conv.user_id} ownerId=${ownerId}`);
+    return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
+  }
 
   // For dispatch we use the service client — we need to hit provider APIs
   // with server credentials, and RLS has already authorized the caller.

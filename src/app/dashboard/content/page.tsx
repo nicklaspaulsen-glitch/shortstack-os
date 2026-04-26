@@ -22,6 +22,7 @@ import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
+import { ALLOWED_GENERAL_UPLOADS, buildAccept, validateFile } from "@/lib/file-types";
 
 type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal" | "pipeline" | "analytics" | "seo";
 
@@ -246,10 +247,15 @@ export default function ContentPage() {
     return "general";
   }
 
+  const DROP_GO_MAX_BYTES = 100 * 1024 * 1024; // 100 MB
+
   async function handleDropGoFiles(files: File[]) {
     if (files.length === 0) return;
 
     for (const file of files) {
+      const typeErr = validateFile(file, ALLOWED_GENERAL_UPLOADS, DROP_GO_MAX_BYTES);
+      if (typeErr) { toast.error(typeErr); continue; }
+
       const localId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
 
@@ -337,9 +343,10 @@ export default function ContentPage() {
 
   function onDropZone(e: React.DragEvent) {
     e.preventDefault();
+    e.stopPropagation();
     setDragOver(false);
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) handleDropGoFiles(files);
+    if (files.length > 0) void handleDropGoFiles(files);
   }
 
   async function remixPlatformTitle(item: DropGoItem, platform: DropGoPlatform) {
@@ -576,7 +583,7 @@ export default function ContentPage() {
         </div>
 
         <div
-          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={onDropZone}
           onClick={() => fileInputRef.current?.click()}
@@ -586,15 +593,15 @@ export default function ContentPage() {
         >
           <Upload size={36} className="mx-auto mb-3 text-gold" />
           <p className="text-sm font-medium">Drag & drop images, videos, PDFs, or docs</p>
-          <p className="text-xs text-muted mt-1">or click to browse. AI auto-packages each file.</p>
+          <p className="text-xs text-muted mt-1">or click to browse — AI auto-packages each file. JPG, PNG, WebP, GIF, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV up to 100 MB.</p>
           <input
             ref={fileInputRef}
             type="file"
             multiple
-            accept="image/*,video/*,application/pdf,.doc,.docx,.txt,.md,audio/*"
+            accept={buildAccept(ALLOWED_GENERAL_UPLOADS)}
             onChange={(e) => {
               const files = Array.from(e.target.files || []);
-              if (files.length > 0) handleDropGoFiles(files);
+              if (files.length > 0) void handleDropGoFiles(files);
               e.target.value = "";
             }}
             className="hidden"

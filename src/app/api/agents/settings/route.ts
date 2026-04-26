@@ -1,11 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
-// GET — load all agent settings
+type AllowedRole = "admin" | "founder" | "agency" | "team_member";
+const WRITE_ROLES: AllowedRole[] = ["admin", "founder"];
+const READ_ROLES: AllowedRole[] = ["admin", "founder", "agency", "team_member"];
+
+async function getUserRole(supabase: ReturnType<typeof createServerSupabase>, userId: string): Promise<string | null> {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userId)
+    .single();
+  return profile?.role ?? null;
+}
+
+// GET — load all agent settings (admin/founder/agency/team_member only)
 export async function GET(_request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const role = await getUserRole(supabase, user.id);
+  if (!role || !(READ_ROLES as string[]).includes(role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const serviceSupabase = createServiceClient();
   const { data } = await serviceSupabase
@@ -20,11 +38,16 @@ export async function GET(_request: NextRequest) {
   return NextResponse.json({ success: true, settings: { ...defaults, ...saved } });
 }
 
-// POST — save agent settings
+// POST — save agent settings (admin/founder only)
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const role = await getUserRole(supabase, user.id);
+  if (!role || !(WRITE_ROLES as string[]).includes(role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const settings = await request.json();
   const serviceSupabase = createServiceClient();

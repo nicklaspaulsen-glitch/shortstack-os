@@ -10,7 +10,7 @@ import { useRef, useState } from "react";
 import { Palette, Globe, Eye, Save, RotateCcw, Upload, AlertTriangle, Trash2, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
-const LOGO_ALLOWED_TYPES = ["image/png", "image/jpeg", "image/svg+xml"];
+const LOGO_ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/svg+xml"];
 const LOGO_MAX_BYTES = 2 * 1024 * 1024;
 
 export type WLState = {
@@ -48,7 +48,7 @@ function LogoDropZone({
 
   function validate(file: File): string | null {
     if (!LOGO_ALLOWED_TYPES.includes(file.type)) {
-      return `Unsupported file type "${file.type || "unknown"}". Allowed: PNG, JPEG, SVG.`;
+      return `Unsupported file type "${file.type || "unknown"}". Allowed: PNG, JPEG, WebP, SVG.`;
     }
     if (file.size > LOGO_MAX_BYTES) {
       return `File too large (${(file.size / 1024 / 1024).toFixed(2)} MB). Max 2 MB.`;
@@ -80,7 +80,9 @@ function LogoDropZone({
   }
 
   function onDrop(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault(); setDragOver(false);
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
     const file = e.dataTransfer.files?.[0];
     if (file) void upload(file);
   }
@@ -94,7 +96,7 @@ function LogoDropZone({
   return (
     <div className="space-y-2">
       <div
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
         onDrop={onDrop}
         onClick={() => inputRef.current?.click()}

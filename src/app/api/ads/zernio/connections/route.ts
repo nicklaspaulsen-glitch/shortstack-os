@@ -5,6 +5,7 @@ import {
   getAdConnections,
   ZERNIO_AD_PLATFORMS,
 } from "@/lib/services/zernio-ads";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 /**
  * GET /api/ads/zernio/connections?client_id=<uuid>
@@ -31,18 +32,21 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Profile not found" }, { status: 403 });
+
   const clientId = request.nextUrl.searchParams.get("client_id");
   if (!clientId) {
     return NextResponse.json({ error: "client_id is required" }, { status: 400 });
   }
 
-  // Verify ownership
+  // Verify ownership — use effective owner so team members can access their parent agency's clients
   const { data: client } = await supabase
     .from("clients")
     .select("id, profile_id, business_name")
     .eq("id", clientId)
     .maybeSingle();
-  if (!client || client.profile_id !== user.id) {
+  if (!client || client.profile_id !== ownerId) {
     return NextResponse.json({ error: "Client not found in your workspace" }, { status: 404 });
   }
 

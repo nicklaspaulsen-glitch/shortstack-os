@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // GET /api/conversations
 // Query: channel, status, unread_only, search, limit, offset
-// Returns list of conversations for the signed-in user (RLS-scoped).
+// Returns list of conversations scoped to the effective owner (team_member → parent agency).
 export async function GET(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Profile not found" }, { status: 403 });
 
   const url = new URL(request.url);
   const channel = url.searchParams.get("channel");
@@ -22,6 +26,7 @@ export async function GET(request: NextRequest) {
     .select(
       "id, channel, external_thread_id, subject, last_message_at, last_message_preview, unread_count, status, assigned_to_user_id, tags, contact_id, created_at",
     )
+    .eq("user_id", ownerId)
     .order("last_message_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
