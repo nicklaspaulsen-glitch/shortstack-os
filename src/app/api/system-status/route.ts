@@ -62,7 +62,17 @@ async function checkSupabase(): Promise<CheckResult> {
     missing, critical: true,
     docs_url: "https://supabase.com/dashboard",
   };
-  const { ok, status } = await probe(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/?apikey=${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`);
+  // Supabase REST v1 requires both `apikey` header and `Authorization: Bearer`
+  // header — the legacy ?apikey= query-string approach returns 401 on newer instances.
+  const { ok, status } = await probe(
+    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/`,
+    {
+      headers: {
+        apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+      },
+    }
+  );
   return ok
     ? { id: "supabase", label: "Supabase (database)", status: "ok", critical: true }
     : { id: "supabase", label: "Supabase (database)", status: "error", detail: `REST API returned HTTP ${status || "timeout"}`, critical: true };
