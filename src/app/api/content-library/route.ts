@@ -3,6 +3,7 @@ import { createServerSupabase, createServiceClient } from "@/lib/supabase/server
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { verifySniffedMime } from "@/lib/server/file-sniff";
 import { ALLOWED_GENERAL_UPLOADS } from "@/lib/file-types";
+import { uploadToR2 } from "@/lib/server/r2-client";
 
 /*
   Table: content_assets
@@ -91,13 +92,12 @@ export async function POST(req: NextRequest) {
   else if (file.type.startsWith("video/")) fileType = "video";
   else if (file.type.startsWith("audio/")) fileType = "audio";
 
-  // Upload to Supabase Storage
+  // Build R2 object key: content/{owner_id}/{ts}-{random}.{ext}
   const ext = file.name.split(".").pop() || "bin";
-  const storagePath = `${ownerId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const r2Key = `content/${ownerId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
   const service = createServiceClient();
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+  const buffer = Buffer.from(await file.arrayBuffer());
 
   /*
    * DEFENSE LAYER 2 — server-side magic-byte MIME sniffing.
@@ -105,28 +105,21 @@ export async function POST(req: NextRequest) {
    * Layer 2 (here) reads the actual bytes to detect spoofed Content-Type.
    * Text/unsniffable formats (CSV, TXT, SVG) return null from the sniff
    * and are passed through — layer 1 already covered them.
+   * The same Buffer instance is passed to both the sniff and the upload
+   * so we read the file body exactly once.
    */
   const sniffError = await verifySniffedMime(buffer, ALLOWED_GENERAL_UPLOADS, file.type);
   if (sniffError) {
     return NextResponse.json({ error: sniffError }, { status: 400 });
   }
 
-  const { error: uploadError } = await service.storage
-    .from("content-assets")
-    .upload(storagePath, buffer, {
-      contentType: file.type,
-      upsert: false,
-    });
-
-  if (uploadError) {
-    return NextResponse.json({ error: `Upload failed: ${uploadError.message}` }, { status: 500 });
+  let fileUrl: string;
+  try {
+    fileUrl = await uploadToR2(r2Key, buffer, file.type);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: `Upload failed: ${msg}` }, { status: 500 });
   }
-
-  const { data: urlData } = service.storage
-    .from("content-assets")
-    .getPublicUrl(storagePath);
-
-  const fileUrl = urlData.publicUrl;
 
   // Parse tags
   const parsedTags: string[] = tags
