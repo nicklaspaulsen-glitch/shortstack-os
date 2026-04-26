@@ -1,17 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 export async function GET(_request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const serviceSupabase = createServiceClient();
 
-  // Find clients that have autopilot entries in trinity_log
+  // Find clients that have autopilot entries in trinity_log — filtered by owner
   const { data: autopilotLogs } = await serviceSupabase
     .from("trinity_log")
     .select("client_id, action_type, created_at")
+    .eq("user_id", ownerId)
     .like("action_type", "autopilot_%")
     .order("created_at", { ascending: false })
     .limit(100);
@@ -33,11 +38,12 @@ export async function GET(_request: NextRequest) {
     }
   }
 
-  // Get client names
+  // Get client names — constrained to owner's clients for defence-in-depth
   const clientIds = Array.from(clientMap.keys());
   const { data: clients } = await serviceSupabase
     .from("clients")
     .select("id, business_name")
+    .eq("profile_id", ownerId)
     .in("id", clientIds);
 
   const result = clientIds.map(id => {

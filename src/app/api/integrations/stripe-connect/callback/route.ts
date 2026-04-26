@@ -34,11 +34,16 @@ export async function GET(request: NextRequest) {
     const stripe = getStripe();
     const account = await stripe.accounts.retrieve(accountId);
 
-    // Sanity check: the account we're upserting must have been created by
-    // this user (via our metadata tag set in /onboard). Protects against a
-    // crafted account_id query param.
+    // Unconditional ownership check: the account MUST have been created by this
+    // user (via our /onboard route which writes shortstack_user_id into metadata).
+    // We fail closed on missing metadata — a missing tag means the account was
+    // NOT created through our onboarding flow and must not be linked.
     const meta = account.metadata || {};
-    if (meta.shortstack_user_id && meta.shortstack_user_id !== user.id) {
+    if (!meta.shortstack_user_id) {
+      console.error("[stripe-connect/callback] account missing shortstack_user_id metadata:", accountId);
+      return redirectBack("stripe_connect_error=account_missing_ownership_metadata");
+    }
+    if (meta.shortstack_user_id !== user.id) {
       return redirectBack("stripe_connect_error=account_mismatch");
     }
 

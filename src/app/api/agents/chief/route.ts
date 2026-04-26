@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { checkAiRateLimit } from "@/lib/api-rate-limit";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // AI Chief Agent (Nexus) — oversees all agents, can spawn sub-agents dynamically
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { data: profile } = await supabase.from("profiles").select("plan_tier").eq("id", user.id).single();
   const limited = checkAiRateLimit(user.id, profile?.plan_tier);
@@ -15,7 +19,10 @@ export async function POST(request: NextRequest) {
   const { message, history } = await request.json();
   const serviceSupabase = createServiceClient();
 
-  // Gather full system context
+  // Gather full system context — all tenant-scoped queries filtered by ownerId.
+  // system_health and custom_agents are intentionally not filtered by owner:
+  //   system_health is a global integration-status table (no user_id column).
+  //   custom_agents scoped by user_id below.
   const [
     { data: recentActions },
     { count: totalLeads },
@@ -28,16 +35,17 @@ export async function POST(request: NextRequest) {
     { data: recentErrors },
     { data: customAgents },
   ] = await Promise.all([
-    serviceSupabase.from("trinity_log").select("action_type, description, status, created_at").order("created_at", { ascending: false }).limit(30),
-    serviceSupabase.from("leads").select("*", { count: "exact", head: true }),
-    serviceSupabase.from("clients").select("*", { count: "exact", head: true }).eq("is_active", true),
-    serviceSupabase.from("clients").select("business_name, mrr, health_score").eq("is_active", true),
-    serviceSupabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "sent"),
-    serviceSupabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("status", "replied"),
+    serviceSupabase.from("trinity_log").select("action_type, description, status, created_at").eq("user_id", ownerId).order("created_at", { ascending: false }).limit(30),
+    serviceSupabase.from("leads").select("*", { count: "exact", head: true }).eq("user_id", ownerId),
+    serviceSupabase.from("clients").select("*", { count: "exact", head: true }).eq("profile_id", ownerId).eq("is_active", true),
+    serviceSupabase.from("clients").select("business_name, mrr, health_score").eq("profile_id", ownerId).eq("is_active", true),
+    serviceSupabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "sent"),
+    serviceSupabase.from("outreach_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "replied"),
+    // system_health is intentionally cross-tenant (global integration status table, no user_id)
     serviceSupabase.from("system_health").select("integration_name, status, error_message"),
-    serviceSupabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("status", "published"),
-    serviceSupabase.from("trinity_log").select("description, action_type, created_at").eq("status", "failed").order("created_at", { ascending: false }).limit(10),
-    serviceSupabase.from("custom_agents").select("name, slug, role, execution_count, last_executed_at").eq("is_active", true).order("execution_count", { ascending: false }).limit(20),
+    serviceSupabase.from("content_calendar").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("status", "published"),
+    serviceSupabase.from("trinity_log").select("description, action_type, created_at").eq("user_id", ownerId).eq("status", "failed").order("created_at", { ascending: false }).limit(10),
+    serviceSupabase.from("custom_agents").select("name, slug, role, execution_count, last_executed_at").eq("user_id", ownerId).eq("is_active", true).order("execution_count", { ascending: false }).limit(20),
   ]);
 
   const totalMRR = (clients || []).reduce((s, c) => s + ((c as { mrr: number }).mrr || 0), 0);

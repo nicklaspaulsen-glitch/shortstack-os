@@ -34,10 +34,10 @@ export async function POST(request: NextRequest) {
     { count: totalActions },
     { count: successCount },
   ] = await Promise.all([
-    supabase.from("trinity_log").select("description, status, result, created_at").eq("action_type", actionType).order("created_at", { ascending: false }).limit(20),
-    supabase.from("trinity_log").select("description, error_message, created_at").eq("action_type", actionType).eq("status", "failed").order("created_at", { ascending: false }).limit(10),
-    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("action_type", actionType),
-    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("action_type", actionType).eq("status", "completed"),
+    supabase.from("trinity_log").select("description, status, result, created_at").eq("user_id", user.id).eq("action_type", actionType).order("created_at", { ascending: false }).limit(20),
+    supabase.from("trinity_log").select("description, error_message, created_at").eq("user_id", user.id).eq("action_type", actionType).eq("status", "failed").order("created_at", { ascending: false }).limit(10),
+    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("action_type", actionType),
+    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("user_id", user.id).eq("action_type", actionType).eq("status", "completed"),
   ]);
 
   const successRate = (totalActions || 0) > 0 ? Math.round(((successCount || 0) / (totalActions || 1)) * 100) : 0;
@@ -81,8 +81,9 @@ Generate a JSON response:
     const cleaned = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const training = JSON.parse(cleaned);
 
-    // Save training results
+    // Save training results — tag with user_id so future owner-filtered reads include it
     await supabase.from("trinity_log").insert({
+      user_id: user.id,
       action_type: actionType,
       description: `Agent ${agent_id} completed self-training: ${training.self_assessment}`,
       status: "completed",
