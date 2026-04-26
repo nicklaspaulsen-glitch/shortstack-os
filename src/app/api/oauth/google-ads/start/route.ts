@@ -1,3 +1,12 @@
+// DEPRECATED: replaced by /api/integrations/nango/* — kept for rollback.
+// Remove after Nango migration verified in prod.
+//
+// The new flow uses `@nangohq/frontend` for the popup + `@nangohq/node` to
+// fetch fresh credentials at API-call time. See:
+//   - src/lib/nango/client.ts        (server credentials)
+//   - src/lib/nango/browser.ts       (popup helper)
+//   - /api/integrations/nango/connect/google-ads
+//   - /api/integrations/nango/disconnect/google-ads
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 import {
