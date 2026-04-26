@@ -16,6 +16,9 @@ import {
 import { motion } from "framer-motion";
 import PageHero from "@/components/ui/page-hero";
 import { MotionPage } from "@/components/motion/motion-page";
+import { StatSkeleton, CardSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
+import Link from "next/link";
 
 const CHART_COLORS = ["#C9A84C", "#38bdf8", "#10b981", "#f43f5e", "#f59e0b", "#8b5cf6"];
 
@@ -26,6 +29,12 @@ interface TeamMember { name: string; leads: number; deals: number; revenue: numb
 interface ActivityItem { id: string; type: "lead" | "payment" | "post" | "deal" | "call"; message: string; time: string }
 
 export default function AnalyticsPage() {
+  const [isLoading, setIsLoading] = useState(true);
+  /*
+   * codex round-1: add error state so a network failure shows an error card
+   * with Retry instead of the "No analytics yet" empty state.
+   */
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalLeads: 0, leadsThisMonth: 0, leadsLastMonth: 0,
     totalClients: 0, activeClients: 0,
@@ -49,16 +58,25 @@ export default function AnalyticsPage() {
   const [activityFeed, setActivityFeed] = useState<ActivityItem[]>([]);
   const activityRef = useRef<HTMLDivElement>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchAnalytics(); }, [dateRange, customStart, customEnd]);
-
-  // Real-time activity feed polling
+  // codex round-1: use a ref-box so fetchAnalytics reads `cancelled.current`
+  // at await-resume time rather than from a stale snapshot parameter.
   useEffect(() => {
-    const interval = setInterval(() => {
+    const cancelled = { current: false };
+    setFetchError(null);
+    fetchAnalytics(cancelled).catch((err: unknown) => {
+      if (!cancelled.current) console.error("[analytics] fetchAnalytics error:", err);
+    });
+    return () => { cancelled.current = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateRange, customStart, customEnd]);
+
+  // Real-time activity feed polling — clearInterval prevents leak on unmount.
+  useEffect(() => {
+    fetchActivityFeed();
+    const id = setInterval(() => {
       fetchActivityFeed();
     }, 15000);
-    fetchActivityFeed();
-    return () => clearInterval(interval);
+    return () => clearInterval(id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,7 +109,8 @@ export default function AnalyticsPage() {
     return { start: new Date(Date.now() - days * 86400000).toISOString(), end: now.toISOString() };
   }
 
-  async function fetchAnalytics() {
+  async function fetchAnalytics(cancelled: { current: boolean } = { current: false }) {
+    if (!cancelled.current) setIsLoading(true);
     try {
     const now = new Date();
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
@@ -133,6 +152,9 @@ export default function AnalyticsPage() {
 
     const totalMRR = clients?.reduce((s: number, c: Record<string, number>) => s + (c.mrr || 0), 0) || 0;
     const dealValue = deals?.reduce((s: number, d: Record<string, number>) => s + (d.amount || 0), 0) || 0;
+
+    // Guard against stale-response setState on rapid date-range changes.
+    if (cancelled.current) return;
 
     setStats({
       totalLeads: totalLeads || 0, leadsThisMonth: leadsThisMonth || 0, leadsLastMonth: leadsLastMonth || 0,
@@ -178,7 +200,12 @@ export default function AnalyticsPage() {
     // Revenue data (populated from real invoices when available)
     setRevenueByMonth([]);
     } catch (err) {
-      console.error("Analytics fetch failed:", err);
+      console.error("[analytics] fetch failed:", err);
+      if (!cancelled.current) {
+        setFetchError(err instanceof Error ? err.message : "Failed to load analytics");
+      }
+    } finally {
+      if (!cancelled.current) setIsLoading(false);
     }
   }
 
@@ -355,7 +382,61 @@ export default function AnalyticsPage() {
         subtitle="See what's working — leads, revenue, and content ROI at a glance."
         gradient="blue"
       />
+      {/* Loading skeleton */}
+      {isLoading && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2.5">
+            {Array.from({ length: 6 }).map((_, i) => <StatSkeleton key={i} />)}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <CardSkeleton />
+            <CardSkeleton />
+          </div>
+        </div>
+      )}
+
+      {/* Error card — fetch failed; show instead of empty or chart state */}
+      {!isLoading && fetchError !== null && (
+        <div className="flex flex-col items-center justify-center py-16 text-center space-y-3">
+          <p className="text-sm text-danger font-medium">Could not load analytics</p>
+          <p className="text-xs text-muted max-w-xs">{fetchError}</p>
+          <button
+            className="btn-secondary text-xs px-4 py-2"
+            onClick={() => {
+              setFetchError(null);
+              const cancelled = { current: false };
+              fetchAnalytics(cancelled).catch((err: unknown) => {
+                if (!cancelled.current) console.error("[analytics] retry failed:", err);
+              });
+            }}
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Empty state — data fetched, no error, and ALL metrics are truly zero */}
+      {!isLoading && fetchError === null &&
+        stats.totalLeads === 0 && stats.totalMRR === 0 && stats.dmsSent === 0 &&
+        stats.totalClients === 0 && stats.totalDeals === 0 && stats.replies === 0 &&
+        stats.callsBooked === 0 && stats.contentPublished === 0 && (
+        <EmptyState
+          type="no-analytics"
+          size={160}
+          title="No analytics yet"
+          description="Start by adding your first client to see leads, revenue, and content ROI here."
+          action={
+            <Link href="/dashboard/clients" className="btn-primary text-xs px-4 py-2">
+              Add your first client
+            </Link>
+          }
+        />
+      )}
+
       {/* Date Range Picker + Export */}
+      {!isLoading && fetchError === null && (stats.totalLeads > 0 || stats.totalMRR > 0 || stats.dmsSent > 0 ||
+        stats.totalClients > 0 || stats.totalDeals > 0 || stats.replies > 0 ||
+        stats.callsBooked > 0 || stats.contentPublished > 0) && <>
       <div className="flex items-start justify-end flex-wrap gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Feature 14: Custom Date Range Picker */}
@@ -1041,6 +1122,7 @@ export default function AnalyticsPage() {
           )}
         </div>
       </div>
+      </>}
     </MotionPage>
   );
 }

@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { generatePersonalBrandIdeas } from "@/lib/services/content-ai";
 
-// Runs every Sunday at 09:00 CET
+// Generates a fresh batch of long-form + short-form personal brand content
+// ideas via the generatePersonalBrandIdeas() service and inserts them into
+// the personal_brand_ideas table.
+//
+// Schedule: "0 8 * * 0" — every Sunday 08:00 UTC = 09:00 CET (set in
+// vercel.json Apr 27).
 export const maxDuration = 120;
 
 export async function GET(request: NextRequest) {

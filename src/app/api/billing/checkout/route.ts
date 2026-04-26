@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
-  console.log(`[billing/checkout] using ${resolvedFrom} for ${tierKey} ${cycle}`);
+  console.warn(`[billing/checkout] using ${resolvedFrom} for ${tierKey} ${cycle}`);
 
   // Resolve baseUrl safely. Stripe rejects success_url/cancel_url with
   // "Not a valid URL" if the URL doesn't start with http(s):// and have a

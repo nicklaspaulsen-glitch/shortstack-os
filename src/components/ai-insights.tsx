@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Sparkles, TrendingUp, Zap, Target, Film,
   Search, CheckCircle, ArrowRight, RefreshCw
@@ -43,24 +43,36 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionedIds, setActionedIds] = useState<Set<number>>(new Set());
+  const [fetchKey, setFetchKey] = useState(0);
+
+  const refresh = useCallback(() => {
+    setInsights([]);
+    setFetchKey((k) => k + 1);
+  }, []);
 
   useEffect(() => {
-    fetchInsights();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientId]);
-
-  async function fetchInsights() {
+    // AbortController prevents stale-response setState on rapid clientId changes.
+    const ctrl = new AbortController();
     setLoading(true);
-    try {
-      const url = clientId ? `/api/insights/generate?client_id=${clientId}` : "/api/insights/generate";
-      const res = await fetch(url);
-      const data = await res.json();
-      if (data.insights && Array.isArray(data.insights)) {
-        setInsights(data.insights);
-      }
-    } catch {}
-    setLoading(false);
-  }
+    const url = clientId ? `/api/insights/generate?client_id=${clientId}` : "/api/insights/generate";
+    fetch(url, { signal: ctrl.signal })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.insights && Array.isArray(data.insights)) {
+          setInsights(data.insights);
+        }
+      })
+      .catch((err: unknown) => {
+        if (err instanceof Error && err.name === "AbortError") return;
+        console.error("[ai-insights] fetch failed:", err);
+      })
+      .finally(() => {
+        // codex round-1: only clear loading when this request was not the one aborted;
+        // an aborted request must not hide the newer in-flight loading indicator.
+        if (!ctrl.signal.aborted) setLoading(false);
+      });
+    return () => ctrl.abort();
+  }, [clientId, fetchKey]);
 
   function markActioned(index: number) {
     setActionedIds(prev => {
@@ -98,7 +110,7 @@ export default function AIInsights({ clientId }: { clientId?: string }) {
             {insights.length - actionedIds.size} active
           </span>
         </div>
-        <button onClick={() => { setInsights([]); fetchInsights(); }} className="text-muted hover:text-foreground transition-colors">
+        <button onClick={refresh} className="text-muted hover:text-foreground transition-colors">
           <RefreshCw size={12} />
         </button>
       </div>

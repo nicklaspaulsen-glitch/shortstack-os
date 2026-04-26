@@ -1,4 +1,9 @@
-export type UserRole = "admin" | "team_member" | "client";
+// Mirrors the Postgres `user_role` enum exactly. The DB enum was extended
+// on 2026-04-26 with 'founder' (platform-wide god mode) and 'agency'
+// (paid agency owner — distinct from admin which is reserved for the
+// internal team). Code that uses these values now compiles AND matches
+// what the database accepts.
+export type UserRole = "admin" | "founder" | "agency" | "team_member" | "client";
 
 export interface Profile {
   id: string;

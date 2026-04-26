@@ -97,6 +97,21 @@ results than ad-hoc work.
   `/codex:review` (requires `codex login` first)
 - TDD / write tests first → `/tdd`
 
+### Auto-route to /agent (Opus+GPT-5 loop, silent by default)
+
+These phrases mean the user wants the **dual-model loop** that uses
+Opus to plan, Sonnet to draft, and GPT-5 (codex CLI) to adversarially
+review across multiple rounds until SHIP. Default to silent mode —
+only the final commit + verdict surfaces in the chat. Full transcript
+goes to `/tmp/agent-<slug>-<ts>.md`. Override with `verbose:` prefix.
+
+- "find every bug" / "find every CRITICAL" / "deep bug hunt" → `/agent`
+- "fix this hard refactor" / "I'm stuck on X" → `/agent`
+- "harden X" / "audit X for security" / "close the IDOR" → `/agent`
+- "make X bulletproof" / "production-ready X" → `/agent`
+- ambiguous high-stakes asks → ask once "run through /agent (codex+opus
+  loop) or single-model?" then proceed.
+
 ## Commit style
 
 Format: `<type>(<scope>): <subject>` — type ∈ feat / fix / sec / docs /

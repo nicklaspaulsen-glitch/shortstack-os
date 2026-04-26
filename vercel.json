@@ -120,6 +120,18 @@
     {
       "path": "/api/cron/review-requests",
       "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/cron/ai-handoff-cleanup",
+      "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/cron/daily-briefing",
+      "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/personal-brand",
+      "schedule": "0 8 * * 0"
     }
   ]
 }

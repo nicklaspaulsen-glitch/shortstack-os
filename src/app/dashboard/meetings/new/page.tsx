@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Upload, Loader2, Mic, FileAudio } from "lucide-react";
 import toast from "react-hot-toast";
+import { ALLOWED_VOICE_SAMPLE, buildAccept, validateFile } from "@/lib/file-types";
 
 export default function NewMeetingPage() {
   const router = useRouter();
@@ -18,12 +19,16 @@ export default function NewMeetingPage() {
   >("idle");
   const [dragOver, setDragOver] = useState(false);
 
+  // Keep in sync with src/app/api/meetings/[id]/upload/route.ts MAX_BYTES.
+  // Previously the client said 500 MB while the server capped at 250 MB,
+  // so files 250-500 MB passed validation and 400'd at upload. Codex
+  // round-1 catch.
+  const MEETINGS_MAX_BYTES = 250 * 1024 * 1024;
+
   function pick(f: File | undefined) {
     if (!f) return;
-    if (!f.type.startsWith("audio/") && !/\.(mp3|wav|m4a|webm|ogg|mp4)$/i.test(f.name)) {
-      toast.error("Please pick an audio file (mp3/wav/m4a/webm/ogg).");
-      return;
-    }
+    const err = validateFile(f, ALLOWED_VOICE_SAMPLE, MEETINGS_MAX_BYTES);
+    if (err) { toast.error(err); return; }
     setFile(f);
     if (!title) setTitle(f.name.replace(/\.[^.]+$/, ""));
   }
@@ -140,11 +145,13 @@ export default function NewMeetingPage() {
           <div
             onDrop={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               setDragOver(false);
               pick(e.dataTransfer.files?.[0]);
             }}
             onDragOver={(e) => {
               e.preventDefault();
+              e.stopPropagation();
               setDragOver(true);
             }}
             onDragLeave={() => setDragOver(false)}
@@ -160,9 +167,9 @@ export default function NewMeetingPage() {
             <input
               ref={inputRef}
               type="file"
-              accept="audio/*,.mp3,.wav,.m4a,.webm,.ogg,.mp4"
+              accept={buildAccept(ALLOWED_VOICE_SAMPLE)}
               className="hidden"
-              onChange={(e) => pick(e.target.files?.[0] || undefined)}
+              onChange={(e) => pick(e.target.files?.[0] ?? undefined)}
             />
             {file ? (
               <div className="flex items-center justify-center gap-2 text-[11px]">
@@ -177,7 +184,7 @@ export default function NewMeetingPage() {
                 <Upload size={24} className="mx-auto mb-2 text-muted" />
                 <p className="text-[11px] font-medium">Drop an audio file here</p>
                 <p className="text-[10px] text-muted mt-1">
-                  mp3, wav, m4a, webm, ogg up to 250 MB
+                  MP3, WAV, M4A, OGG, WebM up to 250 MB
                 </p>
               </>
             )}

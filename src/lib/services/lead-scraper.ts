@@ -166,7 +166,7 @@ export async function scrapeGooglePlaces(
 
     // Log the breakdown so the user can see WHY a query returned fewer than requested
     if (leads.length < maxResults) {
-      console.log(
+      console.warn(
         `[scrapeGooglePlaces] ${query}: requested=${maxResults} got=${leads.length} ` +
         `raw=${rawFetched} pages=${pagesFetched} droppedNoPhone=${droppedNoPhone} droppedTooPopular=${droppedTooPopular}`,
       );

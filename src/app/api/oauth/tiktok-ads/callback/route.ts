@@ -5,6 +5,7 @@ import {
   uiRedirectOnError,
   uiRedirectOnSuccess,
 } from "@/lib/ads/oauth-helpers";
+import { canUserWriteForClient, verifyOAuthState } from "@/lib/oauth-state";
 
 // GET /api/oauth/tiktok-ads/callback
 // Handles both:
@@ -19,17 +20,25 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(uiRedirectOnError("tiktok_ads", "denied"));
   }
 
-  // Try the new signed state first
+  // Try the new signed state first (ads-flow encodeState format)
   const signedState = stateStr ? decodeState(stateStr) : null;
 
-  // Fallback — legacy JSON state (used by the original Ads Manager Zernio flow)
-  let legacy: { client_id: string } | null = null;
+  // Legacy path — used by /dashboard/ads page hitting /api/oauth/tiktok-ads
+  // (the per-client social_accounts flow). Pre-Apr 26 this trusted raw
+  // JSON state which let attackers craft a state with a victim's
+  // client_id. Now verifies via signOAuthState/verifyOAuthState (HMAC) —
+  // matches the same hardening applied to Google/LinkedIn/TikTok-content/
+  // Discord callbacks earlier today.
+  //
+  // We also keep `uid` so the persistence step can enforce that the
+  // session completing the callback is the same user who initiated the
+  // OAuth flow (defense-in-depth — closes the codex round-1 nit on this
+  // route).
+  let legacy: { client_id: string; uid: string } | null = null;
   if (!signedState && stateStr) {
-    try {
-      const parsed = JSON.parse(stateStr);
-      if (parsed?.client_id) legacy = parsed;
-    } catch {
-      /* ignore */
+    const verified = verifyOAuthState(stateStr);
+    if (verified?.client_id && verified.platform === "tiktok_ads" && verified.uid) {
+      legacy = { client_id: verified.client_id, uid: verified.uid };
     }
   }
 
@@ -143,6 +152,24 @@ export async function GET(request: NextRequest) {
 
     // Legacy path — per-client social_accounts persistence
     if (legacy?.client_id && primaryId) {
+      // Defense-in-depth: confirm the currently-authenticated session is
+      // the same user that initiated the OAuth flow, AND that they still
+      // have write rights for the target client_id. Either check failing
+      // means we refuse to write tokens onto somebody else's row.
+      const supabase = createServerSupabase();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user || user.id !== legacy.uid) {
+        return NextResponse.redirect(uiRedirectOnError("tiktok_ads", "auth_mismatch"));
+      }
+      const allowed = await canUserWriteForClient(
+        supabase as unknown as Parameters<typeof canUserWriteForClient>[0],
+        user.id,
+        legacy.client_id,
+      );
+      if (!allowed) {
+        return NextResponse.redirect(uiRedirectOnError("tiktok_ads", "forbidden"));
+      }
+
       const record = {
         client_id: legacy.client_id,
         platform: "tiktok_ads",

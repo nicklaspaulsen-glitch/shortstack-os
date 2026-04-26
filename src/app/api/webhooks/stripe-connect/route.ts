@@ -27,6 +27,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { type Stripe } from "stripe";
 import { getStripe } from "@/lib/stripe/client";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
@@ -48,11 +49,24 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = createServiceClient();
+
+  // CRITICAL idempotency — claim/complete model. See helper for details.
+  const claim = await claimEvent(supabase, "stripe_connect", event.id);
+  if (claim === "already_done") {
+    return NextResponse.json({ ok: true, deduped: true, event_id: event.id });
+  }
+  if (claim === "in_flight") {
+    return NextResponse.json({ ok: true, deduped: true, in_flight: true, event_id: event.id });
+  }
+
   const connectedAccountId = event.account; // undefined for platform-level events
 
   // All events we care about here come from a connected account. Ignore
   // platform-only events (they belong to the Trinity subscription webhook).
+  // Mark complete so the row doesn't churn through stale reclaims every
+  // 5 minutes — there's no work to do, this is a final state.
   if (!connectedAccountId) {
+    await completeEvent(supabase, "stripe_connect", event.id);
     return NextResponse.json({ received: true, ignored: "no_account_field" });
   }
 
@@ -65,6 +79,8 @@ export async function POST(request: NextRequest) {
 
   if (!agency) {
     // Webhook from an account we no longer track (e.g. post-disconnect).
+    // Same as above — terminal state, mark complete.
+    await completeEvent(supabase, "stripe_connect", event.id);
     return NextResponse.json({ received: true, ignored: "unknown_account" });
   }
 
@@ -193,5 +209,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Mark event done so retries see status='done' and short-circuit.
+  await completeEvent(supabase, "stripe_connect", event.id);
   return NextResponse.json({ received: true });
 }

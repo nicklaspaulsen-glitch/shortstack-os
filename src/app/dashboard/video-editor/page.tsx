@@ -38,6 +38,7 @@ import { Wizard, AdvancedToggle, useAdvancedMode } from "@/components/ui/wizard"
 import { VIDEO_PRESETS, VIDEO_PRESET_CATEGORIES } from "@/lib/presets";
 import { ADS_PRESET } from "@/lib/video-presets/ads";
 import { getMaxReferenceFile, formatBytes } from "@/lib/plan-config";
+import { ALLOWED_MEDIA, buildAccept, validateFile } from "@/lib/file-types";
 import {
   CAPTION_STYLES_LIBRARY,
   EFFECTS_CATALOG,
@@ -2356,13 +2357,11 @@ export default function VideoEditorPage() {
 
   function handleFileUpload(files: File[]) {
     const remaining = 5 - referenceFiles.length;
-    if (remaining <= 0) { toast.error("Max 5 files"); return; }
+    if (remaining <= 0) { toast.error("Max 5 reference files"); return; }
     const toProcess = files.slice(0, remaining);
     toProcess.forEach(file => {
-      if (file.size > maxRefFile) {
-        toast.error(`${file.name} is too large (max ${maxRefLabel})`);
-        return;
-      }
+      const err = validateFile(file, ALLOWED_MEDIA, maxRefFile);
+      if (err) { toast.error(err); return; }
       const reader = new FileReader();
       reader.onload = () => {
         const base64 = reader.result as string;
@@ -3598,7 +3597,7 @@ export default function VideoEditorPage() {
                       key={scene.id}
                       draggable
                       onDragStart={() => handleSceneDragStart(scene.id)}
-                      onDragOver={(e) => e.preventDefault()}
+                      onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
                       onDrop={() => handleSceneDrop(scene.id)}
                       className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-grab active:cursor-grabbing ${
                         draggedScene === scene.id ? "border-gold/40 bg-gold/5 opacity-60" : "border-border hover:border-gold/20"
@@ -6232,10 +6231,11 @@ export default function VideoEditorPage() {
                 <label className="block text-[9px] text-muted uppercase tracking-wider mb-1">Reference Files (faces, logos, footage, effects)</label>
                 <div
                   className="border-2 border-dashed border-border/40 rounded-xl p-3 text-center hover:border-gold/30 transition-colors cursor-pointer"
-                  onDragOver={e => { e.preventDefault(); e.currentTarget.classList.add("border-gold/40", "bg-gold/5"); }}
+                  onDragOver={e => { e.preventDefault(); e.stopPropagation(); e.currentTarget.classList.add("border-gold/40", "bg-gold/5"); }}
                   onDragLeave={e => { e.currentTarget.classList.remove("border-gold/40", "bg-gold/5"); }}
                   onDrop={e => {
                     e.preventDefault();
+                    e.stopPropagation();
                     e.currentTarget.classList.remove("border-gold/40", "bg-gold/5");
                     handleFileUpload(Array.from(e.dataTransfer.files));
                   }}
@@ -6243,7 +6243,7 @@ export default function VideoEditorPage() {
                     const input = document.createElement("input");
                     input.type = "file";
                     input.multiple = true;
-                    input.accept = "image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime,audio/mpeg,audio/wav,.png,.jpg,.jpeg,.webp,.mp4,.webm,.mov,.mp3,.wav";
+                    input.accept = buildAccept(ALLOWED_MEDIA);
                     input.onchange = (ev) => {
                       const files = Array.from((ev.target as HTMLInputElement).files || []);
                       handleFileUpload(files);
@@ -6253,7 +6253,7 @@ export default function VideoEditorPage() {
                 >
                   <Upload size={16} className="mx-auto text-muted mb-1" />
                   <p className="text-[10px] text-muted">Drop files or click to upload (up to 5, max {maxRefLabel} each)</p>
-                  <p className="text-[8px] text-muted/60">PNG, JPG, WEBP, MP4, MOV, WEBM, MP3, WAV</p>
+                  <p className="text-[8px] text-muted/60">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV</p>
                 </div>
                 {referenceFiles.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
@@ -6701,6 +6701,31 @@ export default function VideoEditorPage() {
                   <PremiereEditor compositionId={result?.render_id || undefined} />
                 </div>
               ) : (<>
+
+              {/* Sub-task 4: Plan-gated timeline length banner.
+                  Shows when the timeline duration exceeds the user's tier cap.
+                  maxVideoSeconds comes from LIMITS_BY_TIER[planTier].max_video_seconds.
+                  Renders above the timeline rail so the user sees it immediately. */}
+              {Number.isFinite(maxVideoSeconds) && timelineProject.duration / 1000 > maxVideoSeconds && (
+                <div className="mb-2 flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] text-amber-300">
+                  <Lock size={12} className="shrink-0 text-amber-400" />
+                  <span>
+                    Your <strong>{planTier}</strong> plan caps renders at{" "}
+                    <strong>{formatVideoDuration(maxVideoSeconds)}</strong>.
+                    Timeline is{" "}
+                    <strong>{Math.round(timelineProject.duration / 1000)}s</strong> —
+                    only the first {formatVideoDuration(maxVideoSeconds)} will export.
+                  </span>
+                  {nextVideoTierLabel && (
+                    <Link
+                      href="/dashboard/billing"
+                      className="ml-auto shrink-0 rounded px-2 py-0.5 text-[10px] font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/30 transition-colors"
+                    >
+                      Upgrade → {nextVideoTierLabel}
+                    </Link>
+                  )}
+                </div>
+              )}
 
               <VideoTimeline
                 project={timelineProject}

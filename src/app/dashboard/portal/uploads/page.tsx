@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { getMaxStorageUpload, formatBytes } from "@/lib/plan-config";
+import { ALLOWED_GENERAL_UPLOADS, buildAccept, validateFile } from "@/lib/file-types";
 
 interface ClientUpload {
   id: string;
@@ -143,13 +144,15 @@ export default function ClientUploadsPage() {
     if (!clientId) return;
     setUploading(true);
 
+    const hardCap = 100 * 1024 * 1024; // 100 MB absolute portal limit
     for (const file of files) {
+      // Type validation — block unsafe/unsupported formats
+      const typeErr = validateFile(file, ALLOWED_GENERAL_UPLOADS, hardCap);
+      if (typeErr) { toast.error(typeErr); continue; }
+
+      // Plan-tier size cap (may be stricter than hardCap)
       if (maxUpload !== -1 && file.size > maxUpload) {
-        toast.error(`${file.name} is too large (max ${maxUploadLabel})`);
-        continue;
-      }
-      if (file.size > 100 * 1024 * 1024) {
-        toast.error(`${file.name} exceeds 100 MB portal limit`);
+        toast.error(`${file.name} is too large (max ${maxUploadLabel} on your plan)`);
         continue;
       }
       try {
@@ -198,9 +201,10 @@ export default function ClientUploadsPage() {
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
+    e.stopPropagation();
     setDragOver(false);
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) handleFileUpload(files);
+    if (files.length > 0) void handleFileUpload(files);
   }
 
   const analytics: Analytics = {
@@ -296,7 +300,7 @@ export default function ClientUploadsPage() {
         <div className="space-y-4">
           {/* Drop zone */}
           <div
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
@@ -306,9 +310,10 @@ export default function ClientUploadsPage() {
               const input = document.createElement("input");
               input.type = "file";
               input.multiple = true;
+              input.accept = buildAccept(ALLOWED_GENERAL_UPLOADS);
               input.onchange = (e) => {
                 const files = Array.from((e.target as HTMLInputElement).files || []);
-                if (files.length > 0) handleFileUpload(files);
+                if (files.length > 0) void handleFileUpload(files);
               };
               input.click();
             }}
@@ -324,7 +329,7 @@ export default function ClientUploadsPage() {
                   <Upload size={20} className="text-gold" />
                 </div>
                 <p className="text-sm font-medium">Drop files here or click to upload</p>
-                <p className="text-[10px] text-muted">Images, videos, documents, brand assets — max {maxUploadLabel} per file</p>
+                <p className="text-[10px] text-muted">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — max {maxUploadLabel}</p>
               </div>
             )}
           </div>

@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+// IDEMPOTENCY: ElevenLabs retries on non-2xx. Without dedup, retries cause
+// duplicate outreach_log updates, duplicate lead-status flips, and duplicate
+// trinity_log inserts. We use conversation_id as the stable per-event key.
 
 // POST /api/webhooks/elevenlabs
 // Receives conversation events from ElevenLabs Conversational AI.
@@ -83,10 +87,10 @@ export async function POST(request: NextRequest) {
     // link the elevenlabs `conversation_id` to the originating Twilio
     // call_sid (and from there to the voice_calls row).
     //
-    // We do this on the FIRST event we see (conversation_initiation or any
-    // earlier-arriving event that carries dynamic_variables). The lookup
-    // is idempotent — re-running it just sets eleven_conversation_id to
-    // the same value.
+    // Run BEFORE the dedup claim — link is idempotent (filtered on
+    // eleven_conversation_id IS NULL) so a re-delivered event won't double-
+    // write. We need this to run on retries too in case the original handler
+    // crashed before linking.
     const dynamicVars =
       (body.conversation_initiation_client_data?.dynamic_variables as
         | Record<string, unknown>
@@ -113,6 +117,17 @@ export async function POST(request: NextRequest) {
           linkErr.message,
         );
       }
+    }
+
+    // Claim the event atomically. Returns 'already_done' or 'in_flight' if a
+    // prior attempt already ran (or is running). This prevents duplicate
+    // outreach_log updates and duplicate trinity_log inserts on retries.
+    const claim = await claimEvent(service, "elevenlabs", conversationId);
+    if (claim === "already_done") {
+      return NextResponse.json({ ok: true, deduped: true });
+    }
+    if (claim === "in_flight") {
+      return NextResponse.json({ ok: true, deduped: true, in_flight: true });
     }
 
     if (eventType === "conversation_ended" || eventType === "post_conversation") {
@@ -219,10 +234,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    await completeEvent(service, "elevenlabs", conversationId);
     return NextResponse.json({ ok: true, event: eventType });
   } catch (err) {
+    // Do NOT call completeEvent — leave row as 'processing' so the provider
+    // retry can reclaim it after the 5-min stale window and re-run.
     console.error("[webhooks/elevenlabs] error:", err);
-    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
+    throw err;
   }
 }
 

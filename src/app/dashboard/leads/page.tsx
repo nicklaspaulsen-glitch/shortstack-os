@@ -14,6 +14,7 @@ import { EmptyState } from "@/components/ui/empty-state-illustration";
 import CollapsibleStats from "@/components/ui/collapsible-stats";
 import Link from "next/link";
 import PageHero from "@/components/ui/page-hero";
+import { ALLOWED_CSV, buildAccept, validateFile } from "@/lib/file-types";
 
 type MainTab = "leads" | "scoring" | "routing" | "attribution" | "nurture" | "enrichment" | "funnel" | "tags";
 
@@ -133,9 +134,15 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
   }
 
   function onDrop(e: DragEvent) {
-    e.preventDefault(); setDragOver(false);
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
     const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
+    if (!file) return;
+    // Validate: only CSVs / plain-text allowed here
+    const err = validateFile(file, ALLOWED_CSV, 50 * 1024 * 1024);
+    if (err) { toast.error(err); return; }
+    handleFile(file);
   }
 
   function onFileChange(e: ChangeEvent<HTMLInputElement>) {
@@ -183,7 +190,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
         {/* Upload step */}
         {step === "upload" && (
           <div
-            onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+            onDragOver={e => { e.preventDefault(); e.stopPropagation(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onDrop={onDrop}
             onClick={() => fileRef.current?.click()}
@@ -195,7 +202,7 @@ function ImportCSVModal({ onClose, onSuccess }: { onClose: () => void; onSuccess
             <p className="text-xs font-medium mb-1">Drag & drop a CSV file here</p>
             <p className="text-[10px] text-muted">or click to browse</p>
             <p className="text-[9px] text-muted mt-3">Expected columns: business_name, email, phone, industry, city, state, source, status, website</p>
-            <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={onFileChange} />
+            <input ref={fileRef} type="file" accept={buildAccept(ALLOWED_CSV)} className="hidden" onChange={onFileChange} />
           </div>
         )}
 

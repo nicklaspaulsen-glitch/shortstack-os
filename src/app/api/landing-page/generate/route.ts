@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/ai/claude-helpers";
 import { createServerSupabase } from "@/lib/supabase/server";
 
 // POST /api/landing-page/generate
@@ -22,15 +23,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) {
+    if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
         { error: "AI not configured — ANTHROPIC_API_KEY missing" },
         { status: 500 },
       );
     }
 
-    const client = new Anthropic({ apiKey });
+    // Shared singleton — see CLAUDE.md "Module-level SDK init is BANNED" rule.
+    const client = anthropic;
 
     const requestedSections = (sections && sections.length > 0)
       ? sections.join(", ")

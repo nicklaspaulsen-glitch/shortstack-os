@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, LayoutGroup } from "framer-motion";
 import { useAuth } from "@/lib/auth-context";
 import { useWhiteLabel } from "@/lib/white-label-context";
 import { getPlanConfig } from "@/lib/plan-config";
@@ -82,6 +83,7 @@ import {
   Download,
   ShieldCheck,
   ArrowUpRight,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import AdminProfileSwitcher from "@/components/admin-profile-switcher";
@@ -113,7 +115,9 @@ const navItems: NavItem[] = [
   { label: "Conversations", href: "/dashboard/conversations", icon: <MessagesSquare size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Outreach Logs", href: "/dashboard/outreach-logs", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "Sequences", href: "/dashboard/sequences", icon: <ListOrdered size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
+  { label: "Lead Sources", href: "/dashboard/lead-sources", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Leads & Outreach" },
   { label: "CRM", href: "/dashboard/crm", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
+  { label: "Tags", href: "/dashboard/tags", icon: <Layers size={16} />, roles: ["admin"], sub: "Pipeline" },
   { label: "Deals", href: "/dashboard/deals", icon: <CreditCard size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
   { label: "Proposals", href: "/dashboard/proposals", icon: <FileCheck size={16} />, roles: ["admin", "team_member"], sub: "Pipeline" },
   { label: "Forecast", href: "/dashboard/forecast", icon: <TrendingUp size={16} />, roles: ["admin"], sub: "Pipeline" },
@@ -121,6 +125,7 @@ const navItems: NavItem[] = [
   { label: "Ads Manager", href: "/dashboard/ads-manager", icon: <Target size={16} />, roles: ["admin"], sub: "Pipeline" },
   { label: "Calendar", href: "/dashboard/calendar", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Scheduling", href: "/dashboard/scheduling", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
+  { label: "Meetings", href: "/dashboard/meetings", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Clients", href: "/dashboard/clients", icon: <Users size={16} />, roles: ["admin", "team_member"], sub: "Scheduling" },
   { label: "Courses", href: "/dashboard/courses", icon: <BookOpen size={16} />, roles: ["admin"], sub: "Membership" },
 
@@ -155,6 +160,7 @@ const navItems: NavItem[] = [
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI" },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"], sub: "AI" },
   { label: "Agent Room", href: "/dashboard/agent-room", icon: <UsersRound size={16} />, roles: ["admin", "team_member"], sub: "AI" },
+  { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <SlidersHorizontal size={16} />, roles: ["admin"], sub: "AI" },
   { label: "Apps", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], sub: "Workflows" },
   { label: "Flow Builder", href: "/dashboard/workflow-builder", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Workflows" },
@@ -172,6 +178,8 @@ const navItems: NavItem[] = [
   { label: "Projects", href: "/dashboard/projects", icon: <Kanban size={16} />, roles: ["admin", "team_member"], sub: "Business" },
   { label: "Financials", href: "/dashboard/financials", icon: <BarChart3 size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Invoices", href: "/dashboard/invoices", icon: <Receipt size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "Invoice Templates", href: "/dashboard/invoice-templates", icon: <FileText size={16} />, roles: ["admin"], sub: "Business" },
+  { label: "White Label", href: "/dashboard/white-label", icon: <Palette size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Billing", href: "/dashboard/billing", icon: <CreditCard size={16} />, roles: ["admin", "founder", "agency", "team_member"], sub: "Business" },
   { label: "Pricing", href: "/dashboard/pricing", icon: <CreditCard size={16} />, roles: ["admin"], sub: "Business" },
   { label: "Usage & Tokens", href: "/dashboard/usage", icon: <Zap size={16} />, roles: ["admin", "team_member"], sub: "Business" },
@@ -524,7 +532,14 @@ export default function Sidebar() {
           </span>
           <span className="truncate flex-1">{label}</span>
           {unreadCount > 0 && <UnreadBadge count={unreadCount} />}
-          {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
+          {isActive && (
+            <motion.div
+              layoutId="sidebar-active-accent"
+              className="absolute -left-px top-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]"
+              style={{ y: "-50%" }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            />
+          )}
         </Link>
       </div>
     );
@@ -553,7 +568,14 @@ export default function Sidebar() {
             {customIcon || item.icon}
             {unreadCount > 0 && <UnreadDotMini />}
           </span>
-          {isActive && <div className="absolute -left-px top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]" />}
+          {isActive && (
+            <motion.div
+              layoutId="sidebar-active-accent"
+              className="absolute -left-px top-1/2 w-[3px] h-[60%] rounded-r bg-gold shadow-[0_0_8px_rgba(201,168,76,0.6)]"
+              style={{ y: "-50%" }}
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            />
+          )}
         </Link>
         {hoveredItem === item.href && (
           <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 whitespace-nowrap">

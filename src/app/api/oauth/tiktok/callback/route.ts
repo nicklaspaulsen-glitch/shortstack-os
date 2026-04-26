@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { verifyOAuthState } from "@/lib/oauth-state";
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
@@ -11,8 +12,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=denied`);
   }
 
-  let state: { client_id: string } = { client_id: "" };
-  try { state = JSON.parse(stateStr || "{}"); } catch {}
+  // SECURITY: state must be a valid HMAC-signed payload issued by /api/oauth/tiktok
+  // (rejects forged or replayed state). The signed payload includes the user.id
+  // that initiated the flow — we re-check that the current session matches.
+  const verified = verifyOAuthState(stateStr);
+  if (!verified) {
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=invalid_state`);
+  }
+  const supabaseAuth = createServerSupabase();
+  const { data: { user } } = await supabaseAuth.auth.getUser();
+  if (!user || user.id !== verified.uid) {
+    return NextResponse.redirect(`${baseUrl}/dashboard/integrations?error=auth_mismatch`);
+  }
+
+  const state = { client_id: verified.client_id };
 
   try {
     // Exchange code for token

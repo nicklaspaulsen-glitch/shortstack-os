@@ -80,15 +80,27 @@ export async function POST(request: NextRequest) {
       `[Voice Inbound] call_sid=${call_sid} phone=${caller_phone} name=${caller_name || "Unknown"} time=${new Date().toISOString()}`
     );
 
-    // Build TwiML-style XML greeting response
+    // Build TwiML-style XML greeting response.
+    //
+    // SECURITY FIX (Apr 26): pre-fix this had a hardcoded
+    // <Dial>+13055557890</Dial> fallback (a Florida number unrelated to
+    // ShortStack) that fired whenever the Gather route 404'd. The
+    // matching Gather handler at /api/voice/inbound/gather didn't exist
+    // until today's commit — every inbound call's silence was being
+    // routed to a stranger's phone.
+    //
+    // Now: if Gather fails (no speech detected), capture voicemail to
+    // give the caller a way to leave a message instead of dialing a
+    // random number.
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Say voice="Polly.Joanna" language="en-US">${escapeXml(DEFAULT_GREETING)}</Say>
   <Gather input="speech" timeout="5" speechTimeout="auto" action="/api/voice/inbound/gather">
     <Say voice="Polly.Joanna" language="en-US">Please tell me how I can assist you.</Say>
   </Gather>
-  <Say voice="Polly.Joanna" language="en-US">I didn't catch that. Let me transfer you to a team member.</Say>
-  <Dial>+13055557890</Dial>
+  <Say voice="Polly.Joanna" language="en-US">I didn't catch that. Please leave a message after the tone and we'll call you back.</Say>
+  <Record maxLength="60" playBeep="true" />
+  <Say voice="Polly.Joanna" language="en-US">Got it. Thanks for calling.</Say>
 </Response>`;
 
     // Return comprehensive JSON response with config
@@ -117,7 +129,10 @@ export async function POST(request: NextRequest) {
       routing: {
         rules: DEFAULT_ROUTING_RULES,
         default_action: "voicemail",
-        transfer_number: "+13055557890",
+        // transfer_number intentionally omitted — pre-fix this advertised a
+        // stranger's Florida number (+13055557890) as the transfer target.
+        // Real transfers route through the live Twilio webhook
+        // (/api/twilio/voice-webhook) using the agency's configured number.
         calendly_url: "https://calendly.com/shortstack-digital/strategy-call",
       },
       voice: DEFAULT_VOICE_CONFIG,

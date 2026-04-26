@@ -1,6 +1,11 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import {
+  ALLOWED_GENERAL_UPLOADS,
+  buildAccept,
+  validateFile,
+} from "@/lib/file-types";
 import { useAuth } from "@/lib/auth-context";
 import {
   FolderOpen, Upload, Search, Grid, List, Image as ImageIcon,
@@ -214,12 +219,18 @@ export default function ContentLibraryPage() {
 
   // ── Upload logic ──
 
+  const CONTENT_LIB_MAX_BYTES = 100 * 1024 * 1024; // 100 MB
+
   const uploadFiles = async (files: File[]) => {
     if (files.length === 0) return;
     setUploading(true);
 
     let successCount = 0;
     for (const file of files) {
+      // Validate type + size before touching the network
+      const err = validateFile(file, ALLOWED_GENERAL_UPLOADS, CONTENT_LIB_MAX_BYTES);
+      if (err) { toast.error(err); continue; }
+
       try {
         const form = new FormData();
         form.append("file", file);
@@ -227,8 +238,8 @@ export default function ContentLibraryPage() {
 
         const res = await fetch("/api/content-library", { method: "POST", body: form });
         if (!res.ok) {
-          const err = await res.json().catch(() => ({ error: "Upload failed" }));
-          toast.error(`Failed to upload ${file.name}: ${err.error}`);
+          const err2 = await res.json().catch(() => ({ error: "Upload failed" }));
+          toast.error(`Failed to upload ${file.name}: ${err2.error}`);
           continue;
         }
         const json = await res.json();
@@ -247,6 +258,7 @@ export default function ContentLibraryPage() {
 
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setDragging(false);
     const files = Array.from(e.dataTransfer.files);
     await uploadFiles(files);
@@ -458,6 +470,7 @@ export default function ContentLibraryPage() {
                 ref={fileInputRef}
                 type="file"
                 multiple
+                accept={buildAccept(ALLOWED_GENERAL_UPLOADS)}
                 className="hidden"
                 onChange={handleFileInput}
               />
@@ -493,10 +506,14 @@ export default function ContentLibraryPage() {
 
       {/* Upload Drop Zone */}
       <div
-        onDragOver={e => { e.preventDefault(); setDragging(true); }}
+        onDragOver={e => { e.preventDefault(); e.stopPropagation(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-xl p-6 text-center transition-all ${
+        onClick={() => fileInputRef.current?.click()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => { if (e.key === "Enter" || e.key === " ") fileInputRef.current?.click(); }}
+        className={`border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer ${
           dragging ? "border-gold bg-gold/5" : "border-white/10 hover:border-white/20"
         }`}
       >
@@ -508,8 +525,8 @@ export default function ContentLibraryPage() {
         ) : (
           <>
             <Upload size={24} className={`mx-auto mb-2 ${dragging ? "text-gold" : "text-muted"}`} />
-            <p className="text-xs text-muted">Drag and drop files here, or click Upload</p>
-            <p className="text-[10px] text-muted mt-1">Supports images, videos, audio, documents, and more</p>
+            <p className="text-xs text-muted">Drop files here or click to upload</p>
+            <p className="text-[10px] text-muted mt-1">JPG, PNG, WebP, GIF, SVG, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV — up to 100 MB</p>
           </>
         )}
       </div>

@@ -275,13 +275,17 @@ export default function CRMPage() {
 
   // ── Data fetching ──
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchLeads(); }, [managedClientId]);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetchLeads(controller.signal);
+    return () => controller.abort();
+  }, [managedClientId]);
   // Rehydrate persisted CRM settings on mount (was useState-only before).
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchCrmSettings(); }, []);
   useEffect(() => { setPage(0); }, [activeTab, search, sortBy, filters]);
 
-  async function fetchLeads() {
+  async function fetchLeads(signal?: AbortSignal) {
     try {
       setLoading(true);
       let query = supabase
@@ -292,6 +296,7 @@ export default function CRMPage() {
       if (managedClientId) query = query.eq("client_id", managedClientId);
       const { data: leadsData } = await query;
 
+      if (signal?.aborted) return;
       if (!leadsData || leadsData.length === 0) { setLeads([]); return; }
 
       const leadIds = leadsData.map((l: Record<string, unknown>) => l.id);
@@ -309,10 +314,12 @@ export default function CRMPage() {
         outreachByLead[lid].push(entry);
       });
 
+      if (signal?.aborted) return;
       setLeads(leadsData.map((l: Record<string, unknown>) => ({ ...l, review_count: (l.review_count as number) || 0, outreach_log: outreachByLead[l.id as string] || [] }) as unknown as CRMLead));
     } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
       console.error("[CRM] fetchLeads error:", err);
-    } finally { setLoading(false); }
+    } finally { if (!signal?.aborted) setLoading(false); }
   }
 
   // Rehydrate all persisted CRM settings (previously useState-only).
@@ -1025,7 +1032,7 @@ export default function CRMPage() {
             <Coins size={11} className="text-gold" />
             <span className="text-[9px] font-medium text-gold">{emailCredits}</span>
           </button>
-          <button onClick={fetchLeads} className="btn-ghost text-[9px] flex items-center gap-1"><RefreshCw size={11} /> Refresh</button>
+          <button onClick={() => fetchLeads()} className="btn-ghost text-[9px] flex items-center gap-1"><RefreshCw size={11} /> Refresh</button>
         </div>
       </div>
 

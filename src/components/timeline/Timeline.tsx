@@ -52,6 +52,7 @@ import {
   Sparkles,
   Layers as LayersIcon,
   Keyboard,
+  LayoutList,
 } from "lucide-react";
 
 import type {
@@ -61,6 +62,8 @@ import type {
   TimelineTrackKind,
 } from "./types";
 import { useTimelineHistory } from "./use-timeline-history";
+// Sub-task 3: Section markers overlay.
+import { SectionMarkers } from "@/components/video-editor/section-markers";
 
 /* ─── Layout constants ─────────────────────────────────────── */
 
@@ -96,6 +99,10 @@ export interface TimelineProps {
 
   /** Render an extra toolbar widget (e.g. "Generate captions" button). */
   renderExtraToolbar?: () => React.ReactNode;
+
+  /** Sub-task 3: Show intro/body/outro section marker bands on the rail.
+   *  Defaults to false; toggleable via toolbar button. */
+  initialShowSections?: boolean;
 
   className?: string;
   /** data-testid override */
@@ -157,6 +164,7 @@ export function Timeline({
   maxPxPerMs = 0.2,
   initialPxPerMs = 0.05,
   renderExtraToolbar,
+  initialShowSections = false,
   className = "",
   testId = "timeline",
 }: TimelineProps) {
@@ -203,6 +211,8 @@ export function Timeline({
   const [pxPerMs, setPxPerMs] = useState(initialPxPerMs);
   const [snapOn, setSnapOn] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  // Sub-task 3: section markers toggle.
+  const [showSections, setShowSections] = useState(initialShowSections);
 
   // Drag state for clip move / trim.
   type DragState = {
@@ -627,6 +637,20 @@ export function Timeline({
           <Magnet size={10} /> Snap
         </button>
 
+        {/* Sub-task 3: Section markers toggle — intro/body/outro bands. */}
+        <button
+          type="button"
+          onClick={() => setShowSections((v) => !v)}
+          className={`flex items-center gap-1 text-[9px] rounded px-2 py-1 border transition-colors ${
+            showSections
+              ? "border-blue-400/30 bg-blue-400/10 text-blue-300"
+              : "border-border text-muted hover:text-foreground"
+          }`}
+          title="Toggle intro / body / outro section markers"
+        >
+          <LayoutList size={10} /> Sections
+        </button>
+
         {renderExtraToolbar?.()}
 
         {/* Zoom */}
@@ -724,6 +748,25 @@ export function Timeline({
                 }}
               />
             ))}
+
+            {/* Sub-task 3: Section markers — intro/body/outro bands.
+                Rendered below clips (z-0 inside SectionMarkers) so they
+                don't interfere with pointer events on clips. */}
+            {showSections && safeProject.tracks.length > 0 && (
+              <div
+                className="absolute pointer-events-none"
+                style={{ top: RULER_HEIGHT, left: 0, width: railWidth, height: totalHeight - RULER_HEIGHT }}
+              >
+                <SectionMarkers
+                  totalWidthPx={railWidth}
+                  totalMs={safeProject.duration}
+                  trackAreaHeightPx={totalHeight - RULER_HEIGHT}
+                  introDurationMs={3000}
+                  outroDurationMs={3000}
+                  msToPx={msToPx}
+                />
+              </div>
+            )}
 
             {/* Snap grid — faint 1s vertical lines when snap is on. */}
             {snapOn && (() => {

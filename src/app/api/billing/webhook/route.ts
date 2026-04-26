@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { sendPaymentFailedEmail, sendWelcomeEmail } from "@/lib/email";
 import { type Stripe } from "stripe";
 import { getStripe } from "@/lib/stripe/client";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
 
 // Unified Stripe Webhook — handles client billing events
 // Register this at: https://dashboard.stripe.com/webhooks
@@ -30,6 +31,21 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = createServiceClient();
+
+  // CRITICAL idempotency — claim/complete model. Stripe retries up to 3
+  // days on any non-2xx and can deliver the same event_id from multiple
+  // workers. The claim INSERT marks the event as 'processing' atomically
+  // (unique constraint). If we later throw before completeEvent, retries
+  // will see a stale 'processing' row and reclaim it, so legit work isn't
+  // dropped. After successful processing we mark 'done' so subsequent
+  // retries short-circuit to 200.
+  const claim = await claimEvent(supabase, "stripe", event.id);
+  if (claim === "already_done") {
+    return NextResponse.json({ ok: true, deduped: true, event_id: event.id });
+  }
+  if (claim === "in_flight") {
+    return NextResponse.json({ ok: true, deduped: true, in_flight: true, event_id: event.id });
+  }
 
   switch (event.type) {
     // ── Invoice Paid ──
@@ -573,5 +589,10 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Mark the event as fully processed so future retries see 'done' and
+  // short-circuit. If we threw above, this line is skipped and the row
+  // stays 'processing' — provider retry will reclaim it after the stale
+  // window (5 min) and re-run.
+  await completeEvent(supabase, "stripe", event.id);
   return NextResponse.json({ received: true });
 }

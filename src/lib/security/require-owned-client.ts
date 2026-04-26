@@ -75,6 +75,15 @@ export async function requireOwnedClient(
 /**
  * Get the effective agency owner id for a user (team_members resolve to parent).
  * Lightweight helper for list queries that don't involve a specific client.
+ *
+ * Defense-in-depth (codex round-1 catch on the conversations RLS patch): for
+ * team_members we ALSO require an `active` row in `team_members` matching
+ * the parent agency. Without this guard a suspended/revoked member would
+ * still resolve to the parent agency and read inbox / connection data.
+ *
+ * Returns null when:
+ *   - The profile row doesn't exist.
+ *   - The user is a team_member but no active team_members row exists.
  */
 export async function getEffectiveOwnerId(
   supabase: SupabaseClient,
@@ -86,7 +95,16 @@ export async function getEffectiveOwnerId(
     .eq("id", userId)
     .single();
   if (!profile) return null;
+
   if (profile.role === "team_member" && profile.parent_agency_id) {
+    // Verify the team_member row is still active for this agency.
+    const { data: tm } = await supabase
+      .from("team_members")
+      .select("status")
+      .eq("member_profile_id", userId)
+      .eq("agency_owner_id", profile.parent_agency_id)
+      .maybeSingle();
+    if (!tm || tm.status !== "active") return null;
     return profile.parent_agency_id;
   }
   return userId;

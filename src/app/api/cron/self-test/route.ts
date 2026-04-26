@@ -89,7 +89,13 @@ async function runOneCheck(
       }
     }
     const statusOk = statusMatches(check.expected_status, res.status);
-    const shapeOk = shapeMatches(check.expected_shape, body);
+    // Shape check only applies on 2xx responses. A 401/403/404/5xx body
+    // never contains the success-path keys (it's an error envelope), so
+    // shape-checking it is meaningless and would always fail when the
+    // route is correctly auth-gated. The expected_shape describes the
+    // happy path payload, not error responses.
+    const isSuccess = res.status >= 200 && res.status < 300;
+    const shapeOk = isSuccess ? shapeMatches(check.expected_shape, body) : null;
     const ok = statusOk && (shapeOk === null || shapeOk === true);
     return {
       route_path: check.path,
@@ -172,9 +178,13 @@ export async function GET(request: NextRequest) {
 
   const runId = randomUUID();
   const runStartedAt = new Date().toISOString();
+  // Origin priority: explicit app URL → site URL → host header. Avoid
+  // VERCEL_URL because that's the per-deployment URL which carries
+  // deployment-protection auth — it 401s every public route. The
+  // canonical app URL routes through CDN where protection is off.
   const origin =
+    process.env.NEXT_PUBLIC_APP_URL ||
     process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.VERCEL_URL ||
     `https://${request.headers.get("host")}`;
   const normalizedOrigin = origin.startsWith("http") ? origin : `https://${origin}`;
 

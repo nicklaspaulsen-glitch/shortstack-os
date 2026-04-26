@@ -67,10 +67,24 @@ export async function GET(_request: NextRequest) {
 }
 
 // POST — create a new workflow in n8n
+//
+// SECURITY (Apr 26): role-gated to match the per-id PATCH/DELETE handlers.
+// n8n is a shared instance — clients should never spawn workflows directly.
 export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Fail-closed: missing profile → reject. profile?.role === "client"
+  // alone would let users without a profile through.
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .maybeSingle();
+  if (!profile || profile.role === "client") {
+    return NextResponse.json({ error: "Operators only" }, { status: 403 });
+  }
 
   const { name, nodes, connections, client_id } = await request.json();
 

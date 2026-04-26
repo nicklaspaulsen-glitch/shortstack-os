@@ -9,9 +9,18 @@ export async function POST(request: NextRequest) {
 
   const { client_id, bot_name, primary_color, position, welcome_message } = await request.json();
 
+  // Constrain the lookup to clients the caller's tenant owns — otherwise any
+  // authenticated user can enumerate `clients.business_name` for arbitrary
+  // UUIDs. Low-impact (business_name is mostly public-facing) but it's still
+  // a tenant-data leak by default.
   let clientName = "Business";
   if (client_id) {
-    const { data: client } = await supabase.from("clients").select("business_name").eq("id", client_id).single();
+    const { data: client } = await supabase
+      .from("clients")
+      .select("business_name")
+      .eq("id", client_id)
+      .eq("profile_id", user.id)
+      .maybeSingle();
     if (client) clientName = client.business_name;
   }
 

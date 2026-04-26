@@ -16,7 +16,14 @@
  *   - READ_MESSAGE_HISTORY (65536)
  *   - USE_APPLICATION_COMMANDS (2147483648)
  * Total = 2147566720
+ *
+ * SECURITY: state is HMAC-signed via signOAuthState so the callbacks
+ * (/api/integrations/discord/callback and /api/discord/bot-added) can
+ * verify it was issued by us and reject forged URLs that claim to belong
+ * to a victim's user_id. See src/lib/oauth-state.ts.
  */
+
+import { signOAuthState } from "./oauth-state";
 
 const PERMISSIONS_MINIMAL = "2147566720";
 
@@ -52,13 +59,21 @@ export function buildDiscordInstallUrl(opts: DiscordInstallUrlOptions): string |
   const redirectUri = `${baseUrl}${redirectPath}`;
 
   const scope = "bot applications.commands identify guilds";
+  // Sign the state so the callback can verify it was issued by us. Each user
+  // owns their own Discord integration (no separate client tenant), so we use
+  // the same userId for both client_id and uid in the signed payload.
+  const state = signOAuthState({
+    client_id: opts.userId,
+    uid: opts.userId,
+    platform: "discord",
+  });
   const params = new URLSearchParams({
     client_id: clientId,
     scope,
     permissions: PERMISSIONS_MINIMAL,
     response_type: "code",
     redirect_uri: redirectUri,
-    state: opts.userId,
+    state,
     // prompt=consent forces the consent screen so the user always sees the guild picker.
     prompt: "consent",
   });

@@ -10,6 +10,7 @@
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 const DEFAULT_PAGE_SIZE = 20;
 
@@ -62,6 +63,26 @@ export async function POST(request: NextRequest) {
   const title = String(body.title || "").trim();
   if (!title) {
     return NextResponse.json({ error: "title is required" }, { status: 400 });
+  }
+
+  // If a client_id is supplied, verify the caller's tenant owns that client.
+  // Without this an authenticated user can pin a meeting against any
+  // tenant's client_id — pollutes cross-tenant data integrity even though
+  // it doesn't expose data directly.
+  //
+  // Use getEffectiveOwnerId so team_members (who have a parent_agency_id)
+  // are allowed to create meetings against their parent agency's clients.
+  // This matches the pattern in /api/courses/[id]/enroll.
+  if (body.client_id) {
+    const ownerId = (await getEffectiveOwnerId(supabase, user.id)) || user.id;
+    const { data: client } = await supabase
+      .from("clients")
+      .select("profile_id")
+      .eq("id", body.client_id)
+      .maybeSingle();
+    if (!client || client.profile_id !== ownerId) {
+      return NextResponse.json({ error: "client_id not found in your workspace" }, { status: 404 });
+    }
   }
 
   const { data, error } = await supabase

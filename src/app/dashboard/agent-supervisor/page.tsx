@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
-import { ShieldCheck, CheckCircle, XCircle, Terminal, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { ShieldCheck, CheckCircle, XCircle, Terminal, TrendingUp, TrendingDown, Minus, Play, Loader2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface TestResult {
   id: string;
@@ -57,6 +58,7 @@ function Sparkline({ runs }: { runs: boolean[] }) {
 export default function AgentSupervisorPage() {
   const [results, setResults] = useState<TestResult[]>([]);
   const [loading, setLoading] = useState(true);
+  const [running, setRunning] = useState(false);
   const supabase = createClient();
 
   const load = useCallback(async () => {
@@ -71,6 +73,31 @@ export default function AgentSupervisorPage() {
   }, [supabase]);
 
   useEffect(() => { load(); }, [load]);
+
+  // Admin trigger — calls /api/admin/self-test/run which re-invokes the
+  // cron server-side with CRON_SECRET. Sweep takes 30-60s; we keep the
+  // button busy and reload results when it returns.
+  const runNow = useCallback(async () => {
+    if (running) return;
+    setRunning(true);
+    const t = toast.loading("Running self-test sweep — ~60s…");
+    try {
+      const res = await fetch("/api/admin/self-test/run", { method: "POST" });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        toast.error(json.error || `Self-test failed (HTTP ${res.status})`, { id: t });
+      } else {
+        const passed = json?.result?.passed ?? "?";
+        const failed = json?.result?.failed ?? "?";
+        toast.success(`Self-test done: ${passed} passing, ${failed} failing`, { id: t });
+        await load();
+      }
+    } catch (err) {
+      toast.error(`Network error: ${String(err).slice(0, 80)}`, { id: t });
+    } finally {
+      setRunning(false);
+    }
+  }, [load, running]);
 
   // Build per-route summary
   const summaryMap: Record<string, RouteSummary> = {};
@@ -110,6 +137,17 @@ export default function AgentSupervisorPage() {
         subtitle="Self-test results per route — latest run, pass/fail counts, trend."
         icon={<ShieldCheck className="w-6 h-6" />}
         gradient="green"
+        actions={
+          <button
+            onClick={runNow}
+            disabled={running}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white text-sm font-medium hover:bg-white/25 transition-all disabled:opacity-60"
+            title="Run all self-test routes now (~60s)"
+          >
+            {running ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />}
+            {running ? "Running…" : "Run now"}
+          </button>
+        }
       />
 
       {/* Trigger callout */}
@@ -117,7 +155,8 @@ export default function AgentSupervisorPage() {
         <Terminal className="w-5 h-5 shrink-0 mt-0.5" />
         <div>
           <span className="font-semibold">Run tests:</span>{" "}
-          Trigger from the Vercel dashboard (cron job) or via cURL:
+          Use the &quot;Run now&quot; button above (admin only) — or wait for the
+          nightly cron at 03:15 UTC. cURL alternative:
           <code className="ml-2 text-xs bg-black/30 px-2 py-0.5 rounded font-mono">
             curl -X POST /api/cron/self-test -H &quot;Authorization: Bearer $CRON_SECRET&quot;
           </code>

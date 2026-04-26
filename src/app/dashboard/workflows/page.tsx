@@ -6,6 +6,7 @@ import { Client } from "@/lib/types";
 import Modal from "@/components/ui/modal";
 import StatusBadge from "@/components/ui/status-badge";
 import PageHero from "@/components/ui/page-hero";
+import { CardSkeleton } from "@/components/ui/skeleton";
 import { formatRelativeTime } from "@/lib/utils";
 import {
   Zap, Plus, Sparkles, Play, Trash2, Bot,
@@ -19,6 +20,7 @@ import {
 import { WORKFLOW_PRESETS, WORKFLOW_CATEGORIES, type WorkflowPreset } from "@/lib/workflow-presets";
 import toast from "react-hot-toast";
 import { TelegramIcon, SlackIcon } from "@/components/ui/platform-icons";
+import AiWorkflowHero from "@/components/workflows/ai-workflow-hero";
 
 interface WorkflowStep {
   id: string;
@@ -51,6 +53,7 @@ const NODE_TYPES: Record<string, { icon: React.ReactNode; color: string; bg: str
 
 export default function WorkflowsPage() {
   const [workflows, setWorkflows] = useState<Array<{ id: string; workflow: Workflow; client_name?: string; created_at: string; status: string }>>([]);
+  const [workflowsLoading, setWorkflowsLoading] = useState(true);
   const [clients, setClients] = useState<Pick<Client, "id" | "business_name">[]>([]);
   const [showCreate, setShowCreate] = useState(false);
   const [showAiGen, setShowAiGen] = useState(false);
@@ -165,18 +168,23 @@ export default function WorkflowsPage() {
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [agentChat]);
 
   async function fetchData() {
-    const [{ data: logs }, { data: cl }] = await Promise.all([
-      supabase.from("trinity_log").select("*").eq("action_type", "automation").order("created_at", { ascending: false }).limit(50),
-      supabase.from("clients").select("id, business_name").eq("is_active", true),
-    ]);
-    setWorkflows((logs || []).map((l: Record<string, unknown>) => ({
-      id: l.id as string,
-      workflow: l.result as Workflow,
-      client_name: l.description as string,
-      created_at: l.created_at as string,
-      status: l.status as string,
-    })));
-    setClients(cl || []);
+    setWorkflowsLoading(true);
+    try {
+      const [{ data: logs }, { data: cl }] = await Promise.all([
+        supabase.from("trinity_log").select("*").eq("action_type", "automation").order("created_at", { ascending: false }).limit(50),
+        supabase.from("clients").select("id, business_name").eq("is_active", true),
+      ]);
+      setWorkflows((logs || []).map((l: Record<string, unknown>) => ({
+        id: l.id as string,
+        workflow: l.result as Workflow,
+        client_name: l.description as string,
+        created_at: l.created_at as string,
+        status: l.status as string,
+      })));
+      setClients(cl || []);
+    } finally {
+      setWorkflowsLoading(false);
+    }
   }
 
   async function generateWorkflow() {
@@ -363,6 +371,16 @@ export default function WorkflowsPage() {
       {/* AI Generator Modal */}
       <AiWorkflowGenModal open={showAiGen} onClose={() => setShowAiGen(false)} />
 
+      {/* AI Workflow Hero — natural-language workflow designer at the top.
+          Per Apr 26 ask: "massively improve workflows tab to have more
+          options like GHL and features and AI stuff". The Hero replaces
+          a hidden "Generate with AI" button with a hero panel that
+          surfaces the AI design flow as the primary way to build
+          workflows. */}
+      <AiWorkflowHero
+        clients={clients}
+        onPreview={(wf) => setPreviewWorkflow(wf)}
+      />
 
       {/* Tabs (sticky) */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur flex gap-1 overflow-x-auto border-b border-border pb-0">
@@ -987,7 +1005,9 @@ export default function WorkflowsPage() {
       {/* History Tab */}
       {tab === "history" && (
         <div className="space-y-2">
-          {workflows.length === 0 ? (
+          {workflowsLoading ? (
+            <>{Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)}</>
+          ) : workflows.length === 0 ? (
             <div className="card text-center py-8">
               <p className="text-xs text-muted">No workflows yet</p>
             </div>

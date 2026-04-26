@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/ai/claude-helpers";
 import { requireExtensionUser } from "@/lib/extension/auth";
 import { checkRateLimit } from "@/lib/extension/rate-limit";
 
@@ -54,7 +55,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const client = new Anthropic({ apiKey });
+    // Shared singleton — see CLAUDE.md "Module-level SDK init is BANNED" rule.
+    const client = anthropic;
 
     const contextLine = url
       ? `The user is currently viewing: ${url}${pageContext ? ` (page context: ${pageContext})` : ""}.`

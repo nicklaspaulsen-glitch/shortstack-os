@@ -8,7 +8,7 @@ import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
-import { PageLoading } from "@/components/ui/loading";
+import { TableSkeleton } from "@/components/ui/skeleton";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import {
   Users, DollarSign, FileText, Plus, Search, Heart, ArrowUpRight,
@@ -76,13 +76,24 @@ export default function ClientsPage() {
   const [compareClients, setCompareClients] = useState<string[]>([]);
   const [hoveredClient, setHoveredClient] = useState<string | null>(null);
   const [showTagModal, setShowTagModal] = useState<string | null>(null);
+  // Admin / founder god-mode: when the API reports role admin/founder we
+  // get the platform-wide list. Toggle scope=mine to see only the caller's
+  // own agency. Stored locally so the choice persists across re-renders.
+  const [callerRole, setCallerRole] = useState<string | null>(null);
+  const [scope, setScope] = useState<"all" | "mine">("all");
 
+  // codex round-1: use a ref-box so fetchData reads `cancelled.current`
+  // at await-resume time rather than from a stale snapshot parameter.
   useEffect(() => {
-    fetchData();
+    const cancelled = { current: false };
+    fetchData(cancelled).catch((err: unknown) => {
+      if (!cancelled.current) console.error("[Clients] fetchData error:", err);
+    });
+    return () => { cancelled.current = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [scope]);
 
-  async function fetchData() {
+  async function fetchData(cancelled: { current: boolean } = { current: false }) {
     try {
       setLoading(true);
       // Fetch clients via the authenticated server API route.
@@ -91,16 +102,22 @@ export default function ClientsPage() {
       // when the user was actually scoped to rows owned by their profile.
       // The server route reads the session from cookies and scopes by the
       // effective agency owner — so it works reliably on first mount.
+      // For admin/founder, the API returns ALL clients across the
+      // platform unless we pass ?scope=mine.
+      const clientsUrl = scope === "mine" ? "/api/clients?scope=mine" : "/api/clients";
       const [clientsRes, contractsRes, invoicesRes] = await Promise.all([
-        fetch("/api/clients", { cache: "no-store" }),
+        fetch(clientsUrl, { cache: "no-store" }),
         supabase.from("contracts").select("*").order("created_at", { ascending: false }),
         supabase.from("invoices").select("*").order("created_at", { ascending: false }),
       ]);
+
+      if (cancelled.current) return;
 
       let clientsData: Client[] = [];
       if (clientsRes.ok) {
         const json = await clientsRes.json();
         clientsData = json.clients || [];
+        if (json.role) setCallerRole(json.role);
       } else {
         console.error("[Clients] /api/clients failed:", clientsRes.status);
         toast.error("Couldn't load clients — try refreshing.");
@@ -114,10 +131,12 @@ export default function ClientsPage() {
       setContracts(contractsRes.data || []);
       setInvoices(invoicesRes.data || []);
     } catch (err) {
-      console.error("[Clients] fetchData error:", err);
-      toast.error("Failed to load clients — try refreshing.");
+      if (!cancelled.current) {
+        console.error("[Clients] fetchData error:", err);
+        toast.error("Failed to load clients — try refreshing.");
+      }
     } finally {
-      setLoading(false);
+      if (!cancelled.current) setLoading(false);
     }
   }
 
@@ -530,20 +549,60 @@ export default function ClientsPage() {
   const paidInvoices = invoices.filter(i => i.status === "paid");
   const overdueInvoices = invoices.filter(i => i.status === "overdue");
 
-  if (loading) return <PageLoading />;
+  if (loading) return (
+    <div className="space-y-4">
+      <PageHero
+        icon={<Users size={22} />}
+        title="Client Portal"
+        subtitle="Manage clients, contracts, and invoices."
+        gradient="gold"
+      />
+      <TableSkeleton rows={8} />
+    </div>
+  );
 
   return (
     <MotionPage className="space-y-4">
       <PageHero
         icon={<Users size={22} />}
         title="Client Portal"
-        subtitle="Manage clients, contracts, and invoices."
+        subtitle={
+          callerRole === "admin" || callerRole === "founder"
+            ? scope === "all"
+              ? `Showing all ${clients.length} clients across the platform.`
+              : "Showing clients for your agency only."
+            : "Manage clients, contracts, and invoices."
+        }
         gradient="gold"
         actions={
-          <button onClick={() => setShowAddModal(true)}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white text-sm font-medium hover:bg-white/25 transition-all">
-            <Plus size={16} /> Add Client
-          </button>
+          <div className="flex items-center gap-2">
+            {(callerRole === "admin" || callerRole === "founder") && (
+              <div className="flex items-center bg-white/10 border border-white/20 rounded-xl p-0.5">
+                <button
+                  onClick={() => setScope("all")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    scope === "all" ? "bg-white text-black" : "text-white/70 hover:text-white"
+                  }`}
+                  title="See every client across every agency"
+                >
+                  All clients
+                </button>
+                <button
+                  onClick={() => setScope("mine")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    scope === "mine" ? "bg-white text-black" : "text-white/70 hover:text-white"
+                  }`}
+                  title="See only the clients you personally added"
+                >
+                  Mine
+                </button>
+              </div>
+            )}
+            <button onClick={() => setShowAddModal(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 border border-white/20 text-white text-sm font-medium hover:bg-white/25 transition-all">
+              <Plus size={16} /> Add Client
+            </button>
+          </div>
         }
       />
 

@@ -8,6 +8,7 @@ import { BRAND } from "@/lib/brand-config";
 
 // Heavy (R3F + three) — pulled in only on the client, off the critical path.
 const Hero3DScene = dynamic(() => import("./hero-3d-scene"), { ssr: false });
+const HeroProductTour = dynamic(() => import("./hero-product-tour"), { ssr: false });
 
 /**
  * Hero section: badge, headline, subhead, CTAs, and mock dashboard preview.
@@ -151,96 +152,8 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Hero visual — mock dashboard */}
-        <div
-          className={`relative mt-16 md:mt-24 mx-auto max-w-4xl ${
-            visible ? "animate-fade-up delay-500" : "opacity-0"
-          }`}
-          style={{ opacity: 0 }}
-        >
-          <div
-            className="relative rounded-2xl overflow-hidden"
-            style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.06)",
-              padding: "1px",
-            }}
-          >
-            <div
-              className="rounded-2xl px-8 py-10"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(200,168,85,0.03) 0%, rgba(11,13,18,1) 100%)",
-              }}
-            >
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                <div className="w-3 h-3 rounded-full bg-green-500/50" />
-                <span className="text-[10px] text-gray-600 ml-2">
-                  {BRAND.product_name} — Dashboard
-                </span>
-              </div>
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-                {[
-                  { label: "Active Leads", val: "1,284", change: "+12%" },
-                  { label: "Emails Sent", val: "8,432", change: "+28%" },
-                  { label: "Deals Won", val: "47", change: "+8%" },
-                  { label: "Revenue", val: "$124K", change: "+18%" },
-                ].map((s) => (
-                  <div
-                    key={s.label}
-                    className="rounded-lg p-3"
-                    style={{
-                      background: "rgba(255,255,255,0.02)",
-                      border: "1px solid rgba(255,255,255,0.04)",
-                    }}
-                  >
-                    <p className="text-[9px] text-gray-600 mb-1">{s.label}</p>
-                    <p className="text-lg font-bold text-white">{s.val}</p>
-                    <p className="text-[9px] text-emerald-400">{s.change}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex items-end gap-1.5 h-24">
-                {[40, 55, 35, 65, 80, 60, 75, 90, 70, 85, 95, 78].map(
-                  (h, i) => (
-                    <div
-                      key={i}
-                      className="flex-1 rounded-t transition-all"
-                      style={{
-                        height: `${h}%`,
-                        background: `linear-gradient(180deg, rgba(200,168,85,${
-                          0.3 + (h / 100) * 0.5
-                        }) 0%, rgba(200,168,85,0.05) 100%)`,
-                      }}
-                    />
-                  )
-                )}
-              </div>
-            </div>
-
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(200,168,85,0.03), transparent)",
-                animation: "shimmer 3s ease-in-out infinite",
-              }}
-            />
-          </div>
-
-          <div
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-16 pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(ellipse, rgba(200,168,85,0.1) 0%, transparent 70%)",
-              filter: "blur(20px)",
-            }}
-          />
-        </div>
+        {/* Hero visual — rotating product tour (5 surfaces, 5s each, pause on hover) */}
+        <HeroProductTour visible={visible} />
       </div>
     </section>
   );

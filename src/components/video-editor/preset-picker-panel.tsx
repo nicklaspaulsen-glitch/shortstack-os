@@ -54,6 +54,7 @@ import {
   type Sfx,
   type MusicTrack,
 } from "@/lib/video-presets";
+import { PresetSvgPlaceholder } from "@/components/ui/preset-svg-placeholder";
 
 /* ─────────────────────────── Types ─────────────────────────── */
 
@@ -1172,9 +1173,11 @@ function BrollTile({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="h-full w-full flex items-center justify-center text-muted text-[8px]">
-            no preview
-          </div>
+          <PresetSvgPlaceholder
+            name={candidate.label}
+            category={candidate.provider || "broll"}
+            className="h-full w-full"
+          />
         )}
       </div>
       <div className="mt-1 flex items-start justify-between gap-1">

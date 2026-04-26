@@ -1,17 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { verifyOAuthState } from "@/lib/oauth-state";
 
 // Webhook called after Discord OAuth redirect when a bot is added to a guild.
-// Discord redirects with ?code=...&guild_id=...&state=<profile_id>
+// Discord redirects with ?code=...&guild_id=...&state=<signed-payload>
+//
+// SECURITY: state is HMAC-signed by /lib/discord-install-url.ts
+// (signOAuthState({ client_id: userId, uid: userId, platform: "discord" })).
+// Pre-Apr 27 this was a raw user_id, which let anyone craft a URL with
+// ?state=<victim_id>&guild_id=<attacker_guild> to register an attacker-
+// controlled guild against a victim's profile_id, polluting the victim's
+// dashboard and routing inbound webhook events to the wrong tenant.
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const guildId = searchParams.get("guild_id");
-  const state = searchParams.get("state");
+  const stateStr = searchParams.get("state");
   const code = searchParams.get("code");
 
-  if (!guildId || !state) {
+  if (!guildId || !stateStr) {
     return NextResponse.redirect(new URL("/dashboard/discord?error=missing_params", request.url));
   }
+
+  const verified = verifyOAuthState(stateStr);
+  if (!verified) {
+    return NextResponse.redirect(new URL("/dashboard/discord?error=invalid_state", request.url));
+  }
+  const profileId = verified.uid;
 
   const supabase = createServiceClient();
   const botToken = process.env.DISCORD_BOT_TOKEN;
@@ -37,7 +51,7 @@ export async function GET(request: NextRequest) {
   const { data: server } = await supabase
     .from("discord_servers")
     .upsert({
-      profile_id: state,
+      profile_id: profileId,
       guild_id: guildId,
       guild_name: guildName,
       guild_icon: guildIcon,

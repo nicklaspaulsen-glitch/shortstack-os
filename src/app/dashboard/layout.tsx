@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { SkipToContent } from "@/components/a11y/SkipToContent";
 import Sidebar from "@/components/sidebar";
 import GlobalSearch from "@/components/global-search";
@@ -341,9 +341,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <SkipToContent />
       <div className="flex min-h-screen bg-background">
 
-        {/* Desktop sidebar */}
+        {/* Desktop sidebar — wrapped in its own LayoutGroup so the
+            layoutId="sidebar-active-accent" inside Sidebar doesn't
+            collide with the mobile copy when the menu opens
+            (framer-motion shared-layout bug per codex round-2 review). */}
         <div className="hidden lg:block">
-          <Sidebar />
+          <LayoutGroup id="sidebar-desktop">
+            <Sidebar />
+          </LayoutGroup>
         </div>
 
         {/* Mobile sidebar overlay */}
@@ -351,7 +356,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="lg:hidden fixed inset-0 z-50">
             <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
             <div className="relative w-56 h-full">
-              <Sidebar />
+              <LayoutGroup id="sidebar-mobile">
+                <Sidebar />
+              </LayoutGroup>
               <button onClick={() => setMobileMenuOpen(false)}
                 className="absolute top-3 right-3 p-1.5 rounded-lg bg-surface-light text-muted hover:text-foreground z-50">
                 <X size={16} />
@@ -395,17 +402,35 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           {/* Managed client banner */}
           <ManagedClientBanner />
 
-          {/* Page content — wrapped in AnimatePresence for soft page transitions. */}
-          <div className="p-4 lg:p-6 pb-24">
+          {/* Page content — Opus's "Stagger-shatter page entry" (Apr 26):
+              new page arrives as 5 horizontal slabs sliding in from
+              alternating sides with 50ms stagger, settling into one
+              surface. Reads like a deck snapping into place rather than
+              a fade. Honors prefers-reduced-motion via CSS @media query
+              that collapses the slabs to a single fade. */}
+          <div className="p-4 lg:p-6 pb-24 page-shatter-host">
             <ErrorBoundary>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={pathname}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ duration: 0.05 }}
+                  className="page-shatter"
                 >
+                  {/* Slab overlay — 5 horizontal bars that slide in from
+                      alternating sides on mount, then fade. Sits ABOVE
+                      the page during the entry, under after. */}
+                  <div className="page-shatter-slabs" aria-hidden>
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <span
+                        key={i}
+                        className={`page-shatter-slab ${i % 2 === 0 ? "from-left" : "from-right"}`}
+                        style={{ animationDelay: `${i * 50}ms` }}
+                      />
+                    ))}
+                  </div>
                   {children}
                 </motion.div>
               </AnimatePresence>

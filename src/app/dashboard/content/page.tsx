@@ -9,8 +9,8 @@ import StatCard from "@/components/ui/stat-card";
 import StatusBadge from "@/components/ui/status-badge";
 import DataTable from "@/components/ui/data-table";
 import Modal from "@/components/ui/modal";
-import { PageLoading } from "@/components/ui/loading";
-import EmptyState from "@/components/ui/empty-state";
+import { TableSkeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/ui/empty-state-illustration";
 import { formatDate, formatDateTime } from "@/lib/utils";
 import {
   Film, FileText, Inbox, Upload, User, Sparkles, Calendar,
@@ -22,6 +22,7 @@ import PageHero from "@/components/ui/page-hero";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { MotionPage } from "@/components/motion/motion-page";
+import { ALLOWED_GENERAL_UPLOADS, buildAccept, validateFile } from "@/lib/file-types";
 
 type Tab = "scripts" | "requests" | "publish" | "calendar" | "personal" | "pipeline" | "analytics" | "seo";
 
@@ -144,40 +145,48 @@ export default function ContentPage() {
     }, 1500);
   }
 
+  // codex round-1: use a ref-box so fetchData reads `cancelled.current`
+  // at await-resume time rather than from a stale snapshot parameter.
+  useEffect(() => {
+    const cancelled = { current: false };
+    fetchData(cancelled).catch((err: unknown) => {
+      if (!cancelled.current) console.error("[Content] fetchData error:", err);
+    });
+    return () => { cancelled.current = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, [tab, managedClientId]);
+  }, [tab, managedClientId]);
 
-  async function fetchData() {
+  async function fetchData(cancelled: { current: boolean } = { current: false }) {
     setLoading(true);
     try {
       if (tab === "scripts") {
         let q = supabase.from("content_scripts").select("*").order("created_at", { ascending: false });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setScripts(data || []);
+        if (!cancelled.current) setScripts(data || []);
       } else if (tab === "requests") {
         let q = supabase.from("content_requests").select("*").order("created_at", { ascending: false });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setRequests(data || []);
+        if (!cancelled.current) setRequests(data || []);
       } else if (tab === "publish") {
         let q = supabase.from("publish_queue").select("*").order("created_at", { ascending: false });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setPublishQueue(data || []);
+        if (!cancelled.current) setPublishQueue(data || []);
       } else if (tab === "calendar") {
         let q = supabase.from("content_calendar").select("*").order("scheduled_at", { ascending: true });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setCalendar(data || []);
+        if (!cancelled.current) setCalendar(data || []);
       } else if (tab === "personal") {
         const { data } = await supabase.from("personal_brand_ideas").select("*").order("batch_date", { ascending: false });
-        setPersonalIdeas(data || []);
+        if (!cancelled.current) setPersonalIdeas(data || []);
       }
     } finally {
       // Always unstick the loader even if supabase throws — user would be
       // trapped on the spinner otherwise.
-      setLoading(false);
+      if (!cancelled.current) setLoading(false);
     }
   }
 
@@ -246,10 +255,15 @@ export default function ContentPage() {
     return "general";
   }
 
+  const DROP_GO_MAX_BYTES = 100 * 1024 * 1024; // 100 MB
+
   async function handleDropGoFiles(files: File[]) {
     if (files.length === 0) return;
 
     for (const file of files) {
+      const typeErr = validateFile(file, ALLOWED_GENERAL_UPLOADS, DROP_GO_MAX_BYTES);
+      if (typeErr) { toast.error(typeErr); continue; }
+
       const localId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
 
@@ -337,9 +351,10 @@ export default function ContentPage() {
 
   function onDropZone(e: React.DragEvent) {
     e.preventDefault();
+    e.stopPropagation();
     setDragOver(false);
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) handleDropGoFiles(files);
+    if (files.length > 0) void handleDropGoFiles(files);
   }
 
   async function remixPlatformTitle(item: DropGoItem, platform: DropGoPlatform) {
@@ -520,7 +535,17 @@ export default function ContentPage() {
     { key: "seo", label: "SEO & Quality", icon: <Search size={16} /> },
   ];
 
-  if (loading && tab === "scripts") return <PageLoading />;
+  if (loading && tab === "scripts") return (
+    <div className="space-y-4">
+      <PageHero
+        icon={<Sparkles size={22} />}
+        title="Content Studio"
+        subtitle="Scripts, publishing queue, and your personal brand content."
+        gradient="purple"
+      />
+      <TableSkeleton rows={6} />
+    </div>
+  );
 
   return (
     <MotionPage className="space-y-6">
@@ -576,7 +601,7 @@ export default function ContentPage() {
         </div>
 
         <div
-          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
           onDrop={onDropZone}
           onClick={() => fileInputRef.current?.click()}
@@ -586,15 +611,15 @@ export default function ContentPage() {
         >
           <Upload size={36} className="mx-auto mb-3 text-gold" />
           <p className="text-sm font-medium">Drag & drop images, videos, PDFs, or docs</p>
-          <p className="text-xs text-muted mt-1">or click to browse. AI auto-packages each file.</p>
+          <p className="text-xs text-muted mt-1">or click to browse — AI auto-packages each file. JPG, PNG, WebP, GIF, MP4, WebM, MOV, MP3, WAV, PDF, DOCX, CSV up to 100 MB.</p>
           <input
             ref={fileInputRef}
             type="file"
             multiple
-            accept="image/*,video/*,application/pdf,.doc,.docx,.txt,.md,audio/*"
+            accept={buildAccept(ALLOWED_GENERAL_UPLOADS)}
             onChange={(e) => {
               const files = Array.from(e.target.files || []);
-              if (files.length > 0) handleDropGoFiles(files);
+              if (files.length > 0) void handleDropGoFiles(files);
               e.target.value = "";
             }}
             className="hidden"
@@ -963,7 +988,7 @@ export default function ContentPage() {
         ))}
       </div>
 
-      {loading ? <PageLoading /> : (
+      {loading ? <TableSkeleton rows={6} /> : (
         <>
           {/* Scripts */}
           {tab === "scripts" && (
@@ -1092,7 +1117,7 @@ export default function ContentPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {personalIdeas.filter((i) => i.idea_type === "long_form").length === 0 ? (
-                    <EmptyState title="No long-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
+                    <EmptyState type="no-content" title="No long-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
                   ) : (
                     personalIdeas.filter((i) => i.idea_type === "long_form").map((idea) => (
                       <div key={idea.id} className="card-hover">
@@ -1131,7 +1156,7 @@ export default function ContentPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                   {personalIdeas.filter((i) => i.idea_type === "short_form").length === 0 ? (
-                    <EmptyState title="No short-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
+                    <EmptyState type="no-content" title="No short-form ideas yet" description="Ideas are generated every Sunday at 09:00 CET" />
                   ) : (
                     personalIdeas.filter((i) => i.idea_type === "short_form").map((idea) => (
                       <div key={idea.id} className="card-hover p-4">
