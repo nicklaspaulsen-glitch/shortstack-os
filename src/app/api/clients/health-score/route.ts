@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Auto Health Score Calculator
 // Factors: task completion (25%), content published (20%), invoices paid on time (20%),
@@ -79,16 +80,26 @@ export async function POST(request: NextRequest) {
   const { client_id } = await request.json();
   const serviceSupabase = createServiceClient();
 
-  // Single client
+  // Single client — verify ownership before writing the score
   if (client_id) {
+    const ctx = await requireOwnedClient(supabase, user.id, client_id);
+    if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     const result = await calculateScore(client_id, serviceSupabase);
     return NextResponse.json(result);
   }
 
-  // All clients
+  // Bulk recalculate — resolve the effective owner so team_members scope to their agency.
+  // We intentionally support "all my clients" here; a null client_id means "recalculate
+  // all clients that belong to my agency". The ownerId filter ensures we never touch
+  // another tenant's records.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  // All clients belonging to this owner only
   const { data: clients } = await serviceSupabase
     .from("clients")
     .select("id")
+    .eq("profile_id", ownerId)
     .eq("is_active", true);
 
   if (!clients || clients.length === 0) {

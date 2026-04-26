@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 export async function GET(request: NextRequest) {
   // Auth check
@@ -10,6 +11,10 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const clientId = searchParams.get("client_id");
   if (!clientId) return NextResponse.json({ error: "client_id required" }, { status: 400 });
+
+  // Verify caller owns this client before serving any data
+  const ctx = await requireOwnedClient(supabase, user.id, clientId);
+  if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const serviceSupabase = createServiceClient();
 

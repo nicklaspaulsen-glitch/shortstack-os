@@ -1,15 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { checkAiRateLimit } from "@/lib/api-rate-limit";
 
 // Agent Training — when agents are idle, they self-improve
 // Analyzes past performance, learns from failures, optimizes strategies
+
+// Allowlist of valid agent_ids — must match keys of actionTypeMap below.
+// Arbitrary agent_id values from untrusted callers are rejected to prevent
+// attacker-controlled writes to trinity_log under the "custom" fallback.
+const ALLOWED_AGENT_IDS = ["scout", "echo", "pixel", "wave", "blaze", "trinity", "ring", "nexus"] as const;
+
 export async function POST(request: NextRequest) {
   // Auth check — only authenticated users can trigger agent training
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(authSupabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+  const limited = checkAiRateLimit(user.id);
+  if (limited) return limited;
+
   const { agent_id } = await request.json();
+
+  // Validate agent_id against allowlist before any DB or AI operations
+  if (!ALLOWED_AGENT_IDS.includes(agent_id)) {
+    return NextResponse.json({ error: "Invalid agent_id" }, { status: 400 });
+  }
+
   const supabase = createServiceClient();
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "AI not configured" }, { status: 500 });
@@ -34,10 +54,10 @@ export async function POST(request: NextRequest) {
     { count: totalActions },
     { count: successCount },
   ] = await Promise.all([
-    supabase.from("trinity_log").select("description, status, result, created_at").eq("action_type", actionType).order("created_at", { ascending: false }).limit(20),
-    supabase.from("trinity_log").select("description, error_message, created_at").eq("action_type", actionType).eq("status", "failed").order("created_at", { ascending: false }).limit(10),
-    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("action_type", actionType),
-    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("action_type", actionType).eq("status", "completed"),
+    supabase.from("trinity_log").select("description, status, result, created_at").eq("user_id", ownerId).eq("action_type", actionType).order("created_at", { ascending: false }).limit(20),
+    supabase.from("trinity_log").select("description, error_message, created_at").eq("user_id", ownerId).eq("action_type", actionType).eq("status", "failed").order("created_at", { ascending: false }).limit(10),
+    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("action_type", actionType),
+    supabase.from("trinity_log").select("*", { count: "exact", head: true }).eq("user_id", ownerId).eq("action_type", actionType).eq("status", "completed"),
   ]);
 
   const successRate = (totalActions || 0) > 0 ? Math.round(((successCount || 0) / (totalActions || 1)) * 100) : 0;
@@ -81,8 +101,9 @@ Generate a JSON response:
     const cleaned = text.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const training = JSON.parse(cleaned);
 
-    // Save training results
+    // Save training results — tag with ownerId so reads scoped to the agency owner include it
     await supabase.from("trinity_log").insert({
+      user_id: ownerId,
       action_type: actionType,
       description: `Agent ${agent_id} completed self-training: ${training.self_assessment}`,
       status: "completed",

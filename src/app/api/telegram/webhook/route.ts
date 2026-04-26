@@ -9,13 +9,16 @@ import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
 // Telegram Webhook — receive messages from Telegram and execute commands
 // Set this up: https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://app.shortstack.work/api/telegram/webhook&secret_token=YOUR_SECRET
 export async function POST(request: NextRequest) {
-  // Validate Telegram webhook secret token if configured
+  // Fail-closed secret validation — if the env var is not set we reject all
+  // requests. Returning 200 (not 401) so Telegram does not retry endlessly.
   const webhookSecret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  if (webhookSecret) {
-    const token = request.headers.get("x-telegram-bot-api-secret-token");
-    if (token !== webhookSecret) {
-      return NextResponse.json({ ok: true }); // Silent rejection — don't reveal error details
-    }
+  if (!webhookSecret) {
+    console.warn("[telegram/webhook] TELEGRAM_WEBHOOK_SECRET not set — rejecting all requests");
+    return NextResponse.json({ ok: true }); // 200 so Telegram won't retry
+  }
+  const tokenHeader = request.headers.get("x-telegram-bot-api-secret-token");
+  if (tokenHeader !== webhookSecret) {
+    return NextResponse.json({ ok: true }); // Silent rejection — don't reveal error details
   }
 
   let body: Record<string, unknown>;
@@ -38,10 +41,16 @@ export async function POST(request: NextRequest) {
 
   if (!botToken) return NextResponse.json({ ok: true });
 
-  // Only respond to authorized chat IDs to prevent unauthorized command execution
+  // Fail-closed chat-ID check — if env var is missing, reject all messages.
+  // Fail-open here would let any Telegram user who knows the bot token + webhook
+  // secret read agency-wide aggregates (MRR, client list, pipeline stats).
   const allowedChatId = process.env.TELEGRAM_CHAT_ID;
-  if (allowedChatId && chatId !== allowedChatId) {
-    return NextResponse.json({ ok: true }); // Silent ignore
+  if (!allowedChatId) {
+    console.warn("[telegram/webhook] TELEGRAM_CHAT_ID not set — rejecting all messages (would have leaked agency data)");
+    return NextResponse.json({ ok: true }, { status: 200 });
+  }
+  if (String(chatId) !== allowedChatId) {
+    return NextResponse.json({ ok: true }, { status: 200 }); // Silent ignore
   }
 
   // Claim the update before any DB reads or AI calls. update_id is Telegram's
