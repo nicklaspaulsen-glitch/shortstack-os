@@ -13,6 +13,24 @@ import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
 //         checkout.session.completed
 
 export async function POST(request: NextRequest) {
+  // Fail-closed: if the secret env var is missing the route must return 503,
+  // NOT attempt verification. When the secret is the empty string, Stripe's
+  // constructEvent accepts any attacker-forged HMAC-SHA256 payload — verified
+  // empirically (sec/batch-4). A missing secret always indicates a misconfigured
+  // deployment; surface it clearly rather than silently processing forgeable events.
+  const stripeWebhookSecret =
+    process.env.STRIPE_BILLING_WEBHOOK_SECRET ||
+    process.env.STRIPE_WEBHOOK_SECRET;
+  if (!stripeWebhookSecret) {
+    console.error(
+      "[billing/webhook] STRIPE_BILLING_WEBHOOK_SECRET (or STRIPE_WEBHOOK_SECRET) is not set — rejecting request. Configure the secret in Vercel to enable signature verification.",
+    );
+    return NextResponse.json(
+      { error: "Webhook not configured" },
+      { status: 503 },
+    );
+  }
+
   const body = await request.text();
   const sig = request.headers.get("stripe-signature");
 
@@ -21,11 +39,7 @@ export async function POST(request: NextRequest) {
   const stripe = getStripe();
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(
-      body,
-      sig,
-      process.env.STRIPE_BILLING_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || ""
-    );
+    event = stripe.webhooks.constructEvent(body, sig, stripeWebhookSecret);
   } catch {
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
