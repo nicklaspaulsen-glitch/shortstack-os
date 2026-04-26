@@ -6,12 +6,32 @@ import { createClient } from "@/lib/supabase/client";
 import PageHero from "@/components/ui/page-hero";
 import {
   MessageCircle, Plus, Send, Clock, CheckCircle2, XCircle, Loader2,
-  Users, AlertCircle, Calendar, X, ChevronDown,
+  Users, AlertCircle, Calendar, X, ChevronDown, Phone, Inbox,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const MAX_MSG_LEN = 1600;
 const WARN_LEN = 160;
+
+interface WhatsAppNumber {
+  id: string;
+  provider: "meta-cloud" | "twilio";
+  phone: string;
+  label: string;
+  status: string;
+  created_at: string | null;
+}
+
+interface InboxConversation {
+  id: string;
+  contact_id: string | null;
+  external_thread_id: string | null;
+  subject: string | null;
+  last_message_at: string | null;
+  last_message_preview: string | null;
+  unread_count: number;
+  status: string | null;
+}
 
 interface WhatsAppCampaign {
   id: string;
@@ -48,10 +68,15 @@ function StatusBadge({ status }: { status: WhatsAppCampaign["status"] }) {
   );
 }
 
+type Tab = "campaigns" | "numbers" | "inbox";
+
 export default function WhatsAppPage() {
   const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState<Tab>("campaigns");
   const [campaigns, setCampaigns] = useState<WhatsAppCampaign[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
+  const [numbers, setNumbers] = useState<WhatsAppNumber[]>([]);
+  const [conversations, setConversations] = useState<InboxConversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCompose, setShowCompose] = useState(false);
   const [sending, setSending] = useState(false);
@@ -81,6 +106,18 @@ export default function WhatsAppPage() {
     ]);
     setCampaigns((camps as WhatsAppCampaign[]) ?? []);
     setClients((cls as Client[]) ?? []);
+
+    // Fire-and-forget — these enhance UX but failure is non-fatal
+    fetch("/api/whatsapp/numbers")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j?.numbers) setNumbers(j.numbers as WhatsAppNumber[]); })
+      .catch(() => {});
+
+    fetch("/api/whatsapp")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => { if (j?.conversations) setConversations(j.conversations as InboxConversation[]); })
+      .catch(() => {});
+
     setLoading(false);
   }, [user]);
 
@@ -127,32 +164,34 @@ export default function WhatsAppPage() {
       if (campErr) throw campErr;
 
       if (!scheduleAt) {
-        // Fire the SMS endpoint for each selected client
-        const res = await fetch("/api/twilio/send-sms", {
+        // Fire the dedicated WhatsApp bulk-send endpoint. Backend uses Meta
+        // Cloud API when configured, otherwise falls back to Twilio's
+        // WhatsApp business sender. Throttled at 1 msg/sec server-side.
+        const res = await fetch("/api/whatsapp/send-bulk", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            lead_ids: [],
-            message_template: message.trim(),
-            from_number: process.env.NEXT_PUBLIC_TWILIO_WHATSAPP_NUMBER,
-            batch_size: selectedClients.length,
+            campaign_id: camp.id,
+            client_ids: selectedClients,
+            message: message.trim(),
           }),
         });
         const json = await res.json();
 
-        // Update campaign status
-        await supabase
-          .from("whatsapp_campaigns")
-          .update({
-            status: res.ok ? "sent" : "failed",
-            sent_at: new Date().toISOString(),
-          })
-          .eq("id", camp.id);
-
-        if (!res.ok) {
+        if (!res.ok || !json.ok) {
+          await supabase
+            .from("whatsapp_campaigns")
+            .update({ status: "failed", sent_at: new Date().toISOString() })
+            .eq("id", camp.id);
           toast.error(json.error || "Send failed");
         } else {
-          toast.success(`Campaign sent to ${selectedClients.length} recipients`);
+          // server already updated campaign status; surface counts
+          const { sent, failed } = json as { sent: number; failed: number };
+          if (failed > 0) {
+            toast(`Sent ${sent}/${sent + failed} — ${failed} failed`, { icon: "⚠️" });
+          } else {
+            toast.success(`Sent to ${sent} recipient${sent === 1 ? "" : "s"}`);
+          }
         }
       } else {
         toast.success("Campaign scheduled");
@@ -347,6 +386,115 @@ export default function WhatsAppPage() {
         </div>
       )}
 
+      {/* Tabs */}
+      <div className="flex items-center gap-1 border-b border-white/8">
+        {([
+          { id: "campaigns" as const, label: "Campaigns", icon: <Send className="w-3.5 h-3.5" /> },
+          { id: "numbers" as const, label: "Numbers", icon: <Phone className="w-3.5 h-3.5" /> },
+          { id: "inbox" as const, label: "Inbox", icon: <Inbox className="w-3.5 h-3.5" /> },
+        ]).map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setActiveTab(t.id)}
+            className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium border-b-2 transition-all ${
+              activeTab === t.id
+                ? "text-white border-[#25D366]"
+                : "text-white/50 border-transparent hover:text-white/80"
+            }`}
+          >
+            {t.icon}
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "numbers" && (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-semibold text-white/60">Provisioned Numbers</p>
+          {numbers.length === 0 ? (
+            <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
+              <Phone className="w-8 h-8 text-white/20" />
+              <p className="text-white/40 text-sm">No WhatsApp numbers yet</p>
+              <p className="text-white/30 text-xs max-w-md">
+                Configure WHATSAPP_ACCESS_TOKEN + WHATSAPP_PHONE_NUMBER_ID (Meta Cloud) or
+                provision a Twilio number per client to enable WhatsApp sends.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {numbers.map((n) => (
+                <div key={n.id} className="rounded-xl border border-white/8 bg-white/3 p-4 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-[#25D366]/15 flex items-center justify-center">
+                    <Phone className="w-4 h-4 text-[#25D366]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white truncate">{n.label}</p>
+                    <p className="text-xs text-white/40 font-mono">{n.phone}</p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1 shrink-0">
+                    <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 text-white/60">
+                      {n.provider === "meta-cloud" ? "Meta Cloud" : "Twilio"}
+                    </span>
+                    <span className={`text-[10px] ${n.status === "active" ? "text-emerald-400" : "text-amber-400"}`}>
+                      {n.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === "inbox" && (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-semibold text-white/60">Recent Conversations</p>
+          {conversations.length === 0 ? (
+            <div className="rounded-xl border-2 border-dashed border-white/8 flex flex-col items-center justify-center py-10 gap-2 text-center">
+              <Inbox className="w-8 h-8 text-white/20" />
+              <p className="text-white/40 text-sm">No conversations yet</p>
+              <p className="text-white/30 text-xs max-w-md">
+                Inbound WhatsApp messages appear here once your account is wired
+                to Meta&apos;s webhook or Twilio&apos;s SMS-webhook.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {conversations.map((c) => (
+                <div
+                  key={c.id}
+                  className="rounded-xl border border-white/8 bg-white/3 hover:bg-white/5 p-4 flex items-center gap-3 transition-all"
+                >
+                  <div className="w-9 h-9 rounded-full bg-[#25D366]/15 flex items-center justify-center text-xs font-semibold text-[#25D366]">
+                    {(c.subject || c.external_thread_id || "?").charAt(0).toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-white truncate">
+                      {c.subject || c.external_thread_id || "Unknown contact"}
+                    </p>
+                    <p className="text-xs text-white/40 truncate line-clamp-1">
+                      {c.last_message_preview || "(no preview)"}
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-end gap-1 shrink-0">
+                    {c.unread_count > 0 && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#25D366] text-white font-semibold">
+                        {c.unread_count}
+                      </span>
+                    )}
+                    <p className="text-[10px] text-white/30">
+                      {c.last_message_at ? new Date(c.last_message_at).toLocaleDateString() : "—"}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {activeTab === "campaigns" && (<>
+
       {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
@@ -412,6 +560,8 @@ export default function WhatsAppPage() {
           </div>
         )}
       </div>
+
+      </>)}
     </div>
   );
 }
