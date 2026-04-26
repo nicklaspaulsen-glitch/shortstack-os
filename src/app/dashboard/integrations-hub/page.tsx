@@ -39,7 +39,7 @@ import {
   ConnectIntegrationError,
   connectIntegration,
 } from "@/lib/nango/browser";
-import { NANGO_INTEGRATIONS } from "@/lib/nango/client";
+import { NANGO_INTEGRATIONS } from "@/lib/nango/shared";
 
 // ────────────────────────────────────────────────────────────────────────
 // Hardcoded integrations catalogue
