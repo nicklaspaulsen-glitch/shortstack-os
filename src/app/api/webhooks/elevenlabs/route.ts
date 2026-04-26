@@ -79,6 +79,46 @@ export async function POST(request: NextRequest) {
 
     const service = createServiceClient();
 
+    // ── Inbound Voice Receptionist join (Apr 27) ────────────────────────
+    // The Twilio voice-webhook (route /api/twilio/voice-webhook) hands
+    // inbound calls to ElevenLabs ConvAI via a <Connect><Stream> TwiML
+    // tag with `twilio_call_sid` passed as a dynamic Parameter. ElevenLabs
+    // echoes that variable back on every conversation event, which lets us
+    // link the elevenlabs `conversation_id` to the originating Twilio
+    // call_sid (and from there to the voice_calls row).
+    //
+    // Run BEFORE the dedup claim — link is idempotent (filtered on
+    // eleven_conversation_id IS NULL) so a re-delivered event won't double-
+    // write. We need this to run on retries too in case the original handler
+    // crashed before linking.
+    const dynamicVars =
+      (body.conversation_initiation_client_data?.dynamic_variables as
+        | Record<string, unknown>
+        | undefined) ??
+      (body.dynamic_variables as Record<string, unknown> | undefined) ??
+      undefined;
+    const twilioCallSid =
+      typeof dynamicVars?.twilio_call_sid === "string"
+        ? (dynamicVars.twilio_call_sid as string)
+        : null;
+
+    if (twilioCallSid) {
+      // Best-effort: link voice_calls.eleven_conversation_id. Failures are
+      // non-fatal — the call still proceeds, we just lose the join for this
+      // one conversation.
+      const { error: linkErr } = await service
+        .from("voice_calls")
+        .update({ eleven_conversation_id: conversationId })
+        .eq("twilio_call_sid", twilioCallSid)
+        .is("eleven_conversation_id", null);
+      if (linkErr) {
+        console.warn(
+          "[webhooks/elevenlabs] voice_calls link failed:",
+          linkErr.message,
+        );
+      }
+    }
+
     // Claim the event atomically. Returns 'already_done' or 'in_flight' if a
     // prior attempt already ran (or is running). This prevents duplicate
     // outreach_log updates and duplicate trinity_log inserts on retries.
@@ -95,6 +135,47 @@ export async function POST(request: NextRequest) {
       const duration = body.call_duration_secs || body.metadata?.call_duration_secs;
       const outcome = body.analysis?.outcome || body.outcome;
       const fullTranscript = (transcript || []).map((t: { role: string; message: string }) => `${t.role}: ${t.message}`).join("\n");
+
+      // ── voice_calls update for inbound receptionist calls ────────────
+      // Match by eleven_conversation_id (set above on conversation_initiation
+      // or earlier). This is what makes the transcript flow back to the
+      // Voice Receptionist dashboard. Falls through to the existing
+      // outreach_log path for outbound lead-gen calls (unchanged).
+      const { data: voiceCallRow } = await service
+        .from("voice_calls")
+        .select("id, twilio_call_sid, transcript, outcome, metadata")
+        .eq("eleven_conversation_id", conversationId)
+        .maybeSingle();
+
+      if (voiceCallRow?.id) {
+        const callOutcomeForVoice = outcome || detectOutcome(fullTranscript);
+        // Map ElevenLabs outcomes to the voice_calls outcome enum
+        // (booked / qualified / unqualified / spam) used by the Claude
+        // Haiku classifier in voice-status-callback.
+        const mapped =
+          callOutcomeForVoice === "interested" ? "qualified"
+          : callOutcomeForVoice === "voicemail" ? "spam"
+          : callOutcomeForVoice === "not_interested" ? "unqualified"
+          : callOutcomeForVoice === "no_answer" ? "spam"
+          : "unqualified";
+        const existingMeta = (voiceCallRow.metadata as Record<string, unknown>) || {};
+        await service
+          .from("voice_calls")
+          .update({
+            transcript: fullTranscript.slice(0, 100_000),
+            outcome: mapped,
+            duration_seconds: duration ?? null,
+            ended_at: new Date().toISOString(),
+            metadata: {
+              ...existingMeta,
+              elevenlabs_outcome_raw: callOutcomeForVoice,
+              elevenlabs_conversation_id: conversationId,
+              transcript_preview: fullTranscript.slice(0, 500),
+              webhook_processed: new Date().toISOString(),
+            },
+          })
+          .eq("id", voiceCallRow.id);
+      }
 
       // Find the outreach log entry for this conversation
       const { data: outreachEntries } = await service
