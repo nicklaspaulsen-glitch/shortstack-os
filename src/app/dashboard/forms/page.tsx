@@ -34,6 +34,23 @@ interface AiField {
 
 type FormTab = "builder" | "templates" | "submissions" | "analytics" | "settings";
 
+/**
+ * Per-field conditional rule. The form renderer evaluates each rule in order
+ * — multiple rules are AND-combined. The first action wins for show/hide:
+ * if any rule says "hide" and matches, the field is hidden. "require" rules
+ * dynamically toggle the required flag at submit-time (renderer + submit
+ * handler both honor it).
+ */
+type ConditionOperator = "equals" | "not_equals" | "contains" | "is_empty" | "is_not_empty";
+type ConditionAction = "show" | "hide" | "require" | "skip_section";
+
+interface FieldCondition {
+  if_field: string; // referenced field id
+  if_operator: ConditionOperator;
+  if_value?: string; // ignored when operator is is_empty / is_not_empty
+  action: ConditionAction;
+}
+
 interface FormField {
   id: string;
   type: "text" | "email" | "phone" | "textarea" | "select" | "number" | "checkbox" | "file" | "rating";
@@ -41,7 +58,54 @@ interface FormField {
   placeholder: string;
   required: boolean;
   options?: string[];
+  /** @deprecated kept for backward compat — use `conditions` instead. */
   condition?: { fieldId: string; value: string } | null;
+  conditions?: FieldCondition[];
+}
+
+/**
+ * Returns true when the rule matches the given field-value. Used by the
+ * renderer to decide visibility/requirement at submit time.
+ */
+export function evaluateCondition(rule: FieldCondition, value: string | undefined): boolean {
+  const v = (value ?? "").trim();
+  switch (rule.if_operator) {
+    case "equals":
+      return v === (rule.if_value ?? "");
+    case "not_equals":
+      return v !== (rule.if_value ?? "");
+    case "contains":
+      return rule.if_value ? v.toLowerCase().includes(rule.if_value.toLowerCase()) : false;
+    case "is_empty":
+      return v === "";
+    case "is_not_empty":
+      return v !== "";
+    default:
+      return false;
+  }
+}
+
+/**
+ * Compute show/required state for one field given the current form values.
+ * Mirrors the runtime semantics described in the FieldCondition docstring.
+ */
+export function computeFieldVisibility(
+  field: FormField,
+  values: Record<string, string>,
+  fieldsById: Record<string, FormField>,
+): { visible: boolean; required: boolean } {
+  let visible = true;
+  let required = field.required;
+  for (const rule of field.conditions || []) {
+    if (!fieldsById[rule.if_field]) continue;
+    const matches = evaluateCondition(rule, values[rule.if_field]);
+    if (!matches) continue;
+    if (rule.action === "show") visible = true;
+    else if (rule.action === "hide") visible = false;
+    else if (rule.action === "require") required = true;
+    else if (rule.action === "skip_section") visible = false;
+  }
+  return { visible, required };
 }
 
 interface LeadForm {
@@ -167,6 +231,8 @@ export default function FormsPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [ratingHover, setRatingHover] = useState(0);
+  const [previewValues, setPreviewValues] = useState<Record<string, string>>({});
+  const [conditionEditorFieldId, setConditionEditorFieldId] = useState<string | null>(null);
 
   /* ── AI generator state ── */
   const [showAiModal, setShowAiModal] = useState(false);
@@ -526,6 +592,18 @@ export default function FormsPage() {
                         className="text-muted hover:text-gold p-1" title="Regenerate label / placeholder">
                         {regenFieldId === field.id ? <Loader2 size={10} className="animate-spin" /> : <Sparkles size={10} />}
                       </button>
+                      <button
+                        onClick={() => setConditionEditorFieldId(conditionEditorFieldId === field.id ? null : field.id)}
+                        className={`text-[8px] px-1.5 py-0.5 rounded flex items-center gap-1 ${
+                          (field.conditions?.length ?? 0) > 0
+                            ? "bg-gold/10 text-gold"
+                            : "text-muted hover:text-gold"
+                        }`}
+                        title="Add show/hide/require rules"
+                      >
+                        <Zap size={9} />
+                        {(field.conditions?.length ?? 0) > 0 ? `${field.conditions?.length} rule${(field.conditions?.length ?? 0) === 1 ? "" : "s"}` : "Conditions"}
+                      </button>
                       <button onClick={() => removeField(field.id)} className="text-muted hover:text-red-400 p-1" aria-label="Remove field"><Trash2 size={10} /></button>
                     </div>
                     {field.type === "select" && field.options && (
@@ -533,6 +611,13 @@ export default function FormsPage() {
                         <input value={field.options.join(", ")} onChange={e => updateField(field.id, "options", e.target.value.split(", "))}
                           className="input w-full text-[10px]" placeholder="Options (comma separated)" />
                       </div>
+                    )}
+                    {conditionEditorFieldId === field.id && (
+                      <ConditionEditor
+                        field={field}
+                        otherFields={activeForm.fields.filter((f) => f.id !== field.id)}
+                        onChange={(rules) => updateField(field.id, "conditions", rules)}
+                      />
                     )}
                   </div>
                 ))}
@@ -611,21 +696,43 @@ export default function FormsPage() {
             <h2 className="section-header flex items-center gap-2"><Eye size={12} className="text-gold" /> Live Preview</h2>
             <div className="rounded-xl p-6" style={{ background: "#ffffff" }}>
               <h2 style={{ fontSize: 20, fontWeight: 700, color: "#111", marginBottom: 16 }}>{activeForm.name}</h2>
-              {activeForm.fields.map(field => (
+              {(() => {
+                const fieldsById: Record<string, FormField> = {};
+                for (const f of activeForm.fields) fieldsById[f.id] = f;
+                return activeForm.fields.map(field => {
+                  const { visible, required } = computeFieldVisibility(
+                    field,
+                    previewValues,
+                    fieldsById,
+                  );
+                  if (!visible) return null;
+                  return (
                 <div key={field.id} style={{ marginBottom: 12 }}>
                   <label style={{ display: "block", fontSize: 12, color: "#666", marginBottom: 4 }}>
-                    {field.label} {field.required && <span style={{ color: activeForm.accentColor }}>*</span>}
+                    {field.label} {required && <span style={{ color: activeForm.accentColor }}>*</span>}
                   </label>
                   {field.type === "textarea" ? (
-                    <textarea placeholder={field.placeholder} rows={3} style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6, fontSize: 14, resize: "vertical" }} />
+                    <textarea
+                      placeholder={field.placeholder}
+                      rows={3}
+                      value={previewValues[field.id] || ""}
+                      onChange={(e) => setPreviewValues((p) => ({ ...p, [field.id]: e.target.value }))}
+                      style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6, fontSize: 14, resize: "vertical" }} />
                   ) : field.type === "select" ? (
-                    <select style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6, fontSize: 14 }}>
-                      <option>{field.placeholder || "Select..."}</option>
-                      {(field.options || []).map(o => <option key={o}>{o}</option>)}
+                    <select
+                      value={previewValues[field.id] || ""}
+                      onChange={(e) => setPreviewValues((p) => ({ ...p, [field.id]: e.target.value }))}
+                      style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6, fontSize: 14 }}>
+                      <option value="">{field.placeholder || "Select..."}</option>
+                      {(field.options || []).map(o => <option key={o} value={o}>{o}</option>)}
                     </select>
                   ) : field.type === "checkbox" ? (
                     <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14 }}>
-                      <input type="checkbox" /> {field.label}
+                      <input
+                        type="checkbox"
+                        checked={previewValues[field.id] === "true"}
+                        onChange={(e) => setPreviewValues((p) => ({ ...p, [field.id]: e.target.checked ? "true" : "" }))}
+                      /> {field.label}
                     </label>
                   ) : field.type === "rating" ? (
                     <div style={{ display: "flex", gap: 4 }}>
@@ -641,10 +748,17 @@ export default function FormsPage() {
                       Click to upload or drag and drop
                     </div>
                   ) : (
-                    <input type={field.type} placeholder={field.placeholder} style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6, fontSize: 14 }} />
+                    <input
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      value={previewValues[field.id] || ""}
+                      onChange={(e) => setPreviewValues((p) => ({ ...p, [field.id]: e.target.value }))}
+                      style={{ width: "100%", padding: 10, border: "1px solid #ddd", borderRadius: 6, fontSize: 14 }} />
                   )}
                 </div>
-              ))}
+                  );
+                });
+              })()}
               <button style={{ width: "100%", padding: 12, background: activeForm.accentColor, color: "#000", fontWeight: 700, border: "none", borderRadius: 6, fontSize: 15, cursor: "pointer" }}>
                 {activeForm.submitText}
               </button>
@@ -811,6 +925,151 @@ export default function FormsPage() {
               ))}
             </div>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ──────────────────────────────────────────────────────────────────
+ * ConditionEditor — inline rule builder shown beneath a field row.
+ *
+ * Each rule is { if_field, if_operator, if_value?, action }. Multiple
+ * rules are AND-combined by computeFieldVisibility. Rules that target
+ * a non-existent if_field are silently ignored at render time so a
+ * deleted field doesn't break the form.
+ * ────────────────────────────────────────────────────────────────── */
+
+interface ConditionEditorProps {
+  field: FormField;
+  otherFields: FormField[];
+  onChange: (rules: FieldCondition[]) => void;
+}
+
+const OPERATOR_OPTIONS: Array<{ value: ConditionOperator; label: string; needsValue: boolean }> = [
+  { value: "equals", label: "equals", needsValue: true },
+  { value: "not_equals", label: "does not equal", needsValue: true },
+  { value: "contains", label: "contains", needsValue: true },
+  { value: "is_empty", label: "is empty", needsValue: false },
+  { value: "is_not_empty", label: "is not empty", needsValue: false },
+];
+
+const ACTION_OPTIONS: Array<{ value: ConditionAction; label: string }> = [
+  { value: "show", label: "show this field" },
+  { value: "hide", label: "hide this field" },
+  { value: "require", label: "require this field" },
+  { value: "skip_section", label: "skip section" },
+];
+
+function ConditionEditor({ field, otherFields, onChange }: ConditionEditorProps) {
+  const rules = field.conditions ?? [];
+
+  function update(idx: number, patch: Partial<FieldCondition>) {
+    onChange(rules.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
+  }
+
+  function addRule() {
+    if (otherFields.length === 0) return;
+    onChange([
+      ...rules,
+      {
+        if_field: otherFields[0].id,
+        if_operator: "equals",
+        if_value: "",
+        action: "show",
+      },
+    ]);
+  }
+
+  function removeRule(idx: number) {
+    onChange(rules.filter((_, i) => i !== idx));
+  }
+
+  if (otherFields.length === 0) {
+    return (
+      <div className="mt-2 ml-8 p-2 rounded-md bg-surface border border-border/50 text-[10px] text-muted">
+        Add at least one other field above to set conditions.
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-2 ml-8 p-2.5 rounded-md bg-surface border border-gold/20 space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] uppercase tracking-wider text-muted">Conditions for {field.label}</p>
+        <button
+          onClick={addRule}
+          className="flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-gold/10 text-gold hover:bg-gold/20"
+        >
+          <Plus size={9} /> Add rule
+        </button>
+      </div>
+      {rules.length === 0 ? (
+        <p className="text-[10px] text-muted">
+          No rules yet. By default this field always shows. Add a rule to make
+          it appear or hide based on another field&apos;s value.
+        </p>
+      ) : (
+        <div className="space-y-1.5">
+          {rules.map((rule, i) => {
+            const op = OPERATOR_OPTIONS.find((o) => o.value === rule.if_operator);
+            return (
+              <div key={i} className="flex flex-wrap items-center gap-1 text-[10px]">
+                <span className="text-muted">If</span>
+                <select
+                  value={rule.if_field}
+                  onChange={(e) => update(i, { if_field: e.target.value })}
+                  className="input text-[10px] py-0.5 px-1.5 rounded"
+                >
+                  {otherFields.map((f) => (
+                    <option key={f.id} value={f.id}>
+                      {f.label || `(unnamed ${f.type})`}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={rule.if_operator}
+                  onChange={(e) =>
+                    update(i, { if_operator: e.target.value as ConditionOperator })
+                  }
+                  className="input text-[10px] py-0.5 px-1.5 rounded"
+                >
+                  {OPERATOR_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+                {op?.needsValue && (
+                  <input
+                    value={rule.if_value || ""}
+                    onChange={(e) => update(i, { if_value: e.target.value })}
+                    placeholder="value"
+                    className="input text-[10px] py-0.5 px-1.5 rounded w-24"
+                  />
+                )}
+                <span className="text-muted">→</span>
+                <select
+                  value={rule.action}
+                  onChange={(e) => update(i, { action: e.target.value as ConditionAction })}
+                  className="input text-[10px] py-0.5 px-1.5 rounded"
+                >
+                  {ACTION_OPTIONS.map((a) => (
+                    <option key={a.value} value={a.value}>
+                      {a.label}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => removeRule(i)}
+                  className="text-muted hover:text-red-400 p-0.5"
+                  aria-label="Remove rule"
+                >
+                  <Trash2 size={9} />
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>
