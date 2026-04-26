@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { requireOwnedClient } from "@/lib/security/require-owned-client";
+import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import type { SocialPost, SocialPostStatus, SocialPlatform } from "@/lib/social-studio/types";
 
 /**
@@ -23,6 +23,10 @@ export async function GET(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Resolve effective owner — team_members read their parent agency's posts.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const url = new URL(request.url);
   const statusParam = url.searchParams.get("status");
   const platformsParam = url.searchParams.get("platforms");
@@ -43,7 +47,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from("social_posts")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .order("scheduled_at", { ascending: true, nullsFirst: false })
     .order("created_at", { ascending: false })
     .limit(limit);
@@ -81,7 +85,7 @@ export async function GET(request: NextRequest) {
   const baseCount = supabase
     .from("social_posts")
     .select("status, scheduled_at, published_at, engagement_metrics", { count: "exact" })
-    .eq("user_id", user.id);
+    .eq("user_id", ownerId);
 
   const { data: allRows } = clientId
     ? await baseCount.eq("client_id", clientId)
@@ -146,6 +150,9 @@ export async function DELETE(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const id = new URL(request.url).searchParams.get("id");
   if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
 
@@ -153,7 +160,7 @@ export async function DELETE(request: NextRequest) {
     .from("social_posts")
     .update({ status: "cancelled", updated_at: new Date().toISOString() })
     .eq("id", id)
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .select("id")
     .maybeSingle();
 
@@ -184,6 +191,9 @@ export async function PATCH(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   let body: PatchablePost;
   try {
     body = await request.json() as PatchablePost;
@@ -210,7 +220,7 @@ export async function PATCH(request: NextRequest) {
     .from("social_posts")
     .update(updates)
     .eq("id", body.id)
-    .eq("user_id", user.id)
+    .eq("user_id", ownerId)
     .select("*")
     .maybeSingle();
 

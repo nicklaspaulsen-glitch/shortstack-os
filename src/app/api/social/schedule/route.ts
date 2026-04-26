@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { requireOwnedClient } from "@/lib/security/require-owned-client";
+import { requireOwnedClient, getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { schedulePost as zernioSchedule } from "@/lib/services/zernio";
 import { ALL_PLATFORMS } from "@/lib/social-studio/constants";
 import type { SocialPlatform, SocialPost } from "@/lib/social-studio/types";
@@ -43,6 +43,11 @@ export async function POST(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // Resolve effective owner — team_members create posts under the parent agency
+  // so the parent (and other team_members) sees them in the lineup.
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   let body: ScheduleRequest;
   try {
     body = (await request.json()) as ScheduleRequest;
@@ -83,7 +88,7 @@ export async function POST(request: NextRequest) {
   const initialStatus = willPostNow ? "publishing" : "scheduled";
 
   const insert = {
-    user_id: user.id,
+    user_id: ownerId,
     client_id: body.client_id ?? null,
     platforms,
     caption: body.caption,

@@ -11,6 +11,8 @@
 
 import type { DesignDoc, ExportFormat, Layer, Page } from "./types";
 import { checkFetchUrl } from "@/lib/security/ssrf";
+import fs from "node:fs";
+import path from "node:path";
 
 // ── Image URL allowlist for SSRF protection ───────────────────────────────────
 // Only https:// URLs from these hosts are passed to Satori (which fetches them
@@ -73,6 +75,57 @@ function isAllowedImageUrl(src: string): boolean {
 const PLACEHOLDER_SRC =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
 
+// ── Font loading for Satori ─────────────────────────────
+// Satori needs at least one font to render text — passing fonts: [] produces
+// garbled glyphs or crashes on text-heavy designs. We bundle Inter (regular +
+// bold) under public/fonts and lazy-load on first call. Buffer is cached on
+// the module so subsequent renders reuse the read.
+//
+// If the font files are missing (e.g. someone trims public/fonts) we fall back
+// to an empty fonts array and log a clear warning rather than crash the route.
+
+type SatoriFont = {
+  name: string;
+  data: Buffer;
+  weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
+  style: "normal" | "italic";
+};
+
+let cachedFonts: SatoriFont[] | null = null;
+
+function loadFonts(): SatoriFont[] {
+  if (cachedFonts !== null) return cachedFonts;
+
+  const fontsDir = path.join(process.cwd(), "public", "fonts");
+  const candidates: Array<{ file: string; weight: SatoriFont["weight"] }> = [
+    { file: "Inter-Regular.ttf", weight: 400 },
+    { file: "Inter-Bold.ttf", weight: 700 },
+  ];
+
+  const loaded: SatoriFont[] = [];
+  for (const { file, weight } of candidates) {
+    const fontPath = path.join(fontsDir, file);
+    try {
+      const data = fs.readFileSync(fontPath);
+      loaded.push({ name: "Inter", data, weight, style: "normal" });
+    } catch (err) {
+      console.warn(
+        `[design-studio/render] missing font ${file} at ${fontPath} —`,
+        err instanceof Error ? err.message : String(err),
+      );
+    }
+  }
+
+  if (loaded.length === 0) {
+    console.warn(
+      "[design-studio/render] no fonts available — Satori will render with empty fonts list, expect garbled text",
+    );
+  }
+
+  cachedFonts = loaded;
+  return loaded;
+}
+
 export interface RenderOptions {
   pageIndex?: number;
   format?: ExportFormat;
@@ -107,12 +160,14 @@ export async function renderDesign(
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const sharp = (await import("sharp")).default;
 
-    // Satori needs font data — embed a minimal subset or use a CDN font.
-    // For MVP we inline the system sans-serif fallback.
+    // Satori needs font data — empty fonts array produces garbled glyphs or
+    // crashes on text-heavy designs. Load Inter regular + bold from
+    // public/fonts (cached after first call).
+    const fonts = loadFonts();
     const svg = await satori(html as Parameters<typeof satori>[0], {
       width,
       height,
-      fonts: [],
+      fonts: fonts as Parameters<typeof satori>[1]["fonts"],
     });
 
     const sharpInst = sharp(Buffer.from(svg));
