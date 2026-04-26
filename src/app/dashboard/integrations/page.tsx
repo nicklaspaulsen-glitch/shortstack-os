@@ -1022,7 +1022,18 @@ interface HealthResult {
 
 type StatusFilter = "all" | "connected" | "not_connected" | "coming_soon";
 
+/**
+ * Platform admin = Trinity-internal staff (founder/admin) who own the env-var
+ * setup workflow. Agency owners and team_members are shown a customer-facing
+ * flow (OAuth or "contact your admin") instead of the dev-style paste-the-key UI.
+ */
+function isPlatformAdminRole(role: string | null | undefined): boolean {
+  return role === "admin" || role === "founder";
+}
+
 function BusinessIntegrations() {
+  const { profile } = useAuth();
+  const isPlatformAdmin = isPlatformAdminRole(profile?.role);
   const [statuses, setStatuses] = useState<Record<string, HealthResult>>({});
   const [activeModal, setActiveModal] = useState<BusinessIntegration | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -1205,6 +1216,7 @@ function BusinessIntegrations() {
         <IntegrationConnectModal
           integration={activeModal}
           currentStatus={statuses[activeModal.id]}
+          isPlatformAdmin={isPlatformAdmin}
           onClose={() => setActiveModal(null)}
           onStatusChange={(result) => setStatuses(prev => ({ ...prev, [activeModal.id]: result }))}
         />
