@@ -486,12 +486,18 @@ function SocialAccountsPage() {
                       </span>
                       <div className="flex items-center gap-2">
                         {!isZernio && (
-                          <button onClick={() => connectViaZernio(account.platform)}
+                          <button
+                            type="button"
+                            onClick={() => connectViaZernio(account.platform)}
+                            aria-label={`Upgrade ${account.account_name} to Zernio OAuth`}
                             className="text-[10px] text-[#C9A84C] hover:text-[#d4b85c] flex items-center gap-0.5 transition-colors">
                             <LogIn size={10} /> Upgrade to Zernio
                           </button>
                         )}
-                        <button onClick={() => disconnect(account)}
+                        <button
+                          type="button"
+                          onClick={() => disconnect(account)}
+                          aria-label={`Disconnect ${account.account_name}`}
                           className="text-[10px] text-muted hover:text-danger flex items-center gap-0.5 transition-colors">
                           <Unlink size={10} /> Remove
                         </button>
@@ -527,8 +533,10 @@ function SocialAccountsPage() {
                   {availableNow.map(platform => (
                     <button
                       key={platform.id}
+                      type="button"
                       onClick={() => connectViaZernio(platform.id)}
                       disabled={connecting === platform.id}
+                      aria-label={`Connect ${platform.name} via Zernio`}
                       className="text-left rounded-xl p-4 border border-border bg-surface hover:border-gold/20 hover:shadow-card-hover hover:-translate-y-[1px] transition-all group disabled:opacity-60 disabled:pointer-events-none"
                     >
                       <div className="flex items-center gap-3 mb-2">
@@ -572,9 +580,13 @@ function SocialAccountsPage() {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {comingSoonSocial.map(platform => (
-                    <div
+                    <button
                       key={platform.id}
-                      className="rounded-xl p-4 border border-dashed border-border/50 bg-surface/40 opacity-70 cursor-not-allowed"
+                      type="button"
+                      aria-disabled="true"
+                      aria-label={`${platform.name} coming soon`}
+                      onClick={() => toast(`${platform.name} isn't available yet — Zernio hasn't shipped posting APIs for this platform.`, { icon: "ℹ️" })}
+                      className="text-left w-full rounded-xl p-4 border border-dashed border-border/50 bg-surface/40 opacity-70 cursor-not-allowed"
                       title="Coming soon — Zernio doesn't yet expose posting APIs for this platform"
                     >
                       <div className="flex items-center gap-3 mb-2">
@@ -594,7 +606,7 @@ function SocialAccountsPage() {
                           <Clock size={10} /> Pending Zernio support
                         </span>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -676,14 +688,27 @@ function TrinityDiscordInstallCard() {
     setInstalling(true);
     try {
       const res = await fetch("/api/integrations/discord/install-url");
-      const data = await res.json();
+      let data: { install_url?: string; error?: string } = {};
+      try {
+        data = await res.json();
+      } catch {
+        // Non-JSON body — fall through to the generic error toast.
+      }
       if (data.install_url) {
         window.location.href = data.install_url;
-      } else {
-        toast.error(data.error || "Discord bot not configured");
+        return;
       }
-    } catch {
-      toast.error("Failed to start install");
+      // Surface a visible error for every non-success path so the button
+      // never silently fails.
+      toast.error(
+        data.error ||
+        (res.ok
+          ? "Discord bot not configured — contact your admin to enable it."
+          : `Discord install failed (${res.status}) — please try again.`)
+      );
+    } catch (err) {
+      console.warn("[TrinityDiscordInstallCard] startInstall failed:", err);
+      toast.error("Failed to start install — please try again");
     } finally {
       setInstalling(false);
     }
@@ -724,8 +749,10 @@ function TrinityDiscordInstallCard() {
             </div>
             <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={startInstall}
                 disabled={installing}
+                aria-label="Add Trinity bot to your Discord server"
                 className="inline-flex items-center gap-2 text-xs bg-[#5865F2] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#4752C4] disabled:opacity-60"
               >
                 {installing ? <Loader size={12} className="animate-spin" /> : <LogIn size={12} />}
