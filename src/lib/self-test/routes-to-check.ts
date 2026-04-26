@@ -345,6 +345,48 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [400, 401],
     note: "Finalize handler validates body shape — empty body must be rejected, never silently accepted.",
   },
+
+  // ── Social Studio (MVP — calendar/lineup, AI upload, trends, stats, commenters) ──
+  {
+    path: "/api/social/lineup",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Lineup feed — auth-gated. 200 returns { posts, stats }.",
+  },
+  {
+    path: "/api/social/auto-upload",
+    method: "POST",
+    auth_bearer: true,
+    body: {}, // empty payload — must reject (no media + no text)
+    expected_status: [400, 401],
+    note: "AI auto-upload — empty body rejected before AI is called.",
+  },
+  {
+    path: "/api/social/schedule",
+    method: "POST",
+    auth_bearer: true,
+    body: {}, // empty payload — must reject (no platforms + no caption)
+    expected_status: [400, 401],
+    note: "Schedule post — required-field validation (platforms[] + caption).",
+  },
+  {
+    path: "/api/social/trends",
+    auth_bearer: true,
+    expected_status: [200, 401, 429],
+    note: "Trends + content ideas. 429 acceptable when rate-limited.",
+  },
+  {
+    path: "/api/social/stats",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Aggregated post performance — 200 with empty arrays for new accounts.",
+  },
+  {
+    path: "/api/social/top-commenters",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Top commenters list — 200 with empty array until Zernio webhooks land.",
+  },
 ];
 
 /** Total count helper for the dashboard. */

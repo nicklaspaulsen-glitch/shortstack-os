@@ -145,6 +145,7 @@ const navItems: NavItem[] = [
   { label: "Funnels", href: "/dashboard/funnels", icon: <GitBranch size={16} />, roles: ["admin"], sub: "Brand & Web" },
   { label: "Forms", href: "/dashboard/forms", icon: <ClipboardCheck size={16} />, roles: ["admin", "team_member"], sub: "Brand & Web" },
   { label: "Surveys", href: "/dashboard/surveys", icon: <ClipboardList size={16} />, roles: ["admin"], sub: "Brand & Web" },
+  { label: "Social Studio", href: "/dashboard/social-studio", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], sub: "Social" },
   { label: "Social Manager", href: "/dashboard/social-manager", icon: <Share2 size={16} />, roles: ["admin", "team_member"], sub: "Social" },
   { label: "Content Plan", href: "/dashboard/content-plan", icon: <Calendar size={16} />, roles: ["admin", "team_member"], sub: "Social" },
 
