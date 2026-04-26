@@ -138,11 +138,32 @@ decode_gemini_response() {
 }
 
 call_deepseek() {
-  # DeepSeek API is OpenAI-compatible. Model: deepseek-chat (V3) or
-  # deepseek-reasoner (R1). Reasoner is slower but catches more — use
-  # reasoner for high-stakes review.
-  local model="${DEEPSEEK_MODEL:-deepseek-chat}"
-  local payload; payload="$(encode_openai_payload "$model")"
+  # DeepSeek API is OpenAI-compatible. Default to deepseek-v4-pro (the
+  # current code-strong model; v3 / "deepseek-chat" alias may still
+  # work but v4 was rolled out April 2026). For very large patches
+  # consider deepseek-v4-flash. Override via DEEPSEEK_MODEL env.
+  #
+  # DeepSeek's JSON parser rejects certain Unicode bytes that
+  # OpenRouter accepts ("invalid unicode code point at line 1 column N").
+  # We use a STRICTER ASCII-only payload encoder for this backend.
+  local model="${DEEPSEEK_MODEL:-deepseek-v4-pro}"
+  local payload
+  payload="$(node -e '
+    const fs = require("fs");
+    let prompt = fs.readFileSync(process.argv[1], "utf8");
+    // Aggressive: strip every non-ASCII char. Patches are mostly ASCII;
+    // emoji/smart-quotes in comments dont add review signal.
+    prompt = prompt
+      .replace(/[\uD800-\uDFFF]/g, "")
+      .replace(/[^\x09\x0A\x0D\x20-\x7E]/g, "");
+    process.stdout.write(JSON.stringify({
+      model: process.argv[2],
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.1,
+      max_tokens: 1024,
+    }));
+  ' "$PROMPT_FILE" "$model")"
+
   curl -sS -m 90 \
     -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${DEEPSEEK_API_KEY}" \
@@ -191,15 +212,17 @@ call_gemini_cli() {
 }
 
 # Wraps a backend call: writes raw output to /tmp/agent-3rd-<name>.out
-# and tags lines so the merger can attribute issues.
+# AND a status line to /tmp/agent-3rd-<name>.status so the merger can
+# attribute issues without depending on race-prone shared-file writes.
 poll_backend() {
   local name="$1"; shift
   local out="/tmp/agent-3rd-${name}.out"
+  local status="/tmp/agent-3rd-${name}.status"
   : > "$out"
   if "$@" > "$out" 2>&1; then
-    echo "$name|ok|$out"
+    echo "ok" > "$status"
   else
-    echo "$name|err|$out"
+    echo "err" > "$status"
   fi
 }
 
@@ -235,13 +258,18 @@ fi
 
 # ── Poll all configured backends in parallel ───────────────────────────
 
-results_file="$(mktemp)"
+# Clear any prior status files so a stale 'ok' from a previous run
+# doesn't get counted on a new patch.
+for b in "${backends[@]}"; do
+  rm -f "/tmp/agent-3rd-${b}.out" "/tmp/agent-3rd-${b}.status"
+done
+
 for b in "${backends[@]}"; do
   case "$b" in
-    deepseek)     poll_backend "$b" call_deepseek     >> "$results_file" & ;;
-    openrouter)   poll_backend "$b" call_openrouter   >> "$results_file" & ;;
-    gemini-curl)  poll_backend "$b" call_gemini_curl  >> "$results_file" & ;;
-    gemini-cli)   poll_backend "$b" call_gemini_cli   >> "$results_file" & ;;
+    deepseek)     poll_backend "$b" call_deepseek     & ;;
+    openrouter)   poll_backend "$b" call_openrouter   & ;;
+    gemini-curl)  poll_backend "$b" call_gemini_curl  & ;;
+    gemini-cli)   poll_backend "$b" call_gemini_cli   & ;;
   esac
 done
 wait
@@ -254,12 +282,17 @@ hold_count=0
 err_count=0
 issues=""
 
-while IFS='|' read -r name status outfile; do
+for name in "${backends[@]}"; do
+  status_file="/tmp/agent-3rd-${name}.status"
+  out_file="/tmp/agent-3rd-${name}.out"
+  status="$(cat "$status_file" 2>/dev/null || echo "err")"
+
   if [[ "$status" == "err" ]]; then
     err_count=$((err_count + 1))
     continue
   fi
-  body="$(cat "$outfile" 2>/dev/null || echo "")"
+
+  body="$(cat "$out_file" 2>/dev/null || echo "")"
   if [[ -z "$body" ]]; then
     err_count=$((err_count + 1))
     continue
@@ -277,26 +310,34 @@ $(awk '/^ISSUES:/,/^NITS:|^$/' <<<"$body" | head -20)
   else
     err_count=$((err_count + 1))
   fi
-done < "$results_file"
+done
 
 total=${#backends[@]}
 configured=${backends[*]}
 
-if [[ $ship_count -eq $total ]]; then
-  cat <<EOF
-VERDICT: ship
-ISSUES: none — all configured backends ship ($configured)
-NITS:
-EOF
-elif [[ $hold_count -gt 0 ]]; then
+# Verdict logic — backends are binary voters. Errored backends abstain.
+#   - any HOLD          → HOLD (with merged issues)
+#   - else any SHIP     → SHIP (note any errored backends as a warning)
+#   - else all errored  → SKIP (no usable votes; orchestrator falls back)
+
+if [[ $hold_count -gt 0 ]]; then
   cat <<EOF
 VERDICT: hold
 ISSUES: $hold_count of $total backends hold ($configured)
 $issues
 NITS:
 EOF
+elif [[ $ship_count -gt 0 ]]; then
+  warn=""
+  if [[ $err_count -gt 0 ]]; then
+    warn=" — $err_count backend(s) errored and abstained"
+  fi
+  cat <<EOF
+VERDICT: ship
+ISSUES: $ship_count of $total backends ship$warn
+NITS:
+EOF
 else
-  # All erred or unparseable
   cat <<EOF
 VERDICT: skip
 ISSUES: all backends errored ($configured); falling back to single-reviewer
