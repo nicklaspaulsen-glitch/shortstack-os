@@ -275,7 +275,7 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     note: "Empty payload — should reject with 400.",
   },
   {
-    path: "/api/webhooks/stripe",
+    path: "/api/billing/webhook",
     method: "POST",
     body: {},
     expected_status: [400, 401, 403],
