@@ -66,6 +66,17 @@ export async function POST(req: NextRequest, { params }: Params) {
     order = existing?.[0] ? (existing[0].sort_order as number) + 1 : 0;
   }
 
+  // Auto-generate a step slug; uniqueness within a funnel is enforced
+  // by the partial unique index `funnel_steps_funnel_slug_unique` added
+  // in the 20260427 ghl_phase2 migration.
+  const baseStepSlug = title
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 40);
+  const stepSlug = `${baseStepSlug || step_type}-${Math.random().toString(36).slice(2, 6)}`;
+
   const { data, error } = await supabase
     .from("funnel_steps")
     .insert({
@@ -75,6 +86,7 @@ export async function POST(req: NextRequest, { params }: Params) {
       page_id: page_id ?? null,
       sort_order: order,
       settings,
+      slug: stepSlug,
     })
     .select()
     .single();

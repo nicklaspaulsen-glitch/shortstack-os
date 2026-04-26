@@ -66,9 +66,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "name is required" }, { status: 400 });
   }
 
+  // Auto-generate a public slug. Adds a short random suffix to avoid
+  // collisions across tenants when two agencies pick the same name.
+  // Slug uniqueness is enforced by the funnels_slug_unique partial
+  // index added in the 20260427 ghl_phase2 migration.
+  const baseSlug = name
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 40);
+  const slug = `${baseSlug || "funnel"}-${Math.random().toString(36).slice(2, 8)}`;
+
   const { data, error } = await supabase
     .from("funnels")
-    .insert({ profile_id: user.id, name: name.trim(), description, status })
+    .insert({ profile_id: user.id, name: name.trim(), description, status, slug })
     .select()
     .single();
 
