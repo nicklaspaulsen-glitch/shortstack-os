@@ -82,12 +82,18 @@ export default function ClientsPage() {
   const [callerRole, setCallerRole] = useState<string | null>(null);
   const [scope, setScope] = useState<"all" | "mine">("all");
 
+  // codex round-1: use a ref-box so fetchData reads `cancelled.current`
+  // at await-resume time rather than from a stale snapshot parameter.
   useEffect(() => {
-    fetchData();
+    const cancelled = { current: false };
+    fetchData(cancelled).catch((err: unknown) => {
+      if (!cancelled.current) console.error("[Clients] fetchData error:", err);
+    });
+    return () => { cancelled.current = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scope]);
 
-  async function fetchData() {
+  async function fetchData(cancelled: { current: boolean } = { current: false }) {
     try {
       setLoading(true);
       // Fetch clients via the authenticated server API route.
@@ -104,6 +110,8 @@ export default function ClientsPage() {
         supabase.from("contracts").select("*").order("created_at", { ascending: false }),
         supabase.from("invoices").select("*").order("created_at", { ascending: false }),
       ]);
+
+      if (cancelled.current) return;
 
       let clientsData: Client[] = [];
       if (clientsRes.ok) {
@@ -123,10 +131,12 @@ export default function ClientsPage() {
       setContracts(contractsRes.data || []);
       setInvoices(invoicesRes.data || []);
     } catch (err) {
-      console.error("[Clients] fetchData error:", err);
-      toast.error("Failed to load clients — try refreshing.");
+      if (!cancelled.current) {
+        console.error("[Clients] fetchData error:", err);
+        toast.error("Failed to load clients — try refreshing.");
+      }
     } finally {
-      setLoading(false);
+      if (!cancelled.current) setLoading(false);
     }
   }
 

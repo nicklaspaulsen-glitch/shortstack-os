@@ -145,40 +145,48 @@ export default function ContentPage() {
     }, 1500);
   }
 
+  // codex round-1: use a ref-box so fetchData reads `cancelled.current`
+  // at await-resume time rather than from a stale snapshot parameter.
+  useEffect(() => {
+    const cancelled = { current: false };
+    fetchData(cancelled).catch((err: unknown) => {
+      if (!cancelled.current) console.error("[Content] fetchData error:", err);
+    });
+    return () => { cancelled.current = true; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, [tab, managedClientId]);
+  }, [tab, managedClientId]);
 
-  async function fetchData() {
+  async function fetchData(cancelled: { current: boolean } = { current: false }) {
     setLoading(true);
     try {
       if (tab === "scripts") {
         let q = supabase.from("content_scripts").select("*").order("created_at", { ascending: false });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setScripts(data || []);
+        if (!cancelled.current) setScripts(data || []);
       } else if (tab === "requests") {
         let q = supabase.from("content_requests").select("*").order("created_at", { ascending: false });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setRequests(data || []);
+        if (!cancelled.current) setRequests(data || []);
       } else if (tab === "publish") {
         let q = supabase.from("publish_queue").select("*").order("created_at", { ascending: false });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setPublishQueue(data || []);
+        if (!cancelled.current) setPublishQueue(data || []);
       } else if (tab === "calendar") {
         let q = supabase.from("content_calendar").select("*").order("scheduled_at", { ascending: true });
         if (managedClientId) q = q.eq("client_id", managedClientId);
         const { data } = await q;
-        setCalendar(data || []);
+        if (!cancelled.current) setCalendar(data || []);
       } else if (tab === "personal") {
         const { data } = await supabase.from("personal_brand_ideas").select("*").order("batch_date", { ascending: false });
-        setPersonalIdeas(data || []);
+        if (!cancelled.current) setPersonalIdeas(data || []);
       }
     } finally {
       // Always unstick the loader even if supabase throws — user would be
       // trapped on the spinner otherwise.
-      setLoading(false);
+      if (!cancelled.current) setLoading(false);
     }
   }
 

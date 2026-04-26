@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { parseTrinityMessage, executeTrinityCommand, sendTelegramMessage, cleanupOldTelegramMessages } from "@/lib/services/trinity";
 import { upsertInboundMessage } from "@/lib/conversations";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+// IDEMPOTENCY: Telegram retries unacknowledged updates for up to 24h. The
+// /autopilot command fires 7 cron fetches per delivery — each retry multiplies
+// that. We use update.update_id (Telegram's monotonic per-bot counter) as the
+// stable dedup key. Claim runs after signature verification, before any
+// side-effecting work.
 
 export async function POST(request: NextRequest) {
   // Validate Telegram webhook secret token. Fail-closed: if the secret isn't
@@ -34,6 +40,19 @@ export async function POST(request: NextRequest) {
   const text = (message.text as string).trim();
   const supabase = createServiceClient();
 
+  // Claim the update before any side effects. update_id is Telegram's
+  // monotonic per-bot counter — stable across all retries of the same update.
+  const updateId = String(body.update_id ?? "");
+  if (updateId) {
+    const claim = await claimEvent(supabase, "telegram", updateId);
+    if (claim === "already_done") {
+      return NextResponse.json({ ok: true, deduped: true });
+    }
+    if (claim === "in_flight") {
+      return NextResponse.json({ ok: true, deduped: true, in_flight: true });
+    }
+  }
+
   // ── Unified Conversations: log every inbound Telegram message ──
   // Resolve owner via TELEGRAM_OWNER_USER_ID (set per-agency), else fall
   // back to the single-admin install. Unauthorized chats still hit the
@@ -43,7 +62,15 @@ export async function POST(request: NextRequest) {
 
   if (allowedChatId && chatId !== allowedChatId) {
     await sendTelegramMessage(chatId, "Unauthorized. Contact ShortStack admin.");
-    return NextResponse.json({ ok: true });
+    // Mark the event done before returning. Codex round-2 catch:
+    // previously this branch returned without completeEvent, leaving the
+    // dedup row stuck in 'processing'. After the 5-min stale window
+    // Telegram retries of the same update_id would reclaim and re-send
+    // the unauthorized message indefinitely.
+    if (updateId) {
+      await completeEvent(supabase, "telegram", updateId);
+    }
+    return NextResponse.json({ ok: true, ignored: "unauthorized_chat" });
   }
 
   // Commands begin with "/" — don't log those as conversational messages.
@@ -64,79 +91,56 @@ export async function POST(request: NextRequest) {
     }).catch((e) => console.error("[telegram-webhook] conv upsert failed:", e));
   }
 
-  // === BUILT-IN COMMANDS ===
+  // === BUILT-IN COMMANDS + AI COMMAND PARSING ===
+  // codex round-1: all branches now run inside a single try block so that
+  // completeEvent is always called exactly once before the final return,
+  // and a thrown error propagates rather than being swallowed.
+  try {
+    let reply: string | null = null;
 
-  // /briefing — Full briefing of what happened since last login
-  if (text === "/briefing" || text === "/brief" || text.toLowerCase().startsWith("what happened")) {
-    // Clean up old irrelevant messages before sending new briefing
-    await cleanupOldTelegramMessages(chatId, supabase);
-    const briefing = await generateTelegramBriefing(supabase);
-    await sendTelegramMessage(chatId, briefing);
-    return NextResponse.json({ ok: true });
-  }
-
-  // /outreach — Outreach stats
-  if (text === "/outreach" || text === "/stats" || text.toLowerCase().includes("outreach status")) {
-    const stats = await getOutreachStats(supabase);
-    await sendTelegramMessage(chatId, stats);
-    return NextResponse.json({ ok: true });
-  }
-
-  // /leads — Lead stats
-  if (text === "/leads") {
-    const stats = await getLeadStats(supabase);
-    await sendTelegramMessage(chatId, stats);
-    return NextResponse.json({ ok: true });
-  }
-
-  // /health — System health
-  if (text === "/health" || text === "/status") {
-    const health = await getSystemHealth(supabase);
-    await sendTelegramMessage(chatId, health);
-    return NextResponse.json({ ok: true });
-  }
-
-  // /revenue — Revenue overview
-  if (text === "/revenue" || text === "/money") {
-    const revenue = await getRevenueStats(supabase);
-    await sendTelegramMessage(chatId, revenue);
-    return NextResponse.json({ ok: true });
-  }
-
-  // /remind — Schedule a reminder
-  // Formats: "/remind 23:00 Do the thing" or "/remind tomorrow 9:00 Check email"
-  if (text.startsWith("/remind")) {
-    const parts = text.replace("/remind", "").trim();
-    if (!parts) {
-      await sendTelegramMessage(chatId, `*Usage:* /remind <time> <message>\n\nExamples:\n• /remind 23:00 Revamp UI and connect ElevenAgents\n• /remind 14:30 Check TikTok review status\n• /remind tomorrow 9:00 Setup Google OAuth`);
-      return NextResponse.json({ ok: true });
-    }
-
-    const scheduledAt = parseReminderTime(parts);
-    if (!scheduledAt) {
-      await sendTelegramMessage(chatId, "Couldn't parse time. Use format: /remind 23:00 Your message");
-      return NextResponse.json({ ok: true });
-    }
-
-    const reminderMessage = parts.replace(/^(tomorrow\s+)?\d{1,2}[:.]\d{2}\s*/i, "").trim() || "Reminder!";
-
-    await supabase.from("trinity_log").insert({
-      action_type: "reminder",
-      description: reminderMessage,
-      command: text,
-      status: "pending",
-      result: { scheduled_at: scheduledAt.toISOString(), chat_id: chatId },
-    });
-
-    const timeStr = scheduledAt.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
-    const dateStr = scheduledAt.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
-    await sendTelegramMessage(chatId, `⏰ *Reminder set!*\n\n📝 ${reminderMessage}\n🕐 ${dateStr} at ${timeStr}`);
-    return NextResponse.json({ ok: true });
-  }
-
-  // /help — List commands
-  if (text === "/help" || text === "/start") {
-    await sendTelegramMessage(chatId, `*ShortStack Trinity AI* 🤖
+    if (text === "/briefing" || text === "/brief" || text.toLowerCase().startsWith("what happened")) {
+      // /briefing — Full briefing of what happened since last login
+      await cleanupOldTelegramMessages(chatId, supabase);
+      reply = await generateTelegramBriefing(supabase);
+    } else if (text === "/outreach" || text === "/stats" || text.toLowerCase().includes("outreach status")) {
+      // /outreach — Outreach stats
+      reply = await getOutreachStats(supabase);
+    } else if (text === "/leads") {
+      // /leads — Lead stats
+      reply = await getLeadStats(supabase);
+    } else if (text === "/health" || text === "/status") {
+      // /health — System health
+      reply = await getSystemHealth(supabase);
+    } else if (text === "/revenue" || text === "/money") {
+      // /revenue — Revenue overview
+      reply = await getRevenueStats(supabase);
+    } else if (text.startsWith("/remind")) {
+      // /remind — Schedule a reminder
+      // Formats: "/remind 23:00 Do the thing" or "/remind tomorrow 9:00 Check email"
+      const parts = text.replace("/remind", "").trim();
+      if (!parts) {
+        reply = `*Usage:* /remind <time> <message>\n\nExamples:\n• /remind 23:00 Revamp UI and connect ElevenAgents\n• /remind 14:30 Check TikTok review status\n• /remind tomorrow 9:00 Setup Google OAuth`;
+      } else {
+        const scheduledAt = parseReminderTime(parts);
+        if (!scheduledAt) {
+          reply = "Couldn't parse time. Use format: /remind 23:00 Your message";
+        } else {
+          const reminderMessage = parts.replace(/^(tomorrow\s+)?\d{1,2}[:.]\d{2}\s*/i, "").trim() || "Reminder!";
+          await supabase.from("trinity_log").insert({
+            action_type: "reminder",
+            description: reminderMessage,
+            command: text,
+            status: "pending",
+            result: { scheduled_at: scheduledAt.toISOString(), chat_id: chatId },
+          });
+          const timeStr = scheduledAt.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
+          const dateStr = scheduledAt.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+          reply = `⏰ *Reminder set!*\n\n📝 ${reminderMessage}\n🕐 ${dateStr} at ${timeStr}`;
+        }
+      }
+    } else if (text === "/help" || text === "/start") {
+      // /help — List commands
+      reply = `*ShortStack Trinity AI* 🤖
 
 *Quick Commands:*
 /briefing — Full briefing since last login
@@ -155,54 +159,58 @@ export async function POST(request: NextRequest) {
 • "Generate leads for dentists in Miami"
 • "How many calls were booked today?"
 
-I can execute any ShortStack OS action remotely.`);
-    return NextResponse.json({ ok: true });
-  }
-
-  // === AI COMMAND PARSING ===
-  try {
-    const command = await parseTrinityMessage(text);
-
-    if (!command) {
-      // Try to answer as a question about the business
-      const answer = await answerQuestion(supabase, text);
-      await sendTelegramMessage(chatId, answer);
-      return NextResponse.json({ ok: true });
-    }
-
-    // Log the action
-    const { data: logEntry } = await supabase.from("trinity_log").insert({
-      action_type: command.action,
-      description: command.description,
-      command: text,
-      status: "in_progress",
-    }).select("id").single();
-
-    await sendTelegramMessage(chatId, `⚡ *Processing:* ${command.description}`);
-
-    // Execute the command
-    const result = await executeTrinityCommand(command);
-
-    // Update log
-    if (logEntry) {
-      await supabase.from("trinity_log").update({
-        status: result.success ? "completed" : "failed",
-        result: result.result,
-        error_message: result.error || null,
-        completed_at: new Date().toISOString(),
-      }).eq("id", logEntry.id);
-    }
-
-    if (result.success) {
-      await sendTelegramMessage(chatId, `✅ *Done:* ${result.result.message || command.description}`);
+I can execute any ShortStack OS action remotely.`;
     } else {
-      await sendTelegramMessage(chatId, `❌ *Failed:* ${result.error || "Unknown error"}`);
-    }
-  } catch (err) {
-    await sendTelegramMessage(chatId, `❌ Error: ${String(err)}`);
-  }
+      // === AI COMMAND PARSING ===
+      const command = await parseTrinityMessage(text);
 
-  return NextResponse.json({ ok: true });
+      if (!command) {
+        // Try to answer as a question about the business
+        reply = await answerQuestion(supabase, text);
+      } else {
+        // Log the action
+        const { data: logEntry } = await supabase.from("trinity_log").insert({
+          action_type: command.action,
+          description: command.description,
+          command: text,
+          status: "in_progress",
+        }).select("id").single();
+
+        await sendTelegramMessage(chatId, `⚡ *Processing:* ${command.description}`);
+
+        // Execute the command
+        const result = await executeTrinityCommand(command);
+
+        // Update log
+        if (logEntry) {
+          await supabase.from("trinity_log").update({
+            status: result.success ? "completed" : "failed",
+            result: result.result,
+            error_message: result.error || null,
+            completed_at: new Date().toISOString(),
+          }).eq("id", logEntry.id);
+        }
+
+        reply = result.success
+          ? `✅ *Done:* ${result.result.message || command.description}`
+          : `❌ *Failed:* ${result.error || "Unknown error"}`;
+      }
+    }
+
+    if (reply !== null) {
+      await sendTelegramMessage(chatId, reply);
+    }
+
+    // Mark update as processed so retries short-circuit to 200.
+    if (updateId) {
+      await completeEvent(supabase, "telegram", updateId);
+    }
+    return NextResponse.json({ ok: true });
+  } catch (err) {
+    // codex round-1: rethrow so the dedup row stays 'processing' and Telegram retries.
+    console.error("[webhooks/telegram] handler error:", err);
+    throw err;
+  }
 }
 
 // === HELPER FUNCTIONS ===

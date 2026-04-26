@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+// IDEMPOTENCY: Telegram retries for up to 24h on non-2xx. /autopilot fires 7
+// cron endpoints per message — each retry multiplies the blast. We dedup on
+// update.update_id (Telegram's monotonic per-bot counter). Claim runs after
+// auth check, before DB queries and AI calls.
 
 // Telegram Webhook — receive messages from Telegram and execute commands
 // Set this up: https://api.telegram.org/bot{TOKEN}/setWebhook?url=https://app.shortstack.work/api/telegram/webhook&secret_token=YOUR_SECRET
@@ -39,6 +44,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true }); // Silent ignore
   }
 
+  // Claim the update before any DB reads or AI calls. update_id is Telegram's
+  // monotonic per-bot counter — stable across all retries of the same update.
+  const supabase = createServiceClient();
+  const updateId = String(body.update_id ?? "");
+  if (updateId) {
+    const claim = await claimEvent(supabase, "telegram", updateId);
+    if (claim === "already_done") {
+      return NextResponse.json({ ok: true, deduped: true });
+    }
+    if (claim === "in_flight") {
+      return NextResponse.json({ ok: true, deduped: true, in_flight: true });
+    }
+  }
+
   // Send typing indicator
   await fetch(`https://api.telegram.org/bot${botToken}/sendChatAction`, {
     method: "POST",
@@ -47,7 +66,6 @@ export async function POST(request: NextRequest) {
   });
 
   // Get system context for AI
-  const supabase = createServiceClient();
   const [
     { count: totalLeads },
     { count: activeClients },
@@ -102,7 +120,9 @@ If the user's message contains action words (call, email, scrape, send, outreach
       });
       const data = await res.json();
       reply = data.content?.[0]?.text || reply;
-    } catch {}
+    } catch (err) {
+      console.error("[telegram-webhook] AI fetch failed:", err);
+    }
   }
 
   // Detect TRIGGER commands from AI response or user text
@@ -267,5 +287,9 @@ Or just type naturally — "send emails", "how are my leads", "what should I foc
     body: JSON.stringify({ chat_id: chatId, text: reply }),
   });
 
+  // Mark update processed so retries short-circuit to 200.
+  if (updateId) {
+    await completeEvent(supabase, "telegram", updateId);
+  }
   return NextResponse.json({ ok: true });
 }

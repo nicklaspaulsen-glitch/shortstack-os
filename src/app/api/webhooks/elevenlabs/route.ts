@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+// IDEMPOTENCY: ElevenLabs retries on non-2xx. Without dedup, retries cause
+// duplicate outreach_log updates, duplicate lead-status flips, and duplicate
+// trinity_log inserts. We use conversation_id as the stable per-event key.
 
 // POST /api/webhooks/elevenlabs
 // Receives conversation events from ElevenLabs Conversational AI.
@@ -75,6 +79,17 @@ export async function POST(request: NextRequest) {
 
     const service = createServiceClient();
 
+    // Claim the event atomically. Returns 'already_done' or 'in_flight' if a
+    // prior attempt already ran (or is running). This prevents duplicate
+    // outreach_log updates and duplicate trinity_log inserts on retries.
+    const claim = await claimEvent(service, "elevenlabs", conversationId);
+    if (claim === "already_done") {
+      return NextResponse.json({ ok: true, deduped: true });
+    }
+    if (claim === "in_flight") {
+      return NextResponse.json({ ok: true, deduped: true, in_flight: true });
+    }
+
     if (eventType === "conversation_ended" || eventType === "post_conversation") {
       const transcript = body.transcript as Array<{ role: string; message: string }> | undefined;
       const duration = body.call_duration_secs || body.metadata?.call_duration_secs;
@@ -138,10 +153,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    await completeEvent(service, "elevenlabs", conversationId);
     return NextResponse.json({ ok: true, event: eventType });
   } catch (err) {
+    // Do NOT call completeEvent — leave row as 'processing' so the provider
+    // retry can reclaim it after the 5-min stale window and re-run.
     console.error("[webhooks/elevenlabs] error:", err);
-    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
+    throw err;
   }
 }
 

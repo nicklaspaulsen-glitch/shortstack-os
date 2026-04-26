@@ -49,16 +49,24 @@ export default function AnalyticsPage() {
   const [activityFeed, setActivityFeed] = useState<ActivityItem[]>([]);
   const activityRef = useRef<HTMLDivElement>(null);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchAnalytics(); }, [dateRange, customStart, customEnd]);
-
-  // Real-time activity feed polling
+  // codex round-1: use a ref-box so fetchAnalytics reads `cancelled.current`
+  // at await-resume time rather than from a stale snapshot parameter.
   useEffect(() => {
-    const interval = setInterval(() => {
+    const cancelled = { current: false };
+    fetchAnalytics(cancelled).catch((err: unknown) => {
+      if (!cancelled.current) console.error("[analytics] fetchAnalytics error:", err);
+    });
+    return () => { cancelled.current = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateRange, customStart, customEnd]);
+
+  // Real-time activity feed polling — clearInterval prevents leak on unmount.
+  useEffect(() => {
+    fetchActivityFeed();
+    const id = setInterval(() => {
       fetchActivityFeed();
     }, 15000);
-    fetchActivityFeed();
-    return () => clearInterval(interval);
+    return () => clearInterval(id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -91,7 +99,7 @@ export default function AnalyticsPage() {
     return { start: new Date(Date.now() - days * 86400000).toISOString(), end: now.toISOString() };
   }
 
-  async function fetchAnalytics() {
+  async function fetchAnalytics(cancelled: { current: boolean } = { current: false }) {
     try {
     const now = new Date();
     const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
@@ -133,6 +141,9 @@ export default function AnalyticsPage() {
 
     const totalMRR = clients?.reduce((s: number, c: Record<string, number>) => s + (c.mrr || 0), 0) || 0;
     const dealValue = deals?.reduce((s: number, d: Record<string, number>) => s + (d.amount || 0), 0) || 0;
+
+    // Guard against stale-response setState on rapid date-range changes.
+    if (cancelled.current) return;
 
     setStats({
       totalLeads: totalLeads || 0, leadsThisMonth: leadsThisMonth || 0, leadsLastMonth: leadsLastMonth || 0,

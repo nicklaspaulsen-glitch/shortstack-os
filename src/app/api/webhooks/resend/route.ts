@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { fireTrigger, type TriggerType } from "@/lib/workflows/trigger-dispatch";
 import crypto from "crypto";
+import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+// IDEMPOTENCY: Svix (used by Resend) retries on non-2xx. Without dedup,
+// retries cause duplicate trinity_log rows and re-fired workflow triggers.
+// We use the `svix-id` header as the canonical idempotency key — Svix
+// guarantees this is stable across all retries of the same message.
 
 // ──────────────────────────────────────────────────────────────────────────
 // POST /api/webhooks/resend
@@ -237,6 +242,20 @@ export async function POST(request: NextRequest) {
 
   const supabase = createServiceClient();
 
+  // svix-id is the canonical Svix message id and is stable across all retries
+  // of the same event delivery. Prefer it over event.data.email_id which is
+  // a Resend-level id and may not be present on all event types.
+  const dedupKey = svixId ?? event.data.email_id ?? "";
+  if (dedupKey) {
+    const claim = await claimEvent(supabase, "resend", dedupKey);
+    if (claim === "already_done") {
+      return NextResponse.json({ ok: true, deduped: true });
+    }
+    if (claim === "in_flight") {
+      return NextResponse.json({ ok: true, deduped: true, in_flight: true });
+    }
+  }
+
   // Map Resend event types → our trigger types (only the ones we have
   // triggers for). Other event types are logged but don't fire.
   const RESEND_TO_TRIGGER: Record<string, TriggerType> = {
@@ -301,8 +320,10 @@ export async function POST(request: NextRequest) {
   });
 
   // Fire the trigger if we have a mapping AND we could resolve an owner.
+  // codex round-1: awaited so a trigger failure propagates → catch above does
+  // NOT call completeEvent → row stays 'processing' → Svix retries the event.
   if (triggerType && ownerId) {
-    fireTrigger({
+    await fireTrigger({
       supabase,
       userId: ownerId,
       triggerType,
@@ -316,7 +337,12 @@ export async function POST(request: NextRequest) {
         // Pass through any `campaign_id` tag so filters can match on it.
         campaign_id: tags.campaign_id,
       },
-    }).catch((err) => console.error("[resend-webhook] fireTrigger failed:", err));
+    });
+  }
+
+  // Mark complete so subsequent Svix retries short-circuit to 200.
+  if (dedupKey) {
+    await completeEvent(supabase, "resend", dedupKey);
   }
 
   return NextResponse.json({
