@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { anthropic, MODEL_HAIKU, safeJsonParse, getResponseText } from "@/lib/ai/claude-helpers";
+import { anthropic, MODEL_HAIKU, safeJsonParse, getResponseText, withCacheBreakpoint } from "@/lib/ai/claude-helpers";
 
 /**
  * GET /api/dashboard/ai-today
@@ -119,14 +119,14 @@ export async function GET(_request: NextRequest) {
   };
 
   // ── Ask Haiku for the top 3 actions ──
-  const prompt = `You are an agency-operations assistant. Given the user's current data snapshot, propose the top 3 most useful actions they should take RIGHT NOW. Each action should be:
+  // Stable rules + CTA list go in `system` (cached). The per-user `snapshot`
+  // JSON goes in the user message — that's the only thing that changes per
+  // call, so the rest of the tokens hit the Anthropic prompt cache (0.10x).
+  const SYSTEM_PROMPT = `You are an agency-operations assistant. Given the user's current data snapshot, propose the top 3 most useful actions they should take RIGHT NOW. Each action should be:
   - Specific and concrete (not "review your strategy")
   - Tied to a real number from the data ("5 leads went cold")
   - Actionable in <5 minutes if possible
   - Diverse (don't propose 3 lead-gen actions if other areas need attention)
-
-Snapshot:
-${JSON.stringify(snapshot, null, 2)}
 
 Available CTA hrefs (must use one of these — no other paths):
   /dashboard/scraper           — Lead Finder
@@ -165,11 +165,14 @@ Rules:
   - If voice_receptionist_configured is false AND there are hot_leads, prioritize finishing voice receptionist setup
   - If unread_inbound_messages > 0, ALWAYS include "reply to inbox" as one action`;
 
+  const userPrompt = `Snapshot:\n${JSON.stringify(snapshot, null, 2)}`;
+
   try {
     const response = await anthropic.messages.create({
       model: MODEL_HAIKU,
       max_tokens: 800,
-      messages: [{ role: "user", content: prompt }],
+      system: withCacheBreakpoint([{ type: "text", text: SYSTEM_PROMPT }]),
+      messages: [{ role: "user", content: userPrompt }],
     });
 
     const raw = getResponseText(response);

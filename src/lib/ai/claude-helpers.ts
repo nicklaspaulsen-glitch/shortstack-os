@@ -6,6 +6,41 @@ export const MODEL_HAIKU = "claude-haiku-4-5-20251001";
 export const MODEL_SONNET = "claude-sonnet-4-6-20250514";
 
 /**
+ * Add an Anthropic prompt-cache breakpoint (`cache_control: { type: "ephemeral" }`)
+ * to the LAST element of a system-block array or tools array.
+ *
+ * Anthropic charges 0.10x for cache hits and 1.25x to write the cache.
+ * Apply on stable system prompts (>=1024 tokens for the model in use) and
+ * stable tools arrays that get reused across calls — both must be the
+ * exact-same prefix for the cache to hit.
+ *
+ * Returns an empty array when given empty input. Returns a new array
+ * (immutable) — does not mutate the input.
+ *
+ * Safe to call on inputs that already carry `cache_control` — it just
+ * ensures the last block has it.
+ *
+ * Usage:
+ *   await anthropic.messages.create({
+ *     model,
+ *     system: withCacheBreakpoint([{ type: "text", text: SYSTEM_PROMPT }]),
+ *     tools: withCacheBreakpoint(TOOLS),
+ *     messages,
+ *   });
+ */
+export function withCacheBreakpoint<T>(blocks: readonly T[]): T[] {
+  if (!blocks || blocks.length === 0) return [];
+  const last = blocks[blocks.length - 1];
+  return [
+    ...blocks.slice(0, -1).map((b) => ({ ...b }) as T),
+    {
+      ...last,
+      cache_control: { type: "ephemeral" as const },
+    } as T,
+  ];
+}
+
+/**
  * Safely parse JSON from a Claude text response. Strips ```json/``` fences and
  * whitespace. Attempts to find the first balanced JSON object/array in the text
  * as a last resort. Returns `null` when no parseable JSON is found.
