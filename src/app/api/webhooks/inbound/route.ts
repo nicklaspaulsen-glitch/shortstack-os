@@ -19,6 +19,40 @@ const ALLOWED_EVENTS = [
   "custom",
 ] as const;
 
+// Allowlist of columns that external callers may update via lead.update.
+// Server-controlled columns (user_id, created_at, id, lead_score, etc.) are
+// intentionally excluded to prevent arbitrary column writes.
+const ALLOWED_LEAD_UPDATE_COLUMNS = new Set([
+  "business_name",
+  "email",
+  "phone",
+  "industry",
+  "city",
+  "country",
+  "website",
+  "notes",
+  "status",
+  "stage",
+  "owner_name",
+  "source",
+]);
+
+function filterLeadUpdateFields(fields: Record<string, unknown>): Record<string, unknown> {
+  const filtered: Record<string, unknown> = {};
+  const rejected: string[] = [];
+  for (const key of Object.keys(fields)) {
+    if (ALLOWED_LEAD_UPDATE_COLUMNS.has(key)) {
+      filtered[key] = fields[key];
+    } else {
+      rejected.push(key);
+    }
+  }
+  if (rejected.length > 0) {
+    console.warn("[webhooks/inbound] lead.update rejected disallowed columns:", rejected);
+  }
+  return filtered;
+}
+
 export async function POST(request: NextRequest) {
   // Auth via query param or header
   const url = new URL(request.url);
@@ -63,9 +97,16 @@ export async function POST(request: NextRequest) {
         if (!data.id && !data.email) {
           return NextResponse.json({ error: "id or email required for lead.update" }, { status: 400 });
         }
+        // Filter to allowlisted columns only — prevents external callers from
+        // overwriting server-controlled fields (user_id, created_at, etc.)
+        const rawFields = (data.fields || data) as Record<string, unknown>;
+        const safeFields = filterLeadUpdateFields(rawFields);
+        if (Object.keys(safeFields).length === 0) {
+          return NextResponse.json({ error: "No updatable fields provided" }, { status: 400 });
+        }
         const query = data.id
-          ? supabase.from("leads").update(data.fields || data).eq("id", data.id)
-          : supabase.from("leads").update(data.fields || data).eq("email", data.email);
+          ? supabase.from("leads").update(safeFields).eq("id", data.id)
+          : supabase.from("leads").update(safeFields).eq("email", data.email);
         const { error } = await query;
         if (error) throw error;
         results.push("Lead updated");

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
+import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 
 // Dynamic Agent Spawner — Nexus can create sub-agents on the fly
 // When a task doesn't match any existing agent, Nexus spawns a specialist
@@ -7,6 +8,10 @@ export async function POST(request: NextRequest) {
   const supabase = createServerSupabase();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Resolve effective owner so agent rows are scoped to the right agency
+  const ownerId = await getEffectiveOwnerId(supabase, user.id);
+  if (!ownerId) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { task, context, spawned_by } = await request.json();
   if (!task) return NextResponse.json({ error: "Task description required" }, { status: 400 });
@@ -80,7 +85,8 @@ Return JSON only:
       })
       .eq("id", existing.id);
   } else {
-    // Save new agent definition
+    // Save new agent definition — spawned_by must be the authenticated user's id
+    // so RLS policy "custom_agents_own" (spawned_by = auth.uid()::text) works correctly.
     const { data: newAgent, error: insertErr } = await serviceSupabase
       .from("custom_agents")
       .insert({
@@ -89,7 +95,7 @@ Return JSON only:
         role: agentDef.role,
         system_prompt: agentDef.system_prompt,
         capabilities: agentDef.capabilities,
-        spawned_by: spawned_by || "nexus",
+        spawned_by: ownerId,
         parent_task: task,
         execution_count: 1,
         last_executed_at: new Date().toISOString(),

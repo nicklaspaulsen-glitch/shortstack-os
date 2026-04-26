@@ -103,7 +103,14 @@ export function decodeState(token: string): null | { user_id: string; return_to?
 }
 
 function signState(data: string): string {
-  const secret = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXTAUTH_SECRET || "dev-state-secret";
+  // Priority: OAUTH_STATE_SECRET → NEXTAUTH_SECRET (aligns with oauth-state.ts pattern).
+  // SUPABASE_SERVICE_ROLE_KEY intentionally removed — that key bypasses RLS and
+  // must not double as a state-signing secret. No literal fallback: a missing
+  // signing secret means state tokens are forgeable, which is a hard failure.
+  const secret = process.env.OAUTH_STATE_SECRET || process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    throw new Error("OAUTH_STATE_SECRET or NEXTAUTH_SECRET must be set for OAuth state signing");
+  }
   return createHmac("sha256", secret).update(data).digest("base64url");
 }
 

@@ -2,19 +2,30 @@ import { NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 
 export async function POST() {
-  // Auth check — only authenticated users can seed demo data
+  // Auth check — only admin/founder can seed demo data (prevents arbitrary client creation)
   const authSupabase = createServerSupabase();
   const { data: { user } } = await authSupabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { data: profile } = await authSupabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin" && profile?.role !== "founder") {
+    return NextResponse.json({ error: "Admin or founder only" }, { status: 403 });
+  }
+
   const supabase = createServiceClient();
 
   try {
-    // Clean up any existing demo client
+    // Clean up any existing demo client owned by this user
     const { data: existing } = await supabase
       .from("clients")
       .select("id")
       .eq("business_name", "Bright Smile Dental")
+      .eq("profile_id", user.id)
       .single();
 
     if (existing) {
@@ -28,11 +39,12 @@ export async function POST() {
       await supabase.from("clients").delete().eq("id", cid);
     }
 
-    // Create demo client
+    // Create demo client — profile_id ties this row to the seeding user
     const { data: client, error: clientErr } = await supabase
       .from("clients")
       .insert({
         business_name: "Bright Smile Dental",
+        profile_id: user.id,
         industry: "dentist",
         mrr: 2497,
         health_score: 87,

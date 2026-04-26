@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
+import { requireOwnedClient } from "@/lib/security/require-owned-client";
 
 // Send automated onboarding email sequence to new clients (5-email sequence over 7 days).
 // GHL path removed Apr 21 — emails now sent via native Resend (sendEmail helper).
@@ -10,6 +11,11 @@ export async function POST(request: NextRequest) {
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { client_id, email_number } = await request.json();
+
+  // Ownership check — caller must own this client
+  const ctx = await requireOwnedClient(supabase, user.id, client_id);
+  if (!ctx) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   const serviceSupabase = createServiceClient();
 
   const { data: client } = await serviceSupabase.from("clients").select("*").eq("id", client_id).single();
