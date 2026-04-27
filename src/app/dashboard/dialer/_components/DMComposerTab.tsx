@@ -3,10 +3,11 @@
 import { useCallback, useState } from "react";
 import {
   Send, Sparkles, Loader2, AlertTriangle, CheckCircle,
-  AtSign, Hash, Globe, MessageCircle, Share2,
+  AtSign, Hash, Globe, MessageCircle, Share2, Mic,
 } from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
 import { useAuth } from "@/lib/auth-context";
+import VoicePicker from "@/components/voice/VoicePicker";
 
 // Platform metadata — kept inline so we don't pull in an entire
 // integration registry just for the icon + label. Lucide doesn't ship
@@ -14,10 +15,19 @@ import { useAuth } from "@/lib/auth-context";
 const PLATFORMS = [
   { value: "instagram", label: "Instagram", icon: <AtSign size={14} /> },
   { value: "facebook", label: "Facebook", icon: <Share2 size={14} /> },
+  { value: "telegram", label: "Telegram", icon: <Send size={14} /> },
   { value: "linkedin", label: "LinkedIn", icon: <Globe size={14} /> },
   { value: "twitter", label: "Twitter / X", icon: <Hash size={14} /> },
   { value: "tiktok", label: "TikTok", icon: <MessageCircle size={14} /> },
 ] as const;
+
+// Platforms where voice DM is wired end-to-end. LinkedIn/X/TikTok don't
+// expose a voice DM API — show a clear "not supported" state instead.
+const VOICE_DM_SUPPORTED: ReadonlyArray<string> = [
+  "instagram",
+  "facebook",
+  "telegram",
+];
 
 type PlatformValue = (typeof PLATFORMS)[number]["value"];
 
@@ -36,6 +46,11 @@ export default function DMComposerTab() {
   const [polishing, setPolishing] = useState(false);
   const [resultBanner, setResultBanner] = useState<SendResult | null>(null);
   const [stats, setStats] = useState({ sent: 0, queued: 0, failed: 0 });
+
+  // Voice DM toggle.
+  const [voiceMode, setVoiceMode] = useState(false);
+  const [voiceCloneId, setVoiceCloneId] = useState<string | null>(null);
+  const voiceSupported = VOICE_DM_SUPPORTED.includes(platform);
 
   // ── AI polish ─────────────────────────────────────────────────────
   // Channel="dm" so the system prompt biases toward longer, low-pressure
@@ -74,19 +89,35 @@ export default function DMComposerTab() {
     setSending(true);
     setResultBanner(null);
     try {
-      const res = await fetch("/api/dm/send-manual", {
+      const useVoice = voiceMode && voiceSupported;
+      const endpoint = useVoice ? "/api/dm/send-voice" : "/api/dm/send-manual";
+      const payload = useVoice
+        ? {
+            platform,
+            recipient: handle.replace(/^@/, ""),
+            text: message,
+            clone_id: voiceCloneId === "__none__" ? null : voiceCloneId,
+          }
+        : {
+            platform,
+            handle: handle.replace(/^@/, ""),
+            message,
+          };
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          platform,
-          handle: handle.replace(/^@/, ""),
-          message,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
-      if (res.ok && data.success) {
+      const sentOk = res.ok && (data.success || data.ok);
+      if (sentOk) {
         setStats((s) => ({ ...s, sent: s.sent + 1 }));
-        setResultBanner({ ok: true, text: `Sent DM to @${data.handle} on ${platform}` });
+        setResultBanner({
+          ok: true,
+          text: voiceMode
+            ? `Voice DM sent on ${platform}`
+            : `Sent DM to @${handle} on ${platform}`,
+        });
         setMessage("");
         setHandle("");
       } else if (data.queued) {
@@ -94,6 +125,12 @@ export default function DMComposerTab() {
         setResultBanner({
           ok: true,
           text: data.reason || "DM queued for later send",
+        });
+      } else if (data.unsupported) {
+        setStats((s) => ({ ...s, failed: s.failed + 1 }));
+        setResultBanner({
+          ok: false,
+          text: data.reason || `Voice DM not supported on ${platform}`,
         });
       } else {
         setStats((s) => ({ ...s, failed: s.failed + 1 }));
@@ -104,7 +141,7 @@ export default function DMComposerTab() {
       setResultBanner({ ok: false, text: String(err).slice(0, 200) });
     }
     setSending(false);
-  }, [platform, handle, message, sending]);
+  }, [platform, handle, message, sending, voiceMode, voiceSupported, voiceCloneId]);
 
   return (
     <div className="space-y-6">
@@ -174,6 +211,40 @@ export default function DMComposerTab() {
             className="mt-1 w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-orange-400/50 focus:outline-none"
           />
           <div className="mt-1 text-xs text-white/40">{message.length} / 2000 chars</div>
+        </div>
+
+        {/* Voice DM toggle. */}
+        <div className="mt-4 rounded-lg border border-amber-500/20 bg-amber-950/15 p-3">
+          <label className="flex items-center gap-2 text-xs font-medium text-amber-200">
+            <input
+              type="checkbox"
+              checked={voiceMode}
+              onChange={(e) => setVoiceMode(e.target.checked)}
+              disabled={!voiceSupported}
+              className="h-3 w-3 rounded border border-white/20 bg-black/30 text-amber-500 focus:ring-amber-400 disabled:opacity-40"
+            />
+            <Mic size={12} />
+            Send as voice note
+            {!voiceSupported && (
+              <span className="text-[10px] uppercase tracking-wider text-rose-300">
+                {platform} doesn&apos;t support voice DM
+              </span>
+            )}
+          </label>
+          {voiceMode && voiceSupported && (
+            <div className="mt-2">
+              <VoicePicker
+                value={voiceCloneId}
+                onChange={setVoiceCloneId}
+                surface="dm"
+                compact
+              />
+              <p className="mt-2 text-[11px] text-amber-200/80">
+                We&apos;ll synthesise the message above with the chosen voice and
+                deliver it as an audio attachment via the {platform} API.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">

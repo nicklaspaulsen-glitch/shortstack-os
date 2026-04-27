@@ -200,12 +200,14 @@
       "schedule": "*/5 * * * *"
     },
     {
+<<<<<<< HEAD
       "path": "/api/cron/news-triggers-scan",
       "schedule": "0 6 * * *"
     },
     {
       "path": "/api/cron/recompute-voice-profiles",
       "schedule": "*/30 * * * *"
+<<<<<<< HEAD
     },
     {
       "path": "/api/cron/poll-transcription-jobs",
@@ -214,6 +216,12 @@
     {
       "path": "/api/cron/run-browser-tasks",
       "schedule": "* * * * *"
+=======
+=======
+      "path": "/api/cron/voice-clone-poll",
+      "schedule": "*/2 * * * *"
+>>>>>>> 0dd73e5f (feat(voice-studio): voice cloning + presets + voicemail/SMS/DM voice messages)
+>>>>>>> f170e000 (feat(voice-studio): voice cloning + presets + voicemail/SMS/DM voice messages)
     }
   ]
 }

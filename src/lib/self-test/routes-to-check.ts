@@ -435,6 +435,66 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [200, 400, 401, 502],
     note: "200 with queued=true expected when ZERNIO_API_KEY isn't set.",
   },
+
+  // ── Voice Studio (cloning + delivery) ────────────────────────────────────
+  // Each route should auth-gate; routes that synth speech may also 503/500
+  // when neither RUNPOD_F5TTS nor ELEVENLABS is configured in self-test env.
+  {
+    path: "/api/voice/clones",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "GET — lists user clones + presets. Lazy-seeds presets on first hit.",
+  },
+  {
+    path: "/api/voice/presets/seed",
+    method: "POST",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Idempotent preset seed — re-runs are no-ops.",
+  },
+  {
+    path: "/api/voice/synthesize",
+    method: "POST",
+    auth_bearer: true,
+    body: {
+      clone_id: SELF_TEST_DUMMY_JOB_ID,
+      text: "self-test ping",
+    },
+    expected_status: [400, 401, 404],
+    note: "Dummy clone_id → expect 404 (clone not found). 400 acceptable when text too long.",
+  },
+  {
+    path: `/api/voice/clones/${SELF_TEST_DUMMY_JOB_ID}/test`,
+    method: "POST",
+    auth_bearer: true,
+    body: { text: "ping" },
+    expected_status: [401, 404],
+  },
+  {
+    path: "/api/sms/send-voice",
+    method: "POST",
+    auth_bearer: true,
+    body: {
+      to: SELF_TEST_SENTINEL_PHONE,
+      text: "self-test voice mms",
+      _self_test: true,
+    },
+    expected_status: [200, 400, 401, 502, 503],
+    note: `Twilio magic ${SELF_TEST_SENTINEL_PHONE} or 503 when Twilio not configured.`,
+  },
+  {
+    path: "/api/dm/send-voice",
+    method: "POST",
+    auth_bearer: true,
+    body: {
+      platform: "instagram",
+      recipient: "selftest",
+      text: "self-test voice dm",
+      _self_test: true,
+    },
+    expected_status: [200, 400, 401, 500],
+    note: "200 with ok=false + queued=true expected when META_PAGE_TOKEN unset.",
+  },
   {
     path: "/api/ai/generate",
     method: "POST",

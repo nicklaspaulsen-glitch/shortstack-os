@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Phone, PhoneCall, PhoneOff, SkipForward, Loader2, AlertTriangle,
-  CheckCircle, Mic, MicOff, Voicemail, X, Plus, Trash2,
+  CheckCircle, Mic, MicOff, Voicemail, X, Plus, Trash2, ShieldAlert,
 } from "lucide-react";
 import StatCard from "@/components/ui/stat-card";
+import VoicePicker from "@/components/voice/VoicePicker";
 
 // ── Types ────────────────────────────────────────────────────────────
 interface Contact {
@@ -97,6 +98,16 @@ export default function DialerTab() {
   const callRef = useRef<TwilioCall | null>(null);
   const [tokenError, setTokenError] = useState<string | null>(null);
   const [deviceReady, setDeviceReady] = useState(false);
+
+  // ── Voice cloning state ────────────────────────────────────────────
+  // selectedVoiceId="" = default, "__none__" = explicitly no clone, anything
+  // else = explicit clone_id. The dialer pre-renders the opening line via
+  // /api/voice/synthesize before the call connects so the audio is ready.
+  const [selectedVoiceId, setSelectedVoiceId] = useState<string | null>(null);
+  const [openingLine, setOpeningLine] = useState(
+    "Hi {{first_name}}, I noticed your business and had a quick question — is now a good time?",
+  );
+  const [tcpaAccepted, setTcpaAccepted] = useState(false);
 
   // ── Init Twilio Device on mount ────────────────────────────────────
   // We dynamically import @twilio/voice-sdk so the SSR build doesn't try
@@ -215,6 +226,39 @@ export default function DialerTab() {
     setMuted(false);
 
     // Insert the voice_calls row first so we can attach disposition later.
+    // Pre-render opening line audio when a clone is picked (or default exists),
+    // so playing into the call has zero latency.
+    const cloneIdForCall =
+      selectedVoiceId === "__none__" ? null : selectedVoiceId;
+    let preRenderedAudioUrl: string | null = null;
+    if (cloneIdForCall !== null) {
+      try {
+        const text = openingLine.replace(/{{\s*first_name\s*}}/gi, contact.name);
+        // Pre-render via the synth endpoint when an explicit clone is picked.
+        // When selectedVoiceId is null we leave the resolution to the
+        // server (the dialer call route can call getDefaultClone itself).
+        if (cloneIdForCall && text.trim()) {
+          const synthRes = await fetch("/api/voice/synthesize", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              clone_id: cloneIdForCall,
+              text,
+              format: "mp3",
+              context: "dialer_opening_line",
+            }),
+          });
+          if (synthRes.ok) {
+            const j = await synthRes.json();
+            preRenderedAudioUrl = j.r2_url || null;
+          }
+        }
+      } catch {
+        // Pre-render failure shouldn't block the call — just log.
+        console.warn("[dialer] opening-line pre-render failed");
+      }
+    }
+
     let callId: string | null = null;
     try {
       const res = await fetch("/api/dialer/call", {
@@ -224,6 +268,9 @@ export default function DialerTab() {
           to: contact.phone,
           contact_name: contact.name,
           contact_id: contact.id,
+          voice_clone_id: cloneIdForCall,
+          opening_line_audio_url: preRenderedAudioUrl,
+          tcpa_accepted: tcpaAccepted,
         }),
       });
       const data = await res.json();
@@ -267,7 +314,7 @@ export default function DialerTab() {
       console.error("[dialer] dial failed:", err);
       setCallStatus("failed");
     }
-  }, [deviceReady]);
+  }, [deviceReady, selectedVoiceId, openingLine, tcpaAccepted]);
 
   const hangUp = useCallback(() => {
     if (callRef.current) {
@@ -368,6 +415,34 @@ export default function DialerTab() {
           label="Voicemails"
           value={stats.voicemails}
           icon={<Voicemail size={16} />}
+        />
+      </div>
+
+      {/* Voice clone selector + TCPA disclosure for cold calls. */}
+      <div className="rounded-xl border border-amber-500/20 bg-gradient-to-r from-amber-950/20 to-orange-950/10 p-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <VoicePicker
+            value={selectedVoiceId}
+            onChange={setSelectedVoiceId}
+            surface="dialer"
+          />
+          <label className="flex items-center gap-2 text-xs text-white/70">
+            <input
+              type="checkbox"
+              checked={tcpaAccepted}
+              onChange={(e) => setTcpaAccepted(e.target.checked)}
+              className="h-3 w-3 rounded border border-white/20 bg-black/30 text-amber-500 focus:ring-amber-400"
+            />
+            <ShieldAlert size={12} className="text-amber-300" />
+            TCPA disclosure spoken (if cloned voice in use)
+          </label>
+        </div>
+        <textarea
+          value={openingLine}
+          onChange={(e) => setOpeningLine(e.target.value)}
+          rows={2}
+          placeholder="Opening line — pre-rendered with the chosen voice. Use {{first_name}} for personalisation."
+          className="mt-3 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder:text-white/30 focus:border-amber-400/60 focus:outline-none"
         />
       </div>
 
