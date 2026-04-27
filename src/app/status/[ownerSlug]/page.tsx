@@ -23,8 +23,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BRAND } from "@/lib/brand-config";
 
+// ISR — generated on first request, cached for 60s.
+// We deliberately do NOT set `dynamic = "force-static"` here because the
+// `[ownerSlug]` segment has no `generateStaticParams` (slugs are user IDs,
+// unbounded), so Next.js can't pre-render every possible path at build
+// time. Defaulting + setting `revalidate` gives proper ISR behavior.
 export const revalidate = 60;
-export const dynamic = "force-static";
 
 interface Incident {
   id: string;
