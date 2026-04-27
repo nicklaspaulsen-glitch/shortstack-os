@@ -2,115 +2,111 @@
 
 import { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { BRAND } from "@/lib/brand-config";
+import { tokens } from "@/lib/brand/tokens";
+import Stack3D from "@/components/brand/stack-3d";
+
+/**
+ * PageHero — shared header used on every dashboard page.
+ *
+ * Foundation rebuild (Apr 27): swapped from amber-gradient hero blocks to
+ * the OLED + lime + plum brand foundation. The original `gradient` prop is
+ * preserved (gold/blue/purple/green/sunset/ocean) and remapped internally
+ * to one of three new treatments — `lime`, `plum`, `indigo` — so the 100+
+ * existing pages instantly inherit the new visual direction without any
+ * per-page rewrites. New optional props (`photoUrl`, `showStack3D`, `eyebrow`,
+ * `variant`) extend the API for editorial-style pages.
+ *
+ * The original `pattern` and `sparkles` props are accepted but ignored — the
+ * new aesthetic uses lime-edge accent + grain instead of dot patterns + floating
+ * sparkles. They stay in the props so existing call sites keep type-checking.
+ */
 
 export type HeroGradient = "gold" | "blue" | "purple" | "green" | "sunset" | "ocean";
-
-/** Product brand primary color — central source of truth, used as the
- *  baseline for the "gold" hero gradient. Swapping BRAND.primary_color
- *  in brand-config flips all default gold heroes. */
-const BRAND_PRIMARY = BRAND.primary_color;
+export type HeroVariant = "default" | "hero" | "compact";
 
 interface PageHeroProps {
   title: string;
   subtitle?: string;
   icon?: ReactNode;
+  /** Legacy prop — remapped internally. Prefer no value (defaults to "gold" → lime). */
   gradient?: HeroGradient;
   actions?: ReactNode;
+  /** Legacy prop — accepted for back-compat, ignored by the foundation rebuild. */
   pattern?: boolean;
-  /** Optional small badge/pill shown above the title */
+  /** Optional small text/badge above the title. Renders in editorial italic + lime. */
   eyebrow?: ReactNode;
-  /** Drop the floating decorative sparkle particles. They're on by default
-   *  for the gold/sunset/ocean/purple gradients (premium-feel surfaces) and
-   *  disabled for green/blue (tools surfaces). Pass `false` to suppress on
-   *  any page where the sparkles compete with content. */
+  /** Legacy prop — accepted for back-compat, ignored by the foundation rebuild. */
   sparkles?: boolean;
+  /** Optional backdrop photo. Renders behind the OLED scrim. */
+  photoUrl?: string;
+  /** Render the 3D Stack brand mark in the top-right slot. */
+  showStack3D?: boolean;
+  /** Visual size — controls title scale and vertical padding. */
+  variant?: HeroVariant;
   className?: string;
 }
 
-// Hex helper so the gold preset can pull BRAND.primary_color as its accent
-// without hardcoding the color in two places. For non-gold presets (which
-// are purely decorative/section colors) hex literals stay inline.
-const HERO_GOLD_ACCENT = BRAND_PRIMARY; // "#C9A84C" by default
+/** Mapping from the legacy gradient names to the new foundation treatments. */
+type Treatment = "lime" | "plum" | "indigo";
 
-const GRADIENT_PRESETS: Record<HeroGradient, { bg: string; glowA: string; glowB: string; accent: string; iconBg: string; iconBorder: string }> = {
-  gold: {
-    bg: "linear-gradient(135deg, #1a1611 0%, #2d2418 45%, #3d3020 100%)",
-    glowA: "rgba(201, 168, 76, 0.35)",
-    glowB: "rgba(201, 168, 76, 0.12)",
-    // Light gold highlight is derived; core accent comes from brand config.
-    accent: "#E4C876",
-    iconBg: `${HERO_GOLD_ACCENT}2E`, // ~0.18 alpha as hex suffix
-    iconBorder: `${HERO_GOLD_ACCENT}59`, // ~0.35 alpha as hex suffix
+const TREATMENT_BY_GRADIENT: Record<HeroGradient, Treatment> = {
+  gold: "lime", // primary brand
+  green: "lime", // green wasn't really green — it was a tools surface, lift to lime
+  blue: "indigo", // indigo replaces generic Tailwind blue
+  ocean: "indigo",
+  purple: "plum", // plum replaces generic Tailwind purple
+  sunset: "plum",
+};
+
+interface TreatmentStyle {
+  /** Background gradient layered under the photoUrl scrim. */
+  bg: string;
+  /** Color of the eyebrow + the left-edge accent line. */
+  accent: string;
+  /** Color used for the lime-style underscore beneath the title. */
+  underline: string;
+  /** Icon-tile background. */
+  iconBg: string;
+  /** Icon-tile border. */
+  iconBorder: string;
+}
+
+const TREATMENTS: Record<Treatment, TreatmentStyle> = {
+  lime: {
+    bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface1} 60%, ${tokens.brand.plum} 130%)`,
+    accent: tokens.brand.lime,
+    underline: `linear-gradient(90deg, ${tokens.brand.lime} 0%, transparent 70%)`,
+    iconBg: "rgba(212, 255, 0, 0.1)",
+    iconBorder: tokens.border.strong,
   },
-  blue: {
-    bg: "linear-gradient(135deg, #0a1428 0%, #112447 45%, #1a3e7a 100%)",
-    glowA: "rgba(59, 130, 246, 0.38)",
-    glowB: "rgba(59, 130, 246, 0.12)",
-    accent: "#93C5FD",
-    iconBg: "rgba(59, 130, 246, 0.2)",
-    iconBorder: "rgba(147, 197, 253, 0.35)",
+  plum: {
+    bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.brand.plum} 70%, ${tokens.brand.plumHover} 130%)`,
+    accent: tokens.brand.lime,
+    underline: `linear-gradient(90deg, ${tokens.brand.lime} 0%, transparent 70%)`,
+    iconBg: "rgba(212, 255, 0, 0.08)",
+    iconBorder: tokens.border.strong,
   },
-  purple: {
-    bg: "linear-gradient(135deg, #1a1033 0%, #2c1a55 45%, #4a2285 100%)",
-    glowA: "rgba(168, 85, 247, 0.4)",
-    glowB: "rgba(236, 72, 153, 0.12)",
-    accent: "#D8B4FE",
-    iconBg: "rgba(168, 85, 247, 0.2)",
-    iconBorder: "rgba(216, 180, 254, 0.35)",
-  },
-  green: {
-    bg: "linear-gradient(135deg, #07231a 0%, #0c3d2c 45%, #14633e 100%)",
-    glowA: "rgba(16, 185, 129, 0.38)",
-    glowB: "rgba(110, 231, 183, 0.1)",
-    accent: "#6EE7B7",
-    iconBg: "rgba(16, 185, 129, 0.2)",
-    iconBorder: "rgba(110, 231, 183, 0.35)",
-  },
-  sunset: {
-    bg: "linear-gradient(135deg, #2a0f13 0%, #4f1e1d 35%, #8a3520 70%, #b45a23 100%)",
-    glowA: "rgba(249, 115, 22, 0.4)",
-    glowB: "rgba(251, 146, 60, 0.12)",
-    accent: "#FDBA74",
-    iconBg: "rgba(249, 115, 22, 0.2)",
-    iconBorder: "rgba(253, 186, 116, 0.35)",
-  },
-  ocean: {
-    bg: "linear-gradient(135deg, #041926 0%, #0b3547 40%, #14596c 75%, #1f7a87 100%)",
-    glowA: "rgba(20, 184, 166, 0.4)",
-    glowB: "rgba(56, 189, 248, 0.12)",
-    accent: "#5EEAD4",
-    iconBg: "rgba(20, 184, 166, 0.2)",
-    iconBorder: "rgba(94, 234, 212, 0.35)",
+  indigo: {
+    bg: `linear-gradient(140deg, ${tokens.bg.base} 0%, ${tokens.bg.surface2} 50%, ${tokens.brand.indigo}30 130%)`,
+    accent: tokens.brand.indigo,
+    underline: `linear-gradient(90deg, ${tokens.brand.indigo} 0%, transparent 70%)`,
+    iconBg: "rgba(94, 91, 255, 0.12)",
+    iconBorder: "rgba(94, 91, 255, 0.35)",
   },
 };
 
-/** Gradients where decorative floating sparkles look good. The "tools"
- *  gradients (green/blue) are deliberately quieter — sparkles there
- *  compete with status chips and CTAs. */
-const SPARKLE_DEFAULT: Record<HeroGradient, boolean> = {
-  gold: true,
-  sunset: true,
-  ocean: true,
-  purple: true,
-  green: false,
-  blue: false,
+const VARIANT_PADDING: Record<HeroVariant, string> = {
+  compact: "px-5 py-4 sm:px-6 sm:py-5",
+  default: "px-6 py-6 sm:px-8 sm:py-8",
+  hero: "px-7 py-10 sm:px-10 sm:py-14",
 };
 
-// Pre-computed sparkle positions so SSR + first client render match (no
-// hydration mismatch from Math.random). Using deterministic placements
-// also lets us tune the look once instead of leaving "fairness" to the
-// RNG. Each entry is %x, %y, size px, animation-delay seconds.
-const SPARKLES: Array<{ x: number; y: number; size: number; delay: number; duration: number }> = [
-  { x: 8, y: 18, size: 4, delay: 0, duration: 7 },
-  { x: 22, y: 72, size: 3, delay: 1.2, duration: 9 },
-  { x: 35, y: 30, size: 5, delay: 2.4, duration: 6 },
-  { x: 48, y: 80, size: 3, delay: 0.8, duration: 8 },
-  { x: 60, y: 22, size: 4, delay: 3.6, duration: 7 },
-  { x: 72, y: 65, size: 3, delay: 1.6, duration: 9 },
-  { x: 85, y: 35, size: 4, delay: 2.8, duration: 6 },
-  { x: 92, y: 78, size: 3, delay: 0.4, duration: 8 },
-];
+const VARIANT_TITLE_CLASS: Record<HeroVariant, string> = {
+  // Satoshi display, fluid clamp, tight tracking — readable across viewports.
+  compact: "font-display text-[clamp(1.5rem,1.2rem+1vw,2rem)] leading-[1.05]",
+  default: "font-display text-[clamp(1.85rem,1.4rem+1.6vw,2.85rem)] leading-[1.02]",
+  hero: "font-display text-[clamp(2.5rem,1.5rem+4vw,5rem)] leading-[1.0]",
+};
 
 export default function PageHero({
   title,
@@ -118,146 +114,99 @@ export default function PageHero({
   icon,
   gradient = "gold",
   actions,
-  pattern = true,
+  // pattern and sparkles preserved for back-compat — intentionally unused.
+  pattern: _pattern = true, // eslint-disable-line @typescript-eslint/no-unused-vars
   eyebrow,
-  sparkles,
+  sparkles: _sparkles, // eslint-disable-line @typescript-eslint/no-unused-vars
+  photoUrl,
+  showStack3D = false,
+  variant = "default",
   className = "",
 }: PageHeroProps) {
-  const g = GRADIENT_PRESETS[gradient];
-  const patternId = `hero-dots-${gradient}`;
+  const treatment = TREATMENTS[TREATMENT_BY_GRADIENT[gradient]];
   const reduceMotion = useReducedMotion();
-  // Caller can override default per-gradient sparkle behavior with `sparkles`.
-  const showSparkles = sparkles ?? SPARKLE_DEFAULT[gradient];
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-white/5 ${className}`}
+      className={`relative overflow-hidden rounded-2xl border ${className}`}
       style={{
-        background: g.bg,
-        boxShadow:
-          "0 1px 0 rgba(255,255,255,0.05) inset," +
-          "0 2px 8px rgba(0,0,0,0.25)," +
-          "0 10px 28px -8px rgba(0,0,0,0.5)",
+        background: treatment.bg,
+        borderColor: tokens.border.subtle,
+        boxShadow: [
+          "0 1px 0 rgba(255,255,255,0.03) inset",
+          "0 4px 12px rgba(0,0,0,0.4)",
+          "0 16px 40px -12px rgba(0,0,0,0.55)",
+        ].join(", "),
       }}
     >
-      {/* Radial glow accents — slow-orbit motion so the hero feels alive
-       *  but never distracting. Honours prefers-reduced-motion: when set,
-       *  the glows render statically (no animate prop kicks in). The orbit
-       *  is very low-amplitude (~24 px) at a 14–18 s period — readable as
-       *  ambient breathing, not as movement competing with content. */}
-      <motion.div
-        className="pointer-events-none absolute -top-20 -right-20 w-[320px] h-[320px] rounded-full blur-3xl"
-        style={{ background: `radial-gradient(circle, ${g.glowA} 0%, transparent 65%)` }}
-        animate={
-          reduceMotion
-            ? undefined
-            : { x: [0, -18, 8, -10, 0], y: [0, 12, -6, 14, 0] }
-        }
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="pointer-events-none absolute -bottom-20 -left-20 w-[260px] h-[260px] rounded-full blur-3xl"
-        style={{ background: `radial-gradient(circle, ${g.glowB} 0%, transparent 65%)` }}
-        animate={
-          reduceMotion
-            ? undefined
-            : { x: [0, 16, -8, 10, 0], y: [0, -10, 6, -14, 0] }
-        }
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-      />
-
-      {/* Inset vignette */}
-      <div
-        className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.45)" }}
-      />
-
-      {/* Dot pattern overlay */}
-      {pattern && (
-        <svg
-          className="pointer-events-none absolute inset-0 w-full h-full"
-          style={{ opacity: 0.12 }}
+      {/* Optional photographic backdrop — sits behind the gradient scrim. */}
+      {photoUrl && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage: `url(${photoUrl})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.35,
+            mixBlendMode: "luminosity",
+          }}
           aria-hidden
-        >
-          <defs>
-            <pattern id={patternId} width="22" height="22" patternUnits="userSpaceOnUse">
-              <circle cx="1.5" cy="1.5" r="1" fill="white" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill={`url(#${patternId})`} />
-        </svg>
+        />
       )}
 
-      {/* Decorative floating sparkles — disabled when prefers-reduced-motion
-       *  is set. Static positions (deterministic) so SSR matches first paint
-       *  with no hydration warning. Each sparkle pulses opacity + drifts a
-       *  tiny vertical amount on its own delay so the field feels organic. */}
-      {showSparkles && !reduceMotion && (
-        <div className="pointer-events-none absolute inset-0" aria-hidden>
-          {SPARKLES.map((s, i) => (
-            <motion.span
-              key={i}
-              className="absolute rounded-full"
-              style={{
-                left: `${s.x}%`,
-                top: `${s.y}%`,
-                width: s.size,
-                height: s.size,
-                background: g.accent,
-                boxShadow: `0 0 ${s.size * 2}px ${g.accent}`,
-              }}
-              animate={{
-                opacity: [0.25, 0.7, 0.25],
-                y: [0, -6, 0],
-              }}
-              transition={{
-                duration: s.duration,
-                delay: s.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          ))}
-        </div>
+      {/* OLED scrim — re-applies the treatment gradient on top of the photo
+       * so foreground text stays readable regardless of photo content. */}
+      {photoUrl && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background: `linear-gradient(180deg, rgba(10,10,11,0.55) 0%, rgba(10,10,11,0.85) 100%)`,
+          }}
+          aria-hidden
+        />
       )}
 
-      {/* Content
-       *
-       * Layout notes — why this row is structured exactly this way:
-       * 1. Outer wrapper uses `md:items-start` (not items-center) so a long
-       *    title on the left never vertically pushes the actions out of the
-       *    top-right corner. Actions sit at the top-right where users expect
-       *    the AdvancedToggle pill to live — even when the title wraps to
-       *    two lines or the subtitle is long.
-       * 2. The left (title) div gets `flex-1 min-w-0` so it claims its share
-       *    of the row and truncates/wraps its own content instead of growing
-       *    past the right edge and pushing the actions into the parent's
-       *    `overflow-hidden` clip zone. Without `flex-1` the title's intrinsic
-       *    width wins and the actions get shoved off-screen or clipped by the
-       *    rounded-2xl overflow-hidden on the outer card.
-       * 3. The right (actions) div uses `shrink-0` + `flex-wrap` + `ml-auto`
-       *    so it never shrinks below its content but can wrap its own children
-       *    to a second row instead of overflowing horizontally.
-       * 4. The whole content block fades in + slides up on mount via
-       *    framer-motion. Subtle (12 px slide, 0.4 s) — the page feels
-       *    composed-into-place rather than slammed in. Still respects
-       *    prefers-reduced-motion. */}
+      {/* Left-edge lime accent — 4px line, deliberate brand cue. */}
+      <div
+        className="pointer-events-none absolute left-0 top-[10%] bottom-[10%] w-1 rounded-r-sm"
+        style={{
+          background: treatment.accent,
+          boxShadow: `0 0 16px ${treatment.accent}`,
+        }}
+        aria-hidden
+      />
+
+      {/* Subtle grain — local to the hero, scoped tighter than the global overlay. */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")",
+          backgroundSize: "160px 160px",
+        }}
+        aria-hidden
+      />
+
+      {/* Content */}
       <motion.div
-        className="relative z-10 px-6 py-6 sm:px-8 sm:py-8 flex flex-col md:flex-row md:items-start justify-between gap-5"
-        initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+        className={`relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-5 ${VARIANT_PADDING[variant]}`}
+        initial={reduceMotion ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        transition={{
+          duration: reduceMotion ? 0.1 : 0.48,
+          ease: [0.32, 0.72, 0, 1],
+        }}
       >
         <div className="flex items-start gap-4 min-w-0 flex-1">
           {icon && (
             <div
               className="shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
               style={{
-                background: g.iconBg,
-                border: `1px solid ${g.iconBorder}`,
-                color: g.accent,
+                background: treatment.iconBg,
+                border: `1px solid ${treatment.iconBorder}`,
+                color: treatment.accent,
                 boxShadow:
-                  "0 2px 6px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.08) inset",
+                  "0 2px 6px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.06) inset",
               }}
             >
               {icon}
@@ -265,42 +214,54 @@ export default function PageHero({
           )}
           <div className="min-w-0">
             {eyebrow && (
-              <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: g.accent, opacity: 0.85 }}>
+              <div
+                className="font-editorial text-sm mb-2"
+                style={{ color: treatment.accent, opacity: 0.95 }}
+              >
                 {eyebrow}
               </div>
             )}
             <h1
-              className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight"
-              style={{ textShadow: "0 1px 2px rgba(0,0,0,0.4)" }}
+              className={`${VARIANT_TITLE_CLASS[variant]} tracking-[-0.025em]`}
+              style={{
+                color: tokens.text.primary,
+                textShadow: "0 1px 2px rgba(0,0,0,0.45)",
+              }}
             >
               {title}
             </h1>
+            {/* Thin lime gradient line under the title — only on hero variant
+             * to keep default/compact pages from feeling over-decorated. */}
+            {variant === "hero" && (
+              <div
+                className="h-[2px] w-32 mt-3 rounded-full"
+                style={{ background: treatment.underline }}
+                aria-hidden
+              />
+            )}
             {subtitle && (
-              <p className="text-sm mt-1.5 max-w-2xl" style={{ color: "rgba(255,255,255,0.7)" }}>
+              <p
+                className="text-sm mt-2 max-w-2xl"
+                style={{ color: tokens.text.secondary }}
+              >
                 {subtitle}
               </p>
             )}
           </div>
         </div>
-        {actions && (
-          // `relative z-20` keeps the actions above the radial glow layer so
-          // translucent pills (like AdvancedToggle) don't appear clipped by
-          // the orange/amber glow bleed at the hero's top-right corner.
-          //
-          // `shrink-0` + `flex-wrap` ensures actions never get compressed by
-          // the title on the left; when they overflow they wrap to a second
-          // row inside the hero, visible, instead of being clipped by the
-          // outer card's `overflow-hidden rounded-2xl`.
-          //
-          // `md:ml-auto` pushes the actions to the right on row layout,
-          // redundant with `justify-between` on the parent but kept explicit
-          // so consumers who nest another flex wrapper (e.g. a raw
-          // `<div className="flex items-center gap-2">` around actions) still
-          // get the correct right-alignment behavior.
-          <div className="relative z-20 flex flex-wrap items-center justify-end gap-2 shrink-0 max-w-full md:ml-auto">
-            {actions}
-          </div>
-        )}
+
+        <div className="flex items-start gap-3 shrink-0 max-w-full md:ml-auto">
+          {actions && (
+            <div className="relative z-20 flex flex-wrap items-center justify-end gap-2 shrink-0 max-w-full">
+              {actions}
+            </div>
+          )}
+          {showStack3D && (
+            <div className="hidden md:block shrink-0">
+              <Stack3D size={variant === "hero" ? "md" : "sm"} />
+            </div>
+          )}
+        </div>
       </motion.div>
     </div>
   );

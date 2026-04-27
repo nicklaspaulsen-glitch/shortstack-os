@@ -2,7 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* ═══════════ FONT IMPORTS ═══════════
+ * Foundation: Satoshi (display), Inter (body/default), Bodoni Moda (editorial,
+ * reserved for hero/marketing one-off statements only — never body).
+ * JetBrains Mono kept for inline code/monospace surfaces. */
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Bodoni+Moda:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ═══════════ BRAND FOUNDATION TOKENS ═══════════
+ * Authoritative source: src/lib/brand/tokens.ts. These vars drive the
+ * OLED-dark editorial-bento direction. Old --color-* vars below remain
+ * for back-compat with the existing 100+ pages. */
+:root {
+  /* Surfaces (warm-tinted OLED black) */
+  --bg-base: #0A0A0B;
+  --bg-surface-1: #15141A;
+  --bg-surface-2: #1F1E26;
+  --bg-surface-3: #2A2832;
+  --bg-base-rgb: 10 10 11;
+  --bg-surface-1-rgb: 21 20 26;
+  --bg-surface-2-rgb: 31 30 38;
+  --bg-surface-3-rgb: 42 40 50;
+
+  /* Borders — faint lime tint on every border for cohesion */
+  --border-subtle: rgba(212, 255, 0, 0.08);
+  --border-strong: rgba(212, 255, 0, 0.18);
+
+  /* Text — softened off-white, deliberately not pure #FFFFFF */
+  --text-primary: #F5F4F1;
+  --text-secondary: #9F9DAA;
+  --text-muted: #6F6D7A;
+  --text-primary-rgb: 245 244 241;
+  --text-secondary-rgb: 159 157 170;
+  --text-muted-rgb: 111 109 122;
+
+  /* Brand — ACID LIME, deliberately not gold */
+  --brand-lime: #D4FF00;
+  --brand-lime-soft: #E8FF66;
+  --brand-lime-dim: #8A9F00;
+  --brand-lime-glow: rgba(212, 255, 0, 0.4);
+  --brand-lime-rgb: 212 255 0;
+  --brand-lime-soft-rgb: 232 255 102;
+  --brand-lime-dim-rgb: 138 159 0;
+
+  /* Editorial complement — deep plum (replaces generic Tailwind purple) */
+  --brand-plum: #3F0D2D;
+  --brand-plum-hover: #5A1B41;
+  --brand-plum-rgb: 63 13 45;
+  --brand-plum-hover-rgb: 90 27 65;
+
+  /* Single chromatic moment — focus rings, links */
+  --brand-indigo: #5E5BFF;
+  --brand-indigo-rgb: 94 91 255;
+
+  /* Functional */
+  --status-success: #7FE5B8;
+  --status-warning: #FFC062;
+  --status-error: #F26063;
+  --status-success-rgb: 127 229 184;
+  --status-warning-rgb: 255 192 98;
+  --status-error-rgb: 242 96 99;
+
+  /* Motion */
+  --motion-standard: 220ms cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-hero-reveal: 480ms cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-page-transition: 320ms cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-expo-foundation: cubic-bezier(0.32, 0.72, 0, 1);
+}
 
 * {
   margin: 0;
@@ -14,44 +80,82 @@
    When --wl-primary is set via JS (white-label-context), it overrides
    --color-accent across the whole design system. The --wl-accent variable
    provides a secondary accent for hover states.
-   These are injected dynamically by WhiteLabelProvider on mount. */
+   These are injected dynamically by WhiteLabelProvider on mount.
+
+   Foundation note (Apr 27): the dark-theme baseline below has been
+   re-pointed at the new OLED + lime brand foundation. ThemeProvider is
+   still free to override these at runtime per active theme; this just
+   makes the SSR flash match the new direction. */
 :root {
   --wl-primary: initial;
   --wl-accent: initial;
 
-  /* Dark theme baseline — matches the "midnight" theme in ThemeProvider.
+  /* Dark theme baseline — OLED warm-tinted black + acid lime accent.
    * Set at :root so SSR'd HTML doesn't flash white before hydration.
    * ThemeProvider overrides these at runtime if the user picked a
    * different theme. */
-  --color-background: #06080c;
-  --color-surface: #0c1017;
-  --color-surface-light: #131923;
-  --color-border: #1e2a3a;
-  --color-accent: #C9A84C;
-  --color-text: #e2e8f0;
-  --color-muted: #64748b;
-  --color-background-rgb: 6 8 12;
-  --color-surface-rgb: 12 16 23;
-  --color-surface-light-rgb: 19 25 35;
-  --color-border-rgb: 30 42 58;
-  --color-accent-rgb: 201 168 76;
-  --color-text-rgb: 226 232 240;
-  --color-muted-rgb: 100 116 139;
+  --color-background: #0A0A0B;
+  --color-surface: #15141A;
+  --color-surface-light: #1F1E26;
+  --color-border: #2A2832;
+  --color-accent: #D4FF00;
+  --color-text: #F5F4F1;
+  --color-muted: #9F9DAA;
+  --color-foreground: #F5F4F1;
+  --color-background-rgb: 10 10 11;
+  --color-surface-rgb: 21 20 26;
+  --color-surface-light-rgb: 31 30 38;
+  --color-border-rgb: 42 40 50;
+  --color-accent-rgb: 212 255 0;
+  --color-text-rgb: 245 244 241;
+  --color-muted-rgb: 159 157 170;
 }
 
 html {
-  background: var(--color-background, #06080c);
+  background: var(--bg-base, #0A0A0B);
   min-height: 100vh;
 }
 
 body {
-  color: var(--color-text, #374151);
-  background: var(--color-background, #FAFAF7);
+  color: var(--text-primary, #F5F4F1);
+  background: var(--bg-base, #0A0A0B);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 14px;
   line-height: 1.6;
+  position: relative;
+}
+
+/* Display + editorial helpers — applied as opt-in classes. */
+.font-display {
+  font-family: 'Satoshi', 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.font-editorial {
+  font-family: 'Bodoni Moda', Georgia, serif;
+  font-style: italic;
+  letter-spacing: -0.005em;
+}
+
+/* ═══════════ ANALOG GRAIN OVERLAY ═══════════
+ * Subtle SVG noise drop-in for the body. Adds the "anti-AI-slop" analog
+ * texture that breaks up flat surfaces. Opt-in via <GrainOverlay /> in
+ * the layout — this rule just supplies the styles when that component
+ * mounts. Keep opacity ≤ 0.04 so text contrast stays WCAG-clean. */
+.brand-grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand-grain-overlay { opacity: 0.02; }
 }
 
 /* Electron window drag region */
@@ -989,43 +1093,47 @@ body {
   transition: opacity 0s, transform 0s;
 }
 
-/* ═══════════ CSS VARIABLES ═══════════ */
-:root {
+/* ═══════════ CSS VARIABLES (LIGHT-MODE FALLBACK) ═══════════
+ * Light-mode values — kept for any future light theme. The default at
+ * the top of this file is now the OLED/lime baseline; light fallback
+ * here is opt-in via `[data-theme="light"]`. */
+[data-theme="light"] {
   --color-background: #FAFAF7;
   --color-surface: #FFFFFF;
   --color-surface-light: #F5F3EE;
   --color-border: #E8E5E0;
-  --color-accent: #C9A84C;
+  --color-accent: #D4FF00;
   --color-text: #374151;
   --color-muted: #6B7280;
   --color-foreground: #1A1A2E;
-  /* RGB channels for Tailwind opacity modifiers */
   --color-background-rgb: 250 250 247;
   --color-surface-rgb: 255 255 255;
   --color-surface-light-rgb: 245 243 238;
   --color-border-rgb: 232 229 224;
-  --color-accent-rgb: 201 168 76;
+  --color-accent-rgb: 212 255 0;
   --color-text-rgb: 55 65 81;
   --color-muted-rgb: 107 114 128;
 }
 
-/* ═══════════ DARK MODE (data-attribute driven) ═══════════ */
+/* ═══════════ DARK MODE (data-attribute driven) ═══════════
+ * Mirrors the OLED/lime foundation. Themes other than "light" all share
+ * the brand-foundation visuals; ThemeProvider can still tweak per-theme. */
 [data-theme="dark"] {
-  --color-background: #0f0f0f;
-  --color-surface: #1a1a1a;
-  --color-surface-light: #1e1e1e;
-  --color-border: #2a2a2a;
-  --color-accent: #C9A84C;
-  --color-text: #e5e5e5;
-  --color-muted: #888888;
-  --color-foreground: #f0f0f0;
-  --color-background-rgb: 15 15 15;
-  --color-surface-rgb: 26 26 26;
-  --color-surface-light-rgb: 30 30 30;
-  --color-border-rgb: 42 42 42;
-  --color-accent-rgb: 201 168 76;
-  --color-text-rgb: 229 229 229;
-  --color-muted-rgb: 136 136 136;
+  --color-background: #0A0A0B;
+  --color-surface: #15141A;
+  --color-surface-light: #1F1E26;
+  --color-border: #2A2832;
+  --color-accent: #D4FF00;
+  --color-text: #F5F4F1;
+  --color-muted: #9F9DAA;
+  --color-foreground: #F5F4F1;
+  --color-background-rgb: 10 10 11;
+  --color-surface-rgb: 21 20 26;
+  --color-surface-light-rgb: 31 30 38;
+  --color-border-rgb: 42 40 50;
+  --color-accent-rgb: 212 255 0;
+  --color-text-rgb: 245 244 241;
+  --color-muted-rgb: 159 157 170;
 }
 
 /* ═══════════ PREMIUM ANIMATION POLISH ═══════════
@@ -1539,5 +1647,43 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .page-shatter-slabs { display: none; }
+}
+
+/* ═══════════ BRAND FOUNDATION MOTION KEYFRAMES (Apr 27) ═══════════
+ * Canonical motion primitives for the new design foundation. Use via
+ * Tailwind utilities `animate-slide-in-up`, `animate-fade-in-foundation`,
+ * `animate-lime-pulse`, `animate-stack-rotate`, or directly in CSS.
+ * All respect prefers-reduced-motion via the global belt-and-suspenders
+ * rules above. */
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInFoundation {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes limePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 255, 0, 0.45); }
+  50%      { box-shadow: 0 0 0 8px rgba(212, 255, 0, 0); }
+}
+@keyframes stackRotate {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+/* Foundation-tier reduce-motion override — caps animation at 100ms,
+ * disables transforms entirely. Layered on top of existing
+ * prefers-reduced-motion rules (which use 0.01ms). The 100ms cap is the
+ * "feel responsive but no motion sickness" target from the brand spec. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-slide-in-up,
+  .animate-fade-in-foundation,
+  .animate-lime-pulse,
+  .animate-stack-rotate {
+    animation-duration: 100ms !important;
+    animation-iteration-count: 1 !important;
+    transform: none !important;
+  }
 }
 

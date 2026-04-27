@@ -143,6 +143,79 @@ Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
 - **No `: any`** in new code. Use `unknown` + narrowing, or define a
   type. Existing `: any` (~21 occurrences) is deferred.
 
+## Brand & design tokens
+
+The visual foundation is locked. Authoritative source:
+**`src/lib/brand/tokens.ts`** — import from there in TS/TSX. Tailwind
+mirrors the same hex values via `tailwind.config.ts`; CSS variables in
+`src/app/globals.css` mirror them again at `:root`.
+
+Direction: **Editorial Bento × OLED Dark × 3D Depth × Liquid-Glass Accents**.
+
+### Locked color palette
+- **Brand: ACID LIME** `#D4FF00` — *deliberately not gold*. Do **not**
+  introduce gold/amber accents in new pages. Old `text-gold-*` and
+  `text-amber-*` aliases now resolve to lime — they remain only for
+  back-compat on existing pages.
+- **Surfaces:** `--bg-base #0A0A0B` (warm-tinted OLED black),
+  `--bg-surface-1 #15141A`, `--bg-surface-2 #1F1E26`,
+  `--bg-surface-3 #2A2832`.
+- **Borders:** every border carries a faint lime tint —
+  `--border-subtle rgba(212,255,0,0.08)` /
+  `--border-strong rgba(212,255,0,0.18)`.
+- **Text:** `--text-primary #F5F4F1` (softened off-white, never pure
+  `#FFFFFF`), `--text-secondary #9F9DAA`, `--text-muted #6F6D7A`.
+- **Editorial complement:** deep plum `--brand-plum #3F0D2D` — replaces
+  generic Tailwind purple.
+- **Single chromatic moment:** indigo `--brand-indigo #5E5BFF` for focus
+  rings + links.
+
+### Font stack (locked)
+- **Satoshi** — display only (page titles, hero numbers, big counters).
+  Use the `font-display` class.
+- **Inter** — body, labels, tables, default. Set on `<body>`.
+- **Bodoni Moda** — *reserved* for hero/marketing one-off statements
+  only. Never set as body. Use the `font-editorial` class. The
+  `<PageHero>` `eyebrow` slot uses Bodoni Moda by default.
+
+### Motion principles
+- Standard duration: **220ms** `cubic-bezier(0.32, 0.72, 0, 1)`
+  (smooth ease-out). Tailwind: `duration-220 ease-out-expo-foundation`.
+- Hero reveal: **480ms** with 60ms stagger between siblings.
+- Route transitions: **320ms** cross-fade.
+- `prefers-reduced-motion: reduce` → cap to 100ms, disable transforms.
+
+### Stack 3D mark
+The signature brand mark — three lime-edged stacked rectangular blocks
+at slight rotation. Component: `src/components/brand/stack-3d.tsx`.
+Use exactly this pattern, do not invent variations:
+```tsx
+import Stack3D from "@/components/brand/stack-3d";
+<Stack3D size="md" rotating />
+```
+Permitted surfaces: login screen (size `lg`), empty states (`sm`),
+`<PageHero showStack3D />` (`sm` or `md`), 404 / loading. Avoid
+sprinkling it across content surfaces — it loses meaning when overused.
+
+### Grain overlay
+For the analog "anti-AI-slop" texture on full-bleed surfaces, drop
+`<GrainOverlay />` from `src/components/brand/grain-overlay.tsx` once
+inside the root layout's `<body>`. Opacity 0.03, mix-blend-mode overlay,
+pointer-events: none. The component itself is server-safe.
+
+### Existing color names (back-compat shim)
+The 100+ pages still use the original Tailwind class names. Those stay
+registered in `tailwind.config.ts` and now point to the new palette:
+- `text-gold-*` / `bg-gold-*` / `border-gold-*` → lime scale
+- `text-amber-*` / `bg-amber-*` / `border-amber-*` → lime scale
+- `text-purple-*` / `bg-purple-*` / `border-purple-*` → plum scale
+- `text-indigo-*` / `bg-indigo-*` / `border-indigo-*` → indigo scale
+
+For **new code**, reference the canonical brand-foundation classes
+(`bg-brand-lime`, `border-border-subtle`, `text-text-primary`, etc.) or
+import `tokens` from `@/lib/brand/tokens`. Do not introduce new uses of
+the legacy `gold`/`amber`/`purple` shade names.
+
 ## What NOT to do without asking the user
 
 - DO NOT run `npm install` in `shortstack-os` (parent worktree). All
