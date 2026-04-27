@@ -176,7 +176,10 @@ const navItems: NavItem[] = [
   // ── Automate (AI & workflows) ──
   { label: "AI Agents", href: "/dashboard/services", icon: <Sparkles size={16} />, roles: ["admin", "team_member"], section: "Automate", sub: "AI" },
   { label: "Agent HQ", href: "/dashboard/agent-supervisor", icon: <Crown size={16} />, roles: ["admin"], sub: "AI" },
-  { label: "Agent Room", href: "/dashboard/agent-room", icon: <UsersRound size={16} />, roles: ["admin", "team_member"], sub: "AI" },
+  // Replaces the old Agent Room entry with the live pixel-art Agent
+  // Office. The label keeps the "Room" wording so muscle memory still
+  // works; the destination is the new /dashboard/agent-office surface.
+  { label: "Agent Office", href: "/dashboard/agent-office", icon: <UsersRound size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Agent Controls", href: "/dashboard/agent-controls", icon: <SlidersHorizontal size={16} />, roles: ["admin"], sub: "AI" },
   { label: "Apps", href: "/dashboard/agent-desktop", icon: <Monitor size={16} />, roles: ["admin", "team_member"], sub: "AI" },
   { label: "Workflows", href: "/dashboard/workflows", icon: <Zap size={16} />, roles: ["admin"], sub: "Workflows" },

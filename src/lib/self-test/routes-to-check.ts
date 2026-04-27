@@ -960,6 +960,31 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [401, 404],
     note: "Share-link for non-existent file — must 404 (or 401 unauth). Confirms TTL parser doesn't 500.",
   },
+
+  // ── Pixel Agent Office ────────────────────────────────────────────────
+  // Live pixel-art office at /dashboard/agent-office. The snapshot route
+  // returns hydration data (recent events, per-agent history, stat
+  // counters); the events route powers the side-panel pagination.
+  {
+    path: "/api/agent-office/snapshot",
+    auth_bearer: true,
+    expected_status: [200, 401, 403],
+    expected_shape: ["ownerId", "agents", "recentEvents", "byAgent", "stats", "online"],
+    note: "Pixel office hydration. Empty agency returns 200 with zeroed counters.",
+  },
+  {
+    path: "/api/agent-office/events?agent_key=lyra&limit=20",
+    auth_bearer: true,
+    expected_status: [200, 401, 403],
+    expected_shape: ["events", "total"],
+    note: "Per-agent event log for the side panel. Empty list ok.",
+  },
+  {
+    path: "/api/agent-office/events",
+    auth_bearer: true,
+    expected_status: [400, 401],
+    note: "Missing required filter (agent_key or since) must 400.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
