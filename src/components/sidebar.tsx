@@ -110,8 +110,9 @@ const navItems: NavItem[] = [
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Reports", href: "/dashboard/reports", icon: <FileText size={16} />, roles: ["admin"] },
 
-  // ── Workspace (live production board, files, whiteboard) ──
-  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], section: "Workspace" },
+  // ── Workspace (team collaboration) ──
+  { label: "Board", href: "/dashboard/workspace/board", icon: <Kanban size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
+  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], section: "Workspace", sub: "Team" },
 
   // ── Sales (full revenue pipeline) ──
   { label: "Outreach", href: "/dashboard/outreach-hub", icon: <Send size={16} />, roles: ["admin"], section: "Sales", sub: "Leads & Outreach" },
