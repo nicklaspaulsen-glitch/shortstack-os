@@ -25,8 +25,8 @@
   --bg-surface-3-rgb: 42 40 50;
 
   /* Borders — faint lime tint on every border for cohesion */
-  --border-subtle: rgba(212, 255, 0, 0.08);
-  --border-strong: rgba(212, 255, 0, 0.18);
+  --border-subtle: rgba(184, 224, 0, 0.07);
+  --border-strong: rgba(184, 224, 0, 0.16);
 
   /* Text — softened off-white, deliberately not pure #FFFFFF */
   --text-primary: #F5F4F1;
@@ -36,14 +36,16 @@
   --text-secondary-rgb: 159 157 170;
   --text-muted-rgb: 111 109 122;
 
-  /* Brand — ACID LIME, deliberately not gold */
-  --brand-lime: #D4FF00;
-  --brand-lime-soft: #E8FF66;
-  --brand-lime-dim: #8A9F00;
-  --brand-lime-glow: rgba(212, 255, 0, 0.4);
-  --brand-lime-rgb: 212 255 0;
-  --brand-lime-soft-rgb: 232 255 102;
-  --brand-lime-dim-rgb: 138 159 0;
+  /* Brand — LIME, deliberately not gold. Slightly softer than the original
+     full-saturation neon (#D4FF00) so the brand stays distinctive without
+     going acid against OLED dark surfaces. */
+  --brand-lime: #B8E000;
+  --brand-lime-soft: #D4FF33;
+  --brand-lime-dim: #6F8A00;
+  --brand-lime-glow: rgba(184, 224, 0, 0.4);
+  --brand-lime-rgb: 184 224 0;
+  --brand-lime-soft-rgb: 212 255 51;
+  --brand-lime-dim-rgb: 111 138 0;
 
   /* Editorial complement — deep plum (replaces generic Tailwind purple) */
   --brand-plum: #3F0D2D;
@@ -98,7 +100,7 @@
   --color-surface: #15141A;
   --color-surface-light: #1F1E26;
   --color-border: #2A2832;
-  --color-accent: #D4FF00;
+  --color-accent: #B8E000;
   --color-text: #F5F4F1;
   --color-muted: #9F9DAA;
   --color-foreground: #F5F4F1;
@@ -106,7 +108,7 @@
   --color-surface-rgb: 21 20 26;
   --color-surface-light-rgb: 31 30 38;
   --color-border-rgb: 42 40 50;
-  --color-accent-rgb: 212 255 0;
+  --color-accent-rgb: 184 224 0;
   --color-text-rgb: 245 244 241;
   --color-muted-rgb: 159 157 170;
 }
@@ -1102,7 +1104,7 @@ body {
   --color-surface: #FFFFFF;
   --color-surface-light: #F5F3EE;
   --color-border: #E8E5E0;
-  --color-accent: #D4FF00;
+  --color-accent: #B8E000;
   --color-text: #374151;
   --color-muted: #6B7280;
   --color-foreground: #1A1A2E;
@@ -1110,7 +1112,7 @@ body {
   --color-surface-rgb: 255 255 255;
   --color-surface-light-rgb: 245 243 238;
   --color-border-rgb: 232 229 224;
-  --color-accent-rgb: 212 255 0;
+  --color-accent-rgb: 184 224 0;
   --color-text-rgb: 55 65 81;
   --color-muted-rgb: 107 114 128;
 }
@@ -1123,7 +1125,7 @@ body {
   --color-surface: #15141A;
   --color-surface-light: #1F1E26;
   --color-border: #2A2832;
-  --color-accent: #D4FF00;
+  --color-accent: #B8E000;
   --color-text: #F5F4F1;
   --color-muted: #9F9DAA;
   --color-foreground: #F5F4F1;
@@ -1131,7 +1133,7 @@ body {
   --color-surface-rgb: 21 20 26;
   --color-surface-light-rgb: 31 30 38;
   --color-border-rgb: 42 40 50;
-  --color-accent-rgb: 212 255 0;
+  --color-accent-rgb: 184 224 0;
   --color-text-rgb: 245 244 241;
   --color-muted-rgb: 159 157 170;
 }
@@ -1664,8 +1666,8 @@ body {
   to   { opacity: 1; }
 }
 @keyframes limePulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 255, 0, 0.45); }
-  50%      { box-shadow: 0 0 0 8px rgba(212, 255, 0, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 224, 0, 0.45); }
+  50%      { box-shadow: 0 0 0 8px rgba(184, 224, 0, 0); }
 }
 @keyframes stackRotate {
   from { transform: rotateY(0deg); }
