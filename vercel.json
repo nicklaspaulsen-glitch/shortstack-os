@@ -32,16 +32,8 @@
   ],
   "crons": [
     {
-      "path": "/api/cron/daily-brief",
-      "schedule": "0 8 * * *"
-    },
-    {
-      "path": "/api/cron/outreach",
-      "schedule": "0 9 * * 1-5"
-    },
-    {
-      "path": "/api/cron/health-check",
-      "schedule": "*/30 * * * *"
+      "path": "/api/cron/daily-briefing",
+      "schedule": "0 7 * * *"
     },
     {
       "path": "/api/cron/scrape-leads",
@@ -66,10 +58,6 @@
     {
       "path": "/api/cron/lead-cleanup",
       "schedule": "0 6 * * *"
-    },
-    {
-      "path": "/api/cron/follow-up",
-      "schedule": "0 14 * * 1-5"
     },
     {
       "path": "/api/cron/lead-scoring",
@@ -120,24 +108,12 @@
       "schedule": "0 6 * * *"
     },
     {
-      "path": "/api/cron/retention",
-      "schedule": "0 4 * * 0"
-    },
-    {
       "path": "/api/cron/run-sequences",
       "schedule": "0 * * * *"
     },
     {
-      "path": "/api/cron/sequence-runner",
-      "schedule": "* * * * *"
-    },
-    {
       "path": "/api/cron/self-test",
       "schedule": "15 3 * * *"
-    },
-    {
-      "path": "/api/cron/score-leads",
-      "schedule": "0 4 * * *"
     },
     {
       "path": "/api/cron/review-requests",
@@ -146,10 +122,6 @@
     {
       "path": "/api/cron/ai-handoff-cleanup",
       "schedule": "0 3 * * *"
-    },
-    {
-      "path": "/api/cron/daily-briefing",
-      "schedule": "0 7 * * *"
     },
     {
       "path": "/api/cron/personal-brand",
@@ -200,14 +172,12 @@
       "schedule": "*/5 * * * *"
     },
     {
-<<<<<<< HEAD
       "path": "/api/cron/news-triggers-scan",
       "schedule": "0 6 * * *"
     },
     {
       "path": "/api/cron/recompute-voice-profiles",
       "schedule": "*/30 * * * *"
-<<<<<<< HEAD
     },
     {
       "path": "/api/cron/poll-transcription-jobs",
@@ -216,12 +186,10 @@
     {
       "path": "/api/cron/run-browser-tasks",
       "schedule": "* * * * *"
-=======
-=======
+    },
+    {
       "path": "/api/cron/voice-clone-poll",
       "schedule": "*/2 * * * *"
->>>>>>> 0dd73e5f (feat(voice-studio): voice cloning + presets + voicemail/SMS/DM voice messages)
->>>>>>> f170e000 (feat(voice-studio): voice cloning + presets + voicemail/SMS/DM voice messages)
     }
   ]
 }
