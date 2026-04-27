@@ -685,6 +685,73 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_status: [401],
     note: "Trigger event processor cron — unauth returns 401.",
   },
+
+  // ── Public API (Bearer token) ───────────────────────────────────────────
+  // Self-test does not have a real ss_live_ token, so every /api/v1 route
+  // should return 401 from the missing-Bearer check. A 200 here would mean
+  // the auth gate has regressed.
+  {
+    path: "/api/v1/me",
+    expected_status: 401,
+    note: "Public API — verifies Bearer auth gate is in place.",
+  },
+  {
+    path: "/api/v1/leads",
+    expected_status: 401,
+    note: "Public API — leads list without Bearer token must 401.",
+  },
+  {
+    path: "/api/v1/deals",
+    expected_status: 401,
+    note: "Public API — deals list without Bearer token must 401.",
+  },
+  {
+    path: "/api/v1/contacts",
+    expected_status: 401,
+    note: "Public API — contacts list without Bearer token must 401.",
+  },
+
+  // ── API key + webhook management (cookie auth) ──────────────────────────
+  {
+    path: "/api/api-keys",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "API keys list — owner-scoped.",
+  },
+  {
+    path: "/api/api-webhooks",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Webhook subscriptions list — owner-scoped.",
+  },
+
+  // ── Cold-email jobs ──────────────────────────────────────────────────────
+  {
+    path: "/api/cold-email/jobs",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Cold-email jobs list — owner-scoped.",
+  },
+  {
+    path: "/api/cold-email/jobs",
+    method: "POST",
+    auth_bearer: true,
+    body: {},
+    expected_status: [400, 401],
+    note: "Cold-email job create — required-field validation triggers 400.",
+  },
+
+  // ── New cron handlers ────────────────────────────────────────────────────
+  {
+    path: "/api/cron/cold-email-runner",
+    expected_status: [200, 401],
+    note: "Cold-email cron — auth-gated; 401 without bearer is fine.",
+  },
+  {
+    path: "/api/cron/deliver-webhooks",
+    expected_status: [200, 401],
+    note: "Webhook delivery cron — auth-gated.",
+  },
 ];
 
 /** Total count helper for the dashboard. */
