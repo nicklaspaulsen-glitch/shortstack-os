@@ -85,8 +85,10 @@ function fmtDate(iso: string | null): string {
 }
 
 export default function AffiliateDetailPage() {
+  // useParams() can return null during the initial render in Next 14;
+  // guard explicitly so the page renders a loader instead of throwing.
   const params = useParams<{ id: string }>();
-  const affiliateId = params.id;
+  const affiliateId = params?.id ?? null;
 
   const [affiliate, setAffiliate] = useState<AffiliateDetail | null>(null);
   const [referrals, setReferrals] = useState<ReferralRow[]>([]);
