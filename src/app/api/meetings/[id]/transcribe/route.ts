@@ -18,6 +18,7 @@ import {
   transcribeAudio,
   estimateTranscriptionCost,
 } from "@/lib/meetings/whisper-runpod";
+import { captureVoiceSample } from "@/lib/ai/voice-profile";
 
 // Whisper transcription on a 60-min recording can run ~90s on cold start.
 // Vercel default is 10s — bump to 5 min so we can wait for the worker.
@@ -88,6 +89,46 @@ export async function POST(
     if (updErr) {
       console.error("[meetings/transcribe] update error:", updErr);
       return NextResponse.json({ error: updErr.message }, { status: 500 });
+    }
+
+    // Capture meeting transcript segments for voice profiles. Fire-and-forget.
+    // Each unique speaker label gets one sample of their joined utterances.
+    // We treat the meeting creator as the user and collapse all OTHER speakers
+    // into the user-side bucket (we don't have client identity in the meeting
+    // schema yet — speaker→client linking is a future v2).
+    try {
+      const segs = (result.segments || []) as Array<{ speaker?: string; text?: string }>;
+      const bySpeaker = new Map<string, string[]>();
+      for (const s of segs) {
+        const speaker = (s.speaker || "speaker_0").toLowerCase();
+        const text = (s.text || "").trim();
+        if (!text) continue;
+        const list = bySpeaker.get(speaker) ?? [];
+        list.push(text);
+        bySpeaker.set(speaker, list);
+      }
+      const userSpeaker = segs.find((s) => s.speaker)?.speaker?.toLowerCase();
+      const speakerEntries = Array.from(bySpeaker.entries());
+      for (const [speaker, parts] of speakerEntries) {
+        const body = parts.join(" ").trim();
+        if (!body) continue;
+        // Anchor the first detected speaker to the meeting creator (user
+        // voice). All other speakers are skipped at v1 — without a client
+        // mapping we'd pollute corpora. The settings page can paste-
+        // bootstrap explicit client samples instead.
+        if (speaker === userSpeaker) {
+          captureVoiceSample({
+            agencyOwnerId: meeting.created_by,
+            subjectKind: "user",
+            subjectId: meeting.created_by,
+            source: "meeting_transcript",
+            body,
+            channel: "meeting",
+          }).catch((err) => console.warn("[voice-capture/meeting]", err));
+        }
+      }
+    } catch (err) {
+      console.warn("[voice-capture/meeting] sweep failed", err);
     }
 
     return NextResponse.json({ meeting: updated, segments_count: result.segments.length });

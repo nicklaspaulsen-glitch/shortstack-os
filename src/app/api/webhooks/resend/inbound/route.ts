@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel } from "@/lib/conversations";
 import { exitRunsForContact } from "@/lib/sequences/engine";
+import { captureVoiceSample } from "@/lib/ai/voice-profile";
 
 // Inbound email → Conversations.
 //
@@ -163,6 +164,19 @@ export async function POST(request: NextRequest) {
     await exitRunsForContact(supabase, contactId, "replied_email").catch((err) => {
       console.warn("[resend/inbound] exitRunsForContact failed:", err);
     });
+    // Capture client voice — fire-and-forget so storage failures never
+    // affect the inbound message pipeline. Treat the contact as the subject.
+    const replyBody = email.text || stripHtml(email.html || "");
+    if (replyBody) {
+      captureVoiceSample({
+        agencyOwnerId: ownerId,
+        subjectKind: "client",
+        subjectId: contactId,
+        source: "reply_email",
+        body: replyBody,
+        channel: "email",
+      }).catch((err) => console.warn("[voice-capture/email]", err));
+    }
   }
 
   return NextResponse.json({ ok: true });

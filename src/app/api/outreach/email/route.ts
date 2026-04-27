@@ -4,6 +4,7 @@ import { sendEmail } from "@/lib/email";
 import { allocateEmailSenders, recordEmailSend, getMinDelay, type EmailSender } from "@/lib/services/sender-rotation";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
 import { checkLimit, recordUsage } from "@/lib/usage-limits";
+import { captureVoiceSample } from "@/lib/ai/voice-profile";
 import nodemailer from "nodemailer";
 
 // Cold email outreach — AI-personalized emails sent to scraped leads
@@ -165,6 +166,20 @@ export async function POST(request: NextRequest) {
       results.push({ business: lead.business_name, email: lead.email, status: "sent" });
       // Plan-tier usage metering
       await recordUsage(ownerId, "emails", 1, { lead_id: lead.id, platform: "email" });
+      // Capture user voice from successfully-sent outreach. Fire-and-forget;
+      // storage failures must never affect a successful send. Skip if the
+      // body is the canned fallback (no template, no AI personalization)
+      // because it's not the user's actual writing.
+      if (body && body !== `Hi ${lead.owner_name || "there"},`) {
+        captureVoiceSample({
+          agencyOwnerId: ownerId,
+          subjectKind: "user",
+          subjectId: ownerId,
+          source: "sent_email",
+          body,
+          channel: "email",
+        }).catch((err) => console.warn("[voice-capture/sent-email]", err));
+      }
     } else {
       failed++;
       results.push({ business: lead.business_name, email: lead.email, status: "failed" });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage } from "@/lib/conversations";
 import { exitRunsForContact } from "@/lib/sequences/engine";
+import { captureVoiceSample } from "@/lib/ai/voice-profile";
 import crypto from "crypto";
 
 // Zernio webhook → Conversations.
@@ -134,6 +135,19 @@ export async function POST(request: NextRequest) {
         console.warn("[zernio-webhook] exitRunsForContact failed:", err);
       });
     }
+  }
+
+  // Capture client DM voice — anchor to the contact (client) when we have one.
+  // Fire-and-forget: storage failures must never break the inbound webhook.
+  if (contactId && payload.text) {
+    captureVoiceSample({
+      agencyOwnerId: ownerId,
+      subjectKind: "client",
+      subjectId: contactId,
+      source: "reply_dm",
+      body: payload.text,
+      channel: "dm",
+    }).catch((err) => console.warn("[voice-capture/zernio]", err));
   }
 
   return NextResponse.json({ ok: true });

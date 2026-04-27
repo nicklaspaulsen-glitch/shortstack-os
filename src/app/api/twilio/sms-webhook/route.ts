@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel } from "@/lib/conversations";
 import { exitRunsForContact } from "@/lib/sequences/engine";
+import { captureVoiceSample } from "@/lib/ai/voice-profile";
 import crypto from "crypto";
 
 // Twilio SMS + WhatsApp webhook — receives inbound messages to client numbers.
@@ -114,6 +115,20 @@ export async function POST(request: NextRequest) {
         externalMessageId: formData.get("MessageSid") as string | null ?? undefined,
         contactId,
       });
+
+      // Capture client voice from inbound SMS reply — fire-and-forget. Only
+      // capture when we resolved a contact id; otherwise the sample is anchored
+      // to the unknown sender and adds noise to the agency-level corpus.
+      if (contactId && body) {
+        captureVoiceSample({
+          agencyOwnerId: ownerId,
+          subjectKind: "client",
+          subjectId: contactId,
+          source: "reply_sms",
+          body,
+          channel,
+        }).catch((err) => console.warn("[voice-capture/sms]", err));
+      }
     }
 
     // Telegram notification
