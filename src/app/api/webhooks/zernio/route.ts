@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage } from "@/lib/conversations";
+import { exitRunsForContact } from "@/lib/sequences/engine";
 import crypto from "crypto";
 
 // Zernio webhook → Conversations.
@@ -115,6 +116,25 @@ export async function POST(request: NextRequest) {
     contactId,
     sentAt,
   });
+
+  // Multi-channel sequences: try to map the sender's IG handle to a lead
+  // (leads.instagram_url) and exit any active sequence runs. Soft-fail —
+  // most DMs won't map to a tracked lead, that's expected.
+  const senderHandle = payload.from?.username;
+  if (senderHandle) {
+    const { data: matchedLead } = await supabase
+      .from("leads")
+      .select("id")
+      .eq("user_id", ownerId)
+      .ilike("instagram_url", `%${senderHandle}%`)
+      .limit(1)
+      .maybeSingle();
+    if (matchedLead?.id) {
+      await exitRunsForContact(supabase, matchedLead.id, "replied_dm").catch((err) => {
+        console.warn("[zernio-webhook] exitRunsForContact failed:", err);
+      });
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { upsertInboundMessage, findContactByIdentifier, resolveUserIdForChannel } from "@/lib/conversations";
+import { exitRunsForContact } from "@/lib/sequences/engine";
 import crypto from "crypto";
 
 // Twilio SMS + WhatsApp webhook — receives inbound messages to client numbers.
@@ -90,6 +91,11 @@ export async function POST(request: NextRequest) {
 
     if (lead) {
       await supabase.from("leads").update({ status: "replied" }).eq("id", lead.id);
+      // Multi-channel sequences: exit any active/paused runs for this contact.
+      // Reply on ANY channel exits the contact from ALL their sequence runs.
+      await exitRunsForContact(supabase, lead.id, "replied_sms").catch((err) => {
+        console.warn("[twilio/sms-webhook] exitRunsForContact failed:", err);
+      });
     }
 
     // ── Unified Conversations: upsert + insert inbound message ──
