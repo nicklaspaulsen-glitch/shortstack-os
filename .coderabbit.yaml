@@ -1,0 +1,60 @@
+# CodeRabbit configuration
+# https://docs.coderabbit.ai/configure-coderabbit
+#
+# Goal: lightweight PR-summary review that complements (not duplicates) our
+# existing Claude Code Security Review + Codex CLI multi-reviewer setup.
+# Tuned for "chill" profile so it surfaces real issues without nitpicking.
+
+language: en-US
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: true
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - main
+
+  # Don't waste tokens scanning generated / vendored / migration files.
+  # Migrations are reviewed via Supabase MCP separately; node_modules/dist
+  # are obvious skips; public/ is mostly assets.
+  path_filters:
+    - "!node_modules/**"
+    - "!.next/**"
+    - "!dist/**"
+    - "!build/**"
+    - "!coverage/**"
+    - "!public/**"
+    - "!supabase/migrations/**"
+    - "!**/*.lock"
+    - "!**/*.log"
+    - "!extensions/**/dist/**"
+    - "!mobile/.expo/**"
+
+  path_instructions:
+    # Reinforce repo conventions from CLAUDE.md so CodeRabbit flags violations.
+    - path: "src/app/api/**/route.ts"
+      instructions: |
+        Flag any non-HTTP-method exports (only GET/POST/PUT/PATCH/DELETE/HEAD/OPTIONS
+        + dynamic/runtime exports are allowed in route.ts). Helpers must live in
+        src/lib/. Webhook routes must signature-validate and fail-closed (503)
+        when the secret env var is missing.
+    - path: "src/**/*.{ts,tsx}"
+      instructions: |
+        No new `: any` types — use `unknown` + narrowing. No module-level env-var
+        reads that throw — always lazy via getter (see src/lib/stripe/client.ts).
+        Direct `new Anthropic()` is banned — use the shared singleton from
+        src/lib/ai/claude-helpers.ts. Same for Stripe via getStripe().
+    - path: "src/components/**/*.{ts,tsx}"
+      instructions: |
+        Dashboard pages must use the shared <PageHero> from src/components/ui/page-hero.tsx
+        (don't roll your own header). Number-display tiles use <StatCard>.
+
+chat:
+  auto_reply: true
