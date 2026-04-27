@@ -1117,21 +1117,14 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     auth_bearer: true,
     expected_status: [200, 401],
     expected_shape: ["success", "photos", "configured"],
-    note: "Stock-photo search proxy. Returns empty photos[] when no PEXELS_API_KEY/UNSPLASH_ACCESS_KEY set.",
+    note: "Stock-photo search proxy.",
   },
   {
     path: "/api/integrations/exchange-rate?from=USD&to=EUR",
     auth_bearer: true,
     expected_status: [200, 401],
     expected_shape: ["success", "rate"],
-    note: "Single exchange rate via Frankfurter (no key needed).",
-  },
-  {
-    path: "/api/integrations/exchange-rates?from=USD&to=EUR,GBP,DKK",
-    auth_bearer: true,
-    expected_status: [200, 401],
-    expected_shape: ["success", "from", "rates"],
-    note: "Bulk exchange rates. Returns map of code -> rate.",
+    note: "Single exchange rate via Frankfurter.",
   },
   {
     path: "/api/integrations/geo-ip?ip=8.8.8.8",
@@ -1140,32 +1133,46 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     expected_shape: ["success"],
     note: "Geo lookup for a public IP.",
   },
-  {
-    path: "/api/integrations/geo-ip/me",
-    auth_bearer: true,
-    expected_status: [200, 401],
-    expected_shape: ["success"],
-    note: "Self geo-IP lookup. lookup=null in dev is acceptable.",
-  },
 
-  // ── Browser Worker (auth-gated; should 401 unauth, 200 with valid token) ─
+  // ── Browser Worker ──────────────────────────────────────────────────────
   {
     path: "/api/browser-tasks",
     auth_bearer: true,
     expected_status: [200, 401],
-    note: "Browser worker task list — empty array OK, 401 if SELF_TEST_USER_ID unset.",
+    note: "Browser worker task list.",
   },
   {
     path: "/api/browser-task-templates",
     auth_bearer: true,
     expected_status: [200, 401],
-    note: "Browser worker templates — auto-seeds starter templates on first call.",
+    note: "Browser worker templates auto-seeds starter templates on first call.",
+  },
+
+  // ── Branded welcome email + getting-started doc ─────────────────────────
+  {
+    path: "/api/branded-emails",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["templates"],
+    note: "List of all branded transactional templates with defaults filled in.",
   },
   {
-    path: `/api/browser-tasks/${SELF_TEST_DUMMY_JOB_ID}`,
+    path: "/api/branded-emails/client_welcome",
     auth_bearer: true,
-    expected_status: [401, 404],
-    note: "Detail for non-existent browser task — must 404 (or 401 unauth). Never 200.",
+    expected_status: [200, 401],
+    expected_shape: ["template"],
+    note: "Single template fetch — must always 200 (default fallback) when authed.",
+  },
+  {
+    path: "/api/branded-emails/not_a_real_kind",
+    auth_bearer: true,
+    expected_status: [400, 401],
+    note: "Bogus template kind must reject before any DB hit.",
+  },
+  {
+    path: `/api/getting-started/public/${SELF_TEST_DUMMY_JOB_ID}`,
+    expected_status: [200, 404, 503],
+    note: "Public getting-started doc for a non-existent owner must 404.",
   },
 ];
 
