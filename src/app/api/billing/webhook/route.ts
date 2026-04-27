@@ -4,6 +4,7 @@ import { sendPaymentFailedEmail, sendWelcomeEmail } from "@/lib/email";
 import { type Stripe } from "stripe";
 import { getStripe } from "@/lib/stripe/client";
 import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+import { reportError } from "@/lib/observability/error-reporter";
 
 // Unified Stripe Webhook — handles client billing events
 // Register this at: https://dashboard.stripe.com/webhooks
@@ -40,7 +41,14 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(body, sig, stripeWebhookSecret);
-  } catch {
+  } catch (err) {
+    // Signature failures are noisy on probe traffic, but we still want
+    // to alert on a sustained spike — sample at the reporter level via
+    // SENTRY_SAMPLE_RATE rather than inline filtering.
+    reportError(err, {
+      route: "/api/billing/webhook",
+      component: "stripe-signature-verify",
+    });
     return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
   }
 
@@ -61,7 +69,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, deduped: true, in_flight: true, event_id: event.id });
   }
 
-  switch (event.type) {
+  try {
+    switch (event.type) {
     // ── Invoice Paid ──
     case "invoice.paid": {
       const invoice = event.data.object as Stripe.Invoice;
@@ -603,10 +612,23 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Mark the event as fully processed so future retries see 'done' and
-  // short-circuit. If we threw above, this line is skipped and the row
-  // stays 'processing' — provider retry will reclaim it after the stale
-  // window (5 min) and re-run.
-  await completeEvent(supabase, "stripe", event.id);
-  return NextResponse.json({ received: true });
+    // Mark the event as fully processed so future retries see 'done' and
+    // short-circuit. If we threw above, this line is skipped and the row
+    // stays 'processing' — provider retry will reclaim it after the stale
+    // window (5 min) and re-run.
+    await completeEvent(supabase, "stripe", event.id);
+    return NextResponse.json({ received: true });
+  } catch (err) {
+    // Surface to Sentry/GlitchTip so a regression in webhook handling
+    // pages immediately. Re-throw so the idempotency row stays in
+    // 'processing' state and Stripe retries will reclaim it after the
+    // 5-min stale window.
+    reportError(err, {
+      route: "/api/billing/webhook",
+      component: "stripe-handler",
+      eventId: event.id,
+      eventType: event.type,
+    });
+    throw err;
+  }
 }

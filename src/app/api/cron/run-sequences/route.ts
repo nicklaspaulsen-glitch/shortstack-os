@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
+import { reportError } from "@/lib/observability/error-reporter";
+import { structuredLog } from "@/lib/observability/structured-log";
 
 // Native sequences cron runner.
 // Replaces the GHL-hosted drip scheduler we sunset Apr 21.
@@ -72,6 +74,11 @@ export async function GET(request: NextRequest) {
   const supabase = createServiceClient();
   const now = new Date();
   const nowMs = now.getTime();
+
+  structuredLog.info("[cron-run-sequences]", "starting cron tick", {
+    triggered_by: isVercelCron ? "vercel-cron" : "manual-bearer",
+    timestamp: now.toISOString(),
+  });
 
   // Pull active enrollments on active sequences. We filter by elapsed time
   // in app code because Supabase can't express "step delay relative to
@@ -256,6 +263,14 @@ export async function GET(request: NextRequest) {
       actionStatus = "failed";
       actionNote = err instanceof Error ? err.message : "unknown error";
       errors.push(`enr=${enr.id}: ${actionNote}`);
+      reportError(err, {
+        route: "/api/cron/run-sequences",
+        component: "step-execution",
+        enrollmentId: enr.id,
+        sequenceId: enr.sequence_id,
+        stepOrder: step.step_order,
+        channel: step.channel,
+      });
     }
 
     // Log the step execution

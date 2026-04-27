@@ -51,6 +51,8 @@ import type {
 import { resendProvider } from "./providers/resend";
 import { postalProvider } from "./providers/postal";
 import { smtpGenericProvider } from "./providers/smtp-generic";
+import { reportError } from "@/lib/observability/error-reporter";
+import { structuredLog } from "@/lib/observability/structured-log";
 
 export type { EmailMessage, EmailProvider, EmailSendResult } from "./provider";
 
@@ -110,9 +112,10 @@ export async function sendMessage(msg: EmailMessage): Promise<EmailSendResult> {
 
   const fallback = getFallback(requested);
   if (fallback) {
-    console.warn(
-      `[email] requested provider "${requested}" unavailable; falling back to "${fallback.name}"`,
-    );
+    structuredLog.warn("[email-router]", "primary provider unavailable, using fallback", {
+      requested,
+      fallback: fallback.name,
+    });
     return fallback.send(msg);
   }
 
@@ -169,8 +172,21 @@ export async function sendEmail(payload: EmailPayload): Promise<boolean> {
       await notifyTelegram(
         `Email not sent (no provider):\nTo: ${payload.to}\nSubject: ${payload.subject}`,
       );
+      reportError(err, {
+        route: "email-router",
+        component: "sendEmail",
+        reason: "no-provider-configured",
+      });
     } else {
       console.error("[email] send failed:", msg);
+      // A real send failure (network/provider error) — surface to the
+      // error sink. Do NOT pass payload.html or payload.subject in
+      // context; they'd ship customer email content into telemetry.
+      reportError(err, {
+        route: "email-router",
+        component: "sendEmail",
+        reason: "provider-error",
+      });
     }
     return false;
   }

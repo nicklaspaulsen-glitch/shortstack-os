@@ -3,6 +3,7 @@ import { createServiceClient } from "@/lib/supabase/server";
 import { fireTrigger, type TriggerType } from "@/lib/workflows/trigger-dispatch";
 import crypto from "crypto";
 import { claimEvent, completeEvent } from "@/lib/webhooks/idempotency";
+import { reportError } from "@/lib/observability/error-reporter";
 // IDEMPOTENCY: Svix (used by Resend) retries on non-2xx. Without dedup,
 // retries cause duplicate trinity_log rows and re-fired workflow triggers.
 // We use the `svix-id` header as the canonical idempotency key — Svix
@@ -213,6 +214,11 @@ export async function POST(request: NextRequest) {
     const valid = verifySvixSignature(rawBody, svixId, svixTimestamp, svixSignature, secret);
     if (!valid) {
       console.warn("[resend-webhook] signature verification failed");
+      reportError(new Error("Resend webhook signature verification failed"), {
+        route: "/api/webhooks/resend",
+        component: "svix-signature",
+        svix_id: svixId,
+      });
       return NextResponse.json({ error: "Invalid signature" }, { status: 400 });
     }
   } else if (process.env.NODE_ENV === "development") {
