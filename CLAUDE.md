@@ -327,6 +327,39 @@ existing `OPENAI_API_KEY` — behaviour unchanged. Long-running RunPod jobs
 return a `job_id`; `/api/cron/poll-transcription-jobs` finishes them every
 minute. See `docs/TRANSCRIPTION_SETUP.md` for setup.
 
+## Branded welcome email + getting started (Apr 27)
+
+Per-agency transactional email templates + a public per-agency getting-started
+doc page. Multi-tenant: every agency owner customizes their OWN welcome email,
+team-invite, trial-signup, magic-link, and password-reset templates with their
+logo + brand color from `white_label_config`, and clients see THE AGENCY'S
+branding when those emails arrive.
+
+- **Defaults ship pre-filled.** `src/lib/email-templates/defaults.ts` has
+  hand-written, warm-not-corporate copy for all five kinds. An agency does
+  NOT have to customize before clients can be onboarded.
+- **Templates live per-agency in `email_templates`.** A row only exists if
+  the agency customized that kind; reverting a template deletes the row and
+  restores the default.
+- **Variables resolved server-side at send time.** `resolveTemplateVars` reads
+  white_label_config + profile + (optional) client/team-member rows and
+  builds a `{agency_name, logo_url, brand_color, owner_first_name,
+  client_first_name, portal_url, getting_started_url, ...}` map.
+  Mustache-style `{{var}}` substitution; missing keys resolve to "" so a
+  recipient never sees a raw placeholder.
+- **Editor at `/dashboard/settings/email-templates`** — tabs across the five
+  kinds, two-pane editor with live iframe preview, "Send test to me" button,
+  and "Reset to default".
+- **Getting Started editor at `/dashboard/settings/getting-started`** — hero
+  fields, sections with up/down reorder, FAQ, public/private toggle.
+- **Public page at `/getting-started/[ownerSlug]`** — `ownerSlug` is the
+  agency owner's user id (no separate slug in v1). ISR with `revalidate = 60`,
+  uses anon Supabase client; `getting_started_public_read` RLS policy filters
+  to `is_public = true`. Branded with the agency's logo + primary color.
+- **Wired into `/api/clients/onboard`**: right after the client row inserts,
+  `sendBrandedWelcomeEmail` fires fire-and-forget. Soft-fails — never blocks
+  onboarding.
+
 ## Tomorrow's todo file
 
 The active context lives at:

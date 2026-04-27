@@ -4,6 +4,7 @@ import { sendTelegramMessage } from "@/lib/services/trinity";
 import { isAtClientLimit } from "@/lib/plan-config";
 import { recordUsage } from "@/lib/usage-limits";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import { sendBrandedWelcomeEmail } from "@/lib/email-templates/send";
 
 // Full client onboarding — creates client, portal access, welcome doc, first invoice, Zernio profile
 export async function POST(request: NextRequest) {
@@ -163,7 +164,24 @@ export async function POST(request: NextRequest) {
     completed_at: new Date().toISOString(),
   });
 
-  // 9. Queue trigger event so the `client-onboarding-5day` template (and any
+  // 9. Fire the at-signup branded welcome email. This is the FIRST email
+  // the client gets — separate from the 5-day drip below — and uses the
+  // agency's customized template (or a default) from `email_templates`.
+  // Fire-and-forget; never block the onboarding response on email send.
+  if (email) {
+    sendBrandedWelcomeEmail({
+      agency_owner_id: ownerId,
+      client_id: client.id,
+      client_email: email,
+    }).catch((err) => {
+      console.warn(
+        "[clients/onboard] branded welcome email failed:",
+        err instanceof Error ? err.message : String(err),
+      );
+    });
+  }
+
+  // 10. Queue trigger event so the `client-onboarding-5day` template (and any
   // other client.created workflow) fires. Cron picks this up within 1 min.
   const { error: trigErr } = await supabase.from("trigger_events").insert({
     user_id: ownerId,
