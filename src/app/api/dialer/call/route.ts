@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase, createServiceClient } from "@/lib/supabase/server";
 import { getEffectiveOwnerId } from "@/lib/security/require-owned-client";
+import {
+  validatePhone,
+  type PhoneValidationResult,
+} from "@/lib/integrations/phone-validator";
 
 interface CallRequest {
   to: string;
@@ -8,6 +12,8 @@ interface CallRequest {
   contact_name?: string;
   contact_id?: string;
   client_id?: string;
+  /** Self-test marker — skip validation lookup to avoid burning quota. */
+  _self_test?: boolean;
 }
 
 // E.164 normaliser — defaults to +1 (US) when caller forgets the prefix.
@@ -16,6 +22,69 @@ function toE164(raw: string): string | null {
   const cleaned = (raw || "").replace(/[^\d+]/g, "");
   if (cleaned.length < 7 || cleaned.length > 16) return null;
   return cleaned.startsWith("+") ? cleaned : `+1${cleaned}`;
+}
+
+const PHONE_VALIDATION_CACHE_DAYS = 14;
+
+interface CachedPhoneRow {
+  status: PhoneValidationResult["status"];
+  raw_response: unknown;
+  provider: string;
+}
+
+async function getOrCachePhoneValidation(
+  service: ReturnType<typeof createServiceClient>,
+  agencyOwnerId: string,
+  phone: string,
+): Promise<PhoneValidationResult> {
+  const cutoffIso = new Date(
+    Date.now() - PHONE_VALIDATION_CACHE_DAYS * 24 * 60 * 60 * 1000,
+  ).toISOString();
+  const { data: cached } = await service
+    .from("contact_validations")
+    .select("status, raw_response, provider")
+    .eq("agency_owner_id", agencyOwnerId)
+    .eq("channel", "phone")
+    .eq("target", phone)
+    .gte("validated_at", cutoffIso)
+    .maybeSingle();
+  if (cached) {
+    const row = cached as CachedPhoneRow;
+    const raw = row.raw_response as PhoneValidationResult | null;
+    return {
+      phone,
+      is_valid: row.status === "valid",
+      country_code: raw?.country_code ?? null,
+      country_name: raw?.country_name ?? null,
+      line_type: raw?.line_type ?? "unknown",
+      carrier: raw?.carrier ?? null,
+      provider:
+        (row.provider as PhoneValidationResult["provider"]) ?? "skipped",
+      status: row.status,
+    };
+  }
+
+  const fresh = await validatePhone(phone);
+  try {
+    await service.from("contact_validations").upsert(
+      {
+        agency_owner_id: agencyOwnerId,
+        channel: "phone",
+        target: phone,
+        status: fresh.status,
+        raw_response: fresh as unknown as Record<string, unknown>,
+        provider: fresh.provider,
+        validated_at: new Date().toISOString(),
+      },
+      { onConflict: "agency_owner_id,channel,target" },
+    );
+  } catch (err) {
+    console.warn(
+      "[dialer/call] validation cache upsert failed",
+      err instanceof Error ? err.message : String(err),
+    );
+  }
+  return fresh;
 }
 
 // POST /api/dialer/call
@@ -61,6 +130,26 @@ export async function POST(request: NextRequest) {
   // service-role lookup. RLS on `clients` would also block it but we want a
   // clean 403 instead of an inscrutable RLS row miss.
   const service = createServiceClient();
+
+  // Pre-call phone validation. Skips when self-test marker is set or when
+  // neither AbstractAPI Phone nor NumVerify keys are configured (validation
+  // returns "skipped"). Refuses the dial only on confirmed-invalid numbers.
+  if (!body._self_test) {
+    const validation = await getOrCachePhoneValidation(
+      service,
+      ownerId,
+      toNumber,
+    );
+    if (validation.status === "invalid") {
+      return NextResponse.json(
+        {
+          error: "Phone number failed validation",
+          validation,
+        },
+        { status: 400 },
+      );
+    }
+  }
   if (body.client_id) {
     const { data: clientRow } = await service
       .from("clients")
