@@ -30,6 +30,7 @@ import {
   Bell,
   BarChart3,
   CreditCard,
+  LayoutGrid,
   MessageSquare,
   Link2,
   Sparkles,
@@ -108,6 +109,9 @@ const navItems: NavItem[] = [
   { label: "Community", href: "/dashboard/community", icon: <Users size={16} />, roles: ["admin", "team_member", "client"] },
   { label: "Analytics", href: "/dashboard/analytics", icon: <BarChart3 size={16} />, roles: ["admin"] },
   { label: "Reports", href: "/dashboard/reports", icon: <FileText size={16} />, roles: ["admin"] },
+
+  // ── Workspace (live production board, files, whiteboard) ──
+  { label: "Whiteboard", href: "/dashboard/workspace/whiteboard", icon: <LayoutGrid size={16} />, roles: ["admin", "team_member"], section: "Workspace" },
 
   // ── Sales (full revenue pipeline) ──
   { label: "Outreach", href: "/dashboard/outreach-hub", icon: <Send size={16} />, roles: ["admin"], section: "Sales", sub: "Leads & Outreach" },
