@@ -14,10 +14,12 @@ import {
   Lightbulb,
   Clock,
   Trash2,
+  DollarSign,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import TranscriptViewer, { TranscriptSegment } from "@/components/meetings/transcript-viewer";
 import ActionItems, { ActionItem } from "@/components/meetings/action-items";
+import CrmLinkPanel from "@/components/meetings/crm-link-panel";
 
 interface MeetingDetail {
   id: string;
@@ -33,12 +35,29 @@ interface MeetingDetail {
   action_items: ActionItem[] | null;
   decisions: Array<{ text: string; context?: string }> | null;
   key_moments: Array<{ ts: number; label: string }> | null;
+  lead_id: string | null;
+  deal_id: string | null;
+  source_type: string | null;
+  cost_usd: number | null;
+  synced_to_crm_at: string | null;
 }
 
 function formatTs(seconds: number): string {
   const s = Math.max(0, Math.floor(seconds));
   const m = Math.floor(s / 60);
   return `${m}:${(s % 60).toString().padStart(2, "0")}`;
+}
+
+function sourceLabel(source: string): string {
+  switch (source) {
+    case "upload": return "Uploaded";
+    case "zoom_url": return "Zoom";
+    case "loom_url": return "Loom";
+    case "meet_url": return "Google Meet";
+    case "calendar_auto": return "Auto-pulled";
+    case "manual": return "Manual";
+    default: return source;
+  }
 }
 
 export default function MeetingDetailPage() {
@@ -173,11 +192,20 @@ export default function MeetingDetailPage() {
           >
             <ArrowLeft size={16} />
           </Link>
-          <div>
+          <div className="min-w-0">
             <h1 className="text-lg font-bold truncate">{meeting.title}</h1>
-            <p className="text-[10px] text-muted">
-              {new Date(meeting.created_at).toLocaleString()}
-              {meeting.duration_seconds ? ` · ${formatTs(meeting.duration_seconds)}` : ""}
+            <p className="text-[10px] text-muted flex items-center gap-2 flex-wrap">
+              <span>{new Date(meeting.created_at).toLocaleString()}</span>
+              {meeting.duration_seconds ? (
+                <span>· {formatTs(meeting.duration_seconds)}</span>
+              ) : null}
+              {meeting.source_type ? <span>· {sourceLabel(meeting.source_type)}</span> : null}
+              {typeof meeting.cost_usd === "number" && meeting.cost_usd > 0 ? (
+                <span className="flex items-center gap-0.5">
+                  <DollarSign size={9} />
+                  {meeting.cost_usd.toFixed(4)}
+                </span>
+              ) : null}
             </p>
           </div>
         </div>
@@ -259,6 +287,23 @@ export default function MeetingDetailPage() {
 
         {/* Right dock */}
         <div className="lg:col-span-2 space-y-4">
+          {/* CRM linking + sync */}
+          <CrmLinkPanel
+            meetingId={id}
+            leadId={meeting.lead_id}
+            dealId={meeting.deal_id}
+            hasSummary={Boolean(meeting.summary)}
+            syncedAt={meeting.synced_to_crm_at}
+            onLinked={(next) =>
+              setMeeting((cur) => (cur ? { ...cur, ...next } : cur))
+            }
+            onSynced={() =>
+              setMeeting((cur) =>
+                cur ? { ...cur, synced_to_crm_at: new Date().toISOString() } : cur,
+              )
+            }
+          />
+
           {/* Summary */}
           <div className="card p-4 space-y-2">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-muted flex items-center gap-1.5">
