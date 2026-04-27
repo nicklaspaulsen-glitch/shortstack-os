@@ -22,6 +22,10 @@ jobs:
       - name: Run Claude Code Security Review
         uses: anthropics/claude-code-security-review@main
         with:
+          # The action now requires the key via input (it used to read from env).
+          # Without this, the run aborts with: "ANTHROPIC_API_KEY is not set.
+          # Please provide the claude-api-key input to the action."
+          claude-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           comment-pr: 'true'
           upload-results: 'true'
           claudecode-timeout: '20'
