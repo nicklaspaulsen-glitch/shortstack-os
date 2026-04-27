@@ -33,8 +33,10 @@ function formatPrice(cents: number, currency: string): string {
 }
 
 export default function ServiceDetailPage() {
+  // useParams() returns Params | null in Next 14; guard explicitly so
+  // strict null checks pass and the page renders a loader instead of throwing.
   const params = useParams<{ id: string }>();
-  const id = params.id;
+  const id = params?.id ?? null;
   const router = useRouter();
   const [service, setService] = useState<ServiceRow | null>(null);
   const [loading, setLoading] = useState(true);
