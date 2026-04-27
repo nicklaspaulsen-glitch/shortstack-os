@@ -52,6 +52,26 @@ const FILLER_WORDS = ["um", "uh", "uhh", "umm", "like", "so", "basically", "lite
 
 const REP_SPEAKER_PATTERN = /^(rep|agent|sales|advisor|me|speaker[\s_]*1|s1|host)$/i;
 
+// WhisperX (pyannote) emits `SPEAKER_00`, `SPEAKER_01`, ... — zero-indexed and
+// generally ordered by first-appearance in the audio. We treat the
+// numerically lowest label as the rep so the talk-ratio metric works without
+// per-call relabeling. Sales calls dialed from the dashboard always have the
+// rep speak first (greeting → pitch), so this heuristic holds.
+const WHISPERX_LABEL_PATTERN = /^speaker_(\d+)$/i;
+
+function isWhisperxRep(label: string, allLabels: Set<string>): boolean {
+  const m = label.match(WHISPERX_LABEL_PATTERN);
+  if (!m) return false;
+  let lowest = Number.POSITIVE_INFINITY;
+  allLabels.forEach((other) => {
+    const om = other.match(WHISPERX_LABEL_PATTERN);
+    if (!om) return;
+    const idx = Number(om[1]);
+    if (Number.isFinite(idx) && idx < lowest) lowest = idx;
+  });
+  return Number(m[1]) === lowest;
+}
+
 function tokenize(text: string): string[] {
   return text
     .toLowerCase()
@@ -92,21 +112,35 @@ interface ParsedTurn {
   wordCount: number;
 }
 
-function classifySpeaker(label: string | undefined, isFirst: boolean): boolean {
+function classifySpeaker(
+  label: string | undefined,
+  isFirst: boolean,
+  whisperxLabels?: Set<string>,
+): boolean {
   if (!label) return isFirst; // unknown — assume the first speaker is the rep
-  if (REP_SPEAKER_PATTERN.test(label.trim())) return true;
+  const trimmed = label.trim();
+  // WhisperX SPEAKER_00 / SPEAKER_01 — lowest-indexed label is the rep.
+  if (whisperxLabels && WHISPERX_LABEL_PATTERN.test(trimmed)) {
+    return isWhisperxRep(trimmed, whisperxLabels);
+  }
+  if (REP_SPEAKER_PATTERN.test(trimmed)) return true;
   // "Speaker 1" defaults to rep, "Speaker 2" defaults to prospect.
-  if (/^speaker[\s_]*2$/i.test(label.trim())) return false;
-  if (/^prospect|customer|client|lead|caller$/i.test(label.trim())) return false;
+  if (/^speaker[\s_]*2$/i.test(trimmed)) return false;
+  if (/^prospect|customer|client|lead|caller$/i.test(trimmed)) return false;
   return false;
 }
 
 function parseSegments(segments: TranscriptSegment[]): ParsedTurn[] {
   if (segments.length === 0) return [];
-  // Pick a representative "rep speaker" by majority duration of speaker[0]'s
-  // label vs others — for diarized output, we trust the speaker labels.
+  // Pre-collect WhisperX-style labels so the lowest-indexed one wins.
+  const whisperxLabels = new Set<string>();
+  for (const s of segments) {
+    if (s.speaker && WHISPERX_LABEL_PATTERN.test(s.speaker.trim())) {
+      whisperxLabels.add(s.speaker.trim());
+    }
+  }
   return segments.map((s, idx) => {
-    const isRep = classifySpeaker(s.speaker, idx === 0);
+    const isRep = classifySpeaker(s.speaker, idx === 0, whisperxLabels);
     return {
       speaker: s.speaker || (idx === 0 ? "rep" : "prospect"),
       isRep,

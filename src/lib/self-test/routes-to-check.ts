@@ -675,6 +675,28 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     note: "Affiliate program create — required-field validation.",
   },
 
+  // ── Transcription pipeline (faster-whisper + WhisperX) ──────────────────
+  {
+    path: "/api/cron/poll-transcription-jobs",
+    method: "GET",
+    expected_status: [401, 200],
+    note: "Transcription job poller — must 401 without bearer; 200 acceptable if CRON_SECRET self-injected.",
+  },
+  {
+    path: `/api/voice-calls/${SELF_TEST_DUMMY_JOB_ID}/transcribe`,
+    method: "POST",
+    auth_bearer: true,
+    expected_status: [401, 403, 404, 501],
+    note: "Voice call transcribe with dummy id — must reject (404 not found, 403 forbidden, 501 if no provider).",
+  },
+  {
+    path: `/api/meetings/${SELF_TEST_DUMMY_JOB_ID}/transcribe`,
+    method: "POST",
+    auth_bearer: true,
+    expected_status: [401, 404, 501],
+    note: "Meeting transcribe with dummy id — 404 (not found), 501 (no provider configured), or 401 unauth.",
+  },
+
   // ── AI Sales Coach ───────────────────────────────────────────────────────
   {
     path: "/api/coach/analyses",
