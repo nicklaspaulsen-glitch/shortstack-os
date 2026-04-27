@@ -13,7 +13,6 @@
  *   {{location}}        - "City, State"
  *   {{personal_hook}}   - LLM-generated, 1-2 sentence personal observation
  */
-import { callLLMHumanized } from "@/lib/ai/call-llm-humanized";
 import { preHumanize } from "@/lib/ai/humanizer";
 import { callLLMTraced } from "@/lib/ai/llm-router";
 import { safeJsonParse } from "@/lib/ai/claude-helpers";
@@ -120,6 +119,12 @@ export async function personalizeEmail(
     withMemory: Boolean(subject),
     storeMemory: Boolean(subject),
     agentKey: "lyra",
+    voiceProfile: input.userId
+      ? { subjectKind: "user", subjectId: input.userId }
+      : undefined,
+    // JSON output — humanizer would mangle the JSON skeleton. We strip
+    // AI tells from the parsed fields via preHumanize() below instead.
+    humanize: false,
   });
 
   type LLMShape = { subject?: string; opener?: string; body?: string };
