@@ -831,10 +831,6 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
   },
 
   // ── Workspace Board (Trello/Monday-style task board) ─────────────────────
-  // RLS-gated: GET should return 200 (with empty list) for an authed agency
-  // owner OR 401 when SELF_TEST_USER_ID isn't configured. POST without a
-  // body should validation-fail (400) or auth-fail (401). All five entries
-  // verify the auth gate is in place before any DB query runs.
   {
     path: "/api/workspace/tasks",
     auth_bearer: true,
@@ -846,7 +842,7 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     path: "/api/workspace/tasks",
     method: "POST",
     auth_bearer: true,
-    body: {}, // missing required `title` — should 400 once authed
+    body: {},
     expected_status: [400, 401],
     note: "Workspace task create with empty body must 400 (validation) or 401 (no auth).",
   },
@@ -871,6 +867,46 @@ export const ROUTES_TO_CHECK: SelfTestCheck[] = [
     body: { status: "backlog", ordered_ids: [] },
     expected_status: [200, 401],
     note: "Empty reorder is a no-op — must 200 (updated:0) or 401 unauth'd.",
+  },
+
+  // ── Workspace Files (Drive-style file system on R2) ─────────────────────
+  {
+    path: "/api/workspace/folders",
+    auth_bearer: true,
+    expected_status: [200, 401],
+    expected_shape: ["folders"],
+    note: "Root folder list — auto-seeds system folders (Workspace/Templates/Brand/Clients).",
+  },
+  {
+    path: `/api/workspace/folders?parent_id=${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [200, 401],
+    note: "Listing children of a non-existent parent — must return empty array, not 500.",
+  },
+  {
+    path: "/api/workspace/files/upload-url",
+    method: "POST",
+    auth_bearer: true,
+    body: {
+      folder_id: SELF_TEST_DUMMY_JOB_ID,
+      name: "selftest.png",
+      mime_type: "image/png",
+      size_bytes: 1024,
+    },
+    expected_status: [401, 404],
+    note: "Presign for non-existent folder — must 404 (or 401 unauth). Never 200 with this fixture.",
+  },
+  {
+    path: `/api/workspace/files/${SELF_TEST_DUMMY_JOB_ID}`,
+    auth_bearer: true,
+    expected_status: [401, 404],
+    note: "Detail for non-existent file — must 404 (or 401 unauth).",
+  },
+  {
+    path: `/api/workspace/files/${SELF_TEST_DUMMY_JOB_ID}/share-link?ttl=1h`,
+    auth_bearer: true,
+    expected_status: [401, 404],
+    note: "Share-link for non-existent file — must 404 (or 401 unauth). Confirms TTL parser doesn't 500.",
   },
 ];
 
