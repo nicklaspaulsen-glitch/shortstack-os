@@ -304,20 +304,27 @@ the legacy `gold`/`amber`/`purple` shade names.
 
 12 production-ready, tested automation templates ship out of the box.
 
-- **Registry:** `src/lib/workflows/templates.ts` (TEMPLATES + helpers)
-- **Copy:** `src/lib/workflows/template-copy.ts` (email/SMS/Slack/note bodies)
-- **Action handlers:** `src/lib/workflows/library-actions.ts` (`LIBRARY_ACTIONS`)
+- **Registry:** `src/lib/workflows/templates.ts`
+- **Action handlers:** `src/lib/workflows/library-actions.ts` (no stubs)
 - **Install API:** `POST /api/workflows/templates/install`
-- **List API:** `GET /api/workflows/templates`
 - **UI:** `/dashboard/automations/library`
-- **Tests:** `src/__tests__/workflow-library.test.ts` — 35 integration cases
-- **Migration:** `supabase/migrations/20260427_workflow_library.sql`
-  (adds `workflows.installed_from_template_id`, `workflow_waits`, `email_drafts`)
+- **Tests:** 35 integration cases in `src/__tests__/workflow-library.test.ts`
 
-Each handler in `LIBRARY_ACTIONS` actually calls its provider — no
-"would_send_email" stubs. Handlers always return `{ ok, ref_id?, error? }`
-and never throw, so workflow execution stays robust against partial
-provider outages.
+## Transcription pipeline
+
+Transcription routes through `src/lib/transcription/router.ts`. Provider order:
+
+1. **WhisperX** (`runpod_whisperx`) — used when caller passes `diarize: true`
+   AND `RUNPOD_WHISPERX_ENDPOINT` is set. Produces `SPEAKER_00`/`SPEAKER_01`
+   labels via pyannote 3.1; AI Sales Coach uses these for diarized metrics.
+2. **faster-whisper** (`runpod_faster_whisper`) — 4x faster than stock
+   Whisper at the same accuracy.
+3. **OpenAI Whisper API** (`openai_whisper`) — fallback, $0.006/min.
+
+With no transcription env vars set, the router falls back to OpenAI via the
+existing `OPENAI_API_KEY` — behaviour unchanged. Long-running RunPod jobs
+return a `job_id`; `/api/cron/poll-transcription-jobs` finishes them every
+minute. See `docs/TRANSCRIPTION_SETUP.md` for setup.
 
 ## Tomorrow's todo file
 

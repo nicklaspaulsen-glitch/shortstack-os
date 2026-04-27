@@ -1,27 +1,38 @@
 /**
  * POST /api/meetings/[id]/transcribe
  *
- * Fetches the meeting's `audio_url`, streams it through Whisper, and writes
- * `transcript_raw` + `transcript_speaker_labeled` + `duration_seconds` onto
- * the row. Sets status to 'ready' on success, 'failed' on error.
+ * Fetches the meeting's `audio_url`, streams it through the transcription
+ * router (`@/lib/transcription/router`), and writes `transcript_raw` +
+ * `transcript_speaker_labeled` + `duration_seconds` onto the row. Sets
+ * status to 'ready' on success, 'failed' on error.
  *
- * Provider order: RunPod Whisper Large-V3 first (cheaper for the agency
- * call volume + better accuracy on accents/jargon), OpenAI Whisper as a
- * fallback when RunPod isn't configured. Returns 501 if neither is
- * available so the UI can show a "configure provider" hint.
+ * Provider order:
+ *   1. WhisperX (if configured) — diarized SPEAKER_xx labels for the AI
+ *      Sales Coach + meeting transcript view.
+ *   2. faster-whisper (if configured) — 4x faster than stock Whisper, no
+ *      diarization but same accuracy.
+ *   3. OpenAI Whisper API — fallback, $0.006/min, no diarization.
+ *
+ * Returns 501 if no provider is configured so the UI can show a "configure
+ * provider" hint.
+ *
+ * Async path: when RunPod returns a job id (cold start exceeded the
+ * runsync window), we persist a `transcription_jobs` row, mark the meeting
+ * `transcribing`, and let `/api/cron/poll-transcription-jobs` finish the
+ * work. The UI polls the meeting row for `status: 'ready'`.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
-import { hasOpenAIKey } from "@/lib/meetings/whisper";
 import {
-  hasRunpodWhisper,
-  transcribeAudio,
-  estimateTranscriptionCost,
-} from "@/lib/meetings/whisper-runpod";
+  transcribe,
+  getTranscriptionProviderStatus,
+} from "@/lib/transcription/router";
+import { writeTranscriptToSource } from "@/lib/transcription/job-completion";
 import { captureVoiceSample } from "@/lib/ai/voice-profile";
 
 // Whisper transcription on a 60-min recording can run ~90s on cold start.
-// Vercel default is 10s — bump to 5 min so we can wait for the worker.
+// Vercel default is 10s — bump to 5 min so we can wait for the worker
+// (or surface the job-id async path).
 export const maxDuration = 300;
 
 export async function POST(
@@ -32,11 +43,13 @@ export async function POST(
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  if (!hasRunpodWhisper() && !hasOpenAIKey()) {
+  const providerStatus = getTranscriptionProviderStatus();
+  const anyAvailable = providerStatus.some((p) => p.available);
+  if (!anyAvailable) {
     return NextResponse.json(
       {
         error:
-          "transcription disabled, configure RUNPOD_WHISPER_URL + RUNPOD_API_KEY (preferred) or OPENAI_API_KEY",
+          "transcription disabled — set RUNPOD_WHISPERX_ENDPOINT (preferred for diarization), RUNPOD_FASTER_WHISPER_ENDPOINT, or OPENAI_API_KEY",
       },
       { status: 501 },
     );
@@ -57,45 +70,66 @@ export async function POST(
   }
 
   try {
-    const audioResp = await fetch(meeting.audio_url);
-    if (!audioResp.ok) {
-      throw new Error(`Failed to fetch audio (status ${audioResp.status})`);
+    const result = await transcribe({
+      audioUrl: meeting.audio_url,
+      diarize: true,
+      // Sales calls are 2-party by default — helps WhisperX cluster cleanly.
+      speakerCountHint: 2,
+      userId: user.id,
+      context: "/api/meetings/[id]/transcribe",
+    });
+
+    // Async / cold-start path: provider returned a job id; persist a
+    // transcription_jobs row and let the cron handler finish.
+    if (result.job_id) {
+      await supabase
+        .from("meetings")
+        .update({ status: "transcribing" })
+        .eq("id", params.id)
+        .eq("created_by", user.id);
+
+      await supabase.from("transcription_jobs").insert({
+        agency_owner_id: user.id,
+        source_table: "meetings",
+        source_id: params.id,
+        audio_url: meeting.audio_url,
+        provider: result.provider,
+        provider_job_id: result.job_id,
+        status: "processing",
+        diarize: true,
+        speaker_count_hint: 2,
+      });
+
+      return NextResponse.json({
+        meeting: { id: params.id, status: "transcribing" },
+        async: true,
+        provider: result.provider,
+        job_id: result.job_id,
+      });
     }
-    const blob = await audioResp.blob();
-    const filenameGuess = meeting.audio_url.split("/").pop()?.split("?")[0] || "audio.webm";
 
-    const result = await transcribeAudio(blob, { filename: filenameGuess });
+    // Sync path — write transcript back inline.
+    const ok = await writeTranscriptToSource({
+      supabase,
+      sourceTable: "meetings",
+      sourceId: params.id,
+      result,
+    });
+    if (!ok) {
+      return NextResponse.json(
+        { error: "transcript stored but source row update failed" },
+        { status: 500 },
+      );
+    }
 
-    const provider: "runpod" | "openai" = hasRunpodWhisper() ? "runpod" : "openai";
-    const transcribeCost = estimateTranscriptionCost(
-      result.duration_seconds ?? 0,
-      provider,
-    );
-
-    const { data: updated, error: updErr } = await supabase
+    const { data: updated } = await supabase
       .from("meetings")
-      .update({
-        transcript_raw: result.text,
-        transcript_speaker_labeled: result.segments,
-        duration_seconds: result.duration_seconds ?? null,
-        status: "ready",
-        cost_usd: transcribeCost,
-      })
+      .select()
       .eq("id", params.id)
       .eq("created_by", user.id)
-      .select()
       .single();
 
-    if (updErr) {
-      console.error("[meetings/transcribe] update error:", updErr);
-      return NextResponse.json({ error: updErr.message }, { status: 500 });
-    }
-
     // Capture meeting transcript segments for voice profiles. Fire-and-forget.
-    // Each unique speaker label gets one sample of their joined utterances.
-    // We treat the meeting creator as the user and collapse all OTHER speakers
-    // into the user-side bucket (we don't have client identity in the meeting
-    // schema yet — speaker→client linking is a future v2).
     try {
       const segs = (result.segments || []) as Array<{ speaker?: string; text?: string }>;
       const bySpeaker = new Map<string, string[]>();
@@ -108,15 +142,10 @@ export async function POST(
         bySpeaker.set(speaker, list);
       }
       const userSpeaker = segs.find((s) => s.speaker)?.speaker?.toLowerCase();
-      const speakerEntries = Array.from(bySpeaker.entries());
-      for (const [speaker, parts] of speakerEntries) {
+      for (const [speaker, parts] of Array.from(bySpeaker.entries())) {
         const body = parts.join(" ").trim();
         if (!body) continue;
-        // Anchor the first detected speaker to the meeting creator (user
-        // voice). All other speakers are skipped at v1 — without a client
-        // mapping we'd pollute corpora. The settings page can paste-
-        // bootstrap explicit client samples instead.
-        if (speaker === userSpeaker) {
+        if (speaker === userSpeaker && meeting.created_by) {
           captureVoiceSample({
             agencyOwnerId: meeting.created_by,
             subjectKind: "user",
@@ -131,10 +160,13 @@ export async function POST(
       console.warn("[voice-capture/meeting] sweep failed", err);
     }
 
-    return NextResponse.json({ meeting: updated, segments_count: result.segments.length });
+    return NextResponse.json({
+      meeting: updated,
+      provider: result.provider,
+      segments_count: result.segments.length,
+    });
   } catch (err) {
     console.error("[meetings/transcribe] error:", err);
-    // Mark failed so the UI can offer a retry.
     await supabase
       .from("meetings")
       .update({ status: "failed" })
