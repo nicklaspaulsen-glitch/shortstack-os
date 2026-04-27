@@ -32,8 +32,14 @@ import {
 import { loadPublicGettingStartedDoc } from "@/lib/email-templates/getting-started";
 import type { GettingStartedSection, GettingStartedFaq } from "@/lib/email-templates/types";
 
+// ISR — generated on first request, cached for 60s.
+// We deliberately do NOT set `dynamic = "force-static"` here because the
+// `[ownerSlug]` segment has no `generateStaticParams` (slugs are user IDs,
+// unbounded), so Next.js can't pre-render every possible path at build
+// time. Letting Next default the strategy + setting `revalidate` gives us
+// proper ISR (lazy generate on first hit, cache for 60s) without crashing
+// the build during page-data collection.
 export const revalidate = 60;
-export const dynamic = "force-static";
 
 interface BrandingPayload {
   agency_name: string;
