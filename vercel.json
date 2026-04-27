@@ -190,6 +190,10 @@
     {
       "path": "/api/cron/snapshot-health",
       "schedule": "0,15,30,45 * * * *"
+    },
+    {
+      "path": "/api/cron/prune-presence",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
