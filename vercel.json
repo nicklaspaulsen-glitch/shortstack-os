@@ -208,11 +208,11 @@
       "schedule": "*/30 * * * *"
     },
     {
-<<<<<<< HEAD
       "path": "/api/cron/poll-transcription-jobs",
-=======
+      "schedule": "* * * * *"
+    },
+    {
       "path": "/api/cron/run-browser-tasks",
->>>>>>> d1bf5073 (feat(browser-worker): AI agents that drive a real browser via Playwright + Claude tool-calling)
       "schedule": "* * * * *"
     }
   ]
